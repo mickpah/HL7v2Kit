@@ -1,0 +1,103 @@
+{
+  "segmentID": "PID",
+  "version": "2.5.1",
+  "description": "Patient Identification",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - PID",
+      "dataType": "SI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "patientID",
+      "name": "Patient ID (deprecated)",
+      "dataType": "CX",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "patientIdentifierList",
+      "name": "Patient Identifier List",
+      "dataType": "CX",
+      "optionality": "R",
+      "repeatability": "*"
+    },
+    {
+      "index": 4,
+      "swiftName": "alternatePatientID",
+      "name": "Alternate Patient ID (deprecated)",
+      "dataType": "CX",
+      "optionality": "B",
+      "repeatability": "*"
+    },
+    {
+      "index": 5,
+      "swiftName": "patientName",
+      "name": "Patient Name",
+      "dataType": "XPN",
+      "optionality": "R",
+      "repeatability": "*"
+    },
+    {
+      "index": 6,
+      "swiftName": "mothersMaidenName",
+      "name": "Mother's Maiden Name",
+      "dataType": "XPN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 7,
+      "swiftName": "dateTimeOfBirth",
+      "name": "Date/Time of Birth",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "administrativeSex",
+      "name": "Administrative Sex",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "patientAlias",
+      "name": "Patient Alias (deprecated)",
+      "dataType": "XPN",
+      "optionality": "B",
+      "repeatability": "*"
+    },
+    {
+      "index": 10,
+      "swiftName": "race",
+      "name": "Race",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "patientAddress",
+      "name": "Patient Address",
+      "dataType": "XAD",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 12,
+      "swiftName": "countyCode",
+      "name": "County Code (deprecated)",
+      "dataType": "IS",
+      "optionality": "B",
+      "repeatability": "1"
+    }
+  ]
+}

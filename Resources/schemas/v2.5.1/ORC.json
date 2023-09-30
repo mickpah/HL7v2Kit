@@ -1,0 +1,159 @@
+{
+  "segmentID": "ORC",
+  "version": "2.5.1",
+  "description": "Common Order",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "orderControl",
+      "name": "Order Control",
+      "dataType": "ID",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "placerOrderNumber",
+      "name": "Placer Order Number",
+      "dataType": "EI",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "fillerOrderNumber",
+      "name": "Filler Order Number",
+      "dataType": "EI",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "placerGroupNumber",
+      "name": "Placer Group Number",
+      "dataType": "EI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "orderStatus",
+      "name": "Order Status",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "responseFlag",
+      "name": "Response Flag",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "quantityTiming",
+      "name": "Quantity/Timing (deprecated)",
+      "dataType": "TQ",
+      "optionality": "B",
+      "repeatability": "*"
+    },
+    {
+      "index": 8,
+      "swiftName": "parent",
+      "name": "Parent",
+      "dataType": "EIP",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "dateTimeOfTransaction",
+      "name": "Date/Time of Transaction",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "enteredBy",
+      "name": "Entered By",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "verifiedBy",
+      "name": "Verified By",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 12,
+      "swiftName": "orderingProvider",
+      "name": "Ordering Provider",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 13,
+      "swiftName": "enterersLocation",
+      "name": "Enterer's Location",
+      "dataType": "PL",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "callBackPhoneNumber",
+      "name": "Call Back Phone Number",
+      "dataType": "XTN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 15,
+      "swiftName": "orderEffectiveDateTime",
+      "name": "Order Effective Date/Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "orderControlCodeReason",
+      "name": "Order Control Code Reason",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "enteringOrganization",
+      "name": "Entering Organization",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "enteringDevice",
+      "name": "Entering Device",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "actionBy",
+      "name": "Action By",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    }
+  ]
+}

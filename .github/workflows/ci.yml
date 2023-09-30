@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-macos:
+    name: Test on macOS
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Build
+        run: swift build -v
+
+      - name: Test
+        run: swift test -v
+
+  fixture-safety:
+    name: PHI scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Scan fixtures for PHI patterns
+        run: bash scripts/scan-fixtures-for-phi.sh
+
+  codegen-drift:
+    name: Codegen drift
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Regenerate typed segments
+        run: bash scripts/regenerate-typed-segments.sh
+      - name: Fail if Generated/ is out of date
+        run: |
+          if ! git diff --exit-code Sources/HL7v2Kit/Segment/Generated/; then
+            echo "::error::Generated typed segments are out of date. Run scripts/regenerate-typed-segments.sh and commit the result."
+            exit 1
+          fi
