@@ -41,6 +41,15 @@ but transparently fake). No real-world data sources.
 | `edge_empty_fields.hl7` | Edge case | Empty fields + `\F\` `\S\` `\T\` escape sequences in NTE-3 | N/A — synthetic |
 | `malformed_missing_msh.hl7` | Malformed | Starts with PID instead of MSH — parser must throw `.missingMSH` | N/A — synthetic |
 | `malformed_invalid_encoding_chars.hl7` | Malformed | MSH-2 = `^^^^` (encoding chars not distinct) — parser must throw `.invalidMSH` | N/A — synthetic |
+| `adt_a01_with_allergies.hl7` | ADT^A01 (admit) | MSH + PID + PV1 + 2 × AL1 — admit with drug allergies | N/A — synthetic from scratch |
+| `adt_a01_with_insurance.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 + IN1 — admit with insurance details | N/A — synthetic from scratch |
+| `adt_a01_emergency.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 — emergency-class admission | N/A — synthetic from scratch |
+| `adt_a04_register_clinic.hl7` | ADT^A04 (register) | MSH + EVN + PID + PV1 — outpatient clinic registration | N/A — synthetic from scratch |
+| `adt_a04_register_with_nk1.hl7` | ADT^A04 (register) | MSH + EVN + PID + NK1 + PV1 — register with next-of-kin | N/A — synthetic from scratch |
+| `adt_a04_register_paediatric.hl7` | ADT^A04 (register) | MSH + EVN + PID + PD1 + NK1 + PV1 — paediatric register with mother NK1 | N/A — synthetic from scratch |
+| `adt_a08_update_address.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 — patient demographic update (address) | N/A — synthetic from scratch |
+| `adt_a08_update_demographics.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 — patient demographic update (marital status) | N/A — synthetic from scratch |
+| `adt_a08_update_with_allergies.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 + 2 × AL1 — update adding allergies | N/A — synthetic from scratch |
 
 ## Anonymise tool semantics
 
