@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_No changes yet._
+
+## [0.1.0] — 2026-06-13
+
 ### Added
 
 - **Code-generated typed segment structs** for HL7 v2.5.1: `MSH`, `PID` (first 12 of 40 fields), `NTE`, `AL1`.
@@ -140,10 +144,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MessageBuilder` for round-trip construction.
 - Round-trip property test scaffolding.
 
-### Remaining for v0.1.0 release
+### Added (Task 7b — fixture corpus scale-out)
 
-- **Fixture corpus scale-out (Task 7b).** 8 of the target 48 fixtures landed in Task 7a; 40 remain. Pure curation, no architecture. The auto-discovering `FixtureRoundTripTests` harness picks new fixtures up with no test code change.
-- **Tag-time mechanics.** Rename `[Unreleased]` heading to `[0.1.0] — YYYY-MM-DD` at tag time; `git tag v0.1.0`; push to remote (first push triggers CI matrix on macOS 14 + 15).
+- **Fixture corpus expanded 8 → 48** (spec § 9.2 target met for v0.1.0). All synthetic from scratch.
+  - **ADT (12 total):** 3 × A01 (minimal, with NK1, allergies, insurance, emergency) + 3 × A04 (clinic, NK1, paediatric with PD1) + 3 × A08 (address update, demographics update, allergies-add).
+  - **ORM (5 total):** lab order baseline + radiology X-ray, microbiology, haematology, cancel (ORC-1=CA), order with DG1 diagnosis.
+  - **ORU pathology (6 total):** chemistry, haematology FBC, lipid panel, TFT, microbiology MCS, multi-OBR (EUC + LFT batteries under one PID).
+  - **ORU radiology (4 total):** chest X-ray, CT abdomen/pelvis, pelvic ultrasound, MRI brain — each with TX narrative + ST impression.
+  - **ACK (2 total):** application-accept (AA) and application-error (AE + ERR).
+  - **Z-segment heavy (5 total):** original `oru_r01_with_z_segment` + ZAU/ZIN overlay in ADT, ZBL billing in ORM, ZLB/ZRE in ORU, ZTX heartbeat (MSH + Z only).
+  - **Malformed (6 total):** missing MSH + non-distinct encoding chars + MSH too short + MSH no field-sep after MSH-2 + unsupported MSH-18 charset + empty file. Each triggers a distinct `ParseError` case.
+  - **Edge (8 total):** original `edge_empty_fields` + Unicode diacritics, repeating PID-3 identifiers, very-long address, escape sequences in PID-5 and NTE, many trailing NTEs, sparsely-populated PID, OBX with `~`-repeating values.
+- All valid fixtures: round-trip byte-perfectly, produce non-error `ValidationReport`, and pass the PID typed-accessor vs path-string cross-check. All malformed fixtures throw `ParseError`. `FixtureRoundTripTests` auto-discovers — no test code change required.
 
 ### Deferred to v0.2 (or later)
 
@@ -158,4 +170,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ParseError.unsupportedVersion` is reachable code but never thrown — unknown MSH-12 silently falls back to v2.5.1. Wire on `.strict` mode.
 - **`HL7v2KitDictionaries` runtime JSON.** Path C (ADR-005 revised) supersedes the original spec § 8 plan for v0.1.0; placeholder.json stays. Revisit in v0.2 if dynamic version selection becomes a real consumer need.
 
-[Unreleased]: https://github.com/<your-org>/HL7v2Kit/compare/HEAD
+[Unreleased]: https://github.com/<your-org>/HL7v2Kit/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/<your-org>/HL7v2Kit/releases/tag/v0.1.0
