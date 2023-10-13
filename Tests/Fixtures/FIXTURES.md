@@ -6,8 +6,8 @@ gate by which a real-world-derived fixture could enter the corpus, and even
 then the output must be scanned via `scripts/scan-fixtures-for-phi.sh` before
 commit.
 
-Status v0.1.0: synthetic starter set (7a); the full 48-fixture corpus per
-spec § 9.2 is 7b work.
+Status v0.1.0: 48-fixture synthetic corpus complete (7a starter set +
+7b expansion). Spec § 9.2 fixture target met.
 
 ## Line endings
 
@@ -66,6 +66,21 @@ but transparently fake). No real-world data sources.
 | `oru_r01_multi_obr.hl7` | ORU^R01 (result) | Two OBR batteries (EUC + LFT) under one PID | N/A — synthetic from scratch |
 | `ack_application_accept.hl7` | ACK | MSH + MSA (AA — application accept) | N/A — synthetic from scratch |
 | `ack_application_error.hl7` | ACK | MSH + MSA (AE) + ERR — invalid patient ID format | N/A — synthetic from scratch |
+| `adt_a01_with_zau_zin.hl7` | ADT^A01 + Z-segments | ZAU (Medicare) + ZIN (insurance) interleaved before PV1 | N/A — synthetic; Z-segments are AU facility-specific dummy |
+| `orm_o01_z_billing.hl7` | ORM^O01 + Z-segment | ZBL (MBS bulk-bill) appended after OBR | N/A — synthetic; ZBL is dummy |
+| `oru_r01_z_lab_overlay.hl7` | ORU^R01 + Z-segments | ZLB (NATA accreditation) before OBR + ZRE (reflex) after OBX | N/A — synthetic; Z-segments dummy |
+| `msh_with_z_only.hl7` | MSH + Z-segment | Heartbeat-style: MSH + ZTX only (no PID) | N/A — synthetic from scratch |
+| `malformed_msh_too_short.hl7` | Malformed | MSH segment truncated to `MSH\|^~` — parser must throw `.invalidMSH("too short")` | N/A — synthetic |
+| `malformed_msh_no_field_sep_after_enc.hl7` | Malformed | Char after MSH-2 encoding chars isn't `\|` — `.invalidMSH("MSH-2 not followed by field separator")` | N/A — synthetic |
+| `malformed_unsupported_charset.hl7` | Malformed | MSH-18 = `GB18030` (unsupported) — `.unsupportedCharacterEncoding` | N/A — synthetic |
+| `malformed_empty.hl7` | Malformed | Zero-byte file — `.emptyInput` | N/A — synthetic |
+| `edge_unicode_diacritics.hl7` | Edge | UTF-8 names with diacritics (García, José, Søren, Müller) | N/A — synthetic |
+| `edge_repeating_pid3_identifiers.hl7` | Edge | PID-3 with 3 repetitions (MR + MC + NH) via `~` | N/A — synthetic |
+| `edge_long_address.hl7` | Edge | Very long PID-11 address components | N/A — synthetic |
+| `edge_escape_sequences_in_name.hl7` | Edge | `\F\`, `\H\`, `\N\`, `\X0D\` escape sequences in PID-5 and NTE | N/A — synthetic |
+| `edge_many_nte.hl7` | Edge | ORU with 4 trailing NTE segments after OBX | N/A — synthetic |
+| `edge_minimal_pid_phone_only.hl7` | Edge | Sparsely populated PID — name + phone only | N/A — synthetic |
+| `edge_obx_repeating_values.hl7` | Edge | OBX-5 + OBX-8 with `~` repetitions (3-sample BP series) | N/A — synthetic |
 
 ## Anonymise tool semantics
 
