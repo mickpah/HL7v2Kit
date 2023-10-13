@@ -50,6 +50,22 @@ but transparently fake). No real-world data sources.
 | `adt_a08_update_address.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 — patient demographic update (address) | N/A — synthetic from scratch |
 | `adt_a08_update_demographics.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 — patient demographic update (marital status) | N/A — synthetic from scratch |
 | `adt_a08_update_with_allergies.hl7` | ADT^A08 (update) | MSH + EVN + PID + PV1 + 2 × AL1 — update adding allergies | N/A — synthetic from scratch |
+| `orm_o01_radiology_xray.hl7` | ORM^O01 (order) | Chest X-ray order to RIS | N/A — synthetic from scratch |
+| `orm_o01_microbiology.hl7` | ORM^O01 (order) | MCS (microscopy/culture/sensitivity) order | N/A — synthetic from scratch |
+| `orm_o01_haematology.hl7` | ORM^O01 (order) | FBC (full blood count) order | N/A — synthetic from scratch |
+| `orm_o01_cancel.hl7` | ORM^O01 (cancel) | LFT order cancellation (ORC-1=CA) | N/A — synthetic from scratch |
+| `orm_o01_with_diagnosis.hl7` | ORM^O01 (order) | HbA1c order with DG1 diabetes diagnosis | N/A — synthetic from scratch |
+| `oru_r01_haematology.hl7` | ORU^R01 (result) | FBC results (4 × OBX: HGB/WCC/PLT/HCT) | N/A — synthetic from scratch |
+| `oru_r01_lipid_panel.hl7` | ORU^R01 (result) | Lipid panel with mixed N/H abnormal flags | N/A — synthetic from scratch |
+| `oru_r01_thyroid_function.hl7` | ORU^R01 (result) | TFT results (TSH/FT4/FT3) | N/A — synthetic from scratch |
+| `oru_r01_microbiology.hl7` | ORU^R01 (result) | MCS results — organism + sensitivity + TX comment | N/A — synthetic from scratch |
+| `oru_r01_xray_chest.hl7` | ORU^R01 (radiology) | Chest X-ray narrative report (TX) | N/A — synthetic from scratch |
+| `oru_r01_ct_scan.hl7` | ORU^R01 (radiology) | CT abdomen/pelvis report + impression | N/A — synthetic from scratch |
+| `oru_r01_ultrasound.hl7` | ORU^R01 (radiology) | Pelvic ultrasound report + impression | N/A — synthetic from scratch |
+| `oru_r01_mri_brain.hl7` | ORU^R01 (radiology) | MRI brain report + impression | N/A — synthetic from scratch |
+| `oru_r01_multi_obr.hl7` | ORU^R01 (result) | Two OBR batteries (EUC + LFT) under one PID | N/A — synthetic from scratch |
+| `ack_application_accept.hl7` | ACK | MSH + MSA (AA — application accept) | N/A — synthetic from scratch |
+| `ack_application_error.hl7` | ACK | MSH + MSA (AE) + ERR — invalid patient ID format | N/A — synthetic from scratch |
 
 ## Anonymise tool semantics
 
