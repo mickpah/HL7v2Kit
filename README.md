@@ -2,7 +2,7 @@
 
 A native Swift package for parsing, building, and validating HL7 v2.x healthcare messages.
 
-**Status:** v0.1.0 pre-release — see [HL7v2Kit-Spec.md](docs/design/HL7v2Kit-Spec.md) for the design.
+**Status:** v0.1.0 released 2026-06-13 — see [CHANGELOG.md](CHANGELOG.md) and [HL7v2Kit-Spec.md](docs/design/HL7v2Kit-Spec.md).
 
 ## Why use this
 
