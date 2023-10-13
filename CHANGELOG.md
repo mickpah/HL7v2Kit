@@ -140,14 +140,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MessageBuilder` for round-trip construction.
 - Round-trip property test scaffolding.
 
-### Not yet implemented (v0.1.0 scope)
+### Remaining for v0.1.0 release
 
-- Code-generated typed segments for OBR, OBX, NK1, PV1, ORC; remaining 28 PID fields. (See NEXT_STEPS Task 4c.)
-- Full `Validator` (structural + cardinality + Z-segment policy).
-- Real segment dictionary JSON (currently only `placeholder.json`).
-- DocC catalogue (8 articles per spec § 11.2).
-- 48-fixture corpus (currently 0 fixtures).
-- `anonymise-fixture.swift` script — required gate before any real-world-derived fixture can land.
-- Initial git commit (deferred by founder choice).
+- **Fixture corpus scale-out (Task 7b).** 8 of the target 48 fixtures landed in Task 7a; 40 remain. Pure curation, no architecture. The auto-discovering `FixtureRoundTripTests` harness picks new fixtures up with no test code change.
+- **Tag-time mechanics.** Rename `[Unreleased]` heading to `[0.1.0] — YYYY-MM-DD` at tag time; `git tag v0.1.0`; push to remote (first push triggers CI matrix on macOS 14 + 15).
+
+### Deferred to v0.2 (or later)
+
+- **Full PID 30 → 39 and ORC 19 → 31.** Fringe coverage: PID-31..39 are species / breed / strain / tribal-citizenship; ORC-20..31 are confidentiality / charge metadata. v0.1.0 covers the commonly-populated fields per the 2026-06-13 decisions-log entry.
+- **Typed composite data types** (`XPN` / `CX` / `XAD` as Swift structs with named accessors). v0.1.0 returns `Field?` for composites; callers reach into `.components[i].stringValue`. Spec § 4.5 last paragraph.
+- **Conditional-field evaluation.** v0.1.0 treats `optionality=C` as equivalent to `O` for the required-field check. Per `ValidationIssue.IssueCode.conditionalFieldMissing` (reserved).
+- **Component-level grammar in `Validator`.** v0.1.0 only checks field-level rules; e.g. XPN's family-name component being non-empty when XPN-1 is populated is not checked.
+- **Performance budget tests** (spec § 9.5). Nightly latency assertions not in the v0.1.0 acceptance gate.
+- **Three parser-hardening candidates** from Task 7c (all pinned by `ParseErrorTests.swift`, none blocks v0.1.0):
+  - BOM prefix portability — silently stripped by Foundation on macOS but Linux Swift may differ.
+  - Embedded NUL bytes — currently lossy through round-trip; consider `.truncatedMessage(atByte:)` at parse time.
+  - `ParseError.unsupportedVersion` is reachable code but never thrown — unknown MSH-12 silently falls back to v2.5.1. Wire on `.strict` mode.
+- **`HL7v2KitDictionaries` runtime JSON.** Path C (ADR-005 revised) supersedes the original spec § 8 plan for v0.1.0; placeholder.json stays. Revisit in v0.2 if dynamic version selection becomes a real consumer need.
 
 [Unreleased]: https://github.com/<your-org>/HL7v2Kit/compare/HEAD
