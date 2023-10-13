@@ -38,7 +38,7 @@ let rebuilt = message.serialize()
 assert(rebuilt == wire)
 ```
 
-Typed segments currently shipped for HL7 v2.5.1: `MSH`, `PID` (12 of 40 fields — extending), `NTE`, `AL1`. Other segment IDs come back as `UnknownSegment` and are still accessible via path strings.
+Typed segments currently shipped for HL7 v2.5.1 (all 9 from spec § 17): `MSH` (all 21 fields), `PID` (30 of 39), `NTE` (all 4), `AL1` (all 6), `ORC` (19 of 31), `OBX` (all 17), `OBR` (all 47), `NK1` (13 commonly-used), `PV1` (20 commonly-used). Other segment IDs (Z-segments, version-specific extras) come back as `UnknownSegment` and remain accessible via path strings.
 
 ## Installation
 
@@ -77,11 +77,10 @@ v2.3.1, v2.4, v2.5.1, v2.8 (dictionary support; AST is version-agnostic).
 Typed segment structs are code-generated from JSON schemas. To add coverage for a new v2 segment:
 
 1. Hand-curate `Resources/schemas/<version>/<SegmentID>.json` (see existing `PID.json` for the format).
-2. Run `bash scripts/regenerate-typed-segments.sh`.
-3. Add one `case` line to `Sources/HL7v2Kit/Segment/SegmentRegistry.swift`.
-4. Add a cross-check test in `Tests/HL7v2KitTests/TypedSegmentTests.swift` — path access and typed accessor must agree.
+2. Run `bash scripts/regenerate-typed-segments.sh` — emits the typed struct AND auto-updates the `SegmentRegistry+Generated.swift` hydration switch.
+3. Add a cross-check test in `Tests/HL7v2KitTests/TypedSegmentTests.swift` — path access and typed accessor must agree.
 
-The codegen-drift CI job will fail any PR that edits a schema but forgets the regen output.
+No Swift hand-edits required — `SegmentRegistry` is itself codegen-emitted. The codegen-drift CI job will fail any PR that edits a schema but forgets the regen output.
 
 ## Contributing
 

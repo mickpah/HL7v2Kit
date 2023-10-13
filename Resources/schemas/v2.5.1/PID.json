@@ -98,6 +98,150 @@
       "dataType": "IS",
       "optionality": "B",
       "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "phoneNumberHome",
+      "name": "Phone Number - Home",
+      "dataType": "XTN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 14,
+      "swiftName": "phoneNumberBusiness",
+      "name": "Phone Number - Business",
+      "dataType": "XTN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 15,
+      "swiftName": "primaryLanguage",
+      "name": "Primary Language",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "maritalStatus",
+      "name": "Marital Status",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "religion",
+      "name": "Religion",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "patientAccountNumber",
+      "name": "Patient Account Number",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "ssnNumberPatient",
+      "name": "SSN Number - Patient (deprecated)",
+      "dataType": "ST",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "driversLicenseNumberPatient",
+      "name": "Driver's License Number - Patient (deprecated)",
+      "dataType": "DLN",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "mothersIdentifier",
+      "name": "Mother's Identifier",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 22,
+      "swiftName": "ethnicGroup",
+      "name": "Ethnic Group",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 23,
+      "swiftName": "birthPlace",
+      "name": "Birth Place",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "multipleBirthIndicator",
+      "name": "Multiple Birth Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "birthOrder",
+      "name": "Birth Order",
+      "dataType": "NM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 26,
+      "swiftName": "citizenship",
+      "name": "Citizenship",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 27,
+      "swiftName": "veteransMilitaryStatus",
+      "name": "Veterans Military Status",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 28,
+      "swiftName": "nationality",
+      "name": "Nationality (deprecated)",
+      "dataType": "CE",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 29,
+      "swiftName": "patientDeathDateAndTime",
+      "name": "Patient Death Date and Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 30,
+      "swiftName": "patientDeathIndicator",
+      "name": "Patient Death Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

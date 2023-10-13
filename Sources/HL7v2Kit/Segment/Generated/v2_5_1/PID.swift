@@ -72,4 +72,94 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
     public var countyCode: String? {
         field(12)?.stringValue
     }
+
+    /// PID-13: Phone Number - Home. HL7 data type `XTN`.
+    public var phoneNumberHome: Field? {
+        field(13)
+    }
+
+    /// PID-14: Phone Number - Business. HL7 data type `XTN`.
+    public var phoneNumberBusiness: Field? {
+        field(14)
+    }
+
+    /// PID-15: Primary Language. HL7 data type `CE`.
+    public var primaryLanguage: Field? {
+        field(15)
+    }
+
+    /// PID-16: Marital Status. HL7 data type `CE`.
+    public var maritalStatus: Field? {
+        field(16)
+    }
+
+    /// PID-17: Religion. HL7 data type `CE`.
+    public var religion: Field? {
+        field(17)
+    }
+
+    /// PID-18: Patient Account Number. HL7 data type `CX`.
+    public var patientAccountNumber: Field? {
+        field(18)
+    }
+
+    /// PID-19: SSN Number - Patient (deprecated). HL7 data type `ST`.
+    public var ssnNumberPatient: String? {
+        field(19)?.stringValue
+    }
+
+    /// PID-20: Driver's License Number - Patient (deprecated). HL7 data type `DLN`.
+    public var driversLicenseNumberPatient: Field? {
+        field(20)
+    }
+
+    /// PID-21: Mother's Identifier. HL7 data type `CX`.
+    public var mothersIdentifier: Field? {
+        field(21)
+    }
+
+    /// PID-22: Ethnic Group. HL7 data type `CE`.
+    public var ethnicGroup: Field? {
+        field(22)
+    }
+
+    /// PID-23: Birth Place. HL7 data type `ST`.
+    public var birthPlace: String? {
+        field(23)?.stringValue
+    }
+
+    /// PID-24: Multiple Birth Indicator. HL7 data type `ID`.
+    public var multipleBirthIndicator: String? {
+        field(24)?.stringValue
+    }
+
+    /// PID-25: Birth Order. HL7 data type `NM`.
+    public var birthOrder: String? {
+        field(25)?.stringValue
+    }
+
+    /// PID-26: Citizenship. HL7 data type `CE`.
+    public var citizenship: Field? {
+        field(26)
+    }
+
+    /// PID-27: Veterans Military Status. HL7 data type `CE`.
+    public var veteransMilitaryStatus: Field? {
+        field(27)
+    }
+
+    /// PID-28: Nationality (deprecated). HL7 data type `CE`.
+    public var nationality: Field? {
+        field(28)
+    }
+
+    /// PID-29: Patient Death Date and Time. HL7 data type `TS`.
+    public var patientDeathDateAndTime: String? {
+        field(29)?.stringValue
+    }
+
+    /// PID-30: Patient Death Indicator. HL7 data type `ID`.
+    public var patientDeathIndicator: String? {
+        field(30)?.stringValue
+    }
 }

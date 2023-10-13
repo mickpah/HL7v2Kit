@@ -1,0 +1,167 @@
+{
+  "segmentID": "PV1",
+  "version": "2.5.1",
+  "description": "Patient Visit",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - PV1",
+      "dataType": "SI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "patientClass",
+      "name": "Patient Class",
+      "dataType": "IS",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "assignedPatientLocation",
+      "name": "Assigned Patient Location",
+      "dataType": "PL",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "admissionType",
+      "name": "Admission Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "preadmitNumber",
+      "name": "Preadmit Number",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "priorPatientLocation",
+      "name": "Prior Patient Location",
+      "dataType": "PL",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "attendingDoctor",
+      "name": "Attending Doctor",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 8,
+      "swiftName": "referringDoctor",
+      "name": "Referring Doctor",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 9,
+      "swiftName": "consultingDoctor",
+      "name": "Consulting Doctor",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 10,
+      "swiftName": "hospitalService",
+      "name": "Hospital Service",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 11,
+      "swiftName": "temporaryLocation",
+      "name": "Temporary Location",
+      "dataType": "PL",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "preadmitTestIndicator",
+      "name": "Preadmit Test Indicator",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "readmissionIndicator",
+      "name": "Re-admission Indicator",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "admitSource",
+      "name": "Admit Source",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "ambulatoryStatus",
+      "name": "Ambulatory Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 16,
+      "swiftName": "vipIndicator",
+      "name": "VIP Indicator",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "admittingDoctor",
+      "name": "Admitting Doctor",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 18,
+      "swiftName": "patientType",
+      "name": "Patient Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "visitNumber",
+      "name": "Visit Number",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "financialClass",
+      "name": "Financial Class",
+      "dataType": "FC",
+      "optionality": "O",
+      "repeatability": "*"
+    }
+  ]
+}

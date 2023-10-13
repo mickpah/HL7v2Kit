@@ -13,10 +13,13 @@ extension SegmentRegistry {
         switch unknown.segmentID {
         case AL1.segmentID: return .typed(AnyTypedSegment(AL1(fields: unknown.fields)))
         case MSH.segmentID: return .typed(AnyTypedSegment(MSH(fields: unknown.fields)))
+        case NK1.segmentID: return .typed(AnyTypedSegment(NK1(fields: unknown.fields)))
         case NTE.segmentID: return .typed(AnyTypedSegment(NTE(fields: unknown.fields)))
+        case OBR.segmentID: return .typed(AnyTypedSegment(OBR(fields: unknown.fields)))
         case OBX.segmentID: return .typed(AnyTypedSegment(OBX(fields: unknown.fields)))
         case ORC.segmentID: return .typed(AnyTypedSegment(ORC(fields: unknown.fields)))
         case PID.segmentID: return .typed(AnyTypedSegment(PID(fields: unknown.fields)))
+        case PV1.segmentID: return .typed(AnyTypedSegment(PV1(fields: unknown.fields)))
         default:
             return nil
         }

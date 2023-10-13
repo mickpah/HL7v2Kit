@@ -102,6 +102,12 @@ public struct Parser: Sendable {
         for (i, segLine) in segmentStrings.enumerated() {
             if segLine.isEmpty { continue }   // tolerate blank lines mid-message
             let segment = try parseSegment(segLine, encoding: encoding, isMSH: i == 0)
+            // Enforce strict mode: if the registry returned `.unknown`, the
+            // segment ID is not in the codegen-emitted typed-segment table.
+            // Under `allowUnknownSegments: false` we reject it.
+            if !options.allowUnknownSegments, case .unknown(let unk) = segment {
+                throw ParseError.unknownSegment(id: unk.segmentID, position: i + 1)
+            }
             segments.append(segment)
         }
 

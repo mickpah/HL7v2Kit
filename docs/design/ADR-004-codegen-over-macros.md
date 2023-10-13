@@ -1,0 +1,71 @@
+# ADR-004: Typed segments by code generation, not Swift macros
+
+| | |
+|---|---|
+| Status | Accepted |
+| Date | 2026-05-27 |
+| Supersedes | -- |
+| Superseded by | -- |
+| Related | ADR-005 (dictionaries strategy), ADR-001 (AST model) |
+
+## Context
+
+HL7 v2.5.1 defines ~140 segments with on the order of 25 fields each. Across the four versions HL7v2Kit declares support for (v2.3.1, v2.4, v2.5.1, v2.8), that's potentially 1,500+ typed-segment accessors. Hand-writing them is a maintenance trap: every spec change requires touching dozens of files, and the per-field metadata (optionality, repeatability, datatype) is identical to what the validator and codegen consume — single source of truth matters.
+
+We had three viable options for generating typed segments:
+
+### Option A: Swift Macros (the 2024+ language feature)
+
+`@Segment(id: "PID")` with a member macro that introspects an associated JSON schema at compile time and synthesises the accessor properties. Modern, language-native, no separate executable target.
+
+### Option B: gyb-style preprocessing
+
+A separate templating step (gyb, Mustache, Stencil) runs as a build phase. The generated files exist only in `.build/`, not in source.
+
+### Option C: explicit codegen executable, output committed to source
+
+A dedicated SwiftPM `executableTarget` (`HL7v2KitCodegen`) reads JSON schemas and emits `.swift` files into `Sources/HL7v2Kit/Segment/Generated/`. Contributors run `bash scripts/regenerate-typed-segments.sh` when they edit schemas. The generated files are checked into git. CI fails any commit that edits a schema without committing the regen output (the "codegen-drift" job).
+
+## Decision
+
+**Option C: explicit codegen with committed output.**
+
+### Why not Macros
+
+- **Compile-time evaluation cost at scale.** A `@Segment` macro invocation processes one segment per file. With ~140 segments × 4 versions, that's hundreds of macro evaluations every clean build. Macros are spawned subprocesses (currently a separate `swift-plugin-server` per macro). The cost is non-trivial at our scale and the situation is improving slowly.
+- **Opacity to reviewers.** A macro-generated `PID.patientName` accessor only exists at compile time. A reviewer looking at the source can't easily see what the typed segment surface is, what the schema declared, or what changed in the most recent regeneration. With committed generated files, every diff is reviewable as plain Swift.
+- **Reduces moving parts in v0.1.0.** Swift Macros are still relatively young (introduced in Swift 5.9 / 2023) and the documented best practices are still settling. For a v0.1.0 with a solo contributor and zero external production users, "boring and inspectable" beats "modern and capable".
+- **Generated source doubles as DocC documentation surface.** Because the files are in `Sources/`, DocC indexes them automatically. Macro-generated members can be DocC-documented but are less discoverable.
+
+### Why not gyb / build-time preprocessing
+
+- **No artifact in source.** Reviewers can't see the output without building. Diff-on-output is what makes the codegen-drift CI job possible.
+- **One more language in the stack** (gyb is Python). Avoidable given Option C exists.
+
+### Why Option C works for us
+
+- **Single source of truth.** `Resources/schemas/v2.5.1/PID.json` drives both the typed-segment file AND the validator's grammar table (per ADR-005). One JSON edit, one regenerate command, both downstream artifacts update.
+- **CI-enforceable.** The `codegen-drift` GitHub Actions job runs `regenerate-typed-segments.sh` and fails on any non-empty `git diff` under `Sources/HL7v2Kit/Segment/Generated/`. Forgetting to regenerate is structurally impossible to merge.
+- **Reproducible.** Two consecutive `regenerate-typed-segments.sh` runs produce byte-identical output (verified with `shasum`). Switch field sort order, regenerate, see one clean diff.
+- **Extensible to other generated artifacts.** The same codegen executable now also emits `SegmentRegistry+Generated.swift` (the parser's hydration switch — per the R5 refinement) and `SegmentGrammar+v2_5_1.swift` (the validator's grammar table — per ADR-005 revision / Task 5 Path C). Adding a new generated artifact is adding a render function and a `main()` step, not adding a build infrastructure.
+
+## Consequences
+
+**Positive**
+
+- Reviewers can see every generated accessor. PRs that change a schema show both the JSON diff and the corresponding Swift diff.
+- Adding a new segment is a 3-step contributor workflow: write JSON, run script, write cross-check test. No macro-debugging detour.
+- No compile-time macro tax. Build the project once, get all the typed segments. Adding `Validator` didn't slow build times because the grammar table is one compiled file, not 9 macro invocations.
+
+**Negative**
+
+- A small contributor onboarding tax: "don't hand-edit Generated/" is a rule that has to be communicated. Mitigations: per-file `// Auto-generated by HL7v2KitCodegen` header comments; the working notes notes; CONTRIBUTING.md instruction; the codegen-drift CI job catches accidents.
+- Adds an `executableTarget` to `Package.swift`. Swift Package Manager handles it cleanly; consumers depending on the library product never see the executable. Small ongoing complexity cost.
+
+**Explicitly not promised**
+
+- We do not promise to never use Swift Macros. If at v0.3+ the typed-segment surface stabilises and macro tooling improves dramatically, we could revisit. The decision is "not now", not "never".
+
+## Notes
+
+The codegen executable target is in the `HL7v2KitCodegen` directory; it has no dependency on the library target (it duplicates the trivial `SegmentSchema` Decodable). This isolation is intentional — the codegen is "data conversion", not part of the library's public API surface.

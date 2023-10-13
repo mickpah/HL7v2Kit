@@ -1,7 +1,6 @@
 // swift-tools-version: 6.0
 // HL7v2Kit — HL7 v2.x parser, builder, and validator for Swift.
 // Apache 2.0 licensed. See LICENSE.
-
 import PackageDescription
 
 let package = Package(
@@ -17,6 +16,7 @@ let package = Package(
         .library(name: "HL7v2Kit", targets: ["HL7v2Kit"]),
         .library(name: "HL7v2KitDictionaries", targets: ["HL7v2KitDictionaries"]),
         .executable(name: "HL7v2KitCodegen", targets: ["HL7v2KitCodegen"]),
+        .executable(name: "HL7v2KitAnonymise", targets: ["HL7v2KitAnonymise"]),
     ],
     dependencies: [],
     targets: [
@@ -36,6 +36,14 @@ let package = Package(
         ),
         .executableTarget(
             name: "HL7v2KitCodegen",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableUpcomingFeature("ExistentialAny"),
+            ]
+        ),
+        .executableTarget(
+            name: "HL7v2KitAnonymise",
+            dependencies: ["HL7v2Kit"],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),

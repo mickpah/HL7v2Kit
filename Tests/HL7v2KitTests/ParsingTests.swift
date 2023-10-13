@@ -8,6 +8,44 @@ import Foundation
 @Suite("Parsing")
 struct ParsingTests {
 
+    // MARK: - ParserOptions strict mode (R6)
+
+    @Test("Strict mode rejects Z-segments with .unknownSegment")
+    func strictRejectsZSegments() {
+        // Z-segments are unknown to the dictionary; under .strict the parser
+        // must reject them rather than yielding an UnknownSegment.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        ZAU|1|something\r
+        """
+        // ZAU is segment 2 (1-based); MSH is at position 1.
+        #expect(throws: ParseError.unknownSegment(id: "ZAU", position: 2)) {
+            try Parser(options: .strict).parse(wire)
+        }
+    }
+
+    @Test("Default options allow Z-segments (regression for tolerance)")
+    func defaultAllowsZSegments() throws {
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        ZAU|1|something\r
+        """
+        let message = try Parser().parse(wire)
+        #expect(message.segments.contains(where: { $0.segmentID == "ZAU" }))
+    }
+
+    @Test("Strict mode still accepts registered typed segments")
+    func strictAcceptsRegisteredSegments() throws {
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1\r
+        """
+        let message = try Parser(options: .strict).parse(wire)
+        #expect(message.firstSegment(PID.self) != nil)
+    }
+
+    // MARK: - Basic structural tests
+
     @Test("Empty input throws .emptyInput")
     func emptyInput() {
         #expect(throws: ParseError.emptyInput) {
