@@ -130,20 +130,31 @@ struct ParseErrorTests {
         #expect(message.version == .v2_5_1)
     }
 
-    @Test("BOM-prefixed input parses without error (Foundation strips the BOM)")
-    func bomPrefixSilentlyAccepted() throws {
-        // FINDING: UTF-8 BOM (EF BB BF) is stripped by Foundation's
-        // String(data:encoding:.utf8) on this platform/toolchain, so the
-        // parser sees a BOM-free "MSH|..." and parses successfully. Some
-        // platforms (Linux Swift, older toolchains) preserve the BOM as
-        // U+FEFF, in which case .hasPrefix("MSH") returns false and
-        // .missingMSH fires. Pinning current behaviour. Worth a v0.2
-        // explicit "strip BOM if present at start" policy so portability
-        // doesn't depend on Foundation behaviour.
+    @Test("BOM-prefixed input is explicitly stripped before parsing (v0.2-P1)")
+    func bomPrefixStrippedExplicitly() throws {
+        // CONTRACT (v0.2-P1): the 3-byte UTF-8 BOM (EF BB BF) is dropped
+        // before charset detection in `parse(_ data:)`. Result is identical
+        // to the same message without the BOM on every platform — no longer
+        // a Foundation-specific quirk. The serializer must not re-emit the
+        // BOM. The String overload is unaffected (already-decoded text).
+        let mshLine = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r"
         var bytes = Data([0xEF, 0xBB, 0xBF])
-        bytes.append(Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8))
+        bytes.append(Data(mshLine.utf8))
         let message = try Parser().parse(bytes)
         #expect(message.segments.count == 1)
+        // Round-trip drops the BOM — the kit canonicalises output.
+        let rebuilt = message.serialize()
+        #expect(rebuilt == Data(mshLine.utf8), "Serialiser must not re-emit the BOM")
+    }
+
+    @Test("BOM-only input throws .emptyInput after strip (v0.2-P1)")
+    func bomOnlyInputIsEmptyAfterStrip() {
+        // Once the 3 BOM bytes are dropped the payload is empty — must hit
+        // the same .emptyInput contract as zero-length Data.
+        let bytes = Data([0xEF, 0xBB, 0xBF])
+        #expect(throws: ParseError.emptyInput) {
+            try Parser().parse(bytes)
+        }
     }
 
     @Test("Mid-message NUL byte is NOT preserved through round-trip (current leniency)")

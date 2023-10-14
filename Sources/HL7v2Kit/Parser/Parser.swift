@@ -24,16 +24,30 @@ public struct Parser: Sendable {
     /// MSH-18 if declared; if absent or empty, defaults to UTF-8. If MSH-18
     /// is present but names a charset HL7v2Kit does not recognise, throws
     /// `ParseError.unsupportedCharacterEncoding`.
+    ///
+    /// A leading UTF-8 BOM (`EF BB BF`) is tolerated as a no-op prefix —
+    /// the 3 bytes are stripped before charset detection. Windows-side
+    /// senders occasionally emit one; the kit accepts it identically on
+    /// macOS and Linux (Foundation's `String(data:encoding:.utf8)` strips
+    /// the BOM on macOS but not on Linux Swift, so the explicit strip
+    /// makes the byte path portable). The serializer never re-emits the
+    /// BOM. A BOM-only input still throws `.emptyInput`.
     public func parse(_ data: Data) throws -> Message {
         guard !data.isEmpty else { throw ParseError.emptyInput }
+
+        // Strip a leading UTF-8 BOM before any structural work. v0.2-P1.
+        let payload: Data = data.starts(with: [0xEF, 0xBB, 0xBF])
+            ? data.dropFirst(3)
+            : data
+        guard !payload.isEmpty else { throw ParseError.emptyInput }
 
         // Probe via an ISO-8859-1 1:1 decode — Latin-1 maps every byte to a
         // code point, so the probe never fails, and the structural ASCII
         // characters (MSH, `|`, the encoding chars) survive untouched.
-        let probe = String(data: data, encoding: .isoLatin1) ?? ""
+        let probe = String(data: payload, encoding: .isoLatin1) ?? ""
         let characterEncoding = try CharacterEncoding.detect(in: probe)
 
-        guard let decoded = String(data: data, encoding: characterEncoding.stringEncoding) else {
+        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
         }
         return try parse(decoded, characterEncoding: characterEncoding)

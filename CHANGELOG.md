@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No changes yet._
+### Fixed (parser hardening)
+
+- **v0.2-P1 — UTF-8 BOM prefix is now explicitly stripped** in `Parser.parse(_ data:)` before charset detection. Previously this depended on Foundation's `String(data:encoding:.utf8)` silently dropping the BOM, which Linux Swift does not do — so the byte path behaved differently across platforms. Now the 3-byte `EF BB BF` prefix is detected and dropped in HL7v2Kit code; behaviour is identical on macOS and Linux. The String overload (`parse(_ raw:)`) is unaffected because it operates on already-decoded text. The serializer never re-emits the BOM, so a round-trip canonicalises the output. A BOM-only input still throws `.emptyInput` (the empty-after-strip case is checked explicitly). DocC on `parse(_ data:)` documents the contract. Pin in `ParseErrorTests.swift` renamed `bomPrefixSilentlyAccepted` → `bomPrefixStrippedExplicitly` and asserts the round-trip canonicalisation; new `bomOnlyInputIsEmptyAfterStrip` pins the empty-after-strip edge. 159 → 160 tests.
 
 ## [0.1.0] — 2026-06-13
 
