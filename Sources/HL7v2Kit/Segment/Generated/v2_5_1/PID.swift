@@ -162,4 +162,49 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
     public var patientDeathIndicator: String? {
         field(30)?.stringValue
     }
+
+    /// PID-31: Identity Unknown Indicator. HL7 data type `ID`.
+    public var identityUnknownIndicator: String? {
+        field(31)?.stringValue
+    }
+
+    /// PID-32: Identity Reliability Code. HL7 data type `IS`.
+    public var identityReliabilityCode: String? {
+        field(32)?.stringValue
+    }
+
+    /// PID-33: Last Update Date/Time. HL7 data type `TS`.
+    public var lastUpdateDateTime: String? {
+        field(33)?.stringValue
+    }
+
+    /// PID-34: Last Update Facility. HL7 data type `HD`.
+    public var lastUpdateFacility: Field? {
+        field(34)
+    }
+
+    /// PID-35: Species Code. HL7 data type `CE`.
+    public var speciesCode: Field? {
+        field(35)
+    }
+
+    /// PID-36: Breed Code. HL7 data type `CE`.
+    public var breedCode: Field? {
+        field(36)
+    }
+
+    /// PID-37: Strain. HL7 data type `ST`.
+    public var strain: String? {
+        field(37)?.stringValue
+    }
+
+    /// PID-38: Production Class Code. HL7 data type `CE`.
+    public var productionClassCode: Field? {
+        field(38)
+    }
+
+    /// PID-39: Tribal Citizenship. HL7 data type `CWE`.
+    public var tribalCitizenship: Field? {
+        field(39)
+    }
 }

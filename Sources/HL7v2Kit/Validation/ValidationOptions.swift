@@ -24,6 +24,12 @@ public struct ValidationOptions: Sendable {
     /// If true (default), check that fields with optionality `R` are populated.
     public var checkRequiredFields: Bool
 
+    /// If true (default), evaluate the predicate on `.conditional` fields
+    /// and emit `.conditionalFieldMissing` when the predicate is satisfied
+    /// but the field is empty. Conditional fields with no predicate fall
+    /// through as effectively `.optional`. v0.2-V1.
+    public var checkConditionalFields: Bool
+
     /// If true (default), check that single-cardinality fields don't carry
     /// multiple repetitions.
     public var checkCardinality: Bool
@@ -35,11 +41,13 @@ public struct ValidationOptions: Sendable {
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
+        checkConditionalFields: Bool = true,
         checkCardinality: Bool = true,
         warnDeprecatedFields: Bool = true
     ) {
         self.zSegmentPolicy = zSegmentPolicy
         self.checkRequiredFields = checkRequiredFields
+        self.checkConditionalFields = checkConditionalFields
         self.checkCardinality = checkCardinality
         self.warnDeprecatedFields = warnDeprecatedFields
     }
@@ -54,16 +62,19 @@ public struct ValidationOptions: Sendable {
     public static let strict = ValidationOptions(
         zSegmentPolicy: .reject,
         checkRequiredFields: true,
+        checkConditionalFields: true,
         checkCardinality: true,
         warnDeprecatedFields: true
     )
 
     /// Only structural / grammar-required checks. No Z-segment chatter,
-    /// no deprecated-field warnings. Useful when you just want a yes/no
-    /// "would HL7v2Kit be happy parsing this round-trip?" answer.
+    /// no deprecated-field warnings, no conditional-field evaluation.
+    /// Useful when you just want a yes/no "would HL7v2Kit be happy parsing
+    /// this round-trip?" answer.
     public static let lenient = ValidationOptions(
         zSegmentPolicy: .ignore,
         checkRequiredFields: true,
+        checkConditionalFields: false,
         checkCardinality: false,
         warnDeprecatedFields: false
     )
