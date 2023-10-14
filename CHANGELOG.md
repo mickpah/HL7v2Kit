@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No changes yet._
+### Added (schema coverage)
+
+- **v0.2-F1 — PID and ORC are now spec-complete for v2.5.1.** PID extended from 30 → 39 fields: `identityUnknownIndicator` (ID), `identityReliabilityCode` (IS, repeating), `lastUpdateDateTime` (TS), `lastUpdateFacility` (HD), `speciesCode` / `breedCode` / `productionClassCode` (CE), `strain` (ST), `tribalCitizenship` (CWE, repeating). ORC extended from 19 → 31 fields: `advancedBeneficiaryNoticeCode` (CE), `orderingFacilityName` (XON, repeating), `orderingFacilityAddress` / `orderingProviderAddress` (XAD, repeating), `orderingFacilityPhoneNumber` (XTN, repeating), `orderStatusModifier` (CWE), `advancedBeneficiaryNoticeOverrideReason` (CWE), `fillersExpectedAvailabilityDateTime` (TS), `confidentialityCode` / `orderType` / `parentUniversalServiceIdentifier` (CWE), `entererAuthorizationMode` (CNE). Schema-only change: typed-segment files regenerate via `bash scripts/regenerate-typed-segments.sh`; codegen output is reproducible.
+- 14 new cross-check tests in `TypedSegmentTests.swift`: 7 for PID-31..39 (scalar accessors + CE/HD/CWE composites + round-trip), 7 for ORC-20..31 (scalar TS + CE/CWE/XON/XAD/CNE composites + round-trip). Both fringe wires include the standard field-map comment per the multi-field-fixture convention. All 48 fixture round-trips still byte-perfect.
+- Generated file sizes: `PID.swift` 145 → 210 lines, `ORC.swift` 90 → 170 lines — both under the soft 300-line cap, no per-field-group split required.
 
 ## [0.1.0] — 2026-06-13
 

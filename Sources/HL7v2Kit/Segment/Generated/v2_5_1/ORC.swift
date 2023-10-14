@@ -107,4 +107,64 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
     public var actionBy: Field? {
         field(19)
     }
+
+    /// ORC-20: Advanced Beneficiary Notice Code. HL7 data type `CE`.
+    public var advancedBeneficiaryNoticeCode: Field? {
+        field(20)
+    }
+
+    /// ORC-21: Ordering Facility Name. HL7 data type `XON`.
+    public var orderingFacilityName: Field? {
+        field(21)
+    }
+
+    /// ORC-22: Ordering Facility Address. HL7 data type `XAD`.
+    public var orderingFacilityAddress: Field? {
+        field(22)
+    }
+
+    /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`.
+    public var orderingFacilityPhoneNumber: Field? {
+        field(23)
+    }
+
+    /// ORC-24: Ordering Provider Address. HL7 data type `XAD`.
+    public var orderingProviderAddress: Field? {
+        field(24)
+    }
+
+    /// ORC-25: Order Status Modifier. HL7 data type `CWE`.
+    public var orderStatusModifier: Field? {
+        field(25)
+    }
+
+    /// ORC-26: Advanced Beneficiary Notice Override Reason. HL7 data type `CWE`.
+    public var advancedBeneficiaryNoticeOverrideReason: Field? {
+        field(26)
+    }
+
+    /// ORC-27: Filler's Expected Availability Date/Time. HL7 data type `TS`.
+    public var fillersExpectedAvailabilityDateTime: String? {
+        field(27)?.stringValue
+    }
+
+    /// ORC-28: Confidentiality Code. HL7 data type `CWE`.
+    public var confidentialityCode: Field? {
+        field(28)
+    }
+
+    /// ORC-29: Order Type. HL7 data type `CWE`.
+    public var orderType: Field? {
+        field(29)
+    }
+
+    /// ORC-30: Enterer Authorization Mode. HL7 data type `CNE`.
+    public var entererAuthorizationMode: Field? {
+        field(30)
+    }
+
+    /// ORC-31: Parent Universal Service Identifier. HL7 data type `CWE`.
+    public var parentUniversalServiceIdentifier: Field? {
+        field(31)
+    }
 }

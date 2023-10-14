@@ -225,6 +225,96 @@ struct TypedSegmentTests {
         #expect(provider.first?.components[1].stringValue == "Williams")
     }
 
+    // MARK: - ORC fringe fields 20–31 (Task v0.2-F1)
+
+    // ORC populating ORC-1 + ORC-20..31 only; fields 2..19 left empty so the
+    // wire is short and the pipe count is checkable by hand. Field map (the
+    // gap between ORC-1's NW and ORC-20's value is 19 separators — 1 closing
+    // field 1, 18 for empty fields 2..19):
+    //  1 orderControl=NW
+    //  2..19 empty (18 separators)
+    // 20 advancedBeneficiaryNoticeCode=ABN1^Notice^HL7        (CE)
+    // 21 orderingFacilityName=FacilityName                     (XON scalar-ish)
+    // 22 orderingFacilityAddress=1 Hospital Rd^^Sydney^NSW^2000^AU  (XAD)
+    // 23 orderingFacilityPhoneNumber=(02)555-9999              (XTN)
+    // 24 orderingProviderAddress=2 Clinic St^^Sydney^NSW^2000^AU    (XAD)
+    // 25 orderStatusModifier=MOD1^Modifier^HL7                 (CWE)
+    // 26 advancedBeneficiaryNoticeOverrideReason=WAIVED^Waived^HL7  (CWE)
+    // 27 fillersExpectedAvailabilityDateTime=20240301140000    (TS)
+    // 28 confidentialityCode=R^Restricted^HL70177              (CWE)
+    // 29 orderType=I^Inpatient^HL70482                          (CWE)
+    // 30 entererAuthorizationMode=EL^Electronic^HL70483         (CNE)
+    // 31 parentUniversalServiceIdentifier=PAR^Parent^HL70222   (CWE)
+    private let orcFringeWire = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+    ORC|NW|||||||||||||||||||ABN1^Notice^HL7|FacilityName|1 Hospital Rd^^Sydney^NSW^2000^AU|(02)555-9999|2 Clinic St^^Sydney^NSW^2000^AU|MOD1^Modifier^HL7|WAIVED^Waived^HL7|20240301140000|R^Restricted^HL70177|I^Inpatient^HL70482|EL^Electronic^HL70483|PAR^Parent^HL70222\r
+    """
+
+    @Test("ORC-20 (CE composite) advanced beneficiary notice code")
+    func orcAdvancedBeneficiaryNoticeCodeAgrees() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        let abn = try #require(orc.advancedBeneficiaryNoticeCode)
+        #expect(abn.first?.components[0].stringValue == "ABN1")
+        #expect(message["ORC-20.1"] == "ABN1")
+    }
+
+    @Test("ORC-21 (XON) ordering facility name + ORC-22 (XAD) facility address")
+    func orcOrderingFacilityNameAndAddressAgree() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        let name = try #require(orc.orderingFacilityName)
+        let addr = try #require(orc.orderingFacilityAddress)
+        #expect(name.first?.components[0].stringValue == "FacilityName")
+        #expect(addr.first?.components[0].stringValue == "1 Hospital Rd")
+        #expect(message["ORC-22.3"] == "Sydney")
+    }
+
+    @Test("ORC-27 (TS scalar) filler's expected availability date/time")
+    func orcExpectedAvailabilityAgrees() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        #expect(orc.fillersExpectedAvailabilityDateTime == "20240301140000")
+        #expect(orc.fillersExpectedAvailabilityDateTime == message["ORC-27"])
+    }
+
+    @Test("ORC-28 (CWE) confidentiality code + ORC-29 (CWE) order type")
+    func orcConfidentialityAndOrderTypeAgree() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        let confidentiality = try #require(orc.confidentialityCode)
+        let orderType = try #require(orc.orderType)
+        #expect(confidentiality.first?.components[0].stringValue == "R")
+        #expect(orderType.first?.components[0].stringValue == "I")
+        #expect(message["ORC-28.2"] == "Restricted")
+        #expect(message["ORC-29.2"] == "Inpatient")
+    }
+
+    @Test("ORC-30 (CNE composite) enterer authorization mode")
+    func orcEntererAuthorizationModeAgrees() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        let mode = try #require(orc.entererAuthorizationMode)
+        #expect(mode.first?.components[0].stringValue == "EL")
+        #expect(mode.first?.components[1].stringValue == "Electronic")
+    }
+
+    @Test("ORC-31 (CWE) parent universal service identifier")
+    func orcParentUniversalServiceIdentifierAgrees() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let orc = try #require(message.firstSegment(ORC.self))
+        let parent = try #require(orc.parentUniversalServiceIdentifier)
+        #expect(parent.first?.components[0].stringValue == "PAR")
+        #expect(message["ORC-31.1"] == "PAR")
+    }
+
+    @Test("ORC fringe-field wire round-trips byte-perfectly")
+    func orcFringeRoundTrips() throws {
+        let message = try Parser().parse(orcFringeWire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == orcFringeWire)
+    }
+
     // MARK: - OBX (Task 4c-1)
 
     private let obxWire = """
@@ -542,6 +632,87 @@ struct TypedSegmentTests {
         let message = try Parser().parse(extendedPIDWire)
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == extendedPIDWire)
+    }
+
+    // MARK: - PID fringe fields 31–39 (Task v0.2-F1)
+
+    // PID extended through PID-39. Same prefix as extendedPIDWire (1..30),
+    // continuing with the v0.2-F1 fringe fields. Field map (for the fringe
+    // tail only — fields 1..30 are identical to extendedPIDWire above):
+    // 31 identityUnknownIndicator=N
+    // 32 identityReliabilityCode=US
+    // 33 lastUpdateDateTime=20240301080000
+    // 34 lastUpdateFacility=HOSP^FAC^ISO         (HD: namespace^universal^univType)
+    // 35 speciesCode=L1^Human^HL70447            (CE: identifier^text^codingSys)
+    // 36 breedCode empty (human)
+    // 37 strain empty (human)
+    // 38 productionClassCode empty (human)
+    // 39 tribalCitizenship=100^Australian^HL70171  (CWE)
+    private let fringePIDWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234||en^English^ISO639|M^Married^HL70002|CAT^Catholic^HL70006|ACC12345|||||Sydney||||||20231215120000|Y|N|US|20240301080000|HOSP^FAC^ISO|L1^Human^HL70447||||100^Australian^HL70171\r
+    """
+
+    @Test("PID-31 (ID scalar) identity unknown indicator")
+    func pidIdentityUnknownIndicatorAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        #expect(pid.identityUnknownIndicator == "N")
+        #expect(pid.identityUnknownIndicator == message["PID-31"])
+    }
+
+    @Test("PID-32 (IS scalar) identity reliability code")
+    func pidIdentityReliabilityCodeAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        #expect(pid.identityReliabilityCode == "US")
+        #expect(pid.identityReliabilityCode == message["PID-32"])
+    }
+
+    @Test("PID-33 (TS scalar) last update date/time")
+    func pidLastUpdateDateTimeAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        #expect(pid.lastUpdateDateTime == "20240301080000")
+        #expect(pid.lastUpdateDateTime == message["PID-33"])
+    }
+
+    @Test("PID-34 (HD composite) last update facility")
+    func pidLastUpdateFacilityAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        let facility = try #require(pid.lastUpdateFacility)
+        #expect(facility.first?.components[0].stringValue == "HOSP")
+        #expect(message["PID-34.1"] == "HOSP")
+        #expect(message["PID-34.3"] == "ISO")
+    }
+
+    @Test("PID-35 (CE composite) species code")
+    func pidSpeciesCodeAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        let species = try #require(pid.speciesCode)
+        #expect(species.first?.components[0].stringValue == "L1")
+        #expect(species.first?.components[1].stringValue == "Human")
+        #expect(message["PID-35.1"] == "L1")
+        #expect(message["PID-35.2"] == "Human")
+    }
+
+    @Test("PID-39 (CWE composite) tribal citizenship")
+    func pidTribalCitizenshipAgrees() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let pid = try #require(message.firstSegment(PID.self))
+        let citizenship = try #require(pid.tribalCitizenship)
+        #expect(citizenship.first?.components[0].stringValue == "100")
+        #expect(citizenship.first?.components[1].stringValue == "Australian")
+        #expect(message["PID-39.1"] == "100")
+    }
+
+    @Test("PID fringe-field wire round-trips byte-perfectly")
+    func fringePIDRoundTrips() throws {
+        let message = try Parser().parse(fringePIDWire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == fringePIDWire)
     }
 
     // MARK: - NK1 (Task 4c-3)
