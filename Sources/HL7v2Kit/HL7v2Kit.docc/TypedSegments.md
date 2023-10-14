@@ -9,14 +9,16 @@ HL7v2Kit ships typed Swift structs for the most common HL7 v2.5.1 segments. Thes
 Currently shipped typed segments for v2.5.1:
 
 - `MSH` (all 21 fields)
-- `PID` (30 of 39 fields)
+- `PID` (all 39 fields)
 - `NTE` (all 4)
 - `AL1` (all 6)
-- `ORC` (19 of 31)
+- `ORC` (all 31)
 - `OBX` (all 17)
 - `OBR` (all 47)
 - `NK1` (13 commonly-used)
 - `PV1` (20 commonly-used)
+
+`PID` and `ORC` reached full spec coverage post-v0.1.0 (v0.2-F1 — see <doc:Migration>); the rest were complete from v0.1.0.
 
 Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-Segments> below.
 

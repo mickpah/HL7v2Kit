@@ -27,6 +27,7 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 - `dataType` — the HL7 data-type code (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, ...).
 - `optionality` — `R` (required), `O` (optional), `C` (conditional), `X` (not supported), `B` (deprecated).
 - `repeatability` — `"1"` (single) or `"*"` (multiple).
+- `condition` (optional, only meaningful when `optionality=C`) — a predicate string controlling when the field is required. See the Conditional-field DSL in <doc:Validation>. Example: `"condition": "PID-35 populated"` on `PID-36` means "breed code is required when species code is declared". A `C` field without a `condition` falls through as `.optional`.
 
 The data-type code drives the accessor return type: codes in the scalar set (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`) emit `String?` accessors; everything else emits `Field?`. See <doc:TypedSegments>.
 
@@ -72,12 +73,13 @@ The `codegen-drift` GitHub Actions job runs `regenerate-typed-segments.sh` and f
 
 ## What gets validated automatically
 
-Adding a segment's grammar means the ``Validator`` now has rules to check against. The required-field, cardinality, and deprecation checks all become live for the new segment with no additional code.
+Adding a segment's grammar means the ``Validator`` now has rules to check against. The required-field, conditional-field, cardinality, and deprecation checks all become live for the new segment with no additional code. If you populate the `condition` field on a `C`-optional entry, the predicate is evaluated automatically — see <doc:Validation> for the DSL.
 
 ## Limits
 
-- HL7v2Kit doesn't yet ship typed composite data-types (e.g. an `XPN` Swift struct with named `family` / `given` properties). Structured fields stay at `Field?` for v0.1.0. See spec § 4.5.
-- Conditional (`C`) optionality is treated as `O` (optional) for the required-field check. v0.1.0 doesn't evaluate the condition because that requires cross-field rules.
+- HL7v2Kit doesn't yet ship typed composite data-types (e.g. an `XPN` Swift struct with named `family` / `given` properties). Structured fields stay at `Field?` until v0.2-C1 lands. See spec § 4.5 and <doc:Migration>.
+- The Validator only checks field-level rules at present. Component-level rules (e.g. XPN-1 must be non-empty when XPN is populated) are v0.2-V2 work.
+- The conditional-field DSL is same-segment-only. Cross-segment predicates (e.g. "PV1-2 = I → this PID field is required") evaluate to `false` and don't trigger errors.
 
 ## See Also
 

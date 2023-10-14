@@ -42,6 +42,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
 
+### Changed (docs)
+
+- **DocC catalogue brought up to date with the v0.2 work merged on `main`**:
+  - `Migration.md` — "Anticipated changes in 0.2.0" rewritten into two sections: "Toward 0.2.0 — already on `main`" (P1/P2/P3 + F1 + V1, what consumers see if they pin to a commit instead of the `v0.1.0` tag) and "Still pending for 0.2.0" (C1 typed composites, V2 component grammar, X1 perf budget, runtime dictionaries).
+  - `TypedSegments.md` — `PID` / `ORC` field counts updated from "30 of 39" / "19 of 31" to "all 39" / "all 31" with a note pointing at F1.
+  - `Validation.md` — new "Conditional-field check" bullet under the active-checks list; new "Conditional-field DSL" section documenting the predicate grammar (`populated` / `empty` / `= <value>` / `!= <value>`), same-segment-only scope, and fail-safe semantics; presets updated to mention the new `checkConditionalFields` toggle (default `true`; `.lenient` disables); "What the validator does not check" trimmed (conditional fields removed; cross-segment predicates added as a known limit).
+  - `AddingASegment.md` — schema-field list extended with the optional `condition` field (only meaningful for `optionality=C`); "Limits" updated — conditional `C` is no longer treated as `O`; typed-composite and component-level-grammar limits link to `Migration.md` for the v0.2 status.
+  - `RoundTripGuarantee.md` — "Inputs the parser rejected" bullet expanded to call out NUL byte rejection (`ParseError.truncatedMessage(atByte:)`) and BOM strip (round-trip is canonicalisation, not byte-equality, for BOM-prefixed input). Both link back to `Migration.md`.
+  - `GettingStarted.md` / `CharacterEncoding.md` / `EscapeSequences.md` / landing page — spot-checked, no edits needed.
+- No source / test / API changes; tests still 183/183 in 13 suites.
+
 ## [0.1.0] — 2026-06-13
 
 ### Added

@@ -24,6 +24,7 @@ if !report.isValid {
 For each segment whose ID is in the loaded grammar table (currently HL7 v2.5.1 only), and for each field within that segment:
 
 - **Required-field check.** Fields with optionality `R` that are absent or empty produce ``IssueCode/requiredFieldMissing`` errors.
+- **Conditional-field check.** Fields with optionality `C` carrying a ``FieldGrammar/condition`` predicate are evaluated: if the predicate triggers and the field is empty, the validator produces an ``IssueCode/conditionalFieldMissing`` error. C fields with no condition behave as `O` — backward compatible. See <doc:#Conditional-field-DSL> below for the predicate grammar.
 - **Cardinality check.** Fields declared `repeatability=1` carrying multiple `~`-separated repetitions produce ``IssueCode/cardinalityExceeded`` errors.
 - **Deprecation warning.** Fields with optionality `B` (backward-compat) or `X` (not-supported) that are populated produce ``IssueCode/fieldNotSupported`` warnings (severity `.warning`, not `.error`).
 
@@ -36,21 +37,22 @@ For each segment whose ID is **not** in the loaded grammar table:
 Three presets cover the common configurations:
 
 ```swift
-Validator(options: .default)    // grammar checks on, Z-segments silently tolerated
-Validator(options: .strict)     // grammar checks on, Z-segments rejected as errors
-Validator(options: .lenient)    // only required-field check; no cardinality, no warnings, no Z policy
+Validator(options: .default)    // grammar + conditional checks on, Z-segments silently tolerated
+Validator(options: .strict)     // grammar + conditional checks on, Z-segments rejected as errors
+Validator(options: .lenient)    // only required-field check; no conditional, no cardinality, no warnings, no Z policy
 ```
 
 ``ValidationOptions/default`` is appropriate for AU clinical inbound traffic where Z-segments are routine and you want grammar conformance flagged. ``ValidationOptions/strict`` is appropriate for outgoing-message validation where you control every segment. ``ValidationOptions/lenient`` is for "would HL7v2Kit be happy serialising this back?" round-trip pre-check.
 
 ## Custom configurations
 
-The four knobs are independently toggleable:
+The five knobs are independently toggleable:
 
 ```swift
 let options = ValidationOptions(
     zSegmentPolicy: .warnPresence,           // info per Z-segment
     checkRequiredFields: true,
+    checkConditionalFields: false,           // skip predicate evaluation on C fields
     checkCardinality: false,                 // ignore single-cardinality violations
     warnDeprecatedFields: false              // don't warn on populated B/X fields
 )
@@ -81,11 +83,38 @@ Each ``ValidationIssue`` carries:
 - ``ValidationIssue/location`` — an ``IssueLocation`` with the 3-character `segmentID`, the 1-based `segmentIndex` (which occurrence of that segment in document order), and an optional 1-based `fieldIndex`. `location.pathDescription` renders as `"PID[1]-3"` for segment-and-field issues, `"ZAU[1]"` for segment-level issues.
 - ``ValidationIssue/message`` — a human-readable summary suitable for logging or UI display.
 
+## Conditional-field DSL
+
+The condition predicate carried on ``FieldGrammar/condition`` is a short string with grammar:
+
+```
+<segmentID>-<fieldIndex> <predicate>
+<predicate> := "populated" | "empty" | "= <value>" | "!= <value>"
+```
+
+Examples:
+
+```
+"PID-35 populated"     // ships on PID-36 — breed required when species declared
+"ORC-1 = NW"           // hypothetical — would fire when ORC-1 is "NW"
+"PV1-2 != I"           // hypothetical — would fire when patient class isn't inpatient
+```
+
+Semantics:
+
+- **Same-segment only** in the current release. The referenced segment ID must match the segment whose field carries the condition; cross-segment references silently evaluate to `false` (no-trigger). Cross-segment predicates may be revisited if a real condition needs them.
+- **`populated` / `empty`** use the same any-subcomponent-non-empty rule as the required-field check — works for both scalar fields and composites.
+- **`= value` / `!= value`** compare against the first-subcomponent-of-first-component-of-first-repetition "scalar view" of the referent — sufficient for ID/IS/ST/NM-typed fields.
+- **Malformed predicates fail safe.** Any predicate the evaluator can't parse evaluates to `false` (no-trigger), so a schema typo can never make a previously-accepted message non-conformant.
+- **C fields without a `condition`** behave as `O` — backward compatible. A schema can carry a C field with no predicate for years and never produce a conditional error.
+
+Conditions live in the per-segment JSON schemas under `Resources/schemas/<version>/` and are emitted into the codegen-produced ``SegmentGrammarTable``. To add a condition to a field, edit the schema and run `bash scripts/regenerate-typed-segments.sh`. See <doc:AddingASegment>.
+
 ## What the validator does not check
 
-- **Component-level grammar.** v0.1.0 only checks field-level rules. Component cardinality (e.g. XPN's family-name component being non-empty) is v0.2 work.
-- **Cross-field conditions.** Fields with optionality `C` (conditional) require evaluating a condition based on other fields' values. v0.1.0 treats `C` as `O` for required-field purposes.
-- **Field-level type conformance.** A TS field carrying `"hello"` is not a well-formed timestamp, but the validator doesn't currently check that. v0.2 work.
+- **Component-level grammar.** Field-level rules only at present. Component cardinality (e.g. XPN's family-name component being non-empty when XPN-1 is populated) is v0.2-V2 work — see <doc:Migration>.
+- **Field-level type conformance.** A TS field carrying `"hello"` is not a well-formed timestamp, but the validator doesn't currently check that. Tracked for a future release.
+- **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.
 
 ## See Also
 

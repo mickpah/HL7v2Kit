@@ -10,35 +10,76 @@ HL7v2Kit is pre-1.0 (currently 0.1.0 development). Minor releases (0.x → 0.(x+
 
 There is no prior released version. The first public release is 0.1.0.
 
-## Anticipated changes in 0.2.0
+## Toward 0.2.0 — already on `main`
 
-The following items are tracked for the v0.2 release. None has shipped yet; this section is informational so consumers can plan ahead.
+The following changes have landed on `main` since the `v0.1.0` tag but have **not** been released under a `v0.2.0` tag yet. Consumers pinning to a commit (rather than a tag) will encounter them now; consumers using `from: "0.1.0"` see only v0.1.x patch versions and are unaffected until `v0.2.0` ships.
+
+### Parser hardening (v0.2-P1 / P2 / P3)
+
+Three byte-path strictness fixes for ``Parser/parse(_:)-(Data)``. None affects ``Parser/parse(_:)-(String)`` (the byte-path-only constraint was respected).
+
+- **UTF-8 BOM prefix is explicitly stripped.** A leading `EF BB BF` is dropped before charset detection. On macOS, Foundation's `String(data:encoding:.utf8)` silently stripped this anyway; on Linux Swift it didn't, so the byte path used to behave differently across platforms. Now the strip happens in HL7v2Kit code and behaviour is portable. The serialiser never re-emits the BOM, so a round-trip canonicalises BOM-prefixed input. A BOM-only input throws ``ParseError/emptyInput`` after strip.
+- **Embedded NUL bytes are rejected at parse time** with ``ParseError/truncatedMessage(atByte:)``. Real v2 wire never carries `0x00`; an embedded NUL is almost always transport truncation (a fixed-size buffer NUL-padded beyond the real message). Reported byte offset is into the post-BOM-strip payload. This change makes round-trip invariant 1 honest without a NUL carve-out: every accepted message is NUL-free.
+- **``ParserOptions/rejectUnknownVersion`` (new flag).** When `true`, a non-empty MSH-12 value that doesn't map to a known ``Version`` throws ``ParseError/unsupportedVersion(found:)``. Default is `false` (silent fallback to `.v2_5_1`); ``ParserOptions/strict`` sets it `true`. Empty MSH-12 falls back regardless of the flag — emptiness is a Validator concern (MSH-12 has optionality `R`, not "must be a known version").
+
+### Typed-segment coverage closure (v0.2-F1)
+
+PID schema 30 → 39 fields; ORC schema 19 → 31 fields. Both segments are now spec-complete for v2.5.1. New accessors on ``PID``:
+
+- `identityUnknownIndicator`, `identityReliabilityCode`, `lastUpdateDateTime`, `lastUpdateFacility`, `speciesCode`, `breedCode`, `strain`, `productionClassCode`, `tribalCitizenship`
+
+New accessors on ``ORC``:
+
+- `advancedBeneficiaryNoticeCode`, `orderingFacilityName`, `orderingFacilityAddress`, `orderingFacilityPhoneNumber`, `orderingProviderAddress`, `orderStatusModifier`, `advancedBeneficiaryNoticeOverrideReason`, `fillersExpectedAvailabilityDateTime`, `confidentialityCode`, `orderType`, `entererAuthorizationMode`, `parentUniversalServiceIdentifier`
+
+Pure additions — existing accessor names and return types are unchanged. See <doc:TypedSegments>.
+
+### Conditional-field evaluation in Validator (v0.2-V1)
+
+v0.1.0 treated `optionality=C` (conditional) the same as `optionality=O`. ``Validator`` now evaluates `.conditional` fields against an optional predicate carried on ``FieldGrammar/condition``:
+
+```swift
+// PID-36 (Breed Code) ships with: condition = "PID-35 populated"
+// → "if a species code is declared, a breed code is required"
+let report = Validator().validate(messageWithSpeciesNoBreed)
+// .errors contains an ``IssueCode/conditionalFieldMissing`` at PID[1]-36
+```
+
+The DSL is kept small: `<segment-id>-<index> <predicate>` where `<predicate>` ∈ `populated`, `empty`, `= <value>`, `!= <value>`. Same-segment references only; cross-segment or malformed predicates fail safe (no-trigger), so a schema typo can never make a previously-accepted message non-conformant. C fields without a `condition` continue to behave as `.optional`.
+
+New toggle: ``ValidationOptions/checkConditionalFields`` (default `true`; ``ValidationOptions/lenient`` disables it). See <doc:Validation>.
+
+**Behaviour change for consumers.** Messages that include PID-35 (species code) but not PID-36 (breed code) will now produce a `.conditionalFieldMissing` error where v0.1.0 produced none. The 48 gold-corpus fixtures all use human patients (PID-35 empty) and remain unaffected.
+
+## Still pending for 0.2.0
+
+The items below are tracked for v0.2 but have **not** landed on `main` yet. This section stays informational so consumers can plan ahead.
 
 ### Typed composite data types
 
-v0.1.0 typed-segment accessors return `Field?` for structured HL7 data types (XPN, CX, XAD, CE, CWE, EI, XCN, ...). v0.2 may introduce Swift struct wrappers for the most common composites — for example:
+v0.1.0/v0.1.x typed-segment accessors return `Field?` for structured HL7 data types (XPN, CX, XAD, CE, CWE, EI, XCN, ...). v0.2 plans Swift struct wrappers for the most common composites — for example:
 
 ```swift
-// v0.1.0:
+// Current:
 let family = pid.patientName?.first?.components[0].stringValue
 
-// Speculative v0.2:
-let family = pid.patientName?.first?.family
+// Planned (v0.2-C1):
+let family = pid.patientName?.first?.familyName
 ```
 
-Both forms would coexist for at least one minor release. The Swift struct accessors would be additions, not replacements.
+Both forms will likely coexist for at least one minor release. The Swift struct accessors are additions, not replacements. Tracked as v0.2-C1; will bump the line to `0.2.0` because the changes touch the codegen template and every typed-segment file regenerates.
 
-### Conditional-field evaluation
+### Component-level grammar in Validator
 
-v0.1.0 treats `optionality=C` (conditional) the same as `optionality=O` for the required-field check. v0.2 may introduce a small condition-evaluation language sufficient for the standard's "required if PV1-2 = 'I'" patterns. The introduction would be additive — currently-valid messages will continue to validate; previously-suppressed conditional errors may now surface.
+v0.1.0 / current `main` only check field-level rules in ``Validator``. v0.2 plans component-level cardinality (e.g. XPN's family-name component being non-empty when XPN-1 is populated). Tracked as v0.2-V2; depends on the typed composite work above.
 
-### Component-level grammar
+### Performance budget tests
 
-v0.1.0 only checks field-level rules in ``Validator``. v0.2 may add component-level cardinality (e.g. XPN's family-name component being non-empty when XPN-1 is populated).
+Nightly latency assertions per spec § 9.5. Adds a new test target gated on an environment variable so the default test run stays fast. Tracked as v0.2-X1.
 
 ### Runtime-loadable dictionaries
 
-v0.1.0 bakes grammar into a compile-time Swift literal (`SegmentGrammarTable.v2_5_1`). v0.2 may revisit the original `HL7v2KitDictionaries` runtime-loadable plan if there's evidence of consumer need (e.g. dynamic version selection). See `ADR-005`.
+v0.1.0 / current `main` bake grammar into a compile-time Swift literal (`SegmentGrammarTable.v2_5_1`). v0.2 may revisit the original `HL7v2KitDictionaries` runtime-loadable plan if there's evidence of consumer need (e.g. dynamic version selection). See `ADR-005`.
 
 ## Long-term: pre-1.0 → 1.0.0
 
