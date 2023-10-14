@@ -112,22 +112,50 @@ struct ParseErrorTests {
     // becomes stricter, these tests will need to flip from "succeeds with X"
     // to "throws Y".
 
-    @Test("Unknown MSH-12 version silently falls back to v2.5.1 (lenient by design)")
-    func unknownVersionFallsBack() throws {
-        // Parser.swift:122 documents this as a deliberate choice — keeps
-        // the parser useful for older fixtures with non-canonical MSH-12.
-        // ParseError.unsupportedVersion is currently unreachable; consider
-        // wiring it on strict mode in v0.2.
+    @Test("Unknown MSH-12 version silently falls back to v2.5.1 on default (lenient by design)")
+    func unknownVersionFallsBackOnDefault() throws {
+        // The silent-fallback line in Parser.swift is a deliberate choice —
+        // keeps the parser useful for older fixtures with non-canonical
+        // MSH-12. v0.2-P3 wires .unsupportedVersion(found:) onto strict
+        // mode only (see unknownVersionThrowsOnStrict); default + lenient
+        // preserve the fallback.
         let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|9.9.9\r"
         let message = try Parser().parse(wire)
         #expect(message.version == .v2_5_1, "Default fallback should be v2.5.1")
     }
 
-    @Test("Empty MSH-12 silently falls back to v2.5.1")
+    @Test("Unknown MSH-12 version throws .unsupportedVersion on strict (v0.2-P3)")
+    func unknownVersionThrowsOnStrict() {
+        // CONTRACT (v0.2-P3): Parser(options: .strict).parse(...) throws
+        // .unsupportedVersion(found:) when MSH-12 carries a non-empty
+        // value that the Version enum doesn't recognise. Default + lenient
+        // keep the silent v2.5.1 fallback. .strict is now a superset of
+        // .default's checks (it also rejects unknown segments — R6); the
+        // unsupportedVersion throw is the second strict-only check.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|9.9.9\r"
+        #expect(throws: ParseError.unsupportedVersion(found: "9.9.9")) {
+            try Parser(options: .strict).parse(wire)
+        }
+    }
+
+    @Test("Empty MSH-12 silently falls back on default")
     func emptyVersionFallsBack() throws {
         let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|\r"
         let message = try Parser().parse(wire)
         #expect(message.version == .v2_5_1)
+    }
+
+    @Test("Empty MSH-12 still falls back even on strict (v0.2-P3 design choice)")
+    func emptyMSH12FallsBackEvenOnStrict() throws {
+        // Empty MSH-12 means "the sender didn't declare a version" — that's
+        // a Validator concern (MSH-12 is required, optionality R), not a
+        // parser concern. Both default and strict fall back to v2.5.1
+        // silently. The strict mode's new .unsupportedVersion throw is
+        // reserved for *non-empty* MSH-12 values that don't map. Pinning
+        // this so the design choice can't silently change.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|\r"
+        let strictMsg = try Parser(options: .strict).parse(wire)
+        #expect(strictMsg.version == .v2_5_1)
     }
 
     @Test("BOM-prefixed input is explicitly stripped before parsing (v0.2-P1)")
