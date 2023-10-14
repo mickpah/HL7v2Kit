@@ -157,25 +157,43 @@ struct ParseErrorTests {
         }
     }
 
-    @Test("Mid-message NUL byte is NOT preserved through round-trip (current leniency)")
-    func midMessageNULLossy() throws {
-        // FINDING: an embedded NUL byte does not survive round-trip byte-
-        // for-byte — the rebuilt output differs in length from the input.
-        // The architecture invariant says "round-trip byte-equal for every
-        // fixture the parser accepts" (spec § 5); this test documents that
-        // NUL-bearing messages don't satisfy that invariant in practice.
-        // v0.2 paths: (a) reject NUL at parse time with
-        // .truncatedMessage(atByte:), matching spec § 5's carve-out for
-        // control characters; (b) preserve NUL byte-for-byte. (a) is
-        // safer; defer.
-        var bytes = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8)
-        bytes.append(Data("PID|1||SYN-0001||Smith\0Special^John\r".utf8))
-        let message = try Parser().parse(bytes)
-        #expect(message.segments.count == 2)
-        let rebuilt = message.serialize()
-        // Pin the lossy behaviour. If/when v0.2 lands a fix, flip this to
-        // expect either rebuilt == bytes OR throws .truncatedMessage.
-        #expect(rebuilt.count != bytes.count, "NUL round-trip is currently lossy (\(bytes.count) → \(rebuilt.count) bytes)")
+    @Test("Mid-message NUL byte is rejected at parse time (v0.2-P2)")
+    func midMessageNULRejected() {
+        // CONTRACT (v0.2-P2): Real HL7 v2 messages never carry NUL. If one
+        // appears it's almost always transport truncation (a fixed-size
+        // buffer NUL-padded beyond the real message). Parser rejects up-
+        // front with .truncatedMessage(atByte:) so the round-trip byte-
+        // equality invariant (spec § 5) holds for every accepted message
+        // without a NUL carve-out. The reported byte offset is into the
+        // post-BOM-strip payload — see nulOffsetIsRelativeToStrippedPayload.
+        let mshLine = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r"
+        let beforeNUL = "PID|1||SYN-0001||Smith"
+        let afterNUL = "Special^John\r"
+        var bytes = Data(mshLine.utf8)
+        bytes.append(Data(beforeNUL.utf8))
+        let nulOffset = bytes.count
+        bytes.append(0x00)
+        bytes.append(Data(afterNUL.utf8))
+        #expect(throws: ParseError.truncatedMessage(atByte: nulOffset)) {
+            try Parser().parse(bytes)
+        }
+    }
+
+    @Test("NUL offset is reported relative to post-BOM-strip payload (v0.2-P2)")
+    func nulOffsetIsRelativeToStrippedPayload() {
+        // Design choice: the BOM (if present) is dropped before the NUL
+        // scan, and the byte offset reported in .truncatedMessage(atByte:)
+        // is into the post-strip buffer — callers usually care about
+        // "where in the meaningful payload" not "where in the wire
+        // including 3 BOM bytes the kit silently dropped".
+        let preamble = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8)
+        let nulOffsetInPayload = preamble.count
+        var bytes = Data([0xEF, 0xBB, 0xBF])
+        bytes.append(preamble)
+        bytes.append(0x00)
+        #expect(throws: ParseError.truncatedMessage(atByte: nulOffsetInPayload)) {
+            try Parser().parse(bytes)
+        }
     }
 
     @Test("Multiple MSH segments in one input parse without error (NOT batch-aware)")

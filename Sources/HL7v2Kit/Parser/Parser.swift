@@ -32,6 +32,15 @@ public struct Parser: Sendable {
     /// the BOM on macOS but not on Linux Swift, so the explicit strip
     /// makes the byte path portable). The serializer never re-emits the
     /// BOM. A BOM-only input still throws `.emptyInput`.
+    ///
+    /// Embedded NUL bytes (`0x00`) are rejected with
+    /// `ParseError.truncatedMessage(atByte:)`. Real HL7 v2 messages never
+    /// carry NUL; if one appears it is almost always transport truncation
+    /// (a fixed-size buffer NUL-padded beyond the real message). Rejecting
+    /// up-front keeps the round-trip byte-equality invariant (spec §5)
+    /// honest: every accepted message is NUL-free, so no carve-out is
+    /// needed for serialise round-trips. The reported byte offset is into
+    /// the post-BOM-strip payload, not the original buffer.
     public func parse(_ data: Data) throws -> Message {
         guard !data.isEmpty else { throw ParseError.emptyInput }
 
@@ -40,6 +49,13 @@ public struct Parser: Sendable {
             ? data.dropFirst(3)
             : data
         guard !payload.isEmpty else { throw ParseError.emptyInput }
+
+        // Reject NUL bytes. v0.2-P2.
+        if let nulIndex = payload.firstIndex(of: 0x00) {
+            throw ParseError.truncatedMessage(
+                atByte: payload.distance(from: payload.startIndex, to: nulIndex)
+            )
+        }
 
         // Probe via an ISO-8859-1 1:1 decode — Latin-1 maps every byte to a
         // code point, so the probe never fails, and the structural ASCII
