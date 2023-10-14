@@ -108,6 +108,16 @@ public struct Validator: Sendable {
                 )
             }
 
+            if options.checkConditionalFields {
+                checkConditional(
+                    fieldGrammar,
+                    segment: segment,
+                    isPopulated: isPopulated,
+                    location: location,
+                    issues: &issues
+                )
+            }
+
             if options.warnDeprecatedFields, isPopulated {
                 checkDeprecation(
                     fieldGrammar,
@@ -181,6 +191,82 @@ public struct Validator: Sendable {
             location: location,
             message: "Field \(location.pathDescription) ('\(grammar.name)') is single-cardinality but has \(field.repetitions.count) repetitions"
         ))
+    }
+
+    /// `.conditional` field check (v0.2-V1). Fires `.conditionalFieldMissing`
+    /// when the field's `grammar.condition` predicate evaluates to true and
+    /// the field is empty. Same-segment predicates only; cross-segment or
+    /// malformed predicates skip silently (treated as no-trigger).
+    private func checkConditional(
+        _ grammar: FieldGrammar,
+        segment: Segment,
+        isPopulated: Bool,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard grammar.optionality == .conditional,
+              !isPopulated,
+              let condition = grammar.condition,
+              !condition.isEmpty,
+              conditionTriggers(condition, in: segment, currentSegmentID: location.segmentID)
+        else { return }
+        issues.append(ValidationIssue(
+            severity: .error,
+            code: .conditionalFieldMissing,
+            location: location,
+            message: "Conditional field \(location.pathDescription) ('\(grammar.name)') is required by condition '\(condition)' but missing"
+        ))
+    }
+
+    /// Evaluate a v0.2-V1 condition predicate against a single segment.
+    ///
+    /// Grammar:
+    /// ```
+    /// <segmentID>-<index> <predicate>
+    /// <predicate> := "populated" | "empty" | "= <value>" | "!= <value>"
+    /// ```
+    /// Cross-segment references (segmentID ≠ currentSegmentID) and any
+    /// malformed predicate fail safe — return `false` so the field is
+    /// treated as `.optional`. This is deliberate: a malformed schema
+    /// should never make a previously-accepted message non-conformant.
+    ///
+    /// "Populated" / "empty" use the same any-subcomponent-non-empty
+    /// check as `isFieldPopulated`. The `=` / `!=` value comparison
+    /// reads the first subcomponent of the first component of the first
+    /// repetition (the "scalar view" of the field) — sufficient for the
+    /// common case of comparing against an ID/IS/ST scalar.
+    private func conditionTriggers(
+        _ condition: String,
+        in segment: Segment,
+        currentSegmentID: String
+    ) -> Bool {
+        let parts = condition.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
+                              .map(String.init)
+        guard parts.count == 2 else { return false }
+        let fieldRef = parts[0]
+        let predicate = parts[1]
+
+        let refParts = fieldRef.split(separator: "-", maxSplits: 1)
+                                .map(String.init)
+        guard refParts.count == 2,
+              refParts[0] == currentSegmentID,
+              let fieldIndex = Int(refParts[1])
+        else { return false }
+
+        let field = segment.field(fieldIndex)
+        let isReferentPopulated = field.map { isFieldPopulated($0) } ?? false
+
+        if predicate == "populated" { return isReferentPopulated }
+        if predicate == "empty"     { return !isReferentPopulated }
+
+        let raw = field?.repetitions.first?.components.first?.subcomponents.first?.value ?? ""
+        if predicate.hasPrefix("= ") {
+            return raw == String(predicate.dropFirst(2))
+        }
+        if predicate.hasPrefix("!= ") {
+            return raw != String(predicate.dropFirst(3))
+        }
+        return false
     }
 
     /// A field is "populated" if at least one repetition has at least one

@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 14 new cross-check tests in `TypedSegmentTests.swift`: 7 for PID-31..39 (scalar accessors + CE/HD/CWE composites + round-trip), 7 for ORC-20..31 (scalar TS + CE/CWE/XON/XAD/CNE composites + round-trip). Both fringe wires include the standard field-map comment per the multi-field-fixture convention. All 48 fixture round-trips still byte-perfect.
 - Generated file sizes: `PID.swift` 145 → 210 lines, `ORC.swift` 90 → 170 lines — both under the soft 300-line cap, no per-field-group split required.
 
+### Added (validator)
+
+- **v0.2-V1 — Conditional-field evaluation in `Validator`.** `.conditional` (HL7 optionality `C`) fields can now carry a predicate that controls when they become required. New `FieldGrammar.condition: String?` carries the predicate; new `ValidationOptions.checkConditionalFields: Bool` (default `true`; `.lenient` preset sets `false`) gates evaluation; `Validator` emits the already-reserved `IssueCode.conditionalFieldMissing` when a predicate evaluates to true on an empty field.
+- **DSL grammar** (kept deliberately small): `<segment-id>-<index> <predicate>` where `<predicate>` ∈ `"populated"`, `"empty"`, `"= <value>"`, `"!= <value>"`. Same-segment references only in v0.2; cross-segment references and malformed predicates fail safe (treated as no-trigger so a schema typo never makes a previously-accepted message non-conformant). `populated`/`empty` use the any-subcomponent-non-empty check; `=`/`!=` compare against the first-subcomponent-of-first-component-of-first-repetition "scalar view" of the field.
+- **First real condition shipped:** `PID-36` (Breed Code) carries `"PID-35 populated"` — "if a species code is declared, a breed code is required" — the natural veterinary-HL7 interpretation. All 48 gold-corpus fixtures are unaffected because none populate PID-35 (all human patients); pinned by `ConditionalFieldTests.fixtureCorpusNoConditionalErrors`.
+- **C fields without a condition** (e.g. `ORC-2`/`ORC-3`/`ORC-8`/`PID-35` itself) continue to behave as `.optional` — backward compatible. Conditions can be added to those JSON entries in future stages without code changes.
+- **Codegen extended:** `FieldSchema.condition: String?` (optional Decodable) feeds the new `condition:` argument in the emitted `FieldGrammar(...)` table entries. `FieldGrammar.init`'s `condition: String? = nil` default keeps hand-rolled construction compatible.
+- 6 new tests in `Tests/HL7v2KitTests/ConditionalFieldTests.swift`: condition triggers with field empty → error, condition triggers with field populated → no error, condition doesn't trigger → no error, `checkConditionalFields=false` suppresses, `.lenient` preset suppresses, full-corpus regression pin. 173 → 179 tests across 12 → 13 suites.
+
 ## [0.1.0] — 2026-06-13
 
 ### Added

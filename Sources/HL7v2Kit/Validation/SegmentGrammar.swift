@@ -37,19 +37,32 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     public let dataType: String
     public let optionality: FieldOptionality
     public let repeatability: FieldRepeatability
+    /// Predicate that controls when a `.conditional` field becomes required.
+    /// Same-segment only in v0.2.
+    ///
+    /// Grammar: `<segmentID>-<index> <predicate>` where `<predicate>` is one
+    /// of `populated`, `empty`, `= <value>`, or `!= <value>`. Examples:
+    /// `"PID-35 populated"`, `"ORC-1 = NW"`. Cross-segment references or
+    /// malformed predicates evaluate to "condition does not trigger" — the
+    /// field is treated as optional. `nil` for fields with no condition;
+    /// `.conditional` fields with no condition also fall through as
+    /// effectively `.optional`. v0.2-V1.
+    public let condition: String?
 
     public init(
         index: Int,
         name: String,
         dataType: String,
         optionality: FieldOptionality,
-        repeatability: FieldRepeatability
+        repeatability: FieldRepeatability,
+        condition: String? = nil
     ) {
         self.index = index
         self.name = name
         self.dataType = dataType
         self.optionality = optionality
         self.repeatability = repeatability
+        self.condition = condition
     }
 }
 
