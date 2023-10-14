@@ -24,16 +24,46 @@ public struct Parser: Sendable {
     /// MSH-18 if declared; if absent or empty, defaults to UTF-8. If MSH-18
     /// is present but names a charset HL7v2Kit does not recognise, throws
     /// `ParseError.unsupportedCharacterEncoding`.
+    ///
+    /// A leading UTF-8 BOM (`EF BB BF`) is tolerated as a no-op prefix —
+    /// the 3 bytes are stripped before charset detection. Windows-side
+    /// senders occasionally emit one; the kit accepts it identically on
+    /// macOS and Linux (Foundation's `String(data:encoding:.utf8)` strips
+    /// the BOM on macOS but not on Linux Swift, so the explicit strip
+    /// makes the byte path portable). The serializer never re-emits the
+    /// BOM. A BOM-only input still throws `.emptyInput`.
+    ///
+    /// Embedded NUL bytes (`0x00`) are rejected with
+    /// `ParseError.truncatedMessage(atByte:)`. Real HL7 v2 messages never
+    /// carry NUL; if one appears it is almost always transport truncation
+    /// (a fixed-size buffer NUL-padded beyond the real message). Rejecting
+    /// up-front keeps the round-trip byte-equality invariant (spec §5)
+    /// honest: every accepted message is NUL-free, so no carve-out is
+    /// needed for serialise round-trips. The reported byte offset is into
+    /// the post-BOM-strip payload, not the original buffer.
     public func parse(_ data: Data) throws -> Message {
         guard !data.isEmpty else { throw ParseError.emptyInput }
+
+        // Strip a leading UTF-8 BOM before any structural work. v0.2-P1.
+        let payload: Data = data.starts(with: [0xEF, 0xBB, 0xBF])
+            ? data.dropFirst(3)
+            : data
+        guard !payload.isEmpty else { throw ParseError.emptyInput }
+
+        // Reject NUL bytes. v0.2-P2.
+        if let nulIndex = payload.firstIndex(of: 0x00) {
+            throw ParseError.truncatedMessage(
+                atByte: payload.distance(from: payload.startIndex, to: nulIndex)
+            )
+        }
 
         // Probe via an ISO-8859-1 1:1 decode — Latin-1 maps every byte to a
         // code point, so the probe never fails, and the structural ASCII
         // characters (MSH, `|`, the encoding chars) survive untouched.
-        let probe = String(data: data, encoding: .isoLatin1) ?? ""
+        let probe = String(data: payload, encoding: .isoLatin1) ?? ""
         let characterEncoding = try CharacterEncoding.detect(in: probe)
 
-        guard let decoded = String(data: data, encoding: characterEncoding.stringEncoding) else {
+        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
         }
         return try parse(decoded, characterEncoding: characterEncoding)
@@ -119,12 +149,23 @@ public struct Parser: Sendable {
             version = override
         } else if let mshSegment = segments.first,
                   let v12 = mshSegment.field(12)?.stringValue,
-                  let parsed = Version(wireValue: v12) {
-            version = parsed
+                  !v12.isEmpty {
+            if let parsed = Version(wireValue: v12) {
+                version = parsed
+            } else if options.rejectUnknownVersion {
+                // v0.2-P3: strict mode rejects non-empty MSH-12 values
+                // that don't map to a known Version. Default + lenient
+                // keep the silent v2.5.1 fallback below for backward
+                // compatibility with older fixtures.
+                throw ParseError.unsupportedVersion(found: v12)
+            } else {
+                version = .v2_5_1
+            }
         } else {
-            // Fall back to v2.5.1 (the most common AU dialect) rather than
-            // throwing — this keeps the parser useful for older fixtures
-            // where MSH-12 is absent or non-canonical. v0.2 will tighten this.
+            // No MSH, no MSH-12, or empty MSH-12 — fall back to v2.5.1
+            // (the most common AU dialect) rather than throwing. Empty
+            // MSH-12 is a Validator concern (MSH-12 is required), not a
+            // parser concern, so strict mode falls back too.
             version = .v2_5_1
         }
 

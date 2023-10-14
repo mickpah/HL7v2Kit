@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Top-level `HL7v2Kit.xcworkspace/`** at the repo root. Open with `open HL7v2Kit.xcworkspace` instead of `Package.swift` directly. Single `<FileRef>` to the package today; scales to multi-repo when `FHIRAUCoreKit` and `AUCoreWorkbench` land by adding more `<FileRef>` entries. The auto-generated `.swiftpm/xcode/package.xcworkspace` stays gitignored.
 - **Four v0.2 git worktrees** under `~/Developer/HL7v2Kit-worktrees/` for parallel-branch development, all branched off `main` at `69060e4`:
-  - `v0.2-parser-hardening` — P1 BOM → P2 NUL → P3 unsupportedVersion (serial; all touch `Parser.swift`)
+  - `v0.2-parser-hardening` — P1 BOM → P2 NUL → P3 unsupportedVersion (serial; all touch `Parser.swift`) **— landed & merged 2026-06-14; worktree dropped**
   - `v0.2-composites` — C1 typed composite data types → V2 component-level validation
   - `v0.2-fringe-fields` — F1 PID/ORC fringe-field expansion → V1 conditional-field evaluation
   - `v0.2-perf-tests` — X1 performance budget tests
@@ -19,7 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`NEXT_STEPS.md` reorganised** around the v0.2 cycle: new "Workspaces and worktrees" section, each task names its worktree + position in the serial chain, full v0.1.0 task history preserved under "Historical: v0.1.0 runway".
 - **`the working notes` "Project at a glance"** surfaces the workspace + worktree setup so future sessions discover them without re-derivation.
 
-No source / API / test changes; 159/159 tests still green.
+### Fixed (parser hardening)
+
+- **v0.2-P1 — UTF-8 BOM prefix is now explicitly stripped** in `Parser.parse(_ data:)` before charset detection. Previously this depended on Foundation's `String(data:encoding:.utf8)` silently dropping the BOM, which Linux Swift does not do — so the byte path behaved differently across platforms. Now the 3-byte `EF BB BF` prefix is detected and dropped in HL7v2Kit code; behaviour is identical on macOS and Linux. The String overload (`parse(_ raw:)`) is unaffected because it operates on already-decoded text. The serializer never re-emits the BOM, so a round-trip canonicalises the output. A BOM-only input still throws `.emptyInput` (the empty-after-strip case is checked explicitly). DocC on `parse(_ data:)` documents the contract. Pin in `ParseErrorTests.swift` renamed `bomPrefixSilentlyAccepted` → `bomPrefixStrippedExplicitly` and asserts the round-trip canonicalisation; new `bomOnlyInputIsEmptyAfterStrip` pins the empty-after-strip edge. 159 → 160 tests.
+- **v0.2-P2 — Embedded NUL bytes are now rejected at parse time** with `ParseError.truncatedMessage(atByte:)`. Real HL7 v2 wire never carries NUL; an embedded `0x00` is almost always transport truncation (a fixed-size buffer NUL-padded beyond the real message). Rejecting up-front keeps the round-trip byte-equality invariant (spec §5) honest — every accepted message is NUL-free, no carve-out required. The reported byte offset is into the **post-BOM-strip payload**, not the original wire (so a NUL at byte 100 of a BOM-prefixed input reports as 100, not 103). Pin in `ParseErrorTests.swift` renamed `midMessageNULLossy` → `midMessageNULRejected` (was "round-trip is lossy"; now asserts the throw). New `nulOffsetIsRelativeToStrippedPayload` pins the post-strip-offset design choice. 160 → 161 tests.
+- **v0.2-P3 — `.unsupportedVersion` now fires on `Parser(options: .strict)`** when MSH-12 carries a non-empty value the `Version` enum doesn't recognise. Default + lenient preserve the existing silent v2.5.1 fallback (intentional — keeps the parser useful for older fixtures with non-canonical MSH-12). Empty MSH-12 always falls back regardless of the strict flag (that's a Validator concern; MSH-12 is required, not "must map to a known version"). Mechanism: new `ParserOptions.rejectUnknownVersion: Bool` flag (default `false`); `.strict` sets it `true`. `.strict` is now a superset of `.default`'s checks (rejects unknown segments + unknown versions). Pin in `ParseErrorTests.swift`: `unknownVersionFallsBack` → `unknownVersionFallsBackOnDefault` (still passes; default unchanged); new `unknownVersionThrowsOnStrict` and `emptyMSH12FallsBackEvenOnStrict` pin the strict throw and the empty-MSH-12-still-falls-back design choice. 161 → 163 tests.
+
+Tests: 159 (v0.1.0 tag) → 163 (post-merge). All 48 fixture round-trips still byte-perfect.
 
 ## [0.1.0] — 2026-06-13
 

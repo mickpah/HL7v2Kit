@@ -65,21 +65,38 @@ public struct ParserOptions: Sendable {
     /// Whitespace tolerance at segment boundaries.
     public var lineTerminator: LineTerminatorPolicy
 
+    /// If true, an MSH-12 value that doesn't map to a known `Version`
+    /// raises `ParseError.unsupportedVersion(found:)`. If false (default),
+    /// the parser silently falls back to v2.5.1 — useful for older
+    /// fixtures with non-canonical MSH-12. Empty MSH-12 always falls
+    /// back regardless of this flag; that's a Validator concern (MSH-12
+    /// is required).
+    ///
+    /// `.strict` sets this to `true`; `.default` and `.lenient` keep it
+    /// `false`. v0.2-P3.
+    public var rejectUnknownVersion: Bool
+
     public init(
         allowUnknownSegments: Bool = true,
         versionOverride: Version? = nil,
         preserveExcessFields: Bool = true,
-        lineTerminator: LineTerminatorPolicy = .lenient
+        lineTerminator: LineTerminatorPolicy = .lenient,
+        rejectUnknownVersion: Bool = false
     ) {
         self.allowUnknownSegments = allowUnknownSegments
         self.versionOverride = versionOverride
         self.preserveExcessFields = preserveExcessFields
         self.lineTerminator = lineTerminator
+        self.rejectUnknownVersion = rejectUnknownVersion
     }
 
     public static let `default` = ParserOptions()
     public static let lenient = ParserOptions(allowUnknownSegments: true, lineTerminator: .lenient)
-    public static let strict = ParserOptions(allowUnknownSegments: false, lineTerminator: .strict)
+    public static let strict = ParserOptions(
+        allowUnknownSegments: false,
+        lineTerminator: .strict,
+        rejectUnknownVersion: true
+    )
 }
 
 public enum LineTerminatorPolicy: Sendable, Equatable, Hashable {

@@ -112,59 +112,116 @@ struct ParseErrorTests {
     // becomes stricter, these tests will need to flip from "succeeds with X"
     // to "throws Y".
 
-    @Test("Unknown MSH-12 version silently falls back to v2.5.1 (lenient by design)")
-    func unknownVersionFallsBack() throws {
-        // Parser.swift:122 documents this as a deliberate choice — keeps
-        // the parser useful for older fixtures with non-canonical MSH-12.
-        // ParseError.unsupportedVersion is currently unreachable; consider
-        // wiring it on strict mode in v0.2.
+    @Test("Unknown MSH-12 version silently falls back to v2.5.1 on default (lenient by design)")
+    func unknownVersionFallsBackOnDefault() throws {
+        // The silent-fallback line in Parser.swift is a deliberate choice —
+        // keeps the parser useful for older fixtures with non-canonical
+        // MSH-12. v0.2-P3 wires .unsupportedVersion(found:) onto strict
+        // mode only (see unknownVersionThrowsOnStrict); default + lenient
+        // preserve the fallback.
         let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|9.9.9\r"
         let message = try Parser().parse(wire)
         #expect(message.version == .v2_5_1, "Default fallback should be v2.5.1")
     }
 
-    @Test("Empty MSH-12 silently falls back to v2.5.1")
+    @Test("Unknown MSH-12 version throws .unsupportedVersion on strict (v0.2-P3)")
+    func unknownVersionThrowsOnStrict() {
+        // CONTRACT (v0.2-P3): Parser(options: .strict).parse(...) throws
+        // .unsupportedVersion(found:) when MSH-12 carries a non-empty
+        // value that the Version enum doesn't recognise. Default + lenient
+        // keep the silent v2.5.1 fallback. .strict is now a superset of
+        // .default's checks (it also rejects unknown segments — R6); the
+        // unsupportedVersion throw is the second strict-only check.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|9.9.9\r"
+        #expect(throws: ParseError.unsupportedVersion(found: "9.9.9")) {
+            try Parser(options: .strict).parse(wire)
+        }
+    }
+
+    @Test("Empty MSH-12 silently falls back on default")
     func emptyVersionFallsBack() throws {
         let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|\r"
         let message = try Parser().parse(wire)
         #expect(message.version == .v2_5_1)
     }
 
-    @Test("BOM-prefixed input parses without error (Foundation strips the BOM)")
-    func bomPrefixSilentlyAccepted() throws {
-        // FINDING: UTF-8 BOM (EF BB BF) is stripped by Foundation's
-        // String(data:encoding:.utf8) on this platform/toolchain, so the
-        // parser sees a BOM-free "MSH|..." and parses successfully. Some
-        // platforms (Linux Swift, older toolchains) preserve the BOM as
-        // U+FEFF, in which case .hasPrefix("MSH") returns false and
-        // .missingMSH fires. Pinning current behaviour. Worth a v0.2
-        // explicit "strip BOM if present at start" policy so portability
-        // doesn't depend on Foundation behaviour.
-        var bytes = Data([0xEF, 0xBB, 0xBF])
-        bytes.append(Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8))
-        let message = try Parser().parse(bytes)
-        #expect(message.segments.count == 1)
+    @Test("Empty MSH-12 still falls back even on strict (v0.2-P3 design choice)")
+    func emptyMSH12FallsBackEvenOnStrict() throws {
+        // Empty MSH-12 means "the sender didn't declare a version" — that's
+        // a Validator concern (MSH-12 is required, optionality R), not a
+        // parser concern. Both default and strict fall back to v2.5.1
+        // silently. The strict mode's new .unsupportedVersion throw is
+        // reserved for *non-empty* MSH-12 values that don't map. Pinning
+        // this so the design choice can't silently change.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|\r"
+        let strictMsg = try Parser(options: .strict).parse(wire)
+        #expect(strictMsg.version == .v2_5_1)
     }
 
-    @Test("Mid-message NUL byte is NOT preserved through round-trip (current leniency)")
-    func midMessageNULLossy() throws {
-        // FINDING: an embedded NUL byte does not survive round-trip byte-
-        // for-byte — the rebuilt output differs in length from the input.
-        // The architecture invariant says "round-trip byte-equal for every
-        // fixture the parser accepts" (spec § 5); this test documents that
-        // NUL-bearing messages don't satisfy that invariant in practice.
-        // v0.2 paths: (a) reject NUL at parse time with
-        // .truncatedMessage(atByte:), matching spec § 5's carve-out for
-        // control characters; (b) preserve NUL byte-for-byte. (a) is
-        // safer; defer.
-        var bytes = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8)
-        bytes.append(Data("PID|1||SYN-0001||Smith\0Special^John\r".utf8))
+    @Test("BOM-prefixed input is explicitly stripped before parsing (v0.2-P1)")
+    func bomPrefixStrippedExplicitly() throws {
+        // CONTRACT (v0.2-P1): the 3-byte UTF-8 BOM (EF BB BF) is dropped
+        // before charset detection in `parse(_ data:)`. Result is identical
+        // to the same message without the BOM on every platform — no longer
+        // a Foundation-specific quirk. The serializer must not re-emit the
+        // BOM. The String overload is unaffected (already-decoded text).
+        let mshLine = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r"
+        var bytes = Data([0xEF, 0xBB, 0xBF])
+        bytes.append(Data(mshLine.utf8))
         let message = try Parser().parse(bytes)
-        #expect(message.segments.count == 2)
+        #expect(message.segments.count == 1)
+        // Round-trip drops the BOM — the kit canonicalises output.
         let rebuilt = message.serialize()
-        // Pin the lossy behaviour. If/when v0.2 lands a fix, flip this to
-        // expect either rebuilt == bytes OR throws .truncatedMessage.
-        #expect(rebuilt.count != bytes.count, "NUL round-trip is currently lossy (\(bytes.count) → \(rebuilt.count) bytes)")
+        #expect(rebuilt == Data(mshLine.utf8), "Serialiser must not re-emit the BOM")
+    }
+
+    @Test("BOM-only input throws .emptyInput after strip (v0.2-P1)")
+    func bomOnlyInputIsEmptyAfterStrip() {
+        // Once the 3 BOM bytes are dropped the payload is empty — must hit
+        // the same .emptyInput contract as zero-length Data.
+        let bytes = Data([0xEF, 0xBB, 0xBF])
+        #expect(throws: ParseError.emptyInput) {
+            try Parser().parse(bytes)
+        }
+    }
+
+    @Test("Mid-message NUL byte is rejected at parse time (v0.2-P2)")
+    func midMessageNULRejected() {
+        // CONTRACT (v0.2-P2): Real HL7 v2 messages never carry NUL. If one
+        // appears it's almost always transport truncation (a fixed-size
+        // buffer NUL-padded beyond the real message). Parser rejects up-
+        // front with .truncatedMessage(atByte:) so the round-trip byte-
+        // equality invariant (spec § 5) holds for every accepted message
+        // without a NUL carve-out. The reported byte offset is into the
+        // post-BOM-strip payload — see nulOffsetIsRelativeToStrippedPayload.
+        let mshLine = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r"
+        let beforeNUL = "PID|1||SYN-0001||Smith"
+        let afterNUL = "Special^John\r"
+        var bytes = Data(mshLine.utf8)
+        bytes.append(Data(beforeNUL.utf8))
+        let nulOffset = bytes.count
+        bytes.append(0x00)
+        bytes.append(Data(afterNUL.utf8))
+        #expect(throws: ParseError.truncatedMessage(atByte: nulOffset)) {
+            try Parser().parse(bytes)
+        }
+    }
+
+    @Test("NUL offset is reported relative to post-BOM-strip payload (v0.2-P2)")
+    func nulOffsetIsRelativeToStrippedPayload() {
+        // Design choice: the BOM (if present) is dropped before the NUL
+        // scan, and the byte offset reported in .truncatedMessage(atByte:)
+        // is into the post-strip buffer — callers usually care about
+        // "where in the meaningful payload" not "where in the wire
+        // including 3 BOM bytes the kit silently dropped".
+        let preamble = Data("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG|P|2.5.1\r".utf8)
+        let nulOffsetInPayload = preamble.count
+        var bytes = Data([0xEF, 0xBB, 0xBF])
+        bytes.append(preamble)
+        bytes.append(0x00)
+        #expect(throws: ParseError.truncatedMessage(atByte: nulOffsetInPayload)) {
+            try Parser().parse(bytes)
+        }
     }
 
     @Test("Multiple MSH segments in one input parse without error (NOT batch-aware)")
