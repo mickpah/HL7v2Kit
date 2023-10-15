@@ -29,7 +29,13 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 - `repeatability` — `"1"` (single) or `"*"` (multiple).
 - `condition` (optional, only meaningful when `optionality=C`) — a predicate string controlling when the field is required. See the Conditional-field DSL in <doc:Validation>. Example: `"condition": "PID-35 populated"` on `PID-36` means "breed code is required when species code is declared". A `C` field without a `condition` falls through as `.optional`.
 
-The data-type code drives the accessor return type: codes in the scalar set (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`) emit `String?` accessors; everything else emits `Field?`. See <doc:TypedSegments>.
+The data-type code drives the accessor return type:
+
+- Codes in the **scalar set** (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`) emit `String?` accessors.
+- Codes in the **typed-composite set** (`XPN`, `CX`, `XAD` — v0.2-C1) emit the matching Swift struct: `XPN?`, `CX?`, `XAD?`. Each struct exposes named accessors plus `field: Field` for raw access.
+- Everything else emits `Field?`. The caller reaches into ``Field/repetitions`` / ``Repetition/components`` by hand.
+
+See <doc:TypedSegments> for examples.
 
 ## Step 2: Regenerate
 
@@ -77,9 +83,9 @@ Adding a segment's grammar means the ``Validator`` now has rules to check agains
 
 ## Limits
 
-- HL7v2Kit doesn't yet ship typed composite data-types (e.g. an `XPN` Swift struct with named `family` / `given` properties). Structured fields stay at `Field?` until v0.2-C1 lands. See spec § 4.5 and <doc:Migration>.
-- The Validator only checks field-level rules at present. Component-level rules (e.g. XPN-1 must be non-empty when XPN is populated) are v0.2-V2 work.
+- HL7v2Kit ships typed wrappers for **XPN / CX / XAD** (v0.2-C1) plus component-grammar enforcement on each (v0.2-V2). The other composite data types (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` — each can be promoted to a typed struct in a future stage. See <doc:Migration>.
 - The conditional-field DSL is same-segment-only. Cross-segment predicates (e.g. "PV1-2 = I → this PID field is required") evaluate to `false` and don't trigger errors.
+- Field-level type conformance (e.g. a TS field containing `"hello"` not being a well-formed timestamp) is not checked; tracked for a future release.
 
 ## See Also
 

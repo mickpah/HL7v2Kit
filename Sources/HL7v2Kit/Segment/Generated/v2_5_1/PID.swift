@@ -18,29 +18,29 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// PID-2: Patient ID (deprecated). HL7 data type `CX`.
-    public var patientID: Field? {
-        field(2)
+    /// PID-2: Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var patientID: CX? {
+        field(2).map(CX.init(field:))
     }
 
-    /// PID-3: Patient Identifier List. HL7 data type `CX`.
-    public var patientIdentifierList: Field? {
-        field(3)
+    /// PID-3: Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var patientIdentifierList: CX? {
+        field(3).map(CX.init(field:))
     }
 
-    /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`.
-    public var alternatePatientID: Field? {
-        field(4)
+    /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var alternatePatientID: CX? {
+        field(4).map(CX.init(field:))
     }
 
-    /// PID-5: Patient Name. HL7 data type `XPN`.
-    public var patientName: Field? {
-        field(5)
+    /// PID-5: Patient Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var patientName: XPN? {
+        field(5).map(XPN.init(field:))
     }
 
-    /// PID-6: Mother's Maiden Name. HL7 data type `XPN`.
-    public var mothersMaidenName: Field? {
-        field(6)
+    /// PID-6: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var mothersMaidenName: XPN? {
+        field(6).map(XPN.init(field:))
     }
 
     /// PID-7: Date/Time of Birth. HL7 data type `TS`.
@@ -53,9 +53,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(8)?.stringValue
     }
 
-    /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`.
-    public var patientAlias: Field? {
-        field(9)
+    /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var patientAlias: XPN? {
+        field(9).map(XPN.init(field:))
     }
 
     /// PID-10: Race. HL7 data type `CE`.
@@ -63,9 +63,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(10)
     }
 
-    /// PID-11: Patient Address. HL7 data type `XAD`.
-    public var patientAddress: Field? {
-        field(11)
+    /// PID-11: Patient Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var patientAddress: XAD? {
+        field(11).map(XAD.init(field:))
     }
 
     /// PID-12: County Code (deprecated). HL7 data type `IS`.
@@ -98,9 +98,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(17)
     }
 
-    /// PID-18: Patient Account Number. HL7 data type `CX`.
-    public var patientAccountNumber: Field? {
-        field(18)
+    /// PID-18: Patient Account Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var patientAccountNumber: CX? {
+        field(18).map(CX.init(field:))
     }
 
     /// PID-19: SSN Number - Patient (deprecated). HL7 data type `ST`.
@@ -113,9 +113,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(20)
     }
 
-    /// PID-21: Mother's Identifier. HL7 data type `CX`.
-    public var mothersIdentifier: Field? {
-        field(21)
+    /// PID-21: Mother's Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var mothersIdentifier: CX? {
+        field(21).map(CX.init(field:))
     }
 
     /// PID-22: Ethnic Group. HL7 data type `CE`.

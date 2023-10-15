@@ -18,9 +18,9 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// NK1-2: Name. HL7 data type `XPN`.
-    public var name: Field? {
-        field(2)
+    /// NK1-2: Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var name: XPN? {
+        field(2).map(XPN.init(field:))
     }
 
     /// NK1-3: Relationship. HL7 data type `CE`.
@@ -28,9 +28,9 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(3)
     }
 
-    /// NK1-4: Address. HL7 data type `XAD`.
-    public var address: Field? {
-        field(4)
+    /// NK1-4: Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var address: XAD? {
+        field(4).map(XAD.init(field:))
     }
 
     /// NK1-5: Phone Number. HL7 data type `XTN`.
@@ -68,9 +68,9 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(11)
     }
 
-    /// NK1-12: Next of Kin / Associated Parties Employee Number. HL7 data type `CX`.
-    public var nextOfKinEmployeeNumber: Field? {
-        field(12)
+    /// NK1-12: Next of Kin / Associated Parties Employee Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var nextOfKinEmployeeNumber: CX? {
+        field(12).map(CX.init(field:))
     }
 
     /// NK1-13: Organization Name - NK1. HL7 data type `XON`.

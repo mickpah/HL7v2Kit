@@ -25,6 +25,7 @@ For each segment whose ID is in the loaded grammar table (currently HL7 v2.5.1 o
 
 - **Required-field check.** Fields with optionality `R` that are absent or empty produce ``IssueCode/requiredFieldMissing`` errors.
 - **Conditional-field check.** Fields with optionality `C` carrying a ``FieldGrammar/condition`` predicate are evaluated: if the predicate triggers and the field is empty, the validator produces an ``IssueCode/conditionalFieldMissing`` error. C fields with no condition behave as `O` — backward compatible. See <doc:#Conditional-field-DSL> below for the predicate grammar.
+- **Component-grammar check.** When a populated field uses a composite data type HL7v2Kit ships typed metadata for (XPN / CX / XAD), required sub-components are enforced. PID-5 (XPN) populated without an XPN-1 family name produces ``IssueCode/requiredComponentMissing`` at `PID[1]-5.1`; PID-3 (CX) populated without an ID number produces it at `PID[1]-3.1`; PID-11 (XAD) populated without a street address produces it at `PID[1]-11.1`. Each typed composite carries its own `static let requiredComponents` (see ``XPN``, ``CX``, ``XAD``). Composites HL7v2Kit hasn't typed yet (CE / CWE / EI / XCN / ...) skip silently — they can be promoted incrementally. v0.2-V2.
 - **Cardinality check.** Fields declared `repeatability=1` carrying multiple `~`-separated repetitions produce ``IssueCode/cardinalityExceeded`` errors.
 - **Deprecation warning.** Fields with optionality `B` (backward-compat) or `X` (not-supported) that are populated produce ``IssueCode/fieldNotSupported`` warnings (severity `.warning`, not `.error`).
 
@@ -46,13 +47,14 @@ Validator(options: .lenient)    // only required-field check; no conditional, no
 
 ## Custom configurations
 
-The five knobs are independently toggleable:
+The six knobs are independently toggleable:
 
 ```swift
 let options = ValidationOptions(
     zSegmentPolicy: .warnPresence,           // info per Z-segment
     checkRequiredFields: true,
     checkConditionalFields: false,           // skip predicate evaluation on C fields
+    checkComponentGrammar: false,            // skip XPN-1 / CX-1 / XAD-1 required-component checks
     checkCardinality: false,                 // ignore single-cardinality violations
     warnDeprecatedFields: false              // don't warn on populated B/X fields
 )
@@ -112,7 +114,7 @@ Conditions live in the per-segment JSON schemas under `Resources/schemas/<versio
 
 ## What the validator does not check
 
-- **Component-level grammar.** Field-level rules only at present. Component cardinality (e.g. XPN's family-name component being non-empty when XPN-1 is populated) is v0.2-V2 work — see <doc:Migration>.
+- **Component grammar for untyped composites.** XPN / CX / XAD enforce their `requiredComponents`; the other composites (CE / CWE / EI / XCN / HD / MSG / PT / VID / XTN / PL / CNE / XON / EIP) still skip silently because HL7v2Kit doesn't ship typed metadata for them yet. Each can be promoted incrementally — add a `static let requiredComponents: [RequiredComponent]` and extend `Validator.requiredComponents(forCompositeCode:)`.
 - **Field-level type conformance.** A TS field carrying `"hello"` is not a well-formed timestamp, but the validator doesn't currently check that. Tracked for a future release.
 - **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.
 

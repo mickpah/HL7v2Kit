@@ -42,6 +42,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
 
+### Added — component-level grammar in Validator (v0.2-V2)
+
+- **`Validator` now enforces required sub-components on populated composite-typed fields.** Each typed composite (XPN / CX / XAD) carries a `static let requiredComponents: [RequiredComponent]` listing its mandatory sub-components per HL7 v2.5.1: XPN-1 Family Name, CX-1 ID Number, XAD-1 Street Address. When a composite is populated but a required component is empty, the validator emits `IssueCode.requiredComponentMissing` with a component-level location.
+- **New `RequiredComponent` value type** (`Sources/HL7v2Kit/Composite/RequiredComponent.swift`) — `Sendable + Equatable + Hashable` shape `{ index: Int, name: String }`.
+- **`IssueLocation` gains `componentIndex: Int?`** (defaulted to nil for backward compatibility). `pathDescription` now renders as `"PID[1]-5.1"` when the component index is set, alongside the existing `"PID[1]-3"` (field-level) and `"ZAU[1]"` (segment-level) shapes.
+- **New `ValidationOptions.checkComponentGrammar: Bool`** toggle (default `true`; `.strict` keeps it on; `.lenient` disables it).
+- **Composites without typed metadata** (CE / CWE / EI / XCN / HD / MSG / PT / VID / XTN / PL / CNE / XON / EIP) skip silently — they can be promoted incrementally by adding a `static let requiredComponents` and extending `Validator.requiredComponents(forCompositeCode:)`.
+- **Backward-compatible additive change** — no migration burden on v0.1.x callers beyond the C1 breaking change. All 48 gold-corpus fixtures still produce a non-error report; the regression pin lives in `ComponentGrammarTests.fixtureCorpusNoComponentErrors`.
+- 11 new tests in `Tests/HL7v2KitTests/ComponentGrammarTests.swift` cover: XPN/CX/XAD missing-component error paths (3); positive-path no-error case (1); empty-field-hits-required-field-not-component edge (1); CX multi-repetition independent checking (1); toggle suppression (1); `.lenient` preset suppression (1); `.strict` preset enforcement (1); untyped-composite skip (1); 48-fixture regression pin (1). 194 → 205 tests across 14 → 15 suites.
+
+### Changed — API-BREAKING (typed composites, v0.2-C1)
+
+- **Typed-segment accessors for XPN-, CX-, and XAD-typed fields now return Swift struct views** (`XPN?` / `CX?` / `XAD?`) instead of `Field?`. New structs live under `Sources/HL7v2Kit/Composite/` and expose named accessors for the most common components:
+  - `XPN` — `familyName`, `givenName`, `middleName`, `suffix`, `prefix`, `nameTypeCode`
+  - `CX` — `id`, `checkDigit`, `checkDigitScheme`, `assigningAuthorityNamespace`, `identifierTypeCode`, `assigningFacilityNamespace`
+  - `XAD` — `streetAddress`, `otherDesignation`, `city`, `state`, `zip`, `country`, `addressType`
+- **Affected accessors** (any field with `dataType ∈ {XPN, CX, XAD}`): `pid.patientName`, `pid.mothersMaidenName`, `pid.patientAlias` (XPN); `pid.patientIdentifierList`, `pid.alternatePatientID`, `pid.patientAccountNumber`, `pid.mothersIdentifier`, `pv1.visitNumber` (CX); `pid.patientAddress`, `nk1.address`, `orc.orderingFacilityAddress`, `orc.orderingProviderAddress` (XAD); `nk1.name` (XPN). Other composites (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` — they can be promoted incrementally without further breaking changes.
+- **Migration path.** Each composite struct exposes a public `field: Field` for raw access — the v0.1.x `pid.patientName?.first?.components[0].stringValue` pattern still works as `pid.patientName?.field.first?.components[0].stringValue` (one extra hop). Or migrate to the named accessor: `pid.patientName?.familyName`. The cross-check invariant holds for both: `pid.patientName?.familyName == message["PID-5.1"]`.
+- **Multi-repetition access.** Named accessors read from the FIRST repetition. For multi-rep fields (PID-3 patient identifier list, PID-5 name with maiden, ORC-22 facility address, …), walk `.field.repetitions` and wrap each in a new composite struct via the new `init(repetition:)` convenience.
+- **Mechanism.** `Codegen.swift` recognises the composite data-type whitelist (`["XPN", "CX", "XAD"]`); when a field's `dataType` matches, the emitted accessor wraps the underlying `field(N)` call via `<Composite>.init(field:)`. Adding more composites to the whitelist is a one-line change; promoting another composite is purely additive.
+- **Round-trip preserved.** Composite structs are value-type *views* over `Field`, not owners — the segment still holds the bytes. All 48 gold-corpus fixtures round-trip byte-identical; `CompositeTypeTests.compositeRoundTripsByteIdentical` pins this.
+- 11 new tests in `Tests/HL7v2KitTests/CompositeTypeTests.swift` cover every named accessor on each composite + the `.field` migration path + multi-repetition access + cross-check against the path API + round-trip preservation. 13 existing tests across `TypedSegmentTests.swift`, `FixtureRoundTripTests.swift`, `ParseErrorTests.swift`, `ReadmeQuickstartTests.swift`, and `README.md` migrated to the new typed accessors. 183 → 194 tests across 13 → 14 suites.
+
 ### Changed (docs)
 
 - **DocC catalogue brought up to date with the v0.2 work merged on `main`**:

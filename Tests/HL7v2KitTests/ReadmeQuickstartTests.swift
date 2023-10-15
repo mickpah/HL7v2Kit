@@ -36,8 +36,8 @@ struct ReadmeQuickstartTests {
         // Typed accessors — for the segments HL7v2Kit ships dictionaries for.
         let pid = message.firstSegment(PID.self)
         let dob = pid?.dateTimeOfBirth                     // "19800101"
-        let name = pid?.patientName                         // Field? (XPN composite)
-        let familyName = name?.first?.components[0].stringValue
+        let name = pid?.patientName                         // XPN? (typed composite view)
+        let familyName = name?.familyName                   // "Smith"
 
         // MSH-18 character set is detected on parse and re-emitted on serialize.
         // UTF-8 / ASCII / 8859/1 currently supported; unrecognised declarations throw.

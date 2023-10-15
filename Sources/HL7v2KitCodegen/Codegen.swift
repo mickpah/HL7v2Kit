@@ -37,19 +37,35 @@ struct SegmentSchema: Decodable {
 
 /// HL7 data type codes whose values are scalar enough that the typed
 /// accessor returns `String?` (the flattened first-subcomponent value).
-/// Everything else returns `Field?` and the caller reaches into components.
 let scalarDataTypes: Set<String> = [
     "SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "GTS", "TX", "DTM",
 ]
 
+/// HL7 composite data types for which HL7v2Kit ships a Swift struct view
+/// (v0.2-C1). Accessors return `<Composite>?` instead of `Field?` —
+/// callers reach into the named accessors on the struct, with `.field`
+/// available for unexposed components and additional repetitions.
+let compositeDataTypes: Set<String> = ["XPN", "CX", "XAD"]
+
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
-    let returnsString = scalarDataTypes.contains(field.dataType)
-    let returnType = returnsString ? "String?" : "Field?"
-    let body = returnsString
-        ? "field(\(field.index))?.stringValue"
-        : "field(\(field.index))"
+    let returnType: String
+    let body: String
+    let docTail: String
+    if scalarDataTypes.contains(field.dataType) {
+        returnType = "String?"
+        body = "field(\(field.index))?.stringValue"
+        docTail = ""
+    } else if compositeDataTypes.contains(field.dataType) {
+        returnType = "\(field.dataType)?"
+        body = "field(\(field.index)).map(\(field.dataType).init(field:))"
+        docTail = " Returns the typed ``\(field.dataType)`` view; use `.field` for raw access."
+    } else {
+        returnType = "Field?"
+        body = "field(\(field.index))"
+        docTail = ""
+    }
     return """
-        /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.
+        /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(docTail)
         public var \(field.swiftName): \(returnType) {
             \(body)
         }

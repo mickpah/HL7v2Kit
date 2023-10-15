@@ -25,8 +25,8 @@ let patientFamilyName = message["PID-5.1"]
 // Typed accessors — for the segments HL7v2Kit ships dictionaries for.
 let pid = message.firstSegment(PID.self)
 let dob = pid?.dateTimeOfBirth                     // "19800101"
-let name = pid?.patientName                         // Field? (XPN composite)
-let familyName = name?.first?.components[0].stringValue
+let name = pid?.patientName                         // XPN? (typed composite view)
+let familyName = name?.familyName                   // "Smith"
 
 // MSH-18 character set is detected on parse and re-emitted on serialize.
 // UTF-8 / ASCII / 8859/1 currently supported; unrecognised declarations throw.
@@ -38,7 +38,7 @@ let rebuilt = message.serialize()
 assert(rebuilt == wire)
 ```
 
-Typed segments currently shipped for HL7 v2.5.1 (all 9 from spec § 17): `MSH` (all 21 fields), `PID` (30 of 39), `NTE` (all 4), `AL1` (all 6), `ORC` (19 of 31), `OBX` (all 17), `OBR` (all 47), `NK1` (13 commonly-used), `PV1` (20 commonly-used). Other segment IDs (Z-segments, version-specific extras) come back as `UnknownSegment` and remain accessible via path strings.
+Typed segments currently shipped for HL7 v2.5.1 (all 9 from spec § 17): `MSH` (all 21 fields), `PID` (all 39), `NTE` (all 4), `AL1` (all 6), `ORC` (all 31), `OBX` (all 17), `OBR` (all 47), `NK1` (13 commonly-used), `PV1` (20 commonly-used). Composite-typed fields on those segments — XPN (`patientName`, `mothersMaidenName`, `nk1.name`, …), CX (`patientIdentifierList`, `patientAccountNumber`, `pv1.visitNumber`, …), XAD (`patientAddress`, `nk1.address`, `orderingFacilityAddress`, `orderingProviderAddress`) — return typed structs with named accessors (`.familyName`, `.id`, `.streetAddress`, …) instead of raw `Field?`. Other segment IDs (Z-segments, version-specific extras) come back as `UnknownSegment` and remain accessible via path strings.
 
 ## Installation
 

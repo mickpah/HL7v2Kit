@@ -276,7 +276,7 @@ struct ParseErrorTests {
             Issue.record("PID did not hydrate")
             return
         }
-        #expect(pid.patientIdentifierList?.repetitions.count == 1000)
+        #expect(pid.patientIdentifierList?.field.repetitions.count == 1000)
     }
 
     @Test("Trailing CR-only message round-trips")
@@ -346,8 +346,7 @@ struct ParseErrorTests {
             Issue.record("PID did not hydrate under custom encoding chars")
             return
         }
-        let firstID = pid.patientIdentifierList?.first?.components.first?.stringValue
-        #expect(firstID == "SYN-0001")
+        #expect(pid.patientIdentifierList?.id == "SYN-0001")
         // Round-trip must use the custom chars on output.
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == wire, "Custom encoding chars must round-trip")

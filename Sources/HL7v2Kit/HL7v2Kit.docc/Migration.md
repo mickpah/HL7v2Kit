@@ -34,6 +34,61 @@ New accessors on ``ORC``:
 
 Pure additions — existing accessor names and return types are unchanged. See <doc:TypedSegments>.
 
+### Typed composite data types (v0.2-C1) — API-breaking
+
+Typed-segment accessors for XPN-, CX-, and XAD-typed fields now return Swift struct views (`XPN?`, `CX?`, `XAD?`) instead of raw `Field?`. The new structs expose named accessors for the most common components:
+
+```swift
+// Before:
+let family = pid.patientName?.first?.components[0].stringValue   // "Smith"
+let mrn    = pid.patientIdentifierList?.first?.components.first?.stringValue
+let street = pid.patientAddress?.first?.components[0].stringValue
+
+// Now:
+let family = pid.patientName?.familyName                          // "Smith"
+let mrn    = pid.patientIdentifierList?.id
+let street = pid.patientAddress?.streetAddress
+```
+
+**Migration path for v0.1.x callers.** Each composite struct exposes a public `field: Field` for raw access — so the v0.1.x pattern continues to work with one extra hop:
+
+```swift
+let family = pid.patientName?.field.first?.components[0].stringValue
+```
+
+Other composites (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` for now. Each can be promoted to a typed struct in a future stage without further breaking changes — the codegen recognises composite data-type codes via a whitelist.
+
+**Multi-repetition access.** XPN/CX/XAD named accessors read from the **first** repetition. For multi-rep fields like PID-3 (patient identifier list) or PID-5 (legal name + maiden name), walk `.field.repetitions` and wrap each in an additional composite struct via the `init(repetition:)` convenience:
+
+```swift
+let identifiers = pid.patientIdentifierList?.field.repetitions.map { CX(repetition: $0) }
+identifiers?.forEach { print("\($0.id ?? "") (\($0.identifierTypeCode ?? ""))") }
+```
+
+### Component-level grammar in Validator (v0.2-V2)
+
+`Validator` now enforces required sub-components on populated composite-typed fields. Each typed composite carries its own `static let requiredComponents: [RequiredComponent]`:
+
+| Composite | Required component |
+|---|---|
+| ``XPN`` | XPN-1 Family Name |
+| ``CX`` | CX-1 ID Number |
+| ``XAD`` | XAD-1 Street Address |
+
+When a composite is populated but a required component is empty, the validator emits ``IssueCode/requiredComponentMissing`` with a component-level path:
+
+```swift
+// PID-5 (XPN) = ^John^A — family name component empty
+let report = Validator().validate(message)
+// .errors contains an .requiredComponentMissing issue at PID[1]-5.1
+```
+
+``IssueLocation`` gains a `componentIndex: Int?` for component-level issues. ``IssueLocation/pathDescription`` renders as `"PID[1]-5.1"` when the component index is set, alongside the existing `"PID[1]-3"` (field-level) and `"ZAU[1]"` (segment-level) shapes.
+
+New toggle: ``ValidationOptions/checkComponentGrammar`` (default `true`; ``ValidationOptions/lenient`` disables it; ``ValidationOptions/strict`` keeps it on).
+
+**Behaviour change for consumers.** Senders that populate a composite without the required first component now produce a `.requiredComponentMissing` error where v0.1.x produced none. The 48 gold-corpus fixtures all populate the required components and remain unaffected (pinned by `ComponentGrammarTests.fixtureCorpusNoComponentErrors`). Composites HL7v2Kit hasn't typed yet (CE / CWE / EI / XCN / ...) skip silently — promotion is incremental.
+
 ### Conditional-field evaluation in Validator (v0.2-V1)
 
 v0.1.0 treated `optionality=C` (conditional) the same as `optionality=O`. ``Validator`` now evaluates `.conditional` fields against an optional predicate carried on ``FieldGrammar/condition``:
@@ -55,23 +110,9 @@ New toggle: ``ValidationOptions/checkConditionalFields`` (default `true`; ``Vali
 
 The items below are tracked for v0.2 but have **not** landed on `main` yet. This section stays informational so consumers can plan ahead.
 
-### Typed composite data types
+### More composite data types
 
-v0.1.0/v0.1.x typed-segment accessors return `Field?` for structured HL7 data types (XPN, CX, XAD, CE, CWE, EI, XCN, ...). v0.2 plans Swift struct wrappers for the most common composites — for example:
-
-```swift
-// Current:
-let family = pid.patientName?.first?.components[0].stringValue
-
-// Planned (v0.2-C1):
-let family = pid.patientName?.first?.familyName
-```
-
-Both forms will likely coexist for at least one minor release. The Swift struct accessors are additions, not replacements. Tracked as v0.2-C1; will bump the line to `0.2.0` because the changes touch the codegen template and every typed-segment file regenerates.
-
-### Component-level grammar in Validator
-
-v0.1.0 / current `main` only check field-level rules in ``Validator``. v0.2 plans component-level cardinality (e.g. XPN's family-name component being non-empty when XPN-1 is populated). Tracked as v0.2-V2; depends on the typed composite work above.
+v0.2-C1 shipped XPN / CX / XAD. The other v2.5.1 composites (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` and can be promoted incrementally without further breaking changes. Each promotion is additive: the codegen template already recognises a composite-type whitelist, and any new struct just needs to follow the XPN/CX/XAD pattern (wraps `Field`, exposes named accessors, `Sendable + Equatable + Hashable`).
 
 ### Performance budget tests
 
