@@ -31,6 +31,14 @@ import Foundation
 /// and agency) are reachable via ``CX/field`` but not exposed as named
 /// accessors in v0.2.
 public struct CX: Sendable, Equatable, Hashable {
+    /// Required components for the CX composite per HL7 v2.5.1 §2.A.14.
+    /// ``Validator`` consults this when the `checkComponentGrammar` toggle
+    /// is on: if CX is populated but one of these components is empty,
+    /// the validator emits ``IssueCode/requiredComponentMissing``. v0.2-V2.
+    public static let requiredComponents: [RequiredComponent] = [
+        RequiredComponent(index: 1, name: "ID Number"),
+    ]
+
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first, or to components not exposed as
     /// named accessors.

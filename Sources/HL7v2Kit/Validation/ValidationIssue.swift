@@ -27,17 +27,30 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
     public let segmentIndex: Int
     /// 1-based v2 field index, or nil for a segment-level issue.
     public let fieldIndex: Int?
+    /// 1-based component index within a composite-typed field, or nil for
+    /// a field-level issue. Set by ``IssueCode/requiredComponentMissing``
+    /// when a composite is populated but a required sub-component is
+    /// missing — e.g. PID-5 (XPN) populated with no XPN-1 family name
+    /// renders as `"PID[1]-5.1"`. v0.2-V2.
+    public let componentIndex: Int?
 
-    public init(segmentID: String, segmentIndex: Int, fieldIndex: Int? = nil) {
+    public init(
+        segmentID: String,
+        segmentIndex: Int,
+        fieldIndex: Int? = nil,
+        componentIndex: Int? = nil
+    ) {
         self.segmentID = segmentID
         self.segmentIndex = segmentIndex
         self.fieldIndex = fieldIndex
+        self.componentIndex = componentIndex
     }
 
-    /// Human-readable v2 path (e.g. `"PID[1]-3"` or `"ZAU[1]"`).
+    /// Human-readable v2 path (e.g. `"PID[1]-3"`, `"PID[1]-5.1"`, `"ZAU[1]"`).
     public var pathDescription: String {
         var s = "\(segmentID)[\(segmentIndex)]"
         if let fieldIndex { s += "-\(fieldIndex)" }
+        if let componentIndex { s += ".\(componentIndex)" }
         return s
     }
 }
@@ -49,6 +62,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// A conditional field's condition is satisfied but the field is missing.
     /// (Reserved — v0.1.0 doesn't evaluate conditions.)
     case conditionalFieldMissing
+    /// A composite field is populated but a required component within it
+    /// is empty (e.g. PID-5 XPN populated with no XPN-1 family name).
+    /// Set on issues emitted by the component-grammar check. v0.2-V2.
+    case requiredComponentMissing
     /// A deprecated (`B`) or unsupported (`X`) field was populated.
     case fieldNotSupported
     /// A field exceeded its declared cardinality (`1` but multiple

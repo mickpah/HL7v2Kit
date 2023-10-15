@@ -118,6 +118,16 @@ public struct Validator: Sendable {
                 )
             }
 
+            if options.checkComponentGrammar, let field, isPopulated {
+                checkComponents(
+                    fieldGrammar,
+                    field: field,
+                    segmentID: grammar.segmentID,
+                    segmentIndex: occurrence,
+                    issues: &issues
+                )
+            }
+
             if options.warnDeprecatedFields, isPopulated {
                 checkDeprecation(
                     fieldGrammar,
@@ -191,6 +201,77 @@ public struct Validator: Sendable {
             location: location,
             message: "Field \(location.pathDescription) ('\(grammar.name)') is single-cardinality but has \(field.repetitions.count) repetitions"
         ))
+    }
+
+    /// Component-level grammar check (v0.2-V2). When a composite-typed
+    /// field is populated, walks every repetition and confirms that each
+    /// component listed in the composite's `requiredComponents` carries
+    /// a non-empty value. Emits one ``IssueCode/requiredComponentMissing``
+    /// per missing required component. Composite types HL7v2Kit doesn't
+    /// have typed metadata for (CE / CWE / EI / XCN / ...) skip silently.
+    private func checkComponents(
+        _ grammar: FieldGrammar,
+        field: Field,
+        segmentID: String,
+        segmentIndex: Int,
+        issues: inout [ValidationIssue]
+    ) {
+        let required = requiredComponents(forCompositeCode: grammar.dataType)
+        guard !required.isEmpty else { return }
+        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            for spec in required {
+                if !isComponentPopulated(repetition, componentIndex: spec.index) {
+                    let location = IssueLocation(
+                        segmentID: segmentID,
+                        segmentIndex: segmentIndex,
+                        fieldIndex: grammar.index,
+                        componentIndex: spec.index
+                    )
+                    issues.append(ValidationIssue(
+                        severity: .error,
+                        code: .requiredComponentMissing,
+                        location: location,
+                        message: "Required component \(location.pathDescription) ('\(spec.name)') in \(grammar.dataType) field '\(grammar.name)' is missing"
+                    ))
+                }
+            }
+        }
+    }
+
+    /// Map an HL7 composite data-type code (e.g. `"XPN"`) to the type's
+    /// `requiredComponents` metadata. Unknown codes return an empty list
+    /// so the check is a no-op for composites HL7v2Kit hasn't typed yet.
+    private func requiredComponents(forCompositeCode code: String) -> [RequiredComponent] {
+        switch code {
+        case "XPN": return XPN.requiredComponents
+        case "CX":  return CX.requiredComponents
+        case "XAD": return XAD.requiredComponents
+        default:    return []
+        }
+    }
+
+    /// True if the repetition has at least one component with at least
+    /// one non-empty subcomponent. Used to skip empty repetitions on
+    /// multi-rep composite fields.
+    private func isRepetitionPopulated(_ repetition: Repetition) -> Bool {
+        for component in repetition.components {
+            for subcomponent in component.subcomponents {
+                if !subcomponent.value.isEmpty { return true }
+            }
+        }
+        return false
+    }
+
+    /// True if the 1-based `componentIndex`-th component of `repetition`
+    /// has at least one non-empty subcomponent value. Returns false for
+    /// out-of-bounds component indices, which is the correct semantic for
+    /// "required component is missing".
+    private func isComponentPopulated(_ repetition: Repetition, componentIndex: Int) -> Bool {
+        guard repetition.components.indices.contains(componentIndex - 1) else { return false }
+        for subcomponent in repetition.components[componentIndex - 1].subcomponents {
+            if !subcomponent.value.isEmpty { return true }
+        }
+        return false
     }
 
     /// `.conditional` field check (v0.2-V1). Fires `.conditionalFieldMissing`

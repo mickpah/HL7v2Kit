@@ -42,6 +42,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
 
+### Added — component-level grammar in Validator (v0.2-V2)
+
+- **`Validator` now enforces required sub-components on populated composite-typed fields.** Each typed composite (XPN / CX / XAD) carries a `static let requiredComponents: [RequiredComponent]` listing its mandatory sub-components per HL7 v2.5.1: XPN-1 Family Name, CX-1 ID Number, XAD-1 Street Address. When a composite is populated but a required component is empty, the validator emits `IssueCode.requiredComponentMissing` with a component-level location.
+- **New `RequiredComponent` value type** (`Sources/HL7v2Kit/Composite/RequiredComponent.swift`) — `Sendable + Equatable + Hashable` shape `{ index: Int, name: String }`.
+- **`IssueLocation` gains `componentIndex: Int?`** (defaulted to nil for backward compatibility). `pathDescription` now renders as `"PID[1]-5.1"` when the component index is set, alongside the existing `"PID[1]-3"` (field-level) and `"ZAU[1]"` (segment-level) shapes.
+- **New `ValidationOptions.checkComponentGrammar: Bool`** toggle (default `true`; `.strict` keeps it on; `.lenient` disables it).
+- **Composites without typed metadata** (CE / CWE / EI / XCN / HD / MSG / PT / VID / XTN / PL / CNE / XON / EIP) skip silently — they can be promoted incrementally by adding a `static let requiredComponents` and extending `Validator.requiredComponents(forCompositeCode:)`.
+- **Backward-compatible additive change** — no migration burden on v0.1.x callers beyond the C1 breaking change. All 48 gold-corpus fixtures still produce a non-error report; the regression pin lives in `ComponentGrammarTests.fixtureCorpusNoComponentErrors`.
+- 11 new tests in `Tests/HL7v2KitTests/ComponentGrammarTests.swift` cover: XPN/CX/XAD missing-component error paths (3); positive-path no-error case (1); empty-field-hits-required-field-not-component edge (1); CX multi-repetition independent checking (1); toggle suppression (1); `.lenient` preset suppression (1); `.strict` preset enforcement (1); untyped-composite skip (1); 48-fixture regression pin (1). 194 → 205 tests across 14 → 15 suites.
+
 ### Changed — API-BREAKING (typed composites, v0.2-C1)
 
 - **Typed-segment accessors for XPN-, CX-, and XAD-typed fields now return Swift struct views** (`XPN?` / `CX?` / `XAD?`) instead of `Field?`. New structs live under `Sources/HL7v2Kit/Composite/` and expose named accessors for the most common components:

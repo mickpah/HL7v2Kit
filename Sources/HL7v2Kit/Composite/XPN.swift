@@ -30,6 +30,14 @@ import Foundation
 /// order, dates, professional suffix) are reachable via ``XPN/field`` but
 /// not exposed as named accessors in v0.2.
 public struct XPN: Sendable, Equatable, Hashable {
+    /// Required components for the XPN composite per HL7 v2.5.1 §2.A.81.
+    /// ``Validator`` consults this when the `checkComponentGrammar` toggle
+    /// is on: if XPN is populated but one of these components is empty,
+    /// the validator emits ``IssueCode/requiredComponentMissing``. v0.2-V2.
+    public static let requiredComponents: [RequiredComponent] = [
+        RequiredComponent(index: 1, name: "Family Name"),
+    ]
+
     /// The underlying ``Field``. Use this when you need access to repetitions
     /// beyond the first, or to components not exposed as named accessors.
     public let field: Field

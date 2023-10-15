@@ -30,6 +30,15 @@ public struct ValidationOptions: Sendable {
     /// through as effectively `.optional`. v0.2-V1.
     public var checkConditionalFields: Bool
 
+    /// If true (default), check component-level required-component rules
+    /// on populated composite-typed fields (XPN / CX / XAD). When a
+    /// composite is populated but one of its `requiredComponents` is
+    /// empty (e.g. PID-5 XPN populated without an XPN-1 family name), the
+    /// validator emits ``IssueCode/requiredComponentMissing``. Other
+    /// composites (CE / CWE / EI / XCN / ...) carry no required-component
+    /// metadata yet — they're skipped. v0.2-V2.
+    public var checkComponentGrammar: Bool
+
     /// If true (default), check that single-cardinality fields don't carry
     /// multiple repetitions.
     public var checkCardinality: Bool
@@ -42,12 +51,14 @@ public struct ValidationOptions: Sendable {
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
         checkConditionalFields: Bool = true,
+        checkComponentGrammar: Bool = true,
         checkCardinality: Bool = true,
         warnDeprecatedFields: Bool = true
     ) {
         self.zSegmentPolicy = zSegmentPolicy
         self.checkRequiredFields = checkRequiredFields
         self.checkConditionalFields = checkConditionalFields
+        self.checkComponentGrammar = checkComponentGrammar
         self.checkCardinality = checkCardinality
         self.warnDeprecatedFields = warnDeprecatedFields
     }
@@ -63,18 +74,20 @@ public struct ValidationOptions: Sendable {
         zSegmentPolicy: .reject,
         checkRequiredFields: true,
         checkConditionalFields: true,
+        checkComponentGrammar: true,
         checkCardinality: true,
         warnDeprecatedFields: true
     )
 
     /// Only structural / grammar-required checks. No Z-segment chatter,
-    /// no deprecated-field warnings, no conditional-field evaluation.
-    /// Useful when you just want a yes/no "would HL7v2Kit be happy parsing
-    /// this round-trip?" answer.
+    /// no deprecated-field warnings, no conditional-field evaluation, no
+    /// component-grammar enforcement. Useful when you just want a yes/no
+    /// "would HL7v2Kit be happy parsing this round-trip?" answer.
     public static let lenient = ValidationOptions(
         zSegmentPolicy: .ignore,
         checkRequiredFields: true,
         checkConditionalFields: false,
+        checkComponentGrammar: false,
         checkCardinality: false,
         warnDeprecatedFields: false
     )
