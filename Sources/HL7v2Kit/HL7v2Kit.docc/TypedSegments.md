@@ -33,16 +33,21 @@ let setID = pid.setID                                     // "1"
 let dob = pid.dateTimeOfBirth                             // "19800101"
 let sex = pid.administrativeSex                           // "M"
 
-// Structured (composite) accessors return Field?
-let name = pid.patientName                                // XPN field
-let familyName = name?.first?.components[0].stringValue
-let givenName = name?.first?.components[1].stringValue
+// Typed composite (XPN / CX / XAD) accessors return a struct view with named accessors.
+let name = pid.patientName                                // XPN? (typed composite view)
+let familyName = name?.familyName                         // "Smith"
+let givenName = name?.givenName                           // "John"
+
+// Other structured HL7 data types still return Field? — drill in by hand.
+let race = pid.race                                       // Field? (CE)
+let raceCode = race?.first?.components[0].stringValue
 ```
 
 The accessor's return type encodes the field's HL7 datatype:
 
 - **`String?`** for scalar HL7 datatypes (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`). Returns the rendered first-subcomponent value if the field is single-everything-the-way-down; nil if absent.
-- **`Field?`** for structured HL7 datatypes (`HD`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, `XTN`, `PL`, `MSG`, `PT`, `VID`, ...). Returns the underlying ``Field`` — the caller reaches into ``Field/repetitions``, ``Repetition/components``, and ``Component/subcomponents`` themselves.
+- **`XPN?` / `CX?` / `XAD?`** for the three composite data types HL7v2Kit ships typed wrappers for (v0.2-C1). Each struct exposes named accessors (`familyName`, `id`, `streetAddress`, …) for the most common components, plus a public `field: Field` for raw access to repetitions and unexposed components.
+- **`Field?`** for other structured HL7 datatypes (`HD`, `CE`, `CWE`, `EI`, `XCN`, `XTN`, `PL`, `MSG`, `PT`, `VID`, `XON`, `CNE`, `EIP`, ...). Returns the underlying ``Field`` — the caller reaches into ``Field/repetitions``, ``Repetition/components``, and ``Component/subcomponents`` themselves. Each of these can be promoted to a typed composite struct in a future stage without breaking changes.
 
 ## Iterating multi-occurrence segments
 

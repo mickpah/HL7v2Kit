@@ -118,9 +118,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(21)
     }
 
-    /// ORC-22: Ordering Facility Address. HL7 data type `XAD`.
-    public var orderingFacilityAddress: Field? {
-        field(22)
+    /// ORC-22: Ordering Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var orderingFacilityAddress: XAD? {
+        field(22).map(XAD.init(field:))
     }
 
     /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`.
@@ -128,9 +128,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(23)
     }
 
-    /// ORC-24: Ordering Provider Address. HL7 data type `XAD`.
-    public var orderingProviderAddress: Field? {
-        field(24)
+    /// ORC-24: Ordering Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var orderingProviderAddress: XAD? {
+        field(24).map(XAD.init(field:))
     }
 
     /// ORC-25: Order Status Modifier. HL7 data type `CWE`.

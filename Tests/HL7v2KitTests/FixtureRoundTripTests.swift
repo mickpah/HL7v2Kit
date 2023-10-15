@@ -87,16 +87,16 @@ struct FixtureRoundTripTests {
                 pid.administrativeSex == message["PID-8"],
                 "PID-8 typed/path drift in \(fixture.lastPathComponent)"
             )
-            // PID-3 (CX, repeats): first repetition's first component (the
-            // identifier number) should equal PID-3.1.
+            // PID-3 (CX, repeats): the typed CX view exposes the first
+            // repetition's ID via .id, which equals PID-3.1.
             #expect(
-                pid.patientIdentifierList?.first?.components.first?.stringValue == message["PID-3.1"],
+                pid.patientIdentifierList?.id == message["PID-3.1"],
                 "PID-3.1 typed/path drift in \(fixture.lastPathComponent)"
             )
-            // PID-5 (XPN): family name.
-            if let nameField = pid.patientName {
+            // PID-5 (XPN): family name via the typed accessor.
+            if let name = pid.patientName {
                 #expect(
-                    nameField.first?.components[safe: 0]?.stringValue == message["PID-5.1"],
+                    name.familyName == message["PID-5.1"],
                     "PID-5.1 typed/path drift in \(fixture.lastPathComponent)"
                 )
             }

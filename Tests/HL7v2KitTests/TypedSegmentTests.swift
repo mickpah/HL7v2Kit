@@ -47,25 +47,24 @@ struct TypedSegmentTests {
         #expect(pid.setID == message["PID-1"])
     }
 
-    @Test("PID-3 (structured CX, repeats) — typed accessor returns the Field")
+    @Test("PID-3 (CX composite) — typed accessor exposes the ID via .id")
     func patientIdentifierListAgrees() throws {
         let message = try Parser().parse(wire)
         let pid = try #require(message.firstSegment(PID.self))
-        let field = try #require(pid.patientIdentifierList)
-        // First component of the (only) repetition is the ID number.
-        #expect(field.first?.components.first?.stringValue == "123456")
-        #expect(message["PID-3.1"] == "123456")
+        let identifier = try #require(pid.patientIdentifierList)
+        #expect(identifier.id == "123456")
+        #expect(identifier.id == message["PID-3.1"])
     }
 
-    @Test("PID-5 (structured XPN) — components reachable via the typed Field")
+    @Test("PID-5 (XPN composite) — typed accessor exposes family/given names")
     func patientNameAgrees() throws {
         let message = try Parser().parse(wire)
         let pid = try #require(message.firstSegment(PID.self))
         let name = try #require(pid.patientName)
-        #expect(name.first?.components[0].stringValue == "Smith")
-        #expect(name.first?.components[1].stringValue == "John")
-        #expect(message["PID-5.1"] == "Smith")
-        #expect(message["PID-5.2"] == "John")
+        #expect(name.familyName == "Smith")
+        #expect(name.givenName == "John")
+        #expect(name.familyName == message["PID-5.1"])
+        #expect(name.givenName == message["PID-5.2"])
     }
 
     @Test("PID-7 (TS treated as scalar) — typed accessor returns String")
@@ -263,11 +262,12 @@ struct TypedSegmentTests {
     func orcOrderingFacilityNameAndAddressAgree() throws {
         let message = try Parser().parse(orcFringeWire)
         let orc = try #require(message.firstSegment(ORC.self))
-        let name = try #require(orc.orderingFacilityName)
-        let addr = try #require(orc.orderingFacilityAddress)
+        let name = try #require(orc.orderingFacilityName)        // XON stays Field?
+        let addr = try #require(orc.orderingFacilityAddress)     // XAD typed
         #expect(name.first?.components[0].stringValue == "FacilityName")
-        #expect(addr.first?.components[0].stringValue == "1 Hospital Rd")
-        #expect(message["ORC-22.3"] == "Sydney")
+        #expect(addr.streetAddress == "1 Hospital Rd")
+        #expect(addr.city == "Sydney")
+        #expect(addr.city == message["ORC-22.3"])
     }
 
     @Test("ORC-27 (TS scalar) filler's expected availability date/time")
@@ -607,8 +607,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(extendedPIDWire)
         let pid = try #require(message.firstSegment(PID.self))
         let account = try #require(pid.patientAccountNumber)
-        #expect(account.first?.components[0].stringValue == "ACC12345")
-        #expect(message["PID-18.1"] == "ACC12345")
+        #expect(account.id == "ACC12345")
+        #expect(account.id == message["PID-18.1"])
     }
 
     @Test("PID-23 (ST) birth place")
@@ -748,12 +748,12 @@ struct TypedSegmentTests {
     func nk1NameAndRelationshipAgree() throws {
         let message = try Parser().parse(nk1Wire)
         let nk1 = try #require(message.firstSegment(NK1.self))
-        let name = try #require(nk1.name)
-        let relationship = try #require(nk1.relationship)
-        #expect(name.first?.components[0].stringValue == "Smith")
-        #expect(name.first?.components[1].stringValue == "Mary")
+        let name = try #require(nk1.name)                        // XPN typed
+        let relationship = try #require(nk1.relationship)        // CE stays Field?
+        #expect(name.familyName == "Smith")
+        #expect(name.givenName == "Mary")
         #expect(relationship.first?.components[1].stringValue == "Spouse")
-        #expect(message["NK1-2.1"] == "Smith")
+        #expect(name.familyName == message["NK1-2.1"])
         #expect(message["NK1-3.2"] == "Spouse")
     }
 
@@ -841,8 +841,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(pv1Wire)
         let pv1 = try #require(message.firstSegment(PV1.self))
         let visit = try #require(pv1.visitNumber)
-        #expect(visit.first?.components[0].stringValue == "V001")
-        #expect(message["PV1-19.1"] == "V001")
+        #expect(visit.id == "V001")
+        #expect(visit.id == message["PV1-19.1"])
     }
 
     @Test("PV1 round-trips byte-perfectly through typed hydration")
@@ -868,7 +868,7 @@ struct TypedSegmentTests {
         let nk1 = try #require(message.firstSegment(NK1.self))
         #expect(pid.administrativeSex == "M")
         #expect(pv1.patientClass == "I")
-        #expect(nk1.name?.first?.components[0].stringValue == "Smith")
+        #expect(nk1.name?.familyName == "Smith")
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == wire)
     }

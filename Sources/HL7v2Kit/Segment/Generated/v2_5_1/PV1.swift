@@ -33,9 +33,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(4)?.stringValue
     }
 
-    /// PV1-5: Preadmit Number. HL7 data type `CX`.
-    public var preadmitNumber: Field? {
-        field(5)
+    /// PV1-5: Preadmit Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var preadmitNumber: CX? {
+        field(5).map(CX.init(field:))
     }
 
     /// PV1-6: Prior Patient Location. HL7 data type `PL`.
@@ -103,9 +103,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(18)?.stringValue
     }
 
-    /// PV1-19: Visit Number. HL7 data type `CX`.
-    public var visitNumber: Field? {
-        field(19)
+    /// PV1-19: Visit Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var visitNumber: CX? {
+        field(19).map(CX.init(field:))
     }
 
     /// PV1-20: Financial Class. HL7 data type `FC`.

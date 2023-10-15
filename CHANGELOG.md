@@ -42,6 +42,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
 
+### Changed — API-BREAKING (typed composites, v0.2-C1)
+
+- **Typed-segment accessors for XPN-, CX-, and XAD-typed fields now return Swift struct views** (`XPN?` / `CX?` / `XAD?`) instead of `Field?`. New structs live under `Sources/HL7v2Kit/Composite/` and expose named accessors for the most common components:
+  - `XPN` — `familyName`, `givenName`, `middleName`, `suffix`, `prefix`, `nameTypeCode`
+  - `CX` — `id`, `checkDigit`, `checkDigitScheme`, `assigningAuthorityNamespace`, `identifierTypeCode`, `assigningFacilityNamespace`
+  - `XAD` — `streetAddress`, `otherDesignation`, `city`, `state`, `zip`, `country`, `addressType`
+- **Affected accessors** (any field with `dataType ∈ {XPN, CX, XAD}`): `pid.patientName`, `pid.mothersMaidenName`, `pid.patientAlias` (XPN); `pid.patientIdentifierList`, `pid.alternatePatientID`, `pid.patientAccountNumber`, `pid.mothersIdentifier`, `pv1.visitNumber` (CX); `pid.patientAddress`, `nk1.address`, `orc.orderingFacilityAddress`, `orc.orderingProviderAddress` (XAD); `nk1.name` (XPN). Other composites (CE, CWE, EI, XCN, HD, MSG, PT, VID, XTN, PL, CNE, XON, EIP) still return `Field?` — they can be promoted incrementally without further breaking changes.
+- **Migration path.** Each composite struct exposes a public `field: Field` for raw access — the v0.1.x `pid.patientName?.first?.components[0].stringValue` pattern still works as `pid.patientName?.field.first?.components[0].stringValue` (one extra hop). Or migrate to the named accessor: `pid.patientName?.familyName`. The cross-check invariant holds for both: `pid.patientName?.familyName == message["PID-5.1"]`.
+- **Multi-repetition access.** Named accessors read from the FIRST repetition. For multi-rep fields (PID-3 patient identifier list, PID-5 name with maiden, ORC-22 facility address, …), walk `.field.repetitions` and wrap each in a new composite struct via the new `init(repetition:)` convenience.
+- **Mechanism.** `Codegen.swift` recognises the composite data-type whitelist (`["XPN", "CX", "XAD"]`); when a field's `dataType` matches, the emitted accessor wraps the underlying `field(N)` call via `<Composite>.init(field:)`. Adding more composites to the whitelist is a one-line change; promoting another composite is purely additive.
+- **Round-trip preserved.** Composite structs are value-type *views* over `Field`, not owners — the segment still holds the bytes. All 48 gold-corpus fixtures round-trip byte-identical; `CompositeTypeTests.compositeRoundTripsByteIdentical` pins this.
+- 11 new tests in `Tests/HL7v2KitTests/CompositeTypeTests.swift` cover every named accessor on each composite + the `.field` migration path + multi-repetition access + cross-check against the path API + round-trip preservation. 13 existing tests across `TypedSegmentTests.swift`, `FixtureRoundTripTests.swift`, `ParseErrorTests.swift`, `ReadmeQuickstartTests.swift`, and `README.md` migrated to the new typed accessors. 183 → 194 tests across 13 → 14 suites.
+
 ### Changed (docs)
 
 - **DocC catalogue brought up to date with the v0.2 work merged on `main`**:
