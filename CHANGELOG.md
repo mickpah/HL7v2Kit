@@ -42,6 +42,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
 
+### Added — performance budget tests (v0.2-X1)
+
+- **New `Tests/HL7v2KitTests/PerformanceTests.swift`** carrying 5 nightly latency assertions per spec § 9.5 (Apple Silicon M1+ budgets):
+  - Parse 1 message (~600 bytes) under 1ms warm
+  - Parse 1,000 messages under 5s
+  - Round-trip 1,000 messages under 10s
+  - Validate 1 message (default options) under 2ms warm
+  - Validate 1,000 messages under 10s
+- **Skipped by default.** The suite gates on `ProcessInfo.processInfo.environment["RUN_PERF_TESTS"] == nil` via the `@Suite(.disabled(if:))` trait, so the everyday `swift test` run stays fast. To run the perf suite: `RUN_PERF_TESTS=1 xcrun swift test`. Output marks the skipped tests with `➜ ... skipped: "Set RUN_PERF_TESTS=1 to run the perf suite"`.
+- **Timing uses `Date()` differences** for portability with macOS 12+ (Foundation's `ContinuousClock` is macOS 13+). Precision is ~µs — plenty for ms/s budgets.
+- Representative ~600-byte ADT^A01 wire (synthesised from the `adt_a01_minimal.hl7` gold-corpus fixture) carries the composite types most AU clinical traffic populates (CX/XPN/CE/XAD/XTN on PID; PL/XCN on PV1) so the budget covers a realistic critical path. Warm-up loops (100 iterations) precede the single-iteration measurements.
+- Measured on the dev machine at landing time: parse-warm ≈ 41ms suite time; 1000-parse 0.176s; 1000-round-trip 0.233s; validate-warm 35ms suite time; 1000-validate 0.056s. All comfortably under budget; spec also reserves a 20% regression threshold above these numbers.
+- 5 new tests in the disabled-by-default suite. Default `swift test` count: 205 → 210 (5 skipped, not 5 net additions).
+
 ### Added — component-level grammar in Validator (v0.2-V2)
 
 - **`Validator` now enforces required sub-components on populated composite-typed fields.** Each typed composite (XPN / CX / XAD) carries a `static let requiredComponents: [RequiredComponent]` listing its mandatory sub-components per HL7 v2.5.1: XPN-1 Family Name, CX-1 ID Number, XAD-1 Street Address. When a composite is populated but a required component is empty, the validator emits `IssueCode.requiredComponentMissing` with a component-level location.
