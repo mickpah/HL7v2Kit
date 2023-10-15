@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_No changes yet._
+
+## [0.2.0] — 2026-06-15
+
 ### Added (infrastructure)
 
 - **Top-level `HL7v2Kit.xcworkspace/`** at the repo root. Open with `open HL7v2Kit.xcworkspace` instead of `Package.swift` directly. Single `<FileRef>` to the package today; scales to multi-repo when `FHIRAUCoreKit` and `AUCoreWorkbench` land by adding more `<FileRef>` entries. The auto-generated `.swiftpm/xcode/package.xcworkspace` stays gitignored.
@@ -40,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Codegen extended:** `FieldSchema.condition: String?` (optional Decodable) feeds the new `condition:` argument in the emitted `FieldGrammar(...)` table entries. `FieldGrammar.init`'s `condition: String? = nil` default keeps hand-rolled construction compatible.
 - 6 new tests in `Tests/HL7v2KitTests/ConditionalFieldTests.swift`: condition triggers with field empty → error, condition triggers with field populated → no error, condition doesn't trigger → no error, `checkConditionalFields=false` suppresses, `.lenient` preset suppresses, full-corpus regression pin. 173 → 179 tests across 12 → 13 suites.
 
-Tests: 159 (v0.1.0 tag) → 183 (post-merge of parser-hardening + fringe-fields). 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 = 24 net. All 48 fixture round-trips still byte-perfect.
+Tests: 159 (v0.1.0 tag) → 205 (default `swift test`); 210 with `RUN_PERF_TESTS=1`. Per-stage net: 4 from parser-hardening (P1+P2+P3) + 14 from F1 + 6 from V1 + 11 from C1 + 11 from V2 + 5 from X1 (skipped by default) = 51 net; 46 active by default. All 48 fixture round-trips still byte-perfect.
 
 ### Added — performance budget tests (v0.2-X1)
 
