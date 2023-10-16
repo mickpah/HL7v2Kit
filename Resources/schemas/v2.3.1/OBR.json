@@ -1,0 +1,351 @@
+{
+  "segmentID": "OBR",
+  "version": "2.3.1",
+  "description": "Observation Request",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - OBR",
+      "dataType": "SI",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "placerOrderNumber",
+      "name": "Placer Order Number",
+      "dataType": "EI",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "fillerOrderNumber",
+      "name": "Filler Order Number",
+      "dataType": "EI",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "universalServiceIdentifier",
+      "name": "Universal Service Identifier",
+      "dataType": "CE",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "priority",
+      "name": "Priority (deprecated)",
+      "dataType": "ID",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "requestedDateTime",
+      "name": "Requested Date/Time (deprecated)",
+      "dataType": "TS",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "observationDateTime",
+      "name": "Observation Date/Time",
+      "dataType": "TS",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "observationEndDateTime",
+      "name": "Observation End Date/Time",
+      "dataType": "TS",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "collectionVolume",
+      "name": "Collection Volume",
+      "dataType": "CQ",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "collectorIdentifier",
+      "name": "Collector Identifier",
+      "dataType": "XCN",
+      "optionality": "C",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "specimenActionCode",
+      "name": "Specimen Action Code",
+      "dataType": "ID",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "dangerCode",
+      "name": "Danger Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "relevantClinicalInformation",
+      "name": "Relevant Clinical Information",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "specimenReceivedDateTime",
+      "name": "Specimen Received Date/Time",
+      "dataType": "TS",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "specimenSource",
+      "name": "Specimen Source (deprecated)",
+      "dataType": "SPS",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "orderingProvider",
+      "name": "Ordering Provider",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 17,
+      "swiftName": "orderCallbackPhoneNumber",
+      "name": "Order Callback Phone Number",
+      "dataType": "XTN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 18,
+      "swiftName": "placerField1",
+      "name": "Placer Field 1",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "placerField2",
+      "name": "Placer Field 2",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "fillerField1",
+      "name": "Filler Field 1",
+      "dataType": "ST",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "fillerField2",
+      "name": "Filler Field 2",
+      "dataType": "ST",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 22,
+      "swiftName": "resultsReportStatusChangeDateTime",
+      "name": "Results Rpt/Status Chng - Date/Time",
+      "dataType": "TS",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 23,
+      "swiftName": "chargeToPractice",
+      "name": "Charge to Practice",
+      "dataType": "MOC",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "diagnosticServSectID",
+      "name": "Diagnostic Serv Sect ID",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "resultStatus",
+      "name": "Result Status",
+      "dataType": "ID",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 26,
+      "swiftName": "parentResult",
+      "name": "Parent Result",
+      "dataType": "PRL",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 27,
+      "swiftName": "quantityTiming",
+      "name": "Quantity/Timing (deprecated)",
+      "dataType": "TQ",
+      "optionality": "B",
+      "repeatability": "*"
+    },
+    {
+      "index": 28,
+      "swiftName": "resultCopiesTo",
+      "name": "Result Copies To",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 29,
+      "swiftName": "parent",
+      "name": "Parent",
+      "dataType": "EIP",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 30,
+      "swiftName": "transportationMode",
+      "name": "Transportation Mode",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 31,
+      "swiftName": "reasonForStudy",
+      "name": "Reason for Study",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 32,
+      "swiftName": "principalResultInterpreter",
+      "name": "Principal Result Interpreter",
+      "dataType": "NDL",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 33,
+      "swiftName": "assistantResultInterpreter",
+      "name": "Assistant Result Interpreter",
+      "dataType": "NDL",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 34,
+      "swiftName": "technician",
+      "name": "Technician",
+      "dataType": "NDL",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 35,
+      "swiftName": "transcriptionist",
+      "name": "Transcriptionist",
+      "dataType": "NDL",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 36,
+      "swiftName": "scheduledDateTime",
+      "name": "Scheduled Date/Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 37,
+      "swiftName": "numberOfSampleContainers",
+      "name": "Number of Sample Containers",
+      "dataType": "NM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 38,
+      "swiftName": "transportLogisticsOfCollectedSample",
+      "name": "Transport Logistics of Collected Sample",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 39,
+      "swiftName": "collectorsComment",
+      "name": "Collector's Comment",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 40,
+      "swiftName": "transportArrangementResponsibility",
+      "name": "Transport Arrangement Responsibility",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 41,
+      "swiftName": "transportArranged",
+      "name": "Transport Arranged",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 42,
+      "swiftName": "escortRequired",
+      "name": "Escort Required",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 43,
+      "swiftName": "plannedPatientTransportComment",
+      "name": "Planned Patient Transport Comment",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    }
+  ]
+}
