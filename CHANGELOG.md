@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — MLLP framing (v0.3-T1)
+
+- **`MLLP.frame(_:)`** — wraps an HL7 message body in the standard Minimum Lower Layer Protocol envelope (`0x0B <body> 0x1C 0x0D`). Callers stream the result directly to a TCP socket; body bytes are opaque (no escape processing at the MLLP layer).
+- **`MLLPUnframer`** — stateful unframer that consumes incremental TCP byte chunks via `feed(_:)` and emits complete frame bodies as their trailing `0x1C 0x0D` arrives. Handles realistic TCP boundary cases: half-frames across multiple receives, multiple frames in one receive, byte-at-a-time delivery, garbage prefix before the first start byte (silently dropped — common receiver-resilience pattern), and mid-frame restart (a fresh `0x0B` re-syncs the buffer). Exposes `isMidFrame: Bool` for application-layer half-frame-timeout detection.
+- **`MLLP`** namespace exports `startByte` (`0x0B`), `endBodyByte` (`0x1C`), `endFrameByte` (`0x0D`) for callers that need to inspect or hand-construct frames at the byte level.
+- **Portable-kernel placement**. New `Sources/HL7v2Kit/Transport/MLLPCodec.swift` carries the PORTABLE KERNEL header per ADR-006 — `Data` only at API edges, `[UInt8]` for the inner buffer, no Foundation dependencies beyond the type itself. Future Rust/Go port translates this file directly.
+- 12 new tests in `Tests/HL7v2KitTests/MLLPCodecTests.swift` cover framing (single + empty body + body preserved), unframing happy path (one frame / two concatenated / empty body), partial-frame streaming (half-and-half / three-way split / one-byte-at-a-time), resync (garbage prefix dropped / mid-frame restart), round-trip preservation, and end-to-end `frame() → unframe() → Parser.parse()` integration. 272 → 284 tests across 17 → 18 suites.
+
 ### Added — HL7 v2.3 grammar table + `Version.v2_3` case (v0.3-G3)
 
 - **`Version.v2_3 = "2.3"`** — new enum case for the oldest HL7 v2 dialect HL7v2Kit supports. `Version` enum cases now cover `.v2_3` / `.v2_3_1` / `.v2_4` / `.v2_5_1` / `.v2_8`; messages with `MSH-12 = "2.3"` previously fell through `Version(rawValue:)` to nil and the parser's silent v2.5.1 fallback. Now they parse with the correct `.version == .v2_3` and route to the v2.3 grammar table.
