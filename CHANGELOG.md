@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — API-BREAKING (typed composites, v0.3-C4)
+
+- **Typed-segment accessors for HD-, MSG-, PT-, VID-, PL-, CNE-, XON- and EIP-typed fields now return Swift struct views** instead of `Field?`. With v0.3-C4 closing out the composite-promotion track, **every populated typed-segment accessor on the 9 spec § 17 segments now returns either a `String?` (scalar) or a typed composite struct** — there are no remaining `Field?` accessors for structured HL7 datatypes on the v2.5.1 typed-segment surface. New structs live under `Sources/HL7v2Kit/Composite/` following the v0.2-C1 / v0.3-C2 / v0.3-C3 template.
+  - `HD` — `namespaceID`, `universalID`, `universalIDType`. All 3 spec components exposed.
+  - `MSG` — `messageCode`, `triggerEvent`, `messageStructure`. All 3 spec components exposed.
+  - `PT` — `processingID`, `processingMode`. All 2 spec components exposed.
+  - `VID` — `versionID`, `internationalizationCode` (first subcomponent of the nested CE), `internationalVersionID` (first subcomponent of the nested CE). All 3 spec slots exposed.
+  - `PL` — `pointOfCare`, `room`, `bed`, `facility` (first subcomponent of the nested HD). The first 4 of 12 PL components — the AU clinical traffic common case. PL-5..12 remain accessible via `.field`.
+  - `CNE` — `identifier`, `text`, `nameOfCodingSystem`, `altIdentifier`, `altText`, `nameOfAltCodingSystem`. All 6 spec components exposed (same shape as CE).
+  - `XON` — `organizationName`, `organizationNameTypeCode`, `identifierTypeCode`, `organizationIdentifier`. The 4 commonly-populated XON components; XON-3 (deprecated), XON-4/5 (check digit / scheme), XON-6 (assigning authority, nested HD), XON-8 (assigning facility, nested HD), and XON-9 remain accessible via `.field`.
+  - `EIP` — `placerAssignedIdentifier`, `fillerAssignedIdentifier`. Each accessor returns the first subcomponent of the nested EI (EI-1 entityIdentifier); for the full nested EI structure, drill into `.field.first?.components[N]`.
+- **Required-component metadata**:
+  - `MSG.requiredComponents = [(1, "Message Code")]`, `PT.requiredComponents = [(1, "Processing ID")]`, `VID.requiredComponents = [(1, "Version ID")]`, `CNE.requiredComponents = [(1, "Identifier")]`, `XON.requiredComponents = [(1, "Organization Name")]` — empty primary slot on a populated field fires `.requiredComponentMissing`.
+  - `HD.requiredComponents = []`, `PL.requiredComponents = []`, `EIP.requiredComponents = []` — empty by design. HD's "HD-1 OR (HD-2 AND HD-3)", PL's "PL-1 OR PL-4", and EIP's "either slot populated" are the same disjunctive OR-rule shape v0.3-C2 / v0.3-C3 documented for CWE / XTN — modelling these is a future `RequiredComponentSet` refactor that v0.3-C4 explicitly avoids. Each empty `requiredComponents` choice is pinned by a dedicated `…SkipsSilentlyWithNoRequiredComponents` test so the choice can't silently flip later.
+- **Affected typed-segment accessors** (any field with `dataType ∈ {HD, MSG, PT, VID, PL, CNE, XON, EIP}` across the 9 spec § 17 segments):
+  - **HD**: `MSH.sendingApplication` / `sendingFacility` / `receivingApplication` / `receivingFacility`; `PID.lastUpdateFacility`. 5 accessors.
+  - **MSG**: `MSH.messageType`. 1 accessor.
+  - **PT**: `MSH.processingID`. 1 accessor.
+  - **VID**: `MSH.versionID`. 1 accessor.
+  - **PL**: `PV1.assignedPatientLocation` / `priorPatientLocation` / `temporaryLocation`; `ORC.enterersLocation`. 4 accessors.
+  - **CNE**: `ORC.entererAuthorizationMode`. 1 accessor.
+  - **XON**: `NK1.organizationName`; `ORC.orderingFacilityName`. 2 accessors.
+  - **EIP**: `ORC.parent`; `OBR.parent`. 2 accessors.
+- **Migration path** preserved via the public `field: Field` escape hatch — the same v0.1.x → v0.3.x pattern documented for the earlier composite promotions. `pid.lastUpdateFacility?.first?.components[0].stringValue` becomes either `pid.lastUpdateFacility?.field.first?.components[0].stringValue` (one extra hop) or the named accessor `pid.lastUpdateFacility?.namespaceID`.
+- **Mechanism**. `Codegen.compositeDataTypes` whitelist extended to `["XPN", "CX", "XAD", "CE", "CWE", "EI", "XCN", "XTN", "HD", "MSG", "PT", "VID", "PL", "CNE", "XON", "EIP"]` — one-line edit. `Validator.requiredComponents(forCompositeCode:)` switch gains the 8 new cases.
+- **Behavioural change on V2 component-grammar check**: messages with a populated MSG / PT / VID / CNE / XON field that lacks the required primary component now fire `.requiredComponentMissing` — previously skipped because these composites were untyped. Gold-corpus fixtures all populate the required component properly and remain unaffected; pinned by `ComponentGrammarTests.fixtureCorpusNoComponentErrors`. HD / PL / EIP remain silent because their `requiredComponents` is empty by design.
+- **Test landscape**. `Validator`'s `untypedCompositesSkippedSilently` test rebased onto a new `hdSkipsSilentlyWithEmptyRequiredComponents` — the contract it was pinning (untyped composites skip silently) is now vacuous because every typed-segment composite is typed; the rebased test pins the related contract that HD's *deliberately empty* `requiredComponents` doesn't false-positive on legitimate HD-2-only fields. 11 existing test sites across `TypedSegmentTests.swift` migrated from `.first?.components[N].stringValue` to typed named accessors. 16 new tests in `CompositeTypeTests.swift` cover every named accessor on each of the 8 new composites + cross-check against path API + round-trip preservation. 7 new V2 tests in `ComponentGrammarTests.swift`: 5 positive enforcement tests (MSG / PT / VID / CNE / XON empty-primary fires) + 2 negative pins (PL / EIP empty-required-components skips silently). 230 → 253 tests across 16 suites.
+
 ### Changed — API-BREAKING (typed composites, v0.3-C3)
 
 - **Typed-segment accessors for EI-, XCN- and XTN-typed fields now return Swift struct views** (`EI?` / `XCN?` / `XTN?`) instead of `Field?`. New structs live under `Sources/HL7v2Kit/Composite/` following the v0.2-C1 / v0.3-C2 template (value-type view over `Field`; `Sendable + Equatable + Hashable`; `init(field:)` + `init(repetition:)`; named accessors via a private `componentValue(_:)` helper; `static let requiredComponents` for V2 enforcement).

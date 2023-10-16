@@ -251,6 +251,14 @@ public struct Validator: Sendable {
         case "EI":  return EI.requiredComponents
         case "XCN": return XCN.requiredComponents
         case "XTN": return XTN.requiredComponents
+        case "HD":  return HD.requiredComponents
+        case "MSG": return MSG.requiredComponents
+        case "PT":  return PT.requiredComponents
+        case "VID": return VID.requiredComponents
+        case "PL":  return PL.requiredComponents
+        case "CNE": return CNE.requiredComponents
+        case "XON": return XON.requiredComponents
+        case "EIP": return EIP.requiredComponents
         default:    return []
         }
     }

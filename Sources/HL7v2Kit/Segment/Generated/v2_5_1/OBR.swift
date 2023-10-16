@@ -153,9 +153,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(28).map(XCN.init(field:))
     }
 
-    /// OBR-29: Parent. HL7 data type `EIP`.
-    public var parent: Field? {
-        field(29)
+    /// OBR-29: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
+    public var parent: EIP? {
+        field(29).map(EIP.init(field:))
     }
 
     /// OBR-30: Transportation Mode. HL7 data type `ID`.

@@ -118,22 +118,22 @@ struct TypedSegmentTests {
         let message = try Parser().parse(wire)
         let msh = try #require(message.firstSegment(MSH.self))
         let messageType = try #require(msh.messageType)
-        #expect(messageType.first?.components[0].stringValue == "ADT")
-        #expect(messageType.first?.components[1].stringValue == "A01")
+        #expect(messageType.messageCode == "ADT")
+        #expect(messageType.triggerEvent == "A01")
         #expect(message["MSH-9.1"] == "ADT")
         #expect(message["MSH-9.2"] == "A01")
     }
 
-    @Test("MSH-10 (ST scalar) and MSH-11/12 (composite PT/VID first-component) agree with path")
+    @Test("MSH-10 (ST scalar) and MSH-11/12 (composites PT/VID) agree with path")
     func mshControlFieldsAgree() throws {
         let message = try Parser().parse(wire)
         let msh = try #require(message.firstSegment(MSH.self))
         #expect(msh.messageControlID == "MSG00001")
         #expect(msh.messageControlID == message["MSH-10"])
-        // PT and VID are composites: the typed accessor returns Field?, so we
-        // reach into the first component to compare against MSH-11.1 / MSH-12.1.
-        #expect(msh.processingID?.first?.components[0].stringValue == "P")
-        #expect(msh.versionID?.first?.components[0].stringValue == "2.5.1")
+        // PT and VID are now typed composites (v0.3-C4): named accessors
+        // return the first subcomponent of MSH-11.1 / MSH-12.1.
+        #expect(msh.processingID?.processingID == "P")
+        #expect(msh.versionID?.versionID == "2.5.1")
     }
 
     // MARK: - NTE
@@ -262,9 +262,9 @@ struct TypedSegmentTests {
     func orcOrderingFacilityNameAndAddressAgree() throws {
         let message = try Parser().parse(orcFringeWire)
         let orc = try #require(message.firstSegment(ORC.self))
-        let name = try #require(orc.orderingFacilityName)        // XON stays Field?
+        let name = try #require(orc.orderingFacilityName)        // XON typed (v0.3-C4)
         let addr = try #require(orc.orderingFacilityAddress)     // XAD typed
-        #expect(name.first?.components[0].stringValue == "FacilityName")
+        #expect(name.organizationName == "FacilityName")
         #expect(addr.streetAddress == "1 Hospital Rd")
         #expect(addr.city == "Sydney")
         #expect(addr.city == message["ORC-22.3"])
@@ -297,8 +297,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(orcFringeWire)
         let orc = try #require(message.firstSegment(ORC.self))
         let mode = try #require(orc.entererAuthorizationMode)
-        #expect(mode.first?.components[0].stringValue == "EL")
-        #expect(mode.first?.components[1].stringValue == "Electronic")
+        #expect(mode.identifier == "EL")
+        #expect(mode.text == "Electronic")
     }
 
     @Test("ORC-31 (CWE) parent universal service identifier")
@@ -684,7 +684,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(fringePIDWire)
         let pid = try #require(message.firstSegment(PID.self))
         let facility = try #require(pid.lastUpdateFacility)
-        #expect(facility.first?.components[0].stringValue == "HOSP")
+        #expect(facility.namespaceID == "HOSP")
+        #expect(facility.universalIDType == "ISO")
         #expect(message["PID-34.1"] == "HOSP")
         #expect(message["PID-34.3"] == "ISO")
     }
@@ -813,9 +814,9 @@ struct TypedSegmentTests {
         let message = try Parser().parse(pv1Wire)
         let pv1 = try #require(message.firstSegment(PV1.self))
         let location = try #require(pv1.assignedPatientLocation)
-        #expect(location.first?.components[0].stringValue == "WARD1")
-        #expect(location.first?.components[1].stringValue == "ROOM2")
-        #expect(location.first?.components[2].stringValue == "BED3")
+        #expect(location.pointOfCare == "WARD1")
+        #expect(location.room == "ROOM2")
+        #expect(location.bed == "BED3")
         #expect(message["PV1-3.1"] == "WARD1")
     }
 

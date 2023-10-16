@@ -23,24 +23,24 @@ public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
         field(2)?.stringValue
     }
 
-    /// MSH-3: Sending Application. HL7 data type `HD`.
-    public var sendingApplication: Field? {
-        field(3)
+    /// MSH-3: Sending Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var sendingApplication: HD? {
+        field(3).map(HD.init(field:))
     }
 
-    /// MSH-4: Sending Facility. HL7 data type `HD`.
-    public var sendingFacility: Field? {
-        field(4)
+    /// MSH-4: Sending Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var sendingFacility: HD? {
+        field(4).map(HD.init(field:))
     }
 
-    /// MSH-5: Receiving Application. HL7 data type `HD`.
-    public var receivingApplication: Field? {
-        field(5)
+    /// MSH-5: Receiving Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var receivingApplication: HD? {
+        field(5).map(HD.init(field:))
     }
 
-    /// MSH-6: Receiving Facility. HL7 data type `HD`.
-    public var receivingFacility: Field? {
-        field(6)
+    /// MSH-6: Receiving Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var receivingFacility: HD? {
+        field(6).map(HD.init(field:))
     }
 
     /// MSH-7: Date/Time Of Message. HL7 data type `TS`.
@@ -53,9 +53,9 @@ public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
         field(8)?.stringValue
     }
 
-    /// MSH-9: Message Type. HL7 data type `MSG`.
-    public var messageType: Field? {
-        field(9)
+    /// MSH-9: Message Type. HL7 data type `MSG`. Returns the typed ``MSG`` view; use `.field` for raw access.
+    public var messageType: MSG? {
+        field(9).map(MSG.init(field:))
     }
 
     /// MSH-10: Message Control ID. HL7 data type `ST`.
@@ -63,14 +63,14 @@ public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
         field(10)?.stringValue
     }
 
-    /// MSH-11: Processing ID. HL7 data type `PT`.
-    public var processingID: Field? {
-        field(11)
+    /// MSH-11: Processing ID. HL7 data type `PT`. Returns the typed ``PT`` view; use `.field` for raw access.
+    public var processingID: PT? {
+        field(11).map(PT.init(field:))
     }
 
-    /// MSH-12: Version ID. HL7 data type `VID`.
-    public var versionID: Field? {
-        field(12)
+    /// MSH-12: Version ID. HL7 data type `VID`. Returns the typed ``VID`` view; use `.field` for raw access.
+    public var versionID: VID? {
+        field(12).map(VID.init(field:))
     }
 
     /// MSH-13: Sequence Number. HL7 data type `NM`.

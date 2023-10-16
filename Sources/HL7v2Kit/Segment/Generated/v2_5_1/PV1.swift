@@ -23,9 +23,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(2)?.stringValue
     }
 
-    /// PV1-3: Assigned Patient Location. HL7 data type `PL`.
-    public var assignedPatientLocation: Field? {
-        field(3)
+    /// PV1-3: Assigned Patient Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var assignedPatientLocation: PL? {
+        field(3).map(PL.init(field:))
     }
 
     /// PV1-4: Admission Type. HL7 data type `IS`.
@@ -38,9 +38,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(5).map(CX.init(field:))
     }
 
-    /// PV1-6: Prior Patient Location. HL7 data type `PL`.
-    public var priorPatientLocation: Field? {
-        field(6)
+    /// PV1-6: Prior Patient Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var priorPatientLocation: PL? {
+        field(6).map(PL.init(field:))
     }
 
     /// PV1-7: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
@@ -63,9 +63,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(10)?.stringValue
     }
 
-    /// PV1-11: Temporary Location. HL7 data type `PL`.
-    public var temporaryLocation: Field? {
-        field(11)
+    /// PV1-11: Temporary Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var temporaryLocation: PL? {
+        field(11).map(PL.init(field:))
     }
 
     /// PV1-12: Preadmit Test Indicator. HL7 data type `IS`.

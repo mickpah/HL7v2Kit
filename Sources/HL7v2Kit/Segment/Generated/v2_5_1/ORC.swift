@@ -48,9 +48,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(7)
     }
 
-    /// ORC-8: Parent. HL7 data type `EIP`.
-    public var parent: Field? {
-        field(8)
+    /// ORC-8: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
+    public var parent: EIP? {
+        field(8).map(EIP.init(field:))
     }
 
     /// ORC-9: Date/Time of Transaction. HL7 data type `TS`.
@@ -73,9 +73,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(12).map(XCN.init(field:))
     }
 
-    /// ORC-13: Enterer's Location. HL7 data type `PL`.
-    public var enterersLocation: Field? {
-        field(13)
+    /// ORC-13: Enterer's Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var enterersLocation: PL? {
+        field(13).map(PL.init(field:))
     }
 
     /// ORC-14: Call Back Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -113,9 +113,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(20).map(CE.init(field:))
     }
 
-    /// ORC-21: Ordering Facility Name. HL7 data type `XON`.
-    public var orderingFacilityName: Field? {
-        field(21)
+    /// ORC-21: Ordering Facility Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    public var orderingFacilityName: XON? {
+        field(21).map(XON.init(field:))
     }
 
     /// ORC-22: Ordering Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
@@ -158,9 +158,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(29).map(CWE.init(field:))
     }
 
-    /// ORC-30: Enterer Authorization Mode. HL7 data type `CNE`.
-    public var entererAuthorizationMode: Field? {
-        field(30)
+    /// ORC-30: Enterer Authorization Mode. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    public var entererAuthorizationMode: CNE? {
+        field(30).map(CNE.init(field:))
     }
 
     /// ORC-31: Parent Universal Service Identifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

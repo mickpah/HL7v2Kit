@@ -73,8 +73,8 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(12).map(CX.init(field:))
     }
 
-    /// NK1-13: Organization Name - NK1. HL7 data type `XON`.
-    public var organizationName: Field? {
-        field(13)
+    /// NK1-13: Organization Name - NK1. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    public var organizationName: XON? {
+        field(13).map(XON.init(field:))
     }
 }

@@ -1,16 +1,16 @@
 // CompositeTypeTests.swift
 // Typed composite data types — v0.2-C1 (XPN / CX / XAD), v0.3-C2 (CE /
-// CWE), v0.3-C3 (EI / XCN / XTN). Exercises every named accessor on
-// each composite, the `.field` migration path for callers using
-// v0.1.x-style component indexing, multi-repetition access via
-// `.field.repetitions`, and the cross-check invariant (typed accessor
-// == matching path string).
+// CWE), v0.3-C3 (EI / XCN / XTN), v0.3-C4 (HD / MSG / PT / VID / PL /
+// CNE / XON / EIP). Exercises every named accessor on each composite,
+// the `.field` migration path for callers using v0.1.x-style component
+// indexing, multi-repetition access via `.field.repetitions`, and the
+// cross-check invariant (typed accessor == matching path string).
 
 import Testing
 import Foundation
 @testable import HL7v2Kit
 
-@Suite("Composite types — XPN / CX / XAD / CE / CWE / EI / XCN / XTN")
+@Suite("Composite types — all v2.5.1 typed-segment composites")
 struct CompositeTypeTests {
 
     // MARK: - XPN (Extended Person Name)
@@ -413,9 +413,225 @@ struct CompositeTypeTests {
         #expect(mobile.telecommunicationEquipmentType == "CP")
     }
 
+    // MARK: - HD (Hierarchic Designator) — v0.3-C4
+
+    // MSH-3 (sendingApplication) is single-rep HD. All 3 components populated.
+    private let hdRichWire = """
+    MSH|^~\\&|HIS^1.2.840.10008^ISO|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r
+    """
+
+    @Test("HD exposes namespaceID / universalID / universalIDType accessors")
+    func hdNamedAccessors() throws {
+        let message = try Parser().parse(hdRichWire)
+        let app = try #require(message.firstSegment(MSH.self)?.sendingApplication)
+        #expect(app.namespaceID == "HIS")
+        #expect(app.universalID == "1.2.840.10008")
+        #expect(app.universalIDType == "ISO")
+    }
+
+    @Test("HD cross-checks each named accessor against the path API")
+    func hdAgreesWithPath() throws {
+        let message = try Parser().parse(hdRichWire)
+        let app = try #require(message.firstSegment(MSH.self)?.sendingApplication)
+        #expect(app.namespaceID == message["MSH-3.1"])
+        #expect(app.universalID == message["MSH-3.2"])
+        #expect(app.universalIDType == message["MSH-3.3"])
+    }
+
+    // MARK: - MSG (Message Type) — v0.3-C4
+
+    // MSH-9 (messageType) is single-rep MSG; the common wire already
+    // populates MSG-1 / MSG-2.
+    private let msgRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r
+    """
+
+    @Test("MSG exposes messageCode / triggerEvent / messageStructure accessors")
+    func msgNamedAccessors() throws {
+        let message = try Parser().parse(msgRichWire)
+        let mt = try #require(message.firstSegment(MSH.self)?.messageType)
+        #expect(mt.messageCode == "ADT")
+        #expect(mt.triggerEvent == "A01")
+        #expect(mt.messageStructure == "ADT_A01")
+    }
+
+    @Test("MSG cross-checks each named accessor against the path API")
+    func msgAgreesWithPath() throws {
+        let message = try Parser().parse(msgRichWire)
+        let mt = try #require(message.firstSegment(MSH.self)?.messageType)
+        #expect(mt.messageCode == message["MSH-9.1"])
+        #expect(mt.triggerEvent == message["MSH-9.2"])
+        #expect(mt.messageStructure == message["MSH-9.3"])
+    }
+
+    // MARK: - PT (Processing Type) — v0.3-C4
+
+    // MSH-11 (processingID) PT with both components populated.
+    private let ptRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P^A|2.5.1\r
+    """
+
+    @Test("PT exposes processingID / processingMode accessors")
+    func ptNamedAccessors() throws {
+        let message = try Parser().parse(ptRichWire)
+        let pt = try #require(message.firstSegment(MSH.self)?.processingID)
+        #expect(pt.processingID == "P")
+        #expect(pt.processingMode == "A")
+    }
+
+    @Test("PT cross-checks each named accessor against the path API")
+    func ptAgreesWithPath() throws {
+        let message = try Parser().parse(ptRichWire)
+        let pt = try #require(message.firstSegment(MSH.self)?.processingID)
+        #expect(pt.processingID == message["MSH-11.1"])
+        #expect(pt.processingMode == message["MSH-11.2"])
+    }
+
+    // MARK: - VID (Version Identifier) — v0.3-C4
+
+    // MSH-12 (versionID) with the optional nested CE components populated.
+    // VID-2 / VID-3 each populate their CE-1 (identifier subcomponent).
+    private let vidRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1^I18N1^IVID1\r
+    """
+
+    @Test("VID exposes versionID / internationalizationCode / internationalVersionID accessors")
+    func vidNamedAccessors() throws {
+        let message = try Parser().parse(vidRichWire)
+        let v = try #require(message.firstSegment(MSH.self)?.versionID)
+        #expect(v.versionID == "2.5.1")
+        #expect(v.internationalizationCode == "I18N1")
+        #expect(v.internationalVersionID == "IVID1")
+    }
+
+    @Test("VID cross-checks each named accessor against the path API")
+    func vidAgreesWithPath() throws {
+        let message = try Parser().parse(vidRichWire)
+        let v = try #require(message.firstSegment(MSH.self)?.versionID)
+        #expect(v.versionID == message["MSH-12.1"])
+    }
+
+    // MARK: - PL (Person Location) — v0.3-C4
+
+    // PV1-3 (assignedPatientLocation) with all four exposed PL components.
+    private let plRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PV1|1|I|WARD1^ROOM2^BED3^HOSPITAL|R\r
+    """
+
+    @Test("PL exposes pointOfCare / room / bed / facility accessors")
+    func plNamedAccessors() throws {
+        let message = try Parser().parse(plRichWire)
+        let loc = try #require(message.firstSegment(PV1.self)?.assignedPatientLocation)
+        #expect(loc.pointOfCare == "WARD1")
+        #expect(loc.room == "ROOM2")
+        #expect(loc.bed == "BED3")
+        #expect(loc.facility == "HOSPITAL")
+    }
+
+    @Test("PL cross-checks each named accessor against the path API")
+    func plAgreesWithPath() throws {
+        let message = try Parser().parse(plRichWire)
+        let loc = try #require(message.firstSegment(PV1.self)?.assignedPatientLocation)
+        #expect(loc.pointOfCare == message["PV1-3.1"])
+        #expect(loc.room == message["PV1-3.2"])
+        #expect(loc.bed == message["PV1-3.3"])
+        #expect(loc.facility == message["PV1-3.4"])
+    }
+
+    // MARK: - CNE (Coded with No Exceptions) — v0.3-C4
+
+    // ORC-30 (entererAuthorizationMode) is CNE. Field map: ORC populates
+    // ORC-1 (orderControl=NW) + 28 empties (ORC-2..29) + ORC-30 CNE.
+    // Pipe count between "NW" and "EL": 29 (= ORC-30 - ORC-1).
+    private let cneRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+    ORC|NW|||||||||||||||||||||||||||||EL^Electronic^HL70483\r
+    """
+
+    @Test("CNE exposes identifier / text / nameOfCodingSystem accessors")
+    func cneNamedAccessors() throws {
+        let message = try Parser().parse(cneRichWire)
+        #expect(message["ORC-30.1"] == "EL", "Wire mis-counted: CNE should land at ORC-30")
+        let mode = try #require(message.firstSegment(ORC.self)?.entererAuthorizationMode)
+        #expect(mode.identifier == "EL")
+        #expect(mode.text == "Electronic")
+        #expect(mode.nameOfCodingSystem == "HL70483")
+    }
+
+    @Test("CNE cross-checks each named accessor against the path API")
+    func cneAgreesWithPath() throws {
+        let message = try Parser().parse(cneRichWire)
+        let mode = try #require(message.firstSegment(ORC.self)?.entererAuthorizationMode)
+        #expect(mode.identifier == message["ORC-30.1"])
+        #expect(mode.text == message["ORC-30.2"])
+        #expect(mode.nameOfCodingSystem == message["ORC-30.3"])
+    }
+
+    // MARK: - XON (Extended Composite Name and Identification for Organizations) — v0.3-C4
+
+    // NK1-13 (organizationName) is XON. NK1-1=1, 2=name, 3 empty, 4=SPO,
+    // 5..12 empty (9 pipes between SPO and XON value: 13-4=9), 13=XON.
+    // Field map for the XON: name^typeCode^^^^^idTypeCode^^^orgID
+    private let xonRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    NK1|1|Smith^Jane||SPO|||||||||CityHospital^L^^^^^NPI^^^1234567890\r
+    """
+
+    @Test("XON exposes organizationName / typeCode / identifierTypeCode / organizationIdentifier accessors")
+    func xonNamedAccessors() throws {
+        let message = try Parser().parse(xonRichWire)
+        let org = try #require(message.firstSegment(NK1.self)?.organizationName)
+        #expect(org.organizationName == "CityHospital")
+        #expect(org.organizationNameTypeCode == "L")
+        #expect(org.identifierTypeCode == "NPI")
+        #expect(org.organizationIdentifier == "1234567890")
+    }
+
+    @Test("XON cross-checks each named accessor against the path API")
+    func xonAgreesWithPath() throws {
+        let message = try Parser().parse(xonRichWire)
+        let org = try #require(message.firstSegment(NK1.self)?.organizationName)
+        #expect(org.organizationName == message["NK1-13.1"])
+        #expect(org.organizationNameTypeCode == message["NK1-13.2"])
+        #expect(org.identifierTypeCode == message["NK1-13.7"])
+        #expect(org.organizationIdentifier == message["NK1-13.10"])
+    }
+
+    // MARK: - EIP (Entity Identifier Pair) — v0.3-C4
+
+    // ORC-8 (parent) is EIP. Each component is a nested EI; the named
+    // accessors return the first subcomponent of each (EI-1).
+    // Field map for the EIP: placer&placerNS&placerOID&ISO^filler&fillerNS&fillerOID&ISO
+    // (component-separator between the two EIs; subcomponent-separator
+    // between the EI's sub-fields.)
+    private let eipRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+    ORC|NW|||||||PLACER123&HOSP&1.2.840.10008&ISO^FILLER456&LAB&1.2.840.10009&ISO\r
+    """
+
+    @Test("EIP exposes placerAssignedIdentifier / fillerAssignedIdentifier accessors")
+    func eipNamedAccessors() throws {
+        let message = try Parser().parse(eipRichWire)
+        let parent = try #require(message.firstSegment(ORC.self)?.parent)
+        #expect(parent.placerAssignedIdentifier == "PLACER123")
+        #expect(parent.fillerAssignedIdentifier == "FILLER456")
+    }
+
+    @Test("EIP cross-checks each named accessor against the path API")
+    func eipAgreesWithPath() throws {
+        let message = try Parser().parse(eipRichWire)
+        let parent = try #require(message.firstSegment(ORC.self)?.parent)
+        // EIP-1.1 is the first subcomponent of EIP-1; path syntax doesn't
+        // address subcomponents directly. Cross-check via the .field
+        // migration path: components[0].subcomponents[0].value.
+        #expect(parent.placerAssignedIdentifier == parent.field.first?.components[0].subcomponents.first?.value)
+        #expect(parent.fillerAssignedIdentifier == parent.field.first?.components[1].subcomponents.first?.value)
+    }
+
     // MARK: - Round-trip preservation
 
-    @Test("Composite-bearing messages still round-trip byte-perfectly through XPN/CX/XAD/CE/CWE/EI/XCN/XTN")
+    @Test("Composite-bearing messages still round-trip byte-perfectly through all 16 typed composites")
     func compositeRoundTripsByteIdentical() throws {
         // The composite structs are *views* over Field, not owners — the
         // segment still owns the bytes. Round-trip must be unaffected by
@@ -429,6 +645,14 @@ struct CompositeTypeTests {
             eiRichWire,
             xcnRichWire, xcnRepeatingWire,
             xtnRichWire, xtnRepeatingWire,
+            hdRichWire,
+            msgRichWire,
+            ptRichWire,
+            vidRichWire,
+            plRichWire,
+            cneRichWire,
+            xonRichWire,
+            eipRichWire,
         ] {
             let message = try Parser().parse(wire)
             let rebuilt = String(data: message.serialize(), encoding: .utf8)

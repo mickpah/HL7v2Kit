@@ -47,8 +47,14 @@ let scalarDataTypes: Set<String> = [
 /// unexposed components and additional repetitions.
 ///
 /// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 added CE / CWE. v0.3-C3
-/// adds EI / XCN / XTN.
-let compositeDataTypes: Set<String> = ["XPN", "CX", "XAD", "CE", "CWE", "EI", "XCN", "XTN"]
+/// added EI / XCN / XTN. v0.3-C4 closes out the v2.5.1 typed-segment
+/// composite landscape with HD / MSG / PT / VID / PL / CNE / XON /
+/// EIP — every dataType that appears across the 9 spec § 17 segments
+/// is now a typed struct.
+let compositeDataTypes: Set<String> = [
+    "XPN", "CX", "XAD", "CE", "CWE", "EI", "XCN", "XTN",
+    "HD", "MSG", "PT", "VID", "PL", "CNE", "XON", "EIP",
+]
 
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String

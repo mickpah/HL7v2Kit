@@ -156,14 +156,18 @@ struct ComponentGrammarTests {
         #expect(report.errors.contains { $0.code == .requiredComponentMissing })
     }
 
-    // MARK: - Composites without typed metadata
+    // MARK: - Composites with empty requiredComponents (OR-rule design choice)
 
-    @Test("Composites HL7v2Kit hasn't typed (HD / XCN / EI / …) are skipped silently")
-    func untypedCompositesSkippedSilently() throws {
-        // PID-34 (lastUpdateFacility) is HD-typed. HD doesn't have a
-        // `requiredComponents` metadata block yet, so an HD field populated
-        // with only HD-2 (universal ID) and an empty HD-1 (namespace)
-        // must NOT fire a component-grammar issue.
+    @Test("HD with empty HD-1 but populated HD-2/HD-3 does NOT fire (OR-rule design)")
+    func hdSkipsSilentlyWithEmptyRequiredComponents() throws {
+        // PID-34 (lastUpdateFacility) is HD-typed. HD ships with an
+        // empty `requiredComponents` by design — the v2.5.1 spec phrases
+        // HD's conformance as "HD-1 OR (HD-2 AND HD-3)", an OR-rule the
+        // current `RequiredComponent` shape can't express. An HD field
+        // populated with only HD-2 / HD-3 and an empty HD-1 must NOT
+        // fire `.requiredComponentMissing`. Pinned so a future change
+        // that drops the OR-rule constraint and just requires HD-1
+        // can't sneak in without an explicit decision.
         //
         // Fields populated in this wire:
         //  1 setID=1, 3 ids=123456..., 5 name=Smith^John, 7 DOB, 8 sex=M,
@@ -173,7 +177,6 @@ struct ComponentGrammarTests {
         PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||||||||||||||||||||||||||^UNIV_ID^ISO\r
         """
         let message = try Parser().parse(wire)
-        // Sanity-check pipe count: PID-34.2 should be "UNIV_ID".
         #expect(message["PID-34.2"] == "UNIV_ID", "Wire mis-counted: HD should land at PID-34")
         let report = Validator().validate(message)
         let pid34Issues = report.errors.filter { $0.location.fieldIndex == 34 }
@@ -251,6 +254,124 @@ struct ComponentGrammarTests {
         #expect(issue.location.pathDescription == "PV1[1]-7.1")
         #expect(issue.message.contains("ID Number"))
         #expect(issue.message.contains("XCN"))
+    }
+
+    @Test("MSG typed composite (v0.3-C4) fires .requiredComponentMissing on empty MSG-1")
+    func msgFiresComponentMissingOnEmptyMessageCode() throws {
+        // MSH-9 (messageType) is MSG-typed. Empty MSG-1 (messageCode)
+        // with MSG-2 (triggerEvent) populated must fire at MSH[1]-9.1.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||^A01|MSG00001|P|2.5.1\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 9 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "MSH[1]-9.1")
+        #expect(issue.message.contains("Message Code"))
+        #expect(issue.message.contains("MSG"))
+    }
+
+    @Test("VID typed composite (v0.3-C4) fires .requiredComponentMissing on empty VID-1")
+    func vidFiresComponentMissingOnEmptyVersionID() throws {
+        // MSH-12 (versionID) is VID-typed. Empty VID-1 with VID-2 (the
+        // nested internationalization CE composite) populated must fire
+        // at MSH[1]-12.1. Note: empty MSH-12.1 also causes Parser to
+        // silently fall back to v2.5.1; the Field itself is still
+        // populated (carries VID-2 / VID-3 sub-components) so V2 walks
+        // it and finds the missing VID-1.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|^I18N1^IVID1\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 12 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.message.contains("Version ID"))
+        #expect(issue.message.contains("VID"))
+    }
+
+    @Test("PT typed composite (v0.3-C4) fires .requiredComponentMissing on empty PT-1")
+    func ptFiresComponentMissingOnEmptyProcessingID() throws {
+        // MSH-11 (processingID) is PT-typed. Empty PT-1 (processingID)
+        // with PT-2 (processingMode) populated must fire at MSH[1]-11.1.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|^A|2.5.1\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 11 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.message.contains("Processing ID"))
+        #expect(issue.message.contains("PT"))
+    }
+
+    @Test("CNE typed composite (v0.3-C4) fires .requiredComponentMissing on empty CNE-1")
+    func cneFiresComponentMissingOnEmptyIdentifier() throws {
+        // ORC-30 (entererAuthorizationMode) is CNE-typed. Empty CNE-1
+        // with CNE-2 populated must fire at ORC[1]-30.1.
+        // Pipe count between "NW" and "^ElectronicTextOnly": 29.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        ORC|NW|||||||||||||||||||||||||||||^ElectronicTextOnly\r
+        """
+        let message = try Parser().parse(wire)
+        #expect(message["ORC-30.2"] == "ElectronicTextOnly", "Wire mis-counted: CNE should land at ORC-30")
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 30 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "ORC[1]-30.1")
+        #expect(issue.message.contains("Identifier"))
+        #expect(issue.message.contains("CNE"))
+    }
+
+    @Test("XON typed composite (v0.3-C4) fires .requiredComponentMissing on empty XON-1")
+    func xonFiresComponentMissingOnEmptyOrganizationName() throws {
+        // NK1-13 (organizationName) is XON-typed. Empty XON-1 with
+        // XON-2 populated must fire at NK1[1]-13.1.
+        // Pipe count between "SPO" and "^L": 9 (= NK1-13 - NK1-4).
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        NK1|1|Smith^Jane||SPO|||||||||^L\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 13 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "NK1[1]-13.1")
+        #expect(issue.message.contains("Organization Name"))
+        #expect(issue.message.contains("XON"))
+    }
+
+    @Test("PL typed composite (v0.3-C4) has no required components — sparse PL field does NOT fire")
+    func plSkipsSilentlyWithNoRequiredComponents() throws {
+        // PV1-3 (assignedPatientLocation) is PL-typed. PL ships with
+        // empty requiredComponents (the v2.5.1 "PL-1 OR PL-4" OR-rule
+        // again). A PL populated with only PL-4 (facility) and empty
+        // PL-1..3 must NOT fire any component-grammar issue.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PV1|1|I|^^^HOSPITAL|R\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let pv13Issues = report.errors.filter { $0.location.fieldIndex == 3 && $0.code == .requiredComponentMissing }
+        #expect(pv13Issues.isEmpty)
+    }
+
+    @Test("EIP typed composite (v0.3-C4) has no required components — empty EIP-1 does NOT fire")
+    func eipSkipsSilentlyWithNoRequiredComponents() throws {
+        // ORC-8 (parent) is EIP-typed. EIP ships with empty
+        // requiredComponents — a child order may populate only one
+        // slot of the pair, neither slot is strictly required.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        ORC|NW|||||||^FILLER456&LAB\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let orc8Issues = report.errors.filter { $0.location.fieldIndex == 8 && $0.code == .requiredComponentMissing }
+        #expect(orc8Issues.isEmpty)
     }
 
     @Test("XTN typed composite (v0.3-C3) has no required components — empty XTN-1 does NOT fire")

@@ -178,9 +178,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(33)?.stringValue
     }
 
-    /// PID-34: Last Update Facility. HL7 data type `HD`.
-    public var lastUpdateFacility: Field? {
-        field(34)
+    /// PID-34: Last Update Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var lastUpdateFacility: HD? {
+        field(34).map(HD.init(field:))
     }
 
     /// PID-35: Species Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
