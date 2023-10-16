@@ -1,0 +1,31 @@
+{
+  "segmentID": "NTE",
+  "version": "2.3.1",
+  "description": "Notes And Comments",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - NTE",
+      "dataType": "SI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "sourceOfComment",
+      "name": "Source of Comment",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "comment",
+      "name": "Comment",
+      "dataType": "FT",
+      "optionality": "O",
+      "repeatability": "*"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "segmentID": "OBX",
+  "version": "2.3",
+  "description": "Observation/Result",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - OBX",
+      "dataType": "SI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "valueType",
+      "name": "Value Type",
+      "dataType": "ID",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "observationIdentifier",
+      "name": "Observation Identifier",
+      "dataType": "CE",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "observationSubID",
+      "name": "Observation Sub-ID",
+      "dataType": "ST",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "observationValue",
+      "name": "Observation Value",
+      "dataType": "ST",
+      "optionality": "C",
+      "repeatability": "*"
+    },
+    {
+      "index": 6,
+      "swiftName": "units",
+      "name": "Units",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "referencesRange",
+      "name": "References Range",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "abnormalFlags",
+      "name": "Abnormal Flags",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 9,
+      "swiftName": "probability",
+      "name": "Probability",
+      "dataType": "NM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "natureOfAbnormalTest",
+      "name": "Nature of Abnormal Test",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "observationResultStatus",
+      "name": "Observation Result Status",
+      "dataType": "ID",
+      "optionality": "R",
+      "repeatability": "1"
+    }
+  ]
+}

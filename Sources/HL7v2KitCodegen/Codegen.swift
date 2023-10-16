@@ -56,6 +56,15 @@ let compositeDataTypes: Set<String> = [
     "HD", "MSG", "PT", "VID", "PL", "CNE", "XON", "EIP",
 ]
 
+/// The HL7 version whose schemas drive typed-segment-struct emission.
+/// Other versions (v2.3 / v2.3.1 / v2.4 added in v0.3-G1..G3) contribute
+/// only to their per-version `SegmentGrammar+vX_Y_Z.swift` tables; the
+/// typed `struct PID` / `struct ORC` / ... shared across all callers
+/// lives under `Generated/v2_5_1/` and represents the union surface.
+/// Field accessors that don't exist on an older wire simply return nil
+/// — that's the normal Optional contract for an absent field.
+let canonicalVersion = "2.5.1"
+
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String
     let body: String
@@ -232,19 +241,23 @@ struct Codegen {
                 .filter { $0.pathExtension == "json" }
                 .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
 
+            let isCanonical = (version == canonicalVersion)
             let outVersionDir = outputRoot.appendingPathComponent(versionDirName(version))
-            try fm.createDirectory(at: outVersionDir, withIntermediateDirectories: true)
+            if isCanonical {
+                try fm.createDirectory(at: outVersionDir, withIntermediateDirectories: true)
+            }
 
             for schemaURL in segmentFiles {
                 let data = try Data(contentsOf: schemaURL)
                 let schema = try JSONDecoder().decode(SegmentSchema.self, from: data)
+                schemasByVersion[version, default: []].append(schema)
+                guard isCanonical else { continue }
                 let source = render(schema)
                 let outFile = outVersionDir.appendingPathComponent("\(schema.segmentID).swift")
                 try Data(source.utf8).write(to: outFile)
                 print("emitted \(outFile.path)")
                 emitted += 1
                 emittedSegmentIDs.insert(schema.segmentID)
-                schemasByVersion[version, default: []].append(schema)
             }
         }
 
