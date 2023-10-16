@@ -12,6 +12,7 @@
 ///
 /// The raw value matches the on-wire string found in `MSH-12`.
 public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
+    case v2_3   = "2.3"
     case v2_3_1 = "2.3.1"
     case v2_4   = "2.4"
     case v2_5_1 = "2.5.1"

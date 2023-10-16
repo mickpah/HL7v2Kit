@@ -52,10 +52,11 @@ public struct Validator: Sendable {
 
     private func grammarTable(for version: Version) -> [String: SegmentGrammar] {
         switch version {
+        case .v2_3:   return SegmentGrammarTable.v2_3
         case .v2_3_1: return SegmentGrammarTable.v2_3_1
         case .v2_4:   return SegmentGrammarTable.v2_4
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
-        default:      return [:]   // v2.8 grammar table lands in a later v0.3 stage.
+        default:      return [:]   // v2.8 grammar table is out of scope for v0.3.
         }
     }
 

@@ -6,12 +6,15 @@
 // v0.3-G2: HL7 v2.4 grammar table — same shape; v2.4 sits between v2.3.1
 // and v2.5.1, exposing the v2.4 additions (PID-31/32 identity flags,
 // OBX-15/16, ORC-18/19, MSH-18/19/20) while still capping below v2.5.1.
+// v0.3-G3: HL7 v2.3 grammar table — the oldest dialect HL7v2Kit supports;
+// MSH caps at 15 (no MSH-16 application-acknowledgement / MSH-17 country
+// code), OBX caps at 11 (v2.3 only had the early observation slots).
 
 import Testing
 import Foundation
 @testable import HL7v2Kit
 
-@Suite("Multiversion grammar tables (v0.3-G1/G2: v2.3.1 + v2.4)")
+@Suite("Multiversion grammar tables (v0.3-G1/G2/G3: v2.3 / v2.3.1 / v2.4)")
 struct MultiVersionTests {
 
     // A minimal v2.3.1 ADT^A01 with MSH-12 = "2.3.1". v2.3.1 caps MSH at
@@ -172,5 +175,80 @@ struct MultiVersionTests {
         #expect(pid251 == 39)
         #expect(pid231! < pid24!)
         #expect(pid24!  < pid251!)
+    }
+
+    // MARK: - v2.3 (v0.3-G3)
+
+    // v2.3 ADT^A01. v2.3 is the oldest dialect we support; MSH caps at
+    // 15 (no MSH-16 application-acknowledgement, MSH-17 country code,
+    // MSH-18 charset). The wire stays minimal — v2.3 traffic in the
+    // AU corpus is almost entirely admin/order messages with sparse
+    // PID populations.
+    private let v23Wire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3\r\
+    PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r
+    """
+
+    @Test("v2.3 wire parses with .version == .v2_3")
+    func v23VersionDetected() throws {
+        let message = try Parser().parse(v23Wire)
+        #expect(message.version == .v2_3)
+    }
+
+    @Test("v2.3 wire round-trips byte-perfectly")
+    func v23RoundTrip() throws {
+        let message = try Parser().parse(v23Wire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == v23Wire)
+    }
+
+    @Test("v2.3 validation runs against the v2.3 grammar table")
+    func v23ValidatorUsesV23GrammarTable() throws {
+        let message = try Parser().parse(v23Wire)
+        let report = Validator().validate(message)
+        #expect(report.errors.isEmpty,
+                "v2.3 message validated against v2.3 grammar should report no errors, got: \(report.errors.map(\.message))")
+    }
+
+    @Test("v2.3 SegmentGrammarTable populated for all 9 segments with v2.3 caps")
+    func v23GrammarTablePopulated() {
+        let table = SegmentGrammarTable.v2_3
+        #expect(table["MSH"]?.fields.count == 15)   // smallest MSH surface
+        #expect(table["PID"]?.fields.count == 30)   // same as v2.3.1
+        #expect(table["ORC"]?.fields.count == 17)   // same as v2.3.1
+        #expect(table["OBX"]?.fields.count == 11)   // smallest OBX (v2.3 added 12/13/14 later)
+        #expect(table["OBR"]?.fields.count == 43)   // same as v2.3.1
+        #expect(table["NK1"]?.fields.count == 13)
+        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["NTE"]?.fields.count == 3)
+        #expect(table["AL1"]?.fields.count == 6)
+    }
+
+    @Test("Four-way grammar dispatch: MSH grows monotonically 15 → 17 → 20 → 21")
+    func fourWayGrammarDispatch() {
+        let msh23  = SegmentGrammarTable.v2_3["MSH"]?.fields.count
+        let msh231 = SegmentGrammarTable.v2_3_1["MSH"]?.fields.count
+        let msh24  = SegmentGrammarTable.v2_4["MSH"]?.fields.count
+        let msh251 = SegmentGrammarTable.v2_5_1["MSH"]?.fields.count
+        #expect(msh23  == 15)
+        #expect(msh231 == 17)
+        #expect(msh24  == 20)
+        #expect(msh251 == 21)
+        #expect(msh23! < msh231!)
+        #expect(msh231! < msh24!)
+        #expect(msh24!  < msh251!)
+    }
+
+    @Test("v2.3 typed accessors for fields beyond v2.3 cap return nil on a v2.3 wire")
+    func v23ExtendedFieldAccessorsReturnNilOnV23() throws {
+        let message = try Parser().parse(v23Wire)
+        let pid = try #require(message.firstSegment(PID.self))
+        // PID-31..39 (v2.4 / v2.5 additions) all stay nil because the
+        // v2.3 wire doesn't populate them.
+        #expect(pid.identityUnknownIndicator == nil)
+        #expect(pid.identityReliabilityCode == nil)
+        #expect(pid.lastUpdateDateTime == nil)
+        #expect(pid.speciesCode == nil)
+        #expect(pid.tribalCitizenship == nil)
     }
 }

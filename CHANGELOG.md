@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — HL7 v2.3 grammar table + `Version.v2_3` case (v0.3-G3)
+
+- **`Version.v2_3 = "2.3"`** — new enum case for the oldest HL7 v2 dialect HL7v2Kit supports. `Version` enum cases now cover `.v2_3` / `.v2_3_1` / `.v2_4` / `.v2_5_1` / `.v2_8`; messages with `MSH-12 = "2.3"` previously fell through `Version(rawValue:)` to nil and the parser's silent v2.5.1 fallback. Now they parse with the correct `.version == .v2_3` and route to the v2.3 grammar table.
+- **`SegmentGrammarTable.v2_3`** — codegen-emitted Swift literal table baked from new `Resources/schemas/v2.3/*.json` schemas. `Validator.grammarTable(for:)` extended: `case .v2_3 → SegmentGrammarTable.v2_3`. Four distinct grammar tables (v2.3 / v2.3.1 / v2.4 / v2.5.1) now dispatched.
+- **`Resources/schemas/v2.3/*.json`** — 9 hand-curated schemas pruned from the v2.5.1 sources to the v2.3-era field caps: MSH 21 → 15 (no MSH-16 application-acknowledgement, MSH-17 country code, MSH-18 charset and beyond), OBX 17 → 11 (v2.3 had the early observation slots only; OBX-12..17 are v2.3.1+ / v2.4+ / v2.5+ additions). PID / ORC / OBR / NK1 / PV1 / NTE / AL1 unchanged from the v2.3.1 caps (already at or below the v2.3 surface).
+- 6 new tests in `Tests/HL7v2KitTests/MultiVersionTests.swift`: v2.3 version detection / round-trip / dispatch / grammar table populated with v2.3 caps / four-way grammar dispatch confirming MSH grows monotonically 15 → 17 → 20 → 21 across v2.3 → v2.3.1 → v2.4 → v2.5.1 / typed accessors for v2.4+ fields return nil on a v2.3 wire. 266 → 272 tests across 17 suites.
+- This commit closes the v0.3-multiversion track. Three new grammar tables landed total (v2.3 / v2.3.1 / v2.4); v2.5.1 unchanged.
+
 ### Added — HL7 v2.4 grammar table (v0.3-G2)
 
 - **`SegmentGrammarTable.v2_4`** — codegen-emitted Swift literal table baked from new `Resources/schemas/v2.4/*.json` schemas; sits between v2.3.1 and v2.5.1 in field-count granularity. `Validator.grammarTable(for:)` extended: `case .v2_4 → SegmentGrammarTable.v2_4`. Only `.v2_8` remains at the empty-table fallback until v0.3 ships a future v2.8 stage.
