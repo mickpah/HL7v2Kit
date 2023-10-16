@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — HL7 v2.4 grammar table (v0.3-G2)
+
+- **`SegmentGrammarTable.v2_4`** — codegen-emitted Swift literal table baked from new `Resources/schemas/v2.4/*.json` schemas; sits between v2.3.1 and v2.5.1 in field-count granularity. `Validator.grammarTable(for:)` extended: `case .v2_4 → SegmentGrammarTable.v2_4`. Only `.v2_8` remains at the empty-table fallback until v0.3 ships a future v2.8 stage.
+- **`Resources/schemas/v2.4/*.json`** — 9 hand-curated schemas pruned from the v2.5.1 sources with the field caps that match the v2.4 spec surface: MSH 21 → 20 (no MSH-21 `messageProfileIdentifier`), PID 39 → 32 (adds PID-31 `identityUnknownIndicator` + PID-32 `identityReliabilityCode` over v2.3.1's 30; cuts the v2.5 species/breed/strain/tribal-citizenship tail), ORC 31 → 19 (adds ORC-18 `entererAuthorizationMode`-ish slot + ORC-19 `actionBy` over v2.3.1's 17; cuts the v2.5 ordering-facility cluster), OBX 17 → 16 (adds OBX-15 `producerIdentifier` + OBX-16 `responsibleObserver` over v2.3.1's 14; cuts OBX-17 `observationMethod` which is v2.5), OBR 43 → 47 (v2.4 already at the v2.5.1 surface for OBR — keep the full 47). NK1 / PV1 / NTE / AL1 unchanged from the v2.3.1 caps (already at or below the v2.4 surface).
+- 6 new tests in `Tests/HL7v2KitTests/MultiVersionTests.swift`: v2.4 version detection / round-trip / validator routes to v2.4 grammar / table populated with v2.4 caps / typed accessors expose the v2.4 additions (PID-31/32) while v2.5-only fields stay nil / three-way cross-check confirms PID grows monotonically 30 → 32 → 39 across v2.3.1 → v2.4 → v2.5.1. 260 → 266 tests across 17 suites.
+
 ### Added — HL7 v2.3.1 grammar table (v0.3-G1)
 
 - **Validator now dispatches grammar by message version.** Messages with `MSH-12 = "2.3.1"` validate against the new `SegmentGrammarTable.v2_3_1` table; v2.5.1 messages keep validating against the existing `SegmentGrammarTable.v2_5_1` table. The dispatch lives in `Validator.grammarTable(for:)` as a per-version switch. v2.4 / v2.8 fall back to an empty table (no grammar errors emitted) until v0.3-G2 / G3 land.
