@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — `Generated/v2_5_1/` subdirectory flattened to `Generated/` (folder-layout consistency)
+
+- **Typed-segment struct files moved up one level**: the 9 generated `<SegmentID>.swift` files (PID / MSH / NK1 / NTE / OBR / OBX / ORC / PV1 / AL1) now live directly at `Sources/HL7v2Kit/Segment/Generated/`, alongside the per-version `SegmentGrammar+vX_Y_Z.swift` tables and `SegmentRegistry+Generated.swift`. The misleading `v2_5_1/` subdirectory has been deleted.
+- **Why.** The struct surface is **shared** across every supported HL7 v2 version (v2.3 / v2.3.1 / v2.4 / v2.5.1) — accessors for fields that don't exist at an older version return `nil` per the Optional contract. Placing the structs under `Generated/v2_5_1/` implied sibling `Generated/v2_3_1/`, `Generated/v2_4/`, etc. that by design will never exist. The new layout makes the folder hierarchy honest: structs are version-agnostic; grammar tables are per-version.
+- **Mechanism.** Single edit in `Sources/HL7v2KitCodegen/Codegen.swift`: the canonical-version output path is now `outputRoot/<SegmentID>.swift` instead of `outputRoot/<versionDirName(canonicalVersion)>/<SegmentID>.swift`. The codegen-drift CI job already pins reproducibility — the regenerated layout is byte-identical across re-runs.
+- **API-compatible**. Swift module structure is unchanged — `import HL7v2Kit` still surfaces `PID` / `MSH` / etc. at the top level. No callsite edits required.
+- **Path references**: `Sources/HL7v2KitCodegen/Codegen.swift` `canonicalVersion` doc comment and `Sources/HL7v2Kit/HL7v2Kit.docc/TypedSegments.md` Overview updated to point at the new location. Historical CHANGELOG entries for v0.3-G1 and historical NEXT_STEPS task lines reference the old path and are intentionally left as-is — they describe what was true when they landed.
+
 ### Added — Streaming batch parser (v0.3-S1)
 
 - **`StreamingBatchParser`** — incremental, memory-bounded variant of `BatchParser`. Consumes byte chunks of arbitrary size via `feed(_ bytes: Data) throws -> [Message]` and emits each completed `Message` as soon as the next MSH (or batch marker, or EOF) closes the current run. Designed for very-large historical-extract files that don't fit comfortably in memory. New `Sources/HL7v2Kit/Parser/StreamingBatchParser.swift`.
