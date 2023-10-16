@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Streaming batch parser (v0.3-S1)
+
+- **`StreamingBatchParser`** — incremental, memory-bounded variant of `BatchParser`. Consumes byte chunks of arbitrary size via `feed(_ bytes: Data) throws -> [Message]` and emits each completed `Message` as soon as the next MSH (or batch marker, or EOF) closes the current run. Designed for very-large historical-extract files that don't fit comfortably in memory. New `Sources/HL7v2Kit/Parser/StreamingBatchParser.swift`.
+- **API surface**: value-type `feed(_:) throws -> [Message]` + `finish() throws -> [Message]` core for direct chunked-I/O use; plus `static StreamingBatchParser.messages(from: AsyncSequence<UInt8>) -> AsyncThrowingStream<Message, Error>` wrapper for callers using `FileHandle.AsyncBytes` or network read loops. The async wrapper buffers in 4 KB chunks before delegating to the core. `hasPending: Bool` observer is exposed for half-frame timeout detection (true when the parser has a partial segment or an open MSH run).
+- **Scope note** (documented on the struct doc): streaming mode flattens batch markers — FHS / FTS / BHS / BTS lines are recognised (so they correctly close any open message) but their wire strings are NOT preserved. Callers needing the file / batch structure should use the non-streaming `BatchParser`. Streaming mode also assumes UTF-8 input (MSH-18 charset detection requires buffering the whole first message, which defeats the streaming property).
+- **NUL rejection** mirrors `Parser.parse(_ data:)` — a `0x00` byte in the stream throws `ParseError.truncatedMessage(atByte:)` with the byte offset, both in the synchronous and `AsyncStream` paths.
+- 11 new tests in `Tests/HL7v2KitTests/StreamingBatchParserTests.swift` cover: whole-input feed-then-finish / marker flattening (FHS+BHS+BTS+FTS consumed, not preserved) / byte-at-a-time feed produces identical output / random-sized chunk feed identical / incremental emission (first message surfaces before `finish()` once the second MSH boundary appears) / unterminated trailing segment flushed by `finish()` / `hasPending` lifecycle / NUL byte rejection / 100-message batch streamed in 1 KB chunks doesn't accumulate state / AsyncStream wrapper yields in order / AsyncStream wrapper throws on NUL. 295 → 306 tests across 19 → 20 suites.
+- **Closes the v0.3-transport track.** T1 (MLLP) + T2 (BatchParser) + S1 (StreamingBatchParser) now cover the full transport-and-batch surface.
+
 ### Added — FHS / BHS batch parser (v0.3-T2)
 
 - **`BatchParser`** — new structural parser for HL7 v2 batch / file grammar. Recognises the four framing markers (`FHS` file header, `FTS` file trailer, `BHS` batch header, `BTS` batch trailer) and groups the MSH-starting message runs between them. Each message run is dispatched to `Parser(options:).parse(_:)` so encoding detection, composite parsing, escape decoding, and typed-segment hydration behave identically to the bare-message path. New `Sources/HL7v2Kit/Parser/BatchParser.swift`.
