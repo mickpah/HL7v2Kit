@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Fuzz testing harness (v0.3-Z1)
+
+- **`Tests/HL7v2KitTests/FuzzTests.swift`** — byte-level fuzz harness covering all four parser surfaces: `Parser.parse(_ data:)`, `BatchParser.parse(_ data:)`, `StreamingBatchParser.feed/finish`, and `MLLPUnframer.feed(_:)` (plus a `MLLPUnframer → Parser` round-trip composition). For each surface, the harness iterates over the cross-product `gold-corpus fixtures × mutators × iterations` and asserts the only acceptable failure mode is a thrown `ParseError`. Any other behaviour (non-`ParseError` throw, force-unwrap trap, slice out-of-bounds, infinite loop) fails the test.
+- **Mutators**: 7 small targeted perturbations — `bitFlip`, `byteReplace`, `byteInsert`, `byteDelete`, `truncate`, `delimiterCorrupt` (corrupts one of `|^~\&\r`), `nulInject`. Designed to surface bounds-checking bugs, not to model real-world corruption.
+- **Seeded PRNG**: small Xorshift64\* generator with a fixed seed (`0xC0FFEE`) drives all mutations, so every fuzz failure is reproducible — the failing test records the (fixture × mutator × iteration) tuple and a replay against the same seed reproduces the case.
+- **Skipped by default** like `PerformanceTests`. Run with `RUN_FUZZ_TESTS=1 xcrun swift test --filter FuzzTests`. Default `swift test` count goes 306 → 311 with the 5 fuzz tests marked `➜ skipped: "Set RUN_FUZZ_TESTS=1 to run the fuzz suite"`.
+- **Coverage at landing time**: 47 fixtures × 7 mutators × 100 iterations × 5 surfaces ≈ 165,000 mutated payloads exercised in ~5.4 s on the dev machine. All five tests pass — no crashes, no unexpected error types — across the full grid. Validates the byte-level robustness of every parser-side surface added through v0.3.
+
 ### Added — Streaming batch parser (v0.3-S1)
 
 - **`StreamingBatchParser`** — incremental, memory-bounded variant of `BatchParser`. Consumes byte chunks of arbitrary size via `feed(_ bytes: Data) throws -> [Message]` and emits each completed `Message` as soon as the next MSH (or batch marker, or EOF) closes the current run. Designed for very-large historical-extract files that don't fit comfortably in memory. New `Sources/HL7v2Kit/Parser/StreamingBatchParser.swift`.
