@@ -58,9 +58,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(9).map(XPN.init(field:))
     }
 
-    /// PID-10: Race. HL7 data type `CE`.
-    public var race: Field? {
-        field(10)
+    /// PID-10: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var race: CE? {
+        field(10).map(CE.init(field:))
     }
 
     /// PID-11: Patient Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
@@ -73,29 +73,29 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(12)?.stringValue
     }
 
-    /// PID-13: Phone Number - Home. HL7 data type `XTN`.
-    public var phoneNumberHome: Field? {
-        field(13)
+    /// PID-13: Phone Number - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var phoneNumberHome: XTN? {
+        field(13).map(XTN.init(field:))
     }
 
-    /// PID-14: Phone Number - Business. HL7 data type `XTN`.
-    public var phoneNumberBusiness: Field? {
-        field(14)
+    /// PID-14: Phone Number - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var phoneNumberBusiness: XTN? {
+        field(14).map(XTN.init(field:))
     }
 
-    /// PID-15: Primary Language. HL7 data type `CE`.
-    public var primaryLanguage: Field? {
-        field(15)
+    /// PID-15: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var primaryLanguage: CE? {
+        field(15).map(CE.init(field:))
     }
 
-    /// PID-16: Marital Status. HL7 data type `CE`.
-    public var maritalStatus: Field? {
-        field(16)
+    /// PID-16: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var maritalStatus: CE? {
+        field(16).map(CE.init(field:))
     }
 
-    /// PID-17: Religion. HL7 data type `CE`.
-    public var religion: Field? {
-        field(17)
+    /// PID-17: Religion. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var religion: CE? {
+        field(17).map(CE.init(field:))
     }
 
     /// PID-18: Patient Account Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
@@ -118,9 +118,9 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(21).map(CX.init(field:))
     }
 
-    /// PID-22: Ethnic Group. HL7 data type `CE`.
-    public var ethnicGroup: Field? {
-        field(22)
+    /// PID-22: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var ethnicGroup: CE? {
+        field(22).map(CE.init(field:))
     }
 
     /// PID-23: Birth Place. HL7 data type `ST`.
@@ -138,19 +138,19 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(25)?.stringValue
     }
 
-    /// PID-26: Citizenship. HL7 data type `CE`.
-    public var citizenship: Field? {
-        field(26)
+    /// PID-26: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var citizenship: CE? {
+        field(26).map(CE.init(field:))
     }
 
-    /// PID-27: Veterans Military Status. HL7 data type `CE`.
-    public var veteransMilitaryStatus: Field? {
-        field(27)
+    /// PID-27: Veterans Military Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var veteransMilitaryStatus: CE? {
+        field(27).map(CE.init(field:))
     }
 
-    /// PID-28: Nationality (deprecated). HL7 data type `CE`.
-    public var nationality: Field? {
-        field(28)
+    /// PID-28: Nationality (deprecated). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var nationality: CE? {
+        field(28).map(CE.init(field:))
     }
 
     /// PID-29: Patient Death Date and Time. HL7 data type `TS`.
@@ -178,19 +178,19 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(33)?.stringValue
     }
 
-    /// PID-34: Last Update Facility. HL7 data type `HD`.
-    public var lastUpdateFacility: Field? {
-        field(34)
+    /// PID-34: Last Update Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    public var lastUpdateFacility: HD? {
+        field(34).map(HD.init(field:))
     }
 
-    /// PID-35: Species Code. HL7 data type `CE`.
-    public var speciesCode: Field? {
-        field(35)
+    /// PID-35: Species Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var speciesCode: CE? {
+        field(35).map(CE.init(field:))
     }
 
-    /// PID-36: Breed Code. HL7 data type `CE`.
-    public var breedCode: Field? {
-        field(36)
+    /// PID-36: Breed Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var breedCode: CE? {
+        field(36).map(CE.init(field:))
     }
 
     /// PID-37: Strain. HL7 data type `ST`.
@@ -198,13 +198,13 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(37)?.stringValue
     }
 
-    /// PID-38: Production Class Code. HL7 data type `CE`.
-    public var productionClassCode: Field? {
-        field(38)
+    /// PID-38: Production Class Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var productionClassCode: CE? {
+        field(38).map(CE.init(field:))
     }
 
-    /// PID-39: Tribal Citizenship. HL7 data type `CWE`.
-    public var tribalCitizenship: Field? {
-        field(39)
+    /// PID-39: Tribal Citizenship. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var tribalCitizenship: CWE? {
+        field(39).map(CWE.init(field:))
     }
 }

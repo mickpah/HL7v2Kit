@@ -41,11 +41,20 @@ let scalarDataTypes: Set<String> = [
     "SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "GTS", "TX", "DTM",
 ]
 
-/// HL7 composite data types for which HL7v2Kit ships a Swift struct view
-/// (v0.2-C1). Accessors return `<Composite>?` instead of `Field?` —
-/// callers reach into the named accessors on the struct, with `.field`
-/// available for unexposed components and additional repetitions.
-let compositeDataTypes: Set<String> = ["XPN", "CX", "XAD"]
+/// HL7 composite data types for which HL7v2Kit ships a Swift struct view.
+/// Accessors return `<Composite>?` instead of `Field?` — callers reach
+/// into the named accessors on the struct, with `.field` available for
+/// unexposed components and additional repetitions.
+///
+/// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 added CE / CWE. v0.3-C3
+/// added EI / XCN / XTN. v0.3-C4 closes out the v2.5.1 typed-segment
+/// composite landscape with HD / MSG / PT / VID / PL / CNE / XON /
+/// EIP — every dataType that appears across the 9 spec § 17 segments
+/// is now a typed struct.
+let compositeDataTypes: Set<String> = [
+    "XPN", "CX", "XAD", "CE", "CWE", "EI", "XCN", "XTN",
+    "HD", "MSG", "PT", "VID", "PL", "CNE", "XON", "EIP",
+]
 
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String

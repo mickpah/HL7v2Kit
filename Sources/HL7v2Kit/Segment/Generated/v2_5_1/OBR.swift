@@ -18,19 +18,19 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// OBR-2: Placer Order Number. HL7 data type `EI`.
-    public var placerOrderNumber: Field? {
-        field(2)
+    /// OBR-2: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var placerOrderNumber: EI? {
+        field(2).map(EI.init(field:))
     }
 
-    /// OBR-3: Filler Order Number. HL7 data type `EI`.
-    public var fillerOrderNumber: Field? {
-        field(3)
+    /// OBR-3: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var fillerOrderNumber: EI? {
+        field(3).map(EI.init(field:))
     }
 
-    /// OBR-4: Universal Service Identifier. HL7 data type `CE`.
-    public var universalServiceIdentifier: Field? {
-        field(4)
+    /// OBR-4: Universal Service Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var universalServiceIdentifier: CE? {
+        field(4).map(CE.init(field:))
     }
 
     /// OBR-5: Priority (deprecated). HL7 data type `ID`.
@@ -58,9 +58,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(9)
     }
 
-    /// OBR-10: Collector Identifier. HL7 data type `XCN`.
-    public var collectorIdentifier: Field? {
-        field(10)
+    /// OBR-10: Collector Identifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var collectorIdentifier: XCN? {
+        field(10).map(XCN.init(field:))
     }
 
     /// OBR-11: Specimen Action Code. HL7 data type `ID`.
@@ -68,9 +68,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(11)?.stringValue
     }
 
-    /// OBR-12: Danger Code. HL7 data type `CE`.
-    public var dangerCode: Field? {
-        field(12)
+    /// OBR-12: Danger Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var dangerCode: CE? {
+        field(12).map(CE.init(field:))
     }
 
     /// OBR-13: Relevant Clinical Information. HL7 data type `ST`.
@@ -88,14 +88,14 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(15)
     }
 
-    /// OBR-16: Ordering Provider. HL7 data type `XCN`.
-    public var orderingProvider: Field? {
-        field(16)
+    /// OBR-16: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var orderingProvider: XCN? {
+        field(16).map(XCN.init(field:))
     }
 
-    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`.
-    public var orderCallbackPhoneNumber: Field? {
-        field(17)
+    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var orderCallbackPhoneNumber: XTN? {
+        field(17).map(XTN.init(field:))
     }
 
     /// OBR-18: Placer Field 1. HL7 data type `ST`.
@@ -148,14 +148,14 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(27)
     }
 
-    /// OBR-28: Result Copies To. HL7 data type `XCN`.
-    public var resultCopiesTo: Field? {
-        field(28)
+    /// OBR-28: Result Copies To. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var resultCopiesTo: XCN? {
+        field(28).map(XCN.init(field:))
     }
 
-    /// OBR-29: Parent. HL7 data type `EIP`.
-    public var parent: Field? {
-        field(29)
+    /// OBR-29: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
+    public var parent: EIP? {
+        field(29).map(EIP.init(field:))
     }
 
     /// OBR-30: Transportation Mode. HL7 data type `ID`.
@@ -163,9 +163,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(30)?.stringValue
     }
 
-    /// OBR-31: Reason for Study. HL7 data type `CE`.
-    public var reasonForStudy: Field? {
-        field(31)
+    /// OBR-31: Reason for Study. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var reasonForStudy: CE? {
+        field(31).map(CE.init(field:))
     }
 
     /// OBR-32: Principal Result Interpreter. HL7 data type `NDL`.
@@ -198,19 +198,19 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(37)?.stringValue
     }
 
-    /// OBR-38: Transport Logistics of Collected Sample. HL7 data type `CE`.
-    public var transportLogisticsOfCollectedSample: Field? {
-        field(38)
+    /// OBR-38: Transport Logistics of Collected Sample. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var transportLogisticsOfCollectedSample: CE? {
+        field(38).map(CE.init(field:))
     }
 
-    /// OBR-39: Collector's Comment. HL7 data type `CE`.
-    public var collectorsComment: Field? {
-        field(39)
+    /// OBR-39: Collector's Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var collectorsComment: CE? {
+        field(39).map(CE.init(field:))
     }
 
-    /// OBR-40: Transport Arrangement Responsibility. HL7 data type `CE`.
-    public var transportArrangementResponsibility: Field? {
-        field(40)
+    /// OBR-40: Transport Arrangement Responsibility. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var transportArrangementResponsibility: CE? {
+        field(40).map(CE.init(field:))
     }
 
     /// OBR-41: Transport Arranged. HL7 data type `ID`.
@@ -223,28 +223,28 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(42)?.stringValue
     }
 
-    /// OBR-43: Planned Patient Transport Comment. HL7 data type `CE`.
-    public var plannedPatientTransportComment: Field? {
-        field(43)
+    /// OBR-43: Planned Patient Transport Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var plannedPatientTransportComment: CE? {
+        field(43).map(CE.init(field:))
     }
 
-    /// OBR-44: Procedure Code. HL7 data type `CE`.
-    public var procedureCode: Field? {
-        field(44)
+    /// OBR-44: Procedure Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var procedureCode: CE? {
+        field(44).map(CE.init(field:))
     }
 
-    /// OBR-45: Procedure Code Modifier. HL7 data type `CE`.
-    public var procedureCodeModifier: Field? {
-        field(45)
+    /// OBR-45: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var procedureCodeModifier: CE? {
+        field(45).map(CE.init(field:))
     }
 
-    /// OBR-46: Placer Supplemental Service Information. HL7 data type `CE`.
-    public var placerSupplementalServiceInformation: Field? {
-        field(46)
+    /// OBR-46: Placer Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var placerSupplementalServiceInformation: CE? {
+        field(46).map(CE.init(field:))
     }
 
-    /// OBR-47: Filler Supplemental Service Information. HL7 data type `CE`.
-    public var fillerSupplementalServiceInformation: Field? {
-        field(47)
+    /// OBR-47: Filler Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var fillerSupplementalServiceInformation: CE? {
+        field(47).map(CE.init(field:))
     }
 }

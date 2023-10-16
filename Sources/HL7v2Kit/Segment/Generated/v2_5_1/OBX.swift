@@ -23,9 +23,9 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(2)?.stringValue
     }
 
-    /// OBX-3: Observation Identifier. HL7 data type `CE`.
-    public var observationIdentifier: Field? {
-        field(3)
+    /// OBX-3: Observation Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var observationIdentifier: CE? {
+        field(3).map(CE.init(field:))
     }
 
     /// OBX-4: Observation Sub-ID. HL7 data type `ST`.
@@ -38,9 +38,9 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(5)?.stringValue
     }
 
-    /// OBX-6: Units. HL7 data type `CE`.
-    public var units: Field? {
-        field(6)
+    /// OBX-6: Units. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var units: CE? {
+        field(6).map(CE.init(field:))
     }
 
     /// OBX-7: References Range. HL7 data type `ST`.
@@ -83,18 +83,18 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(14)?.stringValue
     }
 
-    /// OBX-15: Producer's ID. HL7 data type `CE`.
-    public var producersID: Field? {
-        field(15)
+    /// OBX-15: Producer's ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var producersID: CE? {
+        field(15).map(CE.init(field:))
     }
 
-    /// OBX-16: Responsible Observer. HL7 data type `XCN`.
-    public var responsibleObserver: Field? {
-        field(16)
+    /// OBX-16: Responsible Observer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var responsibleObserver: XCN? {
+        field(16).map(XCN.init(field:))
     }
 
-    /// OBX-17: Observation Method. HL7 data type `CE`.
-    public var observationMethod: Field? {
-        field(17)
+    /// OBX-17: Observation Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var observationMethod: CE? {
+        field(17).map(CE.init(field:))
     }
 }

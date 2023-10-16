@@ -23,9 +23,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(2)?.stringValue
     }
 
-    /// PV1-3: Assigned Patient Location. HL7 data type `PL`.
-    public var assignedPatientLocation: Field? {
-        field(3)
+    /// PV1-3: Assigned Patient Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var assignedPatientLocation: PL? {
+        field(3).map(PL.init(field:))
     }
 
     /// PV1-4: Admission Type. HL7 data type `IS`.
@@ -38,24 +38,24 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(5).map(CX.init(field:))
     }
 
-    /// PV1-6: Prior Patient Location. HL7 data type `PL`.
-    public var priorPatientLocation: Field? {
-        field(6)
+    /// PV1-6: Prior Patient Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var priorPatientLocation: PL? {
+        field(6).map(PL.init(field:))
     }
 
-    /// PV1-7: Attending Doctor. HL7 data type `XCN`.
-    public var attendingDoctor: Field? {
-        field(7)
+    /// PV1-7: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var attendingDoctor: XCN? {
+        field(7).map(XCN.init(field:))
     }
 
-    /// PV1-8: Referring Doctor. HL7 data type `XCN`.
-    public var referringDoctor: Field? {
-        field(8)
+    /// PV1-8: Referring Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var referringDoctor: XCN? {
+        field(8).map(XCN.init(field:))
     }
 
-    /// PV1-9: Consulting Doctor. HL7 data type `XCN`.
-    public var consultingDoctor: Field? {
-        field(9)
+    /// PV1-9: Consulting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var consultingDoctor: XCN? {
+        field(9).map(XCN.init(field:))
     }
 
     /// PV1-10: Hospital Service. HL7 data type `IS`.
@@ -63,9 +63,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(10)?.stringValue
     }
 
-    /// PV1-11: Temporary Location. HL7 data type `PL`.
-    public var temporaryLocation: Field? {
-        field(11)
+    /// PV1-11: Temporary Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var temporaryLocation: PL? {
+        field(11).map(PL.init(field:))
     }
 
     /// PV1-12: Preadmit Test Indicator. HL7 data type `IS`.
@@ -93,9 +93,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(16)?.stringValue
     }
 
-    /// PV1-17: Admitting Doctor. HL7 data type `XCN`.
-    public var admittingDoctor: Field? {
-        field(17)
+    /// PV1-17: Admitting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var admittingDoctor: XCN? {
+        field(17).map(XCN.init(field:))
     }
 
     /// PV1-18: Patient Type. HL7 data type `IS`.

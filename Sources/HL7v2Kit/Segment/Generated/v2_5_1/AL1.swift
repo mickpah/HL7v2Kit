@@ -18,19 +18,19 @@ public struct AL1: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// AL1-2: Allergen Type Code. HL7 data type `CE`.
-    public var allergenTypeCode: Field? {
-        field(2)
+    /// AL1-2: Allergen Type Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var allergenTypeCode: CE? {
+        field(2).map(CE.init(field:))
     }
 
-    /// AL1-3: Allergen Code/Mnemonic/Description. HL7 data type `CE`.
-    public var allergenCodeMnemonicDescription: Field? {
-        field(3)
+    /// AL1-3: Allergen Code/Mnemonic/Description. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var allergenCodeMnemonicDescription: CE? {
+        field(3).map(CE.init(field:))
     }
 
-    /// AL1-4: Allergy Severity Code. HL7 data type `CE`.
-    public var allergySeverityCode: Field? {
-        field(4)
+    /// AL1-4: Allergy Severity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var allergySeverityCode: CE? {
+        field(4).map(CE.init(field:))
     }
 
     /// AL1-5: Allergy Reaction Code. HL7 data type `ST`.
