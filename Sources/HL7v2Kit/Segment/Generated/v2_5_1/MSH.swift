@@ -103,9 +103,9 @@ public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
         field(18)?.stringValue
     }
 
-    /// MSH-19: Principal Language Of Message. HL7 data type `CE`.
-    public var principalLanguageOfMessage: Field? {
-        field(19)
+    /// MSH-19: Principal Language Of Message. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var principalLanguageOfMessage: CE? {
+        field(19).map(CE.init(field:))
     }
 
     /// MSH-20: Alternate Character Set Handling Scheme. HL7 data type `ID`.

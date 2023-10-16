@@ -88,19 +88,19 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(15)?.stringValue
     }
 
-    /// ORC-16: Order Control Code Reason. HL7 data type `CE`.
-    public var orderControlCodeReason: Field? {
-        field(16)
+    /// ORC-16: Order Control Code Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var orderControlCodeReason: CE? {
+        field(16).map(CE.init(field:))
     }
 
-    /// ORC-17: Entering Organization. HL7 data type `CE`.
-    public var enteringOrganization: Field? {
-        field(17)
+    /// ORC-17: Entering Organization. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var enteringOrganization: CE? {
+        field(17).map(CE.init(field:))
     }
 
-    /// ORC-18: Entering Device. HL7 data type `CE`.
-    public var enteringDevice: Field? {
-        field(18)
+    /// ORC-18: Entering Device. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var enteringDevice: CE? {
+        field(18).map(CE.init(field:))
     }
 
     /// ORC-19: Action By. HL7 data type `XCN`.
@@ -108,9 +108,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(19)
     }
 
-    /// ORC-20: Advanced Beneficiary Notice Code. HL7 data type `CE`.
-    public var advancedBeneficiaryNoticeCode: Field? {
-        field(20)
+    /// ORC-20: Advanced Beneficiary Notice Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var advancedBeneficiaryNoticeCode: CE? {
+        field(20).map(CE.init(field:))
     }
 
     /// ORC-21: Ordering Facility Name. HL7 data type `XON`.
@@ -133,14 +133,14 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(24).map(XAD.init(field:))
     }
 
-    /// ORC-25: Order Status Modifier. HL7 data type `CWE`.
-    public var orderStatusModifier: Field? {
-        field(25)
+    /// ORC-25: Order Status Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var orderStatusModifier: CWE? {
+        field(25).map(CWE.init(field:))
     }
 
-    /// ORC-26: Advanced Beneficiary Notice Override Reason. HL7 data type `CWE`.
-    public var advancedBeneficiaryNoticeOverrideReason: Field? {
-        field(26)
+    /// ORC-26: Advanced Beneficiary Notice Override Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var advancedBeneficiaryNoticeOverrideReason: CWE? {
+        field(26).map(CWE.init(field:))
     }
 
     /// ORC-27: Filler's Expected Availability Date/Time. HL7 data type `TS`.
@@ -148,14 +148,14 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(27)?.stringValue
     }
 
-    /// ORC-28: Confidentiality Code. HL7 data type `CWE`.
-    public var confidentialityCode: Field? {
-        field(28)
+    /// ORC-28: Confidentiality Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var confidentialityCode: CWE? {
+        field(28).map(CWE.init(field:))
     }
 
-    /// ORC-29: Order Type. HL7 data type `CWE`.
-    public var orderType: Field? {
-        field(29)
+    /// ORC-29: Order Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var orderType: CWE? {
+        field(29).map(CWE.init(field:))
     }
 
     /// ORC-30: Enterer Authorization Mode. HL7 data type `CNE`.
@@ -163,8 +163,8 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(30)
     }
 
-    /// ORC-31: Parent Universal Service Identifier. HL7 data type `CWE`.
-    public var parentUniversalServiceIdentifier: Field? {
-        field(31)
+    /// ORC-31: Parent Universal Service Identifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var parentUniversalServiceIdentifier: CWE? {
+        field(31).map(CWE.init(field:))
     }
 }

@@ -254,8 +254,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(orcFringeWire)
         let orc = try #require(message.firstSegment(ORC.self))
         let abn = try #require(orc.advancedBeneficiaryNoticeCode)
-        #expect(abn.first?.components[0].stringValue == "ABN1")
-        #expect(message["ORC-20.1"] == "ABN1")
+        #expect(abn.identifier == "ABN1")
+        #expect(abn.identifier == message["ORC-20.1"])
     }
 
     @Test("ORC-21 (XON) ordering facility name + ORC-22 (XAD) facility address")
@@ -284,10 +284,12 @@ struct TypedSegmentTests {
         let orc = try #require(message.firstSegment(ORC.self))
         let confidentiality = try #require(orc.confidentialityCode)
         let orderType = try #require(orc.orderType)
-        #expect(confidentiality.first?.components[0].stringValue == "R")
-        #expect(orderType.first?.components[0].stringValue == "I")
-        #expect(message["ORC-28.2"] == "Restricted")
-        #expect(message["ORC-29.2"] == "Inpatient")
+        #expect(confidentiality.identifier == "R")
+        #expect(orderType.identifier == "I")
+        #expect(confidentiality.text == "Restricted")
+        #expect(orderType.text == "Inpatient")
+        #expect(confidentiality.text == message["ORC-28.2"])
+        #expect(orderType.text == message["ORC-29.2"])
     }
 
     @Test("ORC-30 (CNE composite) enterer authorization mode")
@@ -304,8 +306,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(orcFringeWire)
         let orc = try #require(message.firstSegment(ORC.self))
         let parent = try #require(orc.parentUniversalServiceIdentifier)
-        #expect(parent.first?.components[0].stringValue == "PAR")
-        #expect(message["ORC-31.1"] == "PAR")
+        #expect(parent.identifier == "PAR")
+        #expect(parent.identifier == message["ORC-31.1"])
     }
 
     @Test("ORC fringe-field wire round-trips byte-perfectly")
@@ -344,10 +346,10 @@ struct TypedSegmentTests {
         let message = try Parser().parse(obxWire)
         let obx = try #require(message.firstSegment(OBX.self))
         let identifier = try #require(obx.observationIdentifier)
-        #expect(identifier.first?.components[0].stringValue == "GLU")
-        #expect(identifier.first?.components[1].stringValue == "Glucose")
-        #expect(message["OBX-3.1"] == "GLU")
-        #expect(message["OBX-3.2"] == "Glucose")
+        #expect(identifier.identifier == "GLU")
+        #expect(identifier.text == "Glucose")
+        #expect(identifier.identifier == message["OBX-3.1"])
+        #expect(identifier.text == message["OBX-3.2"])
     }
 
     @Test("OBX-5 (ST scalar) observation value")
@@ -363,8 +365,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(obxWire)
         let obx = try #require(message.firstSegment(OBX.self))
         let units = try #require(obx.units)
-        #expect(units.first?.components[0].stringValue == "mmol/L")
-        #expect(units.first?.components[2].stringValue == "UCUM")
+        #expect(units.identifier == "mmol/L")
+        #expect(units.nameOfCodingSystem == "UCUM")
     }
 
     @Test("OBX-7 (ST) reference range and OBX-8 (IS) abnormal flags scalars")
@@ -448,9 +450,9 @@ struct TypedSegmentTests {
         let message = try Parser().parse(obrWire)
         let obr = try #require(message.firstSegment(OBR.self))
         let service = try #require(obr.universalServiceIdentifier)
-        #expect(service.first?.components[0].stringValue == "GLU")
-        #expect(service.first?.components[1].stringValue == "Glucose")
-        #expect(message["OBR-4.1"] == "GLU")
+        #expect(service.identifier == "GLU")
+        #expect(service.text == "Glucose")
+        #expect(service.identifier == message["OBR-4.1"])
         #expect(message["OBR-4.2"] == "Glucose")
     }
 
@@ -534,7 +536,7 @@ struct TypedSegmentTests {
         #expect(pid.setID == "1")
         #expect(obr.setID == "1")
         #expect(obx.setID == "1")
-        #expect(obr.universalServiceIdentifier?.first?.components[0].stringValue == "GLU")
+        #expect(obr.universalServiceIdentifier?.identifier == "GLU")
         #expect(obx.observationValue == "5.2")
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == wire)
@@ -597,9 +599,9 @@ struct TypedSegmentTests {
         let language = try #require(pid.primaryLanguage)
         let marital = try #require(pid.maritalStatus)
         let religion = try #require(pid.religion)
-        #expect(language.first?.components[0].stringValue == "en")
-        #expect(marital.first?.components[1].stringValue == "Married")
-        #expect(religion.first?.components[0].stringValue == "CAT")
+        #expect(language.identifier == "en")
+        #expect(marital.text == "Married")
+        #expect(religion.identifier == "CAT")
     }
 
     @Test("PID-18 (CX) patient account number")
@@ -692,10 +694,10 @@ struct TypedSegmentTests {
         let message = try Parser().parse(fringePIDWire)
         let pid = try #require(message.firstSegment(PID.self))
         let species = try #require(pid.speciesCode)
-        #expect(species.first?.components[0].stringValue == "L1")
-        #expect(species.first?.components[1].stringValue == "Human")
-        #expect(message["PID-35.1"] == "L1")
-        #expect(message["PID-35.2"] == "Human")
+        #expect(species.identifier == "L1")
+        #expect(species.text == "Human")
+        #expect(species.identifier == message["PID-35.1"])
+        #expect(species.text == message["PID-35.2"])
     }
 
     @Test("PID-39 (CWE composite) tribal citizenship")
@@ -703,9 +705,9 @@ struct TypedSegmentTests {
         let message = try Parser().parse(fringePIDWire)
         let pid = try #require(message.firstSegment(PID.self))
         let citizenship = try #require(pid.tribalCitizenship)
-        #expect(citizenship.first?.components[0].stringValue == "100")
-        #expect(citizenship.first?.components[1].stringValue == "Australian")
-        #expect(message["PID-39.1"] == "100")
+        #expect(citizenship.identifier == "100")
+        #expect(citizenship.text == "Australian")
+        #expect(citizenship.identifier == message["PID-39.1"])
     }
 
     @Test("PID fringe-field wire round-trips byte-perfectly")
@@ -749,12 +751,12 @@ struct TypedSegmentTests {
         let message = try Parser().parse(nk1Wire)
         let nk1 = try #require(message.firstSegment(NK1.self))
         let name = try #require(nk1.name)                        // XPN typed
-        let relationship = try #require(nk1.relationship)        // CE stays Field?
+        let relationship = try #require(nk1.relationship)        // CE typed (v0.3-C2)
         #expect(name.familyName == "Smith")
         #expect(name.givenName == "Mary")
-        #expect(relationship.first?.components[1].stringValue == "Spouse")
+        #expect(relationship.text == "Spouse")
         #expect(name.familyName == message["NK1-2.1"])
-        #expect(message["NK1-3.2"] == "Spouse")
+        #expect(relationship.text == message["NK1-3.2"])
     }
 
     @Test("NK1-5/6 (XTN composites) home + business phone")
@@ -883,9 +885,9 @@ struct TypedSegmentTests {
         let al1 = try #require(message.firstSegment(AL1.self))
         #expect(al1.setID == "1")
         let allergen = try #require(al1.allergenCodeMnemonicDescription)
-        #expect(allergen.first?.components[0].stringValue == "PENICILLIN")
-        #expect(allergen.first?.components[1].stringValue == "Penicillin")
-        #expect(message["AL1-3.1"] == "PENICILLIN")
+        #expect(allergen.identifier == "PENICILLIN")
+        #expect(allergen.text == "Penicillin")
+        #expect(allergen.identifier == message["AL1-3.1"])
         #expect(al1.allergyReactionCode == "Hives")
     }
 }

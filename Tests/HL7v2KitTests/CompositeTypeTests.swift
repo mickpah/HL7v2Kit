@@ -174,14 +174,106 @@ struct CompositeTypeTests {
         #expect(address.addressType == message["PID-11.7"])
     }
 
+    // MARK: - CE (Coded Element) — v0.3-C2
+
+    // PID-15 (primary language) = en^English^ISO639-2.
+    // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..14 empty
+    // (7 pipes after M), 15 language=en^English^ISO639-2.
+    private let ceRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||en^English^ISO639-2\r
+    """
+
+    @Test("CE exposes identifier / text / nameOfCodingSystem / alt-* accessors")
+    func ceNamedAccessors() throws {
+        let message = try Parser().parse(ceRichWire)
+        let language = try #require(message.firstSegment(PID.self)?.primaryLanguage)
+        #expect(language.identifier == "en")
+        #expect(language.text == "English")
+        #expect(language.nameOfCodingSystem == "ISO639-2")
+        #expect(language.altIdentifier == nil)
+    }
+
+    @Test("CE cross-checks each named accessor against the path API")
+    func ceAgreesWithPath() throws {
+        let message = try Parser().parse(ceRichWire)
+        let language = try #require(message.firstSegment(PID.self)?.primaryLanguage)
+        #expect(language.identifier == message["PID-15.1"])
+        #expect(language.text == message["PID-15.2"])
+        #expect(language.nameOfCodingSystem == message["PID-15.3"])
+    }
+
+    // PID-10 (race) is CE, repeating. Two repetitions: White / Asian.
+    private let ceRepeatingWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005~2028-9^Asian^HL70005\r
+    """
+
+    @Test("CE multi-repetition — wrap each Repetition for typed view")
+    func ceMultiRepetitionAccess() throws {
+        let message = try Parser().parse(ceRepeatingWire)
+        let race = try #require(message.firstSegment(PID.self)?.race)
+        #expect(race.identifier == "2106-3")
+        #expect(race.text == "White")
+        #expect(race.field.repetitions.count == 2)
+        let asian = CE(repetition: race.field.repetitions[1])
+        #expect(asian.identifier == "2028-9")
+        #expect(asian.text == "Asian")
+    }
+
+    // MARK: - CWE (Coded with Exceptions) — v0.3-C2
+
+    // PID-39 (tribal citizenship) = 100^Australian^HL70171.
+    // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..38 empty
+    // (31 pipes after M), 39 tribalCitizenship=100^Australian^HL70171.
+    private let cweRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||100^Australian^HL70171\r
+    """
+
+    @Test("CWE exposes identifier / text / coding-system / alt-* / originalText accessors")
+    func cweNamedAccessors() throws {
+        let message = try Parser().parse(cweRichWire)
+        #expect(message["PID-39.1"] == "100", "Wire mis-counted: CWE should land at PID-39")
+        let citizenship = try #require(message.firstSegment(PID.self)?.tribalCitizenship)
+        #expect(citizenship.identifier == "100")
+        #expect(citizenship.text == "Australian")
+        #expect(citizenship.nameOfCodingSystem == "HL70171")
+        #expect(citizenship.originalText == nil)  // CWE-9 not populated
+    }
+
+    @Test("CWE cross-checks each named accessor against the path API")
+    func cweAgreesWithPath() throws {
+        let message = try Parser().parse(cweRichWire)
+        let citizenship = try #require(message.firstSegment(PID.self)?.tribalCitizenship)
+        #expect(citizenship.identifier == message["PID-39.1"])
+        #expect(citizenship.text == message["PID-39.2"])
+        #expect(citizenship.nameOfCodingSystem == message["PID-39.3"])
+    }
+
+    @Test("CWE.field migration path — callers can still walk components by index")
+    func cweFieldMigrationPath() throws {
+        let message = try Parser().parse(cweRichWire)
+        let citizenship = try #require(message.firstSegment(PID.self)?.tribalCitizenship)
+        // v0.1.x access pattern still works via .field with one extra hop.
+        #expect(citizenship.field.first?.components[0].stringValue == "100")
+        #expect(citizenship.field.first?.components[1].stringValue == "Australian")
+    }
+
     // MARK: - Round-trip preservation
 
-    @Test("Composite-bearing messages still round-trip byte-perfectly through XPN/CX/XAD")
+    @Test("Composite-bearing messages still round-trip byte-perfectly through XPN/CX/XAD/CE/CWE")
     func compositeRoundTripsByteIdentical() throws {
-        // The XPN/CX/XAD structs are *views* over Field, not owners — the
+        // The composite structs are *views* over Field, not owners — the
         // segment still owns the bytes. Round-trip must be unaffected by
         // introducing typed accessors.
-        for wire in [xpnRichWire, xpnRepeatingWire, cxRichWire, cxRepeatingWire, xadRichWire] {
+        for wire in [
+            xpnRichWire, xpnRepeatingWire,
+            cxRichWire, cxRepeatingWire,
+            xadRichWire,
+            ceRichWire, ceRepeatingWire,
+            cweRichWire,
+        ] {
             let message = try Parser().parse(wire)
             let rebuilt = String(data: message.serialize(), encoding: .utf8)
             #expect(rebuilt == wire, "Composite wire round-trip drift")

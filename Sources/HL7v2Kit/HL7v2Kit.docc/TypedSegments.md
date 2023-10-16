@@ -46,8 +46,8 @@ let raceCode = race?.first?.components[0].stringValue
 The accessor's return type encodes the field's HL7 datatype:
 
 - **`String?`** for scalar HL7 datatypes (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`). Returns the rendered first-subcomponent value if the field is single-everything-the-way-down; nil if absent.
-- **`XPN?` / `CX?` / `XAD?`** for the three composite data types HL7v2Kit ships typed wrappers for (v0.2-C1). Each struct exposes named accessors (`familyName`, `id`, `streetAddress`, …) for the most common components, plus a public `field: Field` for raw access to repetitions and unexposed components.
-- **`Field?`** for other structured HL7 datatypes (`HD`, `CE`, `CWE`, `EI`, `XCN`, `XTN`, `PL`, `MSG`, `PT`, `VID`, `XON`, `CNE`, `EIP`, ...). Returns the underlying ``Field`` — the caller reaches into ``Field/repetitions``, ``Repetition/components``, and ``Component/subcomponents`` themselves. Each of these can be promoted to a typed composite struct in a future stage without breaking changes.
+- **`XPN?` / `CX?` / `XAD?` / `CE?` / `CWE?`** for the five composite data types HL7v2Kit ships typed wrappers for (XPN/CX/XAD shipped v0.2-C1; CE/CWE shipped v0.3-C2). Each struct exposes named accessors (`familyName`, `id`, `streetAddress`, `identifier`, `text`, …) for the most common components, plus a public `field: Field` for raw access to repetitions and unexposed components.
+- **`Field?`** for other structured HL7 datatypes (`HD`, `EI`, `XCN`, `XTN`, `PL`, `MSG`, `PT`, `VID`, `XON`, `CNE`, `EIP`, ...). Returns the underlying ``Field`` — the caller reaches into ``Field/repetitions``, ``Repetition/components``, and ``Component/subcomponents`` themselves. Each of these can be promoted to a typed composite struct in a future stage.
 
 ## Iterating multi-occurrence segments
 

@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No changes yet._
+### Changed — API-BREAKING (typed composites, v0.3-C2)
+
+- **Typed-segment accessors for CE- and CWE-typed fields now return Swift struct views** (`CE?` / `CWE?`) instead of `Field?`. New structs live under `Sources/HL7v2Kit/Composite/` and expose named accessors for every component the spec defines:
+  - `CE` — `identifier`, `text`, `nameOfCodingSystem`, `altIdentifier`, `altText`, `nameOfAltCodingSystem`
+  - `CWE` — `identifier`, `text`, `nameOfCodingSystem`, `altIdentifier`, `altText`, `nameOfAltCodingSystem`, `codingSystemVersionID`, `altCodingSystemVersionID`, `originalText`
+- **Required-component metadata** for both: CE-1 / CWE-1 (Identifier). `Validator.checkComponentGrammar` now fires `.requiredComponentMissing` on CE/CWE fields populated with an empty CE-1 / CWE-1 (e.g. `PID|...||^WhiteTextOnly` on PID-10). CWE's `"CE-1 OR CE-9"` OR-semantics from the v2.5.1 spec is simplified to "CE-1 required only" — documented as a known divergence; the conditional-field DSL doesn't yet support disjunctive component conditions.
+- **Affected typed-segment accessors** (any field with `dataType ∈ {CE, CWE}` across the 9 spec § 17 segments):
+  - **CE**: `MSH.principalLanguageOfMessage`; `AL1.allergenTypeCode` / `allergenCodeMnemonicDescription` / `allergySeverityCode`; `NK1.relationship` / `administrativeSex`; `OBR.universalServiceIdentifier` / many; `OBX.observationIdentifier` / `units` / many; `ORC.orderControlCodeReason` / `enteringOrganization` / `enteringDevice` / `advancedBeneficiaryNoticeCode`; `PID.race` / `primaryLanguage` / `maritalStatus` / `religion` / `ethnicGroup` / `citizenship` / `veteransMilitaryStatus` / `nationality` / `speciesCode` / `breedCode` / `productionClassCode`.
+  - **CWE**: `PID.tribalCitizenship`; `ORC.orderStatusModifier` / `advancedBeneficiaryNoticeOverrideReason` / `confidentialityCode` / `orderType` / `parentUniversalServiceIdentifier`.
+- **Migration path** preserved via the public `field: Field` escape hatch — v0.1.x callers can rewrite `pid.race?.first?.components[0].stringValue` as either `pid.race?.field.first?.components[0].stringValue` (one extra hop) or migrate to the named accessor `pid.race?.identifier`. Cross-check invariant holds for both: `pid.race?.identifier == message["PID-10.1"]`.
+- **Mechanism**. `Codegen.compositeDataTypes` whitelist extended to `["XPN", "CX", "XAD", "CE", "CWE"]` — one-line edit. `Validator.requiredComponents(forCompositeCode:)` switch gains CE/CWE cases.
+- **Round-trip preserved**. Composite structs are value-type *views* over `Field`, not owners — the segment still holds the bytes. All 48 gold-corpus fixtures round-trip byte-identical; `CompositeTypeTests.compositeRoundTripsByteIdentical` covers CE/CWE wires too.
+- **Behavioural change on V2 component-grammar check**: messages with PID-10 (race) populated as `^WhiteTextOnly` (CE-1 empty) now fire `.requiredComponentMissing` at `PID[1]-10.1` — previously skipped because CE was untyped. Gold-corpus fixtures all populate CE-1 properly and remain unaffected; pinned by the updated `ComponentGrammarTests.fixtureCorpusNoComponentErrors`.
+- 8 new tests in `Tests/HL7v2KitTests/CompositeTypeTests.swift` cover every named accessor on each composite + the `.field` migration path + multi-repetition access (PID-10 race) + cross-check against path API + round-trip preservation. 2 new V2 tests in `ComponentGrammarTests.swift` (`ceFiresComponentMissingOnEmptyIdentifier`, `cweFiresComponentMissingOnEmptyIdentifier`); the old "CE / CWE / EI skipped silently" test refactored to use the still-untyped HD (PID-34 lastUpdateFacility). 21 existing test sites across `TypedSegmentTests.swift` migrated to the new named accessors. 210 → 218 tests across 16 suites.
 
 ## [0.2.0] — 2026-06-15
 

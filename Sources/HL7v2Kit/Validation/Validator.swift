@@ -246,6 +246,8 @@ public struct Validator: Sendable {
         case "XPN": return XPN.requiredComponents
         case "CX":  return CX.requiredComponents
         case "XAD": return XAD.requiredComponents
+        case "CE":  return CE.requiredComponents
+        case "CWE": return CWE.requiredComponents
         default:    return []
         }
     }

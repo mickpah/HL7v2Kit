@@ -158,19 +158,62 @@ struct ComponentGrammarTests {
 
     // MARK: - Composites without typed metadata
 
-    @Test("Composites HL7v2Kit hasn't typed (CE / CWE / EI) are skipped silently")
+    @Test("Composites HL7v2Kit hasn't typed (HD / XCN / EI / …) are skipped silently")
     func untypedCompositesSkippedSilently() throws {
-        // PID-10 (race) is CE-typed. CE doesn't yet have requiredComponents
-        // metadata in HL7v2Kit, so an empty PID-10.1 with PID-10.2 populated
+        // PID-34 (lastUpdateFacility) is HD-typed. HD doesn't have a
+        // `requiredComponents` metadata block yet, so an HD field populated
+        // with only HD-2 (universal ID) and an empty HD-1 (namespace)
         // must NOT fire a component-grammar issue.
+        //
+        // Fields populated in this wire:
+        //  1 setID=1, 3 ids=123456..., 5 name=Smith^John, 7 DOB, 8 sex=M,
+        //  9..33 empty, 34 lastUpdateFacility=^UNIV_ID^ISO  ← HD with empty HD-1
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||||||||||||||||||||||||||^UNIV_ID^ISO\r
+        """
+        let message = try Parser().parse(wire)
+        // Sanity-check pipe count: PID-34.2 should be "UNIV_ID".
+        #expect(message["PID-34.2"] == "UNIV_ID", "Wire mis-counted: HD should land at PID-34")
+        let report = Validator().validate(message)
+        let pid34Issues = report.errors.filter { $0.location.fieldIndex == 34 }
+        #expect(!pid34Issues.contains { $0.code == .requiredComponentMissing })
+    }
+
+    @Test("CE typed composite (v0.3-C2) fires .requiredComponentMissing on empty CE-1")
+    func ceFiresComponentMissingOnEmptyIdentifier() throws {
+        // PID-10 (race) is CE-typed. v0.3-C2 promoted CE; CE-1 (identifier)
+        // is the required component. An empty PID-10.1 with PID-10.2
+        // populated must NOW fire .requiredComponentMissing at PID[1]-10.1.
         let wire = """
         MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||^WhiteTextOnly\r
         """
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let pid10Issues = report.errors.filter { $0.location.fieldIndex == 10 }
-        #expect(!pid10Issues.contains { $0.code == .requiredComponentMissing })
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 10 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "PID[1]-10.1")
+        #expect(issue.message.contains("Identifier"))
+        #expect(issue.message.contains("CE"))
+    }
+
+    @Test("CWE typed composite (v0.3-C2) fires .requiredComponentMissing on empty CWE-1")
+    func cweFiresComponentMissingOnEmptyIdentifier() throws {
+        // PID-39 (tribal citizenship) is CWE-typed. Empty CWE-1 with CWE-2
+        // populated must fire .requiredComponentMissing at PID[1]-39.1.
+        // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..38 empty
+        // (31 pipes after M), 39 tribalCitizenship=^AustralianText  ← CWE-1 empty.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^AustralianText\r
+        """
+        let message = try Parser().parse(wire)
+        #expect(message["PID-39.2"] == "AustralianText", "Wire mis-counted: CWE should land at PID-39")
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 39 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.message.contains("CWE"))
     }
 
     // MARK: - Fixture corpus regression pin

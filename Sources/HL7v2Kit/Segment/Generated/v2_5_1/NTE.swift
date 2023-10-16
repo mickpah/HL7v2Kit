@@ -28,8 +28,8 @@ public struct NTE: TypedSegment, Sendable, Equatable, Hashable {
         field(3)?.stringValue
     }
 
-    /// NTE-4: Comment Type. HL7 data type `CE`.
-    public var commentType: Field? {
-        field(4)
+    /// NTE-4: Comment Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var commentType: CE? {
+        field(4).map(CE.init(field:))
     }
 }

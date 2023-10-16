@@ -23,9 +23,9 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(2).map(XPN.init(field:))
     }
 
-    /// NK1-3: Relationship. HL7 data type `CE`.
-    public var relationship: Field? {
-        field(3)
+    /// NK1-3: Relationship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var relationship: CE? {
+        field(3).map(CE.init(field:))
     }
 
     /// NK1-4: Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
@@ -43,9 +43,9 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(6)
     }
 
-    /// NK1-7: Contact Role. HL7 data type `CE`.
-    public var contactRole: Field? {
-        field(7)
+    /// NK1-7: Contact Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var contactRole: CE? {
+        field(7).map(CE.init(field:))
     }
 
     /// NK1-8: Start Date. HL7 data type `DT`.
