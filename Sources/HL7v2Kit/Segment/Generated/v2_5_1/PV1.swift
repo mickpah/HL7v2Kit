@@ -43,19 +43,19 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(6)
     }
 
-    /// PV1-7: Attending Doctor. HL7 data type `XCN`.
-    public var attendingDoctor: Field? {
-        field(7)
+    /// PV1-7: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var attendingDoctor: XCN? {
+        field(7).map(XCN.init(field:))
     }
 
-    /// PV1-8: Referring Doctor. HL7 data type `XCN`.
-    public var referringDoctor: Field? {
-        field(8)
+    /// PV1-8: Referring Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var referringDoctor: XCN? {
+        field(8).map(XCN.init(field:))
     }
 
-    /// PV1-9: Consulting Doctor. HL7 data type `XCN`.
-    public var consultingDoctor: Field? {
-        field(9)
+    /// PV1-9: Consulting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var consultingDoctor: XCN? {
+        field(9).map(XCN.init(field:))
     }
 
     /// PV1-10: Hospital Service. HL7 data type `IS`.
@@ -93,9 +93,9 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(16)?.stringValue
     }
 
-    /// PV1-17: Admitting Doctor. HL7 data type `XCN`.
-    public var admittingDoctor: Field? {
-        field(17)
+    /// PV1-17: Admitting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var admittingDoctor: XCN? {
+        field(17).map(XCN.init(field:))
     }
 
     /// PV1-18: Patient Type. HL7 data type `IS`.

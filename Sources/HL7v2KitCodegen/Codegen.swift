@@ -46,8 +46,9 @@ let scalarDataTypes: Set<String> = [
 /// into the named accessors on the struct, with `.field` available for
 /// unexposed components and additional repetitions.
 ///
-/// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 adds CE / CWE.
-let compositeDataTypes: Set<String> = ["XPN", "CX", "XAD", "CE", "CWE"]
+/// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 added CE / CWE. v0.3-C3
+/// adds EI / XCN / XTN.
+let compositeDataTypes: Set<String> = ["XPN", "CX", "XAD", "CE", "CWE", "EI", "XCN", "XTN"]
 
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String

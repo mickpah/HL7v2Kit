@@ -1,15 +1,16 @@
 // CompositeTypeTests.swift
-// v0.2-C1: typed composite data types (XPN / CX / XAD). Exercises every
-// named accessor on each composite, the `.field` migration path for
-// callers using v0.1.x-style component indexing, multi-repetition access
-// via `.field.repetitions`, and the cross-check invariant
-// (typed accessor == matching path string).
+// Typed composite data types — v0.2-C1 (XPN / CX / XAD), v0.3-C2 (CE /
+// CWE), v0.3-C3 (EI / XCN / XTN). Exercises every named accessor on
+// each composite, the `.field` migration path for callers using
+// v0.1.x-style component indexing, multi-repetition access via
+// `.field.repetitions`, and the cross-check invariant (typed accessor
+// == matching path string).
 
 import Testing
 import Foundation
 @testable import HL7v2Kit
 
-@Suite("Composite types — XPN / CX / XAD (v0.2-C1)")
+@Suite("Composite types — XPN / CX / XAD / CE / CWE / EI / XCN / XTN")
 struct CompositeTypeTests {
 
     // MARK: - XPN (Extended Person Name)
@@ -260,9 +261,161 @@ struct CompositeTypeTests {
         #expect(citizenship.field.first?.components[1].stringValue == "Australian")
     }
 
+    // MARK: - EI (Entity Identifier) — v0.3-C3
+
+    // ORC-2 (placerOrderNumber) is a single-rep EI. Wire populates all
+    // four EI components so each named accessor has a non-empty value
+    // to read.
+    private let eiRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+    ORC|NW|PLACER123^HOSP^1.2.840.10008^ISO\r
+    """
+
+    @Test("EI exposes entityIdentifier / namespaceID / universalID / universalIDType accessors")
+    func eiNamedAccessors() throws {
+        let message = try Parser().parse(eiRichWire)
+        let placer = try #require(message.firstSegment(ORC.self)?.placerOrderNumber)
+        #expect(placer.entityIdentifier == "PLACER123")
+        #expect(placer.namespaceID == "HOSP")
+        #expect(placer.universalID == "1.2.840.10008")
+        #expect(placer.universalIDType == "ISO")
+    }
+
+    @Test("EI cross-checks each named accessor against the path API")
+    func eiAgreesWithPath() throws {
+        let message = try Parser().parse(eiRichWire)
+        let placer = try #require(message.firstSegment(ORC.self)?.placerOrderNumber)
+        #expect(placer.entityIdentifier == message["ORC-2.1"])
+        #expect(placer.namespaceID == message["ORC-2.2"])
+        #expect(placer.universalID == message["ORC-2.3"])
+        #expect(placer.universalIDType == message["ORC-2.4"])
+    }
+
+    @Test("EI.field migration path — callers can still walk components by index")
+    func eiFieldMigrationPath() throws {
+        let message = try Parser().parse(eiRichWire)
+        let placer = try #require(message.firstSegment(ORC.self)?.placerOrderNumber)
+        #expect(placer.field.first?.components[0].stringValue == "PLACER123")
+        #expect(placer.field.first?.components[3].stringValue == "ISO")
+    }
+
+    // MARK: - XCN (Extended Composite ID for Persons) — v0.3-C3
+
+    // PV1-7 (attendingDoctor) is multi-rep XCN. First rep populates the
+    // first six XCN components — every named accessor has a value.
+    private let xcnRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PV1|1|I|||||DR123^Jones^Mary^Anne^Jr^Dr\r
+    """
+
+    @Test("XCN exposes idNumber / familyName / givenName / middleName / suffix / prefix_ accessors")
+    func xcnNamedAccessors() throws {
+        let message = try Parser().parse(xcnRichWire)
+        let doctor = try #require(message.firstSegment(PV1.self)?.attendingDoctor)
+        #expect(doctor.idNumber == "DR123")
+        #expect(doctor.familyName == "Jones")
+        #expect(doctor.givenName == "Mary")
+        #expect(doctor.middleName == "Anne")
+        #expect(doctor.suffix == "Jr")
+        #expect(doctor.prefix_ == "Dr")
+    }
+
+    @Test("XCN cross-checks each named accessor against the path API")
+    func xcnAgreesWithPath() throws {
+        let message = try Parser().parse(xcnRichWire)
+        let doctor = try #require(message.firstSegment(PV1.self)?.attendingDoctor)
+        #expect(doctor.idNumber == message["PV1-7.1"])
+        #expect(doctor.familyName == message["PV1-7.2"])
+        #expect(doctor.givenName == message["PV1-7.3"])
+        #expect(doctor.middleName == message["PV1-7.4"])
+        #expect(doctor.suffix == message["PV1-7.5"])
+        #expect(doctor.prefix_ == message["PV1-7.6"])
+    }
+
+    // PV1-9 (consultingDoctor) with two repetitions: a primary and a
+    // backup consultant.
+    private let xcnRepeatingWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PV1|1|I|||||||CN001^Brown^Alex~CN002^Davis^Lee\r
+    """
+
+    @Test("XCN multi-repetition — wrap each Repetition for typed view")
+    func xcnMultiRepetitionAccess() throws {
+        let message = try Parser().parse(xcnRepeatingWire)
+        let consult = try #require(message.firstSegment(PV1.self)?.consultingDoctor)
+        // Named accessors → first repetition.
+        #expect(consult.idNumber == "CN001")
+        #expect(consult.familyName == "Brown")
+        // Second repetition reached via .field.
+        #expect(consult.field.repetitions.count == 2)
+        let backup = XCN(repetition: consult.field.repetitions[1])
+        #expect(backup.idNumber == "CN002")
+        #expect(backup.familyName == "Davis")
+    }
+
+    // MARK: - XTN (Extended Telecommunication) — v0.3-C3
+
+    // PID-13 (phoneNumberHome) is a multi-rep XTN. First rep populates
+    // XTN-1 (legacy phone) + XTN-2 (use) + XTN-3 (equipment) + XTN-4
+    // (email) + XTN-5/6/7 (country/area/local) + XTN-12 (unformatted).
+    // Field map for the XTN: phone^use^equip^email^cc^area^local^^^^^unformatted
+    // Components 8/9/10/11 left empty so XTN-12 is at the right slot.
+    private let xtnRichWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH^john@example.com^61^2^5551234^^^^^+61255551234\r
+    """
+
+    @Test("XTN exposes telephoneNumber / use / equipment / email / country / area / local / unformatted accessors")
+    func xtnNamedAccessors() throws {
+        let message = try Parser().parse(xtnRichWire)
+        let phone = try #require(message.firstSegment(PID.self)?.phoneNumberHome)
+        #expect(phone.telephoneNumber == "(02)555-1234")
+        #expect(phone.telecommunicationUseCode == "PRN")
+        #expect(phone.telecommunicationEquipmentType == "PH")
+        #expect(phone.emailAddress == "john@example.com")
+        #expect(phone.countryCode == "61")
+        #expect(phone.areaCityCode == "2")
+        #expect(phone.localNumber == "5551234")
+        #expect(phone.unformattedTelephoneNumber == "+61255551234")
+    }
+
+    @Test("XTN cross-checks each named accessor against the path API")
+    func xtnAgreesWithPath() throws {
+        let message = try Parser().parse(xtnRichWire)
+        let phone = try #require(message.firstSegment(PID.self)?.phoneNumberHome)
+        #expect(phone.telephoneNumber == message["PID-13.1"])
+        #expect(phone.telecommunicationUseCode == message["PID-13.2"])
+        #expect(phone.telecommunicationEquipmentType == message["PID-13.3"])
+        #expect(phone.emailAddress == message["PID-13.4"])
+        #expect(phone.countryCode == message["PID-13.5"])
+        #expect(phone.areaCityCode == message["PID-13.6"])
+        #expect(phone.localNumber == message["PID-13.7"])
+        #expect(phone.unformattedTelephoneNumber == message["PID-13.12"])
+    }
+
+    // PID-13 with two repetitions: a home phone and a mobile.
+    private let xtnRepeatingWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH~0412345678^PRN^CP\r
+    """
+
+    @Test("XTN multi-repetition — wrap each Repetition for typed view")
+    func xtnMultiRepetitionAccess() throws {
+        let message = try Parser().parse(xtnRepeatingWire)
+        let phone = try #require(message.firstSegment(PID.self)?.phoneNumberHome)
+        // Named accessors → first repetition (home phone).
+        #expect(phone.telephoneNumber == "(02)555-1234")
+        #expect(phone.telecommunicationEquipmentType == "PH")
+        // Second repetition reached via .field (mobile).
+        #expect(phone.field.repetitions.count == 2)
+        let mobile = XTN(repetition: phone.field.repetitions[1])
+        #expect(mobile.telephoneNumber == "0412345678")
+        #expect(mobile.telecommunicationEquipmentType == "CP")
+    }
+
     // MARK: - Round-trip preservation
 
-    @Test("Composite-bearing messages still round-trip byte-perfectly through XPN/CX/XAD/CE/CWE")
+    @Test("Composite-bearing messages still round-trip byte-perfectly through XPN/CX/XAD/CE/CWE/EI/XCN/XTN")
     func compositeRoundTripsByteIdentical() throws {
         // The composite structs are *views* over Field, not owners — the
         // segment still owns the bytes. Round-trip must be unaffected by
@@ -273,6 +426,9 @@ struct CompositeTypeTests {
             xadRichWire,
             ceRichWire, ceRepeatingWire,
             cweRichWire,
+            eiRichWire,
+            xcnRichWire, xcnRepeatingWire,
+            xtnRichWire, xtnRepeatingWire,
         ] {
             let message = try Parser().parse(wire)
             let rebuilt = String(data: message.serialize(), encoding: .utf8)

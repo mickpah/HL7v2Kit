@@ -33,14 +33,14 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
         field(4).map(XAD.init(field:))
     }
 
-    /// NK1-5: Phone Number. HL7 data type `XTN`.
-    public var phoneNumber: Field? {
-        field(5)
+    /// NK1-5: Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var phoneNumber: XTN? {
+        field(5).map(XTN.init(field:))
     }
 
-    /// NK1-6: Business Phone Number. HL7 data type `XTN`.
-    public var businessPhoneNumber: Field? {
-        field(6)
+    /// NK1-6: Business Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var businessPhoneNumber: XTN? {
+        field(6).map(XTN.init(field:))
     }
 
     /// NK1-7: Contact Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

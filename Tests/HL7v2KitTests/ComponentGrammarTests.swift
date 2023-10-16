@@ -216,6 +216,61 @@ struct ComponentGrammarTests {
         #expect(issue.message.contains("CWE"))
     }
 
+    @Test("EI typed composite (v0.3-C3) fires .requiredComponentMissing on empty EI-1")
+    func eiFiresComponentMissingOnEmptyEntityIdentifier() throws {
+        // ORC-2 (placerOrderNumber) is EI-typed. v0.3-C3 promoted EI;
+        // EI-1 (entityIdentifier) is the required component. An empty
+        // ORC-2.1 with ORC-2.2 populated must fire .requiredComponentMissing
+        // at ORC[1]-2.1.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        ORC|NW|^HOSP^1.2.840.10008^ISO\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 2 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "ORC[1]-2.1")
+        #expect(issue.message.contains("Entity Identifier"))
+        #expect(issue.message.contains("EI"))
+    }
+
+    @Test("XCN typed composite (v0.3-C3) fires .requiredComponentMissing on empty XCN-1")
+    func xcnFiresComponentMissingOnEmptyIdNumber() throws {
+        // PV1-7 (attendingDoctor) is XCN-typed. Empty XCN-1 (idNumber)
+        // with XCN-2 (familyName) populated must fire
+        // .requiredComponentMissing at PV1[1]-7.1.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PV1|1|I|||||^Jones^Mary\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 7 })
+        #expect(issue.location.componentIndex == 1)
+        #expect(issue.location.pathDescription == "PV1[1]-7.1")
+        #expect(issue.message.contains("ID Number"))
+        #expect(issue.message.contains("XCN"))
+    }
+
+    @Test("XTN typed composite (v0.3-C3) has no required components — empty XTN-1 does NOT fire")
+    func xtnSkipsSilentlyWithNoRequiredComponents() throws {
+        // PID-13 (phoneNumberHome) is XTN-typed. XTN.requiredComponents is
+        // intentionally empty (XTN-1 deprecated; XTN-12 modern primary;
+        // neither strictly required). An XTN populated with only XTN-4
+        // (email address) must NOT fire any component-grammar error —
+        // pins the design choice that XTN's empty requiredComponents list
+        // is the right call.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||^^^john@example.com\r
+        """
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let pid13Issues = report.errors.filter { $0.location.fieldIndex == 13 && $0.code == .requiredComponentMissing }
+        #expect(pid13Issues.isEmpty)
+    }
+
     // MARK: - Fixture corpus regression pin
 
     @Test("Fixture corpus is unaffected by component-grammar enforcement")

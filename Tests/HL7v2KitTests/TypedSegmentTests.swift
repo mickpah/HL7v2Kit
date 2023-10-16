@@ -194,8 +194,8 @@ struct TypedSegmentTests {
         let orc = try #require(message.firstSegment(ORC.self))
         let placer = try #require(orc.placerOrderNumber)
         let filler = try #require(orc.fillerOrderNumber)
-        #expect(placer.first?.components[0].stringValue == "PLACER123")
-        #expect(filler.first?.components[0].stringValue == "FILLER456")
+        #expect(placer.entityIdentifier == "PLACER123")
+        #expect(filler.entityIdentifier == "FILLER456")
         #expect(message["ORC-2.1"] == "PLACER123")
         #expect(message["ORC-3.1"] == "FILLER456")
     }
@@ -220,8 +220,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(orcExtendedWire)
         let orc = try #require(message.firstSegment(ORC.self))
         let provider = try #require(orc.orderingProvider)
-        // Components: empty^family^given. We exercise components[1] = family.
-        #expect(provider.first?.components[1].stringValue == "Williams")
+        // Components: empty^family^given. We exercise XCN-2 = family.
+        #expect(provider.familyName == "Williams")
     }
 
     // MARK: - ORC fringe fields 20–31 (Task v0.2-F1)
@@ -439,8 +439,8 @@ struct TypedSegmentTests {
         let obr = try #require(message.firstSegment(OBR.self))
         let placer = try #require(obr.placerOrderNumber)
         let filler = try #require(obr.fillerOrderNumber)
-        #expect(placer.first?.components[0].stringValue == "PLACER123")
-        #expect(filler.first?.components[0].stringValue == "FILLER456")
+        #expect(placer.entityIdentifier == "PLACER123")
+        #expect(filler.entityIdentifier == "FILLER456")
         #expect(message["OBR-2.1"] == "PLACER123")
         #expect(message["OBR-3.1"] == "FILLER456")
     }
@@ -485,9 +485,9 @@ struct TypedSegmentTests {
         let message = try Parser().parse(obrWire)
         let obr = try #require(message.firstSegment(OBR.self))
         let provider = try #require(obr.orderingProvider)
-        // XCN layout: ID^family^given. First component is empty in this
-        // fixture; family is "Williams".
-        #expect(provider.first?.components[1].stringValue == "Williams")
+        // XCN layout: ID^family^given. XCN-1 (id) is empty in this
+        // fixture; XCN-2 (familyName) is "Williams".
+        #expect(provider.familyName == "Williams")
         #expect(message["OBR-16.2"] == "Williams")
     }
 
@@ -588,7 +588,7 @@ struct TypedSegmentTests {
         let message = try Parser().parse(extendedPIDWire)
         let pid = try #require(message.firstSegment(PID.self))
         let phone = try #require(pid.phoneNumberHome)
-        #expect(phone.first?.components[0].stringValue == "(02)555-1234")
+        #expect(phone.telephoneNumber == "(02)555-1234")
         #expect(message["PID-13.1"] == "(02)555-1234")
     }
 
@@ -765,8 +765,8 @@ struct TypedSegmentTests {
         let nk1 = try #require(message.firstSegment(NK1.self))
         let home = try #require(nk1.phoneNumber)
         let business = try #require(nk1.businessPhoneNumber)
-        #expect(home.first?.components[0].stringValue == "(02)555-1234")
-        #expect(business.first?.components[0].stringValue == "(02)555-5678")
+        #expect(home.telephoneNumber == "(02)555-1234")
+        #expect(business.telephoneNumber == "(02)555-5678")
     }
 
     @Test("NK1 round-trips byte-perfectly through typed hydration")
@@ -824,8 +824,8 @@ struct TypedSegmentTests {
         let message = try Parser().parse(pv1Wire)
         let pv1 = try #require(message.firstSegment(PV1.self))
         let doctor = try #require(pv1.attendingDoctor)
-        #expect(doctor.first?.components[0].stringValue == "DR123")
-        #expect(doctor.first?.components[1].stringValue == "Jones")
+        #expect(doctor.idNumber == "DR123")
+        #expect(doctor.familyName == "Jones")
         #expect(message["PV1-7.1"] == "DR123")
     }
 

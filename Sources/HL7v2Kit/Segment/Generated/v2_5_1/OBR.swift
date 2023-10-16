@@ -18,14 +18,14 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// OBR-2: Placer Order Number. HL7 data type `EI`.
-    public var placerOrderNumber: Field? {
-        field(2)
+    /// OBR-2: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var placerOrderNumber: EI? {
+        field(2).map(EI.init(field:))
     }
 
-    /// OBR-3: Filler Order Number. HL7 data type `EI`.
-    public var fillerOrderNumber: Field? {
-        field(3)
+    /// OBR-3: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var fillerOrderNumber: EI? {
+        field(3).map(EI.init(field:))
     }
 
     /// OBR-4: Universal Service Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -58,9 +58,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(9)
     }
 
-    /// OBR-10: Collector Identifier. HL7 data type `XCN`.
-    public var collectorIdentifier: Field? {
-        field(10)
+    /// OBR-10: Collector Identifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var collectorIdentifier: XCN? {
+        field(10).map(XCN.init(field:))
     }
 
     /// OBR-11: Specimen Action Code. HL7 data type `ID`.
@@ -88,14 +88,14 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(15)
     }
 
-    /// OBR-16: Ordering Provider. HL7 data type `XCN`.
-    public var orderingProvider: Field? {
-        field(16)
+    /// OBR-16: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var orderingProvider: XCN? {
+        field(16).map(XCN.init(field:))
     }
 
-    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`.
-    public var orderCallbackPhoneNumber: Field? {
-        field(17)
+    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var orderCallbackPhoneNumber: XTN? {
+        field(17).map(XTN.init(field:))
     }
 
     /// OBR-18: Placer Field 1. HL7 data type `ST`.
@@ -148,9 +148,9 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
         field(27)
     }
 
-    /// OBR-28: Result Copies To. HL7 data type `XCN`.
-    public var resultCopiesTo: Field? {
-        field(28)
+    /// OBR-28: Result Copies To. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var resultCopiesTo: XCN? {
+        field(28).map(XCN.init(field:))
     }
 
     /// OBR-29: Parent. HL7 data type `EIP`.

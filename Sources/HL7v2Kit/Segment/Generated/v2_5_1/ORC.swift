@@ -18,19 +18,19 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(1)?.stringValue
     }
 
-    /// ORC-2: Placer Order Number. HL7 data type `EI`.
-    public var placerOrderNumber: Field? {
-        field(2)
+    /// ORC-2: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var placerOrderNumber: EI? {
+        field(2).map(EI.init(field:))
     }
 
-    /// ORC-3: Filler Order Number. HL7 data type `EI`.
-    public var fillerOrderNumber: Field? {
-        field(3)
+    /// ORC-3: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var fillerOrderNumber: EI? {
+        field(3).map(EI.init(field:))
     }
 
-    /// ORC-4: Placer Group Number. HL7 data type `EI`.
-    public var placerGroupNumber: Field? {
-        field(4)
+    /// ORC-4: Placer Group Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var placerGroupNumber: EI? {
+        field(4).map(EI.init(field:))
     }
 
     /// ORC-5: Order Status. HL7 data type `ID`.
@@ -58,19 +58,19 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(9)?.stringValue
     }
 
-    /// ORC-10: Entered By. HL7 data type `XCN`.
-    public var enteredBy: Field? {
-        field(10)
+    /// ORC-10: Entered By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var enteredBy: XCN? {
+        field(10).map(XCN.init(field:))
     }
 
-    /// ORC-11: Verified By. HL7 data type `XCN`.
-    public var verifiedBy: Field? {
-        field(11)
+    /// ORC-11: Verified By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var verifiedBy: XCN? {
+        field(11).map(XCN.init(field:))
     }
 
-    /// ORC-12: Ordering Provider. HL7 data type `XCN`.
-    public var orderingProvider: Field? {
-        field(12)
+    /// ORC-12: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var orderingProvider: XCN? {
+        field(12).map(XCN.init(field:))
     }
 
     /// ORC-13: Enterer's Location. HL7 data type `PL`.
@@ -78,9 +78,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(13)
     }
 
-    /// ORC-14: Call Back Phone Number. HL7 data type `XTN`.
-    public var callBackPhoneNumber: Field? {
-        field(14)
+    /// ORC-14: Call Back Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var callBackPhoneNumber: XTN? {
+        field(14).map(XTN.init(field:))
     }
 
     /// ORC-15: Order Effective Date/Time. HL7 data type `TS`.
@@ -103,9 +103,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(18).map(CE.init(field:))
     }
 
-    /// ORC-19: Action By. HL7 data type `XCN`.
-    public var actionBy: Field? {
-        field(19)
+    /// ORC-19: Action By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var actionBy: XCN? {
+        field(19).map(XCN.init(field:))
     }
 
     /// ORC-20: Advanced Beneficiary Notice Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -123,9 +123,9 @@ public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
         field(22).map(XAD.init(field:))
     }
 
-    /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`.
-    public var orderingFacilityPhoneNumber: Field? {
-        field(23)
+    /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var orderingFacilityPhoneNumber: XTN? {
+        field(23).map(XTN.init(field:))
     }
 
     /// ORC-24: Ordering Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.

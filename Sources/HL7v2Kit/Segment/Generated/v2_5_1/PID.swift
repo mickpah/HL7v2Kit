@@ -73,14 +73,14 @@ public struct PID: TypedSegment, Sendable, Equatable, Hashable {
         field(12)?.stringValue
     }
 
-    /// PID-13: Phone Number - Home. HL7 data type `XTN`.
-    public var phoneNumberHome: Field? {
-        field(13)
+    /// PID-13: Phone Number - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var phoneNumberHome: XTN? {
+        field(13).map(XTN.init(field:))
     }
 
-    /// PID-14: Phone Number - Business. HL7 data type `XTN`.
-    public var phoneNumberBusiness: Field? {
-        field(14)
+    /// PID-14: Phone Number - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var phoneNumberBusiness: XTN? {
+        field(14).map(XTN.init(field:))
     }
 
     /// PID-15: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

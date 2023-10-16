@@ -113,8 +113,8 @@ public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
         field(20)?.stringValue
     }
 
-    /// MSH-21: Message Profile Identifier. HL7 data type `EI`.
-    public var messageProfileIdentifier: Field? {
-        field(21)
+    /// MSH-21: Message Profile Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var messageProfileIdentifier: EI? {
+        field(21).map(EI.init(field:))
     }
 }

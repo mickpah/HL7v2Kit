@@ -88,9 +88,9 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(15).map(CE.init(field:))
     }
 
-    /// OBX-16: Responsible Observer. HL7 data type `XCN`.
-    public var responsibleObserver: Field? {
-        field(16)
+    /// OBX-16: Responsible Observer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var responsibleObserver: XCN? {
+        field(16).map(XCN.init(field:))
     }
 
     /// OBX-17: Observation Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
