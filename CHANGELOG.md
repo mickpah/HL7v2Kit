@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — FHS / BHS batch parser (v0.3-T2)
+
+- **`BatchParser`** — new structural parser for HL7 v2 batch / file grammar. Recognises the four framing markers (`FHS` file header, `FTS` file trailer, `BHS` batch header, `BTS` batch trailer) and groups the MSH-starting message runs between them. Each message run is dispatched to `Parser(options:).parse(_:)` so encoding detection, composite parsing, escape decoding, and typed-segment hydration behave identically to the bare-message path. New `Sources/HL7v2Kit/Parser/BatchParser.swift`.
+- **`BatchFile`** + **`BatchGroup`** — new public value types modelling the result. `BatchFile.fileHeader` / `fileTrailer` carry the FHS / FTS wire strings (or `nil` if absent); `BatchFile.batches: [BatchGroup]` carries one entry per `BHS` / `BTS` pair (or a single header-less group for bare multi-MSH input). `BatchGroup.header` / `trailer` mirror the same pattern. Convenience `BatchFile.allMessages` flattens the messages across groups in document order.
+- **API forms**. `BatchParser.parse(_ data: Data) throws -> BatchFile` mirrors `Parser.parse(_ data:)` semantics (BOM stripping, NUL rejection, MSH-18 charset detection). `BatchParser.parse(_ raw: String) throws -> BatchFile` is the already-decoded counterpart. Both accept lenient line terminators (`\r`, `\n`, `\r\n` all normalise to `\r` before segmentation).
+- **The v0.1.0 `multipleMSHSegmentsAcceptedAsIs` pin is preserved**. `Parser.parse(_:)` on a bare multi-MSH stream still returns one `Message` with multiple MSH segments — the v0.3-T2 `BatchParser` is the opt-in alternative for callers that explicitly want each MSH-starting run split. New test `parserMultiMSHBehaviourUnchanged` pins the contract.
+- 11 new tests in `Tests/HL7v2KitTests/BatchParserTests.swift` cover: bare multi-MSH splits / single-message no-framing / batch-only framing (BHS+msgs+BTS) / fully-wrapped (FHS+BHS+...+BTS+FTS) / multi-batch file (two BHS/BTS pairs in one FHS/FTS) / empty batch (BHS immediately followed by BTS) / per-message delegation to the full Parser pipeline (typed composite accessors work) / `parse(Data:)` BOM strip + NUL rejection / lenient line terminators (LF parses identically to CR) / empty-input throws / regression pin for the v0.1.0 Parser contract. 284 → 295 tests across 18 → 19 suites.
+
 ### Added — MLLP framing (v0.3-T1)
 
 - **`MLLP.frame(_:)`** — wraps an HL7 message body in the standard Minimum Lower Layer Protocol envelope (`0x0B <body> 0x1C 0x0D`). Callers stream the result directly to a TCP socket; body bytes are opaque (no escape processing at the MLLP layer).
