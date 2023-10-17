@@ -9,6 +9,11 @@ commit.
 Status v0.1.0: 48-fixture synthetic corpus complete (7a starter set +
 7b expansion). Spec § 9.2 fixture target met.
 
+Status v0.3-Z2 (2026-06-17): grew the corpus to **51 top-level fixtures
++ 3 batch fixtures** under `Batches/`. New material targets the surfaces
+introduced in v0.3: multi-version grammar tables (v2.3 / v2.3.1 / v2.4
+wires) and the batch parser (FHS / BHS / BTS / FTS framing).
+
 ## Line endings
 
 All `.hl7` files use **CR (`\r`)** as the segment terminator — matching real
@@ -81,6 +86,19 @@ but transparently fake). No real-world data sources.
 | `edge_many_nte.hl7` | Edge | ORU with 4 trailing NTE segments after OBX | N/A — synthetic |
 | `edge_minimal_pid_phone_only.hl7` | Edge | Sparsely populated PID — name + phone only | N/A — synthetic |
 | `edge_obx_repeating_values.hl7` | Edge | OBX-5 + OBX-8 with `~` repetitions (3-sample BP series) | N/A — synthetic |
+| `adt_a01_v23.hl7` | Multi-version (v2.3) | v2.3 ADT^A01 admit — exercises the v2.3 grammar table (MSH cap at 15) | N/A — synthetic from scratch (v0.3-Z2) |
+| `orm_o01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORM^O01 order — exercises the v2.3.1 grammar table (PID cap at 30, ORC cap at 17) | N/A — synthetic from scratch (v0.3-Z2) |
+| `oru_r01_v24.hl7` | Multi-version (v2.4) | v2.4 ORU^R01 result — populates PID-31/32 (identityUnknownIndicator / identityReliabilityCode, the v2.4 additions); MSH-18 charset declared | N/A — synthetic from scratch (v0.3-Z2) |
+
+### Batch fixtures (`Batches/` subdirectory)
+
+These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing markers). The auto-discovering `FixtureRoundTripTests` harness only enumerates the top-level `Tests/Fixtures/` directory, so files under `Batches/` are intentionally skipped by `Parser.parse(_:)`-based round-trip tests — they would be ambiguous (FHS isn't a valid first segment for `Parser`). Instead, `BatchFixtureTests.swift` enumerates `Batches/` and exercises each file through `BatchParser` + `StreamingBatchParser`.
+
+| File | Category | Purpose | Anonymisation log |
+|---|---|---|---|
+| `Batches/batch_bhs_minimal.hl7` | Batch (BHS-only) | BHS + 1 MSH + BTS — smallest valid batch wrapper | N/A — synthetic from scratch (v0.3-Z2) |
+| `Batches/batch_file_full.hl7` | Batch (fully wrapped) | FHS + BHS + 2 MSH + BTS + FTS — exercises all four framing markers in one file | N/A — synthetic from scratch (v0.3-Z2) |
+| `Batches/batch_multi_groups.hl7` | Batch (multi-group) | FHS + 2 BHS/BTS pairs + FTS — one ADT batch followed by one ORU batch | N/A — synthetic from scratch (v0.3-Z2) |
 
 ## Anonymise tool semantics
 

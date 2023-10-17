@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Fixture corpus growth past 48 (v0.3-Z2)
+
+- **`Tests/Fixtures/` corpus grew 48 → 51 top-level + 3 batch fixtures**. New material targets the surfaces v0.3 introduced — earlier fixtures were all v2.5.1 single-message wires.
+- **Multi-version fixtures** (top-level, picked up automatically by `FixtureRoundTripTests` since `Parser.parse(_:)` handles all four supported versions):
+  - `adt_a01_v23.hl7` — minimal v2.3 admit; exercises the v2.3 grammar table (MSH cap at 15)
+  - `orm_o01_v231.hl7` — v2.3.1 order; exercises the v2.3.1 grammar table (PID cap at 30, ORC cap at 17)
+  - `oru_r01_v24.hl7` — v2.4 result; populates PID-31 / PID-32 (`identityUnknownIndicator` / `identityReliabilityCode`, the v2.4 additions); MSH-18 charset declared
+- **Batch fixtures** (new `Tests/Fixtures/Batches/` subdirectory — `FixtureRoundTripTests` enumerates only the top-level dir, so these are intentionally invisible to the `Parser`-based round-trip harness):
+  - `Batches/batch_bhs_minimal.hl7` — BHS + 1 MSH + BTS, smallest valid batch wrapper
+  - `Batches/batch_file_full.hl7` — FHS + BHS + 2 MSH + BTS + FTS, exercises all four framing markers
+  - `Batches/batch_multi_groups.hl7` — FHS + 2 BHS/BTS pairs + FTS (one ADT batch + one ORU batch)
+- **New `Tests/HL7v2KitTests/BatchFixtureTests.swift`** enumerates `Batches/` and exercises every fixture through `BatchParser` + `StreamingBatchParser`. 5 tests cover: every-file-parses smoke check / each fixture's structural assertions / parity between `BatchParser` and `StreamingBatchParser` message counts.
+- **`Tests/Fixtures/FIXTURES.md`** updated with provenance rows for all 6 new fixtures + a v0.3-Z2 status block above the table.
+- **Fuzz coverage automatically grows**: `FuzzTests.swift`'s `seedFixtures()` loader pulls the 3 new top-level fixtures into the cross-product. Per-cycle mutation count: 47 × 7 × 100 × 5 ≈ 165k → **50 × 7 × 100 × 5 ≈ 175k** mutated payloads (Batches/ subdir is correctly skipped by the top-level enumeration). Fuzz suite still passes under `RUN_FUZZ_TESTS=1` (~5.8s).
+- 5 new tests in `BatchFixtureTests.swift` (auto-discover-and-parse, three per-fixture structural checks, BatchParser/StreamingBatchParser parity). 311 → 316 tests across 21 → 22 suites on default `swift test`.
+
 ### Changed — `Generated/v2_5_1/` subdirectory flattened to `Generated/` (folder-layout consistency)
 
 - **Typed-segment struct files moved up one level**: the 9 generated `<SegmentID>.swift` files (PID / MSH / NK1 / NTE / OBR / OBX / ORC / PV1 / AL1) now live directly at `Sources/HL7v2Kit/Segment/Generated/`, alongside the per-version `SegmentGrammar+vX_Y_Z.swift` tables and `SegmentRegistry+Generated.swift`. The misleading `v2_5_1/` subdirectory has been deleted.
