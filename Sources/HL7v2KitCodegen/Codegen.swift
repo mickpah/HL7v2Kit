@@ -60,9 +60,10 @@ let compositeDataTypes: Set<String> = [
 /// Other versions (v2.3 / v2.3.1 / v2.4 added in v0.3-G1..G3) contribute
 /// only to their per-version `SegmentGrammar+vX_Y_Z.swift` tables; the
 /// typed `struct PID` / `struct ORC` / ... shared across all callers
-/// lives under `Generated/v2_5_1/` and represents the union surface.
-/// Field accessors that don't exist on an older wire simply return nil
-/// — that's the normal Optional contract for an absent field.
+/// lives at the `Generated/` root (one file per segment, version-agnostic
+/// names) and represents the union surface. Field accessors that don't
+/// exist on an older wire simply return nil — that's the normal Optional
+/// contract for an absent field.
 let canonicalVersion = "2.5.1"
 
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
@@ -242,9 +243,17 @@ struct Codegen {
                 .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
 
             let isCanonical = (version == canonicalVersion)
-            let outVersionDir = outputRoot.appendingPathComponent(versionDirName(version))
+            // Canonical-version structs emit at the Generated/ root rather
+            // than under a per-version subdirectory. The struct surface is
+            // shared across every supported HL7 v2 version (typed-segment
+            // accessors return Optional, so fields not present on an older
+            // wire surface as nil) — placing the file under v2_5_1/ would
+            // misleadingly imply sibling v2_3_1/, v2_4/ etc. that never
+            // exist. Per-version SegmentGrammar+vX_Y_Z.swift files DO live
+            // at the Generated/ root and reflect the per-version field
+            // sets. See Codegen.swift `canonicalVersion` documentation.
             if isCanonical {
-                try fm.createDirectory(at: outVersionDir, withIntermediateDirectories: true)
+                try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
             }
 
             for schemaURL in segmentFiles {
@@ -253,7 +262,7 @@ struct Codegen {
                 schemasByVersion[version, default: []].append(schema)
                 guard isCanonical else { continue }
                 let source = render(schema)
-                let outFile = outVersionDir.appendingPathComponent("\(schema.segmentID).swift")
+                let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
                 try Data(source.utf8).write(to: outFile)
                 print("emitted \(outFile.path)")
                 emitted += 1
