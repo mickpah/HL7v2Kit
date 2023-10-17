@@ -39,6 +39,20 @@ public struct PL: Sendable, Equatable, Hashable {
     /// CWE).
     public static let requiredComponents: [RequiredComponent] = []
 
+    /// OR-rule conformance per HL7 v2.5.1 §2.A.53 (informal): a populated
+    /// PL field must have at least one of PL-1 (Point of Care) OR PL-4
+    /// (Facility, nested HD) populated. v0.4-S4 supersedes the empty
+    /// `requiredComponents` v0.3-C4 shipped — the spec's actual
+    /// conformance is the OR-rule, not "no constraint".
+    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
+        components: [
+            RequiredComponent(index: 1, name: "Point of Care"),
+            RequiredComponent(index: 4, name: "Facility"),
+        ],
+        semantics: .atLeastOneOf,
+        description: "PL-1 (Point of Care) OR PL-4 (Facility)"
+    )
+
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first or to PL components beyond PL-4.
     public let field: Field

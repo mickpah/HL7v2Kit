@@ -206,12 +206,25 @@ public struct Validator: Sendable {
         ))
     }
 
-    /// Component-level grammar check (v0.2-V2). When a composite-typed
-    /// field is populated, walks every repetition and confirms that each
-    /// component listed in the composite's `requiredComponents` carries
-    /// a non-empty value. Emits one ``IssueCode/requiredComponentMissing``
-    /// per missing required component. Composite types HL7v2Kit doesn't
-    /// have typed metadata for (CE / CWE / EI / XCN / ...) skip silently.
+    /// Component-level grammar check (v0.2-V2 + v0.4-S4). When a
+    /// composite-typed field is populated, walks every repetition and
+    /// dispatches two kinds of conformance check:
+    ///
+    /// 1. **Flat required-component check.** For each component listed
+    ///    in the composite's `requiredComponents`, emits one
+    ///    ``IssueCode/requiredComponentMissing`` if the component is
+    ///    empty. Models simple "this component must always be populated"
+    ///    rules (XPN-1 family, CX-1 ID, XAD-1 street, etc.).
+    ///
+    /// 2. **OR-rule check** (v0.4-S4). For composites whose v2.5.1
+    ///    conformance is "at least one of these components" or "this
+    ///    group OR at least one of those" — `CWE`, `XTN`, `HD`, `PL`,
+    ///    `EIP` — dispatches to the composite's `requiredComponentSet`
+    ///    and emits one issue when the OR-rule is violated. See
+    ///    ``RequiredComponentSet`` for the semantics.
+    ///
+    /// Composite types HL7v2Kit doesn't have typed metadata for skip
+    /// silently in both dispatches.
     private func checkComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -220,8 +233,10 @@ public struct Validator: Sendable {
         issues: inout [ValidationIssue]
     ) {
         let required = requiredComponents(forCompositeCode: grammar.dataType)
-        guard !required.isEmpty else { return }
+        let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
+        guard !required.isEmpty || requiredSet != nil else { return }
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            // (1) Flat required-component check.
             for spec in required {
                 if !isComponentPopulated(repetition, componentIndex: spec.index) {
                     let location = IssueLocation(
@@ -235,6 +250,23 @@ public struct Validator: Sendable {
                         code: .requiredComponentMissing,
                         location: location,
                         message: "Required component \(location.pathDescription) ('\(spec.name)') in \(grammar.dataType) field '\(grammar.name)' is missing"
+                    ))
+                }
+            }
+            // (2) OR-rule check.
+            if let set = requiredSet {
+                let populatedIndices = populatedComponentIndices(in: repetition)
+                if !set.isSatisfied(populatedIndices: populatedIndices) {
+                    let location = IssueLocation(
+                        segmentID: segmentID,
+                        segmentIndex: segmentIndex,
+                        fieldIndex: grammar.index
+                    )
+                    issues.append(ValidationIssue(
+                        severity: .error,
+                        code: .requiredComponentMissing,
+                        location: location,
+                        message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): expected \(set.description) populated"
                     ))
                 }
             }
@@ -264,6 +296,38 @@ public struct Validator: Sendable {
         case "EIP": return EIP.requiredComponents
         default:    return []
         }
+    }
+
+    /// Map an HL7 composite data-type code to the type's OR-rule
+    /// `requiredComponentSet` metadata, if it publishes one. Returns nil
+    /// for composites whose spec conformance is a flat "all-of" rule
+    /// (no OR-rule disjunction). v0.4-S4.
+    private func requiredComponentSet(forCompositeCode code: String) -> RequiredComponentSet? {
+        switch code {
+        case "CWE": return CWE.requiredComponentSet
+        case "XTN": return XTN.requiredComponentSet
+        case "HD":  return HD.requiredComponentSet
+        case "PL":  return PL.requiredComponentSet
+        case "EIP": return EIP.requiredComponentSet
+        default:    return nil
+        }
+    }
+
+    /// Collect the 1-based component indices that are populated in a
+    /// repetition. Used by the OR-rule check to evaluate
+    /// `RequiredComponentSet.isSatisfied(populatedIndices:)`. v0.4-S4.
+    private func populatedComponentIndices(in repetition: Repetition) -> Set<Int> {
+        var indices: Set<Int> = []
+        for (offset, component) in repetition.components.enumerated() {
+            let oneBased = offset + 1
+            for subcomponent in component.subcomponents {
+                if !subcomponent.value.isEmpty {
+                    indices.insert(oneBased)
+                    break
+                }
+            }
+        }
+        return indices
     }
 
     /// True if the repetition has at least one component with at least

@@ -40,6 +40,21 @@ public struct HD: Sendable, Equatable, Hashable {
     /// application-level rule atop the parsed view.
     public static let requiredComponents: [RequiredComponent] = []
 
+    /// OR-rule conformance per HL7 v2.5.1 §2.A.32: a populated HD field
+    /// must have HD-1 (Namespace ID) populated, OR both HD-2 (Universal
+    /// ID) AND HD-3 (Universal ID Type) populated. v0.4-S4 supersedes
+    /// the empty `requiredComponents` v0.3-C4 shipped — the spec's
+    /// actual conformance is the OR-rule, not "no constraint".
+    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
+        components: [
+            RequiredComponent(index: 1, name: "Namespace ID"),
+            RequiredComponent(index: 2, name: "Universal ID"),
+            RequiredComponent(index: 3, name: "Universal ID Type"),
+        ],
+        semantics: .allOfGroupOrAtLeastOne(group: [2, 3]),
+        description: "HD-1 (Namespace ID) OR (HD-2 (Universal ID) AND HD-3 (Universal ID Type))"
+    )
+
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first.
     public let field: Field

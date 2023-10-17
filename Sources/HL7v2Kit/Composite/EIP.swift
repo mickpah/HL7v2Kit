@@ -38,6 +38,20 @@ public struct EIP: Sendable, Equatable, Hashable {
     /// avoids for HD / XTN / PL / CWE.
     public static let requiredComponents: [RequiredComponent] = []
 
+    /// OR-rule conformance per HL7 v2.5.1 §2.A.29: a populated EIP field
+    /// must have at least one of EIP-1 (Placer Assigned Identifier) OR
+    /// EIP-2 (Filler Assigned Identifier) populated. v0.4-S4 supersedes
+    /// the empty `requiredComponents` v0.3-C4 shipped — the spec's
+    /// actual conformance is the OR-rule, not "no constraint".
+    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
+        components: [
+            RequiredComponent(index: 1, name: "Placer Assigned Identifier"),
+            RequiredComponent(index: 2, name: "Filler Assigned Identifier"),
+        ],
+        semantics: .atLeastOneOf,
+        description: "EIP-1 (Placer Assigned Identifier) OR EIP-2 (Filler Assigned Identifier)"
+    )
+
     /// The underlying ``Field``.
     public let field: Field
 

@@ -45,9 +45,21 @@ public struct CWE: Sendable, Equatable, Hashable {
     /// (simplified — see the type-level note about CWE-1/CWE-9 OR
     /// semantics). ``Validator`` consults this when the
     /// `checkComponentGrammar` toggle is on. v0.2-V2 / v0.3-C2.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "Identifier"),
-    ]
+    public static let requiredComponents: [RequiredComponent] = []
+
+    /// OR-rule conformance per HL7 v2.5.1 §2.A.16: a populated CWE field
+    /// must have at least one of CWE-1 (Identifier) OR CWE-9 (Original
+    /// Text) populated. v0.4-S4 supersedes the earlier v0.3-C2 flat
+    /// `requiredComponents = [CWE-1]` which false-positive'd on
+    /// legitimate CWE-9-only payloads.
+    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
+        components: [
+            RequiredComponent(index: 1, name: "Identifier"),
+            RequiredComponent(index: 9, name: "Original Text"),
+        ],
+        semantics: .atLeastOneOf,
+        description: "CWE-1 (Identifier) OR CWE-9 (Original Text)"
+    )
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first.

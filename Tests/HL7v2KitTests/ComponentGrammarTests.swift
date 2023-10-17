@@ -201,12 +201,16 @@ struct ComponentGrammarTests {
         #expect(issue.message.contains("CE"))
     }
 
-    @Test("CWE typed composite (v0.3-C2) fires .requiredComponentMissing on empty CWE-1")
-    func cweFiresComponentMissingOnEmptyIdentifier() throws {
-        // PID-39 (tribal citizenship) is CWE-typed. Empty CWE-1 with CWE-2
-        // populated must fire .requiredComponentMissing at PID[1]-39.1.
+    @Test("CWE typed composite (v0.3-C2/v0.4-S4) fires OR-rule violation on empty CWE-1 + CWE-9")
+    func cweFiresORRuleViolationOnEmptyIdentifierAndOriginalText() throws {
+        // PID-39 (tribal citizenship) is CWE-typed. Under v0.4-S4 CWE
+        // ships an OR-rule `requiredComponentSet`: CWE-1 OR CWE-9 must
+        // be populated. A wire with CWE-2 populated but BOTH CWE-1 and
+        // CWE-9 empty violates the rule and fires
+        // .requiredComponentMissing at the field level (no specific
+        // component index — the violation is the disjunction).
         // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..38 empty
-        // (31 pipes after M), 39 tribalCitizenship=^AustralianText  ← CWE-1 empty.
+        // (31 pipes after M), 39 tribalCitizenship=^AustralianText  ← CWE-1 empty, CWE-9 empty.
         let wire = """
         MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^AustralianText\r
@@ -215,8 +219,29 @@ struct ComponentGrammarTests {
         #expect(message["PID-39.2"] == "AustralianText", "Wire mis-counted: CWE should land at PID-39")
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 39 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.message.contains("CWE"))
+        // OR-rule issues are field-level, not component-level.
+        #expect(issue.location.componentIndex == nil)
+        #expect(issue.message.contains("OR-rule"))
+        #expect(issue.message.contains("CWE-1"))
+        #expect(issue.message.contains("CWE-9"))
+    }
+
+    @Test("CWE typed composite — CWE-9-only payload satisfies the OR-rule (v0.4-S4)")
+    func cweORRuleSatisfiedByOriginalTextAlone() throws {
+        // Spec-compliant CWE payload: CWE-1 empty, CWE-9 populated with
+        // free text. Under v0.4-S4 OR-rule semantics, this satisfies
+        // "CWE-1 OR CWE-9" and must NOT fire. This is the case
+        // v0.3-C2's flat `requiredComponents = [CWE-1]` got wrong.
+        // PID-39 wire: CWE-1 empty, CWE-2..8 empty, CWE-9 populated.
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^^^^^^^^FreeTextSpeciesName\r
+        """
+        let message = try Parser().parse(wire)
+        #expect(message["PID-39.9"] == "FreeTextSpeciesName", "Wire mis-counted: CWE-9 should land here")
+        let report = Validator().validate(message)
+        let pid39Issues = report.errors.filter { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 39 }
+        #expect(pid39Issues.isEmpty, "OR-rule satisfied via CWE-9; no issue expected")
     }
 
     @Test("EI typed composite (v0.3-C3) fires .requiredComponentMissing on empty EI-1")

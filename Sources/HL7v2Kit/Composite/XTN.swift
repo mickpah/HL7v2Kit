@@ -55,6 +55,22 @@ public struct XTN: Sendable, Equatable, Hashable {
     /// refactor that v0.3-C3 explicitly avoids.
     public static let requiredComponents: [RequiredComponent] = []
 
+    /// OR-rule conformance per HL7 v2.5.1 §2.A.84: a populated XTN field
+    /// must have at least one of XTN-1 (Telephone Number — deprecated),
+    /// XTN-4 (Email Address), or XTN-12 (Unformatted Telephone Number —
+    /// modern primary) populated. v0.4-S4 supersedes the empty
+    /// `requiredComponents` v0.3-C3 shipped — the spec's actual
+    /// conformance is the OR-rule, not "no constraint".
+    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
+        components: [
+            RequiredComponent(index: 1, name: "Telephone Number"),
+            RequiredComponent(index: 4, name: "Email Address"),
+            RequiredComponent(index: 12, name: "Unformatted Telephone Number"),
+        ],
+        semantics: .atLeastOneOf,
+        description: "XTN-1 (Telephone Number) OR XTN-4 (Email Address) OR XTN-12 (Unformatted Telephone Number)"
+    )
+
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first or to XTN components beyond
     /// the exposed named accessors.
