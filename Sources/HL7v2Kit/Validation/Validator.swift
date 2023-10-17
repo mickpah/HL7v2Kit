@@ -379,36 +379,84 @@ public struct Validator: Sendable {
         ))
     }
 
-    /// Evaluate a v0.2-V1 condition predicate against a single segment.
+    /// Evaluate a condition predicate against a single segment.
+    /// v0.2-V1 introduced the single-atom DSL; v0.4-S4 extends it with
+    /// compound `AND` / `OR` combinators and `in (…)` / `not in (…)`
+    /// set-membership operators so the v2.5.1 spec's compound
+    /// conditional rules (ORC-2 "required when ORC-1 in {NW, CA, CR,
+    /// DC, …}", OBR-1 / OBR-7 / OBR-22 etc.) can be expressed
+    /// faithfully.
     ///
-    /// Grammar:
+    /// Grammar (recursive descent, precedence AND-binds-tighter-than-OR):
     /// ```
-    /// <segmentID>-<index> <predicate>
-    /// <predicate> := "populated" | "empty" | "= <value>" | "!= <value>"
+    /// <predicate>  := <or-expr>
+    /// <or-expr>    := <and-expr> (" OR " <and-expr>)*
+    /// <and-expr>   := <atom> (" AND " <atom>)*
+    /// <atom>       := <fieldref> " " <op>
+    /// <fieldref>   := <segmentID> "-" <int>
+    /// <op>         := "populated"
+    ///               | "empty"
+    ///               | "= <value>"
+    ///               | "!= <value>"
+    ///               | "in (<values>)"
+    ///               | "not in (<values>)"
+    /// <values>     := <value> ("," " "* <value>)*
     /// ```
     /// Cross-segment references (segmentID ≠ currentSegmentID) and any
-    /// malformed predicate fail safe — return `false` so the field is
-    /// treated as `.optional`. This is deliberate: a malformed schema
-    /// should never make a previously-accepted message non-conformant.
-    ///
-    /// "Populated" / "empty" use the same any-subcomponent-non-empty
-    /// check as `isFieldPopulated`. The `=` / `!=` value comparison
-    /// reads the first subcomponent of the first component of the first
-    /// repetition (the "scalar view" of the field) — sufficient for the
-    /// common case of comparing against an ID/IS/ST scalar.
+    /// malformed sub-expression fail safe — that sub-expression returns
+    /// `false`. Per v0.2-V1 design: a malformed schema must never make a
+    /// previously-accepted message non-conformant.
     private func conditionTriggers(
         _ condition: String,
         in segment: Segment,
         currentSegmentID: String
     ) -> Bool {
-        let parts = condition.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
-                              .map(String.init)
+        evaluateOrExpression(condition, in: segment, currentSegmentID: currentSegmentID)
+    }
+
+    /// Top-level OR: split on `" OR "` at the topmost level. Any clause
+    /// evaluating true short-circuits to true.
+    private func evaluateOrExpression(
+        _ expression: String,
+        in segment: Segment,
+        currentSegmentID: String
+    ) -> Bool {
+        for clause in expression.components(separatedBy: " OR ") {
+            if evaluateAndExpression(clause, in: segment, currentSegmentID: currentSegmentID) {
+                return true
+            }
+        }
+        return false
+    }
+
+    /// AND: every conjunct must evaluate true.
+    private func evaluateAndExpression(
+        _ expression: String,
+        in segment: Segment,
+        currentSegmentID: String
+    ) -> Bool {
+        for atom in expression.components(separatedBy: " AND ") {
+            if !evaluateAtom(atom, in: segment, currentSegmentID: currentSegmentID) {
+                return false
+            }
+        }
+        return true
+    }
+
+    /// Single atomic predicate: `<segmentID>-<index> <op>`.
+    private func evaluateAtom(
+        _ atom: String,
+        in segment: Segment,
+        currentSegmentID: String
+    ) -> Bool {
+        let trimmed = atom.trimmingCharacters(in: .whitespaces)
+        let parts = trimmed.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
+                            .map(String.init)
         guard parts.count == 2 else { return false }
         let fieldRef = parts[0]
         let predicate = parts[1]
 
-        let refParts = fieldRef.split(separator: "-", maxSplits: 1)
-                                .map(String.init)
+        let refParts = fieldRef.split(separator: "-", maxSplits: 1).map(String.init)
         guard refParts.count == 2,
               refParts[0] == currentSegmentID,
               let fieldIndex = Int(refParts[1])
@@ -416,18 +464,41 @@ public struct Validator: Sendable {
 
         let field = segment.field(fieldIndex)
         let isReferentPopulated = field.map { isFieldPopulated($0) } ?? false
+        let raw = field?.repetitions.first?.components.first?.subcomponents.first?.value ?? ""
 
         if predicate == "populated" { return isReferentPopulated }
         if predicate == "empty"     { return !isReferentPopulated }
-
-        let raw = field?.repetitions.first?.components.first?.subcomponents.first?.value ?? ""
         if predicate.hasPrefix("= ") {
             return raw == String(predicate.dropFirst(2))
         }
         if predicate.hasPrefix("!= ") {
             return raw != String(predicate.dropFirst(3))
         }
+        if predicate.hasPrefix("in (") && predicate.hasSuffix(")") {
+            let values = Self.parseValueList(predicate.dropFirst(4).dropLast())
+            return values.contains(raw)
+        }
+        if predicate.hasPrefix("not in (") && predicate.hasSuffix(")") {
+            let values = Self.parseValueList(predicate.dropFirst(8).dropLast())
+            // not-in fires only if the referent is actually populated —
+            // an empty referent isn't a member of any set but it's also
+            // not a meaningful "non-member" assertion. Treat empty as
+            // "not in" being false (no trigger) per the fail-safe rule:
+            // the conditional check should only require the dependent
+            // field when the referent carries a definite value the
+            // predicate excludes.
+            guard isReferentPopulated else { return false }
+            return !values.contains(raw)
+        }
         return false
+    }
+
+    /// Parse `"NW, CA, CR, DC"` (or `"NW,CA,CR"`) into the value list
+    /// `["NW", "CA", "CR", "DC"]`. Whitespace around commas is trimmed.
+    private static func parseValueList<S: StringProtocol>(_ raw: S) -> [String] {
+        raw.split(separator: ",").map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }
     }
 
     /// A field is "populated" if at least one repetition has at least one
