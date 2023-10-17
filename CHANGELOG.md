@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+### Added — HL7 v2.5.1 schema audit document (v0.4-S1)
+
+- **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas (MSH / PID / ORC / OBR / OBX / NK1 / PV1 / NTE / AL1) against the public HL7 v2.5.1 spec. **Outcome**: 198 per-field rows audited; 0 schema corrections warranted; substantially spec-accurate.
+- **3 classes of known limitation documented** (each with a "Possible future fix" note for cycles beyond v0.4):
+  - PID-36 condition predicate `"PID-35 populated"` is over-broad — would false-positive on `PID-35=L1^Human`. Kept because AU clinical traffic doesn't populate PID-35 in practice, and removing the predicate would lose the v0.2-V1 DSL demo without protecting real consumers.
+  - Compound conditional predicates (ORC-2 / OBR-1 / OBR-7 / OBR-22 / OBR-25 / OBR-32) — multi-clause `AND` / `OR` spec rules not expressible in the v0.2-V1 single-predicate DSL. Fields marked `C`-without-predicate; Validator treats as effectively optional. Right ad-hoc-tolerant default.
+  - Composite OR-rules (CWE / XTN / HD / PL / EIP "at-least-one-of-N" disjunctions) — already pinned by `…SkipsSilentlyWithNoRequiredComponents` tests; documented on each composite's struct doc; deferred to a future `RequiredComponentSet` value type.
+- **No source / generated / test changes.** The `SegmentGrammar+v2_5_1.swift` codegen output is byte-identical pre- and post-audit. 316/316 tests across 22 suites green (unchanged). This is the bedrock for v0.4-S2 (v2.3.1 + v2.4 audits as deltas) and v0.4-S3 (v2.8 grammar table addition).
 
 ## [0.3.0] — 2026-06-17
 
