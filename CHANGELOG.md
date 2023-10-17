@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_No unreleased changes yet._
+
+## [0.3.0] — 2026-06-17
+
+v0.3 cycle release. Covers four parallel-track surface expansions and a post-cycle layout refactor: all 16 v2.5.1 typed-segment-surface composites promoted to Swift struct views; `Validator` dispatches four HL7 v2 versions (v2.3 / v2.3.1 / v2.4 / v2.5.1); MLLP framing + structural batch parser + streaming batch parser ship the full TCP-to-Messages pipeline; byte-level fuzz harness across every parser surface; fixture corpus grew 48 → 51 + 3 batch fixtures. **API-affecting** — 16 typed-segment accessor return types went `Field?` → `<Composite>?` across the cycle. Migration path preserved via the public `.field` escape hatch on each composite struct (per the v0.2-C1 pattern). The 3-month no-API-break v1.0 stability clock continues from this tag per Migration.md.
+
 ### Added — Fixture corpus growth past 48 (v0.3-Z2)
 
 - **`Tests/Fixtures/` corpus grew 48 → 51 top-level + 3 batch fixtures**. New material targets the surfaces v0.3 introduced — earlier fixtures were all v2.5.1 single-message wires.
