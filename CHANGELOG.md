@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — HL7 v2.5.1 schema audit document (v0.4-S1)
 
-- **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas (MSH / PID / ORC / OBR / OBX / NK1 / PV1 / NTE / AL1) against the public HL7 v2.5.1 spec. **Outcome**: 198 per-field rows audited; 0 schema corrections warranted; substantially spec-accurate.
-- **3 classes of known limitation documented** (each with a "Possible future fix" note for cycles beyond v0.4):
-  - PID-36 condition predicate `"PID-35 populated"` is over-broad — would false-positive on `PID-35=L1^Human`. Kept because AU clinical traffic doesn't populate PID-35 in practice, and removing the predicate would lose the v0.2-V1 DSL demo without protecting real consumers.
-  - Compound conditional predicates (ORC-2 / OBR-1 / OBR-7 / OBR-22 / OBR-25 / OBR-32) — multi-clause `AND` / `OR` spec rules not expressible in the v0.2-V1 single-predicate DSL. Fields marked `C`-without-predicate; Validator treats as effectively optional. Right ad-hoc-tolerant default.
-  - Composite OR-rules (CWE / XTN / HD / PL / EIP "at-least-one-of-N" disjunctions) — already pinned by `…SkipsSilentlyWithNoRequiredComponents` tests; documented on each composite's struct doc; deferred to a future `RequiredComponentSet` value type.
-- **No source / generated / test changes.** The `SegmentGrammar+v2_5_1.swift` codegen output is byte-identical pre- and post-audit. 316/316 tests across 22 suites green (unchanged). This is the bedrock for v0.4-S2 (v2.3.1 + v2.4 audits as deltas) and v0.4-S3 (v2.8 grammar table addition).
+- **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas against the public HL7 v2.5.1 spec, **re-framed under the the working notes project requirements** (feature-complete over AU-specific; integrator primary-reference tool).
+- **Per-field attributes (name / dataType / optionality / repeatability) — 0 corrections warranted** across 198 rows. The schemas faithfully render the spec on those four axes.
+- **3 spec-completeness defects identified** — not deferrable under the project requirements; each must be closed before v1.0 freezes the API:
+  1. **PID-36 `condition: "PID-35 populated"` is over-broad** — fires false-positive on spec-compliant `PID-35 = L1^Human` (human patient with species explicitly declared, PID-36 legitimately empty).
+  2. **12+ `C` fields without predicates** — ORC-2 / ORC-3 / ORC-8 / OBR-1 / 7 / 8 / 10 / 14 / 22 / 25 / 26 / 32 / OBX-2 / 4 all carry compound `AND` / `OR` spec conditions the v0.2-V1 single-predicate DSL cannot express. Validator currently provides no enforcement.
+  3. **Five composite OR-rules silently unenforced** — CWE-1 OR CWE-9; XTN-1 OR XTN-4 OR XTN-12; HD-1 OR HD-2&3; PL-1 OR PL-4; EIP-1 OR EIP-2. Validator's `requiredComponents` dispatch returns empty for each.
+- **No schema mutations in S1.** The defect fixes require model extensions (compound predicates in the conditional-field DSL; `RequiredComponentSet` for composite OR-rules). Both are scheduled for **v0.4-S4** — a new stage inserted between S1 and S2 per the cycle re-scope. S4 extends the model; the schema-level corrections land in S4's commit alongside the model change. S2 and S3 then absorb the richer model.
+- **v0.4 cycle scope updated** from Option A (6 stages) to Option α (7 stages) — see NEXT_STEPS.md for the new S4 task entry and the updated stage order on the spec branch (S1 → S4 → S2 → S3).
+- **Note on framing history**: an earlier S1 framing deferred these as "AU traffic doesn't trigger them" known limitations. That framing was rejected by the project owner under the integrator-reference-tool requirement and replaced with the current "defect, not deferrable" classification. The the working notes update at commit `909142b` codifies the requirement going forward.
+- **No source / generated / test changes** in S1. `SegmentGrammar+v2_5_1.swift` codegen output is byte-identical pre- and post-audit. 316/316 tests across 22 suites green (unchanged).
 
 ## [0.3.0] — 2026-06-17
 
