@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.4-S4 substages A + B: composite OR-rule enforcement + compound-predicate DSL
+
+- **`Sources/HL7v2Kit/Composite/RequiredComponentSet.swift`** (new). Value type with two semantics cases: `.atLeastOneOf` and `.allOfGroupOrAtLeastOne(group:)`. Closes audit Gap 3: composites with OR-rule conformance (CWE / XTN / HD / PL / EIP) now enforce their spec rule via `requiredComponentSet`, instead of skipping silently. The Validator's `checkComponents` dispatches both the flat `requiredComponents` check (v0.2-V2) and the new OR-rule check (v0.4-S4) per repetition.
+- **CWE composite behavioural change**: `requiredComponents` was `[(1, "Identifier")]`, which false-positive'd on legitimate CWE-9-only payloads. Now `requiredComponents = []`; `requiredComponentSet = atLeastOneOf(CWE-1, CWE-9)`. Migration: callers that scanned `CWE.requiredComponents` for `(1, "Identifier")` should switch to `CWE.requiredComponentSet`. Pre-v1.0 API change.
+- **Compound-predicate DSL** in `Validator.conditionTriggers`. Grammar extends from single-atom (`<segment>-<index> <op>`) to `<atom> (AND <atom>)* (OR <atom>)*` plus `in (<values>)` / `not in (<values>)` set-membership operators. Recursive-descent evaluator; AND binds tighter than OR. `not in` requires referent to be populated (fail-safe rule for ambiguous empty referents). Schema strings continue to be the public format — no `FieldGrammar` API break.
+- **Audit doc updated**: Gap 3 marked RESOLVED at commit `0959be6`; Gaps 1 + 2 marked INFRASTRUCTURE LANDED, SCHEMA-LEVEL CLOSURE PENDING (substage C blocked on spec-text citations for ORC-2's value set etc.).
+- Test count: 316 → 318 across 22 suites green (2 new positive pins; 1 existing pin renamed + assertion updated). All 51 top-level + 3 batch fixtures still round-trip byte-perfect.
+
 ### Added — HL7 v2.5.1 schema audit document (v0.4-S1)
 
 - **`docs/design/v2_5_1-spec-audit.md`** — new design doc capturing the v0.4-S1 audit of all 9 v2.5.1 schemas against the public HL7 v2.5.1 spec, **re-framed under the the working notes project requirements** (feature-complete over AU-specific; integrator primary-reference tool).

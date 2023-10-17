@@ -44,6 +44,12 @@ The `swiftName` field is internal naming and not audited against the spec.
 | AL1 | 6 | 0 | Faithful. |
 | **Total** | **198** | **0** | + 3 spec-completeness gaps documented below. |
 
+## Gap closure status (updated 2026-06-17 after substages A + B)
+
+- **Gap 1 (PID-36 over-broad predicate)** — **INFRASTRUCTURE LANDED, SCHEMA-LEVEL CLOSURE PENDING.** Substage B's compound-predicate DSL admits `PID-35 not in (L1)` as a more spec-accurate predicate, but the code-system brittleness (assumes HL70447) remains. A clean closure needs either code-system-aware comparison or a project-owner decision to bake in HL70447. Tracked in substage C.
+- **Gap 2 (compound predicates not expressible)** — **INFRASTRUCTURE LANDED, SCHEMA-LEVEL CLOSURE PENDING.** Substage B's compound-predicate DSL admits the full `<atom> AND <atom>`, `<atom> OR <atom>`, and `<fieldref> in (<values>)` / `not in (<values>)` grammar needed to express the spec's compound conditional rules. Schema-level rollout to ORC / OBR / OBX deferred to substage C pending authoritative spec-text citations for each per-field rule (ORC-2's value set in particular needs the canonical list, not a guess).
+- **Gap 3 (composite OR-rules unenforced)** — **RESOLVED in substage A** (commit `0959be6`). `RequiredComponentSet` value type + Validator dispatch + 5 composite type updates (CWE / XTN / HD / PL / EIP). CWE specifically: was flat `requiredComponents = [(1, "Identifier")]`, which false-positive'd on CWE-9-only payloads; now `requiredComponentSet = atLeastOneOf(CWE-1, CWE-9)`. Two test changes: `cweFiresORRuleViolationOnEmptyIdentifierAndOriginalText` (renamed + updated assertion) + new positive pin `cweORRuleSatisfiedByOriginalTextAlone`. The four `…SkipsSilentlyWithNoRequiredComponents` pins for HD / PL / EIP / XTN continue to pass because their test wires already populated a satisfying combination; comments updated to reflect the new framing.
+
 ## Spec-completeness gaps
 
 ### Gap 1 — PID-36 condition predicate over-broad (DEFECT)
