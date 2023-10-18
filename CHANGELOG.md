@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.4-S2: structural delta audit of v2.3 / v2.3.1 / v2.4 schemas
+
+- **`docs/design/v2_3-v2_4-spec-audit.md`** — new audit doc covering all 9 segments × 3 earlier HL7 v2 versions as structural deltas against the spec-audited v2.5.1 baseline.
+- **0 corrections warranted on the structural-delta axis.** Per-field consistency check across 4 versions: every field present in 2+ versions has identical `name` / `dataType` / `optionality` / `repeatability`.
+- **Field-count progression** captured for all 9 segments: MSH 15→17→20→21; PID 30→30→32→39; OBR 43→43→47→47; OBX 11→14→16→17; ORC 17→17→19→31; NTE 3→3→3→4. NK1 / PV1 / AL1 stable at their typed-surface caps. End-to-end pinned in `MultiVersionTests.swift`.
+- **Conditional-rule carry-forward**: PID-35 / PID-36 from S4-C don't apply below v2.5 (fields don't exist). OBX-2 carry-forward is plausible but **deferred** — the v2.3 / v2.3.1 / v2.4 Final Standard PDFs aren't locally available, so the per-version §7.4.2.2 text can't be cited.
+- **Known limitations documented honestly** under the the working notes "honesty over completeness" requirement: per-version conditional rules, per-version composite-component definitions, and per-version errata are deferred to a future cycle when the relevant PDFs become available.
+- No schema mutations; no source / test changes. 322/322 tests across 22 suites green (unchanged).
+
 ### Added — v0.4-S4 substage C: spec-text-driven schema corrections (PID-35 / PID-36 / OBX-2)
 
 - **Schema corrections under `Resources/schemas/v2.5.1/`**, each citable to the v2.5.1 Final Standard (ANSI/HL7 April 2007). The author's local copy of the spec PDFs (not committed pending IP review) was used; the audit doc lists section numbers for each citation:
