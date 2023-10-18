@@ -281,7 +281,8 @@
       "name": "Species Code",
       "dataType": "CE",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "PID-36 populated OR PID-38 populated"
     },
     {
       "index": 36,
@@ -290,7 +291,7 @@
       "dataType": "CE",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "PID-35 populated"
+      "condition": "PID-37 populated"
     },
     {
       "index": 37,

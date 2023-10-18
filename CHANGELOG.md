@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.4-S4 substage C: spec-text-driven schema corrections (PID-35 / PID-36 / OBX-2)
+
+- **Schema corrections under `Resources/schemas/v2.5.1/`**, each citable to the v2.5.1 Final Standard (ANSI/HL7 April 2007). The author's local copy of the spec PDFs (not committed pending IP review) was used; the audit doc lists section numbers for each citation:
+  - **`PID.json`**: PID-35 (Species Code) gains `condition: "PID-36 populated OR PID-38 populated"` per §3.4.2.35. PID-36 (Breed Code) `condition` corrected from the backwards `"PID-35 populated"` to the spec-accurate `"PID-37 populated"` per §3.4.2.36. The pre-S4 predicate was on the wrong field and fired in the wrong direction; the original S1 audit's "non-human species" narrative was speculation, not a spec citation.
+  - **`OBX.json`**: OBX-2 (Value Type) gains `condition: "OBX-11 != X"` per §7.4.2.2. Uses the new compound-DSL `!= <value>` operator.
+- **Audit doc rewrite** (`docs/design/v2_5_1-spec-audit.md`):
+  - **Gap 1 (PID conditional rules) RESOLVED** with spec citations.
+  - **Gap 2 PARTIALLY RESOLVED**: OBX-2 closed; the 12 other fields (ORC-2 / ORC-3 / ORC-8 / OBR-1 / 7 / 8 / 10 / 14 / 22 / 25 / 26 / 32 / OBX-4) carry **cross-segment** rules (ORC-2 ↔ OBR-2 XOR per §4.5.1.2) or **message-context** rules (OBR-25 "when in a report message" per §4.5.3.25) that the same-segment compound DSL cannot express. Documented as known limitations requiring cross-segment DSL extension — candidate for post-v0.4 cycle. The S1 audit's "ORC-2 required when ORC-1 in (NW/CA/...)" claim was a speculative reconstruction and has been retracted in the audit doc.
+  - **Gap 3 (composite OR-rules) RESOLVED** with the spec-text caveat that the OR-rule choices for CWE / XTN / HD / PL / EIP are interpretive (community-convention) rather than directly cited — the v2.5.1 component tables list all components as `O`. Documented so integrators don't mistake them for literal spec assertions.
+- **Tests**: `Tests/HL7v2KitTests/ConditionalFieldTests.swift` rewritten around the corrected predicates. 11 tests cover: PID-37→PID-36 trigger + satisfaction, PID-36→PID-35 trigger + satisfaction, PID-38→PID-35 OR-branch trigger, OBX-11≠X→OBX-2 trigger + satisfaction, OBX-2-populated short-circuit, OBX-11=X no-trigger, plus the fixture-corpus regression pin (none of the 48 valid fixtures populate the veterinary fields or trigger the OBX-2 path). 318 → 322 tests across 22 suites green.
+- **Spec PDFs** (Final Standard, April 2007) referenced locally during the audit; **not committed** pending IP review. The audit doc captures the specific section numbers and pull-quoted text so the conclusions remain reproducible without requiring the PDFs in-tree.
+
 ### Added — v0.4-S4 substages A + B: composite OR-rule enforcement + compound-predicate DSL
 
 - **`Sources/HL7v2Kit/Composite/RequiredComponentSet.swift`** (new). Value type with two semantics cases: `.atLeastOneOf` and `.allOfGroupOrAtLeastOne(group:)`. Closes audit Gap 3: composites with OR-rule conformance (CWE / XTN / HD / PL / EIP) now enforce their spec rule via `requiredComponentSet`, instead of skipping silently. The Validator's `checkComponents` dispatches both the flat `requiredComponents` check (v0.2-V2) and the new OR-rule check (v0.4-S4) per repetition.
