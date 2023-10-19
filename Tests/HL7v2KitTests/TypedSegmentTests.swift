@@ -1145,4 +1145,90 @@ struct TypedSegmentTests {
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == dg1Wire)
     }
+
+    // MARK: - IN1 (v0.4-T3: Insurance — billing-essentials subset, 25 fields)
+
+    // IN1 with set ID, insurance plan CE, company ID CX, company name XON,
+    // company address XAD, group number, plan effective date.
+    private let in1Wire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    IN1|1|HBF^Medibank Private^L|MED001|MEDIBANK PRIVATE|PO BOX 9999^^Sydney^NSW^2000^AU||(02)555-7777|GRP123|||N|20240101|20241231\r
+    """
+
+    @Test("IN1 hydrates as .typed")
+    func in1Hydrates() throws {
+        let message = try Parser().parse(in1Wire)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        #expect(type(of: in1).segmentID == "IN1")
+    }
+
+    @Test("IN1-1 (SI) set ID + IN1-2 (CE composite) insurance plan ID")
+    func in1IdentityFieldsAgree() throws {
+        let message = try Parser().parse(in1Wire)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        #expect(in1.setID == "1")
+        let plan = try #require(in1.insurancePlanID)
+        #expect(plan.identifier == "HBF")
+        #expect(plan.text == "Medibank Private")
+        #expect(plan.identifier == message["IN1-2.1"])
+    }
+
+    @Test("IN1-3 (CX composite) insurance company ID + IN1-4 (XON) company name")
+    func in1CompanyAgree() throws {
+        let message = try Parser().parse(in1Wire)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        let companyID = try #require(in1.insuranceCompanyID)
+        let companyName = try #require(in1.insuranceCompanyName)
+        #expect(companyID.id == "MED001")
+        #expect(companyName.organizationName == "MEDIBANK PRIVATE")
+        #expect(companyID.id == message["IN1-3.1"])
+        #expect(companyName.organizationName == message["IN1-4.1"])
+    }
+
+    @Test("IN1-5 (XAD) company address + IN1-7 (XTN) phone")
+    func in1AddressAndPhoneAgree() throws {
+        let message = try Parser().parse(in1Wire)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        let address = try #require(in1.insuranceCompanyAddress)
+        let phone = try #require(in1.insuranceCoPhoneNumber)
+        #expect(address.streetAddress == "PO BOX 9999")
+        #expect(address.city == "Sydney")
+        #expect(phone.telephoneNumber == "(02)555-7777")
+    }
+
+    @Test("IN1-8 (ST) group number + IN1-12 (DT) plan effective date")
+    func in1GroupAndDateAgree() throws {
+        let message = try Parser().parse(in1Wire)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        #expect(in1.groupNumber == "GRP123")
+        #expect(in1.planEffectiveDate == "20240101")
+        #expect(in1.planExpirationDate == "20241231")
+    }
+
+    @Test("IN1 round-trips byte-perfectly through typed hydration")
+    func in1RoundTrips() throws {
+        let message = try Parser().parse(in1Wire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == in1Wire)
+    }
+
+    @Test("adt_a01_with_insurance.hl7 fixture hydrates IN1 as typed (T3 capstone)")
+    func adtWithInsuranceFixtureHydratesIN1() throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/adt_a01_with_insurance.hl7")
+        let bytes = try Data(contentsOf: fixtureURL)
+        let message = try Parser().parse(bytes)
+        let in1 = try #require(message.firstSegment(IN1.self))
+        #expect(in1.setID == "1")
+        let plan = try #require(in1.insurancePlanID)
+        #expect(plan.identifier == "HBF")
+        #expect(plan.text == "Medibank Private")
+        let companyID = try #require(in1.insuranceCompanyID)
+        #expect(companyID.id == "MED001")
+        // Fixture must still round-trip byte-perfectly post-T3.
+        let rebuilt = message.serialize()
+        #expect(rebuilt == bytes)
+    }
 }
