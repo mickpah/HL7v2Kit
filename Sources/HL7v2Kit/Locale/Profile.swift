@@ -46,7 +46,12 @@ struct Profile: Sendable, Equatable, Hashable {
 /// Internal — consumers see profile effects through `ValidationIssue`
 /// rather than reading overrides directly.
 ///
-/// Empty/skeletal in S5-A; S5-B/C/D populate the AU narrowings.
+/// Empty/skeletal in S5-A; S5-B/C/D populate the AU narrowings. A
+/// future S5-B-N substage will introduce a sibling `CompositeOverride`
+/// type keyed by HL7 dataType code (e.g. "CE") for datatype-level
+/// rules that apply to every populated field of that type — needed for
+/// the HL7au:00044.* conformance points which are datatype-level, not
+/// field-level.
 struct FieldOverride: Sendable, Equatable, Hashable {
     /// The segment this override applies to (e.g. "PID").
     let segmentID: String
@@ -69,6 +74,15 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// fields. Empty means "use the base spec's required components
     /// unchanged".
     let requiredComponents: [Int]
+
+    /// Spec citation for this override. Surfaced verbatim in
+    /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`
+    /// so consumers can attribute the failure to the specific
+    /// conformance point (e.g. `"HL7au:000003 (r2) — OBR-2 EI
+    /// completeness"`). nil means "no specific citation" and the
+    /// Validator falls back to a generic `<locale>:<seg>-<idx>.<comp>`
+    /// identifier.
+    let specCitation: String?
 }
 
 /// Profile usage codes from the AU ADRM spec. The base HL7 v2 set is

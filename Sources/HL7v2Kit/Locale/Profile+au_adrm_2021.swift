@@ -25,66 +25,46 @@ extension Profile {
         locale: .auLocalisation,
         baseVersion: .v2_4,
         fieldOverrides: [
-            // HL7au:000003 (r2) — OBR-2 Placer Order Number EI completeness.
             FieldOverride(
                 segmentID: "OBR",
                 fieldIndex: 2,
                 profileUsage: nil,
                 valueSet: nil,
-                requiredComponents: [1, 2, 3, 4]
+                requiredComponents: [1, 2, 3, 4],
+                specCitation: "HL7au:000003 (r2) — OBR-2 EI completeness"
             ),
-            // HL7au:000004.1 (r3) — OBR-3 Filler Order Number EI completeness.
             FieldOverride(
                 segmentID: "OBR",
                 fieldIndex: 3,
                 profileUsage: nil,
                 valueSet: nil,
-                requiredComponents: [1, 2, 3, 4]
+                requiredComponents: [1, 2, 3, 4],
+                specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
             ),
-            // HL7au:000005 (r2) — ORC-2 Placer Order Number EI completeness.
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 2,
                 profileUsage: nil,
                 valueSet: nil,
-                requiredComponents: [1, 2, 3, 4]
+                requiredComponents: [1, 2, 3, 4],
+                specCitation: "HL7au:000005 (r2) — ORC-2 EI completeness"
             ),
-            // HL7au:000006 (r3) — ORC-3 Filler Order Number EI completeness.
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 3,
                 profileUsage: nil,
                 valueSet: nil,
-                requiredComponents: [1, 2, 3, 4]
+                requiredComponents: [1, 2, 3, 4],
+                specCitation: "HL7au:000006 (r3) — ORC-3 EI completeness"
             ),
-            // HL7au:000007 (r2) — ORC-4 Placer Group Number EI completeness.
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 4,
                 profileUsage: nil,
                 valueSet: nil,
-                requiredComponents: [1, 2, 3, 4]
+                requiredComponents: [1, 2, 3, 4],
+                specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
             ),
         ]
     )
-}
-
-/// Per-(segmentID, fieldIndex) lookup of the spec citation for the
-/// AU rule firing on a given field. Used by the Validator to populate
-/// the `localeRule` associated value on `IssueCode.profileConstraintViolation`
-/// and the issue message.
-///
-/// Hand-curated alongside `auADRM2021` to keep the citation and the
-/// override data co-located.
-enum AUADRM2021Citations {
-    static func citation(forSegmentID segmentID: String, fieldIndex: Int) -> String? {
-        switch (segmentID, fieldIndex) {
-        case ("OBR", 2): return "HL7au:000003 (r2) — OBR-2 EI completeness"
-        case ("OBR", 3): return "HL7au:000004.1 (r3) — OBR-3 EI completeness"
-        case ("ORC", 2): return "HL7au:000005 (r2) — ORC-2 EI completeness"
-        case ("ORC", 3): return "HL7au:000006 (r3) — ORC-3 EI completeness"
-        case ("ORC", 4): return "HL7au:000007 (r2) — ORC-4 EI completeness"
-        default:         return nil
-        }
-    }
 }

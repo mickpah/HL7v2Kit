@@ -213,10 +213,8 @@ public struct Validator: Sendable {
                     fieldIndex: fieldGrammar.index,
                     componentIndex: componentIndex
                 )
-                let citation = AUADRM2021Citations.citation(
-                    forSegmentID: segmentID,
-                    fieldIndex: fieldGrammar.index
-                ) ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(componentIndex)"
+                let citation = override.specCitation
+                    ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(componentIndex)"
                 issues.append(ValidationIssue(
                     severity: .error,
                     code: .profileConstraintViolation(localeRule: citation),

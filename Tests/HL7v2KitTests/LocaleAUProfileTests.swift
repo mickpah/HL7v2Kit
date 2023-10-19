@@ -191,4 +191,63 @@ struct LocaleAUProfileTests {
         let report = Validator(locale: .auLocalisation).validate(message)
         #expect(report.locale == .auLocalisation)
     }
+
+    // MARK: - Polish pass: repeating-field + multi-segment pins
+
+    // OBR-3 with two repetitions: first complete (4-of-4 EI), second
+    // incomplete (1-of-4 EI). AU rule must fire on the incomplete rep
+    // only — the complete rep passes silently. Repetitions are
+    // separated by `~`.
+    private let obrRepeatingFieldMixed = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO~ORPHAN789|GLU^Glucose^L\r
+    """
+
+    @Test("Repeating field: AU rule fires per repetition, not just the first")
+    func auRuleFiresPerRepetition() throws {
+        let message = try Parser(locale: .auLocalisation).parse(obrRepeatingFieldMixed)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        // OBR-3 has 2 repetitions: rep 1 is complete (no violations);
+        // rep 2 has only EI-1 set (violations on EI-2, EI-3, EI-4).
+        let obr3Violations = report.errors.filter {
+            if case .profileConstraintViolation = $0.code,
+               $0.location.segmentID == "OBR", $0.location.fieldIndex == 3 {
+                return true
+            }
+            return false
+        }
+        // Three violations expected from the incomplete second repetition.
+        #expect(obr3Violations.count == 3,
+                "Each missing component in the incomplete repetition must fire; got \(obr3Violations.count)")
+    }
+
+    // Two OBR segments in one message: OBR[1] valid, OBR[2] invalid.
+    // The AU rule must fire on OBR[2] only, with the correct
+    // segmentIndex on the location.
+    private let multiObrMixedConformance = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER1^HOSP^1.2.36.1.2001.1003.0.AAA^ISO|FILLER1^LAB^1.2.36.1.2001.1003.0.BBB^ISO|GLU^Glucose^L\r\
+    OBR|2|PLACER2^HOSP|FILLER2^LAB^1.2.36.1.2001.1003.0.CCC^ISO|LFT^Liver function^L\r
+    """
+
+    @Test("Multi-segment mixed conformance: AU rule fires on second OBR only")
+    func auRuleFiresOnCorrectSegmentOccurrence() throws {
+        let message = try Parser(locale: .auLocalisation).parse(multiObrMixedConformance)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let obrViolations = report.errors.filter {
+            if case .profileConstraintViolation = $0.code,
+               $0.location.segmentID == "OBR" { return true }
+            return false
+        }
+        // Second OBR's OBR-2 is incomplete (2 of 4 EI components) and
+        // fires on EI-3 + EI-4. First OBR is complete; fires zero.
+        #expect(obrViolations.count == 2,
+                "Expected 2 violations on OBR[2]-2 (EI-3 + EI-4); got \(obrViolations.count)")
+        for issue in obrViolations {
+            #expect(issue.location.segmentIndex == 2,
+                    "All violations must be on segmentIndex 2 (the second OBR)")
+            #expect(issue.location.fieldIndex == 2,
+                    "All violations must be on OBR-2 (the incomplete field)")
+        }
+    }
 }
