@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-D-2: profileUsage dispatch (closes "must be populated under AU" gap)
+
+Closes the documented S5-C scope gap: under `.auLocalisation`, MSH-17 (`HL7au:000041`) and MSH-19 (`HL7au:000042`) must be populated — not just match a value-set when populated. The S5-C check fired only on populated-but-wrong values; this substage adds presence enforcement via `FieldOverride.profileUsage`.
+
+- **`Validator.checkProfileFieldUsage`** (new): for every field in the segment grammar, when a profile is loaded and the matching `FieldOverride` declares `profileUsage = .required` and the field is empty, emit `.profileConstraintViolation(localeRule:)` with the override's spec citation. `.requiredEmpty` (RE) treated as informational (no fire on empty per the spec's RE semantic); `.notUsed` (X) handled by the existing base `checkDeprecation`; other usage codes don't drive a presence rule.
+- **AU profile updated**: MSH-17 and MSH-19 FieldOverrides now carry `profileUsage = .required`. JSON overlay file (`Resources/profiles/au-adrm-2021/MSH.json`) and Swift mirror in sync.
+- **Tests updated**:
+  - `LocaleTests.auLocaleEmitsNoProfileViolationsOnPIDOnlyMessage` renamed and refocused — now pins "no OBR/ORC AU rules fire on PID-only wire" (filters out MSH violations which now legitimately fire under profileUsage).
+  - `LocaleAUProfileTests.mshValueSetRulesConditionalOnPopulated` (the S5-C scope-limit pin) replaced with `mshProfileRequiredFiresOnEmpty` + `internationalLocaleSilentOnEmptyMSH`. New invariant: empty MSH-17 / MSH-19 now fire `profileConstraintViolation` per the profileUsage track.
+
+- 389 → 390 tests across 24 suites green.
+
 ### Added — v0.5-S5-D: AU pre-adopted PID-35..38 grammar extensions on v2.4
 
 Substage for the AU profile's pre-adoption of v2.5+ PID fields onto v2.4 wires. Closes the documented gap: under base v2.4 grammar (PID capped at 32), the Validator never iterated PID-33..38, so the v2.5.1-style conditional predicates added in v0.4-S4-C didn't apply to v2.4 wires. With S5-D + `.auLocalisation`, the AU profile extends the v2.4 PID grammar so those rules fire.

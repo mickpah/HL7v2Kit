@@ -544,28 +544,53 @@ struct LocaleAUProfileTests {
                 "AU-conformant MSH must fire no profile violations; got \(mshViolations.map(\.message))")
     }
 
-    @Test("MSH-17 / MSH-19 value-set rules are silent on empty fields (only fire when populated)")
-    func mshValueSetRulesConditionalOnPopulated() throws {
-        // The vast majority of the fixture corpus has empty MSH-17 +
-        // MSH-19 — the value-set rules must not fire on those. The
-        // "rules require population at all" enforcement is a separate
-        // future dispatch (profileUsage-based, not in S5-C scope).
+    @Test("profileUsage dispatch: empty MSH-17 and MSH-19 fire profile-required violations")
+    func mshProfileRequiredFiresOnEmpty() throws {
+        // Post-S5-D-2 profileUsage dispatch: the AU spec says MSH-17
+        // and MSH-19 must be populated under AU. With
+        // profileUsage = .required on each FieldOverride, empty MSH-
+        // 17 / MSH-19 fire .profileConstraintViolation (distinct from
+        // the value-set check that fires only on populated-but-wrong).
         let wire = """
         MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
         PID|1||999999^^^HOSP^MR\r
         """
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let mshValueSetViolations = report.errors.filter {
-            if case .profileConstraintViolation(let rule) = $0.code,
-               $0.location.segmentID == "MSH",
-               (rule.contains("HL7au:000041") || rule.contains("HL7au:000042")) {
+        let msh17Issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "MSH",
+               issue.location.fieldIndex == 17,
+               rule.contains("HL7au:000041") {
                 return true
             }
             return false
         }
-        #expect(mshValueSetViolations.isEmpty,
-                "MSH value-set rules must not fire on empty MSH-17 / MSH-19 (yet)")
+        let msh19Issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "MSH",
+               issue.location.fieldIndex == 19,
+               rule.contains("HL7au:000042") {
+                return true
+            }
+            return false
+        }
+        #expect(msh17Issue != nil,
+                "Empty MSH-17 should fire HL7au:000041 violation under AU profile-required")
+        #expect(msh19Issue != nil,
+                "Empty MSH-19 should fire HL7au:000042 violation under AU profile-required")
+    }
+
+    @Test("profileUsage: same wire under .international fires no profile-required violations")
+    func internationalLocaleSilentOnEmptyMSH() throws {
+        let wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||999999^^^HOSP^MR\r
+        """
+        let message = try Parser(locale: .international).parse(wire)
+        let report = Validator(locale: .international).validate(message)
+        #expect(profileViolations(in: report).isEmpty,
+                ".international locale must never fire profile violations")
     }
 
     @Test("MSH-17 / MSH-19 rules don't fire under .international locale")

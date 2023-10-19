@@ -80,18 +80,24 @@ struct LocaleTests {
 
     // MARK: - Default behaviour preserved (no AU constraints fire yet)
 
-    @Test("AU locale: no profileConstraintViolation issues fire on a PID-only message (no AU rule applies)")
-    func auLocaleEmitsNoProfileViolationsOnPIDOnlyMessage() throws {
+    @Test("AU locale: no OBR/ORC profileConstraintViolation issues fire on a PID-only message")
+    func auLocaleEmitsNoOBROrORCViolationsOnPIDOnlyMessage() throws {
         // The S5-B-1 AU rules fire only on OBR-2/3 and ORC-2/3/4. A
-        // PID-only ADT carries no OBR or ORC, so no AU rules apply.
+        // PID-only ADT carries no OBR or ORC, so those rules don't
+        // apply. (MSH rules will fire under profileUsage dispatch
+        // because minimalAdt leaves MSH-17 / MSH-19 empty — that's
+        // covered separately in LocaleAUProfileTests.)
         let message = try Parser(locale: .auLocalisation).parse(minimalAdt)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violations = report.issues.filter {
-            if case .profileConstraintViolation = $0.code { return true }
+        let obrOrOrcViolations = report.issues.filter {
+            if case .profileConstraintViolation = $0.code,
+               ($0.location.segmentID == "OBR" || $0.location.segmentID == "ORC") {
+                return true
+            }
             return false
         }
-        #expect(violations.isEmpty,
-                "ADT with only PID should fire no profile violations under .auLocalisation")
+        #expect(obrOrOrcViolations.isEmpty,
+                "ADT with only PID should fire no OBR/ORC profile violations")
     }
 
     @Test("AU locale errors are a superset of international errors on the fixture corpus")

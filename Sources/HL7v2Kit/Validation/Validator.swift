@@ -223,6 +223,20 @@ public struct Validator: Sendable {
                     issues: &issues
                 )
             }
+            // v0.5-S5-D-2 (post-S5-D substage): profile usage dispatch.
+            // Fires when the override declares `profileUsage = .required`
+            // and the field is empty. Runs regardless of population
+            // state because the absent case is what this check exists
+            // to detect.
+            if let profile {
+                checkProfileFieldUsage(
+                    profile: profile,
+                    fieldGrammar: fieldGrammar,
+                    isPopulated: isPopulated,
+                    location: location,
+                    issues: &issues
+                )
+            }
         }
     }
 
@@ -378,6 +392,42 @@ public struct Validator: Sendable {
         guard repetition.components.indices.contains(componentIndex - 1) else { return "" }
         let component = repetition.components[componentIndex - 1]
         return component.subcomponents.first?.value ?? ""
+    }
+
+    /// Profile-usage dispatch — when an override declares the field
+    /// is profile-required (`.required`) and the field is empty,
+    /// emit `.profileConstraintViolation`. Closes the S5-C scope gap
+    /// where MSH-17 / MSH-19 were enforced for VALUE when populated
+    /// but not enforced for PRESENCE.
+    ///
+    /// `.requiredEmpty` (RE) is treated as informational: the spec
+    /// says the sender must be able to provide the value if it has
+    /// one, but receivers must accept absence — so no violation when
+    /// empty. `.notUsed` (X) flags presence (the base
+    /// `checkDeprecation` already handles `notSupported` populated;
+    /// this path leaves X alone). Other usage codes don't drive a
+    /// presence rule.
+    private func checkProfileFieldUsage(
+        profile: Profile,
+        fieldGrammar: FieldGrammar,
+        isPopulated: Bool,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let override = profile.fieldOverrides.first(where: {
+            $0.segmentID == location.segmentID && $0.fieldIndex == fieldGrammar.index
+        }) else { return }
+        guard override.profileUsage == .required else { return }
+        guard !isPopulated else { return }
+
+        let citation = override.specCitation
+            ?? "\(profile.locale.rawValue):\(location.segmentID)-\(fieldGrammar.index)"
+        issues.append(ValidationIssue(
+            severity: .error,
+            code: .profileConstraintViolation(localeRule: citation),
+            location: location,
+            message: "AU profile rule violated at \(location.pathDescription): field is profile-required (\(profile.locale.rawValue) usage = R) but missing (\(citation))"
+        ))
     }
 
     private func checkRequired(

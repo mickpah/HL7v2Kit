@@ -26,13 +26,15 @@ extension Profile {
         baseVersion: .v2_4,
         fieldOverrides: [
             // HL7au:000041 (r2) — MSH-17 country code must be "AUS"
-            // for Australian originators. AU profile implicitly means
-            // sender is AU, so this rule fires unconditionally when
-            // MSH-17 is populated (and per HL7au:000041 it should
-            // always be populated under AU).
+            // for Australian originators. The spec says MSH-17 must
+            // be specified (required under AU) AND its value must be
+            // "AUS". The profileUsage = .required dispatch fires on
+            // empty MSH-17; the componentValueSets fire on populated-
+            // but-wrong values.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 17,
+                profileUsage: .required,
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
@@ -40,14 +42,16 @@ extension Profile {
                         specCitation: "HL7au:000041 (r2) — MSH-17 country must be \"AUS\""
                     )
                 ],
-                specCitation: "HL7au:000041 (r2) — MSH-17 country narrowed to AUS"
+                specCitation: "HL7au:000041 (r2) — MSH-17 country required + narrowed to AUS"
             ),
             // HL7au:000042 — MSH-19 must equal "en^English^ISO639"
-            // per AU English-only messaging conformance. Three
-            // component value-set rules: CE-1, CE-2, CE-3.
+            // per AU English-only messaging conformance. Same
+            // pattern: profileUsage = .required + per-component
+            // value-set checks.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 19,
+                profileUsage: .required,
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
@@ -65,7 +69,7 @@ extension Profile {
                         specCitation: "HL7au:000042 — MSH-19.3 (coding system) must be \"ISO639\""
                     ),
                 ],
-                specCitation: "HL7au:000042 — MSH-19 language narrowed to en/English/ISO639"
+                specCitation: "HL7au:000042 — MSH-19 language required + narrowed to en/English/ISO639"
             ),
             FieldOverride(
                 segmentID: "OBR",
