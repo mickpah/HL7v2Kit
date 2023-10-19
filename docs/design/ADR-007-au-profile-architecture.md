@@ -260,18 +260,34 @@ Implementation landing as a single S5-A commit on `v0.4-segments`:
 
 S5-B/C/D (actual AU narrowings) land iteratively as integrator conformance needs drive scope. No constraints ship without spec citation per the "no predicate ships without citation" rule.
 
-## Implementation status update (2026-06-18, on `v0.5-au-profile`)
+## Implementation status update (final, v0.5 cycle close, 2026-06-18)
 
-S5-A: shipped in v0.4.0 (`d60d12e` on `main`) per the recommendation above.
+S5-A: shipped in v0.4.0 (`d60d12e` on `main`).
 
-S5-B sub-substages landed on the v0.5 worktree:
+All S5-B/C/D sub-substages landed on the v0.5-au-profile worktree (8 functional + 1 doc commit; ready for v0.5.0 tag):
 
 - **S5-B-1** (`4bb5f67`): 5 field-level AU rules for OBR-2/3 + ORC-2/3/4 EI completeness (HL7au:000003 / 000004.1 / 000005 / 000006 / 000007). Validator dispatches `Profile.fieldOverrides.requiredComponents`.
-- **S5-B-1 polish** (`6128d06`): citations inlined into `FieldOverride.specCitation`; separate `AUADRM2021Citations` switch removed. Single source of truth per override. 2 new tests pin repeating-field + multi-segment occurrence semantics.
-- **S5-B-2** (`46a33ac`): Profile model extended with `compositeOverrides: [CompositeOverride]` + `PairConditional` rules. 12 AU datatype-level rules across CE / CNE / CWE (HL7au:00044.4 / .5 / .6 series). Validator dispatches per-repetition pair-conditional checks.
+- **Scope correction** (`a844c03`): removed framings that positioned HL7v2Kit's purpose as feeding a FHIR mapper. HL7v2Kit is a parsing/validation library; mapping happens in downstream consumers. Locale mode is an integrator-focused conformance-validation feature.
+- **S5-B-1 polish** (`6128d06`): citations inlined into `FieldOverride.specCitation`; separate `AUADRM2021Citations` switch removed. 2 pin tests for repeating-field + multi-segment occurrence semantics.
+- **S5-B-2** (`46a33ac`): `Profile.compositeOverrides: [CompositeOverride]` + `PairConditional` rules. 12 AU datatype-level rules across CE / CNE / CWE (HL7au:00044.4 / .5 / .6 series). Validator dispatches per-repetition pair-conditional checks.
+- **S5-B-3** (`7b7f24d`): `CompositeOverride.requiredComponents: [ComponentRequirement]` track. 2 AU CX rules — CX-4 + CX-5 must be valued when CX populated (HL7au:00044.1.2/.1.3).
+- **S5-C** (`910bdc8`): `FieldOverride.componentValueSets: [ComponentValueSet]` track. 4 AU rules — MSH-17 = "AUS" (HL7au:000041), MSH-19 = "en^English^ISO639" (HL7au:000042, 3 component checks).
+- **S5-D** (`b08931b`): `Profile.grammarExtensions: [String: [FieldGrammar]]` track + `Validator.mergeGrammarExtension`. AU pre-adopts v2.5+ PID-35..38 onto v2.4 wires; conditional predicates from v0.4-S4-C now apply to v2.4 wires under `.auLocalisation`.
+- **S5-D-2** (`292c86e`): profileUsage dispatch — `FieldOverride.profileUsage = .required` now fires `.profileConstraintViolation` on empty fields. MSH-17 + MSH-19 flagged `.required` under AU. Closes the S5-C "populated-then-must-match" scope gap.
 
-**Tests**: 360 (v0.4.0) → **375** across 23 → 24 suites green.
+**Final cumulative coverage**:
 
-**Scope correction (a844c03)**: removed framings that positioned HL7v2Kit's purpose as feeding a FHIR mapper. HL7v2Kit is a parsing/validation library; mapping happens in downstream consumers. The locale mode is an integrator-focused conformance-validation feature.
+| Narrowing axis | Internal type | AU rules |
+|---|---|---:|
+| Field required-components | `FieldOverride.requiredComponents` | 5 |
+| Field required-presence | `FieldOverride.profileUsage = .required` | 2 |
+| Field per-component value-set | `FieldOverride.componentValueSets` | 4 |
+| Composite required-components | `CompositeOverride.requiredComponents` | 2 |
+| Composite pair-conditional | `CompositeOverride.pairRules` | 12 |
+| Grammar extension | `Profile.grammarExtensions` | 4 fields with cond predicates |
 
-S5-B-3 / S5-C / S5-D candidates remain per the substage descriptions above, with the FHIR-mapper-rationale subset choices replaced by integrator-conformance-rationale. See `NEXT_STEPS.md` for current sequencing.
+**29 distinct AU conformance rules** firing under `.auLocalisation` (each with verbatim HL7au spec citation in `localeRule`). Covers MSH / OBR / ORC / PID directly; CE / CNE / CWE / CX every populated occurrence via datatype dispatch.
+
+**Tests**: 360 (v0.4.0) → **390** across 23 → 24 suites green.
+
+ADR moves from "Accepted" to "Implemented" with this status update. Post-v0.5 AU narrowings (HL7au:000001 / 000008 / 00044.\*.3-.4-.7-.8 / 000040 / 00044.2) are out of S5's scope and listed in NEXT_STEPS as v0.6+ candidates — each needs a different sub-rule type (cross-segment refs, value-set code-table store, semantic evaluator, runtime PKI).
