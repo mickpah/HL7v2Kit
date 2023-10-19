@@ -53,9 +53,9 @@ The v2.5.1 audit (S4 substage C) added three conditional predicates citable to s
 
 | Field | v2.5.1 condition | Citation | v2.3 / v2.3.1 / v2.4 status |
 |---|---|---|---|
-| PID-35 | `"PID-36 populated OR PID-38 populated"` | §3.4.2.35 | **Not applicable** — PID-35 doesn't exist in v2.3 / v2.3.1 / v2.4 (PID cap is 30 / 30 / 32). |
-| PID-36 | `"PID-37 populated"` | §3.4.2.36 | **Not applicable** — same reason. |
-| OBX-2 | `"OBX-11 != X"` | §7.4.2.2 | **Deferred.** OBX-2 and OBX-11 both exist in all four supported versions. Carry-forward is plausible under HL7's additive-history convention but is **not currently spec-citable** because the v2.3 / v2.3.1 / v2.4 §7.4.2.2 wording cannot be verified without those PDFs. Tracked as known limitation. |
+| PID-35 | `"PID-36 populated OR PID-38 populated"` | §3.4.2.35 | **Not applicable** in base v2.3 / v2.3.1 / v2.4 — PID-35 doesn't exist (PID caps are 30 / 30 / 32). Note: the **AU v2.4 ADRM-2021 profile pre-adopts PID-35..38** from v2.5; that's a profile-level extension, handled separately when AU profile support lands. |
+| PID-36 | `"PID-37 populated"` | §3.4.2.36 | **Not applicable** in base spec — same reason. |
+| OBX-2 | `"OBX-11 != X"` | §7.4.2.2 | **v2.4 RESOLVED 2026-06-18** — v2.4 §7.4.2.2 wording is identical to v2.5.1 (verified against `docs/standards/HL7_v24_PDF/CH07.PDF`); carry-forward applied. v2.3 / v2.3.1 still **DEFERRED** pending those PDFs. |
 
 ## Known limitations (explicit)
 
