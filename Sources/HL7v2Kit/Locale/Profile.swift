@@ -156,6 +156,12 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// unchanged".
     let requiredComponents: [Int]
 
+    /// Profile-defined value-set narrowings on specific components.
+    /// Each `ComponentValueSet` restricts the named component to a
+    /// fixed list of allowed literal values. Empty means "no value-set
+    /// narrowings on any component". v0.5-S5-C.
+    let componentValueSets: [ComponentValueSet]
+
     /// Spec citation for this override. Surfaced verbatim in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`
     /// so consumers can attribute the failure to the specific
@@ -163,6 +169,42 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// completeness"`). nil means "no specific citation" and the
     /// Validator falls back to a generic `<locale>:<seg>-<idx>.<comp>`
     /// identifier.
+    let specCitation: String?
+
+    init(
+        segmentID: String,
+        fieldIndex: Int,
+        profileUsage: ProfileUsage? = nil,
+        valueSet: String? = nil,
+        requiredComponents: [Int] = [],
+        componentValueSets: [ComponentValueSet] = [],
+        specCitation: String? = nil
+    ) {
+        self.segmentID = segmentID
+        self.fieldIndex = fieldIndex
+        self.profileUsage = profileUsage
+        self.valueSet = valueSet
+        self.requiredComponents = requiredComponents
+        self.componentValueSets = componentValueSets
+        self.specCitation = specCitation
+    }
+}
+
+/// A value-set narrowing on a specific component of a populated
+/// field. "When the field is populated, this 1-based `component`'s
+/// first-subcomponent value must be one of `allowedValues`."
+/// Used to express AU rules like HL7au:000041 (MSH-17 = "AUS") and
+/// HL7au:000042 (MSH-19.1 = "en"). v0.5-S5-C.
+struct ComponentValueSet: Sendable, Equatable, Hashable {
+    /// The 1-based component index this restriction applies to.
+    let component: Int
+
+    /// The fixed list of allowed values. Comparison is exact string
+    /// match against the component's first-subcomponent value.
+    let allowedValues: [String]
+
+    /// Spec citation for this rule. Surfaced in
+    /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
 }
 

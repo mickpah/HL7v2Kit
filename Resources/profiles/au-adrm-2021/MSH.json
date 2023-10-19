@@ -1,0 +1,40 @@
+{
+  "profileID": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "segmentID": "MSH",
+  "_notes": "v0.5-S5-C value-set narrowings on MSH-17 + MSH-19. Currently scoped to populated-then-must-match. The AU spec also says these fields must always be populated under AU; that 'required when populated absent' enforcement is a separate future dispatch via profileUsage. Mirrors Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift.",
+  "fieldOverrides": [
+    {
+      "index": 17,
+      "componentValueSets": [
+        {
+          "component": 1,
+          "allowedValues": ["AUS"],
+          "specCitation": "HL7au:000041 (r2) — The country of origin of the message must be specified in MSH-17 Country code. For Australian originators the value must be \"AUS\"."
+        }
+      ],
+      "specCitation": "HL7au:000041 (r2) — MSH-17 country narrowed to AUS"
+    },
+    {
+      "index": 19,
+      "componentValueSets": [
+        {
+          "component": 1,
+          "allowedValues": ["en"],
+          "specCitation": "HL7au:000042 — MSH-19.1 (identifier) must be \"en\""
+        },
+        {
+          "component": 2,
+          "allowedValues": ["English"],
+          "specCitation": "HL7au:000042 — MSH-19.2 (text) must be \"English\""
+        },
+        {
+          "component": 3,
+          "allowedValues": ["ISO639"],
+          "specCitation": "HL7au:000042 — MSH-19.3 (coding system) must be \"ISO639\""
+        }
+      ],
+      "specCitation": "HL7au:000042 — MSH-19 must be valued as \"en^English^ISO639\""
+    }
+  ]
+}

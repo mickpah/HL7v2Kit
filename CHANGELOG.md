@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-C: AU ADRM-2021 per-component value-set rules (MSH-17 / MSH-19)
+
+First substage of the AU profile value-set track. Extends `FieldOverride` with a `componentValueSets` track parallel to `requiredComponents` (S5-B-1 / -3), then ships the AU "country must be AUS" + "language must be en/English/ISO639" rules.
+
+- **`Profile` model extension**:
+  - `FieldOverride.componentValueSets: [ComponentValueSet]` — new sub-rule track. Each entry restricts a specific 1-based component to a fixed list of allowed literal values via exact-string comparison.
+  - `ComponentValueSet` struct (component index + `allowedValues: [String]` + `specCitation: String?`).
+  - `FieldOverride.init` made explicit (Swift's synthesized memberwise init can't carry defaults for the new field while preserving back-compat).
+
+- **AU rules added**:
+  - **`HL7au:000041 (r2)`** — MSH-17 country code must be `"AUS"`.
+  - **`HL7au:000042`** — MSH-19 must be valued as `"en^English^ISO639"` (three component value-sets: CE-1 = en, CE-2 = English, CE-3 = ISO639).
+
+- **`Validator.checkProfileFieldOverrides`** extended to dispatch the new track alongside the existing `requiredComponents`. Same `.profileConstraintViolation(localeRule:)` plumbing; spec citation per rule.
+
+- **`Resources/profiles/au-adrm-2021/MSH.json`** — new overlay file with both rules + verbatim spec citations + an `_notes` block documenting the populated-then-must-match scope and the future `profileUsage`-based dispatch.
+
+- **Scope note (documented in source comments)**: S5-C rules fire only when the field is populated. The AU spec actually says MSH-17 and MSH-19 must always be populated under `.auLocalisation`. The "field must be populated under AU" enforcement is a separate future track — likely via `profileUsage` dispatch — and is not in S5-C-1 scope.
+
+- **Tests added (Tests/HL7v2KitTests/LocaleAUProfileTests.swift)**: 5 new tests covering MSH-17 wrong country fires; MSH-19 wrong language identifier fires; fully AU-conformant MSH passes; empty MSH-17 / MSH-19 fires nothing (scope pin for populated-then-must-match); `.international` locale silent. 380 → 385 tests across 24 suites green.
+
+**Fixture corpus pin held**: existing fixtures leave MSH-17 / MSH-19 empty, so the S5-C rules don't fire on them. The corpus continues to pass under both locales.
+
+**Cumulative v0.5**: 23 AU rules now firing under `.auLocalisation` (5 field-level EI from S5-B-1, 12 datatype-level pair rules across CE/CNE/CWE from S5-B-2, 2 CX completeness rules from S5-B-3, 4 MSH value-set rules from S5-C — counting each MSH-19 component check separately).
+
 ### Added — v0.5-S5-B-3: AU ADRM-2021 CX required-component rules (HL7au:00044.1.2 / .1.3)
 
 Third substage of the AU profile constraint overlays. Extends `CompositeOverride` with a `requiredComponents` track parallel to the `pairRules` from S5-B-2, then ships the AU CX completeness rules.

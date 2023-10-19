@@ -25,6 +25,48 @@ extension Profile {
         locale: .auLocalisation,
         baseVersion: .v2_4,
         fieldOverrides: [
+            // HL7au:000041 (r2) — MSH-17 country code must be "AUS"
+            // for Australian originators. AU profile implicitly means
+            // sender is AU, so this rule fires unconditionally when
+            // MSH-17 is populated (and per HL7au:000041 it should
+            // always be populated under AU).
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 17,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["AUS"],
+                        specCitation: "HL7au:000041 (r2) — MSH-17 country must be \"AUS\""
+                    )
+                ],
+                specCitation: "HL7au:000041 (r2) — MSH-17 country narrowed to AUS"
+            ),
+            // HL7au:000042 — MSH-19 must equal "en^English^ISO639"
+            // per AU English-only messaging conformance. Three
+            // component value-set rules: CE-1, CE-2, CE-3.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 19,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["en"],
+                        specCitation: "HL7au:000042 — MSH-19.1 (identifier) must be \"en\""
+                    ),
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: ["English"],
+                        specCitation: "HL7au:000042 — MSH-19.2 (text) must be \"English\""
+                    ),
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["ISO639"],
+                        specCitation: "HL7au:000042 — MSH-19.3 (coding system) must be \"ISO639\""
+                    ),
+                ],
+                specCitation: "HL7au:000042 — MSH-19 language narrowed to en/English/ISO639"
+            ),
             FieldOverride(
                 segmentID: "OBR",
                 fieldIndex: 2,

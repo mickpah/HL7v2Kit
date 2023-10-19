@@ -285,9 +285,10 @@ public struct Validator: Sendable {
         guard let override = profile.fieldOverrides.first(where: {
             $0.segmentID == segmentID && $0.fieldIndex == fieldGrammar.index
         }) else { return }
-        guard !override.requiredComponents.isEmpty else { return }
+        guard !override.requiredComponents.isEmpty || !override.componentValueSets.isEmpty else { return }
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            // Track 1 (v0.5-S5-B-1): required-component narrowings.
             for componentIndex in override.requiredComponents {
                 if isComponentPopulated(repetition, componentIndex: componentIndex) {
                     continue
@@ -307,7 +308,37 @@ public struct Validator: Sendable {
                     message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType) component \(componentIndex) must be populated when \(segmentID)-\(fieldGrammar.index) ('\(fieldGrammar.name)') is populated (\(citation))"
                 ))
             }
+            // Track 2 (v0.5-S5-C): per-component value-set narrowings.
+            for valueSet in override.componentValueSets {
+                let actual = componentScalarValue(in: repetition, componentIndex: valueSet.component)
+                if valueSet.allowedValues.contains(actual) { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: valueSet.component
+                )
+                let citation = valueSet.specCitation
+                    ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
+                let allowedList = valueSet.allowedValues.map { "\"\($0)\"" }.joined(separator: ", ")
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile value-set rule violated at \(location.pathDescription): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))"
+                ))
+            }
         }
+    }
+
+    /// First-subcomponent scalar of the 1-based `componentIndex`-th
+    /// component in `repetition`. Returns the empty string when the
+    /// component or subcomponent is out of bounds — matches the
+    /// semantic "empty / missing" for value-set comparisons. v0.5-S5-C.
+    private func componentScalarValue(in repetition: Repetition, componentIndex: Int) -> String {
+        guard repetition.components.indices.contains(componentIndex - 1) else { return "" }
+        let component = repetition.components[componentIndex - 1]
+        return component.subcomponents.first?.value ?? ""
     }
 
     private func checkRequired(
