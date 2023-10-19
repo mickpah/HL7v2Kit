@@ -1,7 +1,7 @@
 # ADR-007 — Locale-aware architecture: AU vs international as a first-class API mode
 
-**Status:** **Accepted 2026-06-18.** Proposed and revised same day; project-owner approval received. Implementation scope = **S5-A only in v0.4** (recommended option), per the project-owner's "Accepted" reply to the ADR's recommendation section. S5-B/C/D iterate later as consumer needs drive scope.
-**Context:** The AU localisation profile `HL7AUSD-STD-OO-ADRM-2021.1` is now available at `docs/standards/HL7_v24_PDF/`. The project memory codifies (a) v2.4 as the recommended AU platform, and (b) HL7v2Kit's downstream role as the substrate for a FHIR AU Core mapping layer.
+**Status:** **Accepted 2026-06-18.** Proposed and revised same day; project-owner approval received. Implementation scope = **S5-A only in v0.4** (recommended option), per the project-owner's "Accepted" reply to the ADR's recommendation section. S5-B/C/D iterate later as integrator conformance needs drive scope. **Scope correction 2026-06-18 (post-S5-B-1)**: removed framings that positioned HL7v2Kit's purpose as feeding a FHIR mapper. HL7v2Kit is a parsing/validation library; mapping (HL7 v2 → FHIR or any other target) lives in downstream consumers, not here. The locale mode is a conformance-validation feature for HL7 integrators.
+**Context:** The AU localisation profile `HL7AUSD-STD-OO-ADRM-2021.1` is now available at `docs/standards/HL7_v24_PDF/`. The project memory codifies v2.4 as the recommended AU platform for integrator conformance validation work.
 
 ## Decision
 
@@ -17,18 +17,18 @@ public enum HL7Locale: Sendable, Hashable {
 
 **Base HL7 v2.4 / v2.5.1 / v2.3.1 / v2.3 schemas remain spec-faithful.** AU narrowings live in a separate overlay set at `Resources/profiles/au-adrm-2021/`. The `HL7Locale` enum is the *public* API; the profile-overlay mechanism is the *implementation* underneath it.
 
-Implications for downstream callers:
+Implications for callers:
 
 - **Parser**: takes an optional `locale:` parameter. Default is `.international` (parses base-spec wire). When `.auLocalisation` is set, pre-adopted v2.5+ fields like PID-35..38 hydrate as typed accessors even on v2.4 wires.
-- **Validator**: takes an optional `locale:` parameter (or surfaces it via `ValidationOptions.locale`). Locale governs whether AU narrowings apply.
-- **FHIR mapping layer (downstream)**: can query the locale to know what guarantees the parser/validator made. AU-locale output carries promises (e.g. CX-4 assigning authority namespace will be populated for AU identifiers) that international-locale output does not. The mapper can rely on those promises without re-verifying.
+- **Validator**: takes an optional `locale:` parameter (or surfaces it via `ValidationOptions.locale`). Locale governs whether AU narrowings apply on top of base-spec checks.
+- **Downstream consumers** (whatever they do — display, persistence, FHIR mapping, ETL, audit, etc.) can read `message.locale` / `report.locale` to see which conformance set was applied. HL7v2Kit makes no claims about downstream behaviour; it just reports what it validated against.
 
 ## Why
 
 Three forces converge on locale-as-mode rather than profile-as-overlay-toggle:
 
 1. **the working notes project requirements.** Base schemas must stay spec-faithful. AU constraints cannot bake in. The overlay storage stays as proposed in the first ADR draft; only the public-API framing changes.
-2. **Downstream FHIR mapper consumer.** When HL7v2Kit feeds a FHIR AU Core mapper, the mapper's contract is "I take HL7 v2 messages and produce AU Core FHIR resources." The mapper depends on AU constraints holding (specific identifier types, code systems, populated fields). Exposing the locale as a buried `options.profile = X` toggle hides the contract; exposing it as a top-level mode makes the contract part of the API conversation.
+2. **Integrator conformance validation is the use case.** Integrators validating AU pathology / referral traffic need a clear way to ask the validator "check this against the AU ADRM-2021 profile, not just base HL7 v2". A buried `options.profile = X` toggle hides that intent; a top-level `locale:` parameter makes the validation conformance set visible at every call site.
 3. **v1.0 stability window.** Pre-v1.0 is the window to land the right shape. Locale-as-mode is the right shape: it generalises to other localisations (UK Spine, DE Basisprofil) without API change. A `profile:` option that's "really an enum in practice" would need refactoring later.
 
 ## Public API shape (proposed)
@@ -99,14 +99,15 @@ From a survey of `HL7AUSD-STD-OO-ADRM-2021.1` (548 pages, 7 chapters + 9 appendi
 
 This goes well beyond what a v2.X JSON schema currently expresses.
 
-## FHIR AU Core mapping integration (downstream-consumer-aware)
+## What downstream consumers can do with the locale
 
-The FHIR mapping layer is HL7v2Kit's primary downstream consumer per the project memory. Locale-aware design helps it concretely:
+HL7v2Kit's scope is parsing and validation. Downstream consumers (display layers, persistence, ETL, audit, FHIR mappers, etc.) live outside this project. The locale-aware design surfaces enough information for any of them to make their own decisions without commitment from HL7v2Kit:
 
-- **Identifier mapping**: `CX-4 Assigning Authority` is `O` in base HL7 v2 but `R` (or `RE`) in AU. AU-locale parse + validate guarantees the mapper can rely on the namespace being present for FHIR `Identifier.system` resolution. International-locale parse makes no such promise — the mapper falls back to heuristics.
-- **Code system mapping**: AU profile constrains `OBX-3 Observation Identifier` to specific code systems (LOINC, AU pathology codes). AU-locale validation rejects out-of-system codes before the mapper sees them; international-locale validation accepts any code, and the mapper does the system-detection work.
-- **Pre-adopted v2.5+ fields**: AU-locale parse on a v2.4 wire surfaces PID-35..38 as typed accessors; the mapper can map them to FHIR `Patient` extensions for species/breed. International-locale parse leaves them as `UnknownField` requiring manual extraction.
-- **Profile compliance reporting**: `ValidationReport.locale == .auLocalisation` is a signal the mapper can include in the FHIR `MessageHeader` provenance.
+- **`message.locale`** — tells the consumer which conformance set the parser was configured with. Consumers can branch on it.
+- **`report.locale`** — same for validation reports.
+- **`ValidationIssue.code.profileConstraintViolation(localeRule:)`** — when AU profile checking is enabled, consumers can see exactly which AU rule fired and attribute the failure precisely.
+
+Whether a consumer maps the validated message to FHIR, persists it to a database, displays it to a user, or anything else, is the consumer's concern. HL7v2Kit guarantees only what it parsed and validated, not how that's consumed.
 
 ## What the AU profile constrains (surface-area survey)
 
@@ -211,7 +212,7 @@ v0.4 was scoped at Option α with 7 stages. Adding AU profile work as a new stag
   - No AU constraints landed yet — but `.international` works (no-op overlay) and `.auLocalisation` loads an empty overlay (no-op too). Sets the API surface in stone for v1.0.
 
 - **v0.4-S5-B** (overlay content — AU narrowings for the 9 currently-typed segments):
-  - `Resources/profiles/au-adrm-2021/{MSH,PID,NK1,NTE,OBR,OBX,ORC,PV1,AL1}.json` with `fieldOverrides` for the optionality narrowings listed in the AU spec. Subset choices should prioritise the fields the FHIR mapper needs first (CX-4, CX-5, HD-2, OBR-4 universal service identifier, OBX-3 observation identifier).
+  - `Resources/profiles/au-adrm-2021/{MSH,PID,NK1,NTE,OBR,OBX,ORC,PV1,AL1}.json` with `fieldOverrides` for the optionality narrowings listed in the AU spec. Subset choices should prioritise the fields most central to AU pathology / referral conformance validation (EI completeness on order/result identifiers, CWE / CE code-system rules, HD identification rules).
 
 - **v0.4-S5-C** (AU code-table validation):
   - CWE / CE value-set checks against AU-defined HL7 code tables (Appendix 4 in the ADRM PDF).
@@ -221,9 +222,9 @@ v0.4 was scoped at Option α with 7 stages. Adding AU profile work as a new stag
 
 Alternatively, v0.4-S5 could be deferred entirely to v0.5, keeping the v0.4 cycle's existing scope intact. **Decision pending project owner.**
 
-**Recommendation**: land **only S5-A in v0.4** (the API plumbing). It's small, locks in the public surface for v1.0, and unblocks the FHIR mapper consumer immediately (mapper can already check `message.locale` and adjust behaviour). S5-B/C/D can land iteratively in v0.5 or later as the FHIR mapper consumer drives requirements.
+**Recommendation**: land **only S5-A in v0.4** (the API plumbing). It's small, locks in the public surface for v1.0, and lets integrators (and any downstream consumers) start working with the locale enum immediately. S5-B/C/D can land iteratively in v0.5 or later as integrator conformance needs drive requirements.
 
-This recommendation respects the "no predicate ships without citation" rule — the actual AU narrowings (S5-B/C/D) need careful per-field spec extraction from the 548-page AU PDF, which is substantial work that benefits from being scoped against real consumer needs.
+This recommendation respects the "no predicate ships without citation" rule — the actual AU narrowings (S5-B/C/D) need careful per-field spec extraction from the 548-page AU PDF, which is substantial work that benefits from being scoped against real integrator needs.
 
 ## Alternatives considered
 
@@ -257,4 +258,4 @@ Implementation landing as a single S5-A commit on `v0.4-segments`:
 - `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
 - Tests: locale round-trip through parse + validate; default behaviour unchanged; `.auLocalisation` loads empty overlay (no constraints fire yet).
 
-S5-B/C/D (actual AU narrowings) land iteratively as the FHIR-mapper consumer drives scope. No constraints ship without spec citation per the "no predicate ships without citation" rule.
+S5-B/C/D (actual AU narrowings) land iteratively as integrator conformance needs drive scope. No constraints ship without spec citation per the "no predicate ships without citation" rule.
