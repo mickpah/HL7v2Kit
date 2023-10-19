@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-06-18
+
+v0.5 cycle release. AU profile constraint overlay substrate now substantively complete for the same-segment / same-datatype subset of HL7 Australia's ADRM-2021 conformance profile. **29 AU conformance rules** firing under `.auLocalisation` across 6 narrowing axes (field required-components, field required-presence, field per-component value-set, composite required-components, composite pair-conditional, grammar extension). All cited verbatim to HL7au identifiers via `.profileConstraintViolation(localeRule:)`. Base-spec behaviour under `.international` is unchanged. The additive-errors invariant (`auLocaleAddsButDoesNotRemoveBaseSpecErrors`) is enforced as a fixture-corpus pin. **No public-API breakage** vs v0.4.0 — all v0.5 work is internal overlay enrichment behind the locked `HL7Locale` enum + `ValidationIssue.code.profileConstraintViolation(localeRule:)` surfaces. Tests: 360 (v0.4.0) → 390 across 23 → 24 suites. The 3-month no-API-break v1.0 stability clock restarts from this tag per Migration.md.
+
 ### Added — v0.5-S5-D-2: profileUsage dispatch (closes "must be populated under AU" gap)
 
 Closes the documented S5-C scope gap: under `.auLocalisation`, MSH-17 (`HL7au:000041`) and MSH-19 (`HL7au:000042`) must be populated — not just match a value-set when populated. The S5-C check fired only on populated-but-wrong values; this substage adds presence enforcement via `FieldOverride.profileUsage`.
