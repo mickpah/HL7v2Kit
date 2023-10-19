@@ -575,4 +575,106 @@ struct LocaleAUProfileTests {
         #expect(profileViolations(in: report).isEmpty,
                 ".international locale must never fire profile violations")
     }
+
+    // MARK: - S5-D: AU pre-adopted PID-35..38 grammar extensions on v2.4
+
+    // v2.4 PID with PID-36 (Breed Code) populated but PID-35 (Species
+    // Code) empty. Under v2.5.1 the AU-adopted condition `"PID-36
+    // populated OR PID-38 populated"` requires PID-35 to be valued.
+    // Without S5-D, v2.4 grammar has no PID-35..38 entries, so this
+    // condition never fires on v2.4 wires. With S5-D + .auLocalisation,
+    // the AU grammar extension merges PID-35..38 in, and the condition
+    // fires.
+    //
+    // PID-36 populated (B7) + PID-35 empty. Wire shape mirrors the
+    // ConditionalFieldTests.pidBreedPopulatedSpeciesEmpty pin: 28
+    // separator pipes after `M` end PID-9..PID-35 (empty); the next
+    // open is PID-36 where B7 lands.
+    private let v24PIDBreedWithoutSpecies = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.4\r\
+    PID|1||999999^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449\r
+    """
+
+    @Test("v2.4 wire + .auLocalisation: PID-36 populated triggers PID-35 conditional via grammar extension")
+    func v24PIDSpeciesConditionFiresUnderAU() throws {
+        let message = try Parser(locale: .auLocalisation).parse(v24PIDBreedWithoutSpecies)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if issue.code == .conditionalFieldMissing,
+               issue.location.segmentID == "PID",
+               issue.location.fieldIndex == 35 {
+                return true
+            }
+            return false
+        }
+        #expect(issue != nil,
+                "Expected .conditionalFieldMissing on PID-35 under AU + v2.4")
+        #expect(issue?.message.contains("PID-36 populated OR PID-38 populated") == true,
+                "Issue message should carry the AU-extended condition string")
+    }
+
+    @Test("v2.4 wire + .international locale: PID-35..38 grammar gap means no conditional fires")
+    func v24PIDSpeciesConditionSilentUnderInternational() throws {
+        // Under .international + v2.4, the base grammar has no
+        // PID-35..38 entries; the conditional rule cannot fire. This
+        // pins the v2.4 base-spec behaviour against regression.
+        let message = try Parser(locale: .international).parse(v24PIDBreedWithoutSpecies)
+        let report = Validator(locale: .international).validate(message)
+        let pid35Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing
+            && $0.location.segmentID == "PID"
+            && $0.location.fieldIndex == 35
+        }
+        #expect(pid35Issues.isEmpty,
+                "Base v2.4 grammar has no PID-35; no conditional should fire under .international")
+    }
+
+    // PID-35 + PID-36 both populated under v2.4 + AU — no conditional
+    // violation on PID-35. Mirrors ConditionalFieldTests pidStrainAnd
+    // BreedPopulated shape (27 pipes after M = PID-35 open, then L2,
+    // then PID-36 = B7).
+    private let v24PIDSpeciesAndBreed = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.4\r\
+    PID|1||999999^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||||||L2^Canine^HL70447|B7^Beagle^HL70449\r
+    """
+
+    @Test("v2.4 wire + .auLocalisation: PID-35 + PID-36 populated fires no PID-35 conditional")
+    func v24PIDSpeciesAndBreedSatisfiesCondition() throws {
+        let message = try Parser(locale: .auLocalisation).parse(v24PIDSpeciesAndBreed)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let pid35Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing
+            && $0.location.segmentID == "PID"
+            && $0.location.fieldIndex == 35
+        }
+        #expect(pid35Issues.isEmpty,
+                "PID-35 populated satisfies its conditional; should not fire")
+    }
+
+    // v2.5.1 PID-35/36 behaviour is unchanged regardless of locale
+    // (base grammar already has these fields).
+    @Test("v2.5.1 wire: PID-35 conditional rule fires regardless of locale (base-grammar route)")
+    func v251PIDSpeciesConditionUnchangedByProfile() throws {
+        // Same wire shape as v24PIDBreedWithoutSpecies but version 2.5.1.
+        let v251Wire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+        PID|1||999999^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449\r
+        """
+        let intlMessage = try Parser(locale: .international).parse(v251Wire)
+        let intlReport = Validator(locale: .international).validate(intlMessage)
+        let auMessage = try Parser(locale: .auLocalisation).parse(v251Wire)
+        let auReport = Validator(locale: .auLocalisation).validate(auMessage)
+        let intlPID35 = intlReport.errors.filter {
+            $0.code == .conditionalFieldMissing
+            && $0.location.fieldIndex == 35
+        }
+        let auPID35 = auReport.errors.filter {
+            $0.code == .conditionalFieldMissing
+            && $0.location.fieldIndex == 35
+        }
+        #expect(intlPID35.count == 1,
+                "v2.5.1 base grammar fires PID-35 conditional under .international")
+        #expect(auPID35.count == 1,
+                "v2.5.1 base grammar fires PID-35 conditional under .auLocalisation")
+    }
 }

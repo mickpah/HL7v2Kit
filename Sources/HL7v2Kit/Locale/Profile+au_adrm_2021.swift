@@ -108,6 +108,48 @@ extension Profile {
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
             ),
         ],
+        grammarExtensions: [
+            // AU pre-adopts v2.5+ PID fields 35..38 (Species Code,
+            // Breed Code, Strain, Production Class Code) on v2.4
+            // wires. Grammar definitions mirror the v2.5.1 PID
+            // schema, including the conditional predicates added in
+            // v0.4-S4-C. Under `.auLocalisation` the Validator merges
+            // these into the v2.4 PID grammar so they validate
+            // against the same rules they do on v2.5.1 wires. v0.5-
+            // S5-D.
+            "PID": [
+                FieldGrammar(
+                    index: 35,
+                    name: "Species Code",
+                    dataType: "CE",
+                    optionality: .conditional,
+                    repeatability: .single,
+                    condition: "PID-36 populated OR PID-38 populated"
+                ),
+                FieldGrammar(
+                    index: 36,
+                    name: "Breed Code",
+                    dataType: "CE",
+                    optionality: .conditional,
+                    repeatability: .single,
+                    condition: "PID-37 populated"
+                ),
+                FieldGrammar(
+                    index: 37,
+                    name: "Strain",
+                    dataType: "ST",
+                    optionality: .optional,
+                    repeatability: .single
+                ),
+                FieldGrammar(
+                    index: 38,
+                    name: "Production Class Code",
+                    dataType: "CE",
+                    optionality: .optional,
+                    repeatability: .single
+                ),
+            ],
+        ],
         compositeOverrides: [
             // CX datatype — HL7au:00044.1 series. Skip 44.1.1 (CX-1
             // must be specified) since the base spec already requires

@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-D: AU pre-adopted PID-35..38 grammar extensions on v2.4
+
+Substage for the AU profile's pre-adoption of v2.5+ PID fields onto v2.4 wires. Closes the documented gap: under base v2.4 grammar (PID capped at 32), the Validator never iterated PID-33..38, so the v2.5.1-style conditional predicates added in v0.4-S4-C didn't apply to v2.4 wires. With S5-D + `.auLocalisation`, the AU profile extends the v2.4 PID grammar so those rules fire.
+
+- **`Profile` model extension**:
+  - `Profile.grammarExtensions: [String: [FieldGrammar]]` — segment ID to appended/replacing field-grammar entries. New track alongside `fieldOverrides`, `compositeOverrides`.
+  - `Profile.init` re-ordered to `(locale, baseVersion, fieldOverrides, grammarExtensions, compositeOverrides)` so the segment-level overrides cluster naturally.
+
+- **AU grammar extension shipped**:
+  - **`"PID"`** → 4 `FieldGrammar` entries mirroring the v2.5.1 PID-35..38 schema:
+    - PID-35 Species Code (CE, C, condition: `"PID-36 populated OR PID-38 populated"`).
+    - PID-36 Breed Code (CE, C, condition: `"PID-37 populated"`).
+    - PID-37 Strain (ST, O).
+    - PID-38 Production Class Code (CE, O).
+
+- **`Validator.mergeGrammarExtension`** (new): merges a profile's grammar extension into a base segment grammar. Existing indices REPLACE; new indices APPEND. The Validator now resolves grammar via the merged result when a profile is loaded.
+
+- **Behaviour gain**: a v2.4 wire that populates PID-36 (Breed Code) without PID-35 (Species Code) under `.auLocalisation` now correctly fires `.conditionalFieldMissing` on PID-35 — matching what would happen on a v2.5.1 wire. Under `.international`, the same v2.4 wire fires nothing (base v2.4 grammar has no PID-35), preserving the documented base-spec behaviour.
+
+- **Tests added (Tests/HL7v2KitTests/LocaleAUProfileTests.swift)**: 4 new tests:
+  - v2.4 + AU: PID-36 populated triggers PID-35 conditional missing.
+  - v2.4 + .international: same wire silently ignores PID-35 (base v2.4 has no PID-35).
+  - v2.4 + AU: PID-35 + PID-36 both populated satisfies the conditional.
+  - v2.5.1 wire: PID-35 conditional fires regardless of locale (base-grammar route is unaffected by profile).
+
+385 → 389 tests across 24 suites green. Fixture corpus pin held (no fixtures populate v2.4 PID-35..38).
+
+**Cumulative v0.5**: AU profile now provides 4 narrowing axes — field-level (S5-B-1), composite required (S5-B-3), composite pair-conditional (S5-B-2), per-component value-set (S5-C), grammar extension (S5-D) — across 5 segments (MSH / OBR / ORC / PID via dispatch + AU grammar reach into PID-35..38 on v2.4).
+
 ### Added — v0.5-S5-C: AU ADRM-2021 per-component value-set rules (MSH-17 / MSH-19)
 
 First substage of the AU profile value-set track. Extends `FieldOverride` with a `componentValueSets` track parallel to `requiredComponents` (S5-B-1 / -3), then ships the AU "country must be AUS" + "language must be en/English/ISO639" rules.

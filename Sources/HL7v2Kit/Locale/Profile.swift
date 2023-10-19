@@ -42,13 +42,37 @@ struct Profile: Sendable, Equatable, Hashable {
     /// the datatype level (HL7au:00044.* series).
     let compositeOverrides: [CompositeOverride]
 
+    /// Per-segment grammar extensions. Each entry's `[FieldGrammar]`
+    /// is appended to the base-spec grammar for that segment when the
+    /// profile is loaded. Used for AU pre-adoption of v2.5+ fields on
+    /// v2.4 wires (e.g. PID-35..38 species/breed/strain/production-
+    /// class), so the Validator sees them under `.auLocalisation`
+    /// even though the base v2.4 PID grammar caps at 32. v0.5-S5-D.
+    let grammarExtensions: [String: [FieldGrammar]]
+
     /// True iff this profile carries any overrides. An empty profile
     /// is a no-op overlay.
     var isEmpty: Bool {
-        fieldOverrides.isEmpty && compositeOverrides.isEmpty
+        fieldOverrides.isEmpty
+            && compositeOverrides.isEmpty
+            && grammarExtensions.isEmpty
     }
 
     static let none: Profile? = nil
+
+    init(
+        locale: HL7Locale,
+        baseVersion: Version,
+        fieldOverrides: [FieldOverride] = [],
+        grammarExtensions: [String: [FieldGrammar]] = [:],
+        compositeOverrides: [CompositeOverride] = []
+    ) {
+        self.locale = locale
+        self.baseVersion = baseVersion
+        self.fieldOverrides = fieldOverrides
+        self.grammarExtensions = grammarExtensions
+        self.compositeOverrides = compositeOverrides
+    }
 }
 
 /// A datatype-level override. Applies to every populated field whose

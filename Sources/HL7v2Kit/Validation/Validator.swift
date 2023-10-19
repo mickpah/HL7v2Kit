@@ -38,7 +38,7 @@ public struct Validator: Sendable {
             let occurrence = (segmentOccurrence[id] ?? 0) + 1
             segmentOccurrence[id] = occurrence
 
-            guard let segGrammar = grammar[id] else {
+            guard let baseGrammar = grammar[id] else {
                 // No grammar entry — treat as a Z-segment / unknown.
                 appendZSegmentIssue(
                     id: id,
@@ -47,6 +47,15 @@ public struct Validator: Sendable {
                 )
                 continue
             }
+
+            // v0.5-S5-D: merge the profile's grammar extensions for
+            // this segment (if any) onto the base grammar. Used for
+            // AU pre-adoption of v2.5+ PID-35..38 on v2.4 wires under
+            // `.auLocalisation`.
+            let segGrammar = mergeGrammarExtension(
+                base: baseGrammar,
+                profileExtension: profile?.grammarExtensions[id]
+            )
 
             checkSegment(
                 segment,
@@ -61,6 +70,36 @@ public struct Validator: Sendable {
     }
 
     // MARK: - Internals
+
+    /// Merge a profile's grammar extension into a base segment
+    /// grammar. The extension's fields APPEND to the base when their
+    /// index doesn't already exist; they REPLACE the base field when
+    /// the index does exist. v0.5-S5-D.
+    ///
+    /// The replacement semantic lets a profile both add new fields
+    /// (typical case — AU PID-35..38 on v2.4) AND override an
+    /// existing field's optionality / condition if needed in the
+    /// future. Today only the additive case is exercised.
+    private func mergeGrammarExtension(
+        base: SegmentGrammar,
+        profileExtension: [FieldGrammar]?
+    ) -> SegmentGrammar {
+        guard let profileExtension, !profileExtension.isEmpty else { return base }
+        let extensionByIndex = Dictionary(
+            uniqueKeysWithValues: profileExtension.map { ($0.index, $0) }
+        )
+        var mergedFields = base.fields.map { extensionByIndex[$0.index] ?? $0 }
+        let baseIndices = Set(base.fields.map(\.index))
+        let added = profileExtension
+            .filter { !baseIndices.contains($0.index) }
+            .sorted(by: { $0.index < $1.index })
+        mergedFields.append(contentsOf: added)
+        return SegmentGrammar(
+            segmentID: base.segmentID,
+            version: base.version,
+            fields: mergedFields
+        )
+    }
 
     private func grammarTable(for version: Version) -> [String: SegmentGrammar] {
         switch version {
