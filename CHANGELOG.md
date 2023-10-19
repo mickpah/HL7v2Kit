@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-B-1: AU ADRM-2021 EI-completeness rules
+
+First substage of the AU profile constraint overlays. The `.auLocalisation` locale was a no-op overlay in v0.4-S5-A; v0.5-S5-B-1 ships the first 5 concrete AU rules:
+
+- **`Resources/profiles/au-adrm-2021/{OBR,ORC}.json`** — overlay JSONs documenting the rules with spec citations:
+  - `OBR-2` (Placer Order Number EI): all 4 components required when populated. HL7au:000003 (r2).
+  - `OBR-3` (Filler Order Number EI): all 4 components required when populated. HL7au:000004.1 (r3).
+  - `ORC-2` (Placer Order Number EI): all 4 components required when populated. HL7au:000005 (r2).
+  - `ORC-3` (Filler Order Number EI): all 4 components required when populated. HL7au:000006 (r3).
+  - `ORC-4` (Placer Group Number EI): all 4 components required when populated. HL7au:000007 (r2).
+- **`Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift`** (new) — hand-curated runtime Profile mirroring the JSON overlays. Codegen support for profile overlays is deferred until more profiles need this pattern.
+- **`Validator`** extended to dispatch `Profile.fieldOverrides`. When `.auLocalisation` is set AND a field has an override AND is populated, the override's `requiredComponents` rule fires `.profileConstraintViolation(localeRule: <HL7au-identifier>)` for each missing component.
+- **`ProfileLoader.load(for: .auLocalisation)`** now returns `Profile.auADRM2021` instead of the empty S5-A scaffold.
+
+Behavioural change for `.auLocalisation` consumers: AU-incomplete OBR/ORC EI fields now fire `.profileConstraintViolation`. `.international` locale is unchanged.
+
+Tests added: 9 new tests in `LocaleAUProfileTests.swift` covering each rule's positive / negative / cross-locale behaviour, plus 1 spec-citation pin. `LocaleTests.swift`'s fixture-corpus pin renamed from "AU locale doesn't introduce new errors" to "AU locale errors are a superset of international errors" and re-implemented with the additive-errors invariant (AU may ADD errors, never REMOVES one). 360 → 368 tests across 23 → 24 suites green.
+
+Spec citation: HL7AUSD-STD-OO-ADRM-2021.1 Appendix 5 Conformance Statements (Normative). Author-local PDFs at `docs/standards/HL7_v24_PDF/`.
+
 ## [0.4.0] — 2026-06-18
 
 v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schemas spec-text-audited; conditional predicates with citations; compound DSL; composite OR-rule enforcement via `RequiredComponentSet`), **localisation API** (`HL7Locale` first-class enum locked for v1.0 stability per ADR-007 Accepted), and **typed segments** (15 typed segments — added EVN, MSA, ERR, PD1, DG1, IN1). 322 → 360 tests across 22 → 23 suites. **API-affecting** — purely additive: new `HL7Locale` enum, new `locale:` parameter on `Parser.init` / `Validator.init`, new `Message.locale` / `ValidationReport.locale` accessors, new `IssueCode.profileConstraintViolation(localeRule:)` case, new typed-segment surface for the 6 additions. No public-API breakage from v0.3.0. The 3-month no-API-break v1.0 stability clock restarts from this tag per Migration.md.

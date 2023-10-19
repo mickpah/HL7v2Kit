@@ -27,11 +27,11 @@ public struct Validator: Sendable {
         var segmentOccurrence: [String: Int] = [:]
 
         let grammar = grammarTable(for: message.version)
-        // S5-A scaffold: locale → Profile lookup. The Profile is consumed
-        // by future S5-B/C/D substages; for S5-A it remains unused, but
-        // the load is exercised so an empty/non-empty distinction is
-        // observable in tests if needed. See ADR-007.
-        _ = ProfileLoader.load(for: locale)
+        // v0.4-S5-A / v0.5-S5-B: load the profile once per `validate(_:)`
+        // call. nil for `.international`; for `.auLocalisation` returns
+        // the AU ADRM-2021 profile with field-override narrowings layered
+        // on top of base v2.4 / v2.5.1 grammar. See ADR-007.
+        let profile = ProfileLoader.load(for: locale)
 
         for segment in message.segments {
             let id = segment.segmentID
@@ -52,6 +52,7 @@ public struct Validator: Sendable {
                 segment,
                 grammar: segGrammar,
                 occurrence: occurrence,
+                profile: profile,
                 issues: &issues
             )
         }
@@ -101,6 +102,7 @@ public struct Validator: Sendable {
         _ segment: Segment,
         grammar: SegmentGrammar,
         occurrence: Int,
+        profile: Profile?,
         issues: inout [ValidationIssue]
     ) {
         for fieldGrammar in grammar.fields {
@@ -157,6 +159,70 @@ public struct Validator: Sendable {
                     location: location,
                     issues: &issues
                 )
+            }
+
+            // v0.5-S5-B-1: layer the loaded profile's field overrides
+            // on top of the base-spec checks. Only fires when locale
+            // is non-international (profile != nil) AND the field has
+            // an override AND the field is actually populated.
+            if let profile, let field, isPopulated {
+                checkProfileFieldOverrides(
+                    profile: profile,
+                    fieldGrammar: fieldGrammar,
+                    field: field,
+                    segmentID: grammar.segmentID,
+                    segmentIndex: occurrence,
+                    issues: &issues
+                )
+            }
+        }
+    }
+
+    /// AU profile override dispatch. For each populated field that has
+    /// a `FieldOverride` in the loaded profile, check the override's
+    /// `requiredComponents` rule: every listed 1-based component index
+    /// must be populated in every populated repetition. Failures emit
+    /// `.profileConstraintViolation(localeRule:)`.
+    ///
+    /// v0.5-S5-B-1 ships the OBR-2/3 + ORC-2/3/4 EI-completeness rules
+    /// from HL7au:000003 / 000004.1 / 000005 / 000006 / 000007. The
+    /// `localeRule` value carries the HL7au identifier so consumers
+    /// can attribute the failure precisely. See
+    /// `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift`.
+    private func checkProfileFieldOverrides(
+        profile: Profile,
+        fieldGrammar: FieldGrammar,
+        field: Field,
+        segmentID: String,
+        segmentIndex: Int,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let override = profile.fieldOverrides.first(where: {
+            $0.segmentID == segmentID && $0.fieldIndex == fieldGrammar.index
+        }) else { return }
+        guard !override.requiredComponents.isEmpty else { return }
+
+        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            for componentIndex in override.requiredComponents {
+                if isComponentPopulated(repetition, componentIndex: componentIndex) {
+                    continue
+                }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: componentIndex
+                )
+                let citation = AUADRM2021Citations.citation(
+                    forSegmentID: segmentID,
+                    fieldIndex: fieldGrammar.index
+                ) ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(componentIndex)"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType) component \(componentIndex) must be populated when \(segmentID)-\(fieldGrammar.index) ('\(fieldGrammar.name)') is populated (\(citation))"
+                ))
             }
         }
     }

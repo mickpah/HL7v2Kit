@@ -80,8 +80,10 @@ struct LocaleTests {
 
     // MARK: - Default behaviour preserved (no AU constraints fire yet)
 
-    @Test("AU locale: no profileConstraintViolation issues fire in S5-A (no overrides loaded)")
-    func auLocaleEmitsNoProfileViolationsInS5A() throws {
+    @Test("AU locale: no profileConstraintViolation issues fire on a PID-only message (no AU rule applies)")
+    func auLocaleEmitsNoProfileViolationsOnPIDOnlyMessage() throws {
+        // The S5-B-1 AU rules fire only on OBR-2/3 and ORC-2/3/4. A
+        // PID-only ADT carries no OBR or ORC, so no AU rules apply.
         let message = try Parser(locale: .auLocalisation).parse(minimalAdt)
         let report = Validator(locale: .auLocalisation).validate(message)
         let violations = report.issues.filter {
@@ -89,11 +91,17 @@ struct LocaleTests {
             return false
         }
         #expect(violations.isEmpty,
-                "S5-A scaffold should fire no profile violations — AU overrides ship in S5-B")
+                "ADT with only PID should fire no profile violations under .auLocalisation")
     }
 
-    @Test("AU locale doesn't introduce new errors on the base-spec-clean fixture corpus")
-    func auLocaleNoRegressionsOnFixtureCorpus() throws {
+    @Test("AU locale errors are a superset of international errors on the fixture corpus")
+    func auLocaleAddsButDoesNotRemoveBaseSpecErrors() throws {
+        // Post-S5-B, AU locale fires .profileConstraintViolation on
+        // OBR/ORC EI-incomplete fixtures (which is most of the corpus,
+        // since base-spec-only fixtures populate only 1-2 EI components).
+        // The invariant we pin here: AU errors == intl errors + AU-
+        // specific profile-violation errors. AU never REMOVES a base-
+        // spec error.
         let fixturesDir = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
@@ -109,8 +117,18 @@ struct LocaleTests {
             let intlReport = Validator(locale: .international).validate(intlMessage)
             let auMessage = try Parser(locale: .auLocalisation).parse(bytes)
             let auReport = Validator(locale: .auLocalisation).validate(auMessage)
-            #expect(intlReport.errors.count == auReport.errors.count,
-                    "\(url.lastPathComponent): AU locale must not introduce/remove base-spec errors in S5-A")
+            let intlNonProfileErrors = intlReport.errors.filter {
+                if case .profileConstraintViolation = $0.code { return false }
+                return true
+            }
+            let auNonProfileErrors = auReport.errors.filter {
+                if case .profileConstraintViolation = $0.code { return false }
+                return true
+            }
+            #expect(intlNonProfileErrors.count == auNonProfileErrors.count,
+                    "\(url.lastPathComponent): AU locale must not introduce or remove base-spec (non-profile) errors")
+            #expect(auReport.errors.count >= intlReport.errors.count,
+                    "\(url.lastPathComponent): AU locale must never remove an error")
         }
     }
 

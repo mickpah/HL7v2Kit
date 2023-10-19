@@ -1,0 +1,22 @@
+{
+  "profileID": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "segmentID": "ORC",
+  "fieldOverrides": [
+    {
+      "index": 2,
+      "requiredComponents": [1, 2, 3, 4],
+      "specCitation": "HL7au:000005 (r2) — If ORC-2 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-2 (Placer Order Number) for a request identifier across different organisations, the Entity identifier (first component) in addition to the Namespace ID (second component) and Universal ID (third component) and Universal ID type (4th component) must be populated."
+    },
+    {
+      "index": 3,
+      "requiredComponents": [1, 2, 3, 4],
+      "specCitation": "HL7au:000006 (r3) — If ORC-3 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-3 (Filler Order Number) for a result identifier across different organisations, the Entity identifier (first component) in addition to the Namespace ID (second component) and Universal ID (third component) and Universal ID type (4th component) must be populated."
+    },
+    {
+      "index": 4,
+      "requiredComponents": [1, 2, 3, 4],
+      "specCitation": "HL7au:000007 (r2) — If ORC-4 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-4 (Placer Group Number) for a request identifier across different organisations, the Entity identifier (first component) in addition to the Namespace ID (second component) and Universal ID (third component) and Universal ID type (4th component) must be populated."
+    }
+  ]
+}
