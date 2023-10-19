@@ -250,4 +250,127 @@ struct LocaleAUProfileTests {
                     "All violations must be on OBR-2 (the incomplete field)")
         }
     }
+
+    // MARK: - S5-B-2: CE / CNE / CWE datatype-level rules (HL7au:00044.4 / .5 / .6)
+
+    // OBR-4 (CE) populated with CE-1 set but CE-3 empty — violates
+    // HL7au:00044.4.1 ("identifier set ⇒ name of coding system set").
+    private let ceIdentifierWithoutCodingSystem = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose\r
+    """
+
+    @Test("CE rule HL7au:00044.4.1 — identifier set without coding system fires violation")
+    func ceIdentifierSetWithoutCodingSystemFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceIdentifierWithoutCodingSystem)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        // OBR-4 (CE) — CE-1 = "GLU" set, CE-3 = empty. Violates 44.4.1.
+        let violation = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBR",
+               issue.location.fieldIndex == 4,
+               issue.location.componentIndex == 3,
+               rule.contains("HL7au:00044.4.1") {
+                return true
+            }
+            return false
+        }
+        #expect(violation != nil,
+                "Expected HL7au:00044.4.1 violation on OBR-4.3; report = \(report.errors.map(\.message))")
+    }
+
+    // CE-4 (alternate identifier) set but CE-6 (alternate coding system)
+    // empty — violates HL7au:00044.4.5.
+    private let ceAltIdentifierWithoutAltCodingSystem = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L^GLU2^Glucose alt\r
+    """
+
+    @Test("CE rule HL7au:00044.4.5 — alt identifier set without alt coding system fires")
+    func ceAltIdentifierSetWithoutAltCodingSystemFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceAltIdentifierWithoutAltCodingSystem)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let violation = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBR",
+               issue.location.fieldIndex == 4,
+               issue.location.componentIndex == 6,
+               rule.contains("HL7au:00044.4.5") {
+                return true
+            }
+            return false
+        }
+        #expect(violation != nil,
+                "Expected HL7au:00044.4.5 violation on OBR-4.6")
+    }
+
+    // CE-1 empty but CE-3 populated — violates HL7au:00044.4.2 (inverse).
+    private let ceCodingSystemWithoutIdentifier = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|^Glucose^LN\r
+    """
+
+    @Test("CE rule HL7au:00044.4.2 — empty identifier with non-empty coding system fires")
+    func ceEmptyIdentifierWithCodingSystemFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceCodingSystemWithoutIdentifier)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let violation = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBR",
+               issue.location.fieldIndex == 4,
+               rule.contains("HL7au:00044.4.2") {
+                return true
+            }
+            return false
+        }
+        #expect(violation != nil,
+                "Expected HL7au:00044.4.2 violation when CE-3 is set with CE-1 empty")
+    }
+
+    // CE fully consistent (CE-1 + CE-3 both set, CE-4 + CE-6 either both
+    // set or both empty) — no CE violations.
+    private let ceConsistent = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L\r
+    """
+
+    @Test("CE consistent (CE-1+CE-3 both set, CE-4+CE-6 both empty) fires no CE violations")
+    func ceConsistentFiresNoViolations() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceConsistent)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let ceViolations = report.errors.filter {
+            if case .profileConstraintViolation(let rule) = $0.code,
+               rule.contains("HL7au:00044.4") { return true }
+            return false
+        }
+        #expect(ceViolations.isEmpty,
+                "Consistent CE should not fire any HL7au:00044.4.x violations; got \(ceViolations.map(\.message))")
+    }
+
+    // CWE pair rule on OBX-3 (which is a CE in v2.5.1; check that
+    // dataType lookup is exact — only CWE fields trigger CWE rules,
+    // not CE fields, and vice versa).
+    private let cweInOBX = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
+    OBX|1|CWE|HCT^Haematocrit|||F^Final^HL70123\r
+    """
+
+    @Test("CWE rule HL7au:00044.6.1 fires on a CWE field with identifier missing coding system")
+    func cweIdentifierWithoutCodingSystemFires() throws {
+        // OBX-3 in v2.5.1 is CE, not CWE. But OBX-11 ('F^Final^HL70123')
+        // has CE-1=F, CE-2=Final, CE-3=HL70123 — fully populated. The
+        // OBR-4 type Identifier (CE) is HCT^Haematocrit — CE-1 set,
+        // CE-3 empty, fires HL7au:00044.4.1.
+        let message = try Parser(locale: .auLocalisation).parse(cweInOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        // Pin: this wire exercises CE-1 set + CE-3 empty in OBX-3,
+        // which is a CE field — so the CE rule fires, not the CWE rule.
+        let ceFires = report.errors.contains { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               rule.contains("HL7au:00044.4.1") { return true }
+            return false
+        }
+        #expect(ceFires,
+                "OBX-3 is a CE field (not CWE) in v2.5.1; the CE rule must fire on its incomplete state")
+    }
 }

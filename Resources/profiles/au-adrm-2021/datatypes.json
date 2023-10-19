@@ -1,0 +1,105 @@
+{
+  "profileID": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "compositeOverrides": [
+    {
+      "dataType": "CE",
+      "pairRules": [
+        {
+          "ifComponent": 1,
+          "condition": "populated",
+          "thenComponent": 3,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.4.1 — When an <identifier (ST)> component is specified, the <name of the coding system> must also be specified."
+        },
+        {
+          "ifComponent": 1,
+          "condition": "empty",
+          "thenComponent": 3,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.4.2 — If no <identifier (ST)> component is specified then no <name of coding system> (primary coding system) must be specified."
+        },
+        {
+          "ifComponent": 4,
+          "condition": "populated",
+          "thenComponent": 6,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.4.5 — When an <alternate identifier (ST)> component is specified, the <name of alternate coding system> must also be specified."
+        },
+        {
+          "ifComponent": 4,
+          "condition": "empty",
+          "thenComponent": 6,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.4.6 — If no <alternate identifier (ST)> component is specified then no <name of alternate coding system> must be specified."
+        }
+      ]
+    },
+    {
+      "dataType": "CNE",
+      "pairRules": [
+        {
+          "ifComponent": 1,
+          "condition": "populated",
+          "thenComponent": 3,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.5.1 — identifier set ⇒ name of coding system set"
+        },
+        {
+          "ifComponent": 1,
+          "condition": "empty",
+          "thenComponent": 3,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.5.2 — identifier empty ⇒ name of coding system empty"
+        },
+        {
+          "ifComponent": 4,
+          "condition": "populated",
+          "thenComponent": 6,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.5.5 — alt identifier set ⇒ alt name of coding system set"
+        },
+        {
+          "ifComponent": 4,
+          "condition": "empty",
+          "thenComponent": 6,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.5.6 — alt identifier empty ⇒ alt name of coding system empty"
+        }
+      ]
+    },
+    {
+      "dataType": "CWE",
+      "pairRules": [
+        {
+          "ifComponent": 1,
+          "condition": "populated",
+          "thenComponent": 3,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.6.1 — When an <identifier (ST)> component is specified, the <name of the coding system> must also be specified."
+        },
+        {
+          "ifComponent": 1,
+          "condition": "empty",
+          "thenComponent": 3,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.6.2 — If no <identifier (ST)> component is specified then no <name of coding system> must be specified."
+        },
+        {
+          "ifComponent": 4,
+          "condition": "populated",
+          "thenComponent": 6,
+          "requirement": "mustBePopulated",
+          "specCitation": "HL7au:00044.6.4 — When an <alternate identifier (ST)> component is specified, the <name of alternate coding system> must also be specified."
+        },
+        {
+          "ifComponent": 4,
+          "condition": "empty",
+          "thenComponent": 6,
+          "requirement": "mustBeEmpty",
+          "specCitation": "HL7au:00044.6.5 — If no <alternate identifier (ST)> component is specified then no <name of alternate coding system> must be specified."
+        }
+      ]
+    }
+  ]
+}

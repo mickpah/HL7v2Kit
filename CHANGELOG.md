@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-B-2: AU ADRM-2021 datatype-level pair rules (CE / CNE / CWE)
+
+Second substage of the AU profile constraint overlays. Extends the Profile model from per-field overrides (S5-B-1) to also carry per-HL7-datatype overrides, then ships 12 AU pair-conditional rules.
+
+- **`Profile` model extension**:
+  - New `compositeOverrides: [CompositeOverride]` track alongside the existing `fieldOverrides: [FieldOverride]`.
+  - New `CompositeOverride` (dataType code + `pairRules: [PairConditional]`).
+  - New `PairConditional` (ifComponent / condition / thenComponent / requirement / specCitation).
+  - New `PairCondition` enum (`.populated` / `.empty`).
+  - New `PairRequirement` enum (`.mustBePopulated` / `.mustBeEmpty`).
+  - All types internal — public surface unchanged.
+
+- **AU rules added** (12 total, from Appendix 5 of HL7AUSD-STD-OO-ADRM-2021.1):
+  - **CE** (`HL7au:00044.4.{1,2,5,6}`): identifier ⇔ name of coding system, alt identifier ⇔ alt name of coding system.
+  - **CNE** (`HL7au:00044.5.{1,2,5,6}`): same shape on CNE composites.
+  - **CWE** (`HL7au:00044.6.{1,2,4,5}`): same shape; spec numbers alt rules as `.4` / `.5` rather than `.5` / `.6`.
+  - Skipped (deferred): `*.3` (CE-2 text must-be-valued — carries a "may be blank" carve-out that violates "no predicate ships if known-incorrect"), `*.4` LOINC-first / `*.7` concept-match / `*.8` distinct-alt-coding-system (value-set / semantic rules deferred to S5-C).
+
+- **`Validator.checkProfileCompositeOverrides`** (new): for each populated field, looks up the override by `fieldGrammar.dataType`. For each pair rule, checks the condition on `ifComponent`; if triggered, requires the `thenComponent` to satisfy the requirement; fires `.profileConstraintViolation(localeRule: <HL7au-id>)` on failure. Dispatches per repetition.
+
+- **`Resources/profiles/au-adrm-2021/datatypes.json`** — new overlay file documenting the 12 pair rules with verbatim spec citations. Source-of-truth for the Swift Profile content.
+
+- **Tests added (Tests/HL7v2KitTests/LocaleAUProfileTests.swift)**: 5 new tests covering CE identifier-without-coding-system, alt-identifier-without-alt-coding-system, empty-identifier-with-coding-system (inverse), fully-consistent CE (no false positives), and a dataType-dispatch sanity check that CE fields (not CWE) fire CE rules. 370 → 375 tests across 24 suites green.
+
+**Fixture corpus pin held**: all 51+3 fixtures still pass under both `.international` and `.auLocalisation` — they happen to be CE-consistent (every CE-1 is paired with a CE-3; every empty CE-1 has empty CE-3). The additive-errors invariant in `LocaleTests.auLocaleAddsButDoesNotRemoveBaseSpecErrors` continues to pass.
+
 ### Added — v0.5-S5-B-1: AU ADRM-2021 EI-completeness rules
 
 First substage of the AU profile constraint overlays. The `.auLocalisation` locale was a no-op overlay in v0.4-S5-A; v0.5-S5-B-1 ships the first 5 concrete AU rules:

@@ -65,6 +65,72 @@ extension Profile {
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
             ),
+        ],
+        compositeOverrides: [
+            // CE datatype — HL7au:00044.4 series. Skip 44.4.3 (CE-2
+            // "text must be valued") since it carries an explicit
+            // "may be blank in some locations" carve-out; also skip
+            // 44.4.4 / 44.4.7 / 44.4.8 (value-set / semantic rules
+            // not expressible as pair-conditionals — defer to S5-C).
+            CompositeOverride(
+                dataType: "CE",
+                pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4")
+            ),
+            // CNE datatype — HL7au:00044.5 series. Same pair shape.
+            CompositeOverride(
+                dataType: "CNE",
+                pairRules: ceCwePairRules(citePrefix: "HL7au:00044.5")
+            ),
+            // CWE datatype — HL7au:00044.6 series. Same pair shape but
+            // the spec numbers components 4 and 5 differently from CE.
+            CompositeOverride(
+                dataType: "CWE",
+                pairRules: ceCwePairRules(citePrefix: "HL7au:00044.6")
+            ),
         ]
     )
+
+    /// Shared pair-rule set for CE / CNE / CWE. All three composites
+    /// follow the same shape: identifier ⇔ coding-system, alternate-
+    /// identifier ⇔ alternate-coding-system. Only the HL7au identifier
+    /// prefix differs between them.
+    ///
+    /// The four rules implement:
+    /// - `.1` "If identifier set, coding system must be set"
+    /// - `.2` "If identifier not set, coding system must not be set"
+    /// - `.4` or `.5` "If alternate identifier set, alternate coding system must be set"
+    /// - `.5` or `.6` "If alternate identifier not set, alternate coding system must not be set"
+    ///
+    /// (CE / CNE use `.5` / `.6` for alternate rules; CWE uses `.4` /
+    /// `.5`. Spec citations follow this convention.)
+    private static func ceCwePairRules(citePrefix: String) -> [PairConditional] {
+        let altCite: (Int) -> String
+        if citePrefix == "HL7au:00044.6" {
+            altCite = { suffix in "\(citePrefix).\(suffix - 1)" }
+        } else {
+            altCite = { suffix in "\(citePrefix).\(suffix)" }
+        }
+        return [
+            PairConditional(
+                ifComponent: 1, condition: .populated,
+                thenComponent: 3, requirement: .mustBePopulated,
+                specCitation: "\(citePrefix).1 — identifier set ⇒ coding system set"
+            ),
+            PairConditional(
+                ifComponent: 1, condition: .empty,
+                thenComponent: 3, requirement: .mustBeEmpty,
+                specCitation: "\(citePrefix).2 — identifier empty ⇒ coding system empty"
+            ),
+            PairConditional(
+                ifComponent: 4, condition: .populated,
+                thenComponent: 6, requirement: .mustBePopulated,
+                specCitation: "\(altCite(5)) — alt identifier set ⇒ alt coding system set"
+            ),
+            PairConditional(
+                ifComponent: 4, condition: .empty,
+                thenComponent: 6, requirement: .mustBeEmpty,
+                specCitation: "\(altCite(6)) — alt identifier empty ⇒ alt coding system empty"
+            ),
+        ]
+    }
 }

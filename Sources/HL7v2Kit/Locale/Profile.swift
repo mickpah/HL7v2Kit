@@ -14,10 +14,15 @@ import Foundation
 /// Validator to layer profile-specific narrowings on top of base
 /// HL7 v2 grammar.
 ///
-/// Profile is keyed by `locale`. The current implementation carries
-/// no overrides — locale plumbing lands in S5-A; the AU constraints
-/// follow in S5-B/C/D as spec citations are extracted from the AU
-/// ADRM-2021 PDF.
+/// Profile carries two narrowing tracks:
+///
+/// 1. **`fieldOverrides`** — per-(segmentID, fieldIndex) rules. Used
+///    for field-specific HL7au conformance points like HL7au:000003
+///    (OBR-2 EI completeness). v0.5-S5-B-1.
+/// 2. **`compositeOverrides`** — per-HL7-datatype rules. Used for
+///    datatype-level conformance points like HL7au:00044.4.1 (every
+///    populated CE field must have CE-3 set when CE-1 is set). v0.5-
+///    S5-B-2.
 struct Profile: Sendable, Equatable, Hashable {
     /// The locale this profile corresponds to.
     let locale: HL7Locale
@@ -29,17 +34,72 @@ struct Profile: Sendable, Equatable, Hashable {
     /// Per-segment field-attribute overrides. Each override identifies
     /// (segmentID, fieldIndex) and carries the profile's narrowing of
     /// optionality / value-set / required-components for that field.
-    ///
-    /// Empty in S5-A.
     let fieldOverrides: [FieldOverride]
+
+    /// Per-HL7-datatype overrides. Apply to every populated field of
+    /// the named dataType across the entire message. Used for CE / CWE
+    /// / CNE / EI / HD conformance points that the AU spec states at
+    /// the datatype level (HL7au:00044.* series).
+    let compositeOverrides: [CompositeOverride]
 
     /// True iff this profile carries any overrides. An empty profile
     /// is a no-op overlay.
     var isEmpty: Bool {
-        fieldOverrides.isEmpty
+        fieldOverrides.isEmpty && compositeOverrides.isEmpty
     }
 
     static let none: Profile? = nil
+}
+
+/// A datatype-level override. Applies to every populated field whose
+/// HL7 dataType code matches `dataType`. v0.5-S5-B-2.
+struct CompositeOverride: Sendable, Equatable, Hashable {
+    /// The HL7 dataType code this override applies to (e.g. `"CE"`).
+    let dataType: String
+
+    /// Pair-conditional rules: "if component A satisfies condition X,
+    /// then component B must satisfy requirement Y". Used to express
+    /// HL7au:00044.4.1, 00044.4.2, 00044.4.5, 00044.4.6 and the
+    /// equivalent CWE / CNE series.
+    let pairRules: [PairConditional]
+}
+
+/// A single pair-conditional rule on a composite. "If component A
+/// satisfies `condition`, then component B must satisfy `requirement`."
+struct PairConditional: Sendable, Equatable, Hashable {
+    /// The 1-based component index whose population state triggers the
+    /// rule (e.g. CE-1).
+    let ifComponent: Int
+
+    /// The population state that triggers the rule.
+    let condition: PairCondition
+
+    /// The 1-based component index whose population state is required
+    /// when the trigger fires (e.g. CE-3).
+    let thenComponent: Int
+
+    /// What the `thenComponent`'s population state must be.
+    let requirement: PairRequirement
+
+    /// Spec citation for this rule. Surfaced in
+    /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
+    let specCitation: String?
+}
+
+/// Trigger states for `PairConditional`.
+enum PairCondition: Sendable, Equatable, Hashable {
+    /// Fire the rule when the `ifComponent` is populated.
+    case populated
+    /// Fire the rule when the `ifComponent` is empty.
+    case empty
+}
+
+/// Required outcomes for `PairConditional`.
+enum PairRequirement: Sendable, Equatable, Hashable {
+    /// When the trigger fires, `thenComponent` must be populated.
+    case mustBePopulated
+    /// When the trigger fires, `thenComponent` must be empty.
+    case mustBeEmpty
 }
 
 /// A single field-level override published by a localisation profile.

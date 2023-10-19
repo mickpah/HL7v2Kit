@@ -174,6 +174,63 @@ public struct Validator: Sendable {
                     segmentIndex: occurrence,
                     issues: &issues
                 )
+                // v0.5-S5-B-2: datatype-level composite overrides.
+                checkProfileCompositeOverrides(
+                    profile: profile,
+                    fieldGrammar: fieldGrammar,
+                    field: field,
+                    segmentID: grammar.segmentID,
+                    segmentIndex: occurrence,
+                    issues: &issues
+                )
+            }
+        }
+    }
+
+    /// Composite (datatype-keyed) override dispatch — v0.5-S5-B-2. For
+    /// every populated field whose HL7 dataType matches a
+    /// `CompositeOverride` in the profile, evaluate the override's
+    /// pair-conditional rules against each populated repetition. Used
+    /// for the HL7au:00044.* datatype-level conformance points (CE /
+    /// CNE / CWE pair rules).
+    private func checkProfileCompositeOverrides(
+        profile: Profile,
+        fieldGrammar: FieldGrammar,
+        field: Field,
+        segmentID: String,
+        segmentIndex: Int,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let composite = profile.compositeOverrides.first(where: {
+            $0.dataType == fieldGrammar.dataType
+        }) else { return }
+
+        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            for rule in composite.pairRules {
+                let ifPopulated = isComponentPopulated(repetition, componentIndex: rule.ifComponent)
+                let triggered = (rule.condition == .populated) == ifPopulated
+                guard triggered else { continue }
+
+                let thenPopulated = isComponentPopulated(repetition, componentIndex: rule.thenComponent)
+                let satisfied = (rule.requirement == .mustBePopulated) == thenPopulated
+                guard !satisfied else { continue }
+
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: rule.thenComponent
+                )
+                let citation = rule.specCitation
+                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.thenComponent)"
+                let condDesc = rule.condition == .populated ? "is populated" : "is empty"
+                let reqDesc = rule.requirement == .mustBePopulated ? "must be populated" : "must be empty"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.thenComponent) \(reqDesc) when \(fieldGrammar.dataType)-\(rule.ifComponent) \(condDesc) (\(citation))"
+                ))
             }
         }
     }
