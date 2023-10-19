@@ -4,7 +4,7 @@
 # but only if it isn't already present. Safe to run more than once.
 #
 # Run from the repo root:
-#   bash add-kernel-headers.sh
+#   bash scripts/add-kernel-headers.sh
 #
 # See docs/design/ADR-006-portable-core-boundary.md for what "kernel" means.
 
@@ -28,6 +28,7 @@ KERNEL_FILES=(
   "Sources/HL7v2Kit/Encoding/EncodingCharacters.swift"
   "Sources/HL7v2Kit/Encoding/EscapeSequences.swift"
   "Sources/HL7v2Kit/Version.swift"
+  "Sources/HL7v2Kit/Locale/HL7Locale.swift"
 )
 
 added=0

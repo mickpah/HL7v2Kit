@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.4-T3: IN1 (Insurance) typed segment — closes segments track
+
+- **`Resources/schemas/v2.5.1/IN1.json`** — 25 fields (billing-essentials subset of the full 53-field v2.5.1 segment). Covers set ID (R), insurance plan ID (CE, R), insurance company ID (CX, R, repeats), company name (XON) + address (XAD) + contact (XPN) + phone (XTN), group number + name + employer ID/name, plan effective + expiration dates, authorization info (AUI), plan type, insured name (XPN) + relationship + DOB + address, assignment + coordination of benefits, COB priority, notice-of-admission flag + date, report-of-eligibility flag.
+- **Codegen output**: `Sources/HL7v2Kit/Segment/Generated/IN1.swift` + `SegmentRegistry+Generated.swift` extension + `SegmentGrammar+v2_5_1.swift` row. 15 typed segments total (was 14).
+- **T3 capstone test**: existing fixture `adt_a01_with_insurance.hl7` (which previously exercised IN1 as UnknownSegment) now auto-hydrates IN1 typed and round-trips byte-perfectly. **No fixture changes needed** — the wire was already spec-conformant.
+- 7 new tests in `TypedSegmentTests.swift`. 353 → 360 tests across 23 suites green.
+
+### Added — v0.4-T2: PD1 + DG1 typed segments
+
+- **`Resources/schemas/v2.5.1/PD1.json`** — 21 fields (full v2.5.1 surface) covering living dependency/arrangement, primary facility (XON), primary care provider (XCN, B-deprecated), student/handicap/living-will/organ-donor indicators, separate bill, duplicate patient (CX), publicity code (CE), protection indicator + effective date, place of worship (XON), advance directive code (CE), immunization registry status, publicity-code effective date, military branch/rank/status.
+- **`Resources/schemas/v2.5.1/DG1.json`** — 21 fields (full v2.5.1 surface) covering set ID (R), diagnosis coding method (B-deprecated), diagnosis code (CE), date/time, diagnosis type (R), legacy MDC/DRG/outlier fields (B-deprecated), priority, diagnosing clinician (XCN repeats), classification, confidential indicator, attestation date, diagnosis identifier (C) + diagnosis action code (C). The two C-fields carry no `condition` predicate — both are "required for P12 update messages" which is a message-context rule the same-segment DSL cannot express; deferred per the no-predicate-without-citation rule.
+- 9 new tests in `TypedSegmentTests.swift` covering scalar + composite accessors + round-trip equality. 344 → 353 tests green.
+
+### Added — v0.4-T1: EVN + MSA + ERR typed segments
+
+- **`Resources/schemas/v2.5.1/EVN.json`** — 7 fields (event type code B, recorded date/time R, planned event date, event reason code, operator ID XCN repeats, event occurred, event facility HD).
+- **`Resources/schemas/v2.5.1/MSA.json`** — 6 fields (ack code R, message control ID R, text message B, expected sequence number, delayed acknowledgment type X (withdrawn v2.5), error condition B).
+- **`Resources/schemas/v2.5.1/ERR.json`** — 12 fields covering the v2.5+ redesign (ELD ERR-1 B for backward compat, ERL ERR-2 location, CWE ERR-3 R hl7 error code, ID ERR-4 R severity, + 8 informational fields).
+- **Codegen**: 12 typed segments total after T1 (was 9). All four `SegmentGrammar+v2_X.swift` tables refreshed.
+- **Fixture correction**: `Tests/Fixtures/ack_application_error.hl7` updated to v2.5.1-conformant ERR layout. The pre-T1 fixture used the v2.4-style single ERR-1 ELD (`ERR|PID^1^3^1|||101^...`) but was labeled MSH-12 = 2.5.1. While ERR was UnknownSegment the validator couldn't see the mismatch; once ERR became typed under v2.5.1 grammar, missing ERR-3 (R) + ERR-4 (R) surfaced. Updated to `ERR||PID^1^3^1|101^Invalid patient ID format^HL70357|E`. FIXTURES.md row annotated.
+- 12 new tests in `TypedSegmentTests.swift` covering EVN/MSA/ERR scalar + composite accessors, round-trip equality, and ACK fixture auto-pickup regression pins. 322 → 344 tests green.
+
+### Added — v0.4-S5-A: `HL7Locale` public API + Profile/ProfileLoader scaffold
+
+- **`HL7Locale` public enum** (Sources/HL7v2Kit/Locale/HL7Locale.swift): `.international` (default, base spec only) / `.auLocalisation` (HL7AUSD-STD-OO-ADRM-2021 over base v2.4). Sendable, CaseIterable, raw-value-backed. **Locale-as-mode is a first-class public API**, not a buried profile toggle — per ADR-007 Accepted.
+- **`Parser.init(options:locale:)`** overload + `Parser.locale` accessor.
+- **`Validator.init(options:locale:)`** overload + `Validator.locale` accessor.
+- **`Message.locale`** property + `Message.init(...locale:)` parameter.
+- **`ValidationReport.locale`** property + `ValidationReport.init(...locale:)`.
+- **`IssueCode.profileConstraintViolation(localeRule:)`** additive enum case carrying the AU-rule identifier for attribution (pre-v1.0 allowed per Migration.md).
+- Internal scaffold (consumers never see these): `Profile` value type with `FieldOverride` + `ProfileUsage`; `ProfileLoader` returns `nil` for `.international` and an empty Profile for `.auLocalisation`. JSON-backed loader + AU narrowings ship in S5-B/C/D.
+- **Behavioural change: NONE.** `.auLocalisation` loads an empty overlay; no `profileConstraintViolation` issues fire in S5-A. Fixture corpus has identical issue counts under both locales (pinned by `auLocaleNoRegressionsOnFixtureCorpus`).
+- **Downstream-consumer rationale (FHIR AU Core mapper)**: the mapping layer can now read `message.locale` / `report.locale` and adjust its behaviour. AU-locale guarantees (identifier system namespaces, code-system membership, pre-adopted-field hydration) ship in S5-B/C/D as spec citations are extracted from the AU ADRM PDF.
+- 10 new tests in `LocaleTests.swift`. 318 → 332 tests across 22 → 23 suites green.
+- **ADR-007** (`docs/design/ADR-007-au-profile-architecture.md`): Accepted 2026-06-18. Locale-aware architecture; base schemas stay spec-faithful; AU constraints live in separate `Resources/profiles/au-adrm-2021/` overlay (ships in S5-B).
+
+### Added — v0.4-S2-reopen: v2.4 OBX-2 carry-forward (S2 deferred item closed for v2.4)
+
+- **Trigger**: v2.4 Final Standard PDFs added at `docs/standards/HL7_v24_PDF/` (author-local, not committed pending IP review), including the AU ADRM-2021 localisation profile.
+- **Schema correction**: `Resources/schemas/v2.4/OBX.json` — OBX-2 gains `condition: "OBX-11 != X"` per v2.4 §7.4.2.2. Wording is verbatim-identical to v2.5.1 §7.4.2.2; carry-forward is spec-citable.
+- **Audit doc updated**: `docs/design/v2_3-v2_4-spec-audit.md` OBX-2 row now marks v2.4 RESOLVED with the v2.4 spec citation. v2.3 / v2.3.1 still deferred (no PDFs).
+
+### Changed — Housekeeping: `add-kernel-headers.sh` moved to `scripts/`
+
+- The one-shot kernel-header utility moved from repo-root to `scripts/`. Its `KERNEL_FILES` list extended to include the new `Sources/HL7v2Kit/Locale/HL7Locale.swift` so future re-runs cover the v0.4-S5-A additions.
+
 ### Added — v0.4-S2: structural delta audit of v2.3 / v2.3.1 / v2.4 schemas
 
 - **`docs/design/v2_3-v2_4-spec-audit.md`** — new audit doc covering all 9 segments × 3 earlier HL7 v2 versions as structural deltas against the spec-audited v2.5.1 baseline.
