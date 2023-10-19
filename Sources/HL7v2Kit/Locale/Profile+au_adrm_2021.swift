@@ -67,6 +67,31 @@ extension Profile {
             ),
         ],
         compositeOverrides: [
+            // CX datatype — HL7au:00044.1 series. Skip 44.1.1 (CX-1
+            // must be specified) since the base spec already requires
+            // CX-1 (CX.requiredComponents = [(1, "ID Number")]);
+            // adding it again would be redundant. The genuinely new
+            // AU narrowings are 44.1.2 (CX-4 assigning authority
+            // required when CX is populated) and 44.1.3 (CX-5
+            // identifier type code required when CX is populated).
+            // The "must conform to sub points of HL7au:00044.2"
+            // clause on 44.1.2 references NASH/PKI rules that are
+            // runtime-dependent and out of scope for parser/validator.
+            // v0.5-S5-B-3.
+            CompositeOverride(
+                dataType: "CX",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 4,
+                        specCitation: "HL7au:00044.1.2 (r2) — CX-4 assigning authority must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 5,
+                        specCitation: "HL7au:00044.1.3 — CX-5 identifier type code must be valued"
+                    ),
+                ],
+                pairRules: []
+            ),
             // CE datatype — HL7au:00044.4 series. Skip 44.4.3 (CE-2
             // "text must be valued") since it carries an explicit
             // "may be blank in some locations" carve-out; also skip
@@ -74,17 +99,20 @@ extension Profile {
             // not expressible as pair-conditionals — defer to S5-C).
             CompositeOverride(
                 dataType: "CE",
+                requiredComponents: [],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4")
             ),
             // CNE datatype — HL7au:00044.5 series. Same pair shape.
             CompositeOverride(
                 dataType: "CNE",
+                requiredComponents: [],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.5")
             ),
             // CWE datatype — HL7au:00044.6 series. Same pair shape but
             // the spec numbers components 4 and 5 differently from CE.
             CompositeOverride(
                 dataType: "CWE",
+                requiredComponents: [],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.6")
             ),
         ]

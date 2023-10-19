@@ -52,16 +52,37 @@ struct Profile: Sendable, Equatable, Hashable {
 }
 
 /// A datatype-level override. Applies to every populated field whose
-/// HL7 dataType code matches `dataType`. v0.5-S5-B-2.
+/// HL7 dataType code matches `dataType`. v0.5-S5-B-2 / v0.5-S5-B-3.
 struct CompositeOverride: Sendable, Equatable, Hashable {
     /// The HL7 dataType code this override applies to (e.g. `"CE"`).
     let dataType: String
 
+    /// Profile-required components that NARROW the base spec. When a
+    /// field of this dataType is populated, each listed component must
+    /// be populated; otherwise `.profileConstraintViolation` fires.
+    ///
+    /// Used to express HL7au:00044.1.2 (CX-4 must be valued) and
+    /// HL7au:00044.1.3 (CX-5 must be valued). v0.5-S5-B-3.
+    let requiredComponents: [ComponentRequirement]
+
     /// Pair-conditional rules: "if component A satisfies condition X,
     /// then component B must satisfy requirement Y". Used to express
     /// HL7au:00044.4.1, 00044.4.2, 00044.4.5, 00044.4.6 and the
-    /// equivalent CWE / CNE series.
+    /// equivalent CWE / CNE series. v0.5-S5-B-2.
     let pairRules: [PairConditional]
+}
+
+/// A single component-required rule on a composite. "When the field
+/// is populated, `component` must be populated." Each rule carries
+/// its own spec citation so the Validator can attribute the failure
+/// per-rule. v0.5-S5-B-3.
+struct ComponentRequirement: Sendable, Equatable, Hashable {
+    /// The 1-based component index that must be populated.
+    let component: Int
+
+    /// Spec citation for this rule. Surfaced in
+    /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
+    let specCitation: String?
 }
 
 /// A single pair-conditional rule on a composite. "If component A

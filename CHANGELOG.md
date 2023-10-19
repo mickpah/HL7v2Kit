@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.5-S5-B-3: AU ADRM-2021 CX required-component rules (HL7au:00044.1.2 / .1.3)
+
+Third substage of the AU profile constraint overlays. Extends `CompositeOverride` with a `requiredComponents` track parallel to the `pairRules` from S5-B-2, then ships the AU CX completeness rules.
+
+- **`Profile` model extension**:
+  - `CompositeOverride.requiredComponents: [ComponentRequirement]` — new sub-rule track. Each requirement says "when a field of this dataType is populated, this component must be populated".
+  - `ComponentRequirement` — internal struct (1-based component index + `specCitation`). Citation-per-rule keeps attribution clean.
+  - Existing `pairRules` track unchanged; both tracks dispatch together inside `checkProfileCompositeOverrides`.
+
+- **AU rules added**:
+  - **CX `HL7au:00044.1.2 (r2)`** — CX-4 Assigning Authority must be valued when CX is populated.
+  - **CX `HL7au:00044.1.3`** — CX-5 Identifier Type Code must be valued when CX is populated.
+  - Skipped (with reasons documented in source comments):
+    - `HL7au:00044.1.1` (CX-1 must be specified) — redundant with base spec, which already requires CX-1 via `CX.requiredComponents`.
+    - `HL7au:00044.1.2` NASH sub-points and `HL7au:00044.1.3` value-set membership — runtime/PKI-dependent or value-set-dispatch work, deferred.
+
+- **`Validator.checkProfileCompositeOverrides`** extended to dispatch the new `requiredComponents` track before the existing `pairRules` track. Same `.profileConstraintViolation(localeRule:)` plumbing; citation per rule.
+
+- **`Resources/profiles/au-adrm-2021/datatypes.json`** — CX entry added with both AU rules + an `_skipped` documentation block listing the rules deliberately omitted with their reasons. Source-of-truth for the Swift Profile content.
+
+- **Tests added (Tests/HL7v2KitTests/LocaleAUProfileTests.swift)**: 5 new tests — PID-3 with CX-4 missing fires `HL7au:00044.1.2`, PID-3 with CX-5 missing fires `HL7au:00044.1.3`, AU-conformant CX fires nothing, CX rules apply to every populated CX field (PID-2 deprecated still triggers under `.auLocalisation`), `.international` locale never fires AU rules. 375 → 380 tests across 24 suites green.
+
+The fixture corpus continues to pass under both locales — existing fixtures coincidentally populate CX-4 (assigning authority) and CX-5 (identifier type code) when PID-3 is populated, so they're AU-conformant on these two new rules.
+
+**Cumulative**: v0.5 has now landed 19 AU rules under `.auLocalisation` (5 field-level EI from S5-B-1, 12 datatype-level pair rules across CE/CNE/CWE from S5-B-2, 2 CX completeness rules from S5-B-3).
+
 ### Added — v0.5-S5-B-2: AU ADRM-2021 datatype-level pair rules (CE / CNE / CWE)
 
 Second substage of the AU profile constraint overlays. Extends the Profile model from per-field overrides (S5-B-1) to also carry per-HL7-datatype overrides, then ships 12 AU pair-conditional rules.

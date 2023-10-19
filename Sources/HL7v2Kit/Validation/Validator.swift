@@ -187,12 +187,19 @@ public struct Validator: Sendable {
         }
     }
 
-    /// Composite (datatype-keyed) override dispatch — v0.5-S5-B-2. For
-    /// every populated field whose HL7 dataType matches a
-    /// `CompositeOverride` in the profile, evaluate the override's
-    /// pair-conditional rules against each populated repetition. Used
-    /// for the HL7au:00044.* datatype-level conformance points (CE /
-    /// CNE / CWE pair rules).
+    /// Composite (datatype-keyed) override dispatch — v0.5-S5-B-2 +
+    /// v0.5-S5-B-3. For every populated field whose HL7 dataType
+    /// matches a `CompositeOverride` in the profile, evaluate two
+    /// sub-rule tracks against each populated repetition:
+    ///
+    /// 1. **`requiredComponents`** (v0.5-S5-B-3) — each listed
+    ///    component must be populated when the field is populated.
+    ///    Used for HL7au:00044.1.2 (CX-4) / 00044.1.3 (CX-5).
+    /// 2. **`pairRules`** (v0.5-S5-B-2) — pair-conditional rules.
+    ///    Used for HL7au:00044.4/5/6 (CE/CNE/CWE).
+    ///
+    /// Both tracks emit `.profileConstraintViolation(localeRule:)`
+    /// with the override's spec citation.
     private func checkProfileCompositeOverrides(
         profile: Profile,
         fieldGrammar: FieldGrammar,
@@ -206,6 +213,27 @@ public struct Validator: Sendable {
         }) else { return }
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            // Track 1: required-components (v0.5-S5-B-3).
+            for requirement in composite.requiredComponents {
+                if isComponentPopulated(repetition, componentIndex: requirement.component) {
+                    continue
+                }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: requirement.component
+                )
+                let citation = requirement.specCitation
+                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(requirement.component)"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(requirement.component) must be populated when \(fieldGrammar.dataType) field is populated (\(citation))"
+                ))
+            }
+            // Track 2: pair-conditional rules (v0.5-S5-B-2).
             for rule in composite.pairRules {
                 let ifPopulated = isComponentPopulated(repetition, componentIndex: rule.ifComponent)
                 let triggered = (rule.condition == .populated) == ifPopulated

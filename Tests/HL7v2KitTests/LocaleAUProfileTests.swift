@@ -373,4 +373,103 @@ struct LocaleAUProfileTests {
         #expect(ceFires,
                 "OBX-3 is a CE field (not CWE) in v2.5.1; the CE rule must fire on its incomplete state")
     }
+
+    // MARK: - S5-B-3: CX required-component rules (HL7au:00044.1.2 / .1.3)
+
+    // PID-3 with only CX-1 populated. AU rules require CX-4 (Assigning
+    // Authority) and CX-5 (Identifier Type Code) to also be valued.
+    private let pidCxMinimal = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||999999\r
+    """
+
+    @Test("CX rule HL7au:00044.1.2 — PID-3 with CX-4 empty fires")
+    func cxAssigningAuthorityMissingFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(pidCxMinimal)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let violation = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "PID",
+               issue.location.fieldIndex == 3,
+               issue.location.componentIndex == 4,
+               rule.contains("HL7au:00044.1.2") {
+                return true
+            }
+            return false
+        }
+        #expect(violation != nil,
+                "Expected HL7au:00044.1.2 violation on PID-3.4")
+    }
+
+    @Test("CX rule HL7au:00044.1.3 — PID-3 with CX-5 empty fires")
+    func cxIdentifierTypeCodeMissingFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(pidCxMinimal)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let violation = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "PID",
+               issue.location.fieldIndex == 3,
+               issue.location.componentIndex == 5,
+               rule.contains("HL7au:00044.1.3") {
+                return true
+            }
+            return false
+        }
+        #expect(violation != nil,
+                "Expected HL7au:00044.1.3 violation on PID-3.5")
+    }
+
+    // PID-3 fully AU-conformant: CX-1 + CX-4 + CX-5 all valued.
+    private let pidCxFull = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1||999999^^^HOSP^MR\r
+    """
+
+    @Test("CX consistent (CX-1+CX-4+CX-5 populated) fires no CX-required violations")
+    func cxConsistentFiresNoViolations() throws {
+        let message = try Parser(locale: .auLocalisation).parse(pidCxFull)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let cxViolations = report.errors.filter {
+            if case .profileConstraintViolation(let rule) = $0.code,
+               rule.contains("HL7au:00044.1") { return true }
+            return false
+        }
+        #expect(cxViolations.isEmpty,
+                "AU-conformant CX must fire no HL7au:00044.1.x violations; got \(cxViolations.map(\.message))")
+    }
+
+    // CX rules apply to EVERY populated CX field, not just PID-3. PID-2
+    // is also CX (Patient ID deprecated). When populated, AU rules fire.
+    private let pidCxOnDeprecatedField = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PID|1|DEPRECATED_ID|999999^^^HOSP^MR\r
+    """
+
+    @Test("CX rules fire on every populated CX field (dataType dispatch)")
+    func cxRuleFiresOnEveryCxFieldRegardlessOfFieldIndex() throws {
+        // PID-2 is a CX (deprecated). Wire populates CX-1 only,
+        // mirroring an "incomplete legacy identifier" pattern. AU
+        // rules narrow CX-4 + CX-5 across the datatype, so PID-2
+        // should also fire the missing-component violations.
+        let message = try Parser(locale: .auLocalisation).parse(pidCxOnDeprecatedField)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let pid2Violations = report.errors.filter {
+            if case .profileConstraintViolation = $0.code,
+               $0.location.segmentID == "PID",
+               $0.location.fieldIndex == 2 {
+                return true
+            }
+            return false
+        }
+        #expect(pid2Violations.count == 2,
+                "PID-2 (CX, deprecated) should fire CX-4 + CX-5 missing under AU; got \(pid2Violations.count)")
+    }
+
+    @Test("CX rules don't fire under .international locale")
+    func cxRulesAreAULocaleOnly() throws {
+        let message = try Parser(locale: .international).parse(pidCxMinimal)
+        let report = Validator(locale: .international).validate(message)
+        #expect(profileViolations(in: report).isEmpty,
+                ".international locale must never fire profile violations")
+    }
 }
