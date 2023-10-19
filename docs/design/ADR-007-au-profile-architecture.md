@@ -1,28 +1,112 @@
-# ADR-007 — AU profile architecture (layered, not baked-in)
+# ADR-007 — Locale-aware architecture: AU vs international as a first-class API mode
 
-**Status:** Proposed, 2026-06-18.
-**Context:** The AU localisation profile `HL7AUSD-STD-OO-ADRM-2021.1` (Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4) is now available at `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 - Australian Diagnostics and Referral Messaging - Localisation of HL7 Version 2.4.pdf`. The project memory codifies v2.4 as the recommended AU platform.
+**Status:** Proposed, 2026-06-18. Revised the same day after project-owner guidance that HL7v2Kit is a building block for a HL7 v2 → FHIR AU Core mapper, and the AU/international toggle is a competitive-advantage API surface.
+**Context:** The AU localisation profile `HL7AUSD-STD-OO-ADRM-2021.1` is now available at `docs/standards/HL7_v24_PDF/`. The project memory codifies (a) v2.4 as the recommended AU platform, and (b) HL7v2Kit's downstream role as the substrate for a FHIR AU Core mapping layer.
 
 ## Decision
 
-**The AU profile lives in a separate, layered constraint set. Base HL7 v2.4 (and v2.3 / v2.3.1 / v2.5.1) schemas remain spec-faithful — no AU-specific narrowing is baked in.**
+**Locale is a first-class, public API mode on Parser and Validator.** Defaults to `.international` (base spec only). AU consumers set `.auLocalisation` to engage the AU ADRM-2021 narrowings.
 
-The Validator gains a new `Profile?` parameter on `ValidationOptions`. When a profile is loaded, validation runs base-spec checks first, then layers the profile's narrowing constraints on top. Profile violations carry a distinct `ValidationIssue.code` (`.profileConstraintViolation`) so consumers can distinguish base-spec failures from profile failures.
+```swift
+public enum HL7Locale: Sendable, Hashable {
+    case international                // base HL7 v2.x spec, no localisation
+    case auLocalisation               // AU ADRM-2021 layered over v2.4 base
+    // future: .ukSpine, .deBasisprofil, etc.
+}
+```
+
+**Base HL7 v2.4 / v2.5.1 / v2.3.1 / v2.3 schemas remain spec-faithful.** AU narrowings live in a separate overlay set at `Resources/profiles/au-adrm-2021/`. The `HL7Locale` enum is the *public* API; the profile-overlay mechanism is the *implementation* underneath it.
+
+Implications for downstream callers:
+
+- **Parser**: takes an optional `locale:` parameter. Default is `.international` (parses base-spec wire). When `.auLocalisation` is set, pre-adopted v2.5+ fields like PID-35..38 hydrate as typed accessors even on v2.4 wires.
+- **Validator**: takes an optional `locale:` parameter (or surfaces it via `ValidationOptions.locale`). Locale governs whether AU narrowings apply.
+- **FHIR mapping layer (downstream)**: can query the locale to know what guarantees the parser/validator made. AU-locale output carries promises (e.g. CX-4 assigning authority namespace will be populated for AU identifiers) that international-locale output does not. The mapper can rely on those promises without re-verifying.
 
 ## Why
 
-The the working notes project requirements rule directly here:
+Three forces converge on locale-as-mode rather than profile-as-overlay-toggle:
 
-> 1. **Feature-complete over AU-specific.** HL7v2Kit must accurately implement the full HL7 v2.x spec, not just the subset used by Australian clinical traffic.
-> 2. **Integrator primary-reference tool.** Schema fields, validator predicates, and composite metadata must be defensible against the HL7 v2 spec text alone — not against AU vendor behaviour.
+1. **the working notes project requirements.** Base schemas must stay spec-faithful. AU constraints cannot bake in. The overlay storage stays as proposed in the first ADR draft; only the public-API framing changes.
+2. **Downstream FHIR mapper consumer.** When HL7v2Kit feeds a FHIR AU Core mapper, the mapper's contract is "I take HL7 v2 messages and produce AU Core FHIR resources." The mapper depends on AU constraints holding (specific identifier types, code systems, populated fields). Exposing the locale as a buried `options.profile = X` toggle hides the contract; exposing it as a top-level mode makes the contract part of the API conversation.
+3. **v1.0 stability window.** Pre-v1.0 is the window to land the right shape. Locale-as-mode is the right shape: it generalises to other localisations (UK Spine, DE Basisprofil) without API change. A `profile:` option that's "really an enum in practice" would need refactoring later.
 
-Baking AU narrowing into the base schemas would mean: (a) the schema no longer reflects the HL7 v2 spec text — it reflects HL7 v2 spec + AU constraints; (b) non-AU integrators reading the schema would mistake AU rules for base-spec rules; (c) the audit doc claims (e.g. "PID-3 is `R` per v2.4 §3.4.2.3") become false when AU constrains the same field tighter and the schema only carries the AU version.
+## Public API shape (proposed)
 
-The layered architecture preserves both axes:
+```swift
+// New value type. Default everywhere.
+public enum HL7Locale: Sendable, Hashable {
+    case international
+    case auLocalisation
+}
 
-- **Base layer**: spec-faithful, audit-citable against HL7 v2.4 / v2.5.1 Final Standard PDFs.
-- **AU profile layer**: spec-faithful, audit-citable against the AU ADRM-2021 PDF.
-- **Validator**: configurable. Default is base-only (everyone gets it). AU consumers opt in by loading the profile.
+extension Parser {
+    public init(options: ParserOptions = .default, locale: HL7Locale = .international)
+}
+
+extension Validator {
+    public init(options: ValidationOptions = .default, locale: HL7Locale = .international)
+}
+
+extension ValidationOptions {
+    // Alternative ergonomics — embed locale in options.
+    public var locale: HL7Locale { get set }
+}
+
+public enum ValidationIssue.Code {
+    // ... existing cases ...
+    case profileConstraintViolation(localeRule: String)
+}
+```
+
+The locale value is propagated into:
+
+- `Message.locale` — the locale that was active when this message was parsed.
+- `ValidationReport.locale` — the locale that was active when validation ran.
+
+Both are accessor-only. Mutating the message's locale post-parse would be unsound.
+
+## Implementation: the profile-overlay mechanism (internal)
+
+Internally, locale resolution maps to a profile-overlay loader:
+
+- `.international` → no overlay loaded; base-spec behaviour as today.
+- `.auLocalisation` → load `Resources/profiles/au-adrm-2021/*.json` overlay over base `v2.4` schemas (and over `v2.5.1` if the AU profile is later extended to a v2.5.1 base).
+
+The overlay format is the same as the first ADR draft proposed:
+
+```json
+{
+  "profileID": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "segmentID": "PID",
+  "fieldOverrides": [ /* ... */ ]
+}
+```
+
+Internal `Profile` type still exists, but it's an implementation detail. Public consumers only see `HL7Locale`.
+
+## What the AU profile constrains (surface-area survey)
+
+From a survey of `HL7AUSD-STD-OO-ADRM-2021.1` (548 pages, 7 chapters + 9 appendices):
+
+1. **Usage codes extended.** Base HL7 v2 uses `R / O / C / X / B`. AU profile adds `RE` (Required, can be empty) and `CE` (Conditional, may be empty), and supports the special `-` (no documentation) marker. The semantics differ enough that the schema's `optionality` field cannot collapse them — the overlay schema needs its own `usage` field.
+2. **Optionality narrowing.** Many base-`O` fields become base-`R` or `RE` under AU. The profile cannot *loosen* what base spec requires (per the profile's own conformance rules), only tighten.
+3. **Code-system constraints.** "Value Set" attribute restricts CWE / CE / IS / ID fields to AU-specific HL7 code tables.
+4. **Pre-adoption of v2.5+ fields.** AU v2.4 profile uses PID-35..38 (species / breed / strain / production class) and other v2.5-or-later additions, despite base v2.4 capping PID at 32. This is `Note: Where … HL7 Version 2.6 standards are pre-adopted, the constrained or specified HL7 table is included below the data type table.`
+5. **Required-component narrowing.** Composites (XAD, XCN, XPN, CWE, etc.) carry tighter required-component lists in the AU profile.
+6. **Sub-message-type-specific constraints.** Some constraints fire only for specific event codes (e.g. ORU^R01 vs. REF^I12).
+
+This goes well beyond what a v2.X JSON schema currently expresses.
+
+## FHIR AU Core mapping integration (downstream-consumer-aware)
+
+The FHIR mapping layer is HL7v2Kit's primary downstream consumer per the project memory. Locale-aware design helps it concretely:
+
+- **Identifier mapping**: `CX-4 Assigning Authority` is `O` in base HL7 v2 but `R` (or `RE`) in AU. AU-locale parse + validate guarantees the mapper can rely on the namespace being present for FHIR `Identifier.system` resolution. International-locale parse makes no such promise — the mapper falls back to heuristics.
+- **Code system mapping**: AU profile constrains `OBX-3 Observation Identifier` to specific code systems (LOINC, AU pathology codes). AU-locale validation rejects out-of-system codes before the mapper sees them; international-locale validation accepts any code, and the mapper does the system-detection work.
+- **Pre-adopted v2.5+ fields**: AU-locale parse on a v2.4 wire surfaces PID-35..38 as typed accessors; the mapper can map them to FHIR `Patient` extensions for species/breed. International-locale parse leaves them as `UnknownField` requiring manual extraction.
+- **Profile compliance reporting**: `ValidationReport.locale == .auLocalisation` is a signal the mapper can include in the FHIR `MessageHeader` provenance.
 
 ## What the AU profile constrains (surface-area survey)
 
@@ -107,20 +191,39 @@ Add `Profile` value type + new `ValidationOptions.profile: Profile?` field. When
 ## Migration / version-stability impact
 
 - **Base schemas**: no API impact. The `FieldGrammar` enum keeps its `R / O / C / X / B` set.
-- **New `Profile` value type**: additive public API. Initial scope is the AU profile; profile loading mechanics generalise to other profiles later.
-- **New `ValidationOptions.profile`**: additive.
-- **New `ValidationIssue.code = .profileConstraintViolation`**: additive enum case (pre-v1.0; allowed per Migration.md).
+- **New `HL7Locale` enum**: additive public API. Initial values `.international` and `.auLocalisation`. Designed to extend cleanly (`.ukSpine`, `.deBasisprofil`, …) without breaking pre-v1.0 callers, since the enum is non-frozen.
+- **New `locale:` parameter on `Parser.init` / `Validator.init` / `ValidationOptions`**: additive defaults to `.international`, so all existing call sites keep their current behaviour.
+- **New `Message.locale` / `ValidationReport.locale` accessors**: additive.
+- **Internal `Profile` value type**: implementation detail. Not exposed in public API.
+- **New `ValidationIssue.code = .profileConstraintViolation(localeRule:)`**: additive enum case (pre-v1.0; allowed per Migration.md). The associated value carries the AU-rule identifier so consumers can attribute the failure.
+- **Locale stability after v1.0**: once v1.0 ships, adding `case .ukSpine` is a non-breaking change (consumers must use `default:` or `@unknown default:` in switches). Renaming or removing existing cases would be breaking.
 
 ## Scope for v0.4 cycle
 
-v0.4 was scoped at Option α with 7 stages. Adding AU profile work pushes into a new stage v0.4-S5:
+v0.4 was scoped at Option α with 7 stages. Adding AU profile work as a new stage v0.4-S5, **reframed under the locale architecture**:
 
-- **v0.4-S5-A**: Profile value type + ProfileLoader + ValidationOptions extension + ValidationIssue case. No actual AU constraints landed yet.
-- **v0.4-S5-B**: AU profile schema for the 9 currently-typed segments (MSH / PID / NK1 / NTE / OBR / OBX / ORC / PV1 / AL1) — `fieldOverrides` for the optionality narrowings the AU spec lists.
-- **v0.4-S5-C**: AU code-table validation (CWE / CE value-set checks).
-- **v0.4-S5-D**: AU pre-adopted fields (PID-35..38 in v2.4 profile) — exercises the `specSource: "AU-profile-extension"` path.
+- **v0.4-S5-A** (the API plumbing — landed first because it shapes everything downstream):
+  - `HL7Locale` enum at top level.
+  - `Parser.init(options:locale:)` overload + locale propagation onto `Message.locale`.
+  - `Validator.init(options:locale:)` overload + `ValidationOptions.locale` + locale propagation onto `ValidationReport.locale`.
+  - Internal `Profile` value type + ProfileLoader for `Resources/profiles/<id>/*.json`.
+  - New `ValidationIssue.code = .profileConstraintViolation(localeRule:)`.
+  - No AU constraints landed yet — but `.international` works (no-op overlay) and `.auLocalisation` loads an empty overlay (no-op too). Sets the API surface in stone for v1.0.
+
+- **v0.4-S5-B** (overlay content — AU narrowings for the 9 currently-typed segments):
+  - `Resources/profiles/au-adrm-2021/{MSH,PID,NK1,NTE,OBR,OBX,ORC,PV1,AL1}.json` with `fieldOverrides` for the optionality narrowings listed in the AU spec. Subset choices should prioritise the fields the FHIR mapper needs first (CX-4, CX-5, HD-2, OBR-4 universal service identifier, OBX-3 observation identifier).
+
+- **v0.4-S5-C** (AU code-table validation):
+  - CWE / CE value-set checks against AU-defined HL7 code tables (Appendix 4 in the ADRM PDF).
+
+- **v0.4-S5-D** (AU pre-adopted fields):
+  - PID-35..38 hydrated as typed accessors on v2.4 wires when `.auLocalisation` is set.
 
 Alternatively, v0.4-S5 could be deferred entirely to v0.5, keeping the v0.4 cycle's existing scope intact. **Decision pending project owner.**
+
+**Recommendation**: land **only S5-A in v0.4** (the API plumbing). It's small, locks in the public surface for v1.0, and unblocks the FHIR mapper consumer immediately (mapper can already check `message.locale` and adjust behaviour). S5-B/C/D can land iteratively in v0.5 or later as the FHIR mapper consumer drives requirements.
+
+This recommendation respects the "no predicate ships without citation" rule — the actual AU narrowings (S5-B/C/D) need careful per-field spec extraction from the 548-page AU PDF, which is substantial work that benefits from being scoped against real consumer needs.
 
 ## Alternatives considered
 
@@ -145,8 +248,8 @@ If HL7 Australia eventually publishes a v2.5.1 ADRM profile, the same architectu
 ## Status
 
 **Proposed.** Awaiting project-owner decision on:
-1. Whether to add v0.4-S5 to this cycle, or defer to v0.5.
-2. The scope of S5-B (all 9 typed segments, or start with PID / OBR / OBX only since the AU profile is pathology-focused).
-3. Whether to migrate the project memory `project_au_baseline.md` to note that AU baseline is now formally documented and the profile is in-tree.
+1. Adopt the locale-as-mode framing (replaces buried-profile-toggle framing from the initial ADR draft).
+2. Land **S5-A only in v0.4** (recommended — API plumbing locks in v1.0 surface, downstream FHIR mapper unblocked), or land the full S5-A/B/C/D in v0.4, or defer entirely to v0.5.
+3. The scope of S5-B if it does land in v0.4 (all 9 typed segments, or start with PID / OBR / OBX only — pathology-focused given AU ADRM is a diagnostics/referral profile).
 
-If approved, ADR moves to **Accepted** and S5 lands per substages above.
+If approved, ADR moves to **Accepted** and the agreed substages land per the cycle plan. The locale enum + Profile-overlay internals + ValidationIssue.code extension all land together in S5-A as one commit so the public-API surface is committed atomically.
