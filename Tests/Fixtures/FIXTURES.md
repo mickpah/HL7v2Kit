@@ -70,7 +70,7 @@ but transparently fake). No real-world data sources.
 | `oru_r01_mri_brain.hl7` | ORU^R01 (radiology) | MRI brain report + impression | N/A — synthetic from scratch |
 | `oru_r01_multi_obr.hl7` | ORU^R01 (result) | Two OBR batteries (EUC + LFT) under one PID | N/A — synthetic from scratch |
 | `ack_application_accept.hl7` | ACK | MSH + MSA (AA — application accept) | N/A — synthetic from scratch |
-| `ack_application_error.hl7` | ACK | MSH + MSA (AE) + ERR — invalid patient ID format | N/A — synthetic from scratch |
+| `ack_application_error.hl7` | ACK | MSH + MSA (AE) + ERR — invalid patient ID format. ERR layout updated 2026-06-18 (v0.4-T1) to v2.5.1-conformant form (ERR-2 location + ERR-3 CWE code + ERR-4 severity), replacing the pre-T1 v2.4-style single ERR-1 ELD that was hidden when ERR was UnknownSegment. | N/A — synthetic from scratch |
 | `adt_a01_with_zau_zin.hl7` | ADT^A01 + Z-segments | ZAU (Medicare) + ZIN (insurance) interleaved before PV1 | N/A — synthetic; Z-segments are AU facility-specific dummy |
 | `orm_o01_z_billing.hl7` | ORM^O01 + Z-segment | ZBL (MBS bulk-bill) appended after OBR | N/A — synthetic; ZBL is dummy |
 | `oru_r01_z_lab_overlay.hl7` | ORU^R01 + Z-segments | ZLB (NATA accreditation) before OBR + ZRE (reflex) after OBX | N/A — synthetic; Z-segments dummy |

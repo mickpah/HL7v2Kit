@@ -19,6 +19,49 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Identification Date (deprecated)", dataType: "DT", optionality: .backwardCompat, repeatability: .single, condition: nil),
             ]
         ),
+        "ERR": SegmentGrammar(
+            segmentID: "ERR",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Error Code and Location", dataType: "ELD", optionality: .backwardCompat, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 2, name: "Error Location", dataType: "ERL", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "HL7 Error Code", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Severity", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Application Error Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Application Error Parameter", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "Diagnostic Information", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "User Message", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Inform Person Indicator", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Override Type", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Override Reason Code", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 12, name: "Help Desk Contact Point", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "EVN": SegmentGrammar(
+            segmentID: "EVN",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Event Type Code", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Recorded Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Date/Time Planned Event", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Event Reason Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Operator ID", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Event Occurred", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Event Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "MSA": SegmentGrammar(
+            segmentID: "MSA",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Acknowledgment Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Message Control ID", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Text Message", dataType: "ST", optionality: .backwardCompat, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Expected Sequence Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Delayed Acknowledgment Type", dataType: "ST", optionality: .notSupported, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Error Condition", dataType: "CE", optionality: .backwardCompat, repeatability: .single, condition: nil),
+            ]
+        ),
         "MSH": SegmentGrammar(
             segmentID: "MSH",
             version: "2.5.1",

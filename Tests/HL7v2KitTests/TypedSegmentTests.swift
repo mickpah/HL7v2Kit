@@ -891,4 +891,155 @@ struct TypedSegmentTests {
         #expect(allergen.identifier == message["AL1-3.1"])
         #expect(al1.allergyReactionCode == "Hives")
     }
+
+    // MARK: - EVN (v0.4-T1: ADT event-type segment)
+
+    // EVN minimal: event code in EVN-1 (B, retained for backward compat),
+    // EVN-2 recorded date/time (R), EVN-7 event facility populated.
+    private let evnWire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    EVN|A01|20240320101500|||DOC123^Jones^Mary||HOSP^FAC^ISO\r
+    """
+
+    @Test("EVN hydrates as .typed")
+    func evnHydrates() throws {
+        let message = try Parser().parse(evnWire)
+        let evn = try #require(message.firstSegment(EVN.self))
+        #expect(type(of: evn).segmentID == "EVN")
+    }
+
+    @Test("EVN-1 (ID) event type code + EVN-2 (TS) recorded date/time scalars")
+    func evnScalarsAgree() throws {
+        let message = try Parser().parse(evnWire)
+        let evn = try #require(message.firstSegment(EVN.self))
+        #expect(evn.eventTypeCode == "A01")
+        #expect(evn.recordedDateTime == "20240320101500")
+        #expect(evn.eventTypeCode == message["EVN-1"])
+        #expect(evn.recordedDateTime == message["EVN-2"])
+    }
+
+    @Test("EVN-5 (XCN composite) operator ID + EVN-7 (HD composite) event facility")
+    func evnCompositesAgree() throws {
+        let message = try Parser().parse(evnWire)
+        let evn = try #require(message.firstSegment(EVN.self))
+        let operatorID = try #require(evn.operatorID)
+        let facility = try #require(evn.eventFacility)
+        #expect(operatorID.idNumber == "DOC123")
+        #expect(operatorID.familyName == "Jones")
+        #expect(facility.namespaceID == "HOSP")
+        #expect(facility.universalIDType == "ISO")
+        #expect(operatorID.idNumber == message["EVN-5.1"])
+        #expect(facility.namespaceID == message["EVN-7.1"])
+    }
+
+    @Test("EVN round-trips byte-perfectly through typed hydration")
+    func evnRoundTrips() throws {
+        let message = try Parser().parse(evnWire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == evnWire)
+    }
+
+    // MARK: - MSA (v0.4-T1: ACK body)
+
+    private let msaWire = """
+    MSH|^~\\&|HIS|FAC|SENDER|FAC|||ACK|MSG10022|P|2.5.1\r\
+    MSA|AA|MSG10001|Message accepted\r
+    """
+
+    @Test("MSA hydrates as .typed")
+    func msaHydrates() throws {
+        let message = try Parser().parse(msaWire)
+        let msa = try #require(message.firstSegment(MSA.self))
+        #expect(type(of: msa).segmentID == "MSA")
+    }
+
+    @Test("MSA-1/2/3 (ID + ST scalars) ack code, control ID, text message")
+    func msaScalarsAgree() throws {
+        let message = try Parser().parse(msaWire)
+        let msa = try #require(message.firstSegment(MSA.self))
+        #expect(msa.acknowledgmentCode == "AA")
+        #expect(msa.messageControlID == "MSG10001")
+        #expect(msa.textMessage == "Message accepted")
+        #expect(msa.acknowledgmentCode == message["MSA-1"])
+        #expect(msa.messageControlID == message["MSA-2"])
+    }
+
+    @Test("MSA round-trips byte-perfectly through typed hydration")
+    func msaRoundTrips() throws {
+        let message = try Parser().parse(msaWire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == msaWire)
+    }
+
+    // MARK: - ERR (v0.4-T1: negative-ACK error detail)
+
+    // ERR with v2.5.1-style ERR-2 (ERL) location + ERR-3 (CWE) HL7 error code
+    // + ERR-4 (ID) severity. ERR-1 (ELD) populated for backward compat.
+    private let errWire = """
+    MSH|^~\\&|HIS|FAC|SENDER|FAC|||ACK|MSG10023|P|2.5.1\r\
+    ERR|PID^1^3^1||101^Required field missing^HL70357|E||PID-3-1 expected\r
+    """
+
+    @Test("ERR hydrates as .typed")
+    func errHydrates() throws {
+        let message = try Parser().parse(errWire)
+        let err = try #require(message.firstSegment(ERR.self))
+        #expect(type(of: err).segmentID == "ERR")
+    }
+
+    @Test("ERR-3 (CWE composite) HL7 error code + ERR-4 (ID) severity scalar")
+    func errCoreFieldsAgree() throws {
+        let message = try Parser().parse(errWire)
+        let err = try #require(message.firstSegment(ERR.self))
+        let hl7Code = try #require(err.hl7ErrorCode)
+        #expect(hl7Code.identifier == "101")
+        #expect(hl7Code.text == "Required field missing")
+        #expect(err.severity == "E")
+        #expect(hl7Code.identifier == message["ERR-3.1"])
+        #expect(hl7Code.text == message["ERR-3.2"])
+        #expect(err.severity == message["ERR-4"])
+    }
+
+    @Test("ERR round-trips byte-perfectly through typed hydration")
+    func errRoundTrips() throws {
+        let message = try Parser().parse(errWire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == errWire)
+    }
+
+    // MARK: - ACK fixture auto-pickup (regression: existing ACK fixtures
+    //         now hydrate MSA / ERR as typed without fixture changes)
+
+    @Test("ack_application_accept.hl7 hydrates MSA as typed")
+    func ackAcceptFixtureHydratesMSA() throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/ack_application_accept.hl7")
+        let bytes = try Data(contentsOf: fixtureURL)
+        let message = try Parser().parse(bytes)
+        let msa = try #require(message.firstSegment(MSA.self))
+        #expect(msa.acknowledgmentCode == "AA")
+        // Fixture must still round-trip byte-perfectly post-T1.
+        let rebuilt = message.serialize()
+        #expect(rebuilt == bytes)
+    }
+
+    @Test("ack_application_error.hl7 hydrates MSA + ERR as typed")
+    func ackErrorFixtureHydratesMSAAndERR() throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/ack_application_error.hl7")
+        let bytes = try Data(contentsOf: fixtureURL)
+        let message = try Parser().parse(bytes)
+        let msa = try #require(message.firstSegment(MSA.self))
+        let err = try #require(message.firstSegment(ERR.self))
+        #expect(msa.acknowledgmentCode == "AE")
+        let hl7Code = try #require(err.hl7ErrorCode)
+        #expect(hl7Code.identifier == "101")
+        // Fixture must still round-trip byte-perfectly post-T1.
+        let rebuilt = message.serialize()
+        #expect(rebuilt == bytes)
+    }
 }
