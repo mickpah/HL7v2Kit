@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-06-18
+
+v0.4 cycle release. Three tracks landed: **spec accuracy** (v2.5.1 + v2.4 schemas spec-text-audited; conditional predicates with citations; compound DSL; composite OR-rule enforcement via `RequiredComponentSet`), **localisation API** (`HL7Locale` first-class enum locked for v1.0 stability per ADR-007 Accepted), and **typed segments** (15 typed segments — added EVN, MSA, ERR, PD1, DG1, IN1). 322 → 360 tests across 22 → 23 suites. **API-affecting** — purely additive: new `HL7Locale` enum, new `locale:` parameter on `Parser.init` / `Validator.init`, new `Message.locale` / `ValidationReport.locale` accessors, new `IssueCode.profileConstraintViolation(localeRule:)` case, new typed-segment surface for the 6 additions. No public-API breakage from v0.3.0. The 3-month no-API-break v1.0 stability clock restarts from this tag per Migration.md.
+
 ### Added — v0.4-T3: IN1 (Insurance) typed segment — closes segments track
 
 - **`Resources/schemas/v2.5.1/IN1.json`** — 25 fields (billing-essentials subset of the full 53-field v2.5.1 segment). Covers set ID (R), insurance plan ID (CE, R), insurance company ID (CX, R, repeats), company name (XON) + address (XAD) + contact (XPN) + phone (XTN), group number + name + employer ID/name, plan effective + expiration dates, authorization info (AUI), plan type, insured name (XPN) + relationship + DOB + address, assignment + coordination of benefits, COB priority, notice-of-admission flag + date, report-of-eligibility flag.
