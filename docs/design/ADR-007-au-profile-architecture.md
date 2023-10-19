@@ -259,3 +259,19 @@ Implementation landing as a single S5-A commit on `v0.4-segments`:
 - Tests: locale round-trip through parse + validate; default behaviour unchanged; `.auLocalisation` loads empty overlay (no constraints fire yet).
 
 S5-B/C/D (actual AU narrowings) land iteratively as integrator conformance needs drive scope. No constraints ship without spec citation per the "no predicate ships without citation" rule.
+
+## Implementation status update (2026-06-18, on `v0.5-au-profile`)
+
+S5-A: shipped in v0.4.0 (`d60d12e` on `main`) per the recommendation above.
+
+S5-B sub-substages landed on the v0.5 worktree:
+
+- **S5-B-1** (`4bb5f67`): 5 field-level AU rules for OBR-2/3 + ORC-2/3/4 EI completeness (HL7au:000003 / 000004.1 / 000005 / 000006 / 000007). Validator dispatches `Profile.fieldOverrides.requiredComponents`.
+- **S5-B-1 polish** (`6128d06`): citations inlined into `FieldOverride.specCitation`; separate `AUADRM2021Citations` switch removed. Single source of truth per override. 2 new tests pin repeating-field + multi-segment occurrence semantics.
+- **S5-B-2** (`46a33ac`): Profile model extended with `compositeOverrides: [CompositeOverride]` + `PairConditional` rules. 12 AU datatype-level rules across CE / CNE / CWE (HL7au:00044.4 / .5 / .6 series). Validator dispatches per-repetition pair-conditional checks.
+
+**Tests**: 360 (v0.4.0) → **375** across 23 → 24 suites green.
+
+**Scope correction (a844c03)**: removed framings that positioned HL7v2Kit's purpose as feeding a FHIR mapper. HL7v2Kit is a parsing/validation library; mapping happens in downstream consumers. The locale mode is an integrator-focused conformance-validation feature.
+
+S5-B-3 / S5-C / S5-D candidates remain per the substage descriptions above, with the FHIR-mapper-rationale subset choices replaced by integrator-conformance-rationale. See `NEXT_STEPS.md` for current sequencing.
