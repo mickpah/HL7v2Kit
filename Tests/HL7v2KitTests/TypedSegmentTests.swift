@@ -1042,4 +1042,107 @@ struct TypedSegmentTests {
         let rebuilt = message.serialize()
         #expect(rebuilt == bytes)
     }
+
+    // MARK: - PD1 (v0.4-T2: Patient Additional Demographic)
+
+    // PD1 with PD1-3 primary facility, PD1-5 student indicator, PD1-7 living
+    // will, PD1-11 publicity code, PD1-12 protection indicator.
+    private let pd1Wire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    PD1|||GOOD_HEALTH^L^1^^^HOSP^XX||N||Y|Y|N||N^Normal^HL70215|Y|20240101\r
+    """
+
+    @Test("PD1 hydrates as .typed")
+    func pd1Hydrates() throws {
+        let message = try Parser().parse(pd1Wire)
+        let pd1 = try #require(message.firstSegment(PD1.self))
+        #expect(type(of: pd1).segmentID == "PD1")
+    }
+
+    @Test("PD1-3 (XON composite) patient primary facility + PD1-5 (IS) student indicator")
+    func pd1PrimaryFacilityAndStudentAgree() throws {
+        let message = try Parser().parse(pd1Wire)
+        let pd1 = try #require(message.firstSegment(PD1.self))
+        let facility = try #require(pd1.patientPrimaryFacility)
+        #expect(facility.organizationName == "GOOD_HEALTH")
+        #expect(facility.organizationName == message["PD1-3.1"])
+        #expect(pd1.studentIndicator == "N")
+        #expect(pd1.studentIndicator == message["PD1-5"])
+    }
+
+    @Test("PD1-11 (CE composite) publicity code + PD1-12 (ID) protection indicator")
+    func pd1PublicityAndProtectionAgree() throws {
+        let message = try Parser().parse(pd1Wire)
+        let pd1 = try #require(message.firstSegment(PD1.self))
+        let publicity = try #require(pd1.publicityCode)
+        #expect(publicity.identifier == "N")
+        #expect(publicity.text == "Normal")
+        #expect(pd1.protectionIndicator == "Y")
+        #expect(pd1.protectionIndicatorEffectiveDate == "20240101")
+    }
+
+    @Test("PD1 round-trips byte-perfectly through typed hydration")
+    func pd1RoundTrips() throws {
+        let message = try Parser().parse(pd1Wire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == pd1Wire)
+    }
+
+    // MARK: - DG1 (v0.4-T2: Diagnosis)
+
+    // DG1 with set ID, diagnosis code (CE), date/time, diagnosis type,
+    // priority, diagnosing clinician. After DG1-6 ("A"), 9 pipes skip
+    // through DG1-7..DG1-14 (8 empty fields) and land "1" at DG1-15;
+    // one more pipe opens DG1-16 carrying the XCN clinician.
+    private let dg1Wire = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
+    DG1|1||I10^Essential hypertension^ICD10||20240315090000|A|||||||||1|DR123^Jones^Mary\r
+    """
+
+    @Test("DG1 hydrates as .typed")
+    func dg1Hydrates() throws {
+        let message = try Parser().parse(dg1Wire)
+        let dg1 = try #require(message.firstSegment(DG1.self))
+        #expect(type(of: dg1).segmentID == "DG1")
+    }
+
+    @Test("DG1-1 (SI) set ID + DG1-6 (IS) diagnosis type scalars")
+    func dg1ScalarsAgree() throws {
+        let message = try Parser().parse(dg1Wire)
+        let dg1 = try #require(message.firstSegment(DG1.self))
+        #expect(dg1.setID == "1")
+        #expect(dg1.diagnosisType == "A")
+        #expect(dg1.setID == message["DG1-1"])
+        #expect(dg1.diagnosisType == message["DG1-6"])
+    }
+
+    @Test("DG1-3 (CE composite) diagnosis code + DG1-5 (TS) diagnosis date")
+    func dg1DiagnosisCodeAndDateAgree() throws {
+        let message = try Parser().parse(dg1Wire)
+        let dg1 = try #require(message.firstSegment(DG1.self))
+        let code = try #require(dg1.diagnosisCode)
+        #expect(code.identifier == "I10")
+        #expect(code.text == "Essential hypertension")
+        #expect(code.nameOfCodingSystem == "ICD10")
+        #expect(dg1.diagnosisDateTime == "20240315090000")
+        #expect(code.identifier == message["DG1-3.1"])
+    }
+
+    @Test("DG1-15 (ID) diagnosis priority + DG1-16 (XCN composite) diagnosing clinician")
+    func dg1PriorityAndClinicianAgree() throws {
+        let message = try Parser().parse(dg1Wire)
+        let dg1 = try #require(message.firstSegment(DG1.self))
+        #expect(dg1.diagnosisPriority == "1")
+        let clinician = try #require(dg1.diagnosingClinician)
+        #expect(clinician.idNumber == "DR123")
+        #expect(clinician.familyName == "Jones")
+        #expect(clinician.idNumber == message["DG1-16.1"])
+    }
+
+    @Test("DG1 round-trips byte-perfectly through typed hydration")
+    func dg1RoundTrips() throws {
+        let message = try Parser().parse(dg1Wire)
+        let rebuilt = String(data: message.serialize(), encoding: .utf8)
+        #expect(rebuilt == dg1Wire)
+    }
 }
