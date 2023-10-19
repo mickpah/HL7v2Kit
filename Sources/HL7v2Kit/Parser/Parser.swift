@@ -16,8 +16,14 @@ import Foundation
 public struct Parser: Sendable {
     public let options: ParserOptions
 
-    public init(options: ParserOptions = .default) {
+    /// The locale this parser was configured with. Default `.international`.
+    /// Propagates onto every `Message.locale` produced by `parse(_:)`. See
+    /// ADR-007.
+    public let locale: HL7Locale
+
+    public init(options: ParserOptions = .default, locale: HL7Locale = .international) {
         self.options = options
+        self.locale = locale
     }
 
     /// Parse a v2 message from raw bytes. Character encoding is taken from
@@ -173,7 +179,8 @@ public struct Parser: Sendable {
             version: version,
             encodingCharacters: encoding,
             segments: segments,
-            characterEncoding: characterEncoding
+            characterEncoding: characterEncoding,
+            locale: locale
         )
     }
 

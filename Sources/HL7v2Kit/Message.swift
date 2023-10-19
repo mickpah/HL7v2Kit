@@ -21,16 +21,23 @@ public struct Message: Sendable, Equatable, Hashable {
     /// `serialize()` re-emits bytes in this encoding.
     public let characterEncoding: CharacterEncoding
 
+    /// The locale the parser was configured with. Default is `.international`.
+    /// Downstream consumers (e.g. a FHIR mapping layer) can read this to
+    /// know which localisation promises the validator made. See ADR-007.
+    public let locale: HL7Locale
+
     public init(
         version: Version,
         encodingCharacters: EncodingCharacters,
         segments: [Segment],
-        characterEncoding: CharacterEncoding = .utf8
+        characterEncoding: CharacterEncoding = .utf8,
+        locale: HL7Locale = .international
     ) {
         self.version = version
         self.encodingCharacters = encodingCharacters
         self.segments = segments
         self.characterEncoding = characterEncoding
+        self.locale = locale
     }
 
     // MARK: - Path access (ad-hoc)

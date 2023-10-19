@@ -10,8 +10,14 @@ import Foundation
 public struct Validator: Sendable {
     public let options: ValidationOptions
 
-    public init(options: ValidationOptions = .default) {
+    /// The locale this validator was configured with. Default `.international`.
+    /// Propagates onto every `ValidationReport.locale` produced by
+    /// `validate(_:)`. See ADR-007.
+    public let locale: HL7Locale
+
+    public init(options: ValidationOptions = .default, locale: HL7Locale = .international) {
         self.options = options
+        self.locale = locale
     }
 
     /// Validate a message. Returns a non-empty report only when at least
@@ -21,6 +27,11 @@ public struct Validator: Sendable {
         var segmentOccurrence: [String: Int] = [:]
 
         let grammar = grammarTable(for: message.version)
+        // S5-A scaffold: locale → Profile lookup. The Profile is consumed
+        // by future S5-B/C/D substages; for S5-A it remains unused, but
+        // the load is exercised so an empty/non-empty distinction is
+        // observable in tests if needed. See ADR-007.
+        _ = ProfileLoader.load(for: locale)
 
         for segment in message.segments {
             let id = segment.segmentID
@@ -45,7 +56,7 @@ public struct Validator: Sendable {
             )
         }
 
-        return ValidationReport(issues: issues)
+        return ValidationReport(issues: issues, locale: locale)
     }
 
     // MARK: - Internals

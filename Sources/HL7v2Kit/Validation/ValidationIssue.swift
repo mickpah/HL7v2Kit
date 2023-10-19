@@ -79,6 +79,12 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// grammar table at all (distinct from Z-segments which match the Z
     /// pattern).
     case unknownSegment
+    /// A localisation profile constraint was violated. The associated
+    /// `localeRule` identifies the specific profile rule (e.g.
+    /// `"au-adrm-2021:PID-3.4 R"`) so consumers can attribute the
+    /// failure to the loaded locale. Scaffolded in v0.4-S5-A; fired
+    /// once profile overrides ship in S5-B and later. See ADR-007.
+    case profileConstraintViolation(localeRule: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

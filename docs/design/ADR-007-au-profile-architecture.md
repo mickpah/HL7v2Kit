@@ -1,6 +1,6 @@
 # ADR-007 — Locale-aware architecture: AU vs international as a first-class API mode
 
-**Status:** Proposed, 2026-06-18. Revised the same day after project-owner guidance that HL7v2Kit is a building block for a HL7 v2 → FHIR AU Core mapper, and the AU/international toggle is a competitive-advantage API surface.
+**Status:** **Accepted 2026-06-18.** Proposed and revised same day; project-owner approval received. Implementation scope = **S5-A only in v0.4** (recommended option), per the project-owner's "Accepted" reply to the ADR's recommendation section. S5-B/C/D iterate later as consumer needs drive scope.
 **Context:** The AU localisation profile `HL7AUSD-STD-OO-ADRM-2021.1` is now available at `docs/standards/HL7_v24_PDF/`. The project memory codifies (a) v2.4 as the recommended AU platform, and (b) HL7v2Kit's downstream role as the substrate for a FHIR AU Core mapping layer.
 
 ## Decision
@@ -247,9 +247,14 @@ If HL7 Australia eventually publishes a v2.5.1 ADRM profile, the same architectu
 
 ## Status
 
-**Proposed.** Awaiting project-owner decision on:
-1. Adopt the locale-as-mode framing (replaces buried-profile-toggle framing from the initial ADR draft).
-2. Land **S5-A only in v0.4** (recommended — API plumbing locks in v1.0 surface, downstream FHIR mapper unblocked), or land the full S5-A/B/C/D in v0.4, or defer entirely to v0.5.
-3. The scope of S5-B if it does land in v0.4 (all 9 typed segments, or start with PID / OBR / OBX only — pathology-focused given AU ADRM is a diagnostics/referral profile).
+**Accepted 2026-06-18.** Project-owner approved the locale-as-mode framing and the recommended scope (S5-A only in v0.4).
 
-If approved, ADR moves to **Accepted** and the agreed substages land per the cycle plan. The locale enum + Profile-overlay internals + ValidationIssue.code extension all land together in S5-A as one commit so the public-API surface is committed atomically.
+Implementation landing as a single S5-A commit on `v0.4-segments`:
+- `HL7Locale` public enum.
+- `Parser.init(options:locale:)` overload + `Message.locale` propagation.
+- `Validator.init(options:locale:)` overload + `ValidationOptions.locale` + `ValidationReport.locale` propagation.
+- Internal `Profile` type + `ProfileLoader` scaffold.
+- `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
+- Tests: locale round-trip through parse + validate; default behaviour unchanged; `.auLocalisation` loads empty overlay (no constraints fire yet).
+
+S5-B/C/D (actual AU narrowings) land iteratively as the FHIR-mapper consumer drives scope. No constraints ship without spec citation per the "no predicate ships without citation" rule.

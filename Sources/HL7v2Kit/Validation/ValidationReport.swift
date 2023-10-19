@@ -11,8 +11,14 @@ public struct ValidationReport: Sendable, Equatable, Hashable {
     /// All issues in the order they were observed (segment scan order).
     public let issues: [ValidationIssue]
 
-    public init(issues: [ValidationIssue]) {
+    /// The locale the validator was configured with. Default `.international`.
+    /// `.auLocalisation` indicates AU profile narrowings were layered on top
+    /// of base-spec checks. See ADR-007.
+    public let locale: HL7Locale
+
+    public init(issues: [ValidationIssue], locale: HL7Locale = .international) {
         self.issues = issues
+        self.locale = locale
     }
 
     /// True iff there are no `.error`-severity issues. Warnings and infos
@@ -36,6 +42,8 @@ public struct ValidationReport: Sendable, Equatable, Hashable {
         issues.filter { $0.severity == .info }
     }
 
-    /// Empty report — validation found nothing wrong.
+    /// Empty report — validation found nothing wrong. Defaults to
+    /// `.international` locale; pass an explicit locale when constructing
+    /// reports for locale-aware contexts.
     public static let empty = ValidationReport(issues: [])
 }
