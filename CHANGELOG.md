@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-06-19
+
+v0.6 cycle opener. Closes the per-version T-track grammar gap from v0.4's audit: v2.4 wires using EVN / MSA / ERR / PD1 / DG1 / IN1 now get per-field validation against the actual v2.4 spec shape, not "unknown segment". Per the project's "feature-complete over AU-specific" + "integrator primary-reference tool" requirements, every v2.4-vs-v2.5.1 divergence (ERR collapse to 1 field, DG1 truncation at 19, MSA-5 retype) is preserved verbatim from the v2.4 spec PDFs (chs 2, 3, 6) rather than transposed from v2.5.1. **No public-API breakage** vs v0.5.0 — pure grammar-table enrichment. Tests: 390 (v0.5.0) → 390 across 24 suites. The 3-month no-API-break v1.0 stability clock continues from v0.5.0.
+
 ### Added — v0.6-T-back-port: v2.4 grammar for the T-track segments
 
 Closes the per-version coverage gap documented in `docs/design/v2_3-v2_4-spec-audit.md`: the six T-track segments (EVN, MSA, ERR, PD1, DG1, IN1) previously only had v2.5.1 grammar tables. v2.4 wires using these segments fell through to "unknown segment" rather than getting per-field validation.
