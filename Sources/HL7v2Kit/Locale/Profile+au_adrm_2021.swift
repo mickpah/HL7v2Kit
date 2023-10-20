@@ -75,7 +75,6 @@ extension Profile {
                 segmentID: "OBR",
                 fieldIndex: 2,
                 profileUsage: nil,
-                valueSet: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000003 (r2) — OBR-2 EI completeness"
             ),
@@ -83,7 +82,6 @@ extension Profile {
                 segmentID: "OBR",
                 fieldIndex: 3,
                 profileUsage: nil,
-                valueSet: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
             ),
@@ -91,7 +89,6 @@ extension Profile {
                 segmentID: "ORC",
                 fieldIndex: 2,
                 profileUsage: nil,
-                valueSet: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000005 (r2) — ORC-2 EI completeness"
             ),
@@ -99,7 +96,6 @@ extension Profile {
                 segmentID: "ORC",
                 fieldIndex: 3,
                 profileUsage: nil,
-                valueSet: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000006 (r3) — ORC-3 EI completeness"
             ),
@@ -107,7 +103,6 @@ extension Profile {
                 segmentID: "ORC",
                 fieldIndex: 4,
                 profileUsage: nil,
-                valueSet: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
             ),

@@ -171,10 +171,6 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// ADR-007 for the extended-usage semantics.
     let profileUsage: ProfileUsage?
 
-    /// Optional code-system constraint (e.g. "HL7AU-0001") for CWE / CE /
-    /// IS / ID fields. nil means "no profile-specific value-set bound".
-    let valueSet: String?
-
     /// Profile-defined required-component narrowings for composite
     /// fields. Empty means "use the base spec's required components
     /// unchanged".
@@ -199,7 +195,6 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         segmentID: String,
         fieldIndex: Int,
         profileUsage: ProfileUsage? = nil,
-        valueSet: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
         specCitation: String? = nil
@@ -207,7 +202,6 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.segmentID = segmentID
         self.fieldIndex = fieldIndex
         self.profileUsage = profileUsage
-        self.valueSet = valueSet
         self.requiredComponents = requiredComponents
         self.componentValueSets = componentValueSets
         self.specCitation = specCitation
