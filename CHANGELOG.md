@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — v0.6-T-back-port: v2.4 grammar for the T-track segments
+
+Closes the per-version coverage gap documented in `docs/design/v2_3-v2_4-spec-audit.md`: the six T-track segments (EVN, MSA, ERR, PD1, DG1, IN1) previously only had v2.5.1 grammar tables. v2.4 wires using these segments fell through to "unknown segment" rather than getting per-field validation.
+
+- **6 new v2.4 schemas** authored under `Resources/schemas/v2.4/`:
+  - `EVN.json` — 7 fields, EVN-2 (Recorded Date/Time) is R. Identical shape to v2.5.1.
+  - `MSA.json` — 6 fields. v2.4 difference vs v2.5.1: MSA-5 (Delayed Acknowledgment Type) is `ID, B` in v2.4 vs `ST, X` in v2.5.1.
+  - `ERR.json` — **1 field only** (ERR-1 CM Error Code and Location). v2.5+ redesigned ERR to 12 fields; v2.4 had only the CM composite.
+  - `PD1.json` — 21 fields. Identical to v2.5.1.
+  - `DG1.json` — **19 fields** (no DG1-20 Diagnosis Identifier or DG1-21 Diagnosis Action Code — those were added in v2.5+).
+  - `IN1.json` — 25 fields (billing-essentials subset). Identical to v2.5.1.
+
+- **Codegen** picks up automatically: the per-version `SegmentGrammarTable.v2_4` now publishes all 15 segments (was 9). Typed segment structs are version-agnostic and unchanged.
+
+- **MultiVersionTests** pin updated to cover the new 6: EVN=7, MSA=6, ERR=1, PD1=21, DG1=19, IN1=25.
+
+- Tests: 390 → 390 across 24 suites green. No new tests required — the existing grammar-table pin assertions caught all back-port shape decisions.
+
+- All field counts and optionalities authored from the v2.4 spec PDFs (chapters 2, 3, 6) — not transposed from v2.5.1. Per the project's "feature-complete over AU-specific" + "integrator primary-reference tool" requirements, every divergence from v2.5.1 (ERR collapse, DG1 truncation, MSA-5 `(B) → X` retype) is preserved verbatim from the source spec text.
+
 ## [0.5.0] — 2026-06-18
 
 v0.5 cycle release. AU profile constraint overlay substrate now substantively complete for the same-segment / same-datatype subset of HL7 Australia's ADRM-2021 conformance profile. **29 AU conformance rules** firing under `.auLocalisation` across 6 narrowing axes (field required-components, field required-presence, field per-component value-set, composite required-components, composite pair-conditional, grammar extension). All cited verbatim to HL7au identifiers via `.profileConstraintViolation(localeRule:)`. Base-spec behaviour under `.international` is unchanged. The additive-errors invariant (`auLocaleAddsButDoesNotRemoveBaseSpecErrors`) is enforced as a fixture-corpus pin. **No public-API breakage** vs v0.4.0 — all v0.5 work is internal overlay enrichment behind the locked `HL7Locale` enum + `ValidationIssue.code.profileConstraintViolation(localeRule:)` surfaces. Tests: 360 (v0.4.0) → 390 across 23 → 24 suites. The 3-month no-API-break v1.0 stability clock restarts from this tag per Migration.md.

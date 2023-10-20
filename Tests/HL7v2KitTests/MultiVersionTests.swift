@@ -136,7 +136,7 @@ struct MultiVersionTests {
                 "v2.4 message validated against v2.4 grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
-    @Test("v2.4 SegmentGrammarTable populated for all 9 segments with v2.4 caps")
+    @Test("v2.4 SegmentGrammarTable populated for all 15 segments with v2.4 caps")
     func v24GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_4
         #expect(table["MSH"]?.fields.count == 20)   // v2.3.1 was 17, v2.5.1 is 21
@@ -148,6 +148,13 @@ struct MultiVersionTests {
         #expect(table["PV1"]?.fields.count == 20)
         #expect(table["NTE"]?.fields.count == 3)    // NTE-4 was added in v2.5
         #expect(table["AL1"]?.fields.count == 6)
+        // v0.6 T-back-port additions:
+        #expect(table["EVN"]?.fields.count == 7)
+        #expect(table["MSA"]?.fields.count == 6)
+        #expect(table["ERR"]?.fields.count == 1)    // v2.4 had only ERR-1 (CM); v2.5+ expanded to 12
+        #expect(table["PD1"]?.fields.count == 21)
+        #expect(table["DG1"]?.fields.count == 19)   // v2.5.1 added DG1-20/21
+        #expect(table["IN1"]?.fields.count == 25)
     }
 
     @Test("v2.4 typed accessors for v2.5-only PID fields return nil on a v2.4 wire")

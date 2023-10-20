@@ -1,0 +1,175 @@
+{
+  "segmentID": "PD1",
+  "version": "2.4",
+  "description": "Patient Additional Demographic",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "livingDependency",
+      "name": "Living Dependency",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 2,
+      "swiftName": "livingArrangement",
+      "name": "Living Arrangement",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "patientPrimaryFacility",
+      "name": "Patient Primary Facility",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 4,
+      "swiftName": "patientPrimaryCareProviderNameAndIDNo",
+      "name": "Patient Primary Care Provider Name & ID No.",
+      "dataType": "XCN",
+      "optionality": "B",
+      "repeatability": "*"
+    },
+    {
+      "index": 5,
+      "swiftName": "studentIndicator",
+      "name": "Student Indicator",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "handicap",
+      "name": "Handicap",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "livingWillCode",
+      "name": "Living Will Code",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "organDonorCode",
+      "name": "Organ Donor Code",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "separateBill",
+      "name": "Separate Bill",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "duplicatePatient",
+      "name": "Duplicate Patient",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "publicityCode",
+      "name": "Publicity Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "protectionIndicator",
+      "name": "Protection Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "protectionIndicatorEffectiveDate",
+      "name": "Protection Indicator Effective Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "placeOfWorship",
+      "name": "Place of Worship",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 15,
+      "swiftName": "advanceDirectiveCode",
+      "name": "Advance Directive Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 16,
+      "swiftName": "immunizationRegistryStatus",
+      "name": "Immunization Registry Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "immunizationRegistryStatusEffectiveDate",
+      "name": "Immunization Registry Status Effective Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "publicityCodeEffectiveDate",
+      "name": "Publicity Code Effective Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "militaryBranch",
+      "name": "Military Branch",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "militaryRankGrade",
+      "name": "Military Rank/Grade",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "militaryStatus",
+      "name": "Military Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}
