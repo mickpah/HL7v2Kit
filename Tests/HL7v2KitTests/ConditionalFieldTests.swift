@@ -198,6 +198,92 @@ struct ConditionalFieldTests {
 
     // MARK: - Fixture corpus regression pin
 
+    // MARK: - v0.7-S3: schema-driven cross-segment / message-context conditions
+
+    // ORC + OBR with both placer-order fields empty triggers the XOR
+    // rule on both sides (ADR-008 §"Three rules expressed in the new DSL").
+    private let oruBothPlacersEmpty = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|RE|||GROUP001|CM\r\
+    OBR|1||FIL001|GLUC^Glucose|||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-2 / OBR-2 XOR fires on both sides when both placer fields empty")
+    func placerOrderXORFiresOnBothSides() throws {
+        let message = try Parser().parse(oruBothPlacersEmpty)
+        let report = Validator().validate(message)
+        let xorIssues = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 2
+        }
+        // Expect one issue per side: ORC-2 and OBR-2.
+        #expect(xorIssues.contains { $0.location.segmentID == "ORC" })
+        #expect(xorIssues.contains { $0.location.segmentID == "OBR" })
+    }
+
+    private let oruORCCarriesPlacer = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|RE|ORD001||GROUP001|CM\r\
+    OBR|1||FIL001|GLUC^Glucose|||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-2 / OBR-2 XOR satisfied when ORC carries the placer order")
+    func placerOrderXORSatisfiedFromORCSide() throws {
+        let message = try Parser().parse(oruORCCarriesPlacer)
+        let report = Validator().validate(message)
+        let xorIssues = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 2
+        }
+        #expect(xorIssues.isEmpty)
+    }
+
+    // OBR-25 (Result Status) required on ORU; ADT^A01 with no OBR-25
+    // must NOT fire the conditional because messageCode = ORU is false.
+    private let adtA01NoOBR = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20260619120000||ADT^A01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Smith^John||19800101|M\r
+    """
+
+    @Test("OBR-25 conditional doesn't fire on non-ORU messages")
+    func obr25SilentOnADT() throws {
+        let message = try Parser().parse(adtA01NoOBR)
+        let report = Validator().validate(message)
+        let obr25Issues = report.errors.filter {
+            $0.location.segmentID == "OBR" && $0.location.fieldIndex == 25
+        }
+        #expect(obr25Issues.isEmpty)
+    }
+
+    // Parent-child ORC pair: first ORC carries ORC-1 = PA (parent),
+    // second carries ORC-1 = CH (child). The child's ORC-8 is empty
+    // → conditional must fire on ORC[2]-8 because previousSegment(ORC)
+    // .ORC-1 = PA.
+    private let parentChildORCChildMissingParentRef = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|PA|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL001|GLUC|||||||||||||||||||||F\r\
+    ORC|CH|ORD002||GROUP|CM\r\
+    OBR|2|ORD002|FIL002|HBA1C|||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-8 conditional fires on child ORC when previous ORC carries PA")
+    func orc8ConditionalFiresOnChild() throws {
+        let message = try Parser().parse(parentChildORCChildMissingParentRef)
+        let report = Validator().validate(message)
+        let orc8Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "ORC" &&
+            $0.location.fieldIndex == 8
+        }
+        // ORC[1] is the parent (its previous ORC doesn't exist, so the
+        // condition fails safe) — silent. ORC[2] is the child (its
+        // previous ORC carries PA) — fires.
+        #expect(orc8Issues.count == 1)
+        #expect(orc8Issues.first?.location.segmentIndex == 2)
+    }
+
     @Test("Fixture corpus produces no unexpected conditional errors")
     func fixtureCorpusNoConditionalErrors() throws {
         // None of the synthetic fixtures populate PID-36/37/38 or the
