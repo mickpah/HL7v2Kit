@@ -136,6 +136,30 @@ struct MultiVersionTests {
                 "v2.4 message validated against v2.4 grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
+    // v0.7-S4: the v2.4 ORC/OBR grammar carries the same four cross-
+    // segment / message-context conditions as v2.5.1. Wire shape is a
+    // minimal v2.4 ORU^R01 with both placer orders empty — the XOR
+    // and OBR-25 conditionals should both fire.
+    private let v24ORUBothPlacersEmpty = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01|MSG|P|2.4\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|RE|||GROUP|CM\r\
+    OBR|1||FIL|GLUC^Glucose\r
+    """
+
+    @Test("v2.4 ORC-2 / OBR-2 XOR + OBR-25 conditionals fire under v2.4 grammar")
+    func v24CrossSegmentConditionalsFire() throws {
+        let message = try Parser().parse(v24ORUBothPlacersEmpty)
+        let report = Validator().validate(message)
+        let codes = report.errors.map { ($0.location.segmentID, $0.location.fieldIndex) }
+        // ORC-2 XOR fires.
+        #expect(codes.contains { $0.0 == "ORC" && $0.1 == 2 })
+        // OBR-2 XOR fires (symmetric).
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 2 })
+        // OBR-25 fires (messageCode = ORU).
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
+    }
+
     @Test("v2.4 SegmentGrammarTable populated for all 15 segments with v2.4 caps")
     func v24GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_4
