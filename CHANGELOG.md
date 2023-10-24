@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-06-24
+
+Closes the three documented out-of-scope conditional rules from `docs/design/v2_5_1-spec-audit.md` §93–121 by extending the v0.4-S4 condition DSL per **ADR-008** (Accepted 2026-06-19). The DSL gains three new predicate categories — cross-segment field refs, message-context atoms (`messageCode` / `triggerEvent` / `messageStructure`), and bounded position atoms (`previousSegment(<ID>).<fieldref>`, `associatedSegment(<ID>).<fieldref>`) — evaluated against the full `Message` rather than a single `Segment`. Schema JSON surface unchanged; `"condition"` strings carry the new productions. **No public-API breakage** vs v0.6.0 — pure internal grammar enrichment behind the locked `HL7Locale` enum + `ValidationIssue` surfaces. Tests: 390 (v0.6.0) → 423 across 24 → 26 suites. The 3-month no-API-break v1.0 stability clock continues from v0.5.0.
+
+### Added — v0.7-S1: Message helpers + Validator signature widening
+
+Internal plumbing layer. `Message` gains five helpers: `messageCode` / `triggerEvent` / `messageStructure` (read MSH-9.1 / .2 / .3), `associatedSegment(_:fromIndex:)` (ORC-delimited group resolution), `previousSegment(_:beforeIndex:)` (nearest preceding segment of named ID). `Validator.checkConditional` signature widens to `(segment, segmentIndex, currentSegmentID, message)`; the segment index is plumbed through `validate()` → `checkSegment` → `conditionTriggers` → OR/AND/atom evaluators. Atom body unchanged in S1 (behaviour identical to v0.6.0). 12 new pins in `MessageCrossSegmentTests`. Test count 390 → 402.
+
+### Added — v0.7-S2: predicate parser productions
+
+Three new productions in the recursive-descent evaluator at `Validator.swift`:
+- **Cross-segment field refs** — `<otherSegmentID>-<n>` resolves via `Message.associatedSegment`, replacing v0.6.0's silent `return false` guard.
+- **Message-context atoms** — `messageCode`, `triggerEvent`, `messageStructure` evaluate against MSH-9.
+- **Position atoms** — `previousSegment(<ID>).<fieldref>` and `associatedSegment(<ID>).<fieldref>`.
+
+Atom evaluator refactored into a clean dispatch (`resolveReferent` → `applyPredicate`) with a `ResolvedReferent` value type. Fail-safe semantics tightened per ADR-008: an unresolvable peer / position returns `nil` from the resolver, atom evaluates `false` (vs the prior "treat absence as empty" behaviour, which would spuriously trigger `<peer>-<n> empty`). `Validator.conditionTriggers` raised from `private` to internal for test access via `@testable`; no public-API surface change. 16 new pins in `CrossSegmentDSLTests` (positive / negative / fail-safe per production + 1 compound + 1 v0.4-S4 regression). Test count 402 → 418.
+
+### Added — v0.7-S3: v2.5.1 schema additions + fixture re-audit
+
+Four conditions added to `Resources/schemas/v2.5.1/`:
+- ORC-2 (Placer Order Number) → `"OBR-2 empty"` (§4.5.1.2 XOR).
+- ORC-8 (Parent) → `"previousSegment(ORC).ORC-1 = PA"` (§4.5.3.29 parent-child).
+- OBR-2 (Placer Order Number) → `"ORC-2 empty"` (symmetric XOR partner).
+- OBR-25 (Result Status) → `"messageCode = ORU"` (§4.5.3.25 report-message guard).
+
+Fixture corpus re-audit (same shape as v0.5-S5-D-2 when profileUsage first fired): 14 ORU^R01 fixtures previously omitted OBR-25 — every one gained `F` (Final results) appended to OBR, all still round-trip byte-perfectly. `oru_r01_with_z_segment.hl7` had a shorter OBR (ended at field 16 instead of 17 like its peers); fix uses 9 separators+F instead of 8. 4 new validator-level integration pins in `ConditionalFieldTests` (XOR fires both sides, XOR satisfied, OBR-25 silent on ADT, ORC-8 fires on child / silent on parent). Test count 418 → 422.
+
+### Added — v0.7-S4: v2.4 mirror
+
+Same four conditions mirrored onto `Resources/schemas/v2.4/{ORC,OBR}.json`. The involved fields exist in v2.4 with identical shapes (verified pre-edit). `oru_r01_v24.hl7` fixture audited: OBR-25 = F appended (OBR previously ended at field 4). 1 new validator-level pin in `MultiVersionTests` exercising all three productions through the v2.4 grammar dispatch. Test count 422 → 423.
+
+Caveat: full verbatim v2.4 § citation extraction is deferred (pdftotext unavailable on dev box; the v2_3-v2_4-spec-audit.md doesn't yet include CH04 chapter audit detail). The conditions propagate from the v2.5.1 audit, which captures HL7's stable ordering semantics that v2.4 inherits identically. A future audit pass will add verbatim citations to `v2_3-v2_4-spec-audit.md`.
+
 ## [0.6.0] — 2026-06-19
 
 v0.6 cycle opener. Closes the per-version T-track grammar gap from v0.4's audit: v2.4 wires using EVN / MSA / ERR / PD1 / DG1 / IN1 now get per-field validation against the actual v2.4 spec shape, not "unknown segment". Per the project's "feature-complete over AU-specific" + "integrator primary-reference tool" requirements, every v2.4-vs-v2.5.1 divergence (ERR collapse to 1 field, DG1 truncation at 19, MSA-5 retype) is preserved verbatim from the v2.4 spec PDFs (chs 2, 3, 6) rather than transposed from v2.5.1. **No public-API breakage** vs v0.5.0 — pure grammar-table enrichment. Tests: 390 (v0.5.0) → 390 across 24 suites. The 3-month no-API-break v1.0 stability clock continues from v0.5.0.
