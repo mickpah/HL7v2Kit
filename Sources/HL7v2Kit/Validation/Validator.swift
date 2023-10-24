@@ -33,7 +33,13 @@ public struct Validator: Sendable {
         // on top of base v2.4 / v2.5.1 grammar. See ADR-007.
         let profile = ProfileLoader.load(for: locale)
 
-        for segment in message.segments {
+        // v0.7-S1 (ADR-008): iterate with the 0-based segment index so
+        // cross-segment / message-context predicates can resolve peers
+        // and group boundaries against the full message. The index is
+        // plumbed through `checkSegment` → `checkConditional` →
+        // predicate evaluators; the evaluator productions stay
+        // single-segment in S1 and gain cross-segment grammar in S2.
+        for (segmentIndex, segment) in message.segments.enumerated() {
             let id = segment.segmentID
             let occurrence = (segmentOccurrence[id] ?? 0) + 1
             segmentOccurrence[id] = occurrence
@@ -59,6 +65,8 @@ public struct Validator: Sendable {
 
             checkSegment(
                 segment,
+                segmentIndex: segmentIndex,
+                message: message,
                 grammar: segGrammar,
                 occurrence: occurrence,
                 profile: profile,
@@ -139,6 +147,8 @@ public struct Validator: Sendable {
 
     private func checkSegment(
         _ segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         grammar: SegmentGrammar,
         occurrence: Int,
         profile: Profile?,
@@ -167,6 +177,8 @@ public struct Validator: Sendable {
                 checkConditional(
                     fieldGrammar,
                     segment: segment,
+                    segmentIndex: segmentIndex,
+                    message: message,
                     isPopulated: isPopulated,
                     location: location,
                     issues: &issues
@@ -641,6 +653,8 @@ public struct Validator: Sendable {
     private func checkConditional(
         _ grammar: FieldGrammar,
         segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         isPopulated: Bool,
         location: IssueLocation,
         issues: inout [ValidationIssue]
@@ -649,7 +663,13 @@ public struct Validator: Sendable {
               !isPopulated,
               let condition = grammar.condition,
               !condition.isEmpty,
-              conditionTriggers(condition, in: segment, currentSegmentID: location.segmentID)
+              conditionTriggers(
+                condition,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: location.segmentID
+              )
         else { return }
         issues.append(ValidationIssue(
             severity: .error,
@@ -686,12 +706,25 @@ public struct Validator: Sendable {
     /// malformed sub-expression fail safe — that sub-expression returns
     /// `false`. Per v0.2-V1 design: a malformed schema must never make a
     /// previously-accepted message non-conformant.
+    ///
+    /// v0.7-S1 (ADR-008) widens the signature to carry `segmentIndex`
+    /// and `message`. The evaluator productions stay single-segment in
+    /// S1; S2 will use the new arguments to resolve cross-segment refs,
+    /// message-context atoms, and position atoms.
     private func conditionTriggers(
         _ condition: String,
         in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         currentSegmentID: String
     ) -> Bool {
-        evaluateOrExpression(condition, in: segment, currentSegmentID: currentSegmentID)
+        evaluateOrExpression(
+            condition,
+            in: segment,
+            segmentIndex: segmentIndex,
+            message: message,
+            currentSegmentID: currentSegmentID
+        )
     }
 
     /// Top-level OR: split on `" OR "` at the topmost level. Any clause
@@ -699,10 +732,18 @@ public struct Validator: Sendable {
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         currentSegmentID: String
     ) -> Bool {
         for clause in expression.components(separatedBy: " OR ") {
-            if evaluateAndExpression(clause, in: segment, currentSegmentID: currentSegmentID) {
+            if evaluateAndExpression(
+                clause,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ) {
                 return true
             }
         }
@@ -713,10 +754,18 @@ public struct Validator: Sendable {
     private func evaluateAndExpression(
         _ expression: String,
         in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         currentSegmentID: String
     ) -> Bool {
         for atom in expression.components(separatedBy: " AND ") {
-            if !evaluateAtom(atom, in: segment, currentSegmentID: currentSegmentID) {
+            if !evaluateAtom(
+                atom,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ) {
                 return false
             }
         }
@@ -727,6 +776,8 @@ public struct Validator: Sendable {
     private func evaluateAtom(
         _ atom: String,
         in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
         currentSegmentID: String
     ) -> Bool {
         let trimmed = atom.trimmingCharacters(in: .whitespaces)

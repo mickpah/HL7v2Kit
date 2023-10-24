@@ -113,6 +113,79 @@ public struct Message: Sendable, Equatable, Hashable {
         }
     }
 
+    // MARK: - Cross-segment helpers (v0.7-S1, ADR-008)
+
+    /// MSH-9.1 — message code (e.g. "ORU", "ADT", "ORM").
+    /// Reads the first component of MSH-9 via the path subscript.
+    /// Used by the cross-segment / message-context predicate DSL.
+    var messageCode: String? {
+        self["MSH-9.1"]
+    }
+
+    /// MSH-9.2 — trigger event (e.g. "R01", "A01", "O01").
+    var triggerEvent: String? {
+        self["MSH-9.2"]
+    }
+
+    /// MSH-9.3 — message structure (e.g. "ORU_R01", "ADT_A01").
+    /// Returns `nil` when MSH-9 carries only the legacy two-component
+    /// form (`code^event`) common on v2.3 wires.
+    var messageStructure: String? {
+        self["MSH-9.3"]
+    }
+
+    /// Resolve the segment of `id` "associated" with the segment at
+    /// `fromIndex`, per ADR-008's ORC/OBR group semantics.
+    ///
+    /// The group is delimited by ORC segments: the group head is the
+    /// most recent ORC at or before `fromIndex`; the group ends at the
+    /// next ORC (or the end of the segment list). The first segment of
+    /// `id` within that range, excluding `fromIndex` itself, is the
+    /// associated peer.
+    ///
+    /// Returns `nil` when no match is found in the group — fail-safe
+    /// for the predicate evaluator per ADR-008's invariant ("a malformed
+    /// schema must never make a previously-accepted message
+    /// non-conformant").
+    func associatedSegment(_ id: String, fromIndex: Int) -> Segment? {
+        guard fromIndex >= 0, fromIndex < segments.count else { return nil }
+
+        // Walk backward to the group head (most recent ORC at or before
+        // fromIndex). If no ORC exists in the message, treat the whole
+        // message as one degenerate group.
+        var groupHead = fromIndex
+        while groupHead > 0 && segments[groupHead].segmentID != "ORC" {
+            groupHead -= 1
+        }
+
+        // Walk forward to the group end (one past the next ORC after
+        // groupHead, or the end of the segment list).
+        var groupEnd = groupHead + 1
+        while groupEnd < segments.count && segments[groupEnd].segmentID != "ORC" {
+            groupEnd += 1
+        }
+
+        for i in groupHead..<groupEnd {
+            if i == fromIndex { continue }
+            if segments[i].segmentID == id { return segments[i] }
+        }
+        return nil
+    }
+
+    /// Resolve the most recent segment of `id` that occurs strictly
+    /// before `beforeIndex`. Returns `nil` when none exists.
+    ///
+    /// Used by the `previousSegment(<ID>)` DSL atom (ADR-008) — for
+    /// example, ORC-8's parent-child rule reads `previousSegment(ORC)
+    /// .ORC-1`.
+    func previousSegment(_ id: String, beforeIndex: Int) -> Segment? {
+        guard beforeIndex > 0, beforeIndex <= segments.count else { return nil }
+        for i in stride(from: beforeIndex - 1, through: 0, by: -1) {
+            if segments[i].segmentID == id { return segments[i] }
+        }
+        return nil
+    }
+
     // MARK: - Serialisation
 
     /// Serialise this message back to wire bytes.
