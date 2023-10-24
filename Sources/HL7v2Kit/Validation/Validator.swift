@@ -708,10 +708,16 @@ public struct Validator: Sendable {
     /// previously-accepted message non-conformant.
     ///
     /// v0.7-S1 (ADR-008) widens the signature to carry `segmentIndex`
-    /// and `message`. The evaluator productions stay single-segment in
-    /// S1; S2 will use the new arguments to resolve cross-segment refs,
-    /// message-context atoms, and position atoms.
-    private func conditionTriggers(
+    /// and `message`. v0.7-S2 uses those arguments to resolve cross-
+    /// segment field refs, message-context atoms (`messageCode` /
+    /// `messageStructure` / `triggerEvent`), and position atoms
+    /// (`previousSegment(<ID>).<fieldref>` / `associatedSegment(<ID>)
+    /// .<fieldref>`).
+    ///
+    /// Internal (not private) access so the v0.7 production unit tests
+    /// can call the evaluator directly via `@testable import`. Not
+    /// part of the public API.
+    func conditionTriggers(
         _ condition: String,
         in segment: Segment,
         segmentIndex: Int,
@@ -772,7 +778,31 @@ public struct Validator: Sendable {
         return true
     }
 
-    /// Single atomic predicate: `<segmentID>-<index> <op>`.
+    /// A referent resolved to a scalar string value plus a "is this
+    /// genuinely populated?" bit. The predicate (populated / empty /
+    /// = / != / in / not in) applies to this pair regardless of where
+    /// the value came from (current segment, cross-segment peer,
+    /// message-context noun, or position lookup).
+    private struct ResolvedReferent {
+        let raw: String
+        let isPopulated: Bool
+    }
+
+    /// Single atomic predicate. Today (v0.7-S2) the referent forms are:
+    ///
+    /// 1. **Same-segment field ref** — `<currentSegmentID>-<index>`.
+    /// 2. **Cross-segment field ref** — `<otherSegmentID>-<index>`,
+    ///    resolved via `Message.associatedSegment` (ORC/OBR group
+    ///    semantics).
+    /// 3. **Message-context atom** — `messageCode`, `triggerEvent`,
+    ///    or `messageStructure` (reads MSH-9.1 / .2 / .3).
+    /// 4. **Position atom** — `previousSegment(<ID>).<fieldref>` or
+    ///    `associatedSegment(<ID>).<fieldref>`.
+    ///
+    /// All forms are evaluated against the same predicate set
+    /// (`populated` / `empty` / `= v` / `!= v` / `in (...)` /
+    /// `not in (...)`). Any unresolvable referent fails safe — the
+    /// atom returns `false` without firing the conditional.
     private func evaluateAtom(
         _ atom: String,
         in segment: Segment,
@@ -784,30 +814,173 @@ public struct Validator: Sendable {
         let parts = trimmed.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
                             .map(String.init)
         guard parts.count == 2 else { return false }
-        let fieldRef = parts[0]
+        let referent = parts[0]
         let predicate = parts[1]
 
-        let refParts = fieldRef.split(separator: "-", maxSplits: 1).map(String.init)
-        guard refParts.count == 2,
-              refParts[0] == currentSegmentID,
-              let fieldIndex = Int(refParts[1])
-        else { return false }
+        guard let resolved = resolveReferent(
+            referent,
+            in: segment,
+            segmentIndex: segmentIndex,
+            message: message,
+            currentSegmentID: currentSegmentID
+        ) else { return false }
 
+        return applyPredicate(predicate, to: resolved)
+    }
+
+    /// Dispatch the referent to the production that recognises it.
+    /// Returns `nil` when no production matches — the atom then fails
+    /// safe per the v0.2-V1 invariant.
+    private func resolveReferent(
+        _ referent: String,
+        in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        currentSegmentID: String
+    ) -> ResolvedReferent? {
+        // 1. Message-context atoms (literal nouns, no dash).
+        switch referent {
+        case "messageCode":
+            let v = message.messageCode ?? ""
+            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
+        case "messageStructure":
+            let v = message.messageStructure ?? ""
+            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
+        case "triggerEvent":
+            let v = message.triggerEvent ?? ""
+            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
+        default:
+            break
+        }
+
+        // 2. Position atoms — `previousSegment(ID).<fieldref>` and
+        //    `associatedSegment(ID).<fieldref>`.
+        if let resolved = resolvePositionReferent(
+            referent,
+            segmentIndex: segmentIndex,
+            message: message
+        ) {
+            return resolved
+        }
+
+        // 3. Field ref — `<segmentID>-<int>`. Same-segment uses the
+        //    current segment; cross-segment uses associatedSegment.
+        return resolveFieldRef(
+            referent,
+            in: segment,
+            segmentIndex: segmentIndex,
+            message: message,
+            currentSegmentID: currentSegmentID
+        )
+    }
+
+    /// `<segmentID>-<int>`. When segmentID matches the current
+    /// segment, reads directly; otherwise resolves the peer via
+    /// `Message.associatedSegment`.
+    ///
+    /// Fail-safe semantic per ADR-008: when a cross-segment peer
+    /// cannot be located, the atom returns `nil` so the predicate
+    /// evaluates to `false` instead of treating the absent peer as
+    /// an "empty" value. Same-segment refs always have a segment in
+    /// hand and never trip this branch.
+    private func resolveFieldRef(
+        _ referent: String,
+        in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        currentSegmentID: String
+    ) -> ResolvedReferent? {
+        let refParts = referent.split(separator: "-", maxSplits: 1).map(String.init)
+        guard refParts.count == 2, let fieldIndex = Int(refParts[1]) else { return nil }
+        let targetID = refParts[0]
+        let targetSegment: Segment
+        if targetID == currentSegmentID {
+            targetSegment = segment
+        } else {
+            guard let peer = message.associatedSegment(targetID, fromIndex: segmentIndex)
+            else { return nil }
+            targetSegment = peer
+        }
+        return readField(targetSegment, fieldIndex: fieldIndex)
+    }
+
+    /// Recognise `previousSegment(<ID>).<fieldref>` and
+    /// `associatedSegment(<ID>).<fieldref>`. Returns `nil` for any
+    /// other shape so the dispatcher falls through to the next
+    /// production.
+    ///
+    /// Fail-safe semantic per ADR-008: a position lookup returning
+    /// `nil` (no preceding / associated segment of that ID) makes the
+    /// atom return `nil` so the predicate evaluates to `false`.
+    private func resolvePositionReferent(
+        _ referent: String,
+        segmentIndex: Int,
+        message: Message
+    ) -> ResolvedReferent? {
+        if let (id, fieldRef) = parsePositionForm(referent, function: "previousSegment") {
+            guard let target = message.previousSegment(id, beforeIndex: segmentIndex)
+            else { return nil }
+            return readFieldRef(fieldRef, in: target)
+        }
+        if let (id, fieldRef) = parsePositionForm(referent, function: "associatedSegment") {
+            guard let target = message.associatedSegment(id, fromIndex: segmentIndex)
+            else { return nil }
+            return readFieldRef(fieldRef, in: target)
+        }
+        return nil
+    }
+
+    /// Parse `<function>(<ID>).<fieldref>` into `(<ID>, <fieldref>)`.
+    /// Returns `nil` if the shape doesn't match.
+    private func parsePositionForm(
+        _ referent: String,
+        function: String
+    ) -> (id: String, fieldRef: String)? {
+        let prefix = "\(function)("
+        guard referent.hasPrefix(prefix) else { return nil }
+        let afterPrefix = referent.dropFirst(prefix.count)
+        guard let closeIdx = afterPrefix.firstIndex(of: ")") else { return nil }
+        let id = String(afterPrefix[..<closeIdx])
+        let after = afterPrefix[afterPrefix.index(after: closeIdx)...]
+        guard after.hasPrefix(".") else { return nil }
+        let fieldRef = String(after.dropFirst())
+        return (id, fieldRef)
+    }
+
+    /// Parse `<segmentID>-<int>` and read the named field from
+    /// `segment`. Returns `nil` if the field-ref shape is malformed.
+    /// Callers guarantee a non-nil segment.
+    private func readFieldRef(_ fieldRef: String, in segment: Segment) -> ResolvedReferent? {
+        let parts = fieldRef.split(separator: "-", maxSplits: 1).map(String.init)
+        guard parts.count == 2, let fieldIndex = Int(parts[1]) else { return nil }
+        return readField(segment, fieldIndex: fieldIndex)
+    }
+
+    /// Project a `Segment` + 1-based field index into the
+    /// `(raw, isPopulated)` pair the predicate consumes. The raw
+    /// value is the first repetition's first component's first
+    /// subcomponent — consistent with the v0.4-S4 scalar reading.
+    private func readField(_ segment: Segment, fieldIndex: Int) -> ResolvedReferent {
         let field = segment.field(fieldIndex)
-        let isReferentPopulated = field.map { isFieldPopulated($0) } ?? false
+        let isPopulated = field.map { isFieldPopulated($0) } ?? false
         let raw = field?.repetitions.first?.components.first?.subcomponents.first?.value ?? ""
+        return ResolvedReferent(raw: raw, isPopulated: isPopulated)
+    }
 
-        if predicate == "populated" { return isReferentPopulated }
-        if predicate == "empty"     { return !isReferentPopulated }
+    /// Apply the predicate clause (`populated` / `empty` / `= v` /
+    /// `!= v` / `in (…)` / `not in (…)`) to a resolved referent.
+    private func applyPredicate(_ predicate: String, to resolved: ResolvedReferent) -> Bool {
+        if predicate == "populated" { return resolved.isPopulated }
+        if predicate == "empty"     { return !resolved.isPopulated }
         if predicate.hasPrefix("= ") {
-            return raw == String(predicate.dropFirst(2))
+            return resolved.raw == String(predicate.dropFirst(2))
         }
         if predicate.hasPrefix("!= ") {
-            return raw != String(predicate.dropFirst(3))
+            return resolved.raw != String(predicate.dropFirst(3))
         }
         if predicate.hasPrefix("in (") && predicate.hasSuffix(")") {
             let values = Self.parseValueList(predicate.dropFirst(4).dropLast())
-            return values.contains(raw)
+            return values.contains(resolved.raw)
         }
         if predicate.hasPrefix("not in (") && predicate.hasSuffix(")") {
             let values = Self.parseValueList(predicate.dropFirst(8).dropLast())
@@ -818,8 +991,8 @@ public struct Validator: Sendable {
             // the conditional check should only require the dependent
             // field when the referent carries a definite value the
             // predicate excludes.
-            guard isReferentPopulated else { return false }
-            return !values.contains(raw)
+            guard resolved.isPopulated else { return false }
+            return !values.contains(resolved.raw)
         }
         return false
     }
