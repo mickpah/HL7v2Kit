@@ -25,6 +25,105 @@ extension Profile {
         locale: .auLocalisation,
         baseVersion: .v2_4,
         fieldOverrides: [
+            // HL7au:000040 — MSH-12 Version ID Field Conformance Points
+            // (AU ADRM-2021 pp. 445-446, extracted via PDFKit recipe).
+            // Five subrules in the spec; 040.5 is receiver runtime
+            // behaviour (out of scope for a validator). v0.8 (ADR-009)
+            // ships .1, .2, .3, .4 as follows:
+            //
+            // 040.1/.2 (universal Senders Orders/Results/Referrals/
+            //   ACK/RRI):
+            //   - VID-1 (Version ID) = "2.4"
+            //   - VID-2 (Internationalization Code, CE):
+            //       .1 = "AUS", .2 = "Australia", .3 = "ISO3166_1"
+            //   These four value-sets always apply when MSH-12 is
+            //   populated (no condition gating).
+            //
+            // 040.3 (Senders Orders, Results — messageCode in
+            //   (ORM, ORU)):
+            //   - VID-3 (Internal Version ID, CE):
+            //       .1 = "HL7AU-OO-201701", .3 = "L"
+            //
+            // 040.4 (Senders Referrals, RRI — messageCode in
+            //   (REF, RRI)):
+            //   - VID-3:
+            //       .1 in {"HL7AU-OO-REF-SIMPLIFIED-201706",
+            //              "HL7AU-OO-REF-SIMPLIFIED-201706-L1"},
+            //       .3 = "L"
+            //
+            // profileUsage stays nil because MSH-12 is already R in
+            // the base HL7 v2 grammar — base-spec checkRequired
+            // catches the empty case; the AU rules add value-set
+            // narrowings on top.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 12,
+                componentValueSets: [
+                    // 040.1/.2: VID-1 = "2.4"
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["2.4"],
+                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.1 (Version ID) must be \"2.4\""
+                    ),
+                    // 040.1/.2: VID-2.1 = "AUS"
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 1,
+                        allowedValues: ["AUS"],
+                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.1 (Internationalization Code identifier) must be \"AUS\""
+                    ),
+                    // 040.1/.2: VID-2.2 = "Australia"
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 2,
+                        allowedValues: ["Australia"],
+                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.2 (Internationalization Code text) must be \"Australia\""
+                    ),
+                    // 040.1/.2: VID-2.3 = "ISO3166_1"
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 3,
+                        allowedValues: ["ISO3166_1"],
+                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.3 (Internationalization Code coding system) must be \"ISO3166_1\""
+                    ),
+                    // 040.3 (Orders/Results only): VID-3.1 = "HL7AU-OO-201701"
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 1,
+                        allowedValues: ["HL7AU-OO-201701"],
+                        condition: "messageCode in (ORM, ORU)",
+                        specCitation: "HL7au:000040.3 — MSH-12.3.1 (Internal Version ID identifier) must be \"HL7AU-OO-201701\" on Orders/Results"
+                    ),
+                    // 040.3 (Orders/Results only): VID-3.3 = "L"
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 3,
+                        allowedValues: ["L"],
+                        condition: "messageCode in (ORM, ORU)",
+                        specCitation: "HL7au:000040.3 — MSH-12.3.3 (Internal Version ID coding system) must be \"L\" on Orders/Results"
+                    ),
+                    // 040.4 (Referrals/RRI only): VID-3.1 in {Level 2, Level 1}
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 1,
+                        allowedValues: [
+                            "HL7AU-OO-REF-SIMPLIFIED-201706",
+                            "HL7AU-OO-REF-SIMPLIFIED-201706-L1",
+                        ],
+                        condition: "messageCode in (REF, RRI)",
+                        specCitation: "HL7au:000040.4 (r2) — MSH-12.3.1 (Internal Version ID identifier) must be HL7AU-OO-REF-SIMPLIFIED-201706 (Level 2) or HL7AU-OO-REF-SIMPLIFIED-201706-L1 (Level 1) on Referrals/RRI"
+                    ),
+                    // 040.4 (Referrals/RRI only): VID-3.3 = "L"
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 3,
+                        allowedValues: ["L"],
+                        condition: "messageCode in (REF, RRI)",
+                        specCitation: "HL7au:000040.4 (r2) — MSH-12.3.3 (Internal Version ID coding system) must be \"L\" on Referrals/RRI"
+                    ),
+                ],
+                specCitation: "HL7au:000040 (r2) — MSH-12 Version ID Field Conformance Points"
+            ),
             // HL7au:000041 (r2) — MSH-17 country code must be "AUS"
             // for Australian originators. The spec says MSH-17 must
             // be specified (required under AU) AND its value must be

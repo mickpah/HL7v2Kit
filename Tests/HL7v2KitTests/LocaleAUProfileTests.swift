@@ -525,9 +525,12 @@ struct LocaleAUProfileTests {
                 "Expected HL7au:000042 violation on MSH-19.1 = 'fr'")
     }
 
-    // MSH-17 = "AUS" + MSH-19 = "en^English^ISO639" — fully AU-conformant.
+    // MSH-12 = "2.4^AUS&Australia&ISO3166_1" + MSH-17 = "AUS" + MSH-19
+    // = "en^English^ISO639" — fully AU-conformant per HL7au:000040.1/.2,
+    // 000041, 000042 (universal subrules; 040.3 / .4 require ORM/ORU or
+    // REF/RRI messages which an ADT^A01 wire doesn't trigger).
     private let mshFullyAUCompliant = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1|||AL|NE|AUS||en^English^ISO639\r\
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.4^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
     PID|1||999999^^^HOSP^MR\r
     """
 
@@ -599,6 +602,209 @@ struct LocaleAUProfileTests {
         let report = Validator(locale: .international).validate(message)
         #expect(profileViolations(in: report).isEmpty,
                 ".international locale must never fire profile violations")
+    }
+
+    // MARK: - v0.8 (ADR-009): HL7au:000040 — MSH-12 Version ID conformance
+
+    // ADT^A01 with MSH-12 = "2.4^AUS&Australia&ISO3166_1" — passes
+    // 040.1/.2; 040.3/.4 don't apply (messageCode = ADT ≠ ORM/ORU/REF/RRI).
+    private let adtAUConformantMSH12 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.4^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.1/.2 — conformant ADT MSH-12 fires no MSH-12 violations")
+    func msh12UniversalConformant() throws {
+        let message = try Parser(locale: .auLocalisation).parse(adtAUConformantMSH12)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let msh12 = report.errors.filter {
+            $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12
+        }
+        #expect(msh12.isEmpty,
+                "Expected no MSH-12 violations on fully-conformant wire; got \(msh12.map(\.message))")
+    }
+
+    // MSH-12 = "2.5.1" (wrong VID-1) → 040.1/.2 fires on VID-1.
+    private let mshWrongVID1 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.5.1^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.1/.2 — MSH-12.1 = '2.5.1' (wrong) fires VID-1 violation")
+    func msh12WrongVID1Fires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(mshWrongVID1)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "MSH",
+               issue.location.fieldIndex == 12,
+               rule.contains("HL7au:000040.1/.2") {
+                return true
+            }
+            return false
+        }
+        #expect(issue != nil)
+    }
+
+    // MSH-12 with VID-2.2 missing (AUS&&ISO3166_1 — empty middle subcomponent).
+    private let mshMissingVID22 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.4^AUS&&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.1/.2 — subcomponent granularity: VID-2.2 empty fires")
+    func msh12SubcomponentGranularityFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(mshMissingVID22)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "MSH",
+               issue.location.fieldIndex == 12,
+               rule.contains("MSH-12.2.2") {
+                return true
+            }
+            return false
+        }
+        #expect(issue != nil,
+                "Expected HL7au:000040.1/.2 violation on MSH-12.2.2 (Australia)")
+    }
+
+    // ORU^R01 — message code triggers 040.3 conditional gating. MSH-12.3 must =
+    // "HL7AU-OO-201701&&L". Wire omits VID-3 entirely → 040.3 fires.
+    private let oruMissingVID3 = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r
+    """
+
+    @Test("HL7au:000040.3 — Orders/Results without VID-3 fires (messageCode gating)")
+    func msh12_040_3_FiresOnORU() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruMissingVID3)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "MSH",
+               issue.location.fieldIndex == 12,
+               rule.contains("HL7au:000040.3") {
+                return true
+            }
+            return false
+        }
+        #expect(issue != nil,
+                "Expected HL7au:000040.3 violation on Orders/Results message lacking VID-3")
+    }
+
+    // Same shape but ADT^A01 instead of ORU — 040.3 gated off; no violation.
+    private let adtMissingVID3 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.4^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.3 — ADT messages don't fire VID-3 rule (conditional gating works)")
+    func msh12_040_3_SilentOnNonOrders() throws {
+        let message = try Parser(locale: .auLocalisation).parse(adtMissingVID3)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               rule.contains("HL7au:000040.3") || rule.contains("HL7au:000040.4") {
+                return true
+            }
+            return false
+        }
+        #expect(issue == nil,
+                "040.3 / 040.4 must not fire on ADT (non-Orders/Referrals); got \(issue?.message ?? "<none>")")
+    }
+
+    // ORU^R01 with correct VID-3 → 040.3 satisfied, no violation.
+    private let oruConformantVID3 = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r
+    """
+
+    @Test("HL7au:000040.3 — conformant ORU VID-3 fires no MSH-12 violations")
+    func msh12_040_3_Satisfied() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruConformantVID3)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let msh12 = report.errors.filter {
+            $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12
+        }
+        #expect(msh12.isEmpty,
+                "Expected no MSH-12 violations on fully-conformant ORU; got \(msh12.map(\.message))")
+    }
+
+    // REF^I12 with the correct Level-2 VID-3 → 040.4 satisfied.
+    private let refLevel2 = """
+    MSH|^~\\&|HIS|FAC|REF|FAC|||REF^I12|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.4 — Referrals with Level-2 VID-3 fires no MSH-12 violations")
+    func msh12_040_4_Level2Satisfied() throws {
+        let message = try Parser(locale: .auLocalisation).parse(refLevel2)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let msh12 = report.errors.filter {
+            $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12
+        }
+        #expect(msh12.isEmpty,
+                "Expected no MSH-12 violations on Level-2 Referral; got \(msh12.map(\.message))")
+    }
+
+    // REF^I12 with Level-1 VID-3 — also valid per 040.4.
+    private let refLevel1 = """
+    MSH|^~\\&|HIS|FAC|REF|FAC|||REF^I12|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706-L1&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000040.4 — Referrals with Level-1 VID-3 fires no MSH-12 violations")
+    func msh12_040_4_Level1Satisfied() throws {
+        let message = try Parser(locale: .auLocalisation).parse(refLevel1)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let msh12 = report.errors.filter {
+            $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12
+        }
+        #expect(msh12.isEmpty)
+    }
+
+    // ORU with REF-style VID-3 → 040.3 fires (wrong identifier for Orders),
+    // and 040.4 is gated off (not a Referral). Confirms message-code
+    // dispatch routes to the right rule set.
+    private let oruWithReferralVID3 = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r
+    """
+
+    @Test("HL7au:000040 — ORU with Referral-style VID-3 fires 040.3 but not 040.4")
+    func msh12_040_DispatchIsExclusive() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithReferralVID3)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let fired_040_3 = report.errors.contains { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               rule.contains("HL7au:000040.3") { return true }
+            return false
+        }
+        let fired_040_4 = report.errors.contains { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               rule.contains("HL7au:000040.4") { return true }
+            return false
+        }
+        #expect(fired_040_3,
+                "Orders/Results with Referral-style VID-3 must fire 040.3")
+        #expect(!fired_040_4,
+                "040.4 must not fire on Orders/Results (gating off)")
+    }
+
+    // International locale: MSH-12 = wrong VID — base-spec accepts any
+    // version ID; no AU narrowing fires.
+    @Test("HL7au:000040 — silent under .international locale")
+    func msh12_040_InternationalSilent() throws {
+        let message = try Parser(locale: .international).parse(mshWrongVID1)
+        let report = Validator(locale: .international).validate(message)
+        #expect(profileViolations(in: report).isEmpty)
     }
 
     // MARK: - S5-D: AU pre-adopted PID-35..38 grammar extensions on v2.4
