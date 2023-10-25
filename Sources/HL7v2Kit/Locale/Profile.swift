@@ -210,20 +210,52 @@ struct FieldOverride: Sendable, Equatable, Hashable {
 
 /// A value-set narrowing on a specific component of a populated
 /// field. "When the field is populated, this 1-based `component`'s
-/// first-subcomponent value must be one of `allowedValues`."
+/// (first-)subcomponent value must be one of `allowedValues`."
+///
 /// Used to express AU rules like HL7au:000041 (MSH-17 = "AUS") and
-/// HL7au:000042 (MSH-19.1 = "en"). v0.5-S5-C.
+/// HL7au:000042 (MSH-19.1 = "en"). v0.5-S5-C introduced the basic
+/// shape; v0.8 (ADR-009) added `subcomponent` and `condition` so the
+/// AU MSH-12 Version ID rules (HL7au:000040.1-.4) can express
+/// subcomponent-granular pins and message-type-dispatched gating.
 struct ComponentValueSet: Sendable, Equatable, Hashable {
     /// The 1-based component index this restriction applies to.
     let component: Int
 
+    /// The 1-based subcomponent index within `component`. When `nil`
+    /// (default), the check reads the component's FIRST subcomponent
+    /// — the v0.5-S5-C behaviour. When set, reads that named
+    /// subcomponent specifically. ADR-009.
+    let subcomponent: Int?
+
     /// The fixed list of allowed values. Comparison is exact string
-    /// match against the component's first-subcomponent value.
+    /// match against the resolved (sub)component value.
     let allowedValues: [String]
+
+    /// Optional v0.7-DSL predicate (ADR-008). When `nil` (default)
+    /// the check always applies on populated fields. When set, the
+    /// check is gated: if the predicate evaluates `false` the
+    /// value-set is skipped. Used by HL7au:000040.3/.4 to apply
+    /// different VID-3 values per message-code class without
+    /// duplicating the FieldOverride entry. ADR-009.
+    let condition: String?
 
     /// Spec citation for this rule. Surfaced in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
+
+    init(
+        component: Int,
+        subcomponent: Int? = nil,
+        allowedValues: [String],
+        condition: String? = nil,
+        specCitation: String? = nil
+    ) {
+        self.component = component
+        self.subcomponent = subcomponent
+        self.allowedValues = allowedValues
+        self.condition = condition
+        self.specCitation = specCitation
+    }
 }
 
 /// Profile usage codes from the AU ADRM spec. The base HL7 v2 set is
