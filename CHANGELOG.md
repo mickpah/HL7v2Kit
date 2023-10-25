@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-06-25
+
+Ships the first AU profile narrowing that exercises subcomponent-granular value pinning and message-type-dispatched conditional gating, per **ADR-009** (Accepted 2026-06-25). The AU `ComponentValueSet` model gains two optional fields (`subcomponent: Int?` + `condition: String?`); the Validator reuses the v0.7 (ADR-008) `conditionTriggers` evaluator as the gating engine — no new parser, no new dispatch surface. Closes HL7au:000040 (MSH-12 Version ID Field Conformance Points) subrules .1, .2, .3, .4 verbatim against the AU ADRM-2021 spec pp. 445–446. 040.5 is receiver runtime behaviour, explicitly out of scope. **No public-API change** vs v0.7.0; v1.0 stability clock continues from v0.5.0. Tests: 423 (v0.7.0) → 435 across 26 suites.
+
+Workflow improvement: macOS PDFKit-based spec-text extraction (`xcrun swift /tmp/extract.swift`) cleared the previously-deferred "no pdftotext" gate that was blocking spec-audit § citation work. Memory file `reference_pdf_extraction.md` documents the recipe for future sessions.
+
+### Added — v0.8-S1: ComponentValueSet model extensions
+
+`ComponentValueSet` gains two optional fields, both defaulting to `nil` (full backwards-compatibility with v0.5–v0.7 overrides):
+
+- **`subcomponent: Int?`** — When nil, reads the named component's FIRST subcomponent (v0.5-S5-C behaviour). When set, reads that named subcomponent. Required by HL7au:000040.1/.2 so MSH-12.2.1 = "AUS", MSH-12.2.2 = "Australia", MSH-12.2.3 = "ISO3166_1" can all be pinned independently.
+- **`condition: String?`** — When nil, the check always applies on populated fields. When set, the check is gated through the v0.7 `conditionTriggers` evaluator — if the predicate is false the value-set is skipped. Required by HL7au:000040.3/.4 to apply different VID-3 values per message-code class without duplicating the FieldOverride entry.
+
+Explicit memberwise init with `nil` defaults for both new fields + `specCitation` lets every existing call site continue to compile via labeled arguments.
+
+### Added — v0.8-S2: Validator dispatch wiring
+
+`Validator.checkProfileFieldOverrides` plumbs `segment: Segment`, `segmentArrayIndex: Int` (0-based, matching the v0.7 evaluator convention), and `message: Message` so it can:
+
+1. Evaluate per-ComponentValueSet `condition` via `conditionTriggers` before applying the value-set check. Unresolvable predicates fail safe per ADR-008 ("malformed schema must never make a previously-accepted message non-conformant").
+2. Resolve the value-set's actual scalar by subcomponent when set, rather than defaulting to the first subcomponent.
+
+Helper rename: `componentScalarValue(in:componentIndex:)` → `valueSetScalarValue(in:component:subcomponent:)`. The validator's legacy `segmentIndex: Int` parameter (which historically meant "1-based per-segment-ID occurrence") was renamed to `occurrence: Int` to unify naming with the v0.7 convention where `segmentIndex` is the 0-based array index.
+
+### Added — v0.8-S3: HL7au:000040 MSH-12 Version ID conformance rules
+
+Nine ComponentValueSet entries on the MSH-12 FieldOverride in `Profile+au_adrm_2021.swift` (mirrored verbatim in `Resources/profiles/au-adrm-2021/MSH.json` per ADR-007's hand-curated sync):
+
+- **040.1/.2** (Senders Orders/Results/Referrals/ACK/RRI): MSH-12.1 = "2.4"; MSH-12.2.1 = "AUS"; MSH-12.2.2 = "Australia"; MSH-12.2.3 = "ISO3166_1".
+- **040.3** (Senders Orders/Results, gated on `messageCode in (ORM, ORU)`): MSH-12.3.1 = "HL7AU-OO-201701"; MSH-12.3.3 = "L".
+- **040.4** (Senders Referrals/RRI, gated on `messageCode in (REF, RRI)`): MSH-12.3.1 ∈ {"HL7AU-OO-REF-SIMPLIFIED-201706", "HL7AU-OO-REF-SIMPLIFIED-201706-L1"}; MSH-12.3.3 = "L".
+
+Fixture audit folded into S3: one inline AU-locale test wire (`mshFullyAUCompliant`) needed MSH-12 updated from "2.5.1" to the AU-conformant form; the broader `Tests/Fixtures/` corpus is `.international` and unaffected. 10 new validator-level pins cover positive/negative/gating/dispatch-exclusivity across all four subrules.
+
+### Added — v0.8-S3b: Polish — gating + literal-pin completeness
+
+Post-review polish on the v0.8-S3 rules:
+
+- **Gated 040.1/.2 by messageCode**: added `condition: "messageCode in (ORM, ORU, REF, RRI, ACK)"` to the four universal ComponentValueSet entries. The spec enumerates these five message-type categories; the prior universal-fire was a known misfire on out-of-scope message types (e.g. ADT^A01 with non-AU MSH-12 was spec-compliant under v2.5.1 but triggered the AU rule).
+- **VID-3.2 literal-empty pin**: the spec literal `"HL7AU-OO-201701&&L"` (and `"...-201706&&L"`) carries an empty middle subcomponent. Two new ComponentValueSet entries pin `MSH-12.3.2 = [""]` on both 040.3 and 040.4 gated paths, closing the permissive over-acceptance gap.
+
+Test changes: 4 ADT-based wires flipped to ORU/REF to keep the rule-firing tests valid under stricter gating. New `msh12UniversalSilentOnADT` pins the gating fix; new `msh12_040_3_VID3_2_MustBeEmpty` pins the literal-empty fix. JSON↔Swift sync maintained.
+
 ## [0.7.0] — 2026-06-24
 
 Closes the three documented out-of-scope conditional rules from `docs/design/v2_5_1-spec-audit.md` §93–121 by extending the v0.4-S4 condition DSL per **ADR-008** (Accepted 2026-06-19). The DSL gains three new predicate categories — cross-segment field refs, message-context atoms (`messageCode` / `triggerEvent` / `messageStructure`), and bounded position atoms (`previousSegment(<ID>).<fieldref>`, `associatedSegment(<ID>).<fieldref>`) — evaluated against the full `Message` rather than a single `Segment`. Schema JSON surface unchanged; `"condition"` strings carry the new productions. **No public-API breakage** vs v0.6.0 — pure internal grammar enrichment behind the locked `HL7Locale` enum + `ValidationIssue` surfaces. Tests: 390 (v0.6.0) → 423 across 24 → 26 suites. The 3-month no-API-break v1.0 stability clock continues from v0.5.0.
