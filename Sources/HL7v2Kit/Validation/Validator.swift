@@ -221,8 +221,11 @@ public struct Validator: Sendable {
                     profile: profile,
                     fieldGrammar: fieldGrammar,
                     field: field,
+                    segment: segment,
+                    segmentArrayIndex: segmentIndex,
+                    message: message,
                     segmentID: grammar.segmentID,
-                    segmentIndex: occurrence,
+                    occurrence: occurrence,
                     issues: &issues
                 )
                 // v0.5-S5-B-2: datatype-level composite overrides.
@@ -343,8 +346,11 @@ public struct Validator: Sendable {
         profile: Profile,
         fieldGrammar: FieldGrammar,
         field: Field,
+        segment: Segment,
+        segmentArrayIndex: Int,
+        message: Message,
         segmentID: String,
-        segmentIndex: Int,
+        occurrence: Int,
         issues: inout [ValidationIssue]
     ) {
         guard let override = profile.fieldOverrides.first(where: {
@@ -360,7 +366,7 @@ public struct Validator: Sendable {
                 }
                 let location = IssueLocation(
                     segmentID: segmentID,
-                    segmentIndex: segmentIndex,
+                    segmentIndex: occurrence,
                     fieldIndex: fieldGrammar.index,
                     componentIndex: componentIndex
                 )
@@ -374,36 +380,66 @@ public struct Validator: Sendable {
                 ))
             }
             // Track 2 (v0.5-S5-C): per-component value-set narrowings.
+            // v0.8 (ADR-009): each value-set may declare an optional
+            // condition gating its application + an optional
+            // subcomponent index for granular reads.
             for valueSet in override.componentValueSets {
-                let actual = componentScalarValue(in: repetition, componentIndex: valueSet.component)
+                // Conditional gating (ADR-009). If the predicate is
+                // false (or unresolvable — fail-safe per ADR-008),
+                // skip this value-set entirely.
+                if let condition = valueSet.condition, !condition.isEmpty {
+                    let gated = conditionTriggers(
+                        condition,
+                        in: segment,
+                        segmentIndex: segmentArrayIndex,
+                        message: message,
+                        currentSegmentID: segmentID
+                    )
+                    if !gated { continue }
+                }
+                let actual = valueSetScalarValue(
+                    in: repetition,
+                    component: valueSet.component,
+                    subcomponent: valueSet.subcomponent
+                )
                 if valueSet.allowedValues.contains(actual) { continue }
                 let location = IssueLocation(
                     segmentID: segmentID,
-                    segmentIndex: segmentIndex,
+                    segmentIndex: occurrence,
                     fieldIndex: fieldGrammar.index,
                     componentIndex: valueSet.component
                 )
                 let citation = valueSet.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
                 let allowedList = valueSet.allowedValues.map { "\"\($0)\"" }.joined(separator: ", ")
+                let pathSuffix = valueSet.subcomponent.map { ".\($0)" } ?? ""
                 issues.append(ValidationIssue(
                     severity: .error,
                     code: .profileConstraintViolation(localeRule: citation),
                     location: location,
-                    message: "AU profile value-set rule violated at \(location.pathDescription): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))"
+                    message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))"
                 ))
             }
         }
     }
 
-    /// First-subcomponent scalar of the 1-based `componentIndex`-th
-    /// component in `repetition`. Returns the empty string when the
-    /// component or subcomponent is out of bounds — matches the
-    /// semantic "empty / missing" for value-set comparisons. v0.5-S5-C.
-    private func componentScalarValue(in repetition: Repetition, componentIndex: Int) -> String {
-        guard repetition.components.indices.contains(componentIndex - 1) else { return "" }
-        let component = repetition.components[componentIndex - 1]
-        return component.subcomponents.first?.value ?? ""
+    /// Resolve the scalar string for a value-set comparison. When
+    /// `subcomponent` is nil (default), reads the named component's
+    /// FIRST subcomponent — the v0.5-S5-C behaviour. When set, reads
+    /// the named subcomponent specifically. Returns the empty string
+    /// when the component or subcomponent is out of bounds — matches
+    /// "empty / missing" so a fail-safe miss surfaces a clear
+    /// expected-vs-got message. v0.8 (ADR-009).
+    private func valueSetScalarValue(
+        in repetition: Repetition,
+        component: Int,
+        subcomponent: Int?
+    ) -> String {
+        guard repetition.components.indices.contains(component - 1) else { return "" }
+        let comp = repetition.components[component - 1]
+        let subIndex = (subcomponent ?? 1) - 1
+        guard comp.subcomponents.indices.contains(subIndex) else { return "" }
+        return comp.subcomponents[subIndex].value
     }
 
     /// Profile-usage dispatch — when an override declares the field
