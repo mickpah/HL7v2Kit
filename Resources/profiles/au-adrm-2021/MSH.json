@@ -10,24 +10,28 @@
         {
           "component": 1,
           "allowedValues": ["2.4"],
-          "specCitation": "HL7au:000040.1/.2 (r2) — MSH-12.1 (Version ID) must be \"2.4\""
+          "condition": "messageCode in (ORM, ORU, REF, RRI, ACK)",
+          "specCitation": "HL7au:000040.1/.2 (r2) — MSH-12.1 (Version ID) must be \"2.4\" on Senders Orders/Results/Referrals/ACK/RRI"
         },
         {
           "component": 2,
           "subcomponent": 1,
           "allowedValues": ["AUS"],
+          "condition": "messageCode in (ORM, ORU, REF, RRI, ACK)",
           "specCitation": "HL7au:000040.1/.2 (r2) — MSH-12.2.1 (Internationalization Code identifier) must be \"AUS\""
         },
         {
           "component": 2,
           "subcomponent": 2,
           "allowedValues": ["Australia"],
+          "condition": "messageCode in (ORM, ORU, REF, RRI, ACK)",
           "specCitation": "HL7au:000040.1/.2 (r2) — MSH-12.2.2 (Internationalization Code text) must be \"Australia\""
         },
         {
           "component": 2,
           "subcomponent": 3,
           "allowedValues": ["ISO3166_1"],
+          "condition": "messageCode in (ORM, ORU, REF, RRI, ACK)",
           "specCitation": "HL7au:000040.1/.2 (r2) — MSH-12.2.3 (Internationalization Code coding system) must be \"ISO3166_1\""
         },
         {
@@ -36,6 +40,13 @@
           "allowedValues": ["HL7AU-OO-201701"],
           "condition": "messageCode in (ORM, ORU)",
           "specCitation": "HL7au:000040.3 — MSH-12.3.1 (Internal Version ID identifier) must be \"HL7AU-OO-201701\" on Orders/Results"
+        },
+        {
+          "component": 3,
+          "subcomponent": 2,
+          "allowedValues": [""],
+          "condition": "messageCode in (ORM, ORU)",
+          "specCitation": "HL7au:000040.3 — MSH-12.3.2 (Internal Version ID text) must be empty per literal \"HL7AU-OO-201701&&L\" on Orders/Results"
         },
         {
           "component": 3,
@@ -53,6 +64,13 @@
           ],
           "condition": "messageCode in (REF, RRI)",
           "specCitation": "HL7au:000040.4 (r2) — MSH-12.3.1 (Internal Version ID identifier) must be HL7AU-OO-REF-SIMPLIFIED-201706 (Level 2) or HL7AU-OO-REF-SIMPLIFIED-201706-L1 (Level 1) on Referrals/RRI"
+        },
+        {
+          "component": 3,
+          "subcomponent": 2,
+          "allowedValues": [""],
+          "condition": "messageCode in (REF, RRI)",
+          "specCitation": "HL7au:000040.4 (r2) — MSH-12.3.2 (Internal Version ID text) must be empty per literal \"...&&L\" on Referrals/RRI"
         },
         {
           "component": 3,

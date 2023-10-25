@@ -31,30 +31,36 @@ extension Profile {
             // behaviour (out of scope for a validator). v0.8 (ADR-009)
             // ships .1, .2, .3, .4 as follows:
             //
-            // 040.1/.2 (universal Senders Orders/Results/Referrals/
-            //   ACK/RRI):
+            // 040.1/.2 (Senders Orders, Results, Referrals, ACK, RRI):
             //   - VID-1 (Version ID) = "2.4"
             //   - VID-2 (Internationalization Code, CE):
             //       .1 = "AUS", .2 = "Australia", .3 = "ISO3166_1"
-            //   These four value-sets always apply when MSH-12 is
-            //   populated (no condition gating).
+            //   v0.8-S3b (review): the spec enumerates these five
+            //   message-type categories; gating prevents over-fire on
+            //   message types outside scope (e.g. ADT).
             //
             // 040.3 (Senders Orders, Results — messageCode in
             //   (ORM, ORU)):
-            //   - VID-3 (Internal Version ID, CE):
-            //       .1 = "HL7AU-OO-201701", .3 = "L"
+            //   - VID-3 (Internal Version ID, CE) = "HL7AU-OO-201701&&L"
+            //     literal, i.e. .1 = "HL7AU-OO-201701", .2 = empty,
+            //     .3 = "L". v0.8-S3b adds the .2 = "" pin for full
+            //     literal conformance.
             //
             // 040.4 (Senders Referrals, RRI — messageCode in
             //   (REF, RRI)):
-            //   - VID-3:
-            //       .1 in {"HL7AU-OO-REF-SIMPLIFIED-201706",
-            //              "HL7AU-OO-REF-SIMPLIFIED-201706-L1"},
-            //       .3 = "L"
+            //   - VID-3 = "HL7AU-OO-REF-SIMPLIFIED-201706&&L" (Level 2)
+            //     OR "HL7AU-OO-REF-SIMPLIFIED-201706-L1&&L" (Level 1),
+            //     each with empty .2 and .3 = "L".
             //
             // profileUsage stays nil because MSH-12 is already R in
             // the base HL7 v2 grammar — base-spec checkRequired
             // catches the empty case; the AU rules add value-set
             // narrowings on top.
+            //
+            // Reused gating predicates:
+            //   universal40 = "messageCode in (ORM, ORU, REF, RRI, ACK)"
+            //   orders     = "messageCode in (ORM, ORU)"
+            //   referrals  = "messageCode in (REF, RRI)"
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 12,
@@ -63,13 +69,15 @@ extension Profile {
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["2.4"],
-                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.1 (Version ID) must be \"2.4\""
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                        specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.1 (Version ID) must be \"2.4\" on Senders Orders/Results/Referrals/ACK/RRI"
                     ),
                     // 040.1/.2: VID-2.1 = "AUS"
                     ComponentValueSet(
                         component: 2,
                         subcomponent: 1,
                         allowedValues: ["AUS"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.1 (Internationalization Code identifier) must be \"AUS\""
                     ),
                     // 040.1/.2: VID-2.2 = "Australia"
@@ -77,6 +85,7 @@ extension Profile {
                         component: 2,
                         subcomponent: 2,
                         allowedValues: ["Australia"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.2 (Internationalization Code text) must be \"Australia\""
                     ),
                     // 040.1/.2: VID-2.3 = "ISO3166_1"
@@ -84,6 +93,7 @@ extension Profile {
                         component: 2,
                         subcomponent: 3,
                         allowedValues: ["ISO3166_1"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000040.1/.2 (r2) — MSH-12.2.3 (Internationalization Code coding system) must be \"ISO3166_1\""
                     ),
                     // 040.3 (Orders/Results only): VID-3.1 = "HL7AU-OO-201701"
@@ -93,6 +103,15 @@ extension Profile {
                         allowedValues: ["HL7AU-OO-201701"],
                         condition: "messageCode in (ORM, ORU)",
                         specCitation: "HL7au:000040.3 — MSH-12.3.1 (Internal Version ID identifier) must be \"HL7AU-OO-201701\" on Orders/Results"
+                    ),
+                    // 040.3 (Orders/Results only): VID-3.2 must be empty
+                    // per the literal "HL7AU-OO-201701&&L" form.
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 2,
+                        allowedValues: [""],
+                        condition: "messageCode in (ORM, ORU)",
+                        specCitation: "HL7au:000040.3 — MSH-12.3.2 (Internal Version ID text) must be empty per literal \"HL7AU-OO-201701&&L\" on Orders/Results"
                     ),
                     // 040.3 (Orders/Results only): VID-3.3 = "L"
                     ComponentValueSet(
@@ -112,6 +131,15 @@ extension Profile {
                         ],
                         condition: "messageCode in (REF, RRI)",
                         specCitation: "HL7au:000040.4 (r2) — MSH-12.3.1 (Internal Version ID identifier) must be HL7AU-OO-REF-SIMPLIFIED-201706 (Level 2) or HL7AU-OO-REF-SIMPLIFIED-201706-L1 (Level 1) on Referrals/RRI"
+                    ),
+                    // 040.4 (Referrals/RRI only): VID-3.2 must be empty
+                    // per the literal "...&&L" form.
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 2,
+                        allowedValues: [""],
+                        condition: "messageCode in (REF, RRI)",
+                        specCitation: "HL7au:000040.4 (r2) — MSH-12.3.2 (Internal Version ID text) must be empty per literal \"...&&L\" on Referrals/RRI"
                     ),
                     // 040.4 (Referrals/RRI only): VID-3.3 = "L"
                     ComponentValueSet(
