@@ -235,7 +235,8 @@
       "name": "Parent",
       "dataType": "EIP",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "ORC-1 = CH"
     },
     {
       "index": 30,

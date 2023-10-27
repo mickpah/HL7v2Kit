@@ -330,6 +330,40 @@ struct ConditionalFieldTests {
                 "PA orders don't require ORC-8 per v2.4 §4.5.1.1; got \(orc8Issues.map(\.message))")
     }
 
+    // v0.9 audit pin: OBR-29 carries the same "required when the
+    // order is a child" rule as ORC-8 per v2.4 §4.5.3.29 (p. 4-54).
+    // The predicate `ORC-1 = CH` resolves cross-segment via
+    // associatedSegment(ORC) when evaluated in OBR context.
+
+    @Test("OBR-29 conditional fires on OBR whose associated ORC is a child")
+    func obr29ConditionalFiresOnChildAssociatedORC() throws {
+        // Same parent+child wire as orc8ConditionalFiresOnChild. The
+        // child group's OBR (OBR[2]) has OBR-29 empty AND its
+        // associated ORC carries ORC-1 = CH → OBR-29 fires.
+        let message = try Parser().parse(parentChildORCChildMissingParentRef)
+        let report = Validator().validate(message)
+        let obr29Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "OBR" &&
+            $0.location.fieldIndex == 29
+        }
+        #expect(obr29Issues.count == 1)
+        #expect(obr29Issues.first?.location.segmentIndex == 2)
+    }
+
+    @Test("OBR-29 silent on OBR whose associated ORC is not a child")
+    func obr29ConditionalSilentOnNonChildAssociatedORC() throws {
+        // Parent-only wire (ORC-1 = PA). OBR-29 empty but the
+        // associated ORC carries PA, not CH → predicate false → no fire.
+        let message = try Parser().parse(standaloneParentORC)
+        let report = Validator().validate(message)
+        let obr29Issues = report.errors.filter {
+            $0.location.segmentID == "OBR" && $0.location.fieldIndex == 29
+        }
+        #expect(obr29Issues.isEmpty,
+                "OBR-29 must not fire on PA orders; got \(obr29Issues.map(\.message))")
+    }
+
     @Test("Fixture corpus produces no unexpected conditional errors")
     func fixtureCorpusNoConditionalErrors() throws {
         // None of the synthetic fixtures populate PID-36/37/38 or the

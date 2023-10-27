@@ -208,7 +208,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 26, name: "Parent Result", dataType: "PRL", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 27, name: "Quantity/Timing (deprecated)", dataType: "TQ", optionality: .backwardCompat, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 28, name: "Result Copies To", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
-            FieldGrammar(index: 29, name: "Parent", dataType: "EIP", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 29, name: "Parent", dataType: "EIP", optionality: .conditional, repeatability: .single, condition: "ORC-1 = CH"),
             FieldGrammar(index: 30, name: "Transportation Mode", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 31, name: "Reason for Study", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 32, name: "Principal Result Interpreter", dataType: "NDL", optionality: .conditional, repeatability: .single, condition: nil),
