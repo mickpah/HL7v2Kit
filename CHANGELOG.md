@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-06-25
+
+Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.
+
+### Added — OBR-7 partial + audit of OBR-14 / OBR-22 / OBR-32
+
+`0810bda` ships `"messageCode = ORU"` on OBR-7 in v2.5.1 + v2.4 per §4.5.3.7 first trigger (report message). Second trigger (specimen sent with request) deferred — needs specimen-presence DSL atom. OBR-14 / OBR-22 / OBR-32 explicitly audited as having no extractable spec MUST trigger.
+
+### Added — ORC-3 / OBR-3 filler-order XOR
+
+`1f7448e` ships the symmetric XOR per §4.5.1.3 (exact mirror of the v0.7-S4 ORC-2 / OBR-2 placer rule).
+
+### Added — Per-version coverage closure to v2.3 + v2.3.1
+
+`5148421` propagates all 5 cross-segment / message-context rules (ORC-2/OBR-2 XOR, ORC-3/OBR-3 XOR, ORC-8/OBR-29 child-order, OBR-7 report-message, OBR-25 report-message) to v2.3 + v2.3.1 schemas. PDFKit-extracted both v2.3.1 Hl7V231.pdf and v2.3 CH4.pdf; confirmed verbatim-equivalent spec text. **16 new condition strings**.
+
+`f98ea6a` propagates OBX-2 result-status condition `"OBX-11 != X"` to v2.3 + v2.3.1 OBX.json. §7.3.2.2 wording confirmed verbatim across all 4 versions.
+
+### Added — DG1-20 / DG1-21 Update-Diagnosis trigger
+
+`c25e208` ships `"triggerEvent = P12"` on both fields in v2.5.1 per §6.5.2.20 / §6.5.2.21. Uses the v0.7 message-context atom.
+
+### Audited / not shippable
+
+- `87dc447` HL7au:000001 (Order addressing / MSH-6 Receiving facility) audited; all 4 subrules either runtime semantics, soft "should" guidance, or pointing to PKI-deferred HL7au:00044.2.
+- `14377cc` HL7au:000008 (Display Segments) audited; cluster needs new DSL primitives (segment-presence-quantification, content-gated overlays). Re-audit after ADR-010 lands.
+
+Combined audit findings reveal a pattern: multiple deferred rules (§4.5.1.8 XOR softening, OBR-7/9/10/11/14 specimen-presence, HL7au:000008) all point to the same architectural extension — a future ADR-010 covering peer-absent atom + segment-quantification atom + content-gated overlay dispatch.
+
+### Carried over from v0.9.0 onto the v0.10.0 line
+
+- `cc14e89` ORC-8 predicate corrected (`previousSegment(ORC).ORC-1 = PA` → `"ORC-1 = CH"`) per the working notes req #4.
+- `f750e56` OBR-29 silently-missing condition filled (`"ORC-1 = CH"`).
+
+These were tagged into v0.9.0; included here for cycle continuity.
+
 ## [0.9.0] — 2026-06-25
 
 Docs + defect-fix release. Closes the v0.7-S4 deferred work by back-filling verbatim v2.4 CH04 § citations for the four cross-segment / message-context rules into `docs/design/v2_3-v2_4-spec-audit.md`, using the PDFKit-based spec-extraction recipe (memory file `reference_pdf_extraction.md`) that cleared the prior "no pdftotext" gate. The audit pass surfaced two the working notes req #4 defects — both corrected in the same session per the new `feedback_correct_defects_as_found` working rule. **No public-API change** vs v0.8.0; v1.0 stability clock continues from v0.5.0. Tests: 435 (v0.8.0) → 439 across 26 suites.
