@@ -351,6 +351,49 @@ struct ConditionalFieldTests {
         #expect(obr29Issues.first?.location.segmentIndex == 2)
     }
 
+    // v0.10 audit: OBR-7 §4.5.3.7 first sentence — "When the OBR is
+    // transmitted as part of a report message, the field must be
+    // filled in." Same message-context predicate as OBR-25. The
+    // §4.5.3.7 second sentence (specimen sent with request) is NOT
+    // captured by the current DSL — would need a specimen-presence
+    // atom. Documented in v2_3-v2_4-spec-audit.md as a known gap.
+
+    private let oruWithEmptyOBR7 = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r
+    """
+
+    @Test("OBR-7 conditional fires on ORU message with empty OBR-7")
+    func obr7ConditionalFiresOnORU() throws {
+        let message = try Parser().parse(oruWithEmptyOBR7)
+        let report = Validator().validate(message)
+        let obr7Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "OBR" &&
+            $0.location.fieldIndex == 7
+        }
+        #expect(obr7Issues.count == 1)
+    }
+
+    private let adtWithEmptyOBR = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("OBR-7 silent when no OBR present (e.g. ADT message)")
+    func obr7ConditionalSilentWhenNoOBR() throws {
+        // ADT^A01 has no OBR segment at all → the conditional check
+        // never runs on OBR-7. Negative pin to confirm.
+        let message = try Parser().parse(adtWithEmptyOBR)
+        let report = Validator().validate(message)
+        let obr7Issues = report.errors.filter {
+            $0.location.segmentID == "OBR" && $0.location.fieldIndex == 7
+        }
+        #expect(obr7Issues.isEmpty)
+    }
+
     @Test("OBR-29 silent on OBR whose associated ORC is not a child")
     func obr29ConditionalSilentOnNonChildAssociatedORC() throws {
         // Parent-only wire (ORC-1 = PA). OBR-29 empty but the

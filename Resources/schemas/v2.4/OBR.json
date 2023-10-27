@@ -58,7 +58,8 @@
       "name": "Observation Date/Time",
       "dataType": "TS",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "messageCode = ORU"
     },
     {
       "index": 8,

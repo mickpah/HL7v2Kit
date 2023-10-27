@@ -171,7 +171,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 4, name: "Universal Service Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
             FieldGrammar(index: 5, name: "Priority (deprecated)", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Requested Date/Time (deprecated)", dataType: "TS", optionality: .backwardCompat, repeatability: .single, condition: nil),
-            FieldGrammar(index: 7, name: "Observation Date/Time", dataType: "TS", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Observation Date/Time", dataType: "TS", optionality: .conditional, repeatability: .single, condition: "messageCode = ORU"),
             FieldGrammar(index: 8, name: "Observation End Date/Time", dataType: "TS", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 9, name: "Collection Volume", dataType: "CQ", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Collector Identifier", dataType: "XCN", optionality: .conditional, repeatability: .multiple, condition: nil),
