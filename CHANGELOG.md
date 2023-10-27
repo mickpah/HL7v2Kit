@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-06-25
+
+Docs + defect-fix release. Closes the v0.7-S4 deferred work by back-filling verbatim v2.4 CH04 § citations for the four cross-segment / message-context rules into `docs/design/v2_3-v2_4-spec-audit.md`, using the PDFKit-based spec-extraction recipe (memory file `reference_pdf_extraction.md`) that cleared the prior "no pdftotext" gate. The audit pass surfaced two the working notes req #4 defects — both corrected in the same session per the new `feedback_correct_defects_as_found` working rule. **No public-API change** vs v0.8.0; v1.0 stability clock continues from v0.5.0. Tests: 435 (v0.8.0) → 439 across 26 suites.
+
+### Added — v2.4 spec-audit § citation back-fill
+
+`docs/design/v2_3-v2_4-spec-audit.md` Conditional-rule carry-forward table extended with rows citing v2.4 CH04 verbatim for each v0.7 cross-segment rule:
+
+- **ORC-2 §4.5.1.2** (p. 4-34) — XOR with OBR-2; wording identical to v2.5.1.
+- **OBR-2 §4.5.3.2** — symmetric XOR partner.
+- **OBR-25 §4.5.3.25** (p. 4-52) — report-message guard; wording identical to v2.5.1.
+- **ORC-8 §4.5.1.1 + §4.5.1.8** (pp. 4-26 / 4-37) — child-order trigger + XOR softening.
+- **OBR-29 §4.5.3.29** (p. 4-54) — identical-to-ORC-8 trigger.
+
+PDFKit-based extraction recipe captured as `reference_pdf_extraction.md` memory; clears the previously-deferred "no pdftotext" gate that blocked spec-audit work.
+
+### Fixed — ORC-8 predicate (the working notes req #4 defect)
+
+The v0.7-S4 mirror shipped `previousSegment(ORC).ORC-1 = PA` as the ORC-8 conditional. The v2.4 CH04 audit surfaced that the spec §4.5.1.1 trigger is keyed on "current ORC carries ORC-1 = CH", not on "preceding ORC carried PA". The prior predicate under-fired on standalone CH orders and CH orders whose parent was sent in a prior message — silent false negatives on spec-compliant scenarios.
+
+Corrected to `"ORC-1 = CH"` (same-segment v0.4-S4 DSL atom; no architectural change) on both `Resources/schemas/v2.5.1/ORC.json` and `Resources/schemas/v2.4/ORC.json`. Tests: existing `orc8ConditionalFiresOnChild` updated; new `orc8ConditionalFiresOnStandaloneChild` (regression guard for the prior false-negative) + `orc8ConditionalSilentOnParent` (negative pin) added. 2 new tests.
+
+### Fixed — OBR-29 silently-missing condition (same defect class)
+
+OBR-29 was conditional in both v2.5.1 and v2.4 schemas but had no `"condition"` string at all — the field's §4.5.3.29 "It is required when the order is a child" trigger silently never fired. Added `"condition": "ORC-1 = CH"`; the v0.7 cross-segment field-ref semantic resolves `ORC-1` via `Message.associatedSegment(ORC, fromIndex: OBR_index)` when evaluated in OBR context.
+
+Tests: new `obr29ConditionalFiresOnChildAssociatedORC` + `obr29ConditionalSilentOnNonChildAssociatedORC` pins. 2 new tests.
+
+Known limitation documented: the §4.5.1.8 XOR softening (parent in ORC OR OBR satisfies both) is not yet enforced — would require a DSL primitive distinguishing "peer absent" from "peer empty" (current cross-segment ref fails safe to false on both). The shipped ORC-8 / OBR-29 conditions err on the over-fire side relative to the XOR softening but match the §4.5.1.1 / §4.5.3.29 child-order triggers exactly.
+
+### Added — Process improvement
+
+New feedback memory `feedback_correct_defects_as_found.md`: when an audit surfaces a the working notes req #4 defect with clear spec text and a mechanical fix path, fix it in the same session rather than queuing as a future candidate. This release sequence (audit → 2 defect corrections → same-session ship) exercises the rule.
+
+### Known follow-ups (deferred to v0.10+)
+
+Same-class audit found **78 conditional fields across all schemas** carrying `"optionality": "C"` with no `"condition"` string. The 4 we corrected in v0.9 are a subset; the remaining 74 silent never-fires require multi-session audit work (v2.3 / v2.3.1 PDF extraction + cross-segment / message-context DSL extensions for some). Scoping options in `NEXT_STEPS.md` "Conditional-without-condition audit" track.
+
 ## [0.8.0] — 2026-06-25
 
 Ships the first AU profile narrowing that exercises subcomponent-granular value pinning and message-type-dispatched conditional gating, per **ADR-009** (Accepted 2026-06-25). The AU `ComponentValueSet` model gains two optional fields (`subcomponent: Int?` + `condition: String?`); the Validator reuses the v0.7 (ADR-008) `conditionTriggers` evaluator as the gating engine — no new parser, no new dispatch surface. Closes HL7au:000040 (MSH-12 Version ID Field Conformance Points) subrules .1, .2, .3, .4 verbatim against the AU ADRM-2021 spec pp. 445–446. 040.5 is receiver runtime behaviour, explicitly out of scope. **No public-API change** vs v0.7.0; v1.0 stability clock continues from v0.5.0. Tests: 423 (v0.7.0) → 435 across 26 suites.
