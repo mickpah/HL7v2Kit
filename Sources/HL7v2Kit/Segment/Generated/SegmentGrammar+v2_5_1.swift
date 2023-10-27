@@ -42,8 +42,8 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 17, name: "Diagnosis Classification", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 18, name: "Confidential Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 19, name: "Attestation Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 20, name: "Diagnosis Identifier", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 21, name: "Diagnosis Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 20, name: "Diagnosis Identifier", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "triggerEvent = P12"),
+            FieldGrammar(index: 21, name: "Diagnosis Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "triggerEvent = P12"),
             ]
         ),
         "ERR": SegmentGrammar(

@@ -378,6 +378,49 @@ struct ConditionalFieldTests {
     OBR|1|ORD001||GLUC|||20260619000000||||||||||||||||||||F\r
     """
 
+    // DG1-20 / DG1-21 per v2.5.1 §6.5.2.20 / §6.5.2.21: "This field
+    // is required in all implementations employing Update Diagnosis/
+    // Procedures (P12) messages." Trigger: messageCode + triggerEvent
+    // pair "ADT^P12". The v0.7 message-context atom resolves
+    // MSH-9.2 directly.
+
+    private let adtP12WithEmptyDG1 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^P12|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    DG1|1||\r
+    """
+
+    @Test("DG1-20 / DG1-21 fire on ADT^P12 with empty DG1 (v0.10 audit)")
+    func dg1ConditionalsFireOnP12() throws {
+        let message = try Parser().parse(adtP12WithEmptyDG1)
+        let report = Validator().validate(message)
+        let dg1Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "DG1" &&
+            ($0.location.fieldIndex == 20 || $0.location.fieldIndex == 21)
+        }
+        #expect(dg1Issues.contains { $0.location.fieldIndex == 20 })
+        #expect(dg1Issues.contains { $0.location.fieldIndex == 21 })
+    }
+
+    private let adtA01WithEmptyDG1 = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    DG1|1||\r
+    """
+
+    @Test("DG1-20 / DG1-21 silent on non-P12 messages")
+    func dg1ConditionalsSilentOnNonP12() throws {
+        let message = try Parser().parse(adtA01WithEmptyDG1)
+        let report = Validator().validate(message)
+        let dg1Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "DG1" &&
+            ($0.location.fieldIndex == 20 || $0.location.fieldIndex == 21)
+        }
+        #expect(dg1Issues.isEmpty)
+    }
+
     @Test("ORC-3 / OBR-3 XOR fires on both sides when both filler orders empty")
     func fillerOrderXORFiresOnBothSides() throws {
         let message = try Parser().parse(oruBothFillersEmpty)

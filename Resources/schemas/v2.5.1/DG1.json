@@ -161,7 +161,8 @@
       "name": "Diagnosis Identifier",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "triggerEvent = P12"
     },
     {
       "index": 21,
@@ -169,7 +170,8 @@
       "name": "Diagnosis Action Code",
       "dataType": "ID",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "triggerEvent = P12"
     }
   ]
 }
