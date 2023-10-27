@@ -67,7 +67,7 @@
       "dataType": "EIP",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "previousSegment(ORC).ORC-1 = PA"
+      "condition": "ORC-1 = CH"
     },
     {
       "index": 9,

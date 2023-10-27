@@ -257,8 +257,10 @@ struct ConditionalFieldTests {
 
     // Parent-child ORC pair: first ORC carries ORC-1 = PA (parent),
     // second carries ORC-1 = CH (child). The child's ORC-8 is empty
-    // → conditional must fire on ORC[2]-8 because previousSegment(ORC)
-    // .ORC-1 = PA.
+    // → conditional must fire on ORC[2]-8 because ORC-1 = CH (the
+    // current ORC IS a child order). v0.9 audit corrected the
+    // predicate from `previousSegment(ORC).ORC-1 = PA` to the
+    // same-segment `ORC-1 = CH` per v2.4 CH04 §4.5.1.1 (p. 4-26).
     private let parentChildORCChildMissingParentRef = """
     MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
     PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
@@ -268,7 +270,7 @@ struct ConditionalFieldTests {
     OBR|2|ORD002|FIL002|HBA1C|||||||||||||||||||||F\r
     """
 
-    @Test("ORC-8 conditional fires on child ORC when previous ORC carries PA")
+    @Test("ORC-8 conditional fires on child ORC (ORC-1 = CH)")
     func orc8ConditionalFiresOnChild() throws {
         let message = try Parser().parse(parentChildORCChildMissingParentRef)
         let report = Validator().validate(message)
@@ -277,11 +279,55 @@ struct ConditionalFieldTests {
             $0.location.segmentID == "ORC" &&
             $0.location.fieldIndex == 8
         }
-        // ORC[1] is the parent (its previous ORC doesn't exist, so the
-        // condition fails safe) — silent. ORC[2] is the child (its
-        // previous ORC carries PA) — fires.
+        // ORC[1] has ORC-1 = PA (parent) — predicate false, no fire.
+        // ORC[2] has ORC-1 = CH (child) — predicate true, ORC-8 empty,
+        // fire on ORC[2]-8.
         #expect(orc8Issues.count == 1)
         #expect(orc8Issues.first?.location.segmentIndex == 2)
+    }
+
+    // v0.9 audit pin: a standalone CH order with no preceding parent
+    // ORC must still fire — the prior predicate `previousSegment(ORC)
+    // .ORC-1 = PA` would have under-fired here. This is the regression
+    // guard for the the working notes req #4 defect fix.
+    private let standaloneChildORC = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|CH|ORD002||GROUP|CM\r\
+    OBR|1|ORD002|FIL002|HBA1C|||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-8 fires on standalone CH order with no preceding parent ORC")
+    func orc8ConditionalFiresOnStandaloneChild() throws {
+        let message = try Parser().parse(standaloneChildORC)
+        let report = Validator().validate(message)
+        let orc8Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "ORC" &&
+            $0.location.fieldIndex == 8
+        }
+        #expect(orc8Issues.count == 1,
+                "Standalone CH order must fire ORC-8 conditional under corrected predicate")
+    }
+
+    // Parent ORC (ORC-1 = PA) with no ORC-8 must NOT fire — the rule
+    // scopes to child orders, not parents.
+    private let standaloneParentORC = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|PA|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL001|GLUC|||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-8 silent on standalone PA order (predicate scoped to CH)")
+    func orc8ConditionalSilentOnParent() throws {
+        let message = try Parser().parse(standaloneParentORC)
+        let report = Validator().validate(message)
+        let orc8Issues = report.errors.filter {
+            $0.location.segmentID == "ORC" && $0.location.fieldIndex == 8
+        }
+        #expect(orc8Issues.isEmpty,
+                "PA orders don't require ORC-8 per v2.4 §4.5.1.1; got \(orc8Issues.map(\.message))")
     }
 
     @Test("Fixture corpus produces no unexpected conditional errors")

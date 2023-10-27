@@ -247,7 +247,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Order Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Response Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "Quantity/Timing (deprecated)", dataType: "TQ", optionality: .backwardCompat, repeatability: .multiple, condition: nil),
-            FieldGrammar(index: 8, name: "Parent", dataType: "EIP", optionality: .conditional, repeatability: .single, condition: "previousSegment(ORC).ORC-1 = PA"),
+            FieldGrammar(index: 8, name: "Parent", dataType: "EIP", optionality: .conditional, repeatability: .single, condition: "ORC-1 = CH"),
             FieldGrammar(index: 9, name: "Date/Time of Transaction", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Entered By", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 11, name: "Verified By", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
