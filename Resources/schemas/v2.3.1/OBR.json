@@ -17,7 +17,8 @@
       "name": "Placer Order Number",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "ORC-2 empty"
     },
     {
       "index": 3,
@@ -25,7 +26,8 @@
       "name": "Filler Order Number",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "ORC-3 empty"
     },
     {
       "index": 4,
@@ -57,7 +59,8 @@
       "name": "Observation Date/Time",
       "dataType": "TS",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "messageCode = ORU"
     },
     {
       "index": 8,
@@ -201,7 +204,8 @@
       "name": "Result Status",
       "dataType": "ID",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "messageCode = ORU"
     },
     {
       "index": 26,
@@ -233,7 +237,8 @@
       "name": "Parent",
       "dataType": "EIP",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "ORC-1 = CH"
     },
     {
       "index": 30,

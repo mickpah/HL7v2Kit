@@ -160,6 +160,36 @@ struct MultiVersionTests {
         #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
     }
 
+    // v0.9+ propagation: the v2.4 CH04 cross-segment / message-context
+    // conditions (ORC-2/OBR-2 XOR, ORC-3/OBR-3 XOR, ORC-8/OBR-29 child-
+    // order, OBR-7/OBR-25 report-message) have verbatim wording in v2.3
+    // and v2.3.1 CH04 — the conditions propagated cleanly. This pin
+    // exercises the v2.3.1 grammar dispatch on a minimal wire where
+    // all conditions fire to confirm the predicates compiled into the
+    // v2.3.1 grammar table.
+    private let v231ORUBothPlacersEmpty = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01|MSG|P|2.3.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|RE|||GROUP|CM\r\
+    OBR|1|||GLUC^Glucose\r
+    """
+
+    @Test("v2.3.1 ORC/OBR cross-segment conditions fire under v2.3.1 grammar")
+    func v231CrossSegmentConditionalsFire() throws {
+        let message = try Parser().parse(v231ORUBothPlacersEmpty)
+        let report = Validator().validate(message)
+        let codes = report.errors.map { ($0.location.segmentID, $0.location.fieldIndex) }
+        // ORC-2 + OBR-2 placer XOR.
+        #expect(codes.contains { $0.0 == "ORC" && $0.1 == 2 })
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 2 })
+        // ORC-3 + OBR-3 filler XOR.
+        #expect(codes.contains { $0.0 == "ORC" && $0.1 == 3 })
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 3 })
+        // OBR-7 + OBR-25 message-context.
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 7 })
+        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
+    }
+
     @Test("v2.4 SegmentGrammarTable populated for all 15 segments with v2.4 caps")
     func v24GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_4

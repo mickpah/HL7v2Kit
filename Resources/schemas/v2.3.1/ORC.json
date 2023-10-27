@@ -17,7 +17,8 @@
       "name": "Placer Order Number",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "OBR-2 empty"
     },
     {
       "index": 3,
@@ -25,7 +26,8 @@
       "name": "Filler Order Number",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "OBR-3 empty"
     },
     {
       "index": 4,
@@ -65,7 +67,8 @@
       "name": "Parent",
       "dataType": "EIP",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "ORC-1 = CH"
     },
     {
       "index": 9,
