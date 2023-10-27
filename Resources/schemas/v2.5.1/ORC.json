@@ -26,7 +26,8 @@
       "name": "Filler Order Number",
       "dataType": "EI",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "OBR-3 empty"
     },
     {
       "index": 4,

@@ -365,6 +365,47 @@ struct ConditionalFieldTests {
     OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r
     """
 
+    // ORC-3 / OBR-3 filler-order XOR per v2.4 §4.5.1.3 / §4.5.3.3:
+    // "ORC-3-filler order number is the same as OBR-3-filler order
+    // number. If the filler order number is not present in the ORC,
+    // it must be present in the associated OBR." Exact mirror of the
+    // ORC-2/OBR-2 placer-order XOR shipped in v0.7-S4.
+
+    private let oruBothFillersEmpty = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001||GLUC|||20260619000000||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-3 / OBR-3 XOR fires on both sides when both filler orders empty")
+    func fillerOrderXORFiresOnBothSides() throws {
+        let message = try Parser().parse(oruBothFillersEmpty)
+        let report = Validator().validate(message)
+        let xorIssues = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 3
+        }
+        #expect(xorIssues.contains { $0.location.segmentID == "ORC" })
+        #expect(xorIssues.contains { $0.location.segmentID == "OBR" })
+    }
+
+    private let oruOBRCarriesFiller = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL001|GLUC|||20260619000000||||||||||||||||||||F\r
+    """
+
+    @Test("ORC-3 / OBR-3 XOR satisfied when OBR carries the filler order")
+    func fillerOrderXORSatisfiedFromOBRSide() throws {
+        let message = try Parser().parse(oruOBRCarriesFiller)
+        let report = Validator().validate(message)
+        let xorIssues = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 3
+        }
+        #expect(xorIssues.isEmpty)
+    }
+
     @Test("OBR-7 conditional fires on ORU message with empty OBR-7")
     func obr7ConditionalFiresOnORU() throws {
         let message = try Parser().parse(oruWithEmptyOBR7)

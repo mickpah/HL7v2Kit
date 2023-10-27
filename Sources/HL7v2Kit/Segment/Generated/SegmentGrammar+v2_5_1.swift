@@ -182,7 +182,7 @@ extension SegmentGrammarTable {
             fields: [
             FieldGrammar(index: 1, name: "Set ID - OBR", dataType: "SI", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-2 empty"),
-            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-3 empty"),
             FieldGrammar(index: 4, name: "Universal Service Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
             FieldGrammar(index: 5, name: "Priority (deprecated)", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Requested Date/Time (deprecated)", dataType: "TS", optionality: .backwardCompat, repeatability: .single, condition: nil),
@@ -258,7 +258,7 @@ extension SegmentGrammarTable {
             fields: [
             FieldGrammar(index: 1, name: "Order Control", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
             FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "OBR-2 empty"),
-            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "OBR-3 empty"),
             FieldGrammar(index: 4, name: "Placer Group Number", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 5, name: "Order Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Response Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
