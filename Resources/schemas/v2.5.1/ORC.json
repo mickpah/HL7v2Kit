@@ -68,7 +68,7 @@
       "dataType": "EIP",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-1 = CH"
+      "condition": "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty"
     },
     {
       "index": 9,

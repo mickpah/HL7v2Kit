@@ -19,6 +19,18 @@ Substage plan: S1 segment-presence + XOR softening → S2 subcomponent field-ref
 
 Accepted as drafted (single ADR spanning all three extensions); split-off of Extension 2 into a follow-up ADR-011 remains an available option if S3 turns out too large in practice.
 
+### Added — v0.11-S1: segment-presence atoms + §4.5.1.8 XOR softening (2026-07-03)
+
+First implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Extends the v0.7-S2 predicate DSL with the ADR-010 Extension 1 segment-presence atom (`<segmentID> present` / `<segmentID> absent`) and applies it to soften the v2.4 CH04 §4.5.1.8 ORC-8 / OBR-29 XOR — the child-order parent may be carried in either peer without over-firing.
+
+- `Validator.evaluateSegmentPresenceAtom` dispatches the new atom shape before the general referent/predicate split. Segment-ID filter: 3-char ASCII alphanumeric uppercase (matches DG1, IN1, PV1 alongside ORC, OBR, etc.).
+- `Message.segmentExists(_ id: String, inGroupOf index: Int) -> Bool` — thin wrapper over ADR-008 `associatedSegment(_:fromIndex:)`. Same ORC/OBR-group boundary semantics; degenerate-group fallback for non-ORC/OBR callers.
+- ORC-8 / OBR-29 conditions in `Resources/schemas/{v2.4,v2.5.1}/{ORC,OBR}.json` rewritten as DNF-encoded XOR softening. Parser has no paren support, so `A AND (B OR C)` is encoded as `A AND B OR A AND C` (equivalent under AND-tighter-than-OR precedence). DocC on `conditionTriggers` updated with the DNF constraint.
+- Regression pins in `ConditionalFieldTests`: `orc8SilentUnderXORSofteningWhenOBRCarriesParent`, `obr29SilentUnderXORSofteningWhenORCCarriesParent`. All v0.9 pins (both-empty case fires; parent-only case silent) remain green.
+- **Known limitation**: v2.3 / v2.3.1 ORC-8 / OBR-29 still carry the unsoftened `"ORC-1 = CH"` predicate — softening those needs PDFKit spec-text confirmation that v2.3 / v2.3.1 CH04 carry the equivalent §4.5.1.8 XOR trigger; queued for S5 release-prep audit.
+
+Tests: 446 → 448 across 26 suites.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.

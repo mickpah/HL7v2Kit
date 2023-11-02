@@ -172,6 +172,21 @@ public struct Message: Sendable, Equatable, Hashable {
         return nil
     }
 
+    /// True when a segment of `id` exists in the same ORC/OBR group as
+    /// the segment at `inGroupOf` (excluding the segment at that index
+    /// itself). Uses the same group-boundary walk as
+    /// `associatedSegment(_:fromIndex:)`.
+    ///
+    /// ADR-010 segment-presence atom (`<segmentID> present` /
+    /// `<segmentID> absent`). Distinguishes "peer segment does not
+    /// exist" from "peer segment exists but field is empty" — the
+    /// unblock for §4.5.1.8 XOR softening on ORC-8 / OBR-29 where
+    /// today's `<fieldref> empty` fails safe to `false` on a missing
+    /// peer and cannot express the softening.
+    func segmentExists(_ id: String, inGroupOf index: Int) -> Bool {
+        associatedSegment(id, fromIndex: index) != nil
+    }
+
     /// Resolve the most recent segment of `id` that occurs strictly
     /// before `beforeIndex`. Returns `nil` when none exists.
     ///

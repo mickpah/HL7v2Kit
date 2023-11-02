@@ -491,6 +491,56 @@ struct ConditionalFieldTests {
                 "OBR-29 must not fire on PA orders; got \(obr29Issues.map(\.message))")
     }
 
+    // v0.11-S1 XOR softening pins (ADR-010, v2.4 CH04 §4.5.1.8): the
+    // parent identifier may be carried in EITHER ORC-8 OR OBR-29 — a
+    // child order that populates one side must not fire the "required"
+    // rule on the other. The prior v0.9 `ORC-1 = CH` predicate over-fired
+    // in both directions; the DNF-encoded XOR
+    // `ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty` (and
+    // symmetric on OBR-29) closes both over-fires.
+
+    // OBR carries the parent identifier; ORC-8 empty. Softening case A.
+    private let childOrderOBRCarriesParent = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|CH|ORD002||GROUP|CM\r\
+    OBR|1|ORD002|FIL002|HBA1C|||||||||||||||||||||F||||PLACER_ORD001\r
+    """
+
+    @Test("XOR softening: ORC-8 silent when OBR-29 carries the parent")
+    func orc8SilentUnderXORSofteningWhenOBRCarriesParent() throws {
+        let message = try Parser().parse(childOrderOBRCarriesParent)
+        let report = Validator().validate(message)
+        let orc8Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "ORC" &&
+            $0.location.fieldIndex == 8
+        }
+        #expect(orc8Issues.isEmpty,
+                "ORC-8 must not fire when peer OBR-29 carries the parent; got \(orc8Issues.map(\.message))")
+    }
+
+    // ORC carries the parent identifier; OBR-29 empty. Softening case B.
+    private let childOrderORCCarriesParent = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
+    ORC|CH|ORD002||GROUP|CM|||PLACER_ORD001\r\
+    OBR|1|ORD002|FIL002|HBA1C|||||||||||||||||||||F\r
+    """
+
+    @Test("XOR softening: OBR-29 silent when ORC-8 carries the parent")
+    func obr29SilentUnderXORSofteningWhenORCCarriesParent() throws {
+        let message = try Parser().parse(childOrderORCCarriesParent)
+        let report = Validator().validate(message)
+        let obr29Issues = report.errors.filter {
+            $0.code == .conditionalFieldMissing &&
+            $0.location.segmentID == "OBR" &&
+            $0.location.fieldIndex == 29
+        }
+        #expect(obr29Issues.isEmpty,
+                "OBR-29 must not fire when peer ORC-8 carries the parent; got \(obr29Issues.map(\.message))")
+    }
+
     @Test("Fixture corpus produces no unexpected conditional errors")
     func fixtureCorpusNoConditionalErrors() throws {
         // None of the synthetic fixtures populate PID-36/37/38 or the

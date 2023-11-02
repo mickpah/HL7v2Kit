@@ -725,19 +725,28 @@ public struct Validator: Sendable {
     ///
     /// Grammar (recursive descent, precedence AND-binds-tighter-than-OR):
     /// ```
-    /// <predicate>  := <or-expr>
-    /// <or-expr>    := <and-expr> (" OR " <and-expr>)*
-    /// <and-expr>   := <atom> (" AND " <atom>)*
-    /// <atom>       := <fieldref> " " <op>
-    /// <fieldref>   := <segmentID> "-" <int>
-    /// <op>         := "populated"
-    ///               | "empty"
-    ///               | "= <value>"
-    ///               | "!= <value>"
-    ///               | "in (<values>)"
-    ///               | "not in (<values>)"
-    /// <values>     := <value> ("," " "* <value>)*
+    /// <predicate>    := <or-expr>
+    /// <or-expr>      := <and-expr> (" OR " <and-expr>)*
+    /// <and-expr>     := <atom> (" AND " <atom>)*
+    /// <atom>         := <field-atom> | <segment-atom>
+    /// <field-atom>   := <fieldref> " " <op>
+    /// <fieldref>     := <segmentID> "-" <int>
+    /// <segment-atom> := <segmentID> " " <segment-op>       // ADR-010
+    /// <segment-op>   := "present" | "absent"
+    /// <op>           := "populated"
+    ///                 | "empty"
+    ///                 | "= <value>"
+    ///                 | "!= <value>"
+    ///                 | "in (<values>)"
+    ///                 | "not in (<values>)"
+    /// <values>       := <value> ("," " "* <value>)*
     /// ```
+    /// The parser is paren-free: compound predicates must be expressed
+    /// in DNF (AND-of-atoms clauses joined by OR). AND binds tighter
+    /// than OR, so `A AND B OR C AND D` parses as `(A AND B) OR
+    /// (C AND D)`. Rules that read naturally as `X AND (Y OR Z)` must
+    /// be encoded as `X AND Y OR X AND Z`.
+    ///
     /// Cross-segment references (segmentID ≠ currentSegmentID) and any
     /// malformed sub-expression fail safe — that sub-expression returns
     /// `false`. Per v0.2-V1 design: a malformed schema must never make a
@@ -748,7 +757,10 @@ public struct Validator: Sendable {
     /// segment field refs, message-context atoms (`messageCode` /
     /// `messageStructure` / `triggerEvent`), and position atoms
     /// (`previousSegment(<ID>).<fieldref>` / `associatedSegment(<ID>)
-    /// .<fieldref>`).
+    /// .<fieldref>`). v0.11-S1 (ADR-010) adds segment-presence atoms
+    /// (`<segmentID> present` / `<segmentID> absent`) to distinguish
+    /// "peer segment does not exist" from "peer field is empty" — the
+    /// §4.5.1.8 XOR softening unblock.
     ///
     /// Internal (not private) access so the v0.7 production unit tests
     /// can call the evaluator directly via `@testable import`. Not
@@ -847,6 +859,20 @@ public struct Validator: Sendable {
         currentSegmentID: String
     ) -> Bool {
         let trimmed = atom.trimmingCharacters(in: .whitespaces)
+
+        // ADR-010 segment-presence atom (`<segmentID> present` /
+        // `<segmentID> absent`) — recognised before the general
+        // referent/predicate dispatch. Falls through when the shape
+        // doesn't match, so field refs / position atoms / message-
+        // context nouns continue to parse via `resolveReferent`.
+        if let presence = evaluateSegmentPresenceAtom(
+            trimmed,
+            segmentIndex: segmentIndex,
+            message: message
+        ) {
+            return presence
+        }
+
         let parts = trimmed.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
                             .map(String.init)
         guard parts.count == 2 else { return false }
@@ -862,6 +888,47 @@ public struct Validator: Sendable {
         ) else { return false }
 
         return applyPredicate(predicate, to: resolved)
+    }
+
+    /// Recognise the ADR-010 segment-presence atom shape
+    /// `<segmentID> present` / `<segmentID> absent`, where `<segmentID>`
+    /// is a bare 3-letter uppercase HL7 segment ID (no dash, no dot,
+    /// no parenthesis). Returns `nil` for any other shape so the
+    /// dispatcher falls through to the field-ref / position-atom /
+    /// message-context productions.
+    ///
+    /// Semantics: `present` is true iff a segment of that ID exists in
+    /// the current segment's ORC/OBR group (per
+    /// `Message.segmentExists(_:inGroupOf:)`); `absent` is the logical
+    /// NOT. Distinct from `<fieldref> populated` / `empty` — the field
+    /// productions fail safe to `false` when the peer segment is
+    /// missing, conflating "peer absent" with "peer field empty". The
+    /// segment-presence atom disentangles them.
+    private func evaluateSegmentPresenceAtom(
+        _ atom: String,
+        segmentIndex: Int,
+        message: Message
+    ) -> Bool? {
+        let parts = atom.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
+        guard parts.count == 2 else { return nil }
+        let id = parts[0]
+        let op = parts[1]
+        // HL7 segment IDs are 3 characters, ASCII uppercase alphanumeric
+        // (e.g. MSH, ORC, OBR, DG1, IN1, PV1). This filter rejects
+        // field refs (`OBR-29` — contains a dash), position atoms
+        // (`previousSegment(ORC)` — contains parens / digits after
+        // paren), and message-context nouns (`messageCode` — lowercase).
+        guard id.count == 3,
+              id.allSatisfy({ $0.isASCII && ($0.isUppercase || $0.isNumber) })
+        else { return nil }
+        switch op {
+        case "present":
+            return message.segmentExists(id, inGroupOf: segmentIndex)
+        case "absent":
+            return !message.segmentExists(id, inGroupOf: segmentIndex)
+        default:
+            return nil
+        }
     }
 
     /// Dispatch the referent to the production that recognises it.
