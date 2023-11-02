@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — ADR-010 Accepted (2026-07-02)
+
+`docs/design/ADR-010-dsl-extensions-peer-absent-quantification-content-gated.md` Accepted. Opens the v0.11 cycle. Three narrowly-scoped extensions to the ADR-008 / ADR-009 machinery, each additive and internal:
+
+- **Segment-presence atoms** (`<segmentID> present` / `absent`) — unlocks §4.5.1.8 XOR softening and the OBR-7 / .9 / .10 / .11 / .14 specimen-presence cluster. Reuses ADR-008 group-boundary resolution.
+- **Group-scope cardinality rules on `SegmentGrammar`** — new axis alongside min/max occurrence bounds, carrying a v0.7-DSL atom predicate. Sole initial consumer: HL7au:000008 parent ("≥1 OBX per OBR/OBX group with `OBX-3.3 = AUSPDI`"). Adds `.segmentCardinalityBelowMinimum` case to `ValidationIssue.Kind`.
+- **Subcomponent-granular field-refs in DSL atoms** (`<segmentID>-<int>[.<int>[.<int>]]`) — unlocks HL7au:000008.1 as an ADR-009-style overlay with `condition: "OBX-3.3 = AUSPDI"`. Reuses `ComponentValueSet.condition` dispatch unchanged.
+
+Substage plan: S1 segment-presence + XOR softening → S2 subcomponent field-refs + HL7au:000008.1 → S3 cardinality axis + HL7au:000008 parent → S4 specimen-presence cluster → S5 release as v0.11.0.
+
+Accepted as drafted (single ADR spanning all three extensions); split-off of Extension 2 into a follow-up ADR-011 remains an available option if S3 turns out too large in practice.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.
