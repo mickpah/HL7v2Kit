@@ -111,8 +111,10 @@ Reading: ORC-8 is required only when this is a child order AND the associated OB
   ```
   scope: .obrObxGroup, minCount: 1, predicate: "OBX-3.3 = AUSPDI"
   ```
-- Sub .1 (000008.1): a new `FieldOverride` on OBX in the AU profile, `component: 3`, gated with `condition: "OBX-3.3 = AUSPDI"`, `allowedValues` = the AU display-format value set. Uses ADR-009 machinery unchanged; only the DSL parser gains the subcomponent-granular field-ref production so `OBX-3.3` parses on the LHS.
+- Sub .1 (000008.1): a new `FieldOverride` on OBX in the AU profile, **`component: 1`** (see clarification below), gated with `condition: "OBX-3.3 = AUSPDI"`, `allowedValues` = the AU display-format value set `["HTML", "PDF", "RTF", "TXT", "PIT"]` (PIT is deprecated but still supported per AU ADRM-2021 p. 247 — receivers "may find that they need to support it for practical reasons"). Uses ADR-009 machinery unchanged; only the DSL parser gains the subcomponent-granular field-ref production so `OBX-3.3` parses on the LHS.
 - Sub .1.1: receiver runtime (display capability) — remains out of scope for a validator.
+
+> **Clarification 2026-07-03 (during S2 implementation)** — this section originally wrote `component: 3` for the HL7au:000008.1 overlay. That was an editorial oversight: component 3 of OBX-3 IS the AUSPDI marker (the gate). The value-set check is on **component 1** (Identifier — HTML / PDF / RTF / TXT / PIT) per HL7au:000008.1 verbatim (AU ADRM-2021 p. 420-421 + display-format table p. 247). Implementation in `Profile+au_adrm_2021.swift` ships with `component: 1`. The intent of the ADR is unchanged; only the component-index number in the illustrative text was wrong.
 
 ## Public API impact
 

@@ -730,8 +730,9 @@ public struct Validator: Sendable {
     /// <and-expr>     := <atom> (" AND " <atom>)*
     /// <atom>         := <field-atom> | <segment-atom>
     /// <field-atom>   := <fieldref> " " <op>
-    /// <fieldref>     := <segmentID> "-" <int>
-    /// <segment-atom> := <segmentID> " " <segment-op>       // ADR-010
+    /// <fieldref>     := <segmentID> "-" <int> <subcomp-tail>?   // ADR-010
+    /// <subcomp-tail> := "." <int> | "." <int> "." <int>
+    /// <segment-atom> := <segmentID> " " <segment-op>            // ADR-010
     /// <segment-op>   := "present" | "absent"
     /// <op>           := "populated"
     ///                 | "empty"
@@ -760,7 +761,12 @@ public struct Validator: Sendable {
     /// .<fieldref>`). v0.11-S1 (ADR-010) adds segment-presence atoms
     /// (`<segmentID> present` / `<segmentID> absent`) to distinguish
     /// "peer segment does not exist" from "peer field is empty" — the
-    /// §4.5.1.8 XOR softening unblock.
+    /// §4.5.1.8 XOR softening unblock. v0.11-S2 extends `<fieldref>`
+    /// with an optional `.<component>[.<subcomponent>]` tail so atoms
+    /// can read a specific composite slot (`OBX-3.3 = AUSPDI` gates
+    /// HL7au:000008.1). `populated` / `empty` still evaluate the
+    /// whole field; slot-specific presence checks should use `= v` /
+    /// `!= v` against the expected scalar.
     ///
     /// Internal (not private) access so the v0.7 production unit tests
     /// can call the evaluator directly via `@testable import`. Not
@@ -994,7 +1000,8 @@ public struct Validator: Sendable {
         currentSegmentID: String
     ) -> ResolvedReferent? {
         let refParts = referent.split(separator: "-", maxSplits: 1).map(String.init)
-        guard refParts.count == 2, let fieldIndex = Int(refParts[1]) else { return nil }
+        guard refParts.count == 2 else { return nil }
+        guard let parsed = Self.parseIndexSuffix(refParts[1]) else { return nil }
         let targetID = refParts[0]
         let targetSegment: Segment
         if targetID == currentSegmentID {
@@ -1004,7 +1011,48 @@ public struct Validator: Sendable {
             else { return nil }
             targetSegment = peer
         }
-        return readField(targetSegment, fieldIndex: fieldIndex)
+        return readField(
+            targetSegment,
+            fieldIndex: parsed.fieldIndex,
+            componentIndex: parsed.componentIndex,
+            subcomponentIndex: parsed.subcomponentIndex
+        )
+    }
+
+    /// Result of parsing an index suffix `<int>[.<int>[.<int>]]` off a
+    /// field-ref like `OBX-3.3` or `OBX-3.3.2`. ADR-010 Extension 3.
+    private struct ParsedIndexSuffix {
+        let fieldIndex: Int
+        let componentIndex: Int?
+        let subcomponentIndex: Int?
+    }
+
+    /// Parse the suffix of a field-ref after `<segmentID>-`. Accepts:
+    /// - `3`         → field 3, no component/subcomponent
+    /// - `3.3`       → field 3, component 3
+    /// - `3.3.2`     → field 3, component 3, subcomponent 2
+    /// Returns `nil` for malformed input (non-integer parts, empty
+    /// parts, more than three dotted components). Fail-safe path per
+    /// the v0.2-V1 invariant.
+    private static func parseIndexSuffix(_ suffix: String) -> ParsedIndexSuffix? {
+        let parts = suffix.split(separator: ".", omittingEmptySubsequences: false).map(String.init)
+        guard parts.count >= 1, parts.count <= 3 else { return nil }
+        guard let fieldIndex = Int(parts[0]) else { return nil }
+        var componentIndex: Int?
+        var subcomponentIndex: Int?
+        if parts.count >= 2 {
+            guard let c = Int(parts[1]) else { return nil }
+            componentIndex = c
+        }
+        if parts.count >= 3 {
+            guard let s = Int(parts[2]) else { return nil }
+            subcomponentIndex = s
+        }
+        return ParsedIndexSuffix(
+            fieldIndex: fieldIndex,
+            componentIndex: componentIndex,
+            subcomponentIndex: subcomponentIndex
+        )
     }
 
     /// Recognise `previousSegment(<ID>).<fieldref>` and
@@ -1050,23 +1098,56 @@ public struct Validator: Sendable {
         return (id, fieldRef)
     }
 
-    /// Parse `<segmentID>-<int>` and read the named field from
-    /// `segment`. Returns `nil` if the field-ref shape is malformed.
-    /// Callers guarantee a non-nil segment.
+    /// Parse `<segmentID>-<int>[.<int>[.<int>]]` and read the named
+    /// field / component / subcomponent from `segment`. Returns `nil`
+    /// if the field-ref shape is malformed. Callers guarantee a
+    /// non-nil segment.
     private func readFieldRef(_ fieldRef: String, in segment: Segment) -> ResolvedReferent? {
         let parts = fieldRef.split(separator: "-", maxSplits: 1).map(String.init)
-        guard parts.count == 2, let fieldIndex = Int(parts[1]) else { return nil }
-        return readField(segment, fieldIndex: fieldIndex)
+        guard parts.count == 2 else { return nil }
+        guard let parsed = Self.parseIndexSuffix(parts[1]) else { return nil }
+        return readField(
+            segment,
+            fieldIndex: parsed.fieldIndex,
+            componentIndex: parsed.componentIndex,
+            subcomponentIndex: parsed.subcomponentIndex
+        )
     }
 
-    /// Project a `Segment` + 1-based field index into the
-    /// `(raw, isPopulated)` pair the predicate consumes. The raw
+    /// Project a `Segment` + 1-based field index (and optional
+    /// component / subcomponent indices) into the `(raw, isPopulated)`
+    /// pair the predicate consumes.
+    ///
+    /// When `componentIndex` / `subcomponentIndex` are nil, the raw
     /// value is the first repetition's first component's first
-    /// subcomponent — consistent with the v0.4-S4 scalar reading.
-    private func readField(_ segment: Segment, fieldIndex: Int) -> ResolvedReferent {
+    /// subcomponent — the v0.4-S4 scalar-reading convention. When
+    /// set, the raw is the specified component's specified
+    /// subcomponent (defaulting to subcomponent 1 when only the
+    /// component index is provided). ADR-010 Extension 3.
+    ///
+    /// `isPopulated` reflects the WHOLE field's population (any
+    /// non-empty subcomponent anywhere in the field) regardless of
+    /// which slot the raw value came from. Predicates that need
+    /// slot-specific presence should use `= v` / `!= v` against the
+    /// specific value; `populated` / `empty` remain field-scope.
+    private func readField(
+        _ segment: Segment,
+        fieldIndex: Int,
+        componentIndex: Int? = nil,
+        subcomponentIndex: Int? = nil
+    ) -> ResolvedReferent {
         let field = segment.field(fieldIndex)
         let isPopulated = field.map { isFieldPopulated($0) } ?? false
-        let raw = field?.repetitions.first?.components.first?.subcomponents.first?.value ?? ""
+        let comp = (componentIndex ?? 1) - 1
+        let sub = (subcomponentIndex ?? 1) - 1
+        let raw: String = {
+            guard let rep = field?.repetitions.first,
+                  rep.components.indices.contains(comp)
+            else { return "" }
+            let subs = rep.components[comp].subcomponents
+            guard subs.indices.contains(sub) else { return "" }
+            return subs[sub].value
+        }()
         return ResolvedReferent(raw: raw, isPopulated: isPopulated)
     }
 

@@ -31,6 +31,18 @@ First implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Extends t
 
 Tests: 446 → 448 across 26 suites.
 
+### Added — v0.11-S2: subcomponent-granular DSL field-refs + HL7au:000008.1 overlay (2026-07-03)
+
+Second implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Extends the v0.7-S2 predicate DSL with the ADR-010 Extension 3 subcomponent-granular field-ref production (`<segmentID>-<int>[.<int>[.<int>]]`) so atom LHSes can read a specific composite slot. First (initial) consumer: HL7au:000008.1 — the AU display-segment identifier value set gated on `OBX-3.3 = AUSPDI`.
+
+- `Validator.parseIndexSuffix` factored out; `resolveFieldRef` / `readFieldRef` extended to accept the new tail. `readField` widened with optional `componentIndex` / `subcomponentIndex` (nil → v0.4-S4 first-of-first-of behaviour; set → specified slot). `populated` / `empty` still evaluate the whole field.
+- AU profile `Profile+au_adrm_2021.swift` gains a `FieldOverride` on OBX-3 with `component: 1`, `condition: "OBX-3.3 = AUSPDI"`, `allowedValues: ["HTML","PDF","RTF","TXT","PIT"]`. Reuses the ADR-009 `ComponentValueSet.condition` dispatch unchanged. Spec text extracted via PDFKit from AU ADRM-2021 pp. 247 + 420–421.
+- **ADR-010 amended** in the same commit with a post-hoc clarification: the ADR §"Rules expressed…" section originally wrote `component: 3` for the HL7au:000008.1 overlay, but component 3 IS the AUSPDI gate itself. The value-set check is on component 1 (Identifier) per HL7au:000008.1 verbatim. Implementation ships with `component: 1`.
+- Four new regression pins in `LocaleAUProfileTests`: `hl7au000008_1_conformingPDFSilent`, `hl7au000008_1_nonConformingAUSPDIFires`, `hl7au000008_1_nonAUSPDIGateSilent` (verifies the gate blocks non-display OBXs), `hl7au000008_1_deprecatedPITPermitted` (deprecated per AU ADRM p. 247 but still supported).
+- DSL grammar DocC on `conditionTriggers` updated with the extended `<fieldref>` production.
+
+Tests: 448 → 452 across 26 suites.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.

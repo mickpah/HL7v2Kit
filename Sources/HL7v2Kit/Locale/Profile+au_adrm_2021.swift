@@ -233,6 +233,37 @@ extension Profile {
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
             ),
+            // HL7au:000008.1 (r2) — Display Segments (v0.11-S2, ADR-010).
+            // OBX-3 display-format identifier value set, gated on
+            // AUSPDI coding system. Spec text (AU ADRM-2021 p. 420-421):
+            //   "Display segments must use the appropriate valid values
+            //    within the AUSPDI coding system in OBX-3 for the
+            //    content that is represented in it: HTML / PDF / RTF /
+            //    TXT (deprecated PIT still supported by receivers)."
+            // Value set from Display Format codes table on p. 247.
+            // Gate `OBX-3.3 = AUSPDI` uses ADR-010 Extension 3
+            // (subcomponent-granular field-refs on the atom LHS) so the
+            // overlay only fires when the segment IS a display segment
+            // — atomic OBX segments (any other coding system in
+            // OBX-3.3) pass through unaltered.
+            // Note: ADR-010 §"Rules expressed…" wrote `component: 3` for
+            // the overlay by editorial oversight — component 3 IS the
+            // AUSPDI gate itself. The value-set check is on component 1
+            // (Identifier), per HL7au:000008.1 verbatim. ADR post-hoc
+            // clarification added 2026-07-03.
+            FieldOverride(
+                segmentID: "OBX",
+                fieldIndex: 3,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["HTML", "PDF", "RTF", "TXT", "PIT"],
+                        condition: "OBX-3.3 = AUSPDI",
+                        specCitation: "HL7au:000008.1 (r2) — OBX-3.1 (Identifier) must be HTML / PDF / RTF / TXT (deprecated PIT permitted) on display segments (AUSPDI); AU ADRM-2021 pp. 420-421, table p. 247"
+                    )
+                ],
+                specCitation: "HL7au:000008.1 (r2) — OBX-3 display-format identifier value set on AUSPDI display segments"
+            ),
         ],
         grammarExtensions: [
             // AU pre-adopts v2.5+ PID fields 35..38 (Species Code,

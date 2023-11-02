@@ -970,4 +970,120 @@ struct LocaleAUProfileTests {
         #expect(auPID35.count == 1,
                 "v2.5.1 base grammar fires PID-35 conditional under .auLocalisation")
     }
+
+    // MARK: - v0.11-S2 (ADR-010): HL7au:000008.1 — OBX-3 AUSPDI value set
+
+    // Fully AU-conformant MSH-12 stack so unrelated 040 rules don't
+    // pollute the OBX-3 assertions. ORU^R01 (Results) is the message
+    // type HL7au:000008 applies to.
+
+    // OBX-3 = "PDF^Display format in PDF^AUSPDI" — conforming display
+    // segment. HL7au:000008.1 must be silent.
+    private let oruWithConformingAUSPDIDisplayOBX = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r\
+    OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+    """
+
+    @Test("HL7au:000008.1 — conforming AUSPDI display OBX (PDF) fires no OBX-3 violation")
+    func hl7au000008_1_conformingPDFSilent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithConformingAUSPDIDisplayOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let obx3 = report.errors.filter { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBX",
+               issue.location.fieldIndex == 3,
+               rule.contains("HL7au:000008.1") {
+                return true
+            }
+            return false
+        }
+        #expect(obx3.isEmpty,
+                "PDF is a conforming AUSPDI display format; got \(obx3.map(\.message))")
+    }
+
+    // OBX-3 = "XYZ^Display in Bad Format^AUSPDI" — wrong identifier.
+    // HL7au:000008.1 must fire.
+    private let oruWithNonConformingAUSPDIDisplayOBX = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r\
+    OBX|1|ED|XYZ^Display in Bad Format^AUSPDI||content|||||F\r
+    """
+
+    @Test("HL7au:000008.1 — non-conforming identifier (XYZ) on AUSPDI display OBX fires")
+    func hl7au000008_1_nonConformingAUSPDIFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithNonConformingAUSPDIDisplayOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = report.errors.first { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBX",
+               issue.location.fieldIndex == 3,
+               rule.contains("HL7au:000008.1") {
+                return true
+            }
+            return false
+        }
+        #expect(issue != nil,
+                "Expected HL7au:000008.1 violation on OBX-3.1 = XYZ under AUSPDI gate")
+    }
+
+    // OBX-3 = "1234-5^Glucose^LN" — atomic result OBX using LOINC.
+    // HL7au:000008.1 must be silent because OBX-3.3 ≠ AUSPDI (the gate
+    // filters the overlay out on non-display OBXs).
+    private let oruWithLOINCAtomicOBX = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r\
+    OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F\r
+    """
+
+    @Test("HL7au:000008.1 — non-AUSPDI (LN atomic) OBX is silent via the OBX-3.3 gate")
+    func hl7au000008_1_nonAUSPDIGateSilent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithLOINCAtomicOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let obx3 = report.errors.filter { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBX",
+               issue.location.fieldIndex == 3,
+               rule.contains("HL7au:000008.1") {
+                return true
+            }
+            return false
+        }
+        #expect(obx3.isEmpty,
+                "HL7au:000008.1 must be gated off when OBX-3.3 ≠ AUSPDI; got \(obx3.map(\.message))")
+    }
+
+    // Regression pin: PIT is deprecated but still permitted per AU
+    // ADRM-2021 p. 247 ("receivers may find that they need to support
+    // it for practical reasons"). Must not fire.
+    private let oruWithPITAUSPDIDisplayOBX = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r\
+    OBX|1|FT|PIT^Display format in PIT^AUSPDI||content|||||F\r
+    """
+
+    @Test("HL7au:000008.1 — deprecated PIT identifier permitted (per AU ADRM p. 247)")
+    func hl7au000008_1_deprecatedPITPermitted() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithPITAUSPDIDisplayOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let obx3 = report.errors.filter { issue in
+            if case .profileConstraintViolation(let rule) = issue.code,
+               issue.location.segmentID == "OBX",
+               issue.location.fieldIndex == 3,
+               rule.contains("HL7au:000008.1") {
+                return true
+            }
+            return false
+        }
+        #expect(obx3.isEmpty,
+                "PIT is deprecated but still permitted per AU ADRM-2021 p. 247; got \(obx3.map(\.message))")
+    }
 }
