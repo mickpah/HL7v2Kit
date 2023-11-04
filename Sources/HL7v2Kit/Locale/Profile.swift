@@ -50,12 +50,22 @@ struct Profile: Sendable, Equatable, Hashable {
     /// even though the base v2.4 PID grammar caps at 32. v0.5-S5-D.
     let grammarExtensions: [String: [FieldGrammar]]
 
+    /// Per-segment group-scope cardinality rules layered on top of the
+    /// base grammar's `segmentCardinalityRules`. v0.11-S3 (ADR-010
+    /// Extension 2). Mirrors `grammarExtensions` in shape: keyed by
+    /// segment ID, valued by `[SegmentCardinalityRule]` merged into
+    /// the effective grammar at Validator dispatch time. Locale-scoped
+    /// rules like HL7au:000008 live here rather than in the base
+    /// grammar so they only fire under the relevant locale.
+    let cardinalityExtensions: [String: [SegmentCardinalityRule]]
+
     /// True iff this profile carries any overrides. An empty profile
     /// is a no-op overlay.
     var isEmpty: Bool {
         fieldOverrides.isEmpty
             && compositeOverrides.isEmpty
             && grammarExtensions.isEmpty
+            && cardinalityExtensions.isEmpty
     }
 
     static let none: Profile? = nil
@@ -65,13 +75,15 @@ struct Profile: Sendable, Equatable, Hashable {
         baseVersion: Version,
         fieldOverrides: [FieldOverride] = [],
         grammarExtensions: [String: [FieldGrammar]] = [:],
-        compositeOverrides: [CompositeOverride] = []
+        compositeOverrides: [CompositeOverride] = [],
+        cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:]
     ) {
         self.locale = locale
         self.baseVersion = baseVersion
         self.fieldOverrides = fieldOverrides
         self.grammarExtensions = grammarExtensions
         self.compositeOverrides = compositeOverrides
+        self.cardinalityExtensions = cardinalityExtensions
     }
 }
 

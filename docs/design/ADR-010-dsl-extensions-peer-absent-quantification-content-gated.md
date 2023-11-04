@@ -116,6 +116,16 @@ Reading: ORC-8 is required only when this is a child order AND the associated OB
 
 > **Clarification 2026-07-03 (during S2 implementation)** — this section originally wrote `component: 3` for the HL7au:000008.1 overlay. That was an editorial oversight: component 3 of OBX-3 IS the AUSPDI marker (the gate). The value-set check is on **component 1** (Identifier — HTML / PDF / RTF / TXT / PIT) per HL7au:000008.1 verbatim (AU ADRM-2021 p. 420-421 + display-format table p. 247). Implementation in `Profile+au_adrm_2021.swift` ships with `component: 1`. The intent of the ADR is unchanged; only the component-index number in the illustrative text was wrong.
 
+> **Clarification 2026-07-03 (during S3 implementation)** — two S3 refinements extending what §"Decision" specified for Extension 2:
+>
+> 1. **Locale-scoped cardinality rules.** HL7au:000008 is AU-specific per AU ADRM-2021 p. 420 ("Senders Results, Referrals"). ADR §"Decision" placed the cardinality axis on `SegmentGrammar` alone, which would fire the rule universally under any locale — an over-fire risk (the working notes req #4). S3 adds a parallel `Profile.cardinalityExtensions: [String: [SegmentCardinalityRule]]` axis mirroring how `Profile.grammarExtensions` extends `SegmentGrammar.fields`. Base-grammar rules apply universally; profile-extension rules apply only under the relevant locale. HL7au:000008 ships on the AU profile.
+>
+> 2. **`SegmentCardinalityRule` gains two additional fields**:
+>    - `countedSegmentID: String` (required) — the segment ID whose occurrence is being counted. Used by the fired `.segmentCardinalityBelowMinimum` case's `segmentID` associated value; avoids parsing the predicate to reconstruct the target.
+>    - `applicableWhen: String?` (optional) — a v0.7 DSL predicate evaluated against the message. When set, the whole rule is gated: if `applicableWhen` is false the rule is skipped entirely for this message. Mirrors ADR-009's `ComponentValueSet.condition`. HL7au:000008 uses `applicableWhen: "messageCode in (ORU, REF)"` to scope to Results / Referrals messages only.
+>
+> Both refinements are additive; the axis surface on `SegmentGrammar` and the `.segmentCardinalityBelowMinimum` case shape are unchanged from what was specified in the Decision section.
+
 ## Public API impact
 
 **None.** All three extensions are internal:

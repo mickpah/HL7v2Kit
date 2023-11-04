@@ -123,13 +123,26 @@ struct LocaleTests {
             let intlReport = Validator(locale: .international).validate(intlMessage)
             let auMessage = try Parser(locale: .auLocalisation).parse(bytes)
             let auReport = Validator(locale: .auLocalisation).validate(auMessage)
+            // Locale-attributable error codes: `.profileConstraintViolation`
+            // (v0.5+, ADR-007 profile overlays) and
+            // `.segmentCardinalityBelowMinimum` (v0.11-S3, ADR-010
+            // Extension 2 — cardinality rules layered via
+            // `Profile.cardinalityExtensions`). Both fire only when an
+            // AU-locale profile rule applies, so they must NOT be counted
+            // as base-spec (locale-independent) errors when comparing
+            // international vs AU reports.
+            let isLocaleAttributable: (IssueCode) -> Bool = { code in
+                switch code {
+                case .profileConstraintViolation:            return true
+                case .segmentCardinalityBelowMinimum:        return true
+                default:                                     return false
+                }
+            }
             let intlNonProfileErrors = intlReport.errors.filter {
-                if case .profileConstraintViolation = $0.code { return false }
-                return true
+                !isLocaleAttributable($0.code)
             }
             let auNonProfileErrors = auReport.errors.filter {
-                if case .profileConstraintViolation = $0.code { return false }
-                return true
+                !isLocaleAttributable($0.code)
             }
             #expect(intlNonProfileErrors.count == auNonProfileErrors.count,
                     "\(url.lastPathComponent): AU locale must not introduce or remove base-spec (non-profile) errors")

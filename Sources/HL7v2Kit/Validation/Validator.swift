@@ -25,6 +25,12 @@ public struct Validator: Sendable {
     public func validate(_ message: Message) -> ValidationReport {
         var issues: [ValidationIssue] = []
         var segmentOccurrence: [String: Int] = [:]
+        // v0.11-S3 (ADR-010 Extension 2): dedupe fired cardinality
+        // violations by (scope, groupHeadIndex, rule identity) so a
+        // rule attached to a head segment (e.g. HL7au:000008 on OBR)
+        // that would be re-evaluated for each candidate segment in the
+        // group only fires once per distinct group.
+        var firedCardinalityKeys: Set<String> = []
 
         let grammar = grammarTable(for: message.version)
         // v0.4-S5-A / v0.5-S5-B: load the profile once per `validate(_:)`
@@ -57,10 +63,12 @@ public struct Validator: Sendable {
             // v0.5-S5-D: merge the profile's grammar extensions for
             // this segment (if any) onto the base grammar. Used for
             // AU pre-adoption of v2.5+ PID-35..38 on v2.4 wires under
-            // `.auLocalisation`.
+            // `.auLocalisation`. v0.11-S3 (ADR-010): also merge the
+            // profile's cardinality extensions.
             let segGrammar = mergeGrammarExtension(
                 base: baseGrammar,
-                profileExtension: profile?.grammarExtensions[id]
+                profileExtension: profile?.grammarExtensions[id],
+                profileCardinalityExtension: profile?.cardinalityExtensions[id]
             )
 
             checkSegment(
@@ -70,6 +78,20 @@ public struct Validator: Sendable {
                 grammar: segGrammar,
                 occurrence: occurrence,
                 profile: profile,
+                issues: &issues
+            )
+
+            // v0.11-S3 (ADR-010 Extension 2): group-scope cardinality
+            // rules attached to this segment's (merged) grammar.
+            // Deduped by (scope, groupHeadIndex, rule identity) so the
+            // rule fires once per distinct group even when the anchor
+            // segment appears multiple times.
+            checkCardinalityRules(
+                grammar: segGrammar,
+                anchorIndex: segmentIndex,
+                anchorOccurrence: occurrence,
+                message: message,
+                firedKeys: &firedCardinalityKeys,
                 issues: &issues
             )
         }
@@ -90,23 +112,182 @@ public struct Validator: Sendable {
     /// future. Today only the additive case is exercised.
     private func mergeGrammarExtension(
         base: SegmentGrammar,
-        profileExtension: [FieldGrammar]?
+        profileExtension: [FieldGrammar]?,
+        profileCardinalityExtension: [SegmentCardinalityRule]? = nil
     ) -> SegmentGrammar {
-        guard let profileExtension, !profileExtension.isEmpty else { return base }
-        let extensionByIndex = Dictionary(
-            uniqueKeysWithValues: profileExtension.map { ($0.index, $0) }
-        )
-        var mergedFields = base.fields.map { extensionByIndex[$0.index] ?? $0 }
-        let baseIndices = Set(base.fields.map(\.index))
-        let added = profileExtension
-            .filter { !baseIndices.contains($0.index) }
-            .sorted(by: { $0.index < $1.index })
-        mergedFields.append(contentsOf: added)
+        let profileCardinality = profileCardinalityExtension ?? []
+        // Fast path: no extensions of either kind.
+        if (profileExtension?.isEmpty ?? true) && profileCardinality.isEmpty {
+            return base
+        }
+        // Field merge (v0.5-S5-D behaviour).
+        let mergedFields: [FieldGrammar]
+        if let profileExtension, !profileExtension.isEmpty {
+            let extensionByIndex = Dictionary(
+                uniqueKeysWithValues: profileExtension.map { ($0.index, $0) }
+            )
+            var merged = base.fields.map { extensionByIndex[$0.index] ?? $0 }
+            let baseIndices = Set(base.fields.map(\.index))
+            let added = profileExtension
+                .filter { !baseIndices.contains($0.index) }
+                .sorted(by: { $0.index < $1.index })
+            merged.append(contentsOf: added)
+            mergedFields = merged
+        } else {
+            mergedFields = base.fields
+        }
+        // Cardinality merge (v0.11-S3 behaviour). Profile rules append
+        // to base rules; no replace semantic — locale-scoped rules
+        // and base-spec universal rules coexist.
+        let mergedCardinality = base.segmentCardinalityRules + profileCardinality
         return SegmentGrammar(
             segmentID: base.segmentID,
             version: base.version,
-            fields: mergedFields
+            fields: mergedFields,
+            segmentCardinalityRules: mergedCardinality
         )
+    }
+
+    /// v0.11-S3 (ADR-010 Extension 2). For each cardinality rule
+    /// attached to this segment's merged grammar, resolve the rule's
+    /// group scope, count segments in that group whose predicate
+    /// evaluation is `true`, and fire `.segmentCardinalityBelowMinimum`
+    /// when the count is below the rule's minimum.
+    ///
+    /// `firedKeys` is a set of `(scope, groupHeadIndex, rule identity)`
+    /// strings threaded across the per-segment loop so a rule attached
+    /// to a head segment (e.g. HL7au:000008 on OBR) that would be
+    /// re-evaluated for each candidate segment in the group only fires
+    /// once per distinct group.
+    ///
+    /// Fail-safe semantics: an unparseable predicate, an unresolvable
+    /// `applicableWhen` gate, or an out-of-bounds group yields no
+    /// violation (the atom returns `false`; the group scan returns
+    /// zero matches; the check silently skips). Consistent with the
+    /// v0.2-V1 invariant that a malformed schema must never make a
+    /// previously-accepted message non-conformant.
+    private func checkCardinalityRules(
+        grammar: SegmentGrammar,
+        anchorIndex: Int,
+        anchorOccurrence: Int,
+        message: Message,
+        firedKeys: inout Set<String>,
+        issues: inout [ValidationIssue]
+    ) {
+        for rule in grammar.segmentCardinalityRules {
+            // `applicableWhen` gate — evaluated against the anchor
+            // segment. Reuses the v0.7 predicate DSL. If the gate is
+            // set and evaluates false, skip this rule entirely.
+            if let gate = rule.applicableWhen, !gate.isEmpty {
+                guard conditionTriggers(
+                    gate,
+                    in: message.segments[anchorIndex],
+                    segmentIndex: anchorIndex,
+                    message: message,
+                    currentSegmentID: grammar.segmentID
+                ) else { continue }
+            }
+
+            guard let group = resolveGroup(
+                scope: rule.scope,
+                anchorIndex: anchorIndex,
+                message: message
+            ) else { continue }
+
+            let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)"
+            if firedKeys.contains(key) { continue }
+            firedKeys.insert(key)
+
+            // Iterate only candidate segments matching the rule's
+            // `countedSegmentID`. This ensures the predicate resolves
+            // against the current candidate's own fields (same-segment
+            // path) rather than cross-segment-resolving to a peer
+            // outside the current sub-group. Without this constraint,
+            // e.g. `OBX-3.3 = AUSPDI` evaluated on an OBR candidate
+            // would resolve via `associatedSegment("OBX", ...)` which
+            // uses ORC-scoped group semantics and can find an OBX
+            // belonging to a different OBR sub-group — false positive.
+            var matches = 0
+            for (offset, seg) in group.segments.enumerated() {
+                guard seg.segmentID == rule.countedSegmentID else { continue }
+                let absoluteIndex = group.startIndex + offset
+                if conditionTriggers(
+                    rule.predicate,
+                    in: seg,
+                    segmentIndex: absoluteIndex,
+                    message: message,
+                    currentSegmentID: seg.segmentID
+                ) {
+                    matches += 1
+                }
+            }
+
+            if matches < rule.minCount {
+                let citation = rule.specCitation.map { " (\($0))" } ?? ""
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .segmentCardinalityBelowMinimum(
+                        segmentID: rule.countedSegmentID,
+                        minCount: rule.minCount,
+                        actual: matches,
+                        groupScope: rule.scope.rawValue
+                    ),
+                    location: IssueLocation(
+                        segmentID: grammar.segmentID,
+                        segmentIndex: anchorOccurrence
+                    ),
+                    message: "Group requires at least \(rule.minCount) \(rule.countedSegmentID) segment(s) matching '\(rule.predicate)'; found \(matches)\(citation)"
+                ))
+            }
+        }
+    }
+
+    /// Resolved group boundaries for a `GroupScope` anchored at
+    /// `anchorIndex`. `startIndex` and `headIndex` are 0-based indices
+    /// into `message.segments`; `segments` is the group's segments in
+    /// document order (inclusive of the head, exclusive of the next
+    /// group's head).
+    private struct ResolvedGroup {
+        let startIndex: Int
+        let headIndex: Int
+        let segments: [Segment]
+    }
+
+    private func resolveGroup(
+        scope: GroupScope,
+        anchorIndex: Int,
+        message: Message
+    ) -> ResolvedGroup? {
+        let segs = message.segments
+        guard anchorIndex >= 0, anchorIndex < segs.count else { return nil }
+        switch scope {
+        case .messageWide:
+            return ResolvedGroup(startIndex: 0, headIndex: 0, segments: segs)
+        case .orcObxGroup:
+            var head = anchorIndex
+            while head > 0 && segs[head].segmentID != "ORC" {
+                head -= 1
+            }
+            var end = head + 1
+            while end < segs.count && segs[end].segmentID != "ORC" {
+                end += 1
+            }
+            return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
+        case .obrObxGroup:
+            var head = anchorIndex
+            while head > 0 && segs[head].segmentID != "OBR" {
+                head -= 1
+            }
+            // No OBR at or before the anchor → no OBR group here.
+            guard segs[head].segmentID == "OBR" else { return nil }
+            var end = head + 1
+            while end < segs.count
+                    && segs[end].segmentID != "OBR"
+                    && segs[end].segmentID != "ORC" {
+                end += 1
+            }
+            return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
+        }
     }
 
     private func grammarTable(for version: Version) -> [String: SegmentGrammar] {

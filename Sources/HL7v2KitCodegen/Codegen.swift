@@ -33,6 +33,21 @@ struct SegmentSchema: Decodable {
     let version: String
     let description: String
     let fields: [FieldSchema]
+    /// Optional group-scope cardinality rules attached to this segment's
+    /// grammar. v0.11-S3 (ADR-010 Extension 2). Absent in every base
+    /// schema JSON as shipped — the axis is available for future
+    /// universal cardinality rules. Locale-specific rules live on
+    /// `Profile.cardinalityExtensions` instead.
+    let segmentCardinalityRules: [CardinalityRuleSchema]?
+}
+
+struct CardinalityRuleSchema: Decodable {
+    let countedSegmentID: String
+    let scope: String          // "orcObxGroup" | "obrObxGroup" | "messageWide"
+    let minCount: Int
+    let predicate: String
+    let applicableWhen: String?
+    let specCitation: String?
 }
 
 /// HL7 data type codes whose values are scalar enough that the typed
@@ -166,12 +181,32 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
             return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition)),"
         }.joined(separator: "\n")
+        let cardinalityRules = schema.segmentCardinalityRules ?? []
+        if cardinalityRules.isEmpty {
+            return """
+                    "\(schema.segmentID)": SegmentGrammar(
+                        segmentID: "\(schema.segmentID)",
+                        version: "\(schema.version)",
+                        fields: [
+            \(fields)
+                        ]
+                    ),
+            """
+        }
+        let rules = cardinalityRules.map { rule in
+            let applicableWhen = rule.applicableWhen.map { escapeStringLiteral($0) } ?? "nil"
+            let specCitation = rule.specCitation.map { escapeStringLiteral($0) } ?? "nil"
+            return "            SegmentCardinalityRule(countedSegmentID: \(escapeStringLiteral(rule.countedSegmentID)), scope: .\(rule.scope), minCount: \(rule.minCount), predicate: \(escapeStringLiteral(rule.predicate)), applicableWhen: \(applicableWhen), specCitation: \(specCitation)),"
+        }.joined(separator: "\n")
         return """
                 "\(schema.segmentID)": SegmentGrammar(
                     segmentID: "\(schema.segmentID)",
                     version: "\(schema.version)",
                     fields: [
         \(fields)
+                    ],
+                    segmentCardinalityRules: [
+        \(rules)
                     ]
                 ),
         """

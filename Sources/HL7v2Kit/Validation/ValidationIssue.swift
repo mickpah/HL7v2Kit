@@ -85,6 +85,15 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// failure to the loaded locale. Scaffolded in v0.4-S5-A; fired
     /// once profile overrides ship in S5-B and later. See ADR-007.
     case profileConstraintViolation(localeRule: String)
+    /// A group-scope cardinality rule matched fewer segments than its
+    /// declared minimum. `segmentID` is the ID being counted (e.g.
+    /// `"OBX"` for HL7au:000008 which requires ≥1 AUSPDI display OBX
+    /// per OBR/OBX group); `minCount` is the rule's declared minimum;
+    /// `actual` is the count observed in the group; `groupScope` is
+    /// the scope identifier (`"obrObxGroup"`, etc.). Additive case
+    /// introduced in v0.11-S3 (ADR-010 Extension 2). Non-`@frozen`
+    /// enum, so this is a minor bump.
+    case segmentCardinalityBelowMinimum(segmentID: String, minCount: Int, actual: Int, groupScope: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

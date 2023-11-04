@@ -66,16 +66,105 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     }
 }
 
+/// The group boundary a `SegmentCardinalityRule` scopes its check to.
+/// v0.11-S3 (ADR-010 Extension 2) initial cases; extend when a rule
+/// surfaces that needs a different boundary. Internal-facing — external
+/// consumers see the resolved `ValidationIssue` only.
+enum GroupScope: String, Sendable, Equatable, Hashable {
+    /// ORC-headed group: back-walk to nearest ORC, forward-walk to next
+    /// ORC. Matches the ADR-008 `Message.associatedSegment` semantic.
+    case orcObxGroup
+    /// OBR-headed group: back-walk to nearest OBR, forward-walk to next
+    /// OBR OR ORC (OBR sub-groups can't cross ORC boundaries). Used for
+    /// HL7au:000008-shape rules.
+    case obrObxGroup
+    /// Entire message as one degenerate group.
+    case messageWide
+}
+
+/// A group-scope cardinality rule attached to a `SegmentGrammar`.
+/// v0.11-S3 (ADR-010 Extension 2). Evaluates the `predicate` (a v0.7
+/// DSL atom) against each candidate segment in the resolved group; if
+/// the count of matches is below `minCount`, fires
+/// `.segmentCardinalityBelowMinimum`.
+///
+/// Convention: the rule attaches to the grammar of the head segment
+/// for its scope (`orcObxGroup` → ORC, `obrObxGroup` → OBR,
+/// `messageWide` → MSH). The group-scan pass in `Validator.validate`
+/// deduplicates by (scope, groupHeadIndex) so a rule fires once per
+/// distinct group.
+///
+/// `applicableWhen` is an optional message-context predicate (v0.7
+/// DSL, evaluated against the message). When set, the whole rule is
+/// gated: if `applicableWhen` is false the rule is skipped entirely
+/// for this message. Mirrors ADR-009's `ComponentValueSet.condition`
+/// pattern; lets a spec-narrowing like HL7au:000008 fire only on
+/// Results / Referrals messages without polluting other traffic.
+struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
+    /// Segment ID being counted (used for the fired issue's user-facing
+    /// segment identifier). The `predicate` will naturally filter to
+    /// segments of this ID via same-segment field-ref semantics (e.g.
+    /// `OBX-3.3 = AUSPDI` only resolves against OBX segments; other
+    /// segments fail safe to false). Setting this field explicitly
+    /// avoids parsing the predicate to reconstruct the target.
+    let countedSegmentID: String
+    let scope: GroupScope
+    let minCount: Int
+    let predicate: String
+    let applicableWhen: String?
+    let specCitation: String?
+
+    init(
+        countedSegmentID: String,
+        scope: GroupScope,
+        minCount: Int,
+        predicate: String,
+        applicableWhen: String? = nil,
+        specCitation: String? = nil
+    ) {
+        self.countedSegmentID = countedSegmentID
+        self.scope = scope
+        self.minCount = minCount
+        self.predicate = predicate
+        self.applicableWhen = applicableWhen
+        self.specCitation = specCitation
+    }
+}
+
 /// Grammar for one segment within an HL7 v2.x version.
 public struct SegmentGrammar: Sendable, Equatable, Hashable {
     public let segmentID: String
     public let version: String
     public let fields: [FieldGrammar]
 
+    /// Group-scope cardinality rules that fire when this segment's
+    /// grammar is being applied. v0.11-S3 (ADR-010 Extension 2). Empty
+    /// by default; codegen emits the array from the schema JSON's
+    /// optional `segmentCardinalityRules` key. Locale-specific rules
+    /// live on `Profile.cardinalityExtensions` instead (see ADR-007).
+    let segmentCardinalityRules: [SegmentCardinalityRule]
+
     public init(segmentID: String, version: String, fields: [FieldGrammar]) {
         self.segmentID = segmentID
         self.version = version
         self.fields = fields
+        self.segmentCardinalityRules = []
+    }
+
+    /// Internal initializer that carries `segmentCardinalityRules`. Used
+    /// by codegen-emitted tables. The public initializer defaults the
+    /// axis to empty so external callers (and existing tests) don't
+    /// need to know about it.
+    init(
+        segmentID: String,
+        version: String,
+        fields: [FieldGrammar],
+        segmentCardinalityRules: [SegmentCardinalityRule]
+    ) {
+        self.segmentID = segmentID
+        self.version = version
+        self.fields = fields
+        self.segmentCardinalityRules = segmentCardinalityRules
     }
 
     /// Look up a field grammar by 1-based v2 index. Returns nil if the

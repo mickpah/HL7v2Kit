@@ -1086,4 +1086,114 @@ struct LocaleAUProfileTests {
         #expect(obx3.isEmpty,
                 "PIT is deprecated but still permitted per AU ADRM-2021 p. 247; got \(obx3.map(\.message))")
     }
+
+    // MARK: - v0.11-S3 (ADR-010): HL7au:000008 parent — ≥1 AUSPDI display OBX per OBR/OBX group
+
+    // Helper to find HL7au:000008 parent-rule violations. The rule fires
+    // as .segmentCardinalityBelowMinimum with groupScope = "obrObxGroup"
+    // and countedSegmentID = "OBX".
+    private func hl7au000008ParentIssues(_ report: ValidationReport) -> [ValidationIssue] {
+        report.errors.filter { issue in
+            if case .segmentCardinalityBelowMinimum(let segID, _, _, let scope) = issue.code,
+               segID == "OBX",
+               scope == "obrObxGroup" {
+                return true
+            }
+            return false
+        }
+    }
+
+    @Test("HL7au:000008 — ORU with a conforming AUSPDI display OBX fires no parent violation")
+    func hl7au000008_parentSilentWhenAUSPDIPresent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruWithConformingAUSPDIDisplayOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hl7au000008ParentIssues(report).isEmpty,
+                "PDF is an AUSPDI display OBX → parent rule satisfied; got \(hl7au000008ParentIssues(report).map(\.message))")
+    }
+
+    @Test("HL7au:000008 — ORU with no AUSPDI display OBX fires parent violation")
+    func hl7au000008_parentFiresWhenNoAUSPDI() throws {
+        // oruWithLOINCAtomicOBX has one OBX with OBX-3.3 = LN. No AUSPDI OBX
+        // in the OBR group → HL7au:000008 fires.
+        let message = try Parser(locale: .auLocalisation).parse(oruWithLOINCAtomicOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = hl7au000008ParentIssues(report)
+        #expect(hits.count == 1,
+                "Expected exactly one HL7au:000008 parent violation; got \(hits.count): \(hits.map(\.message))")
+        if let first = hits.first,
+           case .segmentCardinalityBelowMinimum(_, let minCount, let actual, _) = first.code {
+            #expect(minCount == 1, "minCount should be 1")
+            #expect(actual == 0, "actual count should be 0 (no AUSPDI OBX)")
+        } else {
+            Issue.record("Expected .segmentCardinalityBelowMinimum on first hit")
+        }
+    }
+
+    // ADT^A01 has no OBR at all. HL7au:000008 anchored on OBR → the
+    // group-scan never triggers on a segment whose grammar carries the
+    // rule. Rule silent (correctly — no group to check).
+    private let adtA01NoOBRNoOBX = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r
+    """
+
+    @Test("HL7au:000008 — ADT^A01 (no OBR) fires no parent violation")
+    func hl7au000008_parentSilentOnADT() throws {
+        let message = try Parser(locale: .auLocalisation).parse(adtA01NoOBRNoOBX)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hl7au000008ParentIssues(report).isEmpty,
+                "No OBR → no OBR/OBX group → rule silent; got \(hl7au000008ParentIssues(report).map(\.message))")
+    }
+
+    // A hypothetical ORM^O01 (Order Message, NOT Results/Referrals) with
+    // an OBR but no AUSPDI OBX. The applicableWhen gate
+    // ("messageCode in (ORU, REF)") must block the rule for ORM.
+    private let ormWithNoAUSPDI = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|NW|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||||||||||||||||||||F\r\
+    OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F\r
+    """
+
+    @Test("HL7au:000008 — ORM^O01 (Orders, not Results/Referrals) fires no parent violation (applicableWhen gate)")
+    func hl7au000008_parentSilentOnORM() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ormWithNoAUSPDI)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hl7au000008ParentIssues(report).isEmpty,
+                "ORM is outside the applicableWhen enum (ORU, REF); rule must be silent; got \(hl7au000008ParentIssues(report).map(\.message))")
+    }
+
+    @Test("HL7au:000008 — under .international locale, rule doesn't fire (locale-scoped)")
+    func hl7au000008_parentSilentUnderInternational() throws {
+        // Same LOINC-only wire that fires under .auLocalisation must be
+        // silent under .international because the cardinality rule lives
+        // in the AU profile, not the base grammar.
+        let message = try Parser(locale: .international).parse(oruWithLOINCAtomicOBX)
+        let report = Validator(locale: .international).validate(message)
+        #expect(hl7au000008ParentIssues(report).isEmpty,
+                "HL7au:000008 must not fire under .international; got \(hl7au000008ParentIssues(report).map(\.message))")
+    }
+
+    // Two OBRs in one ORC group. OBR[1] has an AUSPDI display OBX;
+    // OBR[2] has only an atomic OBX. HL7au:000008 must fire once (for
+    // OBR[2]'s group only).
+    private let oruTwoOBRsOnlyFirstHasAUSPDI = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|NE|AUS||en^English^ISO639\r\
+    PID|1||X^^^F^MR\r\
+    ORC|RE|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL1|GLUC|||||||||||||||||||||F\r\
+    OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r\
+    OBR|2|ORD002|FIL2|HBA1C|||||||||||||||||||||F\r\
+    OBX|1|NM|4548-4^HbA1c^LN||5.4|%||||||F\r
+    """
+
+    @Test("HL7au:000008 — multi-OBR: fires per OBR/OBX group missing AUSPDI")
+    func hl7au000008_parentFiresPerGroup() throws {
+        let message = try Parser(locale: .auLocalisation).parse(oruTwoOBRsOnlyFirstHasAUSPDI)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = hl7au000008ParentIssues(report)
+        #expect(hits.count == 1,
+                "Expected exactly one HL7au:000008 violation (OBR[2]'s group only); got \(hits.count): \(hits.map(\.message))")
+    }
 }

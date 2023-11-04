@@ -356,6 +356,31 @@ extension Profile {
                 requiredComponents: [],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.6")
             ),
+        ],
+        cardinalityExtensions: [
+            // HL7au:000008 (r2) — Display Segments parent rule (v0.11-S3,
+            // ADR-010 Extension 2). AU ADRM-2021 p. 420:
+            //   "The message must contain at least one OBX display
+            //    segment per OBR/OBX group."
+            // Applicable to: Senders Results, Referrals. Message codes
+            // ORU and REF (per HL7au:000008 header in Appendix 5;
+            // HL7au:000040.4 uses "Referrals, RRI" separately, so
+            // "Referrals" alone means REF here). Rule fires when a
+            // resolved OBR/OBX group contains zero OBX segments whose
+            // OBX-3.3 = AUSPDI. Attached to OBR grammar so it evaluates
+            // once per OBR-headed group (the group-scan dedupes via
+            // (scope, groupHeadIndex) so multi-OBR-per-ORC groups still
+            // fire the correct number of times).
+            "OBR": [
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .obrObxGroup,
+                    minCount: 1,
+                    predicate: "OBX-3.3 = AUSPDI",
+                    applicableWhen: "messageCode in (ORU, REF)",
+                    specCitation: "HL7au:000008 (r2) — ≥1 AUSPDI display OBX per OBR/OBX group on Senders Results/Referrals; AU ADRM-2021 p. 420"
+                )
+            ]
         ]
     )
 

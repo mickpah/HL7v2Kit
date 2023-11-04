@@ -43,6 +43,41 @@ Second implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Extends 
 
 Tests: 448 → 452 across 26 suites.
 
+### Added — v0.11-S3: group-scope cardinality axis + HL7au:000008 parent (2026-07-03)
+
+Third implementation stage of ADR-010 lands on branch `v0.11-adr-010`. New grammar axis for group-scope cardinality rules (Extension 2), plus a parallel `Profile.cardinalityExtensions` axis so locale-scoped rules can layer on the base grammar without over-firing outside their locale. First consumer: HL7au:000008 parent — "The message must contain at least one OBX display segment per OBR/OBX group" (AU ADRM-2021 p. 420).
+
+**New internal types**:
+- `GroupScope` enum: `.orcObxGroup`, `.obrObxGroup`, `.messageWide`.
+- `SegmentCardinalityRule`: `{countedSegmentID, scope, minCount, predicate, applicableWhen?, specCitation?}`. Two S3-clarification fields beyond the ADR-010 Decision text — `countedSegmentID` (avoids parsing the predicate to reconstruct the target segment ID for the fired issue) and `applicableWhen` (v0.7-DSL message-context gate, mirrors ADR-009 `ComponentValueSet.condition`).
+
+**Model additions**:
+- `SegmentGrammar` gains `segmentCardinalityRules: [SegmentCardinalityRule]` (empty by default; axis is ready for future universal rules that ship in the base schema JSON).
+- `Profile` gains `cardinalityExtensions: [String: [SegmentCardinalityRule]]` — parallel to `grammarExtensions`. Locale-scoped rules layer here; the base-grammar axis remains reserved for spec-universal rules.
+
+**Public API**:
+- New `ValidationIssue.Kind.segmentCardinalityBelowMinimum(segmentID:minCount:actual:groupScope:)` case. Additive on a non-`@frozen` enum; minor bump per the pattern established at v0.4-S4 / v0.7 / v0.8. All other public API is unchanged.
+
+**Codegen**:
+- `HL7v2KitCodegen.CardinalityRuleSchema` decodes the optional `segmentCardinalityRules` JSON key and emits the internal `SegmentGrammar` init that carries the rules array. Silent-safe: no shipping schema uses the key yet, so generated output is byte-identical to v0.11-S2. Codegen-drift CI stays clean.
+
+**Validator**:
+- `mergeGrammarExtension` extended to merge `Profile.cardinalityExtensions` into the effective `SegmentGrammar.segmentCardinalityRules`.
+- `Validator.validate` gains a `checkCardinalityRules` call after each `checkSegment`. Group resolution via a new private `resolveGroup(scope:anchorIndex:message:)` helper (three scopes implemented). Dedupe via a `Set<String>` keyed by `(scope, groupHeadIndex, countedSegmentID, predicate, minCount)` so a rule attached to a head segment fires exactly once per distinct group.
+- Candidate iteration filters to segments matching `countedSegmentID`. Without this filter, a predicate like `OBX-3.3 = AUSPDI` evaluated against a non-OBX candidate would resolve via ADR-008 `associatedSegment` (ORC-scoped) and could false-positive-match an OBX in a different sub-group. Discovered during multi-OBR regression test.
+
+**AU profile — HL7au:000008 shipped** as a `SegmentCardinalityRule` on OBR grammar via `Profile.cardinalityExtensions`. `countedSegmentID: "OBX", scope: .obrObxGroup, minCount: 1, predicate: "OBX-3.3 = AUSPDI", applicableWhen: "messageCode in (ORU, REF)"`. Fires only under `.auLocalisation` on Results / Referrals messages when a resolved OBR/OBX sub-group contains no OBX with `OBX-3.3 = AUSPDI`.
+
+**Tests**:
+- `LocaleTests.auLocaleAddsButDoesNotRemoveBaseSpecErrors` updated: `.segmentCardinalityBelowMinimum` classified as locale-attributable (mirrors `.profileConstraintViolation`) so the AU-vs-international fixture parity check treats the new violations correctly.
+- Six new regression pins in `LocaleAUProfileTests`: silent-with-AUSPDI, fires-without-AUSPDI, silent-on-ADT-with-no-OBR, silent-on-ORM (applicableWhen gate), silent-under-`.international` (locale gate), fires-per-group on multi-OBR wire.
+
+**ADR-010 amended** with an S3-implementation clarification block:
+1. Locale-scoped cardinality rules require the parallel `Profile.cardinalityExtensions` axis in addition to `SegmentGrammar.segmentCardinalityRules` (ADR text only mentioned the base axis).
+2. `SegmentCardinalityRule` gains `countedSegmentID` (required) and `applicableWhen` (optional) fields — both additive to what the Decision section specified.
+
+Tests: 452 → 458 across 26 suites.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.
