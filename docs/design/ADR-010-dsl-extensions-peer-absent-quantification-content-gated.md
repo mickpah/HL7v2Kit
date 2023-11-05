@@ -126,6 +126,8 @@ Reading: ORC-8 is required only when this is a child order AND the associated OB
 >
 > Both refinements are additive; the axis surface on `SegmentGrammar` and the `.segmentCardinalityBelowMinimum` case shape are unchanged from what was specified in the Decision section.
 
+> **Clarification 2026-07-03 (during S4 implementation)** — the OBR specimen-presence cluster shipped in S4 is trimmed from the ADR-010 literal wording. The Decision text (this section) named "OBR-7 second trigger + OBR-9 / OBR-10 / OBR-11 / OBR-14" as the specimen-presence targets. PDFKit extraction of the v2.4 CH04 spec text (pp. 46-48) confirmed that only **OBR-7** (§4.5.3.7) and **OBR-14** (§4.5.3.14) carry crisp "must be filled in when X" conditional-required triggers. OBR-9 (§4.5.3.9 — "results-only field except when the placer has drawn the specimen"), OBR-10 (§4.5.3.10 — "will identify..."), and OBR-11 (§4.5.3.11 — "identifies the action...") are descriptive statements without MUST language. Per the working notes req #4 ("no predicate ships if it's known-incorrect"), OBR-9/10/11 conditions are **not shipped** — the ADR text was speculative before spec-text confirmation. Re-audit if a future spec revision or corrigendum adds MUST language to those fields. Also: the v2.4 §4.5.3.14 "OR when the observation required a specimen and the message is a report" clause reduces in practice to `OBR-15 populated` (no wire-detectable "observation required specimen" predicate without external LOINC lookup), so OBR-14 ships with `SPM present OR OBR-15 populated` (v2.5.1) / `OBR-15 populated` (v2.4) — the "report message" leg is subsumed by the specimen-indicator OR.
+
 ## Public API impact
 
 **None.** All three extensions are internal:

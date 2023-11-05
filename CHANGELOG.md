@@ -78,6 +78,38 @@ Third implementation stage of ADR-010 lands on branch `v0.11-adr-010`. New gramm
 
 Tests: 452 → 458 across 26 suites.
 
+### Added — v0.11-S4: OBR specimen-presence cluster (2026-07-03)
+
+Fourth implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Uses the v0.11-S1 `<segmentID> present` atom (`SPM present` on v2.5.1) plus the existing `<fieldref> populated` atom (`OBR-15 populated`) to encode "specimen sent with request" triggers on OBR-7 and OBR-14 per v2.4 CH04 §4.5.3.7 / .14.
+
+**Schema updates**:
+- **v2.5.1 OBR-7**: `"messageCode = ORU"` → `"messageCode = ORU OR SPM present OR OBR-15 populated"`. Adds the specimen-sent-with-request second trigger from §4.5.3.7.
+- **v2.4 OBR-7**: `"messageCode = ORU"` → `"messageCode = ORU OR OBR-15 populated"`. SPM segment doesn't exist in v2.4; OBR-15 (specimen source) is the specimen indicator.
+- **v2.5.1 OBR-14**: new condition `"SPM present OR OBR-15 populated"` per §4.5.3.14 "must contain a value when the order is accompanied by a specimen".
+- **v2.4 OBR-14**: new condition `"OBR-15 populated"` per §4.5.3.14 with SPM-absent fallback.
+
+**Scope trim per the working notes req #4**:
+- ADR-010 §"Rules expressed…" named "OBR-7 second trigger + OBR-9 / OBR-10 / OBR-11 / OBR-14" as the specimen-presence targets. PDFKit extraction of v2.4 CH04 pp. 46-48 confirmed only OBR-7 (§4.5.3.7) and OBR-14 (§4.5.3.14) carry crisp "must be filled in when X" conditional-required triggers.
+- OBR-9 §4.5.3.9 ("results-only field except when the placer has drawn the specimen"), OBR-10 §4.5.3.10 ("will identify..."), OBR-11 §4.5.3.11 ("identifies the action...") are descriptive statements without MUST language. Not shipped per req #4 ("no predicate ships if known-incorrect"). Re-audit if a future spec revision adds MUST language.
+- ADR-010 amended with a "Clarification 2026-07-03 (during S4 implementation)" block documenting the trim.
+
+**Fixture-corpus side-fix**:
+- Discovered a systematic field-shift error across 13 ORU fixtures: a timestamp was consistently placed at OBR-15 (specimen source, deprecated in v2.5.1) instead of OBR-14 (specimen received DT). Mechanical sed fix `s/L\|\|\|\([0-9]\{14\}\)\|\|/L||\1|||/g` corrected all 13.
+- Bonus fix: cleared the pre-existing "OBR-15 (deprecated B) but populated" warnings that had been surfacing on those fixtures since v0.2.
+
+**Regression pins** (five new tests in `ConditionalFieldTests`):
+- `obr14FiresWhenOBR15PopulatedAndOBR14Empty_v24` — v2.4 §4.5.3.14 canonical trigger.
+- `obr14SilentWhenOBR14Populated_v24` — guard bypasses on populated field.
+- `obr14SilentWhenNoSpecimenIndicator_v24` — no OBR-15 (imaging OBR case) → predicate false.
+- `obr14FiresWhenSPMPresent_v251` — v2.5.1 SPM-segment detection (uses S1 `SPM present` atom).
+- `obr7FiresUnderSecondTrigger` — ORM with OBR-15 populated fires OBR-7 via the second trigger.
+
+**Known limitations carried into S5**:
+- v2.3 / v2.3.1 OBR-7 / OBR-14 do not carry S4 predicates — v2.3 CH04 audit is an S5 candidate.
+- v2.3 / v2.3.1 ORC-8 / OBR-29 still carry the unsoftened `"ORC-1 = CH"` from v0.10 (documented per S1).
+
+Tests: 458 → 463 across 26 suites.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.
