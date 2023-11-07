@@ -374,6 +374,115 @@ struct LocaleAUProfileTests {
                 "OBX-3 is a CE field (not CWE) in v2.5.1; the CE rule must fire on its incomplete state")
     }
 
+    // MARK: - v0.13 (ADR-011): 00044.4.8 / .4.4 / .5.3 / .6.3
+
+    private func hasViolation(_ report: ValidationReport, citing token: String) -> Bool {
+        report.errors.contains { issue in
+            if case .profileConstraintViolation(let rule) = issue.code, rule.contains(token) {
+                return true
+            }
+            return false
+        }
+    }
+
+    // HL7au:00044.4.8 — alternate coding system (CE-6) must differ from
+    // primary coding system (CE-3). OBR-4 with CE-3 = CE-6 = "SCT" (both
+    // populated, equal) fires. CE-6 = "SCT" (not "LN") so 44.4.4 stays
+    // silent — clean isolation.
+    private let ceEqualCodingSystems = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r\
+    OBR|1|PLACER^HOSP^1.2.3^ISO|FILLER^LAB^1.2.4^ISO|GLU^Glucose^SCT^GLU2^Glucose alt^SCT\r
+    """
+
+    @Test("HL7au:00044.4.8 — CE-3 == CE-6 (same coding system) fires")
+    func ceEqualCodingSystemsFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceEqualCodingSystems)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hasViolation(report, citing: "HL7au:00044.4.8"),
+                "CE-3 == CE-6 must fire 44.4.8; got \(report.errors.map(\.message))")
+        #expect(!hasViolation(report, citing: "HL7au:00044.4.4"),
+                "CE-6 = SCT (not LN) must not fire 44.4.4")
+    }
+
+    // Distinct coding systems (CE-3 = SCT, CE-6 = L) → 44.4.8 silent.
+    private let ceDistinctCodingSystems = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r\
+    OBR|1|PLACER^HOSP^1.2.3^ISO|FILLER^LAB^1.2.4^ISO|GLU^Glucose^SCT^GLU2^Glucose alt^L\r
+    """
+
+    @Test("HL7au:00044.4.8 — distinct coding systems (CE-3 != CE-6) silent")
+    func ceDistinctCodingSystemsSilent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceDistinctCodingSystems)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(!hasViolation(report, citing: "HL7au:00044.4.8"),
+                "Distinct CE-3 / CE-6 must not fire 44.4.8; got \(report.errors.map(\.message))")
+    }
+
+    // HL7au:00044.4.4 — LOINC (LN) must be the primary coding system,
+    // not the alternate. OBR-4 on an ORU with CE-6 = "LN" fires. CE-3 =
+    // SCT != CE-6 so 44.4.8 stays silent.
+    private let ceLoincInAltOnORU = """
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r\
+    OBR|1|PLACER^HOSP^1.2.3^ISO|FILLER^LAB^1.2.4^ISO|GLU^Glucose^SCT^14749-6^Glucose^LN\r
+    """
+
+    @Test("HL7au:00044.4.4 — LOINC as alternate coding system on ORU fires")
+    func loincInAltOnORUFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceLoincInAltOnORU)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hasViolation(report, citing: "HL7au:00044.4.4"),
+                "LOINC in CE-6 on ORU must fire 44.4.4; got \(report.errors.map(\.message))")
+        #expect(!hasViolation(report, citing: "HL7au:00044.4.8"),
+                "CE-3 = SCT != CE-6 = LN, so 44.4.8 must stay silent")
+    }
+
+    // Gate check: same LOINC-in-alternate shape on an ADT (not
+    // Orders/Results) via DG1-3 (CE) — 44.4.4 must NOT fire because the
+    // messageCode gate (ORM, ORU) is false.
+    private let ceLoincInAltOnADT = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG|P|2.5.1\r\
+    PID|1||X^^^F^MR\r\
+    DG1|1|I9|486^Pneumonia^SCT^19829001^Pneumonia^LN|||F\r
+    """
+
+    @Test("HL7au:00044.4.4 — LOINC-in-alternate on ADT (non-Orders/Results) is gated silent")
+    func loincInAltOnADTGatedSilent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(ceLoincInAltOnADT)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(!hasViolation(report, citing: "HL7au:00044.4.4"),
+                "ADT is outside the (ORM, ORU) gate; 44.4.4 must not fire; got \(report.errors.map(\.message))")
+    }
+
+    // HL7au:00044.6.3 — CWE <text> (CWE-2) must be valued. ERR-3 is a
+    // CWE field in v2.5.1; populate CWE-1 + CWE-3 but leave CWE-2 empty.
+    private let cweTextEmpty = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ACK|MSG|P|2.5.1\r\
+    MSA|AE|MSG\r\
+    ERR||PID^1^3|207^^HL70357|E\r
+    """
+
+    @Test("HL7au:00044.6.3 — CWE text component empty fires (ERR-3)")
+    func cweTextMustBeValuedFires() throws {
+        let message = try Parser(locale: .auLocalisation).parse(cweTextEmpty)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hasViolation(report, citing: "HL7au:00044.6.3"),
+                "ERR-3 (CWE) with empty text must fire 44.6.3; got \(report.errors.map(\.message))")
+    }
+
+    // HL7au:00044.5.3 — CNE <text> (CNE-2) must be valued. ORC-30
+    // (Enterer Authorization Mode) is the only CNE field in v2.5.1;
+    // populate CNE-1 with text empty. Built with String(repeating:) so
+    // the value lands in field 30 exactly.
+    @Test("HL7au:00044.5.3 — CNE text component empty fires (ORC-30)")
+    func cneTextMustBeValuedFires() throws {
+        let orc = "ORC|NW" + String(repeating: "|", count: 29) + "AUTH"
+        let wire = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r" + orc + "\r"
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hasViolation(report, citing: "HL7au:00044.5.3"),
+                "ORC-30 (CNE) with empty text must fire 44.5.3; got \(report.errors.map(\.message))")
+    }
+
     // MARK: - S5-B-3: CX required-component rules (HL7au:00044.1.2 / .1.3)
 
     // PID-3 with only CX-1 populated. AU rules require CX-4 (Assigning
