@@ -1,0 +1,159 @@
+{
+  "segmentID": "DG1",
+  "version": "2.3.1",
+  "description": "Diagnosis",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - DG1",
+      "dataType": "SI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "diagnosisCodingMethod",
+      "name": "Diagnosis Coding Method",
+      "dataType": "ID",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "diagnosisCode",
+      "name": "Diagnosis Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "diagnosisDescription",
+      "name": "Diagnosis Description",
+      "dataType": "ST",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "diagnosisDateTime",
+      "name": "Diagnosis Date/Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "diagnosisType",
+      "name": "Diagnosis Type",
+      "dataType": "IS",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "majorDiagnosticCategory",
+      "name": "Major Diagnostic Category",
+      "dataType": "CE",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "diagnosticRelatedGroup",
+      "name": "Diagnostic Related Group",
+      "dataType": "CE",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "drgApprovalIndicator",
+      "name": "DRG Approval Indicator",
+      "dataType": "ID",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "drgGrouperReviewCode",
+      "name": "DRG Grouper Review Code",
+      "dataType": "IS",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 11,
+      "swiftName": "outlierType",
+      "name": "Outlier Type",
+      "dataType": "CE",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "outlierDays",
+      "name": "Outlier Days",
+      "dataType": "NM",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "outlierCost",
+      "name": "Outlier Cost",
+      "dataType": "CP",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "grouperVersionAndType",
+      "name": "Grouper Version And Type",
+      "dataType": "ST",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "diagnosisPriority",
+      "name": "Diagnosis Priority",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "diagnosingClinician",
+      "name": "Diagnosing Clinician",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 17,
+      "swiftName": "diagnosisClassification",
+      "name": "Diagnosis Classification",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "confidentialIndicator",
+      "name": "Confidential Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "attestationDateTime",
+      "name": "Attestation Date/Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

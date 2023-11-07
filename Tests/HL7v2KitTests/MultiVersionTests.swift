@@ -58,7 +58,7 @@ struct MultiVersionTests {
                 "v2.3.1 message validated against v2.3.1 grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
-    @Test("v2.3.1 SegmentGrammarTable is populated for all 9 spec § 17 segments")
+    @Test("v2.3.1 SegmentGrammarTable is populated for all 15 segments")
     func grammarTablePopulated() {
         let table = SegmentGrammarTable.v2_3_1
         #expect(table["MSH"] != nil)
@@ -74,6 +74,17 @@ struct MultiVersionTests {
         #expect(table["PID"]?.fields.count == 30)
         // ORC v2.3.1 caps at 17 fields (vs 31 in v2.5.1).
         #expect(table["ORC"]?.fields.count == 17)
+        // v0.12 T-back-port additions (mirror of the v0.6 v2.4 back-port):
+        #expect(table["EVN"]?.fields.count == 6)    // v2.4 has 7 (adds Event Facility)
+        #expect(table["MSA"]?.fields.count == 6)
+        #expect(table["ERR"]?.fields.count == 1)    // single CM field, as in v2.4
+        #expect(table["PD1"]?.fields.count == 12)   // v2.4 expanded to 21
+        #expect(table["DG1"]?.fields.count == 19)
+        #expect(table["IN1"]?.fields.count == 25)
+        // v2.3.1 errata delta vs v2.3: DG1-15 Diagnosis Priority retyped
+        // NM → ID, and IN1-17 Insured's Relationship retyped IS → CE.
+        #expect(table["DG1"]?.field(15)?.dataType == "ID")
+        #expect(table["IN1"]?.field(17)?.dataType == "CE")
     }
 
     @Test("v2.3.1 typed segment accessors that reference v2.5.1-only fields return nil on a v2.3.1 wire")
@@ -271,7 +282,7 @@ struct MultiVersionTests {
                 "v2.3 message validated against v2.3 grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
-    @Test("v2.3 SegmentGrammarTable populated for all 9 segments with v2.3 caps")
+    @Test("v2.3 SegmentGrammarTable populated for all 15 segments with v2.3 caps")
     func v23GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_3
         #expect(table["MSH"]?.fields.count == 15)   // smallest MSH surface
@@ -283,6 +294,18 @@ struct MultiVersionTests {
         #expect(table["PV1"]?.fields.count == 20)
         #expect(table["NTE"]?.fields.count == 3)
         #expect(table["AL1"]?.fields.count == 6)
+        // v0.12 T-back-port additions:
+        #expect(table["EVN"]?.fields.count == 6)    // no Event Facility (EVN-7) in v2.3
+        #expect(table["MSA"]?.fields.count == 6)
+        #expect(table["ERR"]?.fields.count == 1)
+        #expect(table["PD1"]?.fields.count == 12)
+        #expect(table["DG1"]?.fields.count == 19)
+        #expect(table["IN1"]?.fields.count == 25)
+        // v2.3 (pre-errata) divergences vs v2.3.1: DG1-15 Diagnosis
+        // Priority is NM (v2.3.1 retyped to ID); IN1-17 Insured's
+        // Relationship is IS (v2.3.1 retyped to CE).
+        #expect(table["DG1"]?.field(15)?.dataType == "NM")
+        #expect(table["IN1"]?.field(17)?.dataType == "IS")
     }
 
     @Test("Four-way grammar dispatch: MSH grows monotonically 15 → 17 → 20 → 21")
@@ -311,5 +334,84 @@ struct MultiVersionTests {
         #expect(pid.lastUpdateDateTime == nil)
         #expect(pid.speciesCode == nil)
         #expect(pid.tribalCitizenship == nil)
+    }
+
+    // MARK: - v0.12 T-back-port: EVN / MSA / ERR / PD1 / DG1 / IN1 on v2.3 / v2.3.1
+
+    // A v2.3 ADT^A01 carrying EVN + PD1 + DG1 + IN1, plus an ACK-style
+    // MSA/ERR pairing exercised separately. Before v0.12 these segments
+    // hit the "unknown segment" (Z-segment) path on v2.3 wires; now they
+    // dispatch to the v2.3 grammar. Required fields are populated so a
+    // well-formed wire reports no errors.
+    private let v23AdtWithBackportedSegments = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3\r\
+    EVN|A01|20240301120000\r\
+    PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r\
+    PD1|||PRIMARY CLINIC\r\
+    DG1|1|I9|486^Pneumonia^I9C|||F\r\
+    IN1|1|PLAN1^Medibank^L|INS123||Medibank Private\r
+    """
+
+    @Test("v2.3 wire with EVN/PD1/DG1/IN1 dispatches to v2.3 grammar (no unknown-segment)")
+    func v23BackportedSegmentsRecognised() throws {
+        let message = try Parser().parse(v23AdtWithBackportedSegments)
+        let report = Validator().validate(message)
+        // None of the back-ported segments should surface as unknown/Z.
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "Back-ported segments must dispatch to the v2.3 grammar; got \(unknowns.map(\.location.segmentID))")
+        // Well-formed wire: no required-field errors either.
+        #expect(report.errors.isEmpty,
+                "v2.3 back-ported segments on a well-formed wire should report no errors; got \(report.errors.map(\.message))")
+    }
+
+    // Negative pin: DG1 with its required fields (DG1-1 Set ID, DG1-2
+    // Coding Method, DG1-6 Type) empty must fire requiredFieldMissing
+    // under the v2.3 grammar — proves the grammar is actually enforced,
+    // not merely present. DG1-2 is R in v2.3 (vs B in v2.4).
+    private let v23DG1MissingRequired = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3\r\
+    PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r\
+    DG1\r
+    """
+
+    @Test("v2.3 DG1 required-field misses fire under the v2.3 grammar (DG1-2 is R)")
+    func v23DG1RequiredFieldsFire() throws {
+        let message = try Parser().parse(v23DG1MissingRequired)
+        let report = Validator().validate(message)
+        let dg1Required = report.errors.filter {
+            $0.code == .requiredFieldMissing && $0.location.segmentID == "DG1"
+        }
+        // DG1-1 (SI, R), DG1-2 (Coding Method, R — v2.3-specific), DG1-6 (Type, R).
+        #expect(dg1Required.contains { $0.location.fieldIndex == 1 })
+        #expect(dg1Required.contains { $0.location.fieldIndex == 2 },
+                "v2.3 DG1-2 Diagnosis Coding Method is R (v2.4 downgraded it to B)")
+        #expect(dg1Required.contains { $0.location.fieldIndex == 6 })
+    }
+
+    // v2.3.1 wire mirror — confirms the v2.3.1 grammar also carries the
+    // back-ported segments.
+    private let v231AdtWithBackportedSegments = """
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3.1\r\
+    EVN|A01|20240301120000\r\
+    PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r\
+    PD1|||PRIMARY CLINIC\r\
+    DG1|1|I9|486^Pneumonia^I9C|||F\r\
+    IN1|1|PLAN1^Medibank^L|INS123||Medibank Private\r
+    """
+
+    @Test("v2.3.1 wire with EVN/PD1/DG1/IN1 dispatches to v2.3.1 grammar (no unknown-segment)")
+    func v231BackportedSegmentsRecognised() throws {
+        let message = try Parser().parse(v231AdtWithBackportedSegments)
+        let report = Validator().validate(message)
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "Back-ported segments must dispatch to the v2.3.1 grammar; got \(unknowns.map(\.location.segmentID))")
+        #expect(report.errors.isEmpty,
+                "v2.3.1 back-ported segments on a well-formed wire should report no errors; got \(report.errors.map(\.message))")
     }
 }

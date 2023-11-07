@@ -1,0 +1,103 @@
+{
+  "segmentID": "PD1",
+  "version": "2.3.1",
+  "description": "Patient Additional Demographic",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "livingDependency",
+      "name": "Living Dependency",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 2,
+      "swiftName": "livingArrangement",
+      "name": "Living Arrangement",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "patientPrimaryFacility",
+      "name": "Patient Primary Facility",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 4,
+      "swiftName": "patientPrimaryCareProviderNameAndIDNo",
+      "name": "Patient Primary Care Provider Name & ID No.",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 5,
+      "swiftName": "studentIndicator",
+      "name": "Student Indicator",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "handicap",
+      "name": "Handicap",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "livingWillCode",
+      "name": "Living Will",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "organDonorCode",
+      "name": "Organ Donor",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "separateBill",
+      "name": "Separate Bill",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "duplicatePatient",
+      "name": "Duplicate Patient",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "publicityCode",
+      "name": "Publicity Indicator",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "protectionIndicator",
+      "name": "Protection Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

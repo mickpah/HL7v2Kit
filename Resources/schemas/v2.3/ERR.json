@@ -1,0 +1,15 @@
+{
+  "segmentID": "ERR",
+  "version": "2.3",
+  "description": "Error",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "errorCodeAndLocation",
+      "name": "Error Code and Location",
+      "dataType": "CM",
+      "optionality": "R",
+      "repeatability": "*"
+    }
+  ]
+}

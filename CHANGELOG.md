@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-07-03
+
+v2.3 / v2.3.1 T-track grammar back-port. Authors the six T-track segments (EVN / MSA / ERR / PD1 / DG1 / IN1) into the v2.3 and v2.3.1 grammar tables, mirroring the v0.6 v2.4 back-port. Before this, a v2.3 / v2.3.1 wire carrying any of these segments hit the "unknown segment" (Z-segment) path — now they dispatch to per-version field-level validation. Closes the T-track per-version coverage gap documented in `docs/design/v2_3-v2_4-spec-audit.md`. **No public-API change** vs v0.11.0 (typed-segment structs are version-agnostic and already existed); v1.0 stability clock continues from v0.5.0. Tests: 466 → 469 across 26 suites.
+
+### Added — 12 new per-version schemas
+
+Six segments × two versions authored under `Resources/schemas/v2.3/` and `Resources/schemas/v2.3.1/`, each from the version's own spec PDF (v2.3 CH2/CH3/CH6; v2.3.1 combined Final Standard). Per-version field shapes preserved verbatim:
+
+- **EVN** — 6 fields on v2.3 / v2.3.1 (no EVN-7 Event Facility; that arrived in v2.4).
+- **MSA** — 6 fields; identical to v2.4.
+- **ERR** — single `CM` field (Error Code and Location); identical to v2.4.
+- **PD1** — 12 fields on v2.3 / v2.3.1 (v2.4 expanded to 21).
+- **DG1** — 19 fields. Divergences: DG1-2 (Coding Method) is `R` on v2.3 / v2.3.1 (v2.4 downgraded to `B`); DG1-15 (Diagnosis Priority) is `NM` on v2.3, revised to `ID` on v2.3.1 (matching v2.4).
+- **IN1** — 25-field curation (shared typed-segment surface). Divergences: IN1-14 (Authorization Information) is `CM` on v2.3 / v2.3.1 (v2.4 retyped to `AUI`); IN1-17 (Insured's Relationship To Patient) is `IS` on v2.3, revised to `CE` on v2.3.1 (matching v2.4). Field optionality follows the v2.4 curation (R on IN1-1/2/3) — the v2.3 CH6 OPT column resisted clean PDF extraction; types + field count are exact. Documented in the audit doc.
+
+### Added — regression pins
+
+`MultiVersionTests`: `v23BackportedSegmentsRecognised` + `v231BackportedSegmentsRecognised` (segments dispatch to the version grammar, no unknown-segment), `v23DG1RequiredFieldsFire` (DG1-1/2/6 required-field misses fire; proves the v2.3-specific DG1-2 = R is enforced). Extended `grammarTablePopulated` (v2.3.1) + `v23GrammarTablePopulated` (v2.3) with the 6 new segment counts + the DG1-15 / IN1-17 errata-delta type assertions.
+
 ## [0.11.0] — 2026-07-03
 
 ADR-010 DSL-extension cycle. Ships three new predicate/grammar primitives (segment-presence atoms, group-scope cardinality rules, subcomponent-granular field-refs) and applies them to close a cluster of previously-deferred spec rules across all four base versions plus the AU profile: §4.5.1.8 ORC-8/OBR-29 XOR softening, OBR-7/-14 specimen-presence triggers, and HL7au:000008 + .1 (Display Segments). **One new public `ValidationIssue.Kind` case** (`.segmentCardinalityBelowMinimum`, additive on a non-`@frozen` enum — minor bump); no other public-API change; v1.0 stability clock continues from v0.5.0. Tests: 446 (v0.10.0) → 466 across 26 suites. Six functional commits: `13e616a` (S1) → `3d11590` (S2) → `4088a75` (S3) → `cca9aa8` (S4) → `2f4796c` (S4b) plus the ADR-010 accept `2396bd2`.
