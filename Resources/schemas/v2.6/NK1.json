@@ -1,0 +1,20 @@
+{
+  "segmentID": "NK1",
+  "version": "2.6",
+  "description": "Next of Kin / Associated Parties",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID - NK1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "name", "name": "Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "relationship", "name": "Relationship", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "address", "name": "Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "phoneNumber", "name": "Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "businessPhoneNumber", "name": "Business Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "contactRole", "name": "Contact Role", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "startDate", "name": "Start Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "endDate", "name": "End Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "nextOfKinJobTitle", "name": "Next of Kin / Associated Parties Job Title", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "nextOfKinJobCodeClass", "name": "Next of Kin / Associated Parties Job Code/Class", "dataType": "JCC", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "nextOfKinEmployeeNumber", "name": "Next of Kin / Associated Parties Employee Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "organizationName", "name": "Organization Name - NK1", "dataType": "XON", "optionality": "O", "repeatability": "*" }
+  ]
+}

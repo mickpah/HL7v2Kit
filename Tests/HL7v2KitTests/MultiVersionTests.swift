@@ -472,4 +472,27 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "well-formed v2.6 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
     }
+
+    @Test("v2.6 SegmentGrammarTable carries the S2a patient-admin segments with v2.6 divergences")
+    func v26GrammarTableS2aPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        // Field counts vs v2.5.1: PD1 22 (was 21; +PD1-22 Advance Directive
+        // Last Verified Date), NK1 13, PV1 20, AL1 6 (curation depths held).
+        #expect(table["PD1"]?.fields.count == 22)
+        #expect(table["NK1"]?.fields.count == 13)
+        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["AL1"]?.fields.count == 6)
+        // v2.6 CE → CWE migrations (field-by-field, verified against the
+        // v2.6 CH03 tables — NOT a blanket rename):
+        #expect(table["PD1"]?.field(11)?.dataType == "CWE")   // Publicity Code
+        #expect(table["PD1"]?.field(15)?.dataType == "CWE")   // Advance Directive Code
+        #expect(table["PD1"]?.field(22)?.name == "Advance Directive Last Verified Date")
+        #expect(table["NK1"]?.field(3)?.dataType == "CWE")    // Relationship
+        #expect(table["NK1"]?.field(7)?.dataType == "CWE")    // Contact Role
+        #expect(table["AL1"]?.field(2)?.dataType == "CWE")    // Allergen Type Code
+        #expect(table["AL1"]?.field(3)?.dataType == "CWE")    // Allergen Code
+        #expect(table["AL1"]?.field(4)?.dataType == "CWE")    // Allergy Severity Code
+        // PV1 (curated to 20) has no CE/TS in range → identical to v2.5.1.
+        #expect(table["PV1"]?.field(20)?.dataType == "FC")
+    }
 }
