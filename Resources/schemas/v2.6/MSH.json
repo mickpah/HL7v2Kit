@@ -1,0 +1,207 @@
+{
+  "segmentID": "MSH",
+  "version": "2.6",
+  "description": "Message Header",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "fieldSeparator",
+      "name": "Field Separator",
+      "dataType": "ST",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "encodingCharacters",
+      "name": "Encoding Characters",
+      "dataType": "ST",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "sendingApplication",
+      "name": "Sending Application",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "sendingFacility",
+      "name": "Sending Facility",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "receivingApplication",
+      "name": "Receiving Application",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "receivingFacility",
+      "name": "Receiving Facility",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "dateTimeOfMessage",
+      "name": "Date/Time Of Message",
+      "dataType": "DTM",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "security",
+      "name": "Security",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "messageType",
+      "name": "Message Type",
+      "dataType": "MSG",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "messageControlID",
+      "name": "Message Control ID",
+      "dataType": "ST",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 11,
+      "swiftName": "processingID",
+      "name": "Processing ID",
+      "dataType": "PT",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "versionID",
+      "name": "Version ID",
+      "dataType": "VID",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "sequenceNumber",
+      "name": "Sequence Number",
+      "dataType": "NM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "continuationPointer",
+      "name": "Continuation Pointer",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "acceptAcknowledgmentType",
+      "name": "Accept Acknowledgment Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "applicationAcknowledgmentType",
+      "name": "Application Acknowledgment Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "countryCode",
+      "name": "Country Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "characterSet",
+      "name": "Character Set",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 19,
+      "swiftName": "principalLanguageOfMessage",
+      "name": "Principal Language Of Message",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "alternateCharacterSetHandlingScheme",
+      "name": "Alternate Character Set Handling Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "messageProfileIdentifier",
+      "name": "Message Profile Identifier",
+      "dataType": "EI",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 22,
+      "swiftName": "sendingResponsibleOrganization",
+      "name": "Sending Responsible Organization",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 23,
+      "swiftName": "receivingResponsibleOrganization",
+      "name": "Receiving Responsible Organization",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "sendingNetworkAddress",
+      "name": "Sending Network Address",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "receivingNetworkAddress",
+      "name": "Receiving Network Address",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

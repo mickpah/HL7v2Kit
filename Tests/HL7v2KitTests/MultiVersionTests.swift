@@ -414,4 +414,62 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "v2.3.1 back-ported segments on a well-formed wire should report no errors; got \(report.errors.map(\.message))")
     }
+
+    // MARK: - v0.14 (ADR-012): HL7 v2.6 grammar — S1 control/notes segments
+
+    @Test("v2.6 wire parses with .version == .v2_6")
+    func v26VersionDetected() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.6\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries the S1 control/notes segments with v2.6 field counts")
+    func v26GrammarTableS1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        // v2.6-specific field counts (vs v2.5.1): MSH 25 (was 21; +22..25),
+        // MSA 8 (was 6; +7/8 Message Waiting), NTE 8 (was 4; +5..8),
+        // EVN 7, ERR 12.
+        #expect(table["MSH"]?.fields.count == 25)
+        #expect(table["MSA"]?.fields.count == 8)
+        #expect(table["NTE"]?.fields.count == 8)
+        #expect(table["EVN"]?.fields.count == 7)
+        #expect(table["ERR"]?.fields.count == 12)
+        // v2.6 systematically renamed TS → DTM: MSH-7 and the EVN date
+        // fields are DTM (were TS in v2.5.1).
+        #expect(table["MSH"]?.field(7)?.dataType == "DTM")
+        #expect(table["EVN"]?.field(2)?.dataType == "DTM")
+        // MSH-19 Principal Language: CE → CWE in v2.6.
+        #expect(table["MSH"]?.field(19)?.dataType == "CWE")
+        // v2.6 MSH additions.
+        #expect(table["MSH"]?.field(22)?.name == "Sending Responsible Organization")
+        #expect(table["MSH"]?.field(25)?.name == "Receiving Network Address")
+        // NTE-4 Comment Type: CE → CWE in v2.6; NTE-6 Entered Date/Time is DTM.
+        #expect(table["NTE"]?.field(4)?.dataType == "CWE")
+        #expect(table["NTE"]?.field(6)?.dataType == "DTM")
+    }
+
+    // A v2.6 ACK-shaped wire carrying MSH + MSA + ERR dispatches to the
+    // v2.6 grammar (no unknown-segment on the S1 segments). Other
+    // segments (PID etc.) are not yet authored — S2+ — so this wire is
+    // deliberately limited to S1 segments.
+    private let v26AckWire = """
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.6\r\
+    MSA|AA|MSG00001\r\
+    NTE|1||All results verified\r
+    """
+
+    @Test("v2.6 S1 wire (MSH/MSA/NTE) dispatches to v2.6 grammar, no unknown-segment")
+    func v26S1SegmentsRecognised() throws {
+        let message = try Parser().parse(v26AckWire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "v2.6 S1 segments must dispatch to the v2.6 grammar; got \(unknowns.map(\.location.segmentID))")
+        #expect(report.errors.isEmpty,
+                "well-formed v2.6 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
+    }
 }
