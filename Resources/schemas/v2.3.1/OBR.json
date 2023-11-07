@@ -60,7 +60,7 @@
       "dataType": "TS",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "messageCode = ORU"
+      "condition": "messageCode = ORU OR OBR-15 populated"
     },
     {
       "index": 8,
@@ -116,7 +116,8 @@
       "name": "Specimen Received Date/Time",
       "dataType": "TS",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "condition": "OBR-15 populated"
     },
     {
       "index": 15,
@@ -238,7 +239,7 @@
       "dataType": "EIP",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-1 = CH"
+      "condition": "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty"
     },
     {
       "index": 30,

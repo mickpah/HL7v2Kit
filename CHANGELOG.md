@@ -110,6 +110,17 @@ Fourth implementation stage of ADR-010 lands on branch `v0.11-adr-010`. Uses the
 
 Tests: 458 → 463 across 26 suites.
 
+### Added — v0.11-S4b: per-version mirror to v2.3 / v2.3.1 (2026-07-03)
+
+Closes the per-version coverage gap for the S1 XOR softening and S4 specimen-presence conditions by mirroring them into the v2.3 and v2.3.1 OBR / ORC schemas, after PDFKit-confirming the equivalent spec text in v2.3 CH4.
+
+- **v2.3 + v2.3.1 ORC-8 / OBR-29**: `"ORC-1 = CH"` → DNF XOR softening (same predicate strings as v2.4/v2.5.1). Basis: v2.3 §4.3.1.8 child-order-transmitted trigger (verbatim like v2.4 §4.5.1.1) + OBR-29 defined "identical to ORC-8-parent" + the general XOR parenthetical "This rule is the same for other identical fields in the ORC and OBR" (v2.3 CH4, placer/filler order-number rules). v2.3 has no parent-specific §4.5.1.8 sentence like v2.4, so the softening rests on the identical-fields generalization — documented in the audit doc.
+- **v2.3 + v2.3.1 OBR-7**: `"messageCode = ORU"` → `"messageCode = ORU OR OBR-15 populated"` (SPM absent in v2.3/v2.3.1, same fallback as v2.4). Basis: v2.3 §4.5.1.7.
+- **v2.3 + v2.3.1 OBR-14**: new condition `"OBR-15 populated"`. Basis: v2.3 §4.5.1.14 — *verbatim identical* to v2.4 §4.5.3.14 ("must contain a value when the order is accompanied by a specimen").
+- Three regression pins: `obr14FiresOnV23`, `orc8Obr29FireOnV231ChildBothEmpty`, `orc8SilentOnV231WhenOBRCarriesParent`.
+
+Tests: 463 → 466 across 26 suites.
+
 ## [0.10.0] — 2026-06-25
 
 Per-version cross-segment / message-context coverage closure + AU narrowing audit. **Eight functional commits** since v0.9.0, all under the "correct defects as found" feedback rule (`feedback_correct_defects_as_found.md`). PDFKit-extracted spec text for v2.3, v2.3.1, and v2.5.1 CH06 to close the v0.4-S2 "per-version conditional rules pending PDFs" gap for every spec-extractable trigger. Two AU narrowings (HL7au:000001, HL7au:000008) audited and explicitly marked unshippable until a future ADR-010 introduces peer-absent / segment-quantification / content-gated DSL primitives. **No public-API change** vs v0.9.0; v1.0 stability clock continues from v0.5.0. Tests: 439 (v0.9.0) → 446 across 26 suites.

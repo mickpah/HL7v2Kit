@@ -679,4 +679,69 @@ struct ConditionalFieldTests {
         #expect(hits.count == 1,
                 "ORM with OBR-15 populated → OBR-7 must fire via v0.11-S4 trigger; got \(hits.count): \(hits.map(\.message))")
     }
+
+    // MARK: - v0.11-S4b (ADR-010): v2.3 / v2.3.1 per-version mirror
+
+    // v2.3 wire (MSH-12 = 2.3). OBR-15 populated, OBR-14 empty →
+    // OBR-14 condition "OBR-15 populated" fires. Mirrors the v2.4 pin;
+    // v2.3 §4.5.1.14 verbatim-identical to v2.4 §4.5.3.14.
+    private let ormV23SpecimenSourceMissingReceivedDT = """
+    MSH|^~\\&|SENDER|FAC|LAB|FAC|||ORM^O01|MSG|P|2.3\r\
+    PID|1||X^^^F^MR\r\
+    ORC|NW|ORD001||GROUP|CM\r\
+    OBR|1|ORD001|FIL|GLUC|||20240401080000||||||||BLOOD^Blood^HL70070\r
+    """
+
+    @Test("v0.11-S4b: OBR-14 fires on v2.3 when OBR-15 populated")
+    func obr14FiresOnV23() throws {
+        let message = try Parser().parse(ormV23SpecimenSourceMissingReceivedDT)
+        let report = Validator().validate(message)
+        let hits = obrConditionalHits(report, fieldIndex: 14)
+        #expect(hits.count == 1,
+                "v2.3 OBR-14 must fire when OBR-15 populated; got \(hits.count): \(hits.map(\.message))")
+    }
+
+    // v2.3.1 child-order wire: ORC-1 = CH, both ORC-8 and OBR-29 empty
+    // → XOR softening fires on BOTH (neither peer carries the parent).
+    // Mirrors the v2.4/v2.5.1 both-empty case.
+    private let oruV231ChildBothParentsEmpty = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.3.1\r\
+    PID|1||X^^^F^MR\r\
+    ORC|CH|ORD002||GROUP|CM\r\
+    OBR|1|ORD002|FIL002|HBA1C|||||||||||||||||||||F\r
+    """
+
+    @Test("v0.11-S4b: ORC-8 + OBR-29 XOR softening fires on v2.3.1 child with both empty")
+    func orc8Obr29FireOnV231ChildBothEmpty() throws {
+        let message = try Parser().parse(oruV231ChildBothParentsEmpty)
+        let report = Validator().validate(message)
+        let orc8 = report.errors.filter {
+            $0.code == .conditionalFieldMissing
+                && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 8
+        }
+        let obr29 = obrConditionalHits(report, fieldIndex: 29)
+        #expect(orc8.count == 1, "v2.3.1 ORC-8 must fire on child with both parents empty; got \(orc8.map(\.message))")
+        #expect(obr29.count == 1, "v2.3.1 OBR-29 must fire on child with both parents empty; got \(obr29.map(\.message))")
+    }
+
+    // v2.3.1 child-order wire where OBR-29 carries the parent (ORC-8
+    // empty) → XOR softening: ORC-8 must stay silent.
+    private let oruV231ChildOBRCarriesParent = """
+    MSH|^~\\&|HIS|FAC|LAB|FAC|||ORU^R01|MSG|P|2.3.1\r\
+    PID|1||X^^^F^MR\r\
+    ORC|CH|ORD002||GROUP|CM\r\
+    OBR|1|ORD002|FIL002|HBA1C|||||||||||||||||||||F||||PLACER_ORD001\r
+    """
+
+    @Test("v0.11-S4b: ORC-8 silent on v2.3.1 child when OBR-29 carries the parent")
+    func orc8SilentOnV231WhenOBRCarriesParent() throws {
+        let message = try Parser().parse(oruV231ChildOBRCarriesParent)
+        let report = Validator().validate(message)
+        let orc8 = report.errors.filter {
+            $0.code == .conditionalFieldMissing
+                && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 8
+        }
+        #expect(orc8.isEmpty,
+                "v2.3.1 ORC-8 must not fire when OBR-29 carries the parent; got \(orc8.map(\.message))")
+    }
 }
