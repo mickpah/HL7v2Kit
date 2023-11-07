@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed — retired orphaned AU profile JSON overlays (2026-07-04, maintenance)
+## [0.13.1] — 2026-07-04
+
+### Changed — retired orphaned AU profile JSON overlays (maintenance)
 
 Deleted `Resources/profiles/au-adrm-2021/{MSH,OBR,ORC,datatypes}.json`. These files were authored partially in v0.5–v0.8 as the "editable spec source" ADR-007 envisioned, but `ProfileLoader` always returned the hand-curated `Profile.auADRM2021` Swift and never read the JSON — so they were dead code that had drifted stale (missing the v0.8 MSH-12, v0.11 `cardinalityExtensions`, and v0.13 `componentInequalities` / `valueConditionals` rules). Removing them eliminates the "hand-synced JSON↔Swift drift risk" flagged in the runway by deleting the unused second representation; the compiler-checked Swift is now the acknowledged single source of truth. A JSON-driven codegen path (ADR-004 principle) is deferred until a second localisation profile makes shared tooling worthwhile. Comments in `Profile+au_adrm_2021.swift` / `ProfileLoader.swift` corrected; ADR-007 carries a v0.14 status note. **No behaviour or API change**; 475 / 475 tests unchanged.
 
