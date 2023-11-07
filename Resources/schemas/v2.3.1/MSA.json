@@ -1,0 +1,55 @@
+{
+  "segmentID": "MSA",
+  "version": "2.3.1",
+  "description": "Message Acknowledgment",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "acknowledgmentCode",
+      "name": "Acknowledgment Code",
+      "dataType": "ID",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "messageControlID",
+      "name": "Message Control ID",
+      "dataType": "ST",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "textMessage",
+      "name": "Text Message",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "expectedSequenceNumber",
+      "name": "Expected Sequence Number",
+      "dataType": "NM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "delayedAcknowledgmentType",
+      "name": "Delayed Acknowledgment Type",
+      "dataType": "ID",
+      "optionality": "B",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "errorCondition",
+      "name": "Error Condition",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

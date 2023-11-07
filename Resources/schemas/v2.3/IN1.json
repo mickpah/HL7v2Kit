@@ -1,0 +1,207 @@
+{
+  "segmentID": "IN1",
+  "version": "2.3",
+  "description": "Insurance",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID - IN1",
+      "dataType": "SI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "insurancePlanID",
+      "name": "Insurance Plan ID",
+      "dataType": "CE",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "insuranceCompanyID",
+      "name": "Insurance Company ID",
+      "dataType": "CX",
+      "optionality": "R",
+      "repeatability": "*"
+    },
+    {
+      "index": 4,
+      "swiftName": "insuranceCompanyName",
+      "name": "Insurance Company Name",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 5,
+      "swiftName": "insuranceCompanyAddress",
+      "name": "Insurance Company Address",
+      "dataType": "XAD",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 6,
+      "swiftName": "insuranceCoContactPerson",
+      "name": "Insurance Co. Contact Person",
+      "dataType": "XPN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 7,
+      "swiftName": "insuranceCoPhoneNumber",
+      "name": "Insurance Co Phone Number",
+      "dataType": "XTN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 8,
+      "swiftName": "groupNumber",
+      "name": "Group Number",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "groupName",
+      "name": "Group Name",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 10,
+      "swiftName": "insuredsGroupEmpID",
+      "name": "Insured's Group Emp ID",
+      "dataType": "CX",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 11,
+      "swiftName": "insuredsGroupEmpName",
+      "name": "Insured's Group Emp Name",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 12,
+      "swiftName": "planEffectiveDate",
+      "name": "Plan Effective Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "planExpirationDate",
+      "name": "Plan Expiration Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "authorizationInformation",
+      "name": "Authorization Information",
+      "dataType": "CM",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "planType",
+      "name": "Plan Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "nameOfInsured",
+      "name": "Name Of Insured",
+      "dataType": "XPN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 17,
+      "swiftName": "insuredsRelationshipToPatient",
+      "name": "Insured's Relationship To Patient",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "insuredsDateOfBirth",
+      "name": "Insured's Date Of Birth",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "insuredsAddress",
+      "name": "Insured's Address",
+      "dataType": "XAD",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 20,
+      "swiftName": "assignmentOfBenefits",
+      "name": "Assignment Of Benefits",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "coordinationOfBenefits",
+      "name": "Coordination Of Benefits",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 22,
+      "swiftName": "coordOfBenPriority",
+      "name": "Coord Of Ben. Priority",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 23,
+      "swiftName": "noticeOfAdmissionFlag",
+      "name": "Notice Of Admission Flag",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "noticeOfAdmissionDate",
+      "name": "Notice Of Admission Date",
+      "dataType": "DT",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "reportOfEligibilityFlag",
+      "name": "Report Of Eligibility Flag",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}
