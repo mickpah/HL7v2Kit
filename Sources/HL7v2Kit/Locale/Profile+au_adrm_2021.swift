@@ -1,10 +1,17 @@
 // Profile+au_adrm_2021.swift
-// Hand-curated AU ADRM-2021 profile content. Mirrors the JSON overlays
-// under `Resources/profiles/au-adrm-2021/` — they are the editable spec
-// source; this Swift file is what `ProfileLoader` returns at runtime.
-// Codegen support for profile overlays is deferred to a future stage
-// (when more profiles need this pattern); until then, keep the two
-// representations in sync by hand. See ADR-007.
+// Hand-curated AU ADRM-2021 profile content. This Swift file is the
+// SINGLE SOURCE OF TRUTH for the AU profile — it is what `ProfileLoader`
+// returns at runtime, and it is validated by the Swift compiler (the
+// rule types are type-checked at build time, unlike a hand-synced JSON
+// mirror would be).
+//
+// v0.14 retired the orphaned `Resources/profiles/au-adrm-2021/*.json`
+// overlay files that ADR-007 originally envisioned: they were never
+// consumed at runtime (ProfileLoader always returned this Swift) and
+// had drifted stale (missing the v0.8 MSH-12, v0.11 cardinality, and
+// v0.13 composite-inequality rules). A JSON-driven codegen path (per
+// ADR-004) is deferred until a SECOND localisation profile makes shared
+// tooling worthwhile — see ADR-007 (v0.14 status note).
 //
 // v0.5-S5-B-1 ships the EI-all-components rules for OBR-2/3 + ORC-2/3/4
 // per HL7au:000003 / 000004.1 / 000005 / 000006 / 000007 in Appendix 5

@@ -4,10 +4,11 @@
 // consumers see only the locale enum.
 //
 // v0.4-S5-A landed empty-Profile plumbing. v0.5-S5-B-1 returns the
-// hand-curated `Profile.auADRM2021` (see Profile+au_adrm_2021.swift)
-// with the EI-completeness rules for OBR-2 / OBR-3 / ORC-2 / ORC-3 /
-// ORC-4. JSON-driven codegen support is deferred until more profiles
-// need this pattern.
+// hand-curated `Profile.auADRM2021` (see Profile+au_adrm_2021.swift),
+// which is the single source of truth for the AU profile. v0.14 retired
+// the orphaned `Resources/profiles/au-adrm-2021/*.json` files (never
+// consumed here, drifted stale); a JSON-driven codegen path is deferred
+// until a second localisation profile needs shared tooling. See ADR-007.
 
 import Foundation
 
