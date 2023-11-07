@@ -414,6 +414,9 @@ public struct Validator: Sendable {
                     profile: profile,
                     fieldGrammar: fieldGrammar,
                     field: field,
+                    segment: segment,
+                    segmentArrayIndex: segmentIndex,
+                    message: message,
                     segmentID: grammar.segmentID,
                     segmentIndex: occurrence,
                     issues: &issues
@@ -453,6 +456,9 @@ public struct Validator: Sendable {
         profile: Profile,
         fieldGrammar: FieldGrammar,
         field: Field,
+        segment: Segment,
+        segmentArrayIndex: Int,
+        message: Message,
         segmentID: String,
         segmentIndex: Int,
         issues: inout [ValidationIssue]
@@ -507,6 +513,61 @@ public struct Validator: Sendable {
                     code: .profileConstraintViolation(localeRule: citation),
                     location: location,
                     message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.thenComponent) \(reqDesc) when \(fieldGrammar.dataType)-\(rule.ifComponent) \(condDesc) (\(citation))"
+                ))
+            }
+            // Track 3: component-value inequality (v0.13, ADR-011).
+            // Fires when both named components are populated and carry
+            // the same (first-subcomponent) value.
+            for rule in composite.componentInequalities {
+                guard isComponentPopulated(repetition, componentIndex: rule.componentA),
+                      isComponentPopulated(repetition, componentIndex: rule.componentB)
+                else { continue }
+                let valueA = valueSetScalarValue(in: repetition, component: rule.componentA, subcomponent: nil)
+                let valueB = valueSetScalarValue(in: repetition, component: rule.componentB, subcomponent: nil)
+                guard valueA == valueB else { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: rule.componentB
+                )
+                let citation = rule.specCitation
+                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.componentA)!=\(rule.componentB)"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.componentA) and \(fieldGrammar.dataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))"
+                ))
+            }
+            // Track 4: value-conditional denylist (v0.13, ADR-011).
+            // Fires when the named component carries a denied value and
+            // the optional message-context gate (if set) evaluates true.
+            for rule in composite.valueConditionals {
+                if let gate = rule.condition, !gate.isEmpty {
+                    guard conditionTriggers(
+                        gate,
+                        in: segment,
+                        segmentIndex: segmentArrayIndex,
+                        message: message,
+                        currentSegmentID: segmentID
+                    ) else { continue }
+                }
+                let value = valueSetScalarValue(in: repetition, component: rule.component, subcomponent: nil)
+                guard rule.deniedValues.contains(value) else { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: rule.component
+                )
+                let citation = rule.specCitation
+                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.component)"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .profileConstraintViolation(localeRule: citation),
+                    location: location,
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.component) must not be \"\(value)\" (\(citation))"
                 ))
             }
         }

@@ -106,6 +106,64 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// HL7au:00044.4.1, 00044.4.2, 00044.4.5, 00044.4.6 and the
     /// equivalent CWE / CNE series. v0.5-S5-B-2.
     let pairRules: [PairConditional]
+
+    /// Component-value inequality rules: "components A and B must carry
+    /// different values when both are populated". Used to express
+    /// HL7au:00044.4.8 (CE alternate coding system must differ from the
+    /// primary coding system). v0.13 (ADR-011).
+    let componentInequalities: [ComponentInequality]
+
+    /// Value-conditional rules: "component N must not carry a denied
+    /// value" (optionally message-type-gated via the v0.7 DSL). Used to
+    /// express HL7au:00044.4.4 (LOINC must not appear as the alternate
+    /// coding system on Orders/Results). v0.13 (ADR-011).
+    let valueConditionals: [ComponentValueConditional]
+
+    init(
+        dataType: String,
+        requiredComponents: [ComponentRequirement] = [],
+        pairRules: [PairConditional] = [],
+        componentInequalities: [ComponentInequality] = [],
+        valueConditionals: [ComponentValueConditional] = []
+    ) {
+        self.dataType = dataType
+        self.requiredComponents = requiredComponents
+        self.pairRules = pairRules
+        self.componentInequalities = componentInequalities
+        self.valueConditionals = valueConditionals
+    }
+}
+
+/// A component-value inequality rule on a composite. "When the field is
+/// populated and both `componentA` and `componentB` are populated,
+/// their (first-subcomponent) values must differ." Fires
+/// `.profileConstraintViolation` when the two values are equal.
+/// Fail-safe: when either component is empty there is nothing to
+/// compare, so the rule does not fire. v0.13 (ADR-011).
+struct ComponentInequality: Sendable, Equatable, Hashable {
+    /// First 1-based component index (e.g. CE-3, primary coding system).
+    let componentA: Int
+    /// Second 1-based component index (e.g. CE-6, alt coding system).
+    let componentB: Int
+    /// Spec citation surfaced in `.profileConstraintViolation`.
+    let specCitation: String?
+}
+
+/// A value-conditional rule on a composite. "When the field is
+/// populated and (`condition` is nil OR evaluates true), the named
+/// `component`'s (first-subcomponent) value must NOT be one of
+/// `deniedValues`." Fires `.profileConstraintViolation` on a denied
+/// value. Fail-safe: an empty component doesn't match any denied value;
+/// an unparseable `condition` gates the rule off. v0.13 (ADR-011).
+struct ComponentValueConditional: Sendable, Equatable, Hashable {
+    /// The 1-based component index whose value is denied-listed.
+    let component: Int
+    /// Values the component must NOT carry (e.g. `["LN"]`).
+    let deniedValues: [String]
+    /// Optional v0.7-DSL message-context gate. `nil` → always applies.
+    let condition: String?
+    /// Spec citation surfaced in `.profileConstraintViolation`.
+    let specCitation: String?
 }
 
 /// A single component-required rule on a composite. "When the field

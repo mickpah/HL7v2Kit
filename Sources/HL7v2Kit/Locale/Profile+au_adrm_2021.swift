@@ -333,27 +333,62 @@ extension Profile {
                 ],
                 pairRules: []
             ),
-            // CE datatype — HL7au:00044.4 series. Skip 44.4.3 (CE-2
-            // "text must be valued") since it carries an explicit
-            // "may be blank in some locations" carve-out; also skip
-            // 44.4.4 / 44.4.7 / 44.4.8 (value-set / semantic rules
-            // not expressible as pair-conditionals — defer to S5-C).
+            // CE datatype — HL7au:00044.4 series.
+            // - 44.4.1/.2/.5/.6: identifier ⇔ coding-system pairs (pairRules).
+            // - 44.4.8 (v0.13, ADR-011): alternate coding system (CE-6)
+            //   must differ from primary coding system (CE-3).
+            // - 44.4.4 (v0.13, ADR-011): LOINC (LN) must be the primary
+            //   coding system, not the alternate — machine-checkable
+            //   necessary condition "CE-6 must not be LN" on Orders/Results.
+            // Still NOT shipped (documented in the audit doc as permanent
+            // limitations): 44.4.3 (CE-2 text — "may be blank in some
+            // locations" carve-out, would over-fire) and 44.4.7 (concept-
+            // match — requires a terminology service, not wire-checkable).
             CompositeOverride(
                 dataType: "CE",
                 requiredComponents: [],
-                pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4")
+                pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4"),
+                componentInequalities: [
+                    ComponentInequality(
+                        componentA: 3,
+                        componentB: 6,
+                        specCitation: "HL7au:00044.4.8 — CE alternate coding system (CE-6) must differ from primary coding system (CE-3)"
+                    )
+                ],
+                valueConditionals: [
+                    ComponentValueConditional(
+                        component: 6,
+                        deniedValues: ["LN"],
+                        condition: "messageCode in (ORM, ORU)",
+                        specCitation: "HL7au:00044.4.4 — LOINC (LN) must be the primary coding system (CE-3), not the alternate (CE-6), on Orders/Results"
+                    )
+                ]
             ),
-            // CNE datatype — HL7au:00044.5 series. Same pair shape.
+            // CNE datatype — HL7au:00044.5 series. Pair shape + 44.5.3
+            // (v0.13): CNE-2 <text> must be valued (no carve-out, unlike
+            // CE-2). The concept-match leg (44.5.7) is marked "Removed"
+            // in ADRM r2 — not shipped.
             CompositeOverride(
                 dataType: "CNE",
-                requiredComponents: [],
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 2,
+                        specCitation: "HL7au:00044.5.3 — CNE <text> component must be valued (display to user)"
+                    )
+                ],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.5")
             ),
-            // CWE datatype — HL7au:00044.6 series. Same pair shape but
-            // the spec numbers components 4 and 5 differently from CE.
+            // CWE datatype — HL7au:00044.6 series. Pair shape + 44.6.3
+            // (v0.13): CWE-2 <text> must be valued. Concept-match leg
+            // (44.6.7) marked "Removed" in ADRM r2 — not shipped.
             CompositeOverride(
                 dataType: "CWE",
-                requiredComponents: [],
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 2,
+                        specCitation: "HL7au:00044.6.3 — CWE <text> component must be valued (display to user)"
+                    )
+                ],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.6")
             ),
         ],

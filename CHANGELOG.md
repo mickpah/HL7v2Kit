@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] — 2026-07-04
+
+ADR-011 composite-override extension cycle. Adds two internal rule axes to `CompositeOverride` and ships four previously-deferred HL7au:00044.* CE/CNE/CWE datatype conformance points. **No public-API change** (composite-override types are internal per ADR-007; both new rules reuse `.profileConstraintViolation`, no new `ValidationIssue.Kind` case); v1.0 stability clock continues from v0.5.0. Tests: 469 → 475 across 26 suites. Single functional commit + release commit.
+
+### Added — composite-override model extensions (ADR-011)
+
+- **`ComponentInequality`** `{ componentA, componentB, specCitation }` — "two named components must carry different values when both populated." Fires `.profileConstraintViolation` on equal values; no-op when either is empty.
+- **`ComponentValueConditional`** `{ component, deniedValues, condition?, specCitation }` — "component must not carry a denied value," with an optional v0.7-DSL message-context gate (reuses the ADR-009 `conditionTriggers` entry point). No-op on empty component or gate-false.
+- `CompositeOverride` gains `componentInequalities` + `valueConditionals` (defaulted empty). `Validator.checkProfileCompositeOverrides` gains two inner loops (Track 3 / Track 4).
+
+### Added — HL7au:00044 CE/CNE/CWE conformance points
+
+- **44.4.8** (CE) — alternate coding system (CE-6) must differ from primary (CE-3). `ComponentInequality(3, 6)`.
+- **44.4.4** (CE, Orders/Results) — LOINC (LN) must be the primary coding system, not the alternate. `ComponentValueConditional(6, ["LN"], "messageCode in (ORM, ORU)")`. Shipped as a machine-checkable *necessary condition* ("LN must not appear in CE-6"), not the full placement rule — flagged partial (same honesty pattern as v0.10 OBR-7).
+- **44.5.3** (CNE) / **44.6.3** (CWE) — `<text>` component (CNE-2 / CWE-2) must be valued. `requiredComponents: [2]` (existing model, no carve-out unlike CE-2).
+
+### Known limitations (documented, not shipped — req #3/#4)
+
+- **44.4.3** (CE `<text>`) — carries an explicit "in some locations user display is not intended and the text may be blank" carve-out; not wire-detectable, an unconditional rule would over-fire. Permanent limitation unless a wire signal for the blank-allowed locations emerges.
+- **44.4.7** (CE concept-match) — "identifier and alternate identifier must reflect the same concept" requires a terminology service; not machine-checkable from the wire. Permanent limitation.
+- **44.5.7 / 44.6.7** (CNE/CWE concept-match) — marked "Removed" in ADRM r2; not applicable.
+
+### Regression pins
+
+Six in `LocaleAUProfileTests`: 44.4.8 fires (equal CE-3/CE-6) + silent (distinct); 44.4.4 fires (LOINC in CE-6 on ORU) + gated-silent (LOINC in CE-6 on ADT); 44.6.3 (ERR-3 CWE empty text); 44.5.3 (ORC-30 CNE empty text).
+
 ## [0.12.0] — 2026-07-03
 
 v2.3 / v2.3.1 T-track grammar back-port. Authors the six T-track segments (EVN / MSA / ERR / PD1 / DG1 / IN1) into the v2.3 and v2.3.1 grammar tables, mirroring the v0.6 v2.4 back-port. Before this, a v2.3 / v2.3.1 wire carrying any of these segments hit the "unknown segment" (Z-segment) path — now they dispatch to per-version field-level validation. Closes the T-track per-version coverage gap documented in `docs/design/v2_3-v2_4-spec-audit.md`. **No public-API change** vs v0.11.0 (typed-segment structs are version-agnostic and already existed); v1.0 stability clock continues from v0.5.0. Tests: 466 → 469 across 26 suites.
