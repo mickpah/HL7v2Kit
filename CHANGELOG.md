@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-07-03
+
+ADR-010 DSL-extension cycle. Ships three new predicate/grammar primitives (segment-presence atoms, group-scope cardinality rules, subcomponent-granular field-refs) and applies them to close a cluster of previously-deferred spec rules across all four base versions plus the AU profile: §4.5.1.8 ORC-8/OBR-29 XOR softening, OBR-7/-14 specimen-presence triggers, and HL7au:000008 + .1 (Display Segments). **One new public `ValidationIssue.Kind` case** (`.segmentCardinalityBelowMinimum`, additive on a non-`@frozen` enum — minor bump); no other public-API change; v1.0 stability clock continues from v0.5.0. Tests: 446 (v0.10.0) → 466 across 26 suites. Six functional commits: `13e616a` (S1) → `3d11590` (S2) → `4088a75` (S3) → `cca9aa8` (S4) → `2f4796c` (S4b) plus the ADR-010 accept `2396bd2`.
+
 ### Added — ADR-010 Accepted (2026-07-02)
 
 `docs/design/ADR-010-dsl-extensions-peer-absent-quantification-content-gated.md` Accepted. Opens the v0.11 cycle. Three narrowly-scoped extensions to the ADR-008 / ADR-009 machinery, each additive and internal:

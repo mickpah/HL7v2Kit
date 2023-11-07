@@ -52,7 +52,7 @@ In substage S4 the methodology was extended: every conditional rule in the spec 
 | MSH | 21 | 0 | Faithful. |
 | PID | 39 | 0 | Faithful on per-field attributes. PID-35 and PID-36 conditions corrected in S4 (Gap 1). |
 | ORC | 31 | 0 | Faithful on per-field attributes. Conditional rules are cross-segment (ORC↔OBR XOR) — out of scope for same-segment DSL. |
-| OBR | 47 | 0 | Faithful on per-field attributes. OBR-7 / OBR-14 / OBR-25 are message-context-dependent; OBR-22 / OBR-26 / OBR-32 carry discourse-level rules — out of scope for same-segment DSL. |
+| OBR | 47 | 0 | Faithful on per-field attributes. OBR-7 / OBR-14 / OBR-25 message-context + specimen-presence rules **RESOLVED in v0.7 / v0.11** (ADR-008 + ADR-010). OBR-22 / OBR-26 / OBR-32 carry discourse-level rules still out of scope for the DSL; OBR-9 / .10 / .11 not shipped per req #4 (no cited MUST). |
 | OBX | 17 | 0 | Faithful on per-field attributes. OBX-2 condition added in S4 (Gap 2 partial). OBX-4 is grouping-discourse, not same-segment. |
 | NK1 | 13 | 0 | Faithful. |
 | PV1 | 20 | 0 | Faithful. |
@@ -112,6 +112,8 @@ From §4.5.3.25 (OBR-25 Result Status):
 
 These rules depend on message-type or sibling-segment presence (SPM, OBX). They are not expressible as same-segment predicates over the OBR segment alone.
 
+> **v0.11 RESOLVED (ADR-010).** OBR-25 shipped in v0.7-S4 (`messageCode = ORU`). **OBR-7** second trigger and **OBR-14** shipped in v0.11-S4 (commit `cca9aa8`) using the ADR-010 segment-presence atom: OBR-7 = `"messageCode = ORU OR SPM present OR OBR-15 populated"`, OBR-14 = `"SPM present OR OBR-15 populated"`. The "sample sent along" / "accompanied by a specimen" triggers map to SPM-segment presence (v2.5.1) or OBR-15 population. OBR-9 / .10 / .11 remain NOT shipped — descriptive text without a cited MUST trigger (req #4).
+
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)
 
 From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):
@@ -119,6 +121,8 @@ From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):
 > It is required when the order is a child.
 
 "Order is a child" is a parent/child message-structure property (preceding ORC carries an ORC-1 = "PA" code, then this ORC carries "CH"). Not a same-segment predicate.
+
+> **v0.11 RESOLVED (ADR-010).** ORC-8 / OBR-29 child-order trigger shipped in v0.9 (`"ORC-1 = CH"`); v0.11-S1 (commit `13e616a`) refined both to the §4.5.1.8 DNF XOR softening using the peer-absent atom, so neither field over-fires when its peer carries the parent. Predicates: ORC-8 = `"ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty"`, OBR-29 symmetric. Mirrored to v2.3 / v2.3.1 in v0.11-S4b (commit `2f4796c`).
 
 ## What this audit does NOT validate
 
