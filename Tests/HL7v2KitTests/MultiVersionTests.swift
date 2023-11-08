@@ -536,4 +536,25 @@ struct MultiVersionTests {
         #expect(pid35.count == 1,
                 "v2.6 PID-35 conditional should fire when PID-36 populated + PID-35 empty; got \(report.errors.map(\.message))")
     }
+
+    @Test("v2.6 SegmentGrammarTable carries ORC (S3a) with v2.6 divergences + carried conditions")
+    func v26GrammarTableS3aORCPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let orc = table["ORC"]
+        #expect(orc?.fields.count == 31)
+        // v2.6 TS → DTM on the ORC date fields.
+        for i in [9, 15, 27] {
+            #expect(orc?.field(i)?.dataType == "DTM", "ORC-\(i) should be DTM in v2.6")
+        }
+        // v2.6 CE → CWE on the four ORC CE fields (16/17/18/20). The other
+        // ORC coded fields (25/26/28/29/31 CWE, 30 CNE) were already
+        // CWE/CNE in v2.5.1 — unchanged.
+        for i in [16, 17, 18, 20] {
+            #expect(orc?.field(i)?.dataType == "CWE", "ORC-\(i) should be CWE in v2.6")
+        }
+        #expect(orc?.field(30)?.dataType == "CNE")
+        // Cross-segment conditions carried over verbatim from v2.5.1.
+        #expect(orc?.field(2)?.condition == "OBR-2 empty")
+        #expect(orc?.field(8)?.condition == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
+    }
 }
