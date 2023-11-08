@@ -737,4 +737,59 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "well-formed v2.8.2 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
     }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S2 patient-admin segments (deltas vs v2.6)")
+    func v282GrammarTableS2Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts: PID 40 (was 39; +PID-40 Telecommunication Info), PD1 22,
+        // NK1 13 (curated), PV1 20 (curated), AL1 6.
+        #expect(table["PID"]?.fields.count == 40)
+        #expect(table["PD1"]?.fields.count == 22)
+        #expect(table["NK1"]?.fields.count == 13)
+        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["AL1"]?.fields.count == 6)
+
+        // PID: IS→CWE on 8/32; B→W on 2/4/9/12/19/20/28; O→B on 13/14;
+        // PID-40 new (XTN); PID-3/5 stay R.
+        #expect(table["PID"]?.field(8)?.dataType == "CWE")
+        #expect(table["PID"]?.field(32)?.dataType == "CWE")
+        for i in [2, 4, 9, 12, 19, 20, 28] {
+            #expect(table["PID"]?.field(i)?.optionality == .withdrawn, "PID-\(i) should be W in v2.8.2")
+        }
+        #expect(table["PID"]?.field(13)?.optionality == .backwardCompat)
+        #expect(table["PID"]?.field(14)?.optionality == .backwardCompat)
+        #expect(table["PID"]?.field(40)?.name == "Patient Telecommunication Information")
+        #expect(table["PID"]?.field(3)?.optionality == .required)
+        #expect(table["PID"]?.field(5)?.optionality == .required)
+        // v2.8.2 dropped the v2.6 veterinary conditionals: PID-35 (renamed
+        // Taxonomic Classification Code) is O with no condition; PID-36 is B.
+        #expect(table["PID"]?.field(35)?.name == "Taxonomic Classification Code")
+        #expect(table["PID"]?.field(35)?.optionality == .optional)
+        #expect(table["PID"]?.field(35)?.condition == nil)
+        #expect(table["PID"]?.field(36)?.optionality == .backwardCompat)
+
+        // PD1: IS→CWE wave; PD1-4 withdrawn; PD1-12/13 → B; PD1-15 → C.
+        for i in [1, 2, 5, 6, 7, 8, 16, 19, 20, 21] {
+            #expect(table["PD1"]?.field(i)?.dataType == "CWE", "PD1-\(i) should be CWE in v2.8.2")
+        }
+        #expect(table["PD1"]?.field(4)?.optionality == .withdrawn)
+        #expect(table["PD1"]?.field(12)?.optionality == .backwardCompat)
+        #expect(table["PD1"]?.field(15)?.optionality == .conditional)
+
+        // PV1: IS→CWE wave; PV1-9 → B; PV1-2 stays R.
+        for i in [2, 4, 10, 12, 13, 14, 15, 16, 18] {
+            #expect(table["PV1"]?.field(i)?.dataType == "CWE", "PV1-\(i) should be CWE in v2.8.2")
+        }
+        #expect(table["PV1"]?.field(2)?.optionality == .required)
+        #expect(table["PV1"]?.field(9)?.optionality == .backwardCompat)
+
+        // AL1-6 withdrawn (was B in v2.6); AL1-1/3 stay R.
+        #expect(table["AL1"]?.field(6)?.optionality == .withdrawn)
+        #expect(table["AL1"]?.field(1)?.optionality == .required)
+        #expect(table["AL1"]?.field(3)?.optionality == .required)
+
+        // NK1 (curated 13) is unchanged from v2.6.
+        #expect(table["NK1"]?.field(3)?.dataType == "CWE")
+        #expect(table["NK1"]?.field(1)?.optionality == .required)
+    }
 }
