@@ -296,8 +296,9 @@ public struct Validator: Sendable {
         case .v2_3_1: return SegmentGrammarTable.v2_3_1
         case .v2_4:   return SegmentGrammarTable.v2_4
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
-        case .v2_6:   return SegmentGrammarTable.v2_6   // v0.14 (ADR-012)
-        default:      return [:]   // v2.8 grammar table is out of scope.
+        case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
+        case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
+        default:      return [:]   // grammar-less .v2_8 remains out of scope.
         }
     }
 

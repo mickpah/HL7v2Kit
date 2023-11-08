@@ -676,4 +676,65 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "well-formed v2.6 ORU should report no errors; got \(report.errors.map(\.message))")
     }
+
+    // MARK: - v0.15 (ADR-013): HL7 v2.8.2 grammar — S1 control/notes segments
+
+    @Test("v2.8.2 wire parses with .version == .v2_8_2 (distinct from grammar-less .v2_8)")
+    func v282VersionDetected() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8.2\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_8_2)
+        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
+        let v28 = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r")
+        #expect(v28.version == .v2_8)
+    }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S1 control/notes segments (deltas vs v2.6)")
+    func v282GrammarTableS1Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts held vs v2.6: MSH 25, MSA 8, NTE 8, EVN 7, ERR 12.
+        #expect(table["MSH"]?.fields.count == 25)
+        #expect(table["MSA"]?.fields.count == 8)
+        #expect(table["NTE"]?.fields.count == 8)
+        #expect(table["EVN"]?.fields.count == 7)
+        #expect(table["ERR"]?.fields.count == 12)
+        // MSH is byte-identical to v2.6 (DTM-7, CWE-19 already migrated).
+        #expect(table["MSH"]?.field(7)?.dataType == "DTM")
+        #expect(table["MSH"]?.field(19)?.dataType == "CWE")
+        // v2.8.2 withdrew the legacy backward-compat fields (were B in v2.6).
+        #expect(table["MSA"]?.field(3)?.optionality == .withdrawn)
+        #expect(table["MSA"]?.field(5)?.optionality == .withdrawn)
+        #expect(table["MSA"]?.field(6)?.optionality == .withdrawn)
+        #expect(table["ERR"]?.field(1)?.optionality == .withdrawn)
+        #expect(table["EVN"]?.field(1)?.optionality == .withdrawn)
+        // v2.8.2 IS → CWE migrations (verified per field-def header):
+        #expect(table["ERR"]?.field(9)?.dataType == "CWE")   // Inform Person Indicator (was IS)
+        #expect(table["EVN"]?.field(4)?.dataType == "CWE")   // Event Reason Code (was IS)
+        // Required fields held.
+        #expect(table["EVN"]?.field(2)?.optionality == .required)
+        #expect(table["ERR"]?.field(3)?.optionality == .required)
+        #expect(table["ERR"]?.field(4)?.optionality == .required)
+    }
+
+    // A v2.8.2 ACK-shaped wire (MSH/MSA/NTE) dispatches to the v2.8.2
+    // grammar — S1 only; PID etc. arrive in later substages.
+    private let v282AckWire = """
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.8.2\r\
+    MSA|AA|MSG00001\r\
+    NTE|1||All results verified\r
+    """
+
+    @Test("v2.8.2 S1 wire (MSH/MSA/NTE) dispatches to v2.8.2 grammar, no unknown-segment")
+    func v282S1SegmentsRecognised() throws {
+        let message = try Parser().parse(v282AckWire)
+        #expect(message.version == .v2_8_2)
+        let report = Validator().validate(message)
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "v2.8.2 S1 segments must dispatch to the v2.8.2 grammar; got \(unknowns.map(\.location.segmentID))")
+        #expect(report.errors.isEmpty,
+                "well-formed v2.8.2 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
+    }
 }
