@@ -17,12 +17,12 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 ---
 
-## Where we are (v0.13.1)
+## Where we are (v0.14.0)
 
 **Shipped and solid:**
 
 - **Parsing / serialisation** — lossless round-trip; BOM/NUL hardening; MLLP codec (ADR-006); batch + streaming (`AsyncThrowingStream`) parsers.
-- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 fully covered: per-version field grammar, typed segments (15), typed composites (16), and per-version conditional rules. All four versions carry the T-track segments (EVN / MSA / ERR / PD1 / DG1 / IN1) as of v0.12.
+- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / **v2.6** fully covered: per-version field grammar, typed segments (15), typed composites (16), and per-version conditional rules. All versions carry the T-track segments (EVN / MSA / ERR / PD1 / DG1 / IN1) as of v0.12; v2.6 added as first-class grammar in v0.14 (ADR-012), incl. the `W` withdrawn optionality (`docs/design/v2_6-spec-audit.md`).
 - **Validation DSL** — same-segment compound predicates (v0.4-S4); cross-segment / message-context / position atoms (ADR-008); segment-presence atoms + subcomponent-granular field-refs + group-scope cardinality (ADR-010).
 - **Locale / AU profile** — `HL7Locale.{international, auLocalisation}`; ADRM-2021 overlays for HL7au:000003–000008, 000040–000042, and the machine-checkable 00044 CE/CNE/CWE narrowings (ADR-009 + ADR-011). Compiler-checked Swift is the single source of truth (JSON overlays retired v0.13.1).
 - **Docs discipline** — ADR-001…011 all Accepted + implemented; two spec-audit docs; slim STATUS/NEXT_STEPS with archive snapshots at each boundary.
@@ -35,12 +35,12 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 The four themes below are roughly independent and can interleave across cycles. Ordering within a theme is firm; ordering *between* themes is the project owner's call per cycle (see NEXT_STEPS for the next concrete pick).
 
-### M1 — Version coverage completeness
+### M1 — Version coverage completeness ✅ **(closed v0.14.0)**
 *Goal: the base-spec surface an integrator expects is present, or its absence is a documented, defensible decision.*
 
-- **v2.6 grammar table** — the one remaining common version not yet modelled. **Gated on an ADR** (adding it expands the public `Version` enum — API-affecting while the v1.0 clock runs). Decide "first-class version vs out-of-scope" before any schema work. PDFs on disk (`docs/standards/HL7_v26_PDF/`). *Largest single spec-completeness lever left.*
-- **v2.8** — remains **indefinitely deferred** (not in common use; not the AU baseline). Revisit only on concrete integrator demand.
-- **IN1 optionality precision** (v0.12 carry-over) — v2.3 / v2.3.1 IN1 optionality follows the v2.4 curation because the CH6 OPT column resisted PDF extraction. Re-extract if a cleaner source appears. Small; not a v1.0 blocker.
+- **v2.6 grammar table** — ✅ **DONE (v0.14, ADR-012).** First-class v2.6 grammar: `Version.v2_6` + 15 segments, all divergences (TS→DTM, field-by-field CE→CWE/CNE, field-count growth, `W` withdrawn) verified against the v2.6 PDFs. See `docs/design/v2_6-spec-audit.md`.
+- **v2.8** — remains **indefinitely deferred** (not in common use; not the AU baseline). Revisit only on concrete integrator demand. This is M1's documented, defensible absence.
+- **IN1 field-set completeness** — the shared IN1 schema is curated to 25 fields across **all** versions (incl. v2.6); the full ~53-field IN1 is unmodelled. A feature-completeness item (req #1), not a v1.0 blocker. (Supersedes the v0.12 IN1-optionality carry-over note.)
 
 ### M2 — Conformance-surface finalisation
 *Goal: every "C-with-no-condition" / partial / deferred rule is either shipped or recorded as a permanent limitation with a spec-cited rationale — so the schemas are trustworthy as a reference per req #2.*

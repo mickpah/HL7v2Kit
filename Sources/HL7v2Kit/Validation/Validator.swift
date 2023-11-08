@@ -296,7 +296,8 @@ public struct Validator: Sendable {
         case .v2_3_1: return SegmentGrammarTable.v2_3_1
         case .v2_4:   return SegmentGrammarTable.v2_4
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
-        default:      return [:]   // v2.8 grammar table is out of scope for v0.3.
+        case .v2_6:   return SegmentGrammarTable.v2_6   // v0.14 (ADR-012)
+        default:      return [:]   // v2.8 grammar table is out of scope.
         }
     }
 
@@ -754,6 +755,13 @@ public struct Validator: Sendable {
                 code: .fieldNotSupported,
                 location: location,
                 message: "Field \(location.pathDescription) ('\(grammar.name)') is not supported (X) but populated"
+            ))
+        case .withdrawn:
+            issues.append(ValidationIssue(
+                severity: .warning,
+                code: .fieldNotSupported,
+                location: location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') was withdrawn from the standard (W) but populated"
             ))
         default:
             return

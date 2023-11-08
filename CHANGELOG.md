@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] — 2026-07-09
+
+ADR-012 first-class v2.6 grammar cycle. Adds `Version.v2_6` and a full v2.6 grammar table (15 segments), closing the last common-version coverage gap (ROADMAP M1). Before this, a `2.6` wire fell back to `.v2_5_1` or threw `.unsupportedVersion`; it now dispatches to per-field v2.6 validation. **Additive public-API change** (`Version.v2_6` — precedented by `v2_8`; and `FieldOptionality.withdrawn` — a new case on the non-`@frozen` optionality enum); v1.0 stability clock continues from v0.5.0. Tests: 482 → 488 across 26 suites.
+
+### Added — `Version.v2_6` + 15 v2.6 segment schemas
+
+`case v2_6 = "2.6"` (between `v2_5_1` and `v2_8`); `grammarTable(for:)` wired; the regenerate path emits `SegmentGrammar+v2_6.swift`. Segments authored under `Resources/schemas/v2.6/`, each from the v2.6 Final Standard PDFs (CH02/03/04/06/07), preserving every v2.6-vs-v2.5.1 divergence verbatim: MSH, MSA, ERR, EVN, NTE (S1); PID, PD1, NK1, PV1, AL1 (S2); ORC, OBR, OBX (S3); DG1, IN1 (S4). Divergence classes (see `docs/design/v2_6-spec-audit.md`):
+
+- **TS → DTM** — systematic across every timestamp field.
+- **CE → CWE** — field-by-field (verified per header, not blanket); OBR-44/45 went to **CNE**, not CWE.
+- **Field-count growth** — MSH 21→25, MSA 6→8, NTE 4→8, PD1 21→22, OBR 47→50, OBX 17→25, DG1 21→26; new fields authored from v2.6 prose.
+- **Structural conditions** carried verbatim (unchanged in v2.6 spec text): ORC-2/3/8, OBR-2/3/7/14/25/29, OBX-2, PID-35/36, DG1-20/21.
+
+### Added — `FieldOptionality.withdrawn` (`W`) model extension (req #3)
+
+v2.6 is the first modelled version to use the `W` (withdrawn) OPT code — DG1-2/4 and the DRG/outlier block DG1-7..14 were withdrawn (DRG detail moved to the new DRG segment). `W` is distinct from `B` (retained for compatibility); mapping `W → B` would misrepresent the spec (req #4). Added `FieldOptionality.withdrawn = "W"`; codegen maps `"W" → .withdrawn`; `Validator.checkDeprecation` warns (`.fieldNotSupported`) on a populated withdrawn field — same warn-on-populated family as `B`/`X`.
+
+### Known limitations (documented, not shipped — req #3/#4)
+
+- **OBX-22 Mood Code** is `C` in the v2.6 attribute table but the prose gives no extractable predicate; recorded as a conditional-without-condition (falls through as optional, never fires) rather than inventing a rule that could misfire.
+- **IN1** mirrors the shared 25-field curation across all versions (not the full ~53-field v2.6 IN1) — a carried scope limitation, not a v2.6 regression.
+
+### Added — regression pins
+
+`MultiVersionTests` (+6): grammar-table field counts + divergences per substage (S1–S4), the populated-withdrawn-field warning (`v26WithdrawnFieldWarns`), and a well-formed v2.6 ORU^R01 that validates with zero errors (`v26CleanORUHasNoErrors`) — end-to-end proof the carried conditions don't over-fire.
+
 ## [0.13.1] — 2026-07-04
 
 ### Changed — retired orphaned AU profile JSON overlays (maintenance)

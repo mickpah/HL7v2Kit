@@ -414,4 +414,266 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "v2.3.1 back-ported segments on a well-formed wire should report no errors; got \(report.errors.map(\.message))")
     }
+
+    // MARK: - v0.14 (ADR-012): HL7 v2.6 grammar — S1 control/notes segments
+
+    @Test("v2.6 wire parses with .version == .v2_6")
+    func v26VersionDetected() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.6\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries the S1 control/notes segments with v2.6 field counts")
+    func v26GrammarTableS1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        // v2.6-specific field counts (vs v2.5.1): MSH 25 (was 21; +22..25),
+        // MSA 8 (was 6; +7/8 Message Waiting), NTE 8 (was 4; +5..8),
+        // EVN 7, ERR 12.
+        #expect(table["MSH"]?.fields.count == 25)
+        #expect(table["MSA"]?.fields.count == 8)
+        #expect(table["NTE"]?.fields.count == 8)
+        #expect(table["EVN"]?.fields.count == 7)
+        #expect(table["ERR"]?.fields.count == 12)
+        // v2.6 systematically renamed TS → DTM: MSH-7 and the EVN date
+        // fields are DTM (were TS in v2.5.1).
+        #expect(table["MSH"]?.field(7)?.dataType == "DTM")
+        #expect(table["EVN"]?.field(2)?.dataType == "DTM")
+        // MSH-19 Principal Language: CE → CWE in v2.6.
+        #expect(table["MSH"]?.field(19)?.dataType == "CWE")
+        // v2.6 MSH additions.
+        #expect(table["MSH"]?.field(22)?.name == "Sending Responsible Organization")
+        #expect(table["MSH"]?.field(25)?.name == "Receiving Network Address")
+        // NTE-4 Comment Type: CE → CWE in v2.6; NTE-6 Entered Date/Time is DTM.
+        #expect(table["NTE"]?.field(4)?.dataType == "CWE")
+        #expect(table["NTE"]?.field(6)?.dataType == "DTM")
+    }
+
+    // A v2.6 ACK-shaped wire carrying MSH + MSA + ERR dispatches to the
+    // v2.6 grammar (no unknown-segment on the S1 segments). Other
+    // segments (PID etc.) are not yet authored — S2+ — so this wire is
+    // deliberately limited to S1 segments.
+    private let v26AckWire = """
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.6\r\
+    MSA|AA|MSG00001\r\
+    NTE|1||All results verified\r
+    """
+
+    @Test("v2.6 S1 wire (MSH/MSA/NTE) dispatches to v2.6 grammar, no unknown-segment")
+    func v26S1SegmentsRecognised() throws {
+        let message = try Parser().parse(v26AckWire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "v2.6 S1 segments must dispatch to the v2.6 grammar; got \(unknowns.map(\.location.segmentID))")
+        #expect(report.errors.isEmpty,
+                "well-formed v2.6 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries the S2a patient-admin segments with v2.6 divergences")
+    func v26GrammarTableS2aPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        // Field counts vs v2.5.1: PD1 22 (was 21; +PD1-22 Advance Directive
+        // Last Verified Date), NK1 13, PV1 20, AL1 6 (curation depths held).
+        #expect(table["PD1"]?.fields.count == 22)
+        #expect(table["NK1"]?.fields.count == 13)
+        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["AL1"]?.fields.count == 6)
+        // v2.6 CE → CWE migrations (field-by-field, verified against the
+        // v2.6 CH03 tables — NOT a blanket rename):
+        #expect(table["PD1"]?.field(11)?.dataType == "CWE")   // Publicity Code
+        #expect(table["PD1"]?.field(15)?.dataType == "CWE")   // Advance Directive Code
+        #expect(table["PD1"]?.field(22)?.name == "Advance Directive Last Verified Date")
+        #expect(table["NK1"]?.field(3)?.dataType == "CWE")    // Relationship
+        #expect(table["NK1"]?.field(7)?.dataType == "CWE")    // Contact Role
+        #expect(table["AL1"]?.field(2)?.dataType == "CWE")    // Allergen Type Code
+        #expect(table["AL1"]?.field(3)?.dataType == "CWE")    // Allergen Code
+        #expect(table["AL1"]?.field(4)?.dataType == "CWE")    // Allergy Severity Code
+        // PV1 (curated to 20) has no CE/TS in range → identical to v2.5.1.
+        #expect(table["PV1"]?.field(20)?.dataType == "FC")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries PID (S2b) with all CE→CWE / TS→DTM divergences")
+    func v26GrammarTableS2bPIDPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let pid = table["PID"]
+        #expect(pid?.fields.count == 39)
+        // v2.6 renamed every PID TS field to DTM.
+        for i in [7, 29, 33] {
+            #expect(pid?.field(i)?.dataType == "DTM", "PID-\(i) should be DTM in v2.6")
+        }
+        // v2.6 migrated every PID CE field to CWE.
+        for i in [10, 15, 16, 17, 22, 26, 27, 28, 35, 36, 38] {
+            #expect(pid?.field(i)?.dataType == "CWE", "PID-\(i) should be CWE in v2.6")
+        }
+        // PID-39 Tribal Citizenship was already CWE (v2.5 addition).
+        #expect(pid?.field(39)?.dataType == "CWE")
+        // Same-segment species/breed conditionals carry over verbatim.
+        #expect(pid?.field(35)?.condition == "PID-36 populated OR PID-38 populated")
+        #expect(pid?.field(36)?.condition == "PID-37 populated")
+    }
+
+    // A v2.6 ADT with a veterinary PID (species/breed populated) exercises
+    // that the carried-over PID-35 conditional fires under the v2.6 grammar.
+    @Test("v2.6 PID-35 species conditional fires under the v2.6 grammar")
+    func v26PIDSpeciesConditionalFires() throws {
+        // PID-36 (Breed) populated but PID-35 (Species) empty → PID-35
+        // conditional ("PID-36 populated OR PID-38 populated") fires.
+        // The base string ends at PID-8 (F); 28 pipes advance f8→f36, so
+        // "CANINE^Dog^L" lands in PID-36 (Breed). PID-35/37/38 stay empty,
+        // so only PID-35 fires (PID-36's own "PID-37 populated" is false).
+        let pid = "PID|1||X^^^F^MR||Doe^Jane||19800101|F" + String(repeating: "|", count: 28) + "CANINE^Dog^L"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r" + pid + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let pid35 = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PID" && $0.location.fieldIndex == 35
+        }
+        #expect(pid35.count == 1,
+                "v2.6 PID-35 conditional should fire when PID-36 populated + PID-35 empty; got \(report.errors.map(\.message))")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries ORC (S3a) with v2.6 divergences + carried conditions")
+    func v26GrammarTableS3aORCPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let orc = table["ORC"]
+        #expect(orc?.fields.count == 31)
+        // v2.6 TS → DTM on the ORC date fields.
+        for i in [9, 15, 27] {
+            #expect(orc?.field(i)?.dataType == "DTM", "ORC-\(i) should be DTM in v2.6")
+        }
+        // v2.6 CE → CWE on the four ORC CE fields (16/17/18/20). The other
+        // ORC coded fields (25/26/28/29/31 CWE, 30 CNE) were already
+        // CWE/CNE in v2.5.1 — unchanged.
+        for i in [16, 17, 18, 20] {
+            #expect(orc?.field(i)?.dataType == "CWE", "ORC-\(i) should be CWE in v2.6")
+        }
+        #expect(orc?.field(30)?.dataType == "CNE")
+        // Cross-segment conditions carried over verbatim from v2.5.1.
+        #expect(orc?.field(2)?.condition == "OBR-2 empty")
+        #expect(orc?.field(8)?.condition == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries OBR (S3b) — 50 fields, CE→CNE on 44/45, conditions")
+    func v26GrammarTableS3bOBRPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let obr = table["OBR"]
+        #expect(obr?.fields.count == 50)   // v2.5.1 had 47; +48/49/50
+        // TS → DTM on the OBR date fields.
+        for i in [6, 7, 8, 14, 22, 36] {
+            #expect(obr?.field(i)?.dataType == "DTM", "OBR-\(i) should be DTM in v2.6")
+        }
+        // CE → CWE on most coded fields …
+        for i in [4, 12, 31, 38, 39, 40, 43, 46, 47, 48, 50] {
+            #expect(obr?.field(i)?.dataType == "CWE", "OBR-\(i) should be CWE in v2.6")
+        }
+        // … but OBR-44/45 (Procedure Code / Modifier) migrated to CNE, not CWE.
+        #expect(obr?.field(44)?.dataType == "CNE")
+        #expect(obr?.field(45)?.dataType == "CNE")
+        // New v2.6 fields.
+        #expect(obr?.field(48)?.name == "Medically Necessary Duplicate Procedure Reason")
+        #expect(obr?.field(49)?.dataType == "IS")   // Result Handling
+        #expect(obr?.field(50)?.name == "Parent Universal Service Identifier")
+        // Carried conditions (specimen / report-message / XOR).
+        #expect(obr?.field(7)?.condition == "messageCode = ORU OR SPM present OR OBR-15 populated")
+        #expect(obr?.field(25)?.condition == "messageCode = ORU")
+        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries OBX (S3b) — 25 fields, +18..25")
+    func v26GrammarTableS3bOBXPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let obx = table["OBX"]
+        #expect(obx?.fields.count == 25)   // v2.5.1 had 17
+        #expect(obx?.field(3)?.dataType == "CWE")   // Observation Identifier CE→CWE
+        #expect(obx?.field(6)?.dataType == "CWE")   // Units CE→CWE
+        #expect(obx?.field(12)?.dataType == "DTM")  // Effective Date of Ref Range TS→DTM
+        #expect(obx?.field(14)?.dataType == "DTM")  // Date/Time of the Observation TS→DTM
+        #expect(obx?.field(15)?.dataType == "CWE")  // Producer's ID CE→CWE
+        #expect(obx?.field(17)?.dataType == "CWE")  // Observation Method CE→CWE
+        // New v2.6 fields 18..25.
+        #expect(obx?.field(18)?.name == "Equipment Instance Identifier")
+        #expect(obx?.field(22)?.name == "Mood Code")
+        #expect(obx?.field(25)?.name == "Performing Organization Medical Director")
+        // OBX-2 result-status condition carried.
+        #expect(obx?.field(2)?.condition == "OBX-11 != X")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries DG1 (S4) — 26 fields, W on DRG/outlier block")
+    func v26GrammarTableS4DG1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        let dg1 = table["DG1"]
+        #expect(dg1?.fields.count == 26)   // v2.5.1 had 21; +22..26
+        // DG1-2/4 and the DRG/outlier block 7..14 were withdrawn as of v2.6.
+        for i in [2, 4, 7, 8, 9, 10, 11, 12, 13, 14] {
+            #expect(dg1?.field(i)?.optionality == .withdrawn, "DG1-\(i) should be W in v2.6")
+        }
+        #expect(dg1?.field(3)?.dataType == "CWE")   // Diagnosis Code CE→CWE
+        #expect(dg1?.field(5)?.dataType == "DTM")   // Diagnosis Date/Time TS→DTM
+        #expect(dg1?.field(19)?.dataType == "DTM")  // Attestation Date/Time TS→DTM
+        #expect(dg1?.field(23)?.dataType == "CWE")  // DRG CCL Value Code (new)
+        // New v2.6 fields 22..26.
+        #expect(dg1?.field(22)?.name == "Parent Diagnosis")
+        #expect(dg1?.field(26)?.name == "Present On Admission (POA) Indicator")
+        // P12-conditioned fields carried from v2.5.1.
+        #expect(dg1?.field(20)?.condition == "triggerEvent = P12")
+        #expect(dg1?.field(21)?.condition == "triggerEvent = P12")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries IN1 (S4) — CE→CWE on 2/17, TS→DTM on 18")
+    func v26GrammarTableS4IN1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        let in1 = table["IN1"]
+        #expect(in1?.fields.count == 25)   // scope mirrors the v2.5.1 IN1 schema
+        #expect(in1?.field(2)?.dataType == "CWE")   // Insurance Plan ID CE→CWE
+        #expect(in1?.field(17)?.dataType == "CWE")  // Insured's Relationship CE→CWE
+        #expect(in1?.field(18)?.dataType == "DTM")  // Insured's DOB TS→DTM
+        #expect(in1?.field(14)?.dataType == "AUI")  // Authorization Information unchanged
+    }
+
+    // A populated withdrawn (W) field warns, exercising the new .withdrawn
+    // optionality end-to-end through checkDeprecation.
+    @Test("v2.6 populated withdrawn field (DG1-9) emits a warning")
+    func v26WithdrawnFieldWarns() throws {
+        // DG1 base ends at DG1-6 (F); 2 pipes advance f6→f9 so "1" lands in
+        // DG1-9 (DRG Approval Indicator), which is withdrawn in v2.6.
+        let dg1 = "DG1|1||A00.0^Cholera^I10||20240301120000|F" + String(repeating: "|", count: 3) + "1"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r"
+            + "EVN|A01|20240301120000\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + dg1 + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let warn = report.issues.filter {
+            $0.code == .fieldNotSupported && $0.location.segmentID == "DG1" && $0.location.fieldIndex == 9
+        }
+        #expect(warn.count == 1,
+                "populated withdrawn DG1-9 should warn; got \(report.issues.map(\.message))")
+    }
+
+    // A well-formed v2.6 ORU^R01 exercises the carried cross-segment /
+    // message-context / XOR / specimen conditions end-to-end: every
+    // ORU-required conditional (OBR-7, OBR-25, OBX-2) is satisfied and no
+    // XOR (ORC-2/3, OBR-2/3) or specimen (OBR-14) condition misfires.
+    @Test("v2.6 well-formed ORU validates with no spurious errors (S5 conditional pass)")
+    func v26CleanORUHasNoErrors() throws {
+        let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
+            + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
+        let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01|MSG1|P|2.6\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + "ORC|RE|PON123|FON456\r"
+            + obr + "\r"
+            + obx + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        #expect(report.errors.isEmpty,
+                "well-formed v2.6 ORU should report no errors; got \(report.errors.map(\.message))")
+    }
 }
