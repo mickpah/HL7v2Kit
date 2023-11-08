@@ -495,4 +495,45 @@ struct MultiVersionTests {
         // PV1 (curated to 20) has no CE/TS in range → identical to v2.5.1.
         #expect(table["PV1"]?.field(20)?.dataType == "FC")
     }
+
+    @Test("v2.6 SegmentGrammarTable carries PID (S2b) with all CE→CWE / TS→DTM divergences")
+    func v26GrammarTableS2bPIDPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let pid = table["PID"]
+        #expect(pid?.fields.count == 39)
+        // v2.6 renamed every PID TS field to DTM.
+        for i in [7, 29, 33] {
+            #expect(pid?.field(i)?.dataType == "DTM", "PID-\(i) should be DTM in v2.6")
+        }
+        // v2.6 migrated every PID CE field to CWE.
+        for i in [10, 15, 16, 17, 22, 26, 27, 28, 35, 36, 38] {
+            #expect(pid?.field(i)?.dataType == "CWE", "PID-\(i) should be CWE in v2.6")
+        }
+        // PID-39 Tribal Citizenship was already CWE (v2.5 addition).
+        #expect(pid?.field(39)?.dataType == "CWE")
+        // Same-segment species/breed conditionals carry over verbatim.
+        #expect(pid?.field(35)?.condition == "PID-36 populated OR PID-38 populated")
+        #expect(pid?.field(36)?.condition == "PID-37 populated")
+    }
+
+    // A v2.6 ADT with a veterinary PID (species/breed populated) exercises
+    // that the carried-over PID-35 conditional fires under the v2.6 grammar.
+    @Test("v2.6 PID-35 species conditional fires under the v2.6 grammar")
+    func v26PIDSpeciesConditionalFires() throws {
+        // PID-36 (Breed) populated but PID-35 (Species) empty → PID-35
+        // conditional ("PID-36 populated OR PID-38 populated") fires.
+        // The base string ends at PID-8 (F); 28 pipes advance f8→f36, so
+        // "CANINE^Dog^L" lands in PID-36 (Breed). PID-35/37/38 stay empty,
+        // so only PID-35 fires (PID-36's own "PID-37 populated" is false).
+        let pid = "PID|1||X^^^F^MR||Doe^Jane||19800101|F" + String(repeating: "|", count: 28) + "CANINE^Dog^L"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r" + pid + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let pid35 = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PID" && $0.location.fieldIndex == 35
+        }
+        #expect(pid35.count == 1,
+                "v2.6 PID-35 conditional should fire when PID-36 populated + PID-35 empty; got \(report.errors.map(\.message))")
+    }
 }
