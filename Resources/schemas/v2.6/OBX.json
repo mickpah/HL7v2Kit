@@ -1,0 +1,32 @@
+{
+  "segmentID": "OBX",
+  "version": "2.6",
+  "description": "Observation/Result",
+  "fields": [
+    { "index": 1, "swiftName": "setID", "name": "Set ID - OBX", "dataType": "SI", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "optionality": "C", "repeatability": "1", "condition": "OBX-11 != X" },
+    { "index": 3, "swiftName": "observationIdentifier", "name": "Observation Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "observationSubID", "name": "Observation Sub-ID", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "observationValue", "name": "Observation Value", "dataType": "ST", "optionality": "C", "repeatability": "*" },
+    { "index": 6, "swiftName": "units", "name": "Units", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "referencesRange", "name": "References Range", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "abnormalFlags", "name": "Abnormal Flags", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "probability", "name": "Probability", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "natureOfAbnormalTest", "name": "Nature of Abnormal Test", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "observationResultStatus", "name": "Observation Result Status", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 12, "swiftName": "effectiveDateOfReferenceRange", "name": "Effective Date of Reference Range", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "userDefinedAccessChecks", "name": "User Defined Access Checks", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "dateTimeOfTheObservation", "name": "Date/Time of the Observation", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "producersID", "name": "Producer's ID", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "responsibleObserver", "name": "Responsible Observer", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 17, "swiftName": "observationMethod", "name": "Observation Method", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 18, "swiftName": "equipmentInstanceIdentifier", "name": "Equipment Instance Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 19, "swiftName": "dateTimeOfTheAnalysis", "name": "Date/Time of the Analysis", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "observationSite", "name": "Observation Site", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 21, "swiftName": "observationInstanceIdentifier", "name": "Observation Instance Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1" },
+    { "index": 23, "swiftName": "performingOrganizationName", "name": "Performing Organization Name", "dataType": "XON", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "performingOrganizationAddress", "name": "Performing Organization Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "performingOrganizationMedicalDirector", "name": "Performing Organization Medical Director", "dataType": "XCN", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -557,4 +557,49 @@ struct MultiVersionTests {
         #expect(orc?.field(2)?.condition == "OBR-2 empty")
         #expect(orc?.field(8)?.condition == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
     }
+
+    @Test("v2.6 SegmentGrammarTable carries OBR (S3b) — 50 fields, CE→CNE on 44/45, conditions")
+    func v26GrammarTableS3bOBRPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let obr = table["OBR"]
+        #expect(obr?.fields.count == 50)   // v2.5.1 had 47; +48/49/50
+        // TS → DTM on the OBR date fields.
+        for i in [6, 7, 8, 14, 22, 36] {
+            #expect(obr?.field(i)?.dataType == "DTM", "OBR-\(i) should be DTM in v2.6")
+        }
+        // CE → CWE on most coded fields …
+        for i in [4, 12, 31, 38, 39, 40, 43, 46, 47, 48, 50] {
+            #expect(obr?.field(i)?.dataType == "CWE", "OBR-\(i) should be CWE in v2.6")
+        }
+        // … but OBR-44/45 (Procedure Code / Modifier) migrated to CNE, not CWE.
+        #expect(obr?.field(44)?.dataType == "CNE")
+        #expect(obr?.field(45)?.dataType == "CNE")
+        // New v2.6 fields.
+        #expect(obr?.field(48)?.name == "Medically Necessary Duplicate Procedure Reason")
+        #expect(obr?.field(49)?.dataType == "IS")   // Result Handling
+        #expect(obr?.field(50)?.name == "Parent Universal Service Identifier")
+        // Carried conditions (specimen / report-message / XOR).
+        #expect(obr?.field(7)?.condition == "messageCode = ORU OR SPM present OR OBR-15 populated")
+        #expect(obr?.field(25)?.condition == "messageCode = ORU")
+        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries OBX (S3b) — 25 fields, +18..25")
+    func v26GrammarTableS3bOBXPopulated() {
+        let table = SegmentGrammarTable.v2_6
+        let obx = table["OBX"]
+        #expect(obx?.fields.count == 25)   // v2.5.1 had 17
+        #expect(obx?.field(3)?.dataType == "CWE")   // Observation Identifier CE→CWE
+        #expect(obx?.field(6)?.dataType == "CWE")   // Units CE→CWE
+        #expect(obx?.field(12)?.dataType == "DTM")  // Effective Date of Ref Range TS→DTM
+        #expect(obx?.field(14)?.dataType == "DTM")  // Date/Time of the Observation TS→DTM
+        #expect(obx?.field(15)?.dataType == "CWE")  // Producer's ID CE→CWE
+        #expect(obx?.field(17)?.dataType == "CWE")  // Observation Method CE→CWE
+        // New v2.6 fields 18..25.
+        #expect(obx?.field(18)?.name == "Equipment Instance Identifier")
+        #expect(obx?.field(22)?.name == "Mood Code")
+        #expect(obx?.field(25)?.name == "Performing Organization Medical Director")
+        // OBX-2 result-status condition carried.
+        #expect(obx?.field(2)?.condition == "OBX-11 != X")
+    }
 }
