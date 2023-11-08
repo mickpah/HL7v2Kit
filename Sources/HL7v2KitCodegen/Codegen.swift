@@ -237,6 +237,7 @@ func optionalityCase(_ code: String) -> String {
     case "C": return "conditional"
     case "X": return "notSupported"
     case "B": return "backwardCompat"
+    case "W": return "withdrawn"
     default:  return "optional"   // Default to permissive on unknown codes.
     }
 }

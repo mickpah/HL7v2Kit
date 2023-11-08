@@ -756,6 +756,13 @@ public struct Validator: Sendable {
                 location: location,
                 message: "Field \(location.pathDescription) ('\(grammar.name)') is not supported (X) but populated"
             ))
+        case .withdrawn:
+            issues.append(ValidationIssue(
+                severity: .warning,
+                code: .fieldNotSupported,
+                location: location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') was withdrawn from the standard (W) but populated"
+            ))
         default:
             return
         }

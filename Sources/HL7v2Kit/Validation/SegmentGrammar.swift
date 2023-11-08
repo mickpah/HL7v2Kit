@@ -7,13 +7,18 @@
 import Foundation
 
 /// HL7 v2 field optionality. `R` required, `O` optional, `C` conditional,
-/// `X` not supported, `B` backward-compatibility (deprecated but accepted).
+/// `X` not supported, `B` backward-compatibility (deprecated but accepted),
+/// `W` withdrawn (removed from the standard — the sequence position is
+/// retained but the field carries no meaning). `W` first appears in the
+/// v2.6 attribute tables (e.g. the DG1 DRG/outlier fields moved to the DRG
+/// segment); it is distinct from `B`, which is retained for compatibility.
 public enum FieldOptionality: String, Sendable, Equatable, Hashable {
     case required = "R"
     case optional = "O"
     case conditional = "C"
     case notSupported = "X"
     case backwardCompat = "B"
+    case withdrawn = "W"
 }
 
 /// Field repeatability. `single` for `1`, `multiple` for `*`.

@@ -602,4 +602,57 @@ struct MultiVersionTests {
         // OBX-2 result-status condition carried.
         #expect(obx?.field(2)?.condition == "OBX-11 != X")
     }
+
+    @Test("v2.6 SegmentGrammarTable carries DG1 (S4) — 26 fields, W on DRG/outlier block")
+    func v26GrammarTableS4DG1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        let dg1 = table["DG1"]
+        #expect(dg1?.fields.count == 26)   // v2.5.1 had 21; +22..26
+        // DG1-2/4 and the DRG/outlier block 7..14 were withdrawn as of v2.6.
+        for i in [2, 4, 7, 8, 9, 10, 11, 12, 13, 14] {
+            #expect(dg1?.field(i)?.optionality == .withdrawn, "DG1-\(i) should be W in v2.6")
+        }
+        #expect(dg1?.field(3)?.dataType == "CWE")   // Diagnosis Code CE→CWE
+        #expect(dg1?.field(5)?.dataType == "DTM")   // Diagnosis Date/Time TS→DTM
+        #expect(dg1?.field(19)?.dataType == "DTM")  // Attestation Date/Time TS→DTM
+        #expect(dg1?.field(23)?.dataType == "CWE")  // DRG CCL Value Code (new)
+        // New v2.6 fields 22..26.
+        #expect(dg1?.field(22)?.name == "Parent Diagnosis")
+        #expect(dg1?.field(26)?.name == "Present On Admission (POA) Indicator")
+        // P12-conditioned fields carried from v2.5.1.
+        #expect(dg1?.field(20)?.condition == "triggerEvent = P12")
+        #expect(dg1?.field(21)?.condition == "triggerEvent = P12")
+    }
+
+    @Test("v2.6 SegmentGrammarTable carries IN1 (S4) — CE→CWE on 2/17, TS→DTM on 18")
+    func v26GrammarTableS4IN1Populated() {
+        let table = SegmentGrammarTable.v2_6
+        let in1 = table["IN1"]
+        #expect(in1?.fields.count == 25)   // scope mirrors the v2.5.1 IN1 schema
+        #expect(in1?.field(2)?.dataType == "CWE")   // Insurance Plan ID CE→CWE
+        #expect(in1?.field(17)?.dataType == "CWE")  // Insured's Relationship CE→CWE
+        #expect(in1?.field(18)?.dataType == "DTM")  // Insured's DOB TS→DTM
+        #expect(in1?.field(14)?.dataType == "AUI")  // Authorization Information unchanged
+    }
+
+    // A populated withdrawn (W) field warns, exercising the new .withdrawn
+    // optionality end-to-end through checkDeprecation.
+    @Test("v2.6 populated withdrawn field (DG1-9) emits a warning")
+    func v26WithdrawnFieldWarns() throws {
+        // DG1 base ends at DG1-6 (F); 2 pipes advance f6→f9 so "1" lands in
+        // DG1-9 (DRG Approval Indicator), which is withdrawn in v2.6.
+        let dg1 = "DG1|1||A00.0^Cholera^I10||20240301120000|F" + String(repeating: "|", count: 3) + "1"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r"
+            + "EVN|A01|20240301120000\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + dg1 + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_6)
+        let report = Validator().validate(message)
+        let warn = report.issues.filter {
+            $0.code == .fieldNotSupported && $0.location.segmentID == "DG1" && $0.location.fieldIndex == 9
+        }
+        #expect(warn.count == 1,
+                "populated withdrawn DG1-9 should warn; got \(report.issues.map(\.message))")
+    }
 }
