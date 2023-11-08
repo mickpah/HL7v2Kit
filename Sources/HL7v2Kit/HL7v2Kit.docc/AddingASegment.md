@@ -25,7 +25,7 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 - `swiftName` — the generated Swift accessor name (camelCase).
 - `name` — human-readable field name (used in DocC + validation messages).
 - `dataType` — the HL7 data-type code (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, ...).
-- `optionality` — `R` (required), `O` (optional), `C` (conditional), `X` (not supported), `B` (deprecated).
+- `optionality` — `R` (required), `O` (optional), `C` (conditional), `X` (not supported), `B` (deprecated, retained for backward compatibility), `W` (withdrawn — removed from the standard; the sequence slot is retained but carries no meaning; first used by the v2.6 attribute tables). Populated `B`, `X`, and `W` fields each raise a warning.
 - `repeatability` — `"1"` (single) or `"*"` (multiple).
 - `condition` (optional, only meaningful when `optionality=C`) — a predicate string controlling when the field is required. See the Conditional-field DSL in <doc:Validation>. Example: `"condition": "PID-35 populated"` on `PID-36` means "breed code is required when species code is declared". A `C` field without a `condition` falls through as `.optional`.
 
