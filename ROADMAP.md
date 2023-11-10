@@ -11,8 +11,8 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.15.0`** (v2.8.2 first-class grammar, ADR-013) on `main`, pushed to private bare repo |
-| Next planned cycle | M2 (conformance-surface finalisation) or M3 (API stabilisation) — project-owner's call. **M1 (version coverage) fully closed** at v0.15.0. |
+| Current release | **`v0.16.0`** (M2 conditional-completeness sweep) on `main`, pushed to private bare repo |
+| Next planned cycle | M2 close-out (AU-narrowing consolidation) or **M3 (API stabilisation)** — project-owner's call. M1 closed; M2 conditional sweep done. |
 | v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -43,12 +43,13 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **v2.8.2 grammar table** — ✅ **DONE (v0.15, ADR-013).** `Version.v2_8_2` + 15 segments, all divergences (IS→CWE promotion, B→W withdrawals, O→B demotions, dropped/added conditionals, EI→EIP / ST→OG / ID→NM, field-count growth) verified against the v2.8.2 PDFs. The grammar-less `.v2_8` case retained (distinct MSH-12 raw value). No new `FieldOptionality` case needed. See `docs/design/v2_8_2-spec-audit.md`. **Coverage now spans v2.3 → v2.8.2 — the full published-standard set the reference targets.**
 - **Curated-depth backlog (req #1 follow-on, not a v1.0 blocker):** NK1 / PV1 / IN1 are curated to the shared typed-segment depth (13 / 20 / 25) across **all** versions; their full field sets (v2.8.2: 41 / 54 / 53) are unmodelled. Extending them (all versions) is the largest remaining req-#1 lever. (Supersedes the v0.12 IN1-optionality carry-over note.)
 
-### M2 — Conformance-surface finalisation
+### M2 — Conformance-surface finalisation 🔶 **(conditional sweep done v0.16.0)**
 *Goal: every "C-with-no-condition" / partial / deferred rule is either shipped or recorded as a permanent limitation with a spec-cited rationale — so the schemas are trustworthy as a reference per req #2.*
 
-- **Conditional-without-condition sweep** — close or explicitly document the residual OBR-22 / .26 / .32, DG1 edges, and version-specific corners.
+- **Conditional-without-condition sweep** — ✅ **DONE (v0.16, M2).** All 69 `C`-without-`condition` instances (17 distinct positions) audited: PD1-15 + ORC-26 shipped predicates; 15 positions documented as permanent limitations. Register: `docs/design/conditional-completeness-audit.md`; a guard test keeps it honest.
 - **AU narrowings** — the machine-checkable 00044 series is complete; the remaining items are the documented permanent limitations. No further AU rules are shippable without an external terminology or PKI service (a **post-1.0** integration, if ever).
-- **Decision to record before v1.0:** which documented limitations are acceptable to freeze permanently vs which (if any) block v1.0. Default stance: all current limitations are spec-honest and acceptable to freeze.
+- **Decision to record before v1.0:** which documented limitations are acceptable to freeze permanently vs which (if any) block v1.0. Default stance: all current limitations are spec-honest and acceptable to freeze — the conditional-completeness register consolidates them.
+- **Remaining M2 work:** consolidate the AU-narrowing permanent limitations (00044.4.3 / .4.7, 00044.2, HL7au:000001) into the register or a companion doc, then close M2. Small; not a full cycle.
 
 ### M3 — API stabilisation (the v1.0 gate)
 *Goal: freeze a public surface we're willing to support indefinitely.*
