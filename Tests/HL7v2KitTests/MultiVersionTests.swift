@@ -841,4 +841,34 @@ struct MultiVersionTests {
         #expect(table["OBX"]?.field(30)?.name == "Observation Sub-Type")
         #expect(table["OBX"]?.field(2)?.condition == "OBX-11 != X")
     }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S4 financial segments (deltas vs v2.6)")
+    func v282GrammarTableS4Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        #expect(table["DG1"]?.fields.count == 26)
+        #expect(table["IN1"]?.fields.count == 25)   // curated scope mirrors v2.6
+
+        // DG1: IS→CWE on 6/17/25/26; ID→NM on 15; DG1-22 O→C; withdrawn
+        // block 2/4/7..14 held; P12 conditions on 20/21 carried.
+        #expect(table["DG1"]?.field(6)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(15)?.dataType == "NM")
+        #expect(table["DG1"]?.field(17)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(25)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(26)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(22)?.optionality == .conditional)
+        for i in [2, 4, 7, 8, 9, 10, 11, 12, 13, 14] {
+            #expect(table["DG1"]?.field(i)?.optionality == .withdrawn, "DG1-\(i) should be W in v2.8.2")
+        }
+        #expect(table["DG1"]?.field(20)?.condition == "triggerEvent = P12")
+        #expect(table["DG1"]?.field(21)?.condition == "triggerEvent = P12")
+
+        // IN1: IN1-2 renamed "Health Plan ID" (CWE R); IS→CWE on 15/20/21;
+        // TS→DTM on 18 held.
+        #expect(table["IN1"]?.field(2)?.name == "Health Plan ID")
+        #expect(table["IN1"]?.field(2)?.optionality == .required)
+        #expect(table["IN1"]?.field(15)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(20)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(21)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(18)?.dataType == "DTM")
+    }
 }
