@@ -58,7 +58,7 @@ public struct IN1: TypedSegment, Sendable, Equatable, Hashable {
         field(9).map(XON.init(field:))
     }
 
-    /// IN1-10: Insured's Group Emp ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// IN1-10: Insured's Group Emp. ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
     public var insuredsGroupEmpID: CX? {
         field(10).map(CX.init(field:))
     }
@@ -88,17 +88,17 @@ public struct IN1: TypedSegment, Sendable, Equatable, Hashable {
         field(15)?.stringValue
     }
 
-    /// IN1-16: Name Of Insured. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// IN1-16: Name of Insured. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
     public var nameOfInsured: XPN? {
         field(16).map(XPN.init(field:))
     }
 
-    /// IN1-17: Insured's Relationship To Patient. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// IN1-17: Insured's Relationship to Patient. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     public var insuredsRelationshipToPatient: CE? {
         field(17).map(CE.init(field:))
     }
 
-    /// IN1-18: Insured's Date Of Birth. HL7 data type `TS`.
+    /// IN1-18: Insured's Date of Birth. HL7 data type `TS`.
     public var insuredsDateOfBirth: String? {
         field(18)?.stringValue
     }
@@ -108,33 +108,173 @@ public struct IN1: TypedSegment, Sendable, Equatable, Hashable {
         field(19).map(XAD.init(field:))
     }
 
-    /// IN1-20: Assignment Of Benefits. HL7 data type `IS`.
+    /// IN1-20: Assignment of Benefits. HL7 data type `IS`.
     public var assignmentOfBenefits: String? {
         field(20)?.stringValue
     }
 
-    /// IN1-21: Coordination Of Benefits. HL7 data type `IS`.
+    /// IN1-21: Coordination of Benefits. HL7 data type `IS`.
     public var coordinationOfBenefits: String? {
         field(21)?.stringValue
     }
 
-    /// IN1-22: Coord Of Ben. Priority. HL7 data type `ST`.
+    /// IN1-22: Coord of Ben. Priority. HL7 data type `ST`.
     public var coordOfBenPriority: String? {
         field(22)?.stringValue
     }
 
-    /// IN1-23: Notice Of Admission Flag. HL7 data type `ID`.
+    /// IN1-23: Notice of Admission Flag. HL7 data type `ID`.
     public var noticeOfAdmissionFlag: String? {
         field(23)?.stringValue
     }
 
-    /// IN1-24: Notice Of Admission Date. HL7 data type `DT`.
+    /// IN1-24: Notice of Admission Date. HL7 data type `DT`.
     public var noticeOfAdmissionDate: String? {
         field(24)?.stringValue
     }
 
-    /// IN1-25: Report Of Eligibility Flag. HL7 data type `ID`.
+    /// IN1-25: Report of Eligibility Flag. HL7 data type `ID`.
     public var reportOfEligibilityFlag: String? {
         field(25)?.stringValue
+    }
+
+    /// IN1-26: Report of Eligibility Date. HL7 data type `DT`.
+    public var reportOfEligibilityDate: String? {
+        field(26)?.stringValue
+    }
+
+    /// IN1-27: Release Information Code. HL7 data type `IS`.
+    public var releaseInformationCode: String? {
+        field(27)?.stringValue
+    }
+
+    /// IN1-28: Pre-Admit Cert (PAC). HL7 data type `ST`.
+    public var preAdmitCert: String? {
+        field(28)?.stringValue
+    }
+
+    /// IN1-29: Verification Date/Time. HL7 data type `TS`.
+    public var verificationDateTime: String? {
+        field(29)?.stringValue
+    }
+
+    /// IN1-30: Verification by. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var verificationBy: XCN? {
+        field(30).map(XCN.init(field:))
+    }
+
+    /// IN1-31: Type of Agreement Code. HL7 data type `IS`.
+    public var typeOfAgreementCode: String? {
+        field(31)?.stringValue
+    }
+
+    /// IN1-32: Billing Status. HL7 data type `IS`.
+    public var billingStatus: String? {
+        field(32)?.stringValue
+    }
+
+    /// IN1-33: Lifetime Reserve Days. HL7 data type `NM`.
+    public var lifetimeReserveDays: String? {
+        field(33)?.stringValue
+    }
+
+    /// IN1-34: Delay Before L.R. Day. HL7 data type `NM`.
+    public var delayBeforeLRDay: String? {
+        field(34)?.stringValue
+    }
+
+    /// IN1-35: Company Plan Code. HL7 data type `IS`.
+    public var companyPlanCode: String? {
+        field(35)?.stringValue
+    }
+
+    /// IN1-36: Policy Number. HL7 data type `ST`.
+    public var policyNumber: String? {
+        field(36)?.stringValue
+    }
+
+    /// IN1-37: Policy Deductible. HL7 data type `CP`.
+    public var policyDeductible: Field? {
+        field(37)
+    }
+
+    /// IN1-38: Policy Limit - Amount. HL7 data type `CP`.
+    public var policyLimitAmount: Field? {
+        field(38)
+    }
+
+    /// IN1-39: Policy Limit - Days. HL7 data type `NM`.
+    public var policyLimitDays: String? {
+        field(39)?.stringValue
+    }
+
+    /// IN1-40: Room Rate - Semi-Private. HL7 data type `CP`.
+    public var roomRateSemiPrivate: Field? {
+        field(40)
+    }
+
+    /// IN1-41: Room Rate - Private. HL7 data type `CP`.
+    public var roomRatePrivate: Field? {
+        field(41)
+    }
+
+    /// IN1-42: Insured's Employment Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var insuredsEmploymentStatus: CE? {
+        field(42).map(CE.init(field:))
+    }
+
+    /// IN1-43: Insured's Administrative Sex. HL7 data type `IS`.
+    public var insuredsAdministrativeSex: String? {
+        field(43)?.stringValue
+    }
+
+    /// IN1-44: Insured's Employer's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var insuredsEmployersAddress: XAD? {
+        field(44).map(XAD.init(field:))
+    }
+
+    /// IN1-45: Verification Status. HL7 data type `ST`.
+    public var verificationStatus: String? {
+        field(45)?.stringValue
+    }
+
+    /// IN1-46: Prior Insurance Plan ID. HL7 data type `IS`.
+    public var priorInsurancePlanID: String? {
+        field(46)?.stringValue
+    }
+
+    /// IN1-47: Coverage Type. HL7 data type `IS`.
+    public var coverageType: String? {
+        field(47)?.stringValue
+    }
+
+    /// IN1-48: Handicap. HL7 data type `IS`.
+    public var handicap: String? {
+        field(48)?.stringValue
+    }
+
+    /// IN1-49: Insured's ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var insuredsIDNumber: CX? {
+        field(49).map(CX.init(field:))
+    }
+
+    /// IN1-50: Signature Code. HL7 data type `IS`.
+    public var signatureCode: String? {
+        field(50)?.stringValue
+    }
+
+    /// IN1-51: Signature Code Date. HL7 data type `DT`.
+    public var signatureCodeDate: String? {
+        field(51)?.stringValue
+    }
+
+    /// IN1-52: Insured's Birth Place. HL7 data type `ST`.
+    public var insuredsBirthPlace: String? {
+        field(52)?.stringValue
+    }
+
+    /// IN1-53: VIP Indicator. HL7 data type `IS`.
+    public var vipIndicator: String? {
+        field(53)?.stringValue
     }
 }

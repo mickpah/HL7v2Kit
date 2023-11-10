@@ -73,7 +73,7 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
         field(12)?.stringValue
     }
 
-    /// PV1-13: Re-admission Indicator. HL7 data type `IS`.
+    /// PV1-13: Re-Admission Indicator. HL7 data type `IS`.
     public var readmissionIndicator: String? {
         field(13)?.stringValue
     }
@@ -111,5 +111,165 @@ public struct PV1: TypedSegment, Sendable, Equatable, Hashable {
     /// PV1-20: Financial Class. HL7 data type `FC`.
     public var financialClass: Field? {
         field(20)
+    }
+
+    /// PV1-21: Charge Price Indicator. HL7 data type `IS`.
+    public var chargePriceIndicator: String? {
+        field(21)?.stringValue
+    }
+
+    /// PV1-22: Courtesy Code. HL7 data type `IS`.
+    public var courtesyCode: String? {
+        field(22)?.stringValue
+    }
+
+    /// PV1-23: Credit Rating. HL7 data type `IS`.
+    public var creditRating: String? {
+        field(23)?.stringValue
+    }
+
+    /// PV1-24: Contract Code. HL7 data type `IS`.
+    public var contractCode: String? {
+        field(24)?.stringValue
+    }
+
+    /// PV1-25: Contract Effective Date. HL7 data type `DT`.
+    public var contractEffectiveDate: String? {
+        field(25)?.stringValue
+    }
+
+    /// PV1-26: Contract Amount. HL7 data type `NM`.
+    public var contractAmount: String? {
+        field(26)?.stringValue
+    }
+
+    /// PV1-27: Contract Period. HL7 data type `NM`.
+    public var contractPeriod: String? {
+        field(27)?.stringValue
+    }
+
+    /// PV1-28: Interest Code. HL7 data type `IS`.
+    public var interestCode: String? {
+        field(28)?.stringValue
+    }
+
+    /// PV1-29: Transfer to Bad Debt Code. HL7 data type `IS`.
+    public var transferToBadDebtCode: String? {
+        field(29)?.stringValue
+    }
+
+    /// PV1-30: Transfer to Bad Debt Date. HL7 data type `DT`.
+    public var transferToBadDebtDate: String? {
+        field(30)?.stringValue
+    }
+
+    /// PV1-31: Bad Debt Agency Code. HL7 data type `IS`.
+    public var badDebtAgencyCode: String? {
+        field(31)?.stringValue
+    }
+
+    /// PV1-32: Bad Debt Transfer Amount. HL7 data type `NM`.
+    public var badDebtTransferAmount: String? {
+        field(32)?.stringValue
+    }
+
+    /// PV1-33: Bad Debt Recovery Amount. HL7 data type `NM`.
+    public var badDebtRecoveryAmount: String? {
+        field(33)?.stringValue
+    }
+
+    /// PV1-34: Delete Account Indicator. HL7 data type `IS`.
+    public var deleteAccountIndicator: String? {
+        field(34)?.stringValue
+    }
+
+    /// PV1-35: Delete Account Date. HL7 data type `DT`.
+    public var deleteAccountDate: String? {
+        field(35)?.stringValue
+    }
+
+    /// PV1-36: Discharge Disposition. HL7 data type `IS`.
+    public var dischargeDisposition: String? {
+        field(36)?.stringValue
+    }
+
+    /// PV1-37: Discharged to Location. HL7 data type `DLD`.
+    public var dischargedToLocation: Field? {
+        field(37)
+    }
+
+    /// PV1-38: Diet Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var dietType: CE? {
+        field(38).map(CE.init(field:))
+    }
+
+    /// PV1-39: Servicing Facility. HL7 data type `IS`.
+    public var servicingFacility: String? {
+        field(39)?.stringValue
+    }
+
+    /// PV1-40: Bed Status. HL7 data type `IS`.
+    public var bedStatus: String? {
+        field(40)?.stringValue
+    }
+
+    /// PV1-41: Account Status. HL7 data type `IS`.
+    public var accountStatus: String? {
+        field(41)?.stringValue
+    }
+
+    /// PV1-42: Pending Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var pendingLocation: PL? {
+        field(42).map(PL.init(field:))
+    }
+
+    /// PV1-43: Prior Temporary Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    public var priorTemporaryLocation: PL? {
+        field(43).map(PL.init(field:))
+    }
+
+    /// PV1-44: Admit Date/Time. HL7 data type `TS`.
+    public var admitDateTime: String? {
+        field(44)?.stringValue
+    }
+
+    /// PV1-45: Discharge Date/Time. HL7 data type `TS`.
+    public var dischargeDateTime: String? {
+        field(45)?.stringValue
+    }
+
+    /// PV1-46: Current Patient Balance. HL7 data type `NM`.
+    public var currentPatientBalance: String? {
+        field(46)?.stringValue
+    }
+
+    /// PV1-47: Total Charges. HL7 data type `NM`.
+    public var totalCharges: String? {
+        field(47)?.stringValue
+    }
+
+    /// PV1-48: Total Adjustments. HL7 data type `NM`.
+    public var totalAdjustments: String? {
+        field(48)?.stringValue
+    }
+
+    /// PV1-49: Total Payments. HL7 data type `NM`.
+    public var totalPayments: String? {
+        field(49)?.stringValue
+    }
+
+    /// PV1-50: Alternate Visit ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var alternateVisitID: CX? {
+        field(50).map(CX.init(field:))
+    }
+
+    /// PV1-51: Visit Indicator. HL7 data type `IS`.
+    public var visitIndicator: String? {
+        field(51)?.stringValue
+    }
+
+    /// PV1-52: Other Healthcare Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var otherHealthcareProvider: XCN? {
+        field(52).map(XCN.init(field:))
     }
 }
