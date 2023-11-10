@@ -1,15 +1,16 @@
 # HL7v2Kit
 
-A native Swift package for parsing, building, and validating HL7 v2.x healthcare messages.
+A native Swift package for **parsing, building, and validating** HL7 v2.x healthcare messages.
 
-**Status:** v0.1.0 released 2026-06-13 — see [CHANGELOG.md](CHANGELOG.md) and [HL7v2Kit-Spec.md](docs/design/HL7v2Kit-Spec.md).
+**Status:** `v0.19.0` — approaching v1.0 (the public API has been stable since v0.5.0; see [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md), and the migration contract in [`Migration.md`](Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md)).
 
 ## Why use this
 
-- **Round-trip safe.** Parse a v2 message, modify it, serialise it — bytes match.
-- **Australian-aware.** Tolerant of AU Z-segments (ZAU, ZPI, ZMH, ZBR) without false negatives.
+- **Round-trip safe.** Parse a v2 message, modify it, serialise it — the bytes match (including escape sequences and the original character set).
+- **Spec-faithful validation.** Per-version field grammar for v2.3 → v2.8.2, a conditional-field DSL, cross-segment / message-context rules, group-scope cardinality, and component-level checks. Conformance gaps that can't be checked from the wire are documented, not silently skipped.
+- **Australian-aware.** An `HL7Locale.auLocalisation` profile layers the ADRM-2021 (`HL7au`) narrowings on top of the base spec; AU Z-segments (ZAU, ZPI, …) round-trip without false negatives.
 - **Two APIs, one AST.** String paths (`msg["PID-5.1"]`) for ad-hoc work, typed accessors (`msg.firstSegment(PID.self)?.patientName`) for known segments.
-- **Zero runtime dependencies.** Pure Swift + Foundation. Apache 2.0.
+- **Zero runtime dependencies.** Pure Swift 6 + Foundation, strict concurrency on. Apache 2.0.
 
 ## Quickstart
 
@@ -24,28 +25,51 @@ let patientFamilyName = message["PID-5.1"]
 
 // Typed accessors — for the segments HL7v2Kit ships dictionaries for.
 let pid = message.firstSegment(PID.self)
-let dob = pid?.dateTimeOfBirth                     // "19800101"
-let name = pid?.patientName                         // XPN? (typed composite view)
-let familyName = name?.familyName                   // "Smith"
+let dob = pid?.dateTimeOfBirth                      // "19800101"
+let name = pid?.patientName                          // XPN? (typed composite view)
+let familyName = name?.familyName                    // "Smith"
 
-// MSH-18 character set is detected on parse and re-emitted on serialize.
-// UTF-8 / ASCII / 8859/1 currently supported; unrecognised declarations throw.
-print(message.characterEncoding)                    // .utf8 | .ascii | .iso8859_1
+// Validate against the message's declared version (MSH-12) + optional locale.
+let report = Validator().validate(message)           // international rules
+for issue in report.errors {
+    print(issue.severity, issue.code, issue.location.pathDescription)
+}
+let auReport = Validator(locale: .auLocalisation).validate(message)
 
-// Round-trip — serialised bytes equal the input, including escape sequences
-// (`\F\` `\S\` `\T\` `\R\` `\E\` `\X..\`) and the original charset.
+// Round-trip — serialised bytes equal the input.
 let rebuilt = message.serialize()
 assert(rebuilt == wire)
 ```
 
-Typed segments currently shipped for HL7 v2.5.1 (all 9 from spec § 17): `MSH` (all 21 fields), `PID` (all 39), `NTE` (all 4), `AL1` (all 6), `ORC` (all 31), `OBX` (all 17), `OBR` (all 47), `NK1` (13 commonly-used), `PV1` (20 commonly-used). Composite-typed fields on those segments — XPN (`patientName`, `mothersMaidenName`, `nk1.name`, …), CX (`patientIdentifierList`, `patientAccountNumber`, `pv1.visitNumber`, …), XAD (`patientAddress`, `nk1.address`, `orderingFacilityAddress`, `orderingProviderAddress`) — return typed structs with named accessors (`.familyName`, `.id`, `.streetAddress`, …) instead of raw `Field?`. Other segment IDs (Z-segments, version-specific extras) come back as `UnknownSegment` and remain accessible via path strings.
+## Supported HL7 v2 versions
+
+Full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` wire is *recognised* but has no grammar table (rare; see [ADR-013](docs/design/ADR-013-v2_8_2-grammar-version.md)). Coverage spans the full published-standard set an integrator reference is expected to validate.
+
+## Typed segments & composites
+
+15 code-generated typed segment structs — `MSH`, `MSA`, `ERR`, `EVN`, `NTE`, `PID`, `PD1`, `NK1`, `PV1`, `AL1`, `ORC`, `OBR`, `OBX`, `DG1`, `IN1` — generated from the canonical v2.5.1 schemas and version-agnostic at runtime. Composite-typed fields return typed struct views with named accessors instead of raw `Field?`:
+
+| Composite | Example accessors |
+|---|---|
+| `XPN` | `patientName?.familyName`, `.givenName` |
+| `CX` | `patientIdentifierList?.id`, `.identifierTypeCode` |
+| `XAD` | `patientAddress?.streetAddress` |
+| `HD` / `MSG` / `PT` / `VID` / `EI` / `XCN` / `XON` / `PL` / `CNE` / `CWE` / `CE` / `EIP` / `XTN` | named component accessors |
+
+Segment IDs without a typed struct (Z-segments, less-common segments) come back as `UnknownSegment` and stay fully accessible via path strings. See [`public-api-surface.md`](docs/design/public-api-surface.md) for the full public surface.
+
+## Also included
+
+- **MLLP codec** — a portable framing/unframing kernel (`MLLP`, `MLLPUnframer`).
+- **Batch + streaming parsers** — `BatchParser` and `StreamingBatchParser` (`AsyncThrowingStream`) for large batch files.
+- **Message builder** — `MessageBuilder` for programmatic construction.
 
 ## Installation
 
 Add to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "0.1.0")
+.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "0.19.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`.
@@ -59,32 +83,22 @@ Then add `"HL7v2Kit"` to your target's `dependencies`.
 | tvOS | 15 |
 | watchOS | 8 |
 | visionOS | 1 |
-| Linux | Untested in CI, but no Apple-only dependencies — should work on Swift 6.0+ |
-
-## Supported HL7 v2 versions
-
-v2.3.1, v2.4, v2.5.1, v2.8 (dictionary support; AST is version-agnostic).
-
-## Roadmap (v0.2+)
-
-- Typed v2 composite data types (XPN, CX, XAD, …)
-- Companion `HL7v2KitAUExtensions` package with AU Z-segment grammars
-- MLLP server primitives
-- Streaming parser for very large batch files
+| Linux | No Apple-only dependencies — expected to work on Swift 6.0+ (not yet in CI) |
 
 ## Adding a typed segment
 
-Typed segment structs are code-generated from JSON schemas. To add coverage for a new v2 segment:
+Typed segment structs are code-generated from JSON schemas:
 
-1. Hand-curate `Resources/schemas/<version>/<SegmentID>.json` (see existing `PID.json` for the format).
-2. Run `bash scripts/regenerate-typed-segments.sh` — emits the typed struct AND auto-updates the `SegmentRegistry+Generated.swift` hydration switch.
-3. Add a cross-check test in `Tests/HL7v2KitTests/TypedSegmentTests.swift` — path access and typed accessor must agree.
+1. Hand-curate `Resources/schemas/<version>/<SegmentID>.json` (copy an existing schema, e.g. `PID.json`, for the format).
+2. Run `bash scripts/regenerate-typed-segments.sh` to emit the typed struct(s) and the per-version grammar tables.
+3. Register hydration: add a `case <X>.segmentID: …` to `Sources/HL7v2Kit/Segment/SegmentRegistry.swift`.
+4. Add a cross-check test in `Tests/HL7v2KitTests/TypedSegmentTests.swift` — path access and typed accessor must agree.
 
-No Swift hand-edits required — `SegmentRegistry` is itself codegen-emitted. The codegen-drift CI job will fail any PR that edits a schema but forgets the regen output.
+The codegen-drift CI job fails any commit that edits a schema without committing the regenerated output. Never hand-edit files under `Sources/HL7v2Kit/Segment/Generated/`.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). All fixtures must be PHI-free synthetic data — see [scripts/anonymise-fixture.swift](scripts/anonymise-fixture.swift) (not yet implemented; do not add real-world-derived fixtures until it exists).
+See [CONTRIBUTING.md](CONTRIBUTING.md). **No PHI ever enters the repository** — all fixtures must be PHI-free synthetic data. (The anonymisation helper `scripts/anonymise-fixture.swift` is not yet implemented; do not add real-world-derived fixtures until it exists.)
 
 ## Licence
 
