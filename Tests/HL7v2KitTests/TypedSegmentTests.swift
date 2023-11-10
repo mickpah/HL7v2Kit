@@ -1231,4 +1231,36 @@ struct TypedSegmentTests {
         let rebuilt = message.serialize()
         #expect(rebuilt == bytes)
     }
+
+    // MARK: - v0.19: canonical v2.5.1 NK1/PV1/IN1 extended to full field depth
+
+    @Test("v0.19: v2.5.1 grammar carries full NK1 (39) / PV1 (52) / IN1 (53)")
+    func v0_19FullCanonicalFieldCounts() {
+        let table = SegmentGrammarTable.v2_5_1
+        #expect(table["NK1"]?.fields.count == 39)
+        #expect(table["PV1"]?.fields.count == 52)
+        #expect(table["IN1"]?.fields.count == 53)
+        // Newly-added fields carry their spec datatype.
+        #expect(table["NK1"]?.field(35)?.dataType == "CE")   // Race
+        #expect(table["PV1"]?.field(44)?.dataType == "TS")   // Admit Date/Time
+        #expect(table["IN1"]?.field(36)?.dataType == "ST")   // Policy Number
+        // Required fields held after extension.
+        #expect(table["PV1"]?.field(2)?.optionality == .required)
+        #expect(table["IN1"]?.field(2)?.optionality == .required)
+    }
+
+    @Test("v0.19: a new scalar typed accessor hydrates and agrees with the path")
+    func v0_19ExtendedTypedAccessor() throws {
+        // NK1-37 (Contact Person SSN, ST scalar) populated. NK1 base ends at
+        // NK1-3; 34 pipes advance f3→f37 (field index = pipe count from f3),
+        // so the SSN lands at NK1-37.
+        let nk1 = "NK1|1||SPO^Spouse" + String(repeating: "|", count: 34) + "123-45-6789"
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
+            + "PID|1||X^^^F^MR||Doe^Jane\r" + nk1 + "\r"
+        let message = try Parser().parse(wire)
+        let seg = try #require(message.firstSegment(NK1.self))
+        #expect(seg.setID == "1")
+        #expect(seg.contactPersonSocialSecurityNumber == "123-45-6789")   // NK1-37 (new)
+        #expect(seg.contactPersonSocialSecurityNumber == message["NK1-37"])
+    }
 }

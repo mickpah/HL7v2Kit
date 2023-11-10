@@ -11,8 +11,8 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.18.0`** (M3 API stabilisation — ADR-014 evolution policy) on `main`, pushed to private bare repo |
-| Next planned cycle | **v1.0 candidate** — M1 + M2 + M3 all closed; the only remaining gate is M4 (external IP review). v1.0 is tag-able on the private repo at the owner's call. |
+| Current release | **`v0.19.0`** (req-#1: canonical NK1/PV1/IN1 full depth) on `main`, pushed to private bare repo |
+| Next planned cycle | **v1.0 candidate** — M1 + M2 + M3 all closed; only M4 (external IP review) remains. v1.0 is tag-able on the private repo at the owner's call. (Optional pre-1.0: per-version NK1/PV1/IN1 depth follow-on.) |
 | v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -41,7 +41,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 
 - **Common-version set (v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6)** — ✅ **DONE (v0.14, ADR-012).** See `docs/design/v2_6-spec-audit.md`.
 - **v2.8.2 grammar table** — ✅ **DONE (v0.15, ADR-013).** `Version.v2_8_2` + 15 segments, all divergences (IS→CWE promotion, B→W withdrawals, O→B demotions, dropped/added conditionals, EI→EIP / ST→OG / ID→NM, field-count growth) verified against the v2.8.2 PDFs. The grammar-less `.v2_8` case retained (distinct MSH-12 raw value). No new `FieldOptionality` case needed. See `docs/design/v2_8_2-spec-audit.md`. **Coverage now spans v2.3 → v2.8.2 — the full published-standard set the reference targets.**
-- **Curated-depth backlog (req #1 follow-on, not a v1.0 blocker):** NK1 / PV1 / IN1 are curated to the shared typed-segment depth (13 / 20 / 25) across **all** versions; their full field sets (v2.8.2: 41 / 54 / 53) are unmodelled. Extending them (all versions) is the largest remaining req-#1 lever. (Supersedes the v0.12 IN1-optionality carry-over note.)
+- **Curated-depth backlog (req #1 follow-on, not a v1.0 blocker):** 🔶 **Canonical done (v0.19).** NK1 / PV1 / IN1 extended to full HL7 field depth on the **canonical v2.5.1** (39 / 52 / 53) — the typed-segment structs now expose the full accessor surface (`docs/design/full-segment-audit.md`). **Remaining:** the per-version grammar tables (v2.3 / v2.3.1 / v2.4 / v2.6 / v2.8.2) stay at curated depth (13 / 20 / 25) pending a follow-on sweep (which fights the legacy-PDF `RP/#` extraction). (Supersedes the v0.12 IN1-optionality carry-over note.)
 
 ### M2 — Conformance-surface finalisation ✅ **(closed v0.17.0)**
 *Goal: every "C-with-no-condition" / partial / deferred rule is either shipped or recorded as a permanent limitation with a spec-cited rationale — so the schemas are trustworthy as a reference per req #2.*

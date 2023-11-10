@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.19.0] — 2026-07-09
+
+req-#1 feature-completeness — extend the canonical v2.5.1 NK1 / PV1 / IN1 schemas to their full HL7 field set. Since the canonical version drives the typed-segment structs, this delivers the full typed-accessor surface for these three segments. **Additive only** (ADR-014 §open): typed structs gain accessors; no existing accessor changes; the v2.5.1 grammar table gains fields. Tests: 499 → 501 across 26 suites.
+
+### Added — full canonical field depth for NK1 / PV1 / IN1
+
+- **NK1** 13 → **39** fields (HL7 v2.5.1 §3.4.5) — Marital Status … VIP Indicator.
+- **PV1** 20 → **52** fields (§3.4.3) — Charge Price Indicator … Other Healthcare Provider.
+- **IN1** 25 → **53** fields (§6.5.6) — Report of Eligibility Date … VIP Indicator (incl. IN1-28 Pre-Admit Cert).
+
+Field index / name / datatype and optionality are spec-verified (all extended fields `O`; only NK1-1 / PV1-2 / IN1-1/2/3 are `R`). Repeatability follows the HL7 v2.5.1 standard shape — the attribute-table `RP/#` column doesn't extract cleanly, so it's a documented, fail-safe best-effort (see `docs/design/full-segment-audit.md`).
+
+### Scope (documented follow-on, not a gap)
+
+**Canonical v2.5.1 only.** The per-version grammar tables (v2.3 / v2.3.1 / v2.4 / v2.6 / v2.8.2) for NK1/PV1/IN1 stay at curated depth (13/20/25) pending a follow-on cycle — typed-accessor coverage is now full (version-agnostic), but per-version *validation* of the extended fields on non-v2.5.1 wires is still limited to the modelled range.
+
+### Added — regression pins
+
+`TypedSegmentTests` (+2): full-canonical field counts + datatypes + held `R` fields; a new scalar typed accessor (NK1-37) hydrates and agrees with the path.
+
 ## [0.18.0] — 2026-07-09
 
 ROADMAP M3 (API stabilisation) — the last v1.0 engineering gate. Settles the public API evolution policy, audits the full public surface, and finalises the migration contract. **No behaviour change; the only code change is added DocC notes.** Tests unchanged at 499 across 26 suites. **With M3 closed, M1 + M2 + M3 are all done — v1.0 is tag-able on the private repo (only M4 external IP review remains).**

@@ -77,4 +77,134 @@ public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
     public var organizationName: XON? {
         field(13).map(XON.init(field:))
     }
+
+    /// NK1-14: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var maritalStatus: CE? {
+        field(14).map(CE.init(field:))
+    }
+
+    /// NK1-15: Administrative Sex. HL7 data type `IS`.
+    public var administrativeSex: String? {
+        field(15)?.stringValue
+    }
+
+    /// NK1-16: Date/Time of Birth. HL7 data type `TS`.
+    public var dateTimeOfBirth: String? {
+        field(16)?.stringValue
+    }
+
+    /// NK1-17: Living Dependency. HL7 data type `IS`.
+    public var livingDependency: String? {
+        field(17)?.stringValue
+    }
+
+    /// NK1-18: Ambulatory Status. HL7 data type `IS`.
+    public var ambulatoryStatus: String? {
+        field(18)?.stringValue
+    }
+
+    /// NK1-19: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var citizenship: CE? {
+        field(19).map(CE.init(field:))
+    }
+
+    /// NK1-20: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var primaryLanguage: CE? {
+        field(20).map(CE.init(field:))
+    }
+
+    /// NK1-21: Living Arrangement. HL7 data type `IS`.
+    public var livingArrangement: String? {
+        field(21)?.stringValue
+    }
+
+    /// NK1-22: Publicity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var publicityCode: CE? {
+        field(22).map(CE.init(field:))
+    }
+
+    /// NK1-23: Protection Indicator. HL7 data type `ID`.
+    public var protectionIndicator: String? {
+        field(23)?.stringValue
+    }
+
+    /// NK1-24: Student Indicator. HL7 data type `IS`.
+    public var studentIndicator: String? {
+        field(24)?.stringValue
+    }
+
+    /// NK1-25: Religion. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var religion: CE? {
+        field(25).map(CE.init(field:))
+    }
+
+    /// NK1-26: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var mothersMaidenName: XPN? {
+        field(26).map(XPN.init(field:))
+    }
+
+    /// NK1-27: Nationality. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var nationality: CE? {
+        field(27).map(CE.init(field:))
+    }
+
+    /// NK1-28: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var ethnicGroup: CE? {
+        field(28).map(CE.init(field:))
+    }
+
+    /// NK1-29: Contact Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var contactReason: CE? {
+        field(29).map(CE.init(field:))
+    }
+
+    /// NK1-30: Contact Person's Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    public var contactPersonsName: XPN? {
+        field(30).map(XPN.init(field:))
+    }
+
+    /// NK1-31: Contact Person's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    public var contactPersonsTelephoneNumber: XTN? {
+        field(31).map(XTN.init(field:))
+    }
+
+    /// NK1-32: Contact Person's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var contactPersonsAddress: XAD? {
+        field(32).map(XAD.init(field:))
+    }
+
+    /// NK1-33: Next of Kin/Associated Party's Identifiers. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    public var nextOfKinAssociatedPartysIdentifiers: CX? {
+        field(33).map(CX.init(field:))
+    }
+
+    /// NK1-34: Job Status. HL7 data type `IS`.
+    public var jobStatus: String? {
+        field(34)?.stringValue
+    }
+
+    /// NK1-35: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var race: CE? {
+        field(35).map(CE.init(field:))
+    }
+
+    /// NK1-36: Handicap. HL7 data type `IS`.
+    public var handicap: String? {
+        field(36)?.stringValue
+    }
+
+    /// NK1-37: Contact Person Social Security Number. HL7 data type `ST`.
+    public var contactPersonSocialSecurityNumber: String? {
+        field(37)?.stringValue
+    }
+
+    /// NK1-38: Next-of-Kin Birth Place. HL7 data type `ST`.
+    public var nextOfKinBirthPlace: String? {
+        field(38)?.stringValue
+    }
+
+    /// NK1-39: VIP Indicator. HL7 data type `IS`.
+    public var vipIndicator: String? {
+        field(39)?.stringValue
+    }
 }
