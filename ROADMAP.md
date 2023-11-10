@@ -11,14 +11,14 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.16.0`** (M2 conditional-completeness sweep) on `main`, pushed to private bare repo |
-| Next planned cycle | M2 close-out (AU-narrowing consolidation) or **M3 (API stabilisation)** — project-owner's call. M1 closed; M2 conditional sweep done. |
+| Current release | **`v0.17.0`** (M2 close-out — permanent-limitations register) on `main`, pushed to private bare repo |
+| Next planned cycle | **M3 (API stabilisation)** — the last engineering gate before a v1.0 candidate. M1 + M2 closed. |
 | v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
 ---
 
-## Where we are (v0.16.0)
+## Where we are (v0.17.0)
 
 **Shipped and solid:**
 
@@ -43,13 +43,12 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **v2.8.2 grammar table** — ✅ **DONE (v0.15, ADR-013).** `Version.v2_8_2` + 15 segments, all divergences (IS→CWE promotion, B→W withdrawals, O→B demotions, dropped/added conditionals, EI→EIP / ST→OG / ID→NM, field-count growth) verified against the v2.8.2 PDFs. The grammar-less `.v2_8` case retained (distinct MSH-12 raw value). No new `FieldOptionality` case needed. See `docs/design/v2_8_2-spec-audit.md`. **Coverage now spans v2.3 → v2.8.2 — the full published-standard set the reference targets.**
 - **Curated-depth backlog (req #1 follow-on, not a v1.0 blocker):** NK1 / PV1 / IN1 are curated to the shared typed-segment depth (13 / 20 / 25) across **all** versions; their full field sets (v2.8.2: 41 / 54 / 53) are unmodelled. Extending them (all versions) is the largest remaining req-#1 lever. (Supersedes the v0.12 IN1-optionality carry-over note.)
 
-### M2 — Conformance-surface finalisation 🔶 **(conditional sweep done v0.16.0)**
+### M2 — Conformance-surface finalisation ✅ **(closed v0.17.0)**
 *Goal: every "C-with-no-condition" / partial / deferred rule is either shipped or recorded as a permanent limitation with a spec-cited rationale — so the schemas are trustworthy as a reference per req #2.*
 
-- **Conditional-without-condition sweep** — ✅ **DONE (v0.16, M2).** All 69 `C`-without-`condition` instances (17 distinct positions) audited: PD1-15 + ORC-26 shipped predicates; 15 positions documented as permanent limitations. Register: `docs/design/conditional-completeness-audit.md`; a guard test keeps it honest.
-- **AU narrowings** — the machine-checkable 00044 series is complete; the remaining items are the documented permanent limitations. No further AU rules are shippable without an external terminology or PKI service (a **post-1.0** integration, if ever).
-- **Decision to record before v1.0:** which documented limitations are acceptable to freeze permanently vs which (if any) block v1.0. Default stance: all current limitations are spec-honest and acceptable to freeze — the conditional-completeness register consolidates them.
-- **Remaining M2 work:** consolidate the AU-narrowing permanent limitations (00044.4.3 / .4.7, 00044.2, HL7au:000001) into the register or a companion doc, then close M2. Small; not a full cycle.
+- **Conditional-without-condition sweep** — ✅ **DONE (v0.16).** All 69 `C`-without-`condition` instances (17 positions) audited: PD1-15 + ORC-26 shipped; 15 documented. Register: `docs/design/conditional-completeness-audit.md`; a guard test keeps it honest.
+- **AU narrowings + terminology/PKI/history gaps** — ✅ **DONE (v0.17).** Consolidated into `docs/design/permanent-limitations-register.md` (00044.4.3 carve-out, 00044.4.7 concept-match, 00044.2 PKI, 00044.1.2/.1.3, HL7au:000001; cross-cutting terminology / PKI / cross-message-history classes). Each spec-cited and freeze-decided.
+- **Decision recorded:** all current limitations are spec-honest and **acceptable to freeze** for v1.0 — none blocks it. The two registers are the authoritative M2 gate; shipping any documented limitation as an unconditional rule would misfire (req #4). The terminology-service / PKI integrations that would unlock the semantic rules are explicitly **post-1.0** (out of the ADR-006 portable core).
 
 ### M3 — API stabilisation (the v1.0 gate)
 *Goal: freeze a public surface we're willing to support indefinitely.*
@@ -74,12 +73,12 @@ The four themes below are roughly independent and can interleave across cycles. 
 > **v1.0 = frozen public API + spec-honest conformance surface across v2.3–v2.6 (+ v2.8.2 per the M1 track), with all gaps either closed or documented as permanent limitations, published to a public remote.**
 
 Concretely, v1.0 ships when:
-1. M3 API audit complete and `Migration.md` finalised.
-2. M2 conformance surface finalised — no undocumented gaps.
-3. M1 v2.8.2 track resolved (in-scope-and-implemented per ADR-013, or explicitly bounded out). The common set (v2.3–v2.6) is already in.
+1. M3 API audit complete and `Migration.md` finalised. **(the only open engineering gate)**
+2. ✅ M2 conformance surface finalised — no undocumented gaps (v0.16 conditional register + v0.17 permanent-limitations register).
+3. ✅ M1 version coverage complete — v2.3 → v2.8.2 (v0.14 / v0.15).
 4. M4 public push unblocked (IP review) — *or* an explicit decision to tag v1.0 privately and push later.
 
-Items 1–3 are engineering-controllable; item 4 is the external gate. If the IP review lags, v1.0 can be tagged on the private repo with M1–M3 satisfied and the public push tracked as a follow-on.
+Items 1–3 are engineering-controllable (only **M3** remains); item 4 is the external gate. If the IP review lags, v1.0 can be tagged on the private repo with M1–M3 satisfied and the public push tracked as a follow-on.
 
 ---
 
