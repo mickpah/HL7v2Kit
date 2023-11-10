@@ -871,4 +871,25 @@ struct MultiVersionTests {
         #expect(table["IN1"]?.field(21)?.dataType == "CWE")
         #expect(table["IN1"]?.field(18)?.dataType == "DTM")
     }
+
+    // S5 conditional pass: a well-formed v2.8.2 ORU^R01. Every ORU-required
+    // conditional (OBR-7, OBR-25, OBX-2) is satisfied; the v2.6 XOR/parent
+    // conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer apply, and no
+    // carried condition (ORC-2/3, OBR-2/3) misfires.
+    @Test("v2.8.2 well-formed ORU validates with no spurious errors (S5 conditional pass)")
+    func v282CleanORUHasNoErrors() throws {
+        let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
+            + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
+        let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01|MSG1|P|2.8.2\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + "ORC|RE|PON123|FON456\r"
+            + obr + "\r"
+            + obx + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_8_2)
+        let report = Validator().validate(message)
+        #expect(report.errors.isEmpty,
+                "well-formed v2.8.2 ORU should report no errors; got \(report.errors.map(\.message))")
+    }
 }
