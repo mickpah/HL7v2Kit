@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.16.0] — 2026-07-09
+
+ROADMAP M2 conditional-completeness cycle. Audited every grammar field marked `C` (conditional) that carried no `condition` predicate — 69 instances across 17 distinct segment-index positions — and either shipped a spec-citable predicate or recorded it as a documented permanent limitation. **No public-API change** (both shipped predicates reuse the existing v0.4-S4 same-segment DSL; the condition strings are internal schema metadata). v1.0 stability clock continues from v0.5.0. Tests: 495 → 499 across 26 suites.
+
+### Added — `docs/design/conditional-completeness-audit.md` (M2 register)
+
+The authoritative conditional-completeness register: per-position verdict (ship / permanent limitation) with spec citations. This is the M2 gate for v1.0 — the conditional surface is now either shipped or explicitly, spec-citably documented.
+
+### Fixed — two v2.8.2 conditions the v0.15 authoring left as bare `C`
+
+A spec predicate existed for these but was not extracted during v0.15 (fail-safe, so no misfire — but incomplete per req #4):
+
+- **PD1-15 Advance Directive Code** — `PD1-22 populated` (exact; v2.8.2 §3.3.11.15 "required when PD1-22 - Advance Directive Last Verified Date is valued").
+- **ORC-26 Advanced Beneficiary Notice Override Reason** — `ORC-20 in (3, 4)` (v2.8.2 §4.5.1.26; HL7 Table 0339 not-signed codes). **Partial** — external code systems may encode "not signed" with other values (documented, same honesty pattern as HL7au:00044.4.4); a sound necessary condition that cannot misfire on HL7-standard traffic.
+
+### Documented — 15 permanent limitations (req #3/#4)
+
+OBR-1/8/9/10/11/20/21/22/26/32, OBR-48, OBX-4/5/22, DG1-22 carry `C` in their attribute tables but no wire-detectable required-when trigger (discourse-level, data-nature-dependent, peer-comparison, or descriptive-without-cited-MUST). Each stays fail-safe (treated as optional) and never misfires. See the register for per-field rationale.
+
+### Added — regression pins
+
+`MultiVersionTests` (+4): PD1-15 fires (PD1-22 populated + PD1-15 empty); ORC-26 fires (ORC-20=3) and does NOT fire (ORC-20=1, a signed value); a guard asserts the v2.8.2 permanent-limitation set stays `C`-without-`condition` (catches any future accidental bare-`C` field).
+
 ## [0.15.0] — 2026-07-09
 
 ADR-013 first-class v2.8.2 grammar cycle. Adds `Version.v2_8_2` and a full v2.8.2 grammar table (15 segments) — coverage now spans v2.3 → v2.8.2, the latest published HL7 v2.x standard (ROADMAP M1 track). **Additive public-API change** (`Version.v2_8_2 = "2.8.2"`; the grammar-less `.v2_8 = "2.8"` is retained — distinct MSH-12 raw value, no fold). **No new `FieldOptionality` case** — `.withdrawn` (v0.14) covers every v2.8.2 `W`. v1.0 stability clock continues from v0.5.0. Tests: 488 → 495 across 26 suites.

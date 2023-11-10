@@ -892,4 +892,80 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "well-formed v2.8.2 ORU should report no errors; got \(report.errors.map(\.message))")
     }
+
+    // MARK: - v0.16 (ROADMAP M2): conditional-completeness — shipped predicates
+
+    @Test("v0.16 M2: PD1-15 and ORC-26 carry the shipped v2.8.2 conditions")
+    func v282M2ConditionsPresent() {
+        let table = SegmentGrammarTable.v2_8_2
+        #expect(table["PD1"]?.field(15)?.condition == "PD1-22 populated")
+        #expect(table["ORC"]?.field(26)?.condition == "ORC-20 in (3, 4)")
+    }
+
+    // PD1-15 (Advance Directive Code) is required when PD1-22 (Advance
+    // Directive Last Verified Date) is valued (v2.8.2 §3.3.11.15).
+    @Test("v0.16 M2: PD1-15 conditional fires when PD1-22 populated + PD1-15 empty")
+    func v282PD1_15ConditionalFires() throws {
+        // PD1-22 populated (a date), PD1-15 empty: 22 pipes after PD1 land
+        // the date in PD1-22 (field index = pipe count); PD1-15 stays empty.
+        let pd1 = "PD1" + String(repeating: "|", count: 22) + "20240101"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.8.2\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + pd1 + "\r"
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let hits = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PD1" && $0.location.fieldIndex == 15
+        }
+        #expect(hits.count == 1,
+                "PD1-15 should fire when PD1-22 populated + PD1-15 empty; got \(report.errors.map(\.message))")
+    }
+
+    // ORC-26 (ABN Override Reason) is required when ORC-20 (ABN Code)
+    // signals not-signed — HL7 Table 0339 values 3/4 (v2.8.2 §4.5.1.26).
+    @Test("v0.16 M2: ORC-26 conditional fires when ORC-20 = 3 + ORC-26 empty")
+    func v282ORC_26ConditionalFires() throws {
+        // ORC-1=RE, ORC-2/3 populated (so their XOR does not fire), ORC-20=3;
+        // ORC-26 empty. From ORC-3, 17 pipes reach ORC-20.
+        let orc = "ORC|RE|PON|FON" + String(repeating: "|", count: 17) + "3"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01|MSG|P|2.8.2\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + orc + "\r"
+        let message = try Parser().parse(wire)
+        let report = Validator().validate(message)
+        let hits = report.errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 26
+        }
+        #expect(hits.count == 1,
+                "ORC-26 should fire when ORC-20 in (3,4) + ORC-26 empty; got \(report.errors.map(\.message))")
+        // And it must NOT fire when ORC-20 is a signed value (e.g. "1").
+        let orcSigned = "ORC|RE|PON|FON" + String(repeating: "|", count: 17) + "1"
+        let signed = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01|MSG|P|2.8.2\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r" + orcSigned + "\r")
+        let noHit = Validator().validate(signed).errors.filter {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 26
+        }
+        #expect(noHit.isEmpty, "ORC-26 must not fire when ORC-20 is signed (1)")
+    }
+
+    // Guard: the documented v2.8.2 permanent-limitation set stays
+    // C-without-condition. If a future edit adds a bare-C field or drops
+    // one of these, this fails — keeping the conditional-completeness
+    // register (docs/design/conditional-completeness-audit.md) honest.
+    @Test("v0.16 M2: v2.8.2 permanent-limitation set stays C-without-condition")
+    func v282M2PermanentLimitationsGuard() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Every remaining C-without-condition (seg, index) in v2.8.2.
+        let expected: Set<String> = [
+            "OBR-22", "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
+        ]
+        var actual = Set<String>()
+        for (seg, grammar) in table {
+            for f in grammar.fields where f.optionality == .conditional && f.condition == nil {
+                actual.insert("\(seg)-\(f.index)")
+            }
+        }
+        #expect(actual == expected,
+                "v2.8.2 C-without-condition set drifted from the audit register; got \(actual.sorted())")
+    }
 }

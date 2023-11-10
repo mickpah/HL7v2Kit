@@ -1,0 +1,74 @@
+# Conditional-completeness audit — v0.16 (ROADMAP M2)
+
+**Audit date:** 2026-07-09 (v0.16 cycle, ROADMAP M2 "conformance-surface finalisation").
+**Scope:** every grammar field marked `optionality = C` (conditional) that carries **no `condition` predicate** — i.e. it falls through to effectively-optional under the fail-safe DSL semantics (v0.2-V1: an unparseable/absent predicate evaluates `false`, so the field is never flagged required). This register decides, per field, whether a spec-citable, DSL-expressible predicate exists (→ **ship it**) or the conditionality is not wire-detectable (→ **documented permanent limitation**).
+**Method:** enumerated across all six versions' schemas (`Resources/schemas/*/*.json`); each position read against its version's Final Standard field-definition prose. Builds on `v2_5_1-spec-audit.md` (v0.4 / v0.9) and `v2_8_2-spec-audit.md` (v0.15).
+
+## Inventory
+
+69 field instances across **17 distinct segment-index positions** carried `C`-without-`condition` at the start of M2:
+
+| Position | Name | Versions | Verdict |
+|----------|------|----------|---------|
+| PD1-15 | Advance Directive Code | v2.8.2 | **SHIP** — `PD1-22 populated` |
+| ORC-26 | Advanced Beneficiary Notice Override Reason | v2.8.2 | **SHIP (partial)** — `ORC-20 in (3, 4)` |
+| OBR-1 | Set ID - OBR | v2.3–v2.6 | Permanent limitation |
+| OBR-8 | Observation End Date/Time | v2.3–v2.6 | Permanent limitation |
+| OBR-9 | Collection Volume | v2.3–v2.6 | Permanent limitation |
+| OBR-10 | Collector Identifier | v2.3–v2.6 | Permanent limitation |
+| OBR-11 | Specimen Action Code | v2.3–v2.6 | Permanent limitation |
+| OBR-20 | Filler Field 1 | v2.3–v2.6 | Permanent limitation |
+| OBR-21 | Filler Field 2 | v2.3–v2.6 | Permanent limitation |
+| OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation |
+| OBR-26 | Parent Result | v2.3–v2.6 | Permanent limitation |
+| OBR-32 | Principal Result Interpreter | v2.3–v2.6 | Permanent limitation |
+| OBR-48 | Medically Necessary Duplicate Procedure Reason | v2.8.2 | Permanent limitation |
+| OBX-4 | Observation Sub-ID | v2.3–v2.6, v2.8.2 | Permanent limitation |
+| OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
+| OBX-22 | Mood Code | v2.6, v2.8.2 | Permanent limitation |
+| DG1-22 | Parent Diagnosis | v2.8.2 | Permanent limitation |
+
+## Shipped in v0.16 (S2)
+
+### PD1-15 Advance Directive Code — `PD1-22 populated` (exact)
+
+> v2.8.2 §3.3.11.15: "*… When PD1-22 - Advanced Directive Last Verified Date is valued, this field is required.*"
+
+A clean, closed, wire-detectable same-segment MUST. Shipped as `PD1-15 condition = "PD1-22 populated"` on the v2.8.2 PD1 schema (the field is `O` in earlier versions — v2.8.2-specific conditional). Fires `.conditionalFieldMissing` when PD1-22 is populated and PD1-15 is empty.
+
+### ORC-26 Advanced Beneficiary Notice Override Reason — `ORC-20 in (3, 4)` (partial)
+
+> v2.8.2 §4.5.1.26: "*Condition: This field is required if the value of ORC-20 Advanced Beneficiary Notice Code indicates that the notice was not signed. For example, … if ORC-20 was populated with the values "3" or "4" in User-defined Table 0339 … or similar values in related external code tables.*"
+
+Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` — the HL7-standard User-defined Table 0339 "not signed" codes. **Partial** (same honesty pattern as HL7au:00044.4.4, v0.13): the spec's "*or similar values in related external code tables*" caveat means sites using a non-HL7 code system for ORC-20 could encode "not signed" with other values that this predicate won't catch. The rule is a sound **necessary condition** for the HL7-standard table — it fires only when ORC-20 is exactly `3`/`4`, which per Table 0339 genuinely means not-signed, so it cannot misfire on standard-conformant traffic (req #4). External-code-system completeness is out of the portable-core boundary.
+
+## Permanent limitations (documented, not shippable — req #3/#4)
+
+Each below is `C` in its HL7 attribute table, but the field-definition prose gives **no wire-detectable, DSL-expressible required-when trigger**. Under the fail-safe DSL the field is treated as optional — the correct behaviour when the trigger is undecidable — and never misfires. Grouped by why:
+
+**Discourse-level / message-intent (not a same-segment or peer predicate):**
+- **OBR-1 Set ID** — required only when more than one OBR occurs; an ordinal/cardinality property of the message, not a field predicate.
+- **OBR-22 Results Rpt/Status Chng** — tied to a result-status *change* event; the "changed" state is not on the wire.
+- **OBR-26 Parent Result** — parent/child observation linkage; discourse-level (the v2.5.1 audit reached the same conclusion pre-ADR-010).
+- **OBR-32 Principal Result Interpreter** — "identifies the physician … responsible for the report content"; no stated required-when (an earlier audit mis-grouped this as a `messageCode = ORU` rule — the v2.8.2 prose confirms there is none).
+- **DG1-22 Parent Diagnosis** (v2.8.2) — links a "*" manifestation diagnosis to its "+" parent etiological diagnosis; structural, no MUST.
+
+**Data-nature dependent (undecidable from peer fields):**
+- **OBR-8 Observation End Date/Time** — "*null for observations made at a point in time*"; whether the observation is timed/duration-based is not wire-encoded.
+- **OBR-48 Medically Necessary Duplicate Procedure Reason** (v2.8.2) — required only when OBR-44 is a *duplicate* of a prior order/charge; duplicate-detection needs patient history, not the current message.
+- **OBX-5 Observation Value** — the spec states "*It is not a required field*"; conditionality is on OBX-2 value-type semantics, no hard MUST.
+- **OBX-22 Mood Code** (v2.6, v2.8.2) — "*When this field is not valued … the Value is assumed to be 'EVN'*"; a default-on-absence field with no required-when, and "*no documented use cases … in the context messages*".
+
+**Peer-comparison / grouping (beyond same-segment scope):**
+- **OBX-4 Observation Sub-ID** — required to disambiguate multiple OBX sharing an OBX-3; a cross-OBX grouping rule, not a same-segment predicate.
+
+**Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
+- **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
+- **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
+
+## Outcome
+
+- **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
+- **15 positions documented** as permanent limitations with per-field rationale; all are fail-safe (treated as optional) and none misfires.
+- No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
+- **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).
