@@ -56,6 +56,10 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
 }
 
 /// Categorical reason for an issue.
+///
+/// - Note: **Open** enum per ADR-014 — may gain cases in a minor release as
+///   new validation checks are added (e.g. `.segmentCardinalityBelowMinimum`,
+///   v0.11); switch with `@unknown default`.
 public enum IssueCode: Sendable, Equatable, Hashable {
     /// A required field (optionality `R`) is missing or empty.
     case requiredFieldMissing

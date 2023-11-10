@@ -166,6 +166,10 @@ public struct Path: Sendable, Equatable, Hashable {
 
 // MARK: - PathError
 
+/// Errors thrown while parsing an HL7 path expression.
+///
+/// - Note: **Open** enum per ADR-014 — may gain cases in a minor release;
+///   switch with `@unknown default`.
 public enum PathError: Error, Equatable, Sendable, CustomStringConvertible {
     case malformed(input: String, position: Int)
     case invalidSegmentID(String)

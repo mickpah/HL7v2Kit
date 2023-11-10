@@ -11,6 +11,11 @@
 /// HL7 v2 message versions supported by HL7v2Kit.
 ///
 /// The raw value matches the on-wire string found in `MSH-12`.
+///
+/// - Note: This is an **open** enum per the v1.0 API evolution policy
+///   (ADR-014): it may gain cases in a minor release as HL7 publishes
+///   further versions. Exhaustive `switch` over it must include
+///   `@unknown default`.
 public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     case v2_3   = "2.3"
     case v2_3_1 = "2.3.1"

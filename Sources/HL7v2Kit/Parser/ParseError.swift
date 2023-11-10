@@ -9,6 +9,10 @@
 
 import Foundation
 
+/// Errors thrown while parsing an HL7 v2 message.
+///
+/// - Note: **Open** enum per ADR-014 — may gain cases in a minor release as
+///   new failure modes are surfaced; switch with `@unknown default`.
 public enum ParseError: Error, Equatable, Sendable, CustomStringConvertible {
     case emptyInput
     case missingMSH
