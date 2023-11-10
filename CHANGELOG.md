@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-07-09
+
+ADR-013 first-class v2.8.2 grammar cycle. Adds `Version.v2_8_2` and a full v2.8.2 grammar table (15 segments) — coverage now spans v2.3 → v2.8.2, the latest published HL7 v2.x standard (ROADMAP M1 track). **Additive public-API change** (`Version.v2_8_2 = "2.8.2"`; the grammar-less `.v2_8 = "2.8"` is retained — distinct MSH-12 raw value, no fold). **No new `FieldOptionality` case** — `.withdrawn` (v0.14) covers every v2.8.2 `W`. v1.0 stability clock continues from v0.5.0. Tests: 488 → 495 across 26 suites.
+
+### Added — `Version.v2_8_2` + 15 v2.8.2 segment schemas
+
+`case v2_8_2 = "2.8.2"` (after `v2_6`, before `v2_8`); `grammarTable(for:)` wired; `SegmentGrammar+v2_8_2.swift` emits. Segments authored under `Resources/schemas/v2.8.2/` from the v2.8.2 Final Standard PDFs (CH02/03/04/06/07), preserving every v2.8.2-vs-v2.6 divergence verbatim: MSH/MSA/ERR/EVN/NTE (S1); PID/PD1/NK1/PV1/AL1 (S2); ORC/OBR/OBX (S3); DG1/IN1 (S4). Divergence classes (see `docs/design/v2_8_2-spec-audit.md`):
+
+- **`IS → CWE`** — the dominant coded-field promotion wave (ERR-9, EVN-4, PD1/PV1/DG1/IN1 coded fields, PID-8/32, OBX-8).
+- **`B → W`** — 2.7-era withdrawals (MSA-3/5/6, ERR-1, EVN-1, PD1-4, PID-2/4/9/12/19/20/28, AL1-6, OBR-5/6/14/15/27, ORC-7).
+- **`O → B`** — new backward-compat demotions across ORC/OBR/OBX/PID/PD1/PV1.
+- **Conditionals restructured** — v2.6 vet conditionals dropped (PID-35 `C→O` renamed "Taxonomic Classification Code", PID-36 `C→B`); parent-order XOR dropped (ORC-8, OBR-29 `C→O`); new predicate-less `C` fields recorded conditional-without-condition (PD1-15, ORC-26, OBR-48, DG1-22).
+- **Other datatype/name changes** — `EI→EIP` (ORC-4), `ST→OG` (OBX-4), `ID→NM` (DG1-15), `ST→CWE` (OBR-13); renames (OBX-8 "Interpretation Codes", IN1-2 "Health Plan ID").
+- **Field-count growth** — PID 39→40, ORC 31→34, OBR 50→54, OBX 25→30; new fields authored from v2.8.2 prose.
+
+### Method note
+
+The OBX base attribute table (CH07 p51) was used, **not** the four `Example - <cat> Category` profile tables (p153–155) whose `X` markings are example-specific — a trap flagged in the audit doc.
+
+### Known limitations (documented, not shipped — req #3/#4)
+
+- **PD1-15 / ORC-26 / OBR-48 / DG1-22 / OBX-22** — `C` with no extractable predicate; recorded conditional-without-condition (never fire).
+- **NK1 / PV1 / IN1** — curated to the shared typed-segment depth (13 / 20 / 25); full v2.8.2 sets (41 / 54 / 53) unmodelled — a cross-version req-#1 backlog item.
+
+### Added — regression pins
+
+`MultiVersionTests` (+7): version detection incl. `.v2_8`/`.v2_8_2` coexistence; S1–S4 grammar-table field counts + divergences; S1 dispatch no-unknown-segment; and `v282CleanORUHasNoErrors` (well-formed v2.8.2 ORU^R01 → zero errors).
+
 ## [0.14.0] — 2026-07-09
 
 ADR-012 first-class v2.6 grammar cycle. Adds `Version.v2_6` and a full v2.6 grammar table (15 segments), closing the last common-version coverage gap (ROADMAP M1). Before this, a `2.6` wire fell back to `.v2_5_1` or threw `.unsupportedVersion`; it now dispatches to per-field v2.6 validation. **Additive public-API change** (`Version.v2_6` — precedented by `v2_8`; and `FieldOptionality.withdrawn` — a new case on the non-`@frozen` optionality enum); v1.0 stability clock continues from v0.5.0. Tests: 482 → 488 across 26 suites.
