@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] — 2026-07-09
+
+ROADMAP M2 close-out. Consolidates the AU-narrowing and terminology/PKI/history permanent limitations into a single authoritative register and formally closes M2 (conformance-surface finalisation). **Documentation only — no code or API change.** Tests unchanged at 499 across 26 suites.
+
+### Added — `docs/design/permanent-limitations-register.md`
+
+The authoritative list of conformance rules HL7v2Kit cannot machine-check from the wire, each spec-cited and freeze-decided for v1.0: the AU narrowings (HL7au:00044.4.3 CE-text carve-out, 00044.4.7 concept-match, 00044.2 NASH PKI, 00044.1.2/.1.3, HL7au:000001 order addressing) and the cross-cutting terminology / PKI / cross-message-history classes. References the v0.16 conditional-completeness register for the base-spec conditional set. Records what is explicitly **not** a limitation (NUL/BOM handling, grammar-less `.v2_8`, curated NK1/PV1/IN1 depth) to prevent re-litigation.
+
+### Closed — ROADMAP M2
+
+With the v0.16 conditional register (base-spec `C`-without-`condition`) and this register (AU + terminology/PKI/history), every conformance rule is now either validated or documented as a spec-cited permanent limitation with an explicit v1.0 freeze decision. **Decision recorded: all current limitations are acceptable to freeze — none blocks v1.0.** The remaining v1.0 engineering gate is **M3** (API stabilisation).
+
 ## [0.16.0] — 2026-07-09
 
 ROADMAP M2 conditional-completeness cycle. Audited every grammar field marked `C` (conditional) that carried no `condition` predicate — 69 instances across 17 distinct segment-index positions — and either shipped a spec-citable predicate or recorded it as a documented permanent limitation. **No public-API change** (both shipped predicates reuse the existing v0.4-S4 same-segment DSL; the condition strings are internal schema metadata). v1.0 stability clock continues from v0.5.0. Tests: 495 → 499 across 26 suites.
