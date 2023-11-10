@@ -792,4 +792,53 @@ struct MultiVersionTests {
         #expect(table["NK1"]?.field(3)?.dataType == "CWE")
         #expect(table["NK1"]?.field(1)?.optionality == .required)
     }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S3 order/observation segments (deltas vs v2.6)")
+    func v282GrammarTableS3Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts: ORC 34 (was 31; +32/33/34), OBR 54 (was 50; +51..54),
+        // OBX 30 (was 25; +26..30).
+        #expect(table["ORC"]?.fields.count == 34)
+        #expect(table["OBR"]?.fields.count == 54)
+        #expect(table["OBX"]?.fields.count == 30)
+
+        // ORC: EI→EIP on 4; 7→W; 8 C→O (condition dropped); O→B wave;
+        // 26 O→C; 31 O→B; carried 2/3 conditions.
+        #expect(table["ORC"]?.field(4)?.dataType == "EIP")
+        #expect(table["ORC"]?.field(7)?.optionality == .withdrawn)
+        #expect(table["ORC"]?.field(8)?.optionality == .optional)
+        #expect(table["ORC"]?.field(8)?.condition == nil)
+        for i in [10, 11, 12, 17, 18, 19, 21, 22, 23, 24, 31] {
+            #expect(table["ORC"]?.field(i)?.optionality == .backwardCompat, "ORC-\(i) should be B in v2.8.2")
+        }
+        #expect(table["ORC"]?.field(26)?.optionality == .conditional)
+        #expect(table["ORC"]?.field(2)?.condition == "OBR-2 empty")
+        #expect(table["ORC"]?.field(3)?.condition == "OBR-3 empty")
+
+        // OBR: 5/6/14/15/27→W; 13 ST→CWE; 49 IS→CWE; 29 C→O (XOR dropped);
+        // 10/16/28/32/33/34/35/50→B; 48 O→C; carried 2/3/7/25 conditions.
+        for i in [5, 6, 14, 15, 27] {
+            #expect(table["OBR"]?.field(i)?.optionality == .withdrawn, "OBR-\(i) should be W in v2.8.2")
+        }
+        #expect(table["OBR"]?.field(13)?.dataType == "CWE")
+        #expect(table["OBR"]?.field(49)?.dataType == "CWE")
+        #expect(table["OBR"]?.field(29)?.optionality == .optional)
+        for i in [10, 16, 28, 32, 33, 34, 35, 50] {
+            #expect(table["OBR"]?.field(i)?.optionality == .backwardCompat, "OBR-\(i) should be B in v2.8.2")
+        }
+        #expect(table["OBR"]?.field(48)?.optionality == .conditional)
+        #expect(table["OBR"]?.field(54)?.name == "Parent Order")
+        #expect(table["OBR"]?.field(25)?.condition == "messageCode = ORU")
+
+        // OBX: 4 ST→OG; 8 IS→CWE + renamed "Interpretation Codes";
+        // 15/16/18/23/24/25→B; +26..30 new; OBX-2 condition carried.
+        #expect(table["OBX"]?.field(4)?.dataType == "OG")
+        #expect(table["OBX"]?.field(8)?.dataType == "CWE")
+        #expect(table["OBX"]?.field(8)?.name == "Interpretation Codes")
+        for i in [15, 16, 18, 23, 24, 25] {
+            #expect(table["OBX"]?.field(i)?.optionality == .backwardCompat, "OBX-\(i) should be B in v2.8.2")
+        }
+        #expect(table["OBX"]?.field(30)?.name == "Observation Sub-Type")
+        #expect(table["OBX"]?.field(2)?.condition == "OBX-11 != X")
+    }
 }
