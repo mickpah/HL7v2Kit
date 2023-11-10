@@ -11,14 +11,14 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.17.0`** (M2 close-out — permanent-limitations register) on `main`, pushed to private bare repo |
-| Next planned cycle | **M3 (API stabilisation)** — the last engineering gate before a v1.0 candidate. M1 + M2 closed. |
+| Current release | **`v0.18.0`** (M3 API stabilisation — ADR-014 evolution policy) on `main`, pushed to private bare repo |
+| Next planned cycle | **v1.0 candidate** — M1 + M2 + M3 all closed; the only remaining gate is M4 (external IP review). v1.0 is tag-able on the private repo at the owner's call. |
 | v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
 ---
 
-## Where we are (v0.17.0)
+## Where we are (v0.18.0)
 
 **Shipped and solid:**
 
@@ -50,13 +50,13 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **AU narrowings + terminology/PKI/history gaps** — ✅ **DONE (v0.17).** Consolidated into `docs/design/permanent-limitations-register.md` (00044.4.3 carve-out, 00044.4.7 concept-match, 00044.2 PKI, 00044.1.2/.1.3, HL7au:000001; cross-cutting terminology / PKI / cross-message-history classes). Each spec-cited and freeze-decided.
 - **Decision recorded:** all current limitations are spec-honest and **acceptable to freeze** for v1.0 — none blocks it. The two registers are the authoritative M2 gate; shipping any documented limitation as an unconditional rule would misfire (req #4). The terminology-service / PKI integrations that would unlock the semantic rules are explicitly **post-1.0** (out of the ADR-006 portable core).
 
-### M3 — API stabilisation (the v1.0 gate)
+### M3 — API stabilisation ✅ **(closed v0.18.0)**
 *Goal: freeze a public surface we're willing to support indefinitely.*
 
-- **Public-surface audit** — enumerate every `public` symbol; confirm each is intended, minimal, and documented. The surface has been stable since v0.5.0; the only additive change since was `ValidationIssue.Kind.segmentCardinalityBelowMinimum` (v0.11, non-`@frozen` enum).
-- **`@frozen` / evolution decisions** — decide which public enums (`ValidationIssue.Kind`, `Version`, `FieldOptionality`, `HL7Locale`) stay open for additive cases vs freeze. This interacts directly with M1 (the `Version` cases — `v2_6` shipped, `v2_8_2` planned) and M2 (new issue kinds). `FieldOptionality` gained `.withdrawn` in v0.14; if v2.8.2 surfaces further optionality codes, that enum should stay open until M1 fully closes.
-- **Migration guarantees** — finalise `Migration.md`: what the v1.0 contract promises and what remains additive-only.
-- **v1.0 is the API-freeze boundary** (per Migration.md): after it ships, remaining spec gaps become permanent. M1 + M2 decisions must be settled *before* tagging v1.0.
+- **Evolution policy** — ✅ **ADR-014 (Accepted).** Documented SemVer evolution contract; **no `@frozen`** (inert for this source SPM package). Enums classified **open** (`Version`, `HL7Locale`, `IssueCode`, `ParseError`, `PathError`, `BuilderError` — may gain cases in 1.x minors; `@unknown default`) vs **stable** (domain-closed). 1.x is additive-only; removals/renames/signature changes wait for 2.0.
+- **Public-surface audit** — ✅ **DONE (v0.18).** `docs/design/public-api-surface.md`: 74 public types enumerated (59 hand-written + 15 codegen'd), each confirmed intended/minimal, every enum classified. The 6 open enums carry an `@unknown default` DocC note.
+- **Migration guarantees** — ✅ **DONE (v0.18).** `Migration.md` finalised into the v1.0 contract (additive-only rule, open/stable lists, v0.5.0→v0.17 additive-case history).
+- **v1.0 is the API-freeze boundary** (per Migration.md): after it ships, remaining gaps become permanent. **M1 + M2 + M3 are now all closed** — the only remaining v1.0 gate is M4 (external IP review).
 
 ### M4 — Distribution & open-source readiness
 *Goal: the package is publishable and discoverable to the HL7 integrator community it's built for.*
@@ -73,12 +73,12 @@ The four themes below are roughly independent and can interleave across cycles. 
 > **v1.0 = frozen public API + spec-honest conformance surface across v2.3–v2.6 (+ v2.8.2 per the M1 track), with all gaps either closed or documented as permanent limitations, published to a public remote.**
 
 Concretely, v1.0 ships when:
-1. M3 API audit complete and `Migration.md` finalised. **(the only open engineering gate)**
+1. ✅ M3 API audit complete and `Migration.md` finalised (v0.18, ADR-014).
 2. ✅ M2 conformance surface finalised — no undocumented gaps (v0.16 conditional register + v0.17 permanent-limitations register).
 3. ✅ M1 version coverage complete — v2.3 → v2.8.2 (v0.14 / v0.15).
 4. M4 public push unblocked (IP review) — *or* an explicit decision to tag v1.0 privately and push later.
 
-Items 1–3 are engineering-controllable (only **M3** remains); item 4 is the external gate. If the IP review lags, v1.0 can be tagged on the private repo with M1–M3 satisfied and the public push tracked as a follow-on.
+**Items 1–3 (all engineering-controllable) are DONE.** Only item 4 — the external IP-review gate — remains. Per the standing decision, **v1.0 can now be tagged on the private repo** with the public push tracked as a follow-on whenever the owner chooses. There is no remaining engineering blocker to a v1.0 candidate.
 
 ---
 

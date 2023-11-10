@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.0] — 2026-07-09
+
+ROADMAP M3 (API stabilisation) — the last v1.0 engineering gate. Settles the public API evolution policy, audits the full public surface, and finalises the migration contract. **No behaviour change; the only code change is added DocC notes.** Tests unchanged at 499 across 26 suites. **With M3 closed, M1 + M2 + M3 are all done — v1.0 is tag-able on the private repo (only M4 external IP review remains).**
+
+### Added — ADR-014 public API evolution policy
+
+Documented SemVer evolution contract; **no `@frozen`** (inert for this SPM *source* package with no library-evolution mode). Public enums classified **open** (`Version`, `HL7Locale`, `IssueCode`, `ParseError`, `PathError`, `BuilderError` — may gain cases in a 1.x minor; consumers switch with `@unknown default`) vs **stable** (`FieldOptionality`, `FieldRepeatability`, `IssueSeverity`, `ZSegmentPolicy`, `LineTerminatorPolicy`, `CharacterEncoding`, `RequiredComponentSet.Semantics`, `Segment` — domain-closed). 1.x is additive-only; removals / renames / signature changes wait for 2.0.
+
+### Added — `docs/design/public-api-surface.md`
+
+The v1.0 public-symbol inventory: 74 public types (59 hand-written + 15 codegen'd typed segments), each confirmed intended / minimal / documented, every enum classified open/stable. No accidentally-`public` internals.
+
+### Changed — open-enum DocC + finalised `Migration.md`
+
+The six open enums each gained a `- Note:` telling consumers to switch with `@unknown default` (`ParseError` / `PathError` / `BuilderError` also gained a type-level summary comment). `Migration.md` rewritten from its stale 0.2.0-era content into the v1.0 versioning contract (additive-only rule, open/stable lists, the v0.5.0→v0.17 additive-case history, v1.0 gates).
+
 ## [0.17.0] — 2026-07-09
 
 ROADMAP M2 close-out. Consolidates the AU-narrowing and terminology/PKI/history permanent limitations into a single authoritative register and formally closes M2 (conformance-surface finalisation). **Documentation only — no code or API change.** Tests unchanged at 499 across 26 suites.

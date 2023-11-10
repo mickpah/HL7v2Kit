@@ -27,6 +27,9 @@
 ///   Messaging — Localisation of HL7 Version 2.4* (`HL7AUSD-STD-OO-ADRM-2021.1`)
 ///   layered over the base v2.4 spec. v0.4-S5-A ships the API surface; the
 ///   AU constraints themselves land in subsequent stages.
+///
+/// - Note: **Open** enum per ADR-014 — may gain cases in a minor release as
+///   further localisation profiles are added; switch with `@unknown default`.
 public enum HL7Locale: String, Sendable, CaseIterable, Equatable, Hashable {
     /// Base HL7 v2 spec. No localisation profile loaded. Default.
     case international = "international"

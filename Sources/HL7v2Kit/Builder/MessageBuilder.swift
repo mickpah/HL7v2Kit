@@ -3,6 +3,10 @@
 
 import Foundation
 
+/// Errors thrown while building an HL7 v2 message.
+///
+/// - Note: **Open** enum per ADR-014 — may gain cases in a minor release;
+///   switch with `@unknown default`.
 public enum BuilderError: Error, Equatable, Sendable {
     case missingMSH
     case invalidEncodingCharacters
