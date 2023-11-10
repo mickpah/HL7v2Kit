@@ -17,6 +17,7 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     case v2_4   = "2.4"
     case v2_5_1 = "2.5.1"
     case v2_6   = "2.6"
+    case v2_8_2 = "2.8.2"
     case v2_8   = "2.8"
 
     /// Parse a wire-format MSH-12 string into a `Version`, if recognised.

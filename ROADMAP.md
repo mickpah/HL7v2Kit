@@ -11,8 +11,8 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.14.0`** (v2.6 first-class grammar, ADR-012) on `main`, pushed to private bare repo |
-| Next planned cycle | **v0.15 — HL7 v2.8.2 first-class grammar** (ADR-013, mirrors ADR-012). Final Standard PDFs on disk (`docs/standards/HL7_V2.8.2_PDF/`). |
+| Current release | **`v0.15.0`** (v2.8.2 first-class grammar, ADR-013) on `main`, pushed to private bare repo |
+| Next planned cycle | M2 (conformance-surface finalisation) or M3 (API stabilisation) — project-owner's call. **M1 (version coverage) fully closed** at v0.15.0. |
 | v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -36,11 +36,12 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 The four themes below are roughly independent and can interleave across cycles. Ordering within a theme is firm; ordering *between* themes is the project owner's call per cycle (see NEXT_STEPS for the next concrete pick).
 
-### M1 — Version coverage completeness 🔶 **(common set closed v0.14.0; v2.8.2 track open)**
+### M1 — Version coverage completeness ✅ **(fully closed v0.15.0)**
 *Goal: the base-spec surface an integrator expects is present, or its absence is a documented, defensible decision.*
 
-- **Common-version set (v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6)** — ✅ **DONE.** v2.6 closed the common set in v0.14 (ADR-012): `Version.v2_6` + 15 segments, all divergences (TS→DTM, field-by-field CE→CWE/CNE, field-count growth, `W` withdrawn) verified against the v2.6 PDFs. See `docs/design/v2_6-spec-audit.md`.
-- **v2.8.2 grammar table** — 🔶 **NEXT PLANNED CYCLE (v0.15, ADR-013).** The latest published HL7 v2 Final Standard; the full PDF + WORD set is now on disk (`docs/standards/HL7_V2.8.2_PDF/`). Modelling it is a deliberate req-#1 reach for feature-completeness (the integrator reference should cover the latest standard, not stop at the AU-common set). Same discipline as ADR-012: an ADR gates the additive `Version.v2_8_2` case; a multi-substage cycle authors the 15-segment grammar from the attribute tables, preserving every v2.8.2-vs-v2.6 divergence verbatim; per-segment spec-audit doc. Note the existing grammar-less `.v2_8` precedent — reconcile the raw value / naming with ADR-013 (v2.8.2 is a distinct point release from the unmodelled `.v2_8`).
+- **Common-version set (v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6)** — ✅ **DONE (v0.14, ADR-012).** See `docs/design/v2_6-spec-audit.md`.
+- **v2.8.2 grammar table** — ✅ **DONE (v0.15, ADR-013).** `Version.v2_8_2` + 15 segments, all divergences (IS→CWE promotion, B→W withdrawals, O→B demotions, dropped/added conditionals, EI→EIP / ST→OG / ID→NM, field-count growth) verified against the v2.8.2 PDFs. The grammar-less `.v2_8` case retained (distinct MSH-12 raw value). No new `FieldOptionality` case needed. See `docs/design/v2_8_2-spec-audit.md`. **Coverage now spans v2.3 → v2.8.2 — the full published-standard set the reference targets.**
+- **Curated-depth backlog (req #1 follow-on, not a v1.0 blocker):** NK1 / PV1 / IN1 are curated to the shared typed-segment depth (13 / 20 / 25) across **all** versions; their full field sets (v2.8.2: 41 / 54 / 53) are unmodelled. Extending them (all versions) is the largest remaining req-#1 lever.
 - **IN1 field-set completeness** — the shared IN1 schema is curated to 25 fields across **all** versions (incl. v2.6, and to be mirrored for v2.8.2); the full ~53-field IN1 is unmodelled. A feature-completeness item (req #1), not a v1.0 blocker. (Supersedes the v0.12 IN1-optionality carry-over note.)
 
 ### M2 — Conformance-surface finalisation

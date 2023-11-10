@@ -676,4 +676,220 @@ struct MultiVersionTests {
         #expect(report.errors.isEmpty,
                 "well-formed v2.6 ORU should report no errors; got \(report.errors.map(\.message))")
     }
+
+    // MARK: - v0.15 (ADR-013): HL7 v2.8.2 grammar — S1 control/notes segments
+
+    @Test("v2.8.2 wire parses with .version == .v2_8_2 (distinct from grammar-less .v2_8)")
+    func v282VersionDetected() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8.2\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_8_2)
+        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
+        let v28 = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r")
+        #expect(v28.version == .v2_8)
+    }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S1 control/notes segments (deltas vs v2.6)")
+    func v282GrammarTableS1Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts held vs v2.6: MSH 25, MSA 8, NTE 8, EVN 7, ERR 12.
+        #expect(table["MSH"]?.fields.count == 25)
+        #expect(table["MSA"]?.fields.count == 8)
+        #expect(table["NTE"]?.fields.count == 8)
+        #expect(table["EVN"]?.fields.count == 7)
+        #expect(table["ERR"]?.fields.count == 12)
+        // MSH is byte-identical to v2.6 (DTM-7, CWE-19 already migrated).
+        #expect(table["MSH"]?.field(7)?.dataType == "DTM")
+        #expect(table["MSH"]?.field(19)?.dataType == "CWE")
+        // v2.8.2 withdrew the legacy backward-compat fields (were B in v2.6).
+        #expect(table["MSA"]?.field(3)?.optionality == .withdrawn)
+        #expect(table["MSA"]?.field(5)?.optionality == .withdrawn)
+        #expect(table["MSA"]?.field(6)?.optionality == .withdrawn)
+        #expect(table["ERR"]?.field(1)?.optionality == .withdrawn)
+        #expect(table["EVN"]?.field(1)?.optionality == .withdrawn)
+        // v2.8.2 IS → CWE migrations (verified per field-def header):
+        #expect(table["ERR"]?.field(9)?.dataType == "CWE")   // Inform Person Indicator (was IS)
+        #expect(table["EVN"]?.field(4)?.dataType == "CWE")   // Event Reason Code (was IS)
+        // Required fields held.
+        #expect(table["EVN"]?.field(2)?.optionality == .required)
+        #expect(table["ERR"]?.field(3)?.optionality == .required)
+        #expect(table["ERR"]?.field(4)?.optionality == .required)
+    }
+
+    // A v2.8.2 ACK-shaped wire (MSH/MSA/NTE) dispatches to the v2.8.2
+    // grammar — S1 only; PID etc. arrive in later substages.
+    private let v282AckWire = """
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.8.2\r\
+    MSA|AA|MSG00001\r\
+    NTE|1||All results verified\r
+    """
+
+    @Test("v2.8.2 S1 wire (MSH/MSA/NTE) dispatches to v2.8.2 grammar, no unknown-segment")
+    func v282S1SegmentsRecognised() throws {
+        let message = try Parser().parse(v282AckWire)
+        #expect(message.version == .v2_8_2)
+        let report = Validator().validate(message)
+        let unknowns = report.issues.filter {
+            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+        }
+        #expect(unknowns.isEmpty,
+                "v2.8.2 S1 segments must dispatch to the v2.8.2 grammar; got \(unknowns.map(\.location.segmentID))")
+        #expect(report.errors.isEmpty,
+                "well-formed v2.8.2 MSH/MSA/NTE wire should report no errors; got \(report.errors.map(\.message))")
+    }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S2 patient-admin segments (deltas vs v2.6)")
+    func v282GrammarTableS2Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts: PID 40 (was 39; +PID-40 Telecommunication Info), PD1 22,
+        // NK1 13 (curated), PV1 20 (curated), AL1 6.
+        #expect(table["PID"]?.fields.count == 40)
+        #expect(table["PD1"]?.fields.count == 22)
+        #expect(table["NK1"]?.fields.count == 13)
+        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["AL1"]?.fields.count == 6)
+
+        // PID: IS→CWE on 8/32; B→W on 2/4/9/12/19/20/28; O→B on 13/14;
+        // PID-40 new (XTN); PID-3/5 stay R.
+        #expect(table["PID"]?.field(8)?.dataType == "CWE")
+        #expect(table["PID"]?.field(32)?.dataType == "CWE")
+        for i in [2, 4, 9, 12, 19, 20, 28] {
+            #expect(table["PID"]?.field(i)?.optionality == .withdrawn, "PID-\(i) should be W in v2.8.2")
+        }
+        #expect(table["PID"]?.field(13)?.optionality == .backwardCompat)
+        #expect(table["PID"]?.field(14)?.optionality == .backwardCompat)
+        #expect(table["PID"]?.field(40)?.name == "Patient Telecommunication Information")
+        #expect(table["PID"]?.field(3)?.optionality == .required)
+        #expect(table["PID"]?.field(5)?.optionality == .required)
+        // v2.8.2 dropped the v2.6 veterinary conditionals: PID-35 (renamed
+        // Taxonomic Classification Code) is O with no condition; PID-36 is B.
+        #expect(table["PID"]?.field(35)?.name == "Taxonomic Classification Code")
+        #expect(table["PID"]?.field(35)?.optionality == .optional)
+        #expect(table["PID"]?.field(35)?.condition == nil)
+        #expect(table["PID"]?.field(36)?.optionality == .backwardCompat)
+
+        // PD1: IS→CWE wave; PD1-4 withdrawn; PD1-12/13 → B; PD1-15 → C.
+        for i in [1, 2, 5, 6, 7, 8, 16, 19, 20, 21] {
+            #expect(table["PD1"]?.field(i)?.dataType == "CWE", "PD1-\(i) should be CWE in v2.8.2")
+        }
+        #expect(table["PD1"]?.field(4)?.optionality == .withdrawn)
+        #expect(table["PD1"]?.field(12)?.optionality == .backwardCompat)
+        #expect(table["PD1"]?.field(15)?.optionality == .conditional)
+
+        // PV1: IS→CWE wave; PV1-9 → B; PV1-2 stays R.
+        for i in [2, 4, 10, 12, 13, 14, 15, 16, 18] {
+            #expect(table["PV1"]?.field(i)?.dataType == "CWE", "PV1-\(i) should be CWE in v2.8.2")
+        }
+        #expect(table["PV1"]?.field(2)?.optionality == .required)
+        #expect(table["PV1"]?.field(9)?.optionality == .backwardCompat)
+
+        // AL1-6 withdrawn (was B in v2.6); AL1-1/3 stay R.
+        #expect(table["AL1"]?.field(6)?.optionality == .withdrawn)
+        #expect(table["AL1"]?.field(1)?.optionality == .required)
+        #expect(table["AL1"]?.field(3)?.optionality == .required)
+
+        // NK1 (curated 13) is unchanged from v2.6.
+        #expect(table["NK1"]?.field(3)?.dataType == "CWE")
+        #expect(table["NK1"]?.field(1)?.optionality == .required)
+    }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S3 order/observation segments (deltas vs v2.6)")
+    func v282GrammarTableS3Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        // Field counts: ORC 34 (was 31; +32/33/34), OBR 54 (was 50; +51..54),
+        // OBX 30 (was 25; +26..30).
+        #expect(table["ORC"]?.fields.count == 34)
+        #expect(table["OBR"]?.fields.count == 54)
+        #expect(table["OBX"]?.fields.count == 30)
+
+        // ORC: EI→EIP on 4; 7→W; 8 C→O (condition dropped); O→B wave;
+        // 26 O→C; 31 O→B; carried 2/3 conditions.
+        #expect(table["ORC"]?.field(4)?.dataType == "EIP")
+        #expect(table["ORC"]?.field(7)?.optionality == .withdrawn)
+        #expect(table["ORC"]?.field(8)?.optionality == .optional)
+        #expect(table["ORC"]?.field(8)?.condition == nil)
+        for i in [10, 11, 12, 17, 18, 19, 21, 22, 23, 24, 31] {
+            #expect(table["ORC"]?.field(i)?.optionality == .backwardCompat, "ORC-\(i) should be B in v2.8.2")
+        }
+        #expect(table["ORC"]?.field(26)?.optionality == .conditional)
+        #expect(table["ORC"]?.field(2)?.condition == "OBR-2 empty")
+        #expect(table["ORC"]?.field(3)?.condition == "OBR-3 empty")
+
+        // OBR: 5/6/14/15/27→W; 13 ST→CWE; 49 IS→CWE; 29 C→O (XOR dropped);
+        // 10/16/28/32/33/34/35/50→B; 48 O→C; carried 2/3/7/25 conditions.
+        for i in [5, 6, 14, 15, 27] {
+            #expect(table["OBR"]?.field(i)?.optionality == .withdrawn, "OBR-\(i) should be W in v2.8.2")
+        }
+        #expect(table["OBR"]?.field(13)?.dataType == "CWE")
+        #expect(table["OBR"]?.field(49)?.dataType == "CWE")
+        #expect(table["OBR"]?.field(29)?.optionality == .optional)
+        for i in [10, 16, 28, 32, 33, 34, 35, 50] {
+            #expect(table["OBR"]?.field(i)?.optionality == .backwardCompat, "OBR-\(i) should be B in v2.8.2")
+        }
+        #expect(table["OBR"]?.field(48)?.optionality == .conditional)
+        #expect(table["OBR"]?.field(54)?.name == "Parent Order")
+        #expect(table["OBR"]?.field(25)?.condition == "messageCode = ORU")
+
+        // OBX: 4 ST→OG; 8 IS→CWE + renamed "Interpretation Codes";
+        // 15/16/18/23/24/25→B; +26..30 new; OBX-2 condition carried.
+        #expect(table["OBX"]?.field(4)?.dataType == "OG")
+        #expect(table["OBX"]?.field(8)?.dataType == "CWE")
+        #expect(table["OBX"]?.field(8)?.name == "Interpretation Codes")
+        for i in [15, 16, 18, 23, 24, 25] {
+            #expect(table["OBX"]?.field(i)?.optionality == .backwardCompat, "OBX-\(i) should be B in v2.8.2")
+        }
+        #expect(table["OBX"]?.field(30)?.name == "Observation Sub-Type")
+        #expect(table["OBX"]?.field(2)?.condition == "OBX-11 != X")
+    }
+
+    @Test("v2.8.2 SegmentGrammarTable carries the S4 financial segments (deltas vs v2.6)")
+    func v282GrammarTableS4Populated() {
+        let table = SegmentGrammarTable.v2_8_2
+        #expect(table["DG1"]?.fields.count == 26)
+        #expect(table["IN1"]?.fields.count == 25)   // curated scope mirrors v2.6
+
+        // DG1: IS→CWE on 6/17/25/26; ID→NM on 15; DG1-22 O→C; withdrawn
+        // block 2/4/7..14 held; P12 conditions on 20/21 carried.
+        #expect(table["DG1"]?.field(6)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(15)?.dataType == "NM")
+        #expect(table["DG1"]?.field(17)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(25)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(26)?.dataType == "CWE")
+        #expect(table["DG1"]?.field(22)?.optionality == .conditional)
+        for i in [2, 4, 7, 8, 9, 10, 11, 12, 13, 14] {
+            #expect(table["DG1"]?.field(i)?.optionality == .withdrawn, "DG1-\(i) should be W in v2.8.2")
+        }
+        #expect(table["DG1"]?.field(20)?.condition == "triggerEvent = P12")
+        #expect(table["DG1"]?.field(21)?.condition == "triggerEvent = P12")
+
+        // IN1: IN1-2 renamed "Health Plan ID" (CWE R); IS→CWE on 15/20/21;
+        // TS→DTM on 18 held.
+        #expect(table["IN1"]?.field(2)?.name == "Health Plan ID")
+        #expect(table["IN1"]?.field(2)?.optionality == .required)
+        #expect(table["IN1"]?.field(15)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(20)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(21)?.dataType == "CWE")
+        #expect(table["IN1"]?.field(18)?.dataType == "DTM")
+    }
+
+    // S5 conditional pass: a well-formed v2.8.2 ORU^R01. Every ORU-required
+    // conditional (OBR-7, OBR-25, OBX-2) is satisfied; the v2.6 XOR/parent
+    // conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer apply, and no
+    // carried condition (ORC-2/3, OBR-2/3) misfires.
+    @Test("v2.8.2 well-formed ORU validates with no spurious errors (S5 conditional pass)")
+    func v282CleanORUHasNoErrors() throws {
+        let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
+            + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
+        let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01|MSG1|P|2.8.2\r"
+            + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
+            + "ORC|RE|PON123|FON456\r"
+            + obr + "\r"
+            + obx + "\r"
+        let message = try Parser().parse(wire)
+        #expect(message.version == .v2_8_2)
+        let report = Validator().validate(message)
+        #expect(report.errors.isEmpty,
+                "well-formed v2.8.2 ORU should report no errors; got \(report.errors.map(\.message))")
+    }
 }
