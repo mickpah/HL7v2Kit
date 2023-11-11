@@ -10,9 +10,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-07-09 |
-| Current release | **`v1.0.0`** (on `private` only) — API frozen. **Provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **M5 — full HL7 segment coverage** across all versions (owner req, 2026-07-09): the completeness bar that **gates the first public push**. Additive v1.1+ cycles (ADR-014). Big multi-cycle program; extraction-pipeline prerequisite first. |
+| Last updated | 2026-07-12 |
+| Current release | **`v1.0.0`** (on `private` only) — API frozen. **Provisional pending full-coverage parity** (see M5). **v1.1 M5-foundation cycle committed on worktree, awaiting merge/tag.** |
+| Next planned cycle | **M5 sweep (v1.2+)** — per-version segment depth off the inventory, starting with NK1/PV1/IN1. The v1.1 foundation (ADR-015 extraction pipeline + canonical corrections + 188-segment inventory) is done. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -67,13 +67,13 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
 - **Real-world fixture acquisition** — gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes).
 
-### M5 — Full HL7 segment coverage across all versions 🔴 **(NEW — the public-push gate)**
+### M5 — Full HL7 segment coverage across all versions 🟠 **(foundation done v1.1; sweep ongoing — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
-- **Bar:** all ~150 HL7 segments × 6 versions (v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / v2.8.2) at full field depth. Today: 15 typed segments (canonical v2.5.1 full; NK1/PV1/IN1 per-version still curated 13/20/25; ~135 segments unmodelled).
-- **Immediate gap:** NK1/PV1/IN1 per-version depth (v0.19 did canonical only).
-- **Prerequisite — extraction pipeline:** the legacy-PDF `RP/# / OPT` columns resist PDFKit text extraction (columns interleave). Before a ~900-schema sweep, build a reliable extraction path — the v2.8.2 `WORD/*.doc` sources may parse cleaner; legacy versions need a better parser than raw PDFKit. **This is the first M5 sub-task** (likely its own ADR / tooling cycle).
-- **Shape:** additive v1.1+ cycles (ADR-014 §open — new segments/versions add members, never remove; the API stays frozen). A large, multi-cycle program; pace by chapter/segment-family.
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: 15 typed segments (canonical v2.5.1 full + defect-clean; NK1/PV1/IN1 per-version still curated 13/20/25; ~173 segments unmodelled).
+- **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
+- **✅ Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
+- **⬅ Sweep (ongoing, v1.2+):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded + human-verified, by chapter/family. **First: NK1/PV1/IN1 per-version depth** (v0.19 did canonical only; the extractor is proven on those tables).
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
 ---
