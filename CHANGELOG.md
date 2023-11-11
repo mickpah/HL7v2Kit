@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] — 2026-07-09
 
-**First stable release.** 🎉 The public API is frozen under the ADR-014 evolution contract; from here, `1.x` releases are additive-only (new enum cases on the open enums, new types/methods) — removals, renames, and signature changes wait for `2.0`. All four v1.0 milestones are met:
+> **Note (post-tag, 2026-07-09):** the owner reframed the v1.0 completeness bar to require **full HL7 segment coverage across all versions** (ROADMAP M5). `v1.0.0` stays the API-freeze tag but is **provisional on `private`**; the first public push is gated on M5.
+
+**API-freeze release.** The public API is frozen under the ADR-014 evolution contract; from here, `1.x` releases are additive-only (new enum cases on the open enums, new types/methods) — removals, renames, and signature changes wait for `2.0`. Milestone status at tag time:
 
 - **M1 — Version coverage:** full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2** (the complete published-standard set an integrator reference targets). A bare `2.8` wire is recognised but grammar-less (ADR-013).
 - **M2 — Conformance surface:** every rule is either validated or documented as a spec-cited permanent limitation with a v1.0 freeze decision — the conditional-completeness register (`docs/design/conditional-completeness-audit.md`) + the permanent-limitations register (`docs/design/permanent-limitations-register.md`).

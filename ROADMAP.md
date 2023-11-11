@@ -11,9 +11,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v1.0.0`** 🎉 — first stable release; M1–M4 all met. On `main`, pushed to private (public push unblocked, target TBD). |
-| Next planned cycle | **Post-1.0** — additive-only under ADR-014 (`1.x`). Candidates: per-version NK1/PV1/IN1 depth follow-on; second locale profile; terminology-service hook. See "Post-1.0 sketch". |
-| v1.0 stability clock | **Frozen at v1.0.0** (was anchored v0.5.0). The public API is now the SemVer contract per `Migration.md` / ADR-014. |
+| Current release | **`v1.0.0`** (on `private` only) — API frozen. **Provisional pending full-coverage parity** (see M5). |
+| Next planned cycle | **M5 — full HL7 segment coverage** across all versions (owner req, 2026-07-09): the completeness bar that **gates the first public push**. Additive v1.1+ cycles (ADR-014). Big multi-cycle program; extraction-pipeline prerequisite first. |
+| v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
 ---
@@ -58,27 +58,38 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Migration guarantees** — ✅ **DONE (v0.18).** `Migration.md` finalised into the v1.0 contract (additive-only rule, open/stable lists, v0.5.0→v0.17 additive-case history).
 - **v1.0 is the API-freeze boundary** (per Migration.md): after it ships, remaining gaps become permanent. **M1 + M2 + M3 are now all closed** — the only remaining v1.0 gate is M4 (external IP review).
 
-### M4 — Distribution & open-source readiness 🔶 **(IP review cleared; publish pending)**
+### M4 — Distribution & open-source readiness 🔶 **(IP review cleared; publish gated on M5)**
 *Goal: the package is publishable and discoverable to the HL7 integrator community it's built for.*
 
-- **IP review** — ✅ **CLEARED** (2026-07-09). The employment-contract IP review passed; the first public push is **unblocked**. The public remote target is TBD (owner confirms host/repo before any public push).
-- **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local; keep as-is when publishing).
-- **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges — the post-1.0 publish checklist.
-- **Real-world fixture acquisition** — still gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes). Synthetic corpus covers current tests.
+- **IP review** — ✅ **CLEARED** (2026-07-09). The employment-contract gate passed; the *legal* blocker is gone.
+- **Public push is now gated on M5** (full-coverage parity) per the owner's completeness bar — see M5. The `v1.0.0` tag stays on `private` until M5 is met. Remote target TBD (owner names host/repo).
+- **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local).
+- **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
+- **Real-world fixture acquisition** — gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes).
+
+### M5 — Full HL7 segment coverage across all versions 🔴 **(NEW — the public-push gate)**
+*Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
+
+- **Bar:** all ~150 HL7 segments × 6 versions (v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / v2.8.2) at full field depth. Today: 15 typed segments (canonical v2.5.1 full; NK1/PV1/IN1 per-version still curated 13/20/25; ~135 segments unmodelled).
+- **Immediate gap:** NK1/PV1/IN1 per-version depth (v0.19 did canonical only).
+- **Prerequisite — extraction pipeline:** the legacy-PDF `RP/# / OPT` columns resist PDFKit text extraction (columns interleave). Before a ~900-schema sweep, build a reliable extraction path — the v2.8.2 `WORD/*.doc` sources may parse cleaner; legacy versions need a better parser than raw PDFKit. **This is the first M5 sub-task** (likely its own ADR / tooling cycle).
+- **Shape:** additive v1.1+ cycles (ADR-014 §open — new segments/versions add members, never remove; the API stays frozen). A large, multi-cycle program; pace by chapter/segment-family.
+- **This is what "v1.0 complete" now means, and it gates the first public push.**
 
 ---
 
-## v1.0 definition — ✅ MET (v1.0.0, 2026-07-09)
+## v1.0 definition — reframed (owner, 2026-07-09)
 
-> **v1.0 = frozen public API + spec-honest conformance surface across v2.3–v2.8.2, with all gaps either closed or documented as permanent limitations.**
+> **v1.0 = frozen public API + spec-honest conformance surface + full HL7 segment coverage at complete depth across every supported version (v2.3–v2.8.2).**
 
-All four gates cleared:
-1. ✅ M3 API audit complete and `Migration.md` finalised (v0.18, ADR-014).
-2. ✅ M2 conformance surface finalised — no undocumented gaps (v0.16 conditional register + v0.17 permanent-limitations register).
-3. ✅ M1 version coverage complete — v2.3 → v2.8.2 (v0.14 / v0.15).
-4. ✅ M4 IP review cleared (2026-07-09) — public push unblocked; tag `v1.0.0` cut.
+Gate status:
+1. ✅ M3 API stabilisation (v0.18, ADR-014).
+2. ✅ M2 conformance surface (v0.16 + v0.17 registers).
+3. ✅ M1 *version-set* coverage — the six versions are modelled (v0.14 / v0.15) **for the 15-segment set**.
+4. ✅ M4 IP review cleared (legal gate).
+5. 🔴 **M5 full-coverage parity** — every segment × every version at full depth. **NOT met.** This is now the completeness bar and the public-push gate.
 
-**`v1.0.0` is tagged.** The public *push* remains an explicit, owner-confirmed step (remote target TBD) — the tag lives on `private` until then.
+**`v1.0.0` is tagged on `private`** as the API-freeze marker. It is **provisional** until M5 is met — the first public push waits on full-coverage parity. Coverage growth ships as additive v1.1+.
 
 ---
 
