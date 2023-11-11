@@ -2,7 +2,7 @@
 
 A native Swift package for **parsing, building, and validating** HL7 v2.x healthcare messages.
 
-**Status:** `v0.19.0` — approaching v1.0 (the public API has been stable since v0.5.0; see [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md), and the migration contract in [`Migration.md`](Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md)).
+**Status:** `v1.0.0` — first stable release. The public API is frozen under SemVer (additive-only in `1.x`); see [CHANGELOG.md](CHANGELOG.md), [ROADMAP.md](ROADMAP.md), and the versioning contract in [`Migration.md`](Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md).
 
 ## Why use this
 
@@ -69,7 +69,7 @@ Segment IDs without a typed struct (Z-segments, less-common segments) come back 
 Add to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "0.19.0")
+.package(url: "https://github.com/<your-org>/HL7v2Kit.git", from: "1.0.0")
 ```
 
 Then add `"HL7v2Kit"` to your target's `dependencies`.

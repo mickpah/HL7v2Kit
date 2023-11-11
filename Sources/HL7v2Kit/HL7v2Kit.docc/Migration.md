@@ -4,10 +4,10 @@ Versioning contract and per-release migration notes for HL7v2Kit consumers.
 
 ## Overview
 
-HL7v2Kit is approaching **v1.0** (currently `v0.17.0`). The public API surface has been stable since **v0.5.0** (the v1.0 stability-clock anchor); changes since then have been **additive only** (new enum cases, new segments/versions, new validation checks). The remaining pre-1.0 work is the external distribution gate (ROADMAP M4 — IP review), not API churn.
+HL7v2Kit is at **`v1.0.0`** — the first stable release. The public API is now frozen under the evolution policy below (ADR-014); it has been stable since v0.5.0 and every change since was additive.
 
-- **Pre-1.0** (`0.x`): minor releases (`0.x → 0.(x+1)`) *may* make source-breaking changes, each called out in `CHANGELOG.md`. In practice none has since v0.5.0.
-- **Post-1.0** (`1.x`): strict SemVer under the evolution policy below (ADR-014). Additive-only in minors; breaking changes wait for `2.0`.
+- **`1.x`**: strict SemVer under the evolution policy below (ADR-014). Additive-only in minors; breaking changes wait for `2.0`.
+- **`0.x` (historical)**: pre-1.0 minors *could* make source-breaking changes (none did after v0.5.0), each called out in `CHANGELOG.md`.
 
 ## The v1.0 API evolution contract (ADR-014)
 
@@ -50,19 +50,20 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v0.15.0 | `Version.v2_8_2` |
 | v0.16.0 | Two shipped conditional predicates (schema metadata; no API surface change) |
 | v0.17.0 | Conformance-limitations register (docs only) |
+| v0.18.0 | ADR-014 evolution policy + public-API-surface inventory (DocC/docs only) |
+| v0.19.0 | Canonical NK1/PV1/IN1 typed accessors extended to full depth (additive) |
+| **v1.0.0** | **API frozen** — the surface above is now the SemVer contract |
 
 ## Historical: 0.1.0 → 0.5.0
 
 The early minors (0.2–0.5) included source-breaking refactors while the surface settled: typed-composite accessors moving from raw `Field?` to struct views (`XPN`/`CX`/`XAD`), component-level and conditional-field validation, the MLLP codec, and the `HL7Locale` API. These predate the v0.5.0 stability anchor; consumers starting at v0.5.0+ are unaffected. Full detail is in `CHANGELOG.md` and the `docs/archive/` snapshots.
 
-## v1.0 gates
+## v1.0 gates — all met (v1.0.0)
 
-Per `ROADMAP.md`, v1.0 ships when:
-
-1. **M3 API stabilisation** — ✅ this cycle (ADR-014 + the public-API-surface inventory + this contract).
-2. **M2 conformance surface finalised** — ✅ (v0.16 conditional register + v0.17 permanent-limitations register).
-3. **M1 version coverage** — ✅ (v2.3 → v2.8.2).
-4. **M4 public push** — external IP review (the only remaining gate). v1.0 may be tagged on the private repo with M1–M3 satisfied and the public push tracked as a follow-on.
+1. **M1 version coverage** — ✅ v2.3 → v2.8.2 (v0.14 / v0.15).
+2. **M2 conformance surface** — ✅ v0.16 conditional register + v0.17 permanent-limitations register.
+3. **M3 API stabilisation** — ✅ v0.18 (ADR-014 + the public-API-surface inventory + this contract).
+4. **M4 IP review** — ✅ cleared (2026-07-09); public push unblocked.
 
 ## See Also
 
