@@ -230,11 +230,12 @@ func isFieldDefinitionsHeading(_ line: String) -> Bool {
 
 // Map RP/# cell to repeatability token.
 func repeatability(_ rp: String) -> String {
-    let t = rp.trimmingCharacters(in: .whitespaces)
-    if t.isEmpty { return "1" }
-    if t.uppercased() == "Y" { return "*" }
-    // numeric max-count (e.g. "3") or "Y/n" -> repeatable; keep as-is signal
-    return "*"
+    let t = rp.trimmingCharacters(in: .whitespaces).uppercased()
+    if t.isEmpty || t == "N" { return "1" }        // blank or explicit "N" (no) -> single
+    if t == "Y" { return "*" }                      // "Y" (yes) -> repeats
+    if t.contains("Y") { return "*" }               // "Y/2" etc.
+    if t.first(where: { $0.isNumber }) != nil { return "*" } // max-count (e.g. "2", "3") -> repeats
+    return "1"
 }
 
 // MARK: - table extraction from full text

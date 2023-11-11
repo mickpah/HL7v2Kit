@@ -307,7 +307,7 @@
       "name": "Production Class Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "*"
     },
     {
       "index": 39,

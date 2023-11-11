@@ -39,8 +39,8 @@
       "index": 5,
       "swiftName": "delayedAcknowledgmentType",
       "name": "Delayed Acknowledgment Type",
-      "dataType": "ST",
-      "optionality": "X",
+      "dataType": "ID",
+      "optionality": "W",
       "repeatability": "1"
     },
     {

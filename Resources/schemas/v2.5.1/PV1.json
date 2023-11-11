@@ -11,7 +11,7 @@
     { "index": 6, "swiftName": "priorPatientLocation", "name": "Prior Patient Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "attendingDoctor", "name": "Attending Doctor", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "referringDoctor", "name": "Referring Doctor", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
-    { "index": 9, "swiftName": "consultingDoctor", "name": "Consulting Doctor", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "consultingDoctor", "name": "Consulting Doctor", "dataType": "XCN", "optionality": "B", "repeatability": "*" },
     { "index": 10, "swiftName": "hospitalService", "name": "Hospital Service", "dataType": "IS", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "temporaryLocation", "name": "Temporary Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "preadmitTestIndicator", "name": "Preadmit Test Indicator", "dataType": "IS", "optionality": "O", "repeatability": "1" },
@@ -42,18 +42,18 @@
     { "index": 37, "swiftName": "dischargedToLocation", "name": "Discharged to Location", "dataType": "DLD", "optionality": "O", "repeatability": "1" },
     { "index": 38, "swiftName": "dietType", "name": "Diet Type", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 39, "swiftName": "servicingFacility", "name": "Servicing Facility", "dataType": "IS", "optionality": "O", "repeatability": "1" },
-    { "index": 40, "swiftName": "bedStatus", "name": "Bed Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 40, "swiftName": "bedStatus", "name": "Bed Status", "dataType": "IS", "optionality": "B", "repeatability": "1" },
     { "index": 41, "swiftName": "accountStatus", "name": "Account Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
     { "index": 42, "swiftName": "pendingLocation", "name": "Pending Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 43, "swiftName": "priorTemporaryLocation", "name": "Prior Temporary Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 44, "swiftName": "admitDateTime", "name": "Admit Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 45, "swiftName": "dischargeDateTime", "name": "Discharge Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 45, "swiftName": "dischargeDateTime", "name": "Discharge Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "*" },
     { "index": 46, "swiftName": "currentPatientBalance", "name": "Current Patient Balance", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 47, "swiftName": "totalCharges", "name": "Total Charges", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 48, "swiftName": "totalAdjustments", "name": "Total Adjustments", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 49, "swiftName": "totalPayments", "name": "Total Payments", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 50, "swiftName": "alternateVisitID", "name": "Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "*" },
+    { "index": 50, "swiftName": "alternateVisitID", "name": "Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "1" },
     { "index": 51, "swiftName": "visitIndicator", "name": "Visit Indicator", "dataType": "IS", "optionality": "O", "repeatability": "1" },
-    { "index": 52, "swiftName": "otherHealthcareProvider", "name": "Other Healthcare Provider", "dataType": "XCN", "optionality": "O", "repeatability": "*" }
+    { "index": 52, "swiftName": "otherHealthcareProvider", "name": "Other Healthcare Provider", "dataType": "XCN", "optionality": "B", "repeatability": "*" }
   ]
 }

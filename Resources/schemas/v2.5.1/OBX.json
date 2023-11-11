@@ -139,6 +139,62 @@
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "*"
+    },
+    {
+      "index": 18,
+      "swiftName": "equipmentInstanceIdentifier",
+      "name": "Equipment Instance Identifier",
+      "dataType": "EI",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 19,
+      "swiftName": "dateTimeOfTheAnalysis",
+      "name": "Date/Time of the Analysis",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "reservedForHarmonization20",
+      "name": "Reserved for harmonization with V2.6",
+      "dataType": "",
+      "optionality": "X",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "reservedForHarmonization21",
+      "name": "Reserved for harmonization with V2.6",
+      "dataType": "",
+      "optionality": "X",
+      "repeatability": "1"
+    },
+    {
+      "index": 22,
+      "swiftName": "reservedForHarmonization22",
+      "name": "Reserved for harmonization with V2.6",
+      "dataType": "",
+      "optionality": "X",
+      "repeatability": "1"
+    },
+    {
+      "index": 23,
+      "swiftName": "performingOrganizationName",
+      "name": "Performing Organization Name",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "performingOrganizationAddress",
+      "name": "Performing Organization Address",
+      "dataType": "XAD",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

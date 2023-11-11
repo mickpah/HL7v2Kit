@@ -28,7 +28,7 @@
     { "index": 23, "swiftName": "protectionIndicator", "name": "Protection Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "studentIndicator", "name": "Student Indicator", "dataType": "IS", "optionality": "O", "repeatability": "1" },
     { "index": 25, "swiftName": "religion", "name": "Religion", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 26, "swiftName": "mothersMaidenName", "name": "Mother's Maiden Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
+    { "index": 26, "swiftName": "mothersMaidenName", "name": "Mother's Maiden Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
     { "index": 27, "swiftName": "nationality", "name": "Nationality", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 28, "swiftName": "ethnicGroup", "name": "Ethnic Group", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 29, "swiftName": "contactReason", "name": "Contact Reason", "dataType": "CE", "optionality": "O", "repeatability": "*" },
