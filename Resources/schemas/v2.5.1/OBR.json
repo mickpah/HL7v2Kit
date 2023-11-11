@@ -384,6 +384,30 @@
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "*"
+    },
+    {
+      "index": 48,
+      "swiftName": "medicallyNecessaryDuplicateProcedureReason",
+      "name": "Medically Necessary Duplicate Procedure Reason",
+      "dataType": "CWE",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 49,
+      "swiftName": "resultHandling",
+      "name": "Result Handling",
+      "dataType": "IS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 50,
+      "swiftName": "parentUniversalServiceIdentifier",
+      "name": "Parent Universal Service Identifier",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

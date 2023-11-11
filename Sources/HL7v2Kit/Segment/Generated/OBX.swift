@@ -97,4 +97,39 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
     public var observationMethod: CE? {
         field(17).map(CE.init(field:))
     }
+
+    /// OBX-18: Equipment Instance Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var equipmentInstanceIdentifier: EI? {
+        field(18).map(EI.init(field:))
+    }
+
+    /// OBX-19: Date/Time of the Analysis. HL7 data type `TS`.
+    public var dateTimeOfTheAnalysis: String? {
+        field(19)?.stringValue
+    }
+
+    /// OBX-20: Reserved for harmonization with V2.6. HL7 data type ``.
+    public var reservedForHarmonization20: Field? {
+        field(20)
+    }
+
+    /// OBX-21: Reserved for harmonization with V2.6. HL7 data type ``.
+    public var reservedForHarmonization21: Field? {
+        field(21)
+    }
+
+    /// OBX-22: Reserved for harmonization with V2.6. HL7 data type ``.
+    public var reservedForHarmonization22: Field? {
+        field(22)
+    }
+
+    /// OBX-23: Performing Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    public var performingOrganizationName: XON? {
+        field(23).map(XON.init(field:))
+    }
+
+    /// OBX-24: Performing Organization Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    public var performingOrganizationAddress: XAD? {
+        field(24).map(XAD.init(field:))
+    }
 }

@@ -247,4 +247,19 @@ public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
     public var fillerSupplementalServiceInformation: CE? {
         field(47).map(CE.init(field:))
     }
+
+    /// OBR-48: Medically Necessary Duplicate Procedure Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var medicallyNecessaryDuplicateProcedureReason: CWE? {
+        field(48).map(CWE.init(field:))
+    }
+
+    /// OBR-49: Result Handling. HL7 data type `IS`.
+    public var resultHandling: String? {
+        field(49)?.stringValue
+    }
+
+    /// OBR-50: Parent Universal Service Identifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    public var parentUniversalServiceIdentifier: CWE? {
+        field(50).map(CWE.init(field:))
+    }
 }

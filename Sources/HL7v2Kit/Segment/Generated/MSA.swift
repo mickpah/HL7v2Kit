@@ -33,7 +33,7 @@ public struct MSA: TypedSegment, Sendable, Equatable, Hashable {
         field(4)?.stringValue
     }
 
-    /// MSA-5: Delayed Acknowledgment Type. HL7 data type `ST`.
+    /// MSA-5: Delayed Acknowledgment Type. HL7 data type `ID`.
     public var delayedAcknowledgmentType: String? {
         field(5)?.stringValue
     }

@@ -1263,4 +1263,45 @@ struct TypedSegmentTests {
         #expect(seg.contactPersonSocialSecurityNumber == "123-45-6789")   // NK1-37 (new)
         #expect(seg.contactPersonSocialSecurityNumber == message["NK1-37"])
     }
+
+    // v1.1 (ADR-015): the extraction pipeline's golden audit against the v2.5.1 PDFs
+    // caught 11 metadata defects + 2 incomplete segments in the pre-pipeline canonical
+    // schemas. These pins guard the corrections so they can never silently regress.
+    @Test("v1.1: OBR completed to 50 fields, OBX to 24 (were 47 / 17)")
+    func v1_1CompletedFieldCounts() {
+        let table = SegmentGrammarTable.v2_5_1
+        #expect(table["OBR"]?.fields.count == 50)
+        #expect(table["OBX"]?.fields.count == 24)
+        // Newly-authored trailing fields carry their v2.5.1 spec datatype.
+        #expect(table["OBR"]?.field(48)?.dataType == "CWE")  // Medically Necessary Duplicate Procedure Reason
+        #expect(table["OBR"]?.field(49)?.dataType == "IS")   // Result Handling (IS in v2.5.1)
+        #expect(table["OBX"]?.field(18)?.dataType == "EI")   // Equipment Instance Identifier
+        #expect(table["OBX"]?.field(24)?.dataType == "XAD")  // Performing Organization Address
+        // OBX-20/21/22 are "Reserved for harmonization with V2.6" in v2.5.1 (X).
+        #expect(table["OBX"]?.field(20)?.optionality == .notSupported)
+        #expect(table["OBX"]?.field(22)?.optionality == .notSupported)
+    }
+
+    @Test("v1.1: corrected optionality — backward-compat (B) and withdrawn (W) fields")
+    func v1_1CorrectedOptionality() {
+        let table = SegmentGrammarTable.v2_5_1
+        // B (backward-compatibility) fields the pre-pipeline authoring flattened to O.
+        #expect(table["PV1"]?.field(9)?.optionality == .backwardCompat)   // Consulting Doctor
+        #expect(table["PV1"]?.field(40)?.optionality == .backwardCompat)  // Bed Status
+        #expect(table["PV1"]?.field(52)?.optionality == .backwardCompat)  // Other Healthcare Provider
+        #expect(table["IN1"]?.field(38)?.optionality == .backwardCompat)  // Policy Limit - Amount
+        #expect(table["IN1"]?.field(40)?.optionality == .backwardCompat)  // Room Rate - Semi-Private
+        #expect(table["IN1"]?.field(41)?.optionality == .backwardCompat)  // Room Rate - Private
+        // MSA-5 is Withdrawn in v2.5.1 (was mis-modelled as X/ST).
+        #expect(table["MSA"]?.field(5)?.optionality == .withdrawn)
+    }
+
+    @Test("v1.1: corrected repeatability — RP/# read straight from the spec column")
+    func v1_1CorrectedRepeatability() {
+        let table = SegmentGrammarTable.v2_5_1
+        #expect(table["NK1"]?.field(26)?.repeatability == .multiple)  // Mother's Maiden Name (Y)
+        #expect(table["PID"]?.field(38)?.repeatability == .multiple)  // Production Class Code (2)
+        #expect(table["PV1"]?.field(45)?.repeatability == .multiple)  // Discharge Date/Time (Y)
+        #expect(table["PV1"]?.field(50)?.repeatability == .single)    // Alternate Visit ID (blank, was over-marked)
+    }
 }

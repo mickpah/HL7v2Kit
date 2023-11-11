@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-07-12
+
+### M5 foundation — extraction pipeline, canonical corrections, segment inventory (ADR-015)
+
+The opening of ROADMAP **M5** (full HL7 segment coverage across all versions — the gate on
+the first public push). **Additive / correctness only; the frozen v1.0 public API grows but
+never breaks** (ADR-014). Tests: 501 → **504** across 26 suites.
+
+**Added — the extraction pipeline (ADR-015).** `scripts/extract-segment-tables.swift` parses
+segment attribute tables from the Final-Standard PDFs via `pdftotext -layout`, recovering every
+column (`SEQ/LEN/DT/OPT/RP/#/TBL#/ITEM#/NAME`) cleanly across **all six versions** (v2.3→v2.8.2).
+This retires the "legacy `RP/#` columns don't extract cleanly" blocker that v0.19 documented and
+that M5 was gated on. Dev-time tool only — **`Package.swift` has no new dependency**. See
+`docs/design/segment-coverage-extraction.md` (+ its `--verify` golden gate).
+
+**Fixed — 11 canonical v2.5.1 metadata defects** surfaced by the pipeline's golden audit
+(concentrated in the `OPT`/`RP/#` columns the prior PDFKit hand-authoring mis-read):
+
+- Optionality: **PV1-9 / PV1-40 / PV1-52** and **IN1-38 / IN1-40 / IN1-41** were `O`, spec is `B`
+  (backward-compatibility); **MSA-5** was `X`/`ST`, spec is `W` (withdrawn).
+- Repeatability: **NK1-26**, **PID-38**, **PV1-45** are repeatable (`RP/# = Y`/max) — were single;
+  **PV1-50** is single — was over-marked repeatable.
+
+**Added — completed two incomplete canonical segments** (real v2.5.1 fields never authored;
+additive typed accessors):
+
+- **OBR** 47 → **50** — 48 Medically Necessary Duplicate Procedure Reason (CWE, C), 49 Result
+  Handling (IS, O), 50 Parent Universal Service Identifier (CWE, O).
+- **OBX** 17 → **24** — 18 Equipment Instance Identifier (EI), 19 Date/Time of the Analysis (TS),
+  20/21/22 Reserved for harmonization with V2.6 (X), 23 Performing Organization Name (XON),
+  24 Performing Organization Address (XAD).
+
+**Added — segment inventory** (`docs/design/segment-inventory.md`): the M5 work-list — 188
+distinct segments across the six versions (per-version 106→180), ~850 schema-instances for
+full-depth coverage vs. 15 typed today. Plus ADR-015 and 3 new cross-check pin tests.
+
 ## [1.0.0] — 2026-07-09
 
 > **Note (post-tag, 2026-07-09):** the owner reframed the v1.0 completeness bar to require **full HL7 segment coverage across all versions** (ROADMAP M5). `v1.0.0` stays the API-freeze tag but is **provisional on `private`**; the first public push is gated on M5.
