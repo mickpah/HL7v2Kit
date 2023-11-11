@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-07-12
+
 ### M5 foundation — extraction pipeline, canonical corrections, segment inventory (ADR-015)
 
 The opening of ROADMAP **M5** (full HL7 segment coverage across all versions — the gate on
