@@ -11,14 +11,14 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-09 |
-| Current release | **`v0.19.0`** (req-#1: canonical NK1/PV1/IN1 full depth) on `main`, pushed to private bare repo |
-| Next planned cycle | **v1.0 candidate** — M1 + M2 + M3 all closed; only M4 (external IP review) remains. v1.0 is tag-able on the private repo at the owner's call. (Optional pre-1.0: per-version NK1/PV1/IN1 depth follow-on.) |
-| v1.0 stability clock | Anchored at **v0.5.0** (public API surface). See `Sources/HL7v2Kit/HL7v2Kit.docc/Migration.md`. |
+| Current release | **`v1.0.0`** 🎉 — first stable release; M1–M4 all met. On `main`, pushed to private (public push unblocked, target TBD). |
+| Next planned cycle | **Post-1.0** — additive-only under ADR-014 (`1.x`). Candidates: per-version NK1/PV1/IN1 depth follow-on; second locale profile; terminology-service hook. See "Post-1.0 sketch". |
+| v1.0 stability clock | **Frozen at v1.0.0** (was anchored v0.5.0). The public API is now the SemVer contract per `Migration.md` / ADR-014. |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
 ---
 
-## Where we are (v0.18.0)
+## Where we are (v1.0.0)
 
 **Shipped and solid:**
 
@@ -58,27 +58,27 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Migration guarantees** — ✅ **DONE (v0.18).** `Migration.md` finalised into the v1.0 contract (additive-only rule, open/stable lists, v0.5.0→v0.17 additive-case history).
 - **v1.0 is the API-freeze boundary** (per Migration.md): after it ships, remaining gaps become permanent. **M1 + M2 + M3 are now all closed** — the only remaining v1.0 gate is M4 (external IP review).
 
-### M4 — Distribution & open-source readiness
+### M4 — Distribution & open-source readiness 🔶 **(IP review cleared; publish pending)**
 *Goal: the package is publishable and discoverable to the HL7 integrator community it's built for.*
 
-- **First public push** — **gated on the employment-contract IP review** (project-owner parallel-track item). Until cleared, tags live only on the private bare repo.
-- **Spec-PDF IP review** — the `docs/standards/` Final Standard PDFs are author-local; decide handling before any public push (likely: keep out of the public tree).
-- **Distribution hygiene** — README quickstart (exists), LICENSE (Apache 2.0, set), CI on the public remote, SPM discoverability, DocC hosting.
-- **Real-world fixture acquisition** — pipeline is designed but gated on (a) IP review and (b) the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes). Synthetic corpus (51 + 3 batch) covers current tests.
+- **IP review** — ✅ **CLEARED** (2026-07-09). The employment-contract IP review passed; the first public push is **unblocked**. The public remote target is TBD (owner confirms host/repo before any public push).
+- **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local; keep as-is when publishing).
+- **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges — the post-1.0 publish checklist.
+- **Real-world fixture acquisition** — still gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes). Synthetic corpus covers current tests.
 
 ---
 
-## Candidate v1.0 definition (draft — for project-owner ratification)
+## v1.0 definition — ✅ MET (v1.0.0, 2026-07-09)
 
-> **v1.0 = frozen public API + spec-honest conformance surface across v2.3–v2.6 (+ v2.8.2 per the M1 track), with all gaps either closed or documented as permanent limitations, published to a public remote.**
+> **v1.0 = frozen public API + spec-honest conformance surface across v2.3–v2.8.2, with all gaps either closed or documented as permanent limitations.**
 
-Concretely, v1.0 ships when:
+All four gates cleared:
 1. ✅ M3 API audit complete and `Migration.md` finalised (v0.18, ADR-014).
 2. ✅ M2 conformance surface finalised — no undocumented gaps (v0.16 conditional register + v0.17 permanent-limitations register).
 3. ✅ M1 version coverage complete — v2.3 → v2.8.2 (v0.14 / v0.15).
-4. M4 public push unblocked (IP review) — *or* an explicit decision to tag v1.0 privately and push later.
+4. ✅ M4 IP review cleared (2026-07-09) — public push unblocked; tag `v1.0.0` cut.
 
-**Items 1–3 (all engineering-controllable) are DONE.** Only item 4 — the external IP-review gate — remains. Per the standing decision, **v1.0 can now be tagged on the private repo** with the public push tracked as a follow-on whenever the owner chooses. There is no remaining engineering blocker to a v1.0 candidate.
+**`v1.0.0` is tagged.** The public *push* remains an explicit, owner-confirmed step (remote target TBD) — the tag lives on `private` until then.
 
 ---
 

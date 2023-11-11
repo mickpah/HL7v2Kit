@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-07-09
+
+**First stable release.** 🎉 The public API is frozen under the ADR-014 evolution contract; from here, `1.x` releases are additive-only (new enum cases on the open enums, new types/methods) — removals, renames, and signature changes wait for `2.0`. All four v1.0 milestones are met:
+
+- **M1 — Version coverage:** full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2** (the complete published-standard set an integrator reference targets). A bare `2.8` wire is recognised but grammar-less (ADR-013).
+- **M2 — Conformance surface:** every rule is either validated or documented as a spec-cited permanent limitation with a v1.0 freeze decision — the conditional-completeness register (`docs/design/conditional-completeness-audit.md`) + the permanent-limitations register (`docs/design/permanent-limitations-register.md`).
+- **M3 — API stabilisation:** ADR-014 evolution policy, the public-surface inventory (`docs/design/public-api-surface.md`), and the finalised versioning contract (`Migration.md`).
+- **M4 — Distribution:** the external IP review has **cleared** — the first public push is unblocked.
+
+No source change vs `v0.19.0`; v1.0.0 is the stability-commitment tag. The v1.0 public surface: `Parser` / `BatchParser` / `StreamingBatchParser`, `MessageBuilder`, path + typed-accessor APIs, 15 typed segments + 16 typed composites, `Validator` (+ `HL7Locale.auLocalisation`), and the MLLP codec. Tests: 501 across 26 suites.
+
+### Capability summary (shipped across 0.1 → 0.19, frozen at 1.0)
+
+- Lossless parse ↔ serialise round-trip; BOM/NUL hardening; character-set detection (UTF-8 / ASCII / ISO-8859-1).
+- Validation DSL: same-segment compound predicates, cross-segment / message-context / segment-presence atoms, subcomponent-granular field-refs, group-scope cardinality, component-level required-component checks.
+- AU ADRM-2021 profile (HL7au:000003–000008, 000040–000042, machine-checkable 00044.* CE/CNE/CWE narrowings).
+- `FieldOptionality` R/O/C/X/B/W; codegen'd typed segments + composites; zero runtime dependencies.
+
 ## [0.19.0] — 2026-07-09
 
 req-#1 feature-completeness — extend the canonical v2.5.1 NK1 / PV1 / IN1 schemas to their full HL7 field set. Since the canonical version drives the typed-segment structs, this delivers the full typed-accessor surface for these three segments. **Additive only** (ADR-014 §open): typed structs gain accessors; no existing accessor changes; the v2.5.1 grammar table gains fields. Tests: 499 → 501 across 26 suites.
