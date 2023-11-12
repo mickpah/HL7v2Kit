@@ -3,109 +3,42 @@
   "version": "2.3",
   "description": "Next of Kin / Associated Parties",
   "fields": [
-    {
-      "index": 1,
-      "swiftName": "setID",
-      "name": "Set ID - NK1",
-      "dataType": "SI",
-      "optionality": "R",
-      "repeatability": "1"
-    },
-    {
-      "index": 2,
-      "swiftName": "name",
-      "name": "Name",
-      "dataType": "XPN",
-      "optionality": "O",
-      "repeatability": "*"
-    },
-    {
-      "index": 3,
-      "swiftName": "relationship",
-      "name": "Relationship",
-      "dataType": "CE",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 4,
-      "swiftName": "address",
-      "name": "Address",
-      "dataType": "XAD",
-      "optionality": "O",
-      "repeatability": "*"
-    },
-    {
-      "index": 5,
-      "swiftName": "phoneNumber",
-      "name": "Phone Number",
-      "dataType": "XTN",
-      "optionality": "O",
-      "repeatability": "*"
-    },
-    {
-      "index": 6,
-      "swiftName": "businessPhoneNumber",
-      "name": "Business Phone Number",
-      "dataType": "XTN",
-      "optionality": "O",
-      "repeatability": "*"
-    },
-    {
-      "index": 7,
-      "swiftName": "contactRole",
-      "name": "Contact Role",
-      "dataType": "CE",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 8,
-      "swiftName": "startDate",
-      "name": "Start Date",
-      "dataType": "DT",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 9,
-      "swiftName": "endDate",
-      "name": "End Date",
-      "dataType": "DT",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 10,
-      "swiftName": "nextOfKinJobTitle",
-      "name": "Next of Kin / Associated Parties Job Title",
-      "dataType": "ST",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 11,
-      "swiftName": "nextOfKinJobCodeClass",
-      "name": "Next of Kin / Associated Parties Job Code/Class",
-      "dataType": "JCC",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 12,
-      "swiftName": "nextOfKinEmployeeNumber",
-      "name": "Next of Kin / Associated Parties Employee Number",
-      "dataType": "CX",
-      "optionality": "O",
-      "repeatability": "1"
-    },
-    {
-      "index": 13,
-      "swiftName": "organizationName",
-      "name": "Organization Name - NK1",
-      "dataType": "XON",
-      "optionality": "O",
-      "repeatability": "*"
-    }
+    { "index": 1, "swiftName": "setID", "name": "Set ID - NK1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "name", "name": "Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "relationship", "name": "Relationship", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "address", "name": "Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "phoneNumber", "name": "Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "businessPhoneNumber", "name": "Business Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "contactRole", "name": "Contact Role", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "startDate", "name": "Start Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "endDate", "name": "End Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "nextOfKinJobTitle", "name": "Next of Kin / Associated Parties Job Title", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "nextOfKinJobCodeClass", "name": "Next of Kin / Associated Parties Job Code/Class", "dataType": "JCC", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "nextOfKinEmployeeNumber", "name": "Next of Kin / Associated Parties Employee Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "organizationName", "name": "Organization Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "maritalStatus", "name": "Marital Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "administrativeSex", "name": "Sex", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "dateTimeOfBirth", "name": "Date/Time of Birth", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "livingDependency", "name": "Living Dependency", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 18, "swiftName": "ambulatoryStatus", "name": "Ambulatory Status", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 19, "swiftName": "citizenship", "name": "Citizenship", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 20, "swiftName": "primaryLanguage", "name": "Primary Language", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "livingArrangement", "name": "Living Arrangement", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "publicityCode", "name": "Publicity Indicator", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "protectionIndicator", "name": "Protection Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "studentIndicator", "name": "Student Indicator", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "religion", "name": "Religion", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 26, "swiftName": "mothersMaidenName", "name": "Mother's Maiden Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
+    { "index": 27, "swiftName": "nationality", "name": "Nationality", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 28, "swiftName": "ethnicGroup", "name": "Ethnic Group", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 29, "swiftName": "contactReason", "name": "Contact Reason", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 30, "swiftName": "contactPersonsName", "name": "Contact Person's Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
+    { "index": 31, "swiftName": "contactPersonsTelephoneNumber", "name": "Contact Person's Telephone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 32, "swiftName": "contactPersonsAddress", "name": "Contact Person's Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 33, "swiftName": "nextOfKinAssociatedPartysIdentifiers", "name": "Next of Kin/Associated Party's Identifiers", "dataType": "CX", "optionality": "O", "repeatability": "*" },
+    { "index": 34, "swiftName": "jobStatus", "name": "Job Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 35, "swiftName": "race", "name": "Race", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 36, "swiftName": "handicap", "name": "Handicap", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 37, "swiftName": "contactPersonSocialSecurityNumber", "name": "Contact Person Social Security Number", "dataType": "ST", "optionality": "O", "repeatability": "1" }
   ]
 }

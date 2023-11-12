@@ -1,0 +1,21 @@
+{
+  "segmentID": "TQ1",
+  "version": "2.8.2",
+  "description": "TQ1",
+  "fields": [
+    { "index": 1, "swiftName": "setIdTq1", "name": "Set ID - TQ1", "dataType": "SI", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "quantity", "name": "Quantity", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "repeatPattern", "name": "Repeat Pattern", "dataType": "RPT", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "explicitTime", "name": "Explicit Time", "dataType": "TM", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "relativeTimeAndUnits", "name": "Relative Time and Units", "dataType": "CQ", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "serviceDuration", "name": "Service Duration", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "startDateTime", "name": "Start date/time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "endDateTime", "name": "End date/time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "priority", "name": "Priority", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "conditionText", "name": "Condition text", "dataType": "TX", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "textInstruction", "name": "Text instruction", "dataType": "TX", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "conjunction", "name": "Conjunction", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 13, "swiftName": "occurrenceDuration", "name": "Occurrence duration", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "totalOccurrences", "name": "Total occurrences", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "segmentID": "RXD",
+  "version": "2.3.1",
+  "description": "RXD",
+  "fields": [
+    { "index": 1, "swiftName": "dispenseSubIdCounter", "name": "Dispense Sub-ID Counter", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "dispenseGiveCode", "name": "Dispense/Give Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTimeDispensed", "name": "Date/Time Dispensed", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "actualDispenseAmount", "name": "Actual Dispense Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "actualDispenseUnits", "name": "Actual Dispense Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 6, "swiftName": "actualDosageForm", "name": "Actual Dosage Form", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "prescriptionNumber", "name": "Prescription Number", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 8, "swiftName": "numberOfRefillsRemaining", "name": "Number of Refills Remaining", "dataType": "NM", "optionality": "C", "repeatability": "1" },
+    { "index": 9, "swiftName": "dispenseNotes", "name": "Dispense Notes", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "dispensingProvider", "name": "Dispensing Provider", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "totalDailyDose", "name": "Total Daily Dose", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "dispenseToLocation", "name": "Dispense-to Location", "dataType": "CM", "optionality": "C", "repeatability": "1" },
+    { "index": 14, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "pharmacyTreatmentSupplierSSpecialDispensingInstructions", "name": "Pharmacy/Treatment Supplier's Special Dispensing Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 16, "swiftName": "actualStrength", "name": "Actual Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "actualStrengthUnit", "name": "Actual Strength Unit", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "substanceLotNumber", "name": "Substance Lot Number", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 19, "swiftName": "substanceExpirationDate", "name": "Substance Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "*" },
+    { "index": 20, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 21, "swiftName": "indication", "name": "Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 22, "swiftName": "dispensePackageSize", "name": "Dispense Package Size", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "dispensePackageSizeUnit", "name": "Dispense Package Size Unit", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "dispensePackageMethod", "name": "Dispense Package Method", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -10,9 +10,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-07-12 |
-| Current release | **`v1.1.0`** (on `private` only) — M5 foundation shipped (ADR-015 extraction pipeline + canonical corrections + 188-segment inventory). API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **M5 sweep (v1.2+)** — per-version segment depth off the inventory, starting with NK1/PV1/IN1. The v1.1 foundation (ADR-015 extraction pipeline + canonical corrections + 188-segment inventory) is done. Gates the first public push. |
+| Last updated | 2026-07-13 |
+| Current release | **`v1.2.0`** (on `private` only) — M5 sweep: 29 typed segments at full per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
+| Next planned cycle | **M5 sweep continues (v1.3+)** — the ~159 unmodelled segments by chapter/family off the inventory. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -70,10 +70,12 @@ The four themes below are roughly independent and can interleave across cycles. 
 ### M5 — Full HL7 segment coverage across all versions 🟠 **(foundation done v1.1; sweep ongoing — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
-- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: 15 typed segments (canonical v2.5.1 full + defect-clean; NK1/PV1/IN1 per-version still curated 13/20/25; ~173 segments unmodelled).
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **29 typed segments** (canonical v2.5.1 full + defect-clean; **NK1/PV1/IN1 full-depth on all 6 versions + 14 new segments, v1.2**; ~159 segments unmodelled).
 - **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
 - **✅ Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
-- **⬅ Sweep (ongoing, v1.2+):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded + human-verified, by chapter/family. **First: NK1/PV1/IN1 per-version depth** (v0.19 did canonical only; the extractor is proven on those tables).
+- **⬅ Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
+  - ✅ **v1.2:** NK1/PV1/IN1 per-version full depth (closes the immediate gap) + 14 new typed segments (PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG) full-depth on all versions → **29 typed segments**. Also an extractor legacy-CH4 reliability fix.
+  - **v1.3+ (next):** the ~159 unmodelled segments by chapter/family.
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
 ---

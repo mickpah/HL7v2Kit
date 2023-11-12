@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-07-13
+
+M5 sweep — typed-segment coverage **15 → 29**, all at full per-version depth. Additive /
+correctness only; the frozen v1.0 API grows but never breaks (ADR-014). Tests: 504 → **510**.
+
+### M5 sweep — 8 new order/pharmacy/timing segments + extractor reliability fix
+
+Third cycle of the M5 sweep. Adds **TQ1, TQ2, RXO, RXR, RXC, RXE, RXD, RXG** (CH04/CH04A)
+as typed segments — the typed-segment count goes **21 → 29** — each full-depth on every
+version it appears in. Tests: 507 → **510**.
+
+- **Canonical v2.5.1 depths:** TQ1 14, TQ2 10, RXO 28, RXR 6, RXC 9, RXE 44, RXD 33, RXG 26.
+  Per-version depths grow monotonically (RXE 30→45, RXO 22→36); TQ1/TQ2 are v2.5+.
+- **Extractor reliability fix:** SEQ detection now uses the first token before the DT
+  column, not a fixed header-offset slice — recovering legacy v2.3 CH4 tables (RXO/RXC/RXG)
+  that the old slice silently dropped, and correcting v2.3 RXR 6→4. Golden `--verify`
+  unaffected. A general fix for all legacy-chapter sweeps.
+- **Conditional-completeness:** these are HL7's most conditional-heavy segments — 31 new
+  C-without-expressible-trigger fields, bulk-documented in the register + the v2.8.2 guard
+  set (fail-safe, never shipped as rules; req #4).
+
+### M5 sweep — 6 new typed segments (PV2, MRG, DB1, GT1, IN2, IN3)
+
+Second cycle of the M5 sweep. Adds **PV2, MRG, DB1** (CH03) and **GT1, IN2, IN3** (CH06)
+as first-class typed segments — the typed-segment count goes **15 → 21**. Each is modelled
+at full field depth on every version it appears in (36 schemas: canonical v2.5.1 + 30
+per-version), extractor-seeded and golden-`--verify`ed. Auto-registered via the generated
+`SegmentRegistry`; additive API growth only (ADR-014). Tests: 505 → **507**.
+
+- **Canonical v2.5.1 depths:** PV2 49, MRG 7, DB1 8, GT1 57, IN2 72, IN3 25. Per-version
+  depths vary (e.g. PV2 37→50, GT1 55→57, IN3 25→27).
+- **Codegen:** now backtick-escapes Swift-keyword swiftNames (IN3-8 "Operator" →
+  `` `operator` ``) — general safety; grammar-table names stay faithful.
+- **Conditional-completeness:** PV2-1/45/47 are conditional-without-expressible-trigger —
+  added to the register + the v2.8.2 guard-test set (documented, fail-safe).
+- **Tooling:** the extractor gains a reusable `--emit-schema` seed generator.
+
+### M5 sweep — per-version NK1/PV1/IN1 full depth
+
+First segment-coverage cycle of the M5 sweep. Extends **NK1 / PV1 / IN1** from the
+curated caps (13 / 20 / 25) to **full per-version field depth** on every non-canonical
+version — closing the immediate coverage gap. Extractor-seeded (ADR-015 `--emit-schema`)
+and verified: all 15 schemas pass the golden `--verify` (DT/OPT/RP + counts). Additive,
+grammar-table-only — typed structs generate from canonical v2.5.1 (unchanged); the frozen
+v1.0 API is untouched (ADR-014). Tests: 504 → **505**.
+
+- **Full per-version depths** (field counts grow across the standard):
+  - v2.3 / v2.3.1 / v2.4 — NK1 **37**, PV1 **52**, IN1 **49**
+  - v2.6 — NK1 **39**, PV1 **52**, IN1 **53**
+  - v2.8.2 — NK1 **41**, PV1 **54**, IN1 **55**
+- **Version divergences captured verbatim:** v2.3-era coded fields stay `IS` (pre CE→CWE);
+  v2.6 CE→CWE + TS→DTM wave; v2.8.2 full CWE promotion, new NK1-40/41 telecommunication-info
+  fields, and `B`-demotion of the legacy phone fields.
+- **Tooling:** the extractor gains a reusable `--emit-schema` mode (swiftNames mapped from a
+  reference schema) + element-name glyph normalization; `MultiVersionTests` depth pins
+  updated + a new v1.2 divergence pin.
+
 ## [1.1.0] — 2026-07-12
 
 ### M5 foundation — extraction pipeline, canonical corrections, segment inventory (ADR-015)

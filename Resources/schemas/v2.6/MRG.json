@@ -1,0 +1,14 @@
+{
+  "segmentID": "MRG",
+  "version": "2.6",
+  "description": "MRG",
+  "fields": [
+    { "index": 1, "swiftName": "priorPatientIdentifierList", "name": "Prior Patient Identifier List", "dataType": "CX", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "priorAlternatePatientId", "name": "Prior Alternate Patient ID", "dataType": "CX", "optionality": "B", "repeatability": "*" },
+    { "index": 3, "swiftName": "priorPatientAccountNumber", "name": "Prior Patient Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "priorPatientId", "name": "Prior Patient ID", "dataType": "CX", "optionality": "B", "repeatability": "1" },
+    { "index": 5, "swiftName": "priorVisitNumber", "name": "Prior Visit Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "priorAlternateVisitId", "name": "Prior Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "priorPatientName", "name": "Prior Patient Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" }
+  ]
+}

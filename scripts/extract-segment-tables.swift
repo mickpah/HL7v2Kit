@@ -148,11 +148,18 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
     let line = raw.replacingOccurrences(of: "\t", with: "    ")
     let chars = Array(line)
     let nameStart = columns.first { $0.key == "NAME" }?.start ?? Int.max
-    let seqStart = columns.first { $0.key == "SEQ" }!.start
-    let seqEndCol = columns.first { $0.start > seqStart }?.start ?? seqStart + 6
-    guard seqStart < chars.count else { return nil }
-    let seqSlice = String(chars[seqStart..<min(seqEndCol, chars.count)]).trimmingCharacters(in: .whitespaces)
-    guard !seqSlice.isEmpty, seqSlice.allSatisfy({ $0.isNumber }), let n = Int(seqSlice) else { return nil }
+    // SEQ = the first whitespace-delimited token on the line, if it is a bare
+    // integer positioned before the DT column. Using the first token (not a fixed
+    // header-offset slice) is robust to values that sit slightly left/right of the
+    // "SEQ" label — a real v2.3-era layout where a fixed slice silently missed the
+    // number, dropped every row, and skipped the whole table. The DT-column bound
+    // rejects numeric continuation fragments (e.g. a lone "0328" under TBL#).
+    let dtStart = columns.first { $0.key == "DT" }?.start ?? Int.max
+    let lineRuns = runs(in: line)
+    guard let firstRun = lineRuns.first,
+          firstRun.start < dtStart,
+          firstRun.text.allSatisfy({ $0.isNumber }),
+          let n = Int(firstRun.text) else { return nil }
     var row = FieldRow(seq: n)
     let preNameLine = nameStart < chars.count ? String(chars[0..<nameStart]) : line
     for r in runs(in: preNameLine) {
@@ -170,8 +177,20 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         }
     }
     row.opt = normalizeOptionality(row.opt)
-    row.name = elementName(from: line, nameStart: nameStart)
+    row.name = normalizeName(elementName(from: line, nameStart: nameStart))
     return row
+}
+
+// Normalise cosmetic glyphs in element names for cross-version consistency with the
+// canonical schemas: curly apostrophes/quotes → straight; non-breaking space → space.
+func normalizeName(_ s: String) -> String {
+    return s
+        .replacingOccurrences(of: "\u{2019}", with: "'")   // ' right single quote
+        .replacingOccurrences(of: "\u{2018}", with: "'")   // ' left single quote
+        .replacingOccurrences(of: "\u{201C}", with: "\"")  // " left double quote
+        .replacingOccurrences(of: "\u{201D}", with: "\"")  // " right double quote
+        .replacingOccurrences(of: "\u{00A0}", with: " ")
+        .trimmingCharacters(in: .whitespaces)
 }
 
 // Normalise the OPT cell. HL7 attribute tables sometimes render a backward-compat
@@ -378,12 +397,68 @@ func verify(pdf: String, seg: String, schemaPath: String) -> Never {
     }
 }
 
+// MARK: - emit-schema mode (seed a Resources/schemas JSON from a PDF)
+
+// Derive a valid lowerCamelCase Swift identifier from an element name.
+func deriveSwiftName(_ name: String, used: inout Set<String>) -> String {
+    // split on non-alphanumerics, drop empties
+    let words = name.split { !($0.isLetter || $0.isNumber) }.map(String.init)
+    var camel = ""
+    for (i, w) in words.enumerated() {
+        let lw = w.lowercased()
+        if i == 0 { camel += lw }
+        else { camel += lw.prefix(1).uppercased() + lw.dropFirst() }
+    }
+    if camel.isEmpty { camel = "field" }
+    if let f = camel.first, f.isNumber { camel = "f" + camel }   // identifiers can't start with a digit
+    var candidate = camel
+    var n = 2
+    while used.contains(candidate) { candidate = "\(camel)\(n)"; n += 1 }
+    used.insert(candidate)
+    return candidate
+}
+
+// --emit-schema <pdf> <SEGID> <version> <reference-schema.json>
+// Emits a full Resources/schemas JSON to stdout: extractor DT/OPT/RP + swiftNames
+// mapped by index from the reference (canonical v2.5.1) schema, deriving new names
+// for version-specific trailing fields. A SEED for human spec-verification — not a
+// substitute for it (req #2/#4).
+func emitSchema(pdf: String, seg: String, version: String, refPath: String) -> Never {
+    let refData = FileManager.default.contents(atPath: refPath)
+    let refObj: [String: Any] = refData.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] } ?? [:]
+    let refFields = (refObj["fields"] as? [[String: Any]]) ?? []
+    var refSwift: [Int: String] = [:]
+    for f in refFields { if let i = f["index"] as? Int, let s = f["swiftName"] as? String { refSwift[i] = s } }
+    let description = (refObj["description"] as? String) ?? seg
+
+    let tables = extractTables(from: runPdftotext(pdf))
+    guard let table = tables.first(where: { $0.segHint.uppercased() == seg.uppercased() }) else {
+        FileHandle.standardError.write("emit-schema: no \(seg) table in \(pdf)\n".data(using: .utf8)!); exit(1)
+    }
+    var used = Set<String>()
+    // pre-seed used-set with the reference names we'll reuse, so derived names don't collide
+    for r in table.rows { if let s = refSwift[r.seq] { used.insert(s) } }
+    var lines: [String] = []
+    for r in table.rows {
+        let swiftName = refSwift[r.seq] ?? deriveSwiftName(r.name, used: &used)
+        let rep = repeatability(r.rp)
+        lines.append("    { \"index\": \(r.seq), \"swiftName\": \"\(jsonEscape(swiftName))\", \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(rep)\" }")
+    }
+    let out = "{\n  \"segmentID\": \"\(seg)\",\n  \"version\": \"\(version)\",\n  \"description\": \"\(jsonEscape(description))\",\n  \"fields\": [\n\(lines.joined(separator: ",\n"))\n  ]\n}"
+    print(out)
+    exit(0)
+}
+
 // MARK: - main
 
 let args = CommandLine.arguments
 if args.count >= 5, args[1] == "--verify" {
     // --verify <pdf> <SEGID> <schema.json>
     verify(pdf: args[2], seg: args[3], schemaPath: args[4])
+}
+if args.count >= 6, args[1] == "--emit-schema" {
+    // --emit-schema <pdf> <SEGID> <version> <reference-schema.json>
+    emitSchema(pdf: args[2], seg: args[3], version: args[4], refPath: args[5])
 }
 guard args.count >= 2 else {
     FileHandle.standardError.write("""

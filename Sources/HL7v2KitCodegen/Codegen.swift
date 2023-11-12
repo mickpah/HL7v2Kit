@@ -81,6 +81,21 @@ let compositeDataTypes: Set<String> = [
 /// contract for an absent field.
 let canonicalVersion = "2.5.1"
 
+/// Swift keywords that can't be bare identifiers — a schema field whose derived
+/// swiftName collides (e.g. IN3-8 "Operator" → `operator`) is emitted backtick-escaped.
+let swiftKeywords: Set<String> = [
+    "operator", "class", "struct", "enum", "protocol", "extension", "func", "var", "let",
+    "if", "else", "switch", "case", "default", "for", "while", "repeat", "do", "return",
+    "break", "continue", "guard", "defer", "in", "where", "as", "is", "try", "throw",
+    "throws", "rethrows", "init", "deinit", "self", "super", "nil", "true", "false",
+    "import", "typealias", "associatedtype", "public", "private", "internal", "fileprivate",
+    "static", "final", "lazy", "weak", "unowned", "some", "any", "inout", "subscript",
+]
+
+func escapedIdentifier(_ s: String) -> String {
+    swiftKeywords.contains(s) ? "`\(s)`" : s
+}
+
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String
     let body: String
@@ -100,7 +115,7 @@ func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     }
     return """
         /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(docTail)
-        public var \(field.swiftName): \(returnType) {
+        public var \(escapedIdentifier(field.swiftName)): \(returnType) {
             \(body)
         }
     """

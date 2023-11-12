@@ -1304,4 +1304,100 @@ struct TypedSegmentTests {
         #expect(table["PV1"]?.field(45)?.repeatability == .multiple)  // Discharge Date/Time (Y)
         #expect(table["PV1"]?.field(50)?.repeatability == .single)    // Alternate Visit ID (blank, was over-marked)
     }
+
+    // v1.2 (M5 sweep): 6 new typed segments — PV2, MRG, DB1 (CH03) + GT1, IN2,
+    // IN3 (CH06). Canonical v2.5.1 depths pinned; hydration via the auto-generated
+    // registry confirmed; typed accessor ↔ path access agreement checked.
+    @Test("v1.2: new segments PV2/MRG/DB1/GT1/IN2/IN3 — canonical depths + registration")
+    func v1_2NewSegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["PV2"]?.fields.count == 49)
+        #expect(t["MRG"]?.fields.count == 7)
+        #expect(t["DB1"]?.fields.count == 8)
+        #expect(t["GT1"]?.fields.count == 57)
+        #expect(t["IN2"]?.fields.count == 72)
+        #expect(t["IN3"]?.fields.count == 25)
+        // IN3-8 "Operator" — swiftName is the Swift keyword `operator`, emitted
+        // backtick-escaped by codegen; the grammar name stays faithful.
+        #expect(t["IN3"]?.field(8)?.name == "Operator")
+    }
+
+    @Test("v1.2: new segments hydrate as .typed and agree with path access")
+    func v1_2NewSegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
+            + "PID|1||X^^^F^MR||Doe^Jane\r"
+            + "PV2||||||||||||Annual checkup\r"          // PV2-12 Visit Description (ST)
+            + "MRG|OLD123^^^F^MR\r"                        // MRG-1 Prior Patient Identifier List (CX)
+            + "DB1|1\r"                                    // DB1-1 Set ID (SI)
+            + "GT1|1\r"                                    // GT1-1 Set ID (SI)
+            + "IN2\r" + "IN3|1\r"
+        let message = try Parser().parse(wire)
+
+        let pv2 = try #require(message.firstSegment(PV2.self))
+        #expect(pv2.visitDescription == "Annual checkup")
+        #expect(pv2.visitDescription == message["PV2-12"])
+
+        let gt1 = try #require(message.firstSegment(GT1.self))
+        #expect(gt1.setIdGt1 == "1")
+        #expect(gt1.setIdGt1 == message["GT1-1"])
+
+        // The rest hydrate as .typed via the auto-generated registry.
+        #expect(message.firstSegment(MRG.self) != nil)
+        #expect(message.firstSegment(DB1.self) != nil)
+        #expect(message.firstSegment(IN2.self) != nil)
+        #expect(message.firstSegment(IN3.self) != nil)
+    }
+
+    // v1.2 (M5 sweep): 8 new order/pharmacy/timing typed segments — TQ1, TQ2, RXO,
+    // RXR, RXC, RXE, RXD, RXG (CH04). Typed count 21 → 29.
+    @Test("v1.2: order/pharmacy segments — canonical depths + registration")
+    func v1_2PharmacySegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["TQ1"]?.fields.count == 14)
+        #expect(t["TQ2"]?.fields.count == 10)
+        #expect(t["RXO"]?.fields.count == 28)
+        #expect(t["RXR"]?.fields.count == 6)
+        #expect(t["RXC"]?.fields.count == 9)
+        #expect(t["RXE"]?.fields.count == 44)
+        #expect(t["RXD"]?.fields.count == 33)
+        #expect(t["RXG"]?.fields.count == 26)
+    }
+
+    @Test("v1.2: order/pharmacy segments hydrate as .typed and agree with path access")
+    func v1_2PharmacySegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.5.1\r"
+            + "TQ1|1\r"                                     // TQ1-1 Set ID (SI)
+            + "RXR|PO\r"                                    // RXR-1 Route (CE) — component .id = "PO"
+            + "TQ2\r" + "RXO\r" + "RXC\r" + "RXE\r" + "RXD\r" + "RXG\r"
+        let message = try Parser().parse(wire)
+
+        let tq1 = try #require(message.firstSegment(TQ1.self))
+        #expect(tq1.setIdTq1 == "1")
+        #expect(tq1.setIdTq1 == message["TQ1-1"])
+
+        // All 8 hydrate as .typed via the auto-generated registry.
+        #expect(message.firstSegment(TQ2.self) != nil)
+        #expect(message.firstSegment(RXO.self) != nil)
+        #expect(message.firstSegment(RXR.self) != nil)
+        #expect(message.firstSegment(RXC.self) != nil)
+        #expect(message.firstSegment(RXE.self) != nil)
+        #expect(message.firstSegment(RXD.self) != nil)
+        #expect(message.firstSegment(RXG.self) != nil)
+    }
+
+    // v1.2: per-version depth grows monotonically for the pharmacy family
+    // (extractor SEQ-detection fix recovered the v2.3 CH4 tables that a fixed-offset
+    // slice had silently dropped).
+    @Test("v1.2: pharmacy per-version depths (RXE / RXO across versions)")
+    func v1_2PharmacyPerVersion() {
+        #expect(SegmentGrammarTable.v2_3["RXE"]?.fields.count == 30)
+        #expect(SegmentGrammarTable.v2_4["RXE"]?.fields.count == 31)
+        #expect(SegmentGrammarTable.v2_6["RXE"]?.fields.count == 44)
+        #expect(SegmentGrammarTable.v2_8_2["RXE"]?.fields.count == 45)
+        #expect(SegmentGrammarTable.v2_3["RXO"]?.fields.count == 22)
+        #expect(SegmentGrammarTable.v2_8_2["RXO"]?.fields.count == 36)
+        // TQ1/TQ2 are v2.5+ — absent on the older tables.
+        #expect(SegmentGrammarTable.v2_3["TQ1"] == nil)
+        #expect(SegmentGrammarTable.v2_6["TQ1"]?.fields.count == 14)
+    }
 }

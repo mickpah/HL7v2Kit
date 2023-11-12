@@ -1,0 +1,31 @@
+{
+  "segmentID": "RXO",
+  "version": "2.4",
+  "description": "RXO",
+  "fields": [
+    { "index": 1, "swiftName": "requestedGiveCode", "name": "Requested Give Code", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "requestedGiveAmountMinimum", "name": "Requested Give Amount - Minimum", "dataType": "NM", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "requestedGiveAmountMaximum", "name": "Requested Give Amount - Maximum", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "requestedGiveUnits", "name": "Requested Give Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "requestedDosageForm", "name": "Requested Dosage Form", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 6, "swiftName": "providerSPharmacyTreatmentInstructions", "name": "Provider's Pharmacy/Treatment Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "providerSAdministrationInstructions", "name": "Provider's Administration Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "deliverToLocation", "name": "Deliver-To Location", "dataType": "CM", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "allowSubstitutions", "name": "Allow Substitutions", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "requestedDispenseCode", "name": "Requested Dispense Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "requestedDispenseAmount", "name": "Requested Dispense Amount", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "requestedDispenseUnits", "name": "Requested Dispense Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "numberOfRefills", "name": "Number Of Refills", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "orderingProviderSDeaNumber", "name": "Ordering Provider's DEA Number", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
+    { "index": 15, "swiftName": "pharmacistTreatmentSupplierSVerifierId", "name": "Pharmacist/Treatment Supplier's Verifier ID", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
+    { "index": 16, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "requestedGivePerTimeUnit", "name": "Requested Give Per (Time Unit)", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 18, "swiftName": "requestedGiveStrength", "name": "Requested Give Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "requestedGiveStrengthUnits", "name": "Requested Give Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "indication", "name": "Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 21, "swiftName": "requestedGiveRateAmount", "name": "Requested Give Rate Amount", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "requestedGiveRateUnits", "name": "Requested Give Rate Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "totalDailyDose", "name": "Total Daily Dose", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "supplementaryCode", "name": "Supplementary Code", "dataType": "CE", "optionality": "O", "repeatability": "*" }
+  ]
+}

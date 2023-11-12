@@ -1,0 +1,13 @@
+{
+  "segmentID": "RXC",
+  "version": "2.3.1",
+  "description": "RXC",
+  "fields": [
+    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}
