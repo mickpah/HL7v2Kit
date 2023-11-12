@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-07-13
+
+M5 sweep — typed-segment coverage **15 → 29**, all at full per-version depth. Additive /
+correctness only; the frozen v1.0 API grows but never breaks (ADR-014). Tests: 504 → **510**.
+
 ### M5 sweep — 8 new order/pharmacy/timing segments + extractor reliability fix
 
 Third cycle of the M5 sweep. Adds **TQ1, TQ2, RXO, RXR, RXC, RXE, RXD, RXG** (CH04/CH04A)
