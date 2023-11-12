@@ -962,6 +962,14 @@ struct MultiVersionTests {
             // Code (45), Expected LOA Return Date/Time (47) are conditional in the
             // spec with no field-machine-expressible trigger (documented limitation).
             "PV2-1", "PV2-45", "PV2-47",
+            // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
+            // dispense fields and TQ1/TQ2 timing fields are conditional on
+            // data-nature / cross-segment context, not a same-segment predicate
+            // (bulk-documented in conditional-completeness-audit.md).
+            "TQ1-12", "TQ2-3", "TQ2-4", "TQ2-5", "TQ2-6", "TQ2-7", "TQ2-10",
+            "RXO-1", "RXO-2", "RXO-4", "RXO-5", "RXO-15", "RXO-17", "RXO-31",
+            "RXE-10", "RXE-11", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
+            "RXD-5", "RXD-8", "RXG-14", "RXG-32", "RXG-33", "RXC-10", "RXC-11",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

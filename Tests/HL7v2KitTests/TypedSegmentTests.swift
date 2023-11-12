@@ -1347,4 +1347,57 @@ struct TypedSegmentTests {
         #expect(message.firstSegment(IN2.self) != nil)
         #expect(message.firstSegment(IN3.self) != nil)
     }
+
+    // v1.2 (M5 sweep): 8 new order/pharmacy/timing typed segments — TQ1, TQ2, RXO,
+    // RXR, RXC, RXE, RXD, RXG (CH04). Typed count 21 → 29.
+    @Test("v1.2: order/pharmacy segments — canonical depths + registration")
+    func v1_2PharmacySegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["TQ1"]?.fields.count == 14)
+        #expect(t["TQ2"]?.fields.count == 10)
+        #expect(t["RXO"]?.fields.count == 28)
+        #expect(t["RXR"]?.fields.count == 6)
+        #expect(t["RXC"]?.fields.count == 9)
+        #expect(t["RXE"]?.fields.count == 44)
+        #expect(t["RXD"]?.fields.count == 33)
+        #expect(t["RXG"]?.fields.count == 26)
+    }
+
+    @Test("v1.2: order/pharmacy segments hydrate as .typed and agree with path access")
+    func v1_2PharmacySegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.5.1\r"
+            + "TQ1|1\r"                                     // TQ1-1 Set ID (SI)
+            + "RXR|PO\r"                                    // RXR-1 Route (CE) — component .id = "PO"
+            + "TQ2\r" + "RXO\r" + "RXC\r" + "RXE\r" + "RXD\r" + "RXG\r"
+        let message = try Parser().parse(wire)
+
+        let tq1 = try #require(message.firstSegment(TQ1.self))
+        #expect(tq1.setIdTq1 == "1")
+        #expect(tq1.setIdTq1 == message["TQ1-1"])
+
+        // All 8 hydrate as .typed via the auto-generated registry.
+        #expect(message.firstSegment(TQ2.self) != nil)
+        #expect(message.firstSegment(RXO.self) != nil)
+        #expect(message.firstSegment(RXR.self) != nil)
+        #expect(message.firstSegment(RXC.self) != nil)
+        #expect(message.firstSegment(RXE.self) != nil)
+        #expect(message.firstSegment(RXD.self) != nil)
+        #expect(message.firstSegment(RXG.self) != nil)
+    }
+
+    // v1.2: per-version depth grows monotonically for the pharmacy family
+    // (extractor SEQ-detection fix recovered the v2.3 CH4 tables that a fixed-offset
+    // slice had silently dropped).
+    @Test("v1.2: pharmacy per-version depths (RXE / RXO across versions)")
+    func v1_2PharmacyPerVersion() {
+        #expect(SegmentGrammarTable.v2_3["RXE"]?.fields.count == 30)
+        #expect(SegmentGrammarTable.v2_4["RXE"]?.fields.count == 31)
+        #expect(SegmentGrammarTable.v2_6["RXE"]?.fields.count == 44)
+        #expect(SegmentGrammarTable.v2_8_2["RXE"]?.fields.count == 45)
+        #expect(SegmentGrammarTable.v2_3["RXO"]?.fields.count == 22)
+        #expect(SegmentGrammarTable.v2_8_2["RXO"]?.fields.count == 36)
+        // TQ1/TQ2 are v2.5+ — absent on the older tables.
+        #expect(SegmentGrammarTable.v2_3["TQ1"] == nil)
+        #expect(SegmentGrammarTable.v2_6["TQ1"]?.fields.count == 14)
+    }
 }

@@ -148,11 +148,18 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
     let line = raw.replacingOccurrences(of: "\t", with: "    ")
     let chars = Array(line)
     let nameStart = columns.first { $0.key == "NAME" }?.start ?? Int.max
-    let seqStart = columns.first { $0.key == "SEQ" }!.start
-    let seqEndCol = columns.first { $0.start > seqStart }?.start ?? seqStart + 6
-    guard seqStart < chars.count else { return nil }
-    let seqSlice = String(chars[seqStart..<min(seqEndCol, chars.count)]).trimmingCharacters(in: .whitespaces)
-    guard !seqSlice.isEmpty, seqSlice.allSatisfy({ $0.isNumber }), let n = Int(seqSlice) else { return nil }
+    // SEQ = the first whitespace-delimited token on the line, if it is a bare
+    // integer positioned before the DT column. Using the first token (not a fixed
+    // header-offset slice) is robust to values that sit slightly left/right of the
+    // "SEQ" label — a real v2.3-era layout where a fixed slice silently missed the
+    // number, dropped every row, and skipped the whole table. The DT-column bound
+    // rejects numeric continuation fragments (e.g. a lone "0328" under TBL#).
+    let dtStart = columns.first { $0.key == "DT" }?.start ?? Int.max
+    let lineRuns = runs(in: line)
+    guard let firstRun = lineRuns.first,
+          firstRun.start < dtStart,
+          firstRun.text.allSatisfy({ $0.isNumber }),
+          let n = Int(firstRun.text) else { return nil }
     var row = FieldRow(seq: n)
     let preNameLine = nameStart < chars.count ? String(chars[0..<nameStart]) : line
     for r in runs(in: preNameLine) {

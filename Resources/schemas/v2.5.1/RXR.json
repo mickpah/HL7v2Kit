@@ -1,0 +1,13 @@
+{
+  "segmentID": "RXR",
+  "version": "2.5.1",
+  "description": "Pharmacy/Treatment Route",
+  "fields": [
+    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "administrationSite", "name": "Administration Site", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "administrationSiteModifier", "name": "Administration Site Modifier", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}

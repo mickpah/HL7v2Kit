@@ -30,6 +30,7 @@
 | PV2-1 | Prior Pending Location | v2.3–v2.8.2 | Permanent limitation (v1.2) |
 | PV2-45 | Advance Directive Code | v2.6, v2.8.2 | Permanent limitation (v1.2) |
 | PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | Permanent limitation (v1.2) |
+| RXO/RXE/RXD/RXG/RXC/TQ1/TQ2 (31 fields) | order/pharmacy/timing conditionals | v2.3–v2.8.2 | Permanent limitation (v1.2, grouped below) |
 
 ## Shipped in v0.16 (S2)
 
@@ -70,6 +71,17 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 - **PV2-45 Advance Directive Code** (v2.6, v2.8.2) — mirrors PD1-15's conditionality but PV2 carries no PV2-side "last verified date" peer to gate on; descriptive, no same-segment MUST.
 - **PV2-47 Expected LOA Return Date/Time** (v2.4–v2.8.2) — required only for a leave-of-absence visit; the LOA nature is not encoded in a same-segment peer field.
 
+**Order/pharmacy & timing family (added v1.2 when TQ1/TQ2/RXO/RXE/RXD/RXG/RXC were modelled — CH04/CH04A):**
+
+These segments are the most conditional-heavy in HL7. Every `C` field below is conditional on **data-nature** (e.g. "give amount minimum vs. maximum", "dispense vs. give") or **cross-segment order context** (the RXO/RXE pair, ORC control code), none of which is a same-segment field-machine predicate — so all are fail-safe documented limitations, consistent with the OBR/OBX rationale above. (v2.8.2 indices; equivalent positions carry across the versions each segment appears in.)
+
+- **RXO** (Pharmacy/Treatment Order) — 1 Requested Give Code, 2/4/5 give-amount/units, 15/17 dispense/give-per, 31 — conditional on the give-vs-dispense encoding split with RXE.
+- **RXE** (Encoded Order) — 10/11/15/16/17/18/19/22 — give-amount/timing/provider fields required per the encoded-order completion rules.
+- **RXD** (Dispense) — 5/8; **RXG** (Give) — 14/32/33; **RXC** (Component) — 10/11 — dispense/give/component-level conditionals.
+- **TQ1** (Timing/Quantity) — 12; **TQ2** (Timing/Quantity Relationship) — 3/4/5/6/7/10 — sequencing/relationship fields conditional on the presence of a related timing segment.
+
+**Model-extension watch (req #3):** several of these have real triggers that a *cross-segment* predicate could express (the RXO↔RXE pairing especially). Modelling them is a candidate for a future DSL/analysis cycle; until then they remain fail-safe (never misfire) and are recorded here, not shipped as unconditional rules (req #4).
+
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
@@ -77,6 +89,6 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 ## Outcome
 
 - **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **18 positions documented** as permanent limitations with per-field rationale (15 at M2 + PV2-1/45/47 added in the v1.2 sweep); all are fail-safe (treated as optional) and none misfires.
+- **49 positions documented** as permanent limitations with per-field rationale (15 at M2; +PV2-1/45/47 and +31 order/pharmacy/timing fields in the v1.2 sweep); all are fail-safe (treated as optional) and none misfires.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

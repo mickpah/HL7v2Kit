@@ -32,6 +32,14 @@ extension SegmentRegistry {
         case PID.segmentID: return .typed(AnyTypedSegment(PID(fields: unknown.fields)))
         case PV1.segmentID: return .typed(AnyTypedSegment(PV1(fields: unknown.fields)))
         case PV2.segmentID: return .typed(AnyTypedSegment(PV2(fields: unknown.fields)))
+        case RXC.segmentID: return .typed(AnyTypedSegment(RXC(fields: unknown.fields)))
+        case RXD.segmentID: return .typed(AnyTypedSegment(RXD(fields: unknown.fields)))
+        case RXE.segmentID: return .typed(AnyTypedSegment(RXE(fields: unknown.fields)))
+        case RXG.segmentID: return .typed(AnyTypedSegment(RXG(fields: unknown.fields)))
+        case RXO.segmentID: return .typed(AnyTypedSegment(RXO(fields: unknown.fields)))
+        case RXR.segmentID: return .typed(AnyTypedSegment(RXR(fields: unknown.fields)))
+        case TQ1.segmentID: return .typed(AnyTypedSegment(TQ1(fields: unknown.fields)))
+        case TQ2.segmentID: return .typed(AnyTypedSegment(TQ2(fields: unknown.fields)))
         default:
             return nil
         }

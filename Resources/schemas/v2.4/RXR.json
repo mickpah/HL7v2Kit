@@ -1,0 +1,12 @@
+{
+  "segmentID": "RXR",
+  "version": "2.4",
+  "description": "RXR",
+  "fields": [
+    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "administrationSite", "name": "Administration Site", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}
