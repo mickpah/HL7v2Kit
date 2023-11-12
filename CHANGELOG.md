@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — per-version NK1/PV1/IN1 full depth
+
+First segment-coverage cycle of the M5 sweep. Extends **NK1 / PV1 / IN1** from the
+curated caps (13 / 20 / 25) to **full per-version field depth** on every non-canonical
+version — closing the immediate coverage gap. Extractor-seeded (ADR-015 `--emit-schema`)
+and verified: all 15 schemas pass the golden `--verify` (DT/OPT/RP + counts). Additive,
+grammar-table-only — typed structs generate from canonical v2.5.1 (unchanged); the frozen
+v1.0 API is untouched (ADR-014). Tests: 504 → **505**.
+
+- **Full per-version depths** (field counts grow across the standard):
+  - v2.3 / v2.3.1 / v2.4 — NK1 **37**, PV1 **52**, IN1 **49**
+  - v2.6 — NK1 **39**, PV1 **52**, IN1 **53**
+  - v2.8.2 — NK1 **41**, PV1 **54**, IN1 **55**
+- **Version divergences captured verbatim:** v2.3-era coded fields stay `IS` (pre CE→CWE);
+  v2.6 CE→CWE + TS→DTM wave; v2.8.2 full CWE promotion, new NK1-40/41 telecommunication-info
+  fields, and `B`-demotion of the legacy phone fields.
+- **Tooling:** the extractor gains a reusable `--emit-schema` mode (swiftNames mapped from a
+  reference schema) + element-name glyph normalization; `MultiVersionTests` depth pins
+  updated + a new v1.2 divergence pin.
+
 ## [1.1.0] — 2026-07-12
 
 ### M5 foundation — extraction pipeline, canonical corrections, segment inventory (ADR-015)
