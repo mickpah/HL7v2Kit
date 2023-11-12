@@ -80,7 +80,7 @@ struct MultiVersionTests {
         #expect(table["ERR"]?.fields.count == 1)    // single CM field, as in v2.4
         #expect(table["PD1"]?.fields.count == 12)   // v2.4 expanded to 21
         #expect(table["DG1"]?.fields.count == 19)
-        #expect(table["IN1"]?.fields.count == 25)
+        #expect(table["IN1"]?.fields.count == 49)   // v1.2: full per-version depth (was curated 25)
         // v2.3.1 errata delta vs v2.3: DG1-15 Diagnosis Priority retyped
         // NM → ID, and IN1-17 Insured's Relationship retyped IS → CE.
         #expect(table["DG1"]?.field(15)?.dataType == "ID")
@@ -209,8 +209,8 @@ struct MultiVersionTests {
         #expect(table["ORC"]?.fields.count == 19)   // v2.3.1 was 17, v2.5.1 is 31
         #expect(table["OBX"]?.fields.count == 16)   // v2.3.1 was 14, v2.5.1 is 17
         #expect(table["OBR"]?.fields.count == 47)   // matches v2.5.1
-        #expect(table["NK1"]?.fields.count == 13)
-        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["NK1"]?.fields.count == 37)   // v1.2: full per-version depth (was curated 13)
+        #expect(table["PV1"]?.fields.count == 52)   // v1.2: full per-version depth (was curated 20)
         #expect(table["NTE"]?.fields.count == 3)    // NTE-4 was added in v2.5
         #expect(table["AL1"]?.fields.count == 6)
         // v0.6 T-back-port additions:
@@ -219,7 +219,7 @@ struct MultiVersionTests {
         #expect(table["ERR"]?.fields.count == 1)    // v2.4 had only ERR-1 (CM); v2.5+ expanded to 12
         #expect(table["PD1"]?.fields.count == 21)
         #expect(table["DG1"]?.fields.count == 19)   // v2.5.1 added DG1-20/21
-        #expect(table["IN1"]?.fields.count == 25)
+        #expect(table["IN1"]?.fields.count == 49)   // v1.2: full per-version depth (was curated 25)
     }
 
     @Test("v2.4 typed accessors for v2.5-only PID fields return nil on a v2.4 wire")
@@ -290,8 +290,8 @@ struct MultiVersionTests {
         #expect(table["ORC"]?.fields.count == 17)   // same as v2.3.1
         #expect(table["OBX"]?.fields.count == 11)   // smallest OBX (v2.3 added 12/13/14 later)
         #expect(table["OBR"]?.fields.count == 43)   // same as v2.3.1
-        #expect(table["NK1"]?.fields.count == 13)
-        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["NK1"]?.fields.count == 37)   // v1.2: full per-version depth (was curated 13)
+        #expect(table["PV1"]?.fields.count == 52)   // v1.2: full per-version depth (was curated 20)
         #expect(table["NTE"]?.fields.count == 3)
         #expect(table["AL1"]?.fields.count == 6)
         // v0.12 T-back-port additions:
@@ -300,7 +300,7 @@ struct MultiVersionTests {
         #expect(table["ERR"]?.fields.count == 1)
         #expect(table["PD1"]?.fields.count == 12)
         #expect(table["DG1"]?.fields.count == 19)
-        #expect(table["IN1"]?.fields.count == 25)
+        #expect(table["IN1"]?.fields.count == 49)   // v1.2: full per-version depth (was curated 25)
         // v2.3 (pre-errata) divergences vs v2.3.1: DG1-15 Diagnosis
         // Priority is NM (v2.3.1 retyped to ID); IN1-17 Insured's
         // Relationship is IS (v2.3.1 retyped to CE).
@@ -477,10 +477,10 @@ struct MultiVersionTests {
     func v26GrammarTableS2aPopulated() {
         let table = SegmentGrammarTable.v2_6
         // Field counts vs v2.5.1: PD1 22 (was 21; +PD1-22 Advance Directive
-        // Last Verified Date), NK1 13, PV1 20, AL1 6 (curation depths held).
+        // Last Verified Date), NK1 39, PV1 52 (v1.2 full per-version depth), AL1 6.
         #expect(table["PD1"]?.fields.count == 22)
-        #expect(table["NK1"]?.fields.count == 13)
-        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["NK1"]?.fields.count == 39)   // v1.2: full per-version depth (was curated 13)
+        #expect(table["PV1"]?.fields.count == 52)   // v1.2: full per-version depth (was curated 20)
         #expect(table["AL1"]?.fields.count == 6)
         // v2.6 CE → CWE migrations (field-by-field, verified against the
         // v2.6 CH03 tables — NOT a blanket rename):
@@ -628,7 +628,7 @@ struct MultiVersionTests {
     func v26GrammarTableS4IN1Populated() {
         let table = SegmentGrammarTable.v2_6
         let in1 = table["IN1"]
-        #expect(in1?.fields.count == 25)   // scope mirrors the v2.5.1 IN1 schema
+        #expect(in1?.fields.count == 53)   // v1.2: full per-version depth (was curated 25)
         #expect(in1?.field(2)?.dataType == "CWE")   // Insurance Plan ID CE→CWE
         #expect(in1?.field(17)?.dataType == "CWE")  // Insured's Relationship CE→CWE
         #expect(in1?.field(18)?.dataType == "DTM")  // Insured's DOB TS→DTM
@@ -742,11 +742,11 @@ struct MultiVersionTests {
     func v282GrammarTableS2Populated() {
         let table = SegmentGrammarTable.v2_8_2
         // Field counts: PID 40 (was 39; +PID-40 Telecommunication Info), PD1 22,
-        // NK1 13 (curated), PV1 20 (curated), AL1 6.
+        // NK1 41 (+40/41 telecom info), PV1 54 (v1.2 full per-version depth), AL1 6.
         #expect(table["PID"]?.fields.count == 40)
         #expect(table["PD1"]?.fields.count == 22)
-        #expect(table["NK1"]?.fields.count == 13)
-        #expect(table["PV1"]?.fields.count == 20)
+        #expect(table["NK1"]?.fields.count == 41)   // v1.2: full per-version depth (was curated 13)
+        #expect(table["PV1"]?.fields.count == 54)   // v1.2: full per-version depth (was curated 20)
         #expect(table["AL1"]?.fields.count == 6)
 
         // PID: IS→CWE on 8/32; B→W on 2/4/9/12/19/20/28; O→B on 13/14;
@@ -846,7 +846,7 @@ struct MultiVersionTests {
     func v282GrammarTableS4Populated() {
         let table = SegmentGrammarTable.v2_8_2
         #expect(table["DG1"]?.fields.count == 26)
-        #expect(table["IN1"]?.fields.count == 25)   // curated scope mirrors v2.6
+        #expect(table["IN1"]?.fields.count == 55)   // v1.2: full per-version depth (was curated 25)
 
         // DG1: IS→CWE on 6/17/25/26; ID→NM on 15; DG1-22 O→C; withdrawn
         // block 2/4/7..14 held; P12 conditions on 20/21 carried.
@@ -967,5 +967,33 @@ struct MultiVersionTests {
         }
         #expect(actual == expected,
                 "v2.8.2 C-without-condition set drifted from the audit register; got \(actual.sorted())")
+    }
+
+    // v1.2 (M5 sweep): NK1/PV1/IN1 extended from curated (13/20/25) to full
+    // per-version depth on every non-canonical version, extractor-seeded +
+    // spec-verified. These pins lock the newly-exposed depth + divergences.
+    @Test("v1.2: per-version NK1/PV1/IN1 reach full depth with correct version divergences")
+    func v1_2PerVersionFullDepth() {
+        // Full depths per version (grow across the standard).
+        #expect(SegmentGrammarTable.v2_3["NK1"]?.fields.count == 37)
+        #expect(SegmentGrammarTable.v2_3["IN1"]?.fields.count == 49)
+        #expect(SegmentGrammarTable.v2_6["NK1"]?.fields.count == 39)
+        #expect(SegmentGrammarTable.v2_8_2["NK1"]?.fields.count == 41)
+        #expect(SegmentGrammarTable.v2_8_2["PV1"]?.fields.count == 54)
+        #expect(SegmentGrammarTable.v2_8_2["IN1"]?.fields.count == 55)
+
+        // v2.3: coded fields are still IS (pre CE→CWE era).
+        #expect(SegmentGrammarTable.v2_3["NK1"]?.field(35)?.dataType == "IS")   // Race
+
+        // v2.6: CE→CWE + TS→DTM wave reaches the newly-exposed NK1 tail.
+        #expect(SegmentGrammarTable.v2_6["NK1"]?.field(16)?.dataType == "DTM")  // Date/Time of Birth
+        #expect(SegmentGrammarTable.v2_6["NK1"]?.field(35)?.dataType == "CWE")  // Race
+
+        // v2.8.2: NK1 gains the telecom-info fields (40/41, XTN); the legacy
+        // phone fields (5/6) demote to backward-compat B.
+        #expect(SegmentGrammarTable.v2_8_2["NK1"]?.field(40)?.dataType == "XTN")
+        #expect(SegmentGrammarTable.v2_8_2["NK1"]?.field(41)?.dataType == "XTN")
+        #expect(SegmentGrammarTable.v2_8_2["NK1"]?.field(5)?.optionality == .backwardCompat)
+        #expect(SegmentGrammarTable.v2_8_2["NK1"]?.field(6)?.optionality == .backwardCompat)
     }
 }
