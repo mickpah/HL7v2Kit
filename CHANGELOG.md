@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — 8 new order/pharmacy/timing segments + extractor reliability fix
+
+Third cycle of the M5 sweep. Adds **TQ1, TQ2, RXO, RXR, RXC, RXE, RXD, RXG** (CH04/CH04A)
+as typed segments — the typed-segment count goes **21 → 29** — each full-depth on every
+version it appears in. Tests: 507 → **510**.
+
+- **Canonical v2.5.1 depths:** TQ1 14, TQ2 10, RXO 28, RXR 6, RXC 9, RXE 44, RXD 33, RXG 26.
+  Per-version depths grow monotonically (RXE 30→45, RXO 22→36); TQ1/TQ2 are v2.5+.
+- **Extractor reliability fix:** SEQ detection now uses the first token before the DT
+  column, not a fixed header-offset slice — recovering legacy v2.3 CH4 tables (RXO/RXC/RXG)
+  that the old slice silently dropped, and correcting v2.3 RXR 6→4. Golden `--verify`
+  unaffected. A general fix for all legacy-chapter sweeps.
+- **Conditional-completeness:** these are HL7's most conditional-heavy segments — 31 new
+  C-without-expressible-trigger fields, bulk-documented in the register + the v2.8.2 guard
+  set (fail-safe, never shipped as rules; req #4).
+
 ### M5 sweep — 6 new typed segments (PV2, MRG, DB1, GT1, IN2, IN3)
 
 Second cycle of the M5 sweep. Adds **PV2, MRG, DB1** (CH03) and **GT1, IN2, IN3** (CH06)
