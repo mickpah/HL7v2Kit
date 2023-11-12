@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — 6 new typed segments (PV2, MRG, DB1, GT1, IN2, IN3)
+
+Second cycle of the M5 sweep. Adds **PV2, MRG, DB1** (CH03) and **GT1, IN2, IN3** (CH06)
+as first-class typed segments — the typed-segment count goes **15 → 21**. Each is modelled
+at full field depth on every version it appears in (36 schemas: canonical v2.5.1 + 30
+per-version), extractor-seeded and golden-`--verify`ed. Auto-registered via the generated
+`SegmentRegistry`; additive API growth only (ADR-014). Tests: 505 → **507**.
+
+- **Canonical v2.5.1 depths:** PV2 49, MRG 7, DB1 8, GT1 57, IN2 72, IN3 25. Per-version
+  depths vary (e.g. PV2 37→50, GT1 55→57, IN3 25→27).
+- **Codegen:** now backtick-escapes Swift-keyword swiftNames (IN3-8 "Operator" →
+  `` `operator` ``) — general safety; grammar-table names stay faithful.
+- **Conditional-completeness:** PV2-1/45/47 are conditional-without-expressible-trigger —
+  added to the register + the v2.8.2 guard-test set (documented, fail-safe).
+- **Tooling:** the extractor gains a reusable `--emit-schema` seed generator.
+
 ### M5 sweep — per-version NK1/PV1/IN1 full depth
 
 First segment-coverage cycle of the M5 sweep. Extends **NK1 / PV1 / IN1** from the
