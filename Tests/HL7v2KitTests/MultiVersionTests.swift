@@ -958,6 +958,10 @@ struct MultiVersionTests {
         // Every remaining C-without-condition (seg, index) in v2.8.2.
         let expected: Set<String> = [
             "OBR-22", "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
+            // v1.2: PV2 added — Prior Pending Location (1), Advance Directive
+            // Code (45), Expected LOA Return Date/Time (47) are conditional in the
+            // spec with no field-machine-expressible trigger (documented limitation).
+            "PV2-1", "PV2-45", "PV2-47",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

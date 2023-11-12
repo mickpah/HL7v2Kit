@@ -1304,4 +1304,47 @@ struct TypedSegmentTests {
         #expect(table["PV1"]?.field(45)?.repeatability == .multiple)  // Discharge Date/Time (Y)
         #expect(table["PV1"]?.field(50)?.repeatability == .single)    // Alternate Visit ID (blank, was over-marked)
     }
+
+    // v1.2 (M5 sweep): 6 new typed segments — PV2, MRG, DB1 (CH03) + GT1, IN2,
+    // IN3 (CH06). Canonical v2.5.1 depths pinned; hydration via the auto-generated
+    // registry confirmed; typed accessor ↔ path access agreement checked.
+    @Test("v1.2: new segments PV2/MRG/DB1/GT1/IN2/IN3 — canonical depths + registration")
+    func v1_2NewSegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["PV2"]?.fields.count == 49)
+        #expect(t["MRG"]?.fields.count == 7)
+        #expect(t["DB1"]?.fields.count == 8)
+        #expect(t["GT1"]?.fields.count == 57)
+        #expect(t["IN2"]?.fields.count == 72)
+        #expect(t["IN3"]?.fields.count == 25)
+        // IN3-8 "Operator" — swiftName is the Swift keyword `operator`, emitted
+        // backtick-escaped by codegen; the grammar name stays faithful.
+        #expect(t["IN3"]?.field(8)?.name == "Operator")
+    }
+
+    @Test("v1.2: new segments hydrate as .typed and agree with path access")
+    func v1_2NewSegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
+            + "PID|1||X^^^F^MR||Doe^Jane\r"
+            + "PV2||||||||||||Annual checkup\r"          // PV2-12 Visit Description (ST)
+            + "MRG|OLD123^^^F^MR\r"                        // MRG-1 Prior Patient Identifier List (CX)
+            + "DB1|1\r"                                    // DB1-1 Set ID (SI)
+            + "GT1|1\r"                                    // GT1-1 Set ID (SI)
+            + "IN2\r" + "IN3|1\r"
+        let message = try Parser().parse(wire)
+
+        let pv2 = try #require(message.firstSegment(PV2.self))
+        #expect(pv2.visitDescription == "Annual checkup")
+        #expect(pv2.visitDescription == message["PV2-12"])
+
+        let gt1 = try #require(message.firstSegment(GT1.self))
+        #expect(gt1.setIdGt1 == "1")
+        #expect(gt1.setIdGt1 == message["GT1-1"])
+
+        // The rest hydrate as .typed via the auto-generated registry.
+        #expect(message.firstSegment(MRG.self) != nil)
+        #expect(message.firstSegment(DB1.self) != nil)
+        #expect(message.firstSegment(IN2.self) != nil)
+        #expect(message.firstSegment(IN3.self) != nil)
+    }
 }

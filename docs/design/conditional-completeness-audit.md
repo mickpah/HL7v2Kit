@@ -27,6 +27,9 @@
 | OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-22 | Mood Code | v2.6, v2.8.2 | Permanent limitation |
 | DG1-22 | Parent Diagnosis | v2.8.2 | Permanent limitation |
+| PV2-1 | Prior Pending Location | v2.3–v2.8.2 | Permanent limitation (v1.2) |
+| PV2-45 | Advance Directive Code | v2.6, v2.8.2 | Permanent limitation (v1.2) |
+| PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | Permanent limitation (v1.2) |
 
 ## Shipped in v0.16 (S2)
 
@@ -62,6 +65,11 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 **Peer-comparison / grouping (beyond same-segment scope):**
 - **OBX-4 Observation Sub-ID** — required to disambiguate multiple OBX sharing an OBX-3; a cross-OBX grouping rule, not a same-segment predicate.
 
+**PV2 (added v1.2 when PV2 was modelled — CH03):**
+- **PV2-1 Prior Pending Location** (v2.3–v2.8.2) — "*required for cancel pending transfer*"-type trigger keyed on the ADT event code, which lives in the EVN/MSH trigger, not a same-segment peer; the conditionality is message-type dependent and not expressed as a wire predicate here.
+- **PV2-45 Advance Directive Code** (v2.6, v2.8.2) — mirrors PD1-15's conditionality but PV2 carries no PV2-side "last verified date" peer to gate on; descriptive, no same-segment MUST.
+- **PV2-47 Expected LOA Return Date/Time** (v2.4–v2.8.2) — required only for a leave-of-absence visit; the LOA nature is not encoded in a same-segment peer field.
+
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
@@ -69,6 +77,6 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 ## Outcome
 
 - **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **15 positions documented** as permanent limitations with per-field rationale; all are fail-safe (treated as optional) and none misfires.
+- **18 positions documented** as permanent limitations with per-field rationale (15 at M2 + PV2-1/45/47 added in the v1.2 sweep); all are fail-safe (treated as optional) and none misfires.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

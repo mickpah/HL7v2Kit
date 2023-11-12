@@ -12,10 +12,15 @@ extension SegmentRegistry {
     static func hydrateGenerated(_ unknown: UnknownSegment) -> Segment? {
         switch unknown.segmentID {
         case AL1.segmentID: return .typed(AnyTypedSegment(AL1(fields: unknown.fields)))
+        case DB1.segmentID: return .typed(AnyTypedSegment(DB1(fields: unknown.fields)))
         case DG1.segmentID: return .typed(AnyTypedSegment(DG1(fields: unknown.fields)))
         case ERR.segmentID: return .typed(AnyTypedSegment(ERR(fields: unknown.fields)))
         case EVN.segmentID: return .typed(AnyTypedSegment(EVN(fields: unknown.fields)))
+        case GT1.segmentID: return .typed(AnyTypedSegment(GT1(fields: unknown.fields)))
         case IN1.segmentID: return .typed(AnyTypedSegment(IN1(fields: unknown.fields)))
+        case IN2.segmentID: return .typed(AnyTypedSegment(IN2(fields: unknown.fields)))
+        case IN3.segmentID: return .typed(AnyTypedSegment(IN3(fields: unknown.fields)))
+        case MRG.segmentID: return .typed(AnyTypedSegment(MRG(fields: unknown.fields)))
         case MSA.segmentID: return .typed(AnyTypedSegment(MSA(fields: unknown.fields)))
         case MSH.segmentID: return .typed(AnyTypedSegment(MSH(fields: unknown.fields)))
         case NK1.segmentID: return .typed(AnyTypedSegment(NK1(fields: unknown.fields)))
@@ -26,6 +31,7 @@ extension SegmentRegistry {
         case PD1.segmentID: return .typed(AnyTypedSegment(PD1(fields: unknown.fields)))
         case PID.segmentID: return .typed(AnyTypedSegment(PID(fields: unknown.fields)))
         case PV1.segmentID: return .typed(AnyTypedSegment(PV1(fields: unknown.fields)))
+        case PV2.segmentID: return .typed(AnyTypedSegment(PV2(fields: unknown.fields)))
         default:
             return nil
         }
