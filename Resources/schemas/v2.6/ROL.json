@@ -1,0 +1,20 @@
+{
+  "segmentID": "ROL",
+  "version": "2.6",
+  "description": "ROL",
+  "fields": [
+    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
+    { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "roleEndDateTime", "name": "Role End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "roleDuration", "name": "Role Duration", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "roleActionReason", "name": "Role Action Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "providerType", "name": "Provider Type", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "organizationUnitType", "name": "Organization Unit Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "officeHomeAddressBirthplace", "name": "Office/Home Address/Birthplace", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "phone", "name": "Phone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "personSLocation", "name": "Person's Location", "dataType": "PL", "optionality": "O", "repeatability": "1" }
+  ]
+}

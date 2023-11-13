@@ -1,0 +1,29 @@
+{
+  "segmentID": "RXA",
+  "version": "2.4",
+  "description": "RXA",
+  "fields": [
+    { "index": 1, "swiftName": "giveSubIdCounter", "name": "Give Sub-ID Counter", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "administrationSubIdCounter", "name": "Administration Sub-ID Counter", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTimeStartOfAdministration", "name": "Date/Time Start of Administration", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "dateTimeEndOfAdministration", "name": "Date/Time End of Administration", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "administeredCode", "name": "Administered Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 6, "swiftName": "administeredAmount", "name": "Administered Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "administeredUnits", "name": "Administered Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 8, "swiftName": "administeredDosageForm", "name": "Administered Dosage Form", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "administrationNotes", "name": "Administration Notes", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "administeringProvider", "name": "Administering Provider", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "administeredAtLocation", "name": "Administered-at Location", "dataType": "CM", "optionality": "C", "repeatability": "1" },
+    { "index": 12, "swiftName": "administeredPerTimeUnit", "name": "Administered Per (Time Unit)", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 13, "swiftName": "administeredStrength", "name": "Administered Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "administeredStrengthUnits", "name": "Administered Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "substanceLotNumber", "name": "Substance Lot Number", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 16, "swiftName": "substanceExpirationDate", "name": "Substance Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "*" },
+    { "index": 17, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 18, "swiftName": "substanceTreatmentRefusalReason", "name": "Substance/Treatment Refusal Reason", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 19, "swiftName": "indication", "name": "Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 20, "swiftName": "completionStatus", "name": "Completion Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "actionCodeRxa", "name": "Action Code-RXA", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "systemEntryDateTime", "name": "System Entry Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" }
+  ]
+}

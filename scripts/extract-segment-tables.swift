@@ -48,7 +48,7 @@ let headerKeys: [(key: String, patterns: [String])] = [
     ("LEN",  ["LEN"]),
     ("CLEN", ["C.LEN", "C.LEN."]),
     ("DT",   ["DT"]),
-    ("OPT",  ["OPT"]),
+    ("OPT",  ["OPT", "R/O/C", "R/O"]),   // some legacy chapters (e.g. v2.3 CH10) label it "R/O/C"
     ("RP",   ["RP/#", "R P/#", "RP/ #"]),
     ("TBL",  ["TBL#", "TBL #", "TBL"]),
     ("ITEM", ["ITEM#", "ITEM #", "ITEM"]),
@@ -64,7 +64,8 @@ func charOffset(of needle: String, in line: String) -> Int? {
 func detectHeader(_ line: String) -> [Column]? {
     let upper = line.uppercased()
     guard upper.contains("SEQ"), upper.contains("ELEMENT NAME"),
-          upper.contains("OPT"), upper.contains("ITEM") else { return nil }
+          upper.contains("OPT") || upper.contains("R/O/C") || upper.contains("R/O"),
+          upper.contains("ITEM") else { return nil }
     var cols: [Column] = []
     for (key, pats) in headerKeys {
         var found: Int? = nil

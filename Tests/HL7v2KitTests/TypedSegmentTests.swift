@@ -1348,6 +1348,87 @@ struct TypedSegmentTests {
         #expect(message.firstSegment(IN3.self) != nil)
     }
 
+    // v1.3 (M5 sweep): 14 new typed segments — SPM (CH07), ROL (CH15), the CH10
+    // scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ), blood-product BPO/BPX/BTX
+    // and RXA (CH04). Canonical v2.5.1 depths pinned + registry hydration.
+    @Test("v1.3: new segments — canonical depths + RXA base table (not the vaccine profile)")
+    func v1_3NewSegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["SPM"]?.fields.count == 29)
+        #expect(t["ROL"]?.fields.count == 12)
+        #expect(t["SCH"]?.fields.count == 27)
+        #expect(t["RGS"]?.fields.count == 3)
+        #expect(t["AIS"]?.fields.count == 12)
+        #expect(t["AIG"]?.fields.count == 14)
+        #expect(t["AIL"]?.fields.count == 12)
+        #expect(t["AIP"]?.fields.count == 12)
+        #expect(t["APR"]?.fields.count == 5)
+        #expect(t["ARQ"]?.fields.count == 25)
+        #expect(t["BPO"]?.fields.count == 14)
+        #expect(t["BPX"]?.fields.count == 21)
+        #expect(t["BTX"]?.fields.count == 19)
+        // RXA must be the base "Pharmacy/Treatment Administration" table (26 fields),
+        // NOT the "Segment Uses in Vaccine Messages" profile table that follows it.
+        #expect(t["RXA"]?.fields.count == 26)
+        #expect(t["RXA"]?.field(5)?.name == "Administered Code")
+    }
+
+    @Test("v1.3: new segments hydrate as .typed and agree with path access")
+    func v1_3NewSegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||SIU^S12|M1|P|2.5.1\r"
+            + "SCH|A^^^F|B^^^F\r" + "RGS|1\r"
+            + "AIS|1\r" + "AIG|1\r" + "AIL|1\r" + "AIP|1\r" + "APR\r" + "ARQ|A^^^F\r"
+            + "SPM|1\r" + "ROL|R1^^^F|AD\r" + "BPO|1\r" + "BPX|1\r" + "BTX|1\r" + "RXA|0|1\r"
+        let message = try Parser().parse(wire)
+        let rgs = try #require(message.firstSegment(RGS.self))
+        #expect(rgs.setIdRgs == "1")
+        #expect(rgs.setIdRgs == message["RGS-1"])
+        for present in [message.firstSegment(SPM.self) != nil, message.firstSegment(ROL.self) != nil,
+                        message.firstSegment(SCH.self) != nil, message.firstSegment(AIS.self) != nil,
+                        message.firstSegment(AIG.self) != nil, message.firstSegment(AIL.self) != nil,
+                        message.firstSegment(AIP.self) != nil, message.firstSegment(APR.self) != nil,
+                        message.firstSegment(ARQ.self) != nil, message.firstSegment(BPO.self) != nil,
+                        message.firstSegment(BPX.self) != nil, message.firstSegment(BTX.self) != nil,
+                        message.firstSegment(RXA.self) != nil] {
+            #expect(present)
+        }
+    }
+
+    // v1.3 (M5 sweep, master-files/referral batch): MFI/MFE/MFA + OM1–OM7 (CH08),
+    // RF1/AUT/PRD/CTD (CH11). Canonical v2.5.1 depths pinned + registry hydration.
+    @Test("v1.3: master-files + referral segments — canonical depths + registration")
+    func v1_3MasterFilesReferralCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["MFI"]?.fields.count == 6)
+        #expect(t["MFE"]?.fields.count == 5)
+        #expect(t["MFA"]?.fields.count == 6)
+        #expect(t["OM1"]?.fields.count == 49)
+        #expect(t["OM2"]?.fields.count == 10)
+        #expect(t["OM3"]?.fields.count == 7)
+        #expect(t["OM4"]?.fields.count == 17)
+        #expect(t["OM5"]?.fields.count == 3)
+        #expect(t["OM6"]?.fields.count == 3)
+        #expect(t["OM7"]?.fields.count == 24)
+        #expect(t["RF1"]?.fields.count == 11)
+        #expect(t["AUT"]?.fields.count == 10)
+        #expect(t["PRD"]?.fields.count == 9)
+        #expect(t["CTD"]?.fields.count == 7)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||MFN^M01|M1|P|2.5.1\r"
+            + "MFI|CDM^^HL70175\r" + "MFE|MAD\r" + "MFA|MAA\r"
+            + "OM1|1\r" + "OM2|1\r" + "OM3|1\r" + "OM4|1\r" + "OM5|1\r" + "OM6|1\r" + "OM7|1\r"
+            + "RF1|P\r" + "AUT|A^^HL7\r" + "PRD|RP^^HL7\r" + "CTD|CN^^HL7\r"
+        let message = try Parser().parse(wire)
+        let mfi = try #require(message.firstSegment(MFI.self))
+        #expect(mfi.masterFileIdentifier != nil)              // MFI-1 (CE) hydrates via typed accessor
+        for present in [message.firstSegment(MFE.self) != nil, message.firstSegment(MFA.self) != nil,
+                        message.firstSegment(OM1.self) != nil, message.firstSegment(OM7.self) != nil,
+                        message.firstSegment(RF1.self) != nil, message.firstSegment(AUT.self) != nil,
+                        message.firstSegment(PRD.self) != nil, message.firstSegment(CTD.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.2 (M5 sweep): 8 new order/pharmacy/timing typed segments — TQ1, TQ2, RXO,
     // RXR, RXC, RXE, RXD, RXG (CH04). Typed count 21 → 29.
     @Test("v1.2: order/pharmacy segments — canonical depths + registration")

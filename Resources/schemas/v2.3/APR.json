@@ -1,0 +1,12 @@
+{
+  "segmentID": "APR",
+  "version": "2.3",
+  "description": "APR",
+  "fields": [
+    { "index": 1, "swiftName": "timeSelectionCriteria", "name": "Time Selection Criteria", "dataType": "SVC", "optionality": "O", "repeatability": "*" },
+    { "index": 2, "swiftName": "resourceSelectionCriteria", "name": "Resource Selection Criteria", "dataType": "SVC", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "locationSelectionCriteria", "name": "Location Selection Criteria", "dataType": "SVC", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "slotSpacingCriteria", "name": "Slot Spacing Criteria", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "fillerOverrideCriteria", "name": "Filler Override Criteria", "dataType": "SVC", "optionality": "O", "repeatability": "*" }
+  ]
+}

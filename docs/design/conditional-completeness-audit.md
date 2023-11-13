@@ -31,6 +31,8 @@
 | PV2-45 | Advance Directive Code | v2.6, v2.8.2 | Permanent limitation (v1.2) |
 | PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | Permanent limitation (v1.2) |
 | RXO/RXE/RXD/RXG/RXC/TQ1/TQ2 (31 fields) | order/pharmacy/timing conditionals | v2.3–v2.8.2 | Permanent limitation (v1.2, grouped below) |
+| SCH/RGS/ARQ/AIS/AIG/AIL/AIP/BPX/BTX/SPM/ROL/RXA (55 fields) | scheduling/blood-product/specimen/role conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
+| MFE/MFA/OM7/AUT (5 fields) | master-files/referral conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
 
 ## Shipped in v0.16 (S2)
 
@@ -82,6 +84,21 @@ These segments are the most conditional-heavy in HL7. Every `C` field below is c
 
 **Model-extension watch (req #3):** several of these have real triggers that a *cross-segment* predicate could express (the RXO↔RXE pairing especially). Modelling them is a candidate for a future DSL/analysis cycle; until then they remain fail-safe (never misfire) and are recorded here, not shipped as unconditional rules (req #4).
 
+**Scheduling / blood-product / specimen / role family (added v1.3 — CH10/CH04/CH07/CH15):**
+
+Another conditional-heavy cluster. Every `C` below is conditional on the **message intent** (the SIU/SRM appointment trigger, or the placer-vs-filler role) or on **cross-segment resource grouping** — none a same-segment field-machine predicate. All fail-safe documented limitations (v2.8.2 indices; equivalents carry across the versions each segment appears in):
+
+- **SCH** (Schedule Activity) — 1/2/3/24/26/27; **RGS** (Resource Group) — 2; **ARQ** (Appointment Request) — 2/3/24/25 — placer/filler IDs and status fields conditional on request-vs-response intent.
+- **AIS/AIG/AIL/AIP** (Appointment Information — Service/General/Location/Personnel) — set-ID, start-datetime, duration and filler-status fields (indices 2–14) conditional on the appointment action being scheduled/modified vs. queried.
+- **BPX** (Blood Product Dispense Status) — 5/6/8/9/10; **BTX** (Blood Product Transfusion) — 2/3/4/5/6/7 — dispense/transfusion-status fields conditional on the status event.
+- **SPM-13** (Specimen Risk Code) and **ROL-1** (Role Instance ID) — conditional on specimen-hazard presence / role-action context.
+- **RXA-7/12** (Administered Amount fragments) — data-nature conditionals paralleling the RXO/RXE set above.
+
+**Master-files / referral family (added v1.3 — CH08/CH11):**
+- **MFE-2** (Master File Entry — MFN Control ID) and **MFA-2** (Master File Ack — Control ID) — required only for update/replace master-file events (the MFI-3 event code), not a same-segment peer.
+- **OM7-16 / OM7-18** (Additional Basic Attributes) — conditional on the observation's orderability/category, not wire-encoded in a peer field.
+- **AUT-6** (Authorization — Reimbursement Limit) — conditional on the authorization decision context.
+
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
@@ -89,6 +106,6 @@ These segments are the most conditional-heavy in HL7. Every `C` field below is c
 ## Outcome
 
 - **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **49 positions documented** as permanent limitations with per-field rationale (15 at M2; +PV2-1/45/47 and +31 order/pharmacy/timing fields in the v1.2 sweep); all are fail-safe (treated as optional) and none misfires.
+- **~109 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 in v1.2 [PV2 + order/pharmacy/timing]; +55 v1.3 scheduling/blood-product/specimen/role; +5 v1.3 master-files/referral); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

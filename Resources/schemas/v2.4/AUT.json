@@ -1,0 +1,17 @@
+{
+  "segmentID": "AUT",
+  "version": "2.4",
+  "description": "AUT",
+  "fields": [
+    { "index": 1, "swiftName": "authorizingPayorPlanId", "name": "Authorizing Payor, Plan ID", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "authorizingPayorCompanyId", "name": "Authorizing Payor, Company ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "authorizingPayorCompanyName", "name": "Authorizing Payor, Company Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "authorizationEffectiveDate", "name": "Authorization Effective Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "authorizationExpirationDate", "name": "Authorization Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "authorizationIdentifier", "name": "Authorization Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 7, "swiftName": "reimbursementLimit", "name": "Reimbursement Limit", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "requestedNumberOfTreatments", "name": "Requested Number of Treatments", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "authorizedNumberOfTreatments", "name": "Authorized Number of Treatments", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "processDate", "name": "Process Date", "dataType": "TS", "optionality": "O", "repeatability": "1" }
+  ]
+}

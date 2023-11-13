@@ -1,0 +1,13 @@
+{
+  "segmentID": "MFA",
+  "version": "2.5.1",
+  "description": "Master File Acknowledgment",
+  "fields": [
+    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "eventCompletionDateTime", "name": "Event Completion Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "mfnRecordLevelErrorReturn", "name": "MFN Record Level Error Return", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "primaryKeyValueMfa", "name": "Primary Key Value - MFA", "dataType": "Varie", "optionality": "R", "repeatability": "*" },
+    { "index": 6, "swiftName": "primaryKeyValueTypeMfa", "name": "Primary Key Value Type - MFA", "dataType": "ID", "optionality": "R", "repeatability": "*" }
+  ]
+}

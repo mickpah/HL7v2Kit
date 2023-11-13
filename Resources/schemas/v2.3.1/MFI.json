@@ -1,0 +1,13 @@
+{
+  "segmentID": "MFI",
+  "version": "2.3.1",
+  "description": "MFI",
+  "fields": [
+    { "index": 1, "swiftName": "masterFileIdentifier", "name": "Master File Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "masterFileApplicationIdentifier", "name": "Master File Application Identifier", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "fileLevelEventCode", "name": "File-Level Event Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "enteredDateTime", "name": "Entered Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "responseLevelCode", "name": "Response Level Code", "dataType": "ID", "optionality": "R", "repeatability": "1" }
+  ]
+}

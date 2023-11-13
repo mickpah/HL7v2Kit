@@ -24,15 +24,17 @@ partial). So M5's gap is **173 unmodelled segments** plus per-version depth for 
 The ~850 figure is the full schema-authoring runway (each segment × each version it
 appears in, at full field depth).
 
-## Currently modelled (29)
+## Currently modelled (57)
 
-`AL1 DB1 DG1 ERR EVN GT1 IN1 IN2 IN3 MRG MSA MSH NK1 NTE OBR OBX ORC PD1 PID PV1 PV2
-RXC RXD RXE RXG RXO RXR TQ1 TQ2`
+`AIG AIL AIP AIS AL1 APR ARQ AUT BPO BPX BTX CTD DB1 DG1 ERR EVN GT1 IN1 IN2 IN3 MFA MFE
+MFI MRG MSA MSH NK1 NTE OBR OBX OM1 OM2 OM3 OM4 OM5 OM6 OM7 ORC PD1 PID PRD PV1 PV2 RF1
+RGS ROL RXA RXC RXD RXE RXG RXO RXR SCH SPM TQ1 TQ2`
 
 Canonical v2.5.1 defect-clean + complete (v1.1-S3). **NK1/PV1/IN1 full-depth on all 6
-versions (v1.2)**; **PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG added as
-typed segments, full-depth on all versions they appear in (v1.2)**. ~159 segments remain
-unmodelled — the v1.3+ runway.
+versions (v1.2).** New typed segments, full-depth on all versions they appear in:
+**v1.2** PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG; **v1.3**
+SPM/ROL/SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ/BPO/BPX/BTX/RXA + MFI/MFE/MFA/OM1–OM7/RF1/AUT/PRD/CTD.
+**~131 segments remain unmodelled** — the v1.4+ runway.
 
 ## The union work-list (188)
 
