@@ -1348,6 +1348,52 @@ struct TypedSegmentTests {
         #expect(message.firstSegment(IN3.self) != nil)
     }
 
+    // v1.3 (M5 sweep): 14 new typed segments — SPM (CH07), ROL (CH15), the CH10
+    // scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ), blood-product BPO/BPX/BTX
+    // and RXA (CH04). Canonical v2.5.1 depths pinned + registry hydration.
+    @Test("v1.3: new segments — canonical depths + RXA base table (not the vaccine profile)")
+    func v1_3NewSegmentsCanonical() {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["SPM"]?.fields.count == 29)
+        #expect(t["ROL"]?.fields.count == 12)
+        #expect(t["SCH"]?.fields.count == 27)
+        #expect(t["RGS"]?.fields.count == 3)
+        #expect(t["AIS"]?.fields.count == 12)
+        #expect(t["AIG"]?.fields.count == 14)
+        #expect(t["AIL"]?.fields.count == 12)
+        #expect(t["AIP"]?.fields.count == 12)
+        #expect(t["APR"]?.fields.count == 5)
+        #expect(t["ARQ"]?.fields.count == 25)
+        #expect(t["BPO"]?.fields.count == 14)
+        #expect(t["BPX"]?.fields.count == 21)
+        #expect(t["BTX"]?.fields.count == 19)
+        // RXA must be the base "Pharmacy/Treatment Administration" table (26 fields),
+        // NOT the "Segment Uses in Vaccine Messages" profile table that follows it.
+        #expect(t["RXA"]?.fields.count == 26)
+        #expect(t["RXA"]?.field(5)?.name == "Administered Code")
+    }
+
+    @Test("v1.3: new segments hydrate as .typed and agree with path access")
+    func v1_3NewSegmentsHydrate() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||SIU^S12|M1|P|2.5.1\r"
+            + "SCH|A^^^F|B^^^F\r" + "RGS|1\r"
+            + "AIS|1\r" + "AIG|1\r" + "AIL|1\r" + "AIP|1\r" + "APR\r" + "ARQ|A^^^F\r"
+            + "SPM|1\r" + "ROL|R1^^^F|AD\r" + "BPO|1\r" + "BPX|1\r" + "BTX|1\r" + "RXA|0|1\r"
+        let message = try Parser().parse(wire)
+        let rgs = try #require(message.firstSegment(RGS.self))
+        #expect(rgs.setIdRgs == "1")
+        #expect(rgs.setIdRgs == message["RGS-1"])
+        for present in [message.firstSegment(SPM.self) != nil, message.firstSegment(ROL.self) != nil,
+                        message.firstSegment(SCH.self) != nil, message.firstSegment(AIS.self) != nil,
+                        message.firstSegment(AIG.self) != nil, message.firstSegment(AIL.self) != nil,
+                        message.firstSegment(AIP.self) != nil, message.firstSegment(APR.self) != nil,
+                        message.firstSegment(ARQ.self) != nil, message.firstSegment(BPO.self) != nil,
+                        message.firstSegment(BPX.self) != nil, message.firstSegment(BTX.self) != nil,
+                        message.firstSegment(RXA.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.2 (M5 sweep): 8 new order/pharmacy/timing typed segments — TQ1, TQ2, RXO,
     // RXR, RXC, RXE, RXD, RXG (CH04). Typed count 21 → 29.
     @Test("v1.2: order/pharmacy segments — canonical depths + registration")

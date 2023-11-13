@@ -970,6 +970,21 @@ struct MultiVersionTests {
             "RXO-1", "RXO-2", "RXO-4", "RXO-5", "RXO-15", "RXO-17", "RXO-31",
             "RXE-10", "RXE-11", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
             "RXD-5", "RXD-8", "RXG-14", "RXG-32", "RXG-33", "RXC-10", "RXC-11",
+            "RXA-7", "RXA-12",
+            // v1.3: scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/ARQ) — filler/placer
+            // and resource fields conditional on the appointment message intent;
+            // blood-product (BPX/BTX) dispense/transfusion-status conditionals;
+            // SPM-13 specimen-risk and ROL-1 role-instance. All fail-safe, grouped
+            // in conditional-completeness-audit.md.
+            "SCH-1", "SCH-2", "SCH-3", "SCH-24", "SCH-26", "SCH-27",
+            "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24", "ARQ-25",
+            "AIS-2", "AIS-4", "AIS-5", "AIS-6", "AIS-9", "AIS-10",
+            "AIG-2", "AIG-3", "AIG-8", "AIG-9", "AIG-10", "AIG-13", "AIG-14",
+            "AIL-2", "AIL-3", "AIL-4", "AIL-6", "AIL-7", "AIL-8", "AIL-11", "AIL-12",
+            "AIP-2", "AIP-3", "AIP-4", "AIP-6", "AIP-7", "AIP-8", "AIP-11", "AIP-12",
+            "BPX-5", "BPX-6", "BPX-8", "BPX-9", "BPX-10",
+            "BTX-2", "BTX-3", "BTX-4", "BTX-5", "BTX-6", "BTX-7",
+            "SPM-13", "ROL-1",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

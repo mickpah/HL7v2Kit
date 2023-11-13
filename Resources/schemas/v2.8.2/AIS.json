@@ -1,0 +1,19 @@
+{
+  "segmentID": "AIS",
+  "version": "2.8.2",
+  "description": "AIS",
+  "fields": [
+    { "index": 1, "swiftName": "setIdAis", "name": "Set ID - AIS", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1" },
+    { "index": 6, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CNE", "optionality": "C", "repeatability": "1" },
+    { "index": 7, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CNE", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "CWE", "optionality": "C", "repeatability": "1" },
+    { "index": 10, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CWE", "optionality": "C", "repeatability": "1" },
+    { "index": 11, "swiftName": "placerSupplementalServiceInformation", "name": "Placer Supplemental Service Information", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "fillerSupplementalServiceInformation", "name": "Filler Supplemental Service Information", "dataType": "CWE", "optionality": "O", "repeatability": "*" }
+  ]
+}
