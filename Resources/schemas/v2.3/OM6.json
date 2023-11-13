@@ -1,0 +1,9 @@
+{
+  "segmentID": "OM6",
+  "version": "2.3",
+  "description": "OM6",
+  "fields": [
+    { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "derivationRule", "name": "Derivation Rule", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+  ]
+}

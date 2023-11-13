@@ -985,6 +985,9 @@ struct MultiVersionTests {
             "BPX-5", "BPX-6", "BPX-8", "BPX-9", "BPX-10",
             "BTX-2", "BTX-3", "BTX-4", "BTX-5", "BTX-6", "BTX-7",
             "SPM-13", "ROL-1",
+            // v1.3 (master-files / referral batch): master-file entry/ack keys and
+            // OM7 / AUT fields conditional on the master-file event or auth context.
+            "MFE-2", "MFA-2", "OM7-16", "OM7-18", "AUT-6",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

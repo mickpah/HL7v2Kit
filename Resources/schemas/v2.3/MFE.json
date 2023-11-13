@@ -1,0 +1,11 @@
+{
+  "segmentID": "MFE",
+  "version": "2.3",
+  "description": "MFE",
+  "fields": [
+    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "primaryKeyValueMfe", "name": "Primary Key Value - MFE", "dataType": "Varies", "optionality": "R", "repeatability": "*" }
+  ]
+}

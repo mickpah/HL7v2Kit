@@ -1394,6 +1394,41 @@ struct TypedSegmentTests {
         }
     }
 
+    // v1.3 (M5 sweep, master-files/referral batch): MFI/MFE/MFA + OM1–OM7 (CH08),
+    // RF1/AUT/PRD/CTD (CH11). Canonical v2.5.1 depths pinned + registry hydration.
+    @Test("v1.3: master-files + referral segments — canonical depths + registration")
+    func v1_3MasterFilesReferralCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["MFI"]?.fields.count == 6)
+        #expect(t["MFE"]?.fields.count == 5)
+        #expect(t["MFA"]?.fields.count == 6)
+        #expect(t["OM1"]?.fields.count == 49)
+        #expect(t["OM2"]?.fields.count == 10)
+        #expect(t["OM3"]?.fields.count == 7)
+        #expect(t["OM4"]?.fields.count == 17)
+        #expect(t["OM5"]?.fields.count == 3)
+        #expect(t["OM6"]?.fields.count == 3)
+        #expect(t["OM7"]?.fields.count == 24)
+        #expect(t["RF1"]?.fields.count == 11)
+        #expect(t["AUT"]?.fields.count == 10)
+        #expect(t["PRD"]?.fields.count == 9)
+        #expect(t["CTD"]?.fields.count == 7)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||MFN^M01|M1|P|2.5.1\r"
+            + "MFI|CDM^^HL70175\r" + "MFE|MAD\r" + "MFA|MAA\r"
+            + "OM1|1\r" + "OM2|1\r" + "OM3|1\r" + "OM4|1\r" + "OM5|1\r" + "OM6|1\r" + "OM7|1\r"
+            + "RF1|P\r" + "AUT|A^^HL7\r" + "PRD|RP^^HL7\r" + "CTD|CN^^HL7\r"
+        let message = try Parser().parse(wire)
+        let mfi = try #require(message.firstSegment(MFI.self))
+        #expect(mfi.masterFileIdentifier != nil)              // MFI-1 (CE) hydrates via typed accessor
+        for present in [message.firstSegment(MFE.self) != nil, message.firstSegment(MFA.self) != nil,
+                        message.firstSegment(OM1.self) != nil, message.firstSegment(OM7.self) != nil,
+                        message.firstSegment(RF1.self) != nil, message.firstSegment(AUT.self) != nil,
+                        message.firstSegment(PRD.self) != nil, message.firstSegment(CTD.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.2 (M5 sweep): 8 new order/pharmacy/timing typed segments — TQ1, TQ2, RXO,
     // RXR, RXC, RXE, RXD, RXG (CH04). Typed count 21 → 29.
     @Test("v1.2: order/pharmacy segments — canonical depths + registration")

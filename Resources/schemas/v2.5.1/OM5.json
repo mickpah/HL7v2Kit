@@ -1,0 +1,10 @@
+{
+  "segmentID": "OM5",
+  "version": "2.5.1",
+  "description": "Observation Batteries",
+  "fields": [
+    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "testObservationsIncludedWithinAnOrderedTestBattery", "name": "Test/Observations Included within an Ordered Test Battery", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "observationIdSuffixes", "name": "Observation ID Suffixes", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}
