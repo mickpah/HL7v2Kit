@@ -1481,4 +1481,47 @@ struct TypedSegmentTests {
         #expect(SegmentGrammarTable.v2_3["TQ1"] == nil)
         #expect(SegmentGrammarTable.v2_6["TQ1"]?.fields.count == 14)
     }
+
+    // v1.4 (M5 sweep, query/lab batch): QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT (CH05) +
+    // EQU/SAC/INV/TCC/TCD/EQP (CH13). Canonical depths + registry hydration.
+    @Test("v1.4: query + lab-automation segments — canonical depths + registration")
+    func v1_4QueryLabCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["QPD"]?.fields.count == 2)
+        #expect(t["QRD"]?.fields.count == 12)
+        #expect(t["QRF"]?.fields.count == 10)
+        #expect(t["QAK"]?.fields.count == 6)
+        #expect(t["QID"]?.fields.count == 2)
+        #expect(t["RCP"]?.fields.count == 7)
+        #expect(t["RDF"]?.fields.count == 2)
+        #expect(t["RDT"]?.fields.count == 1)
+        #expect(t["EQU"]?.fields.count == 5)
+        #expect(t["SAC"]?.fields.count == 44)
+        #expect(t["INV"]?.fields.count == 20)
+        #expect(t["TCC"]?.fields.count == 14)
+        #expect(t["TCD"]?.fields.count == 8)
+        #expect(t["EQP"]?.fields.count == 6)
+        // Lab-automation segments are v2.5+ — absent on v2.3.
+        #expect(SegmentGrammarTable.v2_3["SAC"] == nil)
+        // v2.3 query segments live in CH2 (CH5 is an empty placeholder in v2.3).
+        #expect(SegmentGrammarTable.v2_3["QRD"]?.fields.count == 12)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||QBP^Q11|M1|P|2.5.1\r"
+            + "QPD|Q^^HL7|tag1\r" + "RCP|I\r"
+            + "QRD|20240101120000\r" + "QRF|X\r" + "QAK|tag1|OK\r" + "QID|q1\r"
+            + "RDF|1\r" + "RDT|v\r"
+            + "EQU|E1\r" + "SAC|AC1\r" + "INV|I1\r" + "TCC|T1\r" + "TCD|T1\r" + "EQP|EV\r"
+        let message = try Parser().parse(wire)
+        let qrd = try #require(message.firstSegment(QRD.self))
+        #expect(qrd.queryDateTime == message["QRD-1"])
+        for present in [message.firstSegment(QPD.self) != nil, message.firstSegment(RCP.self) != nil,
+                        message.firstSegment(QRF.self) != nil, message.firstSegment(QAK.self) != nil,
+                        message.firstSegment(QID.self) != nil, message.firstSegment(RDF.self) != nil,
+                        message.firstSegment(RDT.self) != nil, message.firstSegment(EQU.self) != nil,
+                        message.firstSegment(SAC.self) != nil, message.firstSegment(INV.self) != nil,
+                        message.firstSegment(TCC.self) != nil, message.firstSegment(TCD.self) != nil,
+                        message.firstSegment(EQP.self) != nil] {
+            #expect(present)
+        }
+    }
 }

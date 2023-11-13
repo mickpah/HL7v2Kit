@@ -1,0 +1,8 @@
+{
+  "segmentID": "RDT",
+  "version": "2.5.1",
+  "description": "Table Row Data",
+  "fields": [
+    { "index": 9, "swiftName": "field", "name": "", "dataType": "s", "optionality": "", "repeatability": "1" }
+  ]
+}

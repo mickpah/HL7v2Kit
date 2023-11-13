@@ -1,0 +1,9 @@
+{
+  "segmentID": "RDF",
+  "version": "2.4",
+  "description": "RDF",
+  "fields": [
+    { "index": 1, "swiftName": "numberOfColumnsPerRow", "name": "Number of Columns per Row", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "columnDescription", "name": "Column Description", "dataType": "RCD", "optionality": "R", "repeatability": "*" }
+  ]
+}

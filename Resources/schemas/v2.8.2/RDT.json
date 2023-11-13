@@ -1,0 +1,8 @@
+{
+  "segmentID": "RDT",
+  "version": "2.8.2",
+  "description": "RDT",
+  "fields": [
+    { "index": 2, "swiftName": "queryMessageWillBeSentTheQueryWouldLookAsFollows117777P27MrThatContainsADicomImageOverflowsMrTheAddSegmentWillContainTheRemainderNtinuesOnAsNormal", "name": "query message will be sent. The query would look as follows: 11|7777|P|2.7| ^^MR| that contains a DICOM image overflows ^^MR| the ADD segment will contain the remainder ntinues on as normal.", "dataType": "", "optionality": "", "repeatability": "1" }
+  ]
+}

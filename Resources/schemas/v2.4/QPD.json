@@ -1,0 +1,9 @@
+{
+  "segmentID": "QPD",
+  "version": "2.4",
+  "description": "QPD",
+  "fields": [
+    { "index": 1, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryTagUserParametersInSuccessiveFields", "name": "Query Tag User Parameters (in successive fields)", "dataType": "ST", "optionality": "C", "repeatability": "1" }
+  ]
+}

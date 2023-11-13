@@ -1,0 +1,8 @@
+{
+  "segmentID": "RDT",
+  "version": "2.4",
+  "description": "RDT",
+  "fields": [
+    { "index": 1, "swiftName": "sageWillBeSentTheQueryWouldLookMrSegmentWillContainTheContinuesOnAsNormal", "name": "sage will be sent. The query would look ^^^MR| segment will contain the continues on as normal.", "dataType": "", "optionality": "", "repeatability": "1" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "segmentID": "EQU",
+  "version": "2.5.1",
+  "description": "Equipment Detail",
+  "fields": [
+    { "index": 1, "swiftName": "equipmentInstanceIdentifier", "name": "Equipment Instance Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "eventDateTime", "name": "Event Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "equipmentState", "name": "Equipment State", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "localRemoteControlState", "name": "Local/Remote Control State", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "alertLevel", "name": "Alert Level", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}

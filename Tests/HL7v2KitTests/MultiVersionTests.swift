@@ -988,6 +988,10 @@ struct MultiVersionTests {
             // v1.3 (master-files / referral batch): master-file entry/ack keys and
             // OM7 / AUT fields conditional on the master-file event or auth context.
             "MFE-2", "MFA-2", "OM7-16", "OM7-18", "AUT-6",
+            // v1.4 (query / lab-automation batch): query-tag/response and specimen-
+            // container / equipment fields conditional on the query or lab-automation
+            // event context (fail-safe; documented in the register).
+            "QPD-2", "QAK-1", "RCP-4", "EQU-3", "SAC-3", "SAC-4",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

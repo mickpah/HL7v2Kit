@@ -1,0 +1,17 @@
+{
+  "segmentID": "QRF",
+  "version": "2.6",
+  "description": "QRF",
+  "fields": [
+    { "index": 1, "swiftName": "whereSubjectFilter", "name": "Where Subject Filter", "dataType": "ST", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "whenDataStartDateTime", "name": "When Data Start Date/Time", "dataType": "DTM", "optionality": "B", "repeatability": "1" },
+    { "index": 3, "swiftName": "whenDataEndDateTime", "name": "When Data End Date/Time", "dataType": "DTM", "optionality": "B", "repeatability": "1" },
+    { "index": 4, "swiftName": "whatUserQualifier", "name": "What User Qualifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "otherQrySubjectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "whichDateTimeQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "whichDateTimeStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "dateTimeSelectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "whenQuantityTimingQualifier", "name": "When Quantity/Timing Qualifier", "dataType": "TQ", "optionality": "B", "repeatability": "1" },
+    { "index": 10, "swiftName": "searchConfidenceThreshold", "name": "Search Confidence Threshold", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+  ]
+}

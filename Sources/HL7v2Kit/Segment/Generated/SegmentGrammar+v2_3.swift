@@ -952,6 +952,65 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 37, name: "Baby Detained Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "QAK": SegmentGrammar(
+            segmentID: "QAK",
+            version: "2.3",
+            fields: [
+            FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Query Response Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "QRD": SegmentGrammar(
+            segmentID: "QRD",
+            version: "2.3",
+            fields: [
+            FieldGrammar(index: 1, name: "Query Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Query Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Query Priority", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Query ID", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Deferred Response Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Deferred Response Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Quantity Limited Request", dataType: "CQ", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Who Subject Filter", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "What Subject Filter", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "What Department Data Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 11, name: "What Data Code Value Qual.", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 12, name: "Query Results Level", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "QRF": SegmentGrammar(
+            segmentID: "QRF",
+            version: "2.3",
+            fields: [
+            FieldGrammar(index: 1, name: "Filter", dataType: "ST", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 2, name: "rt Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "lifier", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 5, name: "ject Filter", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "me Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "me Status Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 8, name: "ection Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "/Timing Qualifier", dataType: "TQ", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "RDF": SegmentGrammar(
+            segmentID: "RDF",
+            version: "2.3",
+            fields: [
+            FieldGrammar(index: 1, name: "Number of Columns per Row", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Column Description", dataType: "RCD", optionality: .required, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "RDT": SegmentGrammar(
+            segmentID: "RDT",
+            version: "2.3",
+            fields: [
+            FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Query/ Response Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Stored Procedure Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Input Parameter List", dataType: "QIP", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
         "RF1": SegmentGrammar(
             segmentID: "RF1",
             version: "2.3",
