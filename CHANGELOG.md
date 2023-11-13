@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] — 2026-07-13
+
+M5 sweep — typed-segment coverage **29 → 57** (two batches). Additive / correctness only;
+the frozen v1.0 API grows but never breaks (ADR-014). Tests: 510 → **513**.
+
 ### M5 sweep — 14 new segments (master-files + referral)
 
 Fourth sweep batch. Adds **MFI/MFE/MFA + OM1–OM7** (CH08 master files) and

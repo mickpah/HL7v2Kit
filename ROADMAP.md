@@ -11,7 +11,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-07-13 |
-| Current release | **`v1.2.0`** (on `private`); **v1.3 committed on worktree** (57 typed segments), awaiting merge/tag. API frozen; **still provisional pending full-coverage parity** (see M5). |
+| Current release | **`v1.3.0`** (on `private` only) — M5 sweep: 57 typed segments at full per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
 | Next planned cycle | **M5 sweep continues (v1.4+)** — the ~131 unmodelled segments by chapter/family off the inventory. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
