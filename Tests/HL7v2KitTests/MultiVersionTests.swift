@@ -992,6 +992,11 @@ struct MultiVersionTests {
             // container / equipment fields conditional on the query or lab-automation
             // event context (fail-safe; documented in the register).
             "QPD-2", "QAK-1", "RCP-4", "EQU-3", "SAC-3", "SAC-4",
+            // v1.4 (master-file locations / patient-care / med-records batch):
+            // location-relationship, pricing, goal/problem/pathway and transcription-
+            // document fields conditional on the master-file / care / document event.
+            "LRL-5", "LRL-6", "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
+            "TXA-3", "TXA-5", "TXA-7", "TXA-11", "TXA-13", "TXA-22",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

@@ -1,0 +1,32 @@
+{
+  "segmentID": "PRB",
+  "version": "2.3",
+  "description": "PRB",
+  "fields": [
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "problemId", "name": "Problem ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "problemInstanceId", "name": "Problem Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "episodeOfCareId", "name": "Episode of Care ID", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "problemListPriority", "name": "Problem List Priority", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "problemEstablishedDateTime", "name": "Problem Established Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "anticipatedProblemResolutionDateTime", "name": "Anticipated Problem Resolution Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "actualProblemResolutionDateTime", "name": "Actual Problem Resolution Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "problemClassification", "name": "Problem Classification", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "problemManagementDiscipline", "name": "Problem Management Discipline", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "problemPersistence", "name": "Problem Persistence", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "problemConfirmationStatus", "name": "Problem Confirmation Status", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "problemLifeCycleStatus", "name": "Problem Life Cycle Status", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "problemLifeCycleStatusDateTime", "name": "Problem Life Cycle Status Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "problemDateOfOnset", "name": "Problem Date of Onset", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "problemOnsetText", "name": "Problem Onset Text", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "problemRanking", "name": "Problem Ranking", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "certaintyOfProblem", "name": "Certainty of Problem", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "probabilityOfProblem01", "name": "Probability of Problem (0-1)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "individualAwarenessOfProblem", "name": "Individual Awareness of Problem", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "problemPrognosis", "name": "Problem Prognosis", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "individualAwarenessOfPrognosis", "name": "Individual Awareness of Prognosis", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "familySignificantOtherAwarenessOfProblemPrognosis", "name": "Family/Significant Other Awareness of Problem/Prognosis", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "securitySensitivityNtainingKnowledgeAboutDataAIntegrityItIsAlsoTheir", "name": "Security/Sensitivity ntaining knowledge about data a integrity). It is also their", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}
