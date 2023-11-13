@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — 14 new segments (scheduling / blood-product / specimen / role)
+
+Third sweep cycle. Adds **SPM** (CH07), **ROL** (CH15), the CH10 scheduling family
+(**SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ**), and blood-product **BPO/BPX/BTX** + **RXA** (CH04).
+Typed-segment count **29 → 43**, each full-depth on every version it appears in.
+Extractor-seeded + golden-`--verify`ed; additive API growth only (ADR-014). Tests: 512.
+
+- **RXA** resolves to the base "Pharmacy/Treatment Administration" table (26 fields), not
+  the "Segment Uses in Vaccine Messages" profile table that follows it — pinned by test.
+- **Extractor reliability fix:** `detectHeader` now accepts the legacy `R/O/C`
+  optionality-column header. v2.3 CH10 uses it, so the whole scheduling chapter had been
+  silently skipped; all v2.3 scheduling grammar is now present. Golden v2.5.1 unaffected.
+- **Conditional-completeness:** 55 new conditional-without-trigger fields
+  (scheduling/blood-product/specimen/role) bulk-documented + added to the v2.8.2 guard set
+  (fail-safe; ~104 documented total).
+
 ## [1.2.0] — 2026-07-13
 
 M5 sweep — typed-segment coverage **15 → 29**, all at full per-version depth. Additive /
