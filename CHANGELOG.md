@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — 14 new segments (query + lab-automation)
+
+Fifth sweep batch. Adds **QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT** (CH05 query) and
+**EQU/SAC/INV/TCC/TCD/EQP** (CH13 lab automation) — each full-depth on every version it
+appears in. Typed-segment count **57 → 71**. v2.3 query segments sourced from CH2 (v2.3
+CH5 is an empty placeholder); QPD/QID/RCP are v2.4+; lab-automation is v2.5+. 6 new
+conditional fields documented + guarded. Additive (ADR-014). Tests: 514.
+
 ## [1.3.0] — 2026-07-13
 
 M5 sweep — typed-segment coverage **29 → 57** (two batches). Additive / correctness only;
