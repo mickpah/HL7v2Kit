@@ -23,10 +23,10 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 **Shipped and solid:**
 
 - **Parsing / serialisation** — lossless round-trip; BOM/NUL hardening; MLLP codec (ADR-006); batch + streaming (`AsyncThrowingStream`) parsers.
-- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** fully covered (the grammar-less `.v2_8` case aside): per-version field grammar, typed segments (15), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Coverage spans v2.3 → v2.8.2, the full published-standard set.** See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
+- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** fully covered (the grammar-less `.v2_8` case aside): per-version field grammar, typed segments (15 at v1.0.0; **85 as of v1.4, unmerged** — see M5), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Coverage spans v2.3 → v2.8.2, the full published-standard set.** See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
 - **Validation DSL** — same-segment compound predicates (v0.4-S4); cross-segment / message-context / position atoms (ADR-008); segment-presence atoms + subcomponent-granular field-refs + group-scope cardinality (ADR-010).
 - **Locale / AU profile** — `HL7Locale.{international, auLocalisation}`; ADRM-2021 overlays for HL7au:000003–000008, 000040–000042, and the machine-checkable 00044 CE/CNE/CWE narrowings (ADR-009 + ADR-011). Compiler-checked Swift is the single source of truth (JSON overlays retired v0.13.1).
-- **Docs discipline** — ADR-001…013 all Accepted + implemented; four spec-audit docs (v2_3-v2_4, v2_5_1, v2_6, v2_8_2) + the conditional-completeness register (v0.16); slim STATUS/NEXT_STEPS with archive snapshots at each boundary.
+- **Docs discipline** — ADR-001…015 all Accepted + implemented; four spec-audit docs (v2_3-v2_4, v2_5_1, v2_6, v2_8_2) + the conditional-completeness register (v0.16); slim STATUS/NEXT_STEPS with archive snapshots at each boundary.
 
 **Documented permanent limitations** (not defects — honesty per req #3/#4): the base-spec conditional-without-condition set (OBR-1/8/9/10/11/20/21/22/26/32, OBR-48, OBX-4/5/22, DG1-22) is the v0.16 M2 register (`docs/design/conditional-completeness-audit.md`); AU narrowings HL7au:00044.4.3 (CE text carve-out), 00044.4.7 (concept-match, needs terminology service), 00044.2 (PKI runtime), HL7au:000001 (receiver-runtime semantics).
 
@@ -77,8 +77,8 @@ The four themes below are roughly independent and can interleave across cycles. 
   - ✅ **v1.2:** NK1/PV1/IN1 per-version full depth (closes the immediate gap) + 14 new typed segments (PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG) full-depth on all versions → **29 typed segments**. Also an extractor legacy-CH4 reliability fix.
   - ✅ **v1.3:** 28 new segments — SPM/ROL + CH10 scheduling + blood-product/RXA, then master-files (MFI/MFE/MFA + OM1–OM7) + referral (RF1/AUT/PRD/CTD) → **57 typed segments**. Also an extractor legacy-`R/O/C`-header reliability fix.
   - 🟠 **v1.4 (committed, unmerged):** query (CH05) + lab-automation (CH13) + master-file-locations/patient-care/med-records (CH08/CH12/CH09) → **85 typed segments**. Surfaced an extractor DT-accuracy issue → **v1.5 hardening** before release.
-  - ⚠️ **v1.5:** extractor DT-accuracy + row-robustness hardening; regenerate + re-verify all segments.
-  - **v1.5+ (next):** the ~117 unmodelled segments by chapter/family.
+  - ⚠️ **v1.5 (next):** extractor DT-accuracy + row-robustness hardening; regenerate + re-verify all segments from a clean extractor; fold in + release the v1.4 work.
+  - **v1.6+ (later):** the **~103 unmodelled segments** by chapter/family (remaining CH13 lab, CH12 patient-care, financial CH06, the long tail).
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
 ---
