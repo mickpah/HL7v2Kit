@@ -24,7 +24,7 @@ partial). So M5's gap is **173 unmodelled segments** plus per-version depth for 
 The ~850 figure is the full schema-authoring runway (each segment × each version it
 appears in, at full field depth).
 
-## Currently modelled (71)
+## Currently modelled (85)
 
 `AIG AIL AIP AIS AL1 APR ARQ AUT BPO BPX BTX CTD DB1 DG1 EQP EQU ERR EVN GT1 IN1 IN2 IN3
 INV MFA MFE MFI MRG MSA MSH NK1 NTE OBR OBX OM1 OM2 OM3 OM4 OM5 OM6 OM7 ORC PD1 PID PRD
@@ -35,8 +35,9 @@ Canonical v2.5.1 defect-clean + complete (v1.1-S3). **NK1/PV1/IN1 full-depth on 
 versions (v1.2).** New typed segments, full-depth on all versions they appear in:
 **v1.2** PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG; **v1.3**
 SPM/ROL/SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ/BPO/BPX/BTX/RXA + MFI/MFE/MFA/OM1–OM7/RF1/AUT/PRD/CTD;
-**v1.4** QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT + EQU/SAC/INV/TCC/TCD/EQP.
-**~117 segments remain unmodelled** — the v1.5+ runway.
+**v1.4** QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT + EQU/SAC/INV/TCC/TCD/EQP + LOC/LCH/LRL/LDP/LCC/CDM/PRC/IIM + GOL/PRB/PTH/VAR + TXA/CON.
+**~103 segments remain unmodelled.** v1.4 is committed but UNMERGED, pending the v1.5
+extractor DT-accuracy hardening (see `segment-coverage-extraction.md`).
 
 ## The union work-list (188)
 

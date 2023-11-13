@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **Note (2026-07-14):** the v1.4 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. A v1.4 spike found an extractor datatype-column-assignment issue on some wide-column layouts (GOL/OM*); the fix + a full regeneration are deferred to a **v1.5 extractor-hardening cycle** (see `docs/design/segment-coverage-extraction.md`). A few v1.4 schemas carry imperfect `dataType` on a handful of fields until then (non-fatal; empty DT → untyped accessor).
+
+### M5 sweep — 14 new segments (master-file locations + patient-care + med-records)
+
+Sixth sweep batch. Adds **LOC/LCH/LRL/LDP/LCC/CDM/PRC/IIM** (CH08 master files), **GOL/PRB/PTH/VAR** (CH12 patient care), **TXA/CON** (CH09 med records) — full-depth on every version they appear in. Typed count **71 → 85**. IIM moved CH08→CH17 across versions (sourced accordingly); CON is v2.6+. 13 conditional fields documented + guarded (~128 total). Tests: 514.
+
 ### M5 sweep — 14 new segments (query + lab-automation)
 
 Fifth sweep batch. Adds **QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT** (CH05 query) and

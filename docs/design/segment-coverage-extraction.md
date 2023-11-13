@@ -118,3 +118,33 @@ that underpins the typed segments. They should be corrected as an additive/fix c
 OBX/OBR accessors are additive, ADR-014-clean; the OPT/RP fixes are validation-behaviour
 corrections). Then the sweep extends per-version and to the ~135 unmodelled segments off
 the S3 inventory. Every step runs the golden gate above.
+
+## Known extraction limitations + v1.5 hardening backlog (found during the v1.4 sweep)
+
+The v1.4 batches (query/lab + master-file/care, 57 → 85 typed) surfaced extractor edge
+cases that affect **datatype fidelity** on specific PDF layouts. They do not crash or
+misfire validation (an empty/wrong `dataType` yields an untyped `Field?` accessor, and the
+field still parses / round-trips), but they are a req-#2/#4 faithfulness gap. **A dedicated
+v1.5 "extractor hardening" cycle is planned** to fix all three items below, then regenerate
++ re-verify **every** segment across all versions from a clean extractor.
+
+1. **Column assignment mis-bins right/left-leaning values.** `nearestColumnKey` assigns
+   each run to the nearest header-label **centre**. Where a table's `DT` values sit well to
+   the right of the label (v2.5.1 **CH12 GOL** — GOL-1 `Action Code` extracts empty `DT`
+   instead of `ID`; GOL-4/5 drop `EI`) or a hair left (v2.5.1 **CH04 BPO** — `CWE` just left
+   of the `DT` label), the datatype is dropped/mis-assigned. **Fix (validated in a v1.4
+   spike, then reverted for stability):** assign by smallest distance between the run's
+   **start** and each label's **start** — resolved GOL *and* BPO and kept golden NK1/PV1/IN1
+   passing. A full re-verify will enumerate all affected segments (GOL, OM1/OM4, other
+   wide-column CH08/CH12 tables).
+2. **Spurious `index:0` rows on some tables.** OM4 (CH08) parses three non-field lines as
+   rows (`index:0`, empty name/DT) — they collide on derived swiftName `field3` (breaks
+   codegen) and mask three real trailing fields. Row detection must reject `seq < 1` and
+   empty-name/empty-DT rows, and diagnose why the real SEQ tokens weren't read.
+3. **`deriveSwiftName` must guarantee global uniqueness** (the `field3` collision) and drop
+   possessive `'s` fragments (v1.2 saw `contactPersonSTelecom…`).
+
+**Performance note:** `swift <file>` recompiles the ~500-line script every invocation,
+making full regeneration impractically slow. Compile once —
+`xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin` — and drive
+regeneration from the binary (~20× faster; full canonical re-verify then takes minutes).

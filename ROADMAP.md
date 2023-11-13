@@ -10,9 +10,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-07-13 |
-| Current release | **`v1.3.0`** (on `private`); **v1.4 committed on worktree** (71 typed segments), awaiting merge/tag. API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **M5 sweep continues (v1.5+)** — the ~117 unmodelled segments by chapter/family off the inventory. Gates the first public push. |
+| Last updated | 2026-07-14 |
+| Current release | **`v1.3.0`** (on `private`); **v1.4 committed on worktree (85 typed segments), UNMERGED** — paused on an extractor DT-accuracy finding (v1.5 hardening). API frozen; **still provisional pending full-coverage parity** (see M5). |
+| Next planned cycle | **v1.5 — extractor DT-accuracy hardening** (regenerate + re-verify all segments from a clean extractor), then resume the sweep (~103 unmodelled). Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -70,13 +70,14 @@ The four themes below are roughly independent and can interleave across cycles. 
 ### M5 — Full HL7 segment coverage across all versions 🟠 **(foundation done v1.1; sweep ongoing — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
-- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **71 typed segments** (canonical v2.5.1 full + defect-clean; NK1/PV1/IN1 full-depth on all 6 versions + 56 new segments across v1.2–v1.4; **~117 segments unmodelled**).
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **85 typed segments** (canonical v2.5.1 full + defect-clean; NK1/PV1/IN1 full-depth on all 6 versions + 70 new segments across v1.2–v1.4, v1.4 unmerged; **~103 segments unmodelled**).
 - **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
 - **✅ Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
 - **⬅ Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
   - ✅ **v1.2:** NK1/PV1/IN1 per-version full depth (closes the immediate gap) + 14 new typed segments (PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG) full-depth on all versions → **29 typed segments**. Also an extractor legacy-CH4 reliability fix.
   - ✅ **v1.3:** 28 new segments — SPM/ROL + CH10 scheduling + blood-product/RXA, then master-files (MFI/MFE/MFA + OM1–OM7) + referral (RF1/AUT/PRD/CTD) → **57 typed segments**. Also an extractor legacy-`R/O/C`-header reliability fix.
-  - ✅ **v1.4:** query (CH05) + lab-automation (CH13) → **71 typed segments**.
+  - 🟠 **v1.4 (committed, unmerged):** query (CH05) + lab-automation (CH13) + master-file-locations/patient-care/med-records (CH08/CH12/CH09) → **85 typed segments**. Surfaced an extractor DT-accuracy issue → **v1.5 hardening** before release.
+  - ⚠️ **v1.5:** extractor DT-accuracy + row-robustness hardening; regenerate + re-verify all segments.
   - **v1.5+ (next):** the ~117 unmodelled segments by chapter/family.
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
