@@ -33,6 +33,8 @@
 | RXO/RXE/RXD/RXG/RXC/TQ1/TQ2 (31 fields) | order/pharmacy/timing conditionals | v2.3–v2.8.2 | Permanent limitation (v1.2, grouped below) |
 | SCH/RGS/ARQ/AIS/AIG/AIL/AIP/BPX/BTX/SPM/ROL/RXA (55 fields) | scheduling/blood-product/specimen/role conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
 | MFE/MFA/OM7/AUT (5 fields) | master-files/referral conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
+| QPD/QAK/RCP/EQU/SAC (6 fields) | query/lab-automation conditionals | v2.3–v2.8.2 | Permanent limitation (v1.4, grouped below) |
+| LRL/PRC/GOL/PRB/PTH/TXA (13 fields) | master-file-location/care/document conditionals | v2.3–v2.8.2 | Permanent limitation (v1.4b, grouped below) |
 
 ## Shipped in v0.16 (S2)
 
@@ -99,6 +101,15 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **OM7-16 / OM7-18** (Additional Basic Attributes) — conditional on the observation's orderability/category, not wire-encoded in a peer field.
 - **AUT-6** (Authorization — Reimbursement Limit) — conditional on the authorization decision context.
 
+**Query / lab-automation family (added v1.4 — CH05/CH13):**
+- **QPD-2 / QAK-1** (Query Tag) and **RCP-4** (Segment-group inclusion) — keyed on the query/response paradigm (a response correlating to a prior query), not a same-segment peer.
+- **EQU-3** (Equipment State) and **SAC-3 / SAC-4** (Specimen Container / Carrier identifiers) — conditional on the lab-automation event (container vs. carrier context).
+
+**Master-file locations / patient-care / med-records family (added v1.4b — CH08/CH12/CH09):**
+- **LRL-5 / LRL-6** (Location Relationship — org/location targets) and **PRC-5** (Pricing) — conditional on the master-file location/charge event.
+- **GOL-22 / PRB-28** (Goal/Problem — action-code-gated fields) and **PTH-6 / PTH-7** (Pathway status) — conditional on the care-record action (add/update/delete).
+- **TXA-3/5/7/11/13/22** (Transcription Document Header) — document-status / activity-datetime fields conditional on the document-completion event.
+
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
@@ -106,6 +117,6 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 ## Outcome
 
 - **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **~109 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 in v1.2 [PV2 + order/pharmacy/timing]; +55 v1.3 scheduling/blood-product/specimen/role; +5 v1.3 master-files/referral); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
+- **~128 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

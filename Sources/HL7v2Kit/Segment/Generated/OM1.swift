@@ -173,11 +173,6 @@ public struct OM1: TypedSegment, Sendable, Equatable, Hashable {
         field(32)?.stringValue
     }
 
-    /// OM1-6: . HL7 data type ``.
-    public var field: Field? {
-        field(6)
-    }
-
     /// OM1-33: Contraindications to Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     public var contraindicationsToObservations: CE? {
         field(33).map(CE.init(field:))
@@ -221,11 +216,6 @@ public struct OM1: TypedSegment, Sendable, Equatable, Hashable {
     /// OM1-41: Description of Test Methods. HL7 data type `TX`.
     public var descriptionOfTestMethods: String? {
         field(41)?.stringValue
-    }
-
-    /// OM1-6: . HL7 data type ``.
-    public var field2: Field? {
-        field(6)
     }
 
     /// OM1-42: Kind of Quantity Observed. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

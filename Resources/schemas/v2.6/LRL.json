@@ -1,0 +1,13 @@
+{
+  "segmentID": "LRL",
+  "version": "2.6",
+  "description": "LRL",
+  "fields": [
+    { "index": 1, "swiftName": "primaryKeyValueLrl", "name": "Primary Key Value - LRL", "dataType": "PL", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "segmentUniqueKey", "name": "Segment Unique Key", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "locationRelationshipId", "name": "Location Relationship ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "organizationalLocationRelationshipValue", "name": "Organizational Location Relationship Value", "dataType": "XON", "optionality": "C", "repeatability": "*" },
+    { "index": 6, "swiftName": "patientLocationRelationshipValue", "name": "Patient Location Relationship Value", "dataType": "PL", "optionality": "C", "repeatability": "1" }
+  ]
+}

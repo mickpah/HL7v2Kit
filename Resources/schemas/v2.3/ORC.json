@@ -141,6 +141,22 @@
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "enteringDevice",
+      "name": "Entering Device",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 19,
+      "swiftName": "actionBy",
+      "name": "Action By",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

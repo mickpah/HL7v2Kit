@@ -1,0 +1,8 @@
+{
+  "segmentID": "RDT",
+  "version": "2.6",
+  "description": "Table Row Data",
+  "fields": [
+    { "index": 1, "swiftName": "columnValue", "name": "Column Value", "dataType": "varies", "optionality": "R", "repeatability": "1" }
+  ]
+}

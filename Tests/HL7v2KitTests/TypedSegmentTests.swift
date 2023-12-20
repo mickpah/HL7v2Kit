@@ -1267,11 +1267,14 @@ struct TypedSegmentTests {
     // v1.1 (ADR-015): the extraction pipeline's golden audit against the v2.5.1 PDFs
     // caught 11 metadata defects + 2 incomplete segments in the pre-pipeline canonical
     // schemas. These pins guard the corrections so they can never silently regress.
-    @Test("v1.1: OBR completed to 50 fields, OBX to 24 (were 47 / 17)")
+    @Test("v1.1/v1.6: OBR completed to 50 fields, OBX to 25 (were 47 / 17)")
     func v1_1CompletedFieldCounts() {
         let table = SegmentGrammarTable.v2_5_1
         #expect(table["OBR"]?.fields.count == 50)
-        #expect(table["OBX"]?.fields.count == 24)
+        // v1.6 depth audit: OBX is 25, not 24 — v1.1 added 18..24 but stopped one row
+        // short of the v2.5.1 table. OBX-25 is Performing Organization Medical Director.
+        #expect(table["OBX"]?.fields.count == 25)
+        #expect(table["OBX"]?.field(25)?.dataType == "XCN")
         // Newly-authored trailing fields carry their v2.5.1 spec datatype.
         #expect(table["OBR"]?.field(48)?.dataType == "CWE")  // Medically Necessary Duplicate Procedure Reason
         #expect(table["OBR"]?.field(49)?.dataType == "IS")   // Result Handling (IS in v2.5.1)
@@ -1402,12 +1405,16 @@ struct TypedSegmentTests {
         #expect(t["MFI"]?.fields.count == 6)
         #expect(t["MFE"]?.fields.count == 5)
         #expect(t["MFA"]?.fields.count == 6)
-        #expect(t["OM1"]?.fields.count == 49)
+        // v1.5 correction: OM1 47 / OM4 14 / OM6 2 are the true §8.8 depths. The earlier
+        // 49 / 17 / 3 pins counted phantom rows the extractor produced from wrapped LEN
+        // digits (OM6's "10240" split as a bare "0" row, etc.) — see the v1.5 hardening
+        // note in docs/design/segment-coverage-extraction.md.
+        #expect(t["OM1"]?.fields.count == 47)
         #expect(t["OM2"]?.fields.count == 10)
         #expect(t["OM3"]?.fields.count == 7)
-        #expect(t["OM4"]?.fields.count == 17)
+        #expect(t["OM4"]?.fields.count == 14)
         #expect(t["OM5"]?.fields.count == 3)
-        #expect(t["OM6"]?.fields.count == 3)
+        #expect(t["OM6"]?.fields.count == 2)
         #expect(t["OM7"]?.fields.count == 24)
         #expect(t["RF1"]?.fields.count == 11)
         #expect(t["AUT"]?.fields.count == 10)
@@ -1480,5 +1487,56 @@ struct TypedSegmentTests {
         // TQ1/TQ2 are v2.5+ — absent on the older tables.
         #expect(SegmentGrammarTable.v2_3["TQ1"] == nil)
         #expect(SegmentGrammarTable.v2_6["TQ1"]?.fields.count == 14)
+    }
+
+    // v1.4 (M5 sweep, query/lab batch): QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT (CH05) +
+    // EQU/SAC/INV/TCC/TCD/EQP (CH13). Canonical depths + registry hydration.
+    @Test("v1.4: query + lab-automation segments — canonical depths + registration")
+    func v1_4QueryLabCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["QPD"]?.fields.count == 2)
+        #expect(t["QRD"]?.fields.count == 12)
+        #expect(t["QRF"]?.fields.count == 10)
+        #expect(t["QAK"]?.fields.count == 6)
+        #expect(t["QID"]?.fields.count == 2)
+        #expect(t["RCP"]?.fields.count == 7)
+        #expect(t["RDF"]?.fields.count == 2)
+        #expect(t["RDT"]?.fields.count == 1)
+        #expect(t["EQU"]?.fields.count == 5)
+        #expect(t["SAC"]?.fields.count == 44)
+        #expect(t["INV"]?.fields.count == 20)
+        #expect(t["TCC"]?.fields.count == 14)
+        #expect(t["TCD"]?.fields.count == 8)
+        #expect(t["EQP"]?.fields.count == 5)   // v1.5: was 6 — phantom row from wrapped LEN "65536"
+        // v1.5: RDT is a "1-n" variable-column segment (§5.5.8) — one spec-defined field.
+        // Pinned by identity, not just count: the pre-v1.5 schema also had exactly one
+        // field, but it was extractor garbage (name "", dataType "s").
+        let rdt1 = try #require(t["RDT"]?.fields.first)
+        #expect(rdt1.index == 1)
+        #expect(rdt1.name == "Column Value")
+        #expect(rdt1.dataType == "varies")
+        #expect(rdt1.optionality == .required)
+        // Lab-automation segments are v2.5+ — absent on v2.3.
+        #expect(SegmentGrammarTable.v2_3["SAC"] == nil)
+        // v2.3 query segments live in CH2 (CH5 is an empty placeholder in v2.3).
+        #expect(SegmentGrammarTable.v2_3["QRD"]?.fields.count == 12)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||QBP^Q11|M1|P|2.5.1\r"
+            + "QPD|Q^^HL7|tag1\r" + "RCP|I\r"
+            + "QRD|20240101120000\r" + "QRF|X\r" + "QAK|tag1|OK\r" + "QID|q1\r"
+            + "RDF|1\r" + "RDT|v\r"
+            + "EQU|E1\r" + "SAC|AC1\r" + "INV|I1\r" + "TCC|T1\r" + "TCD|T1\r" + "EQP|EV\r"
+        let message = try Parser().parse(wire)
+        let qrd = try #require(message.firstSegment(QRD.self))
+        #expect(qrd.queryDateTime == message["QRD-1"])
+        for present in [message.firstSegment(QPD.self) != nil, message.firstSegment(RCP.self) != nil,
+                        message.firstSegment(QRF.self) != nil, message.firstSegment(QAK.self) != nil,
+                        message.firstSegment(QID.self) != nil, message.firstSegment(RDF.self) != nil,
+                        message.firstSegment(RDT.self) != nil, message.firstSegment(EQU.self) != nil,
+                        message.firstSegment(SAC.self) != nil, message.firstSegment(INV.self) != nil,
+                        message.firstSegment(TCC.self) != nil, message.firstSegment(TCD.self) != nil,
+                        message.firstSegment(EQP.self) != nil] {
+            #expect(present)
+        }
     }
 }

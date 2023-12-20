@@ -94,8 +94,8 @@
     },
     {
       "index": 12,
-      "swiftName": "effectiveDateOfReferenceRange",
-      "name": "Effective Date of Reference Range",
+      "swiftName": "dateLastObsNormalValues",
+      "name": "Date Last Obs Normal Values",
       "dataType": "TS",
       "optionality": "O",
       "repeatability": "1"
@@ -115,6 +115,30 @@
       "dataType": "TS",
       "optionality": "O",
       "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "producersID",
+      "name": "Producer's ID",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "responsibleObserver",
+      "name": "Responsible Observer",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 17,
+      "swiftName": "observationMethod",
+      "name": "Observation Method",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
     }
   ]
 }

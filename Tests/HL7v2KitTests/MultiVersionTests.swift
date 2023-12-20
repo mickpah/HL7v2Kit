@@ -72,8 +72,9 @@ struct MultiVersionTests {
         #expect(table["OBX"] != nil)
         // PID v2.3.1 caps at 30 fields (vs 39 in v2.5.1).
         #expect(table["PID"]?.fields.count == 30)
-        // ORC v2.3.1 caps at 17 fields (vs 31 in v2.5.1).
-        #expect(table["ORC"]?.fields.count == 17)
+        // ORC v2.3.1 has 24 fields (vs 31 in v2.5.1). v1.6 depth audit: was pinned at 17,
+        // which was the authored depth, not the spec's (ORC-18..24 were never authored).
+        #expect(table["ORC"]?.fields.count == 24)
         // v0.12 T-back-port additions (mirror of the v0.6 v2.4 back-port):
         #expect(table["EVN"]?.fields.count == 6)    // v2.4 has 7 (adds Event Facility)
         #expect(table["MSA"]?.fields.count == 6)
@@ -204,14 +205,16 @@ struct MultiVersionTests {
     @Test("v2.4 SegmentGrammarTable populated for all 15 segments with v2.4 caps")
     func v24GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_4
-        #expect(table["MSH"]?.fields.count == 20)   // v2.3.1 was 17, v2.5.1 is 21
-        #expect(table["PID"]?.fields.count == 32)   // v2.3.1 was 30, v2.5.1 is 39
-        #expect(table["ORC"]?.fields.count == 19)   // v2.3.1 was 17, v2.5.1 is 31
-        #expect(table["OBX"]?.fields.count == 16)   // v2.3.1 was 14, v2.5.1 is 17
+        // v1.6 depth audit: MSH/PID/ORC/OBX/NTE were pinned at their authored depth, not
+        // the spec's. Corrected against the v2.4 attribute tables.
+        #expect(table["MSH"]?.fields.count == 21)   // was 20; MSH-21 Conformance Statement ID
+        #expect(table["PID"]?.fields.count == 38)   // was 32; PID-33..38
+        #expect(table["ORC"]?.fields.count == 25)   // was 19; ORC-20..25
+        #expect(table["OBX"]?.fields.count == 19)   // was 16; OBX-17..19
         #expect(table["OBR"]?.fields.count == 47)   // matches v2.5.1
         #expect(table["NK1"]?.fields.count == 37)   // v1.2: full per-version depth (was curated 13)
         #expect(table["PV1"]?.fields.count == 52)   // v1.2: full per-version depth (was curated 20)
-        #expect(table["NTE"]?.fields.count == 3)    // NTE-4 was added in v2.5
+        #expect(table["NTE"]?.fields.count == 4)    // was 3; NTE-4 Comment Type exists in v2.4
         #expect(table["AL1"]?.fields.count == 6)
         // v0.6 T-back-port additions:
         #expect(table["EVN"]?.fields.count == 7)
@@ -226,10 +229,11 @@ struct MultiVersionTests {
     func v24ExtendedFieldsReturnNilForV25Additions() throws {
         let message = try Parser().parse(v24Wire)
         let pid = try #require(message.firstSegment(PID.self))
-        // v2.4 caps PID at 32, so PID-31 + PID-32 ARE populated.
+        // v2.4 PID reaches 38, so PID-31 + PID-32 ARE populated.
         #expect(pid.identityUnknownIndicator == "N")
         #expect(pid.identityReliabilityCode == "US")
-        // v2.5-only fields (PID-33..39) stay nil.
+        // PID-33..38 exist in v2.4 but are absent from this wire; PID-39 is v2.5-only.
+        // Either way the accessors read the wire, so all three stay nil.
         #expect(pid.lastUpdateDateTime == nil)
         #expect(pid.speciesCode == nil)
         #expect(pid.tribalCitizenship == nil)
@@ -243,7 +247,7 @@ struct MultiVersionTests {
         let pid24  = SegmentGrammarTable.v2_4["PID"]?.fields.count
         let pid251 = SegmentGrammarTable.v2_5_1["PID"]?.fields.count
         #expect(pid231 == 30)
-        #expect(pid24  == 32)
+        #expect(pid24  == 38)   // v1.6: was 32 (authored depth)
         #expect(pid251 == 39)
         #expect(pid231! < pid24!)
         #expect(pid24!  < pid251!)
@@ -285,10 +289,12 @@ struct MultiVersionTests {
     @Test("v2.3 SegmentGrammarTable populated for all 15 segments with v2.3 caps")
     func v23GrammarTablePopulated() {
         let table = SegmentGrammarTable.v2_3
-        #expect(table["MSH"]?.fields.count == 15)   // smallest MSH surface
+        // v1.6 depth audit: MSH/ORC/OBX were pinned at their authored depth, not the
+        // spec's. Corrected against the v2.3 attribute tables (CH2 / CH4 / CH7).
+        #expect(table["MSH"]?.fields.count == 19)   // was 15; MSH-16..19
         #expect(table["PID"]?.fields.count == 30)   // same as v2.3.1
-        #expect(table["ORC"]?.fields.count == 17)   // same as v2.3.1
-        #expect(table["OBX"]?.fields.count == 11)   // smallest OBX (v2.3 added 12/13/14 later)
+        #expect(table["ORC"]?.fields.count == 19)   // was 17; ORC-18/19
+        #expect(table["OBX"]?.fields.count == 17)   // was 11; OBX-12..17
         #expect(table["OBR"]?.fields.count == 43)   // same as v2.3.1
         #expect(table["NK1"]?.fields.count == 37)   // v1.2: full per-version depth (was curated 13)
         #expect(table["PV1"]?.fields.count == 52)   // v1.2: full per-version depth (was curated 20)
@@ -308,19 +314,66 @@ struct MultiVersionTests {
         #expect(table["IN1"]?.field(17)?.dataType == "IS")
     }
 
-    @Test("Four-way grammar dispatch: MSH grows monotonically 15 → 17 → 20 → 21")
+    @Test("Four-way grammar dispatch: MSH grows 19 → 20 → 21 → 21 across dialects")
     func fourWayGrammarDispatch() {
         let msh23  = SegmentGrammarTable.v2_3["MSH"]?.fields.count
         let msh231 = SegmentGrammarTable.v2_3_1["MSH"]?.fields.count
         let msh24  = SegmentGrammarTable.v2_4["MSH"]?.fields.count
         let msh251 = SegmentGrammarTable.v2_5_1["MSH"]?.fields.count
-        #expect(msh23  == 15)
-        #expect(msh231 == 17)
-        #expect(msh24  == 20)
+        // v1.6 depth audit corrected v2.3 (15 → 19), v2.3.1 (17 → 20) and v2.4 (20 → 21).
+        // Growth is non-decreasing, not strictly increasing: v2.4 and v2.5.1 both carry 21
+        // fields (v2.5 renamed MSH-21 Conformance Statement ID → Message Profile Identifier
+        // and retyped it ID → EI, but added no field).
+        #expect(msh23  == 19)
+        #expect(msh231 == 20)
+        #expect(msh24  == 21)
         #expect(msh251 == 21)
         #expect(msh23! < msh231!)
         #expect(msh231! < msh24!)
-        #expect(msh24!  < msh251!)
+        #expect(msh24!  <= msh251!)
+    }
+
+    // v1.6 per-version depth audit. Every committed schema's depth was diffed against its
+    // own version's attribute table; 46 fields across 14 (version, segment) pairs had never
+    // been authored. These pins guard the fills, and the element-name assertions guard the
+    // per-version *naming* divergences that the fill work uncovered — a field can be
+    // renamed between versions, so a name must never be copied from the canonical schema.
+    @Test("v1.6: per-version depth fills + per-version element-name divergences")
+    func v1_6DepthAuditFills() {
+        // Depths that were short before the audit.
+        #expect(SegmentGrammarTable.v2_3["MSH"]?.fields.count == 19)
+        #expect(SegmentGrammarTable.v2_3["OBX"]?.fields.count == 17)
+        #expect(SegmentGrammarTable.v2_3["ORC"]?.fields.count == 19)
+        #expect(SegmentGrammarTable.v2_3_1["MSH"]?.fields.count == 20)
+        #expect(SegmentGrammarTable.v2_3_1["OBR"]?.fields.count == 45)
+        #expect(SegmentGrammarTable.v2_3_1["OBX"]?.fields.count == 17)
+        #expect(SegmentGrammarTable.v2_3_1["ORC"]?.fields.count == 24)
+        #expect(SegmentGrammarTable.v2_3_1["NTE"]?.fields.count == 4)
+        #expect(SegmentGrammarTable.v2_4["OBX"]?.fields.count == 19)
+        #expect(SegmentGrammarTable.v2_5_1["OBX"]?.fields.count == 25)
+
+        // OBX-12 is renamed twice across the standard — the schemas must not converge.
+        #expect(SegmentGrammarTable.v2_3["OBX"]?.field(12)?.name == "Date Last Obs Normal Values")
+        #expect(SegmentGrammarTable.v2_3_1["OBX"]?.field(12)?.name == "Date Last Obs Normal Values")
+        #expect(SegmentGrammarTable.v2_4["OBX"]?.field(12)?.name == "Date Last Observation Normal Value")
+        #expect(SegmentGrammarTable.v2_5_1["OBX"]?.field(12)?.name == "Effective Date of Reference Range Values")
+        #expect(SegmentGrammarTable.v2_6["OBX"]?.field(12)?.name == "Effective Date of Reference Range")
+
+        // OBX-15: v2.5.1 alone says "Producer's Reference"; the neighbours say "Producer's ID".
+        #expect(SegmentGrammarTable.v2_4["OBX"]?.field(15)?.name == "Producer's ID")
+        #expect(SegmentGrammarTable.v2_5_1["OBX"]?.field(15)?.name == "Producer's Reference")
+        #expect(SegmentGrammarTable.v2_6["OBX"]?.field(15)?.name == "Producer's ID")
+
+        // MSH-21: renamed AND retyped in v2.5 (ID → EI) without changing the field count.
+        #expect(SegmentGrammarTable.v2_4["MSH"]?.field(21)?.name == "Conformance Statement ID")
+        #expect(SegmentGrammarTable.v2_4["MSH"]?.field(21)?.dataType == "ID")
+        #expect(SegmentGrammarTable.v2_5_1["MSH"]?.field(21)?.name == "Message Profile Identifier")
+        #expect(SegmentGrammarTable.v2_5_1["MSH"]?.field(21)?.dataType == "EI")
+
+        // Per-version datatype divergence on a filled field: v2.4 PID-35 Species Code is CE,
+        // v2.6 promoted it to CWE. Fills take DT from their own version's table.
+        #expect(SegmentGrammarTable.v2_4["PID"]?.field(35)?.dataType == "CE")
+        #expect(SegmentGrammarTable.v2_4["PID"]?.fields.count == 38)
     }
 
     @Test("v2.3 typed accessors for fields beyond v2.3 cap return nil on a v2.3 wire")
@@ -988,6 +1041,15 @@ struct MultiVersionTests {
             // v1.3 (master-files / referral batch): master-file entry/ack keys and
             // OM7 / AUT fields conditional on the master-file event or auth context.
             "MFE-2", "MFA-2", "OM7-16", "OM7-18", "AUT-6",
+            // v1.4 (query / lab-automation batch): query-tag/response and specimen-
+            // container / equipment fields conditional on the query or lab-automation
+            // event context (fail-safe; documented in the register).
+            "QPD-2", "QAK-1", "RCP-4", "EQU-3", "SAC-3", "SAC-4",
+            // v1.4 (master-file locations / patient-care / med-records batch):
+            // location-relationship, pricing, goal/problem/pathway and transcription-
+            // document fields conditional on the master-file / care / document event.
+            "LRL-5", "LRL-6", "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
+            "TXA-3", "TXA-5", "TXA-7", "TXA-11", "TXA-13", "TXA-22",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

@@ -22,9 +22,4 @@ public struct OM6: TypedSegment, Sendable, Equatable, Hashable {
     public var derivationRule: String? {
         field(2)?.stringValue
     }
-
-    /// OM6-0: . HL7 data type ``.
-    public var field: Field? {
-        field(0)
-    }
 }

@@ -1,0 +1,30 @@
+{
+  "segmentID": "TXA",
+  "version": "2.4",
+  "description": "TXA",
+  "fields": [
+    { "index": 1, "swiftName": "setIdTxa", "name": "Set ID- TXA", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "documentType", "name": "Document Type", "dataType": "IS", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "documentContentPresentation", "name": "Document Content Presentation", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "activityDateTime", "name": "Activity Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "primaryActivityProviderCodeName", "name": "Primary Activity Provider Code/Name", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
+    { "index": 6, "swiftName": "originationDateTime", "name": "Origination Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "transcriptionDateTime", "name": "Transcription Date/Time", "dataType": "TS", "optionality": "C", "repeatability": "1" },
+    { "index": 8, "swiftName": "editDateTime", "name": "Edit Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "originatorCodeName", "name": "Originator Code/Name", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "assignedDocumentAuthenticator", "name": "Assigned Document Authenticator", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "transcriptionistCodeName", "name": "Transcriptionist Code/Name", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
+    { "index": 12, "swiftName": "uniqueDocumentNumber", "name": "Unique Document Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 13, "swiftName": "parentDocumentNumber", "name": "Parent Document Number", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 14, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 15, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "uniqueDocumentFileName", "name": "Unique Document File Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "documentCompletionStatus", "name": "Document Completion Status", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 18, "swiftName": "documentConfidentialityStatus", "name": "Document Confidentiality Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "documentAvailabilityStatus", "name": "Document Availability Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "documentStorageStatus", "name": "Document Storage Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "documentChangeReason", "name": "Document Change Reason", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 22, "swiftName": "authenticationPersonTimeStamp", "name": "Authentication Person, Time Stamp", "dataType": "PPN", "optionality": "C", "repeatability": "*" },
+    { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipients", "name": "Distributed Copies (Code and Name of Recipients)", "dataType": "XCN", "optionality": "O", "repeatability": "*" }
+  ]
+}

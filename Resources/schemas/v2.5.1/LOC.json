@@ -1,0 +1,16 @@
+{
+  "segmentID": "LOC",
+  "version": "2.5.1",
+  "description": "Location Identification",
+  "fields": [
+    { "index": 1, "swiftName": "primaryKeyValueLoc", "name": "Primary Key Value - LOC", "dataType": "PL", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "locationDescription", "name": "Location Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "locationTypeLoc", "name": "Location Type - LOC", "dataType": "IS", "optionality": "R", "repeatability": "*" },
+    { "index": 4, "swiftName": "organizationNameLoc", "name": "Organization Name - LOC", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "locationAddress", "name": "Location Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "locationPhone", "name": "Location Phone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "licenseNumber", "name": "License Number", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "locationEquipment", "name": "Location Equipment", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "locationServiceCode", "name": "Location Service Code", "dataType": "IS", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -352,6 +352,22 @@
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "*"
+    },
+    {
+      "index": 44,
+      "swiftName": "procedureCode",
+      "name": "Procedure Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 45,
+      "swiftName": "procedureCodeModifier",
+      "name": "Procedure Code Modifier",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
     }
   ]
 }

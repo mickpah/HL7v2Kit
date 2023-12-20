@@ -138,6 +138,30 @@
       "dataType": "ID",
       "optionality": "O",
       "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "characterSet",
+      "name": "Character Set",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 19,
+      "swiftName": "principalLanguageOfMessage",
+      "name": "Principal Language Of Message",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "alternateCharacterSetHandlingScheme",
+      "name": "Alternate Character Set Handling Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

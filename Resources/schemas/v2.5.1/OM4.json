@@ -11,13 +11,10 @@
     { "index": 6, "swiftName": "specimen", "name": "Specimen", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "preparation", "name": "Preparation", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 0, "swiftName": "field", "name": "", "dataType": "", "optionality": "", "repeatability": "1" },
     { "index": 9, "swiftName": "specialHandlingRequirements", "name": "Special Handling Requirements", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 0, "swiftName": "field2", "name": "", "dataType": "", "optionality": "", "repeatability": "1" },
     { "index": 10, "swiftName": "normalCollectionVolume", "name": "Normal Collection Volume", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "minimumCollectionVolume", "name": "Minimum Collection Volume", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "specimenRequirements", "name": "Specimen Requirements", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 0, "swiftName": "field3", "name": "", "dataType": "", "optionality": "", "repeatability": "1" },
     { "index": 13, "swiftName": "specimenPriorities", "name": "Specimen Priorities", "dataType": "ID", "optionality": "O", "repeatability": "*" },
     { "index": 14, "swiftName": "specimenRetentionTime", "name": "Specimen Retention Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" }
   ]

@@ -1,0 +1,19 @@
+{
+  "segmentID": "LDP",
+  "version": "2.4",
+  "description": "LDP",
+  "fields": [
+    { "index": 1, "swiftName": "primaryKeyValueLdp", "name": "Primary Key Value - LDP", "dataType": "PL", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "locationService", "name": "Location Service", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "specialtyType", "name": "Specialty Type", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "activationDateLdp", "name": "Activation Date LDP", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "inactivationDateLdp", "name": "Inactivation Date - LDP", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "inactivatedReason", "name": "Inactivated Reason", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "visitingHours", "name": "Visiting Hours", "dataType": "VH", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "contactPhone", "name": "Contact Phone", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "locationCostCenter", "name": "Location Cost Center", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}

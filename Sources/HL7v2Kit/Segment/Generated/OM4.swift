@@ -53,19 +53,9 @@ public struct OM4: TypedSegment, Sendable, Equatable, Hashable {
         field(8)?.stringValue
     }
 
-    /// OM4-0: . HL7 data type ``.
-    public var field: Field? {
-        field(0)
-    }
-
     /// OM4-9: Special Handling Requirements. HL7 data type `TX`.
     public var specialHandlingRequirements: String? {
         field(9)?.stringValue
-    }
-
-    /// OM4-0: . HL7 data type ``.
-    public var field2: Field? {
-        field(0)
     }
 
     /// OM4-10: Normal Collection Volume. HL7 data type `CQ`.
@@ -81,11 +71,6 @@ public struct OM4: TypedSegment, Sendable, Equatable, Hashable {
     /// OM4-12: Specimen Requirements. HL7 data type `TX`.
     public var specimenRequirements: String? {
         field(12)?.stringValue
-    }
-
-    /// OM4-0: . HL7 data type ``.
-    public var field3: Field? {
-        field(0)
     }
 
     /// OM4-13: Specimen Priorities. HL7 data type `ID`.

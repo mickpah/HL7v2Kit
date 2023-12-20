@@ -1,0 +1,16 @@
+{
+  "segmentID": "QRF",
+  "version": "2.3",
+  "description": "QRF",
+  "fields": [
+    { "index": 1, "swiftName": "filter", "name": "Filter", "dataType": "ST", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "rtDateTime", "name": "rt Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTime", "name": "Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "lifier", "name": "lifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "jectFilter", "name": "ject Filter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "meQualifier", "name": "me Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "meStatusQualifier", "name": "me Status Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "ectionQualifier", "name": "ection Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "timingQualifier", "name": "/Timing Qualifier", "dataType": "TQ", "optionality": "O", "repeatability": "1" }
+  ]
+}

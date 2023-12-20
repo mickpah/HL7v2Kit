@@ -7,6 +7,147 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **Note (2026-08-20):** the v1.4 + v1.5 + v1.6 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**, and ready for merge/tag. **No findings are open** — the v1.4 extractor datatype and element-name issues are fixed (v1.5) and the per-version depth gaps they exposed are closed (v1.6).
+
+### Per-version field-depth audit (v1.6)
+
+Correctness-only, additive. Every committed schema's depth was diffed against **its own
+version's** attribute table — all tables in all chapters of all six versions extracted, then
+compared by max field index in both directions.
+
+**436 of 458 schemas matched on the first pass. 46 fields across 14 (version, segment) pairs
+had never been authored**, all on core segments:
+
+| Version | Segment | Was | Now |
+|---|---|---|---|
+| v2.3 | MSH / OBX / ORC | 15 / 11 / 17 | **19 / 17 / 19** |
+| v2.3.1 | MSH / NTE / OBR / OBX / ORC | 17 / 3 / 43 / 14 / 17 | **20 / 4 / 45 / 17 / 24** |
+| v2.4 | MSH / NTE / OBX / ORC / PID | 20 / 3 / 16 / 19 / 32 | **21 / 4 / 19 / 25 / 38** |
+| v2.5.1 | OBX | 24 | **25** |
+
+v2.5.1 OBX-25 (`Performing Organization Medical Director`) adds a typed accessor; the rest
+deepen per-version grammar tables. All additive (ADR-014). After the fills: **452/458 exact,
+0 suspects, 0 unlocated.** New pin test guards the fills and the naming rules below.
+
+**Per-version element names must never be copied from the canonical schema.** HL7 renames
+fields between versions, so the canonical name is often not that version's name:
+
+| Field | v2.3 / v2.3.1 | v2.4 | v2.5.1 | v2.6 / v2.8.2 |
+|---|---|---|---|---|
+| OBX-12 | Date Last Obs Normal Values | Date Last Observation Normal Value | Effective Date of Reference Range **Values** | Effective Date of Reference Range |
+| OBX-15 | Producer's ID | Producer's ID | Producer's **Reference** | Producer's ID |
+| MSH-21 | — | **Conformance Statement ID** (`ID`) | Message Profile Identifier (`EI`) | Message Profile Identifier (`EI`) |
+
+MSH-21 was renamed *and* retyped in v2.5 without changing the field count — a depth-only
+audit could never have caught it.
+
+**Fixed: two pre-existing name defects in the canonical v2.5.1 OBX schema** — OBX-12 was
+truncated (missing `Values`) and OBX-15 carried the neighbouring versions' `Producer's ID`.
+Their `swiftName`s are deliberately unchanged: `effectiveDateOfReferenceRange` and
+`producersID` are shipped public API, frozen until 2.0 (ADR-014). The accessors keep their
+names while their DocC text and grammar entries now read the spec's wording.
+
+**Extractor:** caption matching widened to accept the singular (`Figure 2-10. ERR
+attribute`), which had silently excluded v2.3 / v2.3.1 ERR from audit coverage. Documented
+limitation: a `1-n` variable-column SEQ row (RDT-1, ADD-1) cannot be parsed, so RDT shows as
+a permanent 6-row gap and must be whitelisted — its hand-authored schema is correct.
+
+Tests: 514 → **515** green.
+
+### Element-name fidelity (v1.5-S2)
+
+Correctness-only. Fixes the element-name prose-bleed class — three distinct root causes in
+the extractor, plus 14 surgical name corrections, each verified against the version's own
+attribute table.
+
+**Extractor:**
+
+- **Table-end detection now accepts a lettered chapter number.** v2.8.2 splits the pharmacy
+  chapter into 4 and **4A** and numbers sections `4A.4.3.0 RXC field definitions`; the
+  digits-and-dots-only test missed those, so the table never ended and the entire
+  field-definitions section was folded into the last row's element name.
+- **Continuation folding is bounded** — a fragment is accepted as a wrapped name only if it
+  is short, free of sentence punctuation and component-example markers, and keeps the name
+  under 120 chars. Previously the explanatory note between a CH12 table and its definitions
+  contaminated the last row.
+- **Names are no longer truncated at the front.** Element names are *centred* under the
+  `ELEMENT NAME` label, so long ones start left of the label offset and a fixed-offset slice
+  cut their heads off (`Administered Tag Identifier` → `ministered Tag Identifier`). The
+  boundary is now anchored on the rightmost 4–5 digit metadata run (ITEM #, or TBL # when
+  the item number is blank), and the same boundary bounds metadata binning.
+- **Empty-name rows are rejected when `DT` is under 2 characters**, not merely empty — every
+  real HL7 datatype token is 2+ chars, so a 1-char DT is a wrapped-cell tail. v2.5.1
+  `OBX-5`'s `varies` wraps as `varie` + `s`, and the orphan `s` was parsed as an extra row.
+
+**Names corrected (14):** v2.8.2 `RXA-29` `Administered Tag Identifier`, `RXC-11` /
+`RXG-33` `Dispense Units`, `RXD-35` `Dispense Tag Identifier`, `RXE-45` / `RXO-36`
+`Pharmacy Phone Number`, `RXR-6` `Administration Site Modifier`; `PRB-25`
+`Security/Sensitivity` (v2.3 / v2.3.1 / v2.4 / v2.5.1); `PRB-28` and v2.8.2 `GOL-22`
+`Mood Code` (v2.6 / v2.8.2).
+
+**Left alone as faithful (10):** the attribute tables literally print `Set ID- TXA` (v2.3 /
+v2.3.1 / v2.4 / v2.6 / v2.8.2) and `Sequence Number- Test/Observation Master File` (v2.4
+OM2–OM6) with no space after the hyphen, while the field-definition headings on the same
+pages print them with spaces. The schemas follow the attribute table; rendering a spec typo
+faithfully is correct (req #2).
+
+Blast radius of the corrections is the grammar tables (`FieldGrammar.name` → validator
+message text) and the reference surface, not Swift identifiers — typed structs generate from
+the canonical v2.5.1 schemas only. Golden `--verify` sweep: 18/20 canonical segments pass
+clean (OBR-32 is the documented intentional conditional upgrade; OBX surfaced the depth gap
+noted above). Tests: **514** green.
+
+### Extractor hardening + schema datatype fidelity (v1.5-S1)
+
+Correctness-only. Fixes all three extractor items found during the v1.4 sweep and every
+datatype defect the follow-up audit confirmed, each verified against the spec PDF rather
+than against the extractor's own output.
+
+**Extractor** (`scripts/extract-segment-tables.swift`, dev-time tool — not shipped):
+column assignment now keys on nearest label **start** rather than run **centre** (fixes
+values sitting right of the `DT` label, e.g. CH12 GOL, and a hair left, e.g. CH04 BPO);
+rows with `seq < 1`, or with both an empty name and an empty `DT`, are rejected;
+`deriveSwiftName` drops lone `s` fragments from possessives.
+
+**Schema corrections:**
+
+- **Phantom rows removed** — root-caused to **wrapped `LEN` digits** landing left of the
+  `DT` column (OM6's `10240` leaves a bare `0`; EQP's `65536` leaves a bare `6`), not
+  generic junk lines. Corrected depths: **OM1 49 → 47**, **OM4 17 → 14**, **OM6 3 → 2**,
+  **EQP 6 → 5**. Depth pins updated.
+- **GOL** — v2.5.1 fields 1/4/5 gain `ID`/`EI`/`EI`; **v2.3.1 fields 1–20** filled (were
+  all empty; matches v2.3 / v2.4 per Figure 12-2).
+- **RDT — corrected in all six versions.** v2.3 / v2.3.1 held the **SPR** segment's four
+  fields; v2.4 / v2.5.1 / v2.6 / v2.8.2 held corrupted prose. Root cause: in v2.3 / v2.3.1
+  RDT is defined in **Chapter 2 §2.24.19**, not CH05. Correct in every version: one field,
+  `Column Value`, `OPT R`, ITEM 00703 — DT literal per-version (`Variable` for v2.3 / v2.3.1 /
+  v2.4, `varies` for v2.5.1 / v2.6 / v2.8.2, tracked per-version as `TS`→`DTM` already is).
+  `RP` stays `1`: the spec's `RP/#` cell is blank, so `*` would assert `~`-repeatability the
+  spec does not grant. RDT's `1-n` unbounded-column semantic is recorded as a model
+  limitation (req #3). RDT's typed accessor changes shape, which is ADR-014-clean only
+  because v1.4 has not been released.
+
+**Two audit rules recorded** in `segment-coverage-extraction.md`: an empty `dataType` is a
+defect only when `OPT ∉ {W, X}` (`W`/`X` fields have no datatype by design — this made most
+of the originally-flagged empty-DT set false positives); and wholesale/whitelist
+regeneration is unsafe (it drops hand-authored `condition` predicates, reproduces
+mis-binned datatypes, and title-cases element names), so datatype fixes must be surgical.
+
+Tests: **514** green. The RDT pin now asserts field identity, not just count — the previous
+count-only pin passed against an extractor-garbage field.
+
+### M5 sweep — 14 new segments (master-file locations + patient-care + med-records)
+
+Sixth sweep batch. Adds **LOC/LCH/LRL/LDP/LCC/CDM/PRC/IIM** (CH08 master files), **GOL/PRB/PTH/VAR** (CH12 patient care), **TXA/CON** (CH09 med records) — full-depth on every version they appear in. Typed count **71 → 85**. IIM moved CH08→CH17 across versions (sourced accordingly); CON is v2.6+. 13 conditional fields documented + guarded (~128 total). Tests: 514.
+
+### M5 sweep — 14 new segments (query + lab-automation)
+
+Fifth sweep batch. Adds **QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT** (CH05 query) and
+**EQU/SAC/INV/TCC/TCD/EQP** (CH13 lab automation) — each full-depth on every version it
+appears in. Typed-segment count **57 → 71**. v2.3 query segments sourced from CH2 (v2.3
+CH5 is an empty placeholder); QPD/QID/RCP are v2.4+; lab-automation is v2.5+. 6 new
+conditional fields documented + guarded. Additive (ADR-014). Tests: 514.
+
 ## [1.3.0] — 2026-07-13
 
 M5 sweep — typed-segment coverage **29 → 57** (two batches). Additive / correctness only;

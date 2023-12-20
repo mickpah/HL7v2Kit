@@ -95,7 +95,7 @@
     {
       "index": 12,
       "swiftName": "effectiveDateOfReferenceRange",
-      "name": "Effective Date of Reference Range",
+      "name": "Effective Date of Reference Range Values",
       "dataType": "TS",
       "optionality": "O",
       "repeatability": "1"
@@ -119,7 +119,7 @@
     {
       "index": 15,
       "swiftName": "producersID",
-      "name": "Producer's ID",
+      "name": "Producer's Reference",
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "1"
@@ -193,6 +193,14 @@
       "swiftName": "performingOrganizationAddress",
       "name": "Performing Organization Address",
       "dataType": "XAD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "performingOrganizationMedicalDirector",
+      "name": "Performing Organization Medical Director",
+      "dataType": "XCN",
       "optionality": "O",
       "repeatability": "1"
     }

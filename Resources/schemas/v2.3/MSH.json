@@ -122,6 +122,38 @@
       "dataType": "ID",
       "optionality": "O",
       "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "applicationAcknowledgmentType",
+      "name": "Application Acknowledgment Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "countryCode",
+      "name": "Country Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "characterSet",
+      "name": "Character Set",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 19,
+      "swiftName": "principalLanguageOfMessage",
+      "name": "Principal Language Of Message",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }
