@@ -20,3 +20,8 @@ xcuserdata/
 
 # Generated docs
 docs/DocC/build/
+
+# HL7 Final Standard PDFs — author-local reference material for the ADR-015
+# extraction pipeline. Licensed content: these must never enter this repository
+# or any public tree. See NEXT_STEPS.md "Parallel-track / project-owner decisions".
+docs/standards/
