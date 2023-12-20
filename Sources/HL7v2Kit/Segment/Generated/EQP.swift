@@ -37,9 +37,4 @@ public struct EQP: TypedSegment, Sendable, Equatable, Hashable {
     public var transactionData: String? {
         field(5)?.stringValue
     }
-
-    /// EQP-6: . HL7 data type ``.
-    public var field: Field? {
-        field(6)
-    }
 }

@@ -7,7 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Note (2026-07-14):** the v1.4 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. A v1.4 spike found an extractor datatype-column-assignment issue on some wide-column layouts (GOL/OM*); the fix + a full regeneration are deferred to a **v1.5 extractor-hardening cycle** (see `docs/design/segment-coverage-extraction.md`). A few v1.4 schemas carry imperfect `dataType` on a handful of fields until then (non-fatal; empty DT → untyped accessor).
+> **Note (2026-08-20):** the v1.4 + v1.5 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. The v1.4 extractor datatype issue is now **fixed** (see the v1.5 entry). One open fidelity finding remains — element-name prose bleed on 24 fields, affecting grammar-table field names only (no Swift identifiers) — tracked in `docs/design/segment-coverage-extraction.md`.
+
+### Extractor hardening + schema datatype fidelity (v1.5-S1)
+
+Correctness-only. Fixes all three extractor items found during the v1.4 sweep and every
+datatype defect the follow-up audit confirmed, each verified against the spec PDF rather
+than against the extractor's own output.
+
+**Extractor** (`scripts/extract-segment-tables.swift`, dev-time tool — not shipped):
+column assignment now keys on nearest label **start** rather than run **centre** (fixes
+values sitting right of the `DT` label, e.g. CH12 GOL, and a hair left, e.g. CH04 BPO);
+rows with `seq < 1`, or with both an empty name and an empty `DT`, are rejected;
+`deriveSwiftName` drops lone `s` fragments from possessives.
+
+**Schema corrections:**
+
+- **Phantom rows removed** — root-caused to **wrapped `LEN` digits** landing left of the
+  `DT` column (OM6's `10240` leaves a bare `0`; EQP's `65536` leaves a bare `6`), not
+  generic junk lines. Corrected depths: **OM1 49 → 47**, **OM4 17 → 14**, **OM6 3 → 2**,
+  **EQP 6 → 5**. Depth pins updated.
+- **GOL** — v2.5.1 fields 1/4/5 gain `ID`/`EI`/`EI`; **v2.3.1 fields 1–20** filled (were
+  all empty; matches v2.3 / v2.4 per Figure 12-2).
+- **RDT — corrected in all six versions.** v2.3 / v2.3.1 held the **SPR** segment's four
+  fields; v2.4 / v2.5.1 / v2.6 / v2.8.2 held corrupted prose. Root cause: in v2.3 / v2.3.1
+  RDT is defined in **Chapter 2 §2.24.19**, not CH05. Correct in every version: one field,
+  `Column Value`, `OPT R`, ITEM 00703 — DT literal per-version (`Variable` for v2.3 / v2.3.1 /
+  v2.4, `varies` for v2.5.1 / v2.6 / v2.8.2, tracked per-version as `TS`→`DTM` already is).
+  `RP` stays `1`: the spec's `RP/#` cell is blank, so `*` would assert `~`-repeatability the
+  spec does not grant. RDT's `1-n` unbounded-column semantic is recorded as a model
+  limitation (req #3). RDT's typed accessor changes shape, which is ADR-014-clean only
+  because v1.4 has not been released.
+
+**Two audit rules recorded** in `segment-coverage-extraction.md`: an empty `dataType` is a
+defect only when `OPT ∉ {W, X}` (`W`/`X` fields have no datatype by design — this made most
+of the originally-flagged empty-DT set false positives); and wholesale/whitelist
+regeneration is unsafe (it drops hand-authored `condition` predicates, reproduces
+mis-binned datatypes, and title-cases element names), so datatype fixes must be surgical.
+
+Tests: **514** green. The RDT pin now asserts field identity, not just count — the previous
+count-only pin passed against an extractor-garbage field.
 
 ### M5 sweep — 14 new segments (master-file locations + patient-care + med-records)
 

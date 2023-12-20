@@ -119,30 +119,94 @@ OBX/OBR accessors are additive, ADR-014-clean; the OPT/RP fixes are validation-b
 corrections). Then the sweep extends per-version and to the ~135 unmodelled segments off
 the S3 inventory. Every step runs the golden gate above.
 
-## Known extraction limitations + v1.5 hardening backlog (found during the v1.4 sweep)
+## v1.5 extractor hardening — the three v1.4 items (DONE)
 
 The v1.4 batches (query/lab + master-file/care, 57 → 85 typed) surfaced extractor edge
-cases that affect **datatype fidelity** on specific PDF layouts. They do not crash or
+cases affecting **datatype fidelity** on specific PDF layouts. They did not crash or
 misfire validation (an empty/wrong `dataType` yields an untyped `Field?` accessor, and the
-field still parses / round-trips), but they are a req-#2/#4 faithfulness gap. **A dedicated
-v1.5 "extractor hardening" cycle is planned** to fix all three items below, then regenerate
-+ re-verify **every** segment across all versions from a clean extractor.
+field still parses / round-trips), but they were a req-#2/#4 faithfulness gap. All three
+are now fixed in `scripts/extract-segment-tables.swift`:
 
-1. **Column assignment mis-bins right/left-leaning values.** `nearestColumnKey` assigns
-   each run to the nearest header-label **centre**. Where a table's `DT` values sit well to
-   the right of the label (v2.5.1 **CH12 GOL** — GOL-1 `Action Code` extracts empty `DT`
-   instead of `ID`; GOL-4/5 drop `EI`) or a hair left (v2.5.1 **CH04 BPO** — `CWE` just left
-   of the `DT` label), the datatype is dropped/mis-assigned. **Fix (validated in a v1.4
-   spike, then reverted for stability):** assign by smallest distance between the run's
-   **start** and each label's **start** — resolved GOL *and* BPO and kept golden NK1/PV1/IN1
-   passing. A full re-verify will enumerate all affected segments (GOL, OM1/OM4, other
-   wide-column CH08/CH12 tables).
-2. **Spurious `index:0` rows on some tables.** OM4 (CH08) parses three non-field lines as
-   rows (`index:0`, empty name/DT) — they collide on derived swiftName `field3` (breaks
-   codegen) and mask three real trailing fields. Row detection must reject `seq < 1` and
-   empty-name/empty-DT rows, and diagnose why the real SEQ tokens weren't read.
-3. **`deriveSwiftName` must guarantee global uniqueness** (the `field3` collision) and drop
-   possessive `'s` fragments (v1.2 saw `contactPersonSTelecom…`).
+1. ✅ **Column assignment mis-binned right/left-leaning values.** `nearestColumnKey`
+   assigned each run to the nearest header-label **centre**. Where a table's `DT` values sit
+   well right of the label (v2.5.1 **CH12 GOL** — GOL-1 `Action Code` extracted empty `DT`
+   instead of `ID`; GOL-4/5 dropped `EI`) or a hair left (v2.5.1 **CH04 BPO** — `CWE` just
+   left of the `DT` label), the datatype was dropped/mis-assigned. **Fixed:** `columnKey(forStart:)`
+   assigns by smallest distance between the run's **start** and each label's **start** —
+   resolves GOL *and* BPO, golden NK1/PV1/IN1 still pass.
+2. ✅ **Spurious rows from wrapped `LEN` digits.** Row detection now rejects `seq < 1` and
+   any row with **both** an empty name and an empty `DT`. Root cause identified: these were
+   never "non-field lines" in general — they are the **overflow digits of a wrapped `LEN`
+   cell** landing left of the `DT` column (OM6's `10240` wraps, leaving a bare `0`; EQP's
+   `65536` leaves a bare `6`; OM4/OM1 likewise). They both inflated field counts and
+   collided on derived swiftNames (`field2`, `field3`).
+3. ✅ **`deriveSwiftName`** drops lone `s` fragments left by a possessive apostrophe
+   (`Contact Person's Name` → `contactPersonName`, not `contactPersonSName`).
+
+### Rule: empty `dataType` is not automatically a defect
+
+The audit's initial "63 empty-DT defects" were **mostly false positives**. An empty `DT` is
+**spec-correct** when optionality is `W` (withdrawn) or `X` (reserved) — those HL7 fields
+have no datatype by design. Every flagged v2.6/v2.8.2 RX\*/IN1/PV1/MRG/SCH/SAC/TCC/GOL/INV
+field is `W`; OBX-20/21/22 are `X`.
+
+> **Audit predicate:** an empty `dataType` is a defect only if `OPT ∉ {W, X}`.
+
+### Rule: wholesale regeneration is unsafe — DT fixes must be surgical
+
+Regenerating a whole segment (or a whitelist) to fix a datatype **loses hand-authored
+work**: it drops the `condition` predicates on ORC/OBR/PID/DG1/OBX, reproduces any
+still-mis-binned DTs (regen ≠ fix), and title-cases element names (a fidelity regression).
+Fix the specific field in the schema JSON instead.
+
+### Fixed in v1.5 (each verified against the spec PDF, not just the extractor)
+
+| Segment | Was | Now | Spec citation |
+|---|---|---|---|
+| v2.5.1 OM1 | 49 fields | **47** | CH08 §8.8, last row 47 `Modality Of Imaging Measurement` |
+| v2.5.1 OM4 | 17 fields | **14** | CH08 §8.8, last row 14 `Specimen Retention Time` |
+| v2.5.1 OM6 | 3 fields | **2** | CH08 §8.8.13, `LEN 10240` wraps → phantom `0` row |
+| v2.5.1 EQP | 6 fields | **5** | CH13 §13.4.12, `LEN 65536` wraps → phantom `6` row |
+| v2.5.1 GOL | 1/4/5 empty DT | **ID / EI / EI** | CH12 GOL attribute table |
+| v2.3.1 GOL | 1–20 empty DT | **filled** | CH2 §2.24 Figure 12-2 (matches v2.3 / v2.4) |
+| RDT (all 6) | wrong segment / prose | **1 field, `Column Value`** | see below |
+
+**RDT was wrong in every version.** v2.3 / v2.3.1 held the **SPR segment's** four fields;
+v2.4 / v2.5.1 / v2.6 / v2.8.2 held corrupted prose. Root cause: in v2.3 / v2.3.1 RDT is
+defined in **Chapter 2** (§2.24.19, *Figure 2-26. RDT attributes*), **not** CH05 — the
+extractor was pointed at the query chapter and bound the nearest table it found. Correct
+RDT, confirmed in all six PDFs: a single field, SEQ `1-n`, `Column Value`, `OPT R`, `RP`
+blank, ITEM 00703. The `DT` literal is per-version — v2.3 / v2.3.1 / v2.4 print `Variable`,
+v2.5.1 / v2.6 / v2.8.2 print `varies` — tracked per-version exactly as `TS`→`DTM` and
+`CE`→`CWE` already are.
+
+> **Model limitation (req #3):** SEQ `1-n` means the field *position* recurs — RDT carries
+> an unbounded number of `|`-separated columns. The schema model indexes fields, so only
+> column 1 is described; columns 2..n are unvalidated (the validator iterates
+> `grammar.fields`, so they are silently ignored, never spuriously flagged).
+> `RP` stays `1` because the spec's `RP/#` cell **is blank** — marking it `*` would assert
+> `~`-repeatability the spec does not grant. The other `1-n` segment is **ADD**-1
+> (`Addendum Continuation Pointer`, ITEM 00066), not yet modelled.
+
+### ⚠️ OPEN — element-name prose bleed (found during the v1.5 audit)
+
+A **fourth** defect class, distinct from the DT issues and **not yet fixed**: on some tables
+the extractor runs past the table end and swallows the following *field-definitions* prose
+into the final row's element `name`. 24 fields affected:
+
+- **Catastrophic** (hundreds–thousands of chars of prose): v2.8.2 `RXA-29`, `RXC-11`,
+  `RXD-35`, `RXE-45`, `RXG-33`, `RXO-36`, `RXR-6`.
+- **Partial** (name + prose fragment): `PRB-25` (v2.3 / v2.3.1 / v2.4 / v2.5.1),
+  `PRB-28` + `GOL-22` (v2.6 / v2.8.2).
+- **Cosmetic** (missing space after hyphen): `TXA-1` `Set ID- TXA` (v2.3 / v2.3.1 / v2.4 /
+  v2.6 / v2.8.2); `OM2/OM3/OM4/OM5/OM6-1` `Sequence Number- Test/Observation Master File`
+  (v2.4).
+
+Blast radius is the **grammar tables** (`FieldGrammar.name` → validator message text) and
+the reference surface, *not* Swift identifiers: typed structs are generated from the
+canonical v2.5.1 schemas only, so no accessor name is affected. Still a req-#2 defect — the
+schemas must read as a faithful rendering of the spec. Needs a table-end/`stop` fix in the
+extractor plus surgical name corrections, each verified against the PDF.
 
 **Performance note:** `swift <file>` recompiles the ~500-line script every invocation,
 making full regeneration impractically slow. Compile once —

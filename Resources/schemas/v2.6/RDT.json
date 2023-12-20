@@ -1,8 +1,8 @@
 {
   "segmentID": "RDT",
   "version": "2.6",
-  "description": "RDT",
+  "description": "Table Row Data",
   "fields": [
-    { "index": 2, "swiftName": "ancelQueryMessageWillBeSentTheQueryWouldLookAsFollows61QbpQ117777P24222111MrSegmentThatContainsADicomImageLows24222111MrEThatTheAddSegmentWillContainTheResponseThenContinuesOnAsNormal2499", "name": "ancel query message will be sent. The query would look as follows: 61^QBP_Q11|7777|P|2.4| 222111^^^^MR| segment that contains a DICOM image lows: |2.4| 222111^^^^MR| e that the ADD segment will contain the response then continues on as normal. |2.4||99|", "dataType": "", "optionality": "", "repeatability": "1" }
+    { "index": 1, "swiftName": "columnValue", "name": "Column Value", "dataType": "varies", "optionality": "R", "repeatability": "1" }
   ]
 }

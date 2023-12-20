@@ -13,9 +13,9 @@ public struct GOL: TypedSegment, Sendable, Equatable, Hashable {
         self.fields = fields
     }
 
-    /// GOL-1: Action Code. HL7 data type ``.
-    public var actionCode: Field? {
-        field(1)
+    /// GOL-1: Action Code. HL7 data type `ID`.
+    public var actionCode: String? {
+        field(1)?.stringValue
     }
 
     /// GOL-2: Action Date/Time. HL7 data type `TS`.
@@ -28,14 +28,14 @@ public struct GOL: TypedSegment, Sendable, Equatable, Hashable {
         field(3).map(CE.init(field:))
     }
 
-    /// GOL-4: Goal Instance ID. HL7 data type ``.
-    public var goalInstanceId: Field? {
-        field(4)
+    /// GOL-4: Goal Instance ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var goalInstanceId: EI? {
+        field(4).map(EI.init(field:))
     }
 
-    /// GOL-5: Episode of Care ID. HL7 data type ``.
-    public var episodeOfCareId: Field? {
-        field(5)
+    /// GOL-5: Episode of Care ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    public var episodeOfCareId: EI? {
+        field(5).map(EI.init(field:))
     }
 
     /// GOL-6: Goal List Priority. HL7 data type `NM`.

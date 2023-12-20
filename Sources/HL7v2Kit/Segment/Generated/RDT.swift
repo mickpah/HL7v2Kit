@@ -13,8 +13,8 @@ public struct RDT: TypedSegment, Sendable, Equatable, Hashable {
         self.fields = fields
     }
 
-    /// RDT-9: . HL7 data type `s`.
-    public var field: Field? {
-        field(9)
+    /// RDT-1: Column Value. HL7 data type `varies`.
+    public var columnValue: Field? {
+        field(1)
     }
 }

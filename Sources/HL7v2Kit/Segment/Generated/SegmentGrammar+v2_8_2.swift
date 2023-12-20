@@ -1572,7 +1572,7 @@ extension SegmentGrammarTable {
             segmentID: "RDT",
             version: "2.8.2",
             fields: [
-            FieldGrammar(index: 2, name: "query message will be sent. The query would look as follows: 11|7777|P|2.7| ^^MR| that contains a DICOM image overflows ^^MR| the ADD segment will contain the remainder ntinues on as normal.", dataType: "", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 1, name: "Column Value", dataType: "varies", optionality: .required, repeatability: .single, condition: nil),
             ]
         ),
         "RF1": SegmentGrammar(

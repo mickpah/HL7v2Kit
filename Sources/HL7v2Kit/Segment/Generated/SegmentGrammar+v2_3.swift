@@ -1182,10 +1182,7 @@ extension SegmentGrammarTable {
             segmentID: "RDT",
             version: "2.3",
             fields: [
-            FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Query/ Response Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 3, name: "Stored Procedure Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Input Parameter List", dataType: "QIP", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 1, name: "Column Value", dataType: "Variable", optionality: .required, repeatability: .single, condition: nil),
             ]
         ),
         "RF1": SegmentGrammar(

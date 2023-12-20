@@ -1402,12 +1402,16 @@ struct TypedSegmentTests {
         #expect(t["MFI"]?.fields.count == 6)
         #expect(t["MFE"]?.fields.count == 5)
         #expect(t["MFA"]?.fields.count == 6)
-        #expect(t["OM1"]?.fields.count == 49)
+        // v1.5 correction: OM1 47 / OM4 14 / OM6 2 are the true §8.8 depths. The earlier
+        // 49 / 17 / 3 pins counted phantom rows the extractor produced from wrapped LEN
+        // digits (OM6's "10240" split as a bare "0" row, etc.) — see the v1.5 hardening
+        // note in docs/design/segment-coverage-extraction.md.
+        #expect(t["OM1"]?.fields.count == 47)
         #expect(t["OM2"]?.fields.count == 10)
         #expect(t["OM3"]?.fields.count == 7)
-        #expect(t["OM4"]?.fields.count == 17)
+        #expect(t["OM4"]?.fields.count == 14)
         #expect(t["OM5"]?.fields.count == 3)
-        #expect(t["OM6"]?.fields.count == 3)
+        #expect(t["OM6"]?.fields.count == 2)
         #expect(t["OM7"]?.fields.count == 24)
         #expect(t["RF1"]?.fields.count == 11)
         #expect(t["AUT"]?.fields.count == 10)
@@ -1500,7 +1504,15 @@ struct TypedSegmentTests {
         #expect(t["INV"]?.fields.count == 20)
         #expect(t["TCC"]?.fields.count == 14)
         #expect(t["TCD"]?.fields.count == 8)
-        #expect(t["EQP"]?.fields.count == 6)
+        #expect(t["EQP"]?.fields.count == 5)   // v1.5: was 6 — phantom row from wrapped LEN "65536"
+        // v1.5: RDT is a "1-n" variable-column segment (§5.5.8) — one spec-defined field.
+        // Pinned by identity, not just count: the pre-v1.5 schema also had exactly one
+        // field, but it was extractor garbage (name "", dataType "s").
+        let rdt1 = try #require(t["RDT"]?.fields.first)
+        #expect(rdt1.index == 1)
+        #expect(rdt1.name == "Column Value")
+        #expect(rdt1.dataType == "varies")
+        #expect(rdt1.optionality == .required)
         // Lab-automation segments are v2.5+ — absent on v2.3.
         #expect(SegmentGrammarTable.v2_3["SAC"] == nil)
         // v2.3 query segments live in CH2 (CH5 is an empty placeholder in v2.3).

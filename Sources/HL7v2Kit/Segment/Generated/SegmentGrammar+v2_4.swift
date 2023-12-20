@@ -1292,7 +1292,7 @@ extension SegmentGrammarTable {
             segmentID: "RDT",
             version: "2.4",
             fields: [
-            FieldGrammar(index: 1, name: "sage will be sent. The query would look ^^^MR| segment will contain the continues on as normal.", dataType: "", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 1, name: "Column Value", dataType: "Variable", optionality: .required, repeatability: .single, condition: nil),
             ]
         ),
         "RF1": SegmentGrammar(

@@ -124,12 +124,17 @@ func runs(in line: String) -> [Run] {
     return out
 }
 
-// Assign a run to the nearest pre-NAME column by center distance.
-func nearestColumnKey(center: Int, columns: [Column]) -> String {
+// Assign a run to a pre-NAME column by the smallest distance between the run's START
+// offset and each header label's START offset. Keying both on start (not the run's
+// centre) is robust across the real layouts in the PDFs: a value can sit a few columns
+// right of its label (v2.5.1 CH12 GOL — GOL-1 `ID`) or a hair left (v2.5.1 CH04 BPO —
+// `CWE`); start-to-start nearest resolves both, where a centre-based or span-containment
+// rule mis-bins one or the other. Ties favour the earlier column.
+func columnKey(forStart start: Int, columns: [Column]) -> String {
     var best = columns.first!.key
     var bestDist = Int.max
     for c in columns where c.key != "NAME" {
-        let d = abs(c.start - center)
+        let d = abs(c.start - start)
         if d < bestDist { bestDist = d; best = c.key }
     }
     return best
@@ -160,12 +165,12 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
     guard let firstRun = lineRuns.first,
           firstRun.start < dtStart,
           firstRun.text.allSatisfy({ $0.isNumber }),
-          let n = Int(firstRun.text) else { return nil }
+          let n = Int(firstRun.text),
+          n >= 1 else { return nil }   // reject seq 0 / non-field numeric lines (H2)
     var row = FieldRow(seq: n)
     let preNameLine = nameStart < chars.count ? String(chars[0..<nameStart]) : line
     for r in runs(in: preNameLine) {
-        let center = (r.start + r.end) / 2
-        switch nearestColumnKey(center: center, columns: columns) {
+        switch columnKey(forStart: r.start, columns: columns) {
         case "SEQ": break
         case "LEN": row.len = r.text
         case "CLEN": row.len = row.len.isEmpty ? r.text : row.len
@@ -179,6 +184,10 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
     }
     row.opt = normalizeOptionality(row.opt)
     row.name = normalizeName(elementName(from: line, nameStart: nameStart))
+    // Reject footnote-number lines misread as rows: a real field always has an element
+    // name. A "row" with no name AND no datatype is a stray table-footnote digit (e.g.
+    // OBX's "2", MSA's "3", OM4's "0") that happened to sit before the DT column. (H2)
+    if row.name.isEmpty && row.dt.isEmpty { return nil }
     return row
 }
 
@@ -402,8 +411,11 @@ func verify(pdf: String, seg: String, schemaPath: String) -> Never {
 
 // Derive a valid lowerCamelCase Swift identifier from an element name.
 func deriveSwiftName(_ name: String, used: inout Set<String>) -> String {
-    // split on non-alphanumerics, drop empties
+    // split on non-alphanumerics, drop empties; drop lone "s" fragments left by a
+    // possessive apostrophe (e.g. "Contact Person's Name" → contactPersonName, not
+    // contactPersonSName).
     let words = name.split { !($0.isLetter || $0.isNumber) }.map(String.init)
+        .filter { !($0.count == 1 && $0.lowercased() == "s") }
     var camel = ""
     for (i, w) in words.enumerated() {
         let lw = w.lowercased()
