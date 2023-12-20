@@ -258,6 +258,54 @@
       "dataType": "IS",
       "optionality": "O",
       "repeatability": "*"
+    },
+    {
+      "index": 33,
+      "swiftName": "lastUpdateDateTime",
+      "name": "Last Update Date/Time",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 34,
+      "swiftName": "lastUpdateFacility",
+      "name": "Last Update Facility",
+      "dataType": "HD",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 35,
+      "swiftName": "speciesCode",
+      "name": "Species Code",
+      "dataType": "CE",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 36,
+      "swiftName": "breedCode",
+      "name": "Breed Code",
+      "dataType": "CE",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 37,
+      "swiftName": "strain",
+      "name": "Strain",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 38,
+      "swiftName": "productionClassCode",
+      "name": "Production Class Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
     }
   ]
 }

@@ -964,10 +964,10 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Probability", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Nature of Abnormal Test", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 11, name: "Observation Result Status", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 12, name: "Effective Date of Reference Range", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Effective Date of Reference Range Values", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 13, name: "User Defined Access Checks", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 14, name: "Date/Time of the Observation", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 15, name: "Producer's ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 15, name: "Producer's Reference", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 16, name: "Responsible Observer", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 17, name: "Observation Method", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 18, name: "Equipment Instance Identifier", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
@@ -977,6 +977,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Reserved for harmonization with V2.6", dataType: "", optionality: .notSupported, repeatability: .single, condition: nil),
             FieldGrammar(index: 23, name: "Performing Organization Name", dataType: "XON", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 24, name: "Performing Organization Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 25, name: "Performing Organization Medical Director", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "OM1": SegmentGrammar(

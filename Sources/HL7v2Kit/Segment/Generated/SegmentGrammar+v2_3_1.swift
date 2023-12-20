@@ -634,6 +634,9 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "Accept Acknowledgment Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 16, name: "Application Acknowledgment Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 17, name: "Country Code", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 18, name: "Character Set", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 19, name: "Principal Language Of Message", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 20, name: "Alternate Character Set Handling Scheme", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "NK1": SegmentGrammar(
@@ -686,6 +689,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 1, name: "Set ID - NTE", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 2, name: "Source of Comment", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 3, name: "Comment", dataType: "FT", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Comment Type", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "OBR": SegmentGrammar(
@@ -735,6 +739,8 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 41, name: "Transport Arranged", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 42, name: "Escort Required", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 43, name: "Planned Patient Transport Comment", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 44, name: "Procedure Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 45, name: "Procedure Code Modifier", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "OBX": SegmentGrammar(
@@ -752,9 +758,12 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Probability", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Nature of Abnormal Test", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 11, name: "Observation Result Status", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 12, name: "Effective Date of Reference Range", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Date Last Obs Normal Values", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 13, name: "User Defined Access Checks", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 14, name: "Date/Time of the Observation", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 15, name: "Producer's ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 16, name: "Responsible Observer", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 17, name: "Observation Method", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "OM1": SegmentGrammar(
@@ -897,6 +906,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "Order Effective Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 16, name: "Order Control Code Reason", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 17, name: "Entering Organization", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 18, name: "Entering Device", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 19, name: "Action By", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 20, name: "Advanced Beneficiary Notice Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 21, name: "Ordering Facility Name", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 22, name: "Ordering Facility Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 23, name: "Ordering Facility Phone Number", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 24, name: "Ordering Provider Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "PD1": SegmentGrammar(

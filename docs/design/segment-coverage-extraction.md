@@ -235,7 +235,87 @@ Blast radius of the 14 real corrections was the **grammar tables** (`FieldGramma
 validator message text) and the reference surface, *not* Swift identifiers — typed structs
 generate from the canonical v2.5.1 schemas only.
 
-### ⚠️ OPEN — per-version field-depth gaps on already-modelled segments (found in v1.5-S2)
+## v1.6 per-version depth audit (DONE)
+
+The S2 finding, resolved. Every committed schema's depth was diffed against **its own
+version's** attribute table, by extracting every table in every chapter of all six versions
+and comparing max field index.
+
+**Method** (re-runnable; the audit script pattern is worth keeping):
+
+1. `xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin` — the
+   `swift <file>` path recompiles per invocation and is far too slow for ~90 chapter scans.
+2. For each version, run the binary over every chapter PDF with no segment filter; collect
+   `segmentHint → max field index`, keeping the deepest table seen per segment.
+3. Diff against the committed schemas in **both** directions, and treat them differently:
+   - **GAP** (extractor deeper than schema) → candidate missing fields.
+   - **SUSPECT** (extractor shallower) → an extraction problem to investigate, *never* a
+     depth answer. A shallow extraction is the tool failing, not the spec.
+
+**Result:** 436 of 458 schemas matched exactly on the first pass; **46 fields across 14
+(version, segment) pairs had never been authored**, all on core segments:
+
+| Version | Segment | Was | Now | Added |
+|---|---|---|---|---|
+| v2.3 | MSH | 15 | **19** | 16–19 (Application Ack Type, Country Code, Character Set, Principal Language) |
+| v2.3 | OBX | 11 | **17** | 12–17 |
+| v2.3 | ORC | 17 | **19** | 18–19 (Entering Device, Action By) |
+| v2.3.1 | MSH | 17 | **20** | 18–20 |
+| v2.3.1 | NTE | 3 | **4** | 4 (Comment Type) |
+| v2.3.1 | OBR | 43 | **45** | 44–45 (Procedure Code, Procedure Code Modifier) |
+| v2.3.1 | OBX | 14 | **17** | 15–17 |
+| v2.3.1 | ORC | 17 | **24** | 18–24 |
+| v2.4 | MSH | 20 | **21** | 21 (Conformance Statement ID) |
+| v2.4 | NTE | 3 | **4** | 4 |
+| v2.4 | OBX | 16 | **19** | 17–19 |
+| v2.4 | ORC | 19 | **25** | 20–25 |
+| v2.4 | PID | 32 | **38** | 33–38 |
+| v2.5.1 | OBX | 24 | **25** | 25 (Performing Organization Medical Director) |
+
+After the fills: **452 / 458 match exactly, 0 suspects, 0 unlocated.**
+
+### Per-version element names must never be copied from the canonical schema
+
+The fill work exposed a **naming** trap. Sourcing an added field's `name` from the canonical
+v2.5.1 schema (for cross-version consistency) is **wrong** — HL7 renames fields between
+versions, so the canonical name is often not that version's name:
+
+| Field | v2.3 / v2.3.1 | v2.4 | v2.5.1 | v2.6 / v2.8.2 |
+|---|---|---|---|---|
+| OBX-12 | Date Last Obs Normal Values | Date Last Observation Normal Value | Effective Date of Reference Range **Values** | Effective Date of Reference Range |
+| OBX-15 | Producer's ID | Producer's ID | Producer's **Reference** | Producer's ID |
+| MSH-21 | — | **Conformance Statement ID** (ID) | Message Profile Identifier (EI) | Message Profile Identifier (EI) |
+
+Note MSH-21: v2.5 renamed *and* retyped it without changing the field count, so a
+depth-only audit would never have caught it.
+
+This also surfaced **two pre-existing name defects in the canonical v2.5.1 OBX schema**:
+OBX-12 was truncated (`…Reference Range`, missing `Values`) and OBX-15 carried the
+neighbouring versions' `Producer's ID` instead of `Producer's Reference`.
+
+> **Deviation recorded (ADR-014):** those two names are corrected, but their `swiftName`s are
+> **not**. `effectiveDateOfReferenceRange` and `producersID` are shipped public API, frozen
+> until 2.0 — so the accessors keep their current names while their DocC text and grammar
+> entries now read the spec's wording. Rename at 2.0.
+
+**Rule:** take `DT` / `OPT` / `RP` *and* `name` from the version's own attribute table.
+Only reach for another version's schema when the extraction is visibly corrupted, and then
+hand-verify against the PDF.
+
+### Known extractor limitation — `1-n` variable-column segments
+
+The row parser requires the SEQ cell to be a bare integer, so a `1-n` SEQ row (RDT-1, ADD-1)
+never parses. For RDT the scan then runs on and binds whatever table follows: in v2.3 /
+v2.3.1 it returns the **SPR** segment's four fields (items 00696 / 00697 / 00704 / 00705 —
+exactly the content wrongly committed as RDT before v1.5-S1), and in v2.4+ a query-example
+column table. **RDT therefore shows as a permanent 6-row GAP in the depth audit and must be
+whitelisted**; its schema is hand-authored and correct (one field, `Column Value`). Any
+future `1-n` segment needs the same treatment.
+
+Caption matching was also widened to accept the singular (`Figure 2-10. ERR attribute`) —
+the plural-only pattern silently excluded v2.3 / v2.3.1 ERR from the audit's coverage.
+
+### The original S2 finding (kept for the record — CLOSED in v1.6)
 
 The hardened extractor's golden sweep surfaced a **fifth, unrelated class**: segments whose
 schemas stop short of the spec's field count. Confirmed on **OBX**, a core segment:
@@ -254,12 +334,8 @@ never covered the legacy versions. **This is a req-#1/#4 completeness gap, not a
 faithfulness gap, and it is almost certainly not limited to OBX** — the same "canonical
 depth pinned, per-version depth assumed" pattern applies across the 85 typed segments.
 
-**Next cycle should run a systematic per-version depth audit**: extract every typed
-segment's field count on every version it appears in, diff against the committed schema, and
-close the gaps. That is a full cycle of work and deliberately out of scope for v1.5-S2,
-which was scoped to element-name fidelity. Note the v2.4 OBX extraction failure — the audit
-must treat "extractor returned an implausibly short table" as a finding to investigate, not
-as a depth answer.
+*Closed by the v1.6 audit above.*
+
 
 **Performance note:** `swift <file>` recompiles the ~500-line script every invocation,
 making full regeneration impractically slow. Compile once —

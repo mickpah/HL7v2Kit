@@ -91,6 +91,54 @@
       "dataType": "ID",
       "optionality": "R",
       "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "dateLastObsNormalValues",
+      "name": "Date Last Obs Normal Values",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "userDefinedAccessChecks",
+      "name": "User Defined Access Checks",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "dateTimeOfTheObservation",
+      "name": "Date/Time of the Observation",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 15,
+      "swiftName": "producersID",
+      "name": "Producer's ID",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "responsibleObserver",
+      "name": "Responsible Observer",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "observationMethod",
+      "name": "Observation Method",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
     }
   ]
 }

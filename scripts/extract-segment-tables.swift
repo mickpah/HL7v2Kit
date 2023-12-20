@@ -332,7 +332,10 @@ func captionSegment(above index: Int, lines: [String]) -> String {
             return String(cap[m]).components(separatedBy: CharacterSet(charactersIn: "-–")).last!
                 .trimmingCharacters(in: .whitespaces).components(separatedBy: " ").first ?? ""
         }
-        if let m = cap.range(of: #"([A-Z][A-Z0-9]{1,3}) attributes"#, options: .regularExpression) {
+        // "attributes" is the usual caption, but a few legacy figures use the singular —
+        // v2.3 CH2's "Figure 2-10. ERR attribute" was silently skipped by the plural-only
+        // pattern, which left ERR out of the v1.6 depth audit's coverage entirely.
+        if let m = cap.range(of: #"([A-Z][A-Z0-9]{1,3}) attributes?"#, options: .regularExpression) {
             return String(cap[m]).components(separatedBy: " ").first ?? ""
         }
     }

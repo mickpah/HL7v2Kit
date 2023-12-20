@@ -1267,11 +1267,14 @@ struct TypedSegmentTests {
     // v1.1 (ADR-015): the extraction pipeline's golden audit against the v2.5.1 PDFs
     // caught 11 metadata defects + 2 incomplete segments in the pre-pipeline canonical
     // schemas. These pins guard the corrections so they can never silently regress.
-    @Test("v1.1: OBR completed to 50 fields, OBX to 24 (were 47 / 17)")
+    @Test("v1.1/v1.6: OBR completed to 50 fields, OBX to 25 (were 47 / 17)")
     func v1_1CompletedFieldCounts() {
         let table = SegmentGrammarTable.v2_5_1
         #expect(table["OBR"]?.fields.count == 50)
-        #expect(table["OBX"]?.fields.count == 24)
+        // v1.6 depth audit: OBX is 25, not 24 — v1.1 added 18..24 but stopped one row
+        // short of the v2.5.1 table. OBX-25 is Performing Organization Medical Director.
+        #expect(table["OBX"]?.fields.count == 25)
+        #expect(table["OBX"]?.field(25)?.dataType == "XCN")
         // Newly-authored trailing fields carry their v2.5.1 spec datatype.
         #expect(table["OBR"]?.field(48)?.dataType == "CWE")  // Medically Necessary Duplicate Procedure Reason
         #expect(table["OBR"]?.field(49)?.dataType == "IS")   // Result Handling (IS in v2.5.1)

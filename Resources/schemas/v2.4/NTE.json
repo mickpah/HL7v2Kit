@@ -26,6 +26,14 @@
       "dataType": "FT",
       "optionality": "O",
       "repeatability": "*"
+    },
+    {
+      "index": 4,
+      "swiftName": "commentType",
+      "name": "Comment Type",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
     }
   ]
 }

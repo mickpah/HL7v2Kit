@@ -7,7 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Note (2026-08-20):** the v1.4 + v1.5 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. The v1.4 extractor datatype and element-name issues are now **fixed** (see the v1.5 entries). One open finding remains, tracked in `docs/design/segment-coverage-extraction.md`: **per-version field-depth gaps** on already-modelled segments (confirmed on OBX — v2.5.1 has 24 fields where the spec has 25; v2.3 has 11 where the spec has 17). Needs a systematic depth audit across all 85 typed segments.
+> **Note (2026-08-20):** the v1.4 + v1.5 + v1.6 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**, and ready for merge/tag. **No findings are open** — the v1.4 extractor datatype and element-name issues are fixed (v1.5) and the per-version depth gaps they exposed are closed (v1.6).
+
+### Per-version field-depth audit (v1.6)
+
+Correctness-only, additive. Every committed schema's depth was diffed against **its own
+version's** attribute table — all tables in all chapters of all six versions extracted, then
+compared by max field index in both directions.
+
+**436 of 458 schemas matched on the first pass. 46 fields across 14 (version, segment) pairs
+had never been authored**, all on core segments:
+
+| Version | Segment | Was | Now |
+|---|---|---|---|
+| v2.3 | MSH / OBX / ORC | 15 / 11 / 17 | **19 / 17 / 19** |
+| v2.3.1 | MSH / NTE / OBR / OBX / ORC | 17 / 3 / 43 / 14 / 17 | **20 / 4 / 45 / 17 / 24** |
+| v2.4 | MSH / NTE / OBX / ORC / PID | 20 / 3 / 16 / 19 / 32 | **21 / 4 / 19 / 25 / 38** |
+| v2.5.1 | OBX | 24 | **25** |
+
+v2.5.1 OBX-25 (`Performing Organization Medical Director`) adds a typed accessor; the rest
+deepen per-version grammar tables. All additive (ADR-014). After the fills: **452/458 exact,
+0 suspects, 0 unlocated.** New pin test guards the fills and the naming rules below.
+
+**Per-version element names must never be copied from the canonical schema.** HL7 renames
+fields between versions, so the canonical name is often not that version's name:
+
+| Field | v2.3 / v2.3.1 | v2.4 | v2.5.1 | v2.6 / v2.8.2 |
+|---|---|---|---|---|
+| OBX-12 | Date Last Obs Normal Values | Date Last Observation Normal Value | Effective Date of Reference Range **Values** | Effective Date of Reference Range |
+| OBX-15 | Producer's ID | Producer's ID | Producer's **Reference** | Producer's ID |
+| MSH-21 | — | **Conformance Statement ID** (`ID`) | Message Profile Identifier (`EI`) | Message Profile Identifier (`EI`) |
+
+MSH-21 was renamed *and* retyped in v2.5 without changing the field count — a depth-only
+audit could never have caught it.
+
+**Fixed: two pre-existing name defects in the canonical v2.5.1 OBX schema** — OBX-12 was
+truncated (missing `Values`) and OBX-15 carried the neighbouring versions' `Producer's ID`.
+Their `swiftName`s are deliberately unchanged: `effectiveDateOfReferenceRange` and
+`producersID` are shipped public API, frozen until 2.0 (ADR-014). The accessors keep their
+names while their DocC text and grammar entries now read the spec's wording.
+
+**Extractor:** caption matching widened to accept the singular (`Figure 2-10. ERR
+attribute`), which had silently excluded v2.3 / v2.3.1 ERR from audit coverage. Documented
+limitation: a `1-n` variable-column SEQ row (RDT-1, ADD-1) cannot be parsed, so RDT shows as
+a permanent 6-row gap and must be whitelisted — its hand-authored schema is correct.
+
+Tests: 514 → **515** green.
 
 ### Element-name fidelity (v1.5-S2)
 

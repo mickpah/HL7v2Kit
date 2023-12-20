@@ -68,7 +68,7 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(11)?.stringValue
     }
 
-    /// OBX-12: Effective Date of Reference Range. HL7 data type `TS`.
+    /// OBX-12: Effective Date of Reference Range Values. HL7 data type `TS`.
     public var effectiveDateOfReferenceRange: String? {
         field(12)?.stringValue
     }
@@ -83,7 +83,7 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
         field(14)?.stringValue
     }
 
-    /// OBX-15: Producer's ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBX-15: Producer's Reference. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     public var producersID: CE? {
         field(15).map(CE.init(field:))
     }
@@ -131,5 +131,10 @@ public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
     /// OBX-24: Performing Organization Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
     public var performingOrganizationAddress: XAD? {
         field(24).map(XAD.init(field:))
+    }
+
+    /// OBX-25: Performing Organization Medical Director. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    public var performingOrganizationMedicalDirector: XCN? {
+        field(25).map(XCN.init(field:))
     }
 }

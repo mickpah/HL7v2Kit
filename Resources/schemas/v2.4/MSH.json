@@ -162,6 +162,14 @@
       "dataType": "ID",
       "optionality": "O",
       "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "conformanceStatementId",
+      "name": "Conformance Statement ID",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "*"
     }
   ]
 }
