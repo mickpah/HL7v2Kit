@@ -974,7 +974,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Problem Prognosis", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 23, name: "Individual Awareness of Prognosis", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 24, name: "Family/Significant Other Awareness of Problem/Prognosis", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 25, name: "Security/Sensitivity ntaining knowledge about data a integrity). It is also their", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 25, name: "Security/Sensitivity", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "PRC": SegmentGrammar(

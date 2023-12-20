@@ -140,12 +140,33 @@ func columnKey(forStart start: Int, columns: [Column]) -> String {
     return best
 }
 
-func elementName(from line: String, nameStart: Int) -> String {
+func elementName(from line: String, nameStart: Int, slack: Int = 2) -> String {
     let chars = Array(line)
     guard nameStart < chars.count else { return "" }
     // start a couple of columns early to catch slightly left-shifted names, then trim
-    let s = max(0, nameStart - 2)
+    let s = max(0, nameStart - slack)
     return String(chars[s...]).trimmingCharacters(in: .whitespaces)
+}
+
+// Where this row's element name begins.
+//
+// Long names are *centred* under the "ELEMENT NAME" label and can start well left of the
+// label's own offset, so a fixed header-offset slice truncates them — v2.8.2 CH04A lost
+// the head of RXA-29 ("ministered Tag Identifier"), RXE-45/RXO-36 ("armacy Phone Number")
+// and RXR-6 ("inistration Site Modifier"). Anchor on the rightmost numeric metadata cell
+// instead (ITEM #, or TBL # when the item number is blank): the name is whatever follows
+// it. HL7 item/table numbers are 4-5 digit runs; `LEN`/`C.LEN` cells carry punctuation
+// (`1..4`, `20=`, `5#`) or are shorter, so they don't collide. Falls back to the header
+// offset when a row carries no numeric metadata at all (e.g. a withdrawn field whose LEN,
+// DT, TBL and ITEM cells are all blank).
+func nameBoundary(runs lineRuns: [Run], nameStart: Int) -> Int {
+    var boundary = -1
+    for r in lineRuns where r.start < nameStart {
+        if (4...5).contains(r.text.count), r.text.allSatisfy({ $0.isNumber }) {
+            boundary = max(boundary, r.end)
+        }
+    }
+    return boundary >= 0 ? boundary : nameStart
 }
 
 // Parse a single body line into a field row using the current column model, or nil
@@ -168,7 +189,10 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
           let n = Int(firstRun.text),
           n >= 1 else { return nil }   // reject seq 0 / non-field numeric lines (H2)
     var row = FieldRow(seq: n)
-    let preNameLine = nameStart < chars.count ? String(chars[0..<nameStart]) : line
+    // Bin metadata up to the row's own name boundary, not the header offset — otherwise a
+    // left-shifted long name has its leading words binned as ITEM/TBL values.
+    let boundary = nameBoundary(runs: lineRuns, nameStart: nameStart)
+    let preNameLine = boundary < chars.count ? String(chars[0..<boundary]) : line
     for r in runs(in: preNameLine) {
         switch columnKey(forStart: r.start, columns: columns) {
         case "SEQ": break
@@ -183,11 +207,19 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         }
     }
     row.opt = normalizeOptionality(row.opt)
-    row.name = normalizeName(elementName(from: line, nameStart: nameStart))
+    // No slack when anchoring on a metadata run's end — 2 columns of slack would pull the
+    // tail of the item number into the name.
+    row.name = normalizeName(elementName(from: line, nameStart: boundary,
+                                        slack: boundary == nameStart ? 2 : 0))
     // Reject footnote-number lines misread as rows: a real field always has an element
     // name. A "row" with no name AND no datatype is a stray table-footnote digit (e.g.
     // OBX's "2", MSA's "3", OM4's "0") that happened to sit before the DT column. (H2)
-    if row.name.isEmpty && row.dt.isEmpty { return nil }
+    //
+    // The datatype test needs a *length* floor, not just non-emptiness: every real HL7
+    // datatype token is 2+ characters, so a single-character "DT" is the tail of a wrapped
+    // cell, not a type. v2.5.1 OBX-5's `varies` wraps as `varie` + `s`, and the orphan `s`
+    // was parsed as a whole extra row (it also produced the bogus pre-v1.5 RDT field). (S2)
+    if row.name.isEmpty && row.dt.count < 2 { return nil }
     return row
 }
 
@@ -227,7 +259,7 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
         rows[rows.count-1].tbl += r.text
     }
     let cont = elementName(from: line, nameStart: nameStart)
-    if !cont.isEmpty {
+    if isNameContinuation(cont, currentName: rows[rows.count-1].name) {
         rows[rows.count-1].name += (rows[rows.count-1].name.isEmpty ? "" : " ") + cont
     }
 }
@@ -249,11 +281,31 @@ func isPageFurniture(_ line: String) -> Bool {
 
 // The field-definitions section that immediately follows the attribute table
 // (e.g. "3.4.2.0 PID field definitions" / "3.4.2.1 PID-1 ..."): the table's end.
+//
+// The leading token may carry an alphabetic chapter suffix — v2.8.2 splits the pharmacy
+// chapter into 4 and 4A, numbering sections "4A.4.3.0 RXC field definitions". A
+// digits-and-dots-only test missed those, so the scan ran past the table end and folded
+// the whole field-definitions section into the last row's element name (v1.5-S2: the
+// v2.8.2 RXA/RXC/RXD/RXE/RXG/RXO/RXR corruption).
 func isFieldDefinitionsHeading(_ line: String) -> Bool {
     let t = line.trimmingCharacters(in: .whitespaces)
-    // leading token like 3.4.2.0 or 3.4.2.1 (contains a dot), then prose
-    guard let first = t.split(separator: " ").first, first.contains(".") ,
-          first.allSatisfy({ $0.isNumber || $0 == "." }) else { return false }
+    guard let first = t.split(separator: " ").first, first.contains(".") else { return false }
+    return first.range(of: #"^[0-9]+[A-Za-z]?(\.[0-9]+)+$"#, options: .regularExpression) != nil
+}
+
+// Is `cont` a plausible wrapped-element-name fragment, rather than body prose?
+//
+// A wrapped name is short and has no sentence structure. Prose paragraphs that sit
+// between a table and its field-definitions heading (the "the business and/or application
+// must assume responsibility for maintaining knowledge about data ownership…" note under
+// PRB / GOL) would otherwise be appended to the last row's name (v1.5-S2).
+func isNameContinuation(_ cont: String, currentName: String) -> Bool {
+    let t = cont.trimmingCharacters(in: .whitespaces)
+    if t.isEmpty { return false }
+    if t.count > 60 { return false }                       // paragraphs aren't name wraps
+    if t.contains(". ") || t.hasSuffix(".") { return false }   // sentence punctuation
+    if t.contains("^") || t.contains("|") || t.contains("<") { return false } // component/example text
+    if currentName.count + t.count > 120 { return false }  // no HL7 element name is this long
     return true
 }
 

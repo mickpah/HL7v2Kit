@@ -188,25 +188,78 @@ v2.5.1 / v2.6 / v2.8.2 print `varies` — tracked per-version exactly as `TS`→
 > `~`-repeatability the spec does not grant. The other `1-n` segment is **ADD**-1
 > (`Addendum Continuation Pointer`, ITEM 00066), not yet modelled.
 
-### ⚠️ OPEN — element-name prose bleed (found during the v1.5 audit)
+## v1.5-S2 element-name fidelity (DONE)
 
-A **fourth** defect class, distinct from the DT issues and **not yet fixed**: on some tables
-the extractor runs past the table end and swallows the following *field-definitions* prose
-into the final row's element `name`. 24 fields affected:
+A **fourth** defect class: on some tables the row scan ran past the table end and folded the
+following prose into the final row's element `name`. Three distinct root causes, all fixed:
 
-- **Catastrophic** (hundreds–thousands of chars of prose): v2.8.2 `RXA-29`, `RXC-11`,
-  `RXD-35`, `RXE-45`, `RXG-33`, `RXO-36`, `RXR-6`.
-- **Partial** (name + prose fragment): `PRB-25` (v2.3 / v2.3.1 / v2.4 / v2.5.1),
-  `PRB-28` + `GOL-22` (v2.6 / v2.8.2).
-- **Cosmetic** (missing space after hyphen): `TXA-1` `Set ID- TXA` (v2.3 / v2.3.1 / v2.4 /
-  v2.6 / v2.8.2); `OM2/OM3/OM4/OM5/OM6-1` `Sequence Number- Test/Observation Master File`
-  (v2.4).
+1. **Table-end heading undetectable when the chapter number carries a letter.**
+   `isFieldDefinitionsHeading` required the leading token to be digits-and-dots only, but
+   v2.8.2 splits the pharmacy chapter into 4 and **4A**, numbering sections
+   `4A.4.3.0 RXC field definitions`. The table never ended, so the *entire*
+   field-definitions section (hundreds to thousands of characters — component lists, table
+   references, whole paragraphs) was appended to the last row's name. Hit v2.8.2 `RXA-29`,
+   `RXC-11`, `RXD-35`, `RXE-45`, `RXG-33`, `RXO-36`, `RXR-6`. **Fixed:** the leading token
+   now matches `^[0-9]+[A-Za-z]?(\.[0-9]+)+$`.
+2. **Unbounded continuation folding.** Any non-row line was folded into the previous row's
+   name. The explanatory note that sits between table and definitions on CH12 ("the business
+   and/or application must assume responsibility for maintaining knowledge about data
+   ownership…") therefore contaminated `PRB-25` (v2.3 / v2.3.1 / v2.4 / v2.5.1) and
+   `PRB-28` / `GOL-22` (v2.6 / v2.8.2). **Fixed:** `isNameContinuation` accepts a fragment
+   only if it is short (≤ 60 chars), carries no sentence punctuation, has no `^`/`|`/`<`
+   component-example markers, and keeps the accumulated name under 120 chars.
+3. **Long names truncated at the front.** Element names are *centred* under the
+   `ELEMENT NAME` label, so a long one starts left of the label's offset and a fixed-offset
+   slice cut its head off — `Administered Tag Identifier` → `ministered Tag Identifier`,
+   `Pharmacy Phone Number` → `armacy Phone Number`, `Administration Site Modifier` →
+   `inistration Site Modifier`. This was latent behind (1): fixing the table end exposed it.
+   **Fixed:** `nameBoundary(runs:nameStart:)` anchors the name on the rightmost 4–5 digit
+   numeric metadata run (ITEM #, or TBL # when the item number is blank) and takes what
+   follows; it falls back to the header offset for rows with no numeric metadata. The same
+   boundary now bounds metadata binning, so a left-shifted name no longer overwrites `ITEM`.
 
-Blast radius is the **grammar tables** (`FieldGrammar.name` → validator message text) and
-the reference surface, *not* Swift identifiers: typed structs are generated from the
-canonical v2.5.1 schemas only, so no accessor name is affected. Still a req-#2 defect — the
-schemas must read as a faithful rendering of the spec. Needs a table-end/`stop` fix in the
-extractor plus surgical name corrections, each verified against the PDF.
+Also tightened: a row with an empty name is now rejected when its `DT` is **under 2
+characters**, not merely empty. Every real HL7 datatype token is 2+ chars, so a
+single-character DT is a wrapped-cell tail — v2.5.1 `OBX-5`'s `varies` wraps as `varie` +
+`s`, and that orphan `s` was being parsed as an entire extra row (the same artifact produced
+the bogus pre-v1.5 RDT field).
+
+**Two false-positive classes confirmed as faithful, deliberately left alone:** the attribute
+tables literally print `Set ID- TXA` (v2.3 / v2.3.1 / v2.4 / v2.6 / v2.8.2) and
+`Sequence Number- Test/Observation Master File` (v2.4 OM2–OM6) — no space after the hyphen —
+while the *field-definition headings* on the same pages print them with spaces. The schemas
+follow the attribute table, which is the pipeline's authoritative source. Fidelity to a spec
+typo is correct behaviour (req #2); 10 of the 24 originally-flagged names were this.
+
+Blast radius of the 14 real corrections was the **grammar tables** (`FieldGrammar.name` →
+validator message text) and the reference surface, *not* Swift identifiers — typed structs
+generate from the canonical v2.5.1 schemas only.
+
+### ⚠️ OPEN — per-version field-depth gaps on already-modelled segments (found in v1.5-S2)
+
+The hardened extractor's golden sweep surfaced a **fifth, unrelated class**: segments whose
+schemas stop short of the spec's field count. Confirmed on **OBX**, a core segment:
+
+| Version | Schema depth | Spec depth | Missing |
+|---|---|---|---|
+| v2.5.1 | 24 | **25** | OBX-25 `Performing Organization Medical Director` (XCN, O, ITEM 02285) |
+| v2.3 | 11 | **17** | OBX-12 … OBX-17 (through `Observation Method`) |
+| v2.3.1 | 14 | *unverified* | — |
+| v2.4 | 16 | *unverified* | extraction breaks at field 4 on this layout — needs a manual read |
+| v2.6 | 25 | 25 | ✅ |
+| v2.8.2 | 30 | 30 | ✅ |
+
+The v1.1 audit completed OBX 17 → 24 but stopped one field short of the v2.5.1 table, and
+never covered the legacy versions. **This is a req-#1/#4 completeness gap, not a
+faithfulness gap, and it is almost certainly not limited to OBX** — the same "canonical
+depth pinned, per-version depth assumed" pattern applies across the 85 typed segments.
+
+**Next cycle should run a systematic per-version depth audit**: extract every typed
+segment's field count on every version it appears in, diff against the committed schema, and
+close the gaps. That is a full cycle of work and deliberately out of scope for v1.5-S2,
+which was scoped to element-name fidelity. Note the v2.4 OBX extraction failure — the audit
+must treat "extractor returned an implausibly short table" as a finding to investigate, not
+as a depth answer.
 
 **Performance note:** `swift <file>` recompiles the ~500-line script every invocation,
 making full regeneration impractically slow. Compile once —

@@ -24,6 +24,6 @@
     { "index": 19, "swiftName": "goalLifeCycleStatusDateTime", "name": "Goal Life Cycle Status Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "goalTargetType", "name": "Goal Target Type", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
     { "index": 21, "swiftName": "goalTargetName", "name": "Goal Target Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
-    { "index": 22, "swiftName": "moodCodeRMaintainingKnowledgeAboutDataEsOfDataIntegrityItIsAlsoTheirAta", "name": "Mood Code r maintaining knowledge about data es of data integrity). It is also their ata.", "dataType": "CNE", "optionality": "C", "repeatability": "1" }
+    { "index": 22, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1" }
   ]
 }

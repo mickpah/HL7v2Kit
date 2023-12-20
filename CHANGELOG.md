@@ -7,7 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Note (2026-08-20):** the v1.4 + v1.5 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. The v1.4 extractor datatype issue is now **fixed** (see the v1.5 entry). One open fidelity finding remains — element-name prose bleed on 24 fields, affecting grammar-table field names only (no Swift identifiers) — tracked in `docs/design/segment-coverage-extraction.md`.
+> **Note (2026-08-20):** the v1.4 + v1.5 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**. The v1.4 extractor datatype and element-name issues are now **fixed** (see the v1.5 entries). One open finding remains, tracked in `docs/design/segment-coverage-extraction.md`: **per-version field-depth gaps** on already-modelled segments (confirmed on OBX — v2.5.1 has 24 fields where the spec has 25; v2.3 has 11 where the spec has 17). Needs a systematic depth audit across all 85 typed segments.
+
+### Element-name fidelity (v1.5-S2)
+
+Correctness-only. Fixes the element-name prose-bleed class — three distinct root causes in
+the extractor, plus 14 surgical name corrections, each verified against the version's own
+attribute table.
+
+**Extractor:**
+
+- **Table-end detection now accepts a lettered chapter number.** v2.8.2 splits the pharmacy
+  chapter into 4 and **4A** and numbers sections `4A.4.3.0 RXC field definitions`; the
+  digits-and-dots-only test missed those, so the table never ended and the entire
+  field-definitions section was folded into the last row's element name.
+- **Continuation folding is bounded** — a fragment is accepted as a wrapped name only if it
+  is short, free of sentence punctuation and component-example markers, and keeps the name
+  under 120 chars. Previously the explanatory note between a CH12 table and its definitions
+  contaminated the last row.
+- **Names are no longer truncated at the front.** Element names are *centred* under the
+  `ELEMENT NAME` label, so long ones start left of the label offset and a fixed-offset slice
+  cut their heads off (`Administered Tag Identifier` → `ministered Tag Identifier`). The
+  boundary is now anchored on the rightmost 4–5 digit metadata run (ITEM #, or TBL # when
+  the item number is blank), and the same boundary bounds metadata binning.
+- **Empty-name rows are rejected when `DT` is under 2 characters**, not merely empty — every
+  real HL7 datatype token is 2+ chars, so a 1-char DT is a wrapped-cell tail. v2.5.1
+  `OBX-5`'s `varies` wraps as `varie` + `s`, and the orphan `s` was parsed as an extra row.
+
+**Names corrected (14):** v2.8.2 `RXA-29` `Administered Tag Identifier`, `RXC-11` /
+`RXG-33` `Dispense Units`, `RXD-35` `Dispense Tag Identifier`, `RXE-45` / `RXO-36`
+`Pharmacy Phone Number`, `RXR-6` `Administration Site Modifier`; `PRB-25`
+`Security/Sensitivity` (v2.3 / v2.3.1 / v2.4 / v2.5.1); `PRB-28` and v2.8.2 `GOL-22`
+`Mood Code` (v2.6 / v2.8.2).
+
+**Left alone as faithful (10):** the attribute tables literally print `Set ID- TXA` (v2.3 /
+v2.3.1 / v2.4 / v2.6 / v2.8.2) and `Sequence Number- Test/Observation Master File` (v2.4
+OM2–OM6) with no space after the hyphen, while the field-definition headings on the same
+pages print them with spaces. The schemas follow the attribute table; rendering a spec typo
+faithfully is correct (req #2).
+
+Blast radius of the corrections is the grammar tables (`FieldGrammar.name` → validator
+message text) and the reference surface, not Swift identifiers — typed structs generate from
+the canonical v2.5.1 schemas only. Golden `--verify` sweep: 18/20 canonical segments pass
+clean (OBR-32 is the documented intentional conditional upgrade; OBX surfaced the depth gap
+noted above). Tests: **514** green.
 
 ### Extractor hardening + schema datatype fidelity (v1.5-S1)
 

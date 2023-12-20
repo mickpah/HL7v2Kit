@@ -30,6 +30,6 @@
     { "index": 25, "swiftName": "securitySensitivity", "name": "Security/Sensitivity", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 26, "swiftName": "problemSeverity", "name": "Problem Severity", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 27, "swiftName": "problemPerspective", "name": "Problem Perspective", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 28, "swiftName": "moodCodeTyForMaintainingKnowledgeAboutDataSesOfDataIntegrityItIsAlsoTheirData", "name": "Mood Code ty for maintaining knowledge about data ses of data integrity). It is also their data.", "dataType": "CNE", "optionality": "C", "repeatability": "1" }
+    { "index": 28, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1" }
   ]
 }

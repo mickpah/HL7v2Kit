@@ -133,8 +133,8 @@ public struct PRB: TypedSegment, Sendable, Equatable, Hashable {
         field(24)?.stringValue
     }
 
-    /// PRB-25: Security/Sensitivity nsibility for maintaining knowledge about data r purposes of data integrity). It is also their f that data.. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    public var securitySensitivityNsibilityForMaintainingKnowledgeAboutDataRPurposesOfDataIntegrityItIsAlsoTheirFThatData: CE? {
+    /// PRB-25: Security/Sensitivity. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    public var securitySensitivity: CE? {
         field(25).map(CE.init(field:))
     }
 }
