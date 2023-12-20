@@ -11,8 +11,8 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 | | |
 |---|---|
 | Last updated | 2026-08-20 |
-| Current release | **`v1.3.0`** (on `private`); **v1.4 + v1.5 + v1.6 committed on worktree (85 typed segments), UNMERGED and ready to tag** — no findings open. API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **Merge/tag `v1.4.0`** (user-invoked), then resume the sweep on the ~103 unmodelled segments. Gates the first public push. |
+| Current release | **`v1.4.0`** (merged + tagged locally, not yet pushed) — 85 typed segments at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
+| Next planned cycle | **v1.7 — resume the M5 sweep** on the ~103 unmodelled segments, re-running the depth audit each batch. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -76,9 +76,9 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **⬅ Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
   - ✅ **v1.2:** NK1/PV1/IN1 per-version full depth (closes the immediate gap) + 14 new typed segments (PV2/MRG/DB1/GT1/IN2/IN3 + TQ1/TQ2/RXO/RXR/RXC/RXE/RXD/RXG) full-depth on all versions → **29 typed segments**. Also an extractor legacy-CH4 reliability fix.
   - ✅ **v1.3:** 28 new segments — SPM/ROL + CH10 scheduling + blood-product/RXA, then master-files (MFI/MFE/MFA + OM1–OM7) + referral (RF1/AUT/PRD/CTD) → **57 typed segments**. Also an extractor legacy-`R/O/C`-header reliability fix.
-  - ✅ **v1.4 (committed, unmerged):** query (CH05) + lab-automation (CH13) + master-file-locations/patient-care/med-records (CH08/CH12/CH09) → **85 typed segments**. Surfaced the extractor DT-accuracy issue that v1.5 then fixed.
-  - ✅ **v1.5 (committed, unmerged):** extractor hardening + fidelity. Datatype-column assignment, row robustness, element-name prose bleed (lettered-chapter table ends, unbounded continuation folding, front-truncated centred names). RDT rebuilt in all 6 versions — v2.3/v2.3.1 had held the *SPR* segment's fields, RDT being defined in CH2 §2.24.19 there rather than CH05.
-  - ✅ **v1.6 (committed, unmerged):** per-version depth audit — **46 never-authored fields** filled across 14 (version, segment) pairs, all on core segments (v2.3/v2.3.1/v2.4 MSH/PID/ORC/OBR/OBX/NTE + v2.5.1 OBX-25). Established that per-version element **names** and datatypes must come from each version's own table, never the canonical schema.
+  - ✅ **v1.4.0 (shipped):** query (CH05) + lab-automation (CH13) + master-file-locations/patient-care/med-records (CH08/CH12/CH09) → **85 typed segments**. Surfaced the extractor DT-accuracy issue that v1.5 then fixed.
+  - ✅ **v1.5 (in v1.4.0):** extractor hardening + fidelity. Datatype-column assignment, row robustness, element-name prose bleed (lettered-chapter table ends, unbounded continuation folding, front-truncated centred names). RDT rebuilt in all 6 versions — v2.3/v2.3.1 had held the *SPR* segment's fields, RDT being defined in CH2 §2.24.19 there rather than CH05.
+  - ✅ **v1.6 (in v1.4.0):** per-version depth audit — **46 never-authored fields** filled across 14 (version, segment) pairs, all on core segments (v2.3/v2.3.1/v2.4 MSH/PID/ORC/OBR/OBX/NTE + v2.5.1 OBX-25). Established that per-version element **names** and datatypes must come from each version's own table, never the canonical schema.
   - **v1.7+ (next):** the **~103 unmodelled segments** by chapter/family (remaining CH13 lab, CH12 patient-care, financial CH06, the long tail), re-running the depth audit each batch.
 
   **Method note (earned the hard way in v1.5/v1.6):** six prior sweep cycles authored depths that looked complete and were not — 46 missing fields on the most-used segments in the standard. Coverage counted in *segments* hides gaps counted in *fields*. The depth audit is cheap once the extractor is compiled and belongs in every future batch.

@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Note (2026-08-20):** the v1.4 + v1.5 + v1.6 work below is committed on the `v1.4-query-lab` worktree but **UNMERGED**, and ready for merge/tag. **No findings are open** — the v1.4 extractor datatype and element-name issues are fixed (v1.5) and the per-version depth gaps they exposed are closed (v1.6).
+## [1.4.0] — 2026-08-20
+
+M5 sweep — typed-segment coverage **57 → 85**, plus two correctness cycles that moved the
+authored surface from *assumed* complete to *verified* against the spec. **452 of 458
+committed schemas now match their own version's attribute table exactly** (the 6 exceptions
+are RDT, a known `1-n` variable-column extractor limitation whose hand-authored schema is
+correct). Additive throughout (ADR-014) — the frozen v1.0 API only grows. Tests: 513 → **515**.
+
+Two shipped accessors keep names that now differ from their corrected element names —
+`effectiveDateOfReferenceRange` (OBX-12) and `producersID` (OBX-15). Frozen public API;
+rename at 2.0.
 
 ### Per-version field-depth audit (v1.6)
 
