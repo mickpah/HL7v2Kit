@@ -1,0 +1,30 @@
+{
+  "segmentID": "PCR",
+  "version": "2.4",
+  "description": "Possible Causal Relationship",
+  "fields": [
+    { "index": 1, "swiftName": "implicatedProduct", "name": "Implicated Product", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "genericProduct", "name": "Generic Product", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "productClass", "name": "Product Class", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "totalDurationOfTherapy", "name": "Total Duration Of Therapy", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "productManufactureDate", "name": "Product Manufacture Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "productExpirationDate", "name": "Product Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "productImplantationDate", "name": "Product Implantation Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "productExplantationDate", "name": "Product Explantation Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "singleUseDevice", "name": "Single Use Device", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "indicationForProductUse", "name": "Indication For Product Use", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "productProblem", "name": "Product Problem", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "productSerialLotNumber", "name": "Product Serial/Lot Number", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "productAvailableForInspection", "name": "Product Available For Inspection", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "productEvaluationPerformed", "name": "Product Evaluation Performed", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "productEvaluationStatus", "name": "Product Evaluation Status", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "productEvaluationResults", "name": "Product Evaluation Results", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "evaluatedProductSource", "name": "Evaluated Product Source", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "dateProductReturnedToManufacturer", "name": "Date Product Returned To Manufacturer", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "deviceOperatorQualifications", "name": "Device Operator Qualifications", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "relatednessAssessment", "name": "Relatedness Assessment", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "actionTakenInResponseToTheEvent", "name": "Action Taken In Response To The Event", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 22, "swiftName": "eventCausalityObservations", "name": "Event Causality Observations", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 23, "swiftName": "indirectExposureMechanism", "name": "Indirect Exposure Mechanism", "dataType": "ID", "optionality": "O", "repeatability": "*" }
+  ]
+}

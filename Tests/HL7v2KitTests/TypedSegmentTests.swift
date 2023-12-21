@@ -1594,4 +1594,56 @@ struct TypedSegmentTests {
             #expect(present)
         }
     }
+
+    // v1.8 (M5 sweep): CH07 completion — the product-experience family
+    // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
+    // exist on every supported version at the SAME depth, so the divergence is entirely
+    // in datatypes and element names — exactly what a depth-only check would miss.
+    @Test("v1.8: CH07 product-experience + clinical-trials — depths, registration, divergence")
+    func v1_8ProductExperienceClinicalTrials() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["PES"]?.fields.count == 13)
+        #expect(t["PEO"]?.fields.count == 25)
+        #expect(t["PCR"]?.fields.count == 23)
+        #expect(t["PDC"]?.fields.count == 15)
+        #expect(t["PSH"]?.fields.count == 14)
+        #expect(t["CSR"]?.fields.count == 16)
+        #expect(t["CSP"]?.fields.count == 4)
+        #expect(t["CSS"]?.fields.count == 3)
+        #expect(t["CTI"]?.fields.count == 3)
+        // Present on all six versions at identical depth.
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1,
+                      SegmentGrammarTable.v2_4, SegmentGrammarTable.v2_6,
+                      SegmentGrammarTable.v2_8_2] {
+            #expect(table["PEO"]?.fields.count == 25)
+            #expect(table["CSR"]?.fields.count == 16)
+        }
+
+        // TS → DTM in v2.6 (CSR-6 Date/Time of Patient Study Registration).
+        #expect(t["CSR"]?.field(6)?.dataType == "TS")
+        #expect(SegmentGrammarTable.v2_6["CSR"]?.field(6)?.dataType == "DTM")
+        // v2.3 spec typo, faithfully rendered: PDC-14/15 say "Marked", corrected to
+        // "Marketed" in v2.4. The attribute table AND the definition heading agree, so
+        // this is the spec's own error, not an extraction artifact.
+        #expect(SegmentGrammarTable.v2_3["PDC"]?.field(14)?.name == "Date First Marked")
+        #expect(SegmentGrammarTable.v2_4["PDC"]?.field(14)?.name == "Date First Marketed")
+        // Renames: CTI-1 shortened after v2.3; PEO-14 gained "Description" in v2.6.
+        #expect(SegmentGrammarTable.v2_3["CTI"]?.field(1)?.name == "Sponsor Study Identifier")
+        #expect(t["CTI"]?.field(1)?.name == "Sponsor Study ID")
+        #expect(t["PEO"]?.field(14)?.name == "Event From Original Reporter")
+        #expect(SegmentGrammarTable.v2_6["PEO"]?.field(14)?.name == "Event Description from Original Reporter")
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||PEX^P07|M1|P|2.5.1\r"
+            + "PES|S1\r" + "PEO|E1^^HL7\r" + "PCR|P1^^HL7\r" + "PDC|M1^^HL7\r" + "PSH|R1\r"
+            + "CSR|ST1\r" + "CSP|PH1^^HL7\r" + "CSS|TP1^^HL7\r" + "CTI|ST1\r"
+        let message = try Parser().parse(wire)
+        let csr = try #require(message.firstSegment(CSR.self))
+        #expect(csr.sponsorStudyId != nil)                 // CSR-1 (EI) hydrates
+        for present in [message.firstSegment(PES.self) != nil, message.firstSegment(PEO.self) != nil,
+                        message.firstSegment(PCR.self) != nil, message.firstSegment(PDC.self) != nil,
+                        message.firstSegment(PSH.self) != nil, message.firstSegment(CSP.self) != nil,
+                        message.firstSegment(CSS.self) != nil, message.firstSegment(CTI.self) != nil] {
+            #expect(present)
+        }
+    }
 }

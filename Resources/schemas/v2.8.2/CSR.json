@@ -1,0 +1,23 @@
+{
+  "segmentID": "CSR",
+  "version": "2.8.2",
+  "description": "Clinical Study Registration",
+  "fields": [
+    { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "alternateStudyId", "name": "Alternate Study ID", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "institutionRegisteringThePatient", "name": "Institution Registering the Patient", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "sponsorPatientId", "name": "Sponsor Patient ID", "dataType": "CX", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "alternatePatientIdCsr", "name": "Alternate Patient ID - CSR", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "dateTimeOfPatientStudyRegistration", "name": "Date/Time of Patient Study Registration", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "personPerformingStudyRegistration", "name": "Person Performing Study Registration", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "studyAuthorizingProvider", "name": "Study Authorizing Provider", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
+    { "index": 9, "swiftName": "dateTimePatientStudyConsentSigned", "name": "Date/Time Patient Study Consent Signed", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = C01" },
+    { "index": 10, "swiftName": "patientStudyEligibilityStatus", "name": "Patient Study Eligibility Status", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = C01" },
+    { "index": 11, "swiftName": "studyRandomizationDateTime", "name": "Study Randomization Date/time", "dataType": "DTM", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "randomizedStudyArm", "name": "Randomized Study Arm", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "stratumForStudyRandomization", "name": "Stratum for Study Randomization", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "patientEvaluabilityStatus", "name": "Patient Evaluability Status", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = C04" },
+    { "index": 15, "swiftName": "dateTimeEndedStudy", "name": "Date/Time Ended Study", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = C04" },
+    { "index": 16, "swiftName": "reasonEndedStudy", "name": "Reason Ended Study", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = C04" }
+  ]
+}

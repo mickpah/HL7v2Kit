@@ -1057,6 +1057,12 @@ struct MultiVersionTests {
             // Fail-safe (documented in conditional-completeness-audit.md). The other
             // five segments in this batch (ISD/NDS/CNS/ECD/ECR) carry no C fields.
             "SID-1", "SID-2", "SID-3", "SID-4",
+            // v1.8 (CH07 product-experience + clinical-trials completion): CSP-4 Study
+            // Phase Evaluability is the ONLY bare C in the nine-segment batch. §7.8.2.4
+            // says what the field holds and states no trigger. Its five CSR siblings and
+            // CTI-2 all carry spec-cited predicates instead — see
+            // v1_8ClinicalTrialConditionsShipped() below.
+            "CSP-4",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {
@@ -1066,6 +1072,37 @@ struct MultiVersionTests {
         }
         #expect(actual == expected,
                 "v2.8.2 C-without-condition set drifted from the audit register; got \(actual.sorted())")
+    }
+
+    // v1.8: six conditional fields in the clinical-trials family carry spec-cited,
+    // DSL-expressible predicates rather than joining the permanent-limitation register.
+    // CSR-9/10 cite the patient-registration trigger event (C01); CSR-14/15/16 cite the
+    // off-study trigger event (C04); CTI-2's requirement is stated in CTI-3's own prose
+    // ("CTI-2 ... must be valued if CTI-3 ... is valued"). Each was verified against every
+    // version's field-definition text by ITEM number, since the heading format differs
+    // between the v2.3-era and v2.5+-era chapters.
+    @Test("v1.8: clinical-trial conditional predicates ship on all six versions")
+    func v1_8ClinicalTrialConditionsShipped() {
+        let tables: [(String, [String: SegmentGrammar])] = [
+            ("2.3", SegmentGrammarTable.v2_3),
+            ("2.3.1", SegmentGrammarTable.v2_3_1),
+            ("2.4", SegmentGrammarTable.v2_4),
+            ("2.5.1", SegmentGrammarTable.v2_5_1),
+            ("2.6", SegmentGrammarTable.v2_6),
+            ("2.8.2", SegmentGrammarTable.v2_8_2),
+        ]
+        for (version, table) in tables {
+            #expect(table["CSR"]?.field(9)?.condition == "triggerEvent = C01", "CSR-9 on \(version)")
+            #expect(table["CSR"]?.field(10)?.condition == "triggerEvent = C01", "CSR-10 on \(version)")
+            #expect(table["CSR"]?.field(14)?.condition == "triggerEvent = C04", "CSR-14 on \(version)")
+            #expect(table["CSR"]?.field(15)?.condition == "triggerEvent = C04", "CSR-15 on \(version)")
+            #expect(table["CSR"]?.field(16)?.condition == "triggerEvent = C04", "CSR-16 on \(version)")
+            #expect(table["CTI"]?.field(2)?.condition == "CTI-3 populated", "CTI-2 on \(version)")
+            // CSP-4 has no expressible trigger — it must stay bare so the register's
+            // guard test keeps describing reality.
+            #expect(table["CSP"]?.field(4)?.optionality == .conditional, "CSP-4 opt on \(version)")
+            #expect(table["CSP"]?.field(4)?.condition == nil, "CSP-4 stays bare on \(version)")
+        }
     }
 
     // v1.2 (M5 sweep): NK1/PV1/IN1 extended from curated (13/20/25) to full

@@ -1,0 +1,21 @@
+{
+  "segmentID": "PSH",
+  "version": "2.8.2",
+  "description": "Product Summary Header",
+  "fields": [
+    { "index": 1, "swiftName": "reportType", "name": "Report Type", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "reportFormIdentifier", "name": "Report Form Identifier", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "reportDate", "name": "Report Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "reportIntervalStartDate", "name": "Report Interval Start Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "reportIntervalEndDate", "name": "Report Interval End Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "quantityManufactured", "name": "Quantity Manufactured", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "quantityDistributed", "name": "Quantity Distributed", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "quantityDistributedMethod", "name": "Quantity Distributed Method", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "quantityDistributedComment", "name": "Quantity Distributed Comment", "dataType": "FT", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "quantityInUse", "name": "Quantity in Use", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "quantityInUseMethod", "name": "Quantity in Use Method", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "quantityInUseComment", "name": "Quantity in Use Comment", "dataType": "FT", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "numberOfProductExperienceReportsFiledByFacility", "name": "Number of Product Experience Reports Filed by Facility", "dataType": "NM", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "numberOfProductExperienceReportsFiledByDistributor", "name": "Number of Product Experience Reports Filed by Distributor", "dataType": "NM", "optionality": "O", "repeatability": "*" }
+  ]
+}
