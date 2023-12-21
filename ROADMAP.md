@@ -10,9 +10,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-08-20 |
-| Current release | **`v1.4.0`** (merged + tagged locally, not yet pushed) — 85 typed segments at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **v1.7 — resume the M5 sweep** on the ~103 unmodelled segments, re-running the depth audit each batch. Gates the first public push. |
+| Last updated | 2026-08-21 |
+| Current release | **`v1.4.0`** (tagged locally, not yet pushed). `main` also carries the **v1.7** CH13 batch, untagged — **91 typed segments** at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
+| Next planned cycle | **v1.8 — continue the M5 sweep** on the ~97 unmodelled segments, re-running the depth + integrity audits each batch. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
 
@@ -70,7 +70,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 ### M5 — Full HL7 segment coverage across all versions 🟠 **(foundation done v1.1; sweep ongoing — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
-- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **85 typed segments**; **~103 unmodelled**. **Depth of the authored surface is now verified, not assumed** (v1.6): 452 of 458 committed schemas match their own version's attribute table exactly; the 6 exceptions are RDT, a known `1-n` extractor limitation whose hand-authored schema is correct.
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **91 typed segments**; **~97 unmodelled**. **Depth of the authored surface is verified, not assumed** (v1.6 audit, re-run every batch): 476 of 482 committed schemas match their own version's attribute table exactly; the 6 exceptions are RDT, a known `1-n` extractor limitation whose hand-authored schema is correct.
 - **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
 - **✅ Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
 - **⬅ Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
@@ -79,9 +79,10 @@ The four themes below are roughly independent and can interleave across cycles. 
   - ✅ **v1.4.0 (shipped):** query (CH05) + lab-automation (CH13) + master-file-locations/patient-care/med-records (CH08/CH12/CH09) → **85 typed segments**. Surfaced the extractor DT-accuracy issue that v1.5 then fixed.
   - ✅ **v1.5 (in v1.4.0):** extractor hardening + fidelity. Datatype-column assignment, row robustness, element-name prose bleed (lettered-chapter table ends, unbounded continuation folding, front-truncated centred names). RDT rebuilt in all 6 versions — v2.3/v2.3.1 had held the *SPR* segment's fields, RDT being defined in CH2 §2.24.19 there rather than CH05.
   - ✅ **v1.6 (in v1.4.0):** per-version depth audit — **46 never-authored fields** filled across 14 (version, segment) pairs, all on core segments (v2.3/v2.3.1/v2.4 MSH/PID/ORC/OBR/OBX/NTE + v2.5.1 OBX-25). Established that per-version element **names** and datatypes must come from each version's own table, never the canonical schema.
-  - **v1.7+ (next):** the **~103 unmodelled segments** by chapter/family (remaining CH13 lab, CH12 patient-care, financial CH06, the long tail), re-running the depth audit each batch.
+  - ✅ **v1.7 (merged, untagged):** CH13 clinical-lab-automation completion — ISD/NDS/CNS/ECD/ECR/SID, v2.4+ only (v2.3 / v2.3.1 have no CH13) → **91 typed segments**. Whole-SID conditionality documented (§13.4.11 marks all four fields `C` with no stated condition). Five further prose-bleed element names fixed, found by adding a name-**length** audit predicate that v1.5's marker-word regex had missed.
+  - **v1.8+ (next):** the **~97 unmodelled segments** by chapter/family (CH12 patient-care PES/PEO/PCR, financial CH06 ABS/UB1/UB2/GP1/GP2, CH07 remainder, the long tail), re-running the depth + integrity audits each batch.
 
-  **Method note (earned the hard way in v1.5/v1.6):** six prior sweep cycles authored depths that looked complete and were not — 46 missing fields on the most-used segments in the standard. Coverage counted in *segments* hides gaps counted in *fields*. The depth audit is cheap once the extractor is compiled and belongs in every future batch.
+  **Method note (earned the hard way in v1.5/v1.6, reconfirmed in v1.7):** six prior sweep cycles authored depths that looked complete and were not — 46 missing fields on the most-used segments in the standard. Coverage counted in *segments* hides gaps counted in *fields*. v1.7 then showed the same for *fidelity*: a name-**length** predicate found five corrupted element names that a marker-word regex had walked past. So — audit with **shape** predicates rather than enumerated content lists, and run them every batch. Both audits are cheap once the extractor is compiled.
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
 
 ---
