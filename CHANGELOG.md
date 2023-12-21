@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **State (2026-08-21):** the v1.7 and v1.8 batches below are **merged to `main` and
+> untagged** — they fold into the next release. Typed-segment coverage is **100**, and
+> `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 536 schemas;
+> depth 530 exact, 0 gaps, 0 suspects**. Tests **518** green, no codegen drift. `main` and
+> the `v1.4.0` tag have **not been pushed** to `private`.
+
 ### M5 sweep — CH07 completion: product experience + clinical trials (v1.8)
 
 Adds **PES/PEO/PCR/PDC/PSH** (product experience) and **CSR/CSP/CSS/CTI** (clinical trials),
