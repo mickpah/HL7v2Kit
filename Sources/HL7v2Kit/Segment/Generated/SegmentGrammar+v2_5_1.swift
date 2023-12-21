@@ -242,6 +242,18 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 13, name: "Room Fee Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "CNS": SegmentGrammar(
+            segmentID: "CNS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Starting Notification Reference Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Ending Notification Reference Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Starting Notification Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Ending Notification Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Starting Notification Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Ending Notification Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "CON": SegmentGrammar(
             segmentID: "CON",
             version: "2.5.1",
@@ -325,6 +337,26 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "Attestation Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 20, name: "Diagnosis Identifier", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "triggerEvent = P12"),
             FieldGrammar(index: 21, name: "Diagnosis Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "triggerEvent = P12"),
+            ]
+        ),
+        "ECD": SegmentGrammar(
+            segmentID: "ECD",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Reference Command Number", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Remote Control Command", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Response Required", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Requested Completion Time", dataType: "TQ", optionality: .backwardCompat, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Parameters", dataType: "TX", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "ECR": SegmentGrammar(
+            segmentID: "ECR",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Command Response", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Date/Time Completed", dataType: "TS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Command Response Parameters", dataType: "TX", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "EQP": SegmentGrammar(
@@ -685,6 +717,15 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Target Value", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "ISD": SegmentGrammar(
+            segmentID: "ISD",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Reference Interaction Number (unique identifier)", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Interaction Type Identifier", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Interaction Active State", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
         "LCC": SegmentGrammar(
             segmentID: "LCC",
             version: "2.5.1",
@@ -836,6 +877,16 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "Principal Language Of Message", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 20, name: "Alternate Character Set Handling Scheme", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 21, name: "Message Profile Identifier", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "NDS": SegmentGrammar(
+            segmentID: "NDS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Notification Reference Number", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Notification Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Notification Alert Severity", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Notification Code", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
             ]
         ),
         "NK1": SegmentGrammar(
@@ -1864,6 +1915,16 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 27, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil),
             ]
         ),
+        "SID": SegmentGrammar(
+            segmentID: "SID",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Application / Method Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Substance Lot Number", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Substance Container Identifier", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Substance Manufacturer Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            ]
+        ),
         "SPM": SegmentGrammar(
             segmentID: "SPM",
             version: "2.5.1",
@@ -1966,7 +2027,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Cyclic Entry/Exit Indicator", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 8, name: "Sequence Condition Time Interval", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 9, name: "Cyclic Group Maximum Number of Repeats", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 10, name: "Special Service Request Relationship requests using the parent/child paradigm, the following occurs: ecifies that it follow the first child service request. cifies that it follow the second child service request. ecifies that it follow the third service request. sts in a cyclic manner, the following occurs: cifies that it is to be executed once without any ice requests. Its second execution follows the See example in Section 4.15.2, \"RXO segment field requests to be reported back at the level of the parent request by following the status of the corresponding sent as a group of four service requests (without a n their quantity/timing fields. In this case, there is the service request status of the group as a whole f the four separate service requests. events: f the referenced predecessor service request. Thus a predecessor service request implies the cancellation quent service requests in the chain. n canceled (or discontinued or held), the current old of the predecessor implies a removal of the hold then be executed according to the specification in the", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Special Service Request Relationship", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
             ]
         ),
         "TXA": SegmentGrammar(

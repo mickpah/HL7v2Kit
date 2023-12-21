@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — CH13 lab-automation completion (v1.7)
+
+Sixth chapter closed out. Adds **ISD/NDS/CNS/ECD/ECR/SID** (CH13 clinical laboratory
+automation) — full depth on every version they appear in. CH13 was introduced in **v2.4**, so
+these six exist on v2.4 / v2.5.1 / v2.6 / v2.8.2 only; v2.3 and v2.3.1 have no CH13. Typed
+count **85 → 91**; 24 new schema instances, all 24 passing the golden `--verify` gate.
+
+Per-version divergence is captured rather than flattened: `CE → CWE` and `TS → DTM` in v2.6;
+`ECR-3`/`ECD-5` widen `ST → TX` in v2.5.1; **ECD-4** Requested Completion Time goes
+`O` (v2.4) → `B` (v2.5.1/v2.6) → **withdrawn with no datatype** (v2.8.2); and v2.6 renamed
+`ISD-1` (dropping "(unique identifier)") and `SID-1` (closing up "Application / Method").
+
+**The whole SID segment is conditional.** §13.4.11 marks all four fields `C` and states no
+condition at all, so no DSL predicate is expressible — documented in
+`conditional-completeness-audit.md` as the purest instance of that class (~132 positions).
+The other five segments carry no `C` fields.
+
+### Fixed — five more prose-bleed element names (v1.7)
+
+A **name-length** audit predicate (`> 120` chars) found five instances of the v1.5-S2
+prose-bleed class that the earlier *marker-word* regex had missed: `TQ2-10` (v2.5.1 / v2.6 /
+v2.8.2 — up to 1069 characters of absorbed prose), `BPX-21` and `BTX-20` (v2.8.2). All three
+segments were authored in v1.2 / v1.3, before the extractor's table-end and continuation
+fixes, and had never been re-extracted. Corrected to `Special Service Request Relationship`,
+`BP Dispensing Individual` and `BP Unique ID`, each confirmed against the CH04 tables.
+
+Lesson recorded in `segment-coverage-extraction.md`: prefer a *shape* predicate (length,
+character class) over an *enumerated content* predicate when auditing for corruption —
+marker lists only find the corruption you already thought of.
+
+Depth audit re-run across all six versions: **476 of 482** schemas match exactly, 0 suspects,
+0 unlocated (the 6 remaining gaps are the known RDT `1-n` whitelist). Tests: 515 → **516**.
+
 ## [1.4.0] — 2026-08-20
 
 M5 sweep — typed-segment coverage **57 → 85**, plus two correctness cycles that moved the

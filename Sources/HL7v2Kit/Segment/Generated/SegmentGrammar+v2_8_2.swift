@@ -214,7 +214,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 18, name: "BP Actual Dispensed To Location", dataType: "PL", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 19, name: "BP Actual Dispensed To Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 20, name: "BP Dispensed to Receiver", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 21, name: "BP Dispensing Individual bute pertains to any type of blood product. A commercially prepared blood product that is bute pertains only to blood components. A blood onation. For example, from one whole blood red blood cells, plasma and platelets with each products are assigned a unique donation ates the type of component contained in the bag. bute pertains only to Commercial Products. A ed product, such as blood derivatives ( Rh t Sets or Filters). These types of products are rily assigned a unique donation number.", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 21, name: "BP Dispensing Individual", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "BTX": SegmentGrammar(
@@ -240,7 +240,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 17, name: "BP Transfusion End Date/Time of Status", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 18, name: "BP Adverse Reaction Type", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 19, name: "BP Transfusion Interrupted Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 20, name: "BP Unique ID or commercially prepared blood product that is tribute pertains only to blood components. A blood d donation. For example, from one whole blood nto red blood cells, plasma and platelets with each ood products are always assigned a unique e that indicates the type of component contained in tribute pertains only to Commercial Products. A tured product, such as blood derivatives (Rh ient Sets or Filters). These types of products are ssarily assigned a unique donation number.", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 20, name: "BP Unique ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "CDM": SegmentGrammar(
@@ -260,6 +260,18 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Contract Number", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 12, name: "Contract Organization", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 13, name: "Room Fee Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "CNS": SegmentGrammar(
+            segmentID: "CNS",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Starting Notification Reference Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Ending Notification Reference Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Starting Notification Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Ending Notification Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Starting Notification Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Ending Notification Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "CON": SegmentGrammar(
@@ -350,6 +362,26 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 24, name: "DRG Grouping Usage", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 25, name: "DRG Diagnosis Determination Status", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 26, name: "Present On Admission (POA) Indicator", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "ECD": SegmentGrammar(
+            segmentID: "ECD",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Reference Command Number", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Remote Control Command", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Response Required", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Requested Completion Time", dataType: "", optionality: .withdrawn, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Parameters", dataType: "TX", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "ECR": SegmentGrammar(
+            segmentID: "ECR",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Command Response", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Date/Time Completed", dataType: "DTM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Command Response Parameters", dataType: "TX", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "EQP": SegmentGrammar(
@@ -715,6 +747,15 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Target Value", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "ISD": SegmentGrammar(
+            segmentID: "ISD",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Reference Interaction Number", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Interaction Type Identifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Interaction Active State", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
         "LCC": SegmentGrammar(
             segmentID: "LCC",
             version: "2.8.2",
@@ -874,6 +915,16 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Receiving Responsible Organization", dataType: "XON", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 24, name: "Sending Network Address", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 25, name: "Receiving Network Address", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NDS": SegmentGrammar(
+            segmentID: "NDS",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Notification Reference Number", dataType: "NM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Notification Date/Time", dataType: "DTM", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Notification Alert Severity", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Notification Code", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
             ]
         ),
         "NK1": SegmentGrammar(
@@ -1955,6 +2006,16 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 27, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil),
             ]
         ),
+        "SID": SegmentGrammar(
+            segmentID: "SID",
+            version: "2.8.2",
+            fields: [
+            FieldGrammar(index: 1, name: "Application/Method Identifier", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Substance Lot Number", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Substance Container Identifier", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Substance Manufacturer Identifier", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: nil),
+            ]
+        ),
         "SPM": SegmentGrammar(
             segmentID: "SPM",
             version: "2.8.2",
@@ -2061,7 +2122,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Cyclic Entry/Exit Indicator", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 8, name: "Sequence Condition Time Interval", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 9, name: "Cyclic Group Maximum Number of Repeats", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 10, name: "Special Service Request Relationship using the parent/child paradigm, the g occurs: specifies that it follow the first child service specifies that it follow the second child service specifies that it follow the third service request. cyclic manner, the following occurs: specifies that it is to be executed once without any ervice requests. Its second execution follows the t. See example in Section 4A.5.2 RXO segment e requests to be reported back at the level of the ce request by following the status of the be sent as a group of four service requests by the data in their quantity/timing fields. In this of transmitting the service request status of the he status of each of the four separate service l events: of the referenced predecessor service request. ld) of a predecessor service request implies the d) of all subsequent service requests in the chain. een canceled (or discontinued or held), the current the predecessor implies a removal of the hen be executed according to the", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Special Service Request Relationship", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil),
             ]
         ),
         "TXA": SegmentGrammar(
