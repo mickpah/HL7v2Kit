@@ -1,0 +1,11 @@
+{
+  "segmentID": "SID",
+  "version": "2.4",
+  "description": "Substance Identifier",
+  "fields": [
+    { "index": 1, "swiftName": "applicationMethodIdentifier", "name": "Application / Method Identifier", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "substanceLotNumber", "name": "Substance Lot Number", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "substanceContainerIdentifier", "name": "Substance Container Identifier", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "substanceManufacturerIdentifier", "name": "Substance Manufacturer Identifier", "dataType": "CE", "optionality": "C", "repeatability": "1" }
+  ]
+}

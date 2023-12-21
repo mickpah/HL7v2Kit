@@ -110,6 +110,10 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **GOL-22 / PRB-28** (Goal/Problem — action-code-gated fields) and **PTH-6 / PTH-7** (Pathway status) — conditional on the care-record action (add/update/delete).
 - **TXA-3/5/7/11/13/22** (Transcription Document Header) — document-status / activity-datetime fields conditional on the document-completion event.
 
+**v1.7 (CH13 lab-automation completion) — the whole SID segment:**
+- **SID-1 Application / Method Identifier**, **SID-2 Substance Lot Number**, **SID-3 Substance Container Identifier**, **SID-4 Substance Manufacturer Identifier** — §13.4.11 marks all four `C` and its field-definition prose states **no condition whatsoever** (each definition describes only what the field identifies). Which of the four is required depends on *what the substance is being identified by* in the sending lab's automation workflow — not on any same-segment or cross-segment field value, so no DSL predicate is expressible. Fail-safe: all four are treated as optional. This is the purest instance of the class in the register — a segment whose entire conformance is conditional with no stated trigger.
+- The other five segments in the v1.7 batch (**ISD / NDS / CNS / ECD / ECR**) carry **no** `C` fields: their conditionality is expressed structurally, by the message's own segment grammar.
+
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
@@ -117,6 +121,6 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 ## Outcome
 
 - **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **~128 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
+- **~132 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]; +4 v1.7 [the whole SID segment]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

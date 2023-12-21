@@ -302,6 +302,25 @@ neighbouring versions' `Producer's ID` instead of `Producer's Reference`.
 Only reach for another version's schema when the extraction is visibly corrupted, and then
 hand-verify against the PDF.
 
+### v1.7 — a length predicate catches what marker-matching missed
+
+The v1.5-S2 prose-bleed sweep detected corrupted element names by matching prose *marker
+words* (`It is`, `would`, `knowledge`, …). That under-detects: the v1.7 batch's integrity
+run added a plain **name-length** predicate (`len(name) > 120`) and immediately found **five
+more instances of the same class** that the marker regex had walked straight past —
+`TQ2-10` (v2.5.1 / v2.6 / v2.8.2, up to 1069 characters), `BPX-21` and `BTX-20` (v2.8.2).
+All three segments were authored in v1.2 / v1.3, before the extractor's table-end and
+continuation fixes landed, and were never re-extracted.
+
+True names, confirmed against the CH04 tables: `Special Service Request Relationship`,
+`BP Dispensing Individual`, `BP Unique ID`. Fixed in v1.7.
+
+**Lesson:** prefer a *shape* predicate (length, character class) over an *enumerated
+content* predicate (marker words) when auditing for corruption. Marker lists only find the
+corruption you already thought of. The audit predicate set is now: phantom rows, empty
+`dataType` with `OPT ∉ {W, X}`, duplicate field index, gaps in the index sequence,
+prose-marker names, **name length > 120**, and depth-vs-spec in both directions.
+
 ### Known extractor limitation — `1-n` variable-column segments
 
 The row parser requires the SEQ cell to be a bare integer, so a `1-n` SEQ row (RDT-1, ADD-1)

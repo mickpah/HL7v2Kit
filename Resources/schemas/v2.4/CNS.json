@@ -1,0 +1,13 @@
+{
+  "segmentID": "CNS",
+  "version": "2.4",
+  "description": "Clear Notification",
+  "fields": [
+    { "index": 1, "swiftName": "startingNotificationReferenceNumber", "name": "Starting Notification Reference Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "endingNotificationReferenceNumber", "name": "Ending Notification Reference Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "startingNotificationDateTime", "name": "Starting Notification Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "endingNotificationDateTime", "name": "Ending Notification Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "startingNotificationCode", "name": "Starting Notification Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "endingNotificationCode", "name": "Ending Notification Code", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}

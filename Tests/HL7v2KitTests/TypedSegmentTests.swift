@@ -1539,4 +1539,59 @@ struct TypedSegmentTests {
             #expect(present)
         }
     }
+
+    // v1.7 (M5 sweep): CH13 clinical-lab-automation completion — ISD/NDS/CNS/ECD/ECR/SID.
+    // CH13 was introduced in v2.4, so these six exist on v2.4/v2.5.1/v2.6/v2.8.2 only;
+    // v2.3 and v2.3.1 have no CH13 at all. Depths are identical across those four
+    // versions, but the datatypes are NOT — this pins the divergence so a future
+    // regeneration can't silently converge them (the v1.6 lesson).
+    @Test("v1.7: CH13 lab-automation segments — depths, registration, per-version datatypes")
+    func v1_7LabAutomationCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["ISD"]?.fields.count == 3)
+        #expect(t["NDS"]?.fields.count == 4)
+        #expect(t["CNS"]?.fields.count == 6)
+        #expect(t["ECD"]?.fields.count == 5)
+        #expect(t["ECR"]?.fields.count == 3)
+        #expect(t["SID"]?.fields.count == 4)
+        // CH13 is v2.4+ — absent from the two legacy dialects.
+        #expect(SegmentGrammarTable.v2_3["ISD"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["SID"] == nil)
+        #expect(SegmentGrammarTable.v2_4["ISD"]?.fields.count == 3)
+
+        // Per-version datatype promotions: CE → CWE and TS → DTM in v2.6.
+        #expect(t["NDS"]?.field(2)?.dataType == "TS")
+        #expect(SegmentGrammarTable.v2_6["NDS"]?.field(2)?.dataType == "DTM")
+        #expect(t["NDS"]?.field(3)?.dataType == "CE")
+        #expect(SegmentGrammarTable.v2_6["NDS"]?.field(3)?.dataType == "CWE")
+        // ECR-3 Command Response Parameters is ST in v2.4, widened to TX in v2.5.1.
+        #expect(SegmentGrammarTable.v2_4["ECR"]?.field(3)?.dataType == "ST")
+        #expect(t["ECR"]?.field(3)?.dataType == "TX")
+        // ECD-4 Requested Completion Time: O (v2.4) → B (v2.5.1) → withdrawn in v2.8.2,
+        // where it correctly carries NO datatype (the v1.5 "empty DT is fine when W/X" rule).
+        #expect(SegmentGrammarTable.v2_4["ECD"]?.field(4)?.optionality == .optional)
+        #expect(t["ECD"]?.field(4)?.optionality == .backwardCompat)
+        #expect(SegmentGrammarTable.v2_8_2["ECD"]?.field(4)?.optionality == .withdrawn)
+        #expect(SegmentGrammarTable.v2_8_2["ECD"]?.field(4)?.dataType == "")
+        // Per-version element-name divergence — v2.6 dropped ISD-1's parenthetical and
+        // closed up SID-1's spacing. Verified in the v2.6 CH13 attribute table.
+        #expect(t["ISD"]?.field(1)?.name == "Reference Interaction Number (unique identifier)")
+        #expect(SegmentGrammarTable.v2_6["ISD"]?.field(1)?.name == "Reference Interaction Number")
+        #expect(t["SID"]?.field(1)?.name == "Application / Method Identifier")
+        #expect(SegmentGrammarTable.v2_6["SID"]?.field(1)?.name == "Application/Method Identifier")
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORU^R01|M1|P|2.5.1\r"
+            + "ISD|1||ACTIVE^^HL70387\r" + "NDS|1|20240101120000|W^^HL70367|N1^^HL7\r"
+            + "CNS|1|9\r" + "ECD|1|CMD^^HL70368|Y\r" + "ECR|OK^^HL70387|20240101120000\r"
+            + "SID|M1^^HL7|LOT9|C7|MFR^^HL70385\r"
+        let message = try Parser().parse(wire)
+        let sid = try #require(message.firstSegment(SID.self))
+        #expect(sid.substanceLotNumber == message["SID-2"])          // typed accessor == path
+        #expect(sid.applicationMethodIdentifier?.identifier == "M1")  // CE composite view
+        for present in [message.firstSegment(ISD.self) != nil, message.firstSegment(NDS.self) != nil,
+                        message.firstSegment(CNS.self) != nil, message.firstSegment(ECD.self) != nil,
+                        message.firstSegment(ECR.self) != nil] {
+            #expect(present)
+        }
+    }
 }

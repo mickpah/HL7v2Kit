@@ -1,0 +1,10 @@
+{
+  "segmentID": "ISD",
+  "version": "2.5.1",
+  "description": "Interaction Status Detail",
+  "fields": [
+    { "index": 1, "swiftName": "referenceInteractionNumberUniqueIdentifier", "name": "Reference Interaction Number (unique identifier)", "dataType": "NM", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "interactionTypeIdentifier", "name": "Interaction Type Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "interactionActiveState", "name": "Interaction Active State", "dataType": "CE", "optionality": "R", "repeatability": "1" }
+  ]
+}
