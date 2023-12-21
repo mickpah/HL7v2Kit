@@ -110,6 +110,14 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **GOL-22 / PRB-28** (Goal/Problem — action-code-gated fields) and **PTH-6 / PTH-7** (Pathway status) — conditional on the care-record action (add/update/delete).
 - **TXA-3/5/7/11/13/22** (Transcription Document Header) — document-status / activity-datetime fields conditional on the document-completion event.
 
+**v1.8 (CH07 product-experience + clinical-trials completion) — one bare `C`:**
+- **CSP-4 Study Phase Evaluability** — §7.8.2.4 describes the disposition of the patient's data for the phase interval and states **no trigger**. The other eight segments in the batch either carry no `C` fields or got a shipped predicate (below).
+
+**v1.8 — six predicates SHIPPED rather than documented (req #3/#4):** the clinical-trials family turned out to state its conditions explicitly, so these left the limitation register instead of joining it. Each was verified against **every** version's own field-definition prose, located by stable ITEM number because the v2.3-era heading format omits the `SEG-N` prefix:
+- **CSR-9** (01043) + **CSR-10** (01044) → `triggerEvent = C01` — "required for the patient registration trigger event (C01)".
+- **CSR-14** (01048), **CSR-15** (01049), **CSR-16** (01050) → `triggerEvent = C04` — "required for the off-study trigger event (C04)".
+- **CTI-2** (01022) → `CTI-3 populated` — stated in **CTI-3's** definition, not CTI-2's: "CTI-2 Study Phase Identifier must be valued if CTI-3 Study Scheduled Time Point is valued." A field's condition is not always written in its own entry.
+
 **v1.7 (CH13 lab-automation completion) — the whole SID segment:**
 - **SID-1 Application / Method Identifier**, **SID-2 Substance Lot Number**, **SID-3 Substance Container Identifier**, **SID-4 Substance Manufacturer Identifier** — §13.4.11 marks all four `C` and its field-definition prose states **no condition whatsoever** (each definition describes only what the field identifies). Which of the four is required depends on *what the substance is being identified by* in the sending lab's automation workflow — not on any same-segment or cross-segment field value, so no DSL predicate is expressible. Fail-safe: all four are treated as optional. This is the purest instance of the class in the register — a segment whose entire conformance is conditional with no stated trigger.
 - The other five segments in the v1.7 batch (**ISD / NDS / CNS / ECD / ECR**) carry **no** `C` fields: their conditionality is expressed structurally, by the message's own segment grammar.
@@ -120,7 +128,7 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 
 ## Outcome
 
-- **2 predicates shipped** (PD1-15 exact, ORC-26 partial) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
-- **~132 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]; +4 v1.7 [the whole SID segment]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
+- **8 predicates shipped** (PD1-15 exact, ORC-26 partial; v1.8 added CSR-9/10/14/15/16 + CTI-2) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
+- **~133 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]; +4 v1.7 [the whole SID segment]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

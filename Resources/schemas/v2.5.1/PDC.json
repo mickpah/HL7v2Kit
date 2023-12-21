@@ -1,0 +1,22 @@
+{
+  "segmentID": "PDC",
+  "version": "2.5.1",
+  "description": "Product Detail Country",
+  "fields": [
+    { "index": 1, "swiftName": "manufacturerDistributor", "name": "Manufacturer/Distributor", "dataType": "XON", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "country", "name": "Country", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "brandName", "name": "Brand Name", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "deviceFamilyName", "name": "Device Family Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "genericName", "name": "Generic Name", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "modelIdentifier", "name": "Model Identifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "catalogueIdentifier", "name": "Catalogue Identifier", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "otherIdentifier", "name": "Other Identifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "productCode", "name": "Product Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "marketingBasis", "name": "Marketing Basis", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "marketingApprovalId", "name": "Marketing Approval ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "labeledShelfLife", "name": "Labeled Shelf Life", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "expectedShelfLife", "name": "Expected Shelf Life", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "dateFirstMarketed", "name": "Date First Marketed", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "dateLastMarketed", "name": "Date Last Marketed", "dataType": "TS", "optionality": "O", "repeatability": "1" }
+  ]
+}

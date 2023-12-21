@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 sweep — CH07 completion: product experience + clinical trials (v1.8)
+
+Adds **PES/PEO/PCR/PDC/PSH** (product experience) and **CSR/CSP/CSS/CTI** (clinical trials),
+closing out CH07 alongside OBR/OBX/SPM. All nine exist on **every** supported version at
+identical depth — 54 schema instances, all passing the golden `--verify` gate. Typed count
+**91 → 100**.
+
+Because the depths are uniform, every divergence here is in datatypes and element names —
+precisely what a depth-only check misses: `TS → DTM` and `CE → CWE` in v2.6; `CTI-1` shortens
+`Sponsor Study Identifier` → `Sponsor Study ID` after v2.3; `PEO-14` gains "Description" in
+v2.6; and v2.3's `PDC-14/15` genuinely read `Date First/Last Marked`, corrected to `Marketed`
+in v2.4 — a spec typo rendered faithfully (both the attribute table and the definition
+heading agree).
+
+### Added — six conditional predicates now ship instead of being documented
+
+The clinical-trials family states its conditions explicitly, so these left the
+permanent-limitation register rather than joining it (req #3/#4):
+
+| Field | Predicate | Spec basis |
+|---|---|---|
+| CSR-9, CSR-10 | `triggerEvent = C01` | "required for the patient registration trigger event (C01)" |
+| CSR-14, CSR-15, CSR-16 | `triggerEvent = C04` | "required for the off-study trigger event (C04)" |
+| CTI-2 | `CTI-3 populated` | stated in **CTI-3's** definition, not CTI-2's |
+
+Applied on all six versions (36 entries), each verified against that version's own
+field-definition prose. Two lessons recorded: a field's condition is not always written in
+its own entry, and version prose must be located by **stable ITEM number** — the v2.3-era
+heading format omits the `SEG-N` prefix, so heading-shaped regexes silently miss it.
+**CSP-4** is the batch's only remaining bare `C` (§7.8.2.4 states no trigger).
+
+### Added — `scripts/audit-schemas.py`
+
+The integrity + depth audit is now a committed contributor tool rather than an ad-hoc
+script, since the working rules require running it after every batch. Shape-based predicates
+(emptiness, length, character class, index continuity) plus the two-directional depth diff,
+with RDT whitelisted and `docs/standards/` resolved from the primary worktree when run from a
+cycle worktree. Dev-time only; `Package.swift.dependencies` stays empty.
+
+Audit after this batch: **integrity 0 findings across 536 schemas; depth 530 exact, 0 gaps,
+0 suspects** — the first fully clean sweep. Tests: 516 → **518**.
+
 ### M5 sweep — CH13 lab-automation completion (v1.7)
 
 Sixth chapter closed out. Adds **ISD/NDS/CNS/ECD/ECR/SID** (CH13 clinical laboratory

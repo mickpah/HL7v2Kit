@@ -1,0 +1,20 @@
+{
+  "segmentID": "PES",
+  "version": "2.5.1",
+  "description": "Product Experience Sender",
+  "fields": [
+    { "index": 1, "swiftName": "senderOrganizationName", "name": "Sender Organization Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 2, "swiftName": "senderIndividualName", "name": "Sender Individual Name", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "senderAddress", "name": "Sender Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "senderTelephone", "name": "Sender Telephone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "senderEventIdentifier", "name": "Sender Event Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "senderSequenceNumber", "name": "Sender Sequence Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "senderEventDescription", "name": "Sender Event Description", "dataType": "FT", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "senderComment", "name": "Sender Comment", "dataType": "FT", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "senderAwareDateTime", "name": "Sender Aware Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "eventReportDate", "name": "Event Report Date", "dataType": "TS", "optionality": "R", "repeatability": "1" },
+    { "index": 11, "swiftName": "eventReportTimingType", "name": "Event Report Timing/Type", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "eventReportSource", "name": "Event Report Source", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "eventReportedTo", "name": "Event Reported To", "dataType": "ID", "optionality": "O", "repeatability": "*" }
+  ]
+}
