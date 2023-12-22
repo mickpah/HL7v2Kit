@@ -1646,4 +1646,61 @@ struct TypedSegmentTests {
             #expect(present)
         }
     }
+
+    // v1.9 (M5 sweep): CH06 financial completion — FT1/PR1/ACC/UB1/UB2/DRG (all six
+    // versions) + ABS/GP1/GP2 (v2.4+). Unlike v1.8's uniform-depth batch, these grow
+    // substantially across the standard, so the depths themselves carry the version signal.
+    @Test("v1.9: CH06 financial — per-version depths, registration, P12 conditionals")
+    func v1_9FinancialCanonical() throws {
+        let t = SegmentGrammarTable.v2_5_1
+        #expect(t["FT1"]?.fields.count == 31)
+        #expect(t["PR1"]?.fields.count == 20)
+        #expect(t["ACC"]?.fields.count == 11)
+        #expect(t["UB1"]?.fields.count == 23)
+        #expect(t["UB2"]?.fields.count == 17)
+        #expect(t["DRG"]?.fields.count == 11)
+        #expect(t["ABS"]?.fields.count == 14)
+        #expect(t["GP1"]?.fields.count == 5)
+        #expect(t["GP2"]?.fields.count == 14)
+
+        // Growth across the standard — the depths are the divergence here.
+        #expect(SegmentGrammarTable.v2_3["FT1"]?.fields.count == 25)
+        #expect(SegmentGrammarTable.v2_3_1["FT1"]?.fields.count == 26)   // v2.3.1 errata +1
+        #expect(SegmentGrammarTable.v2_8_2["FT1"]?.fields.count == 43)
+        #expect(SegmentGrammarTable.v2_3["PR1"]?.fields.count == 15)
+        #expect(SegmentGrammarTable.v2_3_1["PR1"]?.fields.count == 16)   // v2.3.1 errata +1
+        #expect(SegmentGrammarTable.v2_8_2["PR1"]?.fields.count == 25)
+        #expect(SegmentGrammarTable.v2_3["ACC"]?.fields.count == 6)
+        #expect(SegmentGrammarTable.v2_8_2["ACC"]?.fields.count == 13)
+        // DRG nearly triples in v2.6 (11 → 33).
+        #expect(SegmentGrammarTable.v2_4["DRG"]?.fields.count == 11)
+        #expect(SegmentGrammarTable.v2_6["DRG"]?.fields.count == 33)
+        // UB1/UB2 are static across every version.
+        #expect(SegmentGrammarTable.v2_3["UB1"]?.fields.count == 23)
+        #expect(SegmentGrammarTable.v2_8_2["UB2"]?.fields.count == 17)
+        // ABS/GP1/GP2 arrived in v2.4 — absent from the two legacy dialects.
+        #expect(SegmentGrammarTable.v2_3["ABS"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["GP1"] == nil)
+        #expect(SegmentGrammarTable.v2_4["GP2"]?.fields.count == 14)
+
+        // PR1-19/20 arrived in v2.5 and both cite the P12 trigger event, so they ship
+        // predicates rather than joining the permanent-limitation register.
+        #expect(t["PR1"]?.field(19)?.condition == "triggerEvent = P12")
+        #expect(t["PR1"]?.field(20)?.condition == "triggerEvent = P12")
+        #expect(SegmentGrammarTable.v2_8_2["PR1"]?.field(20)?.condition == "triggerEvent = P12")
+        #expect(SegmentGrammarTable.v2_4["PR1"]?.field(19) == nil)   // PR1 caps at 18 in v2.4
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||DFT^P03|M1|P|2.5.1\r"
+            + "FT1|1\r" + "PR1|1||P1^^HL7\r" + "ACC|20240101120000\r"
+            + "UB1|1\r" + "UB2|1\r" + "DRG|D1^^HL7\r" + "ABS|1\r" + "GP1|A\r" + "GP2|1\r"
+        let message = try Parser().parse(wire)
+        let pr1 = try #require(message.firstSegment(PR1.self))
+        #expect(pr1.setIdPr1 == message["PR1-1"])          // typed accessor == path
+        for present in [message.firstSegment(FT1.self) != nil, message.firstSegment(ACC.self) != nil,
+                        message.firstSegment(UB1.self) != nil, message.firstSegment(UB2.self) != nil,
+                        message.firstSegment(DRG.self) != nil, message.firstSegment(ABS.self) != nil,
+                        message.firstSegment(GP1.self) != nil, message.firstSegment(GP2.self) != nil] {
+            #expect(present)
+        }
+    }
 }

@@ -1,0 +1,29 @@
+{
+  "segmentID": "PR1",
+  "version": "2.6",
+  "description": "Procedures",
+  "fields": [
+    { "index": 1, "swiftName": "setIdPr1", "name": "Set ID - PR1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "procedureCodingMethod", "name": "Procedure Coding Method", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 3, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CNE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "procedureDescription", "name": "Procedure Description", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 5, "swiftName": "procedureDateTime", "name": "Procedure Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 6, "swiftName": "procedureFunctionalType", "name": "Procedure Functional Type", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "procedureMinutes", "name": "Procedure Minutes", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "anesthesiologist", "name": "Anesthesiologist", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 9, "swiftName": "anesthesiaCode", "name": "Anesthesia Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "anesthesiaMinutes", "name": "Anesthesia Minutes", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "surgeon", "name": "Surgeon", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 12, "swiftName": "procedurePractitioner", "name": "Procedure Practitioner", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 13, "swiftName": "consentCode", "name": "Consent Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "procedurePriority", "name": "Procedure Priority", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "associatedDiagnosisCode", "name": "Associated Diagnosis Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CNE", "optionality": "O", "repeatability": "*" },
+    { "index": 17, "swiftName": "procedureDrgType", "name": "Procedure DRG Type", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "tissueTypeCode", "name": "Tissue Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 19, "swiftName": "procedureIdentifier", "name": "Procedure Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = P12" },
+    { "index": 20, "swiftName": "procedureActionCode", "name": "Procedure Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = P12" },
+    { "index": 21, "swiftName": "drgProcedureDeterminationStatus", "name": "DRG Procedure Determination Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "drgProcedureRelevance", "name": "DRG Procedure Relevance", "dataType": "IS", "optionality": "O", "repeatability": "1" }
+  ]
+}
