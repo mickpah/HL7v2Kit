@@ -7,9 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **State (2026-08-21):** v1.7 and v1.8 are **merged to `main` and untagged**; **v1.9 is
-> committed on the `v1.9-financial` worktree, unmerged**. All fold into the next release.
-> Typed-segment coverage is **109**, and
+> **State (2026-08-21):** v1.7, v1.8 and v1.9 are all **merged to `main` and untagged** —
+> they fold into the next release. Typed-segment coverage is **109**, and
 > `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 584 schemas;
 > depth 578 exact, 0 gaps, 0 suspects**. Tests **519** green, no codegen drift. `main` and
 > the `v1.4.0` tag have **not been pushed** to `private`.
