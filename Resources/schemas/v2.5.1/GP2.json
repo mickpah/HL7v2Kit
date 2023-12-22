@@ -1,0 +1,21 @@
+{
+  "segmentID": "GP2",
+  "version": "2.5.1",
+  "description": "Grouping/Reimbursement - Procedure Line Item",
+  "fields": [
+    { "index": 1, "swiftName": "revenueCode", "name": "Revenue Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "numberOfServiceUnits", "name": "Number of Service Units", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "charge", "name": "Charge", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "reimbursementActionCode", "name": "Reimbursement Action Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "denialOrRejectionCode", "name": "Denial or Rejection Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "oceEditCode", "name": "OCE Edit Code", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "ambulatoryPaymentClassificationCode", "name": "Ambulatory Payment Classification Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "modifierEditCode", "name": "Modifier Edit Code", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "paymentAdjustmentCode", "name": "Payment Adjustment Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "packagingStatusCode", "name": "Packaging Status Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "expectedCmsPaymentAmount", "name": "Expected CMS Payment Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "reimbursementTypeCode", "name": "Reimbursement Type Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "coPayAmount", "name": "Co-Pay Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "payRatePerServiceUnit", "name": "Pay Rate per Service Unit", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+  ]
+}

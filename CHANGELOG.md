@@ -7,11 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **State (2026-08-21):** the v1.7 and v1.8 batches below are **merged to `main` and
-> untagged** — they fold into the next release. Typed-segment coverage is **100**, and
-> `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 536 schemas;
-> depth 530 exact, 0 gaps, 0 suspects**. Tests **518** green, no codegen drift. `main` and
+> **State (2026-08-21):** v1.7 and v1.8 are **merged to `main` and untagged**; **v1.9 is
+> committed on the `v1.9-financial` worktree, unmerged**. All fold into the next release.
+> Typed-segment coverage is **109**, and
+> `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 584 schemas;
+> depth 578 exact, 0 gaps, 0 suspects**. Tests **519** green, no codegen drift. `main` and
 > the `v1.4.0` tag have **not been pushed** to `private`.
+
+### M5 sweep — CH06 financial completion (v1.9)
+
+Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema
+instances, all passing the golden `--verify` gate. Typed count **100 → 109**. Closes out CH06
+alongside GT1/IN1/IN2/IN3 from v1.2.
+
+Where v1.8's batch had uniform depths across all versions, this one is the opposite: the
+depths themselves carry the version signal, and they move a lot. `FT1` 25 → 26 (v2.3.1
+errata) → 31 → **43** (v2.8.2); `PR1` 15 → 16 → 18 → 20 → 22 → **25**; `ACC` 6 → **13**; and
+`DRG` nearly triples in v2.6, 11 → **33**. `UB1`/`UB2` are the counterexample — static at
+23/17 on every version. `ABS`/`GP1`/`GP2` arrived in v2.4 and are absent from the two legacy
+dialects.
+
+**Two more conditional predicates ship rather than being documented.** `PR1-19` Procedure
+Identifier and `PR1-20` Procedure Action Code both cite the Update Diagnosis/Procedures
+trigger event — "required in all implementations employing … (P12) messages" and "required
+for the … (P12) message. In all other events it is optional" — so both carry
+`triggerEvent = P12` on v2.5.1 / v2.6 / v2.8.2 (they do not exist before v2.5; PR1 caps at
+18 in v2.4). The permanent-limitation register is unchanged by this batch, and the guard test
+needed no edit.
+
+Note `BLG` is **not** part of this batch despite being a financial segment — it is defined in
+CH04, not CH06, so it belongs to a later orders pass.
+
+Audit after this batch: **integrity 0 findings across 584 schemas; depth 578 exact, 0 gaps,
+0 suspects**. Tests: 518 → **519**.
 
 ### M5 sweep — CH07 completion: product experience + clinical trials (v1.8)
 

@@ -11,6 +11,8 @@ extension SegmentRegistry {
     /// the caller can fall back to `.unknown` (Z-segment tolerance).
     static func hydrateGenerated(_ unknown: UnknownSegment) -> Segment? {
         switch unknown.segmentID {
+        case ABS.segmentID: return .typed(AnyTypedSegment(ABS(fields: unknown.fields)))
+        case ACC.segmentID: return .typed(AnyTypedSegment(ACC(fields: unknown.fields)))
         case AIG.segmentID: return .typed(AnyTypedSegment(AIG(fields: unknown.fields)))
         case AIL.segmentID: return .typed(AnyTypedSegment(AIL(fields: unknown.fields)))
         case AIP.segmentID: return .typed(AnyTypedSegment(AIP(fields: unknown.fields)))
@@ -32,13 +34,17 @@ extension SegmentRegistry {
         case CTI.segmentID: return .typed(AnyTypedSegment(CTI(fields: unknown.fields)))
         case DB1.segmentID: return .typed(AnyTypedSegment(DB1(fields: unknown.fields)))
         case DG1.segmentID: return .typed(AnyTypedSegment(DG1(fields: unknown.fields)))
+        case DRG.segmentID: return .typed(AnyTypedSegment(DRG(fields: unknown.fields)))
         case ECD.segmentID: return .typed(AnyTypedSegment(ECD(fields: unknown.fields)))
         case ECR.segmentID: return .typed(AnyTypedSegment(ECR(fields: unknown.fields)))
         case EQP.segmentID: return .typed(AnyTypedSegment(EQP(fields: unknown.fields)))
         case EQU.segmentID: return .typed(AnyTypedSegment(EQU(fields: unknown.fields)))
         case ERR.segmentID: return .typed(AnyTypedSegment(ERR(fields: unknown.fields)))
         case EVN.segmentID: return .typed(AnyTypedSegment(EVN(fields: unknown.fields)))
+        case FT1.segmentID: return .typed(AnyTypedSegment(FT1(fields: unknown.fields)))
         case GOL.segmentID: return .typed(AnyTypedSegment(GOL(fields: unknown.fields)))
+        case GP1.segmentID: return .typed(AnyTypedSegment(GP1(fields: unknown.fields)))
+        case GP2.segmentID: return .typed(AnyTypedSegment(GP2(fields: unknown.fields)))
         case GT1.segmentID: return .typed(AnyTypedSegment(GT1(fields: unknown.fields)))
         case IIM.segmentID: return .typed(AnyTypedSegment(IIM(fields: unknown.fields)))
         case IN1.segmentID: return .typed(AnyTypedSegment(IN1(fields: unknown.fields)))
@@ -76,6 +82,7 @@ extension SegmentRegistry {
         case PEO.segmentID: return .typed(AnyTypedSegment(PEO(fields: unknown.fields)))
         case PES.segmentID: return .typed(AnyTypedSegment(PES(fields: unknown.fields)))
         case PID.segmentID: return .typed(AnyTypedSegment(PID(fields: unknown.fields)))
+        case PR1.segmentID: return .typed(AnyTypedSegment(PR1(fields: unknown.fields)))
         case PRB.segmentID: return .typed(AnyTypedSegment(PRB(fields: unknown.fields)))
         case PRC.segmentID: return .typed(AnyTypedSegment(PRC(fields: unknown.fields)))
         case PRD.segmentID: return .typed(AnyTypedSegment(PRD(fields: unknown.fields)))
@@ -110,6 +117,8 @@ extension SegmentRegistry {
         case TQ1.segmentID: return .typed(AnyTypedSegment(TQ1(fields: unknown.fields)))
         case TQ2.segmentID: return .typed(AnyTypedSegment(TQ2(fields: unknown.fields)))
         case TXA.segmentID: return .typed(AnyTypedSegment(TXA(fields: unknown.fields)))
+        case UB1.segmentID: return .typed(AnyTypedSegment(UB1(fields: unknown.fields)))
+        case UB2.segmentID: return .typed(AnyTypedSegment(UB2(fields: unknown.fields)))
         case VAR.segmentID: return .typed(AnyTypedSegment(VAR(fields: unknown.fields)))
         default:
             return nil

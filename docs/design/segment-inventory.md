@@ -19,17 +19,17 @@ against; it is a discovery artifact, refined as authoring proceeds.
 | **Union (any version)** | **188** |
 | **Sum (schema-instances to author for full depth)** | **~850** |
 
-**Today: 100 typed segments** at verified per-version depth (see above).
+**Today: 109 typed segments** at verified per-version depth (see above).
 The ~850 figure is the full schema-authoring runway (each segment × each version it
 appears in, at full field depth).
 
-## Currently modelled (100)
+## Currently modelled (109)
 
-`AIG AIL AIP AIS AL1 APR ARQ AUT BPO BPX BTX CDM CNS CON CSP CSR CSS CTD CTI DB1 DG1 ECD
-ECR EQP EQU ERR EVN GOL GT1 IIM IN1 IN2 IN3 INV ISD LCC LCH LDP LOC LRL MFA MFE MFI MRG
-MSA MSH NDS NK1 NTE OBR OBX OM1 OM2 OM3 OM4 OM5 OM6 OM7 ORC PCR PD1 PDC PEO PES PID PRB
-PRC PRD PSH PTH PV1 PV2 QAK QID QPD QRD QRF RCP RDF RDT RF1 RGS ROL RXA RXC RXD RXE RXG
-RXO RXR SAC SCH SID SPM TCC TCD TQ1 TQ2 TXA VAR`
+`ABS ACC AIG AIL AIP AIS AL1 APR ARQ AUT BPO BPX BTX CDM CNS CON CSP CSR CSS CTD CTI DB1
+DG1 DRG ECD ECR EQP EQU ERR EVN FT1 GOL GP1 GP2 GT1 IIM IN1 IN2 IN3 INV ISD LCC LCH LDP
+LOC LRL MFA MFE MFI MRG MSA MSH NDS NK1 NTE OBR OBX OM1 OM2 OM3 OM4 OM5 OM6 OM7 ORC PCR
+PD1 PDC PEO PES PID PR1 PRB PRC PRD PSH PTH PV1 PV2 QAK QID QPD QRD QRF RCP RDF RDT RF1
+RGS ROL RXA RXC RXD RXE RXG RXO RXR SAC SCH SID SPM TCC TCD TQ1 TQ2 TXA UB1 UB2 VAR`
 
 Canonical v2.5.1 defect-clean + complete (v1.1-S3). **NK1/PV1/IN1 full-depth on all 6
 versions (v1.2).** New typed segments, full-depth on every version they appear in:
@@ -38,13 +38,14 @@ SPM/ROL/SCH/RGS/AIS/AIG/AIL/AIP/APR/ARQ/BPO/BPX/BTX/RXA + MFI/MFE/MFA/OM1–OM7/
 **v1.4** QPD/QRD/QRF/QAK/QID/RCP/RDF/RDT + EQU/SAC/INV/TCC/TCD/EQP +
 LOC/LCH/LRL/LDP/LCC/CDM/PRC/IIM + GOL/PRB/PTH/VAR + TXA/CON; **v1.7**
 ISD/NDS/CNS/ECD/ECR/SID (CH13 completion, v2.4+ only — v2.3 / v2.3.1 have no CH13);
-**v1.8** PES/PEO/PCR/PDC/PSH + CSR/CSP/CSS/CTI (CH07 completion, all 6 versions).
+**v1.8** PES/PEO/PCR/PDC/PSH + CSR/CSP/CSS/CTI (CH07 completion, all 6 versions);
+**v1.9** FT1/PR1/ACC/UB1/UB2/DRG + ABS/GP1/GP2 (CH06 financial completion; ABS/GP1/GP2 are v2.4+).
 
 **Depth is verified, not assumed** (audit re-run each batch via `scripts/audit-schemas.py`):
-530 of 536 committed schemas match their own version's attribute table exactly; the 6
+578 of 584 committed schemas match their own version's attribute table exactly; the 6
 exceptions are RDT, a known `1-n` variable-column extractor limitation.
 
-**~88 segments remain unmodelled** — the v1.9+ runway.
+**~79 segments remain unmodelled** — the v1.10+ runway.
 
 ## The union work-list (188)
 

@@ -1,0 +1,18 @@
+{
+  "segmentID": "ACC",
+  "version": "2.5.1",
+  "description": "Accident",
+  "fields": [
+    { "index": 1, "swiftName": "accidentDateTime", "name": "Accident Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "accidentCode", "name": "Accident Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "accidentLocation", "name": "Accident Location", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "autoAccidentState", "name": "Auto Accident State", "dataType": "CE", "optionality": "B", "repeatability": "1" },
+    { "index": 5, "swiftName": "accidentJobRelatedIndicator", "name": "Accident Job Related Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "accidentDeathIndicator", "name": "Accident Death Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "enteredBy", "name": "Entered By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "accidentDescription", "name": "Accident Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "broughtInBy", "name": "Brought In By", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "policeNotifiedIndicator", "name": "Police Notified Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "accidentAddress", "name": "Accident Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" }
+  ]
+}
