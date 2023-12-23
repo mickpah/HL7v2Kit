@@ -6,13 +6,18 @@ Longer-horizon version arc toward **v1.0**. Companion to the two live planning d
 - **`NEXT_STEPS.md`** — the *near-term* ordered task runway (the next cycle or two).
 - **`ROADMAP.md`** (this file) — the *milestone arc*: themes and gates between today and v1.0, plus a post-1.0 sketch.
 
+Two registers hang off M5 and carry the enumerated detail this file only summarises:
+
+- **`docs/design/au-coverage-sprint-plan.md`** — the six-sprint plan (v1.10 → v1.15) closing every gap on v2.3 / v2.3.1 / v2.4 / v2.5.1.
+- **`docs/design/deferred-coverage-backlog.md`** — the deferred v2.6 / v2.8.2 scope, counted and named.
+
 This file is intentionally higher-altitude than NEXT_STEPS. It records *direction and gates*, not per-stage tasks. Update it at each release boundary and whenever a milestone's scope materially shifts.
 
 | | |
 |---|---|
 | Last updated | 2026-08-23 |
 | Current release | **`v1.4.0`** (tagged locally, not yet pushed). `main` also carries the **v1.7** (CH13), **v1.8** (CH07) and **v1.9** (CH06) batches, all untagged — **109 typed segments** at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **v1.10 — AU-priority sweep** (Tier 1 v2.4 first, incl. the v2.4 lab-automation presence gap), re-running `scripts/audit-schemas.py --depth` each batch. Gates the first public push. |
+| Next planned cycle | **v1.10 = Sprint 0** of the six-sprint AU coverage plan — the v2.4 lab-automation presence **defect** + an audit presence predicate. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -23,7 +28,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 **Shipped and solid:**
 
 - **Parsing / serialisation** — lossless round-trip; BOM/NUL hardening; MLLP codec (ADR-006); batch + streaming (`AsyncThrowingStream`) parsers.
-- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** all present as first-class versions (the grammar-less `.v2_8` case aside) — though *segment* coverage within them is partial and unequal, see M5: per-version field grammar, typed segments (15 at v1.0.0; **109 as of v1.9, merged and untagged** — see M5), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Version coverage spans v2.3 → v2.8.2** (the full published-standard set); **segment coverage within those versions is partial** — 109 typed, 263 schema-instances outstanding, AU-priority tiers first (M5). See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
+- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** all present as first-class versions (the grammar-less `.v2_8` case aside): per-version field grammar, typed segments (15 at v1.0.0; **109 as of v1.9, merged and untagged**), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Version coverage spans v2.3 → v2.8.2** (the full published-standard set); **segment coverage within those versions is partial** — 109 typed, 263 schema-instances outstanding, AU-priority tiers first (M5). See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
 - **Validation DSL** — same-segment compound predicates (v0.4-S4); cross-segment / message-context / position atoms (ADR-008); segment-presence atoms + subcomponent-granular field-refs + group-scope cardinality (ADR-010).
 - **Locale / AU profile** — `HL7Locale.{international, auLocalisation}`; ADRM-2021 overlays for HL7au:000003–000008, 000040–000042, and the machine-checkable 00044 CE/CNE/CWE narrowings (ADR-009 + ADR-011). Compiler-checked Swift is the single source of truth (JSON overlays retired v0.13.1).
 - **Docs discipline** — ADR-001…015 all Accepted + implemented; four spec-audit docs (v2_3-v2_4, v2_5_1, v2_6, v2_8_2) + the conditional-completeness register (v0.16); slim STATUS/NEXT_STEPS with archive snapshots at each boundary.
@@ -100,6 +105,33 @@ schema-instances / ~2,431 fields** and split by Australian relevance:
 | **2 — AU legacy, in-field** | **v2.3.1**, **v2.3** | 26 + 23 | ~224 + ~156 | AS 4700.x pathology/referral messaging; still live in AU deployments. |
 | **3 — structurally required** | **v2.5.1** | 40 instances | ~321 | Not deferrable regardless of AU use: the **typed structs generate from canonical v2.5.1**, so it is load-bearing for the public API. |
 | **Deferred** | v2.6, v2.8.2 | 132 instances | ~1,377 | Not used in AU clinical traffic. Enumerated in `docs/design/deferred-coverage-backlog.md`. |
+
+**Execution plan for Tiers 1–3:** `docs/design/au-coverage-sprint-plan.md` — the 131
+AU-priority instances broken into **six sprints, v1.10 → v1.15**, sized against proven
+throughput (v1.7 = 24 instances, v1.9 = 48, v1.8 = 54, each one cycle):
+
+| Sprint | Cycle | Inst. | Fields | Content |
+|---|---|---|---|---|
+| 0 | v1.10 | 6 | ~94 | v2.4 lab-automation presence **defect** + audit presence predicate |
+| 1 | v1.11 | 46 | ~265 | CH2 control / envelope — leads on `FHS/BHS/BTS/FTS` |
+| 2 | v1.12 | 29 | ~321 | CH8 master files + CH15 personnel |
+| 3 | v1.13 | 29 | ~142 | CH4 orders + CH5 queries + CH6 financial |
+| 4 | v1.14 | 21 | ~232 | CH3 + CH7 + CH14 |
+| 5 | v1.15 | — | — | Closure: audits, conditionals, honest coverage claims, M6 unblock |
+
+Two things set that order, and both are gaps the segment counts alone did not show:
+
+- **Sprint 0 leads on a defect, not new work.** v2.4 is missing six already-modelled
+  lab-automation segments, and `scripts/audit-schemas.py` could not see it — the depth pass
+  only inspects schemas that **exist**, so an absent segment is invisible to it.
+- **Sprint 1 leads on the batch envelope.** `BatchParser` / `StreamingBatchParser` already
+  *frame* `FHS/BHS/BTS/FTS` (v0.3-T2), but **no schemas exist** for them — they parse with no
+  grammar, no typed accessors and no validation. That is a coherence gap between the parser
+  and schema layers, and every batch consumer touches it.
+
+Sprint 5 is deliberately empty of new segments: it is what makes "v2.3–v2.5.1 complete" a
+**measured** claim rather than an assumption, and it is where the coverage statements in
+README / STATUS / DocC get corrected to say v2.6 / v2.8.2 are partial.
 
 **The tension this creates, stated plainly.** the working notes requirement #1 says
 feature-completeness beats AU-specificity, and "AU traffic doesn't trigger this case" is not
