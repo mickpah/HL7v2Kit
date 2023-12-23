@@ -10,11 +10,11 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-08-21 |
+| Last updated | 2026-08-23 |
 | Current release | **`v1.4.0`** (tagged locally, not yet pushed). `main` also carries the **v1.7** (CH13), **v1.8** (CH07) and **v1.9** (CH06) batches, all untagged — **109 typed segments** at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
-| Next planned cycle | **v1.10 — continue the M5 sweep** on the ~79 unmodelled segments, re-running `scripts/audit-schemas.py --depth` each batch. Gates the first public push. |
+| Next planned cycle | **v1.10 — AU-priority sweep** (Tier 1 v2.4 first, incl. the v2.4 lab-automation presence gap), re-running `scripts/audit-schemas.py --depth` each batch. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
-| Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). |
+| Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
@@ -23,7 +23,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 **Shipped and solid:**
 
 - **Parsing / serialisation** — lossless round-trip; BOM/NUL hardening; MLLP codec (ADR-006); batch + streaming (`AsyncThrowingStream`) parsers.
-- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** fully covered (the grammar-less `.v2_8` case aside): per-version field grammar, typed segments (15 at v1.0.0; **109 as of v1.9, merged and untagged** — see M5), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Coverage spans v2.3 → v2.8.2, the full published-standard set.** See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
+- **Base-version grammar** — v2.3 / v2.3.1 / v2.4 / v2.5.1 / v2.6 / **v2.8.2** all present as first-class versions (the grammar-less `.v2_8` case aside) — though *segment* coverage within them is partial and unequal, see M5: per-version field grammar, typed segments (15 at v1.0.0; **109 as of v1.9, merged and untagged** — see M5), typed composites (16), and per-version conditional rules. v2.6 added first-class in v0.14 (ADR-012, `W` optionality); v2.8.2 in v0.15 (ADR-013). **Version coverage spans v2.3 → v2.8.2** (the full published-standard set); **segment coverage within those versions is partial** — 109 typed, 263 schema-instances outstanding, AU-priority tiers first (M5). See `docs/design/v2_6-spec-audit.md` + `v2_8_2-spec-audit.md`.
 - **Validation DSL** — same-segment compound predicates (v0.4-S4); cross-segment / message-context / position atoms (ADR-008); segment-presence atoms + subcomponent-granular field-refs + group-scope cardinality (ADR-010).
 - **Locale / AU profile** — `HL7Locale.{international, auLocalisation}`; ADRM-2021 overlays for HL7au:000003–000008, 000040–000042, and the machine-checkable 00044 CE/CNE/CWE narrowings (ADR-009 + ADR-011). Compiler-checked Swift is the single source of truth (JSON overlays retired v0.13.1).
 - **Docs discipline** — ADR-001…015 all Accepted + implemented; four spec-audit docs (v2_3-v2_4, v2_5_1, v2_6, v2_8_2) + the conditional-completeness register (v0.16); slim STATUS/NEXT_STEPS with archive snapshots at each boundary.
@@ -67,7 +67,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
 - **Real-world fixture acquisition** — gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes).
 
-### M5 — Full HL7 segment coverage across all versions 🟠 **(foundation done v1.1; sweep ongoing — the public-push gate)**
+### M5 — Full HL7 segment coverage across all versions 🟠 **(AU-priority tier active; v2.6/v2.8.2 deferred — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
 - **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **109 typed segments**; **~79 unmodelled**. **Depth of the authored surface is verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 578 of 584 committed schemas match their own version's attribute table exactly, with 0 suspects; the 6 exceptions are RDT, a known `1-n` extractor limitation whose hand-authored schema is correct.
@@ -88,6 +88,53 @@ The four themes below are roughly independent and can interleave across cycles. 
 
   **v1.8 added two reading lessons.** A field's condition may be stated in a **different field's** entry — CTI-2's requirement is written in CTI-3's definition, which is the only reason it shipped a predicate instead of joining the limitation register. And version prose must be located by **stable ITEM number**, never by heading shape: the v2.3-era chapters number definitions `7.8.1.9 <Name> (TS) 01043` with no `SEG-N` prefix, so a `CSR-9`-shaped regex returns nothing — which reads as "no condition stated" when the condition is right there. Both mean the honest answer to "is this conditionality expressible?" is often **yes**, and finding out takes reading the neighbours.
 - **This is what "v1.0 complete" now means, and it gates the first public push.**
+
+#### ⚠️ Re-prioritisation (owner, 2026-08-23): AU-relevant versions first
+
+The sweep is **re-sequenced**, not reduced. Remaining coverage was measured at **263
+schema-instances / ~2,431 fields** and split by Australian relevance:
+
+| Tier | Versions | Remaining | Est. fields | Rationale |
+|---|---|---|---|---|
+| **1 — AU-critical** | **v2.4** | 42 instances | ~353 | The **ADRM-2021 localisation base** (`Profile.swift`: "AU ADRM-2021 is over v2.4"). Where the AU profile actually applies. |
+| **2 — AU legacy, in-field** | **v2.3.1**, **v2.3** | 26 + 23 | ~224 + ~156 | AS 4700.x pathology/referral messaging; still live in AU deployments. |
+| **3 — structurally required** | **v2.5.1** | 40 instances | ~321 | Not deferrable regardless of AU use: the **typed structs generate from canonical v2.5.1**, so it is load-bearing for the public API. |
+| **Deferred** | v2.6, v2.8.2 | 132 instances | ~1,377 | Not used in AU clinical traffic. Enumerated in `docs/design/deferred-coverage-backlog.md`. |
+
+**The tension this creates, stated plainly.** the working notes requirement #1 says
+feature-completeness beats AU-specificity, and "AU traffic doesn't trigger this case" is not
+a valid defence for a known gap. This decision does **not** retract that as the end state —
+it changes **sequencing only**. Two guards keep the two compatible:
+
+1. **The deferred scope is enumerated, not vague** — 132 instances, ~1,377 fields, 38
+   segments named. A deferral you can count is a deferral you can finish.
+2. **v2.6 / v2.8.2 must be described as *partial* everywhere coverage is claimed** (README,
+   STATUS, DocC, any public statement). Requirement #2 makes that non-negotiable: an
+   integrator must never mistake partial for complete.
+
+If the intent ever hardens into "v2.6/v2.8.2 are out of scope permanently", that is a
+different decision — it would need requirement #1 amended and the public-push gate redefined,
+because it changes what the package *is*. This is not that.
+
+### M6 — Australian localisation completeness 🟠 **(new, 2026-08-23 — promoted by the re-prioritisation)**
+*Goal: the AU localisation surface is complete and spec-cited against ADRM-2021 over its v2.4
+base, so AU integrators can trust the profile as a faithful rendering of the localisation.*
+
+- **Base version is v2.4** — ADRM-2021 localises HL7 v2.4; the profile model already records
+  this (`Profile.swift` → `baseVersion`). M6 work is therefore coupled to the Tier-1 v2.4
+  coverage above: a localisation narrowing cannot be expressed on a segment that is not yet
+  modelled on v2.4.
+- **Shipped so far:** HL7au:000003–000008, 000040–000042, and the machine-checkable 00044
+  CE/CNE/CWE narrowings (ADR-009 + ADR-011), locale-gated via
+  `HL7Locale.auLocalisation`.
+- **Known-open AU items** (already in `docs/design/permanent-limitations-register.md`):
+  00044.4.3 CE text carve-out; 00044.4.7 concept-match (needs a terminology service);
+  00044.2 PKI runtime; HL7au:000001 receiver-runtime semantics. These stay limitations —
+  they need capability outside the ADR-006 portable core, not more schema work.
+- **Next concrete step:** audit ADRM-2021 for narrowings that are expressible in the current
+  DSL but not yet shipped, the same way v1.8 found six shippable predicates hiding in CH07
+  prose. Until that audit runs, the AU surface is "as complete as v0.17 left it", which is
+  not the same as complete.
 
 ---
 
