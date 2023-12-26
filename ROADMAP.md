@@ -6,16 +6,17 @@ Longer-horizon version arc toward **v1.0**. Companion to the two live planning d
 - **`NEXT_STEPS.md`** — the *near-term* ordered task runway (the next cycle or two).
 - **`ROADMAP.md`** (this file) — the *milestone arc*: themes and gates between today and v1.0, plus a post-1.0 sketch.
 
-Two registers hang off M5 and carry the enumerated detail this file only summarises:
+Three registers hang off the milestones and carry the enumerated detail this file only summarises:
 
-- **`docs/design/au-coverage-sprint-plan.md`** — the six-sprint plan (v1.10 → v1.15) closing every gap on v2.3 / v2.3.1 / v2.4 / v2.5.1.
-- **`docs/design/deferred-coverage-backlog.md`** — the deferred v2.6 / v2.8.2 scope, counted and named.
+- **`docs/design/au-coverage-sprint-plan.md`** — the six-sprint plan (v1.10 → v1.15) closing every gap on v2.3 / v2.3.1 / v2.4 / v2.5.1 (hangs off **M5**).
+- **`docs/design/deferred-coverage-backlog.md`** — the deferred v2.6 / v2.8.2 scope, counted and named (hangs off **M5**).
+- **`docs/design/remediation-plan.md`** — the 36-finding over-engineering register + R1–R10 TDD stages (hangs off **R**, the parallel track; R10 = the v2.0.0 boundary).
 
 This file is intentionally higher-altitude than NEXT_STEPS. It records *direction and gates*, not per-stage tasks. Update it at each release boundary and whenever a milestone's scope materially shifts.
 
 | | |
 |---|---|
-| Last updated | 2026-08-23 |
+| Last updated | 2026-08-26 (added **R** — over-engineering remediation, parallel non-gating track; R10 = the v2.0.0 boundary) |
 | Current release | **`v1.4.0`** (tagged locally, not yet pushed). `main` also carries the **v1.7** (CH13), **v1.8** (CH07) and **v1.9** (CH06) batches, all untagged — **109 typed segments** at verified per-version depth. API frozen; **still provisional pending full-coverage parity** (see M5). |
 | Next planned cycle | **v1.10 = Sprint 0** of the six-sprint AU coverage plan — the v2.4 lab-automation presence **defect** + an audit presence predicate. Gates the first public push. |
 | v1.0 stability clock | **Frozen at v1.0.0** (public API = SemVer contract, ADR-014). Coverage growth is additive (new segments/versions add members). |
@@ -167,6 +168,25 @@ base, so AU integrators can trust the profile as a faithful rendering of the loc
   DSL but not yet shipped, the same way v1.8 found six shippable predicates hiding in CH07
   prose. Until that audit runs, the AU surface is "as complete as v0.17 left it", which is
   not the same as complete.
+
+### R — Over-engineering remediation 📋 **(planned 2026-08-26 — parallel track, non-gating)**
+*Goal: retire the ~1,400 lines of audited complexity debt — dead code, duplicated mechanics,
+hand-rolled stdlib — without touching a line of spec surface.*
+
+- **Source:** a four-agent over-engineering audit (2026-08-26) produced **36 verified findings**
+  (0 spec surface; every claim grep-verified same day), staged as **R1–R10** with per-stage
+  TDD protocols, pinning tests, and done-when criteria in
+  `docs/design/remediation-plan.md`.
+- **Not a gate.** R1–R9 are non-breaking, 1.x-safe, and sized one-stage-one-commit; they
+  interleave with the M5/M6 sprints opportunistically (no overlap with schema/sprint files).
+  M5 remains the sole public-push gate.
+- **R10 is the v2.0.0 boundary** (owner decision, 2026-08-26): six dead public symbols ship
+  their removal *as* the 2.0 release — SemVer-honest and costless pre-publication. Gated only
+  on the owner scheduling 2.0 (likely post-v1.15). The ADR-014-deferred renames
+  (`effectiveDateOfReferenceRange` / `producersID`, OBX-12/OBX-15) ride the same boundary.
+- **Characterization tests first** (C1–C3): the DSL-rejects-`[N]`/`~N` guard, exact validator
+  messages across the 7 profile-issue sites, and BatchParser MSH-18 Latin-1 — real coverage
+  gaps closed *before* the refactors they protect.
 
 ---
 
