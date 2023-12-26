@@ -140,6 +140,10 @@ ADR-010 Ext 2 documented the axis as deliberate; record in the commit message th
 axis with zero encoded rules is plumbing, not spec surface, and reinstate from git when a first
 universal rule is authored.
 
+**Status: ✅ landed 2026-08-26.** 35 lines removed from `Codegen.swift`; regenerated output
+byte-identical (`Generated/` diff empty); runtime `SegmentCardinalityRule` + AU
+`Profile.cardinalityExtensions` untouched; test-name diff empty; 519/519 green; warning-free.
+
 **Done when:** regenerated output is byte-identical with the axis plumbing gone; drift CI green.
 
 ---

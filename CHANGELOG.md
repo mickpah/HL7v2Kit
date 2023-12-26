@@ -36,6 +36,20 @@ dropped). ~270 net lines removed, behaviour byte-identical, zero API change.
   one pre-existing `ExistentialAny` warning in `StreamingBatchParser.swift:142` (untouched
   since v0.3-S1), fixed in its own commit as `any Error`.
 
+### R2 — dead `segmentCardinalityRules` schema axis removed (remediation stage 2 of 10)
+
+F9 of `docs/design/remediation-plan.md`: the generator carried a full decode/render
+axis for schema-side group-cardinality rules that **0 of 584** schema JSONs ever set
+(ADR-010 Ext 2 authored the axis speculatively; an encoding axis with zero encoded rules is
+plumbing, not spec surface — reinstate from git when a first universal rule is authored).
+
+- Deleted `CardinalityRuleSchema`, the `SegmentSchema.segmentCardinalityRules` field, and the
+  non-empty-rules branch of `renderGrammarTable` — 35 lines, all in `Codegen.swift`.
+- The **runtime** `SegmentCardinalityRule` type and `Profile.cardinalityExtensions` are
+  untouched — the AU profile's locale-scoped cardinality rules still ship through them.
+- Verification: regenerated output **byte-identical** (`Generated/` diff empty); test-name
+  diff **empty**; suite **519/519 green**; build warning-free.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema
