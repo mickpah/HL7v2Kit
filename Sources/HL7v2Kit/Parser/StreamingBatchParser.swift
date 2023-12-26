@@ -139,7 +139,7 @@ extension StreamingBatchParser {
     public static func messages<S: AsyncSequence & Sendable>(
         from bytes: S,
         options: ParserOptions = .default
-    ) -> AsyncThrowingStream<Message, Error> where S.Element == UInt8 {
+    ) -> AsyncThrowingStream<Message, any Error> where S.Element == UInt8 {
         AsyncThrowingStream { continuation in
             let task = Task {
                 var parser = StreamingBatchParser(options: options)
