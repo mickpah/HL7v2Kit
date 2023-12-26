@@ -50,6 +50,27 @@ plumbing, not spec surface — reinstate from git when a first universal rule is
 - Verification: regenerated output **byte-identical** (`Generated/` diff empty); test-name
   diff **empty**; suite **519/519 green**; build warning-free.
 
+### R3 — `CompositeView` protocol extraction + `AnyTypedSegment` cleanup (remediation stage 3 of 10)
+
+F2 + F30 of `docs/design/remediation-plan.md`; net −217 lines, behaviour unchanged
+under the CompositeTypeTests / ComponentGrammarTests / TypedSegmentTests pins.
+
+- **F2:** the mechanics duplicated verbatim across all 16 composite structs — `componentValue(_:)`
+  (md5-identical ×16), the `init(repetition:)` body, and the `Sendable, Equatable, Hashable`
+  conformance list — hoisted into a new public `CompositeView` protocol + extension
+  (`Composite/CompositeView.swift`). Each composite keeps its per-spec accessors, docs, `field`,
+  `init(field:)`, and non-empty metadata. The 5 empty `requiredComponents = []` decls (CWE, EIP,
+  HD, PL, XTN) now come from the protocol default; their stale docs went with them (HD's still
+  described the `RequiredComponentSet` refactor as "explicitly avoided" — it shipped in v0.4-S4).
+  `init(repetition:)` and the metadata statics remain publicly callable via the extension —
+  additive under ADR-014.
+- **F30:** `AnyTypedSegment.underlyingTypeName` deleted — private, stored, never read; `==` is
+  unchanged because segmentID→type is a bijection via the generated registry.
+- **F13 re-binned to R10:** tightening `RequiredComponentSet.init`'s `description: String? = nil`
+  to a required `String` is a public signature change, prohibited in 1.x by ADR-014 — it now
+  rides the v2.0.0 boundary with the other breaking removals.
+- Verification: test-name diff **empty**; suite **519/519 green**; build warning-free.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

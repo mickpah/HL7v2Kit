@@ -28,7 +28,7 @@
 /// 4. Alternate Identifier (ID) → ``CE/altIdentifier``.
 /// 5. Alternate Text (ST) → ``CE/altText``.
 /// 6. Name of Alternate Coding System (ID) → ``CE/nameOfAltCodingSystem``.
-public struct CE: Sendable, Equatable, Hashable {
+public struct CE: CompositeView {
     /// Required components for the CE composite per HL7 v2.5.1 §2.A.13.
     /// ``Validator`` consults this when the `checkComponentGrammar`
     /// toggle is on: if CE is populated but CE-1 is empty, the
@@ -44,13 +44,6 @@ public struct CE: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each code in
-    /// turn (e.g. multi-rep PID-10 race).
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// CE-1 identifier (the primary coded value).
@@ -82,13 +75,5 @@ public struct CE: Sendable, Equatable, Hashable {
     /// CE-6 name of alternate coding system.
     public var nameOfAltCodingSystem: String? {
         componentValue(6)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

@@ -28,7 +28,7 @@
 /// Components 7–10 (effective/expiration dates, assigning jurisdiction
 /// and agency) are reachable via ``CX/field`` but not exposed as named
 /// accessors in v0.2.
-public struct CX: Sendable, Equatable, Hashable {
+public struct CX: CompositeView {
     /// Required components for the CX composite per HL7 v2.5.1 §2.A.14.
     /// ``Validator`` consults this when the `checkComponentGrammar` toggle
     /// is on: if CX is populated but one of these components is empty,
@@ -45,13 +45,6 @@ public struct CX: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each identifier
-    /// in turn (e.g. iterating PID-3 to find the MRN vs the URN).
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// CX-1 ID number.
@@ -84,13 +77,5 @@ public struct CX: Sendable, Equatable, Hashable {
     /// of the HD sub-composite).
     public var assigningFacilityNamespace: String? {
         componentValue(6)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

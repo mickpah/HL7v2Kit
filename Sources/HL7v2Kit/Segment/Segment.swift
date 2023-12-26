@@ -71,12 +71,10 @@ public enum Segment: Sendable, Equatable, Hashable {
 public struct AnyTypedSegment: Sendable, Equatable, Hashable {
     public let segmentID: String
     public let fields: [Field]
-    private let underlyingTypeName: String
 
     public init<S: TypedSegment>(_ segment: S) {
         self.segmentID = S.segmentID
         self.fields = segment.fields
-        self.underlyingTypeName = String(describing: S.self)
     }
 
     /// Attempt to cast back to a concrete typed segment.

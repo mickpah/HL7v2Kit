@@ -27,7 +27,7 @@
 ///    the issuing authority (e.g. an ISO OID).
 /// 4. Universal ID Type (ID) → ``EI/universalIDType``. The form of EI-3
 ///    (e.g. `"ISO"`, `"UUID"`, `"DNS"`).
-public struct EI: Sendable, Equatable, Hashable {
+public struct EI: CompositeView {
     /// Required components for the EI composite per HL7 v2.5.1 §2.A.28.
     /// ``Validator`` consults this when the `checkComponentGrammar`
     /// toggle is on: if EI is populated but EI-1 is empty, the
@@ -43,13 +43,6 @@ public struct EI: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each identifier
-    /// in turn.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// EI-1 entity identifier — the unique value within the namespace.
@@ -70,13 +63,5 @@ public struct EI: Sendable, Equatable, Hashable {
     /// EI-4 universal ID type — the form of EI-3 (`"ISO"`, `"UUID"`, …).
     public var universalIDType: String? {
         componentValue(4)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

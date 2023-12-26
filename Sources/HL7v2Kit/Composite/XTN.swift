@@ -40,19 +40,7 @@
 ///
 /// XTN-8 through XTN-11 (extension, any text, extension prefix, speed
 /// dial code) and XTN-13 / XTN-14 remain accessible via ``XTN/field``.
-public struct XTN: Sendable, Equatable, Hashable {
-    /// Required components for the XTN composite per HL7 v2.5.1 §2.A.84.
-    ///
-    /// Empty by design: XTN-1 (telephone number) is deprecated and
-    /// XTN-12 (unformatted) is the modern primary, but neither is
-    /// strictly required by the v2.5.1 spec — a populated XTN field
-    /// may carry only an email address (XTN-4) with no phone components
-    /// at all. The "at least one of XTN-1 / XTN-4 / XTN-12" pattern
-    /// is the same OR-rule shape v0.3-C2 documented for CWE; modelling
-    /// disjunctive required-component sets is a future RequiredComponentSet
-    /// refactor that v0.3-C3 explicitly avoids.
-    public static let requiredComponents: [RequiredComponent] = []
-
+public struct XTN: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.84: a populated XTN field
     /// must have at least one of XTN-1 (Telephone Number — deprecated),
     /// XTN-4 (Email Address), or XTN-12 (Unformatted Telephone Number —
@@ -77,13 +65,6 @@ public struct XTN: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each phone /
-    /// email / fax in turn.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// XTN-1 telephone number (deprecated free-form slot).
@@ -124,13 +105,5 @@ public struct XTN: Sendable, Equatable, Hashable {
     /// XTN-12 unformatted telephone number — the modern primary slot.
     public var unformattedTelephoneNumber: String? {
         componentValue(12)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

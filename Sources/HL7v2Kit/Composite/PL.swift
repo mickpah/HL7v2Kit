@@ -24,19 +24,7 @@
 ///
 /// PL-5 (location status) through PL-12 (assigning authority for
 /// location) remain accessible via ``PL/field``.
-public struct PL: Sendable, Equatable, Hashable {
-    /// Required components for the PL composite per HL7 v2.5.1
-    /// §2.A.53.
-    ///
-    /// Empty by design: the v2.5.1 spec marks every PL sub-component
-    /// as optional individually. AU clinical traffic typically
-    /// populates either PL-1 (point of care) or PL-4 (facility), but
-    /// neither is strictly required by the spec — modelling the
-    /// "at least one of" disjunction is a future `RequiredComponentSet`
-    /// refactor that v0.3-C4 explicitly avoids (same call as HD / XTN /
-    /// CWE).
-    public static let requiredComponents: [RequiredComponent] = []
-
+public struct PL: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.53 (informal): a populated
     /// PL field must have at least one of PL-1 (Point of Care) OR PL-4
     /// (Facility, nested HD) populated. v0.4-S4 supersedes the empty
@@ -60,11 +48,6 @@ public struct PL: Sendable, Equatable, Hashable {
         self.field = field
     }
 
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
-    }
-
     /// PL-1 point of care (e.g. `"WARD1"`).
     public var pointOfCare: String? {
         componentValue(1)
@@ -84,13 +67,5 @@ public struct PL: Sendable, Equatable, Hashable {
     /// (HD-1 namespace ID, e.g. `"HOSPITAL"`).
     public var facility: String? {
         componentValue(4)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

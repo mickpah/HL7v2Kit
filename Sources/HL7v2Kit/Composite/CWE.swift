@@ -38,13 +38,7 @@
 /// because the conditional-field DSL doesn't yet support disjunctive
 /// component conditions. Senders that populate CWE-9 alone will trip
 /// the CWE-1 check today — flag as known divergence.
-public struct CWE: Sendable, Equatable, Hashable {
-    /// Required components for the CWE composite per HL7 v2.5.1 §2.A.16
-    /// (simplified — see the type-level note about CWE-1/CWE-9 OR
-    /// semantics). ``Validator`` consults this when the
-    /// `checkComponentGrammar` toggle is on. v0.2-V2 / v0.3-C2.
-    public static let requiredComponents: [RequiredComponent] = []
-
+public struct CWE: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.16: a populated CWE field
     /// must have at least one of CWE-1 (Identifier) OR CWE-9 (Original
     /// Text) populated. v0.4-S4 supersedes the earlier v0.3-C2 flat
@@ -66,12 +60,6 @@ public struct CWE: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions`.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// CWE-1 identifier.
@@ -118,13 +106,5 @@ public struct CWE: Sendable, Equatable, Hashable {
     /// mapping to CWE-1.
     public var originalText: String? {
         componentValue(9)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

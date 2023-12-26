@@ -20,7 +20,7 @@
 /// 3. International Version ID (CE) → ``VID/internationalVersionID``.
 ///    Same nested-CE shape as VID-2; returns CE-1 of the nested
 ///    composite.
-public struct VID: Sendable, Equatable, Hashable {
+public struct VID: CompositeView {
     /// Required components for the VID composite per HL7 v2.5.1
     /// §2.A.79.
     public static let requiredComponents: [RequiredComponent] = [
@@ -33,11 +33,6 @@ public struct VID: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// VID-1 version ID (e.g. `"2.5.1"`).
@@ -55,13 +50,5 @@ public struct VID: Sendable, Equatable, Hashable {
     /// nested CE composite.
     public var internationalVersionID: String? {
         componentValue(3)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

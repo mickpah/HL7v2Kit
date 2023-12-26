@@ -26,18 +26,7 @@
 ///    identifier (e.g. an ISO OID).
 /// 3. Universal ID Type (ID) → ``HD/universalIDType``. The form of
 ///    HD-2 (`"ISO"`, `"UUID"`, `"DNS"`, …).
-public struct HD: Sendable, Equatable, Hashable {
-    /// Required components for the HD composite per HL7 v2.5.1 §2.A.32.
-    ///
-    /// Empty by design: the spec phrases HD's conformance as
-    /// "HD-1 OR (HD-2 AND HD-3)" — the same OR-rule shape v0.3-C2
-    /// documented for CWE and v0.3-C3 for XTN. Modelling disjunctive
-    /// required-component sets is a future `RequiredComponentSet`
-    /// refactor that v0.3-C4 explicitly avoids; HD ships with an empty
-    /// list and HD-validating consumers can layer their own
-    /// application-level rule atop the parsed view.
-    public static let requiredComponents: [RequiredComponent] = []
-
+public struct HD: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.32: a populated HD field
     /// must have HD-1 (Namespace ID) populated, OR both HD-2 (Universal
     /// ID) AND HD-3 (Universal ID Type) populated. v0.4-S4 supersedes
@@ -62,11 +51,6 @@ public struct HD: Sendable, Equatable, Hashable {
         self.field = field
     }
 
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
-    }
-
     /// HD-1 namespace ID — the locally-administered identifier.
     public var namespaceID: String? {
         componentValue(1)
@@ -80,13 +64,5 @@ public struct HD: Sendable, Equatable, Hashable {
     /// HD-3 universal ID type — the form of HD-2 (`"ISO"`, `"UUID"`, …).
     public var universalIDType: String? {
         componentValue(3)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

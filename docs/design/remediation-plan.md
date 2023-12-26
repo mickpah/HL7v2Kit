@@ -165,6 +165,15 @@ byte-identical (`Generated/` diff empty); runtime `SegmentCardinalityRule` + AU
 
 **Done when:** 16 structs ride `CompositeView`; suite green; zero warnings.
 
+**Status: ✅ landed 2026-08-26 (F2 + F30; F13 re-binned to R10).** All 16 structs ride
+`CompositeView` (duplication proven byte-identical by md5 before the hoist: one hash ×16 for
+`componentValue`, one for the `init(repetition:)` body); the 5 empty `requiredComponents` decls
+(+ stale docs — HD's described the `RequiredComponentSet` refactor as "explicitly avoided" when
+it has since shipped) now come from the protocol default; `underlyingTypeName` deleted. Net
+−217 lines. Test-name diff empty; 519/519 green; warning-free. **F13 was mis-binned**: tightening
+`init(components:semantics:description:)` from `String? = nil` to required `String` is a public
+signature change, prohibited in 1.x by ADR-014 — moved to R10 where it rides the v2.0.0 boundary.
+
 ---
 
 ## Stage R4 — Validator/locale shrinks
@@ -305,6 +314,8 @@ boundary (likely post-v1.15). Every earlier stage is 1.x-safe; this one IS the m
    self-documented no-op advertising behaviour that never shipped. **F28:** `ValidationReport.empty`.
    **F29:** `MessageBuilder.append(unknown:)` (if a copy-segments-between-messages API is ever
    wanted, re-add WITH a test). **F31:** `ParserOptions.lenient` (field-for-field = `.default`).
+   **F13 (re-binned from R3):** require `RequiredComponentSet.description` and delete
+   `defaultDescription` — a public init-signature tightening, so it rides the major.
 4. **Release scaffolding:** `Migration.md` gains a "2.0" section listing every removal with its
    zero-call-site evidence; ADR-014 gains an addendum note; CHANGELOG gains the v2.0.0 section.
 
@@ -362,7 +373,7 @@ direct check against `98b8390`. Ranked by net cut.
 | 10 | R9 | shrink | Per-version detected/roundTrip/grammar test triple ×3 versions, bodies identical but wire+enum (verified). MultiVersionTests.swift:28-59,130-149,268-287 | 40 | One `@Test(arguments:)` tuple table; grammar-table pin tests NOT touched (spec data) | P5 |
 | 11 | R4 | shrink | 7 near-identical `.profileConstraintViolation` append blocks (verified: exactly 7). Validator.swift:486,513,538,568,619,660,717 | 30 | `appendProfileIssue(…)` helper; emitted issues byte-identical | P1; **C2 FIRST** (suite pins citations/locations, NOT messages); LocaleAUProfileTests |
 | 12 | R4 | yagni | `ProfileLoader` — 4-line switch, sole caller Validator.swift:40 (verified). Locale/ProfileLoader.swift | 25 | `Profile.load(for:)` static; delete file; NOT into HL7Locale.swift (portable kernel) | P1; LocaleTests, LocaleAUProfileTests |
-| 13 | R3 | yagni | `RequiredComponentSet.defaultDescription` + optional-description defaulting — all 5 call sites pass one explicitly (verified). RequiredComponentSet.swift:88-108 | 24 | Require `description: String`; delete defaulting | P1 |
+| 13 | R10 | yagni† | `RequiredComponentSet.defaultDescription` + optional-description defaulting — all 5 call sites pass one explicitly (verified). RequiredComponentSet.swift:88-108. **Re-binned R3→R10 (2026-08-26)**: requiring the param is a public init-signature change, 1.x-prohibited (ADR-014) | 24 | Require `description: String` at 2.0; delete defaulting | P4 |
 | 14 | R4 | shrink | Validator's second field-ref parser `ParsedIndexSuffix`/`parseIndexSuffix` re-implements Path grammar (verified at :1255,1275,1288). Validator.swift:1275-1307 | 20 | `try? Path(referent)` + BOTH guards (`segmentIndex == nil && repetition == nil`) — Path parses `[N]` (Path.swift:87-89) and `~N` | P1; **C1 FIRST**; ConditionalFieldTests, CrossSegmentDSLTests |
 | 15 | R4 | shrink | 5 hand-rolled nested-for population scans (verified). Validator.swift:915-922,928-934,1446-1455; EscapeSequences.swift:195-207 | 20 | `contains(where:)` one-liners (stdlib, kernel-safe) | P1 |
 | 16 | R6 | stdlib | Hand-rolled offset tokenizer `runs(in:)`. scripts/extract-segment-tables.swift:98-125 | 20 | Swift Regex `matches(of:)`; trailing-space delta unreachable (verified consumer trace) | P6; `--verify` |

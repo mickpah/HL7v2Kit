@@ -22,20 +22,7 @@
 ///    — first subcomponent of the nested EI (EI-1 entityIdentifier).
 /// 2. Filler Assigned Identifier (EI) → ``EIP/fillerAssignedIdentifier``
 ///    — same shape as EIP-1.
-public struct EIP: Sendable, Equatable, Hashable {
-    /// Required components for the EIP composite per HL7 v2.5.1
-    /// §2.A.29.
-    ///
-    /// Empty by design: the spec marks both EIP-1 and EIP-2 as
-    /// individually optional. AU clinical traffic uses EIP for
-    /// order-pair linkage; an order with no parent populates neither
-    /// component, and a child order may populate only one of the
-    /// pair. Modelling the "if EIP is populated at all, at least one
-    /// of the two slots must carry an identifier" pattern is the same
-    /// disjunctive-required-component refactor v0.3-C4 explicitly
-    /// avoids for HD / XTN / PL / CWE.
-    public static let requiredComponents: [RequiredComponent] = []
-
+public struct EIP: CompositeView {
     /// OR-rule conformance per HL7 v2.5.1 §2.A.29: a populated EIP field
     /// must have at least one of EIP-1 (Placer Assigned Identifier) OR
     /// EIP-2 (Filler Assigned Identifier) populated. v0.4-S4 supersedes
@@ -58,11 +45,6 @@ public struct EIP: Sendable, Equatable, Hashable {
         self.field = field
     }
 
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
-    }
-
     /// EIP-1 placer assigned identifier — first subcomponent of the
     /// nested EI (its entityIdentifier).
     public var placerAssignedIdentifier: String? {
@@ -73,13 +55,5 @@ public struct EIP: Sendable, Equatable, Hashable {
     /// nested EI (its entityIdentifier).
     public var fillerAssignedIdentifier: String? {
         componentValue(2)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

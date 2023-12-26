@@ -22,7 +22,7 @@
 /// 4. Alternate Identifier (ST) → ``CNE/altIdentifier``.
 /// 5. Alternate Text (ST) → ``CNE/altText``.
 /// 6. Name of Alternate Coding System (ID) → ``CNE/nameOfAltCodingSystem``.
-public struct CNE: Sendable, Equatable, Hashable {
+public struct CNE: CompositeView {
     /// Required components for the CNE composite per HL7 v2.5.1
     /// §2.A.14.
     public static let requiredComponents: [RequiredComponent] = [
@@ -35,11 +35,6 @@ public struct CNE: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// CNE-1 identifier — the coded value.
@@ -70,13 +65,5 @@ public struct CNE: Sendable, Equatable, Hashable {
     /// CNE-6 name of alternate coding system.
     public var nameOfAltCodingSystem: String? {
         componentValue(6)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

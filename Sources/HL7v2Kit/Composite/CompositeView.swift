@@ -1,0 +1,62 @@
+// CompositeView.swift
+// Shared mechanics for the typed composite value views (CX / XPN / CWE / …).
+//
+// Each composite is a value-type view over a Field: the segment still owns
+// the data, so round-trip byte-identity is preserved. The mechanics that were
+// previously duplicated verbatim across all 16 views — first-repetition
+// component access, single-repetition wrapping, and the empty metadata
+// defaults — live here. Per-spec accessors, docs, and non-empty metadata
+// stay on each conforming type: component names are spec surface. R3.
+
+/// Shared surface of the typed composite views (``CX``, ``XPN``, ``CWE``, …).
+///
+/// A composite view wraps a ``Field`` without owning the data. Named
+/// accessors read from the **first repetition** of the underlying field;
+/// use ``field`` to walk further repetitions, or wrap an individual
+/// ``Repetition`` via ``init(repetition:)``.
+public protocol CompositeView: Sendable, Equatable, Hashable {
+    /// The underlying ``Field``. Use this when you need access to
+    /// repetitions beyond the first, or to components not exposed as
+    /// named accessors.
+    var field: Field { get }
+
+    /// Wrap an entire ``Field``. Accessors read from the first repetition.
+    init(field: Field)
+
+    /// Required components for this composite per the HL7 spec.
+    /// ``Validator`` consults this when the `checkComponentGrammar` toggle
+    /// is on: if the composite is populated but one of these components is
+    /// empty, the validator emits ``IssueCode/requiredComponentMissing``.
+    /// Empty when the composite has no per-component requirements.
+    static var requiredComponents: [RequiredComponent] { get }
+
+    /// Cross-component requirement set (e.g. "identifier + coding system,
+    /// or text") for composites whose spec requirements exceed a flat
+    /// per-component list. `nil` when the composite has none.
+    static var requiredComponentSet: RequiredComponentSet? { get }
+}
+
+extension CompositeView {
+    /// No per-component requirements unless the conforming type declares them.
+    public static var requiredComponents: [RequiredComponent] { [] }
+
+    /// No cross-component requirement set unless the conforming type declares one.
+    public static var requiredComponentSet: RequiredComponentSet? { nil }
+
+    /// Wrap a single ``Repetition``. Convenient when iterating
+    /// `field.repetitions` and you want typed access to each repetition
+    /// in turn.
+    public init(repetition: Repetition) {
+        self.init(field: Field(repetitions: [repetition]))
+    }
+
+    /// The first-subcomponent value of the 1-based component `index` in the
+    /// first repetition, or `nil` when the component is absent.
+    func componentValue(_ index: Int) -> String? {
+        guard let rep = field.repetitions.first,
+              rep.components.indices.contains(index - 1) else {
+            return nil
+        }
+        return rep.components[index - 1].subcomponents.first?.value
+    }
+}

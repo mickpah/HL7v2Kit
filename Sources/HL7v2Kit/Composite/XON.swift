@@ -31,7 +31,7 @@
 /// digit scheme), XON-6 (assigning authority, nested HD), XON-8
 /// (assigning facility, nested HD), and XON-9 (name representation
 /// code) remain accessible via ``XON/field``.
-public struct XON: Sendable, Equatable, Hashable {
+public struct XON: CompositeView {
     /// Required components for the XON composite per HL7 v2.5.1
     /// §2.A.86.
     public static let requiredComponents: [RequiredComponent] = [
@@ -44,11 +44,6 @@ public struct XON: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// XON-1 organization name.
@@ -69,13 +64,5 @@ public struct XON: Sendable, Equatable, Hashable {
     /// XON-10 organization identifier — the unique ID value.
     public var organizationIdentifier: String? {
         componentValue(10)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

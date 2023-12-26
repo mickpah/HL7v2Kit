@@ -43,7 +43,7 @@
 /// context, name validity range, name assembly order, effective date,
 /// expiration date, professional suffix, assigning jurisdiction, assigning
 /// agency or department) remain accessible via ``XCN/field``.
-public struct XCN: Sendable, Equatable, Hashable {
+public struct XCN: CompositeView {
     /// Required components for the XCN composite per HL7 v2.5.1 §2.A.85.
     /// ``Validator`` consults this when the `checkComponentGrammar`
     /// toggle is on: if XCN is populated but XCN-1 is empty, the
@@ -60,13 +60,6 @@ public struct XCN: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each provider
-    /// in turn.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// XCN-1 ID Number — the provider / staff identifier.
@@ -97,13 +90,5 @@ public struct XCN: Sendable, Equatable, Hashable {
     /// XCN-6 prefix (e.g. `"Dr"`).
     public var prefix_: String? {
         componentValue(6)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }

@@ -28,7 +28,7 @@
 /// Components 8–14 (other geographic designation, county/parish, census
 /// tract, representation code, validity range, dates) are reachable via
 /// ``XAD/field`` but not exposed as named accessors in v0.2.
-public struct XAD: Sendable, Equatable, Hashable {
+public struct XAD: CompositeView {
     /// Required components for the XAD composite per HL7 v2.5.1 §2.A.79.
     /// ``Validator`` consults this when the `checkComponentGrammar` toggle
     /// is on: if XAD is populated but one of these components is empty,
@@ -45,12 +45,6 @@ public struct XAD: Sendable, Equatable, Hashable {
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
     public init(field: Field) {
         self.field = field
-    }
-
-    /// Wrap a single ``Repetition``. Convenient when iterating
-    /// `field.repetitions` and you want typed access to each address.
-    public init(repetition: Repetition) {
-        self.field = Field(repetitions: [repetition])
     }
 
     /// XAD-1.1 — the street address line (first subcomponent of the SAD
@@ -87,13 +81,5 @@ public struct XAD: Sendable, Equatable, Hashable {
     /// XAD-7 address type (e.g. `"H"` home, `"B"` business, `"M"` mailing).
     public var addressType: String? {
         componentValue(7)
-    }
-
-    private func componentValue(_ index: Int) -> String? {
-        guard let rep = field.repetitions.first,
-              rep.components.indices.contains(index - 1) else {
-            return nil
-        }
-        return rep.components[index - 1].subcomponents.first?.value
     }
 }
