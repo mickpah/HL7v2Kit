@@ -6,8 +6,6 @@
 // IDs and an original-text component to allow senders to communicate
 // free-text codes alongside the primary identifier. v0.3-C2.
 
-import Foundation
-
 /// Coded with Exceptions (CWE) composite.
 ///
 /// Exposed by typed segment accessors that wrap CWE-typed fields —

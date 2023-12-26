@@ -6,8 +6,6 @@
 // struct doesn't own the data — the segment still owns the underlying
 // `Field`. v0.2-C1.
 
-import Foundation
-
 /// Extended Address (XAD) composite.
 ///
 /// Exposed by typed segment accessors that wrap XAD-typed fields (e.g.

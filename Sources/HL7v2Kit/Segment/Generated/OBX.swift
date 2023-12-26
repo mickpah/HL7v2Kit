@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OBX.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Observation/Result segment (HL7 v2.5.1).
-public struct OBX: TypedSegment, Sendable, Equatable, Hashable {
+public struct OBX: TypedSegment {
     public static let segmentID = "OBX"
     public let fields: [Field]
 

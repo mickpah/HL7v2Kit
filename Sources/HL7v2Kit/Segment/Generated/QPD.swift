@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/QPD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Query Parameter Definition segment (HL7 v2.5.1).
-public struct QPD: TypedSegment, Sendable, Equatable, Hashable {
+public struct QPD: TypedSegment {
     public static let segmentID = "QPD"
     public let fields: [Field]
 

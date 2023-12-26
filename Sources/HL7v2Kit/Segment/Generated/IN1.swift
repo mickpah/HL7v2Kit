@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/IN1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Insurance segment (HL7 v2.5.1).
-public struct IN1: TypedSegment, Sendable, Equatable, Hashable {
+public struct IN1: TypedSegment {
     public static let segmentID = "IN1"
     public let fields: [Field]
 

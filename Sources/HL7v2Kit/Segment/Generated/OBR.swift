@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OBR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Observation Request segment (HL7 v2.5.1).
-public struct OBR: TypedSegment, Sendable, Equatable, Hashable {
+public struct OBR: TypedSegment {
     public static let segmentID = "OBR"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/LOC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Location Identification segment (HL7 v2.5.1).
-public struct LOC: TypedSegment, Sendable, Equatable, Hashable {
+public struct LOC: TypedSegment {
     public static let segmentID = "LOC"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/EVN.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Event Type segment (HL7 v2.5.1).
-public struct EVN: TypedSegment, Sendable, Equatable, Hashable {
+public struct EVN: TypedSegment {
     public static let segmentID = "EVN"
     public let fields: [Field]
 

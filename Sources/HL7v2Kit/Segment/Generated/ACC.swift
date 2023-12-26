@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ACC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Accident segment (HL7 v2.5.1).
-public struct ACC: TypedSegment, Sendable, Equatable, Hashable {
+public struct ACC: TypedSegment {
     public static let segmentID = "ACC"
     public let fields: [Field]
 

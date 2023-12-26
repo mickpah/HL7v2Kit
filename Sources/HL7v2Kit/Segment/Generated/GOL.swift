@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/GOL.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Goal Detail segment (HL7 v2.5.1).
-public struct GOL: TypedSegment, Sendable, Equatable, Hashable {
+public struct GOL: TypedSegment {
     public static let segmentID = "GOL"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/TCC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Test Code Configuration segment (HL7 v2.5.1).
-public struct TCC: TypedSegment, Sendable, Equatable, Hashable {
+public struct TCC: TypedSegment {
     public static let segmentID = "TCC"
     public let fields: [Field]
 

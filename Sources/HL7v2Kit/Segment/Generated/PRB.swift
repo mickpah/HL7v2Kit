@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PRB.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Problem Detail segment (HL7 v2.5.1).
-public struct PRB: TypedSegment, Sendable, Equatable, Hashable {
+public struct PRB: TypedSegment {
     public static let segmentID = "PRB"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Component Order segment (HL7 v2.5.1).
-public struct RXC: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXC: TypedSegment {
     public static let segmentID = "RXC"
     public let fields: [Field]
 

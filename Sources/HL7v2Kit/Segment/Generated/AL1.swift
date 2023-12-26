@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/AL1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Patient Allergy Information segment (HL7 v2.5.1).
-public struct AL1: TypedSegment, Sendable, Equatable, Hashable {
+public struct AL1: TypedSegment {
     public static let segmentID = "AL1"
     public let fields: [Field]
 

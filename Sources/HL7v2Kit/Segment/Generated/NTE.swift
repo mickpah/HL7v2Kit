@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/NTE.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Notes And Comments segment (HL7 v2.5.1).
-public struct NTE: TypedSegment, Sendable, Equatable, Hashable {
+public struct NTE: TypedSegment {
     public static let segmentID = "NTE"
     public let fields: [Field]
 

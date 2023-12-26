@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/LCH.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Location Characteristic segment (HL7 v2.5.1).
-public struct LCH: TypedSegment, Sendable, Equatable, Hashable {
+public struct LCH: TypedSegment {
     public static let segmentID = "LCH"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RCP.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Response Control Parameter segment (HL7 v2.5.1).
-public struct RCP: TypedSegment, Sendable, Equatable, Hashable {
+public struct RCP: TypedSegment {
     public static let segmentID = "RCP"
     public let fields: [Field]
 

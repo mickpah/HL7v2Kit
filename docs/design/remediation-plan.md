@@ -104,6 +104,14 @@ verified (or written) against current behaviour before any code moves.
 **F1, F26, F34, F35, F36 · ~278 lines · P3 + P2.** The single biggest cut, and the most
 mechanically provable: a 3-line template change ripples across all 116 generated files.
 
+**Status: ✅ landed 2026-08-26.** All gates held: step-a regeneration byte-identical (F34/F35
+proven output-neutral); step-b diff exactly the two intended line classes (116 import+blank
+removals, 109 decl rewrites); test-name diff empty; 519/519 green; warning-free. **F26 was
+dropped per the never-force rule** — `String(reflecting:)` escapes apostrophes (`\'`), churning
+every possessive grammar-table name; `escapeStringLiteral` now carries a comment recording this.
+Side discovery: the fresh full-module recompile surfaced a pre-existing `ExistentialAny` warning
+in `StreamingBatchParser.swift:142` (untouched since v0.3-S1) — fixed in its own commit.
+
 1. **Byte-identical template cleanups first.** F34 (inline duplicate of `versionDirName` at
    `Codegen.swift:192` → call the function), F35 (`"GTS"` out of `scalarDataTypes` — 0 of 584
    schemas; `DTM` stays, v2.6/v2.8.2 use it), F26 (`escapeStringLiteral` → `String(reflecting:)`
@@ -363,7 +371,7 @@ direct check against `98b8390`. Ranked by net cut.
 | 23 | R5 | stdlib | Hand-rolled `hexDigitValue(_:)` (verified). EscapeSequences.swift:128-135 | 8 | `Character.hexDigitValue` (SE-0221, kernel-safe); call sites :118-119 | P1; EscapeSequenceTests |
 | 24 | R4 | shrink | ORC group-boundary walk duplicated (verified diff). Message.swift:156-166 = Validator.swift:267-275 | 8 | Internal `Message.orcGroupRange(around:)` used by both | P1; MessageCrossSegmentTests (:96,:117,:129); Validator branch production-unreachable — no new test; `GroupScope.orcObxGroup` case stays |
 | 25 | R8 | delete | `Collection.subscript(safe:)` — zero call sites (verified). FixtureRoundTripTests.swift:142-148 | 7 | Delete extension + MARK | P2 |
-| 26 | R1 | stdlib | `escapeStringLiteral` in generator. Codegen.swift:262-267 | 7 | `String(reflecting:)` — accept ONLY if regenerated output byte-identical, else drop | P3 |
+| 26 | R1 | stdlib | `escapeStringLiteral` in generator. Codegen.swift:262-267 | 7 | `String(reflecting:)` — accept ONLY if regenerated output byte-identical, else drop. **DROPPED 2026-08-26**: it escapes apostrophes (`\'`), churning possessive names | P3 |
 | 27 | R9 | delete | `roundTripPreservesBody` = strict subset of `unframeSingleFrame` (verified: same input, weaker asserts). MLLPCodecTests.swift:144-149 | 6 | Delete test | P5 (R9 fold-map row) |
 | 28 | R10 | delete† | `ValidationReport.empty` — zero call sites (verified). ValidationReport.swift:45-48 | 4 | Delete at 2.0 | P4 |
 | 29 | R10 | delete† | `MessageBuilder.append(unknown:)` — zero call sites, untested (verified). MessageBuilder.swift:45-48 | 4 | Delete at 2.0; if the API is ever wanted, re-add WITH a test | P4 |

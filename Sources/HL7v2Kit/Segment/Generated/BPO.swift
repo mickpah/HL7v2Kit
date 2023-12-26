@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/BPO.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Blood Product Order segment (HL7 v2.5.1).
-public struct BPO: TypedSegment, Sendable, Equatable, Hashable {
+public struct BPO: TypedSegment {
     public static let segmentID = "BPO"
     public let fields: [Field]
 

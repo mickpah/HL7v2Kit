@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/BPX.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Blood Product Dispense Status segment (HL7 v2.5.1).
-public struct BPX: TypedSegment, Sendable, Equatable, Hashable {
+public struct BPX: TypedSegment {
     public static let segmentID = "BPX"
     public let fields: [Field]
 

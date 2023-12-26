@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/LRL.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Location Relationship segment (HL7 v2.5.1).
-public struct LRL: TypedSegment, Sendable, Equatable, Hashable {
+public struct LRL: TypedSegment {
     public static let segmentID = "LRL"
     public let fields: [Field]
 

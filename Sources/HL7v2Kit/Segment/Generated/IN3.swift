@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/IN3.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Insurance Additional Information - Certification segment (HL7 v2.5.1).
-public struct IN3: TypedSegment, Sendable, Equatable, Hashable {
+public struct IN3: TypedSegment {
     public static let segmentID = "IN3"
     public let fields: [Field]
 

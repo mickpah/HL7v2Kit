@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/CTI.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Clinical Trial Identification segment (HL7 v2.5.1).
-public struct CTI: TypedSegment, Sendable, Equatable, Hashable {
+public struct CTI: TypedSegment {
     public static let segmentID = "CTI"
     public let fields: [Field]
 

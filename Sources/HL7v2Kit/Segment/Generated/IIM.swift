@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/IIM.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Inventory Item Master segment (HL7 v2.5.1).
-public struct IIM: TypedSegment, Sendable, Equatable, Hashable {
+public struct IIM: TypedSegment {
     public static let segmentID = "IIM"
     public let fields: [Field]
 

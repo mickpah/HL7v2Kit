@@ -53,7 +53,7 @@ struct CardinalityRuleSchema: Decodable {
 /// HL7 data type codes whose values are scalar enough that the typed
 /// accessor returns `String?` (the flattened first-subcomponent value).
 let scalarDataTypes: Set<String> = [
-    "SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "GTS", "TX", "DTM",
+    "SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", "DTM",
 ]
 
 /// HL7 composite data types for which HL7v2Kit ships a Swift struct view.
@@ -131,10 +131,8 @@ func render(_ schema: SegmentSchema) -> String {
     // Source schema: Resources/schemas/v\(schema.version)/\(schema.segmentID).json
     // Regenerate via scripts/regenerate-typed-segments.sh
 
-    import Foundation
-
     /// \(schema.description) segment (HL7 v\(schema.version)).
-    public struct \(schema.segmentID): TypedSegment, Sendable, Equatable, Hashable {
+    public struct \(schema.segmentID): TypedSegment {
         public static let segmentID = "\(schema.segmentID)"
         public let fields: [Field]
 
@@ -166,8 +164,6 @@ func renderRegistry(segmentIDs: [String]) -> String {
     // To register a new segment, add its JSON schema under Resources/schemas/
     // and run scripts/regenerate-typed-segments.sh.
 
-    import Foundation
-
     extension SegmentRegistry {
         /// Hydrate `unknown` into a `.typed` segment if its ID matches a
         /// schema-emitted typed struct. Returns nil for unrecognised IDs so
@@ -189,7 +185,7 @@ func renderRegistry(segmentIDs: [String]) -> String {
 /// Schemas are sorted by segment ID and fields by ascending `index` so the
 /// output is deterministic.
 func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
-    let versionSwiftName = "v" + version.replacingOccurrences(of: ".", with: "_")
+    let versionSwiftName = versionDirName(version)
     let entries = schemas.sorted(by: { $0.segmentID < $1.segmentID }).map { schema in
         let fields = schema.fields.sorted(by: { $0.index < $1.index }).map { field in
             let repeatability = field.repeatability == "*" ? ".multiple" : ".single"
@@ -233,8 +229,6 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
     // To extend a segment's grammar, edit its JSON schema under
     // Resources/schemas/ and run scripts/regenerate-typed-segments.sh.
 
-    import Foundation
-
     extension SegmentGrammarTable {
         public static let \(versionSwiftName): [String: SegmentGrammar] = [
     \(entries)
@@ -258,7 +252,9 @@ func optionalityCase(_ code: String) -> String {
 }
 
 /// Render a Swift string literal that round-trips the input value safely
-/// (handles backslash and quote characters).
+/// (handles backslash and quote characters). Deliberately hand-rolled:
+/// `String(reflecting:)` additionally escapes apostrophes (`\'`), which
+/// would churn every grammar-table line containing a possessive name.
 func escapeStringLiteral(_ s: String) -> String {
     let escaped = s
         .replacingOccurrences(of: "\\", with: "\\\\")

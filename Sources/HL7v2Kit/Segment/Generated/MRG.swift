@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MRG.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Merge Patient Information segment (HL7 v2.5.1).
-public struct MRG: TypedSegment, Sendable, Equatable, Hashable {
+public struct MRG: TypedSegment {
     public static let segmentID = "MRG"
     public let fields: [Field]
 

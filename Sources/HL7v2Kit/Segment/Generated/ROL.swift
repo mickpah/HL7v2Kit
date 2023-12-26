@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ROL.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Role segment (HL7 v2.5.1).
-public struct ROL: TypedSegment, Sendable, Equatable, Hashable {
+public struct ROL: TypedSegment {
     public static let segmentID = "ROL"
     public let fields: [Field]
 

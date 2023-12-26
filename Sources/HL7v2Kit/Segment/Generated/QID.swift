@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/QID.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Query Identification segment (HL7 v2.5.1).
-public struct QID: TypedSegment, Sendable, Equatable, Hashable {
+public struct QID: TypedSegment {
     public static let segmentID = "QID"
     public let fields: [Field]
 

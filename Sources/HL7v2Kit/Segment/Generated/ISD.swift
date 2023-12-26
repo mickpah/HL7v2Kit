@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ISD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Interaction Status Detail segment (HL7 v2.5.1).
-public struct ISD: TypedSegment, Sendable, Equatable, Hashable {
+public struct ISD: TypedSegment {
     public static let segmentID = "ISD"
     public let fields: [Field]
 

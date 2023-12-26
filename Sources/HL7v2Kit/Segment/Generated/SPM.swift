@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/SPM.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Specimen segment (HL7 v2.5.1).
-public struct SPM: TypedSegment, Sendable, Equatable, Hashable {
+public struct SPM: TypedSegment {
     public static let segmentID = "SPM"
     public let fields: [Field]
 

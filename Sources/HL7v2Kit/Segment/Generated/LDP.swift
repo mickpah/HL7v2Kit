@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/LDP.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Location Department segment (HL7 v2.5.1).
-public struct LDP: TypedSegment, Sendable, Equatable, Hashable {
+public struct LDP: TypedSegment {
     public static let segmentID = "LDP"
     public let fields: [Field]
 

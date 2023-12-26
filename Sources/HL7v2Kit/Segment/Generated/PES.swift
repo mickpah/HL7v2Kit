@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PES.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Product Experience Sender segment (HL7 v2.5.1).
-public struct PES: TypedSegment, Sendable, Equatable, Hashable {
+public struct PES: TypedSegment {
     public static let segmentID = "PES"
     public let fields: [Field]
 

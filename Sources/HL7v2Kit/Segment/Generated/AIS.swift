@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/AIS.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Appointment Information - Service segment (HL7 v2.5.1).
-public struct AIS: TypedSegment, Sendable, Equatable, Hashable {
+public struct AIS: TypedSegment {
     public static let segmentID = "AIS"
     public let fields: [Field]
 

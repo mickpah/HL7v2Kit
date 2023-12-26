@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/CSR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Clinical Study Registration segment (HL7 v2.5.1).
-public struct CSR: TypedSegment, Sendable, Equatable, Hashable {
+public struct CSR: TypedSegment {
     public static let segmentID = "CSR"
     public let fields: [Field]
 

@@ -4,8 +4,6 @@
 // Value-type view over a Field that exposes named accessors for each
 // PT component. v0.3-C4.
 
-import Foundation
-
 /// Processing Type (PT) composite.
 ///
 /// Exposed by the typed accessor `msh.processingID` (MSH-11). Declares

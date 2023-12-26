@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RDF.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Table Row Definition segment (HL7 v2.5.1).
-public struct RDF: TypedSegment, Sendable, Equatable, Hashable {
+public struct RDF: TypedSegment {
     public static let segmentID = "RDF"
     public let fields: [Field]
 

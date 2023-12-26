@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MSH.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Message Header segment (HL7 v2.5.1).
-public struct MSH: TypedSegment, Sendable, Equatable, Hashable {
+public struct MSH: TypedSegment {
     public static let segmentID = "MSH"
     public let fields: [Field]
 

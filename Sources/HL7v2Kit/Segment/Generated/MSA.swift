@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MSA.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Message Acknowledgment segment (HL7 v2.5.1).
-public struct MSA: TypedSegment, Sendable, Equatable, Hashable {
+public struct MSA: TypedSegment {
     public static let segmentID = "MSA"
     public let fields: [Field]
 

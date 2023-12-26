@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/APR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Appointment Preferences segment (HL7 v2.5.1).
-public struct APR: TypedSegment, Sendable, Equatable, Hashable {
+public struct APR: TypedSegment {
     public static let segmentID = "APR"
     public let fields: [Field]
 

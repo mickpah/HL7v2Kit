@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/EQU.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Equipment Detail segment (HL7 v2.5.1).
-public struct EQU: TypedSegment, Sendable, Equatable, Hashable {
+public struct EQU: TypedSegment {
     public static let segmentID = "EQU"
     public let fields: [Field]
 

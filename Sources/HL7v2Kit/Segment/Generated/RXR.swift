@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Route segment (HL7 v2.5.1).
-public struct RXR: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXR: TypedSegment {
     public static let segmentID = "RXR"
     public let fields: [Field]
 

@@ -6,8 +6,6 @@
 // still owns the underlying `Field`, so round-trip byte-identity is
 // preserved. v0.2-C1.
 
-import Foundation
-
 /// Extended Person Name (XPN) composite.
 ///
 /// Exposed by typed segment accessors that wrap XPN-typed fields (e.g.

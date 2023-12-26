@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PCR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Possible Causal Relationship segment (HL7 v2.5.1).
-public struct PCR: TypedSegment, Sendable, Equatable, Hashable {
+public struct PCR: TypedSegment {
     public static let segmentID = "PCR"
     public let fields: [Field]
 

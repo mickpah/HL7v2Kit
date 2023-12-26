@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PSH.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Product Summary Header segment (HL7 v2.5.1).
-public struct PSH: TypedSegment, Sendable, Equatable, Hashable {
+public struct PSH: TypedSegment {
     public static let segmentID = "PSH"
     public let fields: [Field]
 

@@ -3,8 +3,6 @@
 // To register a new segment, add its JSON schema under Resources/schemas/
 // and run scripts/regenerate-typed-segments.sh.
 
-import Foundation
-
 extension SegmentRegistry {
     /// Hydrate `unknown` into a `.typed` segment if its ID matches a
     /// schema-emitted typed struct. Returns nil for unrecognised IDs so

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MFI.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Master File Identification segment (HL7 v2.5.1).
-public struct MFI: TypedSegment, Sendable, Equatable, Hashable {
+public struct MFI: TypedSegment {
     public static let segmentID = "MFI"
     public let fields: [Field]
 

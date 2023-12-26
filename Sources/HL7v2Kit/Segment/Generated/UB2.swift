@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/UB2.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// UB92 Data segment (HL7 v2.5.1).
-public struct UB2: TypedSegment, Sendable, Equatable, Hashable {
+public struct UB2: TypedSegment {
     public static let segmentID = "UB2"
     public let fields: [Field]
 

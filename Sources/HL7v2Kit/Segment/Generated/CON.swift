@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/CON.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Consent Segment segment (HL7 v2.5.1).
-public struct CON: TypedSegment, Sendable, Equatable, Hashable {
+public struct CON: TypedSegment {
     public static let segmentID = "CON"
     public let fields: [Field]
 

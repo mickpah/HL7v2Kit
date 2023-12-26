@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ECR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Equipment Command Response segment (HL7 v2.5.1).
-public struct ECR: TypedSegment, Sendable, Equatable, Hashable {
+public struct ECR: TypedSegment {
     public static let segmentID = "ECR"
     public let fields: [Field]
 

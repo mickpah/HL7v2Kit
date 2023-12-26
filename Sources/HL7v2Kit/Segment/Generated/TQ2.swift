@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/TQ2.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Timing/Quantity Relationship segment (HL7 v2.5.1).
-public struct TQ2: TypedSegment, Sendable, Equatable, Hashable {
+public struct TQ2: TypedSegment {
     public static let segmentID = "TQ2"
     public let fields: [Field]
 

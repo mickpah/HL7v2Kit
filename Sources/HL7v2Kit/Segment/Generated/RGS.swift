@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RGS.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Resource Group segment (HL7 v2.5.1).
-public struct RGS: TypedSegment, Sendable, Equatable, Hashable {
+public struct RGS: TypedSegment {
     public static let segmentID = "RGS"
     public let fields: [Field]
 

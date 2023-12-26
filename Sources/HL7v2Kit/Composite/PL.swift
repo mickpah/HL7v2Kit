@@ -7,8 +7,6 @@
 // facility cluster that AU clinical traffic universally populates).
 // v0.3-C4.
 
-import Foundation
-
 /// Person Location (PL) composite.
 ///
 /// Exposed by typed segment accessors that wrap PL-typed fields. PL is

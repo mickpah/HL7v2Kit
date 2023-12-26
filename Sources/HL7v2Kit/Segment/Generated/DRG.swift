@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/DRG.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Diagnosis Related Group segment (HL7 v2.5.1).
-public struct DRG: TypedSegment, Sendable, Equatable, Hashable {
+public struct DRG: TypedSegment {
     public static let segmentID = "DRG"
     public let fields: [Field]
 

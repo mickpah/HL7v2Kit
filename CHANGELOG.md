@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > depth 578 exact, 0 gaps, 0 suspects**. Tests **519** green, no codegen drift. `main` and
 > the `v1.4.0` tag have **not been pushed** to `private`.
 
+### R1 — Foundation-import purge + codegen template trims (remediation stage 1 of 10)
+
+First executed stage of `docs/design/remediation-plan.md` (F1, F34, F35, F36; F26
+dropped). ~270 net lines removed, behaviour byte-identical, zero API change.
+
+- **F1:** the emitted `import Foundation` removed from all three codegen templates — none of
+  the 116 generated files uses a Foundation symbol — and from the 18 hand-written
+  `Composite/` files + `SegmentRegistry.swift` (19 files × 2 lines).
+- **F36:** generated structs now declare `: TypedSegment` only; the protocol already refines
+  `Sendable, Equatable, Hashable` (`Segment.swift:14`) and synthesis still fires — 109 decl
+  lines shortened.
+- **F34:** `renderGrammarTable` calls `versionDirName(_:)` instead of inlining its body.
+  **F35:** dead `"GTS"` entry removed from `scalarDataTypes` (0 of 584 schemas use it).
+  Both proven output-neutral: step-a regeneration was **byte-identical**.
+- **F26 dropped per the plan's never-force rule:** `String(reflecting:)` escapes apostrophes
+  (`Mother's` → `Mother\'s`), churning every possessive grammar-table name; the hand-rolled
+  escaper stays, now with a comment recording why.
+- Stage verification: step-b regenerate diff contained **only** the two intended line classes
+  (116 import+blank removals; 109 decl rewrites); `swift test list` name-diff **empty**;
+  suite **519/519 green**; build **warning-free** — the fresh full-module recompile surfaced
+  one pre-existing `ExistentialAny` warning in `StreamingBatchParser.swift:142` (untouched
+  since v0.3-S1), fixed in its own commit as `any Error`.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

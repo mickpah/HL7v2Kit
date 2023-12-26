@@ -6,8 +6,6 @@
 // struct doesn't own the data — the segment still owns the underlying
 // `Field`. v0.3-C4.
 
-import Foundation
-
 /// Hierarchic Designator (HD) composite.
 ///
 /// Exposed by typed segment accessors that wrap HD-typed fields. HD is

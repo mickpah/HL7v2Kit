@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PV2.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Patient Visit - Additional Information segment (HL7 v2.5.1).
-public struct PV2: TypedSegment, Sendable, Equatable, Hashable {
+public struct PV2: TypedSegment {
     public static let segmentID = "PV2"
     public let fields: [Field]
 

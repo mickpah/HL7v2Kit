@@ -4,8 +4,6 @@
 // Value-type view over a Field that exposes named accessors for each
 // VID component. v0.3-C4.
 
-import Foundation
-
 /// Version Identifier (VID) composite.
 ///
 /// Exposed by the typed accessor `msh.versionID` (MSH-12). Carries the

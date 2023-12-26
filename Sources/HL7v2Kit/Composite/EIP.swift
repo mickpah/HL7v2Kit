@@ -7,8 +7,6 @@
 // OBR-29. The named accessors return the first subcomponent of each
 // nested EI (the entityIdentifier). v0.3-C4.
 
-import Foundation
-
 /// Entity Identifier Pair (EIP) composite.
 ///
 /// Exposed by typed segment accessors that wrap EIP-typed fields. EIP

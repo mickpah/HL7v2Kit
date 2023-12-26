@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/SAC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Specimen Container Detail segment (HL7 v2.5.1).
-public struct SAC: TypedSegment, Sendable, Equatable, Hashable {
+public struct SAC: TypedSegment {
     public static let segmentID = "SAC"
     public let fields: [Field]
 

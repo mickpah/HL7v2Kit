@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/QAK.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Query Acknowledgment segment (HL7 v2.5.1).
-public struct QAK: TypedSegment, Sendable, Equatable, Hashable {
+public struct QAK: TypedSegment {
     public static let segmentID = "QAK"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ARQ.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Appointment Request segment (HL7 v2.5.1).
-public struct ARQ: TypedSegment, Sendable, Equatable, Hashable {
+public struct ARQ: TypedSegment {
     public static let segmentID = "ARQ"
     public let fields: [Field]
 

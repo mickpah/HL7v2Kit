@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM4.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Observations that Require Specimens segment (HL7 v2.5.1).
-public struct OM4: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM4: TypedSegment {
     public static let segmentID = "OM4"
     public let fields: [Field]
 

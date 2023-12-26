@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/GT1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Guarantor segment (HL7 v2.5.1).
-public struct GT1: TypedSegment, Sendable, Equatable, Hashable {
+public struct GT1: TypedSegment {
     public static let segmentID = "GT1"
     public let fields: [Field]
 

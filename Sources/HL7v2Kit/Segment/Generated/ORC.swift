@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ORC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Common Order segment (HL7 v2.5.1).
-public struct ORC: TypedSegment, Sendable, Equatable, Hashable {
+public struct ORC: TypedSegment {
     public static let segmentID = "ORC"
     public let fields: [Field]
 

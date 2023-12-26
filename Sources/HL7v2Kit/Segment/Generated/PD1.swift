@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PD1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Patient Additional Demographic segment (HL7 v2.5.1).
-public struct PD1: TypedSegment, Sendable, Equatable, Hashable {
+public struct PD1: TypedSegment {
     public static let segmentID = "PD1"
     public let fields: [Field]
 

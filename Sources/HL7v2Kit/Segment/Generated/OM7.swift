@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM7.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Additional Basic Attributes segment (HL7 v2.5.1).
-public struct OM7: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM7: TypedSegment {
     public static let segmentID = "OM7"
     public let fields: [Field]
 

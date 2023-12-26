@@ -6,8 +6,6 @@
 // preserved because the struct doesn't own the data — the segment
 // still owns the underlying `Field`. v0.3-C3.
 
-import Foundation
-
 /// Extended Telecommunication Number (XTN) composite.
 ///
 /// Exposed by typed segment accessors that wrap XTN-typed fields. XTN

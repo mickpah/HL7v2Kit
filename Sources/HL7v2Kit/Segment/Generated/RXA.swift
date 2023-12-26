@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXA.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Administration segment (HL7 v2.5.1).
-public struct RXA: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXA: TypedSegment {
     public static let segmentID = "RXA"
     public let fields: [Field]
 

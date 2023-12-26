@@ -6,8 +6,6 @@
 // struct doesn't own the data — the segment still owns the underlying
 // `Field`. v0.3-C3.
 
-import Foundation
-
 /// Entity Identifier (EI) composite.
 ///
 /// Exposed by typed segment accessors that wrap EI-typed fields. EI is

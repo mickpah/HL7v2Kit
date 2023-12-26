@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM3.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Categorical Test/Observation segment (HL7 v2.5.1).
-public struct OM3: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM3: TypedSegment {
     public static let segmentID = "OM3"
     public let fields: [Field]
 

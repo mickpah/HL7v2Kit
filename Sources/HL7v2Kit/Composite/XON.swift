@@ -8,8 +8,6 @@
 // type code plus identifier metadata, the realistic AU traffic
 // subset. v0.3-C4.
 
-import Foundation
-
 /// Extended Composite Name and Identification Number for Organizations
 /// (XON) composite.
 ///

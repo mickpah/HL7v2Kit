@@ -9,8 +9,6 @@
 // is preserved because the struct doesn't own the data — the segment
 // still owns the underlying `Field`. v0.3-C3.
 
-import Foundation
-
 /// Extended Composite ID Number and Name for Persons (XCN) composite.
 ///
 /// Exposed by typed segment accessors that wrap XCN-typed fields. XCN

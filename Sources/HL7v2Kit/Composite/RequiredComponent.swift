@@ -4,8 +4,6 @@
 // toggle is on. Each composite struct (``XPN``, ``CX``, ``XAD``) carries
 // its own `static let requiredComponents: [RequiredComponent]`. v0.2-V2.
 
-import Foundation
-
 /// One required component within a composite data type — the 1-based
 /// component index plus the human-readable name used in
 /// ``ValidationIssue/message`` strings.

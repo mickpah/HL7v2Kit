@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PRD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Provider Data segment (HL7 v2.5.1).
-public struct PRD: TypedSegment, Sendable, Equatable, Hashable {
+public struct PRD: TypedSegment {
     public static let segmentID = "PRD"
     public let fields: [Field]
 

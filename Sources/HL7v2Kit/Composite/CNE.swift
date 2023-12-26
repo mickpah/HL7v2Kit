@@ -6,8 +6,6 @@
 // a stricter conformance contract (the receiving system MUST recognise
 // every populated CNE-1 code, no free-text-fallback allowed). v0.3-C4.
 
-import Foundation
-
 /// Coded with No Exceptions (CNE) composite.
 ///
 /// Exposed by typed segment accessors that wrap CNE-typed fields. CNE

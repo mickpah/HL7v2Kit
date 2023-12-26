@@ -10,8 +10,6 @@
 // with OR-rule conformance — CWE, XTN, HD, PL, EIP — publish a
 // `requiredComponentSet` reflecting their spec rule.
 
-import Foundation
-
 /// OR-rule / grouped-disjunction conformance metadata for a composite
 /// data type. Companion to `RequiredComponent` — that type carries flat
 /// "all-of" requirements; this type carries disjunctive ones.

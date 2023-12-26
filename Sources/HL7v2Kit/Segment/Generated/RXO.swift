@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXO.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Order segment (HL7 v2.5.1).
-public struct RXO: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXO: TypedSegment {
     public static let segmentID = "RXO"
     public let fields: [Field]
 

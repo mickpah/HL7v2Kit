@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PTH.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pathway segment (HL7 v2.5.1).
-public struct PTH: TypedSegment, Sendable, Equatable, Hashable {
+public struct PTH: TypedSegment {
     public static let segmentID = "PTH"
     public let fields: [Field]
 

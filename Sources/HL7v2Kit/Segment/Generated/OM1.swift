@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// General Segment (Observation Text/Master File) segment (HL7 v2.5.1).
-public struct OM1: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM1: TypedSegment {
     public static let segmentID = "OM1"
     public let fields: [Field]
 

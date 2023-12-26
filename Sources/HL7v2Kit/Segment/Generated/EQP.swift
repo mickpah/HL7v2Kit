@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/EQP.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Equipment/Log Service segment (HL7 v2.5.1).
-public struct EQP: TypedSegment, Sendable, Equatable, Hashable {
+public struct EQP: TypedSegment {
     public static let segmentID = "EQP"
     public let fields: [Field]
 

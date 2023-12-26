@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/VAR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Variance segment (HL7 v2.5.1).
-public struct VAR: TypedSegment, Sendable, Equatable, Hashable {
+public struct VAR: TypedSegment {
     public static let segmentID = "VAR"
     public let fields: [Field]
 

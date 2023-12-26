@@ -6,8 +6,6 @@
 // struct doesn't own the data — the segment still owns the underlying
 // `Field`. v0.2-C1.
 
-import Foundation
-
 /// Extended Composite ID with Check Digit (CX) composite.
 ///
 /// Exposed by typed segment accessors that wrap CX-typed fields (e.g.

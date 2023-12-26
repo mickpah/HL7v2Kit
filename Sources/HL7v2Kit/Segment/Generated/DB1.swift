@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/DB1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Disability segment (HL7 v2.5.1).
-public struct DB1: TypedSegment, Sendable, Equatable, Hashable {
+public struct DB1: TypedSegment {
     public static let segmentID = "DB1"
     public let fields: [Field]
 

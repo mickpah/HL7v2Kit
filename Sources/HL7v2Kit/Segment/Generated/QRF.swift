@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/QRF.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Original-Style Query Filter segment (HL7 v2.5.1).
-public struct QRF: TypedSegment, Sendable, Equatable, Hashable {
+public struct QRF: TypedSegment {
     public static let segmentID = "QRF"
     public let fields: [Field]
 

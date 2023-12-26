@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/NDS.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Notification Detail segment (HL7 v2.5.1).
-public struct NDS: TypedSegment, Sendable, Equatable, Hashable {
+public struct NDS: TypedSegment {
     public static let segmentID = "NDS"
     public let fields: [Field]
 

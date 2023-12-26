@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/AUT.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Authorization Information segment (HL7 v2.5.1).
-public struct AUT: TypedSegment, Sendable, Equatable, Hashable {
+public struct AUT: TypedSegment {
     public static let segmentID = "AUT"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/INV.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Inventory Detail segment (HL7 v2.5.1).
-public struct INV: TypedSegment, Sendable, Equatable, Hashable {
+public struct INV: TypedSegment {
     public static let segmentID = "INV"
     public let fields: [Field]
 

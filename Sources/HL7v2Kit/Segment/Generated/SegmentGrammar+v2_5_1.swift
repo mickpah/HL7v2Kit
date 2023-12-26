@@ -3,8 +3,6 @@
 // To extend a segment's grammar, edit its JSON schema under
 // Resources/schemas/ and run scripts/regenerate-typed-segments.sh.
 
-import Foundation
-
 extension SegmentGrammarTable {
     public static let v2_5_1: [String: SegmentGrammar] = [
         "ABS": SegmentGrammar(

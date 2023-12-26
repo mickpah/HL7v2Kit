@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/SID.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Substance Identifier segment (HL7 v2.5.1).
-public struct SID: TypedSegment, Sendable, Equatable, Hashable {
+public struct SID: TypedSegment {
     public static let segmentID = "SID"
     public let fields: [Field]
 

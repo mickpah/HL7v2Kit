@@ -4,8 +4,6 @@
 // Value-type view over a Field that exposes named accessors for each
 // MSG component. v0.3-C4.
 
-import Foundation
-
 /// Message Type (MSG) composite.
 ///
 /// Exposed by the typed accessor `msh.messageType` (MSH-9). Carries the

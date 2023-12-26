@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/AIG.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Appointment Information - General Resource segment (HL7 v2.5.1).
-public struct AIG: TypedSegment, Sendable, Equatable, Hashable {
+public struct AIG: TypedSegment {
     public static let segmentID = "AIG"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/SCH.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Schedule Activity Information segment (HL7 v2.5.1).
-public struct SCH: TypedSegment, Sendable, Equatable, Hashable {
+public struct SCH: TypedSegment {
     public static let segmentID = "SCH"
     public let fields: [Field]
 

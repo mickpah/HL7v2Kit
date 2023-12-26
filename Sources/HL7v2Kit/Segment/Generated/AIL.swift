@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/AIL.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Appointment Information - Location Resource segment (HL7 v2.5.1).
-public struct AIL: TypedSegment, Sendable, Equatable, Hashable {
+public struct AIL: TypedSegment {
     public static let segmentID = "AIL"
     public let fields: [Field]
 

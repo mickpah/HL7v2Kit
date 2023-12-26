@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXG.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Give segment (HL7 v2.5.1).
-public struct RXG: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXG: TypedSegment {
     public static let segmentID = "RXG"
     public let fields: [Field]
 

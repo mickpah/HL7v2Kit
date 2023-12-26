@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM6.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Observations that are Calculated from Other Observations segment (HL7 v2.5.1).
-public struct OM6: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM6: TypedSegment {
     public static let segmentID = "OM6"
     public let fields: [Field]
 

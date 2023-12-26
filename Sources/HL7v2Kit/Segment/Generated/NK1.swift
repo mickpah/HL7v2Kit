@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/NK1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Next of Kin / Associated Parties segment (HL7 v2.5.1).
-public struct NK1: TypedSegment, Sendable, Equatable, Hashable {
+public struct NK1: TypedSegment {
     public static let segmentID = "NK1"
     public let fields: [Field]
 

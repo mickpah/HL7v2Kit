@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PDC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Product Detail Country segment (HL7 v2.5.1).
-public struct PDC: TypedSegment, Sendable, Equatable, Hashable {
+public struct PDC: TypedSegment {
     public static let segmentID = "PDC"
     public let fields: [Field]
 

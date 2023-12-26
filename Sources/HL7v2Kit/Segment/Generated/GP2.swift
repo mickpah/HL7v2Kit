@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/GP2.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Grouping/Reimbursement - Procedure Line Item segment (HL7 v2.5.1).
-public struct GP2: TypedSegment, Sendable, Equatable, Hashable {
+public struct GP2: TypedSegment {
     public static let segmentID = "GP2"
     public let fields: [Field]
 

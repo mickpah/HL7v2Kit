@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PID.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Patient Identification segment (HL7 v2.5.1).
-public struct PID: TypedSegment, Sendable, Equatable, Hashable {
+public struct PID: TypedSegment {
     public static let segmentID = "PID"
     public let fields: [Field]
 

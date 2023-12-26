@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ECD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Equipment Command segment (HL7 v2.5.1).
-public struct ECD: TypedSegment, Sendable, Equatable, Hashable {
+public struct ECD: TypedSegment {
     public static let segmentID = "ECD"
     public let fields: [Field]
 

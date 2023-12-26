@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PRC.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pricing segment (HL7 v2.5.1).
-public struct PRC: TypedSegment, Sendable, Equatable, Hashable {
+public struct PRC: TypedSegment {
     public static let segmentID = "PRC"
     public let fields: [Field]
 

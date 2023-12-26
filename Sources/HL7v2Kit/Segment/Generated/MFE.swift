@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MFE.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Master File Entry segment (HL7 v2.5.1).
-public struct MFE: TypedSegment, Sendable, Equatable, Hashable {
+public struct MFE: TypedSegment {
     public static let segmentID = "MFE"
     public let fields: [Field]
 

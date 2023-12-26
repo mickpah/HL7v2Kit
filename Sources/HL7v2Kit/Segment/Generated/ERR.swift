@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/ERR.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Error segment (HL7 v2.5.1).
-public struct ERR: TypedSegment, Sendable, Equatable, Hashable {
+public struct ERR: TypedSegment {
     public static let segmentID = "ERR"
     public let fields: [Field]
 

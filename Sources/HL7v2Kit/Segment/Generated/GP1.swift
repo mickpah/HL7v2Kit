@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/GP1.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Grouping/Reimbursement - Visit segment (HL7 v2.5.1).
-public struct GP1: TypedSegment, Sendable, Equatable, Hashable {
+public struct GP1: TypedSegment {
     public static let segmentID = "GP1"
     public let fields: [Field]
 

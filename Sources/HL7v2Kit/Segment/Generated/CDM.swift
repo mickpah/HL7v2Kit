@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/CDM.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Charge Description Master segment (HL7 v2.5.1).
-public struct CDM: TypedSegment, Sendable, Equatable, Hashable {
+public struct CDM: TypedSegment {
     public static let segmentID = "CDM"
     public let fields: [Field]
 

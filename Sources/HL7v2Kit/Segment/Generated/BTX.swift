@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/BTX.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Blood Product Transfusion/Disposition segment (HL7 v2.5.1).
-public struct BTX: TypedSegment, Sendable, Equatable, Hashable {
+public struct BTX: TypedSegment {
     public static let segmentID = "BTX"
     public let fields: [Field]
 

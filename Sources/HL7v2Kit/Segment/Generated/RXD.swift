@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/RXD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Pharmacy/Treatment Dispense segment (HL7 v2.5.1).
-public struct RXD: TypedSegment, Sendable, Equatable, Hashable {
+public struct RXD: TypedSegment {
     public static let segmentID = "RXD"
     public let fields: [Field]
 

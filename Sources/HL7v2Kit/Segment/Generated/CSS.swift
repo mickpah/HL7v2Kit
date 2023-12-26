@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/CSS.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Clinical Study Data Schedule segment (HL7 v2.5.1).
-public struct CSS: TypedSegment, Sendable, Equatable, Hashable {
+public struct CSS: TypedSegment {
     public static let segmentID = "CSS"
     public let fields: [Field]
 

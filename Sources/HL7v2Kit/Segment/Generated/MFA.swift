@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/MFA.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Master File Acknowledgment segment (HL7 v2.5.1).
-public struct MFA: TypedSegment, Sendable, Equatable, Hashable {
+public struct MFA: TypedSegment {
     public static let segmentID = "MFA"
     public let fields: [Field]
 

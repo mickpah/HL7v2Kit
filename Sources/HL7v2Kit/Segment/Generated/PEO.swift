@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/PEO.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Product Experience Observation segment (HL7 v2.5.1).
-public struct PEO: TypedSegment, Sendable, Equatable, Hashable {
+public struct PEO: TypedSegment {
     public static let segmentID = "PEO"
     public let fields: [Field]
 

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/QRD.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Original-Style Query Definition segment (HL7 v2.5.1).
-public struct QRD: TypedSegment, Sendable, Equatable, Hashable {
+public struct QRD: TypedSegment {
     public static let segmentID = "QRD"
     public let fields: [Field]
 

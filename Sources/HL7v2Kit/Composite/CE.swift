@@ -6,8 +6,6 @@
 // struct doesn't own the data — the segment still owns the underlying
 // `Field`. v0.3-C2.
 
-import Foundation
-
 /// Coded Element (CE) composite.
 ///
 /// Exposed by typed segment accessors that wrap CE-typed fields. CE is

@@ -2,10 +2,8 @@
 // Source schema: Resources/schemas/v2.5.1/OM2.json
 // Regenerate via scripts/regenerate-typed-segments.sh
 
-import Foundation
-
 /// Numeric Observation segment (HL7 v2.5.1).
-public struct OM2: TypedSegment, Sendable, Equatable, Hashable {
+public struct OM2: TypedSegment {
     public static let segmentID = "OM2"
     public let fields: [Field]
 
