@@ -96,32 +96,21 @@ struct FieldRow {
 struct Run { let text: String; let start: Int; let end: Int }
 
 func runs(in line: String) -> [Run] {
-    var out: [Run] = []
-    var cur = ""
-    var startOff = 0
-    var i = 0
-    var spaceCount = 0
-    let chars = Array(line)
-    func flush(_ endOff: Int) {
-        if !cur.isEmpty { out.append(Run(text: cur, start: startOff, end: endOff)); cur = "" }
+    // Split on runs of 2+ spaces: a run is non-space chars optionally joined
+    // by SINGLE spaces (element-name words stay together). Offsets are
+    // Character distances, matching the old Array(line) indexing. Only
+    // observable delta vs the hand-rolled scanner: a line ending in exactly
+    // one trailing space no longer counts that space in the last run's
+    // `end` — unreachable in both consumers (columnKey reads `start` only;
+    // nameBoundary reads pre-NAME runs), and proven byte-identical against
+    // full-chapter extractions + the all-PDF depth audit at the R6 swap.
+    line.matches(of: #/[^ ](?: [^ ]|[^ ])*/#).map { m in
+        Run(
+            text: String(line[m.range]),
+            start: line.distance(from: line.startIndex, to: m.range.lowerBound),
+            end: line.distance(from: line.startIndex, to: m.range.upperBound)
+        )
     }
-    while i < chars.count {
-        let c = chars[i]
-        if c == " " {
-            spaceCount += 1
-            // split on runs of 2+ spaces (single spaces stay inside a run, e.g. element names)
-            if spaceCount >= 2 { flush(i - spaceCount + 1) }
-        } else {
-            if cur.isEmpty { startOff = i }
-            spaceCount = 0
-            cur.append(c)
-        }
-        i += 1
-    }
-    flush(chars.count)
-    // Merge runs separated by a single space that we accidentally split? No — single
-    // spaces never trigger a flush, so element-name words stay together already.
-    return out
 }
 
 // Assign a run to a pre-NAME column by the smallest distance between the run's START

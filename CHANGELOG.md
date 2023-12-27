@@ -135,6 +135,32 @@ EscapeSequenceTests / RoundTripTests pins.
 - Verification: suite **524 green**; test-name diff vs R4 = exactly the two C3 pins (added by
   the fix commit); build warning-free.
 
+### R6 — scripts + docs hygiene (remediation stage 6 of 10)
+
+F7 + F16 + F18 + doc-rot healing of `docs/design/remediation-plan.md`.
+
+- **F7:** `scripts/add-kernel-headers.sh` deleted — one-shot migration; all 9 kernel files
+  verified to carry the `// PORTABLE KERNEL` marker; the CONTRIBUTING aside now says to copy
+  the header from any existing kernel file.
+- **F16:** the extractor's hand-rolled offset tokenizer → Swift Regex (`#/[^ ](?: [^ ]|[^ ])*/#`).
+  The swap exposed a latent fidelity defect: the old scanner never appended single spaces to
+  run text (its own comment claimed otherwise), so multi-word cells consumed as `run.text`
+  were silently collapsed — v2.3 CH7's waveform `NA or MA` datatype cell extracted as `NAorMA`.
+  Harness: two full-chapter extractions (v2.5.1 CH03 **byte-identical**; v2.3 CH7 differing in
+  exactly that one now-PDF-verbatim row), the all-PDF depth audit **clean**, and zero schemas
+  carrying either form — the 1-row delta ships as a documented fidelity improvement.
+- **F18:** stale `Tests/Fixtures/README.md` ("none yet — sprint 3 work" beside 57 fixtures;
+  citing a script that never existed) replaced via `git mv` — the live FIXTURES.md registry
+  takes the name, and the referrers in CONTRIBUTING / the working notes / scan-fixtures-for-phi.sh
+  became correct with zero edits. The 3-step adding-a-fixture policy folded in with the real
+  pipeline named.
+- **Doc-rot healing beyond the enumerated set:** the working notes's "add a case to
+  SegmentRegistry.swift" step (registration has been fully codegen since ADR-015) and its
+  "anonymisation script does not yet exist" claim; the same stale claim in the root README,
+  CONTRIBUTING, and ROADMAP; six `anonymise-fixture.swift` / `FIXTURES.md` references in the
+  Spec (incl. the §10 heading). Residual stale-referrer grep: **0**.
+- Verification: suite **524 green**, test-name diff empty; PHI scan clean; depth audit clean.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

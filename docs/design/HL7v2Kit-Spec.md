@@ -118,7 +118,7 @@ HL7v2Kit/
 │       ├── au-pathology/            AU PIT-flavoured pathology samples
 │       ├── au-radiology/            AU radiology RIS samples
 │       ├── malformed/               Bad inputs for error tests
-│       └── FIXTURES.md              Provenance, licensing, anonymisation log per file
+│       └── README.md                Provenance, licensing, anonymisation log per file
 ├── docs/
 │   ├── DocC/
 │   │   └── HL7v2Kit.docc/
@@ -135,7 +135,7 @@ HL7v2Kit/
 │       ├── ADR-002-error-strategy.md
 │       └── ADR-003-z-segment-policy.md
 └── scripts/
-    ├── anonymise-fixture.swift      One-shot CLI: scrub PHI from a v2 file
+    ├── anonymise-fixture.sh         Wrapper CLI (HL7v2KitAnonymise target): scrub PHI
     ├── regenerate-dictionaries.sh   Pull HL7 v2 schemas, regenerate JSON
     └── regenerate-typed-segments.sh Run codegen → Sources/HL7v2Kit/Segment/Generated/
 ```
@@ -697,12 +697,12 @@ This is the single most valuable artefact in the package — more valuable than 
 
 **Sourcing rules:**
 
-- Every fixture is documented in `Tests/Fixtures/FIXTURES.md` with:
+- Every fixture is documented in `Tests/Fixtures/README.md` with:
   - Original source (synthetic, donated by a vendor, public sample data, etc.)
   - Licence (CC-BY-4.0 / Apache 2.0 / public domain)
   - Anonymisation log (what was scrubbed, by what rule)
   - Sender context (vendor, AU jurisdiction, message type)
-- No fixture contains real PHI. Period. The `scripts/anonymise-fixture.swift` tool enforces this — see §10.
+- No fixture contains real PHI. Period. The `scripts/anonymise-fixture.sh` tool enforces this — see §10.
 - Synthetic AU pathology fixtures generated from the AU Core test data published by HL7 Australia are the safest starting point.
 - Donated fixtures require a written waiver from the donor confirming the data is non-PHI synthetic / test data.
 
@@ -759,7 +759,7 @@ Performance regressions of >20% on these numbers fail the nightly build.
 
 ---
 
-## 10. Anonymisation tool (`scripts/anonymise-fixture.swift`)
+## 10. Anonymisation tool (`scripts/anonymise-fixture.sh`)
 
 Mandatory companion script. Refuses to add any fixture to the test corpus that hasn't been processed through it.
 
@@ -1036,7 +1036,7 @@ This maps to weeks 3 to 6 of the AU Core Workbench MVP plan. Each sprint is a we
 - `MessageBuilder`, fluent `msh(...)` helper.
 - `Message.serialize() -> Data`.
 - Round-trip property tests on all loaded fixtures.
-- All 48 fixtures sourced, anonymised, documented in FIXTURES.md.
+- All 48 fixtures sourced, anonymised, documented in Tests/Fixtures/README.md.
 - PHI-scan CI job.
 
 ### Sprint 4 (week 6) — typed segments + validation + docs

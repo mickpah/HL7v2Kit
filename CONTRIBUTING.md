@@ -4,7 +4,7 @@ Thanks for considering a contribution. This file covers what you need to know.
 
 ## Ground rules
 
-1. **No PHI in fixtures.** Ever. Every fixture is synthetic. The PHI scan job in CI (`scripts/scan-fixtures-for-phi.sh`) is a hard gate. The anonymisation script (`scripts/anonymise-fixture.swift`) is not yet implemented — until it lands, do not add fixtures that came from real-world sources.
+1. **No PHI in fixtures.** Ever. Every fixture is synthetic. The PHI scan job in CI (`scripts/scan-fixtures-for-phi.sh`) is a hard gate. Real-world-derived fixtures must go through `scripts/anonymise-fixture.sh` (the `HL7v2KitAnonymise` target) — the only approved path — and the output must still pass the PHI scan before commit.
 2. **Round-trip safety is sacred.** If a change breaks parse → serialise byte equality on any accepted fixture, the change is wrong, not the test.
 3. **Public API additions need a CHANGELOG entry.** Public API changes need a major-version bump (pre-1.0: a minor-version bump, with a clear note).
 4. **No runtime dependencies.** Swift Testing is bundled with the Swift 6 toolchain and is the only test dependency. The package's `Package.swift` `dependencies` array must remain empty.
@@ -38,7 +38,7 @@ The codegen-drift CI job fails any PR that edits a schema without committing the
 - All public types are `Sendable`.
 - Errors are enums with associated values, conforming to `Equatable` and `Sendable`.
 - No runtime dependencies (Foundation only).
-- The portable-kernel files under `Sources/HL7v2Kit/` carry a `// PORTABLE KERNEL` header (see `add-kernel-headers.sh`). Those files must stay Foundation-free and byte/character-level — `Data` only at the edges. See `docs/design/ADR-006-portable-core-boundary.md`.
+- The portable-kernel files under `Sources/HL7v2Kit/` carry a `// PORTABLE KERNEL` header (copy it from any existing kernel file when creating a new one). Those files must stay Foundation-free and byte/character-level — `Data` only at the edges. See `docs/design/ADR-006-portable-core-boundary.md`.
 
 ## Pull request checklist
 

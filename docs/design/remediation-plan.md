@@ -267,6 +267,19 @@ F33 → `.scalar("")` ×2. Refactor net −29 lines; suite 524 green; warning-fr
 **Done when:** `--verify` output byte-identical; repo-wide grep finds zero stale referrers;
 fixture-safety CI green.
 
+**Status: ✅ landed 2026-08-27.** F7 script deleted (9/9 markers verified present); F18 `git mv`
+executed with the 3-step policy folded into the promoted README. **F16 exposed a second latent
+defect**: the old scanner NEVER appended single spaces to run text (its own comment claimed
+otherwise) — element names survived only because they're re-sliced from the raw line by offsets,
+but multi-word cells consumed as `run.text` were silently collapsed (`NA or MA` → `NAorMA`). The
+Regex replacement is PDF-verbatim; harness across two chapter extractions (v2.5.1 CH03
+byte-identical; v2.3 CH7 differing in exactly ONE row — the fidelity fix) plus the all-PDF depth
+audit (clean) and zero schema/golden dependence on either form → the 1-row delta accepted as a
+documented fidelity improvement per the adjust-never-force rule. Doc-rot healing went beyond the
+enumerated referrers: root README, ROADMAP, CONTRIBUTING:7, and six Spec references (incl. the
+§10 tool-name heading) all still described `anonymise-fixture.swift` as unwritten or pointed at
+`FIXTURES.md` — all healed; residual-referrer grep = 0. Suite 524 green; PHI scan clean.
+
 ---
 
 ## Stage R7 — Hydration-helper sweep

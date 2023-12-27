@@ -71,7 +71,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Public push is now gated on M5** (full-coverage parity) per the owner's completeness bar — see M5. The `v1.0.0` tag stays on `private` until M5 is met. Remote target TBD (owner names host/repo).
 - **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local).
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
-- **Real-world fixture acquisition** — gated on the not-yet-written `scripts/anonymise-fixture.swift`. No PHI ever enters the repo (the working notes).
+- **Real-world fixture acquisition** — pipeline ready (`scripts/anonymise-fixture.sh` + the `HL7v2KitAnonymise` target); gated on IP review of the source material. No PHI ever enters the repo (the working notes).
 
 ### M5 — Full HL7 segment coverage across all versions 🟠 **(AU-priority tier active; v2.6/v2.8.2 deferred — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*

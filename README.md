@@ -98,7 +98,7 @@ The codegen-drift CI job fails any commit that edits a schema without committing
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). **No PHI ever enters the repository** — all fixtures must be PHI-free synthetic data. (The anonymisation helper `scripts/anonymise-fixture.swift` is not yet implemented; do not add real-world-derived fixtures until it exists.)
+See [CONTRIBUTING.md](CONTRIBUTING.md). **No PHI ever enters the repository** — all fixtures must be PHI-free synthetic data. (Real-world-derived fixtures must go through `scripts/anonymise-fixture.sh` and still pass the CI PHI scan.)
 
 ## Licence
 
