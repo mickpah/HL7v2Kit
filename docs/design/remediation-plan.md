@@ -291,9 +291,16 @@ delete the orphan `// MARK: - AL1` (`TypedSegmentTests.swift:157`).
 
 **Done when:** test-name diff **empty**; suite green at the same test count.
 
----
-
-## Stage R8 — Shared wire + fixture infrastructure
+**Status: ✅ landed 2026-08-27.** Honest scope correction: F5's 144 count conflated two shapes.
+The 103 TypedSegmentTests sites were the true verbatim pair — 97 swept (+2 plain Composite
+ones); 67 became `hydratedMessage` (tuple form) because their tests cross-check path access
+against typed accessors per the working notes's agreement requirement, 3 needed a `Data` overload for
+fixture wires. The 39 remaining CompositeTypeTests sites are a DIFFERENT shape —
+`#require(firstSegment(T.self)?.accessor)` with later `message` use — where an honest sweep
+saves ~zero lines; left untouched per never-force. Compiler-driven pass: sweep to segment-only
+first, let "cannot find 'message'" errors enumerate the tuple sites exactly (326 errors → 0).
+F32 orphan MARK deleted. Net −58 lines (−103 in suites, +45 support file); helpers attribute
+failures to the caller via `sourceLocation`. Test-name diff empty; 524 green; warning-free.
 
 **F4, F8, F25 · ~212 lines · P5.**
 

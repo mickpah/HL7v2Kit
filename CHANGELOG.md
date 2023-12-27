@@ -161,6 +161,25 @@ F7 + F16 + F18 + doc-rot healing of `docs/design/remediation-plan.md`.
   Spec (incl. the §10 heading). Residual stale-referrer grep: **0**.
 - Verification: suite **524 green**, test-name diff empty; PHI scan clean; depth audit clean.
 
+### R7 — hydration-helper sweep (remediation stage 7 of 10)
+
+F5 + F32; the first test-consolidation stage. Net −58 lines (−103 in the suites, +45 shared
+support file), test list unchanged.
+
+- 99 verbatim parse → `#require(firstSegment(…))` arrange pairs collapse to one line via new
+  shared helpers (`Tests/HL7v2KitTests/TestSupport.swift`): `hydrated(_:from:)` and, for the
+  67 tests that also cross-check path access against typed accessors, `hydratedMessage(_:from:)`
+  (+ a `Data` overload for 3 fixture-wire tests). Failures attribute to the calling test via a
+  `sourceLocation` pass-through.
+- Sweep method: mechanical conversion to segment-only form, then a compiler-driven pass —
+  "cannot find 'message'" errors enumerated the tuple-form sites exactly (326 → 0).
+- **Honest scope correction:** the audit's 144-pair count conflated two shapes. The 39
+  remaining CompositeTypeTests sites are `#require(firstSegment(T.self)?.accessor)` chains
+  with later `message` use — an honest sweep saves ~zero lines there; left untouched per the
+  never-force rule.
+- F32: the orphan `// MARK: - AL1` deleted.
+- Verification: suite **524 green**; test-name diff **empty**; zero warnings on full recompile.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

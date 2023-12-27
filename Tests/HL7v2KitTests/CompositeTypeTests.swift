@@ -24,8 +24,7 @@ struct CompositeTypeTests {
 
     @Test("XPN exposes familyName / givenName / middleName / suffix / prefix / nameTypeCode")
     func xpnNamedAccessors() throws {
-        let message = try Parser().parse(xpnRichWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: xpnRichWire)
         let name = try #require(pid.patientName)
         #expect(name.familyName == "LegalSurname")
         #expect(name.givenName == "Patrick")
@@ -151,8 +150,7 @@ struct CompositeTypeTests {
 
     @Test("XAD exposes streetAddress / otherDesignation / city / state / zip / country / addressType")
     func xadNamedAccessors() throws {
-        let message = try Parser().parse(xadRichWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: xadRichWire)
         let address = try #require(pid.patientAddress)
         #expect(address.streetAddress == "10 Main St")
         #expect(address.otherDesignation == "Apt 5")

@@ -17,8 +17,7 @@ struct TypedSegmentTests {
 
     @Test("Parser hydrates PID into a typed segment")
     func parserHydratesPID() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: wire)
         #expect(type(of: pid).segmentID == "PID")
     }
 
@@ -31,8 +30,7 @@ struct TypedSegmentTests {
         MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
         PID|1\r
         """
-        let message = try Parser().parse(shortPID)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: shortPID)
         #expect(pid.setID == "1")
         #expect(pid.dateTimeOfBirth == nil)       // PID-7, absent
         #expect(pid.patientName == nil)           // PID-5, absent
@@ -41,16 +39,14 @@ struct TypedSegmentTests {
 
     @Test("PID-1 (scalar SI) — path and typed accessor agree")
     func setIDMatchesPath() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         #expect(pid.setID == "1")
         #expect(pid.setID == message["PID-1"])
     }
 
     @Test("PID-3 (CX composite) — typed accessor exposes the ID via .id")
     func patientIdentifierListAgrees() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let identifier = try #require(pid.patientIdentifierList)
         #expect(identifier.id == "123456")
         #expect(identifier.id == message["PID-3.1"])
@@ -58,8 +54,7 @@ struct TypedSegmentTests {
 
     @Test("PID-5 (XPN composite) — typed accessor exposes family/given names")
     func patientNameAgrees() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let name = try #require(pid.patientName)
         #expect(name.familyName == "Smith")
         #expect(name.givenName == "John")
@@ -69,16 +64,14 @@ struct TypedSegmentTests {
 
     @Test("PID-7 (TS treated as scalar) — typed accessor returns String")
     func dobAgrees() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         #expect(pid.dateTimeOfBirth == "19800101")
         #expect(pid.dateTimeOfBirth == message["PID-7"])
     }
 
     @Test("PID-8 (IS scalar) — administrative sex")
     func sexAgrees() throws {
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         #expect(pid.administrativeSex == "M")
         #expect(pid.administrativeSex == message["PID-8"])
     }
@@ -107,16 +100,14 @@ struct TypedSegmentTests {
 
     @Test("MSH-1 / MSH-2 typed accessors expose the field-separator and encoding chars")
     func mshHeaderScalarsAgree() throws {
-        let message = try Parser().parse(wire)
-        let msh = try #require(message.firstSegment(MSH.self))
+        let msh = try hydrated(MSH.self, from: wire)
         #expect(msh.fieldSeparator == "|")
         #expect(msh.encodingCharacters == "^~\\&")
     }
 
     @Test("MSH-9 (composite MSG) — typed accessor returns the structured Field")
     func mshMessageTypeAgrees() throws {
-        let message = try Parser().parse(wire)
-        let msh = try #require(message.firstSegment(MSH.self))
+        let (message, msh) = try hydratedMessage(MSH.self, from: wire)
         let messageType = try #require(msh.messageType)
         #expect(messageType.messageCode == "ADT")
         #expect(messageType.triggerEvent == "A01")
@@ -126,8 +117,7 @@ struct TypedSegmentTests {
 
     @Test("MSH-10 (ST scalar) and MSH-11/12 (composites PT/VID) agree with path")
     func mshControlFieldsAgree() throws {
-        let message = try Parser().parse(wire)
-        let msh = try #require(message.firstSegment(MSH.self))
+        let (message, msh) = try hydratedMessage(MSH.self, from: wire)
         #expect(msh.messageControlID == "MSG00001")
         #expect(msh.messageControlID == message["MSH-10"])
         // PT and VID are now typed composites (v0.3-C4): named accessors
@@ -144,8 +134,7 @@ struct TypedSegmentTests {
         MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
         NTE|1|L|Patient is allergic to shellfish\r
         """
-        let message = try Parser().parse(nteWire)
-        let nte = try #require(message.firstSegment(NTE.self))
+        let (message, nte) = try hydratedMessage(NTE.self, from: nteWire)
         #expect(nte.setID == "1")
         #expect(nte.sourceOfComment == "L")
         #expect(nte.comment == "Patient is allergic to shellfish")
@@ -153,8 +142,6 @@ struct TypedSegmentTests {
         #expect(nte.sourceOfComment == message["NTE-2"])
         #expect(nte.comment == message["NTE-3"])
     }
-
-    // MARK: - AL1
 
     // MARK: - ORC (canary for R5: codegen-emitted SegmentRegistry)
 
@@ -167,8 +154,7 @@ struct TypedSegmentTests {
         MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
         ORC|NW\r
         """
-        let message = try Parser().parse(wire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: wire)
         #expect(orc.orderControl == "NW")
         #expect(orc.orderControl == message["ORC-1"])
     }
@@ -182,16 +168,14 @@ struct TypedSegmentTests {
 
     @Test("ORC-1 (ID) order control agrees with path")
     func orcOrderControlAgrees() throws {
-        let message = try Parser().parse(orcExtendedWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcExtendedWire)
         #expect(orc.orderControl == "NW")
         #expect(orc.orderControl == message["ORC-1"])
     }
 
     @Test("ORC-2/3 (composite EI) placer/filler order numbers")
     func orcOrderNumbersAgree() throws {
-        let message = try Parser().parse(orcExtendedWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcExtendedWire)
         let placer = try #require(orc.placerOrderNumber)
         let filler = try #require(orc.fillerOrderNumber)
         #expect(placer.entityIdentifier == "PLACER123")
@@ -202,23 +186,20 @@ struct TypedSegmentTests {
 
     @Test("ORC-5/6 (ID scalars) order status + response flag")
     func orcScalarFlagsAgree() throws {
-        let message = try Parser().parse(orcExtendedWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let orc = try hydrated(ORC.self, from: orcExtendedWire)
         #expect(orc.orderStatus == "IP")
         #expect(orc.responseFlag == "E")
     }
 
     @Test("ORC-9 (TS scalar) date/time of transaction")
     func orcTransactionDateAgrees() throws {
-        let message = try Parser().parse(orcExtendedWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let orc = try hydrated(ORC.self, from: orcExtendedWire)
         #expect(orc.dateTimeOfTransaction == "20240101120000")
     }
 
     @Test("ORC-12 (composite XCN repeats) ordering provider")
     func orcOrderingProviderAgrees() throws {
-        let message = try Parser().parse(orcExtendedWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let orc = try hydrated(ORC.self, from: orcExtendedWire)
         let provider = try #require(orc.orderingProvider)
         // Components: empty^family^given. We exercise XCN-2 = family.
         #expect(provider.familyName == "Williams")
@@ -251,8 +232,7 @@ struct TypedSegmentTests {
 
     @Test("ORC-20 (CE composite) advanced beneficiary notice code")
     func orcAdvancedBeneficiaryNoticeCodeAgrees() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcFringeWire)
         let abn = try #require(orc.advancedBeneficiaryNoticeCode)
         #expect(abn.identifier == "ABN1")
         #expect(abn.identifier == message["ORC-20.1"])
@@ -260,8 +240,7 @@ struct TypedSegmentTests {
 
     @Test("ORC-21 (XON) ordering facility name + ORC-22 (XAD) facility address")
     func orcOrderingFacilityNameAndAddressAgree() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcFringeWire)
         let name = try #require(orc.orderingFacilityName)        // XON typed (v0.3-C4)
         let addr = try #require(orc.orderingFacilityAddress)     // XAD typed
         #expect(name.organizationName == "FacilityName")
@@ -272,16 +251,14 @@ struct TypedSegmentTests {
 
     @Test("ORC-27 (TS scalar) filler's expected availability date/time")
     func orcExpectedAvailabilityAgrees() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcFringeWire)
         #expect(orc.fillersExpectedAvailabilityDateTime == "20240301140000")
         #expect(orc.fillersExpectedAvailabilityDateTime == message["ORC-27"])
     }
 
     @Test("ORC-28 (CWE) confidentiality code + ORC-29 (CWE) order type")
     func orcConfidentialityAndOrderTypeAgree() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcFringeWire)
         let confidentiality = try #require(orc.confidentialityCode)
         let orderType = try #require(orc.orderType)
         #expect(confidentiality.identifier == "R")
@@ -294,8 +271,7 @@ struct TypedSegmentTests {
 
     @Test("ORC-30 (CNE composite) enterer authorization mode")
     func orcEntererAuthorizationModeAgrees() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let orc = try hydrated(ORC.self, from: orcFringeWire)
         let mode = try #require(orc.entererAuthorizationMode)
         #expect(mode.identifier == "EL")
         #expect(mode.text == "Electronic")
@@ -303,8 +279,7 @@ struct TypedSegmentTests {
 
     @Test("ORC-31 (CWE) parent universal service identifier")
     func orcParentUniversalServiceIdentifierAgrees() throws {
-        let message = try Parser().parse(orcFringeWire)
-        let orc = try #require(message.firstSegment(ORC.self))
+        let (message, orc) = try hydratedMessage(ORC.self, from: orcFringeWire)
         let parent = try #require(orc.parentUniversalServiceIdentifier)
         #expect(parent.identifier == "PAR")
         #expect(parent.identifier == message["ORC-31.1"])
@@ -326,15 +301,13 @@ struct TypedSegmentTests {
 
     @Test("OBX hydrates as .typed")
     func obxHydrates() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let obx = try hydrated(OBX.self, from: obxWire)
         #expect(type(of: obx).segmentID == "OBX")
     }
 
     @Test("OBX-1 (SI) and OBX-2 (ID) scalars agree with path")
     func obxIdentifyingScalarsAgree() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let (message, obx) = try hydratedMessage(OBX.self, from: obxWire)
         #expect(obx.setID == "1")
         #expect(obx.setID == message["OBX-1"])
         #expect(obx.valueType == "NM")
@@ -343,8 +316,7 @@ struct TypedSegmentTests {
 
     @Test("OBX-3 (composite CE) observation identifier")
     func obxObservationIdentifierAgrees() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let (message, obx) = try hydratedMessage(OBX.self, from: obxWire)
         let identifier = try #require(obx.observationIdentifier)
         #expect(identifier.identifier == "GLU")
         #expect(identifier.text == "Glucose")
@@ -354,16 +326,14 @@ struct TypedSegmentTests {
 
     @Test("OBX-5 (ST scalar) observation value")
     func obxObservationValueAgrees() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let (message, obx) = try hydratedMessage(OBX.self, from: obxWire)
         #expect(obx.observationValue == "5.2")
         #expect(obx.observationValue == message["OBX-5"])
     }
 
     @Test("OBX-6 (composite CE) units")
     func obxUnitsAgree() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let obx = try hydrated(OBX.self, from: obxWire)
         let units = try #require(obx.units)
         #expect(units.identifier == "mmol/L")
         #expect(units.nameOfCodingSystem == "UCUM")
@@ -371,24 +341,21 @@ struct TypedSegmentTests {
 
     @Test("OBX-7 (ST) reference range and OBX-8 (IS) abnormal flags scalars")
     func obxResultMetaScalarsAgree() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let obx = try hydrated(OBX.self, from: obxWire)
         #expect(obx.referencesRange == "3.9-5.5")
         #expect(obx.abnormalFlags == "N")
     }
 
     @Test("OBX-11 (ID) observation result status")
     func obxResultStatusAgrees() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let (message, obx) = try hydratedMessage(OBX.self, from: obxWire)
         #expect(obx.observationResultStatus == "F")
         #expect(obx.observationResultStatus == message["OBX-11"])
     }
 
     @Test("OBX-14 (TS) date/time of the observation")
     func obxObservationTimestampAgrees() throws {
-        let message = try Parser().parse(obxWire)
-        let obx = try #require(message.firstSegment(OBX.self))
+        let obx = try hydrated(OBX.self, from: obxWire)
         #expect(obx.dateTimeOfTheObservation == "20240101130000")
     }
 
@@ -420,23 +387,20 @@ struct TypedSegmentTests {
 
     @Test("OBR hydrates as .typed")
     func obrHydrates() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let obr = try hydrated(OBR.self, from: obrWire)
         #expect(type(of: obr).segmentID == "OBR")
     }
 
     @Test("OBR-1 (SI scalar) set ID agrees with path")
     func obrSetIDAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         #expect(obr.setID == "1")
         #expect(obr.setID == message["OBR-1"])
     }
 
     @Test("OBR-2/3 (composite EI) placer/filler order numbers")
     func obrOrderNumbersAgree() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         let placer = try #require(obr.placerOrderNumber)
         let filler = try #require(obr.fillerOrderNumber)
         #expect(placer.entityIdentifier == "PLACER123")
@@ -447,8 +411,7 @@ struct TypedSegmentTests {
 
     @Test("OBR-4 (composite CE) universal service identifier")
     func obrUniversalServiceIdentifierAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         let service = try #require(obr.universalServiceIdentifier)
         #expect(service.identifier == "GLU")
         #expect(service.text == "Glucose")
@@ -458,8 +421,7 @@ struct TypedSegmentTests {
 
     @Test("OBR-7/8 (TS scalars) observation start + end timestamps")
     func obrObservationTimestampsAgree() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         #expect(obr.observationDateTime == "20240101120000")
         #expect(obr.observationEndDateTime == "20240101130000")
         #expect(obr.observationDateTime == message["OBR-7"])
@@ -467,23 +429,20 @@ struct TypedSegmentTests {
 
     @Test("OBR-11 (ID scalar) specimen action code")
     func obrSpecimenActionCodeAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         #expect(obr.specimenActionCode == "L")
         #expect(obr.specimenActionCode == message["OBR-11"])
     }
 
     @Test("OBR-14 (TS scalar) specimen received timestamp")
     func obrSpecimenReceivedAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let obr = try hydrated(OBR.self, from: obrWire)
         #expect(obr.specimenReceivedDateTime == "20240101115000")
     }
 
     @Test("OBR-16 (composite XCN repeats) ordering provider")
     func obrOrderingProviderAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         let provider = try #require(obr.orderingProvider)
         // XCN layout: ID^family^given. XCN-1 (id) is empty in this
         // fixture; XCN-2 (familyName) is "Williams".
@@ -493,23 +452,20 @@ struct TypedSegmentTests {
 
     @Test("OBR-20/21 (ST scalars) placer/filler text fields")
     func obrPlacerFillerFieldsAgree() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let obr = try hydrated(OBR.self, from: obrWire)
         #expect(obr.fillerField1 == "PLACER1")
         #expect(obr.fillerField2 == "FILLER1")
     }
 
     @Test("OBR-22 (TS scalar) results report status change date/time")
     func obrResultsReportStatusChangeAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let obr = try hydrated(OBR.self, from: obrWire)
         #expect(obr.resultsReportStatusChangeDateTime == "20240101140000")
     }
 
     @Test("OBR-25 (ID scalar) result status")
     func obrResultStatusAgrees() throws {
-        let message = try Parser().parse(obrWire)
-        let obr = try #require(message.firstSegment(OBR.self))
+        let (message, obr) = try hydratedMessage(OBR.self, from: obrWire)
         #expect(obr.resultStatus == "F")
         #expect(obr.resultStatus == message["OBR-25"])
     }
@@ -529,8 +485,7 @@ struct TypedSegmentTests {
         OBR|1|PLACER123^HOSP|FILLER456^LAB|GLU^Glucose^L\r\
         OBX|1|NM|GLU^Glucose^L||5.2|mmol/L||N|||F\r
         """
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let obr = try #require(message.firstSegment(OBR.self))
         let obx = try #require(message.firstSegment(OBX.self))
         #expect(pid.setID == "1")
@@ -585,8 +540,7 @@ struct TypedSegmentTests {
 
     @Test("PID-13 (XTN composite) home phone number")
     func pidHomePhoneAgrees() throws {
-        let message = try Parser().parse(extendedPIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: extendedPIDWire)
         let phone = try #require(pid.phoneNumberHome)
         #expect(phone.telephoneNumber == "(02)555-1234")
         #expect(message["PID-13.1"] == "(02)555-1234")
@@ -594,8 +548,7 @@ struct TypedSegmentTests {
 
     @Test("PID-15/16/17 (CE composites) language / marital / religion")
     func pidCEComposites() throws {
-        let message = try Parser().parse(extendedPIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: extendedPIDWire)
         let language = try #require(pid.primaryLanguage)
         let marital = try #require(pid.maritalStatus)
         let religion = try #require(pid.religion)
@@ -606,8 +559,7 @@ struct TypedSegmentTests {
 
     @Test("PID-18 (CX) patient account number")
     func pidAccountNumberAgrees() throws {
-        let message = try Parser().parse(extendedPIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: extendedPIDWire)
         let account = try #require(pid.patientAccountNumber)
         #expect(account.id == "ACC12345")
         #expect(account.id == message["PID-18.1"])
@@ -615,16 +567,14 @@ struct TypedSegmentTests {
 
     @Test("PID-23 (ST) birth place")
     func pidBirthPlaceAgrees() throws {
-        let message = try Parser().parse(extendedPIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: extendedPIDWire)
         #expect(pid.birthPlace == "Sydney")
         #expect(pid.birthPlace == message["PID-23"])
     }
 
     @Test("PID-29/30 (TS + ID scalars) death date and indicator")
     func pidDeathFieldsAgree() throws {
-        let message = try Parser().parse(extendedPIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let pid = try hydrated(PID.self, from: extendedPIDWire)
         #expect(pid.patientDeathDateAndTime == "20231215120000")
         #expect(pid.patientDeathIndicator == "Y")
     }
@@ -657,32 +607,28 @@ struct TypedSegmentTests {
 
     @Test("PID-31 (ID scalar) identity unknown indicator")
     func pidIdentityUnknownIndicatorAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         #expect(pid.identityUnknownIndicator == "N")
         #expect(pid.identityUnknownIndicator == message["PID-31"])
     }
 
     @Test("PID-32 (IS scalar) identity reliability code")
     func pidIdentityReliabilityCodeAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         #expect(pid.identityReliabilityCode == "US")
         #expect(pid.identityReliabilityCode == message["PID-32"])
     }
 
     @Test("PID-33 (TS scalar) last update date/time")
     func pidLastUpdateDateTimeAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         #expect(pid.lastUpdateDateTime == "20240301080000")
         #expect(pid.lastUpdateDateTime == message["PID-33"])
     }
 
     @Test("PID-34 (HD composite) last update facility")
     func pidLastUpdateFacilityAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         let facility = try #require(pid.lastUpdateFacility)
         #expect(facility.namespaceID == "HOSP")
         #expect(facility.universalIDType == "ISO")
@@ -692,8 +638,7 @@ struct TypedSegmentTests {
 
     @Test("PID-35 (CE composite) species code")
     func pidSpeciesCodeAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         let species = try #require(pid.speciesCode)
         #expect(species.identifier == "L1")
         #expect(species.text == "Human")
@@ -703,8 +648,7 @@ struct TypedSegmentTests {
 
     @Test("PID-39 (CWE composite) tribal citizenship")
     func pidTribalCitizenshipAgrees() throws {
-        let message = try Parser().parse(fringePIDWire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: fringePIDWire)
         let citizenship = try #require(pid.tribalCitizenship)
         #expect(citizenship.identifier == "100")
         #expect(citizenship.text == "Australian")
@@ -732,15 +676,13 @@ struct TypedSegmentTests {
 
     @Test("NK1 hydrates as .typed")
     func nk1Hydrates() throws {
-        let message = try Parser().parse(nk1Wire)
-        let nk1 = try #require(message.firstSegment(NK1.self))
+        let nk1 = try hydrated(NK1.self, from: nk1Wire)
         #expect(type(of: nk1).segmentID == "NK1")
     }
 
     @Test("NK1-1 (SI) set ID and NK1-10 (ST) job title scalars")
     func nk1ScalarsAgree() throws {
-        let message = try Parser().parse(nk1Wire)
-        let nk1 = try #require(message.firstSegment(NK1.self))
+        let (message, nk1) = try hydratedMessage(NK1.self, from: nk1Wire)
         #expect(nk1.setID == "1")
         #expect(nk1.nextOfKinJobTitle == "Manager")
         #expect(nk1.setID == message["NK1-1"])
@@ -749,8 +691,7 @@ struct TypedSegmentTests {
 
     @Test("NK1-2 (XPN) name and NK1-3 (CE) relationship composites")
     func nk1NameAndRelationshipAgree() throws {
-        let message = try Parser().parse(nk1Wire)
-        let nk1 = try #require(message.firstSegment(NK1.self))
+        let (message, nk1) = try hydratedMessage(NK1.self, from: nk1Wire)
         let name = try #require(nk1.name)                        // XPN typed
         let relationship = try #require(nk1.relationship)        // CE typed (v0.3-C2)
         #expect(name.familyName == "Smith")
@@ -762,8 +703,7 @@ struct TypedSegmentTests {
 
     @Test("NK1-5/6 (XTN composites) home + business phone")
     func nk1PhonesAgree() throws {
-        let message = try Parser().parse(nk1Wire)
-        let nk1 = try #require(message.firstSegment(NK1.self))
+        let nk1 = try hydrated(NK1.self, from: nk1Wire)
         let home = try #require(nk1.phoneNumber)
         let business = try #require(nk1.businessPhoneNumber)
         #expect(home.telephoneNumber == "(02)555-1234")
@@ -794,15 +734,13 @@ struct TypedSegmentTests {
 
     @Test("PV1 hydrates as .typed")
     func pv1Hydrates() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let pv1 = try hydrated(PV1.self, from: pv1Wire)
         #expect(type(of: pv1).segmentID == "PV1")
     }
 
     @Test("PV1-1/2/4 (SI + IS scalars) set ID, patient class, admit type")
     func pv1ClassAndAdmitAgree() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let (message, pv1) = try hydratedMessage(PV1.self, from: pv1Wire)
         #expect(pv1.setID == "1")
         #expect(pv1.patientClass == "I")
         #expect(pv1.admissionType == "R")
@@ -811,8 +749,7 @@ struct TypedSegmentTests {
 
     @Test("PV1-3 (PL composite) assigned patient location")
     func pv1LocationAgrees() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let (message, pv1) = try hydratedMessage(PV1.self, from: pv1Wire)
         let location = try #require(pv1.assignedPatientLocation)
         #expect(location.pointOfCare == "WARD1")
         #expect(location.room == "ROOM2")
@@ -822,8 +759,7 @@ struct TypedSegmentTests {
 
     @Test("PV1-7 (XCN composite repeats) attending doctor")
     func pv1AttendingDoctorAgrees() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let (message, pv1) = try hydratedMessage(PV1.self, from: pv1Wire)
         let doctor = try #require(pv1.attendingDoctor)
         #expect(doctor.idNumber == "DR123")
         #expect(doctor.familyName == "Jones")
@@ -832,8 +768,7 @@ struct TypedSegmentTests {
 
     @Test("PV1-10/14/16 (IS scalars) hospital service, admit source, VIP indicator")
     func pv1AdminScalarsAgree() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let pv1 = try hydrated(PV1.self, from: pv1Wire)
         #expect(pv1.hospitalService == "MED")
         #expect(pv1.admitSource == "7")
         #expect(pv1.vipIndicator == "N")
@@ -841,8 +776,7 @@ struct TypedSegmentTests {
 
     @Test("PV1-19 (CX composite) visit number")
     func pv1VisitNumberAgrees() throws {
-        let message = try Parser().parse(pv1Wire)
-        let pv1 = try #require(message.firstSegment(PV1.self))
+        let (message, pv1) = try hydratedMessage(PV1.self, from: pv1Wire)
         let visit = try #require(pv1.visitNumber)
         #expect(visit.id == "V001")
         #expect(visit.id == message["PV1-19.1"])
@@ -865,8 +799,7 @@ struct TypedSegmentTests {
         PV1|1|I|WARD1^ROOM2^BED3|R|||DR123^Jones^Mary|||MED\r\
         NK1|1|Smith^Mary|SPO^Spouse|10 Main St\r
         """
-        let message = try Parser().parse(wire)
-        let pid = try #require(message.firstSegment(PID.self))
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let pv1 = try #require(message.firstSegment(PV1.self))
         let nk1 = try #require(message.firstSegment(NK1.self))
         #expect(pid.administrativeSex == "M")
@@ -882,8 +815,7 @@ struct TypedSegmentTests {
         MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
         AL1|1|DA|PENICILLIN^Penicillin^L|SV|Hives\r
         """
-        let message = try Parser().parse(al1Wire)
-        let al1 = try #require(message.firstSegment(AL1.self))
+        let (message, al1) = try hydratedMessage(AL1.self, from: al1Wire)
         #expect(al1.setID == "1")
         let allergen = try #require(al1.allergenCodeMnemonicDescription)
         #expect(allergen.identifier == "PENICILLIN")
@@ -903,15 +835,13 @@ struct TypedSegmentTests {
 
     @Test("EVN hydrates as .typed")
     func evnHydrates() throws {
-        let message = try Parser().parse(evnWire)
-        let evn = try #require(message.firstSegment(EVN.self))
+        let evn = try hydrated(EVN.self, from: evnWire)
         #expect(type(of: evn).segmentID == "EVN")
     }
 
     @Test("EVN-1 (ID) event type code + EVN-2 (TS) recorded date/time scalars")
     func evnScalarsAgree() throws {
-        let message = try Parser().parse(evnWire)
-        let evn = try #require(message.firstSegment(EVN.self))
+        let (message, evn) = try hydratedMessage(EVN.self, from: evnWire)
         #expect(evn.eventTypeCode == "A01")
         #expect(evn.recordedDateTime == "20240320101500")
         #expect(evn.eventTypeCode == message["EVN-1"])
@@ -920,8 +850,7 @@ struct TypedSegmentTests {
 
     @Test("EVN-5 (XCN composite) operator ID + EVN-7 (HD composite) event facility")
     func evnCompositesAgree() throws {
-        let message = try Parser().parse(evnWire)
-        let evn = try #require(message.firstSegment(EVN.self))
+        let (message, evn) = try hydratedMessage(EVN.self, from: evnWire)
         let operatorID = try #require(evn.operatorID)
         let facility = try #require(evn.eventFacility)
         #expect(operatorID.idNumber == "DOC123")
@@ -948,15 +877,13 @@ struct TypedSegmentTests {
 
     @Test("MSA hydrates as .typed")
     func msaHydrates() throws {
-        let message = try Parser().parse(msaWire)
-        let msa = try #require(message.firstSegment(MSA.self))
+        let msa = try hydrated(MSA.self, from: msaWire)
         #expect(type(of: msa).segmentID == "MSA")
     }
 
     @Test("MSA-1/2/3 (ID + ST scalars) ack code, control ID, text message")
     func msaScalarsAgree() throws {
-        let message = try Parser().parse(msaWire)
-        let msa = try #require(message.firstSegment(MSA.self))
+        let (message, msa) = try hydratedMessage(MSA.self, from: msaWire)
         #expect(msa.acknowledgmentCode == "AA")
         #expect(msa.messageControlID == "MSG10001")
         #expect(msa.textMessage == "Message accepted")
@@ -982,15 +909,13 @@ struct TypedSegmentTests {
 
     @Test("ERR hydrates as .typed")
     func errHydrates() throws {
-        let message = try Parser().parse(errWire)
-        let err = try #require(message.firstSegment(ERR.self))
+        let err = try hydrated(ERR.self, from: errWire)
         #expect(type(of: err).segmentID == "ERR")
     }
 
     @Test("ERR-3 (CWE composite) HL7 error code + ERR-4 (ID) severity scalar")
     func errCoreFieldsAgree() throws {
-        let message = try Parser().parse(errWire)
-        let err = try #require(message.firstSegment(ERR.self))
+        let (message, err) = try hydratedMessage(ERR.self, from: errWire)
         let hl7Code = try #require(err.hl7ErrorCode)
         #expect(hl7Code.identifier == "101")
         #expect(hl7Code.text == "Required field missing")
@@ -1017,8 +942,7 @@ struct TypedSegmentTests {
             .deletingLastPathComponent()
             .appendingPathComponent("Fixtures/ack_application_accept.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
-        let message = try Parser().parse(bytes)
-        let msa = try #require(message.firstSegment(MSA.self))
+        let (message, msa) = try hydratedMessage(MSA.self, from: bytes)
         #expect(msa.acknowledgmentCode == "AA")
         // Fixture must still round-trip byte-perfectly post-T1.
         let rebuilt = message.serialize()
@@ -1032,8 +956,7 @@ struct TypedSegmentTests {
             .deletingLastPathComponent()
             .appendingPathComponent("Fixtures/ack_application_error.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
-        let message = try Parser().parse(bytes)
-        let msa = try #require(message.firstSegment(MSA.self))
+        let (message, msa) = try hydratedMessage(MSA.self, from: bytes)
         let err = try #require(message.firstSegment(ERR.self))
         #expect(msa.acknowledgmentCode == "AE")
         let hl7Code = try #require(err.hl7ErrorCode)
@@ -1054,15 +977,13 @@ struct TypedSegmentTests {
 
     @Test("PD1 hydrates as .typed")
     func pd1Hydrates() throws {
-        let message = try Parser().parse(pd1Wire)
-        let pd1 = try #require(message.firstSegment(PD1.self))
+        let pd1 = try hydrated(PD1.self, from: pd1Wire)
         #expect(type(of: pd1).segmentID == "PD1")
     }
 
     @Test("PD1-3 (XON composite) patient primary facility + PD1-5 (IS) student indicator")
     func pd1PrimaryFacilityAndStudentAgree() throws {
-        let message = try Parser().parse(pd1Wire)
-        let pd1 = try #require(message.firstSegment(PD1.self))
+        let (message, pd1) = try hydratedMessage(PD1.self, from: pd1Wire)
         let facility = try #require(pd1.patientPrimaryFacility)
         #expect(facility.organizationName == "GOOD_HEALTH")
         #expect(facility.organizationName == message["PD1-3.1"])
@@ -1072,8 +993,7 @@ struct TypedSegmentTests {
 
     @Test("PD1-11 (CE composite) publicity code + PD1-12 (ID) protection indicator")
     func pd1PublicityAndProtectionAgree() throws {
-        let message = try Parser().parse(pd1Wire)
-        let pd1 = try #require(message.firstSegment(PD1.self))
+        let pd1 = try hydrated(PD1.self, from: pd1Wire)
         let publicity = try #require(pd1.publicityCode)
         #expect(publicity.identifier == "N")
         #expect(publicity.text == "Normal")
@@ -1101,15 +1021,13 @@ struct TypedSegmentTests {
 
     @Test("DG1 hydrates as .typed")
     func dg1Hydrates() throws {
-        let message = try Parser().parse(dg1Wire)
-        let dg1 = try #require(message.firstSegment(DG1.self))
+        let dg1 = try hydrated(DG1.self, from: dg1Wire)
         #expect(type(of: dg1).segmentID == "DG1")
     }
 
     @Test("DG1-1 (SI) set ID + DG1-6 (IS) diagnosis type scalars")
     func dg1ScalarsAgree() throws {
-        let message = try Parser().parse(dg1Wire)
-        let dg1 = try #require(message.firstSegment(DG1.self))
+        let (message, dg1) = try hydratedMessage(DG1.self, from: dg1Wire)
         #expect(dg1.setID == "1")
         #expect(dg1.diagnosisType == "A")
         #expect(dg1.setID == message["DG1-1"])
@@ -1118,8 +1036,7 @@ struct TypedSegmentTests {
 
     @Test("DG1-3 (CE composite) diagnosis code + DG1-5 (TS) diagnosis date")
     func dg1DiagnosisCodeAndDateAgree() throws {
-        let message = try Parser().parse(dg1Wire)
-        let dg1 = try #require(message.firstSegment(DG1.self))
+        let (message, dg1) = try hydratedMessage(DG1.self, from: dg1Wire)
         let code = try #require(dg1.diagnosisCode)
         #expect(code.identifier == "I10")
         #expect(code.text == "Essential hypertension")
@@ -1130,8 +1047,7 @@ struct TypedSegmentTests {
 
     @Test("DG1-15 (ID) diagnosis priority + DG1-16 (XCN composite) diagnosing clinician")
     func dg1PriorityAndClinicianAgree() throws {
-        let message = try Parser().parse(dg1Wire)
-        let dg1 = try #require(message.firstSegment(DG1.self))
+        let (message, dg1) = try hydratedMessage(DG1.self, from: dg1Wire)
         #expect(dg1.diagnosisPriority == "1")
         let clinician = try #require(dg1.diagnosingClinician)
         #expect(clinician.idNumber == "DR123")
@@ -1157,15 +1073,13 @@ struct TypedSegmentTests {
 
     @Test("IN1 hydrates as .typed")
     func in1Hydrates() throws {
-        let message = try Parser().parse(in1Wire)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let in1 = try hydrated(IN1.self, from: in1Wire)
         #expect(type(of: in1).segmentID == "IN1")
     }
 
     @Test("IN1-1 (SI) set ID + IN1-2 (CE composite) insurance plan ID")
     func in1IdentityFieldsAgree() throws {
-        let message = try Parser().parse(in1Wire)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let (message, in1) = try hydratedMessage(IN1.self, from: in1Wire)
         #expect(in1.setID == "1")
         let plan = try #require(in1.insurancePlanID)
         #expect(plan.identifier == "HBF")
@@ -1175,8 +1089,7 @@ struct TypedSegmentTests {
 
     @Test("IN1-3 (CX composite) insurance company ID + IN1-4 (XON) company name")
     func in1CompanyAgree() throws {
-        let message = try Parser().parse(in1Wire)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let (message, in1) = try hydratedMessage(IN1.self, from: in1Wire)
         let companyID = try #require(in1.insuranceCompanyID)
         let companyName = try #require(in1.insuranceCompanyName)
         #expect(companyID.id == "MED001")
@@ -1187,8 +1100,7 @@ struct TypedSegmentTests {
 
     @Test("IN1-5 (XAD) company address + IN1-7 (XTN) phone")
     func in1AddressAndPhoneAgree() throws {
-        let message = try Parser().parse(in1Wire)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let in1 = try hydrated(IN1.self, from: in1Wire)
         let address = try #require(in1.insuranceCompanyAddress)
         let phone = try #require(in1.insuranceCoPhoneNumber)
         #expect(address.streetAddress == "PO BOX 9999")
@@ -1198,8 +1110,7 @@ struct TypedSegmentTests {
 
     @Test("IN1-8 (ST) group number + IN1-12 (DT) plan effective date")
     func in1GroupAndDateAgree() throws {
-        let message = try Parser().parse(in1Wire)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let in1 = try hydrated(IN1.self, from: in1Wire)
         #expect(in1.groupNumber == "GRP123")
         #expect(in1.planEffectiveDate == "20240101")
         #expect(in1.planExpirationDate == "20241231")
@@ -1219,8 +1130,7 @@ struct TypedSegmentTests {
             .deletingLastPathComponent()
             .appendingPathComponent("Fixtures/adt_a01_with_insurance.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
-        let message = try Parser().parse(bytes)
-        let in1 = try #require(message.firstSegment(IN1.self))
+        let (message, in1) = try hydratedMessage(IN1.self, from: bytes)
         #expect(in1.setID == "1")
         let plan = try #require(in1.insurancePlanID)
         #expect(plan.identifier == "HBF")
@@ -1257,8 +1167,7 @@ struct TypedSegmentTests {
         let nk1 = "NK1|1||SPO^Spouse" + String(repeating: "|", count: 34) + "123-45-6789"
         let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
             + "PID|1||X^^^F^MR||Doe^Jane\r" + nk1 + "\r"
-        let message = try Parser().parse(wire)
-        let seg = try #require(message.firstSegment(NK1.self))
+        let (message, seg) = try hydratedMessage(NK1.self, from: wire)
         #expect(seg.setID == "1")
         #expect(seg.contactPersonSocialSecurityNumber == "123-45-6789")   // NK1-37 (new)
         #expect(seg.contactPersonSocialSecurityNumber == message["NK1-37"])
@@ -1334,9 +1243,7 @@ struct TypedSegmentTests {
             + "DB1|1\r"                                    // DB1-1 Set ID (SI)
             + "GT1|1\r"                                    // GT1-1 Set ID (SI)
             + "IN2\r" + "IN3|1\r"
-        let message = try Parser().parse(wire)
-
-        let pv2 = try #require(message.firstSegment(PV2.self))
+        let (message, pv2) = try hydratedMessage(PV2.self, from: wire)
         #expect(pv2.visitDescription == "Annual checkup")
         #expect(pv2.visitDescription == message["PV2-12"])
 
@@ -1382,8 +1289,7 @@ struct TypedSegmentTests {
             + "SCH|A^^^F|B^^^F\r" + "RGS|1\r"
             + "AIS|1\r" + "AIG|1\r" + "AIL|1\r" + "AIP|1\r" + "APR\r" + "ARQ|A^^^F\r"
             + "SPM|1\r" + "ROL|R1^^^F|AD\r" + "BPO|1\r" + "BPX|1\r" + "BTX|1\r" + "RXA|0|1\r"
-        let message = try Parser().parse(wire)
-        let rgs = try #require(message.firstSegment(RGS.self))
+        let (message, rgs) = try hydratedMessage(RGS.self, from: wire)
         #expect(rgs.setIdRgs == "1")
         #expect(rgs.setIdRgs == message["RGS-1"])
         for present in [message.firstSegment(SPM.self) != nil, message.firstSegment(ROL.self) != nil,
@@ -1425,8 +1331,7 @@ struct TypedSegmentTests {
             + "MFI|CDM^^HL70175\r" + "MFE|MAD\r" + "MFA|MAA\r"
             + "OM1|1\r" + "OM2|1\r" + "OM3|1\r" + "OM4|1\r" + "OM5|1\r" + "OM6|1\r" + "OM7|1\r"
             + "RF1|P\r" + "AUT|A^^HL7\r" + "PRD|RP^^HL7\r" + "CTD|CN^^HL7\r"
-        let message = try Parser().parse(wire)
-        let mfi = try #require(message.firstSegment(MFI.self))
+        let (message, mfi) = try hydratedMessage(MFI.self, from: wire)
         #expect(mfi.masterFileIdentifier != nil)              // MFI-1 (CE) hydrates via typed accessor
         for present in [message.firstSegment(MFE.self) != nil, message.firstSegment(MFA.self) != nil,
                         message.firstSegment(OM1.self) != nil, message.firstSegment(OM7.self) != nil,
@@ -1457,9 +1362,7 @@ struct TypedSegmentTests {
             + "TQ1|1\r"                                     // TQ1-1 Set ID (SI)
             + "RXR|PO\r"                                    // RXR-1 Route (CE) — component .id = "PO"
             + "TQ2\r" + "RXO\r" + "RXC\r" + "RXE\r" + "RXD\r" + "RXG\r"
-        let message = try Parser().parse(wire)
-
-        let tq1 = try #require(message.firstSegment(TQ1.self))
+        let (message, tq1) = try hydratedMessage(TQ1.self, from: wire)
         #expect(tq1.setIdTq1 == "1")
         #expect(tq1.setIdTq1 == message["TQ1-1"])
 
@@ -1526,8 +1429,7 @@ struct TypedSegmentTests {
             + "QRD|20240101120000\r" + "QRF|X\r" + "QAK|tag1|OK\r" + "QID|q1\r"
             + "RDF|1\r" + "RDT|v\r"
             + "EQU|E1\r" + "SAC|AC1\r" + "INV|I1\r" + "TCC|T1\r" + "TCD|T1\r" + "EQP|EV\r"
-        let message = try Parser().parse(wire)
-        let qrd = try #require(message.firstSegment(QRD.self))
+        let (message, qrd) = try hydratedMessage(QRD.self, from: wire)
         #expect(qrd.queryDateTime == message["QRD-1"])
         for present in [message.firstSegment(QPD.self) != nil, message.firstSegment(RCP.self) != nil,
                         message.firstSegment(QRF.self) != nil, message.firstSegment(QAK.self) != nil,
@@ -1584,8 +1486,7 @@ struct TypedSegmentTests {
             + "ISD|1||ACTIVE^^HL70387\r" + "NDS|1|20240101120000|W^^HL70367|N1^^HL7\r"
             + "CNS|1|9\r" + "ECD|1|CMD^^HL70368|Y\r" + "ECR|OK^^HL70387|20240101120000\r"
             + "SID|M1^^HL7|LOT9|C7|MFR^^HL70385\r"
-        let message = try Parser().parse(wire)
-        let sid = try #require(message.firstSegment(SID.self))
+        let (message, sid) = try hydratedMessage(SID.self, from: wire)
         #expect(sid.substanceLotNumber == message["SID-2"])          // typed accessor == path
         #expect(sid.applicationMethodIdentifier?.identifier == "M1")  // CE composite view
         for present in [message.firstSegment(ISD.self) != nil, message.firstSegment(NDS.self) != nil,
@@ -1636,8 +1537,7 @@ struct TypedSegmentTests {
         let wire = "MSH|^~\\&|A|B|C|D|20240101120000||PEX^P07|M1|P|2.5.1\r"
             + "PES|S1\r" + "PEO|E1^^HL7\r" + "PCR|P1^^HL7\r" + "PDC|M1^^HL7\r" + "PSH|R1\r"
             + "CSR|ST1\r" + "CSP|PH1^^HL7\r" + "CSS|TP1^^HL7\r" + "CTI|ST1\r"
-        let message = try Parser().parse(wire)
-        let csr = try #require(message.firstSegment(CSR.self))
+        let (message, csr) = try hydratedMessage(CSR.self, from: wire)
         #expect(csr.sponsorStudyId != nil)                 // CSR-1 (EI) hydrates
         for present in [message.firstSegment(PES.self) != nil, message.firstSegment(PEO.self) != nil,
                         message.firstSegment(PCR.self) != nil, message.firstSegment(PDC.self) != nil,
@@ -1693,8 +1593,7 @@ struct TypedSegmentTests {
         let wire = "MSH|^~\\&|A|B|C|D|20240101120000||DFT^P03|M1|P|2.5.1\r"
             + "FT1|1\r" + "PR1|1||P1^^HL7\r" + "ACC|20240101120000\r"
             + "UB1|1\r" + "UB2|1\r" + "DRG|D1^^HL7\r" + "ABS|1\r" + "GP1|A\r" + "GP2|1\r"
-        let message = try Parser().parse(wire)
-        let pr1 = try #require(message.firstSegment(PR1.self))
+        let (message, pr1) = try hydratedMessage(PR1.self, from: wire)
         #expect(pr1.setIdPr1 == message["PR1-1"])          // typed accessor == path
         for present in [message.firstSegment(FT1.self) != nil, message.firstSegment(ACC.self) != nil,
                         message.firstSegment(UB1.self) != nil, message.firstSegment(UB2.self) != nil,
