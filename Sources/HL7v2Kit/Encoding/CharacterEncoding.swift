@@ -62,10 +62,11 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
 
     /// Detect the character set declared in MSH-18 of a v2 message header.
     ///
-    /// The first line (terminated by `\r` or `\n`) is split on the field
-    /// separator and field 18 is mapped via `from(mshField18:)`. If MSH-18 is
-    /// absent or empty, defaults to `.utf8`. If MSH-18 is present but names
-    /// a charset HL7v2Kit does not recognise, throws
+    /// The first MSH line (batch FHS / BHS envelope lines are skipped; lines
+    /// terminate at `\r` or `\n`) is split on the field separator and field
+    /// 18 is mapped via `from(mshField18:)`. If no MSH line exists, or
+    /// MSH-18 is absent or empty, defaults to `.utf8`. If MSH-18 is present
+    /// but names a charset HL7v2Kit does not recognise, throws
     /// `ParseError.unsupportedCharacterEncoding(declared:)`.
     ///
     /// The probe is structural — it doesn't require a fully-decoded message,
@@ -82,26 +83,32 @@ public enum CharacterEncoding: Sendable, Equatable, Hashable {
         return known
     }
 
-    /// Pull MSH-18 (the character-set declaration) out of a v2 message
-    /// header. Returns nil when the header is missing, malformed, or simply
-    /// does not have an 18th field.
+    /// Pull MSH-18 (the character-set declaration) out of the first MSH
+    /// line of the probe. Batch wires carry FHS / BHS envelope lines ahead
+    /// of the first message header, so the scan walks lines until it finds
+    /// one prefixed `MSH`. Returns nil when no MSH line exists, the header
+    /// is malformed, or it simply does not have an 18th field.
     private static func probeMSH18(_ probe: String) -> String? {
-        guard !probe.isEmpty else { return nil }
-
-        // First line — \r, \n, or \r\n terminates the header.
-        let lineEnd = probe.firstIndex(where: { $0 == "\r" || $0 == "\n" }) ?? probe.endIndex
-        let line = probe[..<lineEnd]
-
-        guard line.hasPrefix("MSH"), line.count >= 4 else { return nil }
-        let fieldSep = line[line.index(line.startIndex, offsetBy: 3)]
-
-        // Splitting "MSH|^~\\&|sendingApp|..." on '|' gives:
-        //   parts[0] = "MSH"
-        //   parts[1] = MSH-2 (encoding chars)
-        //   parts[N - 1] = MSH-N for N >= 2
-        // So MSH-18 lives at parts[17].
-        let parts = line.split(separator: fieldSep, omittingEmptySubsequences: false)
-        guard parts.count > 17 else { return nil }
-        return String(parts[17])
+        var lineStart = probe.startIndex
+        while lineStart < probe.endIndex {
+            let lineEnd = probe[lineStart...].firstIndex(where: { $0 == "\r" || $0 == "\n" })
+                ?? probe.endIndex
+            let line = probe[lineStart..<lineEnd]
+            if line.hasPrefix("MSH") {
+                guard line.count >= 4 else { return nil }
+                let fieldSep = line[line.index(line.startIndex, offsetBy: 3)]
+                // Splitting "MSH|^~\\&|sendingApp|..." on '|' gives:
+                //   parts[0] = "MSH"
+                //   parts[1] = MSH-2 (encoding chars)
+                //   parts[N - 1] = MSH-N for N >= 2
+                // So MSH-18 lives at parts[17].
+                let parts = line.split(separator: fieldSep, omittingEmptySubsequences: false)
+                guard parts.count > 17 else { return nil }
+                return String(parts[17])
+            }
+            guard lineEnd < probe.endIndex else { return nil }
+            lineStart = probe.index(after: lineEnd)
+        }
+        return nil
     }
 }

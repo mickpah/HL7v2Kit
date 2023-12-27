@@ -177,6 +177,36 @@ struct BatchParserTests {
         }
     }
 
+    // MARK: - R5-C3: MSH-18 charset detection on the Data path
+
+    // Characterization pins for the R5/F20 wire-decode dedup: the batch
+    // Data path must honour MSH-18 exactly like `Parser.parse(_ data:)`.
+    // Before R5 this path was pinned only for BOM strip + NUL rejection;
+    // the Latin-1 decode leg had no batch-side coverage.
+    @Test("BatchParser.parse(Data:) honours MSH-18 = 8859/1 — 0xE9 decodes to é")
+    func dataPathHonoursLatin1() throws {
+        let bhs = "BHS|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||SAMPLE\r"
+        let msh = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG1|P|2.5.1||||||8859/1\r"
+        let pidPrefix = "PID|1||111||Caf"
+        var bytes = Data(bhs.utf8)
+        bytes.append(Data(msh.utf8))
+        bytes.append(Data(pidPrefix.utf8))
+        bytes.append(0xE9)                     // 'é' in Latin-1; invalid as UTF-8
+        bytes.append(Data("\rBTS|1\r".utf8))
+        let batch = try BatchParser().parse(bytes)
+        let message = try #require(batch.allMessages.first)
+        #expect(message["PID-5"] == "Café")
+        #expect(message.characterEncoding == .iso8859_1)
+    }
+
+    @Test("BatchParser.parse(Data:) throws on unrecognised MSH-18")
+    func dataPathUnrecognisedEncodingThrows() {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101120000||ADT^A01|MSG1|P|2.5.1||||||EBCDIC\r"
+        #expect(throws: ParseError.unsupportedCharacterEncoding(declared: "EBCDIC")) {
+            _ = try BatchParser().parse(Data(wire.utf8))
+        }
+    }
+
     // MARK: - Lenient line terminators
 
     @Test("LF-terminated batch wire parses identically to CR-terminated")
