@@ -180,6 +180,22 @@ support file), test list unchanged.
 - F32: the orphan `// MARK: - AL1` deleted.
 - Verification: suite **524 green**; test-name diff **empty**; zero warnings on full recompile.
 
+### R8 — shared wire + fixture infrastructure (remediation stage 8 of 10)
+
+F4 + F8 + F25; net ≈ −220 lines (−310 in the suites, +90 across two shared files).
+
+- **F4:** the two canonical headers (`ADT^A01|MSG00001|P|2.5.1` ×56, its ORU/LAB twin ×15)
+  now live once in `TestWires.swift`; 69 multiline wire literals became
+  `TestWires.adt(…)`/`.oru(…)` builder calls with byte-identical construction. Headers whose
+  content is under test — batch envelopes, AU MSH-12/17/19, version-detection, DSL
+  ORU_R01-structure wires — stay inline by design.
+- **F8:** the fixture-discovery chain re-implemented in six files now rides
+  `FixtureCorpus.swift` (`validFixtureURLs`/`malformedFixtureURLs`/`batchFixtureURLs`/
+  `fixtureURL(named:)`/`batchFixtureURL(named:)`), unified on the canonical Bundle-first
+  resolution + sorted order — a deterministic superset of the three previously-unsorted copies.
+- **F25:** the dead `Collection.subscript(safe:)` deleted with its MARK.
+- Verification: suite **524 green**; test-name diff **empty**; zero diagnostics on rebuild.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

@@ -108,14 +108,7 @@ struct LocaleTests {
         // The invariant we pin here: AU errors == intl errors + AU-
         // specific profile-violation errors. AU never REMOVES a base-
         // spec error.
-        let fixturesDir = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures", isDirectory: true)
-        let fm = FileManager.default
-        let urls = try fm.contentsOfDirectory(at: fixturesDir, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .filter { !$0.lastPathComponent.hasPrefix("malformed_") }
+        let urls = try FixtureCorpus.validFixtureURLs()
         #expect(!urls.isEmpty, "Should find at least one valid fixture")
         for url in urls {
             let bytes = try Data(contentsOf: url)

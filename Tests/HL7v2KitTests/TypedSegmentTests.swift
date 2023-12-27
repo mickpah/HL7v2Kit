@@ -130,10 +130,7 @@ struct TypedSegmentTests {
 
     @Test("NTE typed accessors agree with path access")
     func nteCrossCheck() throws {
-        let nteWire = """
-        MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-        NTE|1|L|Patient is allergic to shellfish\r
-        """
+        let nteWire = TestWires.oru("NTE|1|L|Patient is allergic to shellfish")
         let (message, nte) = try hydratedMessage(NTE.self, from: nteWire)
         #expect(nte.setID == "1")
         #expect(nte.sourceOfComment == "L")
@@ -294,10 +291,7 @@ struct TypedSegmentTests {
 
     // MARK: - OBX (Task 4c-1)
 
-    private let obxWire = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBX|1|NM|GLU^Glucose^L||5.2|mmol/L^Millimoles per litre^UCUM|3.9-5.5|N|||F|||20240101130000\r
-    """
+    private let obxWire = TestWires.oru("OBX|1|NM|GLU^Glucose^L||5.2|mmol/L^Millimoles per litre^UCUM|3.9-5.5|N|||F|||20240101130000")
 
     @Test("OBX hydrates as .typed")
     func obxHydrates() throws {
@@ -380,10 +374,7 @@ struct TypedSegmentTests {
     //  15 empty, 16 ordering-provider=^Williams^Sue,
     //  17/18/19 empty, 20 filler-1=PLACER1, 21 filler-2=FILLER1,
     //  22 results-report=20240101140000, 23/24 empty, 25 result-status=F.
-    private let obrWire = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP|FILLER456^LAB|GLU^Glucose^L|||20240101120000|20240101130000||^Smith^John|L|||20240101115000||^Williams^Sue||||PLACER1|FILLER1|20240101140000|||F\r
-    """
+    private let obrWire = TestWires.oru("OBR|1|PLACER123^HOSP|FILLER456^LAB|GLU^Glucose^L|||20240101120000|20240101130000||^Smith^John|L|||20240101115000||^Williams^Sue||||PLACER1|FILLER1|20240101140000|||F")
 
     @Test("OBR hydrates as .typed")
     func obrHydrates() throws {
@@ -479,12 +470,7 @@ struct TypedSegmentTests {
 
     @Test("OBR + OBX together: full ORU^R01 result message round-trips")
     func oruR01RoundTrips() throws {
-        let wire = """
-        MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John^A\r\
-        OBR|1|PLACER123^HOSP|FILLER456^LAB|GLU^Glucose^L\r\
-        OBX|1|NM|GLU^Glucose^L||5.2|mmol/L||N|||F\r
-        """
+        let wire = TestWires.oru("PID|1||123456^^^HOSP^MR||Smith^John^A", "OBR|1|PLACER123^HOSP|FILLER456^LAB|GLU^Glucose^L", "OBX|1|NM|GLU^Glucose^L||5.2|mmol/L||N|||F")
         let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let obr = try #require(message.firstSegment(OBR.self))
         let obx = try #require(message.firstSegment(OBX.self))
@@ -533,10 +519,7 @@ struct TypedSegmentTests {
     // 28 nationality empty
     // 29 death date=20231215120000
     // 30 death indicator=Y
-    private let extendedPIDWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234||en^English^ISO639|M^Married^HL70002|CAT^Catholic^HL70006|ACC12345|||||Sydney||||||20231215120000|Y\r
-    """
+    private let extendedPIDWire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234||en^English^ISO639|M^Married^HL70002|CAT^Catholic^HL70006|ACC12345|||||Sydney||||||20231215120000|Y")
 
     @Test("PID-13 (XTN composite) home phone number")
     func pidHomePhoneAgrees() throws {
@@ -600,10 +583,7 @@ struct TypedSegmentTests {
     // 37 strain empty (human)
     // 38 productionClassCode empty (human)
     // 39 tribalCitizenship=100^Australian^HL70171  (CWE)
-    private let fringePIDWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234||en^English^ISO639|M^Married^HL70002|CAT^Catholic^HL70006|ACC12345|||||Sydney||||||20231215120000|Y|N|US|20240301080000|HOSP^FAC^ISO|L1^Human^HL70447||||100^Australian^HL70171\r
-    """
+    private let fringePIDWire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234||en^English^ISO639|M^Married^HL70002|CAT^Catholic^HL70006|ACC12345|||||Sydney||||||20231215120000|Y|N|US|20240301080000|HOSP^FAC^ISO|L1^Human^HL70447||||100^Australian^HL70171")
 
     @Test("PID-31 (ID scalar) identity unknown indicator")
     func pidIdentityUnknownIndicatorAgrees() throws {
@@ -669,10 +649,7 @@ struct TypedSegmentTests {
     //  4 address=10 Main St^^Sydney^NSW^2000^AU,
     //  5 home phone=(02)555-1234, 6 business=(02)555-5678,
     //  7/8/9 empty, 10 job title=Manager, 11/12/13 empty.
-    private let nk1Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    NK1|1|Smith^Mary|SPO^Spouse^HL70063|10 Main St^^Sydney^NSW^2000^AU|(02)555-1234|(02)555-5678||||Manager\r
-    """
+    private let nk1Wire = TestWires.adt("NK1|1|Smith^Mary|SPO^Spouse^HL70063|10 Main St^^Sydney^NSW^2000^AU|(02)555-1234|(02)555-5678||||Manager")
 
     @Test("NK1 hydrates as .typed")
     func nk1Hydrates() throws {
@@ -727,10 +704,7 @@ struct TypedSegmentTests {
     //  11/12/13 empty, 14 admitSource=7,
     //  15 empty, 16 vip=N,
     //  17/18 empty, 19 visit number=V001, 20 empty.
-    private let pv1Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PV1|1|I|WARD1^ROOM2^BED3^HOSPITAL|R|||DR123^Jones^Mary|||MED||||7||N|||V001\r
-    """
+    private let pv1Wire = TestWires.adt("PV1|1|I|WARD1^ROOM2^BED3^HOSPITAL|R|||DR123^Jones^Mary|||MED||||7||N|||V001")
 
     @Test("PV1 hydrates as .typed")
     func pv1Hydrates() throws {
@@ -793,12 +767,7 @@ struct TypedSegmentTests {
 
     @Test("MSH + PID + PV1 + NK1: full ADT^A01 admit message round-trips")
     func adtA01FullRoundTrip() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M\r\
-        PV1|1|I|WARD1^ROOM2^BED3|R|||DR123^Jones^Mary|||MED\r\
-        NK1|1|Smith^Mary|SPO^Spouse|10 Main St\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M", "PV1|1|I|WARD1^ROOM2^BED3|R|||DR123^Jones^Mary|||MED", "NK1|1|Smith^Mary|SPO^Spouse|10 Main St")
         let (message, pid) = try hydratedMessage(PID.self, from: wire)
         let pv1 = try #require(message.firstSegment(PV1.self))
         let nk1 = try #require(message.firstSegment(NK1.self))
@@ -828,10 +797,7 @@ struct TypedSegmentTests {
 
     // EVN minimal: event code in EVN-1 (B, retained for backward compat),
     // EVN-2 recorded date/time (R), EVN-7 event facility populated.
-    private let evnWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    EVN|A01|20240320101500|||DOC123^Jones^Mary||HOSP^FAC^ISO\r
-    """
+    private let evnWire = TestWires.adt("EVN|A01|20240320101500|||DOC123^Jones^Mary||HOSP^FAC^ISO")
 
     @Test("EVN hydrates as .typed")
     func evnHydrates() throws {
@@ -937,10 +903,7 @@ struct TypedSegmentTests {
 
     @Test("ack_application_accept.hl7 hydrates MSA as typed")
     func ackAcceptFixtureHydratesMSA() throws {
-        let fixtureURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures/ack_application_accept.hl7")
+        let fixtureURL = FixtureCorpus.fixtureURL(named: "ack_application_accept.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
         let (message, msa) = try hydratedMessage(MSA.self, from: bytes)
         #expect(msa.acknowledgmentCode == "AA")
@@ -951,10 +914,7 @@ struct TypedSegmentTests {
 
     @Test("ack_application_error.hl7 hydrates MSA + ERR as typed")
     func ackErrorFixtureHydratesMSAAndERR() throws {
-        let fixtureURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures/ack_application_error.hl7")
+        let fixtureURL = FixtureCorpus.fixtureURL(named: "ack_application_error.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
         let (message, msa) = try hydratedMessage(MSA.self, from: bytes)
         let err = try #require(message.firstSegment(ERR.self))
@@ -970,10 +930,7 @@ struct TypedSegmentTests {
 
     // PD1 with PD1-3 primary facility, PD1-5 student indicator, PD1-7 living
     // will, PD1-11 publicity code, PD1-12 protection indicator.
-    private let pd1Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PD1|||GOOD_HEALTH^L^1^^^HOSP^XX||N||Y|Y|N||N^Normal^HL70215|Y|20240101\r
-    """
+    private let pd1Wire = TestWires.adt("PD1|||GOOD_HEALTH^L^1^^^HOSP^XX||N||Y|Y|N||N^Normal^HL70215|Y|20240101")
 
     @Test("PD1 hydrates as .typed")
     func pd1Hydrates() throws {
@@ -1014,10 +971,7 @@ struct TypedSegmentTests {
     // priority, diagnosing clinician. After DG1-6 ("A"), 9 pipes skip
     // through DG1-7..DG1-14 (8 empty fields) and land "1" at DG1-15;
     // one more pipe opens DG1-16 carrying the XCN clinician.
-    private let dg1Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    DG1|1||I10^Essential hypertension^ICD10||20240315090000|A|||||||||1|DR123^Jones^Mary\r
-    """
+    private let dg1Wire = TestWires.adt("DG1|1||I10^Essential hypertension^ICD10||20240315090000|A|||||||||1|DR123^Jones^Mary")
 
     @Test("DG1 hydrates as .typed")
     func dg1Hydrates() throws {
@@ -1066,10 +1020,7 @@ struct TypedSegmentTests {
 
     // IN1 with set ID, insurance plan CE, company ID CX, company name XON,
     // company address XAD, group number, plan effective date.
-    private let in1Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    IN1|1|HBF^Medibank Private^L|MED001|MEDIBANK PRIVATE|PO BOX 9999^^Sydney^NSW^2000^AU||(02)555-7777|GRP123|||N|20240101|20241231\r
-    """
+    private let in1Wire = TestWires.adt("IN1|1|HBF^Medibank Private^L|MED001|MEDIBANK PRIVATE|PO BOX 9999^^Sydney^NSW^2000^AU||(02)555-7777|GRP123|||N|20240101|20241231")
 
     @Test("IN1 hydrates as .typed")
     func in1Hydrates() throws {
@@ -1125,10 +1076,7 @@ struct TypedSegmentTests {
 
     @Test("adt_a01_with_insurance.hl7 fixture hydrates IN1 as typed (T3 capstone)")
     func adtWithInsuranceFixtureHydratesIN1() throws {
-        let fixtureURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures/adt_a01_with_insurance.hl7")
+        let fixtureURL = FixtureCorpus.fixtureURL(named: "adt_a01_with_insurance.hl7")
         let bytes = try Data(contentsOf: fixtureURL)
         let (message, in1) = try hydratedMessage(IN1.self, from: bytes)
         #expect(in1.setID == "1")

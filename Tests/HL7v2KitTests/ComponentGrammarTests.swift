@@ -20,10 +20,7 @@ struct ComponentGrammarTests {
     @Test("PID-5 (XPN) populated without family name fires .requiredComponentMissing at PID[1]-5.1")
     func xpnFamilyNameMissing() throws {
         // PID-5 = ^John^A — given+middle present, family empty.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||^John^A||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 5 })
@@ -37,10 +34,7 @@ struct ComponentGrammarTests {
 
     @Test("PID-5 populated with family name → no .requiredComponentMissing")
     func xpnFamilyNamePresent() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         #expect(!report.errors.contains { $0.code == .requiredComponentMissing })
@@ -51,10 +45,7 @@ struct ComponentGrammarTests {
         // PID-5 is R-optionality. Empty PID-5 produces .requiredFieldMissing,
         // not .requiredComponentMissing (the component check is skipped on
         // empty fields).
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR|||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR|||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let pid5Issues = report.errors.filter { $0.location.fieldIndex == 5 }
@@ -67,10 +58,7 @@ struct ComponentGrammarTests {
     @Test("PID-3 (CX) populated without ID number fires .requiredComponentMissing at PID[1]-3.1")
     func cxIdMissing() throws {
         // PID-3 = ^4^M11^HOSP^MR — id empty, check digit + scheme + auth + type present.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||^4^M11^HOSP^MR||Smith^John||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||^4^M11^HOSP^MR||Smith^John||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 3 })
@@ -84,10 +72,7 @@ struct ComponentGrammarTests {
     func cxMultiRepEachChecked() throws {
         // PID-3 = 123456^^^HOSP^MR ~ ^^^MEDICARE^NI
         // Rep 1 has ID; rep 2 is missing it.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR~^^^MEDICARE^NI||Smith^John||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR~^^^MEDICARE^NI||Smith^John||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let cxIssues = report.errors.filter { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 3 }
@@ -105,10 +90,7 @@ struct ComponentGrammarTests {
         //  1 setID=1, 2 empty, 3 ids=123456..., 4 empty, 5 name=Smith^John,
         //  6 empty, 7 DOB=19800101, 8 sex=M, 9 empty, 10 race=2106-3^White^HL70005,
         //  11 address=^Apt 5^Sydney^NSW^2000  ← street component empty.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005|^Apt 5^Sydney^NSW^2000\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005|^Apt 5^Sydney^NSW^2000")
         let message = try Parser().parse(wire)
         // Sanity-check pipe count: PID-11.3 should be "Sydney".
         #expect(message["PID-11.3"] == "Sydney", "Wire mis-counted: XAD should land at PID-11")
@@ -124,10 +106,7 @@ struct ComponentGrammarTests {
 
     @Test("checkComponentGrammar=false suppresses the component check")
     func toggleSuppresses() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||^John^A||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let options = ValidationOptions(checkComponentGrammar: false)
         let report = Validator(options: options).validate(message)
@@ -136,10 +115,7 @@ struct ComponentGrammarTests {
 
     @Test(".lenient preset disables component-grammar enforcement")
     func lenientPresetDisables() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||^John^A||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator(options: .lenient).validate(message)
         #expect(!report.errors.contains { $0.code == .requiredComponentMissing })
@@ -147,10 +123,7 @@ struct ComponentGrammarTests {
 
     @Test(".strict preset enables component-grammar enforcement")
     func strictPresetEnables() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||^John^A||19800101|M\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator(options: .strict).validate(message)
         #expect(report.errors.contains { $0.code == .requiredComponentMissing })
@@ -172,10 +145,7 @@ struct ComponentGrammarTests {
         // Fields populated in this wire:
         //  1 setID=1, 3 ids=123456..., 5 name=Smith^John, 7 DOB, 8 sex=M,
         //  9..33 empty, 34 lastUpdateFacility=^UNIV_ID^ISO  ← HD with empty HD-1
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||||||||||||||||||||||||||^UNIV_ID^ISO\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||||||||||||||||||||||||||^UNIV_ID^ISO")
         let message = try Parser().parse(wire)
         #expect(message["PID-34.2"] == "UNIV_ID", "Wire mis-counted: HD should land at PID-34")
         let report = Validator().validate(message)
@@ -188,10 +158,7 @@ struct ComponentGrammarTests {
         // PID-10 (race) is CE-typed. v0.3-C2 promoted CE; CE-1 (identifier)
         // is the required component. An empty PID-10.1 with PID-10.2
         // populated must NOW fire .requiredComponentMissing at PID[1]-10.1.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||^WhiteTextOnly\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||^WhiteTextOnly")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 10 })
@@ -211,10 +178,7 @@ struct ComponentGrammarTests {
         // component index — the violation is the disjunction).
         // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..38 empty
         // (31 pipes after M), 39 tribalCitizenship=^AustralianText  ← CWE-1 empty, CWE-9 empty.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^AustralianText\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^AustralianText")
         let message = try Parser().parse(wire)
         #expect(message["PID-39.2"] == "AustralianText", "Wire mis-counted: CWE should land at PID-39")
         let report = Validator().validate(message)
@@ -233,10 +197,7 @@ struct ComponentGrammarTests {
         // "CWE-1 OR CWE-9" and must NOT fire. This is the case
         // v0.3-C2's flat `requiredComponents = [CWE-1]` got wrong.
         // PID-39 wire: CWE-1 empty, CWE-2..8 empty, CWE-9 populated.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^^^^^^^^FreeTextSpeciesName\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||^^^^^^^^FreeTextSpeciesName")
         let message = try Parser().parse(wire)
         #expect(message["PID-39.9"] == "FreeTextSpeciesName", "Wire mis-counted: CWE-9 should land here")
         let report = Validator().validate(message)
@@ -268,10 +229,7 @@ struct ComponentGrammarTests {
         // PV1-7 (attendingDoctor) is XCN-typed. Empty XCN-1 (idNumber)
         // with XCN-2 (familyName) populated must fire
         // .requiredComponentMissing at PV1[1]-7.1.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PV1|1|I|||||^Jones^Mary\r
-        """
+        let wire = TestWires.adt("PV1|1|I|||||^Jones^Mary")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 7 })
@@ -355,10 +313,7 @@ struct ComponentGrammarTests {
         // NK1-13 (organizationName) is XON-typed. Empty XON-1 with
         // XON-2 populated must fire at NK1[1]-13.1.
         // Pipe count between "SPO" and "^L": 9 (= NK1-13 - NK1-4).
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        NK1|1|Smith^Jane||SPO|||||||||^L\r
-        """
+        let wire = TestWires.adt("NK1|1|Smith^Jane||SPO|||||||||^L")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 13 })
@@ -374,10 +329,7 @@ struct ComponentGrammarTests {
         // empty requiredComponents (the v2.5.1 "PL-1 OR PL-4" OR-rule
         // again). A PL populated with only PL-4 (facility) and empty
         // PL-1..3 must NOT fire any component-grammar issue.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PV1|1|I|^^^HOSPITAL|R\r
-        """
+        let wire = TestWires.adt("PV1|1|I|^^^HOSPITAL|R")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let pv13Issues = report.errors.filter { $0.location.fieldIndex == 3 && $0.code == .requiredComponentMissing }
@@ -407,10 +359,7 @@ struct ComponentGrammarTests {
         // (email address) must NOT fire any component-grammar error —
         // pins the design choice that XTN's empty requiredComponents list
         // is the right call.
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||^^^john@example.com\r
-        """
+        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M|||||^^^john@example.com")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
         let pid13Issues = report.errors.filter { $0.location.fieldIndex == 13 && $0.code == .requiredComponentMissing }
@@ -426,14 +375,7 @@ struct ComponentGrammarTests {
         // Pin so a future fixture addition that breaks this rule surfaces
         // here directly, alongside the existing
         // FixtureRoundTripTests.allValidProduceNonErrorReport check.
-        let fixturesDir = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures", isDirectory: true)
-        let fm = FileManager.default
-        let urls = try fm.contentsOfDirectory(at: fixturesDir, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .filter { !$0.lastPathComponent.hasPrefix("malformed_") }
+        let urls = try FixtureCorpus.validFixtureURLs()
         #expect(!urls.isEmpty)
         for url in urls {
             let bytes = try Data(contentsOf: url)

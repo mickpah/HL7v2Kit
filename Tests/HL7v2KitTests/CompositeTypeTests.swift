@@ -17,10 +17,7 @@ struct CompositeTypeTests {
 
     // PID-5 = LegalSurname^Patrick^James^III^DR^^L
     //         family^given^middle^suffix^prefix^^nameTypeCode
-    private let xpnRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||LegalSurname^Patrick^James^III^DR^^L\r
-    """
+    private let xpnRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||LegalSurname^Patrick^James^III^DR^^L")
 
     @Test("XPN exposes familyName / givenName / middleName / suffix / prefix / nameTypeCode")
     func xpnNamedAccessors() throws {
@@ -57,10 +54,7 @@ struct CompositeTypeTests {
     }
 
     // PID-5 with two repetitions: "L"egal followed by "M"aiden.
-    private let xpnRepeatingWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Married^Jane^^^^^L~Maiden^Jane^^^^^M\r
-    """
+    private let xpnRepeatingWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Married^Jane^^^^^L~Maiden^Jane^^^^^M")
 
     @Test("XPN reads from the FIRST repetition; walk .field.repetitions for the rest")
     func xpnMultiRepetitionAccess() throws {
@@ -78,10 +72,7 @@ struct CompositeTypeTests {
 
     @Test("XPN absent / empty components return nil rather than empty string")
     func xpnAbsentComponentsReturnNil() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||000001^^^HOSP^MR||OnlyFamily\r
-        """
+        let wire = TestWires.adt("PID|1||000001^^^HOSP^MR||OnlyFamily")
         let message = try Parser().parse(wire)
         let name = try #require(message.firstSegment(PID.self)?.patientName)
         #expect(name.familyName == "OnlyFamily")
@@ -94,10 +85,7 @@ struct CompositeTypeTests {
 
     // PID-3 typical AU shape: 123456^4^M11^HOSP^MR^FAC
     //                         id^cd^cdScheme^assignAuth^typeCode^assignFacility
-    private let cxRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^4^M11^HOSP^MR^FAC||Smith^John\r
-    """
+    private let cxRichWire = TestWires.adt("PID|1||123456^4^M11^HOSP^MR^FAC||Smith^John")
 
     @Test("CX exposes id / checkDigit / checkDigitScheme / typeCode / authority / facility")
     func cxNamedAccessors() throws {
@@ -122,10 +110,7 @@ struct CompositeTypeTests {
     }
 
     // PID-3 with two repetitions: MRN and URN.
-    private let cxRepeatingWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||MRN001^^^HOSP^MR~URN9999^^^MEDICARE^NI||Smith^John\r
-    """
+    private let cxRepeatingWire = TestWires.adt("PID|1||MRN001^^^HOSP^MR~URN9999^^^MEDICARE^NI||Smith^John")
 
     @Test("CX multi-repetition access — wrap each Repetition for typed view")
     func cxMultiRepetitionAccess() throws {
@@ -143,10 +128,7 @@ struct CompositeTypeTests {
 
     // PID-11 = 10 Main St^Apt 5^Sydney^NSW^2000^AU^H
     //          street^otherDes^city^state^zip^country^addressType
-    private let xadRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005|10 Main St^Apt 5^Sydney^NSW^2000^AU^H\r
-    """
+    private let xadRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005|10 Main St^Apt 5^Sydney^NSW^2000^AU^H")
 
     @Test("XAD exposes streetAddress / otherDesignation / city / state / zip / country / addressType")
     func xadNamedAccessors() throws {
@@ -178,10 +160,7 @@ struct CompositeTypeTests {
     // PID-15 (primary language) = en^English^ISO639-2.
     // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..14 empty
     // (7 pipes after M), 15 language=en^English^ISO639-2.
-    private let ceRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||en^English^ISO639-2\r
-    """
+    private let ceRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||en^English^ISO639-2")
 
     @Test("CE exposes identifier / text / nameOfCodingSystem / alt-* accessors")
     func ceNamedAccessors() throws {
@@ -203,10 +182,7 @@ struct CompositeTypeTests {
     }
 
     // PID-10 (race) is CE, repeating. Two repetitions: White / Asian.
-    private let ceRepeatingWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005~2028-9^Asian^HL70005\r
-    """
+    private let ceRepeatingWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M||2106-3^White^HL70005~2028-9^Asian^HL70005")
 
     @Test("CE multi-repetition — wrap each Repetition for typed view")
     func ceMultiRepetitionAccess() throws {
@@ -225,10 +201,7 @@ struct CompositeTypeTests {
     // PID-39 (tribal citizenship) = 100^Australian^HL70171.
     // Field map: 1 setID=1, 3 ids, 5 name, 7 DOB, 8 sex=M, 9..38 empty
     // (31 pipes after M), 39 tribalCitizenship=100^Australian^HL70171.
-    private let cweRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||100^Australian^HL70171\r
-    """
+    private let cweRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||||||||||||||||||||||||||||100^Australian^HL70171")
 
     @Test("CWE exposes identifier / text / coding-system / alt-* / originalText accessors")
     func cweNamedAccessors() throws {
@@ -301,10 +274,7 @@ struct CompositeTypeTests {
 
     // PV1-7 (attendingDoctor) is multi-rep XCN. First rep populates the
     // first six XCN components — every named accessor has a value.
-    private let xcnRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PV1|1|I|||||DR123^Jones^Mary^Anne^Jr^Dr\r
-    """
+    private let xcnRichWire = TestWires.adt("PV1|1|I|||||DR123^Jones^Mary^Anne^Jr^Dr")
 
     @Test("XCN exposes idNumber / familyName / givenName / middleName / suffix / prefix_ accessors")
     func xcnNamedAccessors() throws {
@@ -332,10 +302,7 @@ struct CompositeTypeTests {
 
     // PV1-9 (consultingDoctor) with two repetitions: a primary and a
     // backup consultant.
-    private let xcnRepeatingWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PV1|1|I|||||||CN001^Brown^Alex~CN002^Davis^Lee\r
-    """
+    private let xcnRepeatingWire = TestWires.adt("PV1|1|I|||||||CN001^Brown^Alex~CN002^Davis^Lee")
 
     @Test("XCN multi-repetition — wrap each Repetition for typed view")
     func xcnMultiRepetitionAccess() throws {
@@ -358,10 +325,7 @@ struct CompositeTypeTests {
     // (email) + XTN-5/6/7 (country/area/local) + XTN-12 (unformatted).
     // Field map for the XTN: phone^use^equip^email^cc^area^local^^^^^unformatted
     // Components 8/9/10/11 left empty so XTN-12 is at the right slot.
-    private let xtnRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH^john@example.com^61^2^5551234^^^^^+61255551234\r
-    """
+    private let xtnRichWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH^john@example.com^61^2^5551234^^^^^+61255551234")
 
     @Test("XTN exposes telephoneNumber / use / equipment / email / country / area / local / unformatted accessors")
     func xtnNamedAccessors() throws {
@@ -392,10 +356,7 @@ struct CompositeTypeTests {
     }
 
     // PID-13 with two repetitions: a home phone and a mobile.
-    private let xtnRepeatingWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH~0412345678^PRN^CP\r
-    """
+    private let xtnRepeatingWire = TestWires.adt("PID|1||000001^^^HOSP^MR||Smith^John||19800101|M|||||(02)555-1234^PRN^PH~0412345678^PRN^CP")
 
     @Test("XTN multi-repetition — wrap each Repetition for typed view")
     func xtnMultiRepetitionAccess() throws {
@@ -512,10 +473,7 @@ struct CompositeTypeTests {
     // MARK: - PL (Person Location) — v0.3-C4
 
     // PV1-3 (assignedPatientLocation) with all four exposed PL components.
-    private let plRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PV1|1|I|WARD1^ROOM2^BED3^HOSPITAL|R\r
-    """
+    private let plRichWire = TestWires.adt("PV1|1|I|WARD1^ROOM2^BED3^HOSPITAL|R")
 
     @Test("PL exposes pointOfCare / room / bed / facility accessors")
     func plNamedAccessors() throws {
@@ -571,10 +529,7 @@ struct CompositeTypeTests {
     // NK1-13 (organizationName) is XON. NK1-1=1, 2=name, 3 empty, 4=SPO,
     // 5..12 empty (9 pipes between SPO and XON value: 13-4=9), 13=XON.
     // Field map for the XON: name^typeCode^^^^^idTypeCode^^^orgID
-    private let xonRichWire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    NK1|1|Smith^Jane||SPO|||||||||CityHospital^L^^^^^NPI^^^1234567890\r
-    """
+    private let xonRichWire = TestWires.adt("NK1|1|Smith^Jane||SPO|||||||||CityHospital^L^^^^^NPI^^^1234567890")
 
     @Test("XON exposes organizationName / typeCode / identifierTypeCode / organizationIdentifier accessors")
     func xonNamedAccessors() throws {

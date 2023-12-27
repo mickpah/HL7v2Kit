@@ -13,27 +13,9 @@ import Foundation
 @Suite("Batch fixture corpus (v0.3-Z2)")
 struct BatchFixtureTests {
 
-    /// Locate the `Tests/Fixtures/Batches/` directory relative to this
-    /// test file. Matches the discovery shape used by
-    /// ``FixtureRoundTripTests``.
-    private func batchFixturesDir() -> URL {
-        URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures", isDirectory: true)
-            .appendingPathComponent("Batches", isDirectory: true)
-    }
-
-    private func batchFixtureURLs() throws -> [URL] {
-        try FileManager.default
-            .contentsOfDirectory(at: batchFixturesDir(), includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
-    }
-
     @Test("Every batch fixture parses via BatchParser without throwing")
     func everyBatchFixtureParses() throws {
-        let urls = try batchFixtureURLs()
+        let urls = try FixtureCorpus.batchFixtureURLs()
         #expect(!urls.isEmpty, "No batch fixtures discovered under Tests/Fixtures/Batches/")
         for url in urls {
             let bytes = try Data(contentsOf: url)
@@ -45,7 +27,7 @@ struct BatchFixtureTests {
 
     @Test("batch_bhs_minimal.hl7 — single batch group with one message")
     func bhsMinimal() throws {
-        let url = batchFixturesDir().appendingPathComponent("batch_bhs_minimal.hl7")
+        let url = FixtureCorpus.batchFixtureURL(named: "batch_bhs_minimal.hl7")
         let bytes = try Data(contentsOf: url)
         let batch = try BatchParser().parse(bytes)
         #expect(batch.fileHeader == nil)
@@ -61,7 +43,7 @@ struct BatchFixtureTests {
 
     @Test("batch_file_full.hl7 — FHS + BHS + 2 MSH + BTS + FTS")
     func fullyWrappedFile() throws {
-        let url = batchFixturesDir().appendingPathComponent("batch_file_full.hl7")
+        let url = FixtureCorpus.batchFixtureURL(named: "batch_file_full.hl7")
         let bytes = try Data(contentsOf: url)
         let batch = try BatchParser().parse(bytes)
         #expect(batch.fileHeader?.hasPrefix("FHS|") == true)
@@ -76,7 +58,7 @@ struct BatchFixtureTests {
 
     @Test("batch_multi_groups.hl7 — one FHS/FTS containing two BHS/BTS groups")
     func multiBatchFile() throws {
-        let url = batchFixturesDir().appendingPathComponent("batch_multi_groups.hl7")
+        let url = FixtureCorpus.batchFixtureURL(named: "batch_multi_groups.hl7")
         let bytes = try Data(contentsOf: url)
         let batch = try BatchParser().parse(bytes)
         #expect(batch.fileHeader?.contains("SYN-FILE-MULTI") == true)
@@ -92,7 +74,7 @@ struct BatchFixtureTests {
 
     @Test("Batch fixtures also round-trip cleanly through StreamingBatchParser")
     func batchFixturesStreamingRoundTrip() throws {
-        for url in try batchFixtureURLs() {
+        for url in try FixtureCorpus.batchFixtureURLs() {
             let bytes = try Data(contentsOf: url)
             var streamingParser = StreamingBatchParser()
             var emitted = try streamingParser.feed(bytes)

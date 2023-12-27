@@ -37,15 +37,7 @@ struct FuzzTests {
     /// `malformed_*.hl7` because mutating already-broken input doesn't
     /// teach us anything new about the parser's bounds.
     private func seedFixtures() throws -> [(name: String, bytes: Data)] {
-        let fixturesDir = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures", isDirectory: true)
-        let urls = try FileManager.default
-            .contentsOfDirectory(at: fixturesDir, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .filter { !$0.lastPathComponent.hasPrefix("malformed_") }
-            .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
+        let urls = try FixtureCorpus.validFixtureURLs()
         return try urls.map { url in
             (url.lastPathComponent, try Data(contentsOf: url))
         }

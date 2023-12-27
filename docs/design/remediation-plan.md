@@ -315,6 +315,15 @@ failures to the caller via `sourceLocation`. Test-name diff empty; 524 green; wa
 
 **Done when:** test-name diff **empty**; both shared files exist; suite green.
 
+**Status: ✅ landed 2026-08-27.** F4: 69 multiline wire literals opening with the two canonical
+headers → `TestWires.adt(…)`/`.oru(…)` builder calls (byte-identical construction; LocaleAU's 16
+= its 8 ADT + 8 ORU twins; content-relevant headers — batch/AU-MSH/version-variant/DSL — stay
+inline by design; the R4-C2 single-line row wires untouched). F8: all six discovery
+re-implementations ride `FixtureCorpus` (Bundle-first + sorted — a deterministic superset of the
+three unsorted copies; `batchFixtureURL(named:)` added for the two named batch sites the audit
+missed). F25 deleted. Net ≈ −220 lines (−310 in suites, +90 shared files). Test-name diff empty;
+524 green; zero diagnostics on rebuild.
+
 ---
 
 ## Stage R9 — In-suite consolidation

@@ -48,10 +48,7 @@ struct LocaleAUProfileTests {
 
     // OBR with OBR-2 = PLACER123^HOSP (2 of 4 EI components populated).
     // AU rule must fire on EI-3 (Universal ID) + EI-4 (Universal ID Type).
-    private let obrIncompletePlacer = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP|FILLER456^LAB^1.2.36.1.2001.1003.0.ABC^ISO|GLU^Glucose^L\r
-    """
+    private let obrIncompletePlacer = TestWires.oru("OBR|1|PLACER123^HOSP|FILLER456^LAB^1.2.36.1.2001.1003.0.ABC^ISO|GLU^Glucose^L")
 
     @Test("OBR-2 with 2-of-4 EI components fires AU profile violation on missing components")
     func obr2IncompleteEIFires() throws {
@@ -80,10 +77,7 @@ struct LocaleAUProfileTests {
     }
 
     // OBR with both OBR-2 and OBR-3 fully populated — no violations.
-    private let obrAllEIComponentsPopulated = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L\r
-    """
+    private let obrAllEIComponentsPopulated = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L")
 
     @Test("OBR-2 + OBR-3 fully populated (4 of 4 EI components) fires no violations")
     func obrAllEIComponentsPass() throws {
@@ -100,10 +94,7 @@ struct LocaleAUProfileTests {
 
     @Test("Empty OBR-2 + OBR-3 fires no AU violations (rule is conditional on field populated)")
     func obrEmptyFieldNoAUViolation() throws {
-        let wire = """
-        MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-        OBR|1|||GLU^Glucose^L\r
-        """
+        let wire = TestWires.oru("OBR|1|||GLU^Glucose^L")
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
         let obrViolations = report.errors.filter {
@@ -198,10 +189,7 @@ struct LocaleAUProfileTests {
     // incomplete (1-of-4 EI). AU rule must fire on the incomplete rep
     // only — the complete rep passes silently. Repetitions are
     // separated by `~`.
-    private let obrRepeatingFieldMixed = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO~ORPHAN789|GLU^Glucose^L\r
-    """
+    private let obrRepeatingFieldMixed = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO~ORPHAN789|GLU^Glucose^L")
 
     @Test("Repeating field: AU rule fires per repetition, not just the first")
     func auRuleFiresPerRepetition() throws {
@@ -224,11 +212,7 @@ struct LocaleAUProfileTests {
     // Two OBR segments in one message: OBR[1] valid, OBR[2] invalid.
     // The AU rule must fire on OBR[2] only, with the correct
     // segmentIndex on the location.
-    private let multiObrMixedConformance = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER1^HOSP^1.2.36.1.2001.1003.0.AAA^ISO|FILLER1^LAB^1.2.36.1.2001.1003.0.BBB^ISO|GLU^Glucose^L\r\
-    OBR|2|PLACER2^HOSP|FILLER2^LAB^1.2.36.1.2001.1003.0.CCC^ISO|LFT^Liver function^L\r
-    """
+    private let multiObrMixedConformance = TestWires.oru("OBR|1|PLACER1^HOSP^1.2.36.1.2001.1003.0.AAA^ISO|FILLER1^LAB^1.2.36.1.2001.1003.0.BBB^ISO|GLU^Glucose^L", "OBR|2|PLACER2^HOSP|FILLER2^LAB^1.2.36.1.2001.1003.0.CCC^ISO|LFT^Liver function^L")
 
     @Test("Multi-segment mixed conformance: AU rule fires on second OBR only")
     func auRuleFiresOnCorrectSegmentOccurrence() throws {
@@ -255,10 +239,7 @@ struct LocaleAUProfileTests {
 
     // OBR-4 (CE) populated with CE-1 set but CE-3 empty — violates
     // HL7au:00044.4.1 ("identifier set ⇒ name of coding system set").
-    private let ceIdentifierWithoutCodingSystem = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose\r
-    """
+    private let ceIdentifierWithoutCodingSystem = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose")
 
     @Test("CE rule HL7au:00044.4.1 — identifier set without coding system fires violation")
     func ceIdentifierSetWithoutCodingSystemFires() throws {
@@ -281,10 +262,7 @@ struct LocaleAUProfileTests {
 
     // CE-4 (alternate identifier) set but CE-6 (alternate coding system)
     // empty — violates HL7au:00044.4.5.
-    private let ceAltIdentifierWithoutAltCodingSystem = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L^GLU2^Glucose alt\r
-    """
+    private let ceAltIdentifierWithoutAltCodingSystem = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L^GLU2^Glucose alt")
 
     @Test("CE rule HL7au:00044.4.5 — alt identifier set without alt coding system fires")
     func ceAltIdentifierSetWithoutAltCodingSystemFires() throws {
@@ -305,10 +283,7 @@ struct LocaleAUProfileTests {
     }
 
     // CE-1 empty but CE-3 populated — violates HL7au:00044.4.2 (inverse).
-    private let ceCodingSystemWithoutIdentifier = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|^Glucose^LN\r
-    """
+    private let ceCodingSystemWithoutIdentifier = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|^Glucose^LN")
 
     @Test("CE rule HL7au:00044.4.2 — empty identifier with non-empty coding system fires")
     func ceEmptyIdentifierWithCodingSystemFires() throws {
@@ -329,10 +304,7 @@ struct LocaleAUProfileTests {
 
     // CE fully consistent (CE-1 + CE-3 both set, CE-4 + CE-6 either both
     // set or both empty) — no CE violations.
-    private let ceConsistent = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L\r
-    """
+    private let ceConsistent = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L")
 
     @Test("CE consistent (CE-1+CE-3 both set, CE-4+CE-6 both empty) fires no CE violations")
     func ceConsistentFiresNoViolations() throws {
@@ -350,10 +322,7 @@ struct LocaleAUProfileTests {
     // CWE pair rule on OBX-3 (which is a CE in v2.5.1; check that
     // dataType lookup is exact — only CWE fields trigger CWE rules,
     // not CE fields, and vice versa).
-    private let cweInOBX = """
-    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r\
-    OBX|1|CWE|HCT^Haematocrit|||F^Final^HL70123\r
-    """
+    private let cweInOBX = TestWires.oru("OBX|1|CWE|HCT^Haematocrit|||F^Final^HL70123")
 
     @Test("CWE rule HL7au:00044.6.1 fires on a CWE field with identifier missing coding system")
     func cweIdentifierWithoutCodingSystemFires() throws {
@@ -487,10 +456,7 @@ struct LocaleAUProfileTests {
 
     // PID-3 with only CX-1 populated. AU rules require CX-4 (Assigning
     // Authority) and CX-5 (Identifier Type Code) to also be valued.
-    private let pidCxMinimal = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||999999\r
-    """
+    private let pidCxMinimal = TestWires.adt("PID|1||999999")
 
     @Test("CX rule HL7au:00044.1.2 — PID-3 with CX-4 empty fires")
     func cxAssigningAuthorityMissingFires() throws {
@@ -529,10 +495,7 @@ struct LocaleAUProfileTests {
     }
 
     // PID-3 fully AU-conformant: CX-1 + CX-4 + CX-5 all valued.
-    private let pidCxFull = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||999999^^^HOSP^MR\r
-    """
+    private let pidCxFull = TestWires.adt("PID|1||999999^^^HOSP^MR")
 
     @Test("CX consistent (CX-1+CX-4+CX-5 populated) fires no CX-required violations")
     func cxConsistentFiresNoViolations() throws {
@@ -549,10 +512,7 @@ struct LocaleAUProfileTests {
 
     // CX rules apply to EVERY populated CX field, not just PID-3. PID-2
     // is also CX (Patient ID deprecated). When populated, AU rules fire.
-    private let pidCxOnDeprecatedField = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1|DEPRECATED_ID|999999^^^HOSP^MR\r
-    """
+    private let pidCxOnDeprecatedField = TestWires.adt("PID|1|DEPRECATED_ID|999999^^^HOSP^MR")
 
     @Test("CX rules fire on every populated CX field (dataType dispatch)")
     func cxRuleFiresOnEveryCxFieldRegardlessOfFieldIndex() throws {
@@ -663,10 +623,7 @@ struct LocaleAUProfileTests {
         // profileUsage = .required on each FieldOverride, empty MSH-
         // 17 / MSH-19 fire .profileConstraintViolation (distinct from
         // the value-set check that fires only on populated-but-wrong).
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||999999^^^HOSP^MR\r
-        """
+        let wire = TestWires.adt("PID|1||999999^^^HOSP^MR")
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
         let msh17Issue = report.errors.first { issue in
@@ -695,10 +652,7 @@ struct LocaleAUProfileTests {
 
     @Test("profileUsage: same wire under .international fires no profile-required violations")
     func internationalLocaleSilentOnEmptyMSH() throws {
-        let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||999999^^^HOSP^MR\r
-        """
+        let wire = TestWires.adt("PID|1||999999^^^HOSP^MR")
         let message = try Parser(locale: .international).parse(wire)
         let report = Validator(locale: .international).validate(message)
         #expect(profileViolations(in: report).isEmpty,
@@ -1058,10 +1012,7 @@ struct LocaleAUProfileTests {
     @Test("v2.5.1 wire: PID-35 conditional rule fires regardless of locale (base-grammar route)")
     func v251PIDSpeciesConditionUnchangedByProfile() throws {
         // Same wire shape as v24PIDBreedWithoutSpecies but version 2.5.1.
-        let v251Wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-        PID|1||999999^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449\r
-        """
+        let v251Wire = TestWires.adt("PID|1||999999^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449")
         let intlMessage = try Parser(locale: .international).parse(v251Wire)
         let intlReport = Validator(locale: .international).validate(intlMessage)
         let auMessage = try Parser(locale: .auLocalisation).parse(v251Wire)

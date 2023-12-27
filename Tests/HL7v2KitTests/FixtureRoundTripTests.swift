@@ -22,7 +22,7 @@ struct FixtureRoundTripTests {
 
     @Test("All valid fixtures round-trip byte-perfectly")
     func validFixturesRoundTrip() throws {
-        let fixtures = try discoverFixtures(excludingMalformed: true)
+        let fixtures = try FixtureCorpus.validFixtureURLs()
         try #require(!fixtures.isEmpty, "No valid fixtures discovered — Tests/Fixtures bundle missing?")
 
         for fixture in fixtures {
@@ -41,7 +41,7 @@ struct FixtureRoundTripTests {
 
     @Test("All valid fixtures produce a non-error ValidationReport")
     func validFixturesValidate() throws {
-        let fixtures = try discoverFixtures(excludingMalformed: true)
+        let fixtures = try FixtureCorpus.validFixtureURLs()
         for fixture in fixtures {
             let data = try Data(contentsOf: fixture)
             guard let message = try? Parser().parse(data) else { continue }
@@ -52,7 +52,7 @@ struct FixtureRoundTripTests {
 
     @Test("Malformed fixtures throw a ParseError")
     func malformedFixturesThrow() throws {
-        let fixtures = try discoverFixtures(malformedOnly: true)
+        let fixtures = try FixtureCorpus.malformedFixtureURLs()
         try #require(!fixtures.isEmpty, "No malformed fixtures discovered — Tests/Fixtures bundle missing?")
         for fixture in fixtures {
             let data = try Data(contentsOf: fixture)
@@ -64,7 +64,7 @@ struct FixtureRoundTripTests {
 
     @Test("Valid fixtures: path access and typed accessors agree on every populated PID field")
     func pathAndTypedAccessorsCrossCheck() throws {
-        let fixtures = try discoverFixtures(excludingMalformed: true)
+        let fixtures = try FixtureCorpus.validFixtureURLs()
         for fixture in fixtures {
             let data = try Data(contentsOf: fixture)
             guard let message = try? Parser().parse(data),
@@ -103,46 +103,4 @@ struct FixtureRoundTripTests {
         }
     }
 
-    // MARK: - Discovery
-
-    private func discoverFixtures(
-        excludingMalformed: Bool = false,
-        malformedOnly: Bool = false
-    ) throws -> [URL] {
-        let fixturesDir = try fixturesURL()
-        let fm = FileManager.default
-        let allFiles = try fm.contentsOfDirectory(at: fixturesDir, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
-
-        if malformedOnly {
-            return allFiles.filter { $0.lastPathComponent.hasPrefix("malformed_") }
-        }
-        if excludingMalformed {
-            return allFiles.filter { !$0.lastPathComponent.hasPrefix("malformed_") }
-        }
-        return allFiles
-    }
-
-    private func fixturesURL() throws -> URL {
-        // Package.swift bundles Tests/Fixtures via `.copy("../Fixtures")`,
-        // which lands as a `Fixtures` subdirectory in Bundle.module.
-        if let url = Bundle.module.url(forResource: "Fixtures", withExtension: nil) {
-            return url
-        }
-        // Fallback for environments where Bundle.module isn't populated
-        // (e.g. some test-runner edge cases): walk up from the source file.
-        let here = URL(fileURLWithPath: #filePath)
-        return here.deletingLastPathComponent()       // HL7v2KitTests
-                   .deletingLastPathComponent()       // Tests
-                   .appendingPathComponent("Fixtures")
-    }
-}
-
-// MARK: - Safe collection subscript
-
-private extension Collection {
-    subscript(safe index: Index) -> Element? {
-        indices.contains(index) ? self[index] : nil
-    }
 }

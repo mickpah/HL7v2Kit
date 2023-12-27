@@ -25,10 +25,7 @@ struct ConditionalFieldTests {
     // PID-37 (Strain) populated, PID-36 (Breed Code) empty. Pipe count
     // after `M`: 29 pipes places `DeKalb` at PID-37 with PID-35/36 both
     // empty. The condition fires on PID-36.
-    private let pidStrainPopulatedBreedEmpty = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||||||||DeKalb\r
-    """
+    private let pidStrainPopulatedBreedEmpty = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||||||||DeKalb")
 
     @Test("PID-37 populated + PID-36 empty → .conditionalFieldMissing on PID-36")
     func breedCodeConditionFiresWhenStrainPopulated() throws {
@@ -45,10 +42,7 @@ struct ConditionalFieldTests {
 
     // PID-37 populated AND PID-36 populated — condition triggers but the
     // dependent field is present, no error.
-    private let pidStrainAndBreedPopulated = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||||||L2^Canine^HL70447|B7^Beagle^HL70449|DeKalb\r
-    """
+    private let pidStrainAndBreedPopulated = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||||||L2^Canine^HL70447|B7^Beagle^HL70449|DeKalb")
 
     @Test("PID-35/36/37 all populated → no conditional error")
     func breedCodeConditionSatisfiedWhenBothPopulated() throws {
@@ -62,10 +56,7 @@ struct ConditionalFieldTests {
     // PID-36 populated, PID-35 empty → PID-35 conditional fires. Pipe
     // count: 28 pipes after `M` places `B7^Beagle^HL70449` at PID-36 with
     // PID-35 empty.
-    private let pidBreedPopulatedSpeciesEmpty = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449\r
-    """
+    private let pidBreedPopulatedSpeciesEmpty = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||B7^Beagle^HL70449")
 
     @Test("PID-36 populated + PID-35 empty → .conditionalFieldMissing on PID-35")
     func speciesCodeConditionFiresWhenBreedPopulated() throws {
@@ -81,10 +72,7 @@ struct ConditionalFieldTests {
 
     // PID-38 populated, PID-35 empty → PID-35 conditional fires via the
     // OR clause. Pipe count: 30 pipes after `M`.
-    private let pidProductionPopulatedSpeciesEmpty = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||||DA^Dairy^L\r
-    """
+    private let pidProductionPopulatedSpeciesEmpty = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||||||||||||||||||||||||||||||DA^Dairy^L")
 
     @Test("PID-38 populated + PID-35 empty → .conditionalFieldMissing on PID-35 (OR branch)")
     func speciesCodeConditionFiresWhenProductionClassPopulated() throws {
@@ -102,10 +90,7 @@ struct ConditionalFieldTests {
     // PID with NO species/breed/strain/production-class fields (the typical
     // human-patient shape). No conditional should fire. This pins backward
     // compatibility for the gold-fixture corpus.
-    private let pidPlainHumanPatient = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r\
-    PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M\r
-    """
+    private let pidPlainHumanPatient = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M")
 
     @Test("PID-35..PID-38 all empty → no conditional error")
     func noVeterinaryFieldsNoConditionalError() throws {
@@ -547,14 +532,7 @@ struct ConditionalFieldTests {
         // veterinary fields, and OBX segments either populate OBX-2 or
         // use OBX-11 = X — so the schema-driven conditional rules must
         // not flip any valid fixture from valid → invalid.
-        let fixturesDir = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures", isDirectory: true)
-        let fm = FileManager.default
-        let urls = try fm.contentsOfDirectory(at: fixturesDir, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "hl7" }
-            .filter { !$0.lastPathComponent.hasPrefix("malformed_") }
+        let urls = try FixtureCorpus.validFixtureURLs()
         #expect(!urls.isEmpty, "Should find at least one valid fixture")
         for url in urls {
             let bytes = try Data(contentsOf: url)
