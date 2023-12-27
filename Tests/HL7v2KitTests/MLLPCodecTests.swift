@@ -141,13 +141,6 @@ struct MLLPCodecTests {
 
     // MARK: - Round-trip
 
-    @Test("frame() → unframe() round-trips the original body bytes")
-    func roundTripPreservesBody() {
-        var unframer = MLLPUnframer()
-        let frames = unframer.feed(MLLP.frame(body))
-        #expect(frames.first == body)
-    }
-
     @Test("Round-trip through the Parser: framed wire parses to the same Message")
     func unframeIntoParserParses() throws {
         var unframer = MLLPUnframer()

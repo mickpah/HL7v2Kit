@@ -343,6 +343,19 @@ the delta is enumerated:
 **Done when:** the test-name diff equals the fold map **exactly** (9 MultiVersion names → 3
 parameterized; `roundTripPreservesBody` removed; LocaleAUProfile names unchanged); suite green.
 
+**Status: ✅ landed 2026-08-27.** Fold map delivered EXACTLY, slightly larger than planned on the
+MultiVersion side: **12 removals** (the 9 triple names + `v26VersionDetected` +
+`v282VersionDetected` — both detected legs folded as table rows, incl. the bare-2.8 legacy check
+as a 6th detected row — + MLLP's `roundTripPreservesBody`) → **3 parameterized additions**
+(`versionDetected(_:)`, `versionRoundTrip(_:)`, `validatorUsesOwnGrammar(_:)`); name-diff
+verified equal to this map, LocaleAU names untouched. Suite count 524 → **515** (name-diff is the
+authoritative check per P5). F3 honest tally: **13 closures folded** into the merged
+`hasViolation(_:segmentID:fieldIndex:componentIndex:citing:)` helper (both old overloads merged);
+6 `first{…}` sites remain by design — 3 extract the issue for further asserts (incl. the R4-C2
+row), 1 negative OR-citation with message interpolation, 1 dual-token match, 1 non-profile issue
+code. Net −174 lines. **R10 note:** the fold shifted the `IssueCode.unknownSegment` disjunction
+lines to MultiVersionTests **:394, :443, :494, :749**.
+
 ---
 
 ## Stage R10 — v2.0.0 breaking capstone († track)
@@ -359,7 +372,7 @@ boundary (likely post-v1.15). Every earlier stage is 1.x-safe; this one IS the m
    `ParseError.unknownSegment` is a **distinct, alive** symbol (thrown `Parser.swift:145`) —
    untouched, as are its uses in `ParsingTests:13,:22` and `ParseErrorTests:79-97`. Same-stage
    test edits: the `.malformedField` description row in `ParseErrorTests`, and the
-   `IssueCode.unknownSegment` disjunctions at `MultiVersionTests:414,463,521,786` (disjoint from
+   `IssueCode.unknownSegment` disjunctions at `MultiVersionTests:394,443,494,749` (re-located after the R9 fold; disjoint from
    R9's fold ranges — neither stage silently absorbs the other).
 3. **F22:** delete `ParserOptions.preserveExcessFields` (`ParseError.swift:59-67,86,92`) — a
    self-documented no-op advertising behaviour that never shipped. **F28:** `ValidationReport.empty`.
@@ -428,7 +441,7 @@ direct check against `98b8390`. Ranked by net cut.
 | 14 | R4 | shrink | Validator's second field-ref parser `ParsedIndexSuffix`/`parseIndexSuffix` re-implements Path grammar (verified at :1255,1275,1288). Validator.swift:1275-1307 | 20 | `try? Path(referent)` + BOTH guards (`segmentIndex == nil && repetition == nil`) — Path parses `[N]` (Path.swift:87-89) and `~N` | P1; **C1 FIRST**; ConditionalFieldTests, CrossSegmentDSLTests |
 | 15 | R4 | shrink | 5 hand-rolled nested-for population scans (verified). Validator.swift:915-922,928-934,1446-1455; EscapeSequences.swift:195-207 | 20 | `contains(where:)` one-liners (stdlib, kernel-safe) | P1 |
 | 16 | R6 | stdlib | Hand-rolled offset tokenizer `runs(in:)`. scripts/extract-segment-tables.swift:98-125 | 20 | Swift Regex `matches(of:)`; trailing-space delta unreachable (verified consumer trace) | P6; `--verify` |
-| 17 | R10 | delete† | 4 never-raised public cases: `BuilderError.invalidEncodingCharacters`/`.duplicateMSH`, `ParseError.malformedField`, `IssueCode.unknownSegment` (verified: zero construction sites; `ParseError.unknownSegment` is ALIVE — distinct symbol, thrown Parser.swift:145). MessageBuilder.swift:12-13; ParseError.swift:22,38-39; ValidationIssue.swift:80-85 | 17 | Delete at 2.0; same-stage: ParseErrorTests description row + MultiVersionTests:414,463,521,786 disjunctions | P4 |
+| 17 | R10 | delete† | 4 never-raised public cases: `BuilderError.invalidEncodingCharacters`/`.duplicateMSH`, `ParseError.malformedField`, `IssueCode.unknownSegment` (verified: zero construction sites; `ParseError.unknownSegment` is ALIVE — distinct symbol, thrown Parser.swift:145). MessageBuilder.swift:12-13; ParseError.swift:22,38-39; ValidationIssue.swift:80-85 | 17 | Delete at 2.0; same-stage: ParseErrorTests description row + MultiVersionTests:394,443,494,749 disjunctions | P4 |
 | 18 | R6 | delete | Stale Tests/Fixtures/README.md ("none yet" beside 57 fixtures; names a script that never existed) (verified) | 17 | `git mv FIXTURES.md README.md` (referrers become correct, zero edits); fold 3-step policy in; fix the working notes:107 | P2; fixture-safety CI |
 | 19 | R4 | delete | 3 dead internal `Profile` members: `isEmpty`, `none` (shadows `Optional.none`), `baseVersion` (verified: zero call sites; type internal). Profile.swift:32,62-71 | 16 | Delete | P2 |
 | 20 | R5 | shrink | Verbatim wire-decode preamble (BOM/NUL/Latin-1/MSH-18) duplicated (verified diff). BatchParser.swift:87-101 = Parser.swift:51-74 | 12 | Internal `Parser.decodeWirePayload(_:)` shared by both | P1; **C3 FIRST**; CharacterEncodingTests, BatchFixtureTests |
@@ -457,7 +470,7 @@ The R10 payload. Every symbol below ships dead today; the evidence column is wha
 | Finding | Symbol(s) | Why dead (evidence, 2026-08-26) | Same-stage test edits |
 |---|---|---|---|
 | F6 | `HL7v2KitDictionaries` product + targets | Never imported outside its own test; function shipped via codegen grammar tables (ADR-005 Path C); untouched since Initial Commit | `DictionaryLoadingTests` suite removed (the test-list delta) |
-| F17 | `BuilderError.invalidEncodingCharacters`, `BuilderError.duplicateMSH`, `ParseError.malformedField`, `IssueCode.unknownSegment` | Zero construction/throw sites in Sources; never-emitted cases bait integrators into dead switch arms. `ParseError.unknownSegment` is a distinct ALIVE symbol — untouched | ParseErrorTests `.malformedField` description row; MultiVersionTests:414,463,521,786 disjunctions |
+| F17 | `BuilderError.invalidEncodingCharacters`, `BuilderError.duplicateMSH`, `ParseError.malformedField`, `IssueCode.unknownSegment` | Zero construction/throw sites in Sources; never-emitted cases bait integrators into dead switch arms. `ParseError.unknownSegment` is a distinct ALIVE symbol — untouched | ParseErrorTests `.malformedField` description row; MultiVersionTests:394,443,494,749 disjunctions |
 | F22 | `ParserOptions.preserveExcessFields` | Documented no-op ("this flag is currently a no-op"); zero read sites | none (never set in tests) |
 | F28 | `ValidationReport.empty` | Zero call sites incl. tests | none |
 | F29 | `MessageBuilder.append(unknown:)` | Zero call sites; untested overlap of `appendSegment(id:fields:)` | none |
@@ -523,7 +536,7 @@ git diff --stat Sources/HL7v2Kit/Segment/Generated/   # empty (R2, R1 step-a) or
 - **R10 scheduling** is the only open dependency: it waits on the owner declaring the 2.0
   boundary. R1–R9 have no ordering dependency on it.
 - **Shared-file overlap** R9/R10 (`MultiVersionTests`): fold ranges (:28-59,:130-149,:268-287)
-  and disjunction lines (:414,:463,:521,:786) are disjoint and both enumerated — whichever lands
+  and disjunction lines (now :394,:443,:494,:749 post-R9) are disjoint and both enumerated — whichever lands
   second re-checks line numbers against the shifted file.
 - **F26 is conditional**: if `String(reflecting:)` output differs from `escapeStringLiteral` for
   any schema string, drop the finding rather than chase byte-parity.

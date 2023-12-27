@@ -20,42 +20,64 @@ struct MultiVersionTests {
     // A minimal v2.3.1 ADT^A01 with MSH-12 = "2.3.1". v2.3.1 caps MSH at
     // 17 fields, so the wire deliberately stops before MSH-18 / 19 / 20 /
     // 21 (which only exist in v2.4+ / v2.5+).
-    private let v231Wire = """
+    private static let v231Wire = """
     MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3.1\r\
     PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M||2106-3^White^HL70005|10 Main St^^Sydney^NSW^2000^AU||(02)555-1234\r
     """
 
-    @Test("v2.3.1 wire parses with .version == .v2_3_1")
-    func versionDetected() throws {
-        let message = try Parser().parse(v231Wire)
-        #expect(message.version == .v2_3_1)
+    // R9/F10: the per-version detected / round-trip / validator triple was
+    // duplicated verbatim for v2.3 / v2.3.1 / v2.4 (and the detected leg
+    // again for v2.6 / v2.8.2 / bare-2.8) — folded into three parameterized
+    // tests over shared row tables. Grammar-table PIN tests stay
+    // per-version below: their assertions are spec data, not mechanics.
+
+    private static let detectedRows: [(wire: String, version: Version)] = [
+        (v231Wire, .v2_3_1),
+        (v24Wire, .v2_4),
+        (v23Wire, .v2_3),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.6\r", .v2_6),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8.2\r", .v2_8_2),
+        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r", .v2_8),
+    ]
+
+    private static let tripleRows: [(wire: String, version: Version)] = [
+        (v231Wire, .v2_3_1),
+        (v24Wire, .v2_4),
+        (v23Wire, .v2_3),
+    ]
+
+    @Test("wire parses with its own declared version", arguments: detectedRows)
+    func versionDetected(_ row: (wire: String, version: Version)) throws {
+        let message = try Parser().parse(row.wire)
+        #expect(message.version == row.version)
     }
 
-    @Test("v2.3.1 wire round-trips byte-perfectly")
-    func roundTrip() throws {
-        let message = try Parser().parse(v231Wire)
+    @Test("wire round-trips byte-perfectly", arguments: tripleRows)
+    func versionRoundTrip(_ row: (wire: String, version: Version)) throws {
+        let message = try Parser().parse(row.wire)
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
-        #expect(rebuilt == v231Wire)
+        #expect(rebuilt == row.wire)
+    }
+
+    @Test("validation runs against the wire's own grammar table", arguments: tripleRows)
+    func validatorUsesOwnGrammar(_ row: (wire: String, version: Version)) throws {
+        let message = try Parser().parse(row.wire)
+        let report = Validator().validate(message)
+        // No required-field misses on these well-formed wires — each
+        // version's grammar table marks the same PID-1 / PID-3 / PID-5
+        // fields as required as the v2.5.1 grammar does.
+        #expect(report.errors.isEmpty,
+                "\(row.version) message validated against its own grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
     @Test("v2.3.1 path accessors agree with typed accessors (shared v2.5.1 struct)")
     func pathAndTypedAgree() throws {
-        let message = try Parser().parse(v231Wire)
+        let message = try Parser().parse(Self.v231Wire)
         let pid = try #require(message.firstSegment(PID.self))
         #expect(pid.setID == message["PID-1"])
         #expect(pid.patientName?.familyName == "Smith")
         #expect(pid.patientName?.familyName == message["PID-5.1"])
-    }
-
-    @Test("v2.3.1 validation runs against the v2.3.1 grammar table, not v2.5.1")
-    func validatorUsesV231GrammarTable() throws {
-        let message = try Parser().parse(v231Wire)
-        let report = Validator().validate(message)
-        // No required-field misses on this well-formed wire — the v2.3.1
-        // grammar table marks the same PID-1 / PID-3 / PID-5 fields as
-        // required as the v2.5.1 grammar does.
-        #expect(report.errors.isEmpty,
-                "v2.3.1 message validated against v2.3.1 grammar should report no errors, got: \(report.errors.map(\.message))")
     }
 
     @Test("v2.3.1 SegmentGrammarTable is populated for all 15 segments")
@@ -93,7 +115,7 @@ struct MultiVersionTests {
         // The shared `PID` struct exposes accessors for PID-31..39
         // (v2.4 / v2.5 additions). A v2.3.1 wire doesn't populate them
         // — the typed accessor must return nil, not crash.
-        let message = try Parser().parse(v231Wire)
+        let message = try Parser().parse(Self.v231Wire)
         let pid = try #require(message.firstSegment(PID.self))
         #expect(pid.identityUnknownIndicator == nil)
         #expect(pid.identityReliabilityCode == nil)
@@ -122,31 +144,10 @@ struct MultiVersionTests {
     // to exercise the additions while staying below the v2.5 PID-33..39
     // cap. MSH-18 (charset) populated to exercise the v2.4 MSH addition.
     // Pipe count between PID-8 ("M") and PID-31 ("N"): 23 (= 31 - 8).
-    private let v24Wire = """
+    private static let v24Wire = """
     MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.4|||AL|NE|AU|UNICODE UTF-8\r\
     PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||N|US\r
     """
-
-    @Test("v2.4 wire parses with .version == .v2_4")
-    func v24VersionDetected() throws {
-        let message = try Parser().parse(v24Wire)
-        #expect(message.version == .v2_4)
-    }
-
-    @Test("v2.4 wire round-trips byte-perfectly")
-    func v24RoundTrip() throws {
-        let message = try Parser().parse(v24Wire)
-        let rebuilt = String(data: message.serialize(), encoding: .utf8)
-        #expect(rebuilt == v24Wire)
-    }
-
-    @Test("v2.4 validation runs against the v2.4 grammar table, not v2.3.1 / v2.5.1")
-    func v24ValidatorUsesV24GrammarTable() throws {
-        let message = try Parser().parse(v24Wire)
-        let report = Validator().validate(message)
-        #expect(report.errors.isEmpty,
-                "v2.4 message validated against v2.4 grammar should report no errors, got: \(report.errors.map(\.message))")
-    }
 
     // v0.7-S4: the v2.4 ORC/OBR grammar carries the same four cross-
     // segment / message-context conditions as v2.5.1. Wire shape is a
@@ -227,7 +228,7 @@ struct MultiVersionTests {
 
     @Test("v2.4 typed accessors for v2.5-only PID fields return nil on a v2.4 wire")
     func v24ExtendedFieldsReturnNilForV25Additions() throws {
-        let message = try Parser().parse(v24Wire)
+        let message = try Parser().parse(Self.v24Wire)
         let pid = try #require(message.firstSegment(PID.self))
         // v2.4 PID reaches 38, so PID-31 + PID-32 ARE populated.
         #expect(pid.identityUnknownIndicator == "N")
@@ -260,31 +261,10 @@ struct MultiVersionTests {
     // MSH-18 charset). The wire stays minimal — v2.3 traffic in the
     // AU corpus is almost entirely admin/order messages with sparse
     // PID populations.
-    private let v23Wire = """
+    private static let v23Wire = """
     MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.3\r\
     PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r
     """
-
-    @Test("v2.3 wire parses with .version == .v2_3")
-    func v23VersionDetected() throws {
-        let message = try Parser().parse(v23Wire)
-        #expect(message.version == .v2_3)
-    }
-
-    @Test("v2.3 wire round-trips byte-perfectly")
-    func v23RoundTrip() throws {
-        let message = try Parser().parse(v23Wire)
-        let rebuilt = String(data: message.serialize(), encoding: .utf8)
-        #expect(rebuilt == v23Wire)
-    }
-
-    @Test("v2.3 validation runs against the v2.3 grammar table")
-    func v23ValidatorUsesV23GrammarTable() throws {
-        let message = try Parser().parse(v23Wire)
-        let report = Validator().validate(message)
-        #expect(report.errors.isEmpty,
-                "v2.3 message validated against v2.3 grammar should report no errors, got: \(report.errors.map(\.message))")
-    }
 
     @Test("v2.3 SegmentGrammarTable populated for all 15 segments with v2.3 caps")
     func v23GrammarTablePopulated() {
@@ -378,7 +358,7 @@ struct MultiVersionTests {
 
     @Test("v2.3 typed accessors for fields beyond v2.3 cap return nil on a v2.3 wire")
     func v23ExtendedFieldAccessorsReturnNilOnV23() throws {
-        let message = try Parser().parse(v23Wire)
+        let message = try Parser().parse(Self.v23Wire)
         let pid = try #require(message.firstSegment(PID.self))
         // PID-31..39 (v2.4 / v2.5 additions) all stay nil because the
         // v2.3 wire doesn't populate them.
@@ -469,13 +449,6 @@ struct MultiVersionTests {
     }
 
     // MARK: - v0.14 (ADR-012): HL7 v2.6 grammar — S1 control/notes segments
-
-    @Test("v2.6 wire parses with .version == .v2_6")
-    func v26VersionDetected() throws {
-        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.6\r"
-        let message = try Parser().parse(wire)
-        #expect(message.version == .v2_6)
-    }
 
     @Test("v2.6 SegmentGrammarTable carries the S1 control/notes segments with v2.6 field counts")
     func v26GrammarTableS1Populated() {
@@ -731,16 +704,6 @@ struct MultiVersionTests {
     }
 
     // MARK: - v0.15 (ADR-013): HL7 v2.8.2 grammar — S1 control/notes segments
-
-    @Test("v2.8.2 wire parses with .version == .v2_8_2 (distinct from grammar-less .v2_8)")
-    func v282VersionDetected() throws {
-        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8.2\r"
-        let message = try Parser().parse(wire)
-        #expect(message.version == .v2_8_2)
-        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
-        let v28 = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r")
-        #expect(v28.version == .v2_8)
-    }
 
     @Test("v2.8.2 SegmentGrammarTable carries the S1 control/notes segments (deltas vs v2.6)")
     func v282GrammarTableS1Populated() {

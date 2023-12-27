@@ -196,6 +196,26 @@ F4 + F8 + F25; net ≈ −220 lines (−310 in the suites, +90 across two shared
 - **F25:** the dead `Collection.subscript(safe:)` deleted with its MARK.
 - Verification: suite **524 green**; test-name diff **empty**; zero diagnostics on rebuild.
 
+### R9 — in-suite consolidation (remediation stage 9 of 10)
+
+F3 + F10 + F27; net −174 lines. The only 1.x stage with a test-list delta — and the name diff
+was verified equal to the enumerated fold map exactly.
+
+- **F10:** the per-version detected / round-trip / validator triple (duplicated verbatim for
+  v2.3 / v2.3.1 / v2.4) plus both standalone detected tests (v2.6, v2.8.2 — including the
+  bare-2.8 legacy check, folded as a 6th detected row) → three `@Test(arguments:)`
+  parameterized tests over shared row tables. Grammar-table PIN tests untouched — spec data.
+  Fold map: 12 names removed → 3 added; suite count 524 → 515 (name-diff authoritative).
+- **F3:** 13 inline `first { if case .profileConstraintViolation … }` closures in
+  LocaleAUProfileTests folded into the merged
+  `hasViolation(_:segmentID:fieldIndex:componentIndex:citing:)` helper (the two previous
+  overloads merged into one optional-axis signature). Six `first{…}` sites remain by design:
+  three extract the issue for further asserts, one is a negative OR-citation check, one a
+  dual-token match, one a non-profile issue code.
+- **F27:** `roundTripPreservesBody` deleted — a strict subset of `unframeSingleFrame`.
+- Verification: suite **515 green** in 26 suites; name diff = the fold map exactly;
+  warning-free. R10's `unknownSegment` disjunction lines re-located post-fold (:394/:443/:494/:749).
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

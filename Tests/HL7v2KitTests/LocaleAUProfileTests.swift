@@ -25,22 +25,24 @@ struct LocaleAUProfileTests {
         }
     }
 
-    /// True if the report contains a profile violation matching the
-    /// given (segmentID, fieldIndex, componentIndex) location.
+    /// True if the report contains a profile violation matching every
+    /// provided axis — location (segmentID / fieldIndex / componentIndex)
+    /// and/or a citation token contained in the rule. R9/F3: the per-test
+    /// `first { if case … }` closures all route through here.
     private func hasViolation(
         _ report: ValidationReport,
-        segmentID: String,
-        fieldIndex: Int,
-        componentIndex: Int
+        segmentID: String? = nil,
+        fieldIndex: Int? = nil,
+        componentIndex: Int? = nil,
+        citing token: String? = nil
     ) -> Bool {
         report.errors.contains { issue in
-            if case .profileConstraintViolation = issue.code,
-               issue.location.segmentID == segmentID,
-               issue.location.fieldIndex == fieldIndex,
-               issue.location.componentIndex == componentIndex {
-                return true
-            }
-            return false
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            if let segmentID, issue.location.segmentID != segmentID { return false }
+            if let fieldIndex, issue.location.fieldIndex != fieldIndex { return false }
+            if let componentIndex, issue.location.componentIndex != componentIndex { return false }
+            if let token, !rule.contains(token) { return false }
+            return true
         }
     }
 
@@ -246,17 +248,7 @@ struct LocaleAUProfileTests {
         let message = try Parser(locale: .auLocalisation).parse(ceIdentifierWithoutCodingSystem)
         let report = Validator(locale: .auLocalisation).validate(message)
         // OBR-4 (CE) — CE-1 = "GLU" set, CE-3 = empty. Violates 44.4.1.
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "OBR",
-               issue.location.fieldIndex == 4,
-               issue.location.componentIndex == 3,
-               rule.contains("HL7au:00044.4.1") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "OBR", fieldIndex: 4, componentIndex: 3, citing: "HL7au:00044.4.1"),
                 "Expected HL7au:00044.4.1 violation on OBR-4.3; report = \(report.errors.map(\.message))")
     }
 
@@ -268,17 +260,7 @@ struct LocaleAUProfileTests {
     func ceAltIdentifierSetWithoutAltCodingSystemFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(ceAltIdentifierWithoutAltCodingSystem)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "OBR",
-               issue.location.fieldIndex == 4,
-               issue.location.componentIndex == 6,
-               rule.contains("HL7au:00044.4.5") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "OBR", fieldIndex: 4, componentIndex: 6, citing: "HL7au:00044.4.5"),
                 "Expected HL7au:00044.4.5 violation on OBR-4.6")
     }
 
@@ -289,16 +271,7 @@ struct LocaleAUProfileTests {
     func ceEmptyIdentifierWithCodingSystemFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(ceCodingSystemWithoutIdentifier)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "OBR",
-               issue.location.fieldIndex == 4,
-               rule.contains("HL7au:00044.4.2") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "OBR", fieldIndex: 4, citing: "HL7au:00044.4.2"),
                 "Expected HL7au:00044.4.2 violation when CE-3 is set with CE-1 empty")
     }
 
@@ -344,15 +317,6 @@ struct LocaleAUProfileTests {
     }
 
     // MARK: - v0.13 (ADR-011): 00044.4.8 / .4.4 / .5.3 / .6.3
-
-    private func hasViolation(_ report: ValidationReport, citing token: String) -> Bool {
-        report.errors.contains { issue in
-            if case .profileConstraintViolation(let rule) = issue.code, rule.contains(token) {
-                return true
-            }
-            return false
-        }
-    }
 
     // HL7au:00044.4.8 — alternate coding system (CE-6) must differ from
     // primary coding system (CE-3). OBR-4 with CE-3 = CE-6 = "SCT" (both
@@ -462,17 +426,7 @@ struct LocaleAUProfileTests {
     func cxAssigningAuthorityMissingFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(pidCxMinimal)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "PID",
-               issue.location.fieldIndex == 3,
-               issue.location.componentIndex == 4,
-               rule.contains("HL7au:00044.1.2") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "PID", fieldIndex: 3, componentIndex: 4, citing: "HL7au:00044.1.2"),
                 "Expected HL7au:00044.1.2 violation on PID-3.4")
     }
 
@@ -480,17 +434,7 @@ struct LocaleAUProfileTests {
     func cxIdentifierTypeCodeMissingFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(pidCxMinimal)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "PID",
-               issue.location.fieldIndex == 3,
-               issue.location.componentIndex == 5,
-               rule.contains("HL7au:00044.1.3") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "PID", fieldIndex: 3, componentIndex: 5, citing: "HL7au:00044.1.3"),
                 "Expected HL7au:00044.1.3 violation on PID-3.5")
     }
 
@@ -556,17 +500,7 @@ struct LocaleAUProfileTests {
     func mshCountryWrongValueFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(mshNonAUCountry)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 17,
-               issue.location.componentIndex == 1,
-               rule.contains("HL7au:000041") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 17, componentIndex: 1, citing: "HL7au:000041"),
                 "Expected HL7au:000041 violation on MSH-17.1 = 'USA'")
     }
 
@@ -580,17 +514,7 @@ struct LocaleAUProfileTests {
     func mshLanguageWrongIdentifierFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(mshNonENLanguage)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let violation = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 19,
-               issue.location.componentIndex == 1,
-               rule.contains("HL7au:000042") {
-                return true
-            }
-            return false
-        }
-        #expect(violation != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 19, componentIndex: 1, citing: "HL7au:000042"),
                 "Expected HL7au:000042 violation on MSH-19.1 = 'fr'")
     }
 
@@ -626,27 +550,9 @@ struct LocaleAUProfileTests {
         let wire = TestWires.adt("PID|1||999999^^^HOSP^MR")
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let msh17Issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 17,
-               rule.contains("HL7au:000041") {
-                return true
-            }
-            return false
-        }
-        let msh19Issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 19,
-               rule.contains("HL7au:000042") {
-                return true
-            }
-            return false
-        }
-        #expect(msh17Issue != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 17, citing: "HL7au:000041"),
                 "Empty MSH-17 should fire HL7au:000041 violation under AU profile-required")
-        #expect(msh19Issue != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 19, citing: "HL7au:000042"),
                 "Empty MSH-19 should fire HL7au:000042 violation under AU profile-required")
     }
 
@@ -704,16 +610,7 @@ struct LocaleAUProfileTests {
     func msh12WrongVID1Fires() throws {
         let message = try Parser(locale: .auLocalisation).parse(mshWrongVID1OnORU)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 12,
-               rule.contains("HL7au:000040.1/.2") {
-                return true
-            }
-            return false
-        }
-        #expect(issue != nil)
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 12, citing: "HL7au:000040.1/.2"))
     }
 
     // Same wrong-VID-1 wire but messageCode = ADT — 040.1/.2 must NOT
@@ -753,16 +650,7 @@ struct LocaleAUProfileTests {
     func msh12SubcomponentGranularityFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(mshMissingVID22)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 12,
-               rule.contains("MSH-12.2.2") {
-                return true
-            }
-            return false
-        }
-        #expect(issue != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 12, citing: "MSH-12.2.2"),
                 "Expected HL7au:000040.1/.2 violation on MSH-12.2.2 (Australia)")
     }
 
@@ -779,16 +667,7 @@ struct LocaleAUProfileTests {
     func msh12_040_3_FiresOnORU() throws {
         let message = try Parser(locale: .auLocalisation).parse(oruMissingVID3)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "MSH",
-               issue.location.fieldIndex == 12,
-               rule.contains("HL7au:000040.3") {
-                return true
-            }
-            return false
-        }
-        #expect(issue != nil,
+        #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 12, citing: "HL7au:000040.3"),
                 "Expected HL7au:000040.3 violation on Orders/Results message lacking VID-3")
     }
 
@@ -1078,16 +957,7 @@ struct LocaleAUProfileTests {
     func hl7au000008_1_nonConformingAUSPDIFires() throws {
         let message = try Parser(locale: .auLocalisation).parse(oruWithNonConformingAUSPDIDisplayOBX)
         let report = Validator(locale: .auLocalisation).validate(message)
-        let issue = report.errors.first { issue in
-            if case .profileConstraintViolation(let rule) = issue.code,
-               issue.location.segmentID == "OBX",
-               issue.location.fieldIndex == 3,
-               rule.contains("HL7au:000008.1") {
-                return true
-            }
-            return false
-        }
-        #expect(issue != nil,
+        #expect(hasViolation(report, segmentID: "OBX", fieldIndex: 3, citing: "HL7au:000008.1"),
                 "Expected HL7au:000008.1 violation on OBX-3.1 = XYZ under AUSPDI gate")
     }
 
