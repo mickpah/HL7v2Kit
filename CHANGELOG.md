@@ -71,6 +71,40 @@ under the CompositeTypeTests / ComponentGrammarTests / TypedSegmentTests pins.
   rides the v2.0.0 boundary with the other breaking removals.
 - Verification: test-name diff **empty**; suite **519/519 green**; build warning-free.
 
+### R4 — validator/locale shrinks, characterization-first (remediation stage 4 of 10)
+
+F11 + F12 + F14 + F15 + F19 + F24; the first stage with red-first work. Two characterization
+tests written and green against pre-refactor code BEFORE anything moved, both green after:
+
+- **C1** (CrossSegmentDSLTests): the condition-DSL referent grammar rejects repetition
+  (`PID-3~2`) and segment-index (`PID[N]-3`) forms fail-safe — on a wire whose plain `PID-3`
+  IS populated, so a mis-resolving parser goes red.
+- **C2** (LocaleAUProfileTests): one parameterized row per `.profileConstraintViolation` append
+  site (7) pinning the EXACT message text, with the in-message citation cross-checked against
+  the issue's own `localeRule` payload.
+
+The refactors:
+
+- **F11:** all 7 profile-issue constructions fold into `appendProfileIssue(citation:location:message:into:)`.
+  Line-neutral (messages stay at call sites) — the win is drift-proofed severity/code/location
+  plumbing, proven byte-identical by C2.
+- **F14:** the Validator's second field-ref parser (`ParsedIndexSuffix`/`parseIndexSuffix`) is
+  gone; both referent call sites parse via the shared `Path` parser through `parseDSLFieldRef`,
+  which guards `segmentIndex == nil && repetition == nil`. Undocumented junk referents that
+  accidentally resolved (`PID-+3`, 1-char IDs before the dash) now uniformly evaluate fail-safe
+  false, aligning behaviour with the documented `SEG-f[.c[.s]]` grammar.
+- **F12:** `ProfileLoader.swift` deleted; loading is `Profile.load(for:)` beside the type.
+- **F15:** four hand-rolled nested-for population/needs-encoding scans → `contains(where:)`
+  (`isRepetitionPopulated`, `isComponentPopulated`, `isFieldPopulated` now delegates,
+  `EscapeSequences.needsEncoding`).
+- **F19:** dead internal `Profile` members deleted: `isEmpty`, `none`, `baseVersion` (+ its
+  init param and the AU factory argument).
+- **F24:** the ORC group-boundary walk lives once as `Message.orcGroupRange(around:)`, shared
+  by `associatedSegment` and the Validator's `.orcObxGroup` resolution — the two group
+  definitions can no longer drift.
+- Verification: suite **522 green** (519 + the 3 characterization test names — the exact
+  enumerated addition, zero removals); build warning-free. Source net −54 lines, +81 test lines.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

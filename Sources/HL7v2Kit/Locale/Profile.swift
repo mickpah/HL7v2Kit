@@ -27,10 +27,6 @@ struct Profile: Sendable, Equatable, Hashable {
     /// The locale this profile corresponds to.
     let locale: HL7Locale
 
-    /// The base HL7 v2 version this profile layers over. AU ADRM-2021
-    /// is over v2.4; future profiles may target other base versions.
-    let baseVersion: Version
-
     /// Per-segment field-attribute overrides. Each override identifies
     /// (segmentID, fieldIndex) and carries the profile's narrowing of
     /// optionality / value-set / required-components for that field.
@@ -59,31 +55,36 @@ struct Profile: Sendable, Equatable, Hashable {
     /// grammar so they only fire under the relevant locale.
     let cardinalityExtensions: [String: [SegmentCardinalityRule]]
 
-    /// True iff this profile carries any overrides. An empty profile
-    /// is a no-op overlay.
-    var isEmpty: Bool {
-        fieldOverrides.isEmpty
-            && compositeOverrides.isEmpty
-            && grammarExtensions.isEmpty
-            && cardinalityExtensions.isEmpty
-    }
-
-    static let none: Profile? = nil
-
     init(
         locale: HL7Locale,
-        baseVersion: Version,
         fieldOverrides: [FieldOverride] = [],
         grammarExtensions: [String: [FieldGrammar]] = [:],
         compositeOverrides: [CompositeOverride] = [],
         cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:]
     ) {
         self.locale = locale
-        self.baseVersion = baseVersion
         self.fieldOverrides = fieldOverrides
         self.grammarExtensions = grammarExtensions
         self.compositeOverrides = compositeOverrides
         self.cardinalityExtensions = cardinalityExtensions
+    }
+
+    /// Look up the profile for a given locale.
+    ///
+    /// Returns `nil` for `.international` (no overlay applied —
+    /// validation runs only base-spec checks). Returns the hand-curated
+    /// AU ADRM-2021 profile (see `Profile+au_adrm_2021.swift`, the
+    /// single source of truth) for `.auLocalisation`; the Validator
+    /// layers its overrides on top of the base grammar. A JSON-driven
+    /// codegen path stays deferred until a second localisation profile
+    /// needs shared tooling (ADR-007; v0.14 retired the stale JSON files).
+    static func load(for locale: HL7Locale) -> Profile? {
+        switch locale {
+        case .international:
+            return nil
+        case .auLocalisation:
+            return Profile.auADRM2021
+        }
     }
 }
 

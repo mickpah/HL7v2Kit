@@ -1305,4 +1305,61 @@ struct LocaleAUProfileTests {
         #expect(hits.count == 1,
                 "Expected exactly one HL7au:000008 violation (OBR[2]'s group only); got \(hits.count): \(hits.map(\.message))")
     }
+
+    // MARK: - R4-C2: exact-message characterization (one row per append site)
+
+    /// One row per `.profileConstraintViolation` construction site in
+    /// `Validator` (R4/F11). Pins the EXACT message text so the F11 fold
+    /// into a shared append helper provably preserves emitted issues
+    /// byte-for-byte. The citation inside the message is cross-checked
+    /// against the issue's own `localeRule` payload rather than
+    /// re-transcribed here.
+    private static let exactMessageRows: [(site: String, wire: String, cite: String, segmentID: String, fieldIndex: Int, componentIndex: Int?, messagePrefix: String)] = [
+        (site: "composite requiredComponents (Validator track 1)",
+         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\rPID|1||999999\r",
+         cite: "HL7au:00044.1.2", segmentID: "PID", fieldIndex: 3, componentIndex: 4,
+         messagePrefix: "AU profile rule violated at PID[1]-3.4: CX-4 must be populated when CX field is populated "),
+        (site: "composite pairRules (track 2)",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\rOBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose\r",
+         cite: "HL7au:00044.4.1", segmentID: "OBR", fieldIndex: 4, componentIndex: 3,
+         messagePrefix: "AU profile rule violated at OBR[1]-4.3: CE-3 must be populated when CE-1 is populated "),
+        (site: "composite componentInequalities (track 3)",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\rOBR|1|PLACER^HOSP^1.2.3^ISO|FILLER^LAB^1.2.4^ISO|GLU^Glucose^SCT^GLU2^Glucose alt^SCT\r",
+         cite: "HL7au:00044.4.8", segmentID: "OBR", fieldIndex: 4, componentIndex: 6,
+         messagePrefix: "AU profile rule violated at OBR[1]-4.6: CE-3 and CE-6 must differ but both are \"SCT\" "),
+        (site: "composite valueConditionals (track 4)",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\rOBR|1|PLACER^HOSP^1.2.3^ISO|FILLER^LAB^1.2.4^ISO|GLU^Glucose^SCT^14749-6^Glucose^LN\r",
+         cite: "HL7au:00044.4.4", segmentID: "OBR", fieldIndex: 4, componentIndex: 6,
+         messagePrefix: "AU profile rule violated at OBR[1]-4.6: CE-6 must not be \"LN\" "),
+        (site: "fieldOverride requiredComponents",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\rOBR|1|PLACER123^HOSP|FILLER456^LAB^1.2.36.1.2001.1003.0.ABC^ISO|GLU^Glucose^L\r",
+         cite: "HL7au:000003", segmentID: "OBR", fieldIndex: 2, componentIndex: 3,
+         messagePrefix: "AU profile rule violated at OBR[1]-2.3: EI component 3 must be populated when OBR-2 ('Placer Order Number') is populated "),
+        (site: "fieldOverride componentValueSets",
+         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1|||AL|NE|USA||en^English^ISO639\rPID|1||999999^^^HOSP^MR\r",
+         cite: "HL7au:000041", segmentID: "MSH", fieldIndex: 17, componentIndex: 1,
+         messagePrefix: "AU profile value-set rule violated at MSH[1]-17.1: expected one of [\"AUS\"] but got \"USA\" "),
+        (site: "profileUsage required-but-missing",
+         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\rPID|1||999999^^^HOSP^MR\r",
+         cite: "HL7au:000041", segmentID: "MSH", fieldIndex: 17, componentIndex: nil,
+         messagePrefix: "AU profile rule violated at MSH[1]-17: field is profile-required (au-adrm-2021 usage = R) but missing "),
+    ]
+
+    @Test("R4-C2: exact violation message per Validator append site", arguments: exactMessageRows)
+    func appendSiteMessageExact(
+        _ row: (site: String, wire: String, cite: String, segmentID: String, fieldIndex: Int, componentIndex: Int?, messagePrefix: String)
+    ) throws {
+        let message = try Parser(locale: .auLocalisation).parse(row.wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let issue = try #require(report.errors.first { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            return rule.contains(row.cite)
+                && issue.location.segmentID == row.segmentID
+                && issue.location.fieldIndex == row.fieldIndex
+                && issue.location.componentIndex == row.componentIndex
+        }, "no \(row.cite) violation at the expected location for site: \(row.site)")
+        guard case .profileConstraintViolation(let rule) = issue.code else { return }
+        #expect(issue.message == row.messagePrefix + "(\(rule))",
+                "message drifted for site: \(row.site)")
+    }
 }

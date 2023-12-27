@@ -201,6 +201,18 @@ signature change, prohibited in 1.x by ADR-014 — moved to R10 where it rides t
 
 **Done when:** C1/C2 green before AND after; `ProfileLoader.swift` deleted; suite green.
 
+**Status: ✅ landed 2026-08-27.** C1 (2 tests, CrossSegmentDSLTests — placed beside the existing
+`evaluate` seam rather than ConditionalFieldTests) and C2 (7 exact-message rows, parameterized)
+were green on the FIRST pre-refactor run and stayed green through the fold/swap. All six findings
+landed; suite 522 green (519 + the 3 characterization test names — the enumerated addition; the
+"empty test-name diff" invariant is hereby clarified to mean *no removals or renames*: sanctioned
+characterization additions are the stage's first-class work). Honest deltas vs estimate: source
+net **−54 lines** (+81 test lines) — **F11's fold is line-neutral** (each message stays at its
+call site), its value being drift-proofed severity/code/location plumbing, proven byte-identical
+by C2. F14's Path swap additionally tightens undocumented junk referents (`PID-+3`, 1-char IDs)
+from accidentally-resolving to fail-safe false — aligning behaviour with the documented grammar;
+canonical refs are unchanged and C1 pins the `~N`/`[N]` rejections.
+
 ---
 
 ## Stage R5 — Parser/encoding shrinks

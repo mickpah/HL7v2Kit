@@ -251,4 +251,28 @@ struct CrossSegmentDSLTests {
         let message = try Parser().parse(wire)
         #expect(try evaluate("PID-37 populated", as: "PID", in: message))
     }
+
+    // MARK: - R4-C1: referent grammar excludes repetition / segment-index forms
+
+    // Characterization pins for the field-ref referent grammar
+    // (`SEG-f[.c[.s]]`): repetition (`~N`) and segment-index (`[N]`)
+    // forms are NOT part of the condition DSL and must evaluate
+    // fail-safe false. Plain `PID-3` on the same wire IS populated, so
+    // a parser that mis-resolved either form to the base field would
+    // return true and go red here (the guards for the R4/F14 swap).
+    @Test("Referent repetition form (PID-3~2) evaluates fail-safe false")
+    func referentRepetitionFormRejected() throws {
+        let message = try Parser().parse(oruOneGroupBothPopulated)
+        #expect(try evaluate("PID-3 populated", as: "PID", in: message),
+                "sanity: the plain referent must resolve and be populated")
+        #expect(try evaluate("PID-3~2 populated", as: "PID", in: message) == false)
+        #expect(try evaluate("PID-3~1.1 populated", as: "PID", in: message) == false)
+    }
+
+    @Test("Referent segment-index form (PID[N]-3) evaluates fail-safe false")
+    func referentSegmentIndexFormRejected() throws {
+        let message = try Parser().parse(oruOneGroupBothPopulated)
+        #expect(try evaluate("PID[1]-3 populated", as: "PID", in: message) == false)
+        #expect(try evaluate("PID[2]-3 populated", as: "PID", in: message) == false)
+    }
 }

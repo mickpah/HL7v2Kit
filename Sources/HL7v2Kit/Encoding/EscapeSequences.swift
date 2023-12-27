@@ -193,17 +193,14 @@ enum EscapeSequences {
     }
 
     private static func needsEncoding(_ value: String, encoding: EncodingCharacters) -> Bool {
-        for c in value {
-            if c == encoding.fieldSeparator
+        value.contains { c in
+            c == encoding.fieldSeparator
                 || c == encoding.componentSeparator
                 || c == encoding.subcomponentSeparator
                 || c == encoding.repetitionSeparator
                 || c == encoding.escapeCharacter
-                || needsHexEncoding(c) {
-                return true
-            }
+                || needsHexEncoding(c)
         }
-        return false
     }
 
     /// Control characters cannot appear inside a subcomponent on the wire —

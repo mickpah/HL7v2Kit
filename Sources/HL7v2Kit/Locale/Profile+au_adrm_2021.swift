@@ -1,13 +1,13 @@
 // Profile+au_adrm_2021.swift
 // Hand-curated AU ADRM-2021 profile content. This Swift file is the
-// SINGLE SOURCE OF TRUTH for the AU profile — it is what `ProfileLoader`
+// SINGLE SOURCE OF TRUTH for the AU profile — it is what `Profile.load`
 // returns at runtime, and it is validated by the Swift compiler (the
 // rule types are type-checked at build time, unlike a hand-synced JSON
 // mirror would be).
 //
 // v0.14 retired the orphaned `Resources/profiles/au-adrm-2021/*.json`
 // overlay files that ADR-007 originally envisioned: they were never
-// consumed at runtime (ProfileLoader always returned this Swift) and
+// consumed at runtime (profile loading always returned this Swift) and
 // had drifted stale (missing the v0.8 MSH-12, v0.11 cardinality, and
 // v0.13 composite-inequality rules). A JSON-driven codegen path (per
 // ADR-004) is deferred until a SECOND localisation profile makes shared
@@ -22,7 +22,7 @@ import Foundation
 
 extension Profile {
     /// HL7 Australia ADRM-2021 profile, layered over base HL7 v2.4.
-    /// Returned by `ProfileLoader.load(for: .auLocalisation)`.
+    /// Returned by `Profile.load(for: .auLocalisation)`.
     ///
     /// v0.5-S5-B-1 scope: EI-all-components rules for OBR-2 / OBR-3 /
     /// ORC-2 / ORC-3 / ORC-4. Each enforces that when the field is
@@ -30,7 +30,6 @@ extension Profile {
     /// Namespace ID, Universal ID, Universal ID Type) are populated.
     static let auADRM2021 = Profile(
         locale: .auLocalisation,
-        baseVersion: .v2_4,
         fieldOverrides: [
             // HL7au:000040 — MSH-12 Version ID Field Conformance Points
             // (AU ADRM-2021 pp. 445-446, extracted via PDFKit recipe).

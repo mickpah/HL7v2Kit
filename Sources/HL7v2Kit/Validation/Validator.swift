@@ -37,7 +37,7 @@ public struct Validator: Sendable {
         // call. nil for `.international`; for `.auLocalisation` returns
         // the AU ADRM-2021 profile with field-override narrowings layered
         // on top of base v2.4 / v2.5.1 grammar. See ADR-007.
-        let profile = ProfileLoader.load(for: locale)
+        let profile = Profile.load(for: locale)
 
         // v0.7-S1 (ADR-008): iterate with the 0-based segment index so
         // cross-segment / message-context predicates can resolve peers
@@ -264,15 +264,12 @@ public struct Validator: Sendable {
         case .messageWide:
             return ResolvedGroup(startIndex: 0, headIndex: 0, segments: segs)
         case .orcObxGroup:
-            var head = anchorIndex
-            while head > 0 && segs[head].segmentID != "ORC" {
-                head -= 1
-            }
-            var end = head + 1
-            while end < segs.count && segs[end].segmentID != "ORC" {
-                end += 1
-            }
-            return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
+            let range = message.orcGroupRange(around: anchorIndex)
+            return ResolvedGroup(
+                startIndex: range.lowerBound,
+                headIndex: range.lowerBound,
+                segments: Array(segs[range])
+            )
         case .obrObxGroup:
             var head = anchorIndex
             while head > 0 && segs[head].segmentID != "OBR" {
@@ -441,6 +438,25 @@ public struct Validator: Sendable {
         }
     }
 
+    /// Append a `.profileConstraintViolation` error. All seven profile
+    /// dispatch tracks construct their issues through here so severity /
+    /// code / location plumbing cannot drift between tracks; the message
+    /// is fully formatted at the call site (pinned exactly by the
+    /// LocaleAUProfileTests R4-C2 characterization rows).
+    private func appendProfileIssue(
+        citation: String,
+        location: IssueLocation,
+        message: String,
+        into issues: inout [ValidationIssue]
+    ) {
+        issues.append(ValidationIssue(
+            severity: .error,
+            code: .profileConstraintViolation(localeRule: citation),
+            location: location,
+            message: message
+        ))
+    }
+
     /// Composite (datatype-keyed) override dispatch — v0.5-S5-B-2 +
     /// v0.5-S5-B-3. For every populated field whose HL7 dataType
     /// matches a `CompositeOverride` in the profile, evaluate two
@@ -483,12 +499,12 @@ public struct Validator: Sendable {
                 )
                 let citation = requirement.specCitation
                     ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(requirement.component)"
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(requirement.component) must be populated when \(fieldGrammar.dataType) field is populated (\(citation))"
-                ))
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(requirement.component) must be populated when \(fieldGrammar.dataType) field is populated (\(citation))",
+                    into: &issues
+                )
             }
             // Track 2: pair-conditional rules (v0.5-S5-B-2).
             for rule in composite.pairRules {
@@ -510,12 +526,12 @@ public struct Validator: Sendable {
                     ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.thenComponent)"
                 let condDesc = rule.condition == .populated ? "is populated" : "is empty"
                 let reqDesc = rule.requirement == .mustBePopulated ? "must be populated" : "must be empty"
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.thenComponent) \(reqDesc) when \(fieldGrammar.dataType)-\(rule.ifComponent) \(condDesc) (\(citation))"
-                ))
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.thenComponent) \(reqDesc) when \(fieldGrammar.dataType)-\(rule.ifComponent) \(condDesc) (\(citation))",
+                    into: &issues
+                )
             }
             // Track 3: component-value inequality (v0.13, ADR-011).
             // Fires when both named components are populated and carry
@@ -535,12 +551,12 @@ public struct Validator: Sendable {
                 )
                 let citation = rule.specCitation
                     ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.componentA)!=\(rule.componentB)"
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.componentA) and \(fieldGrammar.dataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))"
-                ))
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.componentA) and \(fieldGrammar.dataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))",
+                    into: &issues
+                )
             }
             // Track 4: value-conditional denylist (v0.13, ADR-011).
             // Fires when the named component carries a denied value and
@@ -565,12 +581,12 @@ public struct Validator: Sendable {
                 )
                 let citation = rule.specCitation
                     ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.component)"
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.component) must not be \"\(value)\" (\(citation))"
-                ))
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.component) must not be \"\(value)\" (\(citation))",
+                    into: &issues
+                )
             }
         }
     }
@@ -616,12 +632,12 @@ public struct Validator: Sendable {
                 )
                 let citation = override.specCitation
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(componentIndex)"
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType) component \(componentIndex) must be populated when \(segmentID)-\(fieldGrammar.index) ('\(fieldGrammar.name)') is populated (\(citation))"
-                ))
+                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType) component \(componentIndex) must be populated when \(segmentID)-\(fieldGrammar.index) ('\(fieldGrammar.name)') is populated (\(citation))",
+                    into: &issues
+                )
             }
             // Track 2 (v0.5-S5-C): per-component value-set narrowings.
             // v0.8 (ADR-009): each value-set may declare an optional
@@ -657,12 +673,12 @@ public struct Validator: Sendable {
                     ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(valueSet.component)"
                 let allowedList = valueSet.allowedValues.map { "\"\($0)\"" }.joined(separator: ", ")
                 let pathSuffix = valueSet.subcomponent.map { ".\($0)" } ?? ""
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .profileConstraintViolation(localeRule: citation),
+                appendProfileIssue(
+                    citation: citation,
                     location: location,
-                    message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))"
-                ))
+                    message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))",
+                    into: &issues
+                )
             }
         }
     }
@@ -714,12 +730,12 @@ public struct Validator: Sendable {
 
         let citation = override.specCitation
             ?? "\(profile.locale.rawValue):\(location.segmentID)-\(fieldGrammar.index)"
-        issues.append(ValidationIssue(
-            severity: .error,
-            code: .profileConstraintViolation(localeRule: citation),
+        appendProfileIssue(
+            citation: citation,
             location: location,
-            message: "AU profile rule violated at \(location.pathDescription): field is profile-required (\(profile.locale.rawValue) usage = R) but missing (\(citation))"
-        ))
+            message: "AU profile rule violated at \(location.pathDescription): field is profile-required (\(profile.locale.rawValue) usage = R) but missing (\(citation))",
+            into: &issues
+        )
     }
 
     private func checkRequired(
@@ -913,12 +929,9 @@ public struct Validator: Sendable {
     /// one non-empty subcomponent. Used to skip empty repetitions on
     /// multi-rep composite fields.
     private func isRepetitionPopulated(_ repetition: Repetition) -> Bool {
-        for component in repetition.components {
-            for subcomponent in component.subcomponents {
-                if !subcomponent.value.isEmpty { return true }
-            }
+        repetition.components.contains { component in
+            component.subcomponents.contains { !$0.value.isEmpty }
         }
-        return false
     }
 
     /// True if the 1-based `componentIndex`-th component of `repetition`
@@ -927,10 +940,7 @@ public struct Validator: Sendable {
     /// "required component is missing".
     private func isComponentPopulated(_ repetition: Repetition, componentIndex: Int) -> Bool {
         guard repetition.components.indices.contains(componentIndex - 1) else { return false }
-        for subcomponent in repetition.components[componentIndex - 1].subcomponents {
-            if !subcomponent.value.isEmpty { return true }
-        }
-        return false
+        return repetition.components[componentIndex - 1].subcomponents.contains { !$0.value.isEmpty }
     }
 
     /// `.conditional` field check (v0.2-V1). Fires `.conditionalFieldMissing`
@@ -1250,60 +1260,35 @@ public struct Validator: Sendable {
         message: Message,
         currentSegmentID: String
     ) -> ResolvedReferent? {
-        let refParts = referent.split(separator: "-", maxSplits: 1).map(String.init)
-        guard refParts.count == 2 else { return nil }
-        guard let parsed = Self.parseIndexSuffix(refParts[1]) else { return nil }
-        let targetID = refParts[0]
+        guard let path = parseDSLFieldRef(referent) else { return nil }
         let targetSegment: Segment
-        if targetID == currentSegmentID {
+        if path.segmentID == currentSegmentID {
             targetSegment = segment
         } else {
-            guard let peer = message.associatedSegment(targetID, fromIndex: segmentIndex)
+            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
             else { return nil }
             targetSegment = peer
         }
         return readField(
             targetSegment,
-            fieldIndex: parsed.fieldIndex,
-            componentIndex: parsed.componentIndex,
-            subcomponentIndex: parsed.subcomponentIndex
+            fieldIndex: path.field,
+            componentIndex: path.component,
+            subcomponentIndex: path.subcomponent
         )
     }
 
-    /// Result of parsing an index suffix `<int>[.<int>[.<int>]]` off a
-    /// field-ref like `OBX-3.3` or `OBX-3.3.2`. ADR-010 Extension 3.
-    private struct ParsedIndexSuffix {
-        let fieldIndex: Int
-        let componentIndex: Int?
-        let subcomponentIndex: Int?
-    }
-
-    /// Parse the suffix of a field-ref after `<segmentID>-`. Accepts:
-    /// - `3`         → field 3, no component/subcomponent
-    /// - `3.3`       → field 3, component 3
-    /// - `3.3.2`     → field 3, component 3, subcomponent 2
-    /// Returns `nil` for malformed input (non-integer parts, empty
-    /// parts, more than three dotted components). Fail-safe path per
-    /// the v0.2-V1 invariant.
-    private static func parseIndexSuffix(_ suffix: String) -> ParsedIndexSuffix? {
-        let parts = suffix.split(separator: ".", omittingEmptySubsequences: false).map(String.init)
-        guard parts.count >= 1, parts.count <= 3 else { return nil }
-        guard let fieldIndex = Int(parts[0]) else { return nil }
-        var componentIndex: Int?
-        var subcomponentIndex: Int?
-        if parts.count >= 2 {
-            guard let c = Int(parts[1]) else { return nil }
-            componentIndex = c
-        }
-        if parts.count >= 3 {
-            guard let s = Int(parts[2]) else { return nil }
-            subcomponentIndex = s
-        }
-        return ParsedIndexSuffix(
-            fieldIndex: fieldIndex,
-            componentIndex: componentIndex,
-            subcomponentIndex: subcomponentIndex
-        )
+    /// Parse a DSL field-ref (`SEG-f`, `SEG-f.c`, `SEG-f.c.s`) via the
+    /// shared ``Path`` parser, then reject the Path-only axes the
+    /// condition DSL grammar excludes: segment-index (`SEG[N]-f`) and
+    /// repetition (`SEG-f~r`) forms return `nil` so the predicate
+    /// evaluates fail-safe false (v0.2-V1 invariant; pinned by the
+    /// CrossSegmentDSLTests R4-C1 rows). ADR-010 Extension 3.
+    private func parseDSLFieldRef(_ referent: String) -> Path? {
+        guard let path = try? Path(referent),
+              path.segmentIndex == nil,
+              path.repetition == nil
+        else { return nil }
+        return path
     }
 
     /// Recognise `previousSegment(<ID>).<fieldref>` and
@@ -1350,18 +1335,17 @@ public struct Validator: Sendable {
     }
 
     /// Parse `<segmentID>-<int>[.<int>[.<int>]]` and read the named
-    /// field / component / subcomponent from `segment`. Returns `nil`
-    /// if the field-ref shape is malformed. Callers guarantee a
-    /// non-nil segment.
+    /// field / component / subcomponent from `segment`. The ref's own
+    /// segment-ID part is not re-checked against `segment` — the caller
+    /// already resolved the target positionally. Returns `nil` if the
+    /// field-ref shape is malformed. Callers guarantee a non-nil segment.
     private func readFieldRef(_ fieldRef: String, in segment: Segment) -> ResolvedReferent? {
-        let parts = fieldRef.split(separator: "-", maxSplits: 1).map(String.init)
-        guard parts.count == 2 else { return nil }
-        guard let parsed = Self.parseIndexSuffix(parts[1]) else { return nil }
+        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
         return readField(
             segment,
-            fieldIndex: parsed.fieldIndex,
-            componentIndex: parsed.componentIndex,
-            subcomponentIndex: parsed.subcomponentIndex
+            fieldIndex: path.field,
+            componentIndex: path.component,
+            subcomponentIndex: path.subcomponent
         )
     }
 
@@ -1444,13 +1428,6 @@ public struct Validator: Sendable {
     /// component with a non-empty subcomponent value. Distinguishes the
     /// "present but empty" wire shape from genuinely absent fields.
     private func isFieldPopulated(_ field: Field) -> Bool {
-        for repetition in field.repetitions {
-            for component in repetition.components {
-                for subcomponent in component.subcomponents {
-                    if !subcomponent.value.isEmpty { return true }
-                }
-            }
-        }
-        return false
+        field.repetitions.contains(where: isRepetitionPopulated)
     }
 }

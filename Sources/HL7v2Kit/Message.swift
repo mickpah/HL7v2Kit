@@ -149,27 +149,30 @@ public struct Message: Sendable, Equatable, Hashable {
     /// non-conformant").
     func associatedSegment(_ id: String, fromIndex: Int) -> Segment? {
         guard fromIndex >= 0, fromIndex < segments.count else { return nil }
-
-        // Walk backward to the group head (most recent ORC at or before
-        // fromIndex). If no ORC exists in the message, treat the whole
-        // message as one degenerate group.
-        var groupHead = fromIndex
-        while groupHead > 0 && segments[groupHead].segmentID != "ORC" {
-            groupHead -= 1
-        }
-
-        // Walk forward to the group end (one past the next ORC after
-        // groupHead, or the end of the segment list).
-        var groupEnd = groupHead + 1
-        while groupEnd < segments.count && segments[groupEnd].segmentID != "ORC" {
-            groupEnd += 1
-        }
-
-        for i in groupHead..<groupEnd {
+        for i in orcGroupRange(around: fromIndex) {
             if i == fromIndex { continue }
             if segments[i].segmentID == id { return segments[i] }
         }
         return nil
+    }
+
+    /// The ORC-delimited group range around `index`: from the most
+    /// recent ORC at or before `index` (or the start of the message when
+    /// no ORC precedes it — the degenerate whole-prefix group) up to the
+    /// next ORC (or the end of the segment list). Shared by
+    /// `associatedSegment(_:fromIndex:)` and the Validator's group-scope
+    /// cardinality resolution so the two group definitions cannot drift.
+    /// Callers guarantee `index` is in bounds.
+    func orcGroupRange(around index: Int) -> Range<Int> {
+        var groupHead = index
+        while groupHead > 0 && segments[groupHead].segmentID != "ORC" {
+            groupHead -= 1
+        }
+        var groupEnd = groupHead + 1
+        while groupEnd < segments.count && segments[groupEnd].segmentID != "ORC" {
+            groupEnd += 1
+        }
+        return groupHead..<groupEnd
     }
 
     /// True when a segment of `id` exists in the same ORC/OBR group as
