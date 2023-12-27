@@ -3,7 +3,7 @@
 **Version:** 0.1 (Draft spec, pre-implementation)
 **Last updated:** 27 May 2026
 **Target release:** v0.1.0 of HL7v2Kit
-**Status:** Pre-implementation. Lock decisions here before writing code.
+**Status:** Founding design record (v0.1, written pre-implementation). Retained as-written; **as-built divergences are annotated inline** (`> As-built` notes) and governed by the ADR chain. For the current API surface read `public-api-surface.md` + `Migration.md` ("The 2.0 boundary"); for the design-doc map read `docs/design/README.md`.
 **Parent project:** AU Core Workbench (see `AU-Core-Workbench-Planning.md`)
 
 ---
@@ -140,9 +140,28 @@ HL7v2Kit/
     └── regenerate-typed-segments.sh Run codegen → Sources/HL7v2Kit/Segment/Generated/
 ```
 
+> **As-built (2026-08-27):** the tree above is the v0.1 sketch. `HL7v2KitDictionaries` (+ its
+> test target) shipped only as a placeholder and was **retired at the 2.0 boundary** (ADR-005
+> addendum; remediation R10) — grammar ships as codegen-emitted Swift tables inside `HL7v2Kit`.
+> `regenerate-dictionaries.sh` was never written; the live scripts are
+> `regenerate-typed-segments.sh`, `extract-segment-tables.swift`, `audit-schemas.py`,
+> `anonymise-fixture.sh`, and `scan-fixtures-for-phi.sh`.
+
 ---
 
 ## 4. Public API surface — v0.1.0
+
+> **As-built (2026-08-27):** the listings below are the v0.1 sketches; the shipped surface is
+> inventoried in `public-api-surface.md` and the 2.0 deltas in `Migration.md` → "The 2.0
+> boundary". Divergences to read past: `ParserOptions.preserveExcessFields` (shipped as a
+> documented no-op) and the `.lenient` preset (as-built it equalled `.default`) were **removed
+> at 2.0** — the as-built default `lineTerminator` is `.lenient`, not `.strict`;
+> `ParseError.malformedField`, `BuilderError.invalidEncodingCharacters`/`.duplicateMSH`, and
+> `MessageBuilder.append(unknown:)` shipped but were never exercised and were **removed at
+> 2.0**; the as-built `IssueCode` is a non-raw-value open enum (ADR-014) whose cases diverged
+> from this sketch (`unknownSegment` removed at 2.0 — no-grammar segments route to
+> `.zSegmentPresent`); `Batch` shipped as `BatchFile` with grouped `batches`. Full story:
+> `remediation-plan.md` (R10).
 
 This is the contract. Adding to it post-1.0 is fine. Removing or changing semantics requires a major version bump (semver).
 
@@ -632,6 +651,13 @@ Hand-written code generator (`HL7v2KitCodegen`) is simpler and the right call fo
 ---
 
 ## 8. Dictionaries module
+
+> **As-built (2026-08-27):** superseded by **ADR-005 Path C** — the grammar ships as
+> codegen-emitted Swift tables (`SegmentGrammar+vX_Y_Z.swift`) inside the `HL7v2Kit` target;
+> the JSON schemas live at repo-root `Resources/schemas/` as the **codegen input**, not a
+> runtime resource. The placeholder `HL7v2KitDictionaries` target this section proposes was
+> retired at the 2.0 boundary (remediation R10). The JSON format sketch below survives as the
+> schema-authoring format.
 
 `HL7v2KitDictionaries` is a separate target that ships the static segment grammar as JSON resources. Two reasons it's separate:
 

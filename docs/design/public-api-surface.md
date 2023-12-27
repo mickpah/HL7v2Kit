@@ -4,8 +4,12 @@
 > **v1.0** boundary. The R10 remediation stage removed the dead surface enumerated in
 > `Migration.md` → "The 2.0 boundary" (Dictionaries product, four never-raised enum cases,
 > two no-op `ParserOptions` members, `ValidationReport.empty`, `MessageBuilder.append(unknown:)`),
-> tightened `RequiredComponentSet.init`, and applied the OBX-12/15 swiftName corrections.
-> Read this file with that delta in mind; a fresh inventory belongs to the v2.0 gate if one runs.
+> tightened `RequiredComponentSet.init`, and applied the OBX-12/15 swiftName corrections
+> (`effectiveDateOfReferenceRangeValues`, `producersReference`). One public **type** was added
+> since this compile: the `CompositeView` protocol (R3 — the shared surface of the 16 composite
+> views; additive under ADR-014), taking the type count 74 → 75 before typed-segment growth
+> (15 codegen'd segments at compile time → 109 today, all additive).
+> Read this file with those deltas in mind; a fresh inventory belongs to the v2.0 gate if one runs.
 
 **Compiled:** 2026-07-09 (v0.18 cycle, ROADMAP M3 API stabilisation).
 **Purpose:** the authoritative inventory of every `public` symbol at the v1.0 boundary, each confirmed *intended, minimal, and documented*, and classified per the ADR-014 evolution policy (open vs stable). This is the M3 gate: the surface a v1.0 tag freezes under the additive-only 1.x contract.

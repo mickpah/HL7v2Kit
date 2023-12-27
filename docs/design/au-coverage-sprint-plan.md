@@ -8,6 +8,11 @@
 field depth**, verified by presence *and* depth audits, with every conditional either shipped
 as a predicate or recorded as a spec-cited limitation.
 
+> **Release-label note (2026-08-27):** the per-sprint labels below (v1.10 → v1.15) are **cycle
+> names**, planned before remediation R10 landed the breaking v2.0.0 capstone on `main`. The
+> sprints themselves are unchanged, but their releases ship on the **2.x line** (Sprint 0 is the
+> first coverage cycle after the `v2.0.0` cut). See ROADMAP → R and STATUS.
+
 ## Measured scope
 
 **131 schema-instances / ~1,054 fields / 47 distinct segments**, across 10 chapters. Field

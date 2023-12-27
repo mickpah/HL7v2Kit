@@ -94,3 +94,12 @@ If revived in v0.2+:
 ## Notes
 
 The codegen-drift CI job (per ADR-004) covers `Sources/HL7v2Kit/Segment/Generated/SegmentGrammar+v2_5_1.swift` along with the per-segment files. A contributor who edits a schema but forgets to regenerate is caught structurally — the validator can't drift out of sync with the typed-segment surface because both come from the same codegen run.
+
+---
+
+**Addendum (2026-08-27, remediation R10):** the placeholder `HL7v2KitDictionaries` target this
+ADR kept "in place for v0.1.0" was **retired at the 2.0 boundary** — it was never imported by
+any consumer, and Path C (codegen-emitted `SegmentGrammar+vX_Y_Z.swift` tables in the main
+target) has been the sole grammar source since v0.13's JSON retirement. The library product,
+target, test target, and the main target's unused dependency edge were all removed (R10/F6;
+evidence in `remediation-plan.md` → "v2.0.0 removal register").

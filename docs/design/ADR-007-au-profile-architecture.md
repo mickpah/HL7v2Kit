@@ -293,3 +293,12 @@ All S5-B/C/D sub-substages landed on the v0.5-au-profile worktree (8 functional 
 **Tests**: 360 (v0.4.0) → **390** across 23 → 24 suites green.
 
 ADR moves from "Accepted" to "Implemented" with this status update. Post-v0.5 AU narrowings (HL7au:000001 / 000008 / 00044.\*.3-.4-.7-.8 / 000040 / 00044.2) are out of S5's scope and listed in NEXT_STEPS as v0.6+ candidates — each needs a different sub-rule type (cross-segment refs, value-set code-table store, semantic evaluator, runtime PKI).
+
+---
+
+**Addendum (2026-08-27, remediation R4):** the `ProfileLoader` enum this ADR scaffolded was a
+4-line switch with a single caller; it was folded into `Profile.load(for:)` beside the type
+(R4/F12 — behaviour identical, `LocaleTests`/`LocaleAUProfileTests` pins unchanged). The
+architecture is otherwise as this ADR + its v0.14 note describe: `Profile.auADRM2021` in
+Swift is the single source of truth, JSON-driven codegen still deferred until a second
+localisation profile needs shared tooling.

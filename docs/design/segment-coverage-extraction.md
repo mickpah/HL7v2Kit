@@ -293,10 +293,11 @@ This also surfaced **two pre-existing name defects in the canonical v2.5.1 OBX s
 OBX-12 was truncated (`…Reference Range`, missing `Values`) and OBX-15 carried the
 neighbouring versions' `Producer's ID` instead of `Producer's Reference`.
 
-> **Deviation recorded (ADR-014):** those two names are corrected, but their `swiftName`s are
-> **not**. `effectiveDateOfReferenceRange` and `producersID` are shipped public API, frozen
-> until 2.0 — so the accessors keep their current names while their DocC text and grammar
-> entries now read the spec's wording. Rename at 2.0.
+> **Deviation recorded (ADR-014) — RESOLVED at 2.0 (remediation R10, 2026-08-27):** the two
+> `swiftName`s were frozen public API through 1.x while their DocC text and grammar entries
+> read the spec wording. The rename shipped at the 2.0 boundary: OBX-12 is now
+> `effectiveDateOfReferenceRangeValues`, OBX-15 is `producersReference` (schema `swiftName` +
+> regenerate; the Generated/ diff was exactly the two accessor declarations).
 
 **Rule:** take `DT` / `OPT` / `RP` *and* `name` from the version's own attribute table.
 Only reach for another version's schema when the extraction is visibly corrupted, and then
@@ -360,3 +361,18 @@ depth pinned, per-version depth assumed" pattern applies across the 85 typed seg
 making full regeneration impractically slow. Compile once —
 `xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin` — and drive
 regeneration from the binary (~20× faster; full canonical re-verify then takes minutes).
+
+---
+
+## R6 tokenizer note (2026-08-27)
+
+The extractor's hand-rolled offset tokenizer `runs(in:)` was replaced with a Swift Regex
+(`#/[^ ](?: [^ ]|[^ ])*/#`) in remediation stage R6. The swap exposed a latent fidelity defect:
+the old scanner **never appended single spaces to run text** (despite its own comment), so
+multi-word cells consumed as `run.text` were silently collapsed — v2.3 CH7's waveform
+`NA or MA` datatype cell extracted as `NAorMA`. Element names were unaffected (they are
+re-sliced from the raw line by offsets). Harness evidence: v2.5.1 CH03 full-chapter extraction
+**byte-identical**; v2.3 CH7 differing in exactly that one now-PDF-verbatim row; the all-PDF
+depth audit clean; zero committed schemas carried either form. Offsets are Character distances,
+matching the old `Array(line)` indexing; the only other delta (a line ending in exactly one
+trailing space no longer counts it in the final run's `end`) is unreachable in both consumers.

@@ -192,3 +192,16 @@ If project owner opts to split the cardinality axis into ADR-011: S1 + S2 + S4 s
 - `docs/design/v2_3-v2_4-spec-audit.md` — §4.5.1.8 known limitation (this ADR closes).
 - `docs/design/v2_5_1-spec-audit.md` §93–121 — the OBR specimen-presence cluster (this ADR closes).
 - AU ADRM-2021 — HL7au:000008 (parent + .1) verbatim; page reference to be added once PDFKit extraction confirms.
+
+---
+
+**Addendum (2026-08-27, remediation R2 + R4):** two implementation-surface updates, semantics
+unchanged. (1) **Extension 2's schema-side encoding axis was removed** (R2/F9): 0 of 584
+schema JSONs ever set `segmentCardinalityRules`, so the generator's decode/render plumbing was
+plumbing without payload — the **runtime** `SegmentCardinalityRule`/`GroupScope` types and the
+AU profile's `cardinalityExtensions` rules (HL7au:000008) are untouched, and the axis can be
+reinstated from git if a universal base-spec rule is ever authored. (2) **Extension 3's
+field-ref suffix parsing now routes through the shared `Path` parser** (R4/F14) with
+`segmentIndex == nil && repetition == nil` guards — the DSL grammar is unchanged and the
+rejection of `[N]`/`~N` forms is pinned by the CrossSegmentDSLTests R4-C1 characterization
+rows; the previous duplicate suffix parser is deleted.

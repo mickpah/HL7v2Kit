@@ -75,3 +75,11 @@ The `.unknownSegment` case fires only when `ParserOptions.allowUnknownSegments` 
 The `ParseError` enum sits in the portable kernel (ADR-006) — it must remain a plain enum with associated values, with no Foundation types in any case. `String` is acceptable as a kernel value type.
 
 `ValidationIssue` and friends are Stratum 2: they reference HL7 spec semantics (`IssueCode`, severity classification) that a Rust/Go port would design idiomatically for its target language.
+
+---
+
+**Addendum (2026-08-27, remediation R10):** `ParseError.malformedField` — sketched here and
+shipped — was never raised by any code path and was removed at the 2.0 boundary
+(`Migration.md` → "The 2.0 boundary"). The error-strategy principles themselves (enums with
+associated values, `Equatable`/`Sendable`, location-carrying) are unchanged; case evolution
+is governed by ADR-014.
