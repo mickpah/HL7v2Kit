@@ -61,11 +61,7 @@ enum EscapeSequences {
                 continue
             }
             // Look for the closing escape character.
-            var j = i + 1
-            while j < chars.count && chars[j] != esc {
-                j += 1
-            }
-            if j >= chars.count {
+            guard let j = chars[(i + 1)...].firstIndex(of: esc) else {
                 // No closing — treat the lone escape char as a literal.
                 result.append(c)
                 i += 1
@@ -125,13 +121,11 @@ enum EscapeSequences {
         return String(decoding: bytes, as: UTF8.self)
     }
 
+    /// ASCII-gated wrapper over stdlib `Character.hexDigitValue` — the
+    /// stdlib property also accepts fullwidth compatibility digits, which
+    /// are not valid in a wire `\X…\` body, so non-ASCII stays rejected.
     private static func hexDigitValue(_ c: Character) -> Int? {
-        switch c {
-        case "0"..."9": return Int(c.asciiValue! - Character("0").asciiValue!)
-        case "A"..."F": return Int(c.asciiValue! - Character("A").asciiValue!) + 10
-        case "a"..."f": return Int(c.asciiValue! - Character("a").asciiValue!) + 10
-        default: return nil
-        }
+        c.isASCII ? c.hexDigitValue : nil
     }
 
     // MARK: - Encode
@@ -154,7 +148,7 @@ enum EscapeSequences {
             // trip works for sequences whose backslashes are themselves part
             // of the encoded value.
             if c == esc,
-               let closingIdx = findClosingEscape(chars, after: i, escape: esc),
+               let closingIdx = chars[(i + 1)...].firstIndex(of: esc),
                isPassthroughBody(chars[(i + 1)..<closingIdx]) {
                 for k in i...closingIdx { result.append(chars[k]) }
                 i = closingIdx + 1
@@ -233,19 +227,6 @@ enum EscapeSequences {
             result.append(digits[Int(byte >> 4)])
             result.append(digits[Int(byte & 0x0F)])
         }
-    }
-
-    private static func findClosingEscape(
-        _ chars: [Character],
-        after start: Int,
-        escape: Character
-    ) -> Int? {
-        var j = start + 1
-        while j < chars.count {
-            if chars[j] == escape { return j }
-            j += 1
-        }
-        return nil
     }
 
     /// A body is "passthrough" if the decoder would have emitted the whole

@@ -48,31 +48,35 @@ public struct Parser: Sendable {
     /// needed for serialise round-trips. The reported byte offset is into
     /// the post-BOM-strip payload, not the original buffer.
     public func parse(_ data: Data) throws -> Message {
-        guard !data.isEmpty else { throw ParseError.emptyInput }
+        let (decoded, characterEncoding) = try Parser.decodeWirePayload(data)
+        return try parse(decoded, characterEncoding: characterEncoding)
+    }
 
-        // Strip a leading UTF-8 BOM before any structural work. v0.2-P1.
+    /// Decode a raw wire buffer into text: strip a leading UTF-8 BOM
+    /// (v0.2-P1), reject NUL bytes (v0.2-P2), detect the MSH-18 charset
+    /// via an ISO-8859-1 probe — Latin-1 maps every byte to a code point,
+    /// so the probe never fails and the structural ASCII (MSH, `|`, the
+    /// encoding chars) survives untouched — then decode with the detected
+    /// charset. Shared by ``Parser`` and ``BatchParser`` so the two Data
+    /// entry points cannot drift (pinned by the BatchParserTests R5-C3
+    /// rows).
+    static func decodeWirePayload(_ data: Data) throws -> (decoded: String, characterEncoding: CharacterEncoding) {
+        guard !data.isEmpty else { throw ParseError.emptyInput }
         let payload: Data = data.starts(with: [0xEF, 0xBB, 0xBF])
             ? data.dropFirst(3)
             : data
         guard !payload.isEmpty else { throw ParseError.emptyInput }
-
-        // Reject NUL bytes. v0.2-P2.
         if let nulIndex = payload.firstIndex(of: 0x00) {
             throw ParseError.truncatedMessage(
                 atByte: payload.distance(from: payload.startIndex, to: nulIndex)
             )
         }
-
-        // Probe via an ISO-8859-1 1:1 decode — Latin-1 maps every byte to a
-        // code point, so the probe never fails, and the structural ASCII
-        // characters (MSH, `|`, the encoding chars) survive untouched.
         let probe = String(data: payload, encoding: .isoLatin1) ?? ""
         let characterEncoding = try CharacterEncoding.detect(in: probe)
-
         guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding) else {
             throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
         }
-        return try parse(decoded, characterEncoding: characterEncoding)
+        return (decoded, characterEncoding)
     }
 
     /// Parse a v2 message from an already-decoded string.
@@ -255,7 +259,7 @@ public struct Parser: Sendable {
 
     private func parseField(_ raw: String, encoding: EncodingCharacters) -> Field {
         if raw.isEmpty {
-            return Field(repetitions: [Repetition(components: [Component(subcomponents: [Subcomponent("")])])])
+            return .scalar("")
         }
         let reps = raw.split(separator: encoding.repetitionSeparator,
                               omittingEmptySubsequences: false)

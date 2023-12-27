@@ -84,21 +84,7 @@ public struct BatchParser: Sendable {
     /// the stream (the first MSH after any FHS / BHS) — all messages
     /// in a single batch file are expected to share the same charset.
     public func parse(_ data: Data) throws -> BatchFile {
-        guard !data.isEmpty else { throw ParseError.emptyInput }
-        let payload: Data = data.starts(with: [0xEF, 0xBB, 0xBF])
-            ? data.dropFirst(3)
-            : data
-        guard !payload.isEmpty else { throw ParseError.emptyInput }
-        if let nulIndex = payload.firstIndex(of: 0x00) {
-            throw ParseError.truncatedMessage(
-                atByte: payload.distance(from: payload.startIndex, to: nulIndex)
-            )
-        }
-        let probe = String(data: payload, encoding: .isoLatin1) ?? ""
-        let characterEncoding = try CharacterEncoding.detect(in: probe)
-        guard let decoded = String(data: payload, encoding: characterEncoding.stringEncoding) else {
-            throw ParseError.unsupportedCharacterEncoding(declared: characterEncoding.wireValue)
-        }
+        let (decoded, _) = try Parser.decodeWirePayload(data)
         return try parseString(decoded)
     }
 

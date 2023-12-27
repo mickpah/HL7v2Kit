@@ -103,7 +103,7 @@ public extension MessageBuilder {
         //   fields[11] = processing ID
         //   fields[12] = version
         var fields: [Field] = []
-        let empty = Field(repetitions: [Repetition(components: [Component(subcomponents: [Subcomponent("")])])])
+        let empty = Field.scalar("")
         fields.append(Field(repetitions: []))                                            // 0: segment ID placeholder
         fields.append(.scalar(String(encodingCharacters.fieldSeparator)))                // 1: MSH-1
         fields.append(.scalar(encodingCharacters.msh2String))                            // 2: MSH-2

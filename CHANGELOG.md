@@ -105,6 +105,36 @@ The refactors:
 - Verification: suite **522 green** (519 + the 3 characterization test names — the exact
   enumerated addition, zero removals); build warning-free. Source net −54 lines, +81 test lines.
 
+### Fixed — MSH-18 charset detection on batch wires (found by R5-C3)
+
+`CharacterEncoding.probeMSH18` examined only the FIRST line of the probe and required it to
+start with `MSH` — but every batch wire opens with FHS/BHS, so the batch Data path silently
+fell back to UTF-8. A batch correctly declaring `MSH-18 = 8859/1` with Latin-1 bytes failed to
+parse (throwing `unsupportedCharacterEncoding` citing the fallback's own `UNICODE UTF-8`),
+contradicting `BatchParser`'s documented "probes the first MSH after any FHS / BHS" contract.
+The probe now walks lines to the first MSH-prefixed one — a no-op for single-message wires.
+Discovered by writing the R5-C3 characterization test the remediation plan ordered (the batch
+Latin-1 leg had zero coverage); C3's two tests ship as the regression pin. Suite 522 → 524.
+
+### R5 — parser/encoding shrinks (remediation stage 5 of 10)
+
+F20 + F21 + F23 + F33 of `docs/design/remediation-plan.md`; refactor net −29 lines
+under the ParsingTests / BatchParserTests (incl. C3) / CharacterEncodingTests /
+EscapeSequenceTests / RoundTripTests pins.
+
+- **F20:** the verbatim-duplicated wire-decode preamble (BOM strip, NUL reject, Latin-1 probe,
+  MSH-18 detect, decode) lives once as internal `Parser.decodeWirePayload(_:)`, shared by both
+  Data entry points so they can no longer drift — C3 pins the batch leg.
+- **F21:** both hand-rolled closing-escape scans → `chars[(i + 1)...].firstIndex(of: esc)`;
+  the `findClosingEscape` helper is deleted.
+- **F23:** hand-rolled `hexDigitValue` → stdlib-backed `c.isASCII ? c.hexDigitValue : nil` —
+  deliberately ASCII-gated: bare `Character.hexDigitValue` also accepts fullwidth compatibility
+  digits, which are not valid in a wire `\X…\` body; the gate keeps behaviour byte-identical.
+- **F33:** the two fully-spelled empty-Field literals → `.scalar("")` (byte-identical
+  constructor chain).
+- Verification: suite **524 green**; test-name diff vs R4 = exactly the two C3 pins (added by
+  the fix commit); build warning-free.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

@@ -233,6 +233,16 @@ canonical refs are unchanged and C1 pins the `~N`/`[N]` rejections.
 
 **Done when:** C3 green before and after; one shared `decodeWirePayload`; suite green.
 
+**Status: ✅ landed 2026-08-27.** C3 could NOT go green "before" — writing it exposed a genuine
+pre-existing defect: `probeMSH18` examined only the first probe line, so batch wires (which open
+with FHS/BHS) silently fell back to UTF-8 and a correctly-declared Latin-1 batch failed to parse,
+contradicting BatchParser's documented contract. Fixed in its own commit (scan to the first MSH
+line — a no-op for single-message wires) with C3's two tests as the regression pin; the R5
+refactors then landed under the green pin. F20 dedup → `Parser.decodeWirePayload`; F21 both
+escape scans → `firstIndex(of:)` (helper deleted); F23 kept **ASCII-gated** over bare stdlib
+(`Character.hexDigitValue` also accepts fullwidth digits — the gate preserves exact behaviour);
+F33 → `.scalar("")` ×2. Refactor net −29 lines; suite 524 green; warning-free.
+
 ---
 
 ## Stage R6 — Scripts + docs hygiene
