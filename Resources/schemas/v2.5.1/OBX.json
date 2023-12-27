@@ -94,7 +94,7 @@
     },
     {
       "index": 12,
-      "swiftName": "effectiveDateOfReferenceRange",
+      "swiftName": "effectiveDateOfReferenceRangeValues",
       "name": "Effective Date of Reference Range Values",
       "dataType": "TS",
       "optionality": "O",
@@ -118,7 +118,7 @@
     },
     {
       "index": 15,
-      "swiftName": "producersID",
+      "swiftName": "producersReference",
       "name": "Producer's Reference",
       "dataType": "CE",
       "optionality": "O",

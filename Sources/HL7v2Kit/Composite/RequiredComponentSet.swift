@@ -47,22 +47,19 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
     public let semantics: Semantics
 
     /// A short human-readable description used in `ValidationIssue.message`
-    /// when the set's rule is violated. Defaults to a generated string
-    /// from `components` + `semantics`, but composites can override for
-    /// clarity (e.g. `"CWE-1 (Identifier) OR CWE-9 (Original Text)"`).
+    /// when the set's rule is violated
+    /// (e.g. `"CWE-1 (Identifier) OR CWE-9 (Original Text)"`). Required
+    /// as of 2.0 — every shipped set spells its rule out explicitly.
     public let description: String
 
     public init(
         components: [RequiredComponent],
         semantics: Semantics,
-        description: String? = nil
+        description: String
     ) {
         self.components = components
         self.semantics = semantics
-        self.description = description ?? Self.defaultDescription(
-            components: components,
-            semantics: semantics
-        )
+        self.description = description
     }
 
     /// Returns true if the populated-component indices satisfy the
@@ -83,25 +80,4 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
         }
     }
 
-    private static func defaultDescription(
-        components: [RequiredComponent],
-        semantics: Semantics
-    ) -> String {
-        switch semantics {
-        case .atLeastOneOf:
-            let parts = components.map { "C-\($0.index) (\($0.name))" }
-            return parts.joined(separator: " OR ")
-        case .allOfGroupOrAtLeastOne(let group):
-            let groupSet = Set(group)
-            let groupParts = components
-                .filter { groupSet.contains($0.index) }
-                .map { "C-\($0.index) (\($0.name))" }
-            let altParts = components
-                .filter { !groupSet.contains($0.index) }
-                .map { "C-\($0.index) (\($0.name))" }
-            let groupClause = groupParts.joined(separator: " AND ")
-            let altClause = altParts.joined(separator: " OR ")
-            return "\(altClause) OR (\(groupClause))"
-        }
-    }
 }

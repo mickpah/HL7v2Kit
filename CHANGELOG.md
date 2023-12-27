@@ -216,6 +216,36 @@ was verified equal to the enumerated fold map exactly.
 - Verification: suite **515 green** in 26 suites; name diff = the fold map exactly;
   warning-free. R10's `unknownSegment` disjunction lines re-located post-fold (:394/:443/:494/:749).
 
+### R10 — ⚠️ BREAKING: the v2.0.0 capstone (remediation stage 10 of 10)
+
+**The next release cut from this point is `v2.0.0`** (owner-scheduled 2026-08-27; ADR-014's
+"waits for 2.0" lane, exercised for the first time). Every removal shipped dead — zero
+construction/call sites, grep-verified at audit time and re-verified at removal. Full
+migration table: `Migration.md` → "The 2.0 boundary".
+
+- **Removed** (F6): the `HL7v2KitDictionaries` stub — library product, target, test target,
+  and the never-imported dependency edge. −1 public product, −2 build targets, −1 test suite.
+- **Removed** (F17): `BuilderError.invalidEncodingCharacters`, `BuilderError.duplicateMSH`,
+  `ParseError.malformedField`, `IssueCode.unknownSegment` — never raised/emitted.
+  (`ParseError.unknownSegment` is distinct, live, and stays.)
+- **Removed** (F22/F28/F29/F31): `ParserOptions.preserveExcessFields` (documented no-op),
+  `ValidationReport.empty`, `MessageBuilder.append(unknown:)`, `ParserOptions.lenient`
+  (= `.default` field-for-field).
+- **Changed** (F13): `RequiredComponentSet.init`'s `description` is now a required `String`;
+  the generated-fallback `defaultDescription` is deleted — every shipped set already spelled
+  its rule out explicitly.
+- **Renamed** (the v1.6-deferred corrections): OBX-12 `effectiveDateOfReferenceRange` →
+  `effectiveDateOfReferenceRangeValues`; OBX-15 `producersID` → `producersReference` —
+  accessors now match the spec's element names (schema `swiftName` + regenerate; the
+  Generated/ diff was exactly the two accessor declarations).
+- Release scaffolding: `Migration.md` "The 2.0 boundary" section; ADR-014 addendum;
+  same-stage test edits (ParseErrorTests description row; the four MultiVersion
+  `unknownSegment` disjunctions collapse to `.zSegmentPresent`).
+- Verification: suite **514 green in 25 suites**; test-name diff = exactly
+  `DictionaryLoadingTests/scaffoldMarker()` removed; zero warnings.
+- **Sequencing consequence:** `main` is now 2.0-bound — the AU coverage sprints
+  (planned as v1.10–v1.15) ship as v2.x releases; plan labels are cycle names, not tags.
+
 ### M5 sweep — CH06 financial completion (v1.9)
 
 Adds **FT1/PR1/ACC/UB1/UB2/DRG** (all six versions) and **ABS/GP1/GP2** (v2.4+) — 48 schema

@@ -42,8 +42,4 @@ public struct ValidationReport: Sendable, Equatable, Hashable {
         issues.filter { $0.severity == .info }
     }
 
-    /// Empty report — validation found nothing wrong. Defaults to
-    /// `.international` locale; pass an explicit locale when constructing
-    /// reports for locale-aware contexts.
-    public static let empty = ValidationReport(issues: [])
 }

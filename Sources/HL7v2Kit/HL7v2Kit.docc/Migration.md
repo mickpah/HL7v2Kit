@@ -37,6 +37,31 @@ case .v2_8_2: …
 
 > `@frozen` is **not** applied to any public enum. HL7v2Kit ships as an SPM *source* package (no library-evolution mode), so `@frozen` would be inert; the contract above is the SemVer promise, not a compiler attribute. See `docs/design/ADR-014-api-evolution-policy.md` and the surface inventory in `docs/design/public-api-surface.md`.
 
+## The 2.0 boundary (R10 — first exercise of the "waits for 2.0" lane)
+
+The 2026-08 remediation programme (`docs/design/remediation-plan.md`, stage R10)
+retired the public surface that had accumulated dead behind the 1.x additive-only contract.
+Every removal below shipped with **zero construction/call sites** in the package and its
+tests — verified by grep at audit time (2026-08-26) and re-verified at removal (2026-08-27):
+
+| Removed / changed at 2.0 | Evidence / migration |
+|---|---|
+| `HL7v2KitDictionaries` product + targets | Never imported outside its own scaffold test; superseded by the ADR-005 Path C codegen grammar tables |
+| `BuilderError.invalidEncodingCharacters`, `.duplicateMSH` | Never thrown — `build()` throws only `.missingMSH` |
+| `ParseError.malformedField` | Never thrown. (`ParseError.unknownSegment` is a distinct, live case and **stays**.) |
+| `IssueCode.unknownSegment` | Never emitted — no-grammar segments route to `.zSegmentPresent` |
+| `ParserOptions.preserveExcessFields` | Self-documented no-op since v0.1; never read |
+| `ParserOptions.lenient` | Field-for-field identical to `.default`; use `.default` |
+| `ValidationReport.empty` | Zero call sites; construct `ValidationReport(issues: [])` |
+| `MessageBuilder.append(unknown:)` | Zero call sites, untested; will be re-added WITH a test if a copy-segments API is ever wanted |
+| `RequiredComponentSet.init` — `description` is now a required `String` | Every shipped set already passed one explicitly; the generated-fallback `defaultDescription` is deleted |
+| OBX-12 `effectiveDateOfReferenceRange` → `effectiveDateOfReferenceRangeValues`; OBX-15 `producersID` → `producersReference` | The v1.6-deferred swiftName corrections — accessors now match the spec's element names |
+
+**Migrating:** switches over the open enums are unaffected when they follow the
+`@unknown default` guidance — a removed case cannot break an exhaustive-with-default
+switch; only constructions could, and none existed. Callers of removed symbols migrate
+per the table. The additive-only contract resumes for the `2.x` line from `v2.0.0`.
+
 ## API evolution since v0.5.0 (the stability anchor)
 
 All additive — no source break for a consumer who follows the `@unknown default` guidance:

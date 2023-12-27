@@ -391,7 +391,7 @@ struct MultiVersionTests {
         let report = Validator().validate(message)
         // None of the back-ported segments should surface as unknown/Z.
         let unknowns = report.issues.filter {
-            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+            $0.code == .zSegmentPresent
         }
         #expect(unknowns.isEmpty,
                 "Back-ported segments must dispatch to the v2.3 grammar; got \(unknowns.map(\.location.segmentID))")
@@ -440,7 +440,7 @@ struct MultiVersionTests {
         let message = try Parser().parse(v231AdtWithBackportedSegments)
         let report = Validator().validate(message)
         let unknowns = report.issues.filter {
-            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+            $0.code == .zSegmentPresent
         }
         #expect(unknowns.isEmpty,
                 "Back-ported segments must dispatch to the v2.3.1 grammar; got \(unknowns.map(\.location.segmentID))")
@@ -491,7 +491,7 @@ struct MultiVersionTests {
         #expect(message.version == .v2_6)
         let report = Validator().validate(message)
         let unknowns = report.issues.filter {
-            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+            $0.code == .zSegmentPresent
         }
         #expect(unknowns.isEmpty,
                 "v2.6 S1 segments must dispatch to the v2.6 grammar; got \(unknowns.map(\.location.segmentID))")
@@ -746,7 +746,7 @@ struct MultiVersionTests {
         #expect(message.version == .v2_8_2)
         let report = Validator().validate(message)
         let unknowns = report.issues.filter {
-            $0.code == .zSegmentPresent || $0.code == .unknownSegment
+            $0.code == .zSegmentPresent
         }
         #expect(unknowns.isEmpty,
                 "v2.8.2 S1 segments must dispatch to the v2.8.2 grammar; got \(unknowns.map(\.location.segmentID))")

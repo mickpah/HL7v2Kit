@@ -169,7 +169,14 @@ base, so AU integrators can trust the profile as a faithful rendering of the loc
   prose. Until that audit runs, the AU surface is "as complete as v0.17 left it", which is
   not the same as complete.
 
-### R — Over-engineering remediation 📋 **(planned 2026-08-26 — parallel track, non-gating)**
+### R — Over-engineering remediation ✅ **(COMPLETE 2026-08-27 — R1–R10 all landed; register closes at the `v2.0.0` tag)**
+
+> **R10 landed the breaking capstone on `main` (owner-scheduled 2026-08-27), so the next
+> release is `v2.0.0`** — it folds the untagged v1.7–v1.9 merges + the R-track. The M5/M6
+> sprint releases below (labelled v1.10–v1.15 when planned) ship as **v2.x** releases; the
+> sprint-plan labels are cycle names, not tags. Delivered: ~1,300 net lines removed, two real
+> defects found-and-fixed (batch MSH-18 detection; extractor cell-collapsing), C1–C3
+> characterization tests, shared test infra, the dead-API removals + OBX-12/15 renames at 2.0.
 *Goal: retire the ~1,400 lines of audited complexity debt — dead code, duplicated mechanics,
 hand-rolled stdlib — without touching a line of spec surface.*
 

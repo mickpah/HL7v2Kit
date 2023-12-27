@@ -14,7 +14,6 @@ let package = Package(
     ],
     products: [
         .library(name: "HL7v2Kit", targets: ["HL7v2Kit"]),
-        .library(name: "HL7v2KitDictionaries", targets: ["HL7v2KitDictionaries"]),
         .executable(name: "HL7v2KitCodegen", targets: ["HL7v2KitCodegen"]),
         .executable(name: "HL7v2KitAnonymise", targets: ["HL7v2KitAnonymise"]),
     ],
@@ -22,16 +21,9 @@ let package = Package(
     targets: [
         .target(
             name: "HL7v2Kit",
-            dependencies: ["HL7v2KitDictionaries"],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
-            ]
-        ),
-        .target(
-            name: "HL7v2KitDictionaries",
-            resources: [
-                .process("Resources"),
             ]
         ),
         .executableTarget(
@@ -55,10 +47,6 @@ let package = Package(
             resources: [
                 .copy("../Fixtures"),
             ]
-        ),
-        .testTarget(
-            name: "HL7v2KitDictionariesTests",
-            dependencies: ["HL7v2KitDictionaries"]
         ),
     ],
     swiftLanguageModes: [.v6]

@@ -95,7 +95,6 @@ struct ParseErrorTests {
             .invalidMSH(reason: "test"),
             .unsupportedVersion(found: "v9.9"),
             .unknownSegment(id: "ZAU", position: 2),
-            .malformedField(segment: "PID", fieldIndex: 3, reason: "test"),
             .unsupportedCharacterEncoding(declared: "EBCDIC"),
             .truncatedMessage(atByte: 42),
         ]

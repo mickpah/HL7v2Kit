@@ -78,11 +78,6 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// A Z-segment (or any segment outside the loaded grammar) is present
     /// and the validator's Z-segment policy is `.warnPresence` or `.reject`.
     case zSegmentPresent
-    /// A grammar lookup for this segment ID returned nothing.
-    /// Used by `Validator` when the segment isn't in the loaded version's
-    /// grammar table at all (distinct from Z-segments which match the Z
-    /// pattern).
-    case unknownSegment
     /// A localisation profile constraint was violated. The associated
     /// `localeRule` identifies the specific profile rule (e.g.
     /// `"au-adrm-2021:PID-3.4 R"`) so consumers can attribute the

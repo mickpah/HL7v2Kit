@@ -386,6 +386,17 @@ boundary (likely post-v1.15). Every earlier stage is 1.x-safe; this one IS the m
 **Done when:** suite green; test-name diff = exactly the `HL7v2KitDictionariesTests` names;
 zero warnings; Migration/ADR/CHANGELOG written; ready for the owner to cut `v2.0.0`.
 
+**Status: ✅ landed 2026-08-27 (owner-scheduled the boundary by starting the stage).** All
+seven findings + the two v1.6-deferred OBX swiftName renames (`effectiveDateOfReferenceRangeValues`,
+`producersReference` — schema + regenerate, Generated/ diff exactly the two accessor decls, zero
+call-site churn) + F13's required-description tightening. Every zero-call-site claim re-verified
+at HEAD before deletion; the F31 grep's two hits were `ValidationOptions.lenient` (distinct type,
+stays). Same-stage test edits exactly as enumerated. Scaffolding written: `Migration.md` → "The
+2.0 boundary" migration table, ADR-014 addendum, CHANGELOG breaking section. Gates: suite 514
+green in 25 suites; name diff = exactly `DictionaryLoadingTests/scaffoldMarker()`; warning-free.
+**This register closes when the owner cuts the `v2.0.0` tag** (tag mechanics stay owner-invoked
+per the working notes).
+
 ---
 
 ## Per-stage definition of done

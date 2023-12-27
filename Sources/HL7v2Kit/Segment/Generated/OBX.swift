@@ -67,7 +67,7 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-12: Effective Date of Reference Range Values. HL7 data type `TS`.
-    public var effectiveDateOfReferenceRange: String? {
+    public var effectiveDateOfReferenceRangeValues: String? {
         field(12)?.stringValue
     }
 
@@ -82,7 +82,7 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-15: Producer's Reference. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    public var producersID: CE? {
+    public var producersReference: CE? {
         field(15).map(CE.init(field:))
     }
 

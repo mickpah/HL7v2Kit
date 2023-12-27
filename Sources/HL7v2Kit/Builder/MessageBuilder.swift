@@ -9,8 +9,6 @@ import Foundation
 ///   switch with `@unknown default`.
 public enum BuilderError: Error, Equatable, Sendable {
     case missingMSH
-    case invalidEncodingCharacters
-    case duplicateMSH
 }
 
 /// Builds an HL7 v2 `Message` segment-by-segment.
@@ -40,11 +38,6 @@ public struct MessageBuilder: Sendable {
         self.version = version
         self.encodingCharacters = encodingCharacters
         self.characterEncoding = characterEncoding
-    }
-
-    /// Append an unknown segment (Z-segment or pre-built raw segment).
-    public mutating func append(unknown: UnknownSegment) {
-        segments.append(.unknown(unknown))
     }
 
     /// Append a segment built from raw field data.

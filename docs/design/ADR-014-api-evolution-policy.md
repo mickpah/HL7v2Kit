@@ -71,3 +71,13 @@ Each substage its own commit at green tests; `main` untouched until the S4 merge
 - `ROADMAP.md` M3 (this cycle) + M4 (distribution / IP review) + the candidate v1.0 definition.
 - the working notes req #1 (feature-complete, will keep adding versions) — the reason `Version` must stay open.
 - Swift library-evolution / `@frozen` semantics — inert without `-enable-library-evolution`, which this package does not set.
+
+---
+
+**Addendum (2026-08-27, R10):** the "waits for 2.0" lane was exercised for the first time.
+The v2.0.0 boundary carries the remediation removals — dead public surface with
+zero call sites; see `Migration.md` → "The 2.0 boundary" for the enumerated list and
+`docs/design/remediation-plan.md` → "v2.0.0 removal register" for the evidence —
+plus the two v1.6-deferred OBX swiftName corrections and the `RequiredComponentSet`
+required-description tightening. The additive-only contract resumes for the 2.x line
+from v2.0.0.
