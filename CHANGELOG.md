@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **State (2026-08-21):** v1.7, v1.8 and v1.9 are all **merged to `main` and untagged** —
-> they fold into the next release. Typed-segment coverage is **109**, and
+> **State (2026-08-27):** v1.7, v1.8 and v1.9 are merged to `main` and untagged, and the
+> **R1–R10 remediation track is complete — R10 is ⚠️ breaking, so the next release cut from
+> `main` is `v2.0.0`**, folding all of the above. Typed-segment coverage is **109**;
 > `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 584 schemas;
-> depth 578 exact, 0 gaps, 0 suspects**. Tests **519** green, no codegen drift. `main` and
-> the `v1.4.0` tag have **not been pushed** to `private`.
+> depth 578 exact, 0 gaps, 0 suspects**. Tests **514 green across 25 suites**, no codegen
+> drift. `main` and the `v1.4.0` tag have **not been pushed** to `private`.
 
 ### R1 — Foundation-import purge + codegen template trims (remediation stage 1 of 10)
 
