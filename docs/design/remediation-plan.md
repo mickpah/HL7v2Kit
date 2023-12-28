@@ -22,7 +22,8 @@ the refactors they protect.
 **36 findings, ~1,400 net removable lines, 0 spec surface touched** — plus 2 build targets and
 1 unused public product (the `HL7v2KitDictionaries` stub). Baseline at audit time: 519/519 tests
 across 26 suites green, no codegen drift. Clean bill everywhere else (see `## What is NOT a
-finding`). This register closes when stage R10 lands and the owner cuts the v2.0.0 tag.
+finding`). **This register CLOSED 2026-08-28 at the `v2.0.0` tag** — R1–R10 all landed
+2026-08-26/27 (per-stage status lines below); the tag folded them with the v1.7–v1.9 cycles.
 
 ## Constraints that shape the stages
 
@@ -394,8 +395,8 @@ at HEAD before deletion; the F31 grep's two hits were `ValidationOptions.lenient
 stays). Same-stage test edits exactly as enumerated. Scaffolding written: `Migration.md` → "The
 2.0 boundary" migration table, ADR-014 addendum, CHANGELOG breaking section. Gates: suite 514
 green in 25 suites; name diff = exactly `DictionaryLoadingTests/scaffoldMarker()`; warning-free.
-**This register closes when the owner cuts the `v2.0.0` tag** (tag mechanics stay owner-invoked
-per the working notes).
+**This register CLOSED 2026-08-28 — the owner cut the `v2.0.0` tag** (release commit
+`release: v2.0.0`; archive snapshots `docs/archive/{STATUS,NEXT_STEPS}-2026-08-28-v2.0-release.md`).
 
 ---
 

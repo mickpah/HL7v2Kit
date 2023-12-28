@@ -16,10 +16,10 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-08-27 (**R complete: R1–R10 all landed; R10 is ⚠️ breaking → `main` is 2.0-bound**) |
-| Current release | **`v1.4.0`** (tagged locally, not yet pushed). `main` also carries the **v1.7/v1.8/v1.9** coverage batches and the **complete R1–R10 remediation track**, all untagged — **109 typed segments** at verified per-version depth, 514/514 green. Everything since v1.4.0 folds into **`v2.0.0`**. |
-| Next planned cycle | **Cut `v2.0.0`**, then **Sprint 0** of the six-sprint AU coverage plan — the v2.4 lab-automation presence **defect** + an audit presence predicate. Sprint releases ship as **v2.x** (the plan's v1.10–v1.15 labels are cycle names). M5 still gates the first public push. |
-| Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane. Additive-only resumes for the **2.x** line from `v2.0.0` (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
+| Last updated | 2026-08-28 (**`v2.0.0` tagged** — the ⚠️ breaking release; R closed) |
+| Current release | **`v2.0.0`** (2026-08-28, tagged locally, not yet pushed — nor is any earlier tag). Folds the **v1.7/v1.8/v1.9** coverage batches and the **complete R1–R10 remediation track** — **109 typed segments** at verified per-version depth, 514/514 green. |
+| Next planned cycle | **Push to `private`**, then **Sprint 0** of the six-sprint AU coverage plan — the v2.4 lab-automation presence **defect** + an audit presence predicate. Sprint releases ship as **v2.x** (the plan's v1.10–v1.15 labels are cycle names). M5 still gates the first public push. |
+| Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
@@ -169,10 +169,10 @@ base, so AU integrators can trust the profile as a faithful rendering of the loc
   prose. Until that audit runs, the AU surface is "as complete as v0.17 left it", which is
   not the same as complete.
 
-### R — Over-engineering remediation ✅ **(COMPLETE 2026-08-27 — R1–R10 all landed; register closes at the `v2.0.0` tag)**
+### R — Over-engineering remediation ✅ **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 
-> **R10 landed the breaking capstone on `main` (owner-scheduled 2026-08-27), so the next
-> release is `v2.0.0`** — it folds the untagged v1.7–v1.9 merges + the R-track. The M5/M6
+> **R10 landed the breaking capstone on `main` (owner-scheduled 2026-08-27) and `v2.0.0`
+> shipped it (2026-08-28)**, folding the untagged v1.7–v1.9 merges + the R-track. The M5/M6
 > sprint releases below (labelled v1.10–v1.15 when planned) ship as **v2.x** releases; the
 > sprint-plan labels are cycle names, not tags. Delivered: ~1,300 net lines removed, two real
 > defects found-and-fixed (batch MSH-18 detection; extractor cell-collapsing), C1–C3
@@ -188,8 +188,8 @@ hand-rolled stdlib — without touching a line of spec surface.*
   interleave with the M5/M6 sprints opportunistically (no overlap with schema/sprint files).
   M5 remains the sole public-push gate.
 - **R10 is the v2.0.0 boundary** (owner decision, 2026-08-26): six dead public symbols ship
-  their removal *as* the 2.0 release — SemVer-honest and costless pre-publication. Gated only
-  on the owner scheduling 2.0 (likely post-v1.15). The ADR-014-deferred renames
+  their removal *as* the 2.0 release — SemVer-honest and costless pre-publication. The owner
+  scheduled 2.0 ahead of the sprints (2026-08-27). The ADR-014-deferred renames
   (`effectiveDateOfReferenceRange` / `producersID`, OBX-12/OBX-15) ride the same boundary.
 - **Characterization tests first** (C1–C3): the DSL-rejects-`[N]`/`~N` guard, exact validator
   messages across the 7 profile-issue sites, and BatchParser MSH-18 Latin-1 — real coverage

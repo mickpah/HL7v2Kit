@@ -48,14 +48,14 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 |---|---|
 | `segment-inventory.md` | The 188-segment work-list (M5) |
 | `segment-coverage-extraction.md` | **Living** method doc — audit predicates, per-version naming rules, extractor quirks (+ R6 tokenizer note) |
-| `au-coverage-sprint-plan.md` | **Active runway** (Sprint 0 next after the `v2.0.0` cut; sprint labels are cycle names, releases ship as v2.x) |
+| `au-coverage-sprint-plan.md` | **Active runway** (Sprint 0 next, on top of `v2.0.0`; sprint labels are cycle names, releases ship as v2.x) |
 | `deferred-coverage-backlog.md` | **Open register** — the deferred v2.6/v2.8.2 scope, enumerated with re-measure commands |
 
 ## Remediation programme
 
 | Record | Status |
 |---|---|
-| `remediation-plan.md` | **R1–R10 all landed** (2026-08-26/27) with per-stage status + evidence; the register **closes when the `v2.0.0` tag is cut** |
+| `remediation-plan.md` | **Closed** — R1–R10 all landed (2026-08-26/27) with per-stage status + evidence; register closed at the `v2.0.0` tag (2026-08-28) |
 
 ## Conventions
 

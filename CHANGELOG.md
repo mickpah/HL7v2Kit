@@ -7,12 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **State (2026-08-27):** v1.7, v1.8 and v1.9 are merged to `main` and untagged, and the
-> **R1–R10 remediation track is complete — R10 is ⚠️ breaking, so the next release cut from
-> `main` is `v2.0.0`**, folding all of the above. Typed-segment coverage is **109**;
-> `scripts/audit-schemas.py --depth` reports **integrity 0 findings across 584 schemas;
-> depth 578 exact, 0 gaps, 0 suspects**. Tests **514 green across 25 suites**, no codegen
-> drift. `main` and the `v1.4.0` tag have **not been pushed** to `private`.
+## [2.0.0] — 2026-08-28
+
+⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10
+removed the dead public surface (the `HL7v2KitDictionaries` product, four never-raised enum
+cases, two no-op `ParserOptions` members, `ValidationReport.empty`,
+`MessageBuilder.append(unknown:)`), made `RequiredComponentSet.init`'s `description` required,
+and applied the v1.6-deferred OBX-12/15 accessor renames (`effectiveDateOfReferenceRangeValues`,
+`producersReference`). Every removal and its replacement is tabled in `Migration.md` → "The 2.0
+boundary". Additive-only resumes for the 2.x line.
+
+Folds the untagged **v1.7 / v1.8 / v1.9** coverage cycles (typed-segment coverage **85 → 109**;
+`scripts/audit-schemas.py --depth`: integrity 0 findings across 584 schemas, depth 578 exact, 0
+gaps, 0 suspects) and the complete **R1–R10** over-engineering remediation track
+(`docs/design/remediation-plan.md` — ~1,400 lines removed behaviour-preserving, two real
+defects found by its characterization harnesses: batch MSH-18 charset detection, extractor
+multi-word-cell collapsing). Tests **515 → 514 across 25 suites** (R9 fold + R10 Dictionaries test
+retirement), no codegen drift.
 
 ### R1 — Foundation-import purge + codegen template trims (remediation stage 1 of 10)
 
