@@ -55,6 +55,16 @@ AU-critical version** and because the tooling gap hid it.
 **Done when:** the presence audit reports zero unexplained gaps on v2.4 for already-modelled
 segments, and the tool would have caught this class.
 
+**Status: ✅ landed 2026-08-28 (items 1–3).** Predicate written first and run red: exactly
+`PRESENCE v2.4 {EQP,EQU,INV,SAC,TCC,TCD}`, nothing else — the tool catches this class. Then
+the six authored from the v2.4 CH13 tables (`--emit-schema` seed → PDF check → `--verify`
+PASS ×6); INV is **18** on v2.4, SAC-6/TCC-3 `CM`/`O` (v2.5.1 `SPS`/`C`,`B`), SAC-27/43 `CE`,
+INV-14 `O`, SAC-22 "Available Volume", SAC-43 "Special Handling Considerations" — all pinned.
+True baseline: 590 schemas, depth 584 exact / 0 / 0, presence 0; never-authored by caption
+v2.3 24, v2.3.1 27, v2.4 37, v2.5.1 41, v2.6 61, v2.8.2 73 = **263** (the 2026-08-23 count
+above was a floor by 6). Suite 514 → 515. The v2.4 chapter sweep continues under this sprint
+(NEXT_STEPS Sprint 0 §3).
+
 ---
 
 ## Sprint 1 (v1.11) — CH2 control / envelope

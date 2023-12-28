@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Sprint 0 — v2.4 lab-automation presence defect + audit presence predicate
+
+First v2.x coverage cycle (`docs/design/au-coverage-sprint-plan.md` Sprint 0; planned label
+v1.10). Additive under ADR-014.
+
+- **Fixed — the v2.4 lab-automation presence gap.** v1.4 authored `EQU/SAC/INV/TCC/TCD/EQP`
+  as "v2.5+", but v2.4 CH13 defines all six. Authored on v2.4 from that version's own
+  attribute tables (golden `--verify` PASS on each): EQU 5 / SAC 44 / **INV 18** (v2.5.1 adds
+  INV-19/20) / TCC 14 / TCD 8 / EQP 5 — 94 fields. Per-version divergences pinned in
+  `TypedSegmentTests`: v2.4 uses `CM` where v2.5.1 has `SPS` (SAC-6, TCC-3) and `CE` where it
+  has `CWE` (SAC-27, SAC-43); no `B`/`C` flags yet (SAC-6, TCC-3, INV-14 are `O`); SAC-22 is
+  "Available Volume" and SAC-43 "Special Handling Considerations" in v2.4.
+- **Added — presence predicate in `scripts/audit-schemas.py --depth`.** The depth pass only
+  inspected schemas that *exist*, so an absent segment was invisible — that is how the gap
+  survived three clean audits. Each version's extracted caption set is now diffed against its
+  schema directory: a segment modelled on another version but absent here is a **PRESENCE**
+  finding (non-zero exit); segments modelled nowhere are reported as the never-authored
+  backlog count. Red-first: the predicate reported exactly the six v2.4 segments before they
+  were authored, and nothing else.
+- **True baseline recorded.** 590 schemas, integrity 0 findings; depth 584 exact / 0 gaps /
+  0 suspects; presence 0. Never-authored by caption: v2.3 24, v2.3.1 27, v2.4 37, v2.5.1 41,
+  v2.6 61, v2.8.2 73 = **263 instances** — six more than the 2026-08-23 plan count implied
+  after Sprint 0 (caption discovery was a floor).
+- Tests 514 → **515** (one new pin), 25 suites; codegen drift = the six new v2.4 grammar tables
+  only. Generated accessors unchanged (structs are canonical-shaped).
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

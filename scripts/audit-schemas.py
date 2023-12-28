@@ -125,11 +125,23 @@ def depth():
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0
-    gaps, suspects, exact = [], [], 0
+        return [], [], 0, [], {}
+    gaps, suspects, exact, presence, backlog = [], [], 0, [], {}
+    authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
+                for v in CHAPTER_GLOBS}
+    modelled_anywhere = set().union(*authored.values())
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
         found = extracted_depths(version)
+        # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
+        # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
+        # audits. A segment the spec defines here that we model on another version is a
+        # defect; one we model nowhere is M5 backlog (counted, not failed).
+        for seg in sorted(found.keys() - authored[version]):
+            if seg in modelled_anywhere:
+                presence.append((version, seg, found[seg]))
+            else:
+                backlog[version] = backlog.get(version, 0) + 1
         for path in sorted(glob.glob(f"{SCHEMAS}/{version}/*.json")):
             seg = os.path.basename(path)[:-5].upper()
             if seg in DEPTH_WHITELIST or seg not in found:
@@ -141,7 +153,7 @@ def depth():
                 suspects.append((version, seg, schema_depth, found[seg]))
             else:
                 exact += 1
-    return gaps, suspects, exact
+    return gaps, suspects, exact, presence, backlog
 
 
 def main():
@@ -157,14 +169,19 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact = depth()
+        gaps, suspects, exact, presence, backlog = depth()
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
             print(f"   GAP      {v} {seg}: schema {s}, spec {e}  -> missing fields?")
         for v, seg, s, e in suspects:
             print(f"   SUSPECT  {v} {seg}: schema {s}, extracted {e}  -> investigate the TOOL")
-        if gaps or suspects:
+        print(f"\n== presence: {len(presence)} modelled-elsewhere segments absent; "
+              f"never-authored backlog: "
+              + ", ".join(f"{v} {n}" for v, n in sorted(backlog.items())))
+        for v, seg, e in presence:
+            print(f"   PRESENCE {v} {seg}: spec defines {e} fields, no schema  -> author it")
+        if gaps or suspects or presence:
             rc = 1
 
     print("\nclean" if rc == 0 else "\nfindings above")

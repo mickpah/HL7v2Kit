@@ -376,3 +376,29 @@ re-sliced from the raw line by offsets). Harness evidence: v2.5.1 CH03 full-chap
 depth audit clean; zero committed schemas carried either form. Offsets are Character distances,
 matching the old `Array(line)` indexing; the only other delta (a line ending in exactly one
 trailing space no longer counts it in the final run's `end`) is unreachable in both consumers.
+
+---
+
+## Sprint 0 presence predicate (2026-08-28)
+
+`scripts/audit-schemas.py --depth` was structurally blind to an **absent** segment: the depth
+loop iterates the schemas that exist, so a segment the spec defines on a version we never
+authored there produced no finding. That is how the v2.4 lab-automation gap
+(`EQU/SAC/INV/TCC/TCD/EQP`, 94 fields) survived three "fully clean" audits after v1.4
+authored them as "v2.5+".
+
+The pass now also diffs each version's **extracted caption set** (the same
+`extracted_depths` output the depth check already consumes) against
+`Resources/schemas/<version>/`:
+
+- **PRESENCE** — the segment has a schema on some *other* version but not this one. A
+  defect; non-zero exit. Written red-first: before authoring it reported exactly the six v2.4
+  segments and nothing else.
+- **never-authored backlog** — no schema on any version. Reported as a per-version count
+  (the live M5 remainder), not failed. Baseline 2026-08-28: v2.3 24, v2.3.1 27, v2.4 37,
+  v2.5.1 41, v2.6 61, v2.8.2 73 = 263 instances.
+
+Predicate shape, per the house rule: a set difference over what the extractor already
+produces — no caption list to maintain, so it catches segments nobody thought to enumerate.
+Caveat carried from `segment-inventory.md`: caption-based discovery is a floor; a segment
+defined only in prose or under a non-standard caption is invisible to both passes.

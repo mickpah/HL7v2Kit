@@ -1367,7 +1367,8 @@ struct TypedSegmentTests {
         #expect(rdt1.name == "Column Value")
         #expect(rdt1.dataType == "varies")
         #expect(rdt1.optionality == .required)
-        // Lab-automation segments are v2.5+ — absent on v2.3.
+        // Lab-automation segments are v2.4+ (CH13 starts at v2.4) — absent on v2.3.
+        // The v2.4 tables themselves are pinned by the Sprint 0 test below.
         #expect(SegmentGrammarTable.v2_3["SAC"] == nil)
         // v2.3 query segments live in CH2 (CH5 is an empty placeholder in v2.3).
         #expect(SegmentGrammarTable.v2_3["QRD"]?.fields.count == 12)
@@ -1442,6 +1443,44 @@ struct TypedSegmentTests {
                         message.firstSegment(ECR.self) != nil] {
             #expect(present)
         }
+    }
+
+    // Sprint 0 (v2.x coverage): the v2.4 lab-automation PRESENCE defect. v1.4 authored
+    // EQU/SAC/INV/TCC/TCD/EQP as "v2.5+", but v2.4 CH13 defines all six — ~94 fields missing
+    // from the AU-critical version. A depth-only audit never sees an ABSENT segment; the
+    // presence predicate in scripts/audit-schemas.py now does. Divergences below were read
+    // from the v2.4 CH13 attribute tables, not inferred from v2.5.1.
+    @Test("Sprint 0: v2.4 lab-automation segments — presence, depths, per-version divergence")
+    func sprint0V2_4LabAutomationPresence() throws {
+        let t = SegmentGrammarTable.v2_4
+        let c = SegmentGrammarTable.v2_5_1
+        #expect(t["EQU"]?.fields.count == 5)
+        #expect(t["SAC"]?.fields.count == 44)
+        #expect(t["INV"]?.fields.count == 18)   // v2.5.1 adds INV-19/20
+        #expect(t["INV"]?.field(19) == nil)
+        #expect(t["TCC"]?.fields.count == 14)
+        #expect(t["TCD"]?.fields.count == 8)
+        #expect(t["EQP"]?.fields.count == 5)
+        // CH13 starts at v2.4 — absent from both legacy dialects.
+        #expect(SegmentGrammarTable.v2_3["EQU"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["SAC"] == nil)
+        // v2.4-era datatypes: CM where v2.5.1 has SPS, CE where it has CWE; no B/C flags yet.
+        #expect(t["SAC"]?.field(6)?.dataType == "CM")
+        #expect(t["SAC"]?.field(6)?.optionality == .optional)
+        #expect(c["SAC"]?.field(6)?.dataType == "SPS")
+        #expect(c["SAC"]?.field(6)?.optionality == .conditional)
+        #expect(t["SAC"]?.field(27)?.dataType == "CE")
+        #expect(t["SAC"]?.field(43)?.dataType == "CE")
+        #expect(t["TCC"]?.field(3)?.dataType == "CM")
+        #expect(t["TCC"]?.field(3)?.optionality == .optional)
+        #expect(c["TCC"]?.field(3)?.optionality == .backwardCompat)
+        #expect(t["INV"]?.field(14)?.optionality == .optional)
+        #expect(c["INV"]?.field(14)?.optionality == .backwardCompat)
+        // Per-version element names — taken from v2.4's own table, never copied.
+        #expect(t["SAC"]?.field(22)?.name == "Available Volume")
+        #expect(c["SAC"]?.field(22)?.name == "Available Specimen Volume")
+        #expect(t["SAC"]?.field(43)?.name == "Special Handling Considerations")
+        #expect(c["SAC"]?.field(43)?.name == "Special Handling Code")
     }
 
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
