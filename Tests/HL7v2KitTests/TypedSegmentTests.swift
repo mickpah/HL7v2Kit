@@ -1565,6 +1565,50 @@ struct TypedSegmentTests {
         }
     }
 
+    // Sprint 0 §3, batch CH04 (orders): BLG/ODS/ODT/RQ1/RQD on every AU-priority version
+    // (v2.3 / v2.3.1 / v2.4 / v2.5.1). BLG lives in CH04, not CH06 — the segment v1.9
+    // deliberately left out of the financial sweep.
+    @Test("Sprint 0 §3 CH04: BLG/ODS/ODT/RQ1/RQD — depths, registration, per-version divergence")
+    func sprint0Ch04Orders() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        for (id, depth) in [("BLG", 4), ("ODS", 4), ("ODT", 3), ("RQ1", 7), ("RQD", 10)] {
+            #expect(c[id]?.fields.count == depth, "v2.5.1 \(id)")
+        }
+        // Identical depth on v2.3 / v2.3.1 / v2.4 except BLG (3 — BLG-4 Charge Type Reason
+        // is v2.5+); BLG-1 is CM before v2.5.1's CCD.
+        for t in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4] {
+            #expect(t["BLG"]?.fields.count == 3)
+            #expect(t["BLG"]?.field(1)?.dataType == "CM")
+            #expect(t["ODS"]?.fields.count == 4)
+            #expect(t["ODT"]?.fields.count == 3)
+            #expect(t["RQ1"]?.fields.count == 7)
+            #expect(t["RQD"]?.fields.count == 10)
+        }
+        #expect(c["BLG"]?.field(1)?.dataType == "CCD")
+        #expect(c["BLG"]?.field(4)?.dataType == "CWE")
+        // BLG-3 Account ID is the legacy CK in v2.3 only; CX from v2.3.1.
+        #expect(SegmentGrammarTable.v2_3["BLG"]?.field(3)?.dataType == "CK")
+        #expect(SegmentGrammarTable.v2_3_1["BLG"]?.field(3)?.dataType == "CX")
+        // RQ1-2's name drifts every version: "Manufactured ID" → "Manufacturer ID" →
+        // "Manufacturer Identifier" (v2.4 and v2.5.1). Each from its own table.
+        #expect(SegmentGrammarTable.v2_3["RQ1"]?.field(2)?.name == "Manufactured ID")
+        #expect(SegmentGrammarTable.v2_3_1["RQ1"]?.field(2)?.name == "Manufacturer ID")
+        #expect(SegmentGrammarTable.v2_4["RQ1"]?.field(2)?.name == "Manufacturer Identifier")
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||OMD^O03|M1|P|2.5.1\r"
+            + "ODS|D|AM^^HL7|LOW^^HL7|no salt\r" + "ODT|TRAY^^HL7||text\r"
+            + "BLG|D|CH|ACC1\r" + "RQ1|9.99\r" + "RQD|1|IC1^^HL7\r"
+        let (message, ods) = try hydratedMessage(ODS.self, from: wire)
+        #expect(ods.textInstruction == message["ODS-4"])
+        #expect(ods.type == "D")
+        let blg = try #require(message.firstSegment(BLG.self))
+        #expect(blg.chargeType == "CH")
+        for present in [message.firstSegment(ODT.self) != nil, message.firstSegment(RQ1.self) != nil,
+                        message.firstSegment(RQD.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

@@ -1,0 +1,11 @@
+{
+  "segmentID": "ODS",
+  "version": "2.3",
+  "description": "Dietary Orders",
+  "fields": [
+    { "index": 1, "swiftName": "type", "name": "Type", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "dietSupplementOrPreferenceCode", "name": "Diet, Supplement, or Preference Code", "dataType": "CE", "optionality": "R", "repeatability": "*" },
+    { "index": 4, "swiftName": "textInstruction", "name": "Text Instruction", "dataType": "ST", "optionality": "O", "repeatability": "*" }
+  ]
+}

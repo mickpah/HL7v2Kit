@@ -65,6 +65,17 @@ v1.10). Additive under ADR-014.
   (`--emit-schema` behaviour; ISD v2.6 precedent) — inert metadata on a non-canonical schema.
 - Tests 515 → **516**.
 
+#### §3 — batch CH04 (orders)
+
+- **Added — five typed segments: `BLG` / `ODS` / `ODT` / `RQ1` / `RQD`** on v2.3, v2.3.1,
+  v2.4 and v2.5.1 (20 schemas, `--verify` PASS ×20). 115 → **120 typed segments**. `BLG`
+  is the CH04 segment v1.9's financial sweep deliberately excluded. Pinned: BLG is 3 fields
+  before v2.5.1 (BLG-4 Charge Type Reason is v2.5+), BLG-1 `CM` → `CCD`, BLG-3 `CK` (v2.3
+  only) → `CX`; RQ1-2's name drifts every version ("Manufactured ID" → "Manufacturer ID" →
+  "Manufacturer Identifier"); ODS/ODT/RQD identical across all four.
+- Audit after the batch: 626 schemas, depth 620 exact / 0 / 0, presence 0, deferred 22;
+  never-authored v2.3 17, v2.3.1 20, v2.4 25, v2.5.1 29, v2.6 49, v2.8.2 61. Tests → **517**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

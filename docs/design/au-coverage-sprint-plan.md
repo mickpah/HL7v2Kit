@@ -71,7 +71,11 @@ without accessors), plus `STF/PRA` on v2.3/v2.3.1 — 16 schemas → 115 typed. 
 §3 rule: **a segment lands on every AU-priority version it exists in, in one batch**; the
 presence predicate flags a split, and v2.6/v2.8.2 absences of modelled segments are its
 *deferred* class (listed, not failed — `DEFERRED_VERSIONS` in `audit-schemas.py`). Sprint 2's
-CH15 scope is therefore already done for these six. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+CH15 scope is therefore already done for these six.
+
+**§3 batch B — CH04 orders ✅ 2026-08-28.** `BLG/ODS/ODT/RQ1/RQD` on all four AU-priority
+versions (20 schemas, `--verify` PASS ×20) → 120 typed. Closes Sprint 3's CH04 line and the
+`BLG` loose end. Divergences pinned (BLG depth/DT, RQ1-2 name drift). `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

@@ -196,6 +196,15 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Process Date", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "BLG": SegmentGrammar(
+            segmentID: "BLG",
+            version: "2.4",
+            fields: [
+            FieldGrammar(index: 1, name: "When to Charge", dataType: "CM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Charge Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Account ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "CDM": SegmentGrammar(
             segmentID: "CDM",
             version: "2.4",
@@ -1074,6 +1083,25 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "Date/Time of the Analysis", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "ODS": SegmentGrammar(
+            segmentID: "ODS",
+            version: "2.4",
+            fields: [
+            FieldGrammar(index: 1, name: "Type", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Service Period", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Diet, Supplement, or Preference Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "ODT": SegmentGrammar(
+            segmentID: "ODT",
+            version: "2.4",
+            fields: [
+            FieldGrammar(index: 1, name: "Tray Type", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Service Period", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "OM1": SegmentGrammar(
             segmentID: "OM1",
             version: "2.4",
@@ -1830,6 +1858,35 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Organization Unit Type", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 11, name: "Office/Home Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 12, name: "Phone", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "RQ1": SegmentGrammar(
+            segmentID: "RQ1",
+            version: "2.4",
+            fields: [
+            FieldGrammar(index: 1, name: "Anticipated Price", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Manufacturer Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "RQD": SegmentGrammar(
+            segmentID: "RQD",
+            version: "2.4",
+            fields: [
+            FieldGrammar(index: 1, name: "Requisition Line Number", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Requisition Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Requisition Unit of Measure", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Dept. Cost Center", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Item Natural Account Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Deliver To ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Date Needed", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "RXA": SegmentGrammar(
