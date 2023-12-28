@@ -1,0 +1,12 @@
+{
+  "segmentID": "AFF",
+  "version": "2.5.1",
+  "description": "Professional Affiliation",
+  "fields": [
+    { "index": 1, "swiftName": "setIdAff", "name": "Set ID – AFF", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "professionalOrganization", "name": "Professional Organization", "dataType": "XON", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "professionalOrganizationAddress", "name": "Professional Organization Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "professionalOrganizationAffiliationDateRange", "name": "Professional Organization Affiliation Date Range", "dataType": "DR", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "professionalAffiliationAdditionalInformation", "name": "Professional Affiliation Additional Information", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}

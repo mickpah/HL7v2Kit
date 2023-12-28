@@ -1199,6 +1199,20 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 16, name: "Procedure Code Modifier", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
+        "PRA": SegmentGrammar(
+            segmentID: "PRA",
+            version: "2.3.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Practitioner Group", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Practitioner Category", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Provider Billing", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Specialty", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Practitioner ID Numbers", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "Privileges", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 8, name: "Date Entered Practice", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "PRB": SegmentGrammar(
             segmentID: "PRB",
             version: "2.3.1",
@@ -1701,6 +1715,38 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Parent Placer Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 24, name: "Parent Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil),
             FieldGrammar(index: 25, name: "Filler Status Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "STF": SegmentGrammar(
+            segmentID: "STF",
+            version: "2.3.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Staff ID Code", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Staff Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Staff Type", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 5, name: "Sex", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Date/Time Of Birth", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Active/Inactive Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Department", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "Hospital Service", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Phone", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 11, name: "Office/Home Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 12, name: "Institution Activation Date", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 13, name: "Institution Inactivation Date", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 14, name: "Backup Person ID", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 15, name: "E-Mail Address", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 16, name: "Preferred Method Of Contact", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 17, name: "Marital Status", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 18, name: "Job Title", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 19, name: "Job Code/Class", dataType: "JCC", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 20, name: "Employment Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 21, name: "Additional Insured on Auto", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 22, name: "Driver's License Number – Staff", dataType: "DLN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 23, name: "Copy Auto Ins", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 24, name: "Auto Ins. Expires", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 25, name: "Date Last DMV Review", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 26, name: "Date Next DMV Review", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "TXA": SegmentGrammar(

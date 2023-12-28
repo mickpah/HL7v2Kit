@@ -65,6 +65,18 @@ v2.3 24, v2.3.1 27, v2.4 37, v2.5.1 41, v2.6 61, v2.8.2 73 = **263** (the 2026-0
 above was a floor by 6). Suite 514 → 515. The v2.4 chapter sweep continues under this sprint
 (NEXT_STEPS Sprint 0 §3).
 
+**§3 batch A — CH15 personnel ✅ 2026-08-28.** `STF/PRA/ORG/AFF/LAN/EDU` on v2.4 **and**
+v2.5.1 (structs come from the canonical version only, so the AU version alone would be grammar
+without accessors), plus `STF/PRA` on v2.3/v2.3.1 — 16 schemas → 115 typed. This sets the
+§3 rule: **a segment lands on every AU-priority version it exists in, in one batch**; the
+presence predicate flags a split, and v2.6/v2.8.2 absences of modelled segments are its
+*deferred* class (listed, not failed — `DEFERRED_VERSIONS` in `audit-schemas.py`). Sprint 2's
+CH15 scope is therefore already done for these six. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
+every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
+FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text
+defects normalised (`segment-coverage-extraction.md` → "Spec-text defects"). Suite 515 → 516.
+
 ---
 
 ## Sprint 1 (v1.11) — CH2 control / envelope

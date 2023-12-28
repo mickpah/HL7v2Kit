@@ -347,10 +347,17 @@ func extractTables(from text: String) -> [Table] {
             // updates the column model and is skipped; a genuinely new segment's table
             // (has its own caption) ends this one.
             if let h = detectHeader(line) {
-                if !rows.isEmpty && captionSegment(above: j, lines: lines).isEmpty {
+                let caption = captionSegment(above: j, lines: lines)
+                if !rows.isEmpty && caption.isEmpty {
                     columns = h; j += 1; continue        // page-repeat header
                 } else if !rows.isEmpty {
                     break loop                            // next segment's table
+                } else if !caption.isEmpty && caption != segHint {
+                    // No rows yet and the next header carries a DIFFERENT segment's caption:
+                    // this table's only row was unparseable (the `1-n` class — ADD, RDT), so
+                    // it must end EMPTY rather than bind the next segment's rows. Sprint 0 §3
+                    // found v2.4 ADD reporting BHS's 12 fields and BHS missing entirely.
+                    break loop
                 } else {
                     columns = h; j += 1; continue         // stray duplicate before first row
                 }

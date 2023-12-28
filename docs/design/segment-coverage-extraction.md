@@ -332,6 +332,26 @@ column table. **RDT therefore shows as a permanent 6-row GAP in the depth audit 
 whitelisted**; its schema is hand-authored and correct (one field, `Column Value`). Any
 future `1-n` segment needs the same treatment.
 
+> **Sprint 0 §3 fix (2026-08-28) — the run-on no longer crosses a caption.** The same
+> mechanism hid a whole segment: v2.4/v2.5.1 CH02 reported `ADD` with **BHS's** 12 fields
+> and no `BHS` at all, because the empty `ADD` scan took BHS's header as a "stray duplicate
+> before first row". An empty-rowed table now ends when a header with a *different* caption
+> appears (`extractTables`, the `rows.isEmpty && caption != segHint` branch). Harness: full
+> caption diff on v2.4 and v2.5.1 = exactly `−ADD +BHS`; depth audit unchanged. A `1-n`
+> table followed by a *caption-less* table (the v2.4+ query-example columns after RDT) can
+> still bind it, so the RDT whitelist stays. `ADD` is now simply absent from the caption set
+> — hand-author it like RDT and expect no depth row for it.
+
+### Spec-text defects normalised in authored schemas
+
+The attribute table is authoritative, but a handful of cells are typeset wrong in the PDF
+itself. Each is normalised in the schema and listed here so `--verify` FAILs are explainable:
+
+| Version | Field | PDF cell | Schema | Evidence |
+|---|---|---|---|---|
+| v2.4 | EDU-2 OPT | *(blank)* | `O` | v2.5.1 table `O`; no conditionality stated in the EDU-2 definition. `--verify` reports this one mismatch. |
+| v2.4 | EDU-4 name | `…Program ParticipationDate Range` | `…Program Participation Date Range` | The field's own definition heading (15.4.2.4) is spaced. `--verify` does not compare names. |
+
 Caption matching was also widened to accept the singular (`Figure 2-10. ERR attribute`) —
 the plural-only pattern silently excluded v2.3 / v2.3.1 ERR from the audit's coverage.
 
@@ -396,7 +416,12 @@ The pass now also diffs each version's **extracted caption set** (the same
   segments and nothing else.
 - **never-authored backlog** — no schema on any version. Reported as a per-version count
   (the live M5 remainder), not failed. Baseline 2026-08-28: v2.3 24, v2.3.1 27, v2.4 37,
-  v2.5.1 41, v2.6 61, v2.8.2 73 = 263 instances.
+  v2.5.1 41, v2.6 61, v2.8.2 73 = 263 instances (before the `1-n` fix below and the
+  Z-segment exclusion; after §3A: 22 / 25 / 30 / 34 / 54 / 66 = 231).
+- **deferred** (added §3A) — a modelled-elsewhere absence on an owner-deferred version
+  (`DEFERRED_VERSIONS = {v2.6, v2.8.2}`, per `deferred-coverage-backlog.md`). Listed, not
+  failed: the AU-first sequencing authors a segment on v2.3–v2.5.1 first, which the plain
+  PRESENCE rule would report as defects. Z-segments are skipped outright (site-defined).
 
 Predicate shape, per the house rule: a set difference over what the extractor already
 produces — no caption list to maintain, so it catches segments nobody thought to enumerate.

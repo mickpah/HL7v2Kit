@@ -1,0 +1,33 @@
+{
+  "segmentID": "STF",
+  "version": "2.3",
+  "description": "Staff Identification",
+  "fields": [
+    { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "staffIdentifierList", "name": "Staff ID Code", "dataType": "CX", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "staffName", "name": "Staff Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "staffType", "name": "Staff Type", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "administrativeSex", "name": "Sex", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "dateTimeOfBirth", "name": "Date/Time Of Birth", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "activeInactiveFlag", "name": "Active/Inactive", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "department", "name": "Department", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "hospitalServiceStf", "name": "Service", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "phone", "name": "Phone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 11, "swiftName": "officeHomeAddressBirthplace", "name": "Office/Home Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "institutionActivationDate", "name": "Activation Date", "dataType": "CM", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "institutionInactivationDate", "name": "Inactivation Date - STF", "dataType": "CM", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "backupPersonId", "name": "Backup Person ID", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 15, "swiftName": "eMailAddress", "name": "E-Mail Address", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 16, "swiftName": "preferredMethodOfContact", "name": "Preferred Method Of Contact", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "maritalStatus", "name": "Marital Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "jobTitle", "name": "Job Title", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "jobCodeClass", "name": "Job Code/Class", "dataType": "JCC", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "employmentStatusCode", "name": "Employment Status", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "additionalInsuredOnAuto", "name": "Additional Insured on Auto", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "driverLicenseNumberStaff", "name": "Driver's License Number - Staff", "dataType": "DLN", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "copyAutoIns", "name": "Copy Auto Ins", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "autoInsExpires", "name": "Auto Ins. Expires", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "dateLastDmvReview", "name": "Date Last DMV Review", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 26, "swiftName": "dateNextDmvReview", "name": "Date Next DMV Review", "dataType": "DT", "optionality": "O", "repeatability": "1" }
+  ]
+}

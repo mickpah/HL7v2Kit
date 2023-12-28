@@ -1,0 +1,19 @@
+{
+  "segmentID": "ORG",
+  "version": "2.5.1",
+  "description": "Practitioner Organization Unit",
+  "fields": [
+    { "index": 1, "swiftName": "setIdOrg", "name": "Set ID – ORG", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "organizationUnitCode", "name": "Organization Unit Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "organizationUnitTypeCode", "name": "Organization Unit Type Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "primaryOrgUnitIndicator", "name": "Primary Org Unit Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "practitionerOrgUnitIdentifier", "name": "Practitioner Org Unit Identifier", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "healthCareProviderTypeCode", "name": "Health Care Provider Type Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "healthCareProviderClassificationCode", "name": "Health Care Provider Classification Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "healthCareProviderAreaOfSpecializationCode", "name": "Health Care Provider Area of Specialization Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "effectiveDateRange", "name": "Effective Date Range", "dataType": "DR", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "employmentStatusCode", "name": "Employment Status Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "boardApprovalIndicator", "name": "Board Approval Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "primaryCarePhysicianIndicator", "name": "Primary Care Physician Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -1483,6 +1483,88 @@ struct TypedSegmentTests {
         #expect(c["SAC"]?.field(43)?.name == "Special Handling Code")
     }
 
+    // Sprint 0 §3, batch CH15 (personnel management): STF/PRA/ORG/AFF/LAN/EDU authored on
+    // v2.4 (Tier 1) and v2.5.1 (canonical — typed structs are emitted from v2.5.1 only) from
+    // each version's own attribute table. v2.3/v2.3.1 follow in their own sprint. CER is
+    // v2.5+ and is NOT a v2.4 segment (the sprint plan's CH15 list was wrong about that).
+    @Test("Sprint 0 §3 CH15: STF/PRA/ORG/AFF/LAN/EDU — depths, registration, per-version divergence")
+    func sprint0Ch15Personnel() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        let t = SegmentGrammarTable.v2_4
+        #expect(c["STF"]?.fields.count == 38)
+        #expect(c["PRA"]?.fields.count == 12)
+        #expect(c["ORG"]?.fields.count == 12)
+        #expect(c["AFF"]?.fields.count == 5)
+        #expect(c["LAN"]?.fields.count == 4)
+        #expect(c["EDU"]?.fields.count == 9)
+        // v2.4 is shallower on STF (29) and EDU (8); the other four are depth-identical.
+        #expect(t["STF"]?.fields.count == 29)
+        #expect(t["STF"]?.field(30) == nil)
+        #expect(t["EDU"]?.fields.count == 8)
+        #expect(t["PRA"]?.fields.count == 12)
+        #expect(t["ORG"]?.fields.count == 12)
+        #expect(t["AFF"]?.fields.count == 5)
+        #expect(t["LAN"]?.fields.count == 4)
+        // STF/PRA also exist in v2.3 / v2.3.1 (CH8 there); the other four are v2.4+.
+        let l = SegmentGrammarTable.v2_3
+        #expect(l["STF"]?.fields.count == 26)
+        #expect(SegmentGrammarTable.v2_3_1["STF"]?.fields.count == 26)
+        #expect(l["PRA"]?.fields.count == 8)
+        #expect(SegmentGrammarTable.v2_3_1["PRA"]?.fields.count == 8)
+        #expect(l["ORG"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["EDU"] == nil)
+        // STF-1 was R in v2.3, C from v2.4; STF-3 repeats only from v2.3.1; STF-16/17 were
+        // ID/IS in v2.3 and CE from v2.3.1.
+        #expect(l["STF"]?.field(1)?.optionality == .required)
+        #expect(t["STF"]?.field(1)?.optionality == .conditional)
+        #expect(l["STF"]?.field(3)?.repeatability == .single)
+        #expect(SegmentGrammarTable.v2_3_1["STF"]?.field(3)?.repeatability == .multiple)
+        #expect(l["STF"]?.field(16)?.dataType == "ID")
+        #expect(l["STF"]?.field(17)?.dataType == "IS")
+        #expect(SegmentGrammarTable.v2_3_1["STF"]?.field(16)?.dataType == "CE")
+        #expect(l["STF"]?.field(9)?.name == "Service")
+        // PRA-1: ST/R (v2.3) → CE/R (v2.3.1) → CE/C (v2.4+); PRA-9..12 are v2.4+.
+        #expect(l["PRA"]?.field(1)?.dataType == "ST")
+        #expect(SegmentGrammarTable.v2_3_1["PRA"]?.field(1)?.dataType == "CE")
+        #expect(SegmentGrammarTable.v2_3_1["PRA"]?.field(1)?.optionality == .required)
+        #expect(t["PRA"]?.field(1)?.optionality == .conditional)
+        #expect(l["PRA"]?.field(9) == nil)
+        // v2.4-era datatypes: CM where v2.5.1 has the named composites.
+        #expect(t["STF"]?.field(12)?.dataType == "CM")
+        #expect(c["STF"]?.field(12)?.dataType == "DIN")
+        #expect(t["PRA"]?.field(5)?.dataType == "CM")
+        #expect(c["PRA"]?.field(5)?.dataType == "SPD")
+        #expect(c["PRA"]?.field(6)?.dataType == "PLN")
+        #expect(c["PRA"]?.field(7)?.dataType == "PIP")
+        // PRA-6 became B in v2.5.1; O in v2.4.
+        #expect(t["PRA"]?.field(6)?.optionality == .optional)
+        #expect(c["PRA"]?.field(6)?.optionality == .backwardCompat)
+        // Per-version element names, from each version's own table.
+        #expect(t["STF"]?.field(2)?.name == "Staff ID Code")
+        #expect(c["STF"]?.field(2)?.name == "Staff Identifier List")
+        #expect(t["STF"]?.field(11)?.name == "Office/Home Address")
+        #expect(c["STF"]?.field(11)?.name == "Office/Home Address/Birthplace")
+        // v2.4 EDU spec defects, normalised (recorded in segment-coverage-extraction.md):
+        // EDU-2's OPT cell is blank in the PDF (v2.5.1: O); EDU-4's name is set
+        // "ParticipationDate" in the table but spaced in its own definition heading.
+        #expect(t["EDU"]?.field(2)?.optionality == .optional)
+        #expect(t["EDU"]?.field(4)?.name == "Academic Degree Program Participation Date Range")
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||MFN^M02|M1|P|2.5.1\r"
+            + "STF|S1^^HL7|ID1|Smith^J||F||A|||||||||||Registrar\r"
+            + "PRA|P1^^HL7||||||||||\r" + "ORG|1|OU1^^HL7\r" + "AFF|1|Org^^HL7\r"
+            + "LAN|1|en^English^ISO639\r" + "EDU|1|MD\r"
+        let (message, stf) = try hydratedMessage(STF.self, from: wire)
+        #expect(stf.jobTitle == message["STF-18"])              // typed accessor == path
+        #expect(stf.jobTitle == "Registrar")
+        let edu = try #require(message.firstSegment(EDU.self))
+        #expect(edu.academicDegree == "MD")
+        for present in [message.firstSegment(PRA.self) != nil, message.firstSegment(ORG.self) != nil,
+                        message.firstSegment(AFF.self) != nil, message.firstSegment(LAN.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

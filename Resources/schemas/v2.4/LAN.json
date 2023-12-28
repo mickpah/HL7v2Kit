@@ -1,0 +1,11 @@
+{
+  "segmentID": "LAN",
+  "version": "2.4",
+  "description": "Language Detail",
+  "fields": [
+    { "index": 1, "swiftName": "setIdLan", "name": "Set ID – LAN", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "languageCode", "name": "Language Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "languageAbilityCode", "name": "Language Ability Code", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "languageProficiencyCode", "name": "Language Proficiency Code", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+  ]
+}

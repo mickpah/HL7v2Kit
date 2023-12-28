@@ -33,6 +33,38 @@ v1.10). Additive under ADR-014.
 - Tests 514 → **515** (one new pin), 25 suites; codegen drift = the six new v2.4 grammar tables
   only. Generated accessors unchanged (structs are canonical-shaped).
 
+#### §3 — v2.4 chapter sweep, batch CH15 (personnel management)
+
+- **Added — six typed segments: `STF` / `PRA` / `ORG` / `AFF` / `LAN` / `EDU`**, authored on
+  **v2.4** (Tier 1) *and* **v2.5.1** (canonical — typed structs are emitted from v2.5.1 only,
+  so authoring the AU version alone would give grammar without accessors), plus `STF`/`PRA`
+  on **v2.3 / v2.3.1** (CH8 there; the other four are v2.4+) so every AU-priority version of
+  the segment lands together — 16 schemas. 109 → **115 typed segments**. Pinned divergences:
+  v2.4 is shallower on STF (29 vs 38) and EDU (8 vs 9), v2.3/v2.3.1 STF is 26 and PRA 8;
+  v2.4 uses `CM` where v2.5.1 has `DIN`/`SPD`/`PLN`/`PIP`; PRA-6 `O` → `B`; STF-1 `R` (v2.3)
+  → `C`; STF-3 repeats only from v2.3.1; STF-16/17 `ID`/`IS` (v2.3) → `CE`; PRA-1 `ST`/`R` →
+  `CE`/`R` → `CE`/`C`; per-version names (STF-2 "Staff ID Code", STF-9 "Service", …).
+  `CER` is v2.5+ (not a v2.4 segment).
+  Two v2.4 EDU spec defects normalised and recorded: EDU-2's OPT cell is blank in the PDF
+  (schema `O`, per v2.5.1 — the one `--verify` FAIL of the batch, documented), EDU-4's name is
+  set "ParticipationDate" in the table but spaced in its own definition heading.
+- **Fixed — extractor `1-n` table binding (`scripts/extract-segment-tables.swift`).** A table
+  whose only row never parses (`ADD-1`, `RDT-1`) left `rows` empty, so the *next* segment's
+  header was taken as a "stray duplicate" and its rows bound under the wrong caption: v2.4 and
+  v2.5.1 both reported `ADD` with BHS's 12 fields and **no `BHS` at all**. An empty table now
+  ends when a header with a different caption appears. Harness: full caption diff on v2.4 and
+  v2.5.1 = exactly `−ADD +BHS`; depth audit unchanged (584 exact / 0 / 0).
+- **Audit:** Z-segments excluded from the never-authored count (site-defined by spec; v2.4
+  CH08's `ZL7` is "PROPOSED EXAMPLE ONLY"). New **deferred** class: a modelled-elsewhere
+  absence on an owner-deferred version (`DEFERRED_VERSIONS = {v2.6, v2.8.2}`, per
+  `deferred-coverage-backlog.md`) is listed but does not fail — the AU-first sequencing now
+  splits a segment's versions across sprints, which the original PRESENCE rule would have
+  reported as 12 defects. After batch A: 606 schemas, depth 600 exact / 0 / 0, presence 0,
+  deferred 12; never-authored v2.3 22, v2.3.1 25, v2.4 30, v2.5.1 34, v2.6 54, v2.8.2 66.
+- SAC v2.4 swiftNames for fields 22/43 realigned to the canonical-by-index convention
+  (`--emit-schema` behaviour; ISD v2.6 precedent) — inert metadata on a non-canonical schema.
+- Tests 515 → **516**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

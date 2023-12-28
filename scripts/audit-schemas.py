@@ -59,6 +59,11 @@ STANDARDS = _standards_dir()
 # the SPR segment). Its hand-authored schema is correct — see segment-coverage-extraction.md.
 DEPTH_WHITELIST = {"RDT"}
 
+# Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
+# backlog.md). A segment modelled elsewhere but absent here is reported as DEFERRED — visible,
+# counted, not a failure. Everywhere else the same absence is a PRESENCE defect.
+DEFERRED_VERSIONS = {"v2.6", "v2.8.2"}
+
 CHAPTER_GLOBS = {
     "v2.3":   ["HL7_v23_PDF/CH*.pdf"],
     "v2.3.1": ["HL7_v231_PDF/Hl7V231.pdf"],
@@ -125,8 +130,8 @@ def depth():
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}
-    gaps, suspects, exact, presence, backlog = [], [], 0, [], {}
+        return [], [], 0, [], {}, []
+    gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
@@ -138,7 +143,11 @@ def depth():
         # audits. A segment the spec defines here that we model on another version is a
         # defect; one we model nowhere is M5 backlog (counted, not failed).
         for seg in sorted(found.keys() - authored[version]):
-            if seg in modelled_anywhere:
+            if seg.startswith("Z"):
+                continue  # Z-segments are site-defined by spec (v2.4 CH08's ZL7 is "PROPOSED EXAMPLE ONLY")
+            if seg in modelled_anywhere and version in DEFERRED_VERSIONS:
+                deferred.append((version, seg, found[seg]))
+            elif seg in modelled_anywhere:
                 presence.append((version, seg, found[seg]))
             else:
                 backlog[version] = backlog.get(version, 0) + 1
@@ -153,7 +162,7 @@ def depth():
                 suspects.append((version, seg, schema_depth, found[seg]))
             else:
                 exact += 1
-    return gaps, suspects, exact, presence, backlog
+    return gaps, suspects, exact, presence, backlog, deferred
 
 
 def main():
@@ -169,7 +178,7 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog = depth()
+        gaps, suspects, exact, presence, backlog, deferred = depth()
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -181,6 +190,9 @@ def main():
               + ", ".join(f"{v} {n}" for v, n in sorted(backlog.items())))
         for v, seg, e in presence:
             print(f"   PRESENCE {v} {seg}: spec defines {e} fields, no schema  -> author it")
+        if deferred:
+            print(f"   deferred ({', '.join(sorted(DEFERRED_VERSIONS))}, owner-scheduled): "
+                  + ", ".join(f"{v} {seg}({e})" for v, seg, e in deferred))
         if gaps or suspects or presence:
             rc = 1
 
