@@ -1,0 +1,8 @@
+{
+  "segmentID": "DSC",
+  "version": "2.3",
+  "description": "Continuation Pointer",
+  "fields": [
+    { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}

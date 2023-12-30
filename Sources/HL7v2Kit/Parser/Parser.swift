@@ -141,7 +141,8 @@ public struct Parser: Sendable {
         var segments: [Segment] = []
         for (i, segLine) in segmentStrings.enumerated() {
             if segLine.isEmpty { continue }   // tolerate blank lines mid-message
-            let segment = try parseSegment(segLine, encoding: encoding, isMSH: i == 0)
+            let segment = try parseSegment(segLine, encoding: encoding,
+                                           separatorSegment: i == 0 || Self.isSeparatorSegment(segLine))
             // Enforce strict mode: if the registry returned `.unknown`, the
             // segment ID is not in the codegen-emitted typed-segment table.
             // Under `allowUnknownSegments: false` we reject it.
@@ -190,10 +191,18 @@ public struct Parser: Sendable {
 
     // MARK: - Segment parsing
 
+    /// Segments whose field 1 IS the field separator and field 2 the encoding characters
+    /// (HL7 v2 §2.x: MSH-1/MSH-2, and identically BHS-1/BHS-2 and FHS-1/FHS-2 for the batch
+    /// and file envelopes). Sprint 0 §3C: before this, an envelope line inside a message was
+    /// numbered plainly, so every BHS/FHS field read one position off the spec.
+    static func isSeparatorSegment(_ line: String) -> Bool {
+        line.hasPrefix("MSH") || line.hasPrefix("BHS") || line.hasPrefix("FHS")
+    }
+
     private func parseSegment(
         _ line: String,
         encoding: EncodingCharacters,
-        isMSH: Bool
+        separatorSegment: Bool
     ) throws -> Segment {
         let chars = Array(line)
         guard chars.count >= 3 else {
@@ -203,24 +212,24 @@ public struct Parser: Sendable {
         let segmentID = String(chars[0..<3])
 
         // Split into raw field strings.
-        // MSH is special: the field separator IS field 1, so the raw split looks
-        // like ["MSH", "^~\\&", ...] but the SEMANTIC fields are:
+        // MSH / BHS / FHS are special: the field separator IS field 1, so the raw split
+        // looks like ["MSH", "^~\\&", ...] but the SEMANTIC fields are:
         //   fields[0] = "MSH"  (segment ID)
         //   fields[1] = fieldSeparator (single character)
         //   fields[2] = encoding chars
         //   fields[3] = sending application
         //   ...
         var rawFields: [String]
-        if isMSH {
-            // Slice off "MSH" + field separator. Reconstruct fields[1] and [2] manually.
+        if separatorSegment {
+            // Slice off the ID + field separator. Reconstruct fields[1] and [2] manually.
             // line == "MSH|^~\\&|sendingApp|..."
             let afterPrefix = String(chars[4...])   // everything after "MSH|"
             let rest = afterPrefix.split(separator: encoding.fieldSeparator,
                                           omittingEmptySubsequences: false)
                                    .map(String.init)
-            // The first element of `rest` is "^~\\&" (MSH-2), then the actual fields.
+            // The first element of `rest` is "^~\\&" (field 2), then the actual fields.
             // Build the canonical array:
-            rawFields = ["MSH", String(encoding.fieldSeparator)] + rest
+            rawFields = [segmentID, String(encoding.fieldSeparator)] + rest
         } else {
             let afterID = String(chars[3...])
             // afterID starts with field separator. Remove the leading one then split.
@@ -242,11 +251,11 @@ public struct Parser: Sendable {
             if i == 0 {
                 // Segment ID slot — not a real field, but keep array indices 1-based.
                 fields.append(Field(repetitions: []))
-            } else if isMSH && i == 1 {
-                // MSH-1 is the field separator as a single character.
+            } else if separatorSegment && i == 1 {
+                // MSH-1 (BHS-1, FHS-1) is the field separator as a single character.
                 fields.append(.scalar(rawField))
-            } else if isMSH && i == 2 {
-                // MSH-2 is the 4 encoding chars as a single literal value (no internal split).
+            } else if separatorSegment && i == 2 {
+                // MSH-2 (BHS-2, FHS-2) is the 4 encoding chars as one literal value (no internal split).
                 fields.append(.scalar(rawField))
             } else {
                 fields.append(parseField(rawField, encoding: encoding))

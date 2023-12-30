@@ -42,6 +42,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Accident Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "ADD": SegmentGrammar(
+            segmentID: "ADD",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Addendum Continuation Pointer", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "AFF": SegmentGrammar(
             segmentID: "AFF",
             version: "2.5.1",
@@ -197,6 +204,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Process Date", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "BHS": SegmentGrammar(
+            segmentID: "BHS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Batch Field Separator", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Batch Encoding Characters", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Batch Sending Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Batch Sending Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Batch Receiving Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Batch Receiving Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Batch Creation Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Batch Security", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Batch Name/ID/Type", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Batch Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Batch Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Reference Batch Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "BLG": SegmentGrammar(
             segmentID: "BLG",
             version: "2.5.1",
@@ -252,6 +277,15 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "BP Actual Dispensed To Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 20, name: "BP Dispensed to Receiver", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 21, name: "BP Dispensing Individual", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "BTS": SegmentGrammar(
+            segmentID: "BTS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Batch Message Count", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Batch Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Batch Totals", dataType: "NM", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "BTX": SegmentGrammar(
@@ -462,6 +496,14 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "DRG Transfer Type", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "DSC": SegmentGrammar(
+            segmentID: "DSC",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Continuation Pointer", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Continuation Style", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "ECD": SegmentGrammar(
             segmentID: "ECD",
             version: "2.5.1",
@@ -550,6 +592,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Event Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "FHS": SegmentGrammar(
+            segmentID: "FHS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "File Field Separator", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "File Encoding Characters", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "File Sending Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "File Sending Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "File Receiving Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "File Receiving Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "File Creation Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "File Security", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "File Name/ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "File Header Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "File Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Reference File Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "FT1": SegmentGrammar(
             segmentID: "FT1",
             version: "2.5.1",
@@ -585,6 +645,14 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 29, name: "NDC Code", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 30, name: "Payment Reference ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 31, name: "Transaction Reference Key", dataType: "SI", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "FTS": SegmentGrammar(
+            segmentID: "FTS",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "File Batch Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "File Trailer Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "GOL": SegmentGrammar(

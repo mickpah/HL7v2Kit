@@ -1609,6 +1609,63 @@ struct TypedSegmentTests {
         }
     }
 
+    // Sprint 0 §3, batch CH02 (control / envelopes): BHS/FHS/BTS/FTS/DSC/ADD on every
+    // AU-priority version. BatchParser / StreamingBatchParser have framed FHS/BHS/BTS/FTS
+    // since v0.3 with NO schemas behind them — this closes that parser/schema coherence gap.
+    // ADD-1 is a `1-n` row (like RDT-1): hand-authored, whitelisted in the depth audit.
+    @Test("Sprint 0 §3 CH02: BHS/FHS/BTS/FTS/DSC/ADD — depths, registration, per-version divergence")
+    func sprint0Ch02Envelopes() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        let all = [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4, c]
+        for t in all {
+            #expect(t["BHS"]?.fields.count == 12)
+            #expect(t["FHS"]?.fields.count == 12)
+            #expect(t["BTS"]?.fields.count == 3)
+            #expect(t["FTS"]?.fields.count == 2)
+            #expect(t["ADD"]?.fields.count == 1)
+            #expect(t["ADD"]?.field(1)?.dataType == "ST")
+        }
+        // DSC-2 Continuation Style is v2.4+.
+        #expect(SegmentGrammarTable.v2_3["DSC"]?.fields.count == 1)
+        #expect(SegmentGrammarTable.v2_3_1["DSC"]?.fields.count == 1)
+        #expect(SegmentGrammarTable.v2_4["DSC"]?.fields.count == 2)
+        #expect(c["DSC"]?.fields.count == 2)
+        // The four sending/receiving application/facility fields are ST through v2.4 and
+        // HD from v2.5.1 — on both envelopes.
+        for idx in 3...6 {
+            #expect(SegmentGrammarTable.v2_4["BHS"]?.field(idx)?.dataType == "ST")
+            #expect(c["BHS"]?.field(idx)?.dataType == "HD")
+            #expect(SegmentGrammarTable.v2_4["FHS"]?.field(idx)?.dataType == "ST")
+            #expect(c["FHS"]?.field(idx)?.dataType == "HD")
+        }
+        #expect(c["BHS"]?.field(1)?.optionality == .required)
+        #expect(c["BTS"]?.field(3)?.repeatability == .multiple)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
+            + "DSC|PTR1|I\r" + "ADD|more text\r"
+            + "BHS|^~\\&|A|B|C|D|20240101120000||batch1||CTRL9\r" + "BTS|1|done\r"
+            + "FHS|^~\\&|A|B|C|D|20240101120000||file1||FCTRL\r" + "FTS|1|end\r"
+        let (message, dsc) = try hydratedMessage(DSC.self, from: wire)
+        #expect(dsc.continuationPointer == message["DSC-1"])
+        #expect(dsc.continuationStyle == "I")
+        // BHS-1 / FHS-1 are the field separator and BHS-2 / FHS-2 the encoding characters,
+        // exactly like MSH-1/2 — so the parser applies the same rule, and the serialiser
+        // mirrors it (the wire must round-trip byte-for-byte).
+        let bhs = try #require(message.firstSegment(BHS.self))
+        #expect(bhs.batchControlId == "CTRL9")
+        #expect(message["BHS-1"] == "|")
+        #expect(message["BHS-2"] == "^~\\&")
+        #expect(message["FHS-3"] == "A")
+        #expect(message["FHS-11"] == "FCTRL")
+        #expect(String(decoding: message.serialize(), as: UTF8.self) == wire)
+        let add = try #require(message.firstSegment(ADD.self))
+        #expect(add.addendumContinuationPointer == "more text")
+        for present in [message.firstSegment(BTS.self) != nil, message.firstSegment(FHS.self) != nil,
+                        message.firstSegment(FTS.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

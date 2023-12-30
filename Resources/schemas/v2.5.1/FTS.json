@@ -1,0 +1,9 @@
+{
+  "segmentID": "FTS",
+  "version": "2.5.1",
+  "description": "File Trailer",
+  "fields": [
+    { "index": 1, "swiftName": "fileBatchCount", "name": "File Batch Count", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "fileTrailerComment", "name": "File Trailer Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}

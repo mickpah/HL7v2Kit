@@ -75,7 +75,14 @@ CH15 scope is therefore already done for these six.
 
 **§3 batch B — CH04 orders ✅ 2026-08-28.** `BLG/ODS/ODT/RQ1/RQD` on all four AU-priority
 versions (20 schemas, `--verify` PASS ×20) → 120 typed. Closes Sprint 3's CH04 line and the
-`BLG` loose end. Divergences pinned (BLG depth/DT, RQ1-2 name drift). `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+`BLG` loose end. Divergences pinned (BLG depth/DT, RQ1-2 name drift).
+
+**§3 batch C — CH02 envelopes ✅ 2026-08-29.** `BHS/FHS/BTS/FTS/DSC/ADD` on all four
+AU-priority versions (24 schemas; `ADD` hand-authored, `1-n`) → 126 typed. Closes Sprint 1's
+envelope lead item and its parser/schema coherence gap — and the pin found the parser
+numbering BHS/FHS one field off the spec (BHS-1/FHS-1 are the field separator, like MSH-1);
+fixed in `Parser` + `Serializer`. Sprint 1's remaining CH02 scope: `OVR`/`SFT` (v2.5+) and the
+query-adjacent set (batch D). `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

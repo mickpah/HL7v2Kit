@@ -340,7 +340,7 @@ future `1-n` segment needs the same treatment.
 > caption diff on v2.4 and v2.5.1 = exactly `−ADD +BHS`; depth audit unchanged. A `1-n`
 > table followed by a *caption-less* table (the v2.4+ query-example columns after RDT) can
 > still bind it, so the RDT whitelist stays. `ADD` is now simply absent from the caption set
-> — hand-author it like RDT and expect no depth row for it.
+> — hand-authored like RDT on all four AU-priority versions (§3C) and whitelisted alongside it.
 
 ### Spec-text defects normalised in authored schemas
 

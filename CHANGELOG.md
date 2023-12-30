@@ -76,6 +76,26 @@ v1.10). Additive under ADR-014.
 - Audit after the batch: 626 schemas, depth 620 exact / 0 / 0, presence 0, deferred 22;
   never-authored v2.3 17, v2.3.1 20, v2.4 25, v2.5.1 29, v2.6 49, v2.8.2 61. Tests → **517**.
 
+#### §3 — batch CH02 (control / batch envelopes)
+
+- **Added — six typed segments: `BHS` / `FHS` / `BTS` / `FTS` / `DSC` / `ADD`** on v2.3,
+  v2.3.1, v2.4 and v2.5.1 (24 schemas; `--verify` PASS ×20, `ADD` ×4 hand-authored). 120 →
+  **126 typed segments**. `BatchParser` / `StreamingBatchParser` have framed FHS/BHS/BTS/FTS
+  since v0.3 with no schemas behind them — the parser/schema coherence gap the sprint plan
+  called out is closed. Pinned: BHS/FHS-3..6 `ST` → `HD` at v2.5.1; DSC-2 Continuation
+  Style is v2.4+; BTS/FTS identical everywhere.
+- **Fixed — BHS-1/FHS-1 are the field separator, like MSH-1.** `Parser` applied the
+  separator rule only to the first line, so an envelope line inside a message was numbered
+  plainly and every BHS/FHS field read one position off the spec (the batch pin found it:
+  `BHS-11 Batch Control ID` came back nil). The rule is now a property of the segment ID
+  (`Parser.isSeparatorSegment`: MSH / BHS / FHS) and `Serializer` mirrors it; the pin
+  round-trips the wire byte-for-byte. Raw `BatchFile.fileHeader` / `BatchGroup.header`
+  strings are unchanged; typed access to them from the batch API is a follow-up.
+- **`ADD-1` is a `1-n` row** (same as RDT-1): hand-authored on all four versions, added to
+  `DEPTH_WHITELIST`. After the batch: 650 schemas, depth 640 exact / 0 / 0, presence 0,
+  deferred 34; never-authored v2.3 12, v2.3.1 15, v2.4 20, v2.5.1 24, v2.6 44, v2.8.2 56.
+  Tests → **518**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

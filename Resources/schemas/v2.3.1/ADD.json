@@ -1,0 +1,8 @@
+{
+  "segmentID": "ADD",
+  "version": "2.3.1",
+  "description": "Addendum",
+  "fields": [
+    { "index": 1, "swiftName": "addendumContinuationPointer", "name": "Addendum Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}

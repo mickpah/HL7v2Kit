@@ -57,7 +57,7 @@ STANDARDS = _standards_dir()
 # RDT is a "1-n" variable-column segment: the row parser needs a bare-integer SEQ, so its
 # single real row never parses and the scan binds whatever table follows (in v2.3/v2.3.1,
 # the SPR segment). Its hand-authored schema is correct — see segment-coverage-extraction.md.
-DEPTH_WHITELIST = {"RDT"}
+DEPTH_WHITELIST = {"RDT", "ADD"}   # ADD-1 is the same `1-n` row (hand-authored, Sprint 0 §3C)
 
 # Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
 # backlog.md). A segment modelled elsewhere but absent here is reported as DEFERRED — visible,

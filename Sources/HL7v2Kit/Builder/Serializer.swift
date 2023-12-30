@@ -16,8 +16,10 @@ enum Serializer {
         var lines: [String] = []
         let enc = message.encodingCharacters
 
-        for (i, segment) in message.segments.enumerated() {
-            let isMSH = (i == 0 && segment.segmentID == "MSH")
+        for segment in message.segments {
+            // Mirror of Parser.isSeparatorSegment: MSH / BHS / FHS carry the field
+            // separator as field 1 and the encoding characters as field 2.
+            let isMSH = Parser.isSeparatorSegment(segment.segmentID)
             lines.append(serializeSegment(segment, encoding: enc, isMSH: isMSH))
         }
 
