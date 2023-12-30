@@ -1666,6 +1666,45 @@ struct TypedSegmentTests {
         }
     }
 
+    // Sprint 0 §3, batch CH05 (the v2.3-era query family): DSP/EQL/ERQ/SPR/URD/URS/VTQ on
+    // every AU-priority version (they live in CH2 in v2.3 / v2.3.1) and QRI (v2.4+). SPR is
+    // the segment whose table was wrongly committed as RDT before v1.5-S1 — now authored
+    // under its own caption. All depths and datatypes are identical across the four versions;
+    // the only cross-version delta was a PDF "Query/ Response" spacing artifact, normalised.
+    @Test("Sprint 0 §3 CH05: DSP/EQL/ERQ/QRI/SPR/URD/URS/VTQ — depths, registration, QRI is v2.4+")
+    func sprint0Ch05Queries() throws {
+        let depths = [("DSP", 5), ("EQL", 4), ("ERQ", 3), ("SPR", 4), ("URD", 7), ("URS", 9), ("VTQ", 5)]
+        for t in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1,
+                  SegmentGrammarTable.v2_4, SegmentGrammarTable.v2_5_1] {
+            for (id, depth) in depths {
+                #expect(t[id]?.fields.count == depth, "\(id)")
+            }
+            #expect(t["SPR"]?.field(2)?.name == "Query/Response Format Code")
+            #expect(t["SPR"]?.field(4)?.dataType == "QIP")
+        }
+        #expect(SegmentGrammarTable.v2_3["QRI"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["QRI"] == nil)
+        #expect(SegmentGrammarTable.v2_4["QRI"]?.fields.count == 3)
+        #expect(SegmentGrammarTable.v2_5_1["QRI"]?.fields.count == 3)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||VQQ^Q07|M1|P|2.5.1\r"
+            + "VTQ|tag1|T|VQ1^^HL7|VT1^^HL7\r" + "SPR|tag1|T|SP1^^HL7\r" + "EQL|tag1|T|EQ1^^HL7|select *\r"
+            + "ERQ|tag1|EV1^^HL7\r" + "URD||R\r" + "URS|ALL\r" + "DSP|1||line one\r" + "QRI|95\r"
+        let (message, vtq) = try hydratedMessage(VTQ.self, from: wire)
+        #expect(vtq.queryResponseFormatCode == message["VTQ-2"])
+        #expect(vtq.queryTag == "tag1")
+        let urd = try #require(message.firstSegment(URD.self))
+        #expect(urd.ruWhatSubjectDefinition == nil)        // hand-tuned name: ruX, not rUX
+        #expect(urd.reportPriority == "R")
+        let dsp = try #require(message.firstSegment(DSP.self))
+        #expect(dsp.dataLine == "line one")
+        for present in [message.firstSegment(SPR.self) != nil, message.firstSegment(EQL.self) != nil,
+                        message.firstSegment(ERQ.self) != nil, message.firstSegment(URS.self) != nil,
+                        message.firstSegment(QRI.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

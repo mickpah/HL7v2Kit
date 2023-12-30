@@ -351,6 +351,8 @@ itself. Each is normalised in the schema and listed here so `--verify` FAILs are
 |---|---|---|---|---|
 | v2.4 | EDU-2 OPT | *(blank)* | `O` | v2.5.1 table `O`; no conditionality stated in the EDU-2 definition. `--verify` reports this one mismatch. |
 | v2.4 | EDU-4 name | `…Program ParticipationDate Range` | `…Program Participation Date Range` | The field's own definition heading (15.4.2.4) is spaced. `--verify` does not compare names. |
+| v2.3 | EQL-2 / SPR-2 / VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Line-wrap artifact after the slash; every other version and the field definitions read `Query/Response`. Names only. |
+| v2.4 | VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Same artifact; v2.4 EQL-2 / SPR-2 are spaced correctly. Names only. |
 
 Caption matching was also widened to accept the singular (`Figure 2-10. ERR attribute`) —
 the plural-only pattern silently excluded v2.3 / v2.3.1 ERR from the audit's coverage.

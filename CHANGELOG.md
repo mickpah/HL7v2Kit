@@ -96,6 +96,21 @@ v1.10). Additive under ADR-014.
   deferred 34; never-authored v2.3 12, v2.3.1 15, v2.4 20, v2.5.1 24, v2.6 44, v2.8.2 56.
   Tests → **518**.
 
+#### §3 — batch CH05 (the v2.3-era query family)
+
+- **Added — eight typed segments: `DSP` / `EQL` / `ERQ` / `SPR` / `URD` / `URS` / `VTQ`**
+  on v2.3, v2.3.1, v2.4 and v2.5.1 (they live in CH2 in the two legacy versions) **and `QRI`**
+  (v2.4+) — 30 schemas, `--verify` PASS ×30. 126 → **134 typed segments**. `SPR` is the
+  segment whose table was wrongly committed as RDT before v1.5-S1; it now has its own
+  schemas on every version. Depths and datatypes identical across all four versions; the only
+  cross-version delta was a PDF "Query/ Response" line-wrap artifact (v2.3 EQL/SPR/VTQ-2,
+  v2.4 VTQ-2), normalised and registered. URD/URS accessor names hand-tuned from the derived
+  `rU…` to `ru…` (`ruDateTime`, `ruWhoSubjectDefinition`, …) before they became permanent API.
+- Audit after the batch: 680 schemas, depth 670 exact / 0 / 0, presence 0, deferred 40 (the
+  v2.3-era query segments are withdrawn from v2.6/v2.8.2, so fewer move to the deferred
+  class); never-authored v2.3 5, v2.3.1 8, v2.4 12, v2.5.1 16, v2.6 40, v2.8.2 54.
+  Tests → **519**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

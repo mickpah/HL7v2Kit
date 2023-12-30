@@ -82,7 +82,12 @@ AU-priority versions (24 schemas; `ADD` hand-authored, `1-n`) → 126 typed. Clo
 envelope lead item and its parser/schema coherence gap — and the pin found the parser
 numbering BHS/FHS one field off the spec (BHS-1/FHS-1 are the field separator, like MSH-1);
 fixed in `Parser` + `Serializer`. Sprint 1's remaining CH02 scope: `OVR`/`SFT` (v2.5+) and the
-query-adjacent set (batch D). `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+query-adjacent set (batch D).
+
+**§3 batch D — CH05 queries ✅ 2026-08-30.** `DSP/EQL/ERQ/SPR/URD/URS/VTQ` on all four
+AU-priority versions + `QRI` (v2.4+) — 30 schemas → 134 typed. Closes Sprint 1's query-adjacent
+set and Sprint 3's CH05 line, including the `SPR` loose end. Uniform across versions; the
+"Query/ Response" spacing artifact registered in `segment-coverage-extraction.md`. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

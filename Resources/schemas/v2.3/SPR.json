@@ -1,0 +1,11 @@
+{
+  "segmentID": "SPR",
+  "version": "2.3",
+  "description": "Stored Procedure Request Definition",
+  "fields": [
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "storedProcedureName", "name": "Stored Procedure Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "optionality": "O", "repeatability": "*" }
+  ]
+}

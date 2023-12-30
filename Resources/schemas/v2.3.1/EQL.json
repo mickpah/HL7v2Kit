@@ -1,0 +1,11 @@
+{
+  "segmentID": "EQL",
+  "version": "2.3.1",
+  "description": "Embedded Query Language",
+  "fields": [
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "eqlQueryName", "name": "EQL Query Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "eqlQueryStatement", "name": "EQL Query Statement", "dataType": "ST", "optionality": "R", "repeatability": "1" }
+  ]
+}

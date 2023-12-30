@@ -1,0 +1,10 @@
+{
+  "segmentID": "ERQ",
+  "version": "2.5.1",
+  "description": "Event Replay Query",
+  "fields": [
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "eventIdentifier", "name": "Event Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "optionality": "O", "repeatability": "*" }
+  ]
+}
