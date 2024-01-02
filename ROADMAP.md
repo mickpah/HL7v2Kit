@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-08-28 (**`v2.0.0` tagged** — the ⚠️ breaking release; R closed) |
+| Last updated | 2026-09-02 (**Sprint 0 §1–§3 complete** on top of `v2.0.0`: presence predicate + 36 segments on every AU-priority version → **146 typed; zero never-authored on v2.3/v2.3.1/v2.4**) |
 | Current release | **`v2.0.0`** (2026-08-28, tagged locally, not yet pushed — nor is any earlier tag). Folds the **v1.7/v1.8/v1.9** coverage batches and the **complete R1–R10 remediation track** — **109 typed segments** at verified per-version depth, 514/514 green. |
-| Next planned cycle | **Push to `private`**, then **Sprint 0** of the six-sprint AU coverage plan — the v2.4 lab-automation presence **defect** + an audit presence predicate. Sprint releases ship as **v2.x** (the plan's v1.10–v1.15 labels are cycle names). M5 still gates the first public push. |
+| Next planned cycle | **Push to `private`** (nothing has ever left this machine), then the **Sprint 0 close-out** (conditional sweep over the 36 new segments + coverage claims) and the **`v2.1.0`** cut. Sprint 0 §3 absorbed Sprints 1–4's authoring scope; M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -76,7 +76,7 @@ The four themes below are roughly independent and can interleave across cycles. 
 ### M5 — Full HL7 segment coverage across all versions 🟠 **(AU-priority tier active; v2.6/v2.8.2 deferred — the public-push gate)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
 
-- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today: **109 typed segments**; **~79 unmodelled**. **Depth of the authored surface is verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 578 of 584 committed schemas match their own version's attribute table exactly, with 0 suspects; the 6 exceptions are RDT, a known `1-n` extractor limitation whose hand-authored schema is correct.
+- **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today (post-Sprint 0 §3, 2026-09-02): **146 typed segments**; **never-authored: 0 on v2.3/v2.3.1/v2.4**, 4 on v2.5.1 (the v2.5-only set), 28/42 on the deferred v2.6/v2.8.2. **Depth *and presence* of the authored surface are verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 706 of 717 committed schemas match their own version's attribute table exactly, 0 suspects, presence 0 (whitelist: RDT + ADD `1-n`; v2.3.1/NSC).
 - **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
 - **✅ Segment inventory (DONE, v1.1, S5).** `docs/design/segment-inventory.md` — the 188-segment work-list + proposed sweep order.
 - **⬅ Sweep (ongoing):** additive cycles (ADR-014 §open — add, never remove; API frozen), extractor-seeded (`--emit-schema`) + human-verified, by chapter/family.
@@ -98,7 +98,9 @@ The four themes below are roughly independent and can interleave across cycles. 
 #### ⚠️ Re-prioritisation (owner, 2026-08-23): AU-relevant versions first
 
 The sweep is **re-sequenced**, not reduced. Remaining coverage was measured at **263
-schema-instances / ~2,431 fields** and split by Australian relevance:
+schema-instances / ~2,431 fields** and split by Australian relevance (Sprint 0 §3 — 2026-09-02 —
+has since authored the entire AU-priority half; what remains is the v2.5-only quartet and the
+deferred tier below):
 
 | Tier | Versions | Remaining | Est. fields | Rationale |
 |---|---|---|---|---|
@@ -125,6 +127,7 @@ Two things set that order, and both are gaps the segment counts alone did not sh
 - **Sprint 0 leads on a defect, not new work.** v2.4 is missing six already-modelled
   lab-automation segments, and `scripts/audit-schemas.py` could not see it — the depth pass
   only inspects schemas that **exist**, so an absent segment is invisible to it.
+  *(✅ 2026-08-28: both fixed — the six authored, and the audit now runs a presence predicate.)*
 - **Sprint 1 leads on the batch envelope.** `BatchParser` / `StreamingBatchParser` already
   *frame* `FHS/BHS/BTS/FTS` (v0.3-T2), but **no schemas exist** for them — they parse with no
   grammar, no typed accessors and no validation. That is a coherence gap between the parser

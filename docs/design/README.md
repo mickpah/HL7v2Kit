@@ -48,7 +48,7 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 |---|---|
 | `segment-inventory.md` | The 188-segment work-list (M5) |
 | `segment-coverage-extraction.md` | **Living** method doc — audit predicates, per-version naming rules, extractor quirks (+ R6 tokenizer note) |
-| `au-coverage-sprint-plan.md` | **Active runway** (Sprint 0 next, on top of `v2.0.0`; sprint labels are cycle names, releases ship as v2.x) |
+| `au-coverage-sprint-plan.md` | **Active runway** — Sprint 0 §1–§3 ✅ (2026-08-28→09-02: presence predicate + 36 segments on every AU-priority version → 146 typed; per-batch status lines in the doc). §3 absorbed Sprints 1–4's authoring scope; next is the Sprint-5-style close-out, then v2.1.0 |
 | `deferred-coverage-backlog.md` | **Open register** — the deferred v2.6/v2.8.2 scope, enumerated with re-measure commands |
 
 ## Remediation programme
