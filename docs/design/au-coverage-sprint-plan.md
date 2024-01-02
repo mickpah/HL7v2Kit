@@ -87,7 +87,13 @@ query-adjacent set (batch D).
 **§3 batch D — CH05 queries ✅ 2026-08-30.** `DSP/EQL/ERQ/SPR/URD/URS/VTQ` on all four
 AU-priority versions + `QRI` (v2.4+) — 30 schemas → 134 typed. Closes Sprint 1's query-adjacent
 set and Sprint 3's CH05 line, including the `SPR` loose end. Uniform across versions; the
-"Query/ Response" spacing artifact registered in `segment-coverage-extraction.md`. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+"Query/ Response" spacing artifact registered in `segment-coverage-extraction.md`.
+
+**§3 batch E — CH03/06/07 ✅ 2026-09-01.** `IAM/NPU/PDA` + `BLC/RMI` + `FAC` (16 schemas;
+IAM/PDA/BLC/RMI are v2.4+) → 140 typed. Covers Sprint 4's CH3/CH7 lines and Sprint 3's CH06
+remainder. Third tool fix of the sweep: v2.3 CH7 wraps the `RP/#` header (`RP/`), which hid
+the repeat column and put its `Y` cells in OPT — pattern added, FAC re-extracted to match the
+PDF exactly. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

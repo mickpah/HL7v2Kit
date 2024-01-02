@@ -111,6 +111,20 @@ v1.10). Additive under ADR-014.
   class); never-authored v2.3 5, v2.3.1 8, v2.4 12, v2.5.1 16, v2.6 40, v2.8.2 54.
   Tests → **519**.
 
+#### §3 — batch E (CH03 patient admin + CH06 financial + CH07 facility)
+
+- **Added — six typed segments: `IAM` / `NPU` / `PDA` / `BLC` / `RMI` / `FAC`** — IAM/PDA/
+  BLC/RMI on v2.4 + v2.5.1 (they are v2.4+), NPU and FAC on all four AU-priority versions —
+  16 schemas, `--verify` PASS ×16. 134 → **140 typed segments**. `IAM` (patient adverse
+  reactions) is the AU-relevant ADT segment this batch was sequenced around. Pinned:
+  IAM-7 `R` (v2.4) → `C` (v2.5.1); v2.3 FAC-1 "Facility ID" and FAC-3/-9/-11 single
+  (repeating from v2.3.1).
+- **Fixed — extractor header key for wrapped `RP/`.** v2.3 CH7's attribute header wraps the
+  `#`, so the column read `RP/` and went undetected — its `Y` cells then landed in OPT
+  (FAC-5..8 extracted as optionality "Y"). `"RP/"` added to the RP header patterns;
+  re-extraction matches the PDF exactly and the corpus-wide audit stayed clean.
+- Tests → **520**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

@@ -393,6 +393,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Event Occurred", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "FAC": SegmentGrammar(
+            segmentID: "FAC",
+            version: "2.3.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Facility ID-FAC", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Facility Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Facility Address", dataType: "XAD", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Facility Telecommunication", dataType: "XTN", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Contact Person", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Contact Title", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "Contact Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 8, name: "Contact Telecommunication", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "Signature Authority", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Signature Authority Title", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Signature Authority Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 12, name: "Signature Authority Telecommunication", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "FHS": SegmentGrammar(
             segmentID: "FHS",
             version: "2.3.1",
@@ -894,6 +912,14 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 35, name: "Race", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 36, name: "Handicap", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 37, name: "Contact Person Social Security Number", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NPU": SegmentGrammar(
+            segmentID: "NPU",
+            version: "2.3.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Bed Location", dataType: "PL", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Bed Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "NTE": SegmentGrammar(

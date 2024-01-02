@@ -1705,6 +1705,55 @@ struct TypedSegmentTests {
         }
     }
 
+    // Sprint 0 §3, batch E (CH03 admin + CH06 financial + CH07): IAM/NPU/PDA + BLC/RMI + FAC.
+    // IAM/PDA/BLC/RMI are v2.4+; NPU and FAC exist on all four AU-priority versions.
+    // IAM (adverse reactions) is the AU-relevant ADT segment the batch is sequenced around.
+    @Test("Sprint 0 §3 E: IAM/NPU/PDA/BLC/RMI/FAC — depths, registration, per-version divergence")
+    func sprint0BatchEAdminFinancialFacility() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        let t = SegmentGrammarTable.v2_4
+        for table in [t, c] {
+            #expect(table["IAM"]?.fields.count == 20)
+            #expect(table["PDA"]?.fields.count == 9)
+            #expect(table["BLC"]?.fields.count == 2)
+            #expect(table["RMI"]?.fields.count == 3)
+        }
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, t, c] {
+            #expect(table["NPU"]?.fields.count == 2)
+            #expect(table["FAC"]?.fields.count == 12)
+            #expect(table["FAC"]?.field(5)?.optionality == .optional)
+            #expect(table["FAC"]?.field(5)?.repeatability == .multiple)
+        }
+        #expect(SegmentGrammarTable.v2_3["IAM"] == nil)
+        #expect(SegmentGrammarTable.v2_3_1["PDA"] == nil)
+        // IAM-7 Allergy Unique Identifier: R in v2.4, relaxed to C in v2.5.1.
+        #expect(t["IAM"]?.field(7)?.optionality == .required)
+        #expect(c["IAM"]?.field(7)?.optionality == .conditional)
+        // v2.3 FAC: FAC-1 is plain "Facility ID"; FAC-3/-9/-11 are single (repeat from
+        // v2.3.1). FAC-5..8 are O + repeating — the wrapped "RP/" header hid that column
+        // from the extractor until the Sprint 0 header-key fix.
+        #expect(SegmentGrammarTable.v2_3["FAC"]?.field(1)?.name == "Facility ID")
+        #expect(SegmentGrammarTable.v2_3_1["FAC"]?.field(1)?.name == "Facility ID-FAC")
+        #expect(SegmentGrammarTable.v2_3["FAC"]?.field(3)?.repeatability == .single)
+        #expect(SegmentGrammarTable.v2_3_1["FAC"]?.field(3)?.repeatability == .multiple)
+        #expect(SegmentGrammarTable.v2_3["FAC"]?.field(9)?.repeatability == .single)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A60|M1|P|2.5.1\r"
+            + "IAM|1|DA^^HL70127|PCN^^ATC|SV^^HL70128||A^^HL70323|EI1\r"
+            + "NPU|W^201^1\r" + "PDA|C10^^I10\r" + "BLC|WBL^^HL70426|1^unit\r"
+            + "RMI|INC1^^HL7|20240101120000|TYPE1^^HL7\r"
+            + "FAC|F1^^HL7|A|1 Main St^^Town^ST^0000|555-0100|||||AUTH^Signer\r"
+        let (message, iam) = try hydratedMessage(IAM.self, from: wire)
+        #expect(iam.allergyUniqueIdentifier?.entityIdentifier == message["IAM-7"])   // EI composite view
+        #expect(iam.setIdIam == "1")
+        let fac = try #require(message.firstSegment(FAC.self))
+        #expect(fac.facilityType == "A")
+        for present in [message.firstSegment(NPU.self) != nil, message.firstSegment(PDA.self) != nil,
+                        message.firstSegment(BLC.self) != nil, message.firstSegment(RMI.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

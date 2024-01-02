@@ -1,0 +1,9 @@
+{
+  "segmentID": "NPU",
+  "version": "2.5.1",
+  "description": "Bed Status Update",
+  "fields": [
+    { "index": 1, "swiftName": "bedLocation", "name": "Bed Location", "dataType": "PL", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "bedStatus", "name": "Bed Status", "dataType": "IS", "optionality": "O", "repeatability": "1" }
+  ]
+}

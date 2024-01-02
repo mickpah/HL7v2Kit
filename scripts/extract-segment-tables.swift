@@ -49,7 +49,7 @@ let headerKeys: [(key: String, patterns: [String])] = [
     ("CLEN", ["C.LEN", "C.LEN."]),
     ("DT",   ["DT"]),
     ("OPT",  ["OPT", "R/O/C", "R/O"]),   // some legacy chapters (e.g. v2.3 CH10) label it "R/O/C"
-    ("RP",   ["RP/#", "R P/#", "RP/ #"]),
+    ("RP",   ["RP/#", "R P/#", "RP/ #", "RP/"]),   // v2.3 CH7 wraps the "#": header reads "RP/" — without it the RP column vanishes and its "Y" cells land in OPT (FAC-5..8)
     ("TBL",  ["TBL#", "TBL #", "TBL"]),
     ("ITEM", ["ITEM#", "ITEM #", "ITEM"]),
     ("NAME", ["ELEMENT NAME"]),
