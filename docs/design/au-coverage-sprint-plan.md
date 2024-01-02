@@ -93,7 +93,15 @@ set and Sprint 3's CH05 line, including the `SPR` loose end. Uniform across vers
 IAM/PDA/BLC/RMI are v2.4+) → 140 typed. Covers Sprint 4's CH3/CH7 lines and Sprint 3's CH06
 remainder. Third tool fix of the sweep: v2.3 CH7 wraps the `RP/#` header (`RP/`), which hid
 the repeat column and put its `Y` cells in OPT — pattern added, FAC re-extracted to match the
-PDF exactly. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+PDF exactly.
+
+**§3 batch F — CH08/CH14 ✅ 2026-09-02, and §3 COMPLETE.** `CM0/CM1/CM2` (all four versions) +
+`NCK/NSC/NST` (v2.3.1+; v2.3 has no network-management chapter) — 21 schemas → **146 typed**.
+The three v2.3.1 CH14 schemas are hand-authored from the raw Appendix C figures (mega-PDF
+prose-bleed; one documented `--verify` exception, NSC). Blank-OPT-means-optional is now encoded
+in `--verify`/`--emit-schema`. **Sprint 0 §3 closes with zero never-authored segments on
+v2.3 / v2.3.1 / v2.4**; Sprints 1–4's segment-authoring scope is fully absorbed, leaving
+Sprint 5 (closure/verification) plus the v2.5-only quartet (`OVR/SFT/CER` + co) and M6. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

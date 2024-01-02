@@ -349,10 +349,26 @@ itself. Each is normalised in the schema and listed here so `--verify` FAILs are
 
 | Version | Field | PDF cell | Schema | Evidence |
 |---|---|---|---|---|
-| v2.4 | EDU-2 OPT | *(blank)* | `O` | v2.5.1 table `O`; no conditionality stated in the EDU-2 definition. `--verify` reports this one mismatch. |
+| v2.4 | EDU-2 OPT | *(blank)* | `O` | v2.5.1 table `O`; no conditionality stated in the EDU-2 definition. (Since §3F, `--verify` treats a blank extracted OPT as matching `O` — the HL7 table convention — so this no longer reports.) |
 | v2.4 | EDU-4 name | `…Program ParticipationDate Range` | `…Program Participation Date Range` | The field's own definition heading (15.4.2.4) is spaced. `--verify` does not compare names. |
 | v2.3 | EQL-2 / SPR-2 / VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Line-wrap artifact after the slash; every other version and the field definitions read `Query/Response`. Names only. |
 | v2.4 | VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Same artifact; v2.4 EQL-2 / SPR-2 are spaced correctly. Names only. |
+| v2.3, v2.3.1, v2.4 | CM2-1 name | `Set ID- CM2` | `Set ID - CM2` | Missing space before the hyphen in all three legacy tables; v2.5.1 and the CM2-1 definition headings are spaced. Names only. |
+
+### Blank OPT = optional, and the v2.3.1 Appendix C exception (§3F)
+
+The CH14 / v2.3.1 Appendix C attribute tables leave the `OPT` (`R/O`) cell **blank for
+optional fields**. Schemas always carry a concrete letter, so blanks are authored as `O`;
+`--verify` and `--emit-schema` both encode the convention (a blank extracted OPT matches
+`O` / emits `O`).
+
+**Documented `--verify` exception — v2.3.1 `NSC`.** The mega-PDF extraction bleeds the book's
+index pages into Appendix C's small tables, inventing phantom rows (and appending prose to
+NCK-1/NST-15 names). `NCK`/`NST` still PASS (DT/OPT/RP unaffected); `NSC` FAILs on the
+phantom rows. Its schema — like `NCK`/`NST` — was hand-authored from the raw Figure C-1/2/3
+tables and eye-verified 2026-09-02. Any re-run of the golden gate should expect exactly this
+one FAIL on v2.3.1 CH14. The depth audit sees the same phantom rows as a 52-index "GAP", so
+`v2.3.1/NSC` carries a per-version entry in `DEPTH_WHITELIST`.
 
 Caption matching was also widened to accept the singular (`Figure 2-10. ERR attribute`) —
 the plural-only pattern silently excluded v2.3 / v2.3.1 ERR from the audit's coverage.

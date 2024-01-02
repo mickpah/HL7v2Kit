@@ -445,7 +445,8 @@ func verify(pdf: String, seg: String, schemaPath: String) -> Never {
     for r in table.rows {
         guard let e = expected[r.seq] else { mismatches.append("\(seg)-\(r.seq): not in schema"); continue }
         if r.dt != e.dt { mismatches.append("\(seg)-\(r.seq) DT: extracted \(r.dt), schema \(e.dt)") }
-        if r.opt != e.opt { mismatches.append("\(seg)-\(r.seq) OPT: extracted \(r.opt), schema \(e.opt)") }
+        // HL7 table convention (CH14 / v2.3.1 Appendix C): a blank OPT cell means optional.
+        if r.opt != e.opt && !(r.opt.isEmpty && e.opt == "O") { mismatches.append("\(seg)-\(r.seq) OPT: extracted \(r.opt), schema \(e.opt)") }
         if repeatability(r.rp) != e.rep { mismatches.append("\(seg)-\(r.seq) RP: extracted \(repeatability(r.rp)), schema \(e.rep)") }
     }
     if mismatches.isEmpty {
@@ -506,7 +507,8 @@ func emitSchema(pdf: String, seg: String, version: String, refPath: String) -> N
     for r in table.rows {
         let swiftName = refSwift[r.seq] ?? deriveSwiftName(r.name, used: &used)
         let rep = repeatability(r.rp)
-        lines.append("    { \"index\": \(r.seq), \"swiftName\": \"\(jsonEscape(swiftName))\", \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(rep)\" }")
+        let opt = r.opt.isEmpty ? "O" : r.opt   // blank OPT cell = optional (HL7 table convention)
+        lines.append("    { \"index\": \(r.seq), \"swiftName\": \"\(jsonEscape(swiftName))\", \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(opt))\", \"repeatability\": \"\(rep)\" }")
     }
     let out = "{\n  \"segmentID\": \"\(seg)\",\n  \"version\": \"\(version)\",\n  \"description\": \"\(jsonEscape(description))\",\n  \"fields\": [\n\(lines.joined(separator: ",\n"))\n  ]\n}"
     print(out)

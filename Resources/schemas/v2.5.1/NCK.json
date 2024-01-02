@@ -1,0 +1,8 @@
+{
+  "segmentID": "NCK",
+  "version": "2.5.1",
+  "description": "System Clock",
+  "fields": [
+    { "index": 1, "swiftName": "systemDateTime", "name": "System Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" }
+  ]
+}

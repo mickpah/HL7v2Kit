@@ -1,0 +1,18 @@
+{
+  "segmentID": "CM0",
+  "version": "2.3.1",
+  "description": "Clinical Study Master",
+  "fields": [
+    { "index": 1, "swiftName": "setIdCm0", "name": "Set ID - CM0", "dataType": "SI", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "alternateStudyId", "name": "Alternate Study ID", "dataType": "EI", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "titleOfStudy", "name": "Title of Study", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "chairmanOfStudy", "name": "Chairman of Study", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "lastIrbApprovalDate", "name": "Last IRB Approval Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "totalAccrualToDate", "name": "Total Accrual to Date", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "lastAccrualDate", "name": "Last Accrual Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "contactForStudy", "name": "Contact for Study", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "contactTelephoneNumber", "name": "Contact's Tel. Number", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "contactAddress", "name": "Contact's Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" }
+  ]
+}

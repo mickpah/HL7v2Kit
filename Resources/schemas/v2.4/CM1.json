@@ -1,0 +1,10 @@
+{
+  "segmentID": "CM1",
+  "version": "2.4",
+  "description": "Clinical Study Phase Master",
+  "fields": [
+    { "index": 1, "swiftName": "setIdCm1", "name": "Set ID - CM1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "descriptionOfStudyPhase", "name": "Description of Study Phase", "dataType": "ST", "optionality": "R", "repeatability": "1" }
+  ]
+}

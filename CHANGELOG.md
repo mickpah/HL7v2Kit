@@ -125,6 +125,25 @@ v1.10). Additive under ADR-014.
   re-extraction matches the PDF exactly and the corpus-wide audit stayed clean.
 - Tests → **520**.
 
+#### §3 — batch F (CH08 clinical-study masters + CH14 app management) — §3 complete
+
+- **Added — six typed segments: `CM0` / `CM1` / `CM2` / `NCK` / `NSC` / `NST`** — the CM
+  family on all four AU-priority versions, the CH14 trio on v2.3.1+ (v2.3 has no
+  network-management chapter) — 21 schemas. 140 → **146 typed segments**. Pinned: CM0-3
+  `CE "Alternate Study ID's"` (v2.3) → `EI "Alternate Study ID"`; CM0-5/-9/-11 single in
+  v2.3; NSC-1 "Network Change Type" → "Application Change Type"; NSC-4/5/8/9 `ST` → `HD`
+  from v2.4; NST-15 "Network Errors" → "Application control-level Errors".
+- **The v2.3.1 CH14 schemas are hand-authored** from the raw Appendix C figures: the
+  mega-PDF extraction prose-bleeds around those small tables (phantom index rows, prose in
+  names). One documented `--verify` exception (NSC); NCK/NST pass. Registered in
+  `segment-coverage-extraction.md`.
+- **Blank OPT = optional** (the CH14/Appendix-C table convention) is now encoded in the
+  extractor: `--verify` accepts a blank extracted OPT against `O`, `--emit-schema` emits `O`.
+  The `Set ID- CM2` spacing artifact (v2.3/v2.3.1/v2.4) normalised and registered.
+- **§3 is complete: zero never-authored segments remain on v2.3 / v2.3.1 / v2.4.** The
+  v2.5.1 never-authored remainder is the v2.5-only set (`OVR`/`SFT`/`CER` + co), out of this
+  sprint's defect-driven scope. Tests → **521**.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

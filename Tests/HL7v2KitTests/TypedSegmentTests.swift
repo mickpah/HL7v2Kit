@@ -1754,6 +1754,59 @@ struct TypedSegmentTests {
         }
     }
 
+    // Sprint 0 §3, batch F (CH08 clinical-study masters + CH14 app management):
+    // CM0/CM1/CM2 on all four AU-priority versions; NCK/NSC/NST are v2.3.1+ (Appendix C
+    // there — v2.3 has no network-management chapter). The v2.3.1 CH14 seeds were
+    // hand-authored from the raw tables (the mega-PDF extraction prose-bleeds around them).
+    @Test("Sprint 0 §3 F: CM0/CM1/CM2/NCK/NSC/NST — depths, registration, per-version divergence")
+    func sprint0BatchFMastersAppManagement() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        for t in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4, c] {
+            #expect(t["CM0"]?.fields.count == 11)
+            #expect(t["CM1"]?.fields.count == 3)
+            #expect(t["CM2"]?.fields.count == 4)
+            #expect(t["CM2"]?.field(1)?.name == "Set ID - CM2")   // "Set ID- CM2" PDF artifact normalised (v2.3/v2.4)
+        }
+        for t in [SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4, c] {
+            #expect(t["NCK"]?.fields.count == 1)
+            #expect(t["NSC"]?.fields.count == 9)
+            #expect(t["NST"]?.fields.count == 15)
+        }
+        #expect(SegmentGrammarTable.v2_3["NCK"] == nil)
+        #expect(SegmentGrammarTable.v2_3["NSC"] == nil)
+        #expect(SegmentGrammarTable.v2_3["NST"] == nil)
+        // CM0-3: "Alternate Study ID's" CE in v2.3 → "Alternate Study ID" EI from v2.3.1;
+        // CM0-5/-9/-11 single in v2.3, repeating from v2.3.1.
+        #expect(SegmentGrammarTable.v2_3["CM0"]?.field(3)?.dataType == "CE")
+        #expect(SegmentGrammarTable.v2_3_1["CM0"]?.field(3)?.dataType == "EI")
+        #expect(SegmentGrammarTable.v2_3["CM0"]?.field(9)?.repeatability == .single)
+        #expect(SegmentGrammarTable.v2_3_1["CM0"]?.field(9)?.repeatability == .multiple)
+        // CH14 renames/promotions: NSC-1 "Network Change Type" → "Application Change Type";
+        // NSC-4/5/8/9 ST → HD from v2.4; NST-15 "Network Errors" → "Application
+        // control-level Errors". Blank OPT cells in these tables mean optional (convention).
+        #expect(SegmentGrammarTable.v2_3_1["NSC"]?.field(1)?.name == "Network Change Type")
+        #expect(SegmentGrammarTable.v2_4["NSC"]?.field(1)?.name == "Application Change Type")
+        #expect(SegmentGrammarTable.v2_3_1["NSC"]?.field(4)?.dataType == "ST")
+        #expect(SegmentGrammarTable.v2_4["NSC"]?.field(4)?.dataType == "HD")
+        #expect(SegmentGrammarTable.v2_3_1["NST"]?.field(15)?.name == "Network Errors")
+        #expect(c["NST"]?.field(15)?.name == "Application control-level Errors")
+        #expect(c["NST"]?.field(2)?.optionality == .optional)
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||NMD^N02|M1|P|2.5.1\r"
+            + "CM0|1|ST1^^HL7|ALT1|Study Title\r" + "CM1|1|PH1^^HL7|Phase one\r"
+            + "CM2|1|SCH1^^HL7|Schedule one\r" + "NCK|20240101120000\r"
+            + "NSC|AC^^HL70333||||||||\r" + "NST|Y|SRC1\r"
+        let (message, nst) = try hydratedMessage(NST.self, from: wire)
+        #expect(nst.sourceIdentifier == message["NST-2"])
+        #expect(nst.statisticsAvailable == "Y")
+        let nck = try #require(message.firstSegment(NCK.self))
+        #expect(nck.systemDateTime == "20240101120000")
+        for present in [message.firstSegment(CM0.self) != nil, message.firstSegment(CM1.self) != nil,
+                        message.firstSegment(CM2.self) != nil, message.firstSegment(NSC.self) != nil] {
+            #expect(present)
+        }
+    }
+
     // v1.8 (M5 sweep): CH07 completion — the product-experience family
     // (PES/PEO/PCR/PDC/PSH) and the clinical-trials family (CSR/CSP/CSS/CTI). All nine
     // exist on every supported version at the SAME depth, so the divergence is entirely

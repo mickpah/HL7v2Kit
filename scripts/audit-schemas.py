@@ -57,7 +57,11 @@ STANDARDS = _standards_dir()
 # RDT is a "1-n" variable-column segment: the row parser needs a bare-integer SEQ, so its
 # single real row never parses and the scan binds whatever table follows (in v2.3/v2.3.1,
 # the SPR segment). Its hand-authored schema is correct — see segment-coverage-extraction.md.
-DEPTH_WHITELIST = {"RDT", "ADD"}   # ADD-1 is the same `1-n` row (hand-authored, Sprint 0 §3C)
+# Entries are either a bare segment ID (whitelisted on every version) or "version/SEG".
+# RDT/ADD: `1-n` rows the extractor cannot parse (hand-authored). v2.3.1/NSC: the mega-PDF
+# prose-bleeds phantom index rows into Appendix C's NSC figure (schema hand-authored,
+# eye-verified; see segment-coverage-extraction.md "Appendix C exception").
+DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
 
 # Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
 # backlog.md). A segment modelled elsewhere but absent here is reported as DEFERRED — visible,
@@ -153,7 +157,7 @@ def depth():
                 backlog[version] = backlog.get(version, 0) + 1
         for path in sorted(glob.glob(f"{SCHEMAS}/{version}/*.json")):
             seg = os.path.basename(path)[:-5].upper()
-            if seg in DEPTH_WHITELIST or seg not in found:
+            if seg in DEPTH_WHITELIST or f"{version}/{seg}" in DEPTH_WHITELIST or seg not in found:
                 continue
             schema_depth = max(f["index"] for f in json.load(open(path))["fields"])
             if found[seg] > schema_depth:

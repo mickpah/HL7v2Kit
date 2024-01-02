@@ -340,6 +340,42 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 13, name: "Room Fee Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "CM0": SegmentGrammar(
+            segmentID: "CM0",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - CM0", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Sponsor Study ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Alternate Study ID", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Title of Study", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Chairman of Study", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Last IRB Approval Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Total Accrual to Date", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Last Accrual Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Contact for Study", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Contact's Telephone Number", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Contact's Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "CM1": SegmentGrammar(
+            segmentID: "CM1",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - CM1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Study Phase Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Description of Study Phase", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
+        "CM2": SegmentGrammar(
+            segmentID: "CM2",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - CM2", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Scheduled Time Point", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Description of Time Point", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Events Scheduled This Time Point", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil),
+            ]
+        ),
         "CNS": SegmentGrammar(
             segmentID: "CNS",
             version: "2.5.1",
@@ -1245,6 +1281,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "Message Profile Identifier", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
+        "NCK": SegmentGrammar(
+            segmentID: "NCK",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "System Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
         "NDS": SegmentGrammar(
             segmentID: "NDS",
             version: "2.5.1",
@@ -1306,6 +1349,42 @@ extension SegmentGrammarTable {
             fields: [
             FieldGrammar(index: 1, name: "Bed Location", dataType: "PL", optionality: .required, repeatability: .single, condition: nil),
             FieldGrammar(index: 2, name: "Bed Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NSC": SegmentGrammar(
+            segmentID: "NSC",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Application Change Type", dataType: "IS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Current CPU", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Current Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Current Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Current Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "New CPU", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "New Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "New Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "New Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NST": SegmentGrammar(
+            segmentID: "NST",
+            version: "2.5.1",
+            fields: [
+            FieldGrammar(index: 1, name: "Statistics Available", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Source Identifier", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Source Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Statistics Start", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Statistics End", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Receive Character Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Send Character Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Messages Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Messages Sent", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Checksum Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Length Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Other Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 13, name: "Connect Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 14, name: "Receive Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 15, name: "Application control-level Errors", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "NTE": SegmentGrammar(
