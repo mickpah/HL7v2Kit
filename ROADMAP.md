@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-02 (**Sprint 0 §1–§3 complete** on top of `v2.0.0`: presence predicate + 36 segments on every AU-priority version → **146 typed; zero never-authored on v2.3/v2.3.1/v2.4**) |
-| Current release | **`v2.0.0`** (2026-08-28, tagged locally, not yet pushed — nor is any earlier tag). Folds the **v1.7/v1.8/v1.9** coverage batches and the **complete R1–R10 remediation track** — **109 typed segments** at verified per-version depth, 514/514 green. |
-| Next planned cycle | **Push to `private`** (nothing has ever left this machine), then the **Sprint 0 close-out** (conditional sweep over the 36 new segments + coverage claims) and the **`v2.1.0`** cut. Sprint 0 §3 absorbed Sprints 1–4's authoring scope; M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
+| Last updated | 2026-09-03 (**`v2.1.0` tagged** — the complete Sprint 0 cycle) |
+| Current release | **`v2.1.0`** (2026-09-03, tagged locally, not yet pushed — nor is any earlier tag). The Sprint 0 cycle: **146 typed segments**, zero never-authored on v2.3/v2.3.1/v2.4, presence predicate, 10 spec-cited condition predicates, honest coverage claims; 525/525 green. |
+| Next planned cycle | **Push to `private`** (nothing has ever left this machine), then **M6 — the ADRM-2021 AU localisation audit** over its now-complete v2.4 base. M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 

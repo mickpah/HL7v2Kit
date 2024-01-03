@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-09-03
+
+The **Sprint 0 cycle** (first release of the 2.x line; additive under ADR-014, resumed at
+`v2.0.0`). Typed-segment coverage **109 → 146** — after this release **no segment the spec
+defines is missing on v2.3, v2.3.1 or v2.4**, and v2.5.1 is complete bar its v2.5-only
+additions; v2.6/v2.8.2 stay deliberately partial (`docs/design/deferred-coverage-backlog.md`).
+The audit gained a **presence predicate** (absent segments were previously invisible — exactly
+how the v2.4 lab-automation gap survived three clean audits), ten spec-cited condition
+predicates shipped, and four real defects were found and fixed by the sweep's own harnesses:
+the extractor `1-n` run-on (BHS bound under ADD on every version), the parser numbering
+BHS/FHS fields one off the spec (BHS-1/FHS-1 are the field separator, like MSH-1), the
+wrapped-`RP/` header (v2.3 FAC's repeat column), and the blank-OPT table convention.
+Tests 514 → **525** across 25 suites; audit: 717 schemas, depth 706 exact / 0 / 0, presence 0.
+
 ### Sprint 0 — v2.4 lab-automation presence defect + audit presence predicate
 
 First v2.x coverage cycle (`docs/design/au-coverage-sprint-plan.md` Sprint 0; planned label
