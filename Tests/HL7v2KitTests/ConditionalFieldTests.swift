@@ -722,4 +722,65 @@ struct ConditionalFieldTests {
         #expect(orc8.isEmpty,
                 "v2.3.1 ORC-8 must not fire when OBR-29 carries the parent; got \(orc8.map(\.message))")
     }
+
+    // MARK: - Sprint 0 close-out predicates (2026-09-03)
+    // STF-1 / PRA-1: "For MFN Master File Notification, this field is required ... for all
+    // other messages, this field should not be used" (v2.4/v2.5.1 CH15). PRA-12 is the
+    // inverse ("for all messages except the ... Master File Notification").
+
+    private func issues(_ report: ValidationReport, _ seg: String, _ idx: Int) -> [ValidationIssue] {
+        report.errors.filter {
+            $0.code == .conditionalFieldMissing
+                && $0.location.segmentID == seg && $0.location.fieldIndex == idx
+        }
+    }
+
+    @Test("STF-1 / PRA-1 fire on MFN when empty; PRA-12 stays silent there")
+    func mfnPrimaryKeyPredicates() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|MPI|FAC|20260903120000||MFN^M02|MSG|P|2.5.1\r"
+            + "STF||ID1\r" + "PRA||PG1\r"
+        let report = Validator().validate(try Parser().parse(wire))
+        #expect(!issues(report, "STF", 1).isEmpty)
+        #expect(!issues(report, "PRA", 1).isEmpty)
+        #expect(issues(report, "PRA", 12).isEmpty)   // messageCode != MFN is false
+    }
+
+    @Test("PRA-12 fires on a non-MFN message; STF-1 / PRA-1 stay silent there")
+    func nonMfnSetIdPredicate() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|MPI|FAC|20260903120000||ADT^A01|MSG|P|2.5.1\r"
+            + "STF||ID1\r" + "PRA||PG1\r"
+        let report = Validator().validate(try Parser().parse(wire))
+        #expect(issues(report, "STF", 1).isEmpty)
+        #expect(issues(report, "PRA", 1).isEmpty)
+        #expect(!issues(report, "PRA", 12).isEmpty)
+    }
+
+    // RQ1-2..5: "either RQ1-2 and RQ1-3 or RQ1-4 and RQ1-5 must be valued" — each field of
+    // a pair is required exactly when the OTHER pair is incomplete (identical prose on all
+    // four AU-priority versions).
+    @Test("RQ1 pair rule: silent when the vendor pair is valued, fires on all four when neither pair is")
+    func rq1PairRule() throws {
+        let vendorOnly = "MSH|^~\\&|A|B|C|D|20260903120000||OMS^O05|M1|P|2.5.1\r"
+            + "RQ1|9.99|||VND^Vendor|VC-1\r"
+        let ok = Validator().validate(try Parser().parse(vendorOnly))
+        for idx in 2...5 { #expect(issues(ok, "RQ1", idx).isEmpty, "RQ1-\(idx)") }
+
+        let neitherPair = "MSH|^~\\&|A|B|C|D|20260903120000||OMS^O05|M1|P|2.5.1\r" + "RQ1|9.99\r"
+        let bad = Validator().validate(try Parser().parse(neitherPair))
+        for idx in 2...5 { #expect(!issues(bad, "RQ1", idx).isEmpty, "RQ1-\(idx)") }
+    }
+
+    // RQD-2/3/4: "at least one of the three ... must be valued" — each is required exactly
+    // when both of the others are empty.
+    @Test("RQD one-of-three rule: silent when any item code is valued, fires on all three when none is")
+    func rqdOneOfThreeRule() throws {
+        let hospitalOnly = "MSH|^~\\&|A|B|C|D|20260903120000||OMS^O05|M1|P|2.5.1\r"
+            + "RQD|1|||HIC^Hospital Item\r"
+        let ok = Validator().validate(try Parser().parse(hospitalOnly))
+        for idx in 2...4 { #expect(issues(ok, "RQD", idx).isEmpty, "RQD-\(idx)") }
+
+        let none = "MSH|^~\\&|A|B|C|D|20260903120000||OMS^O05|M1|P|2.5.1\r" + "RQD|1\r"
+        let bad = Validator().validate(try Parser().parse(none))
+        for idx in 2...4 { #expect(!issues(bad, "RQD", idx).isEmpty, "RQD-\(idx)") }
+    }
 }

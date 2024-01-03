@@ -1751,7 +1751,7 @@ extension SegmentGrammarTable {
             segmentID: "PRA",
             version: "2.4",
             fields: [
-            FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN"),
             FieldGrammar(index: 2, name: "Practitioner Group", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 3, name: "Practitioner Category", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 4, name: "Provider Billing", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
@@ -1762,7 +1762,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Institution", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Date Left Practice", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 11, name: "Government Reimbursement Billing Eligibility", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil),
-            FieldGrammar(index: 12, name: "Set ID - PRA", dataType: "SI", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Set ID - PRA", dataType: "SI", optionality: .conditional, repeatability: .single, condition: "messageCode != MFN"),
             ]
         ),
         "PRB": SegmentGrammar(
@@ -2135,10 +2135,10 @@ extension SegmentGrammarTable {
             version: "2.4",
             fields: [
             FieldGrammar(index: 1, name: "Anticipated Price", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Manufacturer Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Manufacturer Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
+            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
             FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
@@ -2148,9 +2148,9 @@ extension SegmentGrammarTable {
             version: "2.4",
             fields: [
             FieldGrammar(index: 1, name: "Requisition Line Number", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-3 empty AND RQD-4 empty"),
+            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-4 empty"),
+            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-3 empty"),
             FieldGrammar(index: 5, name: "Requisition Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Requisition Unit of Measure", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "Dept. Cost Center", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
@@ -2446,7 +2446,7 @@ extension SegmentGrammarTable {
             segmentID: "STF",
             version: "2.4",
             fields: [
-            FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN"),
             FieldGrammar(index: 2, name: "Staff ID Code", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 3, name: "Staff Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 4, name: "Staff Type", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),

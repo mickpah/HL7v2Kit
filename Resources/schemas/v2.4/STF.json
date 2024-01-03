@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "Staff Identification",
   "fields": [
-    { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "primaryKeyValueStf", "name": "Primary Key Value - STF", "dataType": "CE", "optionality": "C", "repeatability": "1", "condition": "messageCode = MFN" },
     { "index": 2, "swiftName": "staffIdentifierList", "name": "Staff ID Code", "dataType": "CX", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "staffName", "name": "Staff Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
     { "index": 4, "swiftName": "staffType", "name": "Staff Type", "dataType": "IS", "optionality": "O", "repeatability": "*" },

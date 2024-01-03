@@ -1691,10 +1691,10 @@ extension SegmentGrammarTable {
             version: "2.3",
             fields: [
             FieldGrammar(index: 1, name: "Anticipated Price", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Manufactured ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Manufactured ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
+            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
             FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
@@ -1704,9 +1704,9 @@ extension SegmentGrammarTable {
             version: "2.3",
             fields: [
             FieldGrammar(index: 1, name: "Requisition Line Number", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-3 empty AND RQD-4 empty"),
+            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-4 empty"),
+            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-3 empty"),
             FieldGrammar(index: 5, name: "Requisition Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 6, name: "Requisition Unit of Measure", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "Dept. Cost Center", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),

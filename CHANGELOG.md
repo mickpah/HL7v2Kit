@@ -144,6 +144,23 @@ v1.10). Additive under ADR-014.
   v2.5.1 never-authored remainder is the v2.5-only set (`OVR`/`SFT`/`CER` + co), out of this
   sprint's defect-driven scope. Tests → **521**.
 
+### Sprint 0 close-out — conditional sweep + honest coverage claims
+
+- **Added — ten condition predicates over the §3 segments**, each cited to identical prose in
+  every version that carries the `C` (register: `conditional-completeness-audit.md`):
+  `STF-1`/`PRA-1` → `messageCode = MFN`, `PRA-12` → `messageCode != MFN` (the stated inverse),
+  `RQ1-2/-3` → `RQ1-4 empty OR RQ1-5 empty` and `RQ1-4/-5` → the mirror (the either-pair
+  rule), `RQD-2/-3/-4` → both peers `empty` (the one-of-three rule). 34 schema rows;
+  behaviour tests fire-and-stay-silent both ways in `ConditionalFieldTests`.
+- **Documented — `IAM-7 Allergy Unique Identifier`**: its condition keys on receiving-system
+  capability ("if IAM-3 can uniquely identify the allergy on the receiving system"), not
+  message content — no message-expressible predicate exists; joined the register.
+- **Coverage claims made honest** (`README.md`, DocC `TypedSegments.md`): 146 typed segments;
+  zero missing segments on v2.3/v2.3.1/v2.4; v2.5.1 complete bar the v2.5-only additions;
+  **v2.6/v2.8.2 explicitly partial** with a pointer to the deferred backlog. (The README had
+  claimed 15 typed structs since v0.x.)
+- Tests 521 → **525** in 25 suites.
+
 ## [2.0.0] — 2026-08-28
 
 ⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10

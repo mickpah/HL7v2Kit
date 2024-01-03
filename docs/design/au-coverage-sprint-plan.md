@@ -101,7 +101,16 @@ The three v2.3.1 CH14 schemas are hand-authored from the raw Appendix C figures 
 prose-bleed; one documented `--verify` exception, NSC). Blank-OPT-means-optional is now encoded
 in `--verify`/`--emit-schema`. **Sprint 0 §3 closes with zero never-authored segments on
 v2.3 / v2.3.1 / v2.4**; Sprints 1–4's segment-authoring scope is fully absorbed, leaving
-Sprint 5 (closure/verification) plus the v2.5-only quartet (`OVR/SFT/CER` + co) and M6. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
+Sprint 5 (closure/verification) plus the v2.5-only quartet (`OVR/SFT/CER` + co) and M6.
+
+**Close-out (Sprint-5-style) ✅ 2026-09-03.** Conditional sweep over the sweep's 8 distinct
+`C` fields: **10 predicates shipped** spec-cited (STF-1/PRA-1/PRA-12 MFN rules; RQ1
+either-pair; RQD one-of-three — prose identical on every version carrying the `C`), IAM-7
+registered as not message-expressible (`conditional-completeness-audit.md`). Coverage claims
+updated in `README.md` + DocC per req #2 (v2.6/v2.8.2 partial, deferred backlog linked).
+Suite 525. **The Sprint 0 cycle is content-complete; it ships as `v2.1.0`.** Remaining from
+this plan: the v2.5-only quartet, Sprint 5's full-corpus re-verification at the next cycle
+boundary, and M6. `CER` is v2.5+ — the Sprint 2 CH15 list above is wrong for
 v2.4. Found and fixed on the way: the extractor's `1-n` run-on bound BHS's rows under `ADD` on
 every version (`BHS` was invisible to the presence audit; Sprint 1's "no schemas exist for
 FHS/BHS/BTS/FTS" was true, but the tool could not have said so). Two v2.4 EDU spec-text

@@ -6,19 +6,14 @@ How to read a v2 message via compile-time-checked segment / field accessors inst
 
 HL7v2Kit ships typed Swift structs for the most common HL7 v2.5.1 segments. These are **generated** from JSON schemas under `Resources/schemas/v2.5.1/` by the `HL7v2KitCodegen` executable (per `ADR-004`); the generated Swift lives at `Sources/HL7v2Kit/Segment/Generated/` (one file per segment, version-agnostic names) and is committed to the repository so reviewers can see exactly what the typed surface is. The struct surface is shared across every supported HL7 v2 version — older wires (v2.3 / v2.3.1 / v2.4) get nil from any accessor whose field doesn't exist at their version. Per-version `SegmentGrammar+vX_Y_Z.swift` tables (also at `Generated/`) carry the per-version field sets that the `Validator` dispatches on.
 
-Currently shipped typed segments for v2.5.1:
-
-- `MSH` (all 21 fields)
-- `PID` (all 39 fields)
-- `NTE` (all 4)
-- `AL1` (all 6)
-- `ORC` (all 31)
-- `OBX` (all 17)
-- `OBR` (all 47)
-- `NK1` (13 commonly-used)
-- `PV1` (20 commonly-used)
-
-`PID` and `ORC` reached full spec coverage post-v0.1.0 (v0.2-F1 — see <doc:Migration>); the rest were complete from v0.1.0.
+**146 typed segments ship today**, each at its version's full field depth — the ADT/ORU core
+(`MSH`, `PID`, `OBX`, `OBR`, …), orders and pharmacy, scheduling, financial, master files,
+personnel management, clinical trials, lab automation, the query family, and the batch
+envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema directory
+(`Resources/schemas/v2.5.1/` — one JSON file per segment), and every schema is verified
+against its version's own attribute table by `scripts/audit-schemas.py` (depth *and*
+presence). On v2.3 / v2.3.1 / v2.4 **no segment the spec defines is missing**; v2.6 / v2.8.2
+grammar coverage is deliberately partial (see `docs/design/deferred-coverage-backlog.md`).
 
 Segments outside this list parse as ``UnknownSegment`` and remain accessible via path strings — see <doc:#Unknown-Segments> below.
 

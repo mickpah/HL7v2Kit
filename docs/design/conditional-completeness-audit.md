@@ -126,9 +126,29 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
 - **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
 
+**Sprint 0 close-out (2026-09-03) — the 36-segment §3 sweep's conditional surface: 10 shipped, 1 documented:**
+
+- **STF-1 / PRA-1** (00671 / 00685) → `messageCode = MFN` — "For MFN Master File Notification,
+  this field is required ... For all other messages, this field should not be used" (v2.4 +
+  v2.5.1 CH15, identical prose; the field is `R` in v2.3 and absent-of-condition there).
+- **PRA-12** (01616) → `messageCode != MFN` — the stated inverse ("for all messages except the
+  Staff/Practitioner Master File Notification").
+- **RQ1-2 / RQ1-3** (00286 / 00287) → `RQ1-4 empty OR RQ1-5 empty`, **RQ1-4 / RQ1-5**
+  (00288 / 00289) → `RQ1-2 empty OR RQ1-3 empty` — "either RQ1-2 ... and RQ1-3 ... or RQ1-4
+  ... and RQ1-5 ... must be valued": a field of one pair is required exactly when the other
+  pair is incomplete. Identical prose on all four AU-priority versions.
+- **RQD-2 / RQD-3 / RQD-4** (00276 / 00277 / 00278) → the two peer fields `empty AND empty` —
+  "at least one of the three ... must be valued". Identical prose on all four versions.
+- **IAM-7 Allergy Unique Identifier** (01552) — documented, not shipped: "If a system
+  maintains allergen codes as a unique identifier ... this field should not be used ... The
+  surrogate field to use is IAM-3, if that field can uniquely identify the allergy on the
+  receiving system" (v2.5.1 §3.4.7.7). The condition keys on **receiving-system capability**,
+  not message content — no message-expressible predicate exists (req #3: the DSL cannot and
+  should not model site capability).
+
 ## Outcome
 
-- **8 predicates shipped** (PD1-15 exact, ORC-26 partial; v1.8 added CSR-9/10/14/15/16 + CTI-2) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
+- **18 predicates shipped** (PD1-15 exact, ORC-26 partial; v1.8 added CSR-9/10/14/15/16 + CTI-2; Sprint 0 close-out added STF-1, PRA-1, PRA-12, RQ1-2..5, RQD-2..4) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.
 - **~133 positions documented** as permanent limitations with per-field rationale (15 at M2; +34 v1.2; +60 v1.3; +19 v1.4 [query/lab + master-file-location/care/document]; +4 v1.7 [the whole SID segment]); all are fail-safe (treated as optional) and none misfires. The v2.8.2 guard test enumerates the exact current set.
 - No model extension required — both shipped predicates use the existing v0.4-S4 same-segment DSL (`populated`, `in`).
 - **This register is the M2 conditional-completeness gate for v1.0** (ROADMAP M2): the conditional surface is now either shipped or explicitly, spec-citably documented. A regression pin exercises each shipped predicate; a guard test asserts the permanent-limitation set stays `C`-without-`condition` (so a future edit that adds a bare `C` field is caught).

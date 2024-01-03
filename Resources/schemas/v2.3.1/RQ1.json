@@ -4,10 +4,10 @@
   "description": "Requisition Detail-1",
   "fields": [
     { "index": 1, "swiftName": "anticipatedPrice", "name": "Anticipated Price", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "manufacturerIdentifier", "name": "Manufacturer ID", "dataType": "CE", "optionality": "C", "repeatability": "1" },
-    { "index": 3, "swiftName": "manufacturerCatalog", "name": "Manufacturer's Catalog", "dataType": "ST", "optionality": "C", "repeatability": "1" },
-    { "index": 4, "swiftName": "vendorId", "name": "Vendor ID", "dataType": "CE", "optionality": "C", "repeatability": "1" },
-    { "index": 5, "swiftName": "vendorCatalog", "name": "Vendor Catalog", "dataType": "ST", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "manufacturerIdentifier", "name": "Manufacturer ID", "dataType": "CE", "optionality": "C", "repeatability": "1", "condition": "RQ1-4 empty OR RQ1-5 empty" },
+    { "index": 3, "swiftName": "manufacturerCatalog", "name": "Manufacturer's Catalog", "dataType": "ST", "optionality": "C", "repeatability": "1", "condition": "RQ1-4 empty OR RQ1-5 empty" },
+    { "index": 4, "swiftName": "vendorId", "name": "Vendor ID", "dataType": "CE", "optionality": "C", "repeatability": "1", "condition": "RQ1-2 empty OR RQ1-3 empty" },
+    { "index": 5, "swiftName": "vendorCatalog", "name": "Vendor Catalog", "dataType": "ST", "optionality": "C", "repeatability": "1", "condition": "RQ1-2 empty OR RQ1-3 empty" },
     { "index": 6, "swiftName": "taxable", "name": "Taxable", "dataType": "ID", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "substituteAllowed", "name": "Substitute Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1" }
   ]
