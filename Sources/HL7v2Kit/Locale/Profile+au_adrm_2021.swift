@@ -164,14 +164,22 @@ extension Profile {
             // "AUS". The profileUsage = .required dispatch fires on
             // empty MSH-17; the componentValueSets fire on populated-
             // but-wrong values.
+            //
+            // M6-D3 (2026-09-04): both halves are gated on the message
+            // types Appendix 5 names for this point ("Orders, Results,
+            // Referrals, Acknowledgement, Referral Response"). They
+            // used to be ungated and fired on ADT, SIU, MDM and every
+            // other message type the localisation never addressed.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 17,
                 profileUsage: .required,
+                usageCondition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["AUS"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000041 (r2) — MSH-17 country must be \"AUS\""
                     )
                 ],
@@ -180,25 +188,29 @@ extension Profile {
             // HL7au:000042 — MSH-19 must equal "en^English^ISO639"
             // per AU English-only messaging conformance. Same
             // pattern: profileUsage = .required + per-component
-            // value-set checks.
+            // value-set checks, and the same M6-D3 message-type gate.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 19,
                 profileUsage: .required,
+                usageCondition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
                         allowedValues: ["en"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000042 — MSH-19.1 (identifier) must be \"en\""
                     ),
                     ComponentValueSet(
                         component: 2,
                         allowedValues: ["English"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000042 — MSH-19.2 (text) must be \"English\""
                     ),
                     ComponentValueSet(
                         component: 3,
                         allowedValues: ["ISO639"],
+                        condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                         specCitation: "HL7au:000042 — MSH-19.3 (coding system) must be \"ISO639\""
                     ),
                 ],

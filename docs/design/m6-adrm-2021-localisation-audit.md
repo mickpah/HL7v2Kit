@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete (2026-09-04); M6-D1 fixed; M6-A / M6-B open** |
+| Status | **Audit complete (2026-09-04); M6-D1 + M6-D3 fixed; M6-A / M6-B open** |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -101,6 +101,44 @@ pin the numbering per composite and assert `HL7au:00044.5.6` is never cited.
 (M6-D1). The register carries them so a future sweep does not resurrect them
 from an older revision of the PDF.
 
+### M6-D3 — profile usage narrowings fired outside their message-type scope ✅ FIXED 2026-09-04
+
+Appendix 5 scopes almost every conformance point to a named set of message
+types. `HL7au:000041` (MSH-17 = AUS) and `HL7au:000042` (MSH-19 =
+en^English^ISO639) are scoped to *"Orders, Results, Referrals, Acknowledgement,
+Referral Response"*. Both shipped as `profileUsage = .required` with **no gate
+at all**, and their `componentValueSets` carried no `condition` either.
+
+Consequence: under `.auLocalisation`, a spec-compliant `ADT^A01` with no MSH-17
+failed AU validation citing a conformance point that does not apply to ADT.
+Same for `SIU`, `MDM`, and every other message type the localisation never
+addresses. Requirement #4 is explicit that a predicate misfiring in a
+spec-compliant scenario is a defect, so this was one — and a louder one than
+M6-D1, because it produced false errors rather than a wrong string.
+
+The `HL7au:000040` block two fields earlier had reasoned about exactly this
+("gating prevents over-fire on message types outside scope") and gated its
+value sets. MSH-17/19 were written later and did not inherit the reasoning.
+
+**Fixed 2026-09-04** by the model extension req #3 asks for rather than a
+narrowing of the rule: `FieldOverride` gained `usageCondition`, a
+message-context predicate gating `profileUsage`, using the same grammar and the
+same fail-safe semantics as `ComponentValueSet.condition` (an unparseable gate
+evaluates false, silencing the rule rather than over-firing it). MSH-17 and
+MSH-19 now carry `messageCode in (ORM, ORU, REF, RRI, ACK)` on both halves.
+`FieldOverride` is internal, so this is not an API change.
+
+Three tests pin the behaviour: ADT fires neither point when the fields are
+absent, ADT fires neither when they are present-but-wrong, and ORU still fires
+both when they are absent. Six existing tests had encoded the over-fire by
+asserting these rules against ADT wires; their wires moved to ORU, which is
+what they meant to exercise.
+
+**This is a prerequisite for M6-A, not a detour.** Eleven of the 31 CANDIDATE
+points (`00047.1`, `00047.2`, `00049.1`–`.3`, `00048.3.1`, `000024.1`–`.5`) are
+scoped to Orders/Results/Referrals and need `.required` narrowings. Without
+`usageCondition` they could only have shipped with the same defect.
+
 ### M6-O1 — the shippable tranche is unusually cheap
 
 All 31 CANDIDATE points fit shapes the overlay already expresses — 22 are
@@ -143,6 +181,8 @@ same-concept assertion, which stays a permanent limitation), and `000022.1` /
 ## Recommended sequencing
 
 1. ~~**M6-D1** — the citation fix.~~ ✅ done 2026-09-04.
+   ~~**M6-D3** — gate `profileUsage` on message type.~~ ✅ done 2026-09-04;
+   prerequisite for step 2.
 2. **M6-A** — the 31 CANDIDATE points, additive under ADR-014. Split by cluster
    (MSH envelope / composite required components / value sets) so each lands as
    its own stage with its own tests.

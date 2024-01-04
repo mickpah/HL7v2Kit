@@ -431,6 +431,9 @@ public struct Validator: Sendable {
                     profile: profile,
                     fieldGrammar: fieldGrammar,
                     isPopulated: isPopulated,
+                    segment: segment,
+                    segmentArrayIndex: segmentIndex,
+                    message: message,
                     location: location,
                     issues: &issues
                 )
@@ -719,6 +722,9 @@ public struct Validator: Sendable {
         profile: Profile,
         fieldGrammar: FieldGrammar,
         isPopulated: Bool,
+        segment: Segment,
+        segmentArrayIndex: Int,
+        message: Message,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
@@ -727,6 +733,17 @@ public struct Validator: Sendable {
         }) else { return }
         guard override.profileUsage == .required else { return }
         guard !isPopulated else { return }
+        // M6-D3: the usage narrowing only applies to the message types
+        // the conformance point names. No gate means "every message".
+        if let gate = override.usageCondition, !gate.isEmpty {
+            guard conditionTriggers(
+                gate,
+                in: segment,
+                segmentIndex: segmentArrayIndex,
+                message: message,
+                currentSegmentID: location.segmentID
+            ) else { return }
+        }
 
         let citation = override.specCitation
             ?? "\(profile.locale.rawValue):\(location.segmentID)-\(fieldGrammar.index)"

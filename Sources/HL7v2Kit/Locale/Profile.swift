@@ -242,6 +242,23 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// ADR-007 for the extended-usage semantics.
     let profileUsage: ProfileUsage?
 
+    /// Message-context predicate gating `profileUsage`. When set, the
+    /// usage narrowing applies only to messages the predicate matches;
+    /// when `nil` (default) it applies to every message the locale is
+    /// used on.
+    ///
+    /// Uses the same grammar as `ComponentValueSet.condition` (ADR-009),
+    /// e.g. `"messageCode in (ORM, ORU, REF, RRI, ACK)"`, and the same
+    /// fail-safe semantics: an unparseable predicate evaluates false, so
+    /// a malformed gate silences the rule rather than over-firing it.
+    ///
+    /// Added by M6-D3 (2026-09-04). ADRM-2021 states nearly every
+    /// conformance point for a named set of message types; without a
+    /// gate here, `profileUsage = .required` fired on message types the
+    /// spec never addressed — see
+    /// `docs/design/m6-adrm-2021-localisation-audit.md`.
+    let usageCondition: String?
+
     /// Profile-defined required-component narrowings for composite
     /// fields. Empty means "use the base spec's required components
     /// unchanged".
@@ -266,6 +283,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         segmentID: String,
         fieldIndex: Int,
         profileUsage: ProfileUsage? = nil,
+        usageCondition: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
         specCitation: String? = nil
@@ -273,6 +291,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.segmentID = segmentID
         self.fieldIndex = fieldIndex
         self.profileUsage = profileUsage
+        self.usageCondition = usageCondition
         self.requiredComponents = requiredComponents
         self.componentValueSets = componentValueSets
         self.specCitation = specCitation

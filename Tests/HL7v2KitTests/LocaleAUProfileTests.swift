@@ -416,6 +416,49 @@ struct LocaleAUProfileTests {
                 "ORC-30 (CNE) with empty text must fire 44.5.3; got \(report.errors.map(\.message))")
     }
 
+    // MARK: - M6-D3: profile usage narrowings are message-type gated
+    //
+    // Appendix 5 scopes HL7au:000041 / 000042 to "Orders, Results,
+    // Referrals, Acknowledgement, Referral Response". Both rules used to
+    // apply `profileUsage = .required` unconditionally, so an ADT — a
+    // message type the localisation never addresses — failed AU
+    // validation for a missing MSH-17 and MSH-19. req #4: a predicate
+    // that misfires in any spec-compliant scenario is a defect.
+
+    @Test("M6-D3 — ADT is outside HL7au:000041/000042's message-type scope and fires neither")
+    func msh17And19GatedOffOutsideScope() throws {
+        let message = try Parser(locale: .auLocalisation)
+            .parse(TestWires.adt("PID|1||999999^^^AUTH^MR"))
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(!hasViolation(report, citing: "HL7au:000041"),
+                "ADT is not Orders/Results/Referrals/ACK/RRI; 41 must not fire; got \(report.errors.map(\.message))")
+        #expect(!hasViolation(report, citing: "HL7au:000042"),
+                "ADT is not Orders/Results/Referrals/ACK/RRI; 42 must not fire; got \(report.errors.map(\.message))")
+    }
+
+    @Test("M6-D3 — the gate does not silence the rules inside their scope (ORU)")
+    func msh17And19StillFireInScope() throws {
+        // ORU^R01 with MSH-17 and MSH-19 both absent.
+        let wire = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|20240101||ORU^R01|MSG|P|2.4\r"
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        #expect(hasViolation(report, citing: "HL7au:000041"),
+                "ORU is in scope; missing MSH-17 must still fire 41; got \(report.errors.map(\.message))")
+        #expect(hasViolation(report, citing: "HL7au:000042"),
+                "ORU is in scope; missing MSH-19 must still fire 42; got \(report.errors.map(\.message))")
+    }
+
+    @Test("M6-D3 — populated-but-wrong values stay gated too (ADT with MSH-17 = USA)")
+    func msh17WrongValueGatedOutsideScope() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101||ADT^A01|MSG|P|2.4|||||USA||fr^French^ISO639\r"
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        #expect(!hasViolation(report, citing: "HL7au:000041"),
+                "ADT out of scope; a non-AUS country must not fire 41; got \(report.errors.map(\.message))")
+        #expect(!hasViolation(report, citing: "HL7au:000042"),
+                "ADT out of scope; a non-English language must not fire 42; got \(report.errors.map(\.message))")
+    }
+
     // MARK: - M6-D1: alternate-identifier pair-rule citations
     //
     // ADRM-2021 Appendix 5 does NOT number the alternate-identifier pair
@@ -536,7 +579,7 @@ struct LocaleAUProfileTests {
     // MSH field layout (post-MSH-12): MSH-13 empty | MSH-14 empty |
     // MSH-15 AL | MSH-16 NE | MSH-17 USA | MSH-18 empty | MSH-19 lang.
     private let mshNonAUCountry = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1|||AL|NE|USA||en^English^ISO639\r\
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1|||AL|NE|USA||en^English^ISO639\r\
     PID|1||999999^^^HOSP^MR\r
     """
 
@@ -550,7 +593,7 @@ struct LocaleAUProfileTests {
 
     // MSH-19 populated with wrong language identifier.
     private let mshNonENLanguage = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1|||AL|NE|AUS||fr^French^ISO639\r\
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1|||AL|NE|AUS||fr^French^ISO639\r\
     PID|1||999999^^^HOSP^MR\r
     """
 
@@ -564,8 +607,9 @@ struct LocaleAUProfileTests {
 
     // MSH-12 = "2.4^AUS&Australia&ISO3166_1" + MSH-17 = "AUS" + MSH-19
     // = "en^English^ISO639" — fully AU-conformant per HL7au:000040.1/.2,
-    // 000041, 000042 (universal subrules; 040.3 / .4 require ORM/ORU or
-    // REF/RRI messages which an ADT^A01 wire doesn't trigger).
+    // 000041, 000042. Stays on ADT deliberately: it pins that a
+    // conformant MSH fires nothing, and 040.3 / .4 (ORM/ORU or REF/RRI
+    // only) must not reach it either.
     private let mshFullyAUCompliant = """
     MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.4^AUS&Australia&ISO3166_1|||AL|NE|AUS||en^English^ISO639\r\
     PID|1||999999^^^HOSP^MR\r
@@ -591,7 +635,9 @@ struct LocaleAUProfileTests {
         // profileUsage = .required on each FieldOverride, empty MSH-
         // 17 / MSH-19 fire .profileConstraintViolation (distinct from
         // the value-set check that fires only on populated-but-wrong).
-        let wire = TestWires.adt("PID|1||999999^^^HOSP^MR")
+        // ORU, not ADT: since M6-D3 the narrowing is scoped to the
+        // message types Appendix 5 names for these points.
+        let wire = TestWires.oru("PID|1||999999^^^HOSP^MR")
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
         #expect(hasViolation(report, segmentID: "MSH", fieldIndex: 17, citing: "HL7au:000041"),
@@ -1201,11 +1247,11 @@ struct LocaleAUProfileTests {
          cite: "HL7au:000003", segmentID: "OBR", fieldIndex: 2, componentIndex: 3,
          messagePrefix: "AU profile rule violated at OBR[1]-2.3: EI component 3 must be populated when OBR-2 ('Placer Order Number') is populated "),
         (site: "fieldOverride componentValueSets",
-         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1|||AL|NE|USA||en^English^ISO639\rPID|1||999999^^^HOSP^MR\r",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1|||AL|NE|USA||en^English^ISO639\rPID|1||999999^^^HOSP^MR\r",
          cite: "HL7au:000041", segmentID: "MSH", fieldIndex: 17, componentIndex: 1,
          messagePrefix: "AU profile value-set rule violated at MSH[1]-17.1: expected one of [\"AUS\"] but got \"USA\" "),
         (site: "profileUsage required-but-missing",
-         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\rPID|1||999999^^^HOSP^MR\r",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\rPID|1||999999^^^HOSP^MR\r",
          cite: "HL7au:000041", segmentID: "MSH", fieldIndex: 17, componentIndex: nil,
          messagePrefix: "AU profile rule violated at MSH[1]-17: field is profile-required (au-adrm-2021 usage = R) but missing "),
     ]

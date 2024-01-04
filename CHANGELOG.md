@@ -23,6 +23,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/design/m6-adrm-2021-conformance-register.md` — generated, re-runnable
 
 ### Fixed
+- **M6-D3 — AU profile usage narrowings fired outside their message-type scope.**
+  `HL7au:000041` (MSH-17 = AUS) and `HL7au:000042` (MSH-19 = en^English^ISO639)
+  are scoped by ADRM-2021 to Orders, Results, Referrals, ACK and RRI, but
+  shipped as ungated `profileUsage = .required` with ungated value sets. A
+  spec-compliant `ADT^A01` with no MSH-17 therefore failed AU validation citing
+  a conformance point that does not apply to it. `FieldOverride` gains
+  **`usageCondition`** — a message-context predicate gating `profileUsage`,
+  same grammar and same fail-safe semantics as `ComponentValueSet.condition` —
+  and both rules now carry `messageCode in (ORM, ORU, REF, RRI, ACK)` on each
+  half. `FieldOverride` is internal, so the public API is unchanged.
+  Also a prerequisite for M6-A: 11 of the 31 shippable points are
+  message-type-scoped `.required` narrowings that would otherwise have
+  inherited the same defect.
 - **M6-D1 — CNE pair rules cited a withdrawn conformance point.**
   `ceCwePairRules` treated CNE like CE and cited `HL7au:00044.5.5` / `.5.6` for
   the alternate-identifier pair. ADRM-2021 numbers CNE `.5.4` / `.5.5`, and
