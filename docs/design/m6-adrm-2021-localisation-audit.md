@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete, nothing shipped** (2026-09-04) |
+| Status | **Audit complete (2026-09-04); M6-D1 fixed; M6-A / M6-B open** |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -72,7 +72,7 @@ auditable rather than assumed.
 
 ## Findings
 
-### M6-D1 — CNE pair rules cite a withdrawn conformance point ⚠️ defect
+### M6-D1 — CNE pair rules cite a withdrawn conformance point ✅ FIXED 2026-09-04
 
 `ceCwePairRules(citePrefix:)` in `Profile+au_adrm_2021.swift` assumes CE and CNE
 share the alternate-identifier numbering `.5` / `.6`, and only CWE differs at
@@ -89,8 +89,10 @@ revision r2 and no longer exists. The two CNE rules are behaviourally correct;
 only their `specCitation` strings are wrong. Under the working notes req #4 a rule
 carrying a false citation is a defect, so this is the first thing to fix.
 
-Fix: give CNE the same `altCite` branch as CWE, i.e. cite `.5.4` / `.5.5`, and
-correct the doc comment above the helper, which states the false rule.
+**Fixed 2026-09-04.** `ceCwePairRules` now derives the alternate pair from an
+`altBase` — 5 for CE, 4 for CNE and CWE — and the helper's doc comment states
+the real rule instead of the false one. Two tests in `LocaleAUProfileTests`
+pin the numbering per composite and assert `HL7au:00044.5.6` is never cited.
 
 ### M6-D2 — three withdrawn points must stay uncited
 
@@ -140,7 +142,7 @@ same-concept assertion, which stays a permanent limitation), and `000022.1` /
 
 ## Recommended sequencing
 
-1. **M6-D1** — the citation fix. One helper branch plus its doc comment.
+1. ~~**M6-D1** — the citation fix.~~ ✅ done 2026-09-04.
 2. **M6-A** — the 31 CANDIDATE points, additive under ADR-014. Split by cluster
    (MSH envelope / composite required components / value sets) so each lands as
    its own stage with its own tests.

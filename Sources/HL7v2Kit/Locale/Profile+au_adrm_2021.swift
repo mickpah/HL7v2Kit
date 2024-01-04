@@ -433,18 +433,18 @@ extension Profile {
     /// The four rules implement:
     /// - `.1` "If identifier set, coding system must be set"
     /// - `.2` "If identifier not set, coding system must not be set"
-    /// - `.4` or `.5` "If alternate identifier set, alternate coding system must be set"
-    /// - `.5` or `.6` "If alternate identifier not set, alternate coding system must not be set"
+    /// - `.N` "If alternate identifier set, alternate coding system must be set"
+    /// - `.N+1` "If alternate identifier not set, alternate coding system must not be set"
     ///
-    /// (CE / CNE use `.5` / `.6` for alternate rules; CWE uses `.4` /
-    /// `.5`. Spec citations follow this convention.)
+    /// ADRM-2021 Appendix 5 numbers the alternate-identifier pair only
+    /// consistently for two of the three composites: **CE uses `.5` /
+    /// `.6`; CNE and CWE both use `.4` / `.5`.** Getting CNE wrong cites
+    /// `HL7au:00044.5.6`, which revision r2 **removed** — corrected by
+    /// M6-D1 (2026-09-04), found by the Appendix 5 diff. See
+    /// `docs/design/m6-adrm-2021-localisation-audit.md`.
     private static func ceCwePairRules(citePrefix: String) -> [PairConditional] {
-        let altCite: (Int) -> String
-        if citePrefix == "HL7au:00044.6" {
-            altCite = { suffix in "\(citePrefix).\(suffix - 1)" }
-        } else {
-            altCite = { suffix in "\(citePrefix).\(suffix)" }
-        }
+        let altBase = citePrefix == "HL7au:00044.4" ? 5 : 4
+        let altCite: (Int) -> String = { offset in "\(citePrefix).\(altBase + offset)" }
         return [
             PairConditional(
                 ifComponent: 1, condition: .populated,
@@ -459,12 +459,12 @@ extension Profile {
             PairConditional(
                 ifComponent: 4, condition: .populated,
                 thenComponent: 6, requirement: .mustBePopulated,
-                specCitation: "\(altCite(5)) — alt identifier set ⇒ alt coding system set"
+                specCitation: "\(altCite(0)) — alt identifier set ⇒ alt coding system set"
             ),
             PairConditional(
                 ifComponent: 4, condition: .empty,
                 thenComponent: 6, requirement: .mustBeEmpty,
-                specCitation: "\(altCite(6)) — alt identifier empty ⇒ alt coding system empty"
+                specCitation: "\(altCite(1)) — alt identifier empty ⇒ alt coding system empty"
             ),
         ]
     }

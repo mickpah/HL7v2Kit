@@ -416,6 +416,50 @@ struct LocaleAUProfileTests {
                 "ORC-30 (CNE) with empty text must fire 44.5.3; got \(report.errors.map(\.message))")
     }
 
+    // MARK: - M6-D1: alternate-identifier pair-rule citations
+    //
+    // ADRM-2021 Appendix 5 does NOT number the alternate-identifier pair
+    // consistently across the three coded composites: CE is .4.5 / .4.6,
+    // but CNE is .5.4 / .5.5 and CWE is .6.4 / .6.5. The overlay used to
+    // treat CNE like CE, which cited HL7au:00044.5.6 — a point revision
+    // r2 removed. These pins lock the numbering to the spec text so the
+    // helper's `altBase` cannot drift back.
+
+    @Test("HL7au:00044.5.4 — CNE alt identifier without alt coding system cites .5.4, never the removed .5.6")
+    func cneAltPairCitesSpecNumbering() throws {
+        // ORC-30 (Enterer Authorization Mode) is v2.5.1's only CNE field.
+        // CNE-4 (alternate identifier) set, CNE-6 (alt coding system) empty.
+        let orc = "ORC|NW" + String(repeating: "|", count: 29) + "CODE^Text^SYS^ALTCODE"
+        let wire = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r" + orc + "\r"
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(hasViolation(report, citing: "HL7au:00044.5.4"),
+                "CNE alt identifier without alt coding system must cite 44.5.4; got \(report.errors.map(\.message))")
+        #expect(!hasViolation(report, citing: "HL7au:00044.5.6"),
+                "HL7au:00044.5.6 was removed in r2 and must never be cited")
+    }
+
+    @Test("Alternate-identifier pair rules carry each composite's own spec numbering")
+    func altPairCitationsMatchSpecPerComposite() throws {
+        // CE: OBR-4 (.4.5) · CWE: ERR-3 (.6.4). Both with the alternate
+        // identifier set and the alternate coding system left empty.
+        let ceWire = TestWires.oru("OBR|1|P^H^1.2.3^ISO|F^L^1.2.4^ISO|GLU^Glucose^LN^ALTGLU")
+        let ceReport = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(ceWire))
+        #expect(hasViolation(ceReport, citing: "HL7au:00044.4.5"),
+                "CE alt pair must cite 44.4.5; got \(ceReport.errors.map(\.message))")
+
+        let cweWire = """
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ACK|MSG|P|2.5.1\r\
+        MSA|AE|MSG\r\
+        ERR||PID^1^3|207^Text^HL70357^ALT207|E\r
+        """
+        let cweReport = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(cweWire))
+        #expect(hasViolation(cweReport, citing: "HL7au:00044.6.4"),
+                "CWE alt pair must cite 44.6.4; got \(cweReport.errors.map(\.message))")
+    }
+
     // MARK: - S5-B-3: CX required-component rules (HL7au:00044.1.2 / .1.3)
 
     // PID-3 with only CX-1 populated. AU rules require CX-4 (Assigning

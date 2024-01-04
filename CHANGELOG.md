@@ -22,11 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/design/m6-adrm-2021-localisation-audit.md` — findings and sequencing
   - `docs/design/m6-adrm-2021-conformance-register.md` — generated, re-runnable
 
-### Known defect (found by the audit, not yet fixed)
-- **M6-D1** — `ceCwePairRules` cites `HL7au:00044.5.5` / `.5.6` for the CNE
-  alternate-identifier pair rules. The spec numbers them `.5.4` / `.5.5`, and
-  `00044.5.6` was **removed** in revision r2. The rules behave correctly; the
-  `specCitation` strings are wrong, which the working notes req #4 counts as a defect.
+### Fixed
+- **M6-D1 — CNE pair rules cited a withdrawn conformance point.**
+  `ceCwePairRules` treated CNE like CE and cited `HL7au:00044.5.5` / `.5.6` for
+  the alternate-identifier pair. ADRM-2021 numbers CNE `.5.4` / `.5.5`, and
+  `00044.5.6` was **removed** in revision r2 — the overlay was citing a point
+  that no longer exists. Only the `specCitation` strings were wrong; the rules
+  always behaved correctly. Found by the M6 Appendix 5 diff, which is the point
+  of running one. Two tests now pin the per-composite numbering (CE `.4.5`,
+  CNE `.5.4`, CWE `.6.4`) and assert `.5.6` is never cited.
 
 ## [2.1.0] — 2026-09-03
 
