@@ -481,6 +481,47 @@ extension Profile {
             // limitations): 44.4.3 (CE-2 text — "may be blank in some
             // locations" carve-out, would over-fire) and 44.4.7 (concept-
             // match — requires a terminology service, not wire-checkable).
+            // ---- M6-A stage 2: XCN required components ------------
+            // HL7au:00044.7 series, scoped to "Orders, Results,
+            // Referrals". Component indices from the v2.4 XCN
+            // definition (CH02 §2.9.52).
+            //
+            // .7.1 is NOT restated: XCN-1 is already
+            // `XCN.requiredComponents` in the base model.
+            // .7.6 (<given name> "should" be valued) is advisory, not a
+            // "must", so it is not enforced.
+            //
+            // PARTIAL, registered: .7.3 and .7.4 each require the
+            // component to be valued AND to carry a value from an HL7
+            // code table (0200 and 0203). The presence half ships here;
+            // the value-set half cannot — HL7 code tables are not
+            // modelled at all (the schemas drop the spec's TBL# column
+            // and there is no table registry). See M6-O6.
+            CompositeOverride(
+                dataType: "XCN",
+                // M6-D4: HL7au:00044.7 series is scoped to
+                // "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 2,
+                        subcomponent: 1,
+                        specCitation: "HL7au:00044.7.5 — XCN-2.1 (family name → surname) must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 9,
+                        specCitation: "HL7au:00044.7.2 — XCN-9 (assigning authority) must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 10,
+                        specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be valued (HL7 Table 0200 membership not checked — see M6-O6)"
+                    ),
+                    ComponentRequirement(
+                        component: 13,
+                        specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be valued (HL7 Table 0203 membership not checked — see M6-O6)"
+                    ),
+                ]
+            ),
             CompositeOverride(
                 dataType: "CE",
                 // M6-D4: HL7au:00044.4 series is scoped to

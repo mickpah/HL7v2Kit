@@ -13,44 +13,27 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| CANDIDATE | 20 | expressible with the DSL today — the shippable gap |
-| EXTEND | 24 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 40 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 1 | enforced for part of the point's message-type scope |
-| BASE | 13 | already enforced by the base model; overlay deliberately silent |
+| CANDIDATE | 3 | expressible with the DSL today — the shippable gap |
+| EXTEND | 36 | needs a model extension to express faithfully (req #3) |
+| SHIPPED | 42 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 3 | partly enforced — see each row's note for what is not |
+| BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 4 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
-| OUT | 84 | out of scope by nature (transport, payload, cross-message) |
+| OUT | 83 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## CANDIDATE (20)
+## CANDIDATE (3)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 value-set exclusion (`not-in {TX}`) |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. | NTE group-scope cardinality 0 (ADR-010) |
-| `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. | OBR-24 required + HL7 table 0074 value set (ORU) |
-| `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 required + HL7 table 0074 value set (REF) |
-| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | EI-1 required component (uniqueness half is not) |
-| `HL7au:00044.7.2` |  | Senders | Orders, Results, Referrals | XCN <assigning authority (HD)> component must be valued and valid. | XCN-9 required component |
-| `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. | XCN-7 required + HL7 table 0200 value set |
-| `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. | XCN-13 required + HL7 table 0203 value set |
-| `HL7au:00044.7.5` |  | Senders | Orders, Results, Referrals | XCN <family name (FN)> :<surname (ST)> sub- component must to be valued. | XCN-2.1 required subcomponent |
-| `HL7au:00044.10.1.1` |  | Senders | Results, Referrals | ED <type of data (ID)> must be valued. | ED-2 required component |
-| `HL7au:00044.10.1.2` |  | Senders | Results, Referrals | ED <data subtype (ID)> must be valued. | ED-3 required component |
-| `HL7au:00044.10.1.3` |  | Senders | Results, Referrals | ED <encoding (ID)> must be valued. | ED-4 required component |
-| `HL7au:00044.10.1.4` |  | Senders | Results, Referrals | ED <data (ST)> must be valued. | ED-5 required component |
-| `HL7au:00044.11.1.1` |  | Senders | Results, Referrals | RP <pointer (ST) > component must be valued | RP-1 required component |
-| `HL7au:00044.11.1.2` |  | Senders | Results, Referrals | RP <application ID (HD)> component must be valued | RP-2 required component |
-| `HL7au:00044.11.1.3` |  | Senders | Results, Referrals | RP <type of data (ID)> component must be valued | RP-3 required component |
-| `HL7au:00044.11.1.4` |  | Senders | Results, Referrals | RP <subtype (ID)> component must be valued | RP-4 required component |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | OBX-6.3 fixed value `UCUM` |
-| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | PRD-7.2 user-defined table 0363 value set |
-| `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). | PRD-7.3 HL7 table 0203 value set |
 
-## EXTEND (24)
+## EXTEND (36)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -64,13 +47,23 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000023.1` |  | Senders | Orders, Results, Referrals | User defined segments (Z segments) must not be used in messages. | segment-ID prefix match (`Z*`) |
 | `HL7au:000028` |  | Senders | Results | When there are multiple OBR segments in an ORU message, the OBR-3 Filler order number must be unique within messages. | within-message uniqueness of a field across repeats |
 | `HL7au:000028.2` |  | Senders | Referrals | When there are multiple OBR/OBX groups in a REF message, each OBR-3 Filler order number pair must be unique for each OBR/OBX group. | within-message uniqueness of a field across groups |
+| `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. | HL7 Table 0074 membership; needs a code-table registry |
+| `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | HL7 Table 0074 membership; needs a code-table registry |
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | primary-before-local coding-system ordering, generalised from the shipped LOINC rule (HL7au:00044.4.4) |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | primary-before-local coding-system ordering |
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | primary-before-local coding-system ordering |
 | `HL7au:00044.6.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | same-concept assertion across coding systems — the CWE twin of the registered HL7au:00044.4.7 / .5.7 |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | TS datatype-level validation (timezone offset present) |
+| `HL7au:00044.10.1.1` |  | Senders | Results, Referrals | ED <type of data (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
+| `HL7au:00044.10.1.2` |  | Senders | Results, Referrals | ED <data subtype (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
+| `HL7au:00044.10.1.3` |  | Senders | Results, Referrals | ED <encoding (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
+| `HL7au:00044.10.1.4` |  | Senders | Results, Referrals | ED <data (ST)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
 | `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype ⇔ type MIME correspondence map |
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype ⇔ type HL7 table 0291/0191 correspondence map |
+| `HL7au:00044.11.1.1` |  | Senders | Results, Referrals | RP <pointer (ST) > component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
+| `HL7au:00044.11.1.2` |  | Senders | Results, Referrals | RP <application ID (HD)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
+| `HL7au:00044.11.1.3` |  | Senders | Results, Referrals | RP <type of data (ID)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
+| `HL7au:00044.11.1.4` |  | Senders | Results, Referrals | RP <subtype (ID)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
 | `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype ⇔ type MIME correspondence map |
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype ⇔ type HL7 table 0291/0191 correspondence map |
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
@@ -78,8 +71,10 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). | discriminated group cardinality (exactly one PRD-1=AP) |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. | discriminated group cardinality (exactly one PRD-1=IR) |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
+| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | User-defined Table 0363 membership; needs a code-table registry |
+| `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). | HL7 Table 0203 membership; needs a code-table registry |
 
-## SHIPPED (40)
+## SHIPPED (42)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -118,25 +113,31 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.6.3` |  | Senders | Orders, Results, Referrals | <text (ST)> component must be valued and this must be what is intended for display to the user. |  |
 | `HL7au:00044.6.4` |  | Senders | Orders, Results, Referrals | When an <alternate identifier (ST)> component is specified, the <name of alternate coding system> must also be specified. |  |
 | `HL7au:00044.6.5` |  | Senders | Orders, Results, Referrals | If no <alternate identifier (ST)> component is specified then no <name of alternate coding system> must be specified |  |
+| `HL7au:00044.7.2` |  | Senders | Orders, Results, Referrals | XCN <assigning authority (HD)> component must be valued and valid. |  |
+| `HL7au:00044.7.5` |  | Senders | Orders, Results, Referrals | XCN <family name (FN)> :<surname (ST)> sub- component must to be valued. |  |
 | `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. |  |
 | `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
 | `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 
-## PARTIAL (1)
+## PARTIAL (3)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
+| `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. | XCN-10 presence enforced; HL7 Table 0200 membership is not — HL7 code tables are not modelled (M6-O6) |
+| `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. | XCN-13 presence enforced; HL7 Table 0203 membership is not — HL7 code tables are not modelled (M6-O6) |
 
-## BASE (13)
+## BASE (15)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000008.1.2` |  | Senders and Receivers | Results | An OBX display segment is identified using OBX-3 Identifier (CE-1) and Name of Coding System (CE-3) components. The text component of the CE may be blank and only CE1 and CE-3 components need to match. | definitional — states how a display segment is identified; implemented as the overlay gate |
 | `HL7au:000008.1.4` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-3 <name of coding system (IS)> must be valued "AUSPDI". | OBX-3.3 = AUSPDI is the discriminator the HL7au:000008.1 overlay gates on, not an assertion |
 | `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | CX-1 is already `CX.requiredComponents` |
+| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | EI-1 is already `EI.requiredComponents`; the uniqueness half is cross-message and out of scope |
+| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | XCN-1 is already `XCN.requiredComponents` |
 | `HL7au:00046.1.1` |  | Senders | Orders, Results, Referrals | Senders must escape \| characters as '\F\' in all fields, components, subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.2` |  | Senders | Orders, Results, Referrals | Senders must escape '^' characters as '\S\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.3` |  | Senders | Orders, Results, Referrals | Senders must escape '&' characters as '\T\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
@@ -244,7 +245,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00101.8` |  | Receivers | Results, Referrals(L2) | Receiver systems must restrict access to attachments of trusted MIME types (the trusted MIME types may be configurable according to an organisation policy). | receiver behaviour — observed at runtime |
 | `HL7au:00104.2.2` |  | Receivers Senders | Referrals Referrals | The receiving system must present the referral message to intended recipient indicated by PRD-1 value of "IR". PRD-7 must have at least 1 repeat (for providers | receiver behaviour — observed at runtime |
 
-## OUT (84)
+## OUT (83)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -298,7 +299,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.3.4` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID component must contain the HPI-O formatted as "1.2.36.1.2001.1003.0." concatenated with the HPI-O. | transport addressing / NASH PKI |
 | `HL7au:00044.3.3` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID Type component must be "ISO". | transport addressing / NASH PKI |
 | `HL7au:00044.3.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | transport addressing / NASH PKI |
-| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | identifier-scheme validity, not presence |
 | `HL7au:00044.7.6` |  | Senders | Orders, Results, Referrals | XCN <given name (ST)> should be valued. | advisory ("should") |
 | `HL7au:00044.11.1.5.1` |  | Senders | Results, Referrals | When "URI" is specified in RP <application ID (HD)> component - <universal id type (ID)> sub- component value: the URL must be specified by the concatenation of the RP <application ID (HD)> component, <universal id (S... | URL construction from RP components (payload) |
 | `HL7au:00044.11.1.5.2` |  | Senders | Results, Referrals | When "URI" is specified in RP <application ID (HD)> component - <universal id type (ID)> sub- component value: the RP <application ID (HD)> component-<namespace id (IS)> sub-component must not be valued. | URL construction from RP components (payload) |

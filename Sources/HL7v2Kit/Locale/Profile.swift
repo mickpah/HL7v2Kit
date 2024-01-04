@@ -193,9 +193,25 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// The 1-based component index that must be populated.
     let component: Int
 
+    /// The 1-based subcomponent index within `component` that must be
+    /// populated. When `nil` (default), any populated subcomponent
+    /// satisfies the requirement — the pre-M6 behaviour.
+    ///
+    /// Needed because ADRM-2021 names subcomponents directly:
+    /// HL7au:00044.7.5 requires the *surname* subcomponent of XCN-2
+    /// (family name, FN), not merely a populated XCN-2. A `^&PREFIX`
+    /// family name is populated but carries no surname.
+    let subcomponent: Int?
+
     /// Spec citation for this rule. Surfaced in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
+
+    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil) {
+        self.component = component
+        self.subcomponent = subcomponent
+        self.specCitation = specCitation
+    }
 }
 
 /// A single pair-conditional rule on a composite. "If component A

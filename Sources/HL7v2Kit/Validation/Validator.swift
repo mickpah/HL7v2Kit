@@ -502,7 +502,9 @@ public struct Validator: Sendable {
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
             // Track 1: required-components (v0.5-S5-B-3).
             for requirement in composite.requiredComponents {
-                if isComponentPopulated(repetition, componentIndex: requirement.component) {
+                if isComponentPopulated(repetition,
+                                        componentIndex: requirement.component,
+                                        subcomponentIndex: requirement.subcomponent) {
                     continue
                 }
                 let location = IssueLocation(
@@ -979,9 +981,18 @@ public struct Validator: Sendable {
     /// has at least one non-empty subcomponent value. Returns false for
     /// out-of-bounds component indices, which is the correct semantic for
     /// "required component is missing".
-    private func isComponentPopulated(_ repetition: Repetition, componentIndex: Int) -> Bool {
+    private func isComponentPopulated(
+        _ repetition: Repetition,
+        componentIndex: Int,
+        subcomponentIndex: Int? = nil
+    ) -> Bool {
         guard repetition.components.indices.contains(componentIndex - 1) else { return false }
-        return repetition.components[componentIndex - 1].subcomponents.contains { !$0.value.isEmpty }
+        let subs = repetition.components[componentIndex - 1].subcomponents
+        // M6-A-2: a named subcomponent must itself be populated. Without
+        // an index, any populated subcomponent satisfies the check.
+        guard let subcomponentIndex else { return subs.contains { !$0.value.isEmpty } }
+        guard subs.indices.contains(subcomponentIndex - 1) else { return false }
+        return !subs[subcomponentIndex - 1].value.isEmpty
     }
 
     /// `.conditional` field check (v0.2-V1). Fires `.conditionalFieldMissing`

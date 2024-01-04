@@ -13,10 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `HL7AUSD-STD-OO-ADRM-2021.1` (the localisation's normative conformance-point
   table) from `pdftotext -layout` output and classifies every row against what
   `HL7Locale.auLocalisation` ships. **302 rows / 263 conformance points**;
-  the profile enforces or accounts for **58 of the 102 that are decidable from
-  a single message** after stage 1 (40 shipped, 1 partial, 13 base-model, 4
-  registered limitations), leaving **20 expressible with today's DSL** and
-  **24 needing a model extension**. At audit time the figure was 47 of 102. The remaining 158 constrain receiver behaviour, transport/PKI
+  the profile enforces or accounts for **64 of the 103 that are decidable from
+  a single message** after stages 1–2 (42 shipped, 3 partial, 15 base-model, 4
+  registered limitations), leaving **3 expressible with today's DSL** and
+  **36 needing a model extension**. At audit time the figure was 47 of 102;
+  the CANDIDATE column fell from 31 to 3 because shipping stages 1–2
+  discovered why most of them could not ship — see M6-O6 and M6-O7. The remaining 158 constrain receiver behaviour, transport/PKI
   addressing, rendered payload or cross-message uniqueness, and are enumerated
   so the exclusion is auditable rather than assumed.
   - `docs/design/m6-adrm-2021-localisation-audit.md` — findings and sequencing
@@ -35,6 +37,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `HL7au:00048.3.1`'s real catch is encoding aliases the parser accepts but the
   point does not list (`UTF-8`, `US-ASCII`, `ISO-8859-1`) — a genuinely unknown
   encoding is already a `ParseError` before validation.
+
+- **M6-A stage 2 — XCN required components.** `HL7au:00044.7.2` (XCN-9
+  assigning authority) and `.7.5` (XCN-2.1 family-name surname) enforced;
+  `.7.3` (XCN-10) and `.7.4` (XCN-13) enforced for presence only. All gated on
+  `messageCode in (ORM, ORU, REF)`. `ComponentRequirement` gains
+  **`subcomponent`** so `.7.5` names the surname subcomponent exactly — a
+  family name of `&VAN` is populated but carries no surname, and would
+  otherwise have passed.
+  `HL7au:00044.7.1` and `00044.3.1` are not restated (XCN-1 and EI-1 are
+  already base required components).
+
+### Known defects and limitations found by M6 (not fixed)
+- **M6-D5 — OBX-5's declared datatype is wrong in all six schemas.** Every
+  version's attribute table gives OBX-5 the variable datatype (`Variable` on
+  v2.3/v2.3.1/v2.4, `varies` on v2.5.1/v2.6/v2.8.2); the schemas say `ST`.
+  `RDT-1` already stores the variable datatype verbatim, so this is
+  inconsistent with the project's own convention. Correcting it changes
+  `OBX.observationValue` from `String?` to `Field?` — breaking, and blocked by
+  ADR-014's additive-only contract for 2.x. **Scheduled for the next major.**
+- **M6-O5 — no audit predicate compares a field's datatype.**
+  `scripts/audit-schemas.py --depth` compares field *count* only, which is how
+  M6-D5 survived 717 schemas. Until a per-field `dataType` comparison runs, no
+  claim that the schemas faithfully render the spec covers the datatype column.
+- **M6-O6 — HL7 code tables are not modelled.** The schemas drop the spec's
+  `TBL#` column and there is no code-table registry, so every "value from HL7
+  Table NNNN" point is unshippable: `000032`/`.2` (0074), `00044.7.3` (0200),
+  `00044.7.4` / `00104.7.3.1` (0203), `00104.7.2.1` (0363).
+- **M6-O7 — ED and RP never appear as a declared datatype.** Eight points
+  (`00044.10.*`, `00044.11.*`) target composites no field declares on any
+  version; they reach the wire only through OBX-5, whose type OBX-2 chooses at
+  runtime. An override for them would be dead code, so they move to EXTEND.
 
 ### Fixed
 - **M6-D4 — AU composite overrides fired outside their message-type scope.**

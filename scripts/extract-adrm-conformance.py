@@ -98,14 +98,22 @@ SHIPPED = {
     'HL7au:000024.1', 'HL7au:000024.3', 'HL7au:000024.4', 'HL7au:000024.5',
     'HL7au:00047.1', 'HL7au:00047.2',
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
+    # M6-A stage 2 — XCN required components (2026-09-04).
+    'HL7au:00044.7.2', 'HL7au:00044.7.5',
 }
 
-# Enforced only for part of the message-type scope the point names.
+# Enforced in part: either only over part of the message-type scope the
+# point names, or only one half of a two-part rule (presence but not
+# code-table membership).
 PARTIAL = {
     'HL7au:000024.2': 'enforced on Orders/Results as part of the MSH-2 '
                       'literal pin; unenforced on Referrals, where .3/.4/.5 '
                       'do not apply and pinning the whole literal would '
                       'over-fire — needs character-position addressing (M6-B)',
+    'HL7au:00044.7.3': 'XCN-10 presence enforced; HL7 Table 0200 membership '
+                       'is not — HL7 code tables are not modelled (M6-O6)',
+    'HL7au:00044.7.4': 'XCN-13 presence enforced; HL7 Table 0203 membership '
+                       'is not — HL7 code tables are not modelled (M6-O6)',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -126,6 +134,9 @@ BASE = {
     'HL7au:00046.1.4': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.5': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00049.1': 'MSG-1 is already `MSG.requiredComponents`',
+    'HL7au:00044.3.1': 'EI-1 is already `EI.requiredComponents`; the '
+                       'uniqueness half is cross-message and out of scope',
+    'HL7au:00044.7.1': 'XCN-1 is already `XCN.requiredComponents`',
 }
 
 # Registered as permanent / documented limitations.
@@ -139,24 +150,7 @@ WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
 CANDIDATE = {
     'HL7au:000021':      'OBX-2 value-set exclusion (`not-in {TX}`)',
     'HL7au:000023':      'NTE group-scope cardinality 0 (ADR-010)',
-    'HL7au:000032':      'OBR-24 required + HL7 table 0074 value set (ORU)',
-    'HL7au:000032.2':    'OBR-24 required + HL7 table 0074 value set (REF)',
     'HL7au:00050.1.5':   'OBX-6.3 fixed value `UCUM`',
-    'HL7au:00044.3.1':   'EI-1 required component (uniqueness half is not)',
-    'HL7au:00044.7.2':   'XCN-9 required component',
-    'HL7au:00044.7.3':   'XCN-7 required + HL7 table 0200 value set',
-    'HL7au:00044.7.4':   'XCN-13 required + HL7 table 0203 value set',
-    'HL7au:00044.7.5':   'XCN-2.1 required subcomponent',
-    'HL7au:00044.10.1.1': 'ED-2 required component',
-    'HL7au:00044.10.1.2': 'ED-3 required component',
-    'HL7au:00044.10.1.3': 'ED-4 required component',
-    'HL7au:00044.10.1.4': 'ED-5 required component',
-    'HL7au:00044.11.1.1': 'RP-1 required component',
-    'HL7au:00044.11.1.2': 'RP-2 required component',
-    'HL7au:00044.11.1.3': 'RP-3 required component',
-    'HL7au:00044.11.1.4': 'RP-4 required component',
-    'HL7au:00104.7.2.1': 'PRD-7.2 user-defined table 0363 value set',
-    'HL7au:00104.7.3.1': 'PRD-7.3 HL7 table 0203 value set',
 }
 
 # B: faithful expression needs a model extension (the working notes req #3).
@@ -186,6 +180,24 @@ EXTEND = {
     'HL7au:00104.7.1.4': 'PRD-7 component-triple correspondence table',
     'HL7au:000022.3':    'batch-scope cardinality (Validator is message-scoped)',
     'HL7au:000022.1':    'batch-scope acknowledgement mode',
+    # M6-O7: ED and RP never appear as a field's declared dataType on any
+    # supported version — they reach the wire only through OBX-5, whose
+    # type is chosen at runtime by OBX-2. The composite track keys on the
+    # static grammar dataType, so these can never fire as written.
+    'HL7au:00044.10.1.1': 'OBX-2-driven dynamic datatype resolution (ED)',
+    'HL7au:00044.10.1.2': 'OBX-2-driven dynamic datatype resolution (ED)',
+    'HL7au:00044.10.1.3': 'OBX-2-driven dynamic datatype resolution (ED)',
+    'HL7au:00044.10.1.4': 'OBX-2-driven dynamic datatype resolution (ED)',
+    'HL7au:00044.11.1.1': 'OBX-2-driven dynamic datatype resolution (RP)',
+    'HL7au:00044.11.1.2': 'OBX-2-driven dynamic datatype resolution (RP)',
+    'HL7au:00044.11.1.3': 'OBX-2-driven dynamic datatype resolution (RP)',
+    'HL7au:00044.11.1.4': 'OBX-2-driven dynamic datatype resolution (RP)',
+    # M6-O6: HL7 code tables are not modelled — the schemas drop the
+    # spec's TBL# column and there is no table registry.
+    'HL7au:000032':      'HL7 Table 0074 membership; needs a code-table registry',
+    'HL7au:000032.2':    'HL7 Table 0074 membership; needs a code-table registry',
+    'HL7au:00104.7.2.1': 'User-defined Table 0363 membership; needs a code-table registry',
+    'HL7au:00104.7.3.1': 'HL7 Table 0203 membership; needs a code-table registry',
 }
 
 # C: out of scope by nature. Matched most-specific prefix first.
@@ -289,7 +301,7 @@ def main():
         'CANDIDATE': 'expressible with the DSL today — the shippable gap',
         'EXTEND': 'needs a model extension to express faithfully (req #3)',
         'SHIPPED': 'enforced by the `.auLocalisation` overlay today',
-        'PARTIAL': 'enforced for part of the point\'s message-type scope',
+        'PARTIAL': 'partly enforced — see each row\'s note for what is not',
         'BASE': 'already enforced by the base model; overlay deliberately silent',
         'REGISTERED': 'known limitation, already registered',
         'WITHDRAWN': 'removed by revision r2',

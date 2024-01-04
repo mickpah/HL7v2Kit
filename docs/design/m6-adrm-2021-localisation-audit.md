@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete; M6-D1 + M6-D3 + M6-D4 fixed; M6-A stage 1 shipped; stages 2–4 + M6-B open** (2026-09-04) |
+| Status | **Audit complete; M6-D1/D3/D4 fixed, M6-D5 blocked by ADR-014; M6-A stages 1–2 shipped; stage 3 + M6-B open** (2026-09-04) |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -47,12 +47,12 @@ that renumbers a point fails the run instead of silently dropping it.
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| SHIPPED | 40 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 1 | enforced for part of the point's message-type scope |
-| BASE | 13 | already enforced by the base model; the overlay deliberately stays silent |
+| SHIPPED | 42 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 3 | partly enforced — each row's note says what is not |
+| BASE | 15 | already enforced by the base model; the overlay deliberately stays silent |
 | REGISTERED | 4 | known limitation, already registered with a citation |
-| **CANDIDATE** | **20** | **expressible with today's DSL — the shippable gap** |
-| **EXTEND** | **24** | **needs a model extension to express faithfully (req #3)** |
+| **CANDIDATE** | **3** | **expressible with today's DSL — the shippable gap** |
+| **EXTEND** | **36** | **needs a model extension to express faithfully (req #3)** |
 | WITHDRAWN | 3 | removed by revision r2 — must never be cited |
 | RECEIVER | 74 | receiver behaviour, observed at runtime, not decidable from a message |
 | OUT | 84 | out of scope by nature: transport/PKI/directory, rendered payload, cross-message uniqueness |
@@ -61,13 +61,17 @@ that renumbers a point fails the run instead of silently dropping it.
 Counts are per table row. Three identifiers appear on two rows each, so the
 distinct-point totals are one lower where noted below.
 
-Read positively: of the **102 rows that are decidable from a single message**
+Read positively: of the **103 rows that are decidable from a single message**
 (SHIPPED + PARTIAL + BASE + REGISTERED + CANDIDATE + EXTEND), the profile
-enforces or accounts for **58** after M6-A stage 1. The other **44** are the
-remaining M6 backlog.
+enforces or accounts for **64** after M6-A stages 1–2. Only **3** of the
+remainder are shippable with today's DSL; the other **36** need one of the
+model capabilities below.
 
-*Counts as of M6-A stage 1 (2026-09-04). At the time of the audit they were
-SHIPPED 31 / BASE 12 / CANDIDATE 31 — 47 of 102.*
+*Counts as of M6-A stage 2 (2026-09-04). At audit time: SHIPPED 31 / BASE 12 /
+CANDIDATE 31 — 47 of 102. The CANDIDATE column fell from 31 to 3 not because
+those points shipped but because **stages 1–2 discovered why most of them
+could not** — see M6-O6 and M6-O7. That drop is the audit working, not
+scope being abandoned.*
 
 The 158 RECEIVER + OUT points are not a coverage gap in a message library.
 They constrain receiving-system behaviour (74), transport and PKI addressing,
@@ -170,6 +174,70 @@ and its test passed. What exposed them was diffing against the applicability
 column of the source table — the column the overlay had never been checked
 against.
 
+### M6-D5 — OBX-5's declared datatype is wrong in all six schemas ⚠️ blocked by ADR-014
+
+Every supported version's attribute table gives OBX-5 (Observation Value) the
+variable datatype — `Variable` on v2.3/v2.3.1/v2.4, `varies` on
+v2.5.1/v2.6/v2.8.2. All six committed schemas say **`ST`**.
+
+The project already has the right convention for this case: `RDT-1` stores
+`Variable` / `varies` verbatim per version, exactly as `TS`→`DTM` and
+`CE`→`CWE` are tracked. OBX-5 simply does not follow it.
+
+Correcting it is **API-affecting**: `varies` is not in codegen's
+`scalarDataTypes`, so `OBX.observationValue` would change from `String?` to
+`Field?` — a breaking change the 2.x additive-only contract (ADR-014) forbids.
+Per the working notes's stability clock this is therefore a **known defect scheduled
+for the next major boundary**, not something to quietly leave unrecorded. It
+should be listed in `Migration.md` alongside the other 3.0 candidates.
+
+### M6-O5 — no audit predicate has ever compared a field's datatype
+
+M6-D5 survived 717 schemas and every audit because
+`scripts/audit-schemas.py --depth` compares **field count only** —
+`max(index)` against the extracted table depth. Names, `OPT` and `RP` are
+checked by other predicates; `dataType` is checked by nothing. An entire
+column of every attribute table is unaudited.
+
+This is the working rules' own lesson recurring: *audit with shape predicates,
+not content lists*. The fix is a per-field `dataType` comparison in the depth
+pass. It is not run here because triaging its findings across 717 schemas is
+its own cycle — but until it runs, **no claim that the schemas faithfully
+render the spec covers the datatype column**.
+
+### M6-O6 — HL7 code tables are not modelled at all
+
+The schemas carry `index`, `swiftName`, `name`, `dataType`, `optionality`,
+`repeatability` — the extractor drops the spec's `TBL#` column, and there is no
+code-table registry anywhere in the package. Every conformance point of the
+form "must be a value from HL7 Table NNNN" is therefore unshippable as a value
+set:
+
+| Point | Table |
+|---|---|
+| `HL7au:000032` / `.2` | 0074 Diagnostic Service Section |
+| `HL7au:00044.7.3` | 0200 Name Type |
+| `HL7au:00044.7.4` / `HL7au:00104.7.3.1` | 0203 Identifier Type |
+| `HL7au:00104.7.2.1` | 0363 Assigning Authority |
+
+Four moved from CANDIDATE to EXTEND on this finding; two more ship PARTIAL
+(presence enforced, membership not). A code-table registry is the single
+highest-leverage M6-B capability — it is also the one whose absence most
+undermines requirement #2, since an integrator reading the schemas cannot see
+which table a coded field draws from.
+
+### M6-O7 — ED and RP never appear as a declared datatype
+
+`HL7au:00044.10.*` (ED) and `00044.11.*` (RP) are eight conformance points on
+two composites that **no field on any supported version declares**. They reach
+the wire only through OBX-5, whose type is chosen at runtime by OBX-2's value
+type. The composite dispatch keys on the static grammar `dataType`, so an
+override for `"ED"` or `"RP"` would be dead code that can never fire.
+
+Shipping them would have looked like coverage and enforced nothing. They move
+to EXTEND against an OBX-2-driven datatype-resolution capability — which is the
+same gap M6-D5 exposes from the other side.
+
 ### M6-O1 — the shippable tranche is unusually cheap
 
 All 31 CANDIDATE points (as first measured) fit shapes the overlay already
@@ -247,16 +315,20 @@ parser until you see which inputs actually reach it.
    each lands as its own stage with its own tests.
    - ✅ **Stage 1 — MSH envelope literals** (2026-09-04). Nine points shipped,
      one reclassified BASE, one PARTIAL.
-   - ⬅ **Stage 2 — composite required components** (13 points: XCN, ED, RP, EI).
-   - **Stage 3 — HL7-table value sets** (6 points).
-   - **Stage 4 — `000023`, the NTE group-scope cardinality** (1 point).
+   - ✅ **Stage 2 — composite required components** (2026-09-04). Only XCN was
+     shippable: `00044.7.2`/`.7.5` outright, `.7.3`/`.7.4` PARTIAL (presence,
+     not table membership), `.7.1` and `00044.3.1` reclassified BASE, and the
+     eight ED/RP points moved to EXTEND per M6-O7.
+   - ⬅ **Stage 3 — the last three CANDIDATE points**: `000021` (OBX-2 ≠ TX),
+     `00050.1.5` (OBX-6.3 = UCUM), `000023` (NTE group cardinality 0). The
+     other four of the original value-set cluster need a code-table registry.
 3. **M6-B** — pick up the five EXTEND capabilities on their merits. Each one
    that is not taken must be added to `permanent-limitations-register.md` with
    its HL7au citation, per req #3: a spec semantic the DSL cannot express is a
    documented blocker, not a silent omission.
 
 Until M6-A completes, any AU coverage claim must give the measured number —
-**58 of the 102 message-decidable ADRM-2021 conformance points** as of stage 1
+**64 of the 103 message-decidable ADRM-2021 conformance points** as of stage 2
 — never "the AU profile" unqualified.
 
 ## Caveats on the register itself

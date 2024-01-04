@@ -461,6 +461,67 @@ struct LocaleAUProfileTests {
                 "ADT out of scope; a non-English language must not fire 42; got \(report.errors.map(\.message))")
     }
 
+    // MARK: - M6-A stage 2: XCN required components
+    //
+    // HL7au:00044.7 series. Component indices from the v2.4 XCN
+    // definition (CH02 §2.9.52): 2 family name (FN), 9 assigning
+    // authority, 10 name type code, 13 identifier type code.
+    // PV1-7 (Attending Doctor) is XCN on every supported version.
+
+    private func xcnViolations(_ pv1: String) throws -> [String] {
+        let wire = "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\r" + pv1 + "\r"
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        return report.errors.compactMap { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code,
+                  rule.contains("HL7au:00044.7") else { return nil }
+            return rule
+        }
+    }
+
+    @Test("HL7au:00044.7.2/.3/.4/.5 — a bare XCN fires all four required-component rules")
+    func xcnRequiredComponentsFire() throws {
+        let rules = try xcnViolations("PV1|1|I|||||1234")
+        for point in ["00044.7.5", "00044.7.2", "00044.7.3", "00044.7.4"] {
+            #expect(rules.contains { $0.contains(point) },
+                    "XCN with only an ID number must fire \(point); got \(rules)")
+        }
+    }
+
+    @Test("HL7au:00044.7.x — a fully valued XCN fires nothing")
+    func xcnFullyValuedIsSilent() throws {
+        // 1 ID ^ 2 family ^ 3 given ^ 4 ^ 5 ^ 6 ^ 7 ^ 8 ^ 9 authority ^
+        // 10 name type ^ 11 ^ 12 ^ 13 identifier type
+        let rules = try xcnViolations(
+            "PV1|1|I|||||1234^SMITH^JOHN^^^^^^AUTH^L^^^MR")
+        #expect(rules.isEmpty, "a complete XCN must fire nothing; got \(rules)")
+    }
+
+    @Test("HL7au:00044.7.5 — a populated XCN-2 with no surname subcomponent still fires")
+    func xcnFamilyNameSurnameSubcomponent() throws {
+        // XCN-2 is FN: <surname> & <own surname prefix> & ... A value of
+        // "&VAN" populates the component but leaves the surname empty,
+        // which is exactly what .7.5 names. Without subcomponent
+        // addressing this would pass.
+        let rules = try xcnViolations(
+            "PV1|1|I|||||1234^&VAN^JOHN^^^^^^AUTH^L^^^MR")
+        #expect(rules.contains { $0.contains("00044.7.5") },
+                "XCN-2 populated but surname empty must fire .7.5; got \(rules)")
+    }
+
+    @Test("HL7au:00044.7.x — ADT is outside the series' message-type scope")
+    func xcnGatedOutsideScope() throws {
+        let wire = TestWires.adt("PV1|1|I|||||1234")
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        let rules = report.errors.compactMap { issue -> String? in
+            guard case .profileConstraintViolation(let rule) = issue.code,
+                  rule.contains("HL7au:00044.7") else { return nil }
+            return rule
+        }
+        #expect(rules.isEmpty, "ADT is outside the XCN series' scope; got \(rules)")
+    }
+
     // MARK: - M6-D4: composite overrides are message-type gated
     //
     // The composite-track twin of M6-D3. Every HL7au:00044.* datatype
