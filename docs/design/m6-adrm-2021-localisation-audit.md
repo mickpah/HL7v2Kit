@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete; M6-D1 + M6-D3 fixed; M6-A stage 1 shipped; stages 2–4 + M6-B open** (2026-09-04) |
+| Status | **Audit complete; M6-D1 + M6-D3 + M6-D4 fixed; M6-A stage 1 shipped; stages 2–4 + M6-B open** (2026-09-04) |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -144,6 +144,32 @@ points (`00047.1`, `00047.2`, `00049.1`–`.3`, `00048.3.1`, `000024.1`–`.5`) 
 scoped to Orders/Results/Referrals and need `.required` narrowings. Without
 `usageCondition` they could only have shipped with the same defect.
 
+### M6-D4 — composite overrides fired outside their message-type scope ✅ FIXED 2026-09-04
+
+The composite-track twin of M6-D3, found while starting M6-A stage 2. Every
+`HL7au:00044.*` datatype point is scoped to *"Orders, Results, Referrals"* (or
+*"Results, Referrals"* for ED and RP), but `CompositeOverride` had no gate, so
+the CX / CE / CNE / CWE narrowings applied to every message. An `ADT^A01`
+carrying a two-component `CX` in PID-3 failed AU validation citing
+`HL7au:00044.1.2`, which does not reach ADT.
+
+**Fixed 2026-09-04**: `CompositeOverride` gains `condition`, the same
+message-context predicate as `FieldOverride.condition`, gating all four rule
+tracks; `valueConditionals` may still narrow further with their own condition,
+and both must hold. All four AU composite overrides carry
+`messageCode in (ORM, ORU, REF)`.
+
+Six existing tests had encoded this over-fire too — the CX fixtures ran on ADT
+wires and the CWE fixtures on ACK wires, neither of which the relevant points
+reach. Their wires moved to ORU; two new tests pin that ADT fires nothing and
+REF still does.
+
+**Both M6-D3 and M6-D4 are the same mistake on different dispatch tracks**, and
+neither was visible from the code alone: each rule looked correct in isolation
+and its test passed. What exposed them was diffing against the applicability
+column of the source table — the column the overlay had never been checked
+against.
+
 ### M6-O1 — the shippable tranche is unusually cheap
 
 All 31 CANDIDATE points (as first measured) fit shapes the overlay already
@@ -215,6 +241,8 @@ parser until you see which inputs actually reach it.
 1. ~~**M6-D1** — the citation fix.~~ ✅ done 2026-09-04.
    ~~**M6-D3** — gate `profileUsage` on message type.~~ ✅ done 2026-09-04;
    prerequisite for step 2.
+   ~~**M6-D4** — gate composite overrides on message type.~~ ✅ done
+   2026-09-04; prerequisite for stage 2.
 2. **M6-A** — the CANDIDATE points, additive under ADR-014, split by cluster so
    each lands as its own stage with its own tests.
    - ✅ **Stage 1 — MSH envelope literals** (2026-09-04). Nine points shipped,

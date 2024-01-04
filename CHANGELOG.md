@@ -37,6 +37,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   encoding is already a `ParseError` before validation.
 
 ### Fixed
+- **M6-D4 — AU composite overrides fired outside their message-type scope.**
+  The composite-track twin of M6-D3. Every `HL7au:00044.*` datatype point is
+  scoped to Orders/Results/Referrals (Results/Referrals for ED and RP), but
+  `CompositeOverride` had no gate, so an `ADT^A01` carrying a two-component
+  `CX` in PID-3 failed AU validation citing `HL7au:00044.1.2`.
+  `CompositeOverride` gains **`condition`**, gating all four rule tracks; the
+  CX / CE / CNE / CWE overrides now carry `messageCode in (ORM, ORU, REF)`.
+  Six existing tests had encoded the over-fire on ADT and ACK wires; their
+  wires moved into scope.
 - **M6-D3 — AU profile usage narrowings fired outside their message-type scope.**
   `HL7au:000041` (MSH-17 = AUS) and `HL7au:000042` (MSH-19 = en^English^ISO639)
   are scoped by ADRM-2021 to Orders, Results, Referrals, ACK and RRI, but

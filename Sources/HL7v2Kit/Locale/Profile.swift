@@ -94,6 +94,22 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// The HL7 dataType code this override applies to (e.g. `"CE"`).
     let dataType: String
 
+    /// Message-context predicate gating every rule in this override.
+    /// When `nil` (default) the override applies to every message the
+    /// locale is used on.
+    ///
+    /// Same grammar and fail-safe semantics as
+    /// `FieldOverride.condition`. `valueConditionals` may narrow further
+    /// with their own `condition`; both must hold.
+    ///
+    /// Added by M6-D4 (2026-09-04), the composite-track twin of M6-D3:
+    /// every HL7au:00044.* datatype point is scoped to a named set of
+    /// message types, but the overrides applied to all of them, so an
+    /// ADT with a two-component CX failed AU validation citing a point
+    /// that does not reach ADT. See
+    /// `docs/design/m6-adrm-2021-localisation-audit.md`.
+    let condition: String?
+
     /// Profile-required components that NARROW the base spec. When a
     /// field of this dataType is populated, each listed component must
     /// be populated; otherwise `.profileConstraintViolation` fires.
@@ -122,12 +138,14 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
 
     init(
         dataType: String,
+        condition: String? = nil,
         requiredComponents: [ComponentRequirement] = [],
         pairRules: [PairConditional] = [],
         componentInequalities: [ComponentInequality] = [],
         valueConditionals: [ComponentValueConditional] = []
     ) {
         self.dataType = dataType
+        self.condition = condition
         self.requiredComponents = requiredComponents
         self.pairRules = pairRules
         self.componentInequalities = componentInequalities

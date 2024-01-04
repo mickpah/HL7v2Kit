@@ -388,8 +388,10 @@ struct LocaleAUProfileTests {
 
     // HL7au:00044.6.3 — CWE <text> (CWE-2) must be valued. ERR-3 is a
     // CWE field in v2.5.1; populate CWE-1 + CWE-3 but leave CWE-2 empty.
+    // ORU, not ACK: HL7au:00044.6 is scoped to Orders, Results and
+    // Referrals (M6-D4). ERR carries the CWE field under test.
     private let cweTextEmpty = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ACK|MSG|P|2.5.1\r\
+    MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r\
     MSA|AE|MSG\r\
     ERR||PID^1^3|207^^HL70357|E\r
     """
@@ -457,6 +459,38 @@ struct LocaleAUProfileTests {
                 "ADT out of scope; a non-AUS country must not fire 41; got \(report.errors.map(\.message))")
         #expect(!hasViolation(report, citing: "HL7au:000042"),
                 "ADT out of scope; a non-English language must not fire 42; got \(report.errors.map(\.message))")
+    }
+
+    // MARK: - M6-D4: composite overrides are message-type gated
+    //
+    // The composite-track twin of M6-D3. Every HL7au:00044.* datatype
+    // point is scoped to a named set of message types, but the CX / CE /
+    // CNE / CWE overrides applied to every message, so an ADT with a
+    // two-component CX failed AU validation citing a point that does not
+    // reach ADT. The positive halves are pinned by the CX / CE / CNE /
+    // CWE tests above, which now run on in-scope wires.
+
+    @Test("M6-D4 — ADT is outside HL7au:00044.1's scope, so CX narrowings stay silent")
+    func compositeOverridesGatedOutsideScope() throws {
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(TestWires.adt("PID|1||999999")))
+        let cx = report.errors.filter {
+            if case .profileConstraintViolation(let rule) = $0.code {
+                return rule.contains("HL7au:00044.1")
+            }
+            return false
+        }
+        #expect(cx.isEmpty,
+                "ADT is not Orders/Results/Referrals; CX rules must not fire; got \(cx.map(\.message))")
+    }
+
+    @Test("M6-D4 — the gate is per-message-type, not per-locale: REF still fires CX narrowings")
+    func compositeOverridesFireOnReferrals() throws {
+        let wire = "MSH|^~\\&|GP|CLINIC|SPEC|HOSP|20240101||REF^I12|MSG|P|2.4\rPID|1||999999\r"
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        #expect(hasViolation(report, citing: "HL7au:00044.1.2"),
+                "REF is in scope for the CX series; got \(report.errors.map(\.message))")
     }
 
     // MARK: - M6-A stage 1: MSH envelope literals
@@ -622,7 +656,7 @@ struct LocaleAUProfileTests {
                 "CE alt pair must cite 44.4.5; got \(ceReport.errors.map(\.message))")
 
         let cweWire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ACK|MSG|P|2.5.1\r\
+        MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG|P|2.5.1\r\
         MSA|AE|MSG\r\
         ERR||PID^1^3|207^Text^HL70357^ALT207|E\r
         """
@@ -636,7 +670,9 @@ struct LocaleAUProfileTests {
 
     // PID-3 with only CX-1 populated. AU rules require CX-4 (Assigning
     // Authority) and CX-5 (Identifier Type Code) to also be valued.
-    private let pidCxMinimal = TestWires.adt("PID|1||999999")
+    // ORU, not ADT: HL7au:00044.1 is scoped to Orders, Results and
+    // Referrals, so an ADT wire exercises nothing since M6-D4.
+    private let pidCxMinimal = TestWires.oru("PID|1||999999")
 
     @Test("CX rule HL7au:00044.1.2 — PID-3 with CX-4 empty fires")
     func cxAssigningAuthorityMissingFires() throws {
@@ -672,7 +708,7 @@ struct LocaleAUProfileTests {
 
     // CX rules apply to EVERY populated CX field, not just PID-3. PID-2
     // is also CX (Patient ID deprecated). When populated, AU rules fire.
-    private let pidCxOnDeprecatedField = TestWires.adt("PID|1|DEPRECATED_ID|999999^^^HOSP^MR")
+    private let pidCxOnDeprecatedField = TestWires.oru("PID|1|DEPRECATED_ID|999999^^^HOSP^MR")
 
     @Test("CX rules fire on every populated CX field (dataType dispatch)")
     func cxRuleFiresOnEveryCxFieldRegardlessOfFieldIndex() throws {
@@ -1356,7 +1392,7 @@ struct LocaleAUProfileTests {
     /// re-transcribed here.
     private static let exactMessageRows: [(site: String, wire: String, cite: String, segmentID: String, fieldIndex: Int, componentIndex: Int?, messagePrefix: String)] = [
         (site: "composite requiredComponents (Validator track 1)",
-         wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\rPID|1||999999\r",
+         wire: "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\rPID|1||999999\r",
          cite: "HL7au:00044.1.2", segmentID: "PID", fieldIndex: 3, componentIndex: 4,
          messagePrefix: "AU profile rule violated at PID[1]-3.4: CX-4 must be populated when CX field is populated "),
         (site: "composite pairRules (track 2)",

@@ -487,6 +487,17 @@ public struct Validator: Sendable {
         guard let composite = profile.compositeOverrides.first(where: {
             $0.dataType == fieldGrammar.dataType
         }) else { return }
+        // M6-D4: the whole override is scoped to the message types its
+        // conformance points name. No gate means "every message".
+        if let gate = composite.condition, !gate.isEmpty {
+            guard conditionTriggers(
+                gate,
+                in: segment,
+                segmentIndex: segmentArrayIndex,
+                message: message,
+                currentSegmentID: segmentID
+            ) else { return }
+        }
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
             // Track 1: required-components (v0.5-S5-B-3).

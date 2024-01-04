@@ -455,6 +455,9 @@ extension Profile {
             // v0.5-S5-B-3.
             CompositeOverride(
                 dataType: "CX",
+                // M6-D4: HL7au:00044.1 series is scoped to
+                // "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
                     ComponentRequirement(
                         component: 4,
@@ -480,6 +483,9 @@ extension Profile {
             // match — requires a terminology service, not wire-checkable).
             CompositeOverride(
                 dataType: "CE",
+                // M6-D4: HL7au:00044.4 series is scoped to
+                // "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4"),
                 componentInequalities: [
@@ -504,6 +510,9 @@ extension Profile {
             // in ADRM r2 — not shipped.
             CompositeOverride(
                 dataType: "CNE",
+                // M6-D4: HL7au:00044.5 series is scoped to
+                // "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
                     ComponentRequirement(
                         component: 2,
@@ -517,6 +526,9 @@ extension Profile {
             // (44.6.7) marked "Removed" in ADRM r2 — not shipped.
             CompositeOverride(
                 dataType: "CWE",
+                // M6-D4: HL7au:00044.6 series is scoped to
+                // "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
                     ComponentRequirement(
                         component: 2,
