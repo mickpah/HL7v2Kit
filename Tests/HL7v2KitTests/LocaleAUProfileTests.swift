@@ -459,6 +459,135 @@ struct LocaleAUProfileTests {
                 "ADT out of scope; a non-English language must not fire 42; got \(report.errors.map(\.message))")
     }
 
+    // MARK: - M6-A stage 1: MSH envelope literals
+    //
+    // Ten Appendix 5 points on the message header. Each is gated on the
+    // message types the table names, so every rule gets a positive case
+    // inside its scope and a negative case outside it.
+
+    /// Fully AU-conformant ORU header: separators, MSH-9 all three
+    /// components, MSH-12 per HL7au:000040.1/.2/.3, AL/AL, AUS,
+    /// en^English^ISO639.
+    private let mshConformantORU =
+        "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101120000||ORU^R01^ORU_R01|MSG1|P|"
+        + "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|AL|AUS||en^English^ISO639\r"
+
+    /// The HL7au citations of every MSH-located profile violation on a wire.
+    private func mshViolations(_ wire: String) throws -> [String] {
+        let report = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire))
+        return report.errors.compactMap { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code,
+                  issue.location.segmentID == "MSH" else { return nil }
+            return rule
+        }
+    }
+
+    @Test("M6-A — a fully AU-conformant ORU header fires no MSH profile violations")
+    func conformantOruHeaderIsSilent() throws {
+        let rules = try mshViolations(mshConformantORU)
+        #expect(rules.isEmpty, "conformant header must fire nothing; got \(rules)")
+    }
+
+    @Test("HL7au:000024.1 — a non-'|' field separator fires on ORU, not on ADT")
+    func fieldSeparatorNarrowing() throws {
+        let oruRules = try mshViolations(
+            "MSH!^~\\&!LAB!FAC!HOSP!FAC!20240101!!ORU^R01^ORU_R01!MSG!P!2.4!!!AL!AL!AUS!!en^English^ISO639\r")
+        #expect(oruRules.contains { $0.contains("HL7au:000024.1") },
+                "ORU with '!' separator must fire 24.1; got \(oruRules)")
+        let adtRules = try mshViolations(
+            "MSH!^~\\&!HIS!FAC!HOSP!FAC!20240101!!ADT^A01!MSG!P!2.4\r")
+        #expect(!adtRules.contains { $0.contains("HL7au:000024.1") },
+                "ADT is outside 24.1's scope; got \(adtRules)")
+    }
+
+    @Test("HL7au:000024.2/.3/.4/.5 — non-standard encoding characters fire on ORU")
+    func encodingCharactersNarrowing() throws {
+        let rules = try mshViolations(
+            "MSH|^~\\#|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4|||AL|AL|AUS||en^English^ISO639\r")
+        #expect(rules.contains { $0.contains("HL7au:000024.2") },
+                "ORU with '#' sub-component separator must fire; got \(rules)")
+    }
+
+    @Test("HL7au:000024.3/.4/.5 — REF is outside their scope, so MSH-2 is unpinned there")
+    func encodingCharactersUnpinnedOnReferrals() throws {
+        // Documented gap: .2 (component separator) DOES apply to
+        // Referrals, but pinning the whole MSH-2 literal there would
+        // enforce .3/.4/.5 where the spec does not. See M6-B.
+        let rules = try mshViolations(
+            "MSH|^~\\#|GP|CLINIC|SPEC|HOSP|20240101||REF^I12|MSG|P|2.4|||AL|AL|AUS||en^English^ISO639\r")
+        #expect(!rules.contains { $0.contains("HL7au:000024") },
+                "REF is outside .3/.4/.5's scope; got \(rules)")
+    }
+
+    @Test("HL7au:00049.2/.3 — MSH-9 without trigger event or message structure fires on ORU")
+    func messageTypeComponentsRequired() throws {
+        let codeOnly = try mshViolations(
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU|MSG|P|2.4|||AL|AL|AUS||en^English^ISO639\r")
+        #expect(codeOnly.contains { $0.contains("HL7au:00049.2/.3") },
+                "MSH-9 with only a message code must fire 49.2/.3; got \(codeOnly)")
+        let noStructure = try mshViolations(
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01|MSG|P|2.4|||AL|AL|AUS||en^English^ISO639\r")
+        #expect(noStructure.contains { $0.contains("HL7au:00049.2/.3") },
+                "MSH-9 without message structure must still fire; got \(noStructure)")
+    }
+
+    @Test("HL7au:00049.2/.3 — ADT keeps base HL7 optionality for MSH-9.3")
+    func messageTypeComponentsGatedOutsideScope() throws {
+        let rules = try mshViolations("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101||ADT^A01|MSG|P|2.4\r")
+        #expect(!rules.contains { $0.contains("HL7au:00049") },
+                "ADT is outside 49's scope; got \(rules)")
+    }
+
+    @Test("HL7au:00047.1 / .2 — MSH-15 and MSH-16 must both be valued AL")
+    func acknowledgementModesNarrowed() throws {
+        // Absent: the profileUsage half.
+        let absent = try mshViolations(
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4|||||AUS||en^English^ISO639\r")
+        #expect(absent.contains { $0.contains("HL7au:00047.1") },
+                "missing MSH-15 must fire 47.1; got \(absent)")
+        #expect(absent.contains { $0.contains("HL7au:00047.2") },
+                "missing MSH-16 must fire 47.2; got \(absent)")
+        // Populated but wrong: the value-set half.
+        let wrong = try mshViolations(
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4|||NE|ER|AUS||en^English^ISO639\r")
+        #expect(wrong.contains { $0.contains("HL7au:00047.1") },
+                "MSH-15 = NE must fire 47.1; got \(wrong)")
+        #expect(wrong.contains { $0.contains("HL7au:00047.2") },
+                "MSH-16 = ER must fire 47.2; got \(wrong)")
+    }
+
+    @Test("HL7au:00047.1 / .2 — ADT keeps base HL7 optionality for MSH-15/16")
+    func acknowledgementModesGatedOutsideScope() throws {
+        let rules = try mshViolations(
+            "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240101||ADT^A01^ADT_A01|MSG|P|2.4|||NE|NE\r")
+        #expect(!rules.contains { $0.contains("HL7au:00047") },
+                "ADT is outside 47's scope; got \(rules)")
+    }
+
+    @Test("HL7au:00048.3.1 — MSH-18 accepts the AU character-set values and rejects others")
+    func characterSetValueSet() throws {
+        for accepted in ["ASCII", "UNICODE UTF-8", "8859/1"] {
+            let rules = try mshViolations(
+                "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|"
+                + "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|AL|AUS|\(accepted)|en^English^ISO639\r")
+            #expect(rules.isEmpty, "MSH-18 = \(accepted) is permitted; got \(rules)")
+        }
+        // "UTF-8" and "US-ASCII" are aliases `CharacterEncoding` accepts,
+        // so they parse — but HL7au:00048.3.1 lists the four literals
+        // exactly, and an alias is not one of them. A genuinely unknown
+        // encoding never reaches the Validator: the Parser rejects it
+        // with `ParseError.unsupportedCharacterEncoding` first. This
+        // rule's whole value is over that alias gap.
+        for alias in ["UTF-8", "US-ASCII", "ISO-8859-1"] {
+            let rejected = try mshViolations(
+                "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|"
+                + "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|AL|AUS|\(alias)|en^English^ISO639\r")
+            #expect(rejected.contains { $0.contains("HL7au:00048.3.1") },
+                    "\(alias) parses but is not in the AU value set; got \(rejected)")
+        }
+    }
+
     // MARK: - M6-D1: alternate-identifier pair-rule citations
     //
     // ADRM-2021 Appendix 5 does NOT number the alternate-identifier pair

@@ -94,6 +94,18 @@ SHIPPED = {
     'HL7au:00044.5.4', 'HL7au:00044.5.5',
     'HL7au:00044.6.1', 'HL7au:00044.6.2', 'HL7au:00044.6.3',
     'HL7au:00044.6.4', 'HL7au:00044.6.5',
+    # M6-A stage 1 — MSH envelope literals (2026-09-04).
+    'HL7au:000024.1', 'HL7au:000024.3', 'HL7au:000024.4', 'HL7au:000024.5',
+    'HL7au:00047.1', 'HL7au:00047.2',
+    'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
+}
+
+# Enforced only for part of the message-type scope the point names.
+PARTIAL = {
+    'HL7au:000024.2': 'enforced on Orders/Results as part of the MSH-2 '
+                      'literal pin; unenforced on Referrals, where .3/.4/.5 '
+                      'do not apply and pinning the whole literal would '
+                      'over-fire — needs character-position addressing (M6-B)',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -113,6 +125,7 @@ BASE = {
     'HL7au:00046.1.3': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.4': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.5': 'escaping is `Serializer` behaviour, already correct',
+    'HL7au:00049.1': 'MSG-1 is already `MSG.requiredComponents`',
 }
 
 # Registered as permanent / documented limitations.
@@ -126,19 +139,8 @@ WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
 CANDIDATE = {
     'HL7au:000021':      'OBX-2 value-set exclusion (`not-in {TX}`)',
     'HL7au:000023':      'NTE group-scope cardinality 0 (ADR-010)',
-    'HL7au:000024.1':    'MSH-1 / FHS-1 / BHS-1 fixed value `|`',
-    'HL7au:000024.2':    'MSH-2.1 fixed value `^`',
-    'HL7au:000024.3':    'MSH-2.4 fixed value `&`',
-    'HL7au:000024.4':    'MSH-2.2 fixed value `~`',
-    'HL7au:000024.5':    'MSH-2.3 fixed value `\\`',
     'HL7au:000032':      'OBR-24 required + HL7 table 0074 value set (ORU)',
     'HL7au:000032.2':    'OBR-24 required + HL7 table 0074 value set (REF)',
-    'HL7au:00047.1':     'MSH-15 fixed value `AL`',
-    'HL7au:00047.2':     'MSH-16 fixed value `AL`',
-    'HL7au:00048.3.1':   'MSH-18 value set {"", ASCII, UNICODE UTF-8, 8859/1}',
-    'HL7au:00049.1':     'MSH-9.1 must be populated',
-    'HL7au:00049.2':     'MSH-9.2 must be populated',
-    'HL7au:00049.3':     'MSH-9.3 must be populated',
     'HL7au:00050.1.5':   'OBX-6.3 fixed value `UCUM`',
     'HL7au:00044.3.1':   'EI-1 required component (uniqueness half is not)',
     'HL7au:00044.7.2':   'XCN-9 required component',
@@ -230,6 +232,8 @@ def classify(row):
     if row['grouper'] or not row['text']:
         return ('GROUPER', 'heading / grouper — not a conformance point'
                 if row['grouper'] else 'empty row')
+    if i in PARTIAL:
+        return ('PARTIAL', PARTIAL[i])
     if i in SHIPPED:
         return ('SHIPPED', '')
     if i in BASE:
@@ -248,7 +252,7 @@ def classify(row):
     return ('UNTRIAGED', '')
 
 
-ORDER = ['CANDIDATE', 'EXTEND', 'SHIPPED', 'BASE', 'REGISTERED',
+ORDER = ['CANDIDATE', 'EXTEND', 'SHIPPED', 'PARTIAL', 'BASE', 'REGISTERED',
          'WITHDRAWN', 'RECEIVER', 'OUT', 'GROUPER', 'UNTRIAGED']
 
 
@@ -259,8 +263,8 @@ def main():
     # self-check: every curated id must exist in the extracted table, and
     # nothing may fall through unclassified.
     seen = {r['id'] for r in rows}
-    stray = sorted((SHIPPED | set(BASE) | REGISTERED | WITHDRAWN
-                    | set(CANDIDATE) | set(EXTEND)) - seen)
+    stray = sorted((SHIPPED | set(PARTIAL) | set(BASE) | REGISTERED
+                    | WITHDRAWN | set(CANDIDATE) | set(EXTEND)) - seen)
     assert not stray, f'curated ids absent from Appendix 5: {stray}'
     untriaged = sorted(r['id'] for r in rows if r['verdict'] == 'UNTRIAGED')
     assert not untriaged, f'untriaged conformance points: {untriaged}'
@@ -285,6 +289,7 @@ def main():
         'CANDIDATE': 'expressible with the DSL today — the shippable gap',
         'EXTEND': 'needs a model extension to express faithfully (req #3)',
         'SHIPPED': 'enforced by the `.auLocalisation` overlay today',
+        'PARTIAL': 'enforced for part of the point\'s message-type scope',
         'BASE': 'already enforced by the base model; overlay deliberately silent',
         'REGISTERED': 'known limitation, already registered',
         'WITHDRAWN': 'removed by revision r2',

@@ -13,10 +13,11 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| CANDIDATE | 31 | expressible with the DSL today — the shippable gap |
+| CANDIDATE | 20 | expressible with the DSL today — the shippable gap |
 | EXTEND | 24 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 31 | enforced by the `.auLocalisation` overlay today |
-| BASE | 12 | already enforced by the base model; overlay deliberately silent |
+| SHIPPED | 40 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 1 | enforced for part of the point's message-type scope |
+| BASE | 13 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 4 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
@@ -24,17 +25,12 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## CANDIDATE (31)
+## CANDIDATE (20)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 value-set exclusion (`not-in {TX}`) |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. | NTE group-scope cardinality 0 (ADR-010) |
-| `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' | MSH-1 / FHS-1 / BHS-1 fixed value `|` |
-| `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | MSH-2.1 fixed value `^` |
-| `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' | MSH-2.4 fixed value `&` |
-| `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' | MSH-2.2 fixed value `~` |
-| `HL7au:000024.5` |  | Senders General Conforma | Orders, Results | FHS, BHS, and MSH segments must specify the escape separator character as '\' | MSH-2.3 fixed value `\` |
 | `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. | OBR-24 required + HL7 table 0074 value set (ORU) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 required + HL7 table 0074 value set (REF) |
 | `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | EI-1 required component (uniqueness half is not) |
@@ -50,12 +46,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.11.1.2` |  | Senders | Results, Referrals | RP <application ID (HD)> component must be valued | RP-2 required component |
 | `HL7au:00044.11.1.3` |  | Senders | Results, Referrals | RP <type of data (ID)> component must be valued | RP-3 required component |
 | `HL7au:00044.11.1.4` |  | Senders | Results, Referrals | RP <subtype (ID)> component must be valued | RP-4 required component |
-| `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL | MSH-15 fixed value `AL` |
-| `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL | MSH-16 fixed value `AL` |
-| `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. | MSH-18 value set {"", ASCII, UNICODE UTF-8, 8859/1} |
-| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. | MSH-9.1 must be populated |
-| `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. | MSH-9.2 must be populated |
-| `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. | MSH-9.3 must be populated |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | OBX-6.3 fixed value `UCUM` |
 | `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | PRD-7.2 user-defined table 0363 value set |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). | PRD-7.3 HL7 table 0203 value set |
@@ -89,7 +79,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. | discriminated group cardinality (exactly one PRD-1=IR) |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
 
-## SHIPPED (31)
+## SHIPPED (40)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -100,6 +90,10 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000007` | r2 | Senders | Orders, Results, Referrals | If ORC-4 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-4 (Placer Group Number) for a request identifier across different organisations, the Entity identifier (first component) in additi... |  |
 | `HL7au:000008` |  | Senders | Results, Referrals | The message must contain at least one OBX display segment per OBR/OBX group. |  |
 | `HL7au:000008.1` | r2 | Senders | Results, Referrals | Display segments must use the appropriate valid values within the AUSPDI coding system in OBX-3 for the content that is represented in it: • OBX\|\|ED\|HTML^Display format in HTML^AUSPDI\|\|^text^HTML^A^<?xml version=... |  |
+| `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' |  |
+| `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' |  |
+| `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' |  |
+| `HL7au:000024.5` |  | Senders General Conforma | Orders, Results | FHS, BHS, and MSH segments must specify the escape separator character as '\' |  |
 | `HL7au:000040.1` |  | Senders | Orders, Results, Referrals, ACK, R | Senders conforming to this specification must specify "2.4" as the value of version ID (ID) component of MSH-12 Version ID (VID) |  |
 | `HL7au:000040.2` | r2 | Senders | Orders, Results, Referrals, ACK, R | MSH-12 Version ID <internationalization code (CE)> component must be valued "AUS&Australia&ISO3166_1" |  |
 | `HL7au:000040.3` |  | Senders | Orders, Results | MSH-12 Version ID <internal version ID (CE)> component must be valued as "HL7AU- OO-201701&&L". (Note that the number scheme used in this identifier is HL7 date format: YYYYMM) |  |
@@ -124,8 +118,19 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.6.3` |  | Senders | Orders, Results, Referrals | <text (ST)> component must be valued and this must be what is intended for display to the user. |  |
 | `HL7au:00044.6.4` |  | Senders | Orders, Results, Referrals | When an <alternate identifier (ST)> component is specified, the <name of alternate coding system> must also be specified. |  |
 | `HL7au:00044.6.5` |  | Senders | Orders, Results, Referrals | If no <alternate identifier (ST)> component is specified then no <name of alternate coding system> must be specified |  |
+| `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
+| `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
+| `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. |  |
+| `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
+| `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 
-## BASE (12)
+## PARTIAL (1)
+
+| HL7au | Rev | Applies to | Message types | Conformance point | Note |
+|---|---|---|---|---|---|
+| `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
+
+## BASE (13)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -138,6 +143,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00046.1.4` |  | Senders | Orders, Results, Referrals | Senders must escape '~' characters as '\R\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.5` | r2 | Senders | Orders, Results, Referrals | Senders must escape '\' characters as '\E\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
+| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. | MSG-1 is already `MSG.requiredComponents` |
 | `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 | `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |

@@ -242,10 +242,16 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// ADR-007 for the extended-usage semantics.
     let profileUsage: ProfileUsage?
 
-    /// Message-context predicate gating `profileUsage`. When set, the
-    /// usage narrowing applies only to messages the predicate matches;
-    /// when `nil` (default) it applies to every message the locale is
-    /// used on.
+    /// Message-context predicate gating this override's `profileUsage`
+    /// and `requiredComponents` narrowings. When set, they apply only to
+    /// messages the predicate matches; when `nil` (default) they apply
+    /// to every message the locale is used on.
+    ///
+    /// `componentValueSets` are NOT gated by this — each carries its own
+    /// `condition`, because a single field's value sets can be scoped to
+    /// different message-type sets (ADRM-2021 scopes MSH-2's component
+    /// separator to Orders/Results/Referrals but its sub-component,
+    /// repeat and escape characters to Orders/Results only).
     ///
     /// Uses the same grammar as `ComponentValueSet.condition` (ADR-009),
     /// e.g. `"messageCode in (ORM, ORU, REF, RRI, ACK)"`, and the same
@@ -257,7 +263,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// gate here, `profileUsage = .required` fired on message types the
     /// spec never addressed — see
     /// `docs/design/m6-adrm-2021-localisation-audit.md`.
-    let usageCondition: String?
+    let condition: String?
 
     /// Profile-defined required-component narrowings for composite
     /// fields. Empty means "use the base spec's required components
@@ -283,7 +289,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         segmentID: String,
         fieldIndex: Int,
         profileUsage: ProfileUsage? = nil,
-        usageCondition: String? = nil,
+        condition: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
         specCitation: String? = nil
@@ -291,7 +297,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.segmentID = segmentID
         self.fieldIndex = fieldIndex
         self.profileUsage = profileUsage
-        self.usageCondition = usageCondition
+        self.condition = condition
         self.requiredComponents = requiredComponents
         self.componentValueSets = componentValueSets
         self.specCitation = specCitation

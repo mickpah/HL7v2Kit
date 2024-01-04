@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete (2026-09-04); M6-D1 + M6-D3 fixed; M6-A / M6-B open** |
+| Status | **Audit complete; M6-D1 + M6-D3 fixed; M6-A stage 1 shipped; stages 2–4 + M6-B open** (2026-09-04) |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -47,10 +47,11 @@ that renumbers a point fails the run instead of silently dropping it.
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| SHIPPED | 31 | enforced by the `.auLocalisation` overlay today |
-| BASE | 12 | already enforced by the base model; the overlay deliberately stays silent |
+| SHIPPED | 40 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 1 | enforced for part of the point's message-type scope |
+| BASE | 13 | already enforced by the base model; the overlay deliberately stays silent |
 | REGISTERED | 4 | known limitation, already registered with a citation |
-| **CANDIDATE** | **31** | **expressible with today's DSL — the shippable gap** |
+| **CANDIDATE** | **20** | **expressible with today's DSL — the shippable gap** |
 | **EXTEND** | **24** | **needs a model extension to express faithfully (req #3)** |
 | WITHDRAWN | 3 | removed by revision r2 — must never be cited |
 | RECEIVER | 74 | receiver behaviour, observed at runtime, not decidable from a message |
@@ -61,8 +62,12 @@ Counts are per table row. Three identifiers appear on two rows each, so the
 distinct-point totals are one lower where noted below.
 
 Read positively: of the **102 rows that are decidable from a single message**
-(SHIPPED + BASE + REGISTERED + CANDIDATE + EXTEND), the profile currently
-enforces or accounts for **47**. The other **55** are the M6 backlog.
+(SHIPPED + PARTIAL + BASE + REGISTERED + CANDIDATE + EXTEND), the profile
+enforces or accounts for **58** after M6-A stage 1. The other **44** are the
+remaining M6 backlog.
+
+*Counts as of M6-A stage 1 (2026-09-04). At the time of the audit they were
+SHIPPED 31 / BASE 12 / CANDIDATE 31 — 47 of 102.*
 
 The 158 RECEIVER + OUT points are not a coverage gap in a message library.
 They constrain receiving-system behaviour (74), transport and PKI addressing,
@@ -141,14 +146,18 @@ scoped to Orders/Results/Referrals and need `.required` narrowings. Without
 
 ### M6-O1 — the shippable tranche is unusually cheap
 
-All 31 CANDIDATE points fit shapes the overlay already expresses — 22 are
-fixed-value or required-component assertions, 8 are value sets against HL7
-tables, one is a group-scope cardinality. The four clusters below partition
-the 31 exactly:
+All 31 CANDIDATE points (as first measured) fit shapes the overlay already
+expresses — 22 are fixed-value or required-component assertions, 8 are value
+sets against HL7 tables, one is a group-scope cardinality. The four clusters
+below partition the 31 exactly; **cluster 1 shipped on 2026-09-04**, leaving
+20 CANDIDATE.
 
-- **MSH envelope literals** (`000024.1`–`.5`, `00047.1`, `00047.2`, `00049.1`–`.3`,
-  `00048.3.1`) — encoding characters, `AL` acknowledgement modes, MSH-9 and
-  MSH-18 value sets. Eleven points, no new machinery.
+- ✅ **MSH envelope literals** (`000024.1`–`.5`, `00047.1`, `00047.2`,
+  `00049.1`–`.3`, `00048.3.1`) — encoding characters, `AL` acknowledgement
+  modes, MSH-9 and MSH-18 value sets. Eleven points, no new machinery.
+  **Shipped 2026-09-04**: nine enforced outright, `00049.1` reclassified BASE
+  (MSG-1 is already a base required component), `000024.2` PARTIAL. Two
+  findings came out of shipping it — see M6-O3 and M6-O4.
 - **Composite required components** (`00044.7.2`–`.7.5` XCN, `00044.10.1.1`–`.1.4`
   ED, `00044.11.1.1`–`.1.4` RP, `00044.3.1` EI-1) — thirteen points, all
   `RequiredComponentSet`.
@@ -178,21 +187,49 @@ Four stragglers: `00044.8.1` (TS timezone — datatype-level validation),
 same-concept assertion, which stays a permanent limitation), and `000022.1` /
 `000022.3` (batch-scope rules; the Validator is message-scoped).
 
+### M6-O3 — `000024.2` cannot be fully expressed, and the reason is structural
+
+MSH-2 parses as a single scalar literal (`"^~\&"`) with no internal split, so
+the four encoding-character points collapse to one value-set pin. That works
+for Orders and Results, where all four apply. It does not work for Referrals:
+Appendix 5 scopes `.2` (component separator) to Orders, Results **and**
+Referrals, but `.3`/`.4`/`.5` to Orders and Results only. Pinning the whole
+literal on REF would enforce three points the spec does not apply there.
+
+The rule therefore gates on the `(ORM, ORU)` intersection and `000024.2` is
+recorded PARTIAL. Expressing it fully needs character-position addressing
+inside a component — folded into M6-B's value-correspondence capability.
+
+### M6-O4 — `00048.3.1`'s value lies entirely in the alias gap
+
+`CharacterEncoding` already rejects an unknown MSH-18 with
+`ParseError.unsupportedCharacterEncoding` before validation runs, so the AU
+value set never sees a genuinely bad encoding. What it does catch is aliases
+the parser accepts but the conformance point does not list: `UTF-8`,
+`US-ASCII`, `ISO-8859-1`. `00048.3.1` names four literals exactly, and an alias
+is not one of them. Worth stating because the rule looks redundant against the
+parser until you see which inputs actually reach it.
+
 ## Recommended sequencing
 
 1. ~~**M6-D1** — the citation fix.~~ ✅ done 2026-09-04.
    ~~**M6-D3** — gate `profileUsage` on message type.~~ ✅ done 2026-09-04;
    prerequisite for step 2.
-2. **M6-A** — the 31 CANDIDATE points, additive under ADR-014. Split by cluster
-   (MSH envelope / composite required components / value sets) so each lands as
-   its own stage with its own tests.
+2. **M6-A** — the CANDIDATE points, additive under ADR-014, split by cluster so
+   each lands as its own stage with its own tests.
+   - ✅ **Stage 1 — MSH envelope literals** (2026-09-04). Nine points shipped,
+     one reclassified BASE, one PARTIAL.
+   - ⬅ **Stage 2 — composite required components** (13 points: XCN, ED, RP, EI).
+   - **Stage 3 — HL7-table value sets** (6 points).
+   - **Stage 4 — `000023`, the NTE group-scope cardinality** (1 point).
 3. **M6-B** — pick up the five EXTEND capabilities on their merits. Each one
    that is not taken must be added to `permanent-limitations-register.md` with
    its HL7au citation, per req #3: a spec semantic the DSL cannot express is a
    documented blocker, not a silent omission.
 
-Until M6-A lands, any AU coverage claim must say the profile enforces **47 of
-the 102 message-decidable ADRM-2021 conformance points**, not "the AU profile".
+Until M6-A completes, any AU coverage claim must give the measured number —
+**58 of the 102 message-decidable ADRM-2021 conformance points** as of stage 1
+— never "the AU profile" unqualified.
 
 ## Caveats on the register itself
 

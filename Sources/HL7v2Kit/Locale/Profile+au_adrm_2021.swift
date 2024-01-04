@@ -174,7 +174,7 @@ extension Profile {
                 segmentID: "MSH",
                 fieldIndex: 17,
                 profileUsage: .required,
-                usageCondition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
@@ -193,7 +193,7 @@ extension Profile {
                 segmentID: "MSH",
                 fieldIndex: 19,
                 profileUsage: .required,
-                usageCondition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                condition: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                 componentValueSets: [
                     ComponentValueSet(
                         component: 1,
@@ -215,6 +215,122 @@ extension Profile {
                     ),
                 ],
                 specCitation: "HL7au:000042 — MSH-19 language required + narrowed to en/English/ISO639"
+            ),
+            // ---- M6-A stage 1: MSH envelope literals -------------
+            // Eleven Appendix 5 conformance points, all fixed-value or
+            // presence assertions on the message header. Message-type
+            // scopes are taken verbatim from the Appendix 5 table and
+            // differ between points, so each carries its own gate:
+            //   "Orders, Results, Referrals" → (ORM, ORU, REF)
+            //   "Orders, Results"            → (ORM, ORU)
+
+            // HL7au:000024.1 — the field separator must be "|". MSH-1
+            // (and FHS-1 / BHS-1) IS the separator character, parsed as
+            // a scalar, so this is a one-value value set on component 1.
+            // A wire like "MSH!^~\&!..." parses cleanly with "!" as the
+            // separator and is exactly what this point rejects.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 1,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["|"],
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        specCitation: "HL7au:000024.1 — MSH-1 field separator must be \"|\""
+                    )
+                ],
+                specCitation: "HL7au:000024.1 — field separator narrowed to \"|\""
+            ),
+            // HL7au:000024.2/.3/.4/.5 — the four encoding characters.
+            // MSH-2 is parsed as one scalar literal (no internal split),
+            // so the conjunction of the four points is a single pin:
+            // MSH-2 == "^~\&".
+            //
+            // KNOWN GAP, registered: .2 (component separator) is scoped
+            // to Orders, Results AND Referrals, while .3/.4/.5 are
+            // Orders/Results only. Pinning the whole literal on REF
+            // would enforce .3/.4/.5 where the spec does not, so the
+            // gate is the (ORM, ORU) intersection and .2-on-Referrals
+            // goes unenforced. Expressing it needs character-position
+            // addressing inside a component — see M6-B in
+            // `docs/design/m6-adrm-2021-localisation-audit.md`.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 2,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["^~\\&"],
+                        condition: "messageCode in (ORM, ORU)",
+                        specCitation: "HL7au:000024.2/.3/.4/.5 — MSH-2 encoding characters must be \"^~\\&\" (component, repeat, escape, sub-component)"
+                    )
+                ],
+                specCitation: "HL7au:000024.2/.3/.4/.5 — encoding characters narrowed to the AU literal"
+            ),
+            // HL7au:00049.2 / .3 — MSH-9 trigger event and message
+            // structure must both be valued. 00049.1 (message code) is
+            // not restated: MSG-1 is already `MSG.requiredComponents`
+            // in the base model, so the base check fires first.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 9,
+                condition: "messageCode in (ORM, ORU, REF)",
+                requiredComponents: [2, 3],
+                specCitation: "HL7au:00049.2/.3 — MSH-9 trigger event (MSG-2) and message structure (MSG-3) must be valued"
+            ),
+            // HL7au:00047.1 — MSH-15 must be valued "AL". Base v2.4 has
+            // MSH-15 optional, so this needs both halves: the usage
+            // narrowing for the absent case, the value set for the
+            // populated-but-wrong case.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 15,
+                profileUsage: .required,
+                condition: "messageCode in (ORM, ORU, REF)",
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["AL"],
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        specCitation: "HL7au:00047.1 — MSH-15 (Accept acknowledgement type) must be \"AL\""
+                    )
+                ],
+                specCitation: "HL7au:00047.1 — MSH-15 required + narrowed to \"AL\""
+            ),
+            // HL7au:00047.2 — MSH-16 must be valued "AL". Same shape.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 16,
+                profileUsage: .required,
+                condition: "messageCode in (ORM, ORU, REF)",
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["AL"],
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        specCitation: "HL7au:00047.2 — MSH-16 (Application acknowledgement type) must be \"AL\""
+                    )
+                ],
+                specCitation: "HL7au:00047.2 — MSH-16 required + narrowed to \"AL\""
+            ),
+            // HL7au:00048.3.1 — MSH-18 may only carry "" (unvalued),
+            // "ASCII", or by site agreement "UNICODE UTF-8" / "8859/1".
+            // No usage narrowing: the point permits an unvalued MSH-18,
+            // and the value-set track only runs on populated fields.
+            // MSH-18 repeats; each repetition is checked.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 18,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["", "ASCII", "UNICODE UTF-8", "8859/1"],
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        specCitation: "HL7au:00048.3.1 — MSH-18 (Character set) must be \"\", \"ASCII\", or by site agreement \"UNICODE UTF-8\" / \"8859/1\""
+                    )
+                ],
+                specCitation: "HL7au:00048.3.1 — MSH-18 character set value set"
             ),
             FieldOverride(
                 segmentID: "OBR",

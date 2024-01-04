@@ -13,14 +13,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `HL7AUSD-STD-OO-ADRM-2021.1` (the localisation's normative conformance-point
   table) from `pdftotext -layout` output and classifies every row against what
   `HL7Locale.auLocalisation` ships. **302 rows / 263 conformance points**;
-  the profile enforces or accounts for **47 of the 102 that are decidable from
-  a single message** (31 shipped, 12 base-model, 4 registered limitations),
-  leaving **31 expressible with today's DSL** and **24 needing a model
-  extension**. The remaining 158 constrain receiver behaviour, transport/PKI
+  the profile enforces or accounts for **58 of the 102 that are decidable from
+  a single message** after stage 1 (40 shipped, 1 partial, 13 base-model, 4
+  registered limitations), leaving **20 expressible with today's DSL** and
+  **24 needing a model extension**. At audit time the figure was 47 of 102. The remaining 158 constrain receiver behaviour, transport/PKI
   addressing, rendered payload or cross-message uniqueness, and are enumerated
   so the exclusion is auditable rather than assumed.
   - `docs/design/m6-adrm-2021-localisation-audit.md` — findings and sequencing
   - `docs/design/m6-adrm-2021-conformance-register.md` — generated, re-runnable
+
+- **M6-A stage 1 — the MSH envelope literals.** Nine ADRM-2021 conformance
+  points now enforced by `.auLocalisation`, each gated on the message types
+  Appendix 5 names for it: `HL7au:000024.1` (MSH-1 field separator = `|`),
+  `000024.2/.3/.4/.5` (MSH-2 encoding characters = `^~\&`),
+  `00049.2`/`.3` (MSH-9 trigger event and message structure must be valued),
+  `00047.1`/`.2` (MSH-15/MSH-16 = `AL`), `00048.3.1` (MSH-18 character-set
+  value set). `00049.1` is not restated — MSG-1 is already a base required
+  component. `000024.2` is **partial**: it applies to Referrals as well, but
+  `.3`/`.4`/`.5` do not, and MSH-2 parses as one scalar, so the rule gates on
+  the Orders/Results intersection rather than over-firing on REF.
+  `HL7au:00048.3.1`'s real catch is encoding aliases the parser accepts but the
+  point does not list (`UTF-8`, `US-ASCII`, `ISO-8859-1`) — a genuinely unknown
+  encoding is already a `ParseError` before validation.
 
 ### Fixed
 - **M6-D3 — AU profile usage narrowings fired outside their message-type scope.**

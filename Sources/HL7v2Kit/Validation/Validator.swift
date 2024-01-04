@@ -620,10 +620,23 @@ public struct Validator: Sendable {
             $0.segmentID == segmentID && $0.fieldIndex == fieldGrammar.index
         }) else { return }
         guard !override.requiredComponents.isEmpty || !override.componentValueSets.isEmpty else { return }
+        // M6-D3: `requiredComponents` shares the override-level gate with
+        // `profileUsage`. `componentValueSets` are gated individually
+        // below — they can be scoped more narrowly than their field.
+        let requiredComponents: [Int]
+        if let gate = override.condition, !gate.isEmpty, !conditionTriggers(
+            gate, in: segment, segmentIndex: segmentArrayIndex,
+            message: message, currentSegmentID: segmentID
+        ) {
+            requiredComponents = []
+        } else {
+            requiredComponents = override.requiredComponents
+        }
+        guard !requiredComponents.isEmpty || !override.componentValueSets.isEmpty else { return }
 
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
             // Track 1 (v0.5-S5-B-1): required-component narrowings.
-            for componentIndex in override.requiredComponents {
+            for componentIndex in requiredComponents {
                 if isComponentPopulated(repetition, componentIndex: componentIndex) {
                     continue
                 }
@@ -735,7 +748,7 @@ public struct Validator: Sendable {
         guard !isPopulated else { return }
         // M6-D3: the usage narrowing only applies to the message types
         // the conformance point names. No gate means "every message".
-        if let gate = override.usageCondition, !gate.isEmpty {
+        if let gate = override.condition, !gate.isEmpty {
             guard conditionTriggers(
                 gate,
                 in: segment,
