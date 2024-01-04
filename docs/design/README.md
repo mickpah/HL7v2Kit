@@ -50,6 +50,8 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 | `segment-coverage-extraction.md` | **Living** method doc — audit predicates, per-version naming rules, extractor quirks (+ R6 tokenizer note) |
 | `au-coverage-sprint-plan.md` | **Active runway** — Sprint 0 §1–§3 ✅ (2026-08-28→09-02: presence predicate + 36 segments on every AU-priority version → 146 typed; per-batch status lines in the doc). §3 absorbed Sprints 1–4's authoring scope; next is the Sprint-5-style close-out, then v2.1.0 |
 | `deferred-coverage-backlog.md` | **Open register** — the deferred v2.6/v2.8.2 scope, enumerated with re-measure commands |
+| `m6-adrm-2021-localisation-audit.md` | **Active runway (M6)** — findings from the ADRM-2021 Appendix 5 diff: 1 defect (M6-D1), 31 shippable points (M6-A), 23 needing a model extension (M6-B) |
+| `m6-adrm-2021-conformance-register.md` | **Generated** by `scripts/extract-adrm-conformance.py` — every ADRM-2021 conformance point classified against the shipped overlay. Do not hand-edit; regenerate |
 
 ## Remediation programme
 

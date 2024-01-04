@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **M6 — ADRM-2021 AU localisation audit (audit only; no behaviour change).**
+  `scripts/extract-adrm-conformance.py` recovers Appendix 5 of
+  `HL7AUSD-STD-OO-ADRM-2021.1` (the localisation's normative conformance-point
+  table) from `pdftotext -layout` output and classifies every row against what
+  `HL7Locale.auLocalisation` ships. **302 rows / 263 conformance points**;
+  the profile enforces or accounts for **47 of the 102 that are decidable from
+  a single message** (31 shipped, 12 base-model, 4 registered limitations),
+  leaving **31 expressible with today's DSL** and **24 needing a model
+  extension**. The remaining 158 constrain receiver behaviour, transport/PKI
+  addressing, rendered payload or cross-message uniqueness, and are enumerated
+  so the exclusion is auditable rather than assumed.
+  - `docs/design/m6-adrm-2021-localisation-audit.md` — findings and sequencing
+  - `docs/design/m6-adrm-2021-conformance-register.md` — generated, re-runnable
+
+### Known defect (found by the audit, not yet fixed)
+- **M6-D1** — `ceCwePairRules` cites `HL7au:00044.5.5` / `.5.6` for the CNE
+  alternate-identifier pair rules. The spec numbers them `.5.4` / `.5.5`, and
+  `00044.5.6` was **removed** in revision r2. The rules behave correctly; the
+  `specCitation` strings are wrong, which the working notes req #4 counts as a defect.
+
 ## [2.1.0] — 2026-09-03
 
 The **Sprint 0 cycle** (first release of the 2.x line; additive under ADR-014, resumed at
