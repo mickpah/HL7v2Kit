@@ -91,7 +91,8 @@ enum GroupScope: String, Sendable, Equatable, Hashable {
 /// v0.11-S3 (ADR-010 Extension 2). Evaluates the `predicate` (a v0.7
 /// DSL atom) against each candidate segment in the resolved group; if
 /// the count of matches is below `minCount`, fires
-/// `.segmentCardinalityBelowMinimum`.
+/// `.segmentCardinalityBelowMinimum`; if it is above `maxCount` (when
+/// set), fires `.segmentCardinalityAboveMaximum`.
 ///
 /// Convention: the rule attaches to the grammar of the head segment
 /// for its scope (`orcObxGroup` → ORC, `obrObxGroup` → OBR,
@@ -115,6 +116,19 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
     let countedSegmentID: String
     let scope: GroupScope
     let minCount: Int
+
+    /// Upper bound on matches. `nil` (default) means unbounded — the
+    /// pre-M6 behaviour. `0` expresses a prohibition: ADRM-2021's
+    /// HL7au:000023 ("the NTE segment must NOT be used") and
+    /// HL7au:000021 ("data type TX must NOT be used in OBX-2") are both
+    /// "count of matching segments must be zero" rules, which the
+    /// minimum-only model of v0.11 could not state. M6-A-3.
+    let maxCount: Int?
+
+    /// Predicate a candidate must satisfy to be counted. An empty
+    /// string counts **every** segment whose ID is `countedSegmentID`
+    /// — needed for whole-segment prohibitions like HL7au:000023,
+    /// where there is no field to test.
     let predicate: String
     let applicableWhen: String?
     let specCitation: String?
@@ -123,6 +137,7 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
         countedSegmentID: String,
         scope: GroupScope,
         minCount: Int,
+        maxCount: Int? = nil,
         predicate: String,
         applicableWhen: String? = nil,
         specCitation: String? = nil
@@ -130,6 +145,7 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
         self.countedSegmentID = countedSegmentID
         self.scope = scope
         self.minCount = minCount
+        self.maxCount = maxCount
         self.predicate = predicate
         self.applicableWhen = applicableWhen
         self.specCitation = specCitation

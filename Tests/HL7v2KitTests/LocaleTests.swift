@@ -118,16 +118,17 @@ struct LocaleTests {
             let auReport = Validator(locale: .auLocalisation).validate(auMessage)
             // Locale-attributable error codes: `.profileConstraintViolation`
             // (v0.5+, ADR-007 profile overlays) and
-            // `.segmentCardinalityBelowMinimum` (v0.11-S3, ADR-010
-            // Extension 2 — cardinality rules layered via
-            // `Profile.cardinalityExtensions`). Both fire only when an
-            // AU-locale profile rule applies, so they must NOT be counted
-            // as base-spec (locale-independent) errors when comparing
-            // international vs AU reports.
+            // `.segmentCardinalityBelowMinimum` / `AboveMaximum`
+            // (v0.11-S3 / M6-A-3, ADR-010 Extension 2 — cardinality
+            // rules layered via `Profile.cardinalityExtensions`). All
+            // fire only when an AU-locale profile rule applies, so they
+            // must NOT be counted as base-spec (locale-independent)
+            // errors when comparing international vs AU reports.
             let isLocaleAttributable: (IssueCode) -> Bool = { code in
                 switch code {
                 case .profileConstraintViolation:            return true
                 case .segmentCardinalityBelowMinimum:        return true
+                case .segmentCardinalityAboveMaximum:        return true
                 default:                                     return false
                 }
             }

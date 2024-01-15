@@ -48,6 +48,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `HL7au:00044.7.1` and `00044.3.1` are not restated (XCN-1 and EI-1 are
   already base required components).
 
+- **M6-A stage 3 — the prohibitions, closing the CANDIDATE tranche.**
+  `SegmentCardinalityRule` gains **`maxCount`** (default `nil` = unbounded, the
+  pre-M6 behaviour): the v0.11 group-scope cardinality model was minimum-only
+  and could not state "the count must be zero". `maxCount: 0` expresses a
+  prohibition and fires the new additive `IssueCode`
+  **`.segmentCardinalityAboveMaximum`**. An empty rule predicate now counts
+  every segment of the counted ID — whole-segment prohibitions have no field
+  to test. Shipped on this machinery, both anchored on MSH at `messageWide`
+  scope:
+  - `HL7au:000023` — the NTE segment must not be used; gated
+    `messageCode in (ORM, ORU, REF)` per Appendix 5 (p. 440).
+  - `HL7au:000021` — OBX-2 must not be `TX`; **partial** — the Results leg
+    (`messageCode = ORU`) is enforced, the Referrals(L2) leg is not: Level 2
+    is identified by an MSH-21 profile ID the model cannot address, and a
+    bare REF gate would over-fire on Level 1 and unprofiled referrals
+    (p. 439).
+  - `HL7au:00050.1.5` (OBX-6.3 = `UCUM`) did **not** ship and is now a
+    registered permanent limitation: it is scoped "Senders (Pathology only)"
+    and ADRM-2021 defines no message-decidable pathology discriminator —
+    table 0074 mixes pathology and imaging disciplines and the spec names no
+    pathology subset, so any gate either over-fires on spec-compliant imaging
+    results (req #4) or rests on an invented OBR-24 subset (req #2). See
+    `docs/design/permanent-limitations-register.md`.
+
+  **M6-A is complete**: CANDIDATE 0; the register now reads SHIPPED 43 /
+  PARTIAL 4 / BASE 15 / REGISTERED 5 — **67 of the 103 message-decidable
+  points** enforced or accounted for; the remaining 36 are the EXTEND tranche
+  (M6-B). Suite 545 → 552 green.
+
 ### Known defects and limitations found by M6 (not fixed)
 - **M6-D5 — OBX-5's declared datatype is wrong in all six schemas.** Every
   version's attribute table gives OBX-5 the variable datatype (`Variable` on

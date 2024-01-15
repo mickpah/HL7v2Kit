@@ -93,6 +93,12 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// introduced in v0.11-S3 (ADR-010 Extension 2). Non-`@frozen`
     /// enum, so this is a minor bump.
     case segmentCardinalityBelowMinimum(segmentID: String, minCount: Int, actual: Int, groupScope: String)
+    /// A group-scope cardinality rule matched more segments than its
+    /// declared maximum. A `maxCount` of 0 expresses a prohibition —
+    /// HL7au:000023 forbids NTE outright, HL7au:000021 forbids an OBX
+    /// whose OBX-2 is `TX`. Additive case introduced in M6-A-3; the
+    /// enum is open per ADR-014, so this is a minor bump.
+    case segmentCardinalityAboveMaximum(segmentID: String, maxCount: Int, actual: Int, groupScope: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

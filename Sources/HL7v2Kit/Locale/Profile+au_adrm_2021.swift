@@ -580,6 +580,54 @@ extension Profile {
             ),
         ],
         cardinalityExtensions: [
+            // M6-A-3 — the two ADRM-2021 prohibitions. Both are
+            // "count of matching segments must be zero", which the
+            // minimum-only cardinality model of v0.11 could not state;
+            // `SegmentCardinalityRule.maxCount` adds the upper bound.
+            // Attached to MSH because `.messageWide` resolves its group
+            // from the anchor and MSH occurs exactly once — the rule
+            // then fires at most once per message.
+            "MSH": [
+                // HL7au:000021 — "Data type TX must NOT be used as a
+                // value in the OBX-2 Value Type field."
+                //
+                // Appendix 5 scopes this to "Results, Referrals(L2)".
+                // Only the Results leg ships. "Referrals(L2)" is the
+                // Simplified Referral Profile Level 2 (Appendix 5
+                // preamble: "Referrals(L2) = Simplified Referral
+                // Profile Level 2"), identified by the profile ID
+                // `HL7AU-OO-REF-SIMPLIFIED-201706` in MSH-21 — a
+                // repeating EI field the model does not address. A
+                // `messageCode = REF` gate would fire on Level 1 and
+                // unprofiled referrals the point does not reach, so the
+                // Referrals leg is PARTIAL, not shipped. See
+                // `docs/design/m6-adrm-2021-localisation-audit.md`.
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "OBX-2 = TX",
+                    applicableWhen: "messageCode = ORU",
+                    specCitation: "HL7au:000021 — OBX-2 must not be valued TX on Senders Results; AU ADRM-2021 Appendix 5 p. 439"
+                ),
+                // HL7au:000023 — "The NTE segment must NOT be used in
+                // messages." Scoped to "Orders, Results, Referrals";
+                // plain "Referrals" is every REF profile (Appendix 5
+                // preamble), so the gate is the three message codes.
+                //
+                // Empty predicate: the prohibition is on the segment
+                // itself, not on any field of it.
+                SegmentCardinalityRule(
+                    countedSegmentID: "NTE",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode in (ORM, ORU, REF)",
+                    specCitation: "HL7au:000023 — the NTE segment must not be used on Senders Orders/Results/Referrals; AU ADRM-2021 Appendix 5 p. 440"
+                ),
+            ],
             // HL7au:000008 (r2) — Display Segments parent rule (v0.11-S3,
             // ADR-010 Extension 2). AU ADRM-2021 p. 420:
             //   "The message must contain at least one OBX display

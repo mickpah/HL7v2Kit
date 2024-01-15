@@ -100,6 +100,8 @@ SHIPPED = {
     'HL7au:00048.3.1', 'HL7au:00049.2', 'HL7au:00049.3',
     # M6-A stage 2 — XCN required components (2026-09-04).
     'HL7au:00044.7.2', 'HL7au:00044.7.5',
+    # M6-A stage 3 — prohibitions via SegmentCardinalityRule.maxCount.
+    'HL7au:000023',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -114,6 +116,11 @@ PARTIAL = {
                        'is not — HL7 code tables are not modelled (M6-O6)',
     'HL7au:00044.7.4': 'XCN-13 presence enforced; HL7 Table 0203 membership '
                        'is not — HL7 code tables are not modelled (M6-O6)',
+    'HL7au:000021': 'OBX-2 = TX prohibition enforced on Results (ORU); the '
+                    'Referrals(L2) leg is not — L2 is identified by an '
+                    'MSH-21 profile ID the model cannot address, and a bare '
+                    'REF gate would over-fire on Level 1 and unprofiled '
+                    'referrals',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -140,18 +147,26 @@ BASE = {
 }
 
 # Registered as permanent / documented limitations.
+# 00050.1.5 (M6-A-3): scoped "Senders (Pathology only)", and ADRM-2021
+# defines no message-decidable pathology discriminator — table 0074
+# mixes pathology and imaging disciplines and the spec names no
+# pathology subset. A bare ORU gate would over-fire on spec-compliant
+# imaging results (req #4); an invented OBR-24 subset would not be
+# defensible against spec text (req #2).
 REGISTERED = {'HL7au:000001', 'HL7au:00044.2',
-              'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7'}
+              'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7',
+              'HL7au:00050.1.5'}
 
 # Withdrawn by the r2 revision — must never be cited.
 WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
 
 # A: expressible with the DSL as it stands today; ship next.
-CANDIDATE = {
-    'HL7au:000021':      'OBX-2 value-set exclusion (`not-in {TX}`)',
-    'HL7au:000023':      'NTE group-scope cardinality 0 (ADR-010)',
-    'HL7au:00050.1.5':   'OBX-6.3 fixed value `UCUM`',
-}
+# Emptied by M6-A stage 3 (2026-09-15): 000023 shipped, 000021 shipped
+# PARTIAL (Results leg only), 00050.1.5 moved to REGISTERED — its
+# "(Pathology only)" actor scoping has no message-decidable
+# discriminator, so no gate exists that reaches all pathology and no
+# non-pathology traffic.
+CANDIDATE = {}
 
 # B: faithful expression needs a model extension (the working notes req #3).
 EXTEND = {

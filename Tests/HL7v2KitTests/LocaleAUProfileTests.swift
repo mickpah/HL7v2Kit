@@ -1499,4 +1499,148 @@ struct LocaleAUProfileTests {
         #expect(issue.message == row.messagePrefix + "(\(rule))",
                 "message drifted for site: \(row.site)")
     }
+
+    // MARK: - M6-A stage 3: prohibition rules (maxCount 0)
+
+    // HL7au:000021 — OBX-2 must not be TX (Senders Results; the
+    // Referrals(L2) leg is PARTIAL, see the audit doc). HL7au:000023 —
+    // the NTE segment must not be used (Senders Orders/Results/
+    // Referrals). Both are message-wide `SegmentCardinalityRule`s with
+    // `maxCount: 0`, anchored on MSH.
+
+    /// Filters to `.segmentCardinalityAboveMaximum` for the given
+    /// counted segment at messageWide scope.
+    private func prohibitionIssues(_ report: ValidationReport, counted: String) -> [ValidationIssue] {
+        report.errors.filter { issue in
+            if case .segmentCardinalityAboveMaximum(let segID, _, _, let scope) = issue.code,
+               segID == counted, scope == "messageWide" {
+                return true
+            }
+            return false
+        }
+    }
+
+    @Test("HL7au:000021 — ORU with OBX-2 = TX fires the prohibition")
+    func hl7au000021_firesOnTXValueTypeInORU() throws {
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L",
+            "OBX|1|TX|100^Note^LN||free text comment|||||F"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prohibitionIssues(report, counted: "OBX")
+        #expect(hits.count == 1,
+                "Expected exactly one HL7au:000021 violation; got \(hits.count): \(hits.map(\.message))")
+        if let first = hits.first,
+           case .segmentCardinalityAboveMaximum(_, let maxCount, let actual, _) = first.code {
+            #expect(maxCount == 0, "maxCount should be 0 (prohibition)")
+            #expect(actual == 1, "one TX-valued OBX should be counted")
+            #expect(first.message.contains("HL7au:000021"),
+                    "issue must carry the HL7au citation; got \(first.message)")
+        } else {
+            Issue.record("Expected .segmentCardinalityAboveMaximum on first hit")
+        }
+    }
+
+    @Test("HL7au:000021 — ORU with OBX-2 = NM is silent")
+    func hl7au000021_silentOnNonTXValueType() throws {
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L",
+            "OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prohibitionIssues(report, counted: "OBX").isEmpty,
+                "OBX-2 = NM must not fire HL7au:000021")
+    }
+
+    // The Referrals(L2) leg of HL7au:000021 is deliberately unshipped
+    // (PARTIAL): L2 is identified by an MSH-21 profile ID the model
+    // cannot address, and a bare REF gate would over-fire on Level 1
+    // and unprofiled referrals. A REF wire with a TX OBX must be silent.
+    private let refWithTXValueType = """
+    MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+    PID|1||X^^^F^MR\r\
+    OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+    OBX|1|TX|100^Note^LN||referral narrative|||||F\r
+    """
+
+    @Test("HL7au:000021 — REF with OBX-2 = TX is silent (Referrals(L2) leg is PARTIAL)")
+    func hl7au000021_silentOnREF() throws {
+        let message = try Parser(locale: .auLocalisation).parse(refWithTXValueType)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prohibitionIssues(report, counted: "OBX").isEmpty,
+                "the REF leg is not shipped; HL7au:000021 must be silent on REF")
+    }
+
+    @Test("HL7au:000023 — ORU with two NTE segments fires once with actual = 2")
+    func hl7au000023_firesOnNTEInORU() throws {
+        // Two NTEs pin the empty-predicate counting path: every segment
+        // of the counted ID counts, no field is tested.
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L",
+            "NTE|1||first comment",
+            "OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F",
+            "NTE|2||second comment"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prohibitionIssues(report, counted: "NTE")
+        #expect(hits.count == 1,
+                "Expected exactly one HL7au:000023 violation; got \(hits.count): \(hits.map(\.message))")
+        if let first = hits.first,
+           case .segmentCardinalityAboveMaximum(_, let maxCount, let actual, _) = first.code {
+            #expect(maxCount == 0, "maxCount should be 0 (prohibition)")
+            #expect(actual == 2, "both NTE segments must be counted (empty predicate)")
+            #expect(first.message.contains("HL7au:000023"),
+                    "issue must carry the HL7au citation; got \(first.message)")
+        } else {
+            Issue.record("Expected .segmentCardinalityAboveMaximum on first hit")
+        }
+    }
+
+    @Test("HL7au:000023 — ORM with an NTE fires (Orders leg)")
+    func hl7au000023_firesOnORM() throws {
+        let wire = """
+        MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG00001|P|2.4\r\
+        PID|1||X^^^F^MR\r\
+        ORC|NW|ORD001^H^1.2.36.1^ISO\r\
+        OBR|1|ORD001^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L\r\
+        NTE|1||order comment\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prohibitionIssues(report, counted: "NTE").count == 1,
+                "ORM is inside the (ORM, ORU, REF) gate; HL7au:000023 must fire")
+    }
+
+    @Test("HL7au:000023 — ADT with an NTE is silent (outside the message-type gate)")
+    func hl7au000023_silentOnADT() throws {
+        let wire = TestWires.adt(
+            "PID|1||X^^^F^MR",
+            "NTE|1||admission comment"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prohibitionIssues(report, counted: "NTE").isEmpty,
+                "ADT is outside the (ORM, ORU, REF) gate; HL7au:000023 must be silent")
+    }
+
+    @Test("M6-A-3 — prohibitions are silent under .international locale")
+    func prohibitionsSilentUnderInternational() throws {
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L",
+            "NTE|1||comment",
+            "OBX|1|TX|100^Note^LN||free text|||||F"
+        )
+        let message = try Parser(locale: .international).parse(wire)
+        let report = Validator(locale: .international).validate(message)
+        #expect(prohibitionIssues(report, counted: "OBX").isEmpty
+                    && prohibitionIssues(report, counted: "NTE").isEmpty,
+                "prohibition rules live in the AU profile, not the base grammar")
+    }
 }

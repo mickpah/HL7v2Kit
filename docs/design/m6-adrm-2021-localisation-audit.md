@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete; M6-D1/D3/D4 fixed, M6-D5 blocked by ADR-014; M6-A stages 1–2 shipped; stage 3 + M6-B open** (2026-09-04) |
+| Status | **Audit complete; M6-D1/D3/D4 fixed, M6-D5 blocked by ADR-014; M6-A COMPLETE (stages 1–3); M6-B open** (2026-09-15) |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -47,15 +47,15 @@ that renumbers a point fails the run instead of silently dropping it.
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| SHIPPED | 42 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 3 | partly enforced — each row's note says what is not |
+| SHIPPED | 43 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 4 | partly enforced — each row's note says what is not |
 | BASE | 15 | already enforced by the base model; the overlay deliberately stays silent |
-| REGISTERED | 4 | known limitation, already registered with a citation |
-| **CANDIDATE** | **3** | **expressible with today's DSL — the shippable gap** |
+| REGISTERED | 5 | known limitation, already registered with a citation |
+| CANDIDATE | 0 | expressible with today's DSL — **emptied by M6-A stage 3** |
 | **EXTEND** | **36** | **needs a model extension to express faithfully (req #3)** |
 | WITHDRAWN | 3 | removed by revision r2 — must never be cited |
 | RECEIVER | 74 | receiver behaviour, observed at runtime, not decidable from a message |
-| OUT | 84 | out of scope by nature: transport/PKI/directory, rendered payload, cross-message uniqueness |
+| OUT | 83 | out of scope by nature: transport/PKI/directory, rendered payload, cross-message uniqueness |
 | GROUPER | 39 | heading rows |
 
 Counts are per table row. Three identifiers appear on two rows each, so the
@@ -63,15 +63,16 @@ distinct-point totals are one lower where noted below.
 
 Read positively: of the **103 rows that are decidable from a single message**
 (SHIPPED + PARTIAL + BASE + REGISTERED + CANDIDATE + EXTEND), the profile
-enforces or accounts for **64** after M6-A stages 1–2. Only **3** of the
-remainder are shippable with today's DSL; the other **36** need one of the
-model capabilities below.
+enforces or accounts for **67** after M6-A stages 1–3. **M6-A is complete**:
+the CANDIDATE column is empty, and every remaining gap is either one of the
+**36** EXTEND points (needs a model capability — M6-B) or a REGISTERED
+permanent limitation with its citation.
 
-*Counts as of M6-A stage 2 (2026-09-04). At audit time: SHIPPED 31 / BASE 12 /
-CANDIDATE 31 — 47 of 102. The CANDIDATE column fell from 31 to 3 not because
-those points shipped but because **stages 1–2 discovered why most of them
-could not** — see M6-O6 and M6-O7. That drop is the audit working, not
-scope being abandoned.*
+*Counts as of M6-A stage 3 (2026-09-15). At audit time: SHIPPED 31 / BASE 12 /
+CANDIDATE 31 — 47 of 102. The CANDIDATE column fell from 31 to 0 not because
+all those points shipped but because **shipping the stages discovered why most
+of them could not** — see M6-O6, M6-O7, and the stage 3 note on
+`00050.1.5`. That drop is the audit working, not scope being abandoned.*
 
 The 158 RECEIVER + OUT points are not a coverage gap in a message library.
 They constrain receiving-system behaviour (74), transport and PKI addressing,
@@ -257,9 +258,13 @@ below partition the 31 exactly; **cluster 1 shipped on 2026-09-04**, leaving
   `RequiredComponentSet`.
 - **Value sets against HL7 tables** (`000032`, `000032.2` OBR-24/table 0074;
   `00104.7.2.1` table 0363; `00104.7.3.1` table 0203; `000021` OBX-2 exclusion;
-  `00050.1.5` OBX-6.3 = `UCUM`) — six points.
+  `00050.1.5` OBX-6.3 = `UCUM`) — six points. **Stage 3 outcome (2026-09-15):**
+  `000021` shipped PARTIAL (Results leg), `00050.1.5` → REGISTERED (no
+  message-decidable pathology discriminator), the four table-membership
+  points → EXTEND (M6-O6).
 - **`000023`** — "the NTE segment must NOT be used" is a group-scope cardinality
-  of 0, which ADR-010 already expresses.
+  of 0. ADR-010's model was minimum-only; stage 3 added
+  `SegmentCardinalityRule.maxCount` and shipped it. ✅
 
 ### M6-O2 — the extension tranche clusters into five model gaps
 
@@ -319,17 +324,32 @@ parser until you see which inputs actually reach it.
      shippable: `00044.7.2`/`.7.5` outright, `.7.3`/`.7.4` PARTIAL (presence,
      not table membership), `.7.1` and `00044.3.1` reclassified BASE, and the
      eight ED/RP points moved to EXTEND per M6-O7.
-   - ⬅ **Stage 3 — the last three CANDIDATE points**: `000021` (OBX-2 ≠ TX),
-     `00050.1.5` (OBX-6.3 = UCUM), `000023` (NTE group cardinality 0). The
-     other four of the original value-set cluster need a code-table registry.
+   - ✅ **Stage 3 — the last three CANDIDATE points** (2026-09-15). The two
+     prohibitions shipped via `SegmentCardinalityRule.maxCount` (an upper
+     bound the minimum-only v0.11 model could not state; `maxCount: 0` is a
+     prohibition, and an empty predicate counts every segment of the ID):
+     `000023` (NTE must not be used, gated ORM/ORU/REF) shipped outright;
+     `000021` (OBX-2 ≠ TX) shipped PARTIAL — the Results leg is enforced,
+     but the Referrals(L2) leg is not, because Level 2 is identified by an
+     MSH-21 profile ID the model cannot address and a bare REF gate would
+     over-fire on Level 1 and unprofiled referrals. `00050.1.5` (OBX-6.3 =
+     UCUM) did **not** ship: it is scoped "Senders (Pathology only)" and
+     ADRM-2021 defines no message-decidable pathology discriminator (table
+     0074 mixes pathology and imaging; no pathology subset is named), so a
+     bare ORU gate would over-fire on spec-compliant imaging results
+     (req #4) — moved to REGISTERED in
+     `permanent-limitations-register.md`. The other four of the original
+     value-set cluster need a code-table registry (M6-O6).
 3. **M6-B** — pick up the five EXTEND capabilities on their merits. Each one
    that is not taken must be added to `permanent-limitations-register.md` with
    its HL7au citation, per req #3: a spec semantic the DSL cannot express is a
    documented blocker, not a silent omission.
 
-Until M6-A completes, any AU coverage claim must give the measured number —
-**64 of the 103 message-decidable ADRM-2021 conformance points** as of stage 2
-— never "the AU profile" unqualified.
+**M6-A is complete (stage 3, 2026-09-15).** Any AU coverage claim must still
+give the measured number — **67 of the 103 message-decidable ADRM-2021
+conformance points** (43 shipped, 4 partial, 15 base-model, 5 registered
+limitations) — never "the AU profile" unqualified. The remaining 36 are the
+EXTEND tranche (M6-B).
 
 ## Caveats on the register itself
 

@@ -194,7 +194,7 @@ public struct Validator: Sendable {
                 message: message
             ) else { continue }
 
-            let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)"
+            let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)|\(rule.maxCount.map(String.init) ?? "-")"
             if firedKeys.contains(key) { continue }
             firedKeys.insert(key)
 
@@ -210,6 +210,12 @@ public struct Validator: Sendable {
             var matches = 0
             for (offset, seg) in group.segments.enumerated() {
                 guard seg.segmentID == rule.countedSegmentID else { continue }
+                // An empty predicate counts every segment of this ID —
+                // whole-segment prohibitions have no field to test.
+                if rule.predicate.isEmpty {
+                    matches += 1
+                    continue
+                }
                 let absoluteIndex = group.startIndex + offset
                 if conditionTriggers(
                     rule.predicate,
@@ -237,6 +243,29 @@ public struct Validator: Sendable {
                         segmentIndex: anchorOccurrence
                     ),
                     message: "Group requires at least \(rule.minCount) \(rule.countedSegmentID) segment(s) matching '\(rule.predicate)'; found \(matches)\(citation)"
+                ))
+            }
+
+            // M6-A-3: upper bound. `maxCount: 0` is a prohibition.
+            if let maxCount = rule.maxCount, matches > maxCount {
+                let citation = rule.specCitation.map { " (\($0))" } ?? ""
+                let matching = rule.predicate.isEmpty
+                    ? "" : " matching '\(rule.predicate)'"
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .segmentCardinalityAboveMaximum(
+                        segmentID: rule.countedSegmentID,
+                        maxCount: maxCount,
+                        actual: matches,
+                        groupScope: rule.scope.rawValue
+                    ),
+                    location: IssueLocation(
+                        segmentID: grammar.segmentID,
+                        segmentIndex: anchorOccurrence
+                    ),
+                    message: maxCount == 0
+                        ? "Group must contain no \(rule.countedSegmentID) segment(s)\(matching); found \(matches)\(citation)"
+                        : "Group allows at most \(maxCount) \(rule.countedSegmentID) segment(s)\(matching); found \(matches)\(citation)"
                 ))
             }
         }

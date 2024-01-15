@@ -13,25 +13,17 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 
 | Verdict | Count | Meaning |
 |---|---:|---|
-| CANDIDATE | 3 | expressible with the DSL today — the shippable gap |
+| CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 36 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 42 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 3 | partly enforced — see each row's note for what is not |
+| SHIPPED | 43 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 4 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 4 | known limitation, already registered |
+| REGISTERED | 5 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 83 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
-
-## CANDIDATE (3)
-
-| HL7au | Rev | Applies to | Message types | Conformance point | Note |
-|---|---|---|---|---|---|
-| `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 value-set exclusion (`not-in {TX}`) |
-| `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. | NTE group-scope cardinality 0 (ADR-010) |
-| `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | OBX-6.3 fixed value `UCUM` |
 
 ## EXTEND (36)
 
@@ -74,7 +66,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | User-defined Table 0363 membership; needs a code-table registry |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). | HL7 Table 0203 membership; needs a code-table registry |
 
-## SHIPPED (42)
+## SHIPPED (43)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -85,6 +77,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000007` | r2 | Senders | Orders, Results, Referrals | If ORC-4 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-4 (Placer Group Number) for a request identifier across different organisations, the Entity identifier (first component) in additi... |  |
 | `HL7au:000008` |  | Senders | Results, Referrals | The message must contain at least one OBX display segment per OBR/OBX group. |  |
 | `HL7au:000008.1` | r2 | Senders | Results, Referrals | Display segments must use the appropriate valid values within the AUSPDI coding system in OBX-3 for the content that is represented in it: • OBX\|\|ED\|HTML^Display format in HTML^AUSPDI\|\|^text^HTML^A^<?xml version=... |  |
+| `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. |  |
 | `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' |  |
 | `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' |  |
 | `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' |  |
@@ -121,10 +114,11 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
 | `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 
-## PARTIAL (3)
+## PARTIAL (4)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
+| `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 = TX prohibition enforced on Results (ORU); the Referrals(L2) leg is not — L2 is identified by an MSH-21 profile ID the model cannot address, and a bare REF gate would over-fire on Level 1 and unprofiled referrals |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. | XCN-10 presence enforced; HL7 Table 0200 membership is not — HL7 code tables are not modelled (M6-O6) |
 | `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. | XCN-13 presence enforced; HL7 Table 0203 membership is not — HL7 code tables are not modelled (M6-O6) |
@@ -149,7 +143,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 | `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (4)
+## REGISTERED (5)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -157,6 +151,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.4.3` |  | Senders | Orders, Results, Referrals | <text (ST)> component must be valued as what is intended for display to the user. (In some locations user display is not intended and the text may be blank.) | known limitation, registered with citation |
 | `HL7au:00044.4.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00044.5.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
+| `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | known limitation, registered with citation |
 
 ## WITHDRAWN (3)
 
