@@ -1643,4 +1643,236 @@ struct LocaleAUProfileTests {
                     && prohibitionIssues(report, counted: "NTE").isEmpty,
                 "prohibition rules live in the AU profile, not the base grammar")
     }
+
+    // MARK: - M6-B-1: PRD exactly-one rules + referral display formats
+
+    // HL7au:00104.1.1 / 00104.2.1 — exactly one PRD with PRD-1 = AP /
+    // IR in the REF message. PRD-1 repeats, so the rules use the
+    // anyRepeat atom. HL7au:00104.7.0 (r3) — PRD-7 required on the IR
+    // PRD. HL7au:000008.3.1 (PARTIAL) — ≥1 HTML/PDF/TXT display OBX
+    // per OBR/OBX group on Referrals.
+
+    private func prdCardinalityIssues(_ report: ValidationReport, citing token: String) -> [ValidationIssue] {
+        report.errors.filter { issue in
+            switch issue.code {
+            case .segmentCardinalityBelowMinimum(let segID, _, _, let scope),
+                 .segmentCardinalityAboveMaximum(let segID, _, _, let scope):
+                return segID == "PRD" && scope == "messageWide"
+                    && issue.message.contains(token)
+            default:
+                return false
+            }
+        }
+    }
+
+    // A conforming REF: one AP PRD, one IR PRD (with PRD-7), and a PDF
+    // display OBX in the single OBR group.
+    private let refConforming = """
+    MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+    PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+    PID|1||X^^^F^MR\r\
+    OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+    OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+    """
+
+    @Test("HL7au:00104.1.1/.2.1 — conforming REF (one AP, one IR) is silent")
+    func hl7au00104_conformingREFSilent() throws {
+        let message = try Parser(locale: .auLocalisation).parse(refConforming)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prdCardinalityIssues(report, citing: "HL7au:00104.1.1").isEmpty
+                    && prdCardinalityIssues(report, citing: "HL7au:00104.2.1").isEmpty,
+                "one AP + one IR must satisfy both exactly-one rules; got \(report.errors.map(\.message))")
+    }
+
+    // AP arrives in the SECOND repetition of PRD-1 — pins the anyRepeat
+    // atom. A first-repetition read would count zero APs and misfire.
+    private let refAPInSecondRepeat = """
+    MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+    PRD|RP^Referring Provider^HL70286~AP^Authoring Provider^HL70286|Doe^John\r\
+    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+    PID|1||X^^^F^MR\r\
+    OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+    OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+    """
+
+    @Test("HL7au:00104.1.1 — AP in a later PRD-1 repetition still counts (anyRepeat)")
+    func hl7au00104_1_1_anyRepeatCountsLaterRepetition() throws {
+        let message = try Parser(locale: .auLocalisation).parse(refAPInSecondRepeat)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prdCardinalityIssues(report, citing: "HL7au:00104.1.1").isEmpty,
+                "PRD-1 = RP~AP carries AP in repetition 2; the rule must count it; got \(prdCardinalityIssues(report, citing: "HL7au:00104.1.1").map(\.message))")
+    }
+
+    @Test("HL7au:00104.1.1 — REF with no AP PRD fires below-minimum")
+    func hl7au00104_1_1_firesWhenNoAP() throws {
+        let wire = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prdCardinalityIssues(report, citing: "HL7au:00104.1.1")
+        #expect(hits.count == 1,
+                "no AP PRD → exactly one 00104.1.1 violation; got \(hits.count)")
+    }
+
+    @Test("HL7au:00104.2.1 — REF with two IR PRDs fires above-maximum")
+    func hl7au00104_2_1_firesOnTwoIRs() throws {
+        let wire = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+        PRD|IR^Intended Recipient^HL70286|Jones^Bob|||||67890^^^AUSHIC^UPIN\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prdCardinalityIssues(report, citing: "HL7au:00104.2.1")
+        #expect(hits.count == 1, "two IR PRDs → one above-maximum violation")
+        if let first = hits.first,
+           case .segmentCardinalityAboveMaximum(_, let maxCount, let actual, _) = first.code {
+            #expect(maxCount == 1 && actual == 2)
+        } else {
+            Issue.record("Expected .segmentCardinalityAboveMaximum")
+        }
+    }
+
+    @Test("HL7au:00104.x — ORU with no PRD is silent (REF gate)")
+    func hl7au00104_silentOutsideREF() throws {
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L",
+            "OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(prdCardinalityIssues(report, citing: "HL7au:00104").isEmpty,
+                "the PRD rules are gated on messageCode = REF")
+    }
+
+    @Test("HL7au:00104.7.0 — IR PRD without PRD-7 fires; AP PRD without PRD-7 does not")
+    func hl7au00104_7_0_prd7RequiredOnIROnly() throws {
+        let wire = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = report.errors.filter { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            return rule.contains("HL7au:00104.7.0")
+        }
+        #expect(hits.count == 1,
+                "PRD-7 missing on the IR PRD only → exactly one 00104.7.0 violation; got \(hits.count): \(hits.map(\.message))")
+        #expect(hits.first?.location.segmentIndex == 2,
+                "the violation must attach to the second PRD (the IR one)")
+    }
+
+    @Test("HL7au:000008.3.1 — REF group with only an RTF display OBX fires")
+    func hl7au000008_3_1_firesOnRTFOnly() throws {
+        let wire = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+        OBX|1|ED|RTF^Display format in RTF^AUSPDI||content|||||F\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = report.errors.filter { issue in
+            if case .segmentCardinalityBelowMinimum = issue.code {
+                return issue.message.contains("HL7au:000008.3.1")
+            }
+            return false
+        }
+        #expect(hits.count == 1,
+                "RTF alone does not satisfy the HTML/PDF/TXT disjunction; got \(hits.count): \(hits.map(\.message))")
+        // The conforming wire (PDF display) must be silent for 000008.3.1.
+        let okReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(refConforming))
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:000008.3.1") },
+                "a PDF display OBX satisfies 000008.3.1")
+    }
+
+    // MARK: - M6-B-2: the Z-prefix prohibitions
+
+    // HL7au:000020 — trigger event codes beginning with Z must not be
+    // used (enforced on the ORM/ORU intersection; the message-code leg
+    // is self-excluded by the gate and Referrals(L2) is unaddressable).
+    // HL7au:000023.1 — Z segments must not be used (ORM/ORU/REF), via
+    // the `Z*` counted-segment prefix pattern.
+
+    @Test("HL7au:000020 — ORU^Z01 (Z trigger event) fires the prohibition")
+    func hl7au000020_firesOnZTriggerEvent() throws {
+        let wire = """
+        MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^Z01|MSG00001|P|2.4\r\
+        PID|1||X^^^F^MR\r
+        """
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prohibitionIssues(report, counted: "MSH")
+            .filter { $0.message.contains("HL7au:000020") }
+        #expect(hits.count == 1,
+                "ORU^Z01 must fire HL7au:000020 exactly once; got \(hits.count)")
+    }
+
+    @Test("HL7au:000020 — ORU^R01 is silent; ADT^Z99 is outside the gate")
+    func hl7au000020_silentOnNonZAndOutsideGate() throws {
+        let oru = try Parser(locale: .auLocalisation)
+            .parse(TestWires.oru("PID|1||X^^^F^MR"))
+        let oruReport = Validator(locale: .auLocalisation).validate(oru)
+        #expect(!oruReport.errors.contains { $0.message.contains("HL7au:000020") },
+                "R01 does not begin with Z")
+        let adt = try Parser(locale: .auLocalisation).parse("""
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^Z99|MSG00001|P|2.4\r\
+        PID|1||X^^^F^MR\r
+        """)
+        let adtReport = Validator(locale: .auLocalisation).validate(adt)
+        #expect(!adtReport.errors.contains { $0.message.contains("HL7au:000020") },
+                "ADT is outside the (ORM, ORU) gate")
+    }
+
+    @Test("HL7au:000023.1 — ORU with two Z segments fires once with actual = 2")
+    func hl7au000023_1_firesOnZSegments() throws {
+        let wire = TestWires.oru(
+            "PID|1||X^^^F^MR",
+            "ZAU|1|local content",
+            "ZXY|extra local segment"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let hits = prohibitionIssues(report, counted: "Z*")
+            .filter { $0.message.contains("HL7au:000023.1") }
+        #expect(hits.count == 1,
+                "expected one HL7au:000023.1 violation; got \(hits.count): \(hits.map(\.message))")
+        if let first = hits.first,
+           case .segmentCardinalityAboveMaximum(_, _, let actual, _) = first.code {
+            #expect(actual == 2, "both Z segments must be counted by the Z* prefix")
+        } else {
+            Issue.record("Expected .segmentCardinalityAboveMaximum")
+        }
+    }
+
+    @Test("HL7au:000023.1 — ADT with a Z segment is silent (outside the gate)")
+    func hl7au000023_1_silentOnADT() throws {
+        let wire = TestWires.adt(
+            "PID|1||X^^^F^MR",
+            "ZAU|1|local content"
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(!report.errors.contains { $0.message.contains("HL7au:000023.1") },
+                "ADT is outside the (ORM, ORU, REF) gate")
+    }
 }

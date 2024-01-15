@@ -102,6 +102,12 @@ SHIPPED = {
     'HL7au:00044.7.2', 'HL7au:00044.7.5',
     # M6-A stage 3 — prohibitions via SegmentCardinalityRule.maxCount.
     'HL7au:000023',
+    # M6-B-1 — exactly-one PRD rules (maxCount + the anyRepeat atom;
+    # PRD-1 repeats) and the repaired 00104.7.0 (PRD-7 required on the
+    # IR PRD via FieldOverride.condition).
+    'HL7au:00104.1.1', 'HL7au:00104.2.1', 'HL7au:00104.7.0',
+    # M6-B-2 — Z-segment prohibition via the Z* counted-segment prefix.
+    'HL7au:000023.1',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -121,6 +127,16 @@ PARTIAL = {
                     'MSH-21 profile ID the model cannot address, and a bare '
                     'REF gate would over-fire on Level 1 and unprofiled '
                     'referrals',
+    'HL7au:000008.3.1': '≥1 display OBX in {HTML, PDF, TXT} per OBR/OBX '
+                        'group enforced on Referrals — a necessary condition '
+                        'under both legs; the Level 1 "must be PDF" '
+                        'narrowing is not enforced (L1 is identified by an '
+                        'MSH-21 profile ID the model cannot address)',
+    'HL7au:000020': 'Z-prefixed trigger events prohibited on Orders/Results '
+                    'via the startsWith op; the message-code leg is '
+                    'undecidable inside any message-type gate (a wholly-Z '
+                    'code never satisfies it) and the Referrals(L2) leg is '
+                    'MSH-21-identified — both unenforced',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -170,8 +186,6 @@ CANDIDATE = {}
 
 # B: faithful expression needs a model extension (the working notes req #3).
 EXTEND = {
-    'HL7au:000020':      'message-code / trigger prefix match (`Z*`)',
-    'HL7au:000023.1':    'segment-ID prefix match (`Z*`)',
     'HL7au:000028':      'within-message uniqueness of a field across repeats',
     'HL7au:000028.2':    'within-message uniqueness of a field across groups',
     'HL7au:000034.1':    'primary-before-local coding-system ordering, generalised '
@@ -180,8 +194,9 @@ EXTEND = {
     'HL7au:000034.3':    'primary-before-local coding-system ordering',
     'HL7au:000008.1.3':  'OBX-2 ⇔ OBX-3.1 value-correspondence map',
     'HL7au:000008.1.5':  'intra-group segment ordering',
-    'HL7au:000008.3.1':  'discriminated group-content cardinality',
-    'HL7au:000008.3.2':  'discriminated group-content cardinality (RTF ⇒ sibling)',
+    'HL7au:000008.3.2':  'relational group cardinality (RTF present ⇒ '
+                         'HTML/PDF/TXT sibling) plus content equality — '
+                         'neither expressible',
     'HL7au:00044.8.1':   'TS datatype-level validation (timezone offset present)',
     'HL7au:00044.10.1.5': 'ED subtype ⇔ type MIME correspondence map',
     'HL7au:00044.10.1.6': 'ED subtype ⇔ type HL7 table 0291/0191 correspondence map',
@@ -190,8 +205,6 @@ EXTEND = {
     'HL7au:00044.6.7':   'same-concept assertion across coding systems — the CWE '
                          'twin of the registered HL7au:00044.4.7 / .5.7',
     'HL7au:00100.1':     'group ordering within a message',
-    'HL7au:00104.1.1':   'discriminated group cardinality (exactly one PRD-1=AP)',
-    'HL7au:00104.2.1':   'discriminated group cardinality (exactly one PRD-1=IR)',
     'HL7au:00104.7.1.4': 'PRD-7 component-triple correspondence table',
     'HL7au:000022.3':    'batch-scope cardinality (Validator is message-scoped)',
     'HL7au:000022.1':    'batch-scope acknowledgement mode',
@@ -248,8 +261,22 @@ OUT_OF_SCOPE = [
     ('HL7au:00102',      'referral-summary content (templates, atomic data)'),
     ('HL7au:00103',      'referral-summary rendered content'),
     ('HL7au:00104.7.1',  'requires identifier-scheme recognition (HPI-I)'),
-    ('HL7au:00104.7.0',  'grouper text fragment'),
 ]
+
+# Curated row repairs for PDF layout quirks the parser cannot recover.
+# 00104.7.0 (r3): the identifier is printed BELOW the row's first text
+# line (p. 472), so the parse attached only the trailing fragment and
+# an earlier triage dismissed it as a grouper fragment. Verified against
+# the source 2026-09-15: it is a real Senders/Referrals point.
+ROW_REPAIRS = {
+    'HL7au:00104.7.0': {
+        'appl': 'Senders',
+        'mtype': 'Referrals',
+        'text': 'PRD-7 must have at least 1 repeat (for providers '
+                'receiving electronic communication specified by IR - '
+                'Intended Recipient in PRD-1).',
+    },
+}
 
 
 def classify(row):
@@ -286,6 +313,8 @@ ORDER = ['CANDIDATE', 'EXTEND', 'SHIPPED', 'PARTIAL', 'BASE', 'REGISTERED',
 def main():
     rows = parse_appendix5(sys.argv[1] if len(sys.argv) > 1 else '/tmp/adrm2021.txt')
     for r in rows:
+        if r['id'] in ROW_REPAIRS:
+            r.update(ROW_REPAIRS[r['id']])
         r['verdict'], r['note'] = classify(r)
     # self-check: every curated id must exist in the extracted table, and
     # nothing may fall through unclassified.

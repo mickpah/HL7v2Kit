@@ -398,6 +398,21 @@ extension Profile {
                 ],
                 specCitation: "HL7au:000008.1 (r2) — OBX-3 display-format identifier value set on AUSPDI display segments"
             ),
+            // M6-B-1 — HL7au:00104.7.0 (r3): "PRD-7 must have at least
+            // 1 repeat (for providers receiving electronic
+            // communication specified by IR - Intended Recipient in
+            // PRD-1)." A populated field has ≥1 repeat, so this is a
+            // per-instance required-usage narrowing on the IR PRD.
+            // PRD-1 repeats, hence the anyRepeat gate (req #4: "IR" in
+            // a later repetition still identifies the intended
+            // recipient).
+            FieldOverride(
+                segmentID: "PRD",
+                fieldIndex: 7,
+                profileUsage: .required,
+                condition: "messageCode = REF AND anyRepeat(PRD-1) = IR",
+                specCitation: "HL7au:00104.7.0 (r3) — PRD-7 must have at least 1 repeat on the Intended Recipient (PRD-1 = IR) PRD in the REF message; AU ADRM-2021 Appendix 5 p. 472"
+            ),
         ],
         grammarExtensions: [
             // AU pre-adopts v2.5+ PID fields 35..38 (Species Code,
@@ -627,6 +642,69 @@ extension Profile {
                     applicableWhen: "messageCode in (ORM, ORU, REF)",
                     specCitation: "HL7au:000023 — the NTE segment must not be used on Senders Orders/Results/Referrals; AU ADRM-2021 Appendix 5 p. 440"
                 ),
+                // M6-B-1 — the two PRD exactly-one rules. PRD-1 is a
+                // repeating CE, so the predicate uses the anyRepeat
+                // atom: a provider with roles "RP~AP" carries AP in a
+                // later repetition and the first-repetition scalar
+                // convention would have missed it (req #4).
+                //
+                // HL7au:00104.1.1 — "There must be exactly one PRD
+                // with a PRD-1 value of 'AP' (Authoring Provider) in
+                // the REF message."
+                SegmentCardinalityRule(
+                    countedSegmentID: "PRD",
+                    scope: .messageWide,
+                    minCount: 1,
+                    maxCount: 1,
+                    predicate: "anyRepeat(PRD-1) = AP",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "HL7au:00104.1.1 — exactly one PRD with PRD-1 = AP (Authoring Provider) in the REF message; AU ADRM-2021 Appendix 5 p. 472"
+                ),
+                // HL7au:00104.2.1 — "There must be exactly one PRD
+                // with a PRD-1 value of 'IR' (Intended Recipient) in
+                // the REF message."
+                SegmentCardinalityRule(
+                    countedSegmentID: "PRD",
+                    scope: .messageWide,
+                    minCount: 1,
+                    maxCount: 1,
+                    predicate: "anyRepeat(PRD-1) = IR",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "HL7au:00104.2.1 — exactly one PRD with PRD-1 = IR (Intended Recipient) in the REF message; AU ADRM-2021 Appendix 5 p. 472"
+                ),
+                // M6-B-2 — the Z-prefix prohibitions (p. 439-440).
+                //
+                // HL7au:000020 — "All message types and trigger event
+                // codes beginning with the letter 'Z' are reserved for
+                // locally-defined messages and must NOT be used."
+                // PARTIAL twice over: (1) the message-code leg is
+                // undecidable inside any message-type gate — a wholly-Z
+                // message code (ZAA^...) never satisfies the gate, so
+                // only the trigger-event leg (ORU^Z01) is enforceable;
+                // (2) the point is scoped Orders/Results/Referrals(L2),
+                // and L2 is MSH-21-identified (the 000021 gap), so the
+                // gate is the (ORM, ORU) intersection.
+                SegmentCardinalityRule(
+                    countedSegmentID: "MSH",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "triggerEvent startsWith Z",
+                    applicableWhen: "messageCode in (ORM, ORU)",
+                    specCitation: "HL7au:000020 — trigger event codes beginning with Z are reserved and must not be used on Senders Orders/Results; AU ADRM-2021 Appendix 5 p. 439"
+                ),
+                // HL7au:000023.1 — "User defined segments (Z segments)
+                // must not be used in messages." Counted by the Z*
+                // prefix pattern; empty predicate counts every match.
+                SegmentCardinalityRule(
+                    countedSegmentID: "Z*",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode in (ORM, ORU, REF)",
+                    specCitation: "HL7au:000023.1 — user-defined Z segments must not be used on Senders Orders/Results/Referrals; AU ADRM-2021 Appendix 5 p. 440"
+                ),
             ],
             // HL7au:000008 (r2) — Display Segments parent rule (v0.11-S3,
             // ADR-010 Extension 2). AU ADRM-2021 p. 420:
@@ -649,6 +727,24 @@ extension Profile {
                     predicate: "OBX-3.3 = AUSPDI",
                     applicableWhen: "messageCode in (ORU, REF)",
                     specCitation: "HL7au:000008 (r2) — ≥1 AUSPDI display OBX per OBR/OBX group on Senders Results/Referrals; AU ADRM-2021 p. 420"
+                ),
+                // M6-B-1 — HL7au:000008.3.1, PARTIAL. The point has two
+                // legs: Level 1 requires a PDF display OBX in the single
+                // OBR/OBX group; every other Referrals profile requires
+                // ≥1 display OBX in {HTML, PDF, TXT} per group. PDF
+                // satisfies the {HTML, PDF, TXT} disjunction, so the
+                // weaker rule is a necessary condition under BOTH legs
+                // and never over-fires. The L1-specific "must be PDF"
+                // narrowing is NOT enforced — Level 1 is identified by
+                // an MSH-21 profile ID the model cannot address (same
+                // gap as HL7au:000021's Referrals(L2) leg).
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .obrObxGroup,
+                    minCount: 1,
+                    predicate: "OBX-3.3 = AUSPDI AND OBX-3.1 in (HTML, PDF, TXT)",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "HL7au:000008.3.1 — each OBR/OBX group must contain ≥1 display OBX in HTML/PDF/TXT on Senders Referrals (L1's PDF-specific leg not enforced); AU ADRM-2021 Appendix 5 p. 423"
                 )
             ]
         ]

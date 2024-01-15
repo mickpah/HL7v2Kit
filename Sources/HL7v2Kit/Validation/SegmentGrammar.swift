@@ -113,6 +113,11 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
     /// `OBX-3.3 = AUSPDI` only resolves against OBX segments; other
     /// segments fail safe to false). Setting this field explicitly
     /// avoids parsing the predicate to reconstruct the target.
+    ///
+    /// A trailing `*` makes it a prefix pattern: `"Z*"` counts every
+    /// segment whose ID begins with `Z` — needed for HL7au:000023.1's
+    /// blanket Z-segment prohibition, where no single ID exists to
+    /// count. M6-B-2.
     let countedSegmentID: String
     let scope: GroupScope
     let minCount: Int

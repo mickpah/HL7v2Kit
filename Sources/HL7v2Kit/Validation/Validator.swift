@@ -209,7 +209,15 @@ public struct Validator: Sendable {
             // belonging to a different OBR sub-group — false positive.
             var matches = 0
             for (offset, seg) in group.segments.enumerated() {
-                guard seg.segmentID == rule.countedSegmentID else { continue }
+                // M6-B-2: a trailing `*` makes the counted ID a prefix
+                // pattern — `"Z*"` counts every user-defined Z segment
+                // (HL7au:000023.1). Exact match otherwise.
+                if rule.countedSegmentID.hasSuffix("*") {
+                    guard seg.segmentID.hasPrefix(rule.countedSegmentID.dropLast())
+                    else { continue }
+                } else {
+                    guard seg.segmentID == rule.countedSegmentID else { continue }
+                }
                 // An empty predicate counts every segment of this ID —
                 // whole-segment prohibitions have no field to test.
                 if rule.predicate.isEmpty {
@@ -1194,6 +1202,10 @@ public struct Validator: Sendable {
     ///    or `messageStructure` (reads MSH-9.1 / .2 / .3).
     /// 4. **Position atom** — `previousSegment(<ID>).<fieldref>` or
     ///    `associatedSegment(<ID>).<fieldref>`.
+    /// 5. **Any-repetition atom** — `anyRepeat(<fieldref>)` applies the
+    ///    predicate to every repetition of the field with ∃-semantics
+    ///    (M6-B-1; repeating fields like PRD-1 need more than the
+    ///    first-repetition scalar convention).
     ///
     /// All forms are evaluated against the same predicate set
     /// (`populated` / `empty` / `= v` / `!= v` / `in (...)` /
@@ -1226,6 +1238,25 @@ public struct Validator: Sendable {
         guard parts.count == 2 else { return false }
         let referent = parts[0]
         let predicate = parts[1]
+
+        // M6-B-1 any-repetition atom: `anyRepeat(<fieldref>) <predicate>`.
+        // The scalar field-ref convention reads the FIRST repetition
+        // only, so `PRD-1 = AP` misses a spec-compliant `RP~AP`.
+        // `anyRepeat` applies the predicate to EVERY repetition's slot
+        // with ∃-semantics: true iff any repetition satisfies it.
+        // Fail-safe: a malformed inner ref or unresolvable peer
+        // evaluates false (v0.2-V1).
+        if referent.hasPrefix("anyRepeat("), referent.hasSuffix(")") {
+            let inner = String(referent.dropFirst("anyRepeat(".count).dropLast())
+            guard let slots = resolveRepetitionSlots(
+                inner,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ) else { return false }
+            return slots.contains { applyPredicate(predicate, to: $0) }
+        }
 
         guard let resolved = resolveReferent(
             referent,
@@ -1358,6 +1389,46 @@ public struct Validator: Sendable {
         )
     }
 
+    /// Resolve every repetition of a field-ref to its own
+    /// `(raw, isPopulated)` pair at the ref's component/subcomponent
+    /// slot, for the `anyRepeat(...)` atom (M6-B-1). Same
+    /// same-segment / cross-segment resolution as `resolveFieldRef`;
+    /// `isPopulated` here is per-repetition-slot (the slot value is
+    /// non-empty), unlike the whole-field convention of `readField` —
+    /// under ∃-semantics a field-scope answer would be meaningless.
+    /// Returns `nil` on a malformed ref or unresolvable peer
+    /// (fail-safe); an absent field resolves to `[]`, which no
+    /// predicate matches.
+    private func resolveRepetitionSlots(
+        _ fieldRef: String,
+        in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        currentSegmentID: String
+    ) -> [ResolvedReferent]? {
+        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
+        let targetSegment: Segment
+        if path.segmentID == currentSegmentID {
+            targetSegment = segment
+        } else {
+            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
+            else { return nil }
+            targetSegment = peer
+        }
+        guard let field = targetSegment.field(path.field) else { return [] }
+        let comp = (path.component ?? 1) - 1
+        let sub = (path.subcomponent ?? 1) - 1
+        return field.repetitions.map { rep in
+            let raw: String = {
+                guard rep.components.indices.contains(comp) else { return "" }
+                let subs = rep.components[comp].subcomponents
+                guard subs.indices.contains(sub) else { return "" }
+                return subs[sub].value
+            }()
+            return ResolvedReferent(raw: raw, isPopulated: !raw.isEmpty)
+        }
+    }
+
     /// Parse a DSL field-ref (`SEG-f`, `SEG-f.c`, `SEG-f.c.s`) via the
     /// shared ``Path`` parser, then reject the Path-only axes the
     /// condition DSL grammar excludes: segment-index (`SEG[N]-f`) and
@@ -1468,7 +1539,8 @@ public struct Validator: Sendable {
     }
 
     /// Apply the predicate clause (`populated` / `empty` / `= v` /
-    /// `!= v` / `in (…)` / `not in (…)`) to a resolved referent.
+    /// `!= v` / `in (…)` / `not in (…)` / `startsWith v` /
+    /// `not startsWith v`) to a resolved referent.
     private func applyPredicate(_ predicate: String, to resolved: ResolvedReferent) -> Bool {
         if predicate == "populated" { return resolved.isPopulated }
         if predicate == "empty"     { return !resolved.isPopulated }
@@ -1477,6 +1549,21 @@ public struct Validator: Sendable {
         }
         if predicate.hasPrefix("!= ") {
             return resolved.raw != String(predicate.dropFirst(3))
+        }
+        // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning
+        // `Z` (HL7au:000020 message/trigger codes, 000023.1 segments),
+        // which no equality or value-set clause can state. `startsWith`
+        // on an empty referent is false (an absent value begins with
+        // nothing); `not startsWith` mirrors `not in` — it asserts only
+        // on populated referents, per the fail-safe rule.
+        if predicate.hasPrefix("startsWith ") {
+            let prefix = String(predicate.dropFirst("startsWith ".count))
+            return !prefix.isEmpty && resolved.raw.hasPrefix(prefix)
+        }
+        if predicate.hasPrefix("not startsWith ") {
+            let prefix = String(predicate.dropFirst("not startsWith ".count))
+            guard resolved.isPopulated, !prefix.isEmpty else { return false }
+            return !resolved.raw.hasPrefix(prefix)
         }
         if predicate.hasPrefix("in (") && predicate.hasSuffix(")") {
             let values = Self.parseValueList(predicate.dropFirst(4).dropLast())
