@@ -31,3 +31,6 @@ docs/standards/
 # docs/standards/ still cannot be committed. No PDF has ever been tracked.
 *.pdf
 *.PDF
+
+# zvec-grep local semantic index
+.zvec-grep/
