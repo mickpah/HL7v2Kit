@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [3.0.0] — 2026-09-16
+
+**The M6 release — AU localisation completeness (ADRM-2021), closed and measured.** One ⚠️ **breaking** change (the M6-D5 OBX-5 datatype fix, shipped under an owner-directed ADR-014 override — see "Changed — BREAKING" below and `Migration.md` → "The 3.0 boundary"); everything else is additive. The additive-only contract resumes for the 3.x line from this tag.
+
 ### Added
 - **M6 — ADRM-2021 AU localisation audit (audit only; no behaviour change).**
   `scripts/extract-adrm-conformance.py` recovers Appendix 5 of
