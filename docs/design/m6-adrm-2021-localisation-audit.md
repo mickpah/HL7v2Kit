@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete; ALL M6 defects fixed (D1/D3/D4/D5 — D5 via owner-directed ADR-014 override); M6-A COMPLETE (stages 1–3); M6-B open** (2026-09-15) |
+| Status | **M6 CLOSED (2026-09-16).** All defects fixed (D1/D3/D4/D5 — D5 via owner-directed ADR-014 override); M6-A complete; M6-B-1/2 shipped the anyRepeat/startsWith/Z*-expressible points; M6-O5 predicate live (13 defects fixed); the 30-point EXTEND remainder registered in `permanent-limitations-register.md` §D. Appendix 5 is not exhaustive — the prose sweep is separate, later work. |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -351,11 +351,18 @@ parser until you see which inputs actually reach it.
    its HL7au citation, per req #3: a spec semantic the DSL cannot express is a
    documented blocker, not a silent omission.
 
-**M6-A is complete (stage 3, 2026-09-15).** Any AU coverage claim must still
-give the measured number — **67 of the 103 message-decidable ADRM-2021
-conformance points** (43 shipped, 4 partial, 15 base-model, 5 registered
-limitations) — never "the AU profile" unqualified. The remaining 36 are the
-EXTEND tranche (M6-B).
+**M6 is closed (2026-09-16).** M6-B-1/2 shipped the points expressible with
+three further DSL extensions (`anyRepeat`, `startsWith`, the `Z*` counted
+prefix): `00104.1.1`, `00104.2.1`, `00104.7.0` (a register row the parser had
+mangled and an earlier triage dismissed — repaired and shipped), `000023.1`,
+and the PARTIALs `000008.3.1` and `000020`. M6-O5's dataType predicate is
+live (45 findings → 13 real defects fixed). The 30-point EXTEND remainder is
+registered as deferred capabilities in `permanent-limitations-register.md`
+§D. Any AU coverage claim must give the measured number — **74 of the 104
+message-decidable ADRM-2021 rows** (48 shipped, 6 partial, 15 base-model,
+5 registered) — never "the AU profile" unqualified, and must carry the
+standing caveat: Appendix 5 is explicitly not exhaustive; the chapter-body
+prose sweep is separate, later work.
 
 ## Caveats on the register itself
 

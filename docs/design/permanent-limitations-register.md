@@ -33,6 +33,30 @@ The machine-checkable HL7au:00044.* CE/CNE/CWE narrowings shipped in v0.13 (ADR-
 
 **Freeze decision (B + C):** all acceptable to freeze for v1.0. They are honest, spec-cited gaps, not defects; each would require an out-of-core runtime integration (terminology service, PKI) that is explicitly **post-1.0** (see ROADMAP "Post-1.0 sketch"). Shipping any as an unconditional rule would misfire, violating req #4.
 
+## D. M6-B — ADRM-2021 points awaiting model capabilities (deferred, blocks spec-completeness)
+
+Added at M6 close (2026-09-16). These are **not** permanent: each is expressible once its
+capability lands, and per req #3 each **blocks** any claim of AU spec-completeness until
+then. They are the EXTEND remainder of the ADRM-2021 Appendix 5 register after M6-A and
+M6-B-1/2 shipped everything today's DSL can state faithfully (see
+`m6-adrm-2021-conformance-register.md` for per-point text).
+
+| Capability | Points (HL7au:) | What it needs |
+|------------|-----------------|---------------|
+| **HL7 code-table registry (M6-O6)** | `000032`, `000032.2` (table 0074); `00104.7.2.1` (0363); `00104.7.3.1` (0203) — and it upgrades the PARTIAL `00044.7.3`/`.7.4` to full | Model the spec's `TBL#` column and a per-version table-content registry. Highest-leverage deferred capability; its absence most undermines req #2. |
+| **OBX-2-driven datatype resolution (M6-O7)** | `00044.10.1.1`–`.1.4` (ED), `00044.11.1.1`–`.1.4` (RP) | Composite dispatch on the *runtime* type OBX-2 names, not the static grammar dataType. The M6-D5 fix (OBX-5 is `Field?` since the 3.0 boundary) is the prerequisite. |
+| **Value-correspondence maps** | `00044.10.1.5`/`.6`, `00044.11.1.5`/`.6` (ED/RP subtype ⇒ type), `000008.1.3` (OBX-2 ⇔ OBX-3.1 display format), `00104.7.1.4` (PRD-7 component triple) | "Component A's value determines component B's allowed values" — a map structure, not a value set. |
+| **Within-message uniqueness / ordering** | `000028`, `000028.2` (unique OBR-3 across groups); `00100.1`, `000008.1.5` (group / display-segment ordering) | Cross-group aggregation state the per-segment scan does not carry. |
+| **Generalised coding-system precedence** | `000034.1`–`.3` | The shipped LOINC rule (`00044.4.4`) generalised to any public/local coding-system pair — needs a code-system classification, which itself leans on M6-O6. |
+| **Relational group cardinality** | `000008.3.2` | "If an RTF display OBX exists in the group, an HTML/PDF/TXT sibling must too" — count(A) ≥ 1 conditioned on count(B) ≥ 1, plus a content-equality half that is not machine-checkable at all. |
+| **Stragglers** | `00044.8.1` (TS timezone offset — datatype-level validation); `00044.6.7` (CWE same-concept assertion — the CE/CNE twins are §B permanent limitations); `000022.1`, `000022.3` (batch-scope rules; the Validator is message-scoped) | Each is a different small capability; none clusters with the five above. |
+
+**Freeze decision:** deferred, not frozen. Any release claiming full ADRM-2021 coverage
+must first land these or re-justify each row. The two PARTIAL Z/prohibition legs
+(`000020`'s message-code + Referrals(L2) legs, `000021`'s Referrals(L2) leg,
+`000008.3.1`'s L1-PDF leg) share one root cause — MSH-21 profile-ID addressing — and
+close together when a repeating-EI profile discriminator lands.
+
 ## What is NOT a limitation (recorded to prevent re-litigation)
 
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.

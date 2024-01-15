@@ -18,7 +18,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 |---|---|
 | Last updated | 2026-09-03 (**`v2.1.0` tagged** — the complete Sprint 0 cycle) |
 | Current release | **`v2.1.0`** (2026-09-03, tagged locally, not yet pushed — nor is any earlier tag). The Sprint 0 cycle: **146 typed segments**, zero never-authored on v2.3/v2.3.1/v2.4, presence predicate, 10 spec-cited condition predicates, honest coverage claims; 525/525 green. |
-| Next planned cycle | **Push to `private`** (nothing has ever left this machine), then **M6 — the ADRM-2021 AU localisation audit** over its now-complete v2.4 base. M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
+| Next planned cycle | **Owner: tag `v3.0.0`** (breaking M6-D5 fix on `main`) and **push to `private`** (nothing has ever left this machine). **M6 is CLOSED (2026-09-16).** M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -152,25 +152,24 @@ If the intent ever hardens into "v2.6/v2.8.2 are out of scope permanently", that
 different decision — it would need requirement #1 amended and the public-push gate redefined,
 because it changes what the package *is*. This is not that.
 
-### M6 — Australian localisation completeness 🟠 **(new, 2026-08-23 — promoted by the re-prioritisation)**
+### M6 — Australian localisation completeness ✅ **CLOSED (2026-09-16)**
 *Goal: the AU localisation surface is complete and spec-cited against ADRM-2021 over its v2.4
 base, so AU integrators can trust the profile as a faithful rendering of the localisation.*
 
-- **Base version is v2.4** — ADRM-2021 localises HL7 v2.4; the profile model already records
-  this (`Profile.swift` → `baseVersion`). M6 work is therefore coupled to the Tier-1 v2.4
-  coverage above: a localisation narrowing cannot be expressed on a segment that is not yet
-  modelled on v2.4.
-- **Shipped so far:** HL7au:000003–000008, 000040–000042, and the machine-checkable 00044
-  CE/CNE/CWE narrowings (ADR-009 + ADR-011), locale-gated via
-  `HL7Locale.auLocalisation`.
-- **Known-open AU items** (already in `docs/design/permanent-limitations-register.md`):
-  00044.4.3 CE text carve-out; 00044.4.7 concept-match (needs a terminology service);
-  00044.2 PKI runtime; HL7au:000001 receiver-runtime semantics. These stay limitations —
-  they need capability outside the ADR-006 portable core, not more schema work.
-- **Next concrete step:** audit ADRM-2021 for narrowings that are expressible in the current
-  DSL but not yet shipped, the same way v1.8 found six shippable predicates hiding in CH07
-  prose. Until that audit runs, the AU surface is "as complete as v0.17 left it", which is
-  not the same as complete.
+- **Outcome:** Appendix 5 extracted into a re-runnable register (302 rows / 263 conformance
+  points; one misparsed row repaired and shipped); **74 of the 104 message-decidable rows
+  enforced or accounted for** (48 shipped, 6 partial, 15 base-model, 5 registered).
+  CANDIDATE 0. The 30-point EXTEND remainder is registered as **deferred capabilities with
+  citations** in `permanent-limitations-register.md` §D — chiefly the HL7 code-table
+  registry (M6-O6) and OBX-2-driven datatype resolution (M6-O7).
+- **Four defects found and fixed** (D1 citations, D3/D4 message-type gates, D5 the breaking
+  OBX-5 datatype fix under the owner-directed ADR-014 override → next release is `v3.0.0`),
+  plus the M6-O5 dataType audit predicate (13 further schema defects fixed) and five DSL
+  extensions (maxCount, anyRepeat, startsWith, `Z*` counted prefix, `subcomponent`).
+- **Standing caveat:** Appendix 5 is explicitly not exhaustive — the ADRM chapter-body
+  prose sweep is separate, later work, and AU coverage is always cited as the measured
+  number. Full narrative: `docs/design/m6-adrm-2021-localisation-audit.md` +
+  `docs/archive/STATUS-2026-09-16-m6-closed.md`.
 
 ### R — Over-engineering remediation ✅ **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 

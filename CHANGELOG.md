@@ -77,6 +77,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   points** enforced or accounted for; the remaining 36 are the EXTEND tranche
   (M6-B). Suite 545 → 552 green.
 
+- **M6-B-1/2 — PRD exactly-one, referral display formats, the Z prohibitions.**
+  Three more DSL extensions (req #3): the **`anyRepeat(<fieldref>)`** atom
+  (∃-semantics over every repetition — `PRD-1 = AP` would miss a
+  spec-compliant `RP~AP`), **`startsWith` / `not startsWith`** predicate ops,
+  and a trailing-`*` prefix pattern on `countedSegmentID` (`"Z*"` counts every
+  user-defined segment). Shipped on them: `HL7au:00104.1.1` / `00104.2.1`
+  (exactly one PRD with PRD-1 = AP / IR in the REF message, p. 472),
+  `00104.7.0` (r3) (PRD-7 required on the IR PRD — this row was **misparsed
+  as a grouper fragment** in the register because the PDF prints the
+  identifier below the row's first text line; verified against the source,
+  repaired via a curated `ROW_REPAIRS` table, and shipped),
+  `000008.3.1` **partial** (≥1 HTML/PDF/TXT display OBX per OBR/OBX group on
+  Referrals — a necessary condition under both the L1 and other-profiles legs;
+  L1's "must be PDF" narrowing is MSH-21-identified and unenforced, p. 423),
+  `000023.1` (Z segments prohibited on ORM/ORU/REF, p. 440), and `000020`
+  **partial** (Z-prefixed trigger events prohibited on ORM/ORU; the
+  message-code leg is undecidable inside any message-type gate and the
+  Referrals(L2) leg is MSH-21-identified, p. 439). Register: SHIPPED 43 → 48,
+  PARTIAL 4 → 6, EXTEND 36 → 30, OUT 83 → 82 — **74 of the 104
+  message-decidable rows** (the repaired row adds one to the denominator).
+  Suite 552 → 569 green.
+
+- **M6-O5 — the per-field `dataType` audit predicate.**
+  `scripts/audit-schemas.py --depth` now diffs every schema field's `dataType`
+  against the union of values the extractor sees for that (segment, index)
+  across the version's chapters. First measurement: **45 findings** — 30 were
+  the pre-v2.5 `CM`-placeholder class (the schemas carry the v2.5-era name of
+  the identical component structure; grammar-level composite dispatch keys on
+  it, so a spec `CM` accepts any named composite — documented convention, not
+  a defect), 2 whitelisted (`v2.4/AL1-1`, a spec typo where the v2.4 table and
+  heading both print `CE` for Set ID; `v2.5.1/OBX-5`, the variable-type row
+  defeats the extractor), and **13 real verbatim-fidelity defects fixed**:
+  v2.3 `PID-10/16/17/22/26` and v2.3/v2.3.1 `AL1-2/4` were typed `CE` against
+  the spec's scalar `IS`, v2.3/v2.3.1 `OBX-8` `IS` → `ID`, v2.3 `MSH-12`
+  `VID` → `ID` (VID does not exist before v2.4), and v2.8.2 `ORC-34`
+  `EI` → `CWE` (attribute table wins over the field-definition heading). All
+  on non-canonical versions — grammar tables only, no typed-accessor impact.
+  The audit is fully clean: integrity 0 / depth 706 exact / presence 0 /
+  **dataType 0**.
+
+- **M6-B-3 — the EXTEND tranche triaged; M6 closed.** The 30 remaining
+  EXTEND points are registered in `permanent-limitations-register.md` §D as
+  **deferred capabilities with citations** (req #3): value-correspondence
+  maps (6), within-message uniqueness/ordering (4), generalised coding-system
+  precedence (3), relational group cardinality (1), OBX-2-driven datatype
+  resolution / M6-O7 (8), the HL7 code-table registry / M6-O6 (4), and four
+  stragglers (TS timezone, CWE same-concept, two batch-scope points). Each
+  blocks spec-completeness until its capability lands; none is silently
+  dropped. **M6 closes at 74 of 104 message-decidable ADRM-2021 rows enforced
+  or accounted for** — with the standing caveat that Appendix 5 is explicitly
+  not exhaustive; the chapter-body prose sweep is separate, later work.
+
 ### Changed — BREAKING (M6-D5 fix; owner-directed ADR-014 override, 2026-09-15)
 - **`OBX.observationValue` is now `Field?` (was `String?`).** M6-D5: every
   version's attribute table gives OBX-5 the variable datatype (`*` on
@@ -90,19 +142,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ADR-014 override to fix this now rather than queue it; **the next release
   is a major (`v3.0.0`)**. The additive-only contract is otherwise unchanged.
 
-### Known defects and limitations found by M6 (not fixed)
-- **M6-O5 — no audit predicate compares a field's datatype.**
-  `scripts/audit-schemas.py --depth` compares field *count* only, which is how
-  M6-D5 survived 717 schemas. Until a per-field `dataType` comparison runs, no
-  claim that the schemas faithfully render the spec covers the datatype column.
+### Known limitations found by M6 (registered, not fixed)
+- ~~**M6-O5**~~ ✅ closed above — the dataType predicate now runs each batch.
 - **M6-O6 — HL7 code tables are not modelled.** The schemas drop the spec's
   `TBL#` column and there is no code-table registry, so every "value from HL7
   Table NNNN" point is unshippable: `000032`/`.2` (0074), `00044.7.3` (0200),
-  `00044.7.4` / `00104.7.3.1` (0203), `00104.7.2.1` (0363).
+  `00044.7.4` / `00104.7.3.1` (0203), `00104.7.2.1` (0363). Registered as the
+  highest-leverage deferred capability (`permanent-limitations-register.md` §D).
 - **M6-O7 — ED and RP never appear as a declared datatype.** Eight points
   (`00044.10.*`, `00044.11.*`) target composites no field declares on any
   version; they reach the wire only through OBX-5, whose type OBX-2 chooses at
-  runtime. An override for them would be dead code, so they move to EXTEND.
+  runtime. An override for them would be dead code. Registered §D; the M6-D5
+  fix (OBX-5 → `Field?`) is the prerequisite the future capability builds on.
 
 ### Fixed
 - **M6-D4 — AU composite overrides fired outside their message-type scope.**
