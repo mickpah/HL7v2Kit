@@ -445,3 +445,34 @@ Predicate shape, per the house rule: a set difference over what the extractor al
 produces — no caption list to maintain, so it catches segments nobody thought to enumerate.
 Caveat carried from `segment-inventory.md`: caption-based discovery is a floor; a segment
 defined only in prose or under a non-standard caption is invisible to both passes.
+
+## M6-O5 dataType predicate (2026-09-16)
+
+The depth pass compared field **count** only; the `dataType` column had no predicate at
+all, which is how M6-D5 (OBX-5 typed `ST` against the spec's `Variable`/`varies`) survived
+717 schemas. `--depth` now collects, per `(segment, index)`, the **union** of dataTypes the
+extractor sees across that version's chapters, and flags a schema value that matches none
+of them (union, so table-selection noise cannot false-positive; a wrong value that happens
+to match a stray table is the residual risk, same as before the predicate existed).
+
+Two carve-outs, both enumerated in `audit-schemas.py`:
+
+- **`CM` accepts any named composite.** Pre-v2.5 tables type most composites as the
+  placeholder `CM` ("composite, see the field definition"); the schemas carry the v2.5-era
+  NAME of the identical component structure because grammar-level composite dispatch keys
+  on it (HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed `MSG`). A **scalar** against
+  a spec `CM` still flags.
+- **`DATATYPE_WHITELIST`** — `v2.4/AL1-1`: the v2.4 table *and* heading print `CE` for
+  `Set ID - AL1` (SI in v2.3 and v2.5+), a spec typo; following it verbatim would dispatch
+  the AU CE composite rules onto every plain set-ID (req #4 misfire), so the schema
+  normalises to `SI`. `v2.5.1/OBX-5`: the variable-type row defeats the extractor
+  (candidates include `*`, `NA or`, truncated `varie`); the schema's `varies` is
+  hand-verified (M6-D5).
+
+First measurement (2026-09-16): **45 findings** → 30 were the CM-refinement class
+(documented above, not defects), 2 whitelisted, and **13 real verbatim-fidelity defects
+fixed**: v2.3 `PID-10/16/17/22/26` and `AL1-2/4` were typed `CE` against the spec's `IS`,
+v2.3/v2.3.1 `OBX-8` `IS` → `ID`, v2.3 `MSH-12` `VID` → `ID` (VID does not exist before
+v2.4), v2.3.1 `AL1-2/4` `CE` → `IS`, and v2.8.2 `ORC-34` `EI` → `CWE` (the attribute table
+wins over the field-definition heading, which still prints EI). All were on non-canonical
+versions, so only grammar tables changed — no typed-accessor impact.

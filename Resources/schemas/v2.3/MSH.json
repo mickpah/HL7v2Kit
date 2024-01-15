@@ -95,7 +95,7 @@
       "index": 12,
       "swiftName": "versionID",
       "name": "Version ID",
-      "dataType": "VID",
+      "dataType": "ID",
       "optionality": "R",
       "repeatability": "1"
     },

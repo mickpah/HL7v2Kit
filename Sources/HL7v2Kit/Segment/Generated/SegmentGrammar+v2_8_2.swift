@@ -1492,7 +1492,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 31, name: "Parent Universal Service Identifier", dataType: "CWE", optionality: .backwardCompat, repeatability: .single, condition: nil),
             FieldGrammar(index: 32, name: "Advanced Beneficiary Notice Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 33, name: "Alternate Placer Order Number", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil),
-            FieldGrammar(index: 34, name: "Order Workflow Profile", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 34, name: "Order Workflow Profile", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
             ]
         ),
         "PCR": SegmentGrammar(

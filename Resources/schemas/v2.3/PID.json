@@ -79,7 +79,7 @@
       "index": 10,
       "swiftName": "race",
       "name": "Race",
-      "dataType": "CE",
+      "dataType": "IS",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -127,7 +127,7 @@
       "index": 16,
       "swiftName": "maritalStatus",
       "name": "Marital Status",
-      "dataType": "CE",
+      "dataType": "IS",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -135,7 +135,7 @@
       "index": 17,
       "swiftName": "religion",
       "name": "Religion",
-      "dataType": "CE",
+      "dataType": "IS",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -175,7 +175,7 @@
       "index": 22,
       "swiftName": "ethnicGroup",
       "name": "Ethnic Group",
-      "dataType": "CE",
+      "dataType": "IS",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -207,7 +207,7 @@
       "index": 26,
       "swiftName": "citizenship",
       "name": "Citizenship",
-      "dataType": "CE",
+      "dataType": "IS",
       "optionality": "O",
       "repeatability": "*"
     },

@@ -68,6 +68,31 @@ DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
 # counted, not a failure. Everywhere else the same absence is a PRESENCE defect.
 DEFERRED_VERSIONS = {"v2.6", "v2.8.2"}
 
+# M6-O5 dataType predicate knobs.
+#
+# Pre-v2.5 attribute tables type most composites as the placeholder `CM`
+# ("composite, defined in the field definition"); the schemas carry the
+# v2.5-era NAME of the identical component structure (v2.3 MSH-9's
+# components are MSG's) because grammar-level composite dispatch keys on
+# it — e.g. HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed MSG.
+# A spec `CM` therefore accepts any named COMPOSITE; a scalar against a
+# spec `CM` still flags. Scalar set mirrors `scalarDataTypes` in
+# Codegen.swift.
+SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", "DTM"}
+
+# (version, segment, index) triples where the schema deliberately
+# diverges from the extracted attribute-table value:
+#   v2.4/AL1/1  — the v2.4 table AND heading print `CE` for Set ID -
+#                 AL1, a known spec typo (SI in v2.3 and v2.5+).
+#                 Following it verbatim would dispatch the AU CE
+#                 composite rules onto every plain set-ID (req #4
+#                 misfire), so the schema normalises to SI; registered
+#                 in segment-coverage-extraction.md.
+#   v2.5.1/OBX/5 — the variable-type row's prose defeats the extractor
+#                 (candidates include `*`, `NA or`, truncated `varie`);
+#                 the schema's `varies` is hand-verified (M6-D5).
+DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
+
 CHAPTER_GLOBS = {
     "v2.3":   ["HL7_v23_PDF/CH*.pdf"],
     "v2.3.1": ["HL7_v231_PDF/Hl7V231.pdf"],
@@ -108,8 +133,15 @@ def integrity():
 
 
 def extracted_depths(version):
-    """segment -> deepest max-field-index seen across that version's chapter PDFs."""
-    best = {}
+    """(segment -> deepest max-field-index, (segment, index) -> {dataTypes seen})
+    across that version's chapter PDFs.
+
+    The dataType map collects the UNION of values seen for a slot: a segment
+    can appear in more than one chapter (overview vs defining table), so a
+    schema value is a finding only when it matches NO extracted candidate.
+    That bias under-reports and never false-positives — M6-O5's first
+    measurement must not cry wolf on table-selection noise."""
+    best, dts = {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -125,7 +157,11 @@ def extracted_depths(version):
             fields = table.get("fields", [])
             if seg and fields:
                 best[seg] = max(best.get(seg, 0), max(f["index"] for f in fields))
-    return best
+                for f in fields:
+                    dt = (f.get("dataType") or "").strip()
+                    if dt:
+                        dts.setdefault((seg, f["index"]), set()).add(dt)
+    return best, dts
 
 
 def depth():
@@ -134,14 +170,15 @@ def depth():
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, []
+        return [], [], 0, [], {}, [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
+    datatype_findings = []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found = extracted_depths(version)
+        found, spec_dts = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -159,14 +196,31 @@ def depth():
             seg = os.path.basename(path)[:-5].upper()
             if seg in DEPTH_WHITELIST or f"{version}/{seg}" in DEPTH_WHITELIST or seg not in found:
                 continue
-            schema_depth = max(f["index"] for f in json.load(open(path))["fields"])
+            schema_fields = json.load(open(path))["fields"]
+            schema_depth = max(f["index"] for f in schema_fields)
             if found[seg] > schema_depth:
                 gaps.append((version, seg, schema_depth, found[seg]))
             elif found[seg] < schema_depth:
                 suspects.append((version, seg, schema_depth, found[seg]))
             else:
                 exact += 1
-    return gaps, suspects, exact, presence, backlog, deferred
+            # M6-O5: the dataType column had NO predicate — OBX-5 shipped
+            # typed ST against a spec `Variable`/`varies` and survived 717
+            # schemas because only field COUNT was compared. A schema value
+            # is a finding when the extract saw that slot and the schema's
+            # value matches none of the candidates seen for it.
+            for f in schema_fields:
+                candidates = spec_dts.get((seg, f["index"]))
+                schema_dt = (f.get("dataType") or "").strip()
+                if not candidates or not schema_dt or schema_dt in candidates:
+                    continue
+                if (version, seg, f["index"]) in DATATYPE_WHITELIST:
+                    continue
+                if "CM" in candidates and schema_dt not in SCALAR_DATATYPES:
+                    continue  # named refinement of the CM placeholder
+                datatype_findings.append(
+                    (version, seg, f["index"], schema_dt, sorted(candidates)))
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings
 
 
 def main():
@@ -182,7 +236,7 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred = depth()
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings = depth()
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -197,7 +251,10 @@ def main():
         if deferred:
             print(f"   deferred ({', '.join(sorted(DEFERRED_VERSIONS))}, owner-scheduled): "
                   + ", ".join(f"{v} {seg}({e})" for v, seg, e in deferred))
-        if gaps or suspects or presence:
+        print(f"\n== dataType (M6-O5): {len(dt_findings)} findings")
+        for v, seg, idx, got, want in dt_findings:
+            print(f"   DATATYPE {v} {seg}-{idx}: schema {got!r}, spec saw {want}")
+        if gaps or suspects or presence or dt_findings:
             rc = 1
 
     print("\nclean" if rc == 0 else "\nfindings above")

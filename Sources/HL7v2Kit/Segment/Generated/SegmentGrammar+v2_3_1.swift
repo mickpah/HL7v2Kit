@@ -101,9 +101,9 @@ extension SegmentGrammarTable {
             version: "2.3.1",
             fields: [
             FieldGrammar(index: 1, name: "Set ID - AL1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 2, name: "Allergen Type Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Allergen Type Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 3, name: "Allergen Code/Mnemonic/Description", dataType: "CE", optionality: .required, repeatability: .single, condition: nil),
-            FieldGrammar(index: 4, name: "Allergy Severity Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Allergy Severity Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 5, name: "Allergy Reaction Code", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 6, name: "Identification Date (deprecated)", dataType: "DT", optionality: .backwardCompat, repeatability: .single, condition: nil),
             ]
@@ -1073,7 +1073,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Observation Value", dataType: "*", optionality: .conditional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 6, name: "Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "References Range", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 8, name: "Abnormal Flags", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 8, name: "Abnormal Flags", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 9, name: "Probability", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 10, name: "Nature of Abnormal Test", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 11, name: "Observation Result Status", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),

@@ -36,6 +36,6 @@
     { "index": 31, "swiftName": "parentUniversalServiceIdentifier", "name": "Parent Universal Service Identifier", "dataType": "CWE", "optionality": "B", "repeatability": "1" },
     { "index": 32, "swiftName": "advancedBeneficiaryNoticeDate", "name": "Advanced Beneficiary Notice Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
     { "index": 33, "swiftName": "alternatePlacerOrderNumber", "name": "Alternate Placer Order Number", "dataType": "CX", "optionality": "O", "repeatability": "*" },
-    { "index": 34, "swiftName": "orderWorkflowProfile", "name": "Order Workflow Profile", "dataType": "EI", "optionality": "O", "repeatability": "*" }
+    { "index": 34, "swiftName": "orderWorkflowProfile", "name": "Order Workflow Profile", "dataType": "CWE", "optionality": "O", "repeatability": "*" }
   ]
 }
