@@ -77,14 +77,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   points** enforced or accounted for; the remaining 36 are the EXTEND tranche
   (M6-B). Suite 545 → 552 green.
 
+### Changed — BREAKING (M6-D5 fix; owner-directed ADR-014 override, 2026-09-15)
+- **`OBX.observationValue` is now `Field?` (was `String?`).** M6-D5: every
+  version's attribute table gives OBX-5 the variable datatype (`*` on
+  v2.3/v2.3.1/v2.4, `varies` on v2.5.1/v2.6/v2.8.2 — the audit's "`Variable`"
+  was the section-heading paraphrase; the tables print `*`); the schemas said
+  `ST`, and the `String?` accessor silently flattened structured payloads
+  (CE, SN, ED, ...) to their first component. The six schemas now store the
+  verbatim table value (the `RDT-1` convention) and the accessor returns the
+  full `Field`. Scalar callers migrate with `?.stringValue`; see
+  `Migration.md` → "The 3.0 boundary". The project owner directed the
+  ADR-014 override to fix this now rather than queue it; **the next release
+  is a major (`v3.0.0`)**. The additive-only contract is otherwise unchanged.
+
 ### Known defects and limitations found by M6 (not fixed)
-- **M6-D5 — OBX-5's declared datatype is wrong in all six schemas.** Every
-  version's attribute table gives OBX-5 the variable datatype (`Variable` on
-  v2.3/v2.3.1/v2.4, `varies` on v2.5.1/v2.6/v2.8.2); the schemas say `ST`.
-  `RDT-1` already stores the variable datatype verbatim, so this is
-  inconsistent with the project's own convention. Correcting it changes
-  `OBX.observationValue` from `String?` to `Field?` — breaking, and blocked by
-  ADR-014's additive-only contract for 2.x. **Scheduled for the next major.**
 - **M6-O5 — no audit predicate compares a field's datatype.**
   `scripts/audit-schemas.py --depth` compares field *count* only, which is how
   M6-D5 survived 717 schemas. Until a per-field `dataType` comparison runs, no

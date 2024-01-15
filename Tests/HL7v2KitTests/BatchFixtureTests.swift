@@ -69,7 +69,7 @@ struct BatchFixtureTests {
         #expect(batch.allMessages.count == 2)
         #expect(batch.allMessages[0].firstSegment(MSH.self)?.messageType?.triggerEvent == "A01")
         #expect(batch.allMessages[1].firstSegment(MSH.self)?.messageType?.triggerEvent == "R01")
-        #expect(batch.allMessages[1].firstSegment(OBX.self)?.observationValue == "145")
+        #expect(batch.allMessages[1].firstSegment(OBX.self)?.observationValue?.stringValue == "145")
     }
 
     @Test("Batch fixtures also round-trip cleanly through StreamingBatchParser")

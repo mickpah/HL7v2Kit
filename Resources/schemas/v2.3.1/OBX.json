@@ -40,7 +40,7 @@
       "index": 5,
       "swiftName": "observationValue",
       "name": "Observation Value",
-      "dataType": "ST",
+      "dataType": "*",
       "optionality": "C",
       "repeatability": "*"
     },

@@ -318,11 +318,28 @@ struct TypedSegmentTests {
         #expect(identifier.text == message["OBX-3.2"])
     }
 
-    @Test("OBX-5 (ST scalar) observation value")
+    @Test("OBX-5 (variable datatype) observation value returns Field")
     func obxObservationValueAgrees() throws {
+        // M6-D5: OBX-5's datatype is variable (`*` / `varies` in the
+        // attribute tables), chosen at runtime by OBX-2 — the accessor
+        // is `Field?`, not `String?`, so structured payloads (CE, ED,
+        // SN, ...) are reachable.
         let (message, obx) = try hydratedMessage(OBX.self, from: obxWire)
-        #expect(obx.observationValue == "5.2")
-        #expect(obx.observationValue == message["OBX-5"])
+        #expect(obx.observationValue?.stringValue == "5.2")
+        #expect(obx.observationValue?.stringValue == message["OBX-5"])
+    }
+
+    @Test("OBX-5 structured payload (CE via OBX-2) is reachable through the typed accessor")
+    func obxObservationValueStructuredPayload() throws {
+        // The String? accessor flattened a coded observation to its
+        // first component; the Field? accessor preserves the structure.
+        let wire = TestWires.oru("OBX|1|CE|30525-0^Age^LN||P0Y2M^2 months^ISO+||||||F")
+        let (message, obx) = try hydratedMessage(OBX.self, from: wire)
+        let value = try #require(obx.observationValue?.first)
+        #expect(value.components[0].stringValue == "P0Y2M")
+        #expect(value.components[1].stringValue == "2 months")
+        #expect(value.components[2].stringValue == "ISO+")
+        #expect(message["OBX-5.2"] == "2 months")
     }
 
     @Test("OBX-6 (composite CE) units")
@@ -478,7 +495,7 @@ struct TypedSegmentTests {
         #expect(obr.setID == "1")
         #expect(obx.setID == "1")
         #expect(obr.universalServiceIdentifier?.identifier == "GLU")
-        #expect(obx.observationValue == "5.2")
+        #expect(obx.observationValue?.stringValue == "5.2")
         let rebuilt = String(data: message.serialize(), encoding: .utf8)
         #expect(rebuilt == wire)
     }

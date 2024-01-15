@@ -81,3 +81,13 @@ zero call sites; see `Migration.md` → "The 2.0 boundary" for the enumerated li
 plus the two v1.6-deferred OBX swiftName corrections and the `RequiredComponentSet`
 required-description tightening. The additive-only contract resumes for the 2.x line
 from v2.0.0.
+
+**Addendum (2026-09-15, M6-D5 override):** the project owner directed an override of the
+2.x additive-only contract to remediate M6-D5 immediately: OBX-5's declared datatype was
+`ST` in all six schemas where every version's attribute table gives the variable datatype
+(`*` on v2.3/v2.3.1/v2.4, `varies` on v2.5.1+), so `OBX.observationValue` silently
+flattened structured payloads to `String?`. The fix (accessor now `Field?`) is breaking;
+the next release is therefore a **major** (`v3.0.0`). This is a spec-fidelity defect fix
+under the working notes req #4, not a policy change — the additive-only contract is otherwise
+unchanged and resumes for the 3.x line from v3.0.0. See `Migration.md` → "The 3.0
+boundary".

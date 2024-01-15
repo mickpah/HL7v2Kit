@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Audit complete; M6-D1/D3/D4 fixed, M6-D5 blocked by ADR-014; M6-A COMPLETE (stages 1–3); M6-B open** (2026-09-15) |
+| Status | **Audit complete; ALL M6 defects fixed (D1/D3/D4/D5 — D5 via owner-directed ADR-014 override); M6-A COMPLETE (stages 1–3); M6-B open** (2026-09-15) |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |
@@ -175,22 +175,28 @@ and its test passed. What exposed them was diffing against the applicability
 column of the source table — the column the overlay had never been checked
 against.
 
-### M6-D5 — OBX-5's declared datatype is wrong in all six schemas ⚠️ blocked by ADR-014
+### M6-D5 — OBX-5's declared datatype is wrong in all six schemas ✅ FIXED (2026-09-15, owner-directed ADR-014 override)
 
 Every supported version's attribute table gives OBX-5 (Observation Value) the
-variable datatype — `Variable` on v2.3/v2.3.1/v2.4, `varies` on
-v2.5.1/v2.6/v2.8.2. All six committed schemas say **`ST`**.
+variable datatype. All six committed schemas said **`ST`**.
 
-The project already has the right convention for this case: `RDT-1` stores
-`Variable` / `varies` verbatim per version, exactly as `TS`→`DTM` and
-`CE`→`CWE` are tracked. OBX-5 simply does not follow it.
+**Correction found at fix time:** the audit recorded the v2.3-era value as
+`Variable`; the attribute tables actually print **`*`** on v2.3/v2.3.1/v2.4
+(the section headings read `Observation value (*)`) and `varies` on
+v2.5.1/v2.6/v2.8.2. `Variable` was a paraphrase, not the verbatim value —
+re-verified against all six chapters' tables at fix time.
 
-Correcting it is **API-affecting**: `varies` is not in codegen's
-`scalarDataTypes`, so `OBX.observationValue` would change from `String?` to
-`Field?` — a breaking change the 2.x additive-only contract (ADR-014) forbids.
-Per the working notes's stability clock this is therefore a **known defect scheduled
-for the next major boundary**, not something to quietly leave unrecorded. It
-should be listed in `Migration.md` alongside the other 3.0 candidates.
+The project already had the right convention for this case: `RDT-1` stores
+the verbatim table value per version. OBX-5 now follows it.
+
+The fix was **API-affecting**: `*`/`varies` are not in codegen's
+`scalarDataTypes`, so `OBX.observationValue` changed from `String?` to
+`Field?` — breaking, originally blocked by ADR-014's 2.x additive-only
+contract. **The project owner directed an override (2026-09-15)** to
+remediate immediately; the next release is a major (`v3.0.0`). See
+`Migration.md` → "The 3.0 boundary" and the ADR-014 addendum. The `String?`
+accessor had silently flattened structured OBX-5 payloads (CE, SN, ED, ...)
+to their first component; a test now pins the structured path.
 
 ### M6-O5 — no audit predicate has ever compared a field's datatype
 

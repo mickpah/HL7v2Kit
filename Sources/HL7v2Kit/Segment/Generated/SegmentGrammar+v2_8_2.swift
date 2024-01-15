@@ -1262,7 +1262,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X"),
             FieldGrammar(index: 3, name: "Observation Identifier", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
             FieldGrammar(index: 4, name: "Observation Sub-ID", dataType: "OG", optionality: .conditional, repeatability: .single, condition: nil),
-            FieldGrammar(index: 5, name: "Observation Value", dataType: "ST", optionality: .conditional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 5, name: "Observation Value", dataType: "varies", optionality: .conditional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 6, name: "Units", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 7, name: "References Range", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 8, name: "Interpretation Codes", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),

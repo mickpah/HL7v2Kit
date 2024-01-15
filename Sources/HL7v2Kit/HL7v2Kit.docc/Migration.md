@@ -62,6 +62,24 @@ tests — verified by grep at audit time (2026-08-26) and re-verified at removal
 switch; only constructions could, and none existed. Callers of removed symbols migrate
 per the table. The additive-only contract resumes for the `2.x` line from `v2.0.0`.
 
+## The 3.0 boundary (M6-D5 — owner-directed ADR-014 override, 2026-09-15)
+
+The M6 audit found `OBX.observationValue` declared as `ST` (`String?`) in all six
+schemas, where every version's attribute table gives OBX-5 the **variable** datatype
+(`*` on v2.3/v2.3.1/v2.4, `varies` on v2.5.1/v2.6/v2.8.2) — the actual type is chosen
+at runtime by OBX-2. A `String?` accessor silently flattened structured payloads
+(CE, SN, ED, ...) to their first component. The project owner directed an ADR-014
+override to fix the defect immediately rather than queue it (2026-09-15); the first
+release containing it is therefore a **major** (`v3.0.0`).
+
+| Changed at 3.0 | Migration |
+|---|---|
+| `OBX.observationValue`: `String?` → `Field?` | For scalar reads, append `?.stringValue` (`obx.observationValue?.stringValue`). For structured payloads, use the `Field` API (`.first?.components`), or path access (`message["OBX-5.2"]`). |
+
+The schemas now store the spec's verbatim datatype (`*` / `varies`), matching the
+`RDT-1` convention. This is the only ADR-014 exception granted for the 2.x line;
+the additive-only contract otherwise continues and resumes for `3.x` from `v3.0.0`.
+
 ## API evolution since v0.5.0 (the stability anchor)
 
 All additive — no source break for a consumer who follows the `@unknown default` guidance:

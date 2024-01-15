@@ -31,9 +31,9 @@ public struct OBX: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// OBX-5: Observation Value. HL7 data type `ST`.
-    public var observationValue: String? {
-        field(5)?.stringValue
+    /// OBX-5: Observation Value. HL7 data type `varies`.
+    public var observationValue: Field? {
+        field(5)
     }
 
     /// OBX-6: Units. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

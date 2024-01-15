@@ -49,7 +49,7 @@ For segments that can appear more than once (e.g. multiple `OBX` per message):
 
 ```swift
 for obx in message.allSegments(OBX.self) {
-    print("\(obx.observationIdentifier?.first?.components[0].stringValue ?? "") = \(obx.observationValue ?? "")")
+    print("\(obx.observationIdentifier?.first?.components[0].stringValue ?? "") = \(obx.observationValue?.stringValue ?? "")")
 }
 ```
 
