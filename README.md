@@ -47,7 +47,7 @@ Full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2
 
 ## Typed segments & composites
 
-**146 code-generated typed segment structs** — the ADT/ORU core (`MSH`, `PID`, `OBX`, `OBR`, …) through orders/pharmacy, scheduling, financial, master files, personnel, clinical trials, lab automation, queries, and the batch envelopes (`BHS`/`FHS`/`BTS`/`FTS`) — generated from the canonical v2.5.1 schemas (`Resources/schemas/`) and version-agnostic at runtime. Composite-typed fields return typed struct views with named accessors instead of raw `Field?`:
+**150 code-generated typed segment structs** — the ADT/ORU core (`MSH`, `PID`, `OBX`, `OBR`, …) through orders/pharmacy, scheduling, financial, master files, personnel, clinical trials, lab automation, queries, and the batch envelopes (`BHS`/`FHS`/`BTS`/`FTS`) — generated from the canonical v2.5.1 schemas (`Resources/schemas/`) and version-agnostic at runtime. Composite-typed fields return typed struct views with named accessors instead of raw `Field?`:
 
 | Composite | Example accessors |
 |---|---|

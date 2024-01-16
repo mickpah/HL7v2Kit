@@ -1,0 +1,79 @@
+{
+  "segmentID": "IPC",
+  "version": "2.5.1",
+  "description": "Imaging Procedure Control Segment",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "accessionIdentifier",
+      "name": "Accession Identifier",
+      "dataType": "EI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "requestedProcedureID",
+      "name": "Requested Procedure ID",
+      "dataType": "EI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "studyInstanceUID",
+      "name": "Study Instance UID",
+      "dataType": "EI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "scheduledProcedureStepID",
+      "name": "Scheduled Procedure Step ID",
+      "dataType": "EI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "modality",
+      "name": "Modality",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "protocolCode",
+      "name": "Protocol Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 7,
+      "swiftName": "scheduledStationName",
+      "name": "Scheduled Station Name",
+      "dataType": "EI",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "scheduledProcedureStepLocation",
+      "name": "Scheduled Procedure Step Location",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 9,
+      "swiftName": "scheduledAETitle",
+      "name": "Scheduled AE Title",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+- **v3 cycle 1 — the v2.5-only quartet: `CER` / `IPC` / `OVR` / `SFT`.** The last
+  never-authored segments on any AU-priority version, authored on v2.5.1 from
+  their own attribute tables (CH15 / CH04 / CH02 / CH02; 31 + 9 + 5 + 6 fields,
+  four `--verify` PASS). **146 → 150 typed segments; the v2.5.1 never-authored
+  count is 0** — every remaining coverage gap is the owner-deferred
+  v2.6/v2.8.2 backlog (their quartet instances now count in the deferred
+  class: 24 / 38). Notes: `CER-1` renders the spec's en-dash verbatim
+  (`Set ID – CER`); `CER-12 Subject ID` is a bare `C` (its X.509-format
+  condition is not wire-decidable — registered in
+  `conditional-completeness-audit.md`); **`CER-6` is the first field on any
+  modelled version to declare `ED`** as its static datatype, amending
+  M6-O7's "no field declares ED" observation (the §D ED/RP points are
+  unaffected — their subject is the runtime OBX-5 type).
 
 ## [3.0.0] — 2026-09-16
 

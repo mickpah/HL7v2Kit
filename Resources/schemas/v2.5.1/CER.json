@@ -1,0 +1,255 @@
+{
+  "segmentID": "CER",
+  "version": "2.5.1",
+  "description": "Certificate Detail",
+  "fields": [
+    {
+      "index": 1,
+      "swiftName": "setID",
+      "name": "Set ID – CER",
+      "dataType": "SI",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 2,
+      "swiftName": "serialNumber",
+      "name": "Serial Number",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 3,
+      "swiftName": "version",
+      "name": "Version",
+      "dataType": "ST",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 4,
+      "swiftName": "grantingAuthority",
+      "name": "Granting Authority",
+      "dataType": "XON",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 5,
+      "swiftName": "issuingAuthority",
+      "name": "Issuing Authority",
+      "dataType": "XCN",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 6,
+      "swiftName": "signatureOfIssuingAuthority",
+      "name": "Signature of Issuing Authority",
+      "dataType": "ED",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 7,
+      "swiftName": "grantingCountry",
+      "name": "Granting Country",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 8,
+      "swiftName": "grantingStateProvince",
+      "name": "Granting State/Province",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 9,
+      "swiftName": "grantingCountyParish",
+      "name": "Granting County/Parish",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 10,
+      "swiftName": "certificateType",
+      "name": "Certificate Type",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 11,
+      "swiftName": "certificateDomain",
+      "name": "Certificate Domain",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 12,
+      "swiftName": "subjectID",
+      "name": "Subject ID",
+      "dataType": "ID",
+      "optionality": "C",
+      "repeatability": "1"
+    },
+    {
+      "index": 13,
+      "swiftName": "subjectName",
+      "name": "Subject Name",
+      "dataType": "ST",
+      "optionality": "R",
+      "repeatability": "1"
+    },
+    {
+      "index": 14,
+      "swiftName": "subjectDirectoryAttributeExtension",
+      "name": "Subject Directory Attribute Extension (Health Professional Data)",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 15,
+      "swiftName": "subjectPublicKeyInfo",
+      "name": "Subject Public Key Info",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 16,
+      "swiftName": "authorityKeyIdentifier",
+      "name": "Authority Key Identifier",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 17,
+      "swiftName": "basicConstraint",
+      "name": "Basic Constraint",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 18,
+      "swiftName": "crlDistributionPoint",
+      "name": "CRL Distribution Point",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 19,
+      "swiftName": "jurisdictionCountry",
+      "name": "Jurisdiction Country",
+      "dataType": "ID",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 20,
+      "swiftName": "jurisdictionStateProvince",
+      "name": "Jurisdiction State/Province",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 21,
+      "swiftName": "jurisdictionCountyParish",
+      "name": "Jurisdiction County/Parish",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 22,
+      "swiftName": "jurisdictionBreadth",
+      "name": "Jurisdiction Breadth",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "*"
+    },
+    {
+      "index": 23,
+      "swiftName": "grantingDate",
+      "name": "Granting Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 24,
+      "swiftName": "issuingDate",
+      "name": "Issuing Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 25,
+      "swiftName": "activationDate",
+      "name": "Activation Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 26,
+      "swiftName": "inactivationDate",
+      "name": "Inactivation Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 27,
+      "swiftName": "expirationDate",
+      "name": "Expiration Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 28,
+      "swiftName": "renewalDate",
+      "name": "Renewal Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 29,
+      "swiftName": "revocationDate",
+      "name": "Revocation Date",
+      "dataType": "TS",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 30,
+      "swiftName": "revocationReasonCode",
+      "name": "Revocation Reason Code",
+      "dataType": "CE",
+      "optionality": "O",
+      "repeatability": "1"
+    },
+    {
+      "index": 31,
+      "swiftName": "certificateStatus",
+      "name": "Certificate Status",
+      "dataType": "CWE",
+      "optionality": "O",
+      "repeatability": "1"
+    }
+  ]
+}

@@ -1930,4 +1930,56 @@ struct TypedSegmentTests {
             #expect(present)
         }
     }
+
+    // v3.x cycle 1: the v2.5-only quartet CER/IPC/OVR/SFT — the last never-authored
+    // segments on any AU-priority version. All four are v2.5+ additions: absent from
+    // v2.3/v2.3.1/v2.4 by spec, and their v2.6/v2.8.2 instances are the owner-deferred
+    // class. CER-6 is the FIRST field on any modelled version to declare ED as its
+    // static datatype (amends M6-O7's "no field declares ED" observation; the eight
+    // OBX-5-targeted ED/RP points in permanent-limitations-register.md §D are
+    // unaffected — their subject remains the runtime OBX-5 type).
+    @Test("v3 cycle 1: CER/IPC/OVR/SFT — depths, v2.5-only presence, verbatim names")
+    func v3Cycle1V25OnlyQuartet() throws {
+        let c = SegmentGrammarTable.v2_5_1
+        #expect(c["CER"]?.fields.count == 31)
+        #expect(c["IPC"]?.fields.count == 9)
+        #expect(c["OVR"]?.fields.count == 5)
+        #expect(c["SFT"]?.fields.count == 6)
+        // v2.5-only: not defined on the pre-v2.5 AU-priority versions.
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4] {
+            for seg in ["CER", "IPC", "OVR", "SFT"] {
+                #expect(table[seg] == nil, "\(seg) is a v2.5+ segment")
+            }
+        }
+        // Verbatim spec renderings: CER-1 prints an en-dash ("Set ID – CER");
+        // CER-12 is a bare C (X.509-format condition, not wire-decidable —
+        // registered with the conditional-completeness set).
+        #expect(c["CER"]?.field(1)?.name == "Set ID – CER")
+        #expect(c["CER"]?.field(12)?.optionality == .conditional)
+        #expect(c["CER"]?.field(6)?.dataType == "ED")
+
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||MFN^M15|M1|P|2.5.1\r"
+            + "SFT|Vendor Org^L|1.2.3|HL7v2Kit|abc123|Product info|20240101\r"
+            + "OVR|OT^Override Type^HL70518|OC^Override Code^HL70521|Because|Doe^John|Roe^Jane\r"
+            + "IPC|ACC1^NS^1.2.36.1^ISO|RP1|1.2.840.1|SPS1|MR^Magnetic Resonance^DCM|PROT1^Protocol^L\r"
+            + "CER|1|SN123|3|Granting Org^L|Doe^John|data^application^pdf^Base64^AAAA|AUS\r"
+        let (message, cer) = try hydratedMessage(CER.self, from: wire)
+        #expect(cer.setID == "1")                               // SI scalar
+        #expect(cer.serialNumber == "SN123")
+        // ED has no composite struct view → Field? accessor; cross-check
+        // the typed read against the path read (Field.stringValue is
+        // strictly scalar, so read the first component explicitly).
+        #expect(cer.signatureOfIssuingAuthority?.first?.components.first?.stringValue
+                    == message["CER-6.1"])
+        #expect(message["CER-6.1"] == "data")
+        let sft = try #require(message.firstSegment(SFT.self))
+        #expect(sft.softwareProductName == "HL7v2Kit")
+        #expect(sft.softwareVendorOrganization?.organizationName == message["SFT-1.1"])  // XON view
+        let ovr = try #require(message.firstSegment(OVR.self))
+        #expect(ovr.overrideComments == "Because")
+        let ipc = try #require(message.firstSegment(IPC.self))
+        #expect(ipc.accessionIdentifier?.entityIdentifier == message["IPC-1.1"])  // EI view
+        #expect(message["IPC-1.1"] == "ACC1")
+        #expect(ipc.scheduledAETitle == nil)                    // absent optional tail
+    }
 }
