@@ -8,6 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M6-B-7 — OBX-2-driven datatype resolution: the ED/RP series ships.**
+  The composite dispatch resolves OBX-5's effective datatype from OBX-2
+  when the grammar carries the variable placeholder — the M6-O7 capability.
+  `HL7au:00044.10.1.1–.4` (ED type/subtype/encoding/data must be valued)
+  and `.11.1.1–.4` (RP pointer/application ID/type/subtype) enforced,
+  gated (ORU, REF). A CE-valued OBX-5 now also correctly receives the
+  CE narrowings. SHIPPED 55 → 63, EXTEND 26 → 18.
+
+- **M6-B-8 — correspondence maps, and a M6-B-4 correction.** New
+  `ComponentCorrespondence` rule (per-repetition key ⇒ value maps on both
+  override tracks; unstated keys and empty values skip; case-insensitive —
+  the ADRM's own examples mix `TEXT^RTF` and `text^html`). Shipped:
+  ED/RP subtype ⇒ type (`00044.10.1.5/.6`, `.11.1.5/.6`, partial — stated
+  pairs only, the IANA registry is unbounded), the PRD-7 authority ⇒
+  qualifier pairs (`00104.7.1.4`, partial — vendor authorities are
+  open-ended examples), and `000008.1.3` (OBX-2 must match the OBX-3.1
+  display format per the p. 247 table). **Correction:** `00104.7.2.1`'s
+  0363 membership check was withdrawn → REGISTERED — table 0363 is
+  user-defined and the ADRM's own p. 334 examples use vendor authorities
+  outside it, so the closed-set check misfired on the spec's own wires
+  (req #4); table 0203 gains `UPIN`/`NOI`, which the ADRM's examples use
+  but its printed post-v2.4 0203 omits. SHIPPED 63, PARTIAL 8,
+  REGISTERED 6, EXTEND 18 → 12 — **92 of the 104 message-decidable rows**.
+
 - **M6-B-6 — the referral-level gates: three more PARTIAL legs shipped, and
   a correction.** The M6 audit had recorded the Referrals(L2)/L1
   discriminator as "an MSH-21 profile ID the model cannot address". That
