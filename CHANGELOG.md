@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M7-P2 — five prose-only narrowings ship (cited as `ADRM-prose:P-n`).**
+  P-1: PID-1 profile-required ("mandatory in the Australian context",
+  p. 61 footnote; gated ORM/ORU/REF/RRI). P-2: the §7.4.2 REF
+  disallowed-segments list — nine `maxCount: 0` prohibitions (ACC, AUT,
+  CTD, DRG, DSC, DSP, GT1, IN2, PR1; NTE was already HL7au:000023).
+  P-3: MSH-9 pinned to REF^I12^REF_I12 / RRI^I12^RRI_I12 on referral
+  traffic (§7.3.1.9 p. 326). P-5a: on ACK messages MSH-12.3.1 is
+  required and closed over {HL7AU-OO-ACK-201701,
+  HL7AU-OO-ACK-READ-2020006} (§8.4/§8.5 p. 372). P-5b: on user read
+  acknowledgements MSH-3.3 must be AUSHICPR or NPIO (§8.4). All on
+  existing machinery — no model change; suite 605 tests, 595 green.
+
 - **M7-P1 — the ADRM chapter-body prose sweep (measurement + triage).**
   New `scripts/sweep-adrm-prose.py` scans the ADRM body for normative
   sentences with no conformance-point ID nearby and no textual match in

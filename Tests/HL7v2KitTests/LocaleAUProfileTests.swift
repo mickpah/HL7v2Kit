@@ -2117,6 +2117,98 @@ struct LocaleAUProfileTests {
                 "date-only values skip — the offset is conditioned on time being transmitted")
     }
 
+    // MARK: - M7-P2: prose-sweep findings (docs/design/m7-adrm-prose-sweep.md)
+
+    private func prose(_ wire: String, _ tag: String) throws -> [String] {
+        let report = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire))
+        return report.errors.compactMap {
+            $0.message.contains(tag) ? $0.message : nil
+        }
+    }
+
+    @Test("ADRM-prose:P-1 — PID-1 is mandatory in the Australian context")
+    func pid1MandatoryAU() throws {
+        let noSetID = "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ORU^R01|MSG1|P|2.5.1\r"
+            + "PID|||999999^^^HOSP^MR\r"
+        #expect(try prose(noSetID, "ADRM-prose:P-1").count == 1,
+                "an ORU PID without Set ID must fire P-1")
+        let withSetID = "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ORU^R01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+        #expect(try prose(withSetID, "ADRM-prose:P-1").isEmpty)
+        // ADT is outside the guide's scope — base HL7 optionality holds.
+        let adt = "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ADT^A01|MSG1|P|2.5.1\r"
+            + "PID|||999999^^^HOSP^MR\r"
+        #expect(try prose(adt, "ADRM-prose:P-1").isEmpty)
+    }
+
+    @Test("ADRM-prose:P-2 — the §7.4.2 disallowed segments fire on REF only")
+    func refDisallowedSegments() throws {
+        let refWithGT1 = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+            + "GT1|1||GUARANTOR^G\r"
+        let fired = try prose(refWithGT1, "ADRM-prose:P-2")
+        #expect(fired.count == 1 && fired[0].contains("GT1"),
+                "a GT1 in a REF must fire the §7.4.2 prohibition; got \(fired)")
+        // Multiple disallowed segments each fire.
+        let refWithTwo = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+            + "DSC|1\r"
+            + "PR1|1||1234^Proc^L\r"
+        #expect(try prose(refWithTwo, "ADRM-prose:P-2").count == 2)
+        // The gate: the same segments outside REF are untouched by P-2
+        // (GT1 is legitimate ORM billing content, p. 117).
+        let ormWithGT1 = "MSH|^~\\&|GP|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+            + "GT1|1||GUARANTOR^G\r"
+        #expect(try prose(ormWithGT1, "ADRM-prose:P-2").isEmpty)
+    }
+
+    @Test("ADRM-prose:P-3 — MSH-9 pinned to REF^I12^REF_I12 / RRI^I12^RRI_I12")
+    func msh9ReferralPins() throws {
+        let wrongStructure = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I11|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+        #expect(try prose(wrongStructure, "ADRM-prose:P-3").count == 1,
+                "REF with a wrong message structure must fire P-3")
+        let conformant = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+        #expect(try prose(conformant, "ADRM-prose:P-3").isEmpty)
+        let rriWrongTrigger = "MSH|^~\\&|SPEC|FAC|GP|FAC|||RRI^I13^RRI_I12|MSG1|P|2.4\r"
+            + "PID|1||X^^^F^MR\r"
+        #expect(try prose(rriWrongTrigger, "ADRM-prose:P-3").count == 1,
+                "RRI with a wrong trigger event must fire P-3")
+    }
+
+    @Test("ADRM-prose:P-5a — ACK MSH-12.3.1 closed over the two ack profile IDs")
+    func ackProfilePin() throws {
+        func ack(_ vid3: String) -> String {
+            "MSH|^~\\&|LAB|FAC|GP|FAC|||ACK|MSG1|P|2.4^AUS&Australia&ISO3166_1\(vid3)\r"
+                + "MSA|AA|MSG0\r"
+        }
+        #expect(try prose(ack("^HL7AU-OO-ACK-201701&&L"), "ADRM-prose:P-5a").isEmpty,
+                "the general-ack profile ID is conformant")
+        #expect(try prose(ack("^HL7AU-OO-ACK-READ-2020006&&L"), "ADRM-prose:P-5a").isEmpty,
+                "the read-ack profile ID is conformant")
+        #expect(try prose(ack("^HL7AU-OO-201701&&L"), "ADRM-prose:P-5a").count == 1,
+                "the Orders/Results profile ID on an ACK must fire")
+        #expect(try prose(ack(""), "ADRM-prose:P-5a").count == 1,
+                "an ACK without MSH-12.3 must fire — both §8.4/§8.5 say 'must be valued'")
+    }
+
+    @Test("ADRM-prose:P-5b — read-ack MSH-3.3 must be AUSHICPR or NPIO")
+    func readAckSenderScheme() throws {
+        func readAck(msh3: String, vid3: String = "HL7AU-OO-ACK-READ-2020006") -> String {
+            "MSH|^~\\&|\(msh3)|FAC|GP|FAC|||ACK|MSG1|P|2.4^AUS&Australia&ISO3166_1^\(vid3)&&L\r"
+                + "MSA|AA|MSG0\r"
+        }
+        #expect(try prose(readAck(msh3: "DrSmith^0499602CT^AUSHICPR"), "ADRM-prose:P-5b").isEmpty)
+        #expect(try prose(readAck(msh3: "DrSmith^8003611566701234@8003621566684455^NPIO"), "ADRM-prose:P-5b").isEmpty)
+        #expect(try prose(readAck(msh3: "DrSmith^0499602CT^LOCAL"), "ADRM-prose:P-5b").count == 1,
+                "a non-AUSHICPR/NPIO scheme on a read-ack must fire")
+        // The gate: a general ACK is not a read-ack — the scheme is free.
+        #expect(try prose(readAck(msh3: "LAB^X^LOCAL", vid3: "HL7AU-OO-ACK-201701"), "ADRM-prose:P-5b").isEmpty)
+    }
+
     // MARK: - M6-B-6: the L1/L2 legs via the MSH-12.3.1 profile discriminator
     //
     // The ADRM declares the adhered profile in MSH-12.3 (000040.4 pins the

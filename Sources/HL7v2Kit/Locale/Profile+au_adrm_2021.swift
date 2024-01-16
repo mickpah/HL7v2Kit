@@ -155,6 +155,26 @@ extension Profile {
                         condition: "messageCode in (REF, RRI)",
                         specCitation: "HL7au:000040.4 (r2) — MSH-12.3.3 (Internal Version ID coding system) must be \"L\" on Referrals/RRI"
                     ),
+                    // M7-P2 / P-5a — chapter 8 pins the acknowledgement
+                    // profile in the same component: "MSH-12-3 must be
+                    // valued 'HL7AU-OO-ACK-READ-2020006'" for user read
+                    // acknowledgements (§8.4) and "... 'HL7AU-OO-ACK-
+                    // 201701'" for general acknowledgements (§8.5), both
+                    // p. 372. The two sections partition ACK usage and
+                    // the flavour is only distinguishable by this value,
+                    // so on ACK the component is required and closed
+                    // over the pair. Prose-only: Appendix 5 carries no
+                    // ACK-scoped MSH-12.3 row.
+                    ComponentValueSet(
+                        component: 3,
+                        subcomponent: 1,
+                        allowedValues: [
+                            "HL7AU-OO-ACK-201701",
+                            "HL7AU-OO-ACK-READ-2020006",
+                        ],
+                        condition: "messageCode = ACK",
+                        specCitation: "ADRM-prose:P-5a — on ACK messages MSH-12.3.1 must be HL7AU-OO-ACK-201701 (general, §8.5) or HL7AU-OO-ACK-READ-2020006 (user read, §8.4); AU ADRM-2021 p. 372"
+                    ),
                 ],
                 specCitation: "HL7au:000040 (r2) — MSH-12 Version ID Field Conformance Points"
             ),
@@ -277,6 +297,38 @@ extension Profile {
                 fieldIndex: 9,
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [2, 3],
+                componentValueSets: [
+                    // M7-P2 / P-3 — §7.3.1.9 (p. 326): "For the patient
+                    // referral message this field must be valued as:
+                    // REF^I12^REF_I12. For the referral response
+                    // indication message this must be valued as
+                    // RRI^I12^RRI_I12." Component 1 is the gate itself;
+                    // components 2 and 3 pin per message code.
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: ["I12"],
+                        condition: "messageCode = REF",
+                        specCitation: "ADRM-prose:P-3 — MSH-9 on a patient referral must be REF^I12^REF_I12 (§7.3.1.9 p. 326)"
+                    ),
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["REF_I12"],
+                        condition: "messageCode = REF",
+                        specCitation: "ADRM-prose:P-3 — MSH-9 on a patient referral must be REF^I12^REF_I12 (§7.3.1.9 p. 326)"
+                    ),
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: ["I12"],
+                        condition: "messageCode = RRI",
+                        specCitation: "ADRM-prose:P-3 — MSH-9 on a referral response must be RRI^I12^RRI_I12 (§7.3.1.9 p. 326)"
+                    ),
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["RRI_I12"],
+                        condition: "messageCode = RRI",
+                        specCitation: "ADRM-prose:P-3 — MSH-9 on a referral response must be RRI^I12^RRI_I12 (§7.3.1.9 p. 326)"
+                    ),
+                ],
                 specCitation: "HL7au:00049.2/.3 — MSH-9 trigger event (MSG-2) and message structure (MSG-3) must be valued"
             ),
             // HL7au:00047.1 — MSH-15 must be valued "AL". Base v2.4 has
@@ -331,6 +383,46 @@ extension Profile {
                     )
                 ],
                 specCitation: "HL7au:00048.3.1 — MSH-18 character set value set"
+            ),
+            // ---- M7-P2: prose-sweep findings ----------------------
+            // These carry no HL7au identifier — Appendix 5 has no row
+            // for them. Each is quoted verbatim from chapter prose in
+            // `docs/design/m7-adrm-prose-sweep.md`, cited as
+            // "ADRM-prose:P-n" with the section and printed page.
+            //
+            // P-1 — "PID-1 is mandatory in the Australian context.
+            // Variance to HL7 International." (PID attribute-table
+            // footnote †††, p. 61). Base v2.4 has PID-1 optional.
+            // Gated to the message types the guide carries PID in
+            // (Orders, Results, Referrals, Referral Response — the RRI
+            // echoes the REF's PID per §7.1, p. 325).
+            FieldOverride(
+                segmentID: "PID",
+                fieldIndex: 1,
+                profileUsage: .required,
+                condition: "messageCode in (ORM, ORU, REF, RRI)",
+                specCitation: "ADRM-prose:P-1 — PID-1 (Set ID) is mandatory in the Australian context (variance to HL7 International); AU ADRM-2021 p. 61"
+            ),
+            // P-5b — read acknowledgements: "Valid formats for the user
+            // details in MSH-3 (Sending Application) are:
+            // Username^<Medicare Australia provider number>^AUSHICPR
+            // [or] Username^<HPI-I>@<HPI-O>^NPIO" (§8.4, p. 372). The
+            // decidable component is MSH-3.3 (the scheme); the ID
+            // formats themselves are content patterns and stay in the
+            // sweep register. Gated on the read-ack profile ID the
+            // message itself declares.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 3,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["AUSHICPR", "NPIO"],
+                        condition: "messageCode = ACK AND MSH-12.3.1 = HL7AU-OO-ACK-READ-2020006",
+                        specCitation: "ADRM-prose:P-5b — on user read acknowledgements MSH-3.3 must be AUSHICPR or NPIO (§8.4 p. 372)"
+                    )
+                ],
+                specCitation: "ADRM-prose:P-5b — read-acknowledgement MSH-3 user-detail scheme"
             ),
             FieldOverride(
                 segmentID: "OBR",
@@ -885,6 +977,94 @@ extension Profile {
                     predicate: "",
                     applicableWhen: "messageCode in (ORM, ORU, REF)",
                     specCitation: "HL7au:000023 — the NTE segment must not be used on Senders Orders/Results/Referrals; AU ADRM-2021 Appendix 5 p. 440"
+                ),
+                // M7-P2 / P-2 — §7.4.2 "Disallowed segments" (p. 363):
+                // "The following segments … must not be used by
+                // senders": ACC, AUT, CTD, DRG, DSC, DSP, GT1, IN2,
+                // NTE, PR1. Prose-only — Appendix 5 has no row. NTE is
+                // already prohibited by HL7au:000023 above (wider
+                // scope), so the remaining nine ship here, gated to
+                // referral messages (§7.4.2 is chapter 7, REF).
+                SegmentCardinalityRule(
+                    countedSegmentID: "ACC",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the ACC segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "AUT",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the AUT segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "CTD",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the CTD segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "DRG",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the DRG segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "DSC",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the DSC segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "DSP",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the DSP segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "GT1",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the GT1 segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "IN2",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the IN2 segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "PR1",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "",
+                    applicableWhen: "messageCode = REF",
+                    specCitation: "ADRM-prose:P-2 — the PR1 segment must not be used by senders in referral messages; AU ADRM-2021 §7.4.2 p. 363"
                 ),
                 // M6-B-1 — the two PRD exactly-one rules. PRD-1 is a
                 // repeating CE, so the predicate uses the anyRepeat

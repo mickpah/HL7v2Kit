@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Started | 2026-09-16 (M7-P1) |
-| Status | **P1 (measurement + triage) complete.** Ship candidates queued as M7-P2/P3; register entries recorded below. Normative appendices 8–10 remain unswept (follow-on P4). |
+| Status | **P1 (measurement + triage) complete; P2 SHIPPED (2026-09-16)** — P-1, P-2, P-3, and both P-5 halves are live in the profile with `ADRM-prose:P-n` citations. P-4 (escape prohibitions, needs a content-scan track) queued as M7-P3. Normative appendices 8–10 remain unswept (follow-on P4). |
 | Method | `scripts/sweep-adrm-prose.py` over `/tmp/adrm2021.txt` (pdftotext of the ADRM; re-extract per session) |
 | Predecessor | `m6-adrm-2021-localisation-audit.md` — the Appendix 5 register work. This sweep covers what Appendix 5 explicitly does not: narrowings stated only in chapter prose. |
 
@@ -36,11 +36,12 @@ page indexes (printed page ≈ index, off by at most a few).
 
 | # | Finding | Spec text (quoted) | Mechanism | Status |
 |---|---------|--------------------|-----------|--------|
-| P-1 | **PID-1 profile-required** | "PID-1 is mandatory in the Australian context. Variance to HL7 International." (PID attribute-table footnote †††, p. 61) | `FieldOverride` profileUsage R, gated to the ADRM message scope (ORM/ORU/REF), citation `AU ADRM-2021 p. 61` | **queued M7-P2** |
-| P-2 | **REF disallowed segments** | "§7.4.2 Disallowed segments — The following segments … must not be used by senders": ACC, AUT, CTD, DRG, DSC, DSP, GT1, IN2, NTE, PR1 (p. 363) | Nine new `maxCount: 0` prohibitions gated `messageCode = REF` (NTE is already shipped `HL7au:000023` over Orders/Results/Referrals). Existing machinery — no model change. | **queued M7-P2** |
-| P-3 | **MSH-9 exact pins on referral traffic** | "For the patient referral message this field must be valued as: REF^I12^REF_I12. For the referral response indication message this must be valued as RRI^I12^RRI_I12" (§7.3.1.9, p. 326) | Component value sets on MSH-9.1/.2/.3 gated per message code (REF / RRI). Existing machinery. | **queued M7-P2** |
+| P-1 | **PID-1 profile-required** | "PID-1 is mandatory in the Australian context. Variance to HL7 International." (PID attribute-table footnote †††, p. 61) | `FieldOverride` profileUsage R, gated (ORM, ORU, REF, RRI) — the RRI echoes the REF's PID per §7.1 p. 325 | **✅ SHIPPED M7-P2** |
+| P-2 | **REF disallowed segments** | "§7.4.2 Disallowed segments — The following segments … must not be used by senders": ACC, AUT, CTD, DRG, DSC, DSP, GT1, IN2, NTE, PR1 (p. 363) | Nine `maxCount: 0` prohibitions gated `messageCode = REF` (NTE was already shipped as `HL7au:000023` over Orders/Results/Referrals). Existing machinery. | **✅ SHIPPED M7-P2** |
+| P-3 | **MSH-9 exact pins on referral traffic** | "For the patient referral message this field must be valued as: REF^I12^REF_I12. For the referral response indication message this must be valued as RRI^I12^RRI_I12" (§7.3.1.9, p. 326) | Component value sets on MSH-9.2/.3 gated per message code (REF / RRI); component 1 is the gate itself. | **✅ SHIPPED M7-P2** |
 | P-4 | **Escape-sequence prohibitions** | "§3.1.1.5 Hexadecimal — Variance to HL7 International. The hexadecimal escape sequence (\Xdddd...\) must not be used." "§3.1.1.6 — The single-byte character escape sequence \Cxxyy\ and multi-byte … \Mxxyyzz\ must not be used." (p. 136; reiterated p. 159: "The HL7 escape sequences \M and \C shall not be used.") | Needs a small content-scan capability (a prohibited-escape-sequences track on `Profile`, same shape as the M6-B-9 timezone check). Model extension, small. | **queued M7-P3** |
-| P-5 | **MSH-12.3 read-acknowledgement profile pin** | "MSH-12-3 must be valued 'HL7AU-OO-ACK-READ-2020006'" (p. 372, read-ack profile section) | Same MSH-12.3.1 gate machinery as M6-B-6, once the rule's message-shape scope is confirmed from surrounding prose. | **investigate in M7-P2** |
+| P-5a | **ACK MSH-12.3.1 closed set** | "MSH-12-3 must be valued 'HL7AU-OO-ACK-READ-2020006'" (§8.4 user read acks) and "MSH-12-3 must be valued 'HL7AU-OO-ACK-201701'" (§8.5 general acks), both p. 372. The two sections partition ACK usage; the flavour is only distinguishable by this value. | ComponentValueSet on MSH-12.3.1 gated `messageCode = ACK`, closed over the pair. The bare "read-acks must carry READ-2020006" statement is **definitional** (the value IS the discriminator, like `000008.1.4`) — what ships is the derived closed set + presence. | **✅ SHIPPED M7-P2** |
+| P-5b | **Read-ack MSH-3.3 scheme** | "Valid formats for the user details in MSH-3 (Sending Application) are: Username^\<Medicare Australia provider number\>^AUSHICPR [or] Username^\<HPI-I\>@\<HPI-O\>^NPIO" (§8.4, p. 372) | MSH-3.3 ∈ {AUSHICPR, NPIO} gated `messageCode = ACK AND MSH-12.3.1 = HL7AU-OO-ACK-READ-2020006`. The ID formats themselves (provider-number shape, HPI-I@HPI-O) are content patterns — registered below. | **✅ SHIPPED M7-P2** (scheme component only) |
 
 ## B. Register — prose narrowings that cannot ship faithfully
 
@@ -53,6 +54,7 @@ page indexes (printed page ≈ index, off by at most a few).
 | Chapter message-type enumerations | "the following message type and trigger event codes shall be used: ORM^O01, ORU^R01, ORR^O02, ACK^R01, ACK^O01" (p. 278) | A chapter-scope statement (Orders). Enforcing it as an MSH-9 value set would misfire on the guide's own referral traffic (REF/RRI, ch. 7) and read-acks. The per-chapter pins that ARE per-message-decidable ship as P-3/P-5. |
 | Rendering rules | pp. 250–256 and Appendix 2 (columns, highlighting, date format, age intervals) | Receiver display behaviour — not decidable from a message. |
 | MSH field-length variances | e.g. "field length of 250 characters is a variation to the HL7 International standard" (pp. 211, 329) | Field lengths are not modelled (documented model scope); lengths also do not constrain wire validity in this DSL. |
+| Read-ack user-ID formats | "Username^\<Medicare Australia provider number\>^AUSHICPR" / "Username^\<HPI-I\>@\<HPI-O\>^NPIO" (§8.4 p. 372) | The scheme component shipped (P-5b); the ID shapes themselves (provider-number pattern, `HPI-I@HPI-O` composition) need content-pattern matching the DSL does not have. Joins P-4's capability if a content-scan track lands. |
 
 ## C. Base-spec observations (not AU narrowings — recorded for base-model work)
 
