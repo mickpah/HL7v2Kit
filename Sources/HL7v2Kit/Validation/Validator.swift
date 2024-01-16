@@ -103,6 +103,11 @@ public struct Validator: Sendable {
             checkEscapeProhibitions(profile: profile, message: message, issues: &issues)
         }
 
+        // M8-B1: base-spec ORC/OBR paired-field equality (items
+        // 00216/00217) — runs for every locale and version; the pairs
+        // are the base standard's own identity assertions.
+        checkOrcObrPairEquality(message: message, issues: &issues)
+
         return ValidationReport(issues: issues, locale: locale)
     }
 
@@ -802,6 +807,87 @@ public struct Validator: Sendable {
                 }
             }
         }
+    }
+
+    /// M8-B1: the ORC/OBR field pairs the base spec declares to be the
+    /// SAME data element. Each pair shares an HL7 ITEM number in every
+    /// supported version's attribute tables — the spec's own identity
+    /// assertion — and the chapter-4 prose states the consequence
+    /// explicitly: "If both fields, ORC-2-placer order number and
+    /// OBR-2-placer order number, are valued, they must contain the
+    /// same value" (v2.4 §4.5.1.2; "This rule is the same for other
+    /// identical fields in the ORC and OBR", §4.5.1.3); v2.8.2
+    /// §4.5.3.2: "This field is identical to ORC-2-Placer Order
+    /// Number." Conservative scope: the two EI order-number pairs
+    /// only — the XCN/TQ pairs (ORC-12/OBR-16, ORC-7/OBR-27) carry
+    /// repetition and backward-compatibility nuance and stay recorded
+    /// in `m7-adrm-prose-sweep.md` §C until modelled deliberately.
+    private static let orcObrEqualityPairs: [(field: Int, name: String, item: String)] = [
+        (2, "Placer Order Number", "00216"),
+        (3, "Filler Order Number", "00217"),
+    ]
+
+    /// M8-B1: within each ORC/OBR group, a paired field populated on
+    /// BOTH segments must carry the same value (full-field wire
+    /// comparison of the first repetition — both pairs are
+    /// single-cardinality EI). Empty on either side skips: the
+    /// presence half of the prose ("if not present in the ORC, it must
+    /// be present in the associated OBR") is message-shape-dependent
+    /// (ORU needs no ORC at all) and is not asserted here.
+    private func checkOrcObrPairEquality(
+        message: Message,
+        issues: inout [ValidationIssue]
+    ) {
+        var obrOccurrence = 0
+        var obrOccurrenceByIndex: [Int: Int] = [:]
+        for (index, segment) in message.segments.enumerated() where segment.segmentID == "OBR" {
+            obrOccurrence += 1
+            obrOccurrenceByIndex[index] = obrOccurrence
+        }
+        for (index, segment) in message.segments.enumerated() where segment.segmentID == "ORC" {
+            guard let obrIndex = message.segments.indices.first(where: { i in
+                i != index
+                    && message.segments[i].segmentID == "OBR"
+                    && message.orcGroupRange(around: index).contains(i)
+            }) else { continue }
+            let obr = message.segments[obrIndex]
+            for pair in Self.orcObrEqualityPairs {
+                guard let orcValue = flattenedFirstRepetition(segment.field(pair.field)),
+                      let obrValue = flattenedFirstRepetition(obr.field(pair.field)),
+                      orcValue != obrValue
+                else { continue }
+                let location = IssueLocation(
+                    segmentID: "OBR",
+                    segmentIndex: obrOccurrenceByIndex[obrIndex] ?? 1,
+                    fieldIndex: pair.field,
+                    componentIndex: nil
+                )
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .pairedFieldMismatch(item: pair.item),
+                    location: location,
+                    message: "ORC-\(pair.field) and OBR-\(pair.field) are the same data element (\(pair.name), item \(pair.item)) but carry different values in one order group: ORC has \"\(orcValue)\", OBR has \"\(obrValue)\" (HL7 v2.4 §4.5.1.2; v2.8.2 §4.5.3.2)"
+                ))
+            }
+        }
+    }
+
+    /// Flatten a field's first repetition to wire form for whole-field
+    /// comparison, normalising trailing empty components/subcomponents
+    /// (`A^B` and `A^B^^` carry the same value). Returns `nil` when the
+    /// field is absent or entirely empty. `Repetition.stringValue`
+    /// cannot be used here — it has strict-scalar semantics and returns
+    /// `nil` for multi-component values. M8-B1.
+    private func flattenedFirstRepetition(_ field: Field?) -> String? {
+        guard let rep = field?.repetitions.first else { return nil }
+        var components = rep.components.map { component -> String in
+            var subs = component.subcomponents.map(\.value)
+            while subs.count > 1, subs.last?.isEmpty == true { subs.removeLast() }
+            return subs.joined(separator: "&")
+        }
+        while components.count > 1, components.last?.isEmpty == true { components.removeLast() }
+        let joined = components.joined(separator: "^")
+        return joined.isEmpty ? nil : joined
     }
 
     /// M7-P3: scan every populated subcomponent for prohibited escape

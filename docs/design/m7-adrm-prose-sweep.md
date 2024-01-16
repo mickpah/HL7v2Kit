@@ -61,10 +61,18 @@ page indexes (printed page ≈ index, off by at most a few).
 - **ORC/OBR pair-equality rules** (pp. 210, 223, 292–296, base v2.4 prose): "If both
   fields, ORC-2 placer order number and OBR-2 placer order number, are valued, they must
   contain the same value" — likewise ORC-3/OBR-3, ORC-12/OBR-16, quantity/timing,
-  parent. Cross-segment **equality** between paired fields is expressible in spirit via
-  the ADR-008 DSL but there is no shipped base rule. Candidate for a base-grammar
-  cross-segment rule set (all six versions state it). Out of AU-profile scope; belongs
-  to the base-model runway.
+  parent. **✅ The two EI order-number pairs shipped as base rules (M8-B1,
+  2026-09-17):** ORC-2/OBR-2 (item 00216) and ORC-3/OBR-3 (item 00217) — the shared
+  ITEM number in every version's attribute tables is the spec's own identity assertion,
+  with v2.4 §4.5.1.2 stating the consequence and v2.8.2 §4.5.3.2 stating "This field is
+  identical to ORC-2". New `IssueCode.pairedFieldMismatch(item:)`; fires per ORC/OBR
+  group when BOTH sides are populated and differ (whole-field wire comparison,
+  trailing-empty-normalised); runs for every locale and version. **Remaining pairs**
+  (ORC-12/OBR-16 XCN, ORC-7/OBR-27 TQ, ORC-8/OBR-29-or-54 parent) carry repetition and
+  cross-version placement nuance (v2.8.2 moved parent equality to OBR-54) — still
+  recorded here for deliberate later modelling. The presence half ("if not present in
+  the ORC, it must be present in the associated OBR") is message-shape-dependent (ORU
+  needs no ORC) and stays unshipped.
 - **RXO-1/2/4 vs RXO-6 free-text conditional** (pp. 346–348): "The RXO-1, RXO-2 and
   RXO-4 are mandatory unless the prescription is transmitted as free text using RXO-6,
   then … the first subcomponent of RXO-6 must be blank." Compound conditional

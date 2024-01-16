@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M8-B1 — base-spec ORC/OBR paired-field equality.** The base
+  standard declares ORC-2/OBR-2 (item 00216, Placer Order Number) and
+  ORC-3/OBR-3 (item 00217, Filler Order Number) to be the SAME data
+  element — the shared ITEM number in every version's attribute tables,
+  spelled out in v2.4 §4.5.1.2 ("If both fields ... are valued, they
+  must contain the same value") and v2.8.2 §4.5.3.2 ("This field is
+  identical to ORC-2"). New Validator base pass: per ORC/OBR group,
+  both sides populated and different fires the new
+  `IssueCode.pairedFieldMismatch(item:)` (additive case; open enum per
+  ADR-014). Whole-field wire comparison with trailing-empty
+  normalisation; empty-either-side skips (the presence half is
+  message-shape-dependent — ORU needs no ORC). Runs for every locale
+  and version. The XCN/TQ/parent pairs stay recorded in the sweep doc
+  §C for deliberate later modelling. Suite 612 tests, 602 green.
+
 - **M7-P4 — the normative-appendices pass; M7 complete.** Appendices
   8–10 swept (63 candidates, all triaged in the sweep doc). Shipped
   `ADRM-prose:P-6`: the VMR header OBX pins (Appendix 9 p. 490) —

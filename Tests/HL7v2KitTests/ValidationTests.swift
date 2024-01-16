@@ -183,4 +183,77 @@ struct ValidationTests {
         let fieldLocation = IssueLocation(segmentID: "PID", segmentIndex: 2, fieldIndex: 5)
         #expect(fieldLocation.pathDescription == "PID[2]-5")
     }
+
+    // MARK: - M8-B1: base ORC/OBR paired-field equality (items 00216/00217)
+
+    private func pairMismatches(_ wire: String) throws -> [ValidationIssue] {
+        let report = Validator().validate(try Parser().parse(wire))
+        return report.errors.filter {
+            if case .pairedFieldMismatch = $0.code { return true }
+            return false
+        }
+    }
+
+    @Test("ORC-2/OBR-2 carrying different values in one group fires item 00216")
+    func orcObrPlacerMismatchFires() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "ORC|NW|PLACER-A^HOSP|FIL-1^LAB\r"
+            + "OBR|1|PLACER-B^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
+        let fired = try pairMismatches(wire)
+        #expect(fired.count == 1, "got \(fired.map(\.message))")
+        #expect(fired.first?.code == .pairedFieldMismatch(item: "00216"))
+        #expect(fired.first?.location.pathDescription == "OBR[1]-2")
+    }
+
+    @Test("ORC-3/OBR-3 mismatch fires item 00217; matching pairs are silent")
+    func orcObrFillerMismatchFires() throws {
+        let mismatch = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "ORC|NW|PL-1^HOSP|FIL-A^LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-B^LAB|GLU^Glucose^L\r"
+        let fired = try pairMismatches(mismatch)
+        #expect(fired.count == 1)
+        #expect(fired.first?.code == .pairedFieldMismatch(item: "00217"))
+        let matching = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "ORC|NW|PL-1^HOSP|FIL-1^LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
+        #expect(try pairMismatches(matching).isEmpty)
+    }
+
+    @Test("An empty side skips — equality only applies when both are valued")
+    func orcObrPairEmptySideSkips() throws {
+        // The spec's own upward-compatibility pattern: the value lives
+        // in the OBR and the ORC omits it (or vice versa).
+        let orcOnly = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "ORC|NW|PL-1^HOSP\r"
+            + "OBR|1||FIL-1^LAB|GLU^Glucose^L\r"
+        #expect(try pairMismatches(orcOnly).isEmpty)
+    }
+
+    @Test("Per-group evaluation: a mismatch in the second ORC group fires once, at OBR[2]")
+    func orcObrPairPerGroup() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "ORC|NW|PL-1^HOSP|FIL-1^LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
+            + "ORC|NW|PL-2^HOSP|FIL-2^LAB\r"
+            + "OBR|2|PL-2X^HOSP|FIL-2^LAB|LFT^Liver^L\r"
+        let fired = try pairMismatches(wire)
+        #expect(fired.count == 1)
+        #expect(fired.first?.location.pathDescription == "OBR[2]-2")
+    }
+
+    @Test("The pair rule is base-spec: it fires under the international locale")
+    func orcObrPairIsBaseSpec() throws {
+        // No profile is loaded for .international — this rule still runs.
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "ORC|NW|PL-A^HOSP\r"
+            + "OBR|1|PL-B^HOSP||GLU^Glucose^L\r"
+        let report = Validator(locale: .international)
+            .validate(try Parser(locale: .international).parse(wire))
+        #expect(report.errors.contains { $0.code == .pairedFieldMismatch(item: "00216") })
+    }
 }

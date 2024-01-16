@@ -99,6 +99,16 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// whose OBX-2 is `TX`. Additive case introduced in M6-A-3; the
     /// enum is open per ADR-014, so this is a minor bump.
     case segmentCardinalityAboveMaximum(segmentID: String, maxCount: Int, actual: Int, groupScope: String)
+    /// Two field positions that the base spec declares to be the SAME
+    /// data element (they share an HL7 ITEM number — e.g. ORC-2 and
+    /// OBR-2 are both item 00216, Placer Order Number) carry different
+    /// values in the same ORC/OBR group. v2.4 §4.5.1.2: "If both
+    /// fields ... are valued, they must contain the same value";
+    /// v2.8.2 §4.5.3.2: "This field is identical to ORC-2-Placer Order
+    /// Number." Fires only when BOTH sides are populated. Additive
+    /// case introduced in M8-B1; the enum is open per ADR-014, so this
+    /// is a minor bump.
+    case pairedFieldMismatch(item: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a
