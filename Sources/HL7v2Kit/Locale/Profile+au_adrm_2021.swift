@@ -671,19 +671,16 @@ extension Profile {
             // then fires at most once per message.
             "MSH": [
                 // HL7au:000021 — "Data type TX must NOT be used as a
-                // value in the OBX-2 Value Type field."
-                //
-                // Appendix 5 scopes this to "Results, Referrals(L2)".
-                // Only the Results leg ships. "Referrals(L2)" is the
-                // Simplified Referral Profile Level 2 (Appendix 5
-                // preamble: "Referrals(L2) = Simplified Referral
-                // Profile Level 2"), identified by the profile ID
-                // `HL7AU-OO-REF-SIMPLIFIED-201706` in MSH-21 — a
-                // repeating EI field the model does not address. A
-                // `messageCode = REF` gate would fire on Level 1 and
-                // unprofiled referrals the point does not reach, so the
-                // Referrals leg is PARTIAL, not shipped. See
-                // `docs/design/m6-adrm-2021-localisation-audit.md`.
+                // value in the OBX-2 Value Type field." Appendix 5
+                // scopes it to "Results, Referrals(L2)": the Results
+                // leg gates on ORU; the Referrals(L2) leg gates on the
+                // profile the sender declares in MSH-12.3.1 — the ADRM
+                // states "the <internal version ID (CE)> component must
+                // be valued ... to indicate the profile that is being
+                // adhered [to]" and its profile table names
+                // HL7AU-OO-REF-SIMPLIFIED-201706 as Level 2 (M6-B-6;
+                // the earlier "MSH-21" note in the audit doc was a
+                // misidentification, corrected there).
                 SegmentCardinalityRule(
                     countedSegmentID: "OBX",
                     scope: .messageWide,
@@ -692,6 +689,15 @@ extension Profile {
                     predicate: "OBX-2 = TX",
                     applicableWhen: "messageCode = ORU",
                     specCitation: "HL7au:000021 — OBX-2 must not be valued TX on Senders Results; AU ADRM-2021 Appendix 5 p. 439"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "OBX-2 = TX",
+                    applicableWhen: "messageCode = REF AND MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706",
+                    specCitation: "HL7au:000021 — OBX-2 must not be valued TX on Senders Referrals(L2), the profile MSH-12.3.1 declares; AU ADRM-2021 Appendix 5 p. 439"
                 ),
                 // HL7au:000023 — "The NTE segment must NOT be used in
                 // messages." Scoped to "Orders, Results, Referrals";
@@ -744,13 +750,12 @@ extension Profile {
                 // HL7au:000020 — "All message types and trigger event
                 // codes beginning with the letter 'Z' are reserved for
                 // locally-defined messages and must NOT be used."
-                // PARTIAL twice over: (1) the message-code leg is
-                // undecidable inside any message-type gate — a wholly-Z
-                // message code (ZAA^...) never satisfies the gate, so
-                // only the trigger-event leg (ORU^Z01) is enforceable;
-                // (2) the point is scoped Orders/Results/Referrals(L2),
-                // and L2 is MSH-21-identified (the 000021 gap), so the
-                // gate is the (ORM, ORU) intersection.
+                // Scoped Orders/Results/Referrals(L2). The trigger-event
+                // leg ships on (ORM, ORU) and — since M6-B-6 — on
+                // Referrals(L2) via the MSH-12.3.1 profile gate. Still
+                // PARTIAL for the message-CODE leg: a wholly-Z message
+                // code (ZAA^...) never satisfies any message-type gate,
+                // so that half is undecidable inside this rule shape.
                 SegmentCardinalityRule(
                     countedSegmentID: "MSH",
                     scope: .messageWide,
@@ -759,6 +764,15 @@ extension Profile {
                     predicate: "triggerEvent startsWith Z",
                     applicableWhen: "messageCode in (ORM, ORU)",
                     specCitation: "HL7au:000020 — trigger event codes beginning with Z are reserved and must not be used on Senders Orders/Results; AU ADRM-2021 Appendix 5 p. 439"
+                ),
+                SegmentCardinalityRule(
+                    countedSegmentID: "MSH",
+                    scope: .messageWide,
+                    minCount: 0,
+                    maxCount: 0,
+                    predicate: "triggerEvent startsWith Z",
+                    applicableWhen: "messageCode = REF AND MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706",
+                    specCitation: "HL7au:000020 — Z trigger events must not be used on Senders Referrals(L2), the profile MSH-12.3.1 declares; AU ADRM-2021 Appendix 5 p. 439"
                 ),
                 // HL7au:000023.1 — "User defined segments (Z segments)
                 // must not be used in messages." Counted by the Z*
@@ -795,23 +809,34 @@ extension Profile {
                     applicableWhen: "messageCode in (ORU, REF)",
                     specCitation: "HL7au:000008 (r2) — ≥1 AUSPDI display OBX per OBR/OBX group on Senders Results/Referrals; AU ADRM-2021 p. 420"
                 ),
-                // M6-B-1 — HL7au:000008.3.1, PARTIAL. The point has two
-                // legs: Level 1 requires a PDF display OBX in the single
-                // OBR/OBX group; every other Referrals profile requires
-                // ≥1 display OBX in {HTML, PDF, TXT} per group. PDF
-                // satisfies the {HTML, PDF, TXT} disjunction, so the
-                // weaker rule is a necessary condition under BOTH legs
-                // and never over-fires. The L1-specific "must be PDF"
-                // narrowing is NOT enforced — Level 1 is identified by
-                // an MSH-21 profile ID the model cannot address (same
-                // gap as HL7au:000021's Referrals(L2) leg).
+                // M6-B-1 — HL7au:000008.3.1, both legs. Every Referrals
+                // profile requires ≥1 display OBX in {HTML, PDF, TXT}
+                // per OBR/OBX group (PDF satisfies the disjunction, so
+                // this rule is a necessary condition under both legs);
+                // Level 1 additionally requires the display to be PDF —
+                // enforced since M6-B-6 via the profile the sender
+                // declares in MSH-12.3.1 (the L1 rule below).
                 SegmentCardinalityRule(
                     countedSegmentID: "OBX",
                     scope: .obrObxGroup,
                     minCount: 1,
                     predicate: "OBX-3.3 = AUSPDI AND OBX-3.1 in (HTML, PDF, TXT)",
                     applicableWhen: "messageCode = REF",
-                    specCitation: "HL7au:000008.3.1 — each OBR/OBX group must contain ≥1 display OBX in HTML/PDF/TXT on Senders Referrals (L1's PDF-specific leg not enforced); AU ADRM-2021 Appendix 5 p. 423"
+                    specCitation: "HL7au:000008.3.1 — each OBR/OBX group must contain ≥1 display OBX in HTML/PDF/TXT on Senders Referrals; AU ADRM-2021 Appendix 5 p. 423"
+                ),
+                // The Level-1-specific leg: "For Referrals Level 1: The
+                // single OBR/OBX group of the message must contain an
+                // OBX display segment in PDF format." Gated on the L1
+                // profile ID in MSH-12.3.1 (cross-segment via the
+                // previousSegment position atom — MSH always precedes
+                // the OBR anchor).
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .obrObxGroup,
+                    minCount: 1,
+                    predicate: "OBX-3.3 = AUSPDI AND OBX-3.1 = PDF",
+                    applicableWhen: "messageCode = REF AND previousSegment(MSH).MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706-L1",
+                    specCitation: "HL7au:000008.3.1 — on Referrals Level 1 (MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706-L1) the OBR/OBX group must contain a PDF display OBX; AU ADRM-2021 Appendix 5 p. 423"
                 )
             ]
         ]

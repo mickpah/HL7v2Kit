@@ -335,10 +335,15 @@ parser until you see which inputs actually reach it.
      bound the minimum-only v0.11 model could not state; `maxCount: 0` is a
      prohibition, and an empty predicate counts every segment of the ID):
      `000023` (NTE must not be used, gated ORM/ORU/REF) shipped outright;
-     `000021` (OBX-2 ≠ TX) shipped PARTIAL — the Results leg is enforced,
-     but the Referrals(L2) leg is not, because Level 2 is identified by an
-     MSH-21 profile ID the model cannot address and a bare REF gate would
-     over-fire on Level 1 and unprofiled referrals. `00050.1.5` (OBX-6.3 =
+     `000021` (OBX-2 ≠ TX) shipped PARTIAL — the Results leg only at that
+     stage. *(Correction, M6-B-6 2026-09-16: stage 3 recorded the L2
+     discriminator as "an MSH-21 profile ID the model cannot address".
+     That was a misidentification — the ADRM declares the adhered profile
+     in **MSH-12.3** ("The <internal version ID (CE)> component must be
+     valued ... to indicate the profile"), which 000040.4 already pins and
+     the DSL addresses directly. The Referrals(L2) leg shipped at M6-B-6
+     gated on `MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706`.)*
+     `00050.1.5` (OBX-6.3 =
      UCUM) did **not** ship: it is scoped "Senders (Pathology only)" and
      ADRM-2021 defines no message-decidable pathology discriminator (table
      0074 mixes pathology and imaging; no pathology subset is named), so a

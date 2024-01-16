@@ -112,6 +112,10 @@ SHIPPED = {
     'HL7au:000032', 'HL7au:00104.7.2.1', 'HL7au:00104.7.3.1',
     # M6-B-5 — XCN table membership via the composite value-set track.
     'HL7au:00044.7.3', 'HL7au:00044.7.4',
+    # M6-B-6 — the L1/L2 legs via the MSH-12.3.1 profile discriminator
+    # (the ADRM declares the adhered profile in MSH-12.3; the earlier
+    # "MSH-21" note was a misidentification).
+    'HL7au:000021', 'HL7au:000008.3.1',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -122,21 +126,12 @@ PARTIAL = {
                       'literal pin; unenforced on Referrals, where .3/.4/.5 '
                       'do not apply and pinning the whole literal would '
                       'over-fire — needs character-position addressing (M6-B)',
-    'HL7au:000021': 'OBX-2 = TX prohibition enforced on Results (ORU); the '
-                    'Referrals(L2) leg is not — L2 is identified by an '
-                    'MSH-21 profile ID the model cannot address, and a bare '
-                    'REF gate would over-fire on Level 1 and unprofiled '
-                    'referrals',
-    'HL7au:000008.3.1': '≥1 display OBX in {HTML, PDF, TXT} per OBR/OBX '
-                        'group enforced on Referrals — a necessary condition '
-                        'under both legs; the Level 1 "must be PDF" '
-                        'narrowing is not enforced (L1 is identified by an '
-                        'MSH-21 profile ID the model cannot address)',
     'HL7au:000020': 'Z-prefixed trigger events prohibited on Orders/Results '
-                    'via the startsWith op; the message-code leg is '
-                    'undecidable inside any message-type gate (a wholly-Z '
-                    'code never satisfies it) and the Referrals(L2) leg is '
-                    'MSH-21-identified — both unenforced',
+                    'and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 '
+                    'profile gate; the message-CODE leg stays unenforced — '
+                    'a wholly-Z message code never satisfies any '
+                    'message-type gate, so that half is undecidable inside '
+                    'this rule shape',
     'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '

@@ -15,8 +15,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 26 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 53 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 5 | partly enforced — see each row's note for what is not |
+| SHIPPED | 55 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 3 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 5 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
@@ -56,7 +56,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
 
-## SHIPPED (53)
+## SHIPPED (55)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -67,6 +67,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000007` | r2 | Senders | Orders, Results, Referrals | If ORC-4 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-4 (Placer Group Number) for a request identifier across different organisations, the Entity identifier (first component) in additi... |  |
 | `HL7au:000008` |  | Senders | Results, Referrals | The message must contain at least one OBX display segment per OBR/OBX group. |  |
 | `HL7au:000008.1` | r2 | Senders | Results, Referrals | Display segments must use the appropriate valid values within the AUSPDI coding system in OBX-3 for the content that is represented in it: • OBX\|\|ED\|HTML^Display format in HTML^AUSPDI\|\|^text^HTML^A^<?xml version=... |  |
+| `HL7au:000008.3.1` |  | Senders | Referrals | For Referrals Level 1: The single OBR/OBX group of the message must contain an OBX display segment in PDF format. For other profiles: Each OBR/OBX group of the message must contain at least one of the following OBX di... |  |
+| `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. |  |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. |  |
 | `HL7au:000023.1` |  | Senders | Orders, Results, Referrals | User defined segments (Z segments) must not be used in messages. |  |
 | `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' |  |
@@ -114,13 +116,11 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (5)
+## PARTIAL (3)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
-| `HL7au:000008.3.1` |  | Senders | Referrals | For Referrals Level 1: The single OBR/OBX group of the message must contain an OBX display segment in PDF format. For other profiles: Each OBR/OBX group of the message must contain at least one of the following OBX di... | ≥1 display OBX in {HTML, PDF, TXT} per OBR/OBX group enforced on Referrals — a necessary condition under both legs; the Level 1 "must be PDF" narrowing is not enforced (L1 is identified by an MSH-21 profile ID the model cannot address) |
-| `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results via the startsWith op; the message-code leg is undecidable inside any message-type gate (a wholly-Z code never satisfies it) and the Referrals(L2) leg is MSH-21-identified — both unenforced |
-| `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 = TX prohibition enforced on Results (ORU); the Referrals(L2) leg is not — L2 is identified by an MSH-21 profile ID the model cannot address, and a bare REF gate would over-fire on Level 1 and unprofiled referrals |
+| `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 profile gate; the message-CODE leg stays unenforced — a wholly-Z message code never satisfies any message-type gate, so that half is undecidable inside this rule shape |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
 

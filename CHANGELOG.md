@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M6-B-6 — the referral-level gates: three more PARTIAL legs shipped, and
+  a correction.** The M6 audit had recorded the Referrals(L2)/L1
+  discriminator as "an MSH-21 profile ID the model cannot address". That
+  was a **misidentification**: the ADRM declares the adhered profile in
+  **MSH-12.3** ("The `<internal version ID (CE)>` component must be valued
+  … to indicate the profile that is being adhered [to]"; its profile table
+  names `HL7AU-OO-REF-SIMPLIFIED-201706` as Level 2 and `…-L1` as
+  Level 1) — the same component the shipped `000040.4` pins, addressable
+  by the plain field-ref DSL all along. Shipped on that gate:
+  `HL7au:000021`'s Referrals(L2) leg (OBX-2 ≠ TX; the point is now FULLY
+  enforced), `000008.3.1`'s Level-1 leg (the OBR/OBX group must contain a
+  **PDF** display OBX; fully enforced), and `000020`'s Referrals(L2)
+  trigger-event leg (only its message-code half remains — a shape-level
+  undecidability, since a wholly-Z code never satisfies any message-type
+  gate). Register: SHIPPED 53 → 55, PARTIAL 5 → 3. The correction is
+  recorded in the audit doc's stage-3 note and §D.
+
 - **M6-B-5 — the composite value-set track; the XCN PARTIALs are now full.**
   `CompositeOverride` gains `componentValueSets` (allow lists, the datatype
   twin of the field-level track) with **populated-only semantics** — an

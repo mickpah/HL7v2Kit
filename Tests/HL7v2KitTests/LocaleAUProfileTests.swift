@@ -1974,4 +1974,79 @@ struct LocaleAUProfileTests {
         #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.3.1") },
                 "BADTYPE is not in table 0203")
     }
+
+    // MARK: - M6-B-6: the L1/L2 legs via the MSH-12.3.1 profile discriminator
+    //
+    // The ADRM declares the adhered profile in MSH-12.3 (000040.4 pins the
+    // literals), so "Referrals(L2)" and "Referrals Level 1" scopes gate on
+    // MSH-12.3.1 — the audit's earlier "MSH-21" note was a
+    // misidentification, corrected at M6-B-6.
+
+    private func refWire(profileID: String, obx: String) -> String {
+        "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4^AUS&Australia&ISO3166_1^\(profileID)&&L\r"
+            + "PRD|AP^Authoring Provider^HL70286|Doe^John\r"
+            + "PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^PRES\r"
+            + "PID|1||X^^^F^MR\r"
+            + "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r"
+            + obx + "\r"
+    }
+
+    @Test("HL7au:000021 — Referrals(L2) leg fires on the L2 profile, not on L1")
+    func hl7au000021_level2LegViaProfileID() throws {
+        let l2 = try Parser(locale: .auLocalisation).parse(refWire(
+            profileID: "HL7AU-OO-REF-SIMPLIFIED-201706",
+            obx: "OBX|1|TX|100^Note^LN||narrative|||||F"))
+        let l2Report = Validator(locale: .auLocalisation).validate(l2)
+        #expect(prohibitionIssues(l2Report, counted: "OBX")
+                    .contains { $0.message.contains("Referrals(L2)") },
+                "TX OBX on an L2 referral must fire 000021's L2 leg")
+        let l1 = try Parser(locale: .auLocalisation).parse(refWire(
+            profileID: "HL7AU-OO-REF-SIMPLIFIED-201706-L1",
+            obx: "OBX|1|TX|100^Note^LN||narrative|||||F"))
+        let l1Report = Validator(locale: .auLocalisation).validate(l1)
+        #expect(prohibitionIssues(l1Report, counted: "OBX").isEmpty,
+                "Level 1 is outside 000021's scope; got \(prohibitionIssues(l1Report, counted: "OBX").map(\.message))")
+    }
+
+    @Test("HL7au:000008.3.1 — the L1 leg requires a PDF display specifically")
+    func hl7au000008_3_1_level1PDFLeg() throws {
+        func l1Issues(_ report: ValidationReport) -> [ValidationIssue] {
+            report.errors.filter {
+                if case .segmentCardinalityBelowMinimum = $0.code {
+                    return $0.message.contains("Referrals Level 1")
+                }
+                return false
+            }
+        }
+        // L1 with an HTML display: satisfies the base 3.1 disjunction but
+        // not the L1 PDF leg.
+        let l1html = try Parser(locale: .auLocalisation).parse(refWire(
+            profileID: "HL7AU-OO-REF-SIMPLIFIED-201706-L1",
+            obx: "OBX|1|ED|HTML^Display format in HTML^AUSPDI||content|||||F"))
+        let htmlReport = Validator(locale: .auLocalisation).validate(l1html)
+        #expect(l1Issues(htmlReport).count == 1,
+                "L1 with only HTML must fire the PDF leg; got \(l1Issues(htmlReport).map(\.message))")
+        // L1 with a PDF display: silent.
+        let l1pdf = try Parser(locale: .auLocalisation).parse(refWire(
+            profileID: "HL7AU-OO-REF-SIMPLIFIED-201706-L1",
+            obx: "OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F"))
+        #expect(l1Issues(Validator(locale: .auLocalisation).validate(l1pdf)).isEmpty)
+        // L2 with only HTML: the L1 leg does not apply.
+        let l2html = try Parser(locale: .auLocalisation).parse(refWire(
+            profileID: "HL7AU-OO-REF-SIMPLIFIED-201706",
+            obx: "OBX|1|ED|HTML^Display format in HTML^AUSPDI||content|||||F"))
+        #expect(l1Issues(Validator(locale: .auLocalisation).validate(l2html)).isEmpty,
+                "the PDF leg is L1-gated")
+    }
+
+    @Test("HL7au:000020 — Referrals(L2) leg fires on a Z trigger event")
+    func hl7au000020_level2LegViaProfileID() throws {
+        let wire = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^Z99|MSG00001|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L\r"
+            + "PID|1||X^^^F^MR\r"
+        let report = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire))
+        #expect(prohibitionIssues(report, counted: "MSH")
+                    .contains { $0.message.contains("Referrals(L2)") },
+                "REF^Z99 under the L2 profile must fire 000020's L2 leg; got \(report.errors.map(\.message))")
+    }
 }

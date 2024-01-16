@@ -52,10 +52,12 @@ M6-B-1/2 shipped everything today's DSL can state faithfully (see
 | **Stragglers** | `00044.8.1` (TS timezone offset — datatype-level validation); `00044.6.7` (CWE same-concept assertion — the CE/CNE twins are §B permanent limitations); `000022.1`, `000022.3` (batch-scope rules; the Validator is message-scoped) | Each is a different small capability; none clusters with the five above. |
 
 **Freeze decision:** deferred, not frozen. Any release claiming full ADRM-2021 coverage
-must first land these or re-justify each row. The two PARTIAL Z/prohibition legs
-(`000020`'s message-code + Referrals(L2) legs, `000021`'s Referrals(L2) leg,
-`000008.3.1`'s L1-PDF leg) share one root cause — MSH-21 profile-ID addressing — and
-close together when a repeating-EI profile discriminator lands.
+must first land these or re-justify each row. *(M6-B-6, 2026-09-16: the "MSH-21
+profile-ID addressing" root cause named here earlier was a misidentification — the ADRM
+declares the adhered profile in MSH-12.3, which the DSL addresses. `000021`'s
+Referrals(L2) leg and `000008.3.1`'s L1-PDF leg have shipped on that gate; of `000020`
+only the message-CODE leg remains unenforced, a shape-level undecidability, not a
+field-addressing gap.)*
 
 ## What is NOT a limitation (recorded to prevent re-litigation)
 
