@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.1.0] — 2026-09-16
+
+The completeness release, entirely additive on `v3.0.0` (ADR-014 holds).
+Two milestones land: **M5 formally closed** — every HL7 segment the six
+supported specs define is modelled to full field depth on every version
+that defines it (188 typed segments, 853 schemas, all audit predicates
+zero) — and the **AU profile finished**: all 104 message-decidable
+ADRM-2021 conformance rows accounted for (65 shipped / 12 partial /
+15 base / 12 registered; EXTEND 0, CANDIDATE 0).
+
 ### Added
 - **M6-B-9 — the final twelve: EXTEND reaches zero.** Every remaining
   ADRM-2021 EXTEND point either ships or is registered with a citation.

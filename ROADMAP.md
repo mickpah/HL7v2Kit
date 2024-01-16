@@ -18,7 +18,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 |---|---|
 | Last updated | 2026-09-03 (**`v2.1.0` tagged** — the complete Sprint 0 cycle) |
 | Current release | **`v2.1.0`** (2026-09-03, tagged locally, not yet pushed — nor is any earlier tag). The Sprint 0 cycle: **146 typed segments**, zero never-authored on v2.3/v2.3.1/v2.4, presence predicate, 10 spec-cited condition predicates, honest coverage claims; 525/525 green. |
-| Next planned cycle | **Owner decisions:** confirm M5 closed, tag `v3.1.0`, push to `private`, choose the public remote (all engineering gates met — nothing has ever left this machine). **M6 FINISHED at 104/104 (2026-09-16); M5 coverage bar met (188/188).** |
+| Next planned cycle | **M5 ✅ CLOSED (owner-confirmed) and `v3.1.0` tagged (2026-09-16, local).** Remaining owner actions: push to `private` (`git push private main --follow-tags`), choose the public remote, first public push. **M6 FINISHED at 104/104.** Engineering follow-ons: ADRM prose sweep, general code-table registry, `BatchValidator`, fixtures. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -64,17 +64,27 @@ The four themes below are roughly independent and can interleave across cycles. 
 - **Migration guarantees** — ✅ **DONE (v0.18).** `Migration.md` finalised into the v1.0 contract (additive-only rule, open/stable lists, v0.5.0→v0.17 additive-case history).
 - **v1.0 is the API-freeze boundary** (per Migration.md): after it ships, remaining gaps become permanent. **M1 + M2 + M3 are now all closed** — the only remaining v1.0 gate is M4 (external IP review).
 
-### M4 — Distribution & open-source readiness 🔶 **(IP review cleared; publish gated on M5)**
+### M4 — Distribution & open-source readiness 🔶 **(all gates met; awaiting the owner's push)**
 *Goal: the package is publishable and discoverable to the HL7 integrator community it's built for.*
 
 - **IP review** — ✅ **CLEARED** (2026-07-09). The employment-contract gate passed; the *legal* blocker is gone.
-- **Public push is now gated on M5** (full-coverage parity) per the owner's completeness bar — see M5. The `v1.0.0` tag stays on `private` until M5 is met. Remote target TBD (owner names host/repo).
+- **The M5 gate is ✅ RELEASED** (M5 closed 2026-09-16) — every stated gate on the first public push is now met. What remains is the owner's action: name the remote, push. Remote target TBD (owner names host/repo).
 - **Spec-PDF handling** — the `docs/standards/` Final Standard PDFs stay **out of the public tree** (author-local).
 - **Distribution hygiene (remaining):** public CI workflow, SPM discoverability, DocC hosting, README badges.
 - **Real-world fixture acquisition** — pipeline ready (`scripts/anonymise-fixture.sh` + the `HL7v2KitAnonymise` target); gated on IP review of the source material. No PHI ever enters the repo (the working notes).
 
-### M5 — Full HL7 segment coverage across all versions 🟠 **(AU-priority tier active; v2.6/v2.8.2 deferred — the public-push gate)**
+### M5 — Full HL7 segment coverage across all versions ✅ **CLOSED (2026-09-16, owner-confirmed)**
 *Goal (owner, 2026-07-09, req #1 strict): every HL7 segment modelled to full field depth on **every** supported version — not just the canonical v2.5.1 subset.*
+
+- **Close-out:** the bar is met and measured — **188 typed segments, 853 schemas, zero
+  never-authored and zero deferred instances on all six versions**; depth, presence and
+  per-field dataType verified by `scripts/audit-schemas.py --depth` (all predicates zero).
+  The v3 coverage cycles (2026-09-16) finished the v2.5-only quartet, the deferred
+  v2.6/v2.8.2 batches A–C, and the never-authored backlog, with a codegen
+  earliest-defining-version fallback for the 38 v2.6/v2.8.2-only segments. Formally
+  confirmed closed by the owner 2026-09-16; released as **`v3.1.0`**. The public-push
+  gate M5 held is released — the push itself remains the owner's action.
+  *(The section below is the historical sweep narrative.)*
 
 - **Bar (measured, v1.1-S5):** **188 distinct segments** across the 6 versions; **~850 schema-instances** at full depth. Today (post-Sprint 0 §3, 2026-09-02): **146 typed segments**; **never-authored: 0 on v2.3/v2.3.1/v2.4**, 4 on v2.5.1 (the v2.5-only set), 28/42 on the deferred v2.6/v2.8.2. **Depth *and presence* of the authored surface are verified, not assumed** (`scripts/audit-schemas.py --depth`, re-run every batch): 706 of 717 committed schemas match their own version's attribute table exactly, 0 suspects, presence 0 (whitelist: RDT + ADD `1-n`; v2.3.1/NSC).
 - **✅ Prerequisite — extraction pipeline (DONE, v1.1, ADR-015).** `pdftotext -layout` (poppler) recovers every attribute-table column cleanly on all 6 versions; the legacy-`RP/#` blocker is retired. Dev-time tool only (no new package dep). Its golden `--verify` caught **11 canonical v2.5.1 defects** (fixed) + **2 incomplete segments** (OBR 47→50, OBX 17→24, completed) — validating both the tool and the M5 premise. See `docs/design/segment-coverage-extraction.md`.
