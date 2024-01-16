@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M7-P3 — the escape-sequence prohibition track (ADRM-prose:P-4).**
+  New `EscapeProhibition` axis on `Profile`: the AU profile prohibits
+  the `\X...\` (hexadecimal, §3.1.1.5), `\C...\` and `\M...\`
+  (character-set, §3.1.1.6) escape families as variances to HL7
+  International (p. 136). Because the parser decodes escapes into
+  stored values, the Validator re-encodes each subcomponent via
+  `EscapeSequences.encode` (byte-exact round-trip, verified) and
+  tokenizes on the escape delimiter — a naive substring scan would
+  miss decoded `\X..\` and false-fire on decoded `\E\` next to a
+  literal X (both cases test-pinned). MSH-1/2 exempt; gated to the
+  guide scope. Suite 606 tests, 596 green.
+
 - **M7-P2 — five prose-only narrowings ship (cited as `ADRM-prose:P-n`).**
   P-1: PID-1 profile-required ("mandatory in the Australian context",
   p. 61 footnote; gated ORM/ORU/REF/RRI). P-2: the §7.4.2 REF

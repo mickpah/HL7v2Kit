@@ -1227,6 +1227,28 @@ extension Profile {
                 applicableWhen: "messageCode = REF",
                 specCitation: "HL7au:000028.2 — each OBR/OBX group's OBR-3 Filler Order Number must be unique in the REF message; AU ADRM-2021 Appendix 5 p. 442"
             ),
+        ],
+        // M7-P3 / ADRM-prose:P-4 — the §3.1.1.5/.6 escape-sequence
+        // prohibitions, variances to HL7 International (p. 136;
+        // reiterated p. 159). Chapter 3 datatype variances apply
+        // across the guide's message scope, so the gate matches the
+        // universal 000040 gate.
+        escapeProhibitions: [
+            EscapeProhibition(
+                lead: "X",
+                applicableWhen: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                specCitation: "ADRM-prose:P-4 — the hexadecimal escape sequence (\\Xdddd...\\) must not be used (variance to HL7 International); AU ADRM-2021 §3.1.1.5 p. 136"
+            ),
+            EscapeProhibition(
+                lead: "C",
+                applicableWhen: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                specCitation: "ADRM-prose:P-4 — the single-byte character escape sequence (\\Cxxyy\\) must not be used (variance to HL7 International); AU ADRM-2021 §3.1.1.6 p. 136"
+            ),
+            EscapeProhibition(
+                lead: "M",
+                applicableWhen: "messageCode in (ORM, ORU, REF, RRI, ACK)",
+                specCitation: "ADRM-prose:P-4 — the multi-byte character escape sequence (\\Mxxyyzz\\) must not be used (variance to HL7 International); AU ADRM-2021 §3.1.1.6 p. 136"
+            ),
         ]
     )
 

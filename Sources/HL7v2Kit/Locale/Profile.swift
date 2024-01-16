@@ -60,13 +60,20 @@ struct Profile: Sendable, Equatable, Hashable {
     /// unique within messages."
     let uniquenessRules: [FieldUniquenessRule]
 
+    /// Prohibited escape-sequence classes (M7-P3). The AU ADRM narrows
+    /// the base-spec escape repertoire as a variance to HL7
+    /// International; the Validator scans every populated subcomponent
+    /// value for `\<lead>...\` occurrences.
+    let escapeProhibitions: [EscapeProhibition]
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
         grammarExtensions: [String: [FieldGrammar]] = [:],
         compositeOverrides: [CompositeOverride] = [],
         cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:],
-        uniquenessRules: [FieldUniquenessRule] = []
+        uniquenessRules: [FieldUniquenessRule] = [],
+        escapeProhibitions: [EscapeProhibition] = []
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -74,6 +81,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.compositeOverrides = compositeOverrides
         self.cardinalityExtensions = cardinalityExtensions
         self.uniquenessRules = uniquenessRules
+        self.escapeProhibitions = escapeProhibitions
     }
 
     /// Look up the profile for a given locale.
@@ -447,6 +455,37 @@ struct FieldUniquenessRule: Sendable, Equatable, Hashable {
     /// Optional v0.7-DSL message-context gate.
     let applicableWhen: String?
     let specCitation: String?
+}
+
+/// A prohibited escape-sequence class (M7-P3). The AU ADRM removes
+/// three base-spec escape families as variances to HL7 International:
+/// "The hexadecimal escape sequence (\Xdddd...\) must not be used"
+/// (§3.1.1.5) and "The single-byte character escape sequence \Cxxyy\
+/// and multi-byte character escape sequence \Mxxyyzz\ must not be
+/// used" (§3.1.1.6), both p. 136 (reiterated p. 159: "The HL7 escape
+/// sequences \M and \C shall not be used").
+///
+/// The Validator scans every populated subcomponent value for a
+/// `\<lead>` opening followed by a closing `\` in the same value —
+/// i.e. a complete escape sequence of the prohibited family. An
+/// unterminated `\<lead>` skips (fail-safe: a malformed escape is a
+/// different defect, not this rule's). Matching is case-sensitive —
+/// HL7 escape-sequence codes are uppercase by definition. MSH-1 and
+/// MSH-2 are exempt: they carry the delimiter literals themselves.
+struct EscapeProhibition: Sendable, Equatable, Hashable {
+    /// The character(s) after the escape delimiter identifying the
+    /// family: "X" prohibits `\X...\`, "C" prohibits `\C...\`, "M"
+    /// prohibits `\M...\`.
+    let lead: String
+    /// Optional v0.7-DSL message-context gate; `nil` → always applies.
+    let applicableWhen: String?
+    let specCitation: String?
+
+    init(lead: String, applicableWhen: String? = nil, specCitation: String? = nil) {
+        self.lead = lead
+        self.applicableWhen = applicableWhen
+        self.specCitation = specCitation
+    }
 }
 
 /// A per-repetition value-correspondence rule: "when `keyComponent`

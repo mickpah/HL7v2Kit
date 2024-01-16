@@ -99,6 +99,8 @@ public struct Validator: Sendable {
         // M6-B-9: message-wide field-uniqueness rules (HL7au:000028/.2).
         if let profile {
             checkUniquenessRules(profile: profile, message: message, issues: &issues)
+            // M7-P3: prohibited escape-sequence scan (ADRM-prose:P-4).
+            checkEscapeProhibitions(profile: profile, message: message, issues: &issues)
         }
 
         return ValidationReport(issues: issues, locale: locale)
@@ -800,6 +802,92 @@ public struct Validator: Sendable {
                 }
             }
         }
+    }
+
+    /// M7-P3: scan every populated subcomponent for prohibited escape
+    /// sequences (ADRM-prose:P-4 — the ADRM's §3.1.1.5/.6 variances
+    /// remove \X...\, \C...\ and \M...\ from the escape repertoire).
+    ///
+    /// The parser DECODES escapes into the stored value (\X0D\ becomes
+    /// a literal CR; \E\ becomes a literal backslash), so the stored
+    /// value cannot be scanned directly — a decoded \E\ next to a
+    /// literal X would false-positive, and a decoded \X..\ is
+    /// invisible. `EscapeSequences.encode` restores the exact wire form
+    /// (the round-trip is byte-for-byte; verified for all three
+    /// families plus \E\-adjacency), so the scan runs on the
+    /// RE-ENCODED value. MSH-1 / MSH-2 are exempt (they carry the
+    /// delimiter literals).
+    private func checkEscapeProhibitions(
+        profile: Profile,
+        message: Message,
+        issues: inout [ValidationIssue]
+    ) {
+        guard !profile.escapeProhibitions.isEmpty,
+              let first = message.segments.first else { return }
+        let active = profile.escapeProhibitions.filter { rule in
+            guard let gate = rule.applicableWhen, !gate.isEmpty else { return true }
+            return conditionTriggers(
+                gate, in: first, segmentIndex: 0,
+                message: message, currentSegmentID: first.segmentID
+            )
+        }
+        guard !active.isEmpty else { return }
+        var occurrenceBySegmentID: [String: Int] = [:]
+        for segment in message.segments {
+            let occurrence = (occurrenceBySegmentID[segment.segmentID] ?? 0) + 1
+            occurrenceBySegmentID[segment.segmentID] = occurrence
+            for (fieldIndex, field) in segment.fields.enumerated() where fieldIndex >= 1 {
+                if segment.segmentID == "MSH", fieldIndex <= 2 { continue }
+                for repetition in field.repetitions {
+                    for component in repetition.components {
+                        for subcomponent in component.subcomponents {
+                            let wireValue = EscapeSequences.encode(
+                                subcomponent.value,
+                                encoding: message.encodingCharacters
+                            )
+                            let escape = String(message.encodingCharacters.escapeCharacter)
+                            guard wireValue.contains(escape) else { continue }
+                            for rule in active where containsProhibitedEscape(wireValue, lead: rule.lead, escape: escape) {
+                                let citation = rule.specCitation
+                                    ?? "\(profile.locale.rawValue):escape:\\\(rule.lead)"
+                                let location = IssueLocation(
+                                    segmentID: segment.segmentID,
+                                    segmentIndex: occurrence,
+                                    fieldIndex: fieldIndex,
+                                    componentIndex: nil
+                                )
+                                appendProfileIssue(
+                                    citation: citation,
+                                    location: location,
+                                    message: "AU profile rule violated at \(location.pathDescription): the \\\(rule.lead)...\\ escape sequence must not be used (\(citation))",
+                                    into: &issues
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// True when the wire-form `value` contains a complete
+    /// `\<lead>...\` sequence.
+    ///
+    /// Splitting on the escape delimiter alternates literal and escape
+    /// content: in `a\X0D\b` the parts are ["a", "X0D", "b"] and every
+    /// odd index is escape content. A naive substring search for `\X`
+    /// would false-positive on `...\E\X...`, where the `\` is the
+    /// CLOSING delimiter of `\E\` and `X` is literal text (req #4). An
+    /// odd-indexed part that is also the last part lacks its closing
+    /// delimiter — unterminated, skip.
+    private func containsProhibitedEscape(_ value: String, lead: String, escape: String) -> Bool {
+        let parts = value.components(separatedBy: escape)
+        guard parts.count >= 3 else { return false }
+        for index in stride(from: 1, to: parts.count - 1, by: 2)
+            where parts[index].hasPrefix(lead) {
+            return true
+        }
+        return false
     }
 
     /// M6-B-8: evaluate key⇒value correspondence rules against one

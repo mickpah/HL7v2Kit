@@ -2195,6 +2195,33 @@ struct LocaleAUProfileTests {
                 "an ACK without MSH-12.3 must fire — both §8.4/§8.5 say 'must be valued'")
     }
 
+    @Test("ADRM-prose:P-4 — the \\X / \\C / \\M escape sequences must not be used")
+    func escapeSequenceProhibitions() throws {
+        func oruWithNote(_ text: String) -> String {
+            "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ORU^R01|MSG1|P|2.5.1\r"
+                + "PID|1||999999^^^HOSP^MR\r"
+                + "OBX|1|FT|8251-1^Notes^LN||\(text)||||||F\r"
+        }
+        // A complete hex escape fires.
+        #expect(try prose(oruWithNote("before\\X0D\\after"), "ADRM-prose:P-4").count == 1)
+        // Single-byte and multi-byte character escapes fire.
+        #expect(try prose(oruWithNote("a\\C2842\\b"), "ADRM-prose:P-4").count == 1)
+        #expect(try prose(oruWithNote("a\\M2842AA\\b"), "ADRM-prose:P-4").count == 1)
+        // Permitted escapes are untouched.
+        #expect(try prose(oruWithNote("line one\\.br\\line two \\E\\ \\T\\ \\F\\"), "ADRM-prose:P-4").isEmpty)
+        // The \E\-then-literal-X shape is NOT an \X escape: the middle
+        // backslash CLOSES \E\ and the X is ordinary text (the naive
+        // substring scan would misfire here).
+        #expect(try prose(oruWithNote("path \\E\\X2 \\E\\ done"), "ADRM-prose:P-4").isEmpty)
+        // Unterminated opening skips, fail-safe.
+        #expect(try prose(oruWithNote("broken\\X0D"), "ADRM-prose:P-4").isEmpty)
+        // ADT is outside the guide's scope.
+        let adt = "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ADT^A01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "OBX|1|FT|8251-1^Notes^LN||x\\X0D\\y||||||F\r"
+        #expect(try prose(adt, "ADRM-prose:P-4").isEmpty)
+    }
+
     @Test("ADRM-prose:P-5b — read-ack MSH-3.3 must be AUSHICPR or NPIO")
     func readAckSenderScheme() throws {
         func readAck(msh3: String, vid3: String = "HL7AU-OO-ACK-READ-2020006") -> String {
