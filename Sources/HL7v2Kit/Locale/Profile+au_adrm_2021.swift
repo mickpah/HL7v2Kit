@@ -411,7 +411,58 @@ extension Profile {
                 fieldIndex: 7,
                 profileUsage: .required,
                 condition: "messageCode = REF AND anyRepeat(PRD-1) = IR",
+                componentValueSets: [
+                    // M6-B-4 — HL7au:00104.7.2.1: "PRD-7 <type of ID
+                    // number (IS)> must be valued from User-defined
+                    // Table 0363 - Assigning Authority." The value-set
+                    // check runs per populated repetition, so every
+                    // provider identifier in the repeat list is held to
+                    // the table.
+                    ComponentValueSet(
+                        component: 2,
+                        allowedValues: HL7CodeTables.table0363,
+                        condition: "messageCode = REF",
+                        specCitation: "HL7au:00104.7.2.1 — PRD-7.2 (type of ID number) must be valued from User-defined Table 0363 (Assigning Authority) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 310"
+                    ),
+                    // M6-B-4 — HL7au:00104.7.3.1: "<other qualifying
+                    // info (ST)> must be a valued from HL7 Table 0203 -
+                    // Identifier Type."
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: HL7CodeTables.table0203,
+                        condition: "messageCode = REF",
+                        specCitation: "HL7au:00104.7.3.1 — PRD-7.3 (other qualifying info) must be valued from HL7 Table 0203 (Identifier Type) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 301"
+                    ),
+                ],
                 specCitation: "HL7au:00104.7.0 (r3) — PRD-7 must have at least 1 repeat on the Intended Recipient (PRD-1 = IR) PRD in the REF message; AU ADRM-2021 Appendix 5 p. 472"
+            ),
+            // M6-B-4 — HL7au:000032 / 000032.2: "the field OBR-24
+            // 'Diagnostic serv sect ID' must be valued and must have
+            // values from HL7 table 0074." Presence on ORU and REF via
+            // the gated usage narrowing; membership per leg below.
+            // 000032.2's second half ("appropriate for the content in
+            // the OBR/OBX group") is receiver-judgement over content —
+            // membership is enforced, appropriateness is not (PARTIAL).
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 24,
+                profileUsage: .required,
+                condition: "messageCode in (ORU, REF)",
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: HL7CodeTables.table0074,
+                        condition: "messageCode = ORU",
+                        specCitation: "HL7au:000032 — OBR-24 must be valued from HL7 Table 0074 (Diagnostic Service Section) on Senders Results; AU ADRM-2021 Appendix 5 p. 444, table pp. 225-226"
+                    ),
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: HL7CodeTables.table0074,
+                        condition: "messageCode = REF",
+                        specCitation: "HL7au:000032.2 — OBR-24 must be valued from HL7 Table 0074 on Senders Referrals (content-appropriateness half not machine-checkable); AU ADRM-2021 Appendix 5 p. 444"
+                    ),
+                ],
+                specCitation: "HL7au:000032 / 000032.2 — OBR-24 (Diagnostic Serv Sect ID) must be valued on Senders Results/Referrals; AU ADRM-2021 Appendix 5 p. 444"
             ),
         ],
         grammarExtensions: [

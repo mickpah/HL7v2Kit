@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M6-B-4 — the code-table registry seed; four more ADRM points enforced.**
+  New internal `HL7CodeTables` holds the tables shipped conformance points
+  consume — 0074 (Diagnostic Service Section), 0200 (Name Type), 0203
+  (Identifier Type) and the AU-defined 0363 (Assigning Authority) — each
+  hand-verified against the **ADRM-2021's printed rendering** (the normative
+  one for HL7au points; its 0203 is a post-v2.4 vintage). Shipped on it:
+  `HL7au:000032` (OBR-24 valued + table 0074 membership on Results),
+  `000032.2` **partial** (same on Referrals; the "appropriate for the
+  content" half is receiver-judgement), `00104.7.2.1` (PRD-7.2 from 0363)
+  and `00104.7.3.1` (PRD-7.3 from 0203), all message-type-gated. Register:
+  SHIPPED 48 → 51, PARTIAL 6 → 7, EXTEND 30 → 26 — **78 of the 104
+  message-decidable rows**. The XCN PARTIALs (`00044.7.3`/`.7.4`) still
+  await a value-set track on `CompositeOverride` (§D updated). Existing ORU
+  test wires gained `OBR-24 = LAB` — the new requiredness caught them
+  exactly as it would catch real traffic.
+
 - **v3 cycle 5 — the never-authored backlog closed: 188 of 188 segments,
   M5's coverage bar is MET.** The 62 remaining never-authored instances
   (38 distinct v2.6/v2.8.2-only segments: eClaims CH16, materials

@@ -14,9 +14,9 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | Verdict | Count | Meaning |
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
-| EXTEND | 30 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 48 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 6 | partly enforced — see each row's note for what is not |
+| EXTEND | 26 | needs a model extension to express faithfully (req #3) |
+| SHIPPED | 51 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 7 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 5 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
@@ -25,7 +25,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## EXTEND (30)
+## EXTEND (26)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -36,8 +36,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000022.3` |  | Senders | Referrals | Senders must generate batches containing no more than 1 message. | batch-scope cardinality (Validator is message-scoped) |
 | `HL7au:000028` |  | Senders | Results | When there are multiple OBR segments in an ORU message, the OBR-3 Filler order number must be unique within messages. | within-message uniqueness of a field across repeats |
 | `HL7au:000028.2` |  | Senders | Referrals | When there are multiple OBR/OBX groups in a REF message, each OBR-3 Filler order number pair must be unique for each OBR/OBX group. | within-message uniqueness of a field across groups |
-| `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. | HL7 Table 0074 membership; needs a code-table registry |
-| `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | HL7 Table 0074 membership; needs a code-table registry |
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | primary-before-local coding-system ordering, generalised from the shipped LOINC rule (HL7au:00044.4.4) |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | primary-before-local coding-system ordering |
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | primary-before-local coding-system ordering |
@@ -57,10 +55,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype ⇔ type HL7 table 0291/0191 correspondence map |
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
-| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | User-defined Table 0363 membership; needs a code-table registry |
-| `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). | HL7 Table 0203 membership; needs a code-table registry |
 
-## SHIPPED (48)
+## SHIPPED (51)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -77,6 +73,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000024.3` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the Sub-components separator characters '&' |  |
 | `HL7au:000024.4` |  | Senders | Orders, Results | FHS, BHS, and MSH segments must specify the repeat separator character as '~' |  |
 | `HL7au:000024.5` |  | Senders General Conforma | Orders, Results | FHS, BHS, and MSH segments must specify the escape separator character as '\' |  |
+| `HL7au:000032` |  | Senders | Results | In the ORU message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section. |  |
 | `HL7au:000040.1` |  | Senders | Orders, Results, Referrals, ACK, R | Senders conforming to this specification must specify "2.4" as the value of version ID (ID) component of MSH-12 Version ID (VID) |  |
 | `HL7au:000040.2` | r2 | Senders | Orders, Results, Referrals, ACK, R | MSH-12 Version ID <internationalization code (CE)> component must be valued "AUS&Australia&ISO3166_1" |  |
 | `HL7au:000040.3` |  | Senders | Orders, Results | MSH-12 Version ID <internal version ID (CE)> component must be valued as "HL7AU- OO-201701&&L". (Note that the number scheme used in this identifier is HL7 date format: YYYYMM) |  |
@@ -112,8 +109,10 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). |  |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. |  |
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
+| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). |  |
+| `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (6)
+## PARTIAL (7)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -121,6 +120,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results via the startsWith op; the message-code leg is undecidable inside any message-type gate (a wholly-Z code never satisfies it) and the Referrals(L2) leg is MSH-21-identified — both unenforced |
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 = TX prohibition enforced on Results (ORU); the Referrals(L2) leg is not — L2 is identified by an MSH-21 profile ID the model cannot address, and a bare REF gate would over-fire on Level 1 and unprofiled referrals |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
+| `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
 | `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. | XCN-10 presence enforced; HL7 Table 0200 membership is not — HL7 code tables are not modelled (M6-O6) |
 | `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. | XCN-13 presence enforced; HL7 Table 0203 membership is not — HL7 code tables are not modelled (M6-O6) |
 

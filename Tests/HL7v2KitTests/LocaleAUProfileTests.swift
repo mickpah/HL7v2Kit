@@ -78,8 +78,9 @@ struct LocaleAUProfileTests {
                 ".international locale must never fire profile violations")
     }
 
-    // OBR with both OBR-2 and OBR-3 fully populated — no violations.
-    private let obrAllEIComponentsPopulated = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L")
+    // OBR with both OBR-2 and OBR-3 fully populated (and OBR-24 = LAB,
+    // required on Senders Results per HL7au:000032) — no violations.
+    private let obrAllEIComponentsPopulated = TestWires.oru("OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L||||||||||||||||||||LAB")
 
     @Test("OBR-2 + OBR-3 fully populated (4 of 4 EI components) fires no violations")
     func obrAllEIComponentsPass() throws {
@@ -96,7 +97,7 @@ struct LocaleAUProfileTests {
 
     @Test("Empty OBR-2 + OBR-3 fires no AU violations (rule is conditional on field populated)")
     func obrEmptyFieldNoAUViolation() throws {
-        let wire = TestWires.oru("OBR|1|||GLU^Glucose^L")
+        let wire = TestWires.oru("OBR|1|||GLU^Glucose^L||||||||||||||||||||LAB")
         let message = try Parser(locale: .auLocalisation).parse(wire)
         let report = Validator(locale: .auLocalisation).validate(message)
         let obrViolations = report.errors.filter {
@@ -214,7 +215,8 @@ struct LocaleAUProfileTests {
     // Two OBR segments in one message: OBR[1] valid, OBR[2] invalid.
     // The AU rule must fire on OBR[2] only, with the correct
     // segmentIndex on the location.
-    private let multiObrMixedConformance = TestWires.oru("OBR|1|PLACER1^HOSP^1.2.36.1.2001.1003.0.AAA^ISO|FILLER1^LAB^1.2.36.1.2001.1003.0.BBB^ISO|GLU^Glucose^L", "OBR|2|PLACER2^HOSP|FILLER2^LAB^1.2.36.1.2001.1003.0.CCC^ISO|LFT^Liver function^L")
+    // OBR-24 = LAB on both (HL7au:000032 requires it on Senders Results).
+    private let multiObrMixedConformance = TestWires.oru("OBR|1|PLACER1^HOSP^1.2.36.1.2001.1003.0.AAA^ISO|FILLER1^LAB^1.2.36.1.2001.1003.0.BBB^ISO|GLU^Glucose^L||||||||||||||||||||LAB", "OBR|2|PLACER2^HOSP|FILLER2^LAB^1.2.36.1.2001.1003.0.CCC^ISO|LFT^Liver function^L||||||||||||||||||||LAB")
 
     @Test("Multi-segment mixed conformance: AU rule fires on second OBR only")
     func auRuleFiresOnCorrectSegmentOccurrence() throws {
@@ -1665,14 +1667,16 @@ struct LocaleAUProfileTests {
         }
     }
 
-    // A conforming REF: one AP PRD, one IR PRD (with PRD-7), and a PDF
-    // display OBX in the single OBR group.
+    // A conforming REF: one AP PRD, one IR PRD (with PRD-7 in the
+    // table-conformant shape: ID ^ 0363-authority ^ 0203-type), OBR-24
+    // valued from table 0074, and a PDF display OBX in the single OBR
+    // group.
     private let refConforming = """
     MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
     PRD|AP^Authoring Provider^HL70286|Doe^John\r\
-    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^^^AUSHIC^UPIN\r\
+    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^PRES\r\
     PID|1||X^^^F^MR\r\
-    OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L\r\
+    OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r\
     OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
     """
 
@@ -1874,5 +1878,71 @@ struct LocaleAUProfileTests {
         let report = Validator(locale: .auLocalisation).validate(message)
         #expect(!report.errors.contains { $0.message.contains("HL7au:000023.1") },
                 "ADT is outside the (ORM, ORU, REF) gate")
+    }
+
+    // MARK: - M6-B-4: code-table membership (HL7CodeTables seed)
+
+    // HL7au:000032 / 000032.2 — OBR-24 must be valued from HL7 Table
+    // 0074 on Results/Referrals. HL7au:00104.7.2.1 / .7.3.1 — PRD-7.2
+    // from User-defined Table 0363, PRD-7.3 from HL7 Table 0203.
+
+    @Test("HL7au:000032 — ORU with OBR-24 missing fires; wrong value fires membership; LAB is silent")
+    func hl7au000032_obr24PresenceAndMembership() throws {
+        // Missing → profile-required.
+        let missing = try Parser(locale: .auLocalisation)
+            .parse(TestWires.oru("OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L"))
+        let missingReport = Validator(locale: .auLocalisation).validate(missing)
+        #expect(missingReport.errors.contains {
+            guard case .profileConstraintViolation(let rule) = $0.code else { return false }
+            return rule.contains("HL7au:000032") && $0.location.fieldIndex == 24
+        }, "OBR-24 absent on ORU must fire the required narrowing")
+        // Non-member → value-set violation citing 000032.
+        let bad = try Parser(locale: .auLocalisation)
+            .parse(TestWires.oru("OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L||||||||||||||||||||XYZ"))
+        let badReport = Validator(locale: .auLocalisation).validate(bad)
+        #expect(badReport.errors.contains {
+            guard case .profileConstraintViolation(let rule) = $0.code else { return false }
+            return rule.contains("HL7au:000032") && rule.contains("0074")
+        }, "OBR-24 = XYZ is not in table 0074 and must fire membership")
+        // Member → silent for 000032.
+        let ok = try Parser(locale: .auLocalisation)
+            .parse(TestWires.oru("OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L||||||||||||||||||||LAB"))
+        let okReport = Validator(locale: .auLocalisation).validate(ok)
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:000032") },
+                "OBR-24 = LAB is in table 0074; got \(okReport.errors.map(\.message))")
+    }
+
+    @Test("HL7au:000032 — ADT is outside the (ORU, REF) gate")
+    func hl7au000032_gatedOffOnADT() throws {
+        let message = try Parser(locale: .auLocalisation)
+            .parse(TestWires.adt("PID|1||X^^^F^MR"))
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(!report.errors.contains { $0.message.contains("HL7au:000032") },
+                "no OBR and no gate match on ADT")
+    }
+
+    @Test("HL7au:00104.7.2.1/.7.3.1 — PRD-7 table membership on REF")
+    func hl7au00104_7_tableMembership() throws {
+        // Conforming wire: silent for both points.
+        let okReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(refConforming))
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:00104.7.2.1") }
+                    && !okReport.errors.contains { $0.message.contains("HL7au:00104.7.3.1") },
+                "AUSHICPR^PRES is table-conformant; got \(okReport.errors.map(\.message))")
+        // Bad authority (not in 0363) + bad type (not in 0203) both fire.
+        let wire = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^MEDICARE^BADTYPE\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r\
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+        """
+        let report = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire))
+        #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.2.1") },
+                "MEDICARE is not in table 0363")
+        #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.3.1") },
+                "BADTYPE is not in table 0203")
     }
 }

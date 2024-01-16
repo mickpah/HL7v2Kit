@@ -108,6 +108,8 @@ SHIPPED = {
     'HL7au:00104.1.1', 'HL7au:00104.2.1', 'HL7au:00104.7.0',
     # M6-B-2 — Z-segment prohibition via the Z* counted-segment prefix.
     'HL7au:000023.1',
+    # M6-B-4 — code-table membership via the HL7CodeTables seed.
+    'HL7au:000032', 'HL7au:00104.7.2.1', 'HL7au:00104.7.3.1',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -137,6 +139,10 @@ PARTIAL = {
                     'undecidable inside any message-type gate (a wholly-Z '
                     'code never satisfies it) and the Referrals(L2) leg is '
                     'MSH-21-identified — both unenforced',
+    'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
+                      'Referrals; the "appropriate for the content in the '
+                      'OBR/OBX group" half is receiver-judgement over '
+                      'content and is not machine-checkable',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -222,10 +228,6 @@ EXTEND = {
     'HL7au:00044.11.1.4': 'OBX-2-driven dynamic datatype resolution (RP)',
     # M6-O6: HL7 code tables are not modelled — the schemas drop the
     # spec's TBL# column and there is no table registry.
-    'HL7au:000032':      'HL7 Table 0074 membership; needs a code-table registry',
-    'HL7au:000032.2':    'HL7 Table 0074 membership; needs a code-table registry',
-    'HL7au:00104.7.2.1': 'User-defined Table 0363 membership; needs a code-table registry',
-    'HL7au:00104.7.3.1': 'HL7 Table 0203 membership; needs a code-table registry',
 }
 
 # C: out of scope by nature. Matched most-specific prefix first.
