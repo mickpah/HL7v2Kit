@@ -278,6 +278,68 @@ struct ValidationTests {
         #expect(try pairMismatches(normalised).isEmpty)
     }
 
+    // MARK: - M8-C: BatchValidator
+
+    private let batchORU = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|M-ORU|P|2.5.1\r"
+        + "PID|1||1^^^H^MR\r"
+    private let batchREF = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|M-REF|P|2.4\r"
+        + "PID|1||X^^^F^MR\r"
+
+    @Test("ADRM-prose:P-7 — only one Batch is supported per file in Australia")
+    func auSingleBatchPerFile() throws {
+        let twoBatches = "FHS|^~\\&|APP\r"
+            + "BHS|^~\\&|APP\r" + batchORU + "BTS|1\r"
+            + "BHS|^~\\&|APP\r" + batchORU + "BTS|1\r"
+            + "FTS|1\r"
+        let file = try BatchParser().parse(twoBatches)
+        let auReport = BatchValidator(locale: .auLocalisation).validate(file)
+        #expect(auReport.batchIssues.contains { $0.message.contains("ADRM-prose:P-7") },
+                "two BHS-headed batches must fire; got \(auReport.batchIssues.map(\.message))")
+        // The rule is AU-scoped: the international locale is silent.
+        let intReport = BatchValidator(locale: .international).validate(file)
+        #expect(intReport.batchIssues.isEmpty)
+        #expect(intReport.messageReports.count == 2)
+    }
+
+    @Test("HL7au:000022.3 — a referral batch must contain no more than one message")
+    func auReferralBatchSize() throws {
+        func file(_ messages: [String]) throws -> BatchFile {
+            try BatchParser().parse(
+                "BHS|^~\\&|APP\r" + messages.joined() + "BTS|\(messages.count)\r"
+            )
+        }
+        // REF alongside another message: fires.
+        let mixed = BatchValidator(locale: .auLocalisation)
+            .validate(try file([batchREF, batchORU]))
+        #expect(mixed.batchIssues.contains { $0.message.contains("HL7au:000022.3") },
+                "got \(mixed.batchIssues.map(\.message))")
+        // A single REF: silent.
+        let single = BatchValidator(locale: .auLocalisation)
+            .validate(try file([batchREF]))
+        #expect(single.batchIssues.isEmpty)
+        // Multiple non-referral messages: "a batch can contain any
+        // number of messages" (p. 19) — silent.
+        let results = BatchValidator(locale: .auLocalisation)
+            .validate(try file([batchORU, batchORU, batchORU]))
+        #expect(results.batchIssues.isEmpty)
+        #expect(results.messageReports.count == 3)
+    }
+
+    @Test("HL7au:000022.1 — batched messages get the per-message AL acknowledgement rules")
+    func auBatchedMessagesGetAckRules() throws {
+        // The batched ORU has no MSH-15/16 — under AU the per-message
+        // validation inside BatchValidator must fire HL7au:00047.1/.2.
+        let file = try BatchParser().parse("BHS|^~\\&|APP\r" + batchORU + "BTS|1\r")
+        let report = BatchValidator(locale: .auLocalisation).validate(file)
+        #expect(report.messageReports.count == 1)
+        let ackViolations = report.messageReports[0].errors.filter {
+            $0.message.contains("HL7au:00047")
+        }
+        #expect(ackViolations.count == 2,
+                "missing MSH-15 and MSH-16 must both fire inside the batch; got \(ackViolations.map(\.message))")
+        #expect(!report.isValid)
+    }
+
     @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.8.2")
     func orcObrParentPairMovesAcrossVersions() throws {
         // v2.5.1: parent lives at OBR-29 (both sides EIP).

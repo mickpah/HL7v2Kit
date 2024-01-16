@@ -126,6 +126,9 @@ SHIPPED = {
     # M6-B-9 — OBR-3 filler-order-number uniqueness (message-wide
     # FieldUniquenessRule; p. 442), on both the ORU and REF legs.
     'HL7au:000028', 'HL7au:000028.2',
+    # M8-C — enforced by BatchValidator over BatchParser output: a
+    # batch group carrying a REF alongside any other message fires.
+    'HL7au:000022.3',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -175,6 +178,15 @@ PARTIAL = {
                        'fires on Orders/Results/Referrals; the "offset '
                        'is CORRECT for the stated local time" half '
                        'needs a timezone database and is out of scope',
+    # M8-C addition.
+    'HL7au:000022.1': 'the individual-acknowledgement half is enforced: '
+                      'BHS carries no acknowledgement field, so the mode '
+                      'lives in each contained message\'s MSH-15/16, and '
+                      'BatchValidator runs the per-message AU rules '
+                      '(00047.1/.2, MSH-15/16 = AL) on every batched '
+                      'message; the "no information from the file '
+                      'header/footer or batch segments must be used" '
+                      'half is receiver processing behaviour',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -221,14 +233,13 @@ BASE = {
 # 000034.3 / 00044.6.7 — "the alternate must encode the SAME CONCEPT as
 #   the primary" is a terminology-service equivalence judgement, not a
 #   structural check.
-# 000022.1 / 000022.3 — batch-envelope (FHS/BHS) scope; the Validator
-#   is message-scoped and a future BatchValidator is the documented
-#   home for batch rules.
+# 000022.1 / 000022.3 — MOVED OUT at M8-C (2026-09-17): BatchValidator
+#   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
 REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
               'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7',
               'HL7au:00050.1.5',
               'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
-              'HL7au:00044.6.7', 'HL7au:000022.1', 'HL7au:000022.3'}
+              'HL7au:00044.6.7'}
 
 # Withdrawn by the r2 revision — must never be cited.
 WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}

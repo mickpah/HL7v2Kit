@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M8-C — `BatchValidator`: batch-scope validation lands.** New public
+  `BatchValidator` / `BatchValidationReport` (additive API): every
+  message in a `BatchFile` runs through the standard `Validator`, plus
+  the batch-envelope rules no single message can carry. Under
+  `.auLocalisation`: `ADRM-prose:P-7` ("In Australia only one Batch is
+  supported", §1 p. 19 — a second BHS-headed group fires) and
+  `HL7au:000022.3` ("Senders must generate batches containing no more
+  than 1 message" on Referrals — a REF alongside any other message in
+  one batch group fires). `HL7au:000022.1`'s individual-acknowledgement
+  half is enforced through the per-message MSH-15/16 = AL rules running
+  on every batched message. **Register: the two batch points leave
+  REGISTERED — 000022.3 SHIPPED, 000022.1 PARTIAL; final counts 66
+  shipped / 13 partial / 15 base / 10 registered (still 104/104,
+  EXTEND 0).** Suite 617 tests, 607 green.
+
 - **M8-B2 — the ORC/OBR pair family completed.** ORC-12/OBR-16
   (Ordering Provider, item 00226) ships with repetition-aware
   whole-field comparison (v2.4 §4.5.1.12: "If both ... are valued,

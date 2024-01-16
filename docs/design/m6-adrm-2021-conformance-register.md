@@ -15,17 +15,17 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 65 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 12 | partly enforced — see each row's note for what is not |
+| SHIPPED | 66 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 13 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 12 | known limitation, already registered |
+| REGISTERED | 10 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 82 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (65)
+## SHIPPED (66)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -39,6 +39,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000008.1.3` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-2 Value Type field must match its corresponding display format specified in OBX-3 Identifier (ST) component as per table Display Format codes (see page 247) in Section 4.5 Display Se... |  |
 | `HL7au:000008.3.1` |  | Senders | Referrals | For Referrals Level 1: The single OBR/OBX group of the message must contain an OBX display segment in PDF format. For other profiles: Each OBR/OBX group of the message must contain at least one of the following OBX di... |  |
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. |  |
+| `HL7au:000022.3` |  | Senders | Referrals | Senders must generate batches containing no more than 1 message. |  |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. |  |
 | `HL7au:000023.1` |  | Senders | Orders, Results, Referrals | User defined segments (Z segments) must not be used in messages. |  |
 | `HL7au:000024.1` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Field separator character as '\|' |  |
@@ -95,12 +96,13 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (12)
+## PARTIAL (13)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000008.3.2` |  | Senders | Referrals(L2) | If an RTF display segment is sent in an OBR/OBX group, then the same content must be sent in one of either HTML, PDF, or TXT (HL7 FT) same OBR/OBX group. | the STRUCTURAL half is enforced: an RTF display OBX in an OBR group without an HTML/PDF/TXT sibling fires (relational cardinality via activationPredicate); the "same content" equality half needs cross-format rendering comparison and is not machine-checkable |
 | `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 profile gate; the message-CODE leg stays unenforced — a wholly-Z message code never satisfies any message-type gate, so that half is undecidable inside this rule shape |
+| `HL7au:000022.1` |  | Senders | Orders, Results, Referrals | If the batch header is used it must specify individual message acknowledgement. No information from the file header/footer or batch segments must be used. | the individual-acknowledgement half is enforced: BHS carries no acknowledgement field, so the mode lives in each contained message's MSH-15/16, and BatchValidator runs the per-message AU rules (00047.1/.2, MSH-15/16 = AL) on every batched message; the "no information from the file header/footer or batch segments must be used" half is receiver processing behaviour |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | enforced for the public systems the ADRM names (LN, SCT, UCUM): a named public system relegated to the CE/CWE alternate triplet behind a non-public primary fires; systems the ADRM does not name skip fail-safe |
@@ -132,14 +134,12 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 | `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (12)
+## REGISTERED (10)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000001` |  | Senders/Receivers | Orders | Order addressing - Senders and receivers must ensure an order message is addressed using MSH-6 Receiving facility, as per rules in sub points of HD Datatype conformance heading HL7au:00044.2. | known limitation, registered with citation |
 | `HL7au:000008.1.5` |  | Senders | Results, Referrals | The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identif... | known limitation, registered with citation |
-| `HL7au:000022.1` |  | Senders | Orders, Results, Referrals | If the batch header is used it must specify individual message acknowledgement. No information from the file header/footer or batch segments must be used. | known limitation, registered with citation |
-| `HL7au:000022.3` |  | Senders | Referrals | Senders must generate batches containing no more than 1 message. | known limitation, registered with citation |
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | known limitation, registered with citation |
 | `HL7au:00044.4.3` |  | Senders | Orders, Results, Referrals | <text (ST)> component must be valued as what is intended for display to the user. (In some locations user display is not intended and the text may be blank.) | known limitation, registered with citation |
 | `HL7au:00044.4.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
