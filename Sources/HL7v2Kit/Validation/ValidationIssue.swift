@@ -99,6 +99,14 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// whose OBX-2 is `TX`. Additive case introduced in M6-A-3; the
     /// enum is open per ADR-014, so this is a minor bump.
     case segmentCardinalityAboveMaximum(segmentID: String, maxCount: Int, actual: Int, groupScope: String)
+    /// A field is populated while its `prohibitedWhen` predicate holds
+    /// — the inverse of `conditionalFieldMissing`. The spec pattern is
+    /// "may only be valued if X is valued" (e.g. v2.8.2 PRT-6/PRT-7),
+    /// which is a PROHIBITION, not a requirement: encoding it as a
+    /// required-when condition would wrongly demand the field whenever
+    /// its subject is present. Additive case introduced in M8-D; the
+    /// enum is open per ADR-014, so this is a minor bump.
+    case conditionalFieldProhibited
     /// Two field positions that the base spec declares to be the SAME
     /// data element (they share an HL7 ITEM number — e.g. ORC-2 and
     /// OBR-2 are both item 00216, Placer Order Number) carry different

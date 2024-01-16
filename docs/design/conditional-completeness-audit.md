@@ -143,12 +143,17 @@ limitations, all fail-safe:
   message chooses to carry), not a field predicate; a 30-disjunct approximation would
   misfire (req #4).
 - **PAC-2** — "If SHP-8 Number of Packages in Shipment is greater than 1": a **numeric
-  ordering comparison**, which the DSL does not have (equality/sets/prefixes only). A
-  model-extension candidate.
+  ordering comparison**. ✅ **SHIPPED M8-D (2026-09-17):** the condition DSL gained the `>`
+  operator (numeric, fail-safe false on non-numeric or empty referents) and PAC-2 carries
+  `condition: "SHP-8 > 1"`.
 - **PRT-1** — "required when known": sender-knowledge, not wire-decidable.
 - **PRT-6, PRT-7** — "may only be valued if PRT-5 [PRT-8] is valued": **not-permitted-unless**,
   a *prohibition* — encoding it as a required-when condition would wrongly demand the field
-  whenever its subject is present. A model-extension candidate (conditional prohibition).
+  whenever its subject is present. ✅ **SHIPPED M8-D (2026-09-17):** `FieldGrammar` gained a
+  `prohibitedWhen` axis (populated while the predicate holds fires the new
+  `IssueCode.conditionalFieldProhibited`); PRT-6 carries `prohibitedWhen: "PRT-5 empty"`,
+  PRT-7 `prohibitedWhen: "PRT-8 empty"`. The bare-C guard now treats either axis as
+  modelled conditionality.
 - **PRT-14, RXV-20, RXV-21** — definitions state what the fields hold and no trigger.
 
 **v3 cycle 1 (2026-09-16) — the v2.5-only quartet (CER/IPC/OVR/SFT):**

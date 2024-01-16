@@ -1045,22 +1045,27 @@ struct MultiVersionTests {
             // triaged per field in conditional-completeness-audit.md. Shipped
             // instead of registered: PYE-3..6 (payee-type gates), MCP-5,
             // OMC-2/3 (mutual presence), PRT-5/8/9/10/22 (the one-of-five
-            // rotation the shared Condition sentence states). The rest have
-            // no field-expressible trigger: financial/DRG context (ADJ-7,
-            // IVC-23, PSL-10/12..16, DMI-2..5, REL-1), usage-pattern
-            // exceptions (DON-1/2), a numeric-ordering comparison the DSL
-            // lacks (PAC-2, SHP-8 > 1), required-when-known (PRT-1),
-            // not-permitted-unless — a prohibition the required-when model
-            // cannot express (PRT-6/7) — no stated trigger (PRT-14,
+            // rotation the shared Condition sentence states). M8-D closed
+            // two more classes: PAC-2 carries "SHP-8 > 1" (the numeric
+            // ordering comparison landed) and PRT-6/7 carry prohibitedWhen
+            // (the conditional-prohibition model landed) — all three left
+            // this set. The rest have no field-expressible trigger:
+            // financial/DRG context (ADJ-7, IVC-23, PSL-10/12..16,
+            // DMI-2..5, REL-1), usage-pattern exceptions (DON-1/2),
+            // required-when-known (PRT-1), no stated trigger (PRT-14,
             // RXV-20/21).
             "ADJ-7", "IVC-23", "PSL-10", "PSL-12", "PSL-13", "PSL-14",
             "PSL-15", "PSL-16", "DMI-2", "DMI-3", "DMI-4", "DMI-5", "REL-1",
-            "DON-1", "DON-2", "PAC-2", "PRT-1", "PRT-6", "PRT-7", "PRT-14",
+            "DON-1", "DON-2", "PRT-1", "PRT-14",
             "RXV-20", "RXV-21",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {
-            for f in grammar.fields where f.optionality == .conditional && f.condition == nil {
+            // A field whose conditionality is modelled by EITHER axis
+            // (required-when `condition` or the M8-D `prohibitedWhen`
+            // prohibition) is not bare.
+            for f in grammar.fields
+            where f.optionality == .conditional && f.condition == nil && f.prohibitedWhen == nil {
                 actual.insert("\(seg)-\(f.index)")
             }
         }

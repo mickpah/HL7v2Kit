@@ -54,13 +54,25 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// effectively `.optional`. v0.2-V1.
     public let condition: String?
 
+    /// Predicate that controls when a field is PROHIBITED: if the field
+    /// is populated while this predicate is true, the Validator fires
+    /// `.conditionalFieldProhibited`. The inverse of `condition` —
+    /// "may only be valued if X is valued" encodes as
+    /// `prohibitedWhen: "X empty"`. Encoding it as a required-when
+    /// condition would wrongly demand the field whenever its subject is
+    /// present (the PRT-6/PRT-7 lesson,
+    /// `conditional-completeness-audit.md`). Same fail-safe semantics
+    /// as `condition`: an unresolvable predicate never fires. M8-D.
+    public let prohibitedWhen: String?
+
     public init(
         index: Int,
         name: String,
         dataType: String,
         optionality: FieldOptionality,
         repeatability: FieldRepeatability,
-        condition: String? = nil
+        condition: String? = nil,
+        prohibitedWhen: String? = nil
     ) {
         self.index = index
         self.name = name
@@ -68,6 +80,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.optionality = optionality
         self.repeatability = repeatability
         self.condition = condition
+        self.prohibitedWhen = prohibitedWhen
     }
 }
 

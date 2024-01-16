@@ -26,6 +26,10 @@ struct FieldSchema: Decodable {
     /// becomes required. See `FieldGrammar.condition` for the grammar.
     /// v0.2-V1.
     let condition: String?
+    /// Optional predicate string controlling when a field is PROHIBITED
+    /// (populated while the predicate is true fires). See
+    /// `FieldGrammar.prohibitedWhen`. M8-D.
+    let prohibitedWhen: String?
 }
 
 struct SegmentSchema: Decodable {
@@ -175,7 +179,8 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
         let fields = schema.fields.sorted(by: { $0.index < $1.index }).map { field in
             let repeatability = field.repeatability == "*" ? ".multiple" : ".single"
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition)),"
+            let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen)),"
         }.joined(separator: "\n")
         return """
                 "\(schema.segmentID)": SegmentGrammar(

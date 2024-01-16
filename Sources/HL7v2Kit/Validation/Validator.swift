@@ -431,6 +431,16 @@ public struct Validator: Sendable {
                     location: location,
                     issues: &issues
                 )
+                // M8-D: the inverse case — populated while prohibited.
+                checkProhibition(
+                    fieldGrammar,
+                    segment: segment,
+                    segmentIndex: segmentIndex,
+                    message: message,
+                    isPopulated: isPopulated,
+                    location: location,
+                    issues: &issues
+                )
             }
 
             if options.checkComponentGrammar, let field, isPopulated {
@@ -1503,6 +1513,40 @@ public struct Validator: Sendable {
         ))
     }
 
+    /// Conditional-prohibition check (M8-D). Fires
+    /// `.conditionalFieldProhibited` when the field IS populated while
+    /// its `grammar.prohibitedWhen` predicate is true — the inverse of
+    /// `checkConditional`. "PRT-6 may only be valued if PRT-5 is
+    /// valued" encodes as `prohibitedWhen: "PRT-5 empty"`. Same
+    /// fail-safe semantics: an unresolvable predicate never fires.
+    private func checkProhibition(
+        _ grammar: FieldGrammar,
+        segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        isPopulated: Bool,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard isPopulated,
+              let prohibition = grammar.prohibitedWhen,
+              !prohibition.isEmpty,
+              conditionTriggers(
+                prohibition,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: location.segmentID
+              )
+        else { return }
+        issues.append(ValidationIssue(
+            severity: .error,
+            code: .conditionalFieldProhibited,
+            location: location,
+            message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(prohibition)' holds"
+        ))
+    }
+
     /// Evaluate a condition predicate against a single segment.
     /// v0.2-V1 introduced the single-atom DSL; v0.4-S4 extends it with
     /// compound `AND` / `OR` combinators and `in (…)` / `not in (…)`
@@ -1994,6 +2038,17 @@ public struct Validator: Sendable {
         // on an empty referent is false (an absent value begins with
         // nothing); `not startsWith` mirrors `not in` — it asserts only
         // on populated referents, per the fail-safe rule.
+        // M8-D: numeric ordering comparison — `> <number>`. Needed for
+        // conditions like PAC-2's "If SHP-8 Number of Packages in
+        // Shipment is greater than 1", which no equality or value-set
+        // clause can state. Both sides must parse as numbers; a
+        // non-numeric or empty referent fails safe to false (v0.2-V1).
+        if predicate.hasPrefix("> ") {
+            guard let threshold = Double(predicate.dropFirst(2)),
+                  let value = Double(resolved.raw)
+            else { return false }
+            return value > threshold
+        }
         if predicate.hasPrefix("startsWith ") {
             let prefix = String(predicate.dropFirst("startsWith ".count))
             return !prefix.isEmpty && resolved.raw.hasPrefix(prefix)

@@ -278,6 +278,59 @@ struct ValidationTests {
         #expect(try pairMismatches(normalised).isEmpty)
     }
 
+    // MARK: - M8-D: numeric comparison (PAC-2) + conditional prohibition (PRT-6/7)
+
+    @Test("PAC-2 is required when SHP-8 > 1 and free otherwise (numeric comparison)")
+    func pac2NumericComparisonCondition() throws {
+        func report(_ shp8: String, pac2: String) throws -> ValidationReport {
+            let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||OSM^R26|MSG1|P|2.8.2\r"
+                + "SHP|SHIP1^LAB|||||||\(shp8)\r"
+                + "PAC|1|\(pac2)\r"
+            return Validator().validate(try Parser().parse(wire))
+        }
+        // SHP-8 = 3 and PAC-2 empty: the condition triggers.
+        let fires = try report("3", pac2: "")
+        #expect(fires.errors.contains {
+            $0.code == .conditionalFieldMissing && $0.location.pathDescription == "PAC[1]-2"
+        }, "got \(fires.errors.map(\.message))")
+        // SHP-8 = 1: not greater than 1 — free.
+        #expect(!(try report("1", pac2: "").errors.contains {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PAC"
+        }))
+        // SHP-8 empty / non-numeric: fail-safe, no trigger.
+        #expect(!(try report("", pac2: "").errors.contains {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PAC"
+        }))
+        // SHP-8 = 3 with PAC-2 populated: satisfied.
+        #expect(!(try report("3", pac2: "PKG1^LAB").errors.contains {
+            $0.code == .conditionalFieldMissing && $0.location.segmentID == "PAC"
+        }))
+    }
+
+    @Test("PRT-6/7 are prohibited unless their subject is valued (conditional prohibition)")
+    func prtConditionalProhibition() throws {
+        func report(_ prt: String) throws -> [ValidationIssue] {
+            let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|MSG1|P|2.8.2\r"
+                + prt + "\r"
+            return Validator().validate(try Parser().parse(wire)).errors.filter {
+                $0.code == .conditionalFieldProhibited
+            }
+        }
+        // PRT-6 (provider type) populated with PRT-5 empty: prohibited.
+        let fires = try report("PRT|1|AD||AP||GP^General Practice")
+        #expect(fires.count == 1, "got \(fires.map(\.message))")
+        #expect(fires.first?.location.pathDescription == "PRT[1]-6")
+        // PRT-6 populated WITH PRT-5 valued: permitted.
+        let ok = try report("PRT|1|AD||AP|1234^SMITH^JOHN|GP^General Practice")
+        #expect(ok.isEmpty)
+        // PRT-6 empty: nothing to prohibit.
+        #expect(try report("PRT|1|AD||AP").isEmpty)
+        // PRT-7 populated with PRT-8 empty: prohibited at PRT-7.
+        let prt7 = try report("PRT|1|AD||AP|||WARD^Ward Unit")
+        #expect(prt7.count == 1)
+        #expect(prt7.first?.location.pathDescription == "PRT[1]-7")
+    }
+
     // MARK: - M8-C: BatchValidator
 
     private let batchORU = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|M-ORU|P|2.5.1\r"

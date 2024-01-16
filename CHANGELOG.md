@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M8-D — the last two recorded conditional classes ship.** The
+  condition DSL gains the numeric `>` operator (fail-safe false on
+  non-numeric referents), unlocking v2.8.2 PAC-2
+  (`condition: "SHP-8 > 1"` — "If SHP-8 Number of Packages in Shipment
+  is greater than 1"). `FieldGrammar` gains a `prohibitedWhen` axis
+  (schema key → codegen → new `IssueCode.conditionalFieldProhibited`),
+  unlocking v2.8.2 PRT-6/PRT-7 ("may only be valued if PRT-5 [PRT-8]
+  is valued" — a prohibition the required-when model could not state
+  without misfiring). All 188 grammar tables regenerated; the bare-C
+  guard treats either axis as modelled conditionality and its expected
+  set shrinks by three. Audit fully clean. Suite 619 tests, 609 green.
+
 - **M8-C — `BatchValidator`: batch-scope validation lands.** New public
   `BatchValidator` / `BatchValidationReport` (additive API): every
   message in a `BatchFile` runs through the standard `Validator`, plus
