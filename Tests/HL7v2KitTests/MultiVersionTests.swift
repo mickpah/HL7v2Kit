@@ -1026,6 +1026,14 @@ struct MultiVersionTests {
             // CTI-2 all carry spec-cited predicates instead — see
             // v1_8ClinicalTrialConditionsShipped() below.
             "CSP-4",
+            // v3-C3 (deferred CH15 personnel on v2.8.2): CER-12 Subject ID is
+            // conditional on the certificate being "expressed as a X.509
+            // document" (§15.4.2.12) — a payload format no field states, so it
+            // stays bare on every version it exists on (registered in
+            // conditional-completeness-audit.md at v3 cycle 1). STF-1 / PRA-1 /
+            // PRA-12 carry their MFN predicates here just as on the AU-priority
+            // versions (identical prose, verified).
+            "CER-12",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

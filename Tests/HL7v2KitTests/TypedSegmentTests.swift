@@ -2010,4 +2010,25 @@ struct TypedSegmentTests {
         #expect(SegmentGrammarTable.v2_8_2["URD"] == nil)
         #expect(SegmentGrammarTable.v2_8_2["URS"] == nil)
     }
+
+    // v3 cycle 3 (deferred-tier batch B): CH15 personnel on v2.6/v2.8.2.
+    // STF grows 39 → 41 and ORG 12 → 13 at v2.8.2; the rest are stable.
+    // CER's v2.6/v2.8.2 instances close the loop opened by v3 cycle 1
+    // (authored canonical-first, deferred instances now in place).
+    @Test("v3 cycle 3: deferred CH15 personnel on v2.6 + v2.8.2 — depths and divergences")
+    func v3Cycle3DeferredPersonnel() {
+        let six = SegmentGrammarTable.v2_6
+        let eight = SegmentGrammarTable.v2_8_2
+        #expect(six["STF"]?.fields.count == 39)
+        #expect(eight["STF"]?.fields.count == 41)
+        #expect(six["ORG"]?.fields.count == 12)
+        #expect(eight["ORG"]?.fields.count == 13)
+        for t in [six, eight] {
+            #expect(t["PRA"]?.fields.count == 12)
+            #expect(t["AFF"]?.fields.count == 5)
+            #expect(t["LAN"]?.fields.count == 4)
+            #expect(t["EDU"]?.fields.count == 9)
+            #expect(t["CER"]?.fields.count == 31)
+        }
+    }
 }

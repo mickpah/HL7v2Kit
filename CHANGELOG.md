@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **v3 cycle 3 — deferred-tier batch B: CH15 personnel on v2.6 / v2.8.2.**
+  Fourteen schema instances (`STF/PRA/ORG/AFF/LAN/EDU/CER` × both versions),
+  extractor-seeded and `--verify` PASS. Divergences pinned: STF grows
+  39 → 41 and ORG 12 → 13 at v2.8.2; CER-12 retypes `ID` → `EI` at v2.8.2.
+  The conditional surface travelled with the segments: `STF-1`/`PRA-1`
+  (`messageCode = MFN`) and `PRA-12` (`messageCode != MFN`) carry the same
+  spec-cited predicates as the AU-priority versions (identical prose,
+  verified on both chapters); `CER-12` stays a bare `C` (the X.509 payload
+  condition, registered) and joins the v2.8.2 bare-C guard set — the guard
+  caught exactly this on the first run, which is its job. 751 schemas,
+  740 depth-exact, audit fully clean.
+
 - **v3 cycle 2 — deferred-tier batch A: CH02 envelopes + CH05 queries on
   v2.6 / v2.8.2.** Sixteen schema instances of already-modelled segments,
   extractor-seeded from each version's own chapters and `--verify` PASS:
