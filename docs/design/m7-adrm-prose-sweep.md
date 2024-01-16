@@ -67,12 +67,18 @@ page indexes (printed page ≈ index, off by at most a few).
   with v2.4 §4.5.1.2 stating the consequence and v2.8.2 §4.5.3.2 stating "This field is
   identical to ORC-2". New `IssueCode.pairedFieldMismatch(item:)`; fires per ORC/OBR
   group when BOTH sides are populated and differ (whole-field wire comparison,
-  trailing-empty-normalised); runs for every locale and version. **Remaining pairs**
-  (ORC-12/OBR-16 XCN, ORC-7/OBR-27 TQ, ORC-8/OBR-29-or-54 parent) carry repetition and
-  cross-version placement nuance (v2.8.2 moved parent equality to OBR-54) — still
-  recorded here for deliberate later modelling. The presence half ("if not present in
-  the ORC, it must be present in the associated OBR") is message-shape-dependent (ORU
-  needs no ORC) and stays unshipped.
+  trailing-empty-normalised); runs for every locale and version. **M8-B2 (2026-09-17)
+  finished the family:** ORC-12/OBR-16 (item 00226, Ordering Provider — repetition-aware
+  comparison, "If both ... are valued, then both must contain the same value", v2.4
+  §4.5.1.12) and the parent pair with its version split — ORC-8/OBR-29 on v2.3–v2.6
+  ("ORC-8-parent is the same as OBR-29-parent", v2.4 §4.5.1.8) and ORC-8/OBR-54 on
+  v2.8.2, where OBR-29 is a DIFFERENT element (00261) and §4.5.1.8 states "Where the
+  message has matching ORC/OBR pairs, ORC-8 and OBR-54 Must carry the same value".
+  **Deliberately NOT shipped:** ORC-7/OBR-27 (quantity/timing) — the v2.4 prose says the
+  pair "should be valued exactly the same" (advisory, not normative) and both fields are
+  withdrawn (`W`) from v2.7; an error-level rule would over-read (req #4). The presence
+  half ("if not present in the ORC, it must be present in the associated OBR") is
+  message-shape-dependent (ORU needs no ORC) and stays unshipped.
 - **RXO-1/2/4 vs RXO-6 free-text conditional** (pp. 346–348): "The RXO-1, RXO-2 and
   RXO-4 are mandatory unless the prescription is transmitted as free text using RXO-6,
   then … the first subcomponent of RXO-6 must be blank." Compound conditional

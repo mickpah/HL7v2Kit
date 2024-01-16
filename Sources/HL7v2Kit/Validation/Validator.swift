@@ -809,31 +809,61 @@ public struct Validator: Sendable {
         }
     }
 
-    /// M8-B1: the ORC/OBR field pairs the base spec declares to be the
-    /// SAME data element. Each pair shares an HL7 ITEM number in every
-    /// supported version's attribute tables — the spec's own identity
-    /// assertion — and the chapter-4 prose states the consequence
-    /// explicitly: "If both fields, ORC-2-placer order number and
-    /// OBR-2-placer order number, are valued, they must contain the
-    /// same value" (v2.4 §4.5.1.2; "This rule is the same for other
-    /// identical fields in the ORC and OBR", §4.5.1.3); v2.8.2
-    /// §4.5.3.2: "This field is identical to ORC-2-Placer Order
-    /// Number." Conservative scope: the two EI order-number pairs
-    /// only — the XCN/TQ pairs (ORC-12/OBR-16, ORC-7/OBR-27) carry
-    /// repetition and backward-compatibility nuance and stay recorded
-    /// in `m7-adrm-prose-sweep.md` §C until modelled deliberately.
-    private static let orcObrEqualityPairs: [(field: Int, name: String, item: String)] = [
-        (2, "Placer Order Number", "00216"),
-        (3, "Filler Order Number", "00217"),
+    /// An ORC/OBR field pair the base spec declares to be the SAME data
+    /// element (shared HL7 ITEM number — the spec's own identity
+    /// assertion). M8-B1/B2.
+    private struct OrcObrPair {
+        let orcField: Int
+        let obrField: Int
+        let name: String
+        let item: String
+        /// `nil` = every version. The parent pair moves between OBR
+        /// positions across versions, so its two legs are enumerated.
+        let versions: Set<Version>?
+    }
+
+    /// M8-B1/B2: the pairs and their citations.
+    /// - ORC-2/OBR-2 (00216), ORC-3/OBR-3 (00217): v2.4 §4.5.1.2 "If
+    ///   both fields ... are valued, they must contain the same value"
+    ///   ("This rule is the same for other identical fields in the ORC
+    ///   and OBR", §4.5.1.3); v2.8.2 §4.5.3.2 "This field is identical
+    ///   to ORC-2-Placer Order Number."
+    /// - ORC-12/OBR-16 (00226, XCN, repeats): v2.4 §4.5.1.12 "If both,
+    ///   ORC-12 Ordering provider and OBR-16 Ordering Provider are
+    ///   valued, then both must contain the same value." Both print
+    ///   item 00226 on every version (B usage from v2.7 — deprecated
+    ///   but accepted, so the rule still applies when populated).
+    /// - Parent (EIP): v2.3–v2.6 pair ORC-8 with OBR-29 (both named
+    ///   "Parent"; v2.4 §4.5.1.8: "ORC-8-parent is the same as
+    ///   OBR-29-parent"). v2.8.2 repurposes OBR-29 (item 00261, Parent
+    ///   Result Observation Identifier) and pairs ORC-8 with OBR-54:
+    ///   "Condition: Where the message has matching ORC/OBR pairs,
+    ///   ORC-8 and OBR-54 Must carry the same value" (§4.5.1.8);
+    ///   "neither one is the same as OBR-29". The grammar-less `.v2_8`
+    ///   gets neither parent leg (ADR-013).
+    /// - ORC-7/OBR-27 (TQ) is deliberately ABSENT: the v2.4 prose says
+    ///   the pair "should be valued exactly the same" — advisory, not
+    ///   normative — and both fields are withdrawn (`W`) from v2.7.
+    ///   An error-level rule would over-read (req #4). Recorded in
+    ///   `m7-adrm-prose-sweep.md` §C.
+    private static let orcObrEqualityPairs: [OrcObrPair] = [
+        OrcObrPair(orcField: 2, obrField: 2, name: "Placer Order Number", item: "00216", versions: nil),
+        OrcObrPair(orcField: 3, obrField: 3, name: "Filler Order Number", item: "00217", versions: nil),
+        OrcObrPair(orcField: 12, obrField: 16, name: "Ordering Provider", item: "00226", versions: nil),
+        OrcObrPair(orcField: 8, obrField: 29, name: "Parent", item: "00222",
+                   versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6]),
+        OrcObrPair(orcField: 8, obrField: 54, name: "Parent Order", item: "00222",
+                   versions: [.v2_8_2]),
     ]
 
-    /// M8-B1: within each ORC/OBR group, a paired field populated on
-    /// BOTH segments must carry the same value (full-field wire
-    /// comparison of the first repetition — both pairs are
-    /// single-cardinality EI). Empty on either side skips: the
-    /// presence half of the prose ("if not present in the ORC, it must
-    /// be present in the associated OBR") is message-shape-dependent
-    /// (ORU needs no ORC at all) and is not asserted here.
+    /// M8-B1/B2: within each ORC/OBR group, a paired field populated on
+    /// BOTH segments must carry the same value (whole-field wire
+    /// comparison including repetitions). Empty on either side skips:
+    /// the presence half of the prose ("if not present in the ORC, it
+    /// must be present in the associated OBR") is
+    /// message-shape-dependent (ORU needs no ORC at all) and is not
+    /// asserted here. Version-gated pairs (parent) apply only where
+    /// their version set says.
     private func checkOrcObrPairEquality(
         message: Message,
         issues: inout [ValidationIssue]
@@ -852,42 +882,49 @@ public struct Validator: Sendable {
             }) else { continue }
             let obr = message.segments[obrIndex]
             for pair in Self.orcObrEqualityPairs {
-                guard let orcValue = flattenedFirstRepetition(segment.field(pair.field)),
-                      let obrValue = flattenedFirstRepetition(obr.field(pair.field)),
+                if let versions = pair.versions, !versions.contains(message.version) { continue }
+                guard let orcValue = flattenedField(segment.field(pair.orcField)),
+                      let obrValue = flattenedField(obr.field(pair.obrField)),
                       orcValue != obrValue
                 else { continue }
                 let location = IssueLocation(
                     segmentID: "OBR",
                     segmentIndex: obrOccurrenceByIndex[obrIndex] ?? 1,
-                    fieldIndex: pair.field,
+                    fieldIndex: pair.obrField,
                     componentIndex: nil
                 )
                 issues.append(ValidationIssue(
                     severity: .error,
                     code: .pairedFieldMismatch(item: pair.item),
                     location: location,
-                    message: "ORC-\(pair.field) and OBR-\(pair.field) are the same data element (\(pair.name), item \(pair.item)) but carry different values in one order group: ORC has \"\(orcValue)\", OBR has \"\(obrValue)\" (HL7 v2.4 §4.5.1.2; v2.8.2 §4.5.3.2)"
+                    message: "ORC-\(pair.orcField) and OBR-\(pair.obrField) are the same data element (\(pair.name), item \(pair.item)) but carry different values in one order group: ORC has \"\(orcValue)\", OBR has \"\(obrValue)\" (HL7 v2.4 §4.5.1; v2.8.2 §4.5.3)"
                 ))
             }
         }
     }
 
-    /// Flatten a field's first repetition to wire form for whole-field
-    /// comparison, normalising trailing empty components/subcomponents
-    /// (`A^B` and `A^B^^` carry the same value). Returns `nil` when the
-    /// field is absent or entirely empty. `Repetition.stringValue`
-    /// cannot be used here — it has strict-scalar semantics and returns
-    /// `nil` for multi-component values. M8-B1.
-    private func flattenedFirstRepetition(_ field: Field?) -> String? {
-        guard let rep = field?.repetitions.first else { return nil }
-        var components = rep.components.map { component -> String in
-            var subs = component.subcomponents.map(\.value)
-            while subs.count > 1, subs.last?.isEmpty == true { subs.removeLast() }
-            return subs.joined(separator: "&")
+    /// Flatten a whole field to wire form for whole-field comparison,
+    /// normalising trailing empty components/subcomponents (`A^B` and
+    /// `A^B^^` carry the same value) and dropping empty repetitions.
+    /// Returns `nil` when the field is absent or entirely empty.
+    /// `Repetition.stringValue` cannot be used here — it has
+    /// strict-scalar semantics and returns `nil` for multi-component
+    /// values. Repetition-aware since M8-B2: the XCN pair
+    /// (ORC-12/OBR-16) repeats, and "both must contain the same value"
+    /// covers every repetition. M8-B1/B2.
+    private func flattenedField(_ field: Field?) -> String? {
+        guard let field else { return nil }
+        let repetitions = field.repetitions.compactMap { rep -> String? in
+            var components = rep.components.map { component -> String in
+                var subs = component.subcomponents.map(\.value)
+                while subs.count > 1, subs.last?.isEmpty == true { subs.removeLast() }
+                return subs.joined(separator: "&")
+            }
+            while components.count > 1, components.last?.isEmpty == true { components.removeLast() }
+            let joined = components.joined(separator: "^")
+            return joined.isEmpty ? nil : joined
         }
-        while components.count > 1, components.last?.isEmpty == true { components.removeLast() }
-        let joined = components.joined(separator: "^")
-        return joined.isEmpty ? nil : joined
+        return repetitions.isEmpty ? nil : repetitions.joined(separator: "~")
     }
 
     /// M7-P3: scan every populated subcomponent for prohibited escape

@@ -256,4 +256,52 @@ struct ValidationTests {
             .validate(try Parser(locale: .international).parse(wire))
         #expect(report.errors.contains { $0.code == .pairedFieldMismatch(item: "00216") })
     }
+
+    @Test("ORC-12/OBR-16 (Ordering Provider, item 00226) — repetition-aware equality")
+    func orcObrOrderingProviderPair() throws {
+        // Same provider list on both sides: silent.
+        func wire(orc12: String, obr16: String) -> String {
+            "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+                + "ORC|NW|PL-1^HOSP|FIL-1^LAB|||||||||\(orc12)\r"
+                + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L||||||||||||\(obr16)\r"
+        }
+        let same = wire(orc12: "1234^SMITH^JOHN~5678^JONES^ANN", obr16: "1234^SMITH^JOHN~5678^JONES^ANN")
+        #expect(try pairMismatches(same).isEmpty)
+        // A repetition differing only on the second repeat fires.
+        let differs = wire(orc12: "1234^SMITH^JOHN~5678^JONES^ANN", obr16: "1234^SMITH^JOHN~9999^OTHER^X")
+        let fired = try pairMismatches(differs)
+        #expect(fired.count == 1)
+        #expect(fired.first?.code == .pairedFieldMismatch(item: "00226"))
+        #expect(fired.first?.location.pathDescription == "OBR[1]-16")
+        // Trailing empty components are the same value.
+        let normalised = wire(orc12: "1234^SMITH^JOHN^^", obr16: "1234^SMITH^JOHN")
+        #expect(try pairMismatches(normalised).isEmpty)
+    }
+
+    @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.8.2")
+    func orcObrParentPairMovesAcrossVersions() throws {
+        // v2.5.1: parent lives at OBR-29 (both sides EIP).
+        let v251 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
+        let firedOld = try pairMismatches(v251)
+        #expect(firedOld.count == 1, "got \(firedOld.map(\.message))")
+        #expect(firedOld.first?.code == .pairedFieldMismatch(item: "00222"))
+        #expect(firedOld.first?.location.pathDescription == "OBR[1]-29")
+        // v2.8.2: OBR-29 is a DIFFERENT element (00261) — a differing
+        // OBR-29 must NOT fire; the pair reads OBR-54 instead.
+        let v282Obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21|MSG1|P|2.8.2\r"
+            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
+        #expect(try pairMismatches(v282Obr29).isEmpty,
+                "OBR-29 is not the v2.8.2 parent peer")
+        // v2.8.2 with a mismatching OBR-54 fires.
+        let obr54Tail = String(repeating: "|", count: 50)
+        let v282Obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21|MSG1|P|2.8.2\r"
+            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
+        let fired282 = try pairMismatches(v282Obr54)
+        #expect(fired282.count == 1, "got \(fired282.map(\.message))")
+        #expect(fired282.first?.location.pathDescription == "OBR[1]-54")
+    }
 }

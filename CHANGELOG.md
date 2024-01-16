@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M8-B2 — the ORC/OBR pair family completed.** ORC-12/OBR-16
+  (Ordering Provider, item 00226) ships with repetition-aware
+  whole-field comparison (v2.4 §4.5.1.12: "If both ... are valued,
+  then both must contain the same value"), and the parent pair ships
+  version-split: ORC-8/OBR-29 on v2.3–v2.6 ("ORC-8-parent is the same
+  as OBR-29-parent", §4.5.1.8), ORC-8/OBR-54 on v2.8.2 (which
+  repurposes OBR-29 as item 00261 and pins the pair explicitly:
+  "ORC-8 and OBR-54 Must carry the same value"). ORC-7/OBR-27
+  (quantity/timing) is deliberately not shipped — "should be valued
+  exactly the same" is advisory and both fields are withdrawn from
+  v2.7 (req #4). Suite 614 tests, 604 green.
+
 - **M8-B1 — base-spec ORC/OBR paired-field equality.** The base
   standard declares ORC-2/OBR-2 (item 00216, Placer Order Number) and
   ORC-3/OBR-3 (item 00217, Filler Order Number) to be the SAME data
