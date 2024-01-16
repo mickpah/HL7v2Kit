@@ -35,29 +35,30 @@ The machine-checkable HL7au:00044.* CE/CNE/CWE narrowings shipped in v0.13 (ADR-
 
 ## D. M6-B — ADRM-2021 points awaiting model capabilities (deferred, blocks spec-completeness)
 
-Added at M6 close (2026-09-16). These are **not** permanent: each is expressible once its
-capability lands, and per req #3 each **blocks** any claim of AU spec-completeness until
-then. They are the EXTEND remainder of the ADRM-2021 Appendix 5 register after M6-A and
-M6-B-1/2 shipped everything today's DSL can state faithfully (see
+Added at M6 close (2026-09-16) as the EXTEND remainder of the ADRM-2021 Appendix 5
+register; **drained by M6-B-4 through M6-B-9** (same date). Each row below records its
+outcome: shipped, shipped-PARTIAL with the unenforced half stated in the conformance
+register, or registered with the citation-backed reason no faithful rule can exist (see
 `m6-adrm-2021-conformance-register.md` for per-point text).
 
 | Capability | Points (HL7au:) | What it needs |
 |------------|-----------------|---------------|
 | **HL7 code-table registry (M6-O6)** — ✅ seeded (M6-B-4/5, 2026-09-16) | ~~`000032`, `000032.2`, `00104.7.2.1`, `00104.7.3.1`, `00044.7.3`, `00044.7.4`~~ all shipped: the `HL7CodeTables` seed (tables 0074/0200/0203/0363, hand-verified against the ADRM's printed renderings) plus the M6-B-5 composite value-set track (populated-only allow lists on `CompositeOverride`) | **Remaining:** the general per-version registry only — the seed holds just the tables shipped points consume, values-only, with no descriptions and no codegen. Grow it when a new point needs a new table. |
-| **OBX-2-driven datatype resolution (M6-O7)** | `00044.10.1.1`–`.1.4` (ED), `00044.11.1.1`–`.1.4` (RP) | Composite dispatch on the *runtime* type OBX-2 names, not the static grammar dataType. The M6-D5 fix (OBX-5 is `Field?` since the 3.0 boundary) is the prerequisite. |
-| **Value-correspondence maps** | `00044.10.1.5`/`.6`, `00044.11.1.5`/`.6` (ED/RP subtype ⇒ type), `000008.1.3` (OBX-2 ⇔ OBX-3.1 display format), `00104.7.1.4` (PRD-7 component triple) | "Component A's value determines component B's allowed values" — a map structure, not a value set. |
-| **Within-message uniqueness / ordering** | `000028`, `000028.2` (unique OBR-3 across groups); `00100.1`, `000008.1.5` (group / display-segment ordering) | Cross-group aggregation state the per-segment scan does not carry. |
-| **Generalised coding-system precedence** | `000034.1`–`.3` | The shipped LOINC rule (`00044.4.4`) generalised to any public/local coding-system pair — needs a code-system classification, which itself leans on M6-O6. |
-| **Relational group cardinality** | `000008.3.2` | "If an RTF display OBX exists in the group, an HTML/PDF/TXT sibling must too" — count(A) ≥ 1 conditioned on count(B) ≥ 1, plus a content-equality half that is not machine-checkable at all. |
-| **Stragglers** | `00044.8.1` (TS timezone offset — datatype-level validation); `00044.6.7` (CWE same-concept assertion — the CE/CNE twins are §B permanent limitations); `000022.1`, `000022.3` (batch-scope rules; the Validator is message-scoped) | Each is a different small capability; none clusters with the five above. |
+| **OBX-2-driven datatype resolution (M6-O7)** — ✅ shipped (M6-B-7, 2026-09-16) | ~~`00044.10.1.1`–`.1.4` (ED), `00044.11.1.1`–`.1.4` (RP)~~ all shipped: the composite-override dispatch resolves OBX-5's effective datatype from the sibling OBX-2 value | Nothing remaining for these points. The general capability stays OBX-5-specific by design — no other field's type varies at runtime. |
+| **Value-correspondence maps** — ✅ shipped (M6-B-8, 2026-09-16) | ~~`00044.10.1.5`/`.6`, `00044.11.1.5`/`.6`, `000008.1.3`, `00104.7.1.4`~~ all shipped (PARTIAL where the ADRM leaves the pair set open) via `ComponentCorrespondence` on both override tracks | **Remaining:** only the open ends noted per row in the register — unstated IANA subtypes and open-ended vendor authorities skip, fail-safe (req #4). |
+| **Within-message uniqueness** — ✅ shipped (M6-B-9, 2026-09-16) | ~~`000028`, `000028.2`~~ shipped via `FieldUniquenessRule` (message-wide OBR-3.1 duplicate detection, ORU- and REF-gated legs) | Nothing remaining. |
+| **Intra-message ordering** — registered (M6-B-9, 2026-09-16) | `00100.1` (REF-4 referral-priority ordering "according to the SNOMED CT hierarchy"), `000008.1.5` (display-segment signature ordering per **HB 308-2011**) | `00100.1` needs SNOMED CT subsumption — a terminology server, §C territory, not a DSL gap. `000008.1.5`'s normative content (which identifiers mark a signature block) lives in HB 308-2011, an external Standards Australia handbook the ADRM does not reproduce; a rule would not be defensible against the ADRM text alone (req #2). **Permanent** unless a future revision inlines the handbook's identifier list. |
+| **Coding-system precedence** — ✅ shipped for named public systems (M6-B-9, 2026-09-16) | ~~`000034.1`, `000034.2`~~ shipped PARTIAL: a public system the ADRM names (LN, SCT, UCUM — `HL7CodeTables.publicCodingSystems`) appearing in the CE/CWE alternate triplet behind a non-public primary fires; unnamed systems skip, fail-safe. `000034.3` registered | `000034.3` ("the alternate must be a translation of the same concept") is a terminology-equivalence judgement, §C territory — same reasoning as the registered `00044.4.7`/`.5.7` and their CWE twin `00044.6.7` (also registered at M6-B-9). |
+| **Relational group cardinality** — ✅ shipped, structural half (M6-B-9, 2026-09-16) | ~~`000008.3.2`~~ shipped PARTIAL via `SegmentCardinalityRule.activationPredicate`: RTF display present in an OBR group without an HTML/PDF/TXT sibling fires (L2 Referrals gate) | **Remaining:** the "same content" equality half — comparing rendered RTF against rendered HTML/PDF/TXT is not machine-checkable; permanent, same class as `000008.2`. |
+| **TS timezone offset** — ✅ shipped, presence half (M6-B-9, 2026-09-16) | ~~`00044.8.1`~~ shipped PARTIAL via `CompositeOverride.timezoneRequiredCitation`: a TS with hour-or-greater precision and no `+`/`-ZZZZ` suffix fires on Orders/Results/Referrals | **Remaining:** verifying the offset is *correct* for the stated local time needs a timezone database and the sender's location — out of scope by nature. |
+| **Batch-scope rules** — registered (M6-B-9, 2026-09-16) | `000022.1` (batch acknowledgement mode), `000022.3` (batch cardinality) | Both attach to the FHS/BHS batch envelope; `Validator` is message-scoped by design. The documented home is a future `BatchValidator` over `BatchParser` output. Deferred there, not lost. |
 
-**Freeze decision:** deferred, not frozen. Any release claiming full ADRM-2021 coverage
-must first land these or re-justify each row. *(M6-B-6, 2026-09-16: the "MSH-21
+**Freeze decision (M6-B-9 close, 2026-09-16): §D is drained.** Every capability row is
+now shipped, shipped-PARTIAL with the unenforced half stated, or registered with a
+citation-backed reason no faithful rule can exist. The EXTEND class of the ADRM register
+is empty; nothing awaits a model extension. *(Historical note, M6-B-6: the "MSH-21
 profile-ID addressing" root cause named here earlier was a misidentification — the ADRM
-declares the adhered profile in MSH-12.3, which the DSL addresses. `000021`'s
-Referrals(L2) leg and `000008.3.1`'s L1-PDF leg have shipped on that gate; of `000020`
-only the message-CODE leg remains unenforced, a shape-level undecidability, not a
-field-addressing gap.)*
+declares the adhered profile in MSH-12.3, which the DSL addresses.)*
 
 ## What is NOT a limitation (recorded to prevent re-litigation)
 

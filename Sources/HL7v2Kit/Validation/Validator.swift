@@ -96,6 +96,11 @@ public struct Validator: Sendable {
             )
         }
 
+        // M6-B-9: message-wide field-uniqueness rules (HL7au:000028/.2).
+        if let profile {
+            checkUniquenessRules(profile: profile, message: message, issues: &issues)
+        }
+
         return ValidationReport(issues: issues, locale: locale)
     }
 
@@ -194,9 +199,28 @@ public struct Validator: Sendable {
                 message: message
             ) else { continue }
 
-            let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)|\(rule.maxCount.map(String.init) ?? "-")"
+            let key = "\(rule.scope.rawValue)|\(group.headIndex)|\(rule.countedSegmentID)|\(rule.predicate)|\(rule.minCount)|\(rule.maxCount.map(String.init) ?? "-")|\(rule.activationPredicate ?? "-")"
             if firedKeys.contains(key) { continue }
             firedKeys.insert(key)
+
+            // M6-B-9 relational cardinality: when an activation
+            // predicate is set, the rule applies only if at least one
+            // segment in the group matches it (e.g. HL7au:000008.3.2 —
+            // the HTML/PDF/TXT sibling requirement activates only when
+            // an RTF display OBX exists in the group).
+            if let activation = rule.activationPredicate, !activation.isEmpty {
+                let activated = group.segments.enumerated().contains { offset, seg in
+                    guard seg.segmentID == rule.countedSegmentID else { return false }
+                    return conditionTriggers(
+                        activation,
+                        in: seg,
+                        segmentIndex: group.startIndex + offset,
+                        message: message,
+                        currentSegmentID: seg.segmentID
+                    )
+                }
+                guard activated else { continue }
+            }
 
             // Iterate only candidate segments matching the rule's
             // `countedSegmentID`. This ensures the predicate resolves
@@ -702,6 +726,79 @@ public struct Validator: Sendable {
                 profile: profile,
                 issues: &issues
             )
+            // Track 7 (M6-B-9, HL7au:00044.8.1): a timestamp with
+            // hour-or-greater precision (≥10 leading digits) must carry
+            // a +/-ZZZZ offset. Date-only values skip — the TS section
+            // conditions the offset on time being transmitted. Only
+            // offset PRESENCE is checkable; correctness is not.
+            if let citation = composite.timezoneRequiredCitation {
+                let value = valueSetScalarValue(in: repetition, component: 1, subcomponent: nil)
+                let digits = value.prefix(while: \.isNumber)
+                let tail = value.dropFirst(digits.count)
+                let hasOffset = (tail.first == "+" || tail.first == "-")
+                    || tail.contains("+") || tail.contains("-")
+                if digits.count >= 10, !hasOffset {
+                    let location = IssueLocation(
+                        segmentID: segmentID,
+                        segmentIndex: segmentIndex,
+                        fieldIndex: fieldGrammar.index,
+                        componentIndex: 1
+                    )
+                    appendProfileIssue(
+                        citation: citation,
+                        location: location,
+                        message: "AU profile rule violated at \(location.pathDescription): a timestamp with hour-or-greater precision must carry a +/-ZZZZ timezone offset; got \"\(value)\" (\(citation))",
+                        into: &issues
+                    )
+                }
+            }
+        }
+    }
+
+    /// M6-B-9 (HL7au:000028 / 000028.2): every populated occurrence of
+    /// the named field must carry a distinct key across the message.
+    private func checkUniquenessRules(
+        profile: Profile,
+        message: Message,
+        issues: inout [ValidationIssue]
+    ) {
+        for rule in profile.uniquenessRules {
+            if let gate = rule.applicableWhen, !gate.isEmpty {
+                guard let first = message.segments.first else { continue }
+                guard conditionTriggers(
+                    gate, in: first, segmentIndex: 0,
+                    message: message, currentSegmentID: first.segmentID
+                ) else { continue }
+            }
+            var seen: [String: Int] = [:]   // key -> first occurrence
+            var occurrence = 0
+            for segment in message.segments where segment.segmentID == rule.segmentID {
+                occurrence += 1
+                guard let field = segment.field(rule.fieldIndex),
+                      let rep = field.repetitions.first else { continue }
+                let key = rep.components.indices.contains(rule.component - 1)
+                    ? (rep.components[rule.component - 1].subcomponents.first?.value ?? "")
+                    : ""
+                guard !key.isEmpty else { continue }
+                if let firstOccurrence = seen[key] {
+                    let citation = rule.specCitation
+                        ?? "\(profile.locale.rawValue):unique:\(rule.segmentID)-\(rule.fieldIndex)"
+                    let location = IssueLocation(
+                        segmentID: rule.segmentID,
+                        segmentIndex: occurrence,
+                        fieldIndex: rule.fieldIndex,
+                        componentIndex: rule.component
+                    )
+                    appendProfileIssue(
+                        citation: citation,
+                        location: location,
+                        message: "AU profile uniqueness rule violated at \(location.pathDescription): value \"\(key)\" already used by \(rule.segmentID)[\(firstOccurrence)]-\(rule.fieldIndex) (\(citation))",
+                        into: &issues
+                    )
+                } else {
+                    seen[key] = occurrence
+                }
+            }
         }
     }
 

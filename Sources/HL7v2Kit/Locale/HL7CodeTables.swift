@@ -104,4 +104,21 @@ enum HL7CodeTables {
         "x-hl7-cda-level-one": ["text", "TEXT", "application"],
         "x-hl7-cda-xdm-zip": ["application"],
     ]
+
+    /// Public coding systems the ADRM names (M6-B-9, HL7au:000034.1/.2):
+    /// LN (LOINC — named throughout), SCT (SNOMED CT-AU — the referral
+    /// OBR-4 codes §4.4.1.4.1), UCUM (units §4.4.2.6). Used as a
+    /// correspondence map: a public system in the ALTERNATE coding-system
+    /// slot requires the PRIMARY slot to also be public — i.e. the
+    /// public code was not relegated behind a local one. Systems the
+    /// ADRM does not name skip (PARTIAL).
+    static let publicCodingSystems: [String] = ["LN", "SCT", "UCUM"]
+
+    /// key = a public system appearing in CE/CWE/CNE-6 (alternate);
+    /// allowed values for CE-3 (primary) = the public set.
+    static let publicInAlternateMap: [String: [String]] = [
+        "ln": publicCodingSystems,
+        "sct": publicCodingSystems,
+        "ucum": publicCodingSystems,
+    ]
 }

@@ -396,7 +396,40 @@ extension Profile {
                         specCitation: "HL7au:000008.1 (r2) — OBX-3.1 (Identifier) must be HTML / PDF / RTF / TXT (deprecated PIT permitted) on display segments (AUSPDI); AU ADRM-2021 pp. 420-421, table p. 247"
                     )
                 ],
+                // M6-B-9 — HL7au:000034.1/.2: on OBX-3, when both a
+                // public and a local terminology are transmitted, the
+                // public code must be the PRIMARY triplet (1-3) and the
+                // local the alternate (4-6). Encoded as: a public
+                // coding system in the ALTERNATE slot (key CE-6)
+                // requires the primary slot (CE-3) to be public too.
+                // Public set = the systems the ADRM names (LN,
+                // SNOMED CT-AU as SCT, UCUM); others skip — PARTIAL.
+                componentCorrespondences: [
+                    ComponentCorrespondence(
+                        keyComponent: 6,
+                        valueComponent: 3,
+                        map: HL7CodeTables.publicInAlternateMap,
+                        condition: "messageCode in (ORU, REF)",
+                        specCitation: "HL7au:000034.1/.2 — when both public and local terminology are transmitted in OBX-3, the public code must be primary and the local the alternate; AU ADRM-2021 Appendix 5 pp. 441-442"
+                    ),
+                ],
                 specCitation: "HL7au:000008.1 (r2) — OBX-3 display-format identifier value set on AUSPDI display segments"
+            ),
+            // M6-B-9 — HL7au:000034.1's OBX-5 leg (the point names
+            // "either OBX-3 ... or as an Observation Value").
+            FieldOverride(
+                segmentID: "OBX",
+                fieldIndex: 5,
+                componentCorrespondences: [
+                    ComponentCorrespondence(
+                        keyComponent: 6,
+                        valueComponent: 3,
+                        map: HL7CodeTables.publicInAlternateMap,
+                        condition: "messageCode in (ORU, REF)",
+                        specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary; AU ADRM-2021 Appendix 5 p. 441"
+                    ),
+                ],
+                specCitation: "HL7au:000034.1 — public-before-local coding-system precedence on coded OBX-5 values"
             ),
             // M6-B-1 — HL7au:00104.7.0 (r3): "PRD-7 must have at least
             // 1 repeat (for providers receiving electronic
@@ -699,6 +732,17 @@ extension Profile {
                     ),
                 ]
             ),
+            // M6-B-9 — HL7au:00044.8.1: "Correct timezone must be
+            // specified." The TS format conditions the offset on time
+            // being transmitted ("If a precision of Hour or greater is
+            // used a time zone should be specified", §3.26), so the rule
+            // fires on hour-plus values without +/-ZZZZ. PARTIAL: offset
+            // presence is checkable, offset CORRECTNESS is not.
+            CompositeOverride(
+                dataType: "TS",
+                condition: "messageCode in (ORM, ORU, REF)",
+                timezoneRequiredCitation: "HL7au:00044.8.1 — a TS with hour-or-greater precision must specify the timezone offset on Senders Orders/Results/Referrals; AU ADRM-2021 §3.26 p. 183"
+            ),
             CompositeOverride(
                 dataType: "RP",
                 condition: "messageCode in (ORU, REF)",
@@ -964,8 +1008,45 @@ extension Profile {
                     predicate: "OBX-3.3 = AUSPDI AND OBX-3.1 = PDF",
                     applicableWhen: "messageCode = REF AND previousSegment(MSH).MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706-L1",
                     specCitation: "HL7au:000008.3.1 — on Referrals Level 1 (MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706-L1) the OBR/OBX group must contain a PDF display OBX; AU ADRM-2021 Appendix 5 p. 423"
+                ),
+                // M6-B-9 — HL7au:000008.3.2 (structural half): "If an
+                // RTF display segment is sent in an OBR/OBX group, then
+                // the same content must be sent in one of either HTML,
+                // PDF, or TXT (HL7 FT) same OBR/OBX group." The sibling
+                // requirement activates only when an RTF display exists
+                // in the group; the "same content" half is a rendered-
+                // payload comparison and is not machine-checkable
+                // (PARTIAL). Scoped Referrals(L2) via MSH-12.3.1.
+                SegmentCardinalityRule(
+                    countedSegmentID: "OBX",
+                    scope: .obrObxGroup,
+                    minCount: 1,
+                    activationPredicate: "OBX-3.3 = AUSPDI AND OBX-3.1 = RTF",
+                    predicate: "OBX-3.3 = AUSPDI AND OBX-3.1 in (HTML, PDF, TXT)",
+                    applicableWhen: "messageCode = REF AND previousSegment(MSH).MSH-12.3.1 = HL7AU-OO-REF-SIMPLIFIED-201706",
+                    specCitation: "HL7au:000008.3.2 — an RTF display OBX in an OBR/OBX group requires an HTML/PDF/TXT sibling in the same group on Referrals(L2) (content equality not machine-checkable); AU ADRM-2021 Appendix 5 p. 423"
                 )
             ]
+        ],
+        // M6-B-9 — HL7au:000028 / 000028.2: "the OBR-3 Filler order
+        // number must be unique within messages" (Results; Referrals
+        // states it per OBR/OBX group, which message-wide uniqueness
+        // implies). Key = OBR-3.1 (the entity identifier).
+        uniquenessRules: [
+            FieldUniquenessRule(
+                segmentID: "OBR",
+                fieldIndex: 3,
+                component: 1,
+                applicableWhen: "messageCode = ORU",
+                specCitation: "HL7au:000028 — OBR-3 Filler Order Number must be unique within the message on Senders Results; AU ADRM-2021 Appendix 5 p. 442"
+            ),
+            FieldUniquenessRule(
+                segmentID: "OBR",
+                fieldIndex: 3,
+                component: 1,
+                applicableWhen: "messageCode = REF",
+                specCitation: "HL7au:000028.2 — each OBR/OBX group's OBR-3 Filler Order Number must be unique in the REF message; AU ADRM-2021 Appendix 5 p. 442"
+            ),
         ]
     )
 

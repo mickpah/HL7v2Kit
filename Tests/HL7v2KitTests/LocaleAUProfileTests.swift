@@ -595,7 +595,7 @@ struct LocaleAUProfileTests {
     /// components, MSH-12 per HL7au:000040.1/.2/.3, AL/AL, AUS,
     /// en^English^ISO639.
     private let mshConformantORU =
-        "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101120000||ORU^R01^ORU_R01|MSG1|P|"
+        "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101120000+1000||ORU^R01^ORU_R01|MSG1|P|"
         + "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L|||AL|AL|AUS||en^English^ISO639\r"
 
     /// The HL7au citations of every MSH-located profile violation on a wire.
@@ -2026,6 +2026,95 @@ struct LocaleAUProfileTests {
             .validate(try Parser(locale: .auLocalisation).parse(ok))
         #expect(!okReport.errors.contains { $0.message.contains("HL7au:000008.1.3") },
                 "TXT => FT is the stated pair; got \(okReport.errors.map(\.message))")
+    }
+
+    // MARK: - M6-B-9: uniqueness, relational cardinality, precedence, timezone
+
+    @Test("HL7au:000028 — duplicate OBR-3 filler order numbers fire; distinct ones are silent")
+    func obr3UniquenessFires() throws {
+        let dup = TestWires.oru(
+            "OBR|1|P1^H|FIL001^LAB^1.2.36^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBR|2|P2^H|FIL001^LAB^1.2.36^ISO|LFT^Liver^L||||||||||||||||||||LAB"
+        )
+        let dupReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(dup))
+        #expect(dupReport.errors.contains { $0.message.contains("HL7au:000028") },
+                "two OBRs sharing FIL001 must fire; got \(dupReport.errors.map(\.message))")
+        let ok = TestWires.oru(
+            "OBR|1|P1^H|FIL001^LAB^1.2.36^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBR|2|P2^H|FIL002^LAB^1.2.36^ISO|LFT^Liver^L||||||||||||||||||||LAB"
+        )
+        let okReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(ok))
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:000028") },
+                "distinct filler numbers must be silent")
+    }
+
+    @Test("HL7au:000008.3.2 — RTF display without an HTML/PDF/TXT sibling fires on L2")
+    func rtfSiblingRuleFires() throws {
+        func issues(_ obx: String...) throws -> [String] {
+            let wire = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L\r"
+                + "PID|1||X^^^F^MR\r"
+                + "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r"
+                + obx.map { $0 + "\r" }.joined()
+            let report = Validator(locale: .auLocalisation)
+                .validate(try Parser(locale: .auLocalisation).parse(wire))
+            return report.errors.compactMap {
+                $0.message.contains("HL7au:000008.3.2") ? $0.message : nil
+            }
+        }
+        // RTF alone: sibling requirement fires.
+        #expect(try issues("OBX|1|ED|RTF^Display format in RTF^AUSPDI||src^TEXT^RTF^Base64^AAAA|||||F").count == 1)
+        // RTF + PDF sibling: silent.
+        #expect(try issues(
+            "OBX|1|ED|RTF^Display format in RTF^AUSPDI||src^TEXT^RTF^Base64^AAAA|||||F",
+            "OBX|2|ED|PDF^Display format in PDF^AUSPDI||src^application^pdf^Base64^AAAA|||||F"
+        ).isEmpty)
+        // No RTF at all: the activation predicate keeps the rule off.
+        #expect(try issues("OBX|1|ED|HTML^Display format in HTML^AUSPDI||src^text^html^Base64^AAAA|||||F").isEmpty)
+    }
+
+    @Test("HL7au:000034.1 — a public system relegated to the alternate triplet fires")
+    func publicSystemPrecedenceFires() throws {
+        // OBX-3: local primary (L) with SCT in the alternate — the
+        // public code is not in the identifier: fires.
+        let bad = TestWires.oru(
+            "OBR|1|P1^H|F1^L^1.2.36^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBX|1|NM|GLU4^Glucose^L^14749-6^Glucose^SCT||5.4|mmol/L^mmol/L^UCUM|||||F"
+        )
+        let badReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(bad))
+        #expect(badReport.errors.contains { $0.message.contains("HL7au:000034") },
+                "SCT in the alternate with a local primary must fire; got \(badReport.errors.map(\.message))")
+        // Public primary (LN) with SCT alternate: both public — silent.
+        let ok = TestWires.oru(
+            "OBR|1|P1^H|F1^L^1.2.36^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBX|1|NM|14749-6^Glucose^LN^271062006^Glucose^SCT||5.4|mmol/L^mmol/L^UCUM|||||F"
+        )
+        let okReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(ok))
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:000034") },
+                "public primary with public alternate is conformant; got \(okReport.errors.map(\.message))")
+    }
+
+    @Test("HL7au:00044.8.1 — hour-precision timestamps need a timezone offset")
+    func tsTimezoneRequired() throws {
+        // OBR-7 (Observation Date/Time, TS) with hour precision and no
+        // offset: fires. Same value with +1000: silent. Date-only: silent.
+        func issues(_ obr7: String) throws -> [String] {
+            let wire = TestWires.oru("OBR|1|P1^H|F1^L|GLU^Glucose^L|||\(obr7)|||||||||||||||||LAB")
+            let report = Validator(locale: .auLocalisation)
+                .validate(try Parser(locale: .auLocalisation).parse(wire))
+            return report.errors.compactMap {
+                $0.message.contains("HL7au:00044.8.1") ? $0.message : nil
+            }
+        }
+        #expect(try issues("20240101120000").count == 1,
+                "hour-plus precision without an offset must fire")
+        #expect(try issues("20240101120000+1000").isEmpty,
+                "an offset satisfies the rule")
+        #expect(try issues("20240101").isEmpty,
+                "date-only values skip — the offset is conditioned on time being transmitted")
     }
 
     // MARK: - M6-B-6: the L1/L2 legs via the MSH-12.3.1 profile discriminator

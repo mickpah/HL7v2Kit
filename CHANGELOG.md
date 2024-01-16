@@ -8,6 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M6-B-9 — the final twelve: EXTEND reaches zero.** Every remaining
+  ADRM-2021 EXTEND point either ships or is registered with a citation.
+  Shipped: `HL7au:000028`/`.2` (OBR-3 filler order number unique across
+  the message; new `FieldUniquenessRule` track, ORU- and REF-gated legs,
+  p. 442), `000008.3.2` structural half (an RTF display OBX in an OBR
+  group requires an HTML/PDF/TXT sibling; new
+  `SegmentCardinalityRule.activationPredicate` — relational group
+  cardinality, L2-Referrals-gated; the "same content" equality half is
+  not machine-checkable), `000034.1`/`.2` (a public coding system the
+  ADRM names — LN/SCT/UCUM — relegated to the CE/CWE alternate triplet
+  behind a non-public primary fires; `HL7CodeTables.publicCodingSystems`
+  correspondence, unnamed systems skip fail-safe), and `00044.8.1`
+  offset-presence half (a TS with hour-or-greater precision must carry a
+  timezone offset on Orders/Results/Referrals; new
+  `CompositeOverride.timezoneRequiredCitation`; §3.26 p. 183).
+  Registered with citations (permanent-limitations register §D):
+  `00100.1` (SNOMED CT hierarchy subsumption — terminology server),
+  `000008.1.5` (signature identifiers live in HB 308-2011, external to
+  the ADRM; req #2), `000034.3` + `00044.6.7` (same-concept equivalence
+  — terminology judgement), `000022.1`/`.3` (FHS/BHS batch envelope;
+  documented home is a future `BatchValidator`). **Final register:
+  SHIPPED 65, PARTIAL 12, BASE 15, REGISTERED 12 — 104 of 104
+  message-decidable rows accounted for; EXTEND 0, CANDIDATE 0.**
+
 - **M6-B-7 — OBX-2-driven datatype resolution: the ED/RP series ships.**
   The composite dispatch resolves OBX-5's effective datatype from OBX-2
   when the grammar carries the variable placeholder — the M6-O7 capability.

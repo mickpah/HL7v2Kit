@@ -123,6 +123,9 @@ SHIPPED = {
     'HL7au:00044.10.1.1', 'HL7au:00044.10.1.2', 'HL7au:00044.10.1.3',
     'HL7au:00044.10.1.4', 'HL7au:00044.11.1.1', 'HL7au:00044.11.1.2',
     'HL7au:00044.11.1.3', 'HL7au:00044.11.1.4',
+    # M6-B-9 — OBR-3 filler-order-number uniqueness (message-wide
+    # FieldUniquenessRule; p. 442), on both the ORU and REF legs.
+    'HL7au:000028', 'HL7au:000028.2',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -153,6 +156,25 @@ PARTIAL = {
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '
                       'content and is not machine-checkable',
+    # M6-B-9 additions.
+    'HL7au:000008.3.2': 'the STRUCTURAL half is enforced: an RTF display '
+                        'OBX in an OBR group without an HTML/PDF/TXT '
+                        'sibling fires (relational cardinality via '
+                        'activationPredicate); the "same content" '
+                        'equality half needs cross-format rendering '
+                        'comparison and is not machine-checkable',
+    'HL7au:000034.1': 'enforced for the public systems the ADRM names '
+                      '(LN, SCT, UCUM): a named public system relegated '
+                      'to the CE/CWE alternate triplet behind a '
+                      'non-public primary fires; systems the ADRM does '
+                      'not name skip fail-safe',
+    'HL7au:000034.2': 'same machinery on OBX-5 coded values; same '
+                      'named-public-systems scope as 000034.1',
+    'HL7au:00044.8.1': 'the offset-PRESENCE half is enforced: a TS with '
+                       'hour-or-greater precision and no +/-ZZZZ suffix '
+                       'fires on Orders/Results/Referrals; the "offset '
+                       'is CORRECT for the stated local time" half '
+                       'needs a timezone database and is out of scope',
 }
 
 # Enforced by the base spec model before the overlay runs, so the overlay
@@ -190,9 +212,23 @@ BASE = {
 # outside it (Medical-Objects, Argus) — a closed-set membership check
 # misfires on the spec's own examples (req #4). Withdrawn from the
 # profile; registered.
+# M6-B-9 registrations (each cited in permanent-limitations-register §D):
+# 00100.1 — REF-4 SNOMED CT hierarchy subsumption needs a terminology
+#   server; no closed value set exists in the ADRM.
+# 000008.1.5 — signature-format identifiers live in HB 308-2011, an
+#   external Standards Australia handbook not reproduced in the ADRM;
+#   no closed list to check against (req #2).
+# 000034.3 / 00044.6.7 — "the alternate must encode the SAME CONCEPT as
+#   the primary" is a terminology-service equivalence judgement, not a
+#   structural check.
+# 000022.1 / 000022.3 — batch-envelope (FHS/BHS) scope; the Validator
+#   is message-scoped and a future BatchValidator is the documented
+#   home for batch rules.
 REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
               'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7',
-              'HL7au:00050.1.5'}
+              'HL7au:00050.1.5',
+              'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
+              'HL7au:00044.6.7', 'HL7au:000022.1', 'HL7au:000022.3'}
 
 # Withdrawn by the r2 revision — must never be cited.
 WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
@@ -206,30 +242,15 @@ WITHDRAWN = {'HL7au:00044.5.6', 'HL7au:00044.6.6', 'HL7au:00048.3.2'}
 CANDIDATE = {}
 
 # B: faithful expression needs a model extension (the working notes req #3).
-EXTEND = {
-    'HL7au:000028':      'within-message uniqueness of a field across repeats',
-    'HL7au:000028.2':    'within-message uniqueness of a field across groups',
-    'HL7au:000034.1':    'primary-before-local coding-system ordering, generalised '
-                         'from the shipped LOINC rule (HL7au:00044.4.4)',
-    'HL7au:000034.2':    'primary-before-local coding-system ordering',
-    'HL7au:000034.3':    'primary-before-local coding-system ordering',
-    'HL7au:000008.1.5':  'intra-group segment ordering',
-    'HL7au:000008.3.2':  'relational group cardinality (RTF present ⇒ '
-                         'HTML/PDF/TXT sibling) plus content equality — '
-                         'neither expressible',
-    'HL7au:00044.8.1':   'TS datatype-level validation (timezone offset present)',
-    'HL7au:00044.6.7':   'same-concept assertion across coding systems — the CWE '
-                         'twin of the registered HL7au:00044.4.7 / .5.7',
-    'HL7au:00100.1':     'group ordering within a message',
-    'HL7au:000022.3':    'batch-scope cardinality (Validator is message-scoped)',
-    'HL7au:000022.1':    'batch-scope acknowledgement mode',
-    # M6-O7: ED and RP never appear as a field's declared dataType on any
-    # supported version — they reach the wire only through OBX-5, whose
-    # type is chosen at runtime by OBX-2. The composite track keys on the
-    # static grammar dataType, so these can never fire as written.
-    # M6-O6: HL7 code tables are not modelled — the schemas drop the
-    # spec's TBL# column and there is no table registry.
-}
+# Emptied by M6-B-9 (2026-09-16): the final twelve either shipped
+# (000028/.2 via FieldUniquenessRule; 000008.3.2's structural half via
+# SegmentCardinalityRule.activationPredicate; 000034.1/.2 via the
+# public-in-alternate correspondence map; 00044.8.1's offset-presence
+# half via CompositeOverride.timezoneRequiredCitation) or were
+# registered with citations (00100.1, 000008.1.5, 000034.3, 00044.6.7,
+# 000022.1, 000022.3 — see the REGISTERED block above and
+# permanent-limitations-register.md §D).
+EXTEND = {}
 
 # C: out of scope by nature. Matched most-specific prefix first.
 OUT_OF_SCOPE = [

@@ -55,18 +55,25 @@ struct Profile: Sendable, Equatable, Hashable {
     /// grammar so they only fire under the relevant locale.
     let cardinalityExtensions: [String: [SegmentCardinalityRule]]
 
+    /// Message-wide field-uniqueness rules (M6-B-9). Used for
+    /// HL7au:000028 / 000028.2 — "OBR-3 Filler order number must be
+    /// unique within messages."
+    let uniquenessRules: [FieldUniquenessRule]
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
         grammarExtensions: [String: [FieldGrammar]] = [:],
         compositeOverrides: [CompositeOverride] = [],
-        cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:]
+        cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:],
+        uniquenessRules: [FieldUniquenessRule] = []
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
         self.grammarExtensions = grammarExtensions
         self.compositeOverrides = compositeOverrides
         self.cardinalityExtensions = cardinalityExtensions
+        self.uniquenessRules = uniquenessRules
     }
 
     /// Look up the profile for a given locale.
@@ -152,6 +159,15 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// ED/RP subtype⇒type points (HL7au:00044.10.1.5/.6, .11.1.5/.6).
     let componentCorrespondences: [ComponentCorrespondence]
 
+    /// When set (M6-B-9, HL7au:00044.8.1): every populated value of
+    /// this datatype with HOUR-or-greater precision (≥10 leading
+    /// digits per the TS format) must carry a `+/-ZZZZ` timezone
+    /// offset; the string is the citation. Date-only values skip —
+    /// the TS section conditions the offset on time being transmitted.
+    /// PARTIAL by nature: offset *presence* is checkable, offset
+    /// *correctness* is not.
+    let timezoneRequiredCitation: String?
+
     init(
         dataType: String,
         condition: String? = nil,
@@ -160,7 +176,8 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         componentInequalities: [ComponentInequality] = [],
         valueConditionals: [ComponentValueConditional] = [],
         componentValueSets: [ComponentValueSet] = [],
-        componentCorrespondences: [ComponentCorrespondence] = []
+        componentCorrespondences: [ComponentCorrespondence] = [],
+        timezoneRequiredCitation: String? = nil
     ) {
         self.dataType = dataType
         self.condition = condition
@@ -170,6 +187,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         self.valueConditionals = valueConditionals
         self.componentValueSets = componentValueSets
         self.componentCorrespondences = componentCorrespondences
+        self.timezoneRequiredCitation = timezoneRequiredCitation
     }
 }
 
@@ -413,6 +431,22 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         self.condition = condition
         self.specCitation = specCitation
     }
+}
+
+/// A message-wide field-uniqueness rule (M6-B-9): every populated
+/// occurrence of `segmentID`-`fieldIndex` (component `component`) must
+/// carry a distinct value across the message. HL7au:000028 / 000028.2:
+/// "the OBR-3 Filler order number must be unique within messages."
+/// Empty fields skip (presence is a separate concern); the comparison
+/// key is the named component's first-repetition scalar.
+struct FieldUniquenessRule: Sendable, Equatable, Hashable {
+    let segmentID: String
+    let fieldIndex: Int
+    /// 1-based component the uniqueness key is read from.
+    let component: Int
+    /// Optional v0.7-DSL message-context gate.
+    let applicableWhen: String?
+    let specCitation: String?
 }
 
 /// A per-repetition value-correspondence rule: "when `keyComponent`

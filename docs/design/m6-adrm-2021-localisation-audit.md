@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **M6 CLOSED (2026-09-16).** All defects fixed (D1/D3/D4/D5 — D5 via owner-directed ADR-014 override); M6-A complete; M6-B-1/2 shipped the anyRepeat/startsWith/Z*-expressible points; M6-O5 predicate live (13 defects fixed); the 30-point EXTEND remainder registered in `permanent-limitations-register.md` §D. Appendix 5 is not exhaustive — the prose sweep is separate, later work. |
+| Status | **M6 CLOSED (2026-09-16), then FINISHED to 104/104 the same day (M6-B-4..9).** All defects fixed (D1/D3/D4/D5 — D5 via owner-directed ADR-014 override); M6-A complete; the M6-B capability run drained the EXTEND class entirely — **final register: 65 shipped / 12 partial / 15 base / 12 registered, EXTEND 0, CANDIDATE 0**; `permanent-limitations-register.md` §D drained. The historical counts in the body below (36 EXTEND, etc.) record the audit-time triage and are superseded by the generated register. Appendix 5 is not exhaustive — the prose sweep is separate, later work. |
 | Source | `docs/standards/HL7_v24_PDF/HL7AUSD-STD-OO-ADRM-2021.1 — Australian Diagnostics and Referral Messaging — Localisation of HL7 Version 2.4.pdf`, Appendix 5 *Conformance Statements (Normative)*, pp. 416–474 |
 | Subject | `HL7Locale.auLocalisation` → `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` |
 | Generated register | `docs/design/m6-adrm-2021-conformance-register.md` (re-runnable) |

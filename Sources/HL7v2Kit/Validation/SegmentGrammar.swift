@@ -122,6 +122,15 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
     let scope: GroupScope
     let minCount: Int
 
+    /// When set (M6-B-9), the rule only applies if AT LEAST ONE segment
+    /// in the resolved group matches this predicate — relational group
+    /// cardinality. HL7au:000008.3.2: "If an RTF display segment is
+    /// sent in an OBR/OBX group, then the same content must be sent in
+    /// one of either HTML, PDF, or TXT" — the min-count on the
+    /// HTML/PDF/TXT disjunction activates only when an RTF display
+    /// exists in the group. `nil` (default) = always active.
+    let activationPredicate: String?
+
     /// Upper bound on matches. `nil` (default) means unbounded — the
     /// pre-M6 behaviour. `0` expresses a prohibition: ADRM-2021's
     /// HL7au:000023 ("the NTE segment must NOT be used") and
@@ -143,6 +152,7 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
         scope: GroupScope,
         minCount: Int,
         maxCount: Int? = nil,
+        activationPredicate: String? = nil,
         predicate: String,
         applicableWhen: String? = nil,
         specCitation: String? = nil
@@ -151,6 +161,7 @@ struct SegmentCardinalityRule: Sendable, Equatable, Hashable {
         self.scope = scope
         self.minCount = minCount
         self.maxCount = maxCount
+        self.activationPredicate = activationPredicate
         self.predicate = predicate
         self.applicableWhen = applicableWhen
         self.specCitation = specCitation

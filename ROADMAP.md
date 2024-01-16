@@ -18,7 +18,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 |---|---|
 | Last updated | 2026-09-03 (**`v2.1.0` tagged** — the complete Sprint 0 cycle) |
 | Current release | **`v2.1.0`** (2026-09-03, tagged locally, not yet pushed — nor is any earlier tag). The Sprint 0 cycle: **146 typed segments**, zero never-authored on v2.3/v2.3.1/v2.4, presence predicate, 10 spec-cited condition predicates, honest coverage claims; 525/525 green. |
-| Next planned cycle | **Owner: tag `v3.0.0`** (breaking M6-D5 fix on `main`) and **push to `private`** (nothing has ever left this machine). **M6 is CLOSED (2026-09-16).** M5 still gates the first public push (v2.5-only quartet + deferred v2.6/v2.8.2 remain). |
+| Next planned cycle | **Owner decisions:** confirm M5 closed, tag `v3.1.0`, push to `private`, choose the public remote (all engineering gates met — nothing has ever left this machine). **M6 FINISHED at 104/104 (2026-09-16); M5 coverage bar met (188/188).** |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -157,11 +157,14 @@ because it changes what the package *is*. This is not that.
 base, so AU integrators can trust the profile as a faithful rendering of the localisation.*
 
 - **Outcome:** Appendix 5 extracted into a re-runnable register (302 rows / 263 conformance
-  points; one misparsed row repaired and shipped); **74 of the 104 message-decidable rows
-  enforced or accounted for** (48 shipped, 6 partial, 15 base-model, 5 registered).
-  CANDIDATE 0. The 30-point EXTEND remainder is registered as **deferred capabilities with
-  citations** in `permanent-limitations-register.md` §D — chiefly the HL7 code-table
-  registry (M6-O6) and OBX-2-driven datatype resolution (M6-O7).
+  points; one misparsed row repaired and shipped); at close, 74 of the 104 message-decidable
+  rows accounted for. **The M6-B capability run (B-4..9, same date) then finished the job:
+  ALL 104 rows accounted for — 65 shipped, 12 partial (unenforced half stated per row),
+  15 base-model, 12 registered with citations; EXTEND 0, CANDIDATE 0.** Capabilities
+  landed: `HL7CodeTables`, composite value sets, the MSH-12.3.1 L1/L2 profile gate,
+  OBX-2-driven datatype resolution (M6-O7), correspondence maps, field uniqueness,
+  relational cardinality, public-system precedence, TS timezone presence.
+  `permanent-limitations-register.md` §D is drained.
 - **Four defects found and fixed** (D1 citations, D3/D4 message-type gates, D5 the breaking
   OBX-5 datatype fix under the owner-directed ADR-014 override → next release is `v3.0.0`),
   plus the M6-O5 dataType audit predicate (13 further schema defects fixed) and five DSL
