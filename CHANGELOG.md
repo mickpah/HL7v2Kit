@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.2.0] — 2026-09-17
+
+The spec-exhaustion release, entirely additive on `v3.1.0` (ADR-014
+holds). Two milestones land. **M7 — the ADRM prose sweep:** the chapter
+bodies and normative appendices audited beyond Appendix 5; seven
+prose-only narrowings ship as `ADRM-prose:P-1..P-7` rules plus the
+`EscapeProhibition` model track. **M8 — base-spec consistency and
+batch scope:** the ORC/OBR paired-field equality family (items
+00216/00217/00226/00222, with the v2.8.2 OBR-54 parent split), the new
+public `BatchValidator`/`BatchValidationReport`, and the numeric-`>` /
+`prohibitedWhen` conditional classes (PAC-2, PRT-6/7). The AU register
+closes at **66 shipped / 13 partial / 15 base / 10 registered — 104 of
+104 message-decidable rows; EXTEND 0, CANDIDATE 0** — and every
+rule-level gap in every register is now enforced or registered with a
+citation. New `IssueCode` cases (all additive, open enum):
+`pairedFieldMismatch(item:)`, `conditionalFieldProhibited`.
+619 tests: 609 passed, 0 failed; schema audits fully clean.
+
 ### Added
 - **M8-D — the last two recorded conditional classes ship.** The
   condition DSL gains the numeric `>` operator (fail-safe false on

@@ -18,7 +18,7 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 |---|---|
 | Last updated | 2026-09-03 (**`v2.1.0` tagged** — the complete Sprint 0 cycle) |
 | Current release | **`v2.1.0`** (2026-09-03, tagged locally, not yet pushed — nor is any earlier tag). The Sprint 0 cycle: **146 typed segments**, zero never-authored on v2.3/v2.3.1/v2.4, presence predicate, 10 spec-cited condition predicates, honest coverage claims; 525/525 green. |
-| Next planned cycle | **M5 ✅ CLOSED (owner-confirmed) and `v3.1.0` tagged (2026-09-16, local).** Remaining owner actions: push to `private` (`git push private main --follow-tags`), choose the public remote, first public push. **M6 FINISHED at 104/104.** Engineering follow-ons: ADRM prose sweep, general code-table registry, `BatchValidator`, fixtures. |
+| Next planned cycle | **`v3.2.0` tagged (2026-09-17, local) — M7 (prose sweep) and M8 (base consistency + batch) CLOSED.** Every rule-level gap in every register is shipped or registered with citation. Remaining owner actions: push to `private` (`git push private main --follow-tags`), choose the public remote, first public push. Remaining engineering (own cycles): general code-table registry, fixtures. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -183,6 +183,31 @@ base, so AU integrators can trust the profile as a faithful rendering of the loc
   prose sweep is separate, later work, and AU coverage is always cited as the measured
   number. Full narrative: `docs/design/m6-adrm-2021-localisation-audit.md` +
   `docs/archive/STATUS-2026-09-16-m6-closed.md`.
+
+### M7 — ADRM prose sweep ✅ **CLOSED (2026-09-16; released in `v3.2.0`)**
+*Goal: audit the ADRM text Appendix 5 explicitly does not cover — chapter-body prose and
+the normative appendices — so no prose-only narrowing is invisible to the profile.*
+
+- **Outcome:** the chapter bodies (319 normative hits → 263 candidates) and normative
+  appendices 8–10 (63 candidates) fully swept and hand-triaged
+  (`docs/design/m7-adrm-prose-sweep.md`; re-runnable via `scripts/sweep-adrm-prose.py`).
+  **Seven prose-only narrowings shipped** as `ADRM-prose:P-1..P-7` rules (PID-1 required;
+  the §7.4.2 REF disallowed segments; MSH-9 REF/RRI pins; the \X/\C/\M escape
+  prohibitions via the new `EscapeProhibition` track; the ACK MSH-12.3.1 closed set;
+  read-ack MSH-3.3 scheme; the VMR header OBX pins; single-batch-per-file landed with
+  M8's `BatchValidator`). Every non-shippable finding registered with its reason.
+
+### M8 — Base-spec consistency + batch scope ✅ **CLOSED (2026-09-17; released in `v3.2.0`)**
+*Goal: the base-spec cross-segment rules and batch-envelope scope the message-scoped
+Validator could not carry.*
+
+- **Outcome:** the ORC/OBR paired-field equality family (items 00216/00217/00226/00222,
+  incl. the v2.8.2 OBR-54 parent split; the TQ pair deliberately not shipped — advisory
+  and withdrawn); the public `BatchValidator`/`BatchValidationReport` (upgrading the AU
+  batch points: `000022.3` SHIPPED, `000022.1` PARTIAL — **final AU register 66/13/15/10,
+  104/104, EXTEND 0**); and the numeric-`>` / `prohibitedWhen` conditional classes
+  (PAC-2, PRT-6/7 — the bare-C guard set shrank by three). New `IssueCode` cases:
+  `pairedFieldMismatch(item:)`, `conditionalFieldProhibited`.
 
 ### R — Over-engineering remediation ✅ **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 
