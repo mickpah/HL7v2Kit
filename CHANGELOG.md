@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added
+- **M7-P1 — the ADRM chapter-body prose sweep (measurement + triage).**
+  New `scripts/sweep-adrm-prose.py` scans the ADRM body for normative
+  sentences with no conformance-point ID nearby and no textual match in
+  Appendix 5: 319 raw hits, 263 candidates, all hand-triaged in
+  `docs/design/m7-adrm-prose-sweep.md`. Five ship candidates queued
+  (PID-1 profile-required p. 61; the §7.4.2 REF disallowed-segments
+  list; the §7.3.1.9 MSH-9 REF/RRI exact pins; the §3.1.1.5/.6
+  escape-sequence prohibitions; the read-ack MSH-12.3 pin), seven
+  register entries with the reason each cannot ship faithfully, and two
+  base-spec observations recorded for the base-model runway (ORC/OBR
+  pair equality; the RXO free-text conditional). Normative appendices
+  8–10 remain for a follow-on pass.
 
 ## [3.1.0] — 2026-09-16
 
