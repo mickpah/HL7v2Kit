@@ -14,8 +14,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | Verdict | Count | Meaning |
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
-| EXTEND | 26 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 55 | enforced by the `.auLocalisation` overlay today |
+| EXTEND | 18 | needs a model extension to express faithfully (req #3) |
+| SHIPPED | 63 | enforced by the `.auLocalisation` overlay today |
 | PARTIAL | 3 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 5 | known limitation, already registered |
@@ -25,7 +25,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## EXTEND (26)
+## EXTEND (18)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -41,22 +41,14 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | primary-before-local coding-system ordering |
 | `HL7au:00044.6.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | same-concept assertion across coding systems — the CWE twin of the registered HL7au:00044.4.7 / .5.7 |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | TS datatype-level validation (timezone offset present) |
-| `HL7au:00044.10.1.1` |  | Senders | Results, Referrals | ED <type of data (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
-| `HL7au:00044.10.1.2` |  | Senders | Results, Referrals | ED <data subtype (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
-| `HL7au:00044.10.1.3` |  | Senders | Results, Referrals | ED <encoding (ID)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
-| `HL7au:00044.10.1.4` |  | Senders | Results, Referrals | ED <data (ST)> must be valued. | OBX-2-driven dynamic datatype resolution (ED) |
 | `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype ⇔ type MIME correspondence map |
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype ⇔ type HL7 table 0291/0191 correspondence map |
-| `HL7au:00044.11.1.1` |  | Senders | Results, Referrals | RP <pointer (ST) > component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
-| `HL7au:00044.11.1.2` |  | Senders | Results, Referrals | RP <application ID (HD)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
-| `HL7au:00044.11.1.3` |  | Senders | Results, Referrals | RP <type of data (ID)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
-| `HL7au:00044.11.1.4` |  | Senders | Results, Referrals | RP <subtype (ID)> component must be valued | OBX-2-driven dynamic datatype resolution (RP) |
 | `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype ⇔ type MIME correspondence map |
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype ⇔ type HL7 table 0291/0191 correspondence map |
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
 
-## SHIPPED (55)
+## SHIPPED (63)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -104,6 +96,14 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. |  |
 | `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. |  |
 | `HL7au:00044.7.5` |  | Senders | Orders, Results, Referrals | XCN <family name (FN)> :<surname (ST)> sub- component must to be valued. |  |
+| `HL7au:00044.10.1.1` |  | Senders | Results, Referrals | ED <type of data (ID)> must be valued. |  |
+| `HL7au:00044.10.1.2` |  | Senders | Results, Referrals | ED <data subtype (ID)> must be valued. |  |
+| `HL7au:00044.10.1.3` |  | Senders | Results, Referrals | ED <encoding (ID)> must be valued. |  |
+| `HL7au:00044.10.1.4` |  | Senders | Results, Referrals | ED <data (ST)> must be valued. |  |
+| `HL7au:00044.11.1.1` |  | Senders | Results, Referrals | RP <pointer (ST) > component must be valued |  |
+| `HL7au:00044.11.1.2` |  | Senders | Results, Referrals | RP <application ID (HD)> component must be valued |  |
+| `HL7au:00044.11.1.3` |  | Senders | Results, Referrals | RP <type of data (ID)> component must be valued |  |
+| `HL7au:00044.11.1.4` |  | Senders | Results, Referrals | RP <subtype (ID)> component must be valued |  |
 | `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. |  |

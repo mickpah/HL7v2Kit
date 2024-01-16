@@ -521,8 +521,20 @@ public struct Validator: Sendable {
         segmentIndex: Int,
         issues: inout [ValidationIssue]
     ) {
+        // M6-B-7: OBX-5's grammar dataType is the variable placeholder
+        // (`varies` from v2.5.1, `*` on the pre-v2.5 tables) — its
+        // EFFECTIVE type is whatever OBX-2 names at runtime. Resolving
+        // it here is what makes the ED/RP datatype points
+        // (HL7au:00044.10/.11) reachable at all: no field declares ED
+        // or RP statically except CER-6.
+        var effectiveDataType = fieldGrammar.dataType
+        if segmentID == "OBX", fieldGrammar.index == 5,
+           effectiveDataType == "varies" || effectiveDataType == "*" || effectiveDataType == "Variable",
+           let declared = segment.field(2)?.stringValue, !declared.isEmpty {
+            effectiveDataType = declared
+        }
         guard let composite = profile.compositeOverrides.first(where: {
-            $0.dataType == fieldGrammar.dataType
+            $0.dataType == effectiveDataType
         }) else { return }
         // M6-D4: the whole override is scoped to the message types its
         // conformance points name. No gate means "every message".
@@ -551,11 +563,11 @@ public struct Validator: Sendable {
                     componentIndex: requirement.component
                 )
                 let citation = requirement.specCitation
-                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(requirement.component)"
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(requirement.component)"
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(requirement.component) must be populated when \(fieldGrammar.dataType) field is populated (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(requirement.component) must be populated when \(effectiveDataType) field is populated (\(citation))",
                     into: &issues
                 )
             }
@@ -576,13 +588,13 @@ public struct Validator: Sendable {
                     componentIndex: rule.thenComponent
                 )
                 let citation = rule.specCitation
-                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.thenComponent)"
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.thenComponent)"
                 let condDesc = rule.condition == .populated ? "is populated" : "is empty"
                 let reqDesc = rule.requirement == .mustBePopulated ? "must be populated" : "must be empty"
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.thenComponent) \(reqDesc) when \(fieldGrammar.dataType)-\(rule.ifComponent) \(condDesc) (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.thenComponent) \(reqDesc) when \(effectiveDataType)-\(rule.ifComponent) \(condDesc) (\(citation))",
                     into: &issues
                 )
             }
@@ -603,11 +615,11 @@ public struct Validator: Sendable {
                     componentIndex: rule.componentB
                 )
                 let citation = rule.specCitation
-                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.componentA)!=\(rule.componentB)"
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.componentA)!=\(rule.componentB)"
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.componentA) and \(fieldGrammar.dataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.componentA) and \(effectiveDataType)-\(rule.componentB) must differ but both are \"\(valueA)\" (\(citation))",
                     into: &issues
                 )
             }
@@ -633,11 +645,11 @@ public struct Validator: Sendable {
                     componentIndex: rule.component
                 )
                 let citation = rule.specCitation
-                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(rule.component)"
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(rule.component)"
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(rule.component) must not be \"\(value)\" (\(citation))",
+                    message: "AU profile rule violated at \(location.pathDescription): \(effectiveDataType)-\(rule.component) must not be \"\(value)\" (\(citation))",
                     into: &issues
                 )
             }
@@ -668,11 +680,11 @@ public struct Validator: Sendable {
                     componentIndex: valueSet.component
                 )
                 let citation = valueSet.specCitation
-                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(valueSet.component)"
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(valueSet.component)"
                 appendProfileIssue(
                     citation: citation,
                     location: location,
-                    message: "AU profile value-set rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(valueSet.component) value \"\(value)\" is not in the allowed set (\(citation))",
+                    message: "AU profile value-set rule violated at \(location.pathDescription): \(effectiveDataType)-\(valueSet.component) value \"\(value)\" is not in the allowed set (\(citation))",
                     into: &issues
                 )
             }

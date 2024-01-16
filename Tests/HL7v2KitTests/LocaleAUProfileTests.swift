@@ -2039,6 +2039,46 @@ struct LocaleAUProfileTests {
                 "the PDF leg is L1-gated")
     }
 
+    // MARK: - M6-B-7: OBX-2-driven datatype resolution (ED/RP series)
+
+    private func edRpViolations(_ obx: String, msh: String = "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\r") throws -> [String] {
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(msh + obx + "\r"))
+        return report.errors.compactMap {
+            guard case .profileConstraintViolation(let rule) = $0.code,
+                  rule.contains("HL7au:00044.10") || rule.contains("HL7au:00044.11") else { return nil }
+            return rule
+        }
+    }
+
+    @Test("HL7au:00044.10 — an ED-typed OBX-5 with bare content fires all four ED rules")
+    func edOBX5RulesFire() throws {
+        // OBX-2 = ED makes OBX-5's effective type ED; a single-component
+        // value leaves ED-2..5 empty.
+        let rules = try edRpViolations("OBX|1|ED|123^Attachment^LN||content|||||F")
+        for point in ["10.1.1", "10.1.2", "10.1.3", "10.1.4"] {
+            #expect(rules.contains { $0.contains(point) },
+                    "bare ED value must fire 00044.\(point); got \(rules)")
+        }
+    }
+
+    @Test("HL7au:00044.10 — a complete ED value is silent")
+    func edOBX5CompleteSilent() throws {
+        let rules = try edRpViolations("OBX|1|ED|123^Attachment^LN||src^application^pdf^Base64^AAAA|||||F")
+        #expect(rules.isEmpty, "ED with type/subtype/encoding/data valued must fire nothing; got \(rules)")
+    }
+
+    @Test("HL7au:00044.11 — an RP-typed OBX-5 fires the RP rules; NM does not dispatch")
+    func rpOBX5RulesFireAndNMDoesNot() throws {
+        let rp = try edRpViolations("OBX|1|RP|123^Attachment^LN||pointer|||||F")
+        for point in ["11.1.2", "11.1.3", "11.1.4"] {
+            #expect(rp.contains { $0.contains(point) },
+                    "RP with only a pointer must fire 00044.\(point); got \(rp)")
+        }
+        let nm = try edRpViolations("OBX|1|NM|1234-5^Glucose^LN||5.4|mmol/L||||||F")
+        #expect(nm.isEmpty, "OBX-2 = NM must not dispatch the ED/RP overrides")
+    }
+
     @Test("HL7au:000020 — Referrals(L2) leg fires on a Z trigger event")
     func hl7au000020_level2LegViaProfileID() throws {
         let wire = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^Z99|MSG00001|P|2.4^AUS&Australia&ISO3166_1^HL7AU-OO-REF-SIMPLIFIED-201706&&L\r"

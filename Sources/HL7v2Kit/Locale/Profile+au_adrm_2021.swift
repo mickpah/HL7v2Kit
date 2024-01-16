@@ -604,6 +604,57 @@ extension Profile {
                     ),
                 ]
             ),
+            // M6-B-7 — the ED/RP series (HL7au:00044.10 / .11), reachable
+            // since the composite dispatch resolves OBX-5's effective
+            // datatype from OBX-2. Components per the v2.4 definitions:
+            // ED = source app (1) ^ type of data (2) ^ subtype (3) ^
+            // encoding (4) ^ data (5); RP = pointer (1) ^ application
+            // ID (2) ^ type of data (3) ^ subtype (4). Scoped
+            // "Results, Referrals" per Appendix 5.
+            CompositeOverride(
+                dataType: "ED",
+                condition: "messageCode in (ORU, REF)",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 2,
+                        specCitation: "HL7au:00044.10.1.1 — ED <type of data> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 3,
+                        specCitation: "HL7au:00044.10.1.2 — ED <data subtype> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 4,
+                        specCitation: "HL7au:00044.10.1.3 — ED <encoding> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 5,
+                        specCitation: "HL7au:00044.10.1.4 — ED <data> must be valued"
+                    ),
+                ]
+            ),
+            CompositeOverride(
+                dataType: "RP",
+                condition: "messageCode in (ORU, REF)",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.11.1.1 — RP <pointer> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 2,
+                        specCitation: "HL7au:00044.11.1.2 — RP <application ID> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 3,
+                        specCitation: "HL7au:00044.11.1.3 — RP <type of data> must be valued"
+                    ),
+                    ComponentRequirement(
+                        component: 4,
+                        specCitation: "HL7au:00044.11.1.4 — RP <subtype> must be valued"
+                    ),
+                ]
+            ),
             CompositeOverride(
                 dataType: "CE",
                 // M6-D4: HL7au:00044.4 series is scoped to

@@ -116,6 +116,11 @@ SHIPPED = {
     # (the ADRM declares the adhered profile in MSH-12.3; the earlier
     # "MSH-21" note was a misidentification).
     'HL7au:000021', 'HL7au:000008.3.1',
+    # M6-B-7 — ED/RP required components, reachable since the composite
+    # dispatch resolves OBX-5's effective datatype from OBX-2.
+    'HL7au:00044.10.1.1', 'HL7au:00044.10.1.2', 'HL7au:00044.10.1.3',
+    'HL7au:00044.10.1.4', 'HL7au:00044.11.1.1', 'HL7au:00044.11.1.2',
+    'HL7au:00044.11.1.3', 'HL7au:00044.11.1.4',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -211,14 +216,6 @@ EXTEND = {
     # supported version — they reach the wire only through OBX-5, whose
     # type is chosen at runtime by OBX-2. The composite track keys on the
     # static grammar dataType, so these can never fire as written.
-    'HL7au:00044.10.1.1': 'OBX-2-driven dynamic datatype resolution (ED)',
-    'HL7au:00044.10.1.2': 'OBX-2-driven dynamic datatype resolution (ED)',
-    'HL7au:00044.10.1.3': 'OBX-2-driven dynamic datatype resolution (ED)',
-    'HL7au:00044.10.1.4': 'OBX-2-driven dynamic datatype resolution (ED)',
-    'HL7au:00044.11.1.1': 'OBX-2-driven dynamic datatype resolution (RP)',
-    'HL7au:00044.11.1.2': 'OBX-2-driven dynamic datatype resolution (RP)',
-    'HL7au:00044.11.1.3': 'OBX-2-driven dynamic datatype resolution (RP)',
-    'HL7au:00044.11.1.4': 'OBX-2-driven dynamic datatype resolution (RP)',
     # M6-O6: HL7 code tables are not modelled — the schemas drop the
     # spec's TBL# column and there is no table registry.
 }
