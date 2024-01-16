@@ -1,0 +1,11 @@
+{
+  "segmentID": "CM2",
+  "version": "2.6",
+  "description": "Clinical Study Schedule Master",
+  "fields": [
+    { "index": 1, "swiftName": "setIdCm2", "name": "Set ID- CM2", "dataType": "SI", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "scheduledTimePoint", "name": "Scheduled Time Point", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "descriptionOfTimePoint", "name": "Description of Time Point", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "eventsScheduledThisTimePoint", "name": "Events Scheduled This Time Point", "dataType": "CWE", "optionality": "R", "repeatability": "*" }
+  ]
+}

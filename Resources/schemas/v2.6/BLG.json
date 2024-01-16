@@ -1,0 +1,11 @@
+{
+  "segmentID": "BLG",
+  "version": "2.6",
+  "description": "Billing",
+  "fields": [
+    { "index": 1, "swiftName": "whenToCharge", "name": "When to Charge", "dataType": "CCD", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "chargeType", "name": "Charge Type", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "accountId", "name": "Account ID", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "chargeTypeReason", "name": "Charge Type Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}

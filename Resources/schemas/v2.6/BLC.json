@@ -1,0 +1,9 @@
+{
+  "segmentID": "BLC",
+  "version": "2.6",
+  "description": "Blood Code",
+  "fields": [
+    { "index": 1, "swiftName": "bloodProductCode", "name": "Blood Product Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "bloodAmount", "name": "Blood Amount", "dataType": "CQ", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "segmentID": "PDA",
+  "version": "2.8.2",
+  "description": "Patient Death and Autopsy",
+  "fields": [
+    { "index": 1, "swiftName": "deathCauseCode", "name": "Death Cause Code", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 2, "swiftName": "deathLocation", "name": "Death Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "deathCertifiedIndicator", "name": "Death Certified Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "deathCertificateSignedDateTime", "name": "Death Certificate Signed Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "deathCertifiedBy", "name": "Death Certified By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "autopsyIndicator", "name": "Autopsy Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "autopsyStartAndEndDateTime", "name": "Autopsy Start and End Date/Time", "dataType": "DR", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "autopsyPerformedBy", "name": "Autopsy Performed By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "coronerIndicator", "name": "Coroner Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+  ]
+}

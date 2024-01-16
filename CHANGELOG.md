@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **v3 cycle 4 — deferred-tier batch C: the last deferred instances.** Forty
+  schema instances across CH02/03/04/06/07/08/14 (`OVR/SFT`, `IAM/NPU/PDA`,
+  `BLG/ODS/ODT/RQ1/RQD/IPC`, `BLC/RMI`, `FAC`, `CM0/CM1/CM2`, `NCK/NSC/NST`
+  on both v2.6 and v2.8.2), all `--verify` PASS. **The deferred-instances
+  class is now EMPTY: every modelled segment exists on every version that
+  defines it.** IAM is the one deep divergence (20 → 30 at v2.8.2). The
+  conditional surface travelled: `RQ1-2..5` (either-pair) and `RQD-2..4`
+  (one-of-three) carry the same spec-cited predicates as the AU-priority
+  versions (prose verified identical on both chapters); `IAM-7` stays a
+  registered bare `C` and joins the v2.8.2 guard set. 791 schemas,
+  780 depth-exact, audit fully clean. The only remaining M5 scope is the
+  never-authored v2.6/v2.8.2-only backlog (24 + 38 segments).
+
 - **v3 cycle 3 — deferred-tier batch B: CH15 personnel on v2.6 / v2.8.2.**
   Fourteen schema instances (`STF/PRA/ORG/AFF/LAN/EDU/CER` × both versions),
   extractor-seeded and `--verify` PASS. Divergences pinned: STF grows

@@ -1,0 +1,16 @@
+{
+  "segmentID": "NSC",
+  "version": "2.6",
+  "description": "Application Status Change",
+  "fields": [
+    { "index": 1, "swiftName": "applicationChangeType", "name": "Application Change Type", "dataType": "IS", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "currentCpu", "name": "Current CPU", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "currentFileserver", "name": "Current Fileserver", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "currentApplication", "name": "Current Application", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "currentFacility", "name": "Current Facility", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "newCpu", "name": "New CPU", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "newFileserver", "name": "New Fileserver", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "newApplication", "name": "New Application", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "newFacility", "name": "New Facility", "dataType": "HD", "optionality": "O", "repeatability": "1" }
+  ]
+}

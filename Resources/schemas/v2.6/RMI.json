@@ -1,0 +1,10 @@
+{
+  "segmentID": "RMI",
+  "version": "2.6",
+  "description": "Risk Management Incident",
+  "fields": [
+    { "index": 1, "swiftName": "riskManagementIncidentCode", "name": "Risk Management Incident Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "dateTimeIncident", "name": "Date/Time Incident", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "incidentTypeCode", "name": "Incident Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}

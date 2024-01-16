@@ -1034,6 +1034,13 @@ struct MultiVersionTests {
             // PRA-12 carry their MFN predicates here just as on the AU-priority
             // versions (identical prose, verified).
             "CER-12",
+            // v3-C4 (deferred batch C): IAM-7 Allergy Unique Identifier is a
+            // receiving-system-capability condition (registered at the Sprint 0
+            // close-out) — bare on every version it exists on. RQ1-2..5 and
+            // RQD-2..4 carry the same either-pair / one-of-three predicates as
+            // the AU-priority versions (identical prose, verified on both
+            // chapters).
+            "IAM-7",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

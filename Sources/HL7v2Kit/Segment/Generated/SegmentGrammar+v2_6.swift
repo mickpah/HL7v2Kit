@@ -217,6 +217,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 14, name: "Batch Receiving Network Address", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "BLC": SegmentGrammar(
+            segmentID: "BLC",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Blood Product Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Blood Amount", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "BLG": SegmentGrammar(
+            segmentID: "BLG",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "When to Charge", dataType: "CCD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Charge Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Account ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Charge Type Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "BPO": SegmentGrammar(
             segmentID: "BPO",
             version: "2.6",
@@ -352,6 +370,42 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 29, name: "Revocation Date", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 30, name: "Revocation Reason Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 31, name: "Certificate Status Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "CM0": SegmentGrammar(
+            segmentID: "CM0",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - CM0", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Sponsor Study ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Alternate Study ID", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Title of Study", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Chairman of Study", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Last IRB Approval Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Total Accrual to Date", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Last Accrual Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Contact for Study", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Contact's Telephone Number", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Contact's Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "CM1": SegmentGrammar(
+            segmentID: "CM1",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - CM1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Study Phase Identifier", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Description of Study Phase", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
+        "CM2": SegmentGrammar(
+            segmentID: "CM2",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID- CM2", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Scheduled Time Point", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Description of Time Point", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Events Scheduled This Time Point", dataType: "CWE", optionality: .required, repeatability: .multiple, condition: nil),
             ]
         ),
         "CNS": SegmentGrammar(
@@ -652,6 +706,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Event Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "FAC": SegmentGrammar(
+            segmentID: "FAC",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Facility ID-FAC", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Facility Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Facility Address", dataType: "XAD", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Facility Telecommunication", dataType: "XTN", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Contact Person", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Contact Title", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "Contact Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 8, name: "Contact Telecommunication", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "Signature Authority", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 10, name: "Signature Authority Title", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Signature Authority Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 12, name: "Signature Authority Telecommunication", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "FHS": SegmentGrammar(
             segmentID: "FHS",
             version: "2.6",
@@ -837,6 +909,32 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 55, name: "Guarantor Race", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 56, name: "Guarantor Birth Place", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 57, name: "VIP Indicator", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "IAM": SegmentGrammar(
+            segmentID: "IAM",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Set ID - IAM", dataType: "SI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Allergen Type Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Allergen Code/Mnemonic/Description", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Allergy Severity Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Allergy Reaction Code", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 6, name: "Allergy Action Code", dataType: "CNE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Allergy Unique Identifier", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Action Reason", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Sensitivity to Causative Agent Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Allergen Group Code/Mnemonic/Description", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Onset Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Onset Date Text", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 13, name: "Reported Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 14, name: "Reported By", dataType: "XPN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 15, name: "Relationship to Patient Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 16, name: "Alert Device Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 17, name: "Allergy Clinical Status Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 18, name: "Statused by Person", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 19, name: "Statused by Organization", dataType: "XON", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 20, name: "Statused at Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "IIM": SegmentGrammar(
@@ -1054,6 +1152,21 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Target Value", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "IPC": SegmentGrammar(
+            segmentID: "IPC",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Accession Identifier", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Requested Procedure ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Study Instance UID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Scheduled Procedure Step ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Modality", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Protocol Code", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 7, name: "Scheduled Station Name", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Scheduled Procedure Step Location", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 9, name: "Scheduled Station AE Title", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "ISD": SegmentGrammar(
             segmentID: "ISD",
             version: "2.6",
@@ -1234,6 +1347,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 25, name: "Receiving Network Address", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "NCK": SegmentGrammar(
+            segmentID: "NCK",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "System Date/Time", dataType: "DTM", optionality: .required, repeatability: .single, condition: nil),
+            ]
+        ),
         "NDS": SegmentGrammar(
             segmentID: "NDS",
             version: "2.6",
@@ -1287,6 +1407,50 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 37, name: "Contact Person Social Security Number", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 38, name: "Next of Kin Birth Place", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 39, name: "VIP Indicator", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NPU": SegmentGrammar(
+            segmentID: "NPU",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Bed Location", dataType: "PL", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Bed Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NSC": SegmentGrammar(
+            segmentID: "NSC",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Application Change Type", dataType: "IS", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Current CPU", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Current Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Current Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Current Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "New CPU", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "New Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "New Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "New Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "NST": SegmentGrammar(
+            segmentID: "NST",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Statistics Available", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Source Identifier", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Source Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Statistics Start", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Statistics End", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Receive Character Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Send Character Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Messages Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Messages Sent", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Checksum Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 11, name: "Length Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 12, name: "Other Errors Received", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 13, name: "Connect Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 14, name: "Receive Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 15, name: "Application control-level Errors", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "NTE": SegmentGrammar(
@@ -1388,6 +1552,25 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Performing Organization Name", dataType: "XON", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 24, name: "Performing Organization Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 25, name: "Performing Organization Medical Director", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "ODS": SegmentGrammar(
+            segmentID: "ODS",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Type", dataType: "ID", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Service Period", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Diet, Supplement, or Preference Code", dataType: "CWE", optionality: .required, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 4, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "ODT": SegmentGrammar(
+            segmentID: "ODT",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Tray Type", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Service Period", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 3, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "OM1": SegmentGrammar(
@@ -1594,6 +1777,17 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 12, name: "Primary Care Physician Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "OVR": SegmentGrammar(
+            segmentID: "OVR",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Business Rule Override Type", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Business Rule Override Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Override Comments", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Override Entered By", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Override Authorized By", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "PCR": SegmentGrammar(
             segmentID: "PCR",
             version: "2.6",
@@ -1649,6 +1843,21 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Military Rank/Grade", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 21, name: "Military Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 22, name: "Advance Directive Last Verified Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "PDA": SegmentGrammar(
+            segmentID: "PDA",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Death Cause Code", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil),
+            FieldGrammar(index: 2, name: "Death Location", dataType: "PL", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Death Certified Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Death Certificate Signed Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Death Certified By", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Autopsy Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Autopsy Start and End Date/Time", dataType: "DR", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Autopsy Performed By", dataType: "XCN", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Coroner Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "PDC": SegmentGrammar(
@@ -2164,6 +2373,15 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 3, name: "Resource Group ID", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
+        "RMI": SegmentGrammar(
+            segmentID: "RMI",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Risk Management Incident Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Date/Time Incident", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Incident Type Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
         "ROL": SegmentGrammar(
             segmentID: "ROL",
             version: "2.6",
@@ -2181,6 +2399,35 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Office/Home Address/Birthplace", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 12, name: "Phone", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 13, name: "Person's Location", dataType: "PL", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "RQ1": SegmentGrammar(
+            segmentID: "RQ1",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Anticipated Price", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Manufacturer Identifier", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty"),
+            FieldGrammar(index: 4, name: "Vendor ID", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
+            FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty"),
+            FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil),
+            ]
+        ),
+        "RQD": SegmentGrammar(
+            segmentID: "RQD",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Requisition Line Number", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQD-3 empty AND RQD-4 empty"),
+            FieldGrammar(index: 3, name: "Item Code - External", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-4 empty"),
+            FieldGrammar(index: 4, name: "Hospital Item Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-3 empty"),
+            FieldGrammar(index: 5, name: "Requisition Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Requisition Unit of Measure", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 7, name: "Cost Center Account Number", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 8, name: "Item Natural Account Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 9, name: "Deliver To ID", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 10, name: "Date Needed", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "RXA": SegmentGrammar(
@@ -2491,6 +2738,18 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 25, name: "Filler Status Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil),
             FieldGrammar(index: 26, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil),
             FieldGrammar(index: 27, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil),
+            ]
+        ),
+        "SFT": SegmentGrammar(
+            segmentID: "SFT",
+            version: "2.6",
+            fields: [
+            FieldGrammar(index: 1, name: "Software Vendor Organization", dataType: "XON", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 2, name: "Software Certified Version or Release Number", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 3, name: "Software Product Name", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 4, name: "Software Binary ID", dataType: "ST", optionality: .required, repeatability: .single, condition: nil),
+            FieldGrammar(index: 5, name: "Software Product Information", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil),
+            FieldGrammar(index: 6, name: "Software Install Date", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil),
             ]
         ),
         "SID": SegmentGrammar(

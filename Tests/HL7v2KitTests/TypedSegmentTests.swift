@@ -2031,4 +2031,45 @@ struct TypedSegmentTests {
             #expect(t["CER"]?.fields.count == 31)
         }
     }
+
+    // v3 cycle 4 (deferred-tier batch C): the last deferred INSTANCES of
+    // modelled segments — CH02/03/04/06/07/08/14 families plus the quartet's
+    // own v2.6/v2.8.2 instances. After this batch, every modelled segment
+    // exists on every version that defines it; the only remaining M5 scope
+    // is the never-authored v2.6/v2.8.2-only backlog.
+    @Test("v3 cycle 4: deferred batch C on v2.6 + v2.8.2 — depths, IAM growth, predicates travel")
+    func v3Cycle4DeferredBatchC() {
+        let six = SegmentGrammarTable.v2_6
+        let eight = SegmentGrammarTable.v2_8_2
+        // IAM is the one deep divergence in the batch: 20 → 30 at v2.8.2.
+        #expect(six["IAM"]?.fields.count == 20)
+        #expect(eight["IAM"]?.fields.count == 30)
+        for t in [six, eight] {
+            #expect(t["NPU"]?.fields.count == 2)
+            #expect(t["PDA"]?.fields.count == 9)
+            #expect(t["BLG"]?.fields.count == 4)
+            #expect(t["ODS"]?.fields.count == 4)
+            #expect(t["ODT"]?.fields.count == 3)
+            #expect(t["RQ1"]?.fields.count == 7)
+            #expect(t["RQD"]?.fields.count == 10)
+            #expect(t["BLC"]?.fields.count == 2)
+            #expect(t["RMI"]?.fields.count == 3)
+            #expect(t["FAC"]?.fields.count == 12)
+            #expect(t["CM0"]?.fields.count == 11)
+            #expect(t["CM1"]?.fields.count == 3)
+            #expect(t["CM2"]?.fields.count == 4)
+            #expect(t["NCK"]?.fields.count == 1)
+            #expect(t["NSC"]?.fields.count == 9)
+            #expect(t["NST"]?.fields.count == 15)
+            #expect(t["IPC"]?.fields.count == 9)
+            #expect(t["OVR"]?.fields.count == 5)
+            #expect(t["SFT"]?.fields.count == 6)
+            // The spec-cited conditionals travelled with the segments.
+            #expect(t["RQ1"]?.field(2)?.condition == "RQ1-4 empty OR RQ1-5 empty")
+            #expect(t["RQD"]?.field(4)?.condition == "RQD-2 empty AND RQD-3 empty")
+            // IAM-7 stays bare (receiving-system capability, registered).
+            #expect(t["IAM"]?.field(7)?.optionality == .conditional)
+            #expect(t["IAM"]?.field(7)?.condition == nil)
+        }
+    }
 }
