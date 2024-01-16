@@ -1041,6 +1041,22 @@ struct MultiVersionTests {
             // the AU-priority versions (identical prose, verified on both
             // chapters).
             "IAM-7",
+            // v3-C5 (never-authored backlog): the new-segment bare-C surface,
+            // triaged per field in conditional-completeness-audit.md. Shipped
+            // instead of registered: PYE-3..6 (payee-type gates), MCP-5,
+            // OMC-2/3 (mutual presence), PRT-5/8/9/10/22 (the one-of-five
+            // rotation the shared Condition sentence states). The rest have
+            // no field-expressible trigger: financial/DRG context (ADJ-7,
+            // IVC-23, PSL-10/12..16, DMI-2..5, REL-1), usage-pattern
+            // exceptions (DON-1/2), a numeric-ordering comparison the DSL
+            // lacks (PAC-2, SHP-8 > 1), required-when-known (PRT-1),
+            // not-permitted-unless — a prohibition the required-when model
+            // cannot express (PRT-6/7) — no stated trigger (PRT-14,
+            // RXV-20/21).
+            "ADJ-7", "IVC-23", "PSL-10", "PSL-12", "PSL-13", "PSL-14",
+            "PSL-15", "PSL-16", "DMI-2", "DMI-3", "DMI-4", "DMI-5", "REL-1",
+            "DON-1", "DON-2", "PAC-2", "PRT-1", "PRT-6", "PRT-7", "PRT-14",
+            "RXV-20", "RXV-21",
         ]
         var actual = Set<String>()
         for (seg, grammar) in table {

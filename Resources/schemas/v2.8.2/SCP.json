@@ -1,0 +1,15 @@
+{
+  "segmentID": "SCP",
+  "version": "2.8.2",
+  "description": "Sterilizer Configuration",
+  "fields": [
+    { "index": 1, "swiftName": "numberOfDecontaminationSterilizationDevices", "name": "Number Of Decontamination/Sterilization Devices", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "laborCalculationType", "name": "Labor Calculation Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateFormat", "name": "Date Format", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "deviceModelName", "name": "Device Model Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "deviceType", "name": "Device Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "lotControl", "name": "Lot Control", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}

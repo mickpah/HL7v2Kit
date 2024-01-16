@@ -1,0 +1,15 @@
+{
+  "segmentID": "IPR",
+  "version": "2.6",
+  "description": "Invoice Processing Results",
+  "fields": [
+    { "index": 1, "swiftName": "iprIdentifier", "name": "IPR Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "providerCrossReferenceIdentifier", "name": "Provider Cross Reference Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "payerCrossReferenceIdentifier", "name": "Payer Cross Reference Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "iprStatus", "name": "IPR Status", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "iprDateTime", "name": "IPR Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 6, "swiftName": "adjudicatedPaidAmount", "name": "Adjudicated/Paid Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "expectedPaymentDateTime", "name": "Expected Payment Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "iprChecksum", "name": "IPR Checksum", "dataType": "ST", "optionality": "R", "repeatability": "1" }
+  ]
+}

@@ -282,6 +282,26 @@ struct Codegen {
             }
         }
 
+        // Fallback pass (v3-C5): a segment with no canonical v2.5.1 schema
+        // — the v2.6/v2.8.2-only surface — emits its shared struct from
+        // the EARLIEST version that defines it. This extends the
+        // union-surface doctrine rather than replacing it: canonical
+        // stays authoritative wherever it defines a segment; where it
+        // never does, the earliest definer is that segment's de-facto
+        // canonical. (Pre-v2.6 versions cannot reach this path — the
+        // presence audit guarantees every pre-v2.6 segment also exists
+        // on canonical.)
+        for (_, schemas) in schemasByVersion.sorted(by: { $0.key < $1.key }) {
+            for schema in schemas where !emittedSegmentIDs.contains(schema.segmentID) {
+                let source = render(schema)
+                let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
+                try Data(source.utf8).write(to: outFile)
+                print("emitted \(outFile.path)")
+                emitted += 1
+                emittedSegmentIDs.insert(schema.segmentID)
+            }
+        }
+
         // Emit the cross-version SegmentRegistry extension.
         try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
         let registrySource = renderRegistry(segmentIDs: Array(emittedSegmentIDs))

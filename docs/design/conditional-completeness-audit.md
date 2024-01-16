@@ -122,6 +122,35 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **SID-1 Application / Method Identifier**, **SID-2 Substance Lot Number**, **SID-3 Substance Container Identifier**, **SID-4 Substance Manufacturer Identifier** — §13.4.11 marks all four `C` and its field-definition prose states **no condition whatsoever** (each definition describes only what the field identifies). Which of the four is required depends on *what the substance is being identified by* in the sending lab's automation workflow — not on any same-segment or cross-segment field value, so no DSL predicate is expressible. Fail-safe: all four are treated as optional. This is the purest instance of the class in the register — a segment whose entire conformance is conditional with no stated trigger.
 - The other five segments in the v1.7 batch (**ISD / NDS / CNS / ECD / ECR**) carry **no** `C` fields: their conditionality is expressed structurally, by the message's own segment grammar.
 
+**v3 cycle 5 (2026-09-16) — the never-authored v2.6/v2.8.2 backlog (38 new segments):**
+
+Sixteen conditionals shipped with spec-cited predicates: **PYE-3/4/5/6** ("Conditional or
+empty: if Payee Type in list (…), then Required" — payee-type gates on PYE-2, prose verified
+identical on both chapters), **MCP-5** ("conditionally required when MCP-3 is valued"),
+**OMC-2/3** (mutual "Required if the other is valued"), and **PRT-5/8/9/10/22** (the shared
+Condition sentence — "At least one of the Participation Person, Participation Organization,
+Participation Location, or Participation Device (and/or Participation Device Type) fields
+must be valued" — as the RQD-style one-of-five rotation). The rest are documented
+limitations, all fail-safe:
+
+- **ADJ-7, IVC-23, PSL-10, PSL-12..16** — eClaims financial fields; the definitions
+  describe content (dates must order, gross amount arithmetic) with **no presence trigger**.
+- **DMI-2..5** — DRG master-file statistics; conditionality depends on the jurisdiction's
+  grouping scheme, not any field.
+- **REL-1** — set-ID with no stated trigger.
+- **DON-1, DON-2** — "mandatory except when using an eligibility message type in which only
+  DON-9, DON-10, and DON-11 are populated": a usage-pattern exception (which fields the
+  message chooses to carry), not a field predicate; a 30-disjunct approximation would
+  misfire (req #4).
+- **PAC-2** — "If SHP-8 Number of Packages in Shipment is greater than 1": a **numeric
+  ordering comparison**, which the DSL does not have (equality/sets/prefixes only). A
+  model-extension candidate.
+- **PRT-1** — "required when known": sender-knowledge, not wire-decidable.
+- **PRT-6, PRT-7** — "may only be valued if PRT-5 [PRT-8] is valued": **not-permitted-unless**,
+  a *prohibition* — encoding it as a required-when condition would wrongly demand the field
+  whenever its subject is present. A model-extension candidate (conditional prohibition).
+- **PRT-14, RXV-20, RXV-21** — definitions state what the fields hold and no trigger.
+
 **v3 cycle 1 (2026-09-16) — the v2.5-only quartet (CER/IPC/OVR/SFT):**
 - **CER-12 Subject ID** (01867) — §15.4.2.12: "*If the certificate is expressed as a X.509 document this field is required.*" The certificate's document format is not wire-decidable: no CER field states it (CER-10 Certificate Type carries no table and its prose names no format values), so the trigger lives in the payload encoding, not in any field the DSL can address. Fail-safe (treated as optional); the only `C` in the quartet — IPC, OVR and SFT carry none. Identical prose on v2.6 and v2.8.2 (verified at v3-C3 when their deferred instances were authored; the field retypes `ID` → `EI` at v2.8.2 but the condition text is unchanged), so CER-12 is now in the v2.8.2 guard set as a bare `C`.
 

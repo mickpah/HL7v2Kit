@@ -1,0 +1,12 @@
+{
+  "segmentID": "DMI",
+  "version": "2.8.2",
+  "description": "DRG Master File Information",
+  "fields": [
+    { "index": 1, "swiftName": "diagnosticRelatedGroup", "name": "Diagnostic Related Group", "dataType": "CNE", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "majorDiagnosticCategory", "name": "Major Diagnostic Category", "dataType": "CNE", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "lowerAndUpperTrimPoints", "name": "Lower and Upper Trim Points", "dataType": "NR", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "averageLengthOfStay", "name": "Average Length of Stay", "dataType": "NM", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "relativeWeight", "name": "Relative Weight", "dataType": "NM", "optionality": "C", "repeatability": "1" }
+  ]
+}

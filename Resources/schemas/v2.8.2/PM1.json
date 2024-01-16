@@ -1,0 +1,31 @@
+{
+  "segmentID": "PM1",
+  "version": "2.8.2",
+  "description": "Payer Master File",
+  "fields": [
+    { "index": 1, "swiftName": "healthPlanId", "name": "Health Plan ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "insuranceCompanyId", "name": "Insurance Company ID", "dataType": "CX", "optionality": "R", "repeatability": "*" },
+    { "index": 3, "swiftName": "insuranceCompanyName", "name": "Insurance Company Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "insuranceCompanyAddress", "name": "Insurance Company Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "insuranceCoContactPerson", "name": "Insurance Co Contact Person", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "insuranceCoPhoneNumber", "name": "Insurance Co Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "groupNumber", "name": "Group Number", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "groupName", "name": "Group Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "planEffectiveDate", "name": "Plan Effective Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "planExpirationDate", "name": "Plan Expiration Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "patientDobRequired", "name": "Patient DOB Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "patientGenderRequired", "name": "Patient Gender Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "patientRelationshipRequired", "name": "Patient Relationship Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "patientSignatureRequired", "name": "Patient Signature Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "diagnosisRequired", "name": "Diagnosis Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "serviceRequired", "name": "Service Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "patientNameRequired", "name": "Patient Name Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "patientAddressRequired", "name": "Patient Address Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 19, "swiftName": "subscribersNameRequired", "name": "Subscribers Name Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "workmanCompIndicator", "name": "Workman's Comp Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 21, "swiftName": "billTypeRequired", "name": "Bill Type Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "commercialCarrierNameAndAddressRequired", "name": "Commercial Carrier Name and Address Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 23, "swiftName": "policyNumberPattern", "name": "Policy Number Pattern", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 24, "swiftName": "groupNumberPattern", "name": "Group Number Pattern", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "segmentID": "VND",
+  "version": "2.6",
+  "description": "Purchasing Vendor",
+  "fields": [
+    { "index": 1, "swiftName": "setIdVnd", "name": "Set Id – VND", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "vendorIdentifier", "name": "Vendor Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "vendorName", "name": "Vendor Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "vendorCatalogNumber", "name": "Vendor Catalog Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "primaryVendorIndicator", "name": "Primary Vendor Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1" }
+  ]
+}

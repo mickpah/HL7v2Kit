@@ -6,7 +6,7 @@ How to read a v2 message via compile-time-checked segment / field accessors inst
 
 HL7v2Kit ships typed Swift structs for the most common HL7 v2.5.1 segments. These are **generated** from JSON schemas under `Resources/schemas/v2.5.1/` by the `HL7v2KitCodegen` executable (per `ADR-004`); the generated Swift lives at `Sources/HL7v2Kit/Segment/Generated/` (one file per segment, version-agnostic names) and is committed to the repository so reviewers can see exactly what the typed surface is. The struct surface is shared across every supported HL7 v2 version — older wires (v2.3 / v2.3.1 / v2.4) get nil from any accessor whose field doesn't exist at their version. Per-version `SegmentGrammar+vX_Y_Z.swift` tables (also at `Generated/`) carry the per-version field sets that the `Validator` dispatches on.
 
-**150 typed segments ship today**, each at its version's full field depth — the ADT/ORU core
+**188 typed segments ship today**, each at its version's full field depth — the ADT/ORU core
 (`MSH`, `PID`, `OBX`, `OBR`, …), orders and pharmacy, scheduling, financial, master files,
 personnel management, clinical trials, lab automation, the query family, and the batch
 envelopes (`BHS`/`FHS`/`BTS`/`FTS`). The authoritative list is the schema directory

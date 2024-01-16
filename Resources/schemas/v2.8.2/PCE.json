@@ -1,0 +1,11 @@
+{
+  "segmentID": "PCE",
+  "version": "2.8.2",
+  "description": "Patient Charge Cost Center Exception",
+  "fields": [
+    { "index": 1, "swiftName": "setIdPce", "name": "Set ID – PCE", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "costCenterAccountNumber", "name": "Cost Center Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "transactionCode", "name": "Transaction Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "transactionAmountUnit", "name": "Transaction Amount - Unit", "dataType": "CP", "optionality": "O", "repeatability": "1" }
+  ]
+}

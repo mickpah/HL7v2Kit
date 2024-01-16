@@ -8,6 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **v3 cycle 5 — the never-authored backlog closed: 188 of 188 segments,
+  M5's coverage bar is MET.** The 62 remaining never-authored instances
+  (38 distinct v2.6/v2.8.2-only segments: eClaims CH16, materials
+  management CH17, plus `ARV/IAR/UAC/SGH/SGT`, `BUI/CDO/DON/RXV`,
+  `DMI/DPS/MCP/OMC/PM1`, `PAC/PRT/SHP`, `REL`) authored from their own
+  chapters, all 62 `--verify` PASS, descriptions taken from the chapters'
+  own section headings. **Codegen gains an earliest-defining-version
+  fallback**: a segment v2.5.1 never defines emits its shared struct from
+  the earliest version that does (extending the union-surface doctrine) —
+  **150 → 188 typed structs**. Conditional surface triaged per field:
+  16 spec-cited predicates shipped (`PYE-3..6` payee-type gates, `MCP-5`,
+  `OMC-2/3` mutual presence, `PRT-5/8/9/10/22` one-of-five rotation) and
+  22 registered with per-field rationale in
+  `conditional-completeness-audit.md`, including two new model-extension
+  classes: numeric ordering comparison (`PAC-2`, "SHP-8 > 1") and
+  conditional prohibition / not-permitted-unless (`PRT-6/7`). Audit fully
+  clean: **853 schemas, 842 depth-exact, zero never-authored anywhere**.
+
 - **v3 cycle 4 — deferred-tier batch C: the last deferred instances.** Forty
   schema instances across CH02/03/04/06/07/08/14 (`OVR/SFT`, `IAM/NPU/PDA`,
   `BLG/ODS/ODT/RQ1/RQD/IPC`, `BLC/RMI`, `FAC`, `CM0/CM1/CM2`, `NCK/NSC/NST`

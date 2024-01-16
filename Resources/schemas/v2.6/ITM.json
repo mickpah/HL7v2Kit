@@ -1,0 +1,13 @@
+{
+  "segmentID": "ITM",
+  "version": "2.6",
+  "description": "Material Item",
+  "fields": [
+    { "index": 1, "swiftName": "itemIdentifier", "name": "Item Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "itemDescription", "name": "Item Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "itemStatus", "name": "Item Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "itemType", "name": "Item Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "itemCategory", "name": "Item Category", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "subjectToExpirationIndicator", "name": "Subject to Expiration Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1" }
+  ]
+}

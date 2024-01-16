@@ -43,11 +43,11 @@ assert(rebuilt == wire)
 
 ## Supported HL7 v2 versions
 
-Full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` wire is *recognised* but has no grammar table (rare; see [ADR-013](docs/design/ADR-013-v2_8_2-grammar-version.md)). Segment coverage: **v2.3 / v2.3.1 / v2.4 have zero missing segments**, and v2.5.1 is complete apart from its v2.5-only additions (`OVR`/`SFT`/`CER` + co); **v2.6 and v2.8.2 grammar tables are deliberately partial** — the deferred scope is enumerated in [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md). Every authored schema is verified against its own version's attribute table (depth *and* presence) by `scripts/audit-schemas.py`.
+Full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` wire is *recognised* but has no grammar table (rare; see [ADR-013](docs/design/ADR-013-v2_8_2-grammar-version.md)). Segment coverage: **every version has zero missing segments** — all 188 segments the six specs define are modelled on every version that defines them (the deferred backlog of [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md) closed 2026-09-16). Every authored schema is verified against its own version's attribute table (depth, presence *and* per-field datatype) by `scripts/audit-schemas.py`.
 
 ## Typed segments & composites
 
-**150 code-generated typed segment structs** — the ADT/ORU core (`MSH`, `PID`, `OBX`, `OBR`, …) through orders/pharmacy, scheduling, financial, master files, personnel, clinical trials, lab automation, queries, and the batch envelopes (`BHS`/`FHS`/`BTS`/`FTS`) — generated from the canonical v2.5.1 schemas (`Resources/schemas/`) and version-agnostic at runtime. Composite-typed fields return typed struct views with named accessors instead of raw `Field?`:
+**188 code-generated typed segment structs** — the ADT/ORU core (`MSH`, `PID`, `OBX`, `OBR`, …) through orders/pharmacy, scheduling, financial, master files, personnel, clinical trials, lab automation, queries, eClaims, materials management, and the batch envelopes (`BHS`/`FHS`/`BTS`/`FTS`) — generated from the canonical v2.5.1 schemas (`Resources/schemas/`), falling back to a segment's earliest defining version where v2.5.1 never defines it, and version-agnostic at runtime. Composite-typed fields return typed struct views with named accessors instead of raw `Field?`:
 
 | Composite | Example accessors |
 |---|---|
