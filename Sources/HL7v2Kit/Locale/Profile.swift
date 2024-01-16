@@ -148,6 +148,10 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// component as both "must be populated" and "not in the table".
     let componentValueSets: [ComponentValueSet]
 
+    /// Per-repetition key⇒value correspondences (M6-B-8). Used for the
+    /// ED/RP subtype⇒type points (HL7au:00044.10.1.5/.6, .11.1.5/.6).
+    let componentCorrespondences: [ComponentCorrespondence]
+
     init(
         dataType: String,
         condition: String? = nil,
@@ -155,7 +159,8 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         pairRules: [PairConditional] = [],
         componentInequalities: [ComponentInequality] = [],
         valueConditionals: [ComponentValueConditional] = [],
-        componentValueSets: [ComponentValueSet] = []
+        componentValueSets: [ComponentValueSet] = [],
+        componentCorrespondences: [ComponentCorrespondence] = []
     ) {
         self.dataType = dataType
         self.condition = condition
@@ -164,6 +169,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         self.componentInequalities = componentInequalities
         self.valueConditionals = valueConditionals
         self.componentValueSets = componentValueSets
+        self.componentCorrespondences = componentCorrespondences
     }
 }
 
@@ -324,6 +330,11 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// narrowings on any component". v0.5-S5-C.
     let componentValueSets: [ComponentValueSet]
 
+    /// Per-repetition key⇒value correspondences (M6-B-8). Used for the
+    /// PRD-7 authority⇒qualifier pairs (HL7au:00104.7.1.4) — PRD-7
+    /// repeats, so each repetition pairs its own key and value.
+    let componentCorrespondences: [ComponentCorrespondence]
+
     /// Spec citation for this override. Surfaced verbatim in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`
     /// so consumers can attribute the failure to the specific
@@ -340,6 +351,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         condition: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
+        componentCorrespondences: [ComponentCorrespondence] = [],
         specCitation: String? = nil
     ) {
         self.segmentID = segmentID
@@ -348,6 +360,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.condition = condition
         self.requiredComponents = requiredComponents
         self.componentValueSets = componentValueSets
+        self.componentCorrespondences = componentCorrespondences
         self.specCitation = specCitation
     }
 }
@@ -397,6 +410,47 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         self.component = component
         self.subcomponent = subcomponent
         self.allowedValues = allowedValues
+        self.condition = condition
+        self.specCitation = specCitation
+    }
+}
+
+/// A per-repetition value-correspondence rule: "when `keyComponent`
+/// carries a value the `map` knows, `valueComponent` (of the SAME
+/// repetition) must carry one of the mapped values." M6-B-8.
+///
+/// - Keys the map does not know SKIP (fail-safe): the spec tables that
+///   feed these maps state correspondences for enumerated keys only
+///   (ADRM §3.20.5 type-subtype combinations; the PRD-7 matches table),
+///   and an unstated key is not a violation.
+/// - Comparison is CASE-INSENSITIVE on both key and value: the ADRM's
+///   own sanctioned examples mix case (`TEXT^RTF` in §4.5.2,
+///   `text^html` in §4.5.3).
+/// - Evaluated per repetition so repeating fields (PRD-7) pair each
+///   repetition's own key and value — a message-level gate would mix
+///   repetitions.
+struct ComponentCorrespondence: Sendable, Equatable, Hashable {
+    /// 1-based component whose value selects the mapping.
+    let keyComponent: Int
+    /// 1-based component that must carry a mapped value.
+    let valueComponent: Int
+    /// Lowercased key → allowed values (compared lowercased).
+    let map: [String: [String]]
+    /// Optional v0.7-DSL gate; `nil` → always applies.
+    let condition: String?
+    /// Spec citation surfaced in the violation.
+    let specCitation: String?
+
+    init(
+        keyComponent: Int,
+        valueComponent: Int,
+        map: [String: [String]],
+        condition: String? = nil,
+        specCitation: String? = nil
+    ) {
+        self.keyComponent = keyComponent
+        self.valueComponent = valueComponent
+        self.map = map
         self.condition = condition
         self.specCitation = specCitation
     }

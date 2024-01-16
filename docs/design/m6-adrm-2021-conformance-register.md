@@ -14,22 +14,21 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | Verdict | Count | Meaning |
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
-| EXTEND | 18 | needs a model extension to express faithfully (req #3) |
+| EXTEND | 12 | needs a model extension to express faithfully (req #3) |
 | SHIPPED | 63 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 3 | partly enforced — see each row's note for what is not |
+| PARTIAL | 8 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
-| REGISTERED | 5 | known limitation, already registered |
+| REGISTERED | 6 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
 | OUT | 82 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## EXTEND (18)
+## EXTEND (12)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
-| `HL7au:000008.1.3` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-2 Value Type field must match its corresponding display format specified in OBX-3 Identifier (ST) component as per table Display Format codes (see page 247) in Section 4.5 Display Se... | OBX-2 ⇔ OBX-3.1 value-correspondence map |
 | `HL7au:000008.1.5` |  | Senders | Results, Referrals | The OBX display segment(s) must be the last in a set of OBX segments in each OBR/OBX group, with the exception of digital signature OBX(s) which may be after the display segments OBXs. (Display segments can be identif... | intra-group segment ordering |
 | `HL7au:000008.3.2` |  | Senders | Referrals(L2) | If an RTF display segment is sent in an OBR/OBX group, then the same content must be sent in one of either HTML, PDF, or TXT (HL7 FT) same OBR/OBX group. | relational group cardinality (RTF present ⇒ HTML/PDF/TXT sibling) plus content equality — neither expressible |
 | `HL7au:000022.1` |  | Senders | Orders, Results, Referrals | If the batch header is used it must specify individual message acknowledgement. No information from the file header/footer or batch segments must be used. | batch-scope acknowledgement mode |
@@ -41,12 +40,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000034.3` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, In either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both a public (e.g. LOINC) and a local terminology, then concepts from... | primary-before-local coding-system ordering |
 | `HL7au:00044.6.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | same-concept assertion across coding systems — the CWE twin of the registered HL7au:00044.4.7 / .5.7 |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | TS datatype-level validation (timezone offset present) |
-| `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype ⇔ type MIME correspondence map |
-| `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype ⇔ type HL7 table 0291/0191 correspondence map |
-| `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype ⇔ type MIME correspondence map |
-| `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype ⇔ type HL7 table 0291/0191 correspondence map |
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
-| `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
 
 ## SHIPPED (63)
 
@@ -59,6 +53,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000007` | r2 | Senders | Orders, Results, Referrals | If ORC-4 is valued, then to ensure the uniqueness of the Entity Identifier (EI) in ORC-4 (Placer Group Number) for a request identifier across different organisations, the Entity identifier (first component) in additi... |  |
 | `HL7au:000008` |  | Senders | Results, Referrals | The message must contain at least one OBX display segment per OBR/OBX group. |  |
 | `HL7au:000008.1` | r2 | Senders | Results, Referrals | Display segments must use the appropriate valid values within the AUSPDI coding system in OBX-3 for the content that is represented in it: • OBX\|\|ED\|HTML^Display format in HTML^AUSPDI\|\|^text^HTML^A^<?xml version=... |  |
+| `HL7au:000008.1.3` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-2 Value Type field must match its corresponding display format specified in OBX-3 Identifier (ST) component as per table Display Format codes (see page 247) in Section 4.5 Display Se... |  |
 | `HL7au:000008.3.1` |  | Senders | Referrals | For Referrals Level 1: The single OBR/OBX group of the message must contain an OBX display segment in PDF format. For other profiles: Each OBR/OBX group of the message must contain at least one of the following OBX di... |  |
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. |  |
 | `HL7au:000023` |  | Senders | Orders, Results, Referrals | The NTE segment must NOT be used in messages. |  |
@@ -113,16 +108,20 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). |  |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. |  |
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
-| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (3)
+## PARTIAL (8)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000020` |  | Senders | Orders, Results, Referrals(L2) | All message types and trigger event codes beginning with the letter “Z” are reserved for locally-defined messages and must NOT be used. | Z-prefixed trigger events prohibited on Orders/Results and (since M6-B-6) on Referrals(L2) via the MSH-12.3.1 profile gate; the message-CODE leg stays unenforced — a wholly-Z message code never satisfies any message-type gate, so that half is undecidable inside this rule shape |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
+| `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype => type enforced for spec-stated pairs (ADRM §3.20.5 + example annotations); arbitrary IANA subtypes skip, fail-safe |
+| `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype => type enforced for the 0291 subtypes whose 0191 main type §3.20.5 states; unstated ones skip |
+| `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.5 |
+| `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
+| `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
 ## BASE (15)
 
@@ -144,7 +143,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 | `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |
 
-## REGISTERED (5)
+## REGISTERED (6)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -153,6 +152,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.4.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00044.5.7` |  | Senders | Orders, Results, Referrals | Both <identifier> and <alternative identifier> must reflect the same concept in each of the primary and alternate coding system respectively. Each code may reflect differing levels of granularity within each coding sy... | known limitation, registered with citation |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | known limitation, registered with citation |
+| `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). | known limitation, registered with citation |
 
 ## WITHDRAWN (3)
 

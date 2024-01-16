@@ -412,26 +412,35 @@ extension Profile {
                 profileUsage: .required,
                 condition: "messageCode = REF AND anyRepeat(PRD-1) = IR",
                 componentValueSets: [
-                    // M6-B-4 — HL7au:00104.7.2.1: "PRD-7 <type of ID
-                    // number (IS)> must be valued from User-defined
-                    // Table 0363 - Assigning Authority." The value-set
-                    // check runs per populated repetition, so every
-                    // provider identifier in the repeat list is held to
-                    // the table.
-                    ComponentValueSet(
-                        component: 2,
-                        allowedValues: HL7CodeTables.table0363,
-                        condition: "messageCode = REF",
-                        specCitation: "HL7au:00104.7.2.1 — PRD-7.2 (type of ID number) must be valued from User-defined Table 0363 (Assigning Authority) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 310"
-                    ),
                     // M6-B-4 — HL7au:00104.7.3.1: "<other qualifying
                     // info (ST)> must be a valued from HL7 Table 0203 -
-                    // Identifier Type."
+                    // Identifier Type." (00104.7.2.1's 0363 membership
+                    // was withdrawn at M6-B-8: table 0363 is
+                    // user-defined and the ADRM's own PRD-7 matches
+                    // table uses vendor authorities outside it —
+                    // registered, see permanent-limitations-register.)
                     ComponentValueSet(
                         component: 3,
                         allowedValues: HL7CodeTables.table0203,
                         condition: "messageCode = REF",
                         specCitation: "HL7au:00104.7.3.1 — PRD-7.3 (other qualifying info) must be valued from HL7 Table 0203 (Identifier Type) on Senders Referrals; AU ADRM-2021 Appendix 5 p. 472, table p. 301"
+                    ),
+                ],
+                // M6-B-8 — HL7au:00104.7.1.4: "the correct matching
+                // <type of ID number> and <other qualifying info> must
+                // be used as per Table 7.3.3.7.1" (p. 334). The table
+                // states pairs for the closed AU authorities; vendor
+                // authorities are open-ended examples and skip.
+                componentCorrespondences: [
+                    ComponentCorrespondence(
+                        keyComponent: 2,
+                        valueComponent: 3,
+                        map: [
+                            "aushicpr": ["UPIN"],
+                            "aushic": ["NPIO", "NOI"],
+                        ],
+                        condition: "messageCode = REF",
+                        specCitation: "HL7au:00104.7.1.4 — PRD-7 authority => qualifying-info pairs per Table 7.3.3.7.1 (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); AU ADRM-2021 p. 334 (vendor authorities are open-ended and skip)"
                     ),
                 ],
                 specCitation: "HL7au:00104.7.0 (r3) — PRD-7 must have at least 1 repeat on the Intended Recipient (PRD-1 = IR) PRD in the REF message; AU ADRM-2021 Appendix 5 p. 472"
@@ -463,6 +472,49 @@ extension Profile {
                     ),
                 ],
                 specCitation: "HL7au:000032 / 000032.2 — OBR-24 (Diagnostic Serv Sect ID) must be valued on Senders Results/Referrals; AU ADRM-2021 Appendix 5 p. 444"
+            ),
+            // M6-B-8 — HL7au:000008.1.3: "the OBX-2 Value Type field
+            // must match its corresponding display format specified in
+            // OBX-3 Identifier" per the Display Format codes table
+            // (p. 247): RTF/HTML/PDF => ED, TXT/PIT => FT. Five gated
+            // value sets — OBX-3 does not repeat, so the gate reads a
+            // stable value. Scoped Results per Appendix 5.
+            FieldOverride(
+                segmentID: "OBX",
+                fieldIndex: 2,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["ED"],
+                        condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = RTF",
+                        specCitation: "HL7au:000008.1.3 — an RTF display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["ED"],
+                        condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = HTML",
+                        specCitation: "HL7au:000008.1.3 — an HTML display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["ED"],
+                        condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = PDF",
+                        specCitation: "HL7au:000008.1.3 — a PDF display segment's OBX-2 must be ED; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["FT"],
+                        condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = TXT",
+                        specCitation: "HL7au:000008.1.3 — a TXT display segment's OBX-2 must be FT; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["FT"],
+                        condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = PIT",
+                        specCitation: "HL7au:000008.1.3 — a PIT display segment's OBX-2 must be FT; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                ],
+                specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"
             ),
         ],
         grammarExtensions: [
@@ -631,6 +683,20 @@ extension Profile {
                         component: 5,
                         specCitation: "HL7au:00044.10.1.4 — ED <data> must be valued"
                     ),
+                ],
+                // M6-B-8 — HL7au:00044.10.1.5/.6: the subtype in ED-3
+                // determines ED-2's type. Keys are the pairs the spec
+                // STATES (ADRM §3.20.5 type-subtype combinations; the
+                // 0291 extension rows' own MIME annotations; the §4.5
+                // display examples). Unstated subtypes skip: PARTIAL —
+                // the IANA MIME registry is external and unbounded.
+                componentCorrespondences: [
+                    ComponentCorrespondence(
+                        keyComponent: 3,
+                        valueComponent: 2,
+                        map: HL7CodeTables.subtypeToTypeMap,
+                        specCitation: "HL7au:00044.10.1.5/.6 — ED subtype => type of data correspondence (MIME and HL7 Table 0291 => 0191); AU ADRM-2021 §3.20 pp. 167-171, §4.5 examples"
+                    ),
                 ]
             ),
             CompositeOverride(
@@ -652,6 +718,16 @@ extension Profile {
                     ComponentRequirement(
                         component: 4,
                         specCitation: "HL7au:00044.11.1.4 — RP <subtype> must be valued"
+                    ),
+                ],
+                // M6-B-8 — HL7au:00044.11.1.5/.6: same correspondence,
+                // RP's subtype is component 4 and its type component 3.
+                componentCorrespondences: [
+                    ComponentCorrespondence(
+                        keyComponent: 4,
+                        valueComponent: 3,
+                        map: HL7CodeTables.subtypeToTypeMap,
+                        specCitation: "HL7au:00044.11.1.5/.6 — RP subtype => type of data correspondence (MIME and HL7 Table 0291 => 0191); AU ADRM-2021 §3.20 pp. 167-171"
                     ),
                 ]
             ),

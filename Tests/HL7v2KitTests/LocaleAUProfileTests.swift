@@ -1703,7 +1703,7 @@ struct LocaleAUProfileTests {
     private let refConforming = """
     MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
     PRD|AP^Authoring Provider^HL70286|Doe^John\r\
-    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^PRES\r\
+    PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^UPIN\r\
     PID|1||X^^^F^MR\r\
     OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r\
     OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
@@ -1950,29 +1950,82 @@ struct LocaleAUProfileTests {
                 "no OBR and no gate match on ADT")
     }
 
-    @Test("HL7au:00104.7.2.1/.7.3.1 — PRD-7 table membership on REF")
+    @Test("HL7au:00104.7.3.1/.7.1.4 — PRD-7 membership and authority-pair rules on REF")
     func hl7au00104_7_tableMembership() throws {
-        // Conforming wire: silent for both points.
+        // Conforming wire (AUSHICPR^UPIN, the ADRM's own example pair):
+        // silent for membership and correspondence. (00104.7.2.1's 0363
+        // membership was withdrawn at M6-B-8 — table 0363 is
+        // user-defined and the ADRM's own examples use vendor
+        // authorities outside it.)
         let okReport = Validator(locale: .auLocalisation)
             .validate(try Parser(locale: .auLocalisation).parse(refConforming))
-        #expect(!okReport.errors.contains { $0.message.contains("HL7au:00104.7.2.1") }
-                    && !okReport.errors.contains { $0.message.contains("HL7au:00104.7.3.1") },
-                "AUSHICPR^PRES is table-conformant; got \(okReport.errors.map(\.message))")
-        // Bad authority (not in 0363) + bad type (not in 0203) both fire.
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:00104.7") },
+                "AUSHICPR^UPIN is the ADRM's own example pair; got \(okReport.errors.map(\.message))")
+        // BADTYPE fires 0203 membership AND the AUSHICPR => UPIN pair rule.
         let wire = """
         MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
         PRD|AP^Authoring Provider^HL70286|Doe^John\r\
-        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^MEDICARE^BADTYPE\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||12345^AUSHICPR^BADTYPE\r\
         PID|1||X^^^F^MR\r\
         OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r\
-        OBX|1|ED|PDF^Display format in PDF^AUSPDI||content|||||F\r
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||src^application^pdf^Base64^AAAA|||||F\r
         """
         let report = Validator(locale: .auLocalisation)
             .validate(try Parser(locale: .auLocalisation).parse(wire))
-        #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.2.1") },
-                "MEDICARE is not in table 0363")
         #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.3.1") },
                 "BADTYPE is not in table 0203")
+        #expect(report.errors.contains { $0.message.contains("HL7au:00104.7.1.4") },
+                "AUSHICPR requires UPIN per the p. 334 matches table")
+        // A vendor-allocated identifier (authority outside 0363, VDI
+        // qualifier) is sanctioned by the ADRM's own examples: silent.
+        let vendor = """
+        MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4\r\
+        PRD|AP^Authoring Provider^HL70286|Doe^John\r\
+        PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||X0012345^Argus^VDI\r\
+        PID|1||X^^^F^MR\r\
+        OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r\
+        OBX|1|ED|PDF^Display format in PDF^AUSPDI||src^application^pdf^Base64^AAAA|||||F\r
+        """
+        let vendorReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(vendor))
+        #expect(!vendorReport.errors.contains { $0.message.contains("HL7au:00104.7") },
+                "vendor authorities skip the (withdrawn) 0363 check and the pair map; got \(vendorReport.errors.map(\.message))")
+    }
+
+    // MARK: - M6-B-8: correspondence maps
+
+    @Test("HL7au:00044.10.1.5/.6 — ED subtype pdf requires type application")
+    func edSubtypeTypeCorrespondence() throws {
+        let bad = try edRpViolations("OBX|1|ED|123^Attachment^LN||src^text^pdf^Base64^AAAA|||||F")
+        #expect(bad.contains { $0.contains("10.1.5") },
+                "pdf subtype with type 'text' must fire the correspondence; got \(bad)")
+        let ok = try edRpViolations("OBX|1|ED|123^Attachment^LN||src^application^pdf^Base64^AAAA|||||F")
+        #expect(ok.isEmpty, "application/pdf is the stated pair; got \(ok)")
+        // Case-insensitivity: the ADRM's own examples use TEXT^RTF.
+        let rtf = try edRpViolations("OBX|1|ED|RTF^Display format in RTF^AUSPDI||src^TEXT^RTF^Base64^AAAA|||||F")
+        #expect(rtf.isEmpty, "TEXT^RTF is a sanctioned example casing; got \(rtf)")
+    }
+
+    @Test("HL7au:000008.1.3 — OBX-2 must match the display format")
+    func obx2DisplayFormatCorrespondence() throws {
+        // HTML display carried as FT: the table says ED.
+        let wire = TestWires.oru(
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBX|1|FT|HTML^Display format in HTML^AUSPDI||<div>x</div>|||||F"
+        )
+        let report = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(wire))
+        #expect(report.errors.contains { $0.message.contains("HL7au:000008.1.3") },
+                "HTML display with OBX-2 = FT must fire; got \(report.errors.map(\.message))")
+        // TXT display as FT is the stated pair: silent.
+        let ok = TestWires.oru(
+            "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|GLU^Glucose^L||||||||||||||||||||LAB",
+            "OBX|1|FT|TXT^Display format in Text^AUSPDI||plain text|||||F"
+        )
+        let okReport = Validator(locale: .auLocalisation)
+            .validate(try Parser(locale: .auLocalisation).parse(ok))
+        #expect(!okReport.errors.contains { $0.message.contains("HL7au:000008.1.3") },
+                "TXT => FT is the stated pair; got \(okReport.errors.map(\.message))")
     }
 
     // MARK: - M6-B-6: the L1/L2 legs via the MSH-12.3.1 profile discriminator
@@ -1985,7 +2038,7 @@ struct LocaleAUProfileTests {
     private func refWire(profileID: String, obx: String) -> String {
         "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12|MSG00001|P|2.4^AUS&Australia&ISO3166_1^\(profileID)&&L\r"
             + "PRD|AP^Authoring Provider^HL70286|Doe^John\r"
-            + "PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^PRES\r"
+            + "PRD|IR^Intended Recipient^HL70286|Smith^Alice|||||049960CT^AUSHICPR^UPIN\r"
             + "PID|1||X^^^F^MR\r"
             + "OBR|1|P1^H^1.2.36.1^ISO|F1^L^1.2.36.2^ISO|REFER^Referral^L||||||||||||||||||||PHY\r"
             + obx + "\r"

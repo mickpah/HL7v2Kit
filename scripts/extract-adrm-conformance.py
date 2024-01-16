@@ -109,13 +109,15 @@ SHIPPED = {
     # M6-B-2 — Z-segment prohibition via the Z* counted-segment prefix.
     'HL7au:000023.1',
     # M6-B-4 — code-table membership via the HL7CodeTables seed.
-    'HL7au:000032', 'HL7au:00104.7.2.1', 'HL7au:00104.7.3.1',
+    'HL7au:000032', 'HL7au:00104.7.3.1',
     # M6-B-5 — XCN table membership via the composite value-set track.
     'HL7au:00044.7.3', 'HL7au:00044.7.4',
     # M6-B-6 — the L1/L2 legs via the MSH-12.3.1 profile discriminator
     # (the ADRM declares the adhered profile in MSH-12.3; the earlier
     # "MSH-21" note was a misidentification).
     'HL7au:000021', 'HL7au:000008.3.1',
+    # M6-B-8 — OBX-2 must match the OBX-3.1 display format (p. 247 table).
+    'HL7au:000008.1.3',
     # M6-B-7 — ED/RP required components, reachable since the composite
     # dispatch resolves OBX-5's effective datatype from OBX-2.
     'HL7au:00044.10.1.1', 'HL7au:00044.10.1.2', 'HL7au:00044.10.1.3',
@@ -137,6 +139,16 @@ PARTIAL = {
                     'a wholly-Z message code never satisfies any '
                     'message-type gate, so that half is undecidable inside '
                     'this rule shape',
+    'HL7au:00044.10.1.5': 'ED subtype => type enforced for spec-stated pairs '
+                          '(ADRM §3.20.5 + example annotations); arbitrary IANA '
+                          'subtypes skip, fail-safe',
+    'HL7au:00044.10.1.6': 'ED subtype => type enforced for the 0291 subtypes '
+                          'whose 0191 main type §3.20.5 states; unstated ones skip',
+    'HL7au:00044.11.1.5': 'RP subtype => type, as 00044.10.1.5',
+    'HL7au:00044.11.1.6': 'RP subtype => type, as 00044.10.1.6',
+    'HL7au:00104.7.1.4': 'authority => qualifier pairs enforced for the closed AU '
+                         'authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor '
+                         'authorities are open-ended examples and skip',
     'HL7au:000032.2': 'OBR-24 presence + table 0074 membership enforced on '
                       'Referrals; the "appropriate for the content in the '
                       'OBR/OBX group" half is receiver-judgement over '
@@ -173,7 +185,12 @@ BASE = {
 # pathology subset. A bare ORU gate would over-fire on spec-compliant
 # imaging results (req #4); an invented OBR-24 subset would not be
 # defensible against spec text (req #2).
-REGISTERED = {'HL7au:000001', 'HL7au:00044.2',
+# 00104.7.2.1 (M6-B-8 correction): table 0363 is USER-defined and the
+# ADRM's own PRD-7 matches table (p. 334) uses vendor authorities
+# outside it (Medical-Objects, Argus) — a closed-set membership check
+# misfires on the spec's own examples (req #4). Withdrawn from the
+# profile; registered.
+REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
               'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7',
               'HL7au:00050.1.5'}
 
@@ -196,20 +213,14 @@ EXTEND = {
                          'from the shipped LOINC rule (HL7au:00044.4.4)',
     'HL7au:000034.2':    'primary-before-local coding-system ordering',
     'HL7au:000034.3':    'primary-before-local coding-system ordering',
-    'HL7au:000008.1.3':  'OBX-2 ⇔ OBX-3.1 value-correspondence map',
     'HL7au:000008.1.5':  'intra-group segment ordering',
     'HL7au:000008.3.2':  'relational group cardinality (RTF present ⇒ '
                          'HTML/PDF/TXT sibling) plus content equality — '
                          'neither expressible',
     'HL7au:00044.8.1':   'TS datatype-level validation (timezone offset present)',
-    'HL7au:00044.10.1.5': 'ED subtype ⇔ type MIME correspondence map',
-    'HL7au:00044.10.1.6': 'ED subtype ⇔ type HL7 table 0291/0191 correspondence map',
-    'HL7au:00044.11.1.5': 'RP subtype ⇔ type MIME correspondence map',
-    'HL7au:00044.11.1.6': 'RP subtype ⇔ type HL7 table 0291/0191 correspondence map',
     'HL7au:00044.6.7':   'same-concept assertion across coding systems — the CWE '
                          'twin of the registered HL7au:00044.4.7 / .5.7',
     'HL7au:00100.1':     'group ordering within a message',
-    'HL7au:00104.7.1.4': 'PRD-7 component-triple correspondence table',
     'HL7au:000022.3':    'batch-scope cardinality (Validator is message-scoped)',
     'HL7au:000022.1':    'batch-scope acknowledgement mode',
     # M6-O7: ED and RP never appear as a field's declared dataType on any

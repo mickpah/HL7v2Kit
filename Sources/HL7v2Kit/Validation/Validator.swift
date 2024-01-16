@@ -688,6 +688,75 @@ public struct Validator: Sendable {
                     into: &issues
                 )
             }
+            // Track 6: per-repetition key⇒value correspondences (M6-B-8).
+            checkCorrespondences(
+                composite.componentCorrespondences,
+                repetition: repetition,
+                dataTypeLabel: effectiveDataType,
+                segment: segment,
+                segmentArrayIndex: segmentArrayIndex,
+                message: message,
+                segmentID: segmentID,
+                occurrence: segmentIndex,
+                fieldIndex: fieldGrammar.index,
+                profile: profile,
+                issues: &issues
+            )
+        }
+    }
+
+    /// M6-B-8: evaluate key⇒value correspondence rules against one
+    /// repetition. Keys the map does not state SKIP (fail-safe — the
+    /// source tables enumerate correspondences for named keys only);
+    /// an EMPTY value component skips too (presence belongs to the
+    /// required-component / membership rules, and firing here as well
+    /// would double-report). Case-insensitive on both sides: the
+    /// ADRM's own examples mix `TEXT^RTF` and `text^html`.
+    private func checkCorrespondences(
+        _ rules: [ComponentCorrespondence],
+        repetition: Repetition,
+        dataTypeLabel: String,
+        segment: Segment,
+        segmentArrayIndex: Int,
+        message: Message,
+        segmentID: String,
+        occurrence: Int,
+        fieldIndex: Int,
+        profile: Profile,
+        issues: inout [ValidationIssue]
+    ) {
+        for rule in rules {
+            if let gate = rule.condition, !gate.isEmpty {
+                guard conditionTriggers(
+                    gate,
+                    in: segment,
+                    segmentIndex: segmentArrayIndex,
+                    message: message,
+                    currentSegmentID: segmentID
+                ) else { continue }
+            }
+            let key = valueSetScalarValue(
+                in: repetition, component: rule.keyComponent, subcomponent: nil)
+            guard !key.isEmpty, let allowed = rule.map[key.lowercased()] else { continue }
+            let value = valueSetScalarValue(
+                in: repetition, component: rule.valueComponent, subcomponent: nil)
+            guard !value.isEmpty else { continue }
+            guard !allowed.contains(where: { $0.caseInsensitiveCompare(value) == .orderedSame })
+            else { continue }
+            let location = IssueLocation(
+                segmentID: segmentID,
+                segmentIndex: occurrence,
+                fieldIndex: fieldIndex,
+                componentIndex: rule.valueComponent
+            )
+            let citation = rule.specCitation
+                ?? "\(profile.locale.rawValue):\(dataTypeLabel).\(rule.keyComponent)=>\(rule.valueComponent)"
+            appendProfileIssue(
+                citation: citation,
+                location: location,
+                message: "AU profile correspondence rule violated at \(location.pathDescription): \(dataTypeLabel)-\(rule.keyComponent) \"\(key)\" requires \(dataTypeLabel)-\(rule.valueComponent) in [\(allowed.joined(separator: ", "))] but got \"\(value)\" (\(citation))",
+                into: &issues
+            )
         }
     }
 
@@ -793,6 +862,20 @@ public struct Validator: Sendable {
                     into: &issues
                 )
             }
+            // Track 3 (M6-B-8): per-repetition key⇒value correspondences.
+            checkCorrespondences(
+                override.componentCorrespondences,
+                repetition: repetition,
+                dataTypeLabel: "\(segmentID)-\(fieldGrammar.index)",
+                segment: segment,
+                segmentArrayIndex: segmentArrayIndex,
+                message: message,
+                segmentID: segmentID,
+                occurrence: occurrence,
+                fieldIndex: fieldGrammar.index,
+                profile: profile,
+                issues: &issues
+            )
         }
     }
 
