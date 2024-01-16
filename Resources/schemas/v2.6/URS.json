@@ -1,0 +1,16 @@
+{
+  "segmentID": "URS",
+  "version": "2.6",
+  "description": "Unsolicited Selection",
+  "fields": [
+    { "index": 1, "swiftName": "ruWhereSubjectDefinition", "name": "R/U Where Subject Definition", "dataType": "ST", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "ruWhenDataStartDateTime", "name": "R/U When Data Start Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "ruWhenDataEndDateTime", "name": "R/U When Data End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "ruWhatUserQualifier", "name": "R/U What User Qualifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "ruOtherResultsSubjectDefinition", "name": "R/U Other Results Subject Definition", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "ruWhichDateTimeQualifier", "name": "R/U Which Date/Time Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "ruWhichDateTimeStatusQualifier", "name": "R/U Which Date/Time Status Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "ruDateTimeSelectionQualifier", "name": "R/U Date/Time Selection Qualifier", "dataType": "ID", "optionality": "O", "repeatability": "*" },
+    { "index": 9, "swiftName": "ruQuantityTimingQualifier", "name": "R/U Quantity/Timing Qualifier", "dataType": "TQ", "optionality": "B", "repeatability": "1" }
+  ]
+}

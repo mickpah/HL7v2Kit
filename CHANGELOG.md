@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **v3 cycle 2 — deferred-tier batch A: CH02 envelopes + CH05 queries on
+  v2.6 / v2.8.2.** Sixteen schema instances of already-modelled segments,
+  extractor-seeded from each version's own chapters and `--verify` PASS:
+  `BHS/FHS/BTS/FTS/DSC` (both versions), `DSP/QRI` (both), `URD/URS`
+  (v2.6 only — **withdrawn from v2.8.2**, whose CH05 carries no attribute
+  table for them). Divergences pinned: BHS/FHS grow 12 → 14 (batch/file
+  sending + receiving network address, `HD`); `URD-4` rides the v2.6
+  CE → CWE wave. 737 schemas, 726 depth-exact, audit fully clean; the
+  never-authored backlog is unchanged (v2.6 24 / v2.8.2 38 — these were
+  deferred instances of modelled segments).
+
 - **v3 cycle 1 — the v2.5-only quartet: `CER` / `IPC` / `OVR` / `SFT`.** The last
   never-authored segments on any AU-priority version, authored on v2.5.1 from
   their own attribute tables (CH15 / CH04 / CH02 / CH02; 31 + 9 + 5 + 6 fields,

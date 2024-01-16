@@ -1982,4 +1982,32 @@ struct TypedSegmentTests {
         #expect(message["IPC-1.1"] == "ACC1")
         #expect(ipc.scheduledAETitle == nil)                    // absent optional tail
     }
+
+    // v3 cycle 2 (deferred-tier batch A): CH02 envelopes + CH05 queries on
+    // v2.6/v2.8.2 — the first bite of the owner-deferred backlog. BHS/FHS grow
+    // 12 → 14 (batch/file sending+receiving network address, HD); URD-4 rides
+    // the v2.6 CE→CWE wave; URD/URS are withdrawn from v2.8.2 entirely
+    // (present in v2.6, no attribute table in the v2.8.2 CH05).
+    @Test("v3 cycle 2: deferred CH02/CH05 on v2.6 + v2.8.2 — depths and divergences")
+    func v3Cycle2DeferredEnvelopesQueries() {
+        for t in [SegmentGrammarTable.v2_6, SegmentGrammarTable.v2_8_2] {
+            #expect(t["BHS"]?.fields.count == 14)
+            #expect(t["FHS"]?.fields.count == 14)
+            #expect(t["BTS"]?.fields.count == 3)
+            #expect(t["FTS"]?.fields.count == 2)
+            #expect(t["DSC"]?.fields.count == 2)
+            #expect(t["DSP"]?.fields.count == 5)
+            #expect(t["QRI"]?.fields.count == 3)
+            #expect(t["BHS"]?.field(13)?.dataType == "HD")   // v2.6+ addition
+            #expect(t["BHS"]?.field(14)?.dataType == "HD")
+        }
+        #expect(SegmentGrammarTable.v2_5_1["BHS"]?.fields.count == 12)
+        #expect(SegmentGrammarTable.v2_6["URD"]?.fields.count == 7)
+        #expect(SegmentGrammarTable.v2_6["URS"]?.fields.count == 9)
+        #expect(SegmentGrammarTable.v2_5_1["URD"]?.field(4)?.dataType == "CE")
+        #expect(SegmentGrammarTable.v2_6["URD"]?.field(4)?.dataType == "CWE")
+        // Withdrawn from v2.8.2 — no grammar entry there.
+        #expect(SegmentGrammarTable.v2_8_2["URD"] == nil)
+        #expect(SegmentGrammarTable.v2_8_2["URS"] == nil)
+    }
 }

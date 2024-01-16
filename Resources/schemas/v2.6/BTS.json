@@ -1,0 +1,10 @@
+{
+  "segmentID": "BTS",
+  "version": "2.6",
+  "description": "Batch Trailer",
+  "fields": [
+    { "index": 1, "swiftName": "batchMessageCount", "name": "Batch Message Count", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "batchComment", "name": "Batch Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "batchTotals", "name": "Batch Totals", "dataType": "NM", "optionality": "O", "repeatability": "*" }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "segmentID": "FHS",
+  "version": "2.6",
+  "description": "File Header",
+  "fields": [
+    { "index": 1, "swiftName": "fileFieldSeparator", "name": "File Field Separator", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "fileEncodingCharacters", "name": "File Encoding Characters", "dataType": "ST", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "fileSendingApplication", "name": "File Sending Application", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "fileSendingFacility", "name": "File Sending Facility", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "fileReceivingApplication", "name": "File Receiving Application", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "fileReceivingFacility", "name": "File Receiving Facility", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "fileCreationDateTime", "name": "File Creation Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "fileSecurity", "name": "File Security", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "fileNameId", "name": "File Name/ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "fileHeaderComment", "name": "File Header Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "fileControlId", "name": "File Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "referenceFileControlId", "name": "Reference File Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "fileSendingNetworkAddress", "name": "File Sending Network Address", "dataType": "HD", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "fileReceivingNetworkAddress", "name": "File Receiving Network Address", "dataType": "HD", "optionality": "O", "repeatability": "1" }
+  ]
+}

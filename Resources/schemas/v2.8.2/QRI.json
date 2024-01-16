@@ -1,0 +1,10 @@
+{
+  "segmentID": "QRI",
+  "version": "2.8.2",
+  "description": "Query Response Instance",
+  "fields": [
+    { "index": 1, "swiftName": "candidateConfidence", "name": "Candidate Confidence", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "matchReasonCode", "name": "Match Reason Code", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "algorithmDescriptor", "name": "Algorithm Descriptor", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+  ]
+}
