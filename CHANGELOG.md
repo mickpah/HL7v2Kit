@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M7-P4 — the normative-appendices pass; M7 complete.** Appendices
+  8–10 swept (63 candidates, all triaged in the sweep doc). Shipped
+  `ADRM-prose:P-6`: the VMR header OBX pins (Appendix 9 p. 490) —
+  OBX-2 must be RP and OBX-5 must be the fixed
+  `HL7V2-VMR.v1^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^TX^Octet-stream`
+  literal, gated on the header's own discriminator
+  (`messageCode = REF AND OBX-3.1 = 74028-2`), pinned per
+  component/subcomponent into the existing OBX-2/OBX-5 overrides.
+  Registered: the VMR OBX-4 sub-ID hierarchy + implementation table
+  (needs tree validation + the table as a modelled artefact), and
+  Appendix 10's directory-consistency rules (external-directory state,
+  not message-decidable). Suite 607 tests, 597 green. **M7 total:
+  seven prose-only rules shipped (P-1..P-6), one model capability
+  (escape prohibitions), every non-shippable finding registered with
+  its reason.**
+
 - **M7-P3 — the escape-sequence prohibition track (ADRM-prose:P-4).**
   New `EscapeProhibition` axis on `Profile`: the AU profile prohibits
   the `\X...\` (hexadecimal, §3.1.1.5), `\C...\` and `\M...\`

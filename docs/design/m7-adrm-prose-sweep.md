@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Started | 2026-09-16 (M7-P1) |
-| Status | **P1 (measurement + triage) complete; P2 + P3 SHIPPED (2026-09-16)** — all six ship candidates (P-1, P-2, P-3, P-4, P-5a, P-5b) are live in the profile with `ADRM-prose:P-n` citations. Remaining: the normative-appendices pass (M7-P4, appendices 8–10). |
+| Status | **M7 COMPLETE (2026-09-16).** P1 body sweep + P2/P3 shipped six findings; P4 swept the normative appendices 8–10 (63 candidates, triage below) and shipped P-6 (the VMR header pins). All seven decidable prose findings are live as `ADRM-prose:P-n` rules; everything else is registered with its reason. |
 | Method | `scripts/sweep-adrm-prose.py` over `/tmp/adrm2021.txt` (pdftotext of the ADRM; re-extract per session) |
 | Predecessor | `m6-adrm-2021-localisation-audit.md` — the Appendix 5 register work. This sweep covers what Appendix 5 explicitly does not: narrowings stated only in chapter prose. |
 
@@ -83,13 +83,18 @@ is this point's body text) · PID-35/37 conditionality (base grammar conditions)
 UPIN/0203 accommodation (M6-B-8) · LOINC-first triplet ordering (00044.4.4/000034) ·
 NTE prohibition (000023) · Z-segment prohibition (000023.1).
 
-## Follow-on scope (not yet swept)
+## The normative-appendices pass (M7-P4, complete)
 
-- **Normative appendices 8 (Simplified REF profile), 9 (HL7v2 VMR), 10 (PD addressing)**
-  — excluded from the body scan range. Appendix 8's points largely surface in Appendix 5
-  (the L1/L2 legs shipped in M6-B-6); 9 and 10 need their own pass (M7-P4).
-- Appendix 2 (rendering) confirmed receiver-scope; Appendix 3 (common errors) is
-  informative guidance.
+Same scan over pdftotext pages 482–548 (appendices 8–10): 63 candidates, all read.
+
+| Appendix | Outcome |
+|---|---|
+| **8 — Simplified REF profile** (pp. 482–489) | The L1/L2 display-segment requirements are the already-shipped `HL7au:000008.3.1` legs (M6-B-6). "If atomic allergy information is included, it must be represented in the AL1 segments" is definitional (allergy content is not detectable outside AL1); the sender-workflow rules (copy OBR/OBX groups from source messages) are cross-message; receiver display/filing rules are receiver-scope. Nothing new ships. |
+| **9 — HL7v2 VMR** (pp. 490–527) | **P-6 SHIPPED:** the VMR header OBX pins — "This header OBX must have a OBX-2 Datatype field value of 'RP'" and "OBX-5 must be valued as 'HL7V2-VMR.v1^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^TX^Octet-stream'" (p. 490), gated on the header's own discriminator (`messageCode = REF AND OBX-3.1 = 74028-2` — "OBX-3 field must have the value 74028-2^Report template ID^LN"). Full literal pinned per component/subcomponent into the existing OBX-2/OBX-5 overrides (the Validator honours ONE FieldOverride per field — first match — so pins merge rather than adding parallel overrides). **Registered:** the OBX-4 dotted-decimal sub-ID hierarchy rules (pp. 490, 515 — prefixing, repeat indices, "must not share the same root" for non-VMR observations) need sub-ID tree validation plus the full VMR implementation table (pp. 492–515) as a modelled artefact — a code-table-registry-class capability, deferred with the general registry. |
+| **10 — PD addressing** (pp. 528–548) | Every rule is "values must be copied from / match the directory" (FHIR PractitionerRole / Endpoint / HealthcareService resources) — consistency with an external directory, not message-decidable. The two message-decidable statements it contains (single AP / single IR in PRD-1, p. 537) are the already-shipped `HL7au:00104.1.1/.2.1`. "PRD-2 and PRD-7 must be populated for all PRD segments" is scoped to "when using the Australian Profile for Provider Directory Services", which is a transport/directory arrangement with no wire declaration — gate undecidable, registered. |
+
+Appendix 2 (rendering) confirmed receiver-scope; Appendix 3 (common errors) is
+informative guidance; Appendix 5 is the M6 register's territory.
 
 ## Standing rule
 

@@ -512,6 +512,54 @@ extension Profile {
             FieldOverride(
                 segmentID: "OBX",
                 fieldIndex: 5,
+                componentValueSets: [
+                    // M7-P4 / ADRM-prose:P-6 — the VMR header OBX
+                    // (Appendix 9, p. 490): "OBX-5 must be valued as
+                    // 'HL7V2-VMR.v1^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^
+                    // TX^Octet-stream'" — the full RP literal, pinned
+                    // per component/subcomponent like the 000040.3
+                    // literal pins. Gated on the header's own OBX-3
+                    // discriminator (74028-2, Report template ID).
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["HL7V2-VMR.v1"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.1 (pointer) must be \"HL7V2-VMR.v1\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 1,
+                        allowedValues: ["HL7V2 VMR"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.1 (application namespace) must be \"HL7V2 VMR\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 2,
+                        allowedValues: ["99A-9AAC5A649D18B6F2"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.2 (universal ID) must be \"99A-9AAC5A649D18B6F2\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                    ComponentValueSet(
+                        component: 2,
+                        subcomponent: 3,
+                        allowedValues: ["L"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.2.3 (universal ID type) must be \"L\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["TX"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.3 (type of data) must be \"TX\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                    ComponentValueSet(
+                        component: 4,
+                        allowedValues: ["Octet-stream"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — VMR header OBX-5.4 (data subtype) must be \"Octet-stream\"; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                ],
                 componentCorrespondences: [
                     ComponentCorrespondence(
                         keyComponent: 6,
@@ -637,6 +685,18 @@ extension Profile {
                         allowedValues: ["FT"],
                         condition: "messageCode = ORU AND OBX-3.3 = AUSPDI AND OBX-3.1 = PIT",
                         specCitation: "HL7au:000008.1.3 — a PIT display segment's OBX-2 must be FT; AU ADRM-2021 Display Format codes p. 247"
+                    ),
+                    // M7-P4 / ADRM-prose:P-6 — the VMR header OBX
+                    // (Appendix 9, p. 490): "This header OBX must have
+                    // a OBX-2 Datatype field value of 'RP'". The header
+                    // is identified by its own OBX-3 discriminator
+                    // ("OBX-3 field must have the value
+                    // 74028-2^Report template ID^LN").
+                    ComponentValueSet(
+                        component: 1,
+                        allowedValues: ["RP"],
+                        condition: "messageCode = REF AND OBX-3.1 = 74028-2",
+                        specCitation: "ADRM-prose:P-6 — the VMR header OBX (OBX-3.1 = 74028-2) must have OBX-2 = RP; AU ADRM-2021 Appendix 9 p. 490"
                     ),
                 ],
                 specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"

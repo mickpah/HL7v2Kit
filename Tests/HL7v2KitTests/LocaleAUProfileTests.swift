@@ -2222,6 +2222,32 @@ struct LocaleAUProfileTests {
         #expect(try prose(adt, "ADRM-prose:P-4").isEmpty)
     }
 
+    @Test("ADRM-prose:P-6 — the VMR header OBX is pinned to RP and the fixed OBX-5 literal")
+    func vmrHeaderPins() throws {
+        func ref(_ obx: String) -> String {
+            "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|MSG1|P|2.4\r"
+                + "PID|1||X^^^F^MR\r"
+                + obx + "\r"
+        }
+        let conformant = ref("OBX|1|RP|74028-2^Report template ID^LN|1|HL7V2-VMR.v1^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^TX^Octet-stream||||||F")
+        #expect(try prose(conformant, "ADRM-prose:P-6").isEmpty,
+                "the ADRM's own header example must be silent")
+        // Wrong OBX-2 on the header fires the RP pin.
+        let wrongType = ref("OBX|1|TX|74028-2^Report template ID^LN|1|HL7V2-VMR.v1^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^TX^Octet-stream||||||F")
+        #expect(try prose(wrongType, "ADRM-prose:P-6").count == 1)
+        // Wrong template pointer fires the OBX-5.1 pin.
+        let wrongPointer = ref("OBX|1|RP|74028-2^Report template ID^LN|1|OTHER-TEMPLATE^HL7V2 VMR&99A-9AAC5A649D18B6F2&L^TX^Octet-stream||||||F")
+        #expect(try prose(wrongPointer, "ADRM-prose:P-6").count == 1)
+        // A non-header OBX (different OBX-3) is outside the gate.
+        let atomic = ref("OBX|1|NM|14749-6^Glucose^LN||5.4|mmol/L^mmol/L^UCUM|||||F")
+        #expect(try prose(atomic, "ADRM-prose:P-6").isEmpty)
+        // The VMR is referral content — ORU is outside the gate.
+        let oru = "MSH|^~\\&|LAB|FAC|HOSP|FAC|||ORU^R01|MSG1|P|2.5.1\r"
+            + "PID|1||999999^^^HOSP^MR\r"
+            + "OBX|1|TX|74028-2^Report template ID^LN|1|whatever||||||F\r"
+        #expect(try prose(oru, "ADRM-prose:P-6").isEmpty)
+    }
+
     @Test("ADRM-prose:P-5b — read-ack MSH-3.3 must be AUSHICPR or NPIO")
     func readAckSenderScheme() throws {
         func readAck(msh3: String, vid3: String = "HL7AU-OO-ACK-READ-2020006") -> String {
