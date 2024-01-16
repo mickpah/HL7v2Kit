@@ -15,8 +15,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 26 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 51 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 7 | partly enforced — see each row's note for what is not |
+| SHIPPED | 53 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 5 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 5 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
@@ -56,7 +56,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00100.1` | r2 | Senders | Referrals | The current referral summary OBR/OBX group must appear as the first OBR/OBX group in the message. | group ordering within a message |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | PRD-7 component-triple correspondence table |
 
-## SHIPPED (51)
+## SHIPPED (53)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -99,6 +99,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.6.4` |  | Senders | Orders, Results, Referrals | When an <alternate identifier (ST)> component is specified, the <name of alternate coding system> must also be specified. |  |
 | `HL7au:00044.6.5` |  | Senders | Orders, Results, Referrals | If no <alternate identifier (ST)> component is specified then no <name of alternate coding system> must be specified |  |
 | `HL7au:00044.7.2` |  | Senders | Orders, Results, Referrals | XCN <assigning authority (HD)> component must be valued and valid. |  |
+| `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. |  |
+| `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. |  |
 | `HL7au:00044.7.5` |  | Senders | Orders, Results, Referrals | XCN <family name (FN)> :<surname (ST)> sub- component must to be valued. |  |
 | `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
@@ -112,7 +114,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.2.1` |  | Senders | Referrals | PRD-7 <type of ID number (IS)> must be valued from User-defined Table 0363 - Assigning Authority (see page 310). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (7)
+## PARTIAL (5)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -121,8 +123,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000021` |  | Senders | Results, Referrals(L2) | Data type TX must NOT be used as a value in the OBX-2 Value Type field. | OBX-2 = TX prohibition enforced on Results (ORU); the Referrals(L2) leg is not — L2 is identified by an MSH-21 profile ID the model cannot address, and a bare REF gate would over-fire on Level 1 and unprofiled referrals |
 | `HL7au:000024.2` |  | Senders | Orders, Results, Referrals | FHS, BHS, and MSH segments must specify the Components separator character as '^' | enforced on Orders/Results as part of the MSH-2 literal pin; unenforced on Referrals, where .3/.4/.5 do not apply and pinning the whole literal would over-fire — needs character-position addressing (M6-B) |
 | `HL7au:000032.2` |  | Senders | Referrals | In the REF message the field OBR-24 "Diagnostic serv sect ID" must be valued and must have values from HL7 table 0074 - diagnostic service section appropriate for the content in the OBR/ OBX group. | OBR-24 presence + table 0074 membership enforced on Referrals; the "appropriate for the content in the OBR/OBX group" half is receiver-judgement over content and is not machine-checkable |
-| `HL7au:00044.7.3` |  | Senders | Orders, Results, Referrals | XCN <name type code (ID)> component must be valued and valid from HL7 Table 200. | XCN-10 presence enforced; HL7 Table 0200 membership is not — HL7 code tables are not modelled (M6-O6) |
-| `HL7au:00044.7.4` |  | Senders | Orders, Results, Referrals | XCN <identifier type code (ID)> component must be valued with a valid value from HL7 Table 203. | XCN-13 presence enforced; HL7 Table 0203 membership is not — HL7 code tables are not modelled (M6-O6) |
 
 ## BASE (15)
 

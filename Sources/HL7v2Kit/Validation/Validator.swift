@@ -641,6 +641,41 @@ public struct Validator: Sendable {
                     into: &issues
                 )
             }
+            // Track 5: component value sets (allow lists) — M6-B-5.
+            // POPULATED-ONLY: an empty (sub)component does not fire;
+            // presence is track 1's job, and firing here too would
+            // double-report every missing component.
+            for valueSet in composite.componentValueSets {
+                if let gate = valueSet.condition, !gate.isEmpty {
+                    guard conditionTriggers(
+                        gate,
+                        in: segment,
+                        segmentIndex: segmentArrayIndex,
+                        message: message,
+                        currentSegmentID: segmentID
+                    ) else { continue }
+                }
+                let value = valueSetScalarValue(
+                    in: repetition,
+                    component: valueSet.component,
+                    subcomponent: valueSet.subcomponent
+                )
+                guard !value.isEmpty, !valueSet.allowedValues.contains(value) else { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldGrammar.index,
+                    componentIndex: valueSet.component
+                )
+                let citation = valueSet.specCitation
+                    ?? "\(profile.locale.rawValue):\(fieldGrammar.dataType).\(valueSet.component)"
+                appendProfileIssue(
+                    citation: citation,
+                    location: location,
+                    message: "AU profile value-set rule violated at \(location.pathDescription): \(fieldGrammar.dataType)-\(valueSet.component) value \"\(value)\" is not in the allowed set (\(citation))",
+                    into: &issues
+                )
+            }
         }
     }
 

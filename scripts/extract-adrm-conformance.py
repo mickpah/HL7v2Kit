@@ -110,6 +110,8 @@ SHIPPED = {
     'HL7au:000023.1',
     # M6-B-4 — code-table membership via the HL7CodeTables seed.
     'HL7au:000032', 'HL7au:00104.7.2.1', 'HL7au:00104.7.3.1',
+    # M6-B-5 — XCN table membership via the composite value-set track.
+    'HL7au:00044.7.3', 'HL7au:00044.7.4',
 }
 
 # Enforced in part: either only over part of the message-type scope the
@@ -120,10 +122,6 @@ PARTIAL = {
                       'literal pin; unenforced on Referrals, where .3/.4/.5 '
                       'do not apply and pinning the whole literal would '
                       'over-fire — needs character-position addressing (M6-B)',
-    'HL7au:00044.7.3': 'XCN-10 presence enforced; HL7 Table 0200 membership '
-                       'is not — HL7 code tables are not modelled (M6-O6)',
-    'HL7au:00044.7.4': 'XCN-13 presence enforced; HL7 Table 0203 membership '
-                       'is not — HL7 code tables are not modelled (M6-O6)',
     'HL7au:000021': 'OBX-2 = TX prohibition enforced on Results (ORU); the '
                     'Referrals(L2) leg is not — L2 is identified by an '
                     'MSH-21 profile ID the model cannot address, and a bare '

@@ -136,13 +136,26 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// coding system on Orders/Results). v0.13 (ADR-011).
     let valueConditionals: [ComponentValueConditional]
 
+    /// Per-component value-set narrowings (ALLOW lists), the composite
+    /// twin of `FieldOverride.componentValueSets`. M6-B-5 (2026-09-16):
+    /// added so datatype-level table-membership points (HL7au:00044.7.3
+    /// XCN-10 / table 0200, 00044.7.4 XCN-13 / table 0203) can express
+    /// the membership half that held them at PARTIAL.
+    ///
+    /// **Populated-only semantics** — unlike the field-level track, an
+    /// EMPTY component does not fire: presence is `requiredComponents`'
+    /// job here, and firing on empty would double-report every missing
+    /// component as both "must be populated" and "not in the table".
+    let componentValueSets: [ComponentValueSet]
+
     init(
         dataType: String,
         condition: String? = nil,
         requiredComponents: [ComponentRequirement] = [],
         pairRules: [PairConditional] = [],
         componentInequalities: [ComponentInequality] = [],
-        valueConditionals: [ComponentValueConditional] = []
+        valueConditionals: [ComponentValueConditional] = [],
+        componentValueSets: [ComponentValueSet] = []
     ) {
         self.dataType = dataType
         self.condition = condition
@@ -150,6 +163,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         self.pairRules = pairRules
         self.componentInequalities = componentInequalities
         self.valueConditionals = valueConditionals
+        self.componentValueSets = componentValueSets
     }
 }
 

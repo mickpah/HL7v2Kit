@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **M6-B-5 — the composite value-set track; the XCN PARTIALs are now full.**
+  `CompositeOverride` gains `componentValueSets` (allow lists, the datatype
+  twin of the field-level track) with **populated-only semantics** — an
+  empty component is a presence violation (`requiredComponents`), never a
+  membership one, so nothing double-reports. Shipped on it:
+  `HL7au:00044.7.3` (XCN-10 from table 0200) and `00044.7.4` (XCN-13 from
+  table 0203) upgrade from PARTIAL to fully enforced. Register: SHIPPED
+  51 → 53, PARTIAL 7 → 5 — still **78 of the 104 message-decidable rows**,
+  now with two fewer asterisks. M6-O6's remaining scope reduces to the
+  general per-version registry alone.
+
 - **M6-B-4 — the code-table registry seed; four more ADRM points enforced.**
   New internal `HL7CodeTables` holds the tables shipped conformance points
   consume — 0074 (Diagnostic Service Section), 0200 (Name Type), 0203

@@ -524,6 +524,35 @@ struct LocaleAUProfileTests {
         #expect(rules.isEmpty, "ADT is outside the XCN series' scope; got \(rules)")
     }
 
+    // M6-B-5 — the membership halves of .7.3/.7.4, upgraded from PARTIAL
+    // via the composite value-set track over the HL7CodeTables seed.
+
+    @Test("HL7au:00044.7.3/.7.4 — non-table XCN-10/13 values fire membership")
+    func xcnTableMembershipFires() throws {
+        // "Q" is not in table 0200; "BADTYPE" is not in table 0203.
+        let rules = try xcnViolations(
+            "PV1|1|I|||||1234^SMITH^JOHN^^^^^^AUTH^Q^^^BADTYPE")
+        #expect(rules.contains { $0.contains("00044.7.3") && $0.contains("0200") },
+                "XCN-10 = Q must fire 0200 membership; got \(rules)")
+        #expect(rules.contains { $0.contains("00044.7.4") && $0.contains("0203") },
+                "XCN-13 = BADTYPE must fire 0203 membership; got \(rules)")
+    }
+
+    @Test("HL7au:00044.7.3/.7.4 — empty components fire presence only, not membership")
+    func xcnMembershipIsPopulatedOnly() throws {
+        // Bare XCN: the required-component rules fire; the value sets
+        // must NOT double-report the same components as non-members.
+        let wire = "MSH|^~\\&|LAB|FAC|HOSP|FAC|20240101||ORU^R01^ORU_R01|MSG|P|2.4\rPV1|1|I|||||1234\r"
+        let report = Validator(locale: .auLocalisation).validate(
+            try Parser(locale: .auLocalisation).parse(wire))
+        let membership = report.errors.filter {
+            guard case .profileConstraintViolation(let rule) = $0.code else { return false }
+            return rule.contains("HL7au:00044.7") && $0.message.contains("not in the allowed set")
+        }
+        #expect(membership.isEmpty,
+                "empty XCN-10/13 are presence violations only; got \(membership.map(\.message))")
+    }
+
     // MARK: - M6-D4: composite overrides are message-type gated
     //
     // The composite-track twin of M6-D3. Every HL7au:00044.* datatype

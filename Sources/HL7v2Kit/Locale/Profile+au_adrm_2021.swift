@@ -580,11 +580,27 @@ extension Profile {
                     ),
                     ComponentRequirement(
                         component: 10,
-                        specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be valued (HL7 Table 0200 membership not checked — see M6-O6)"
+                        specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be valued"
                     ),
                     ComponentRequirement(
                         component: 13,
-                        specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be valued (HL7 Table 0203 membership not checked — see M6-O6)"
+                        specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be valued"
+                    ),
+                ],
+                // M6-B-5 — the membership halves that held .7.3/.7.4 at
+                // PARTIAL, now expressible via the composite value-set
+                // track over the HL7CodeTables seed. Populated-only:
+                // presence stays the requiredComponents' job above.
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 10,
+                        allowedValues: HL7CodeTables.table0200,
+                        specCitation: "HL7au:00044.7.3 — XCN-10 (name type code) must be a valid value from HL7 Table 0200 (Name Type); AU ADRM-2021 table p. 62"
+                    ),
+                    ComponentValueSet(
+                        component: 13,
+                        allowedValues: HL7CodeTables.table0203,
+                        specCitation: "HL7au:00044.7.4 — XCN-13 (identifier type code) must be a valid value from HL7 Table 0203 (Identifier Type); AU ADRM-2021 table pp. 301-309"
                     ),
                 ]
             ),
