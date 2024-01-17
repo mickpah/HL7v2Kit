@@ -403,119 +403,171 @@ public struct Validator: Sendable {
         issues: inout [ValidationIssue]
     ) {
         for fieldGrammar in grammar.fields {
-            let location = IssueLocation(
+            checkField(
+                fieldGrammar,
+                at: fieldGrammar.index,
+                requiredApplies: true,
+                segment: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                grammar: grammar,
+                occurrence: occurrence,
+                profile: profile,
+                issues: &issues
+            )
+            // Track B: a SEQ 1-n field recurs by POSITION. Apply the same
+            // grammar to every later wire column. Later columns are
+            // individually optional (the spec bounds the count, never a
+            // minimum), so the required check applies to column 1 only.
+            guard fieldGrammar.variableColumns else { continue }
+            let lastPosition = segment.fields.count - 1   // fields[0] is the segment ID
+            if lastPosition > fieldGrammar.index {
+                for position in (fieldGrammar.index + 1)...lastPosition {
+                    checkField(
+                        fieldGrammar,
+                        at: position,
+                        requiredApplies: false,
+                        segment: segment,
+                        segmentIndex: segmentIndex,
+                        message: message,
+                        grammar: grammar,
+                        occurrence: occurrence,
+                        profile: profile,
+                        issues: &issues
+                    )
+                }
+            }
+        }
+    }
+
+    /// One field position's base-spec checks. `position` is the wire
+    /// index the checks read and report; it equals `fieldGrammar.index`
+    /// except for `variableColumns` grammars (Track B), where the same
+    /// grammar is re-applied at each later column.
+    private func checkField(
+        _ fieldGrammar: FieldGrammar,
+        at position: Int,
+        requiredApplies: Bool,
+        segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        grammar: SegmentGrammar,
+        occurrence: Int,
+        profile: Profile?,
+        issues: inout [ValidationIssue]
+    ) {
+        let location = IssueLocation(
+            segmentID: grammar.segmentID,
+            segmentIndex: occurrence,
+            fieldIndex: position
+        )
+
+        let field = segment.field(position)
+        let isPopulated = field.map { isFieldPopulated($0) } ?? false
+
+        if options.checkRequiredFields, requiredApplies {
+            checkRequired(
+                fieldGrammar,
+                isPopulated: isPopulated,
+                location: location,
+                issues: &issues
+            )
+        }
+
+        if options.checkConditionalFields {
+            checkConditional(
+                fieldGrammar,
+                segment: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                isPopulated: isPopulated,
+                location: location,
+                issues: &issues
+            )
+            // M8-D: the inverse case — populated while prohibited.
+            checkProhibition(
+                fieldGrammar,
+                segment: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                isPopulated: isPopulated,
+                location: location,
+                issues: &issues
+            )
+        }
+
+        if options.checkComponentGrammar, let field, isPopulated {
+            checkComponents(
+                fieldGrammar,
+                field: field,
                 segmentID: grammar.segmentID,
                 segmentIndex: occurrence,
-                fieldIndex: fieldGrammar.index
+                issues: &issues
             )
+        }
 
-            let field = segment.field(fieldGrammar.index)
-            let isPopulated = field.map { isFieldPopulated($0) } ?? false
+        if options.warnDeprecatedFields, isPopulated {
+            checkDeprecation(
+                fieldGrammar,
+                location: location,
+                issues: &issues
+            )
+        }
 
-            if options.checkRequiredFields {
-                checkRequired(
-                    fieldGrammar,
-                    isPopulated: isPopulated,
-                    location: location,
-                    issues: &issues
-                )
-            }
+        if options.checkCardinality, let field, isPopulated {
+            checkCardinality(
+                fieldGrammar,
+                field: field,
+                location: location,
+                issues: &issues
+            )
+        }
 
-            if options.checkConditionalFields {
-                checkConditional(
-                    fieldGrammar,
-                    segment: segment,
-                    segmentIndex: segmentIndex,
-                    message: message,
-                    isPopulated: isPopulated,
-                    location: location,
-                    issues: &issues
-                )
-                // M8-D: the inverse case — populated while prohibited.
-                checkProhibition(
-                    fieldGrammar,
-                    segment: segment,
-                    segmentIndex: segmentIndex,
-                    message: message,
-                    isPopulated: isPopulated,
-                    location: location,
-                    issues: &issues
-                )
-            }
-
-            if options.checkComponentGrammar, let field, isPopulated {
-                checkComponents(
-                    fieldGrammar,
-                    field: field,
-                    segmentID: grammar.segmentID,
-                    segmentIndex: occurrence,
-                    issues: &issues
-                )
-            }
-
-            if options.warnDeprecatedFields, isPopulated {
-                checkDeprecation(
-                    fieldGrammar,
-                    location: location,
-                    issues: &issues
-                )
-            }
-
-            if options.checkCardinality, let field, isPopulated {
-                checkCardinality(
-                    fieldGrammar,
-                    field: field,
-                    location: location,
-                    issues: &issues
-                )
-            }
-
-            // v0.5-S5-B-1: layer the loaded profile's field overrides
-            // on top of the base-spec checks. Only fires when locale
-            // is non-international (profile != nil) AND the field has
-            // an override AND the field is actually populated.
-            if let profile, let field, isPopulated {
-                checkProfileFieldOverrides(
-                    profile: profile,
-                    fieldGrammar: fieldGrammar,
-                    field: field,
-                    segment: segment,
-                    segmentArrayIndex: segmentIndex,
-                    message: message,
-                    segmentID: grammar.segmentID,
-                    occurrence: occurrence,
-                    issues: &issues
-                )
-                // v0.5-S5-B-2: datatype-level composite overrides.
-                checkProfileCompositeOverrides(
-                    profile: profile,
-                    fieldGrammar: fieldGrammar,
-                    field: field,
-                    segment: segment,
-                    segmentArrayIndex: segmentIndex,
-                    message: message,
-                    segmentID: grammar.segmentID,
-                    segmentIndex: occurrence,
-                    issues: &issues
-                )
-            }
-            // v0.5-S5-D-2 (post-S5-D substage): profile usage dispatch.
-            // Fires when the override declares `profileUsage = .required`
-            // and the field is empty. Runs regardless of population
-            // state because the absent case is what this check exists
-            // to detect.
-            if let profile {
-                checkProfileFieldUsage(
-                    profile: profile,
-                    fieldGrammar: fieldGrammar,
-                    isPopulated: isPopulated,
-                    segment: segment,
-                    segmentArrayIndex: segmentIndex,
-                    message: message,
-                    location: location,
-                    issues: &issues
-                )
-            }
+        // v0.5-S5-B-1: layer the loaded profile's field overrides
+        // on top of the base-spec checks. Only fires when locale
+        // is non-international (profile != nil) AND the field has
+        // an override AND the field is actually populated.
+        if let profile, let field, isPopulated {
+            checkProfileFieldOverrides(
+                profile: profile,
+                fieldGrammar: fieldGrammar,
+                field: field,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                segmentID: grammar.segmentID,
+                occurrence: occurrence,
+                issues: &issues
+            )
+            // v0.5-S5-B-2: datatype-level composite overrides.
+            checkProfileCompositeOverrides(
+                profile: profile,
+                fieldGrammar: fieldGrammar,
+                field: field,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                segmentID: grammar.segmentID,
+                segmentIndex: occurrence,
+                issues: &issues
+            )
+        }
+        // v0.5-S5-D-2 (post-S5-D substage): profile usage dispatch.
+        // Fires when the override declares `profileUsage = .required`
+        // and the field is empty. Runs regardless of population
+        // state because the absent case is what this check exists
+        // to detect.
+        if let profile {
+            checkProfileFieldUsage(
+                profile: profile,
+                fieldGrammar: fieldGrammar,
+                isPopulated: isPopulated,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                location: location,
+                issues: &issues
+            )
         }
     }
 
