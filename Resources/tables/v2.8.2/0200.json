@@ -93,10 +93,6 @@
     {
       "code": "U",
       "description": "Unknown"
-    },
-    {
-      "code": "Note:",
-      "description": "The content of Legal Name is country specific. In the US the legal name is the same as the current"
     }
   ]
 }

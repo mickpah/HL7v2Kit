@@ -2,9 +2,9 @@
   "table": "0227",
   "version": "2.6",
   "name": "Manufacturers of Vaccines (code=MVX)",
-  "kind": "User",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, User-defined Table 0227 - Manufacturers of Vaccines (code=MVX)",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0227 - Manufacturers of Vaccines (code=MVX)",
   "entries": [
     {
       "code": "AB",

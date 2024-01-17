@@ -99,8 +99,12 @@
       "description": "Insufficient evidence"
     },
     {
-      "code": "SYN-",
+      "code": "SYN-R",
       "description": "Synergy – resistant"
+    },
+    {
+      "code": "SYN-S",
+      "description": "Synergy – susceptible"
     },
     {
       "code": "VS",

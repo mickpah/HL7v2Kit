@@ -7,12 +7,8 @@
   "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0356 - Alternate Character Set Handling Scheme",
   "entries": [
     {
-      "code": "ISO 2022-",
-      "description": "This standard is titled “Information Technology –"
-    },
-    {
-      "code": "1994",
-      "description": "Character Code Structure and Extension Technique”. ."
+      "code": "ISO 2022-1994",
+      "description": "This standard is titled “Information Technology – Character Code Structure and Extension Technique”. ."
     },
     {
       "code": "2.3",

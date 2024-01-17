@@ -95,10 +95,6 @@
       "description": ""
     },
     {
-      "code": "ENCODEDORDER",
-      "description": ""
-    },
-    {
       "code": "ENCODED_ORDER",
       "description": ""
     },
@@ -115,7 +111,7 @@
       "description": ""
     },
     {
-      "code": "FINANCIAL_COMMON ORDER",
+      "code": "FINANCIAL_COMMON_ORDER",
       "description": ""
     },
     {
@@ -135,15 +131,7 @@
       "description": ""
     },
     {
-      "code": "FINANCIAL_TIMING QUANTITY",
-      "description": ""
-    },
-    {
       "code": "FINANCIAL_TIMING_QUANTITY",
-      "description": ""
-    },
-    {
-      "code": "GENERALRESOURCE",
       "description": ""
     },
     {
@@ -176,10 +164,6 @@
     },
     {
       "code": "INSURANCE",
-      "description": ""
-    },
-    {
-      "code": "LOCATIONRESOURCE",
       "description": ""
     },
     {

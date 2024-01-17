@@ -33,18 +33,22 @@
 // B. Chapter 2C (v2.8.2)
 //    Heading `2.C.2.<n> <number> – <name>`, a Table Metadata block, a caption
 //    `HL7 Table <number> – <name>` / `User-defined Table ...`, then a
-//    `Value  Description [ Comment ]` column header and the rows. Columns are
-//    read at the offsets the header prints, so the Comment column is dropped
-//    without truncating a description that contains wide gaps.
+//    `Value  Description [ Comment ]` column header and the rows. The header
+//    seeds the columns and the rows correct them, because Chapter 2C does not
+//    always align the two. A page footer ends the rows (the header is reprinted
+//    on the next page), so a footnote set below it does not join the table.
 //
 // Tables the index names but the values section never enumerates are emitted
 // with `entries: []` — the registry stays honest about "known but unenumerated"
 // rather than silently omitting the table.
 //
-// Resources/tables/overrides.json is a hand-kept overlay merged into every
-// version's emission for that table number (permitsLocalExtensions / citation /
-// dropCodes). It lives at the root of Resources/tables, which the codegen's
-// tables pass ignores because that pass only enumerates `v*` directories.
+// Resources/tables/overrides.json is a hand-kept overlay, keyed by version and
+// then by table number (kind / permitsLocalExtensions / citation / dropCodes,
+// plus a `note` documenting what was verified). Every entry is version-scoped:
+// an artifact of one version's printing must never be able to silently alter
+// another version's table. The file lives at the root of Resources/tables,
+// which the codegen's tables pass ignores because it only enumerates `v*`
+// directories.
 
 import Foundation
 
@@ -95,19 +99,29 @@ final class Table {
     let number: String
     var name: String
     var kind: String            // "HL7" | "User"
+    /// The spec names an outside authority as the source of the values (v2.6
+    /// prints `undefined`, v2.8.2 `Externally-defined` / `External` /
+    /// `Imported`). The printed rows are then a pointer, never the value set,
+    /// so the table is emitted with `permitsLocalExtensions: true`.
+    var externallyDefined: Bool
     var codes: [String] = []
     var descriptions: [String] = []
-    init(number: String, name: String, kind: String) {
+    init(number: String, name: String, kind: String, externallyDefined: Bool = false) {
         self.number = number
         self.name = name
         self.kind = kind
+        self.externallyDefined = externallyDefined
     }
 }
 
 struct Override {
+    var kind: String?
     var permitsLocalExtensions: Bool?
     var citation: String?
     var dropCodes: [String] = []
+    /// Hand-verified corrections of a value the source PDF misprints exactly
+    /// once, so the separator-variant rule below has no sibling to learn from.
+    var renameCodes: [String: String] = [:]
 }
 
 // MARK: - shared line classification
@@ -130,14 +144,29 @@ let furniture: [RE] = [
 
 func isFurniture(_ s: String) -> Bool { furniture.contains { $0.matches(s) } }
 
-/// The v2.6 index prints a third ownership token, `undefined`, for tables whose
-/// values an external body owns (0227 MVX, 0291 MIME subtypes, 0292 CVX, 0399
-/// ISO 3166, 0834 MIME types). HL7Table.Kind models two owners, and an
-/// externally-owned value set is not an HL7-closed one, so `undefined` maps to
-/// `User` — the kind that never validates as a closed set.
-func normaliseKind(_ token: String) -> String {
-    token.hasPrefix("HL7") ? "HL7" : "User"
+/// The ownership token the spec prints, mapped onto HL7Table.Kind's two owners.
+///
+/// Both layouts print a third class for a table whose values an outside body
+/// maintains: v2.6's index calls it `undefined` (0227 MVX, 0291 MIME subtypes,
+/// 0292 CVX, 0340, 0399 ISO 3166, 0834) and v2.8.2's caption calls it
+/// `Externally-defined` / `External` / `Imported`. HL7 owns the table number
+/// and a site may not invent values for it, so the kind is `HL7`; the printed
+/// rows are a pointer rather than the value set, so the table is also marked
+/// `externallyDefined` and emitted with `permitsLocalExtensions: true`, which
+/// is what stops it ever validating as a closed set.
+func kindOfToken(_ token: String) -> (kind: String, external: Bool) {
+    let t = token.lowercased()
+    if t.hasPrefix("hl7") { return ("HL7", false) }
+    if t.hasPrefix("undef") || t.hasPrefix("extern") || t.hasPrefix("imported") {
+        return ("HL7", true)
+    }
+    return ("User", false)
 }
+
+/// `true` for a Value cell that cannot be a code. A printed value never ends
+/// in a colon: only a `Note:` leading a paragraph the spec sets under the table
+/// does (v2.8.2 0200 and 0301 both print one directly beneath the last row).
+func isNoteLead(_ cell: String) -> Bool { cell.hasSuffix(":") }
 
 /// Rows the spec prints in place of values when a table has none.
 let noValuesPhrase = RE("^(no suggested values|no values defined|no values are defined|needs values)", [.caseInsensitive])
@@ -218,19 +247,19 @@ let reValuesHeader = RE("^\\s*Type\\s+Table\\s+Name\\s+Value\\s+Description")
 struct Row { var table: String; var index: Int; var codeCol: Int; var descCol: Int }
 
 func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String]) {
-    var index: [String: (kind: String, name: String)] = [:]
+    var index: [String: (kind: String, name: String, external: Bool)] = [:]
     var order: [String] = []
     var tables: [String: Table] = [:]
     var notes: [String] = []
 
     var inIndex = false
     var inValues = false
-    var pendingCaption: (kind: String, name: String)? = nil
+    var pendingCaption: (kind: String, name: String, external: Bool)? = nil
     var lastRow: Row? = nil
 
-    func table(_ number: String, kind: String, name: String) -> Table {
+    func table(_ number: String, kind: String, name: String, external: Bool) -> Table {
         if let t = tables[number] { return t }
-        let t = Table(number: number, name: name, kind: kind)
+        let t = Table(number: number, name: name, kind: kind, externallyDefined: external)
         tables[number] = t
         order.append(number)
         return t
@@ -273,7 +302,10 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             let number = padNumber(g[2])
             let name = splitColumns(g[3]).first ?? g[3]
             if number == "0000" { continue }        // v2.6 prints a placeholder "no table" row
-            if index[number] == nil { index[number] = (normaliseKind(g[1]), name) }
+            if index[number] == nil {
+                let k = kindOfToken(g[1])
+                index[number] = (k.kind, name, k.external)
+            }
             continue
         }
         guard inValues else { continue }
@@ -287,17 +319,22 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             if let existing = tables[number] {
                 t = existing
             } else if let idx = index[number] {
-                t = table(number, kind: idx.kind, name: idx.name)
+                t = table(number, kind: idx.kind, name: idx.name, external: idx.external)
             } else if let cap = pendingCaption {
-                t = table(number, kind: cap.kind, name: cap.name)
+                t = table(number, kind: cap.kind, name: cap.name, external: cap.external)
             } else {
-                t = table(number, kind: "User", name: "")
+                t = table(number, kind: "User", name: "", external: false)
                 notes.append("\(number): no caption and no index entry — kind defaulted to User")
             }
             pendingCaption = nil
 
             let cells = splitCells(rest)
             let chunks = cells.map(\.text)
+            if cells.count >= 2, isNoteLead(cells[0].text) {
+                lastRow = nil
+                if report { notes.append("\(number): SKIPPED note row: \(rest)") }
+                continue
+            }
             if cells.count >= 2 {
                 t.codes.append(cells[0].text)
                 t.descriptions.append(cells[1...].map(\.text).joined(separator: " "))
@@ -317,12 +354,14 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 // the spec prints under the table ("or user-defined codes",
                 // "See Chapter 8 ... for values"). Never a code.
                 lastRow = nil
-                if report && !noValuesPhrase.matches(only) {
-                    notes.append("\(number): SKIPPED note row (empty Value column): \(only)")
-                }
+                if report { notes.append("\(number): SKIPPED note row (empty Value column): \(only)") }
                 continue
             }
-            if noValuesPhrase.matches(only) { lastRow = nil; continue }
+            if noValuesPhrase.matches(only) {
+                lastRow = nil
+                if report { notes.append("\(number): SKIPPED no-values marker: \(only)") }
+                continue
+            }
             if let codeCol = lastCodeCol[number], restCol < codeCol - 6 {
                 // Outdented to the left of the Value column: a note, not a row.
                 lastRow = nil
@@ -333,6 +372,18 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 t.codes.append(only)
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
+                continue
+            }
+            // A table that prints no descriptions at all (v2.6 0391 Segment
+            // group) has no description column to split against, so the whole
+            // cell is the code — but only when it is shaped like one. Prose the
+            // PDF bled into the column always carries lower-case words.
+            if established < 0 && only.uppercased() == only
+                && !continuesInValueColumn(after: lineNumber, valueColumn: restCol) {
+                t.codes.append(only)
+                t.descriptions.append("")
+                lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
+                if report { notes.append("\(number): description-less table, whole cell taken as the code: \(only)") }
                 continue
             }
             // Space-separated at the Value column: the code and its description
@@ -362,14 +413,18 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             if let g = reCaptionNumbered.groups(raw) {
                 let number = padNumber(g[2])
                 let name = splitColumns(g[3]).first ?? g[3]
-                _ = table(number, kind: index[number]?.kind ?? normaliseKind(g[1]), name: index[number]?.name ?? name)
+                let k = kindOfToken(g[1])
+                _ = table(number, kind: index[number]?.kind ?? k.kind,
+                          name: index[number]?.name ?? name,
+                          external: index[number]?.external ?? k.external)
                 pendingCaption = nil
                 lastRow = nil
                 continue
             }
             if let g = reCaptionPlain.groups(raw) {
                 let name = splitColumns(g[2]).first ?? g[2]
-                pendingCaption = (normaliseKind(g[1]), name)
+                let k = kindOfToken(g[1])
+                pendingCaption = (k.kind, name, k.external)
                 lastRow = nil
                 continue
             }
@@ -393,10 +448,14 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
 
     // Tables named by the index but never enumerated: emit them empty.
     for (number, meta) in index where tables[number] == nil {
-        _ = table(number, kind: meta.kind, name: meta.name)
+        _ = table(number, kind: meta.kind, name: meta.name, external: meta.external)
     }
     for (number, meta) in index {
-        if let t = tables[number], t.name.isEmpty { t.name = meta.name; t.kind = meta.kind }
+        if let t = tables[number], t.name.isEmpty {
+            t.name = meta.name
+            t.kind = meta.kind
+            t.externallyDefined = meta.external
+        }
     }
     return (tables, notes)
 }
@@ -418,6 +477,14 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
     var descCol = -1
     var commentCol = -1
 
+    func table(_ number: String, name: String, kind: String, external: Bool) -> Table {
+        if let t = tables[number] { return t }
+        let t = Table(number: number, name: name, kind: kind, externallyDefined: external)
+        tables[number] = t
+        order.append(number)
+        return t
+    }
+
     for raw in text.split(separator: "\n", omittingEmptySubsequences: false).map({ clean(String($0)) }) {
         let s = raw.trimmingCharacters(in: .whitespaces)
         if s.isEmpty { continue }
@@ -426,28 +493,28 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
         if let g = reHeading282.groups(raw) {
             let number = g[1]
             let name = g[2].trimmingCharacters(in: .whitespaces)
-            if let existing = tables[number] {
-                current = existing
-            } else {
-                let t = Table(number: number, name: name, kind: "User")
-                tables[number] = t
-                order.append(number)
-                current = t
-            }
+            current = table(number, name: name, kind: "User", external: false)
             inRows = false
             descCol = -1
             commentCol = -1
             continue
         }
         if let g = reCaption282.groups(raw) {
+            // The caption, not the heading, is the reliable identifier: 0399's
+            // heading prints the code system's name (`2.C.2.565 ISO-3166-1`)
+            // instead of a table number, so the caption has to be able to
+            // create the table as well as label it.
             let number = g[2]
-            let kind = g[1].lowercased().hasPrefix("hl7") ? "HL7" : "User"
-            if let t = tables[number] {
-                t.kind = kind
-                if t.name.isEmpty { t.name = g[3].trimmingCharacters(in: .whitespaces) }
-                current = t
-            }
+            let k = kindOfToken(g[1])
+            let t = table(number, name: g[3].trimmingCharacters(in: .whitespaces),
+                          kind: k.kind, external: k.external)
+            t.kind = k.kind
+            t.externallyDefined = k.external
+            if t.name.isEmpty { t.name = g[3].trimmingCharacters(in: .whitespaces) }
+            current = t
             inRows = false
+            descCol = -1
+            commentCol = -1
             continue
         }
         if reMetaHeader282.matches(raw) { inRows = false; continue }
@@ -458,7 +525,11 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             inRows = true
             continue
         }
-        if isFurniture(s) { continue }
+        // A page footer ends the rows. Chapter 2C reprints the column header on
+        // the next page, so nothing is lost — and a footnote printed below the
+        // footer (0200 / 0301 `Note: The content of Legal Name ...`) no longer
+        // lands in the table that happened to precede it.
+        if isFurniture(s) { inRows = false; continue }
         guard inRows, let t = current else { continue }
 
         // Chapter 2C prints the column header once per page and does not always
@@ -479,8 +550,30 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
         }
         if descCol >= 0 && first.offset > descCol + 4 { continue }
 
+        // A code too wide for the Value column wraps onto the next line, which
+        // then looks exactly like a new row. The break is only visible in the
+        // code the spec left dangling: 0356 prints `ISO 2022-` / `1994`, and a
+        // printed code never ends in a separator. Join it back on.
+        if let last = t.codes.last, last.hasSuffix("-") || last.hasSuffix("_") {
+            let i = t.codes.count - 1
+            t.codes[i] += first.text
+            for cell in cells.dropFirst() {
+                if commentCol >= 0 && cell.offset >= commentCol - 4 { continue }
+                t.descriptions[i] += (t.descriptions[i].isEmpty ? "" : " ") + cell.text
+            }
+            if report { notes.append("\(t.number): wrapped code rejoined as \(t.codes[i])") }
+            continue
+        }
+
         if cells.count >= 2 {
-            if noValuesPhrase.matches(first.text) { continue }
+            if noValuesPhrase.matches(first.text) {
+                if report { notes.append("\(t.number): SKIPPED no-values marker: \(first.text)") }
+                continue
+            }
+            if isNoteLead(first.text) {
+                if report { notes.append("\(t.number): SKIPPED note row: \(first.text) \(cells[1].text)") }
+                continue
+            }
             t.codes.append(first.text)
             t.descriptions.append(cells[1].text)
             descCol = cells[1].offset
@@ -488,7 +581,10 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             continue
         }
         // One cell: a bare code, or a note the spec prints across the table.
-        if noValuesPhrase.matches(first.text) { continue }
+        if noValuesPhrase.matches(first.text) || isNoteLead(first.text) {
+            if report { notes.append("\(t.number): SKIPPED note row: \(first.text)") }
+            continue
+        }
         if first.text.contains(" ") {
             if report { notes.append("\(t.number): SKIPPED note row: \(first.text)") }
             continue
@@ -521,28 +617,80 @@ func jsonString(_ s: String) -> String {
     return out + "\""
 }
 
-func render(_ t: Table, version: String, appendix: Bool, override: Override?) -> String {
-    let kindLabel = t.kind == "HL7" ? "HL7 Table" : "User-defined Table"
+/// A code with spaces and underscores removed. The printed tables sometimes
+/// carry the same value twice with different separators — v2.6 0391 prints
+/// `ENCODED` / `ORDER` (wrapped at the space) two rows above `ENCODED_ORD` /
+/// `ER` (wrapped mid-word), and both name the same segment group.
+func separatorKey(_ code: String) -> String {
+    code.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "_", with: "")
+}
+
+/// Drop the codes the overlay removes, exact reprints, and separator-variant
+/// twins. Returns the surviving (code, description) pairs plus the notes the
+/// `--report` flag prints: nothing is removed silently.
+func survivingRows(_ t: Table, drop: Set<String>, rename: [String: String]) -> ([(String, String)], [String]) {
+    var notes: [String] = []
+    var codes = t.codes
+    for (i, code) in codes.enumerated() {
+        if let corrected = rename[code] {
+            notes.append("\(t.number): renamed by overrides.json: \(code) -> \(corrected)")
+            codes[i] = corrected
+        }
+    }
+
+    // Which spelling of each separator-variant group to keep: the one that uses
+    // an underscore (every wrapped-at-a-space twin observed has an underscored
+    // sibling), and among those the one with no space left in it.
+    var preferred: [String: String] = [:]
+    for code in codes {
+        let key = separatorKey(code)
+        guard let held = preferred[key] else { preferred[key] = code; continue }
+        func rank(_ c: String) -> Int {
+            (c.contains("_") ? 2 : 0) + (c.contains(" ") ? 0 : 1)
+        }
+        if rank(code) > rank(held) { preferred[key] = code }
+    }
+
+    var rows: [(String, String)] = []
+    var seen = Set<String>()
+    for (i, code) in codes.enumerated() {
+        if drop.contains(code) {
+            notes.append("\(t.number): dropped by overrides.json: \(code)")
+            continue
+        }
+        if seen.contains(code) {
+            notes.append("\(t.number): dropped reprint of \(code)")
+            continue
+        }
+        if let keep = preferred[separatorKey(code)], keep != code {
+            notes.append("\(t.number): dropped separator variant \(code) (keeping \(keep))")
+            continue
+        }
+        seen.insert(code)
+        rows.append((code, t.descriptions[i]))
+    }
+    return (rows, notes)
+}
+
+func render(_ t: Table, version: String, appendix: Bool, override: Override?) -> (json: String, notes: [String]) {
+    let kind = override?.kind ?? t.kind
+    let kindLabel = kind == "HL7" ? "HL7 Table" : "User-defined Table"
     let source = appendix ? "Appendix A" : "Chapter 2C"
     let citation = override?.citation
         ?? "HL7 v\(version) \(source), \(kindLabel) \(t.number) - \(t.name)"
-    let permits = override?.permitsLocalExtensions ?? false
-    let drop = Set(override?.dropCodes ?? [])
+    let permits = override?.permitsLocalExtensions ?? t.externallyDefined
+    let (rowPairs, notes) = survivingRows(t, drop: Set(override?.dropCodes ?? []),
+                                          rename: override?.renameCodes ?? [:])
     var lines: [String] = []
     lines.append("{")
     lines.append("  \"table\": \(jsonString(t.number)),")
     lines.append("  \"version\": \(jsonString(version)),")
     lines.append("  \"name\": \(jsonString(t.name)),")
-    lines.append("  \"kind\": \(jsonString(t.kind)),")
+    lines.append("  \"kind\": \(jsonString(kind)),")
     lines.append("  \"permitsLocalExtensions\": \(permits),")
     lines.append("  \"citation\": \(jsonString(citation)),")
-    var rows: [String] = []
-    var seen = Set<String>()
-    for (i, code) in t.codes.enumerated() {
-        if drop.contains(code) { continue }
-        if seen.contains(code) { continue }     // the spec reprints a row across a page break
-        seen.insert(code)
-        rows.append("    {\n      \"code\": \(jsonString(code)),\n      \"description\": \(jsonString(t.descriptions[i]))\n    }")
+    let rows = rowPairs.map {
+        "    {\n      \"code\": \(jsonString($0.0)),\n      \"description\": \(jsonString($0.1))\n    }"
     }
     if rows.isEmpty {
         lines.append("  \"entries\": []")
@@ -552,19 +700,28 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
         lines.append("  ]")
     }
     lines.append("}")
-    return lines.joined(separator: "\n") + "\n"
+    return (lines.joined(separator: "\n") + "\n", notes)
 }
 
-func loadOverrides(_ path: String) -> [String: Override] {
+/// Load `Resources/tables/overrides.json` for one version.
+///
+/// Every entry is scoped to the version it was verified against: the file is
+/// `{"<version>": {"<table>": {kind?, permitsLocalExtensions?, citation?,
+/// dropCodes?, note?}}}`. `note` is documentation for the reader and is
+/// ignored here.
+func loadOverrides(_ path: String, version: String) -> [String: Override] {
     guard let data = FileManager.default.contents(atPath: path),
-          let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return [:] }
+          let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+          let scoped = obj[version] as? [String: Any] else { return [:] }
     var out: [String: Override] = [:]
-    for (number, value) in obj {
+    for (number, value) in scoped {
         guard let d = value as? [String: Any] else { continue }
         out[number] = Override(
+            kind: d["kind"] as? String,
             permitsLocalExtensions: d["permitsLocalExtensions"] as? Bool,
             citation: d["citation"] as? String,
-            dropCodes: (d["dropCodes"] as? [String]) ?? []
+            dropCodes: (d["dropCodes"] as? [String]) ?? [],
+            renameCodes: (d["renameCodes"] as? [String: String]) ?? [:]
         )
     }
     return out
@@ -588,10 +745,11 @@ guard !text.isEmpty else {
     exit(2)
 }
 
-let (tables, notes) = appendix ? extractAppendixA(text, report: report) : extract282(text, report: report)
+let (tables, extractionNotes) = appendix ? extractAppendixA(text, report: report) : extract282(text, report: report)
+var notes = extractionNotes
 
 let overridesPath = (outDir as NSString).deletingLastPathComponent + "/overrides.json"
-let overrides = loadOverrides(overridesPath)
+let overrides = loadOverrides(overridesPath, version: version)
 
 let fm = FileManager.default
 try? fm.createDirectory(atPath: outDir, withIntermediateDirectories: true)
@@ -602,7 +760,8 @@ for existing in (try? fm.contentsOfDirectory(atPath: outDir)) ?? [] where existi
 var entryTotal = 0, empties = 0
 for number in tables.keys.sorted() {
     let t = tables[number]!
-    let json = render(t, version: version, appendix: appendix, override: overrides[number])
+    let (json, rowNotes) = render(t, version: version, appendix: appendix, override: overrides[number])
+    notes.append(contentsOf: rowNotes)
     try! json.write(toFile: outDir + "/" + number + ".json", atomically: true, encoding: .utf8)
     let rows = json.components(separatedBy: "\"code\":").count - 1
     entryTotal += rows

@@ -74,6 +74,18 @@ struct HL7TableRegistryTests {
         }
     }
 
+    @Test("An externally-defined table still resolves: v2.8.2 0399 Country code")
+    func externallyDefinedTableResolves() throws {
+        // v2.8.2 Chapter 2C heads the section with the code system's name
+        // (`2.C.2.565 ISO-3166-1`) instead of the table number, and prints no
+        // rows. The registry must still carry it — HL7-owned, and never a
+        // closed set because ISO 3166 supplies the values.
+        let t = try #require(HL7TableRegistry.table("0399", version: .v2_8_2))
+        #expect(t.kind == .hl7)
+        #expect(!t.isClosed)
+        #expect(t.entries.isEmpty)
+    }
+
     @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has no CWE")
     func extractionSanity() throws {
         #expect(HL7TableRegistry.table("0003", version: .v2_5_1)?.entries.count == 286)

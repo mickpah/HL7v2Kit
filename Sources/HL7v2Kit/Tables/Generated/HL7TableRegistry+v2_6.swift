@@ -3792,8 +3792,8 @@ extension HL7TableRegistry {
     static let t0227_v2_6 = HL7Table(
         number: "0227",
         name: "Manufacturers of Vaccines (code=MVX)",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "AB", description: "Abbott Laboratories"),
             HL7Table.Entry(code: "AD", description: "Adams Laboratories, Inc."),
@@ -4892,8 +4892,8 @@ extension HL7TableRegistry {
     static let t0291_v2_6 = HL7Table(
         number: "0291",
         name: "Subtype of referenced data",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "...", description: "Source RFC 2046"),
             HL7Table.Entry(code: "x-hl7-cda-level-one", description: "HL7 Clinical Document Architecture Level One document"),
@@ -4903,8 +4903,8 @@ extension HL7TableRegistry {
     static let t0292_v2_6 = HL7Table(
         number: "0292",
         name: "Vaccines administered (code = CVX) (parenteral, unless oral is noted)",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "01", description: "DTP"),
             HL7Table.Entry(code: "02", description: "OPV"),
@@ -5595,8 +5595,8 @@ extension HL7TableRegistry {
     static let t0340_v2_6 = HL7Table(
         number: "0340",
         name: "Procedure Code Modifier",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "...", description: "No suggested values defined"),
         ] as [HL7Table.Entry]
@@ -6593,19 +6593,16 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "DEFINITION", description: ""),
             HL7Table.Entry(code: "DIET", description: ""),
             HL7Table.Entry(code: "DISPENSE", description: ""),
-            HL7Table.Entry(code: "ENCODEDORDER", description: ""),
             HL7Table.Entry(code: "ENCODED_ORDER", description: ""),
             HL7Table.Entry(code: "ENCODING", description: ""),
             HL7Table.Entry(code: "EXPERIENCE", description: ""),
             HL7Table.Entry(code: "FINANCIAL", description: ""),
-            HL7Table.Entry(code: "FINANCIAL_COMMON ORDER", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_COMMON_ORDER", description: ""),
             HL7Table.Entry(code: "FINANCIAL_INSURANCE", description: ""),
             HL7Table.Entry(code: "FINANCIAL_OBSERVATION", description: ""),
             HL7Table.Entry(code: "FINANCIAL_ORDER", description: ""),
             HL7Table.Entry(code: "FINANCIAL_PROCEDURE", description: ""),
-            HL7Table.Entry(code: "FINANCIAL_TIMING QUANTITY", description: ""),
             HL7Table.Entry(code: "FINANCIAL_TIMING_QUANTITY", description: ""),
-            HL7Table.Entry(code: "GENERALRESOURCE", description: ""),
             HL7Table.Entry(code: "GENERAL_RESOURCE", description: ""),
             HL7Table.Entry(code: "GIVE", description: ""),
             HL7Table.Entry(code: "GOAL", description: ""),
@@ -6614,7 +6611,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "GOAL_ROLE", description: ""),
             HL7Table.Entry(code: "GUARANTOR_INSURANCE", description: ""),
             HL7Table.Entry(code: "INSURANCE", description: ""),
-            HL7Table.Entry(code: "LOCATIONRESOURCE", description: ""),
             HL7Table.Entry(code: "LOCATION_RESOURCE", description: ""),
             HL7Table.Entry(code: "MERGE_INFO", description: ""),
             HL7Table.Entry(code: "MF", description: ""),
@@ -6916,7 +6912,7 @@ extension HL7TableRegistry {
     static let t0399_v2_6 = HL7Table(
         number: "0399",
         name: "Country code",
-        kind: .userDefined,
+        kind: .hl7,
         permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "...", description: "use 3-character (alphabetic) form of ISO 3166"),
@@ -10526,8 +10522,8 @@ extension HL7TableRegistry {
     static let t0834_v2_6 = HL7Table(
         number: "0834",
         name: "MIME Types",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "application", description: "Application data"),
             HL7Table.Entry(code: "audio", description: "Audio data"),

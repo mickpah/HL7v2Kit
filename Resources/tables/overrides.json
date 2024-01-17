@@ -1,58 +1,170 @@
 {
-  "0003": {
-    "permitsLocalExtensions": true,
-    "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+  "2.3": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    }
   },
-  "0076": {
-    "permitsLocalExtensions": true,
-    "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+  "2.3.1": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    }
   },
-  "0104": {
-    "permitsLocalExtensions": true,
-    "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+  "2.4": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    }
   },
-  "0396": {
-    "permitsLocalExtensions": true,
-    "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+  "2.5.1": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0440": {
+      "note": "v2.5.1 Appendix A prints the ERL element name in the Value column of Data types (text line 6737). Verified against v2.4 and v2.6, which print the same table without it.",
+      "dropCodes": [
+        "Error location anddescri"
+      ]
+    }
   },
-  "0399": {
-    "permitsLocalExtensions": true,
-    "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+  "2.6": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0391": {
+      "note": "v2.6 Appendix A prints the Segment group name FINANCIAL_COMMON_ORDER with a space in place of the second underscore, and wraps it (text lines 5852-5853), so it is the one artifact in this table with no correctly-spelled sibling for the separator-variant rule to prefer. Corrected against the v2.8.2 printing (text line 10358), which spells it FINANCIAL_COMMON_ORDER.",
+      "renameCodes": {
+        "FINANCIAL_COMMON ORDER": "FINANCIAL_COMMON_ORDER"
+      }
+    },
+    "0119": {
+      "note": "v2.6 Appendix A runs the footnote prose of Order control codes through the Value column (text lines 2701-2730). None of these is a code: MSH / ORC / OBR / OBX / PID / RXO are segment IDs quoted in that prose, and the rest are sentence fragments. Verified against the v2.5.1 and v2.8.2 printings of the same table, which carry none of them.",
+      "dropCodes": [
+        "MSH",
+        "ORC",
+        "OBR",
+        "OBR]",
+        "[ORC",
+        "OBX",
+        "PID",
+        "RXO",
+        "NW or RO",
+        "(2) When the fillerappli",
+        "(3) When anapplication (",
+        "Whether the OBRsegments"
+      ]
+    }
   },
-  "0119": {
-    "note": "The v2.6 printing of Order control codes bleeds footnote prose into the Value column. These rows are not codes in any version.",
-    "dropCodes": [
-      "MSH",
-      "ORC",
-      "OBR",
-      "OBR]",
-      "[ORC",
-      "OBX",
-      "PID",
-      "RXO",
-      "NW or RO",
-      "(2) When the fillerappli",
-      "(3) When anapplication (",
-      "Whether the OBRsegments"
-    ]
-  },
-  "0211": {
-    "note": "The v2.8.2 printing of Alternate character sets runs a footnote (its marker and its URL) through the Value column. Neither is a code in any version.",
-    "dropCodes": [
-      "1",
-      "http://www.unicode.org/unicode/consortium/consort.html"
-    ]
-  },
-  "0391": {
-    "note": "The v2.6 printing of Segment group wraps PERSONNEL RESOURCE across a line break; PERSONNEL_RESOURCE is the group's real name and is printed separately.",
-    "dropCodes": [
-      "PERSONNELRESOURCE"
-    ]
-  },
-  "0440": {
-    "note": "The v2.5.1 printing of Data types bleeds the ERL element name into the Value column. That row is not a code in any version.",
-    "dropCodes": [
-      "Error location anddescri"
-    ]
+  "2.8.2": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0211": {
+      "note": "v2.8.2 Chapter 2C runs a footnote marker and its URL through the Value column of Alternate character sets (text lines 6030-6033). Verified against v2.5.1 and v2.6, which print the same table without either.",
+      "dropCodes": [
+        "1",
+        "http://www.unicode.org/unicode/consortium/consort.html"
+      ]
+    }
   }
 }

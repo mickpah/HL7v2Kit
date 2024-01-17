@@ -61,10 +61,6 @@
     {
       "code": "x500",
       "description": "An X.500 directory name"
-    },
-    {
-      "code": "Note:",
-      "description": "X400, X500, and DNS are not technically universally valid for all time. Names can be de-registered"
     }
   ]
 }

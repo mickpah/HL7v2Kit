@@ -2,8 +2,8 @@
   "table": "0913",
   "version": "2.8.2",
   "name": "ISO-4217 Monetary Denomination Code",
-  "kind": "User",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0913 - ISO-4217 Monetary Denomination Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0913 - ISO-4217 Monetary Denomination Code",
   "entries": []
 }

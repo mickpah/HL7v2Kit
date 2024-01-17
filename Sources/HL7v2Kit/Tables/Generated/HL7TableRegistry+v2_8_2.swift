@@ -326,6 +326,7 @@ extension HL7TableRegistry {
         "0396": t0396_v2_8_2,
         "0397": t0397_v2_8_2,
         "0398": t0398_v2_8_2,
+        "0399": t0399_v2_8_2,
         "0401": t0401_v2_8_2,
         "0402": t0402_v2_8_2,
         "0403": t0403_v2_8_2,
@@ -1360,8 +1361,8 @@ extension HL7TableRegistry {
     static let t0055_v2_8_2 = HL7Table(
         number: "0055",
         name: "Diagnosis Related Group",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -1790,7 +1791,8 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NS", description: "Non-susceptible"),
             HL7Table.Entry(code: "SDD", description: "Susceptible-dose dependent"),
             HL7Table.Entry(code: "IE", description: "Insufficient evidence"),
-            HL7Table.Entry(code: "SYN-", description: "Synergy – resistant"),
+            HL7Table.Entry(code: "SYN-R", description: "Synergy – resistant"),
+            HL7Table.Entry(code: "SYN-S", description: "Synergy – susceptible"),
             HL7Table.Entry(code: "VS", description: "Very susceptible. Indicates for microbiology susceptibilities only."),
             HL7Table.Entry(code: "POS", description: "Positive"),
             HL7Table.Entry(code: "NEG", description: "Negative"),
@@ -1892,8 +1894,8 @@ extension HL7TableRegistry {
     static let t0088_v2_8_2 = HL7Table(
         number: "0088",
         name: "Procedure Code",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "C4", description: "CPT-4"),
             HL7Table.Entry(code: "C5", description: "CPT-5"),
@@ -2108,8 +2110,8 @@ extension HL7TableRegistry {
     static let t0118_v2_8_2 = HL7Table(
         number: "0118",
         name: "Major Diagnostic Category",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -2638,8 +2640,8 @@ extension HL7TableRegistry {
     static let t0153_v2_8_2 = HL7Table(
         number: "0153",
         name: "Value Code",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -3241,7 +3243,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "T", description: "Indigenous/Tribal"),
             HL7Table.Entry(code: "TEMP", description: "Temporary Name"),
             HL7Table.Entry(code: "U", description: "Unknown"),
-            HL7Table.Entry(code: "Note:", description: "The content of Legal Name is country specific. In the US the legal name is the same as the current"),
         ] as [HL7Table.Entry]
     )
 
@@ -3676,8 +3677,8 @@ extension HL7TableRegistry {
     static let t0227_v2_8_2 = HL7Table(
         number: "0227",
         name: "Manufacturers of Vaccines",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -4720,19 +4721,18 @@ extension HL7TableRegistry {
     static let t0291_v2_8_2 = HL7Table(
         number: "0291",
         name: "Subtype of Referenced Data",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "x-hl7-cda-", description: "HL7 Clinical Document Architecture Level One document"),
-            HL7Table.Entry(code: "level-one", description: "compatibility only as of v2.6 and CDA R 2. Preferred value is text/xml."),
+            HL7Table.Entry(code: "x-hl7-cda-level-one", description: "HL7 Clinical Document Architecture Level One document"),
         ] as [HL7Table.Entry]
     )
 
     static let t0292_v2_8_2 = HL7Table(
         number: "0292",
         name: "Vaccines Administered (code = CVX)",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -4849,7 +4849,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier, in accordance with RFC 4122. Recommended format is 32 hexadecimal digits separated by hyphens, in the digit grouping 8-4-4-4- 12"),
             HL7Table.Entry(code: "x400", description: "An X.400 MHS identifier. Recommended format is in accordance with RFC 1649"),
             HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
-            HL7Table.Entry(code: "Note:", description: "X400, X500, and DNS are not technically universally valid for all time. Names can be de-registered"),
         ] as [HL7Table.Entry]
     )
 
@@ -5305,8 +5304,8 @@ extension HL7TableRegistry {
     static let t0340_v2_8_2 = HL7Table(
         number: "0340",
         name: "Procedure Code Modifier",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
             HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA) Procedure Codes"),
@@ -5466,8 +5465,7 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "ISO 2022-", description: "This standard is titled “Information Technology –"),
-            HL7Table.Entry(code: "1994", description: "Character Code Structure and Extension Technique”. ."),
+            HL7Table.Entry(code: "ISO 2022-1994", description: "This standard is titled “Information Technology – Character Code Structure and Extension Technique”. ."),
             HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.5, section 2.7.2 and section 2.A.46, “XPN – extended person name”."),
             HL7Table.Entry(code: "<null>", description: "This is the default, indicating that there is no character set switching occurring in this message."),
         ] as [HL7Table.Entry]
@@ -6461,6 +6459,16 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "F", description: "Fragmentation"),
             HL7Table.Entry(code: "I", description: "Interactive Continuation"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0399_v2_8_2 = HL7Table(
+        number: "0399",
+        name: "Country Code",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+
         ] as [HL7Table.Entry]
     )
 
@@ -8811,8 +8819,8 @@ extension HL7TableRegistry {
     static let t0549_v2_8_2 = HL7Table(
         number: "0549",
         name: "NDC Codes",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -10077,9 +10085,9 @@ extension HL7TableRegistry {
 
     static let t0834_v2_8_2 = HL7Table(
         number: "0834",
-        name: "Mime Types",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        name: "Mime Types is an example of an imported table.",
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "application", description: "Application data"),
             HL7Table.Entry(code: "audio", description: "Audio data"),
@@ -10321,8 +10329,8 @@ extension HL7TableRegistry {
     static let t0910_v2_8_2 = HL7Table(
         number: "0910",
         name: "Acquisition Modality",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -10376,8 +10384,8 @@ extension HL7TableRegistry {
     static let t0913_v2_8_2 = HL7Table(
         number: "0913",
         name: "ISO-4217 Monetary Denomination Code",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
 
         ] as [HL7Table.Entry]
@@ -10745,10 +10753,10 @@ extension HL7TableRegistry {
     static let t0941_v2_8_2 = HL7Table(
         number: "0941",
         name: "Procedure Code",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "2.C.2.565", description: "ISO-3166-1 use 3-character (alphabetic) form of ISO 3166-1"),
+            HL7Table.Entry(code: "2.C.2.565", description: "ISO-3166-1"),
         ] as [HL7Table.Entry]
     )
 }

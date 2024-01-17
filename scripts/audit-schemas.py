@@ -129,12 +129,20 @@ TABLE_PDFS = {
 }
 TABLE_EXTRACTOR = "/tmp/tablesbin"
 
-# Codes the source PDFs print that are not values: the spec's own prose bleeding into the
-# Value column (v2.6 table 0119 prints six segment IDs and three sentence fragments as if
-# they were order control codes). Those are dropped by Resources/tables/overrides.json;
-# SUSPECT is how the next one gets found. Shape-based, deliberately narrow — a space or a
-# parenthesis is normal in a printed code ("ISO IR14", "99zzz or L", "* (star)").
-SUSPECT_CODE = re.compile(r"[\[\]|]|^.{31,}$")
+# Codes the source PDFs print that are not values, or that the extractor assembled wrongly.
+# Every shape here was learned from a defect the code-table review found:
+#
+#   [ ] |            prose bleed carrying segment-group markup (v2.6 0119 "[ORC", "OBR]")
+#   over 30 chars    a footnote URL parsed as a value (v2.8.2 0211)
+#   ends - _         a code the printer wrapped and nothing rejoined (v2.8.2 0356 "ISO 2022-")
+#   ends :           a "Note:" paragraph set under the table (v2.8.2 0200 / 0301)
+#   Capitalised+word a prose sentence in the Value column (v2.6 0119 "Whether the OBRsegments",
+#                    0725 "Criterion applying", v2.5.1 0440 "Error location anddescri")
+#
+# Deliberately narrow otherwise. A space is normal in a printed code ("ISO IR14", "99zzz or
+# L") and so is a lone capitalised word ("Routine", "Booked", "Internet" are real values in
+# 0276 / 0278 / 0202), so neither is suspect on its own.
+SUSPECT_CODE = re.compile(r"[\[\]|]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S")
 
 
 def integrity():
@@ -326,6 +334,16 @@ def tables(depth=False):
         for code, n in seen.items():
             if n > 1:
                 findings.append((rel, stem, f"duplicate code {code!r} ({n}x)"))
+        # Two spellings of one value: the printer wrapped the same name at a space in one
+        # row and mid-word in another (v2.6 0391 ENCODED ORDER / ENCODED_ORDER). The
+        # extractor keeps one of them; if both survived, the rule did not fire.
+        variants = collections.defaultdict(list)
+        for code in seen:
+            variants[code.replace(" ", "").replace("_", "")].append(code)
+        for key, spellings in variants.items():
+            if len(spellings) > 1:
+                findings.append((rel, stem,
+                                 f"SUSPECT separator variants {sorted(spellings)} -> investigate the TOOL"))
         catalogue.setdefault(version, {})[stem] = doc
 
     # Every schema field that links a table must resolve to that version's table, and the

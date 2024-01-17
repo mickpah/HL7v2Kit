@@ -2,8 +2,8 @@
   "table": "0055",
   "version": "2.8.2",
   "name": "Diagnosis Related Group",
-  "kind": "User",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0055 - Diagnosis Related Group",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0055 - Diagnosis Related Group",
   "entries": []
 }
