@@ -125,6 +125,9 @@ def integrity():
                 findings.append((rel, f["index"], f"element name {len(name)} chars — prose bleed?"))
             if re.search(r"[|^<]", name):
                 findings.append((rel, f["index"], "delimiter/markup character in element name"))
+            table = f.get("table")
+            if table is not None and not (re.fullmatch(r"\d{4}", table) and dt in ("ID", "IS")):
+                findings.append((rel, f["index"], f"malformed table ref {table!r} (dataType {dt!r})"))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))

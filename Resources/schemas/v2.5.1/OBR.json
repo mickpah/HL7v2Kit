@@ -196,6 +196,7 @@
       "swiftName": "diagnosticServSectID",
       "name": "Diagnostic Serv Sect ID",
       "dataType": "ID",
+      "table": "0074",
       "optionality": "O",
       "repeatability": "1"
     },

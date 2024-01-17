@@ -34,6 +34,10 @@ struct FieldSchema: Decodable {
     /// position recurs across every `|`-separated column). The value is
     /// the plural accessor name emitted alongside the primary accessor.
     let variableColumns: String?
+    /// The HL7 code table this coded field draws from (the spec's `TBL#`
+    /// column, e.g. `"0074"`), or `nil` for uncoded fields. See
+    /// `FieldGrammar.table`. M6-O6.
+    let table: String?
 }
 
 struct SegmentSchema: Decodable {
@@ -215,7 +219,8 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
             let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
             let variableColumns = field.variableColumns != nil ? "true" : "false"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns)),"
+            let table = field.table.map { escapeStringLiteral($0) } ?? "nil"
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table)),"
         }.joined(separator: "\n")
         return """
                 "\(schema.segmentID)": SegmentGrammar(

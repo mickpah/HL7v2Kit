@@ -76,6 +76,13 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// bounds the count, never a minimum). v3.3 Track B.
     public let variableColumns: Bool
 
+    /// The HL7 code table this coded field draws from, as the spec's
+    /// `TBL#` column prints it (`"0074"`), or `nil` for uncoded fields.
+    /// Resolve it with ``HL7TableRegistry/table(_:version:)``. Only an
+    /// `ID`-typed field whose table ``HL7Table/isClosed`` is enforced;
+    /// `IS` fields and open tables are informational (req #4). M6-O6.
+    public let table: String?
+
     public init(
         index: Int,
         name: String,
@@ -84,7 +91,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         repeatability: FieldRepeatability,
         condition: String? = nil,
         prohibitedWhen: String? = nil,
-        variableColumns: Bool = false
+        variableColumns: Bool = false,
+        table: String? = nil
     ) {
         self.index = index
         self.name = name
@@ -94,6 +102,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.condition = condition
         self.prohibitedWhen = prohibitedWhen
         self.variableColumns = variableColumns
+        self.table = table
     }
 }
 
