@@ -117,6 +117,15 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// case introduced in M8-B1; the enum is open per ADR-014, so this
     /// is a minor bump.
     case pairedFieldMismatch(item: String)
+
+    /// An `ID`-typed field carries a value that is not in the HL7-defined
+    /// table its spec `TBL#` column names, for the message's version.
+    /// Fires only for closed tables (``HL7Table/isClosed``): `IS` fields,
+    /// user-defined tables, tables the spec opens to local codes, and
+    /// tables with no printed rows are never enforced (req #4). The
+    /// payload is the four-digit table number. Additive case introduced
+    /// in M6-O6; the enum is open per ADR-014, so this is a minor bump.
+    case valueNotInTable(table: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

@@ -524,6 +524,11 @@ public struct Validator: Sendable {
             )
         }
 
+        if options.checkCodeTables, let field, isPopulated, let tableNumber = fieldGrammar.table {
+            checkCodeTable(fieldGrammar, tableNumber: tableNumber, field: field,
+                           version: message.version, location: location, issues: &issues)
+        }
+
         // v0.5-S5-B-1: layer the loaded profile's field overrides
         // on top of the base-spec checks. Only fires when locale
         // is non-international (profile != nil) AND the field has
@@ -1384,6 +1389,32 @@ public struct Validator: Sendable {
             location: location,
             message: "Field \(location.pathDescription) ('\(grammar.name)') is single-cardinality but has \(field.repetitions.count) repetitions"
         ))
+    }
+
+    /// Closed-set check for an `ID`-typed field (M6-O6). Double-gated:
+    /// the field's datatype must be `ID` AND the table must be closed
+    /// for this version. A repetition whose value is not a bare scalar
+    /// is a structure fault, not a table fault — skipped, never misfired.
+    private func checkCodeTable(
+        _ grammar: FieldGrammar,
+        tableNumber: String,
+        field: Field,
+        version: Version,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard grammar.dataType == "ID",
+              let table = HL7TableRegistry.table(tableNumber, version: version),
+              table.isClosed else { return }
+        for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
+            guard let value = repetition.stringValue, value != "\"\"", !table.contains(value) else { continue }
+            issues.append(ValidationIssue(
+                severity: .error,
+                code: .valueNotInTable(table: table.number),
+                location: location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
+            ))
+        }
     }
 
     /// Component-level grammar check (v0.2-V2 + v0.4-S4). When a

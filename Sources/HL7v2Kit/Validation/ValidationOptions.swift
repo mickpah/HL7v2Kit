@@ -47,6 +47,12 @@ public struct ValidationOptions: Sendable {
     /// not-supported (`X`) field is populated.
     public var warnDeprecatedFields: Bool
 
+    /// If true (default), check populated `ID`-typed fields against the
+    /// closed HL7 table their grammar names (``FieldGrammar/table``) and
+    /// emit ``IssueCode/valueNotInTable(table:)`` on a miss. Not an init
+    /// parameter: set it by mutation. M6-O6.
+    public var checkCodeTables: Bool = true
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
