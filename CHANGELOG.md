@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added
+
+- **Track B — SEQ 1-n variable-column segments modelled.** New schema key
+  `variableColumns` on RDT-1 (all six versions) and ADD-1 (v2.3–v2.5.1) →
+  `FieldGrammar.variableColumns` + plural accessors `RDT.columnValues` /
+  `ADD.addendumContinuationPointers` (`[Field]`). The Validator applies the
+  field's grammar to every column; column 1 keeps the row's optionality,
+  later columns are individually optional and single-cardinality (spec RP
+  blank). Additive; the depth-audit whitelist stays (extractor limitation).
 
 ## [3.2.0] — 2026-09-17
 

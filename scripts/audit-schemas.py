@@ -58,9 +58,12 @@ STANDARDS = _standards_dir()
 # single real row never parses and the scan binds whatever table follows (in v2.3/v2.3.1,
 # the SPR segment). Its hand-authored schema is correct — see segment-coverage-extraction.md.
 # Entries are either a bare segment ID (whitelisted on every version) or "version/SEG".
-# RDT/ADD: `1-n` rows the extractor cannot parse (hand-authored). v2.3.1/NSC: the mega-PDF
-# prose-bleeds phantom index rows into Appendix C's NSC figure (schema hand-authored,
-# eye-verified; see segment-coverage-extraction.md "Appendix C exception").
+# RDT/ADD: `1-n` rows the extractor cannot parse (hand-authored). This is an EXTRACTOR
+# limitation only — the model limitation is resolved (`variableColumns` schema key, see
+# integrity() below, which fails a whitelisted RDT/ADD schema missing that key).
+# v2.3.1/NSC: the mega-PDF prose-bleeds phantom index rows into Appendix C's NSC figure
+# (schema hand-authored, eye-verified; see segment-coverage-extraction.md "Appendix C
+# exception").
 DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
 
 # Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
@@ -129,6 +132,12 @@ def integrity():
         if got and got != list(range(1, max(got) + 1)):
             missing = sorted(set(range(1, max(got) + 1)) - set(got))
             findings.append((rel, 0, f"gap in index sequence, missing {missing}"))
+        # Track B: the 1-n class is whitelisted from the depth audit (extractor
+        # limitation), so pin its model marker here instead — a 1-n schema that
+        # loses `variableColumns` would silently drop columns 2..n from validation.
+        seg = os.path.basename(path)[:-5].upper()
+        if seg in {"RDT", "ADD"} and not any(f.get("variableColumns") for f in doc["fields"]):
+            findings.append((rel, 1, "1-n segment must set variableColumns on its field"))
     return findings
 
 

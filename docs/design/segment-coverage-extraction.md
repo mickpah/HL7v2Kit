@@ -180,13 +180,19 @@ blank, ITEM 00703. The `DT` literal is per-version — v2.3 / v2.3.1 / v2.4 prin
 v2.5.1 / v2.6 / v2.8.2 print `varies` — tracked per-version exactly as `TS`→`DTM` and
 `CE`→`CWE` already are.
 
-> **Model limitation (req #3):** SEQ `1-n` means the field *position* recurs — RDT carries
-> an unbounded number of `|`-separated columns. The schema model indexes fields, so only
-> column 1 is described; columns 2..n are unvalidated (the validator iterates
-> `grammar.fields`, so they are silently ignored, never spuriously flagged).
-> `RP` stays `1` because the spec's `RP/#` cell **is blank** — marking it `*` would assert
-> `~`-repeatability the spec does not grant. The other `1-n` segment is **ADD**-1
-> (`Addendum Continuation Pointer`, ITEM 00066), not yet modelled.
+> **Model resolution (req #3):** SEQ `1-n` means the field *position* recurs — RDT carries
+> an unbounded number of `|`-separated columns. This is now modelled by the schema key
+> `variableColumns` on the field, which drives a plural accessor (`RDT.columnValues:
+> [Field]`) and a `FieldGrammar.variableColumns` flag; the validator re-applies the
+> field's grammar to every column at parse time instead of describing only column 1.
+> Column 1 keeps the row's own optionality; columns 2..n are individually optional and
+> single-cardinality. `RP` stays `1` because the spec's `RP/#` cell **is blank** — marking
+> it `*` would assert `~`-repeatability the spec does not grant, so a blank `RP` means each
+> column is its own single value, not a repeating component. The other `1-n` segment,
+> **ADD**-1 (`Addendum Continuation Pointer`, ITEM 00066), is modelled the same way. The
+> depth-audit whitelist (`RDT`, `ADD` in `DEPTH_WHITELIST`) is an unrelated, still-open
+> *extractor* limitation — the row parser needs a bare-integer SEQ, so RDT/ADD's real
+> `1-n` row never parses cleanly out of the PDF tables — not a gap in the schema model.
 
 ## v1.5-S2 element-name fidelity (DONE)
 
