@@ -3,6 +3,6 @@
   "version": "2.3",
   "description": "Table Row Data",
   "fields": [
-    { "index": 1, "swiftName": "columnValue", "name": "Column Value", "dataType": "Variable", "optionality": "R", "repeatability": "1" }
+    { "index": 1, "swiftName": "columnValue", "name": "Column Value", "dataType": "Variable", "optionality": "R", "repeatability": "1", "variableColumns": "columnValues" }
   ]
 }

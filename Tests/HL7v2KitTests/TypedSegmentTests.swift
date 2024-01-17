@@ -2072,4 +2072,52 @@ struct TypedSegmentTests {
             #expect(t["IAM"]?.field(7)?.condition == nil)
         }
     }
+
+    // MARK: - 1-n variable columns (RDT-1, ADD-1)
+
+    @Test("RDT-1 grammar is flagged variableColumns on every version; ordinary fields are not")
+    func rdtGrammarFlagsVariableColumns() throws {
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4, SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6, SegmentGrammarTable.v2_8_2] {
+            let rdt1 = try #require(table["RDT"]?.field(1))
+            #expect(rdt1.variableColumns)
+            #expect(rdt1.repeatability == .single, "RP is blank in the spec; 1-n is not ~-repetition")
+            let pid3 = try #require(table["PID"]?.field(3))
+            #expect(!pid3.variableColumns)
+        }
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4, SegmentGrammarTable.v2_5_1] {
+            #expect(table["ADD"]?.field(1)?.variableColumns == true)
+        }
+    }
+
+    @Test("RDT.columnValues returns every |-separated column in wire order")
+    func rdtColumnValuesAccessor() throws {
+        // Message type is irrelevant to base-spec segment grammar; reuse the canonical header.
+        let wire = TestWires.adt("RDT|alpha|beta||delta")
+        let message = try Parser().parse(wire)
+        let rdt = try #require(message.firstSegment(RDT.self))
+        #expect(rdt.columnValues.count == 4)
+        #expect(rdt.columnValues.map { $0.stringValue ?? "" } == ["alpha", "beta", "", "delta"])
+        #expect(rdt.columnValue?.stringValue == "alpha", "column-1 accessor is unchanged")
+        #expect(String(data: message.serialize(), encoding: .utf8) == wire, "columns 2..n survive the round trip")
+    }
+
+    @Test("RDT with a single column yields one element; empty RDT yields none")
+    func rdtColumnValuesEdges() throws {
+        let one = try Parser().parse(TestWires.adt("RDT|only"))
+        #expect(try #require(one.firstSegment(RDT.self)).columnValues.count == 1)
+        // A bare "RDT" wire line still yields one present-but-blank field 1
+        // (the parser's split-on-`|` always yields at least one trailing
+        // element); to exercise the true "no field 1 at all" case, construct
+        // the segment directly with only the segment-ID placeholder slot.
+        let none = RDT(fields: [Field(repetitions: [])])
+        #expect(none.columnValues.isEmpty)
+    }
+
+    @Test("ADD.addendumContinuationPointers returns every column")
+    func addPluralAccessor() throws {
+        let message = try Parser().parse(TestWires.adt("ADD|part one|part two"))
+        let add = try #require(message.firstSegment(ADD.self))
+        #expect(add.addendumContinuationPointers.map { $0.stringValue } == ["part one", "part two"])
+        #expect(add.addendumContinuationPointer == "part one")
+    }
 }

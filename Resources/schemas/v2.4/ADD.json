@@ -3,6 +3,6 @@
   "version": "2.4",
   "description": "Addendum",
   "fields": [
-    { "index": 1, "swiftName": "addendumContinuationPointer", "name": "Addendum Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "addendumContinuationPointer", "name": "Addendum Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1", "variableColumns": "addendumContinuationPointers" }
   ]
 }

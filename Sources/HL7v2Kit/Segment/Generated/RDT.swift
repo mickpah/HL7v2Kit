@@ -15,4 +15,12 @@ public struct RDT: TypedSegment {
     public var columnValue: Field? {
         field(1)
     }
+
+    /// RDT-1..n: every `Column Value` column. The spec's SEQ is `1-n`:
+    /// the field position recurs, so this returns each `|`-separated column from
+    /// position 1 upward in wire order (empty columns included). Not
+    /// `~`-repetition — each element is one column.
+    public var columnValues: [Field] {
+        fields.count > 1 ? Array(fields[1...]) : []
+    }
 }

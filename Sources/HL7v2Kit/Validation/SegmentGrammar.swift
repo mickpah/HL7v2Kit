@@ -65,6 +65,17 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// as `condition`: an unresolvable predicate never fires. M8-D.
     public let prohibitedWhen: String?
 
+    /// `true` when the spec's SEQ cell for this field is `1-n`: the field
+    /// *position* recurs, so every `|`-separated position from `index`
+    /// upward is this same data element (RDT-1 Column Value, ADD-1
+    /// Addendum Continuation Pointer). This is not `~`-repetition — the
+    /// spec's RP cell is blank, so `repeatability` stays `.single` and a
+    /// `~` inside any column is a cardinality error. The Validator applies
+    /// this grammar to each populated column; column 1 keeps the row's
+    /// optionality, later columns are individually optional (the spec
+    /// bounds the count, never a minimum). v3.3 Track B.
+    public let variableColumns: Bool
+
     public init(
         index: Int,
         name: String,
@@ -72,7 +83,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         optionality: FieldOptionality,
         repeatability: FieldRepeatability,
         condition: String? = nil,
-        prohibitedWhen: String? = nil
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false
     ) {
         self.index = index
         self.name = name
@@ -81,6 +93,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.repeatability = repeatability
         self.condition = condition
         self.prohibitedWhen = prohibitedWhen
+        self.variableColumns = variableColumns
     }
 }
 

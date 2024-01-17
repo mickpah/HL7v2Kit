@@ -15,4 +15,12 @@ public struct ADD: TypedSegment {
     public var addendumContinuationPointer: String? {
         field(1)?.stringValue
     }
+
+    /// ADD-1..n: every `Addendum Continuation Pointer` column. The spec's SEQ is `1-n`:
+    /// the field position recurs, so this returns each `|`-separated column from
+    /// position 1 upward in wire order (empty columns included). Not
+    /// `~`-repetition — each element is one column.
+    public var addendumContinuationPointers: [Field] {
+        fields.count > 1 ? Array(fields[1...]) : []
+    }
 }

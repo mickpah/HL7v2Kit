@@ -30,6 +30,10 @@ struct FieldSchema: Decodable {
     /// (populated while the predicate is true fires). See
     /// `FieldGrammar.prohibitedWhen`. M8-D.
     let prohibitedWhen: String?
+    /// Track B: presence means the spec's SEQ cell is `1-n` (the field
+    /// position recurs across every `|`-separated column). The value is
+    /// the plural accessor name emitted alongside the primary accessor.
+    let variableColumns: String?
 }
 
 struct SegmentSchema: Decodable {
@@ -102,10 +106,22 @@ func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
         body = "field(\(field.index))"
         docTail = ""
     }
-    return """
+    let primary = """
         /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(docTail)
         public var \(escapedIdentifier(field.swiftName)): \(returnType) {
             \(body)
+        }
+    """
+    guard let plural = field.variableColumns else { return primary }
+    return primary + """
+
+
+        /// \(segmentID)-\(field.index)..n: every `\(field.name)` column. The spec's SEQ is `1-n`:
+        /// the field position recurs, so this returns each `|`-separated column from
+        /// position \(field.index) upward in wire order (empty columns included). Not
+        /// `~`-repetition — each element is one column.
+        public var \(escapedIdentifier(plural)): [Field] {
+            fields.count > \(field.index) ? Array(fields[\(field.index)...]) : []
         }
     """
 }
@@ -180,7 +196,8 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let repeatability = field.repeatability == "*" ? ".multiple" : ".single"
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
             let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen)),"
+            let variableColumns = field.variableColumns != nil ? "true" : "false"
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns)),"
         }.joined(separator: "\n")
         return """
                 "\(schema.segmentID)": SegmentGrammar(
