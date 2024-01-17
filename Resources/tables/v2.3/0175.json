@@ -1,0 +1,42 @@
+{
+  "table": "0175",
+  "version": "2.3",
+  "name": "Master File Identifier Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0175 - Master File Identifier Code",
+  "entries": [
+    {
+      "code": "CDM",
+      "description": "Charge description master file"
+    },
+    {
+      "code": "CM0",
+      "description": "Clinical study master"
+    },
+    {
+      "code": "CM1",
+      "description": "Clinical study phase master"
+    },
+    {
+      "code": "CM2",
+      "description": "Clinical study Data Schedule Master"
+    },
+    {
+      "code": "LOC",
+      "description": "Location master file"
+    },
+    {
+      "code": "OM1-OM6",
+      "description": "Observation test master file segments"
+    },
+    {
+      "code": "PRA",
+      "description": "Practitioner master file"
+    },
+    {
+      "code": "STF",
+      "description": "Staff Master File"
+    }
+  ]
+}

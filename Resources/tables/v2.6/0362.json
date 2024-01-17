@@ -1,0 +1,14 @@
+{
+  "table": "0362",
+  "version": "2.6",
+  "name": "Facility",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0362 - Facility",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

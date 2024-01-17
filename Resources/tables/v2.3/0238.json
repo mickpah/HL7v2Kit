@@ -1,0 +1,22 @@
+{
+  "table": "0238",
+  "version": "2.3",
+  "name": "Event Seriousness",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0238 - Event Seriousness",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "Yes"
+    },
+    {
+      "code": "S",
+      "description": "Significant"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    }
+  ]
+}

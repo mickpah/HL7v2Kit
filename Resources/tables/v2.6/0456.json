@@ -1,0 +1,14 @@
+{
+  "table": "0456",
+  "version": "2.6",
+  "name": "Revenue code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0456 - Revenue code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0454",
+  "version": "2.4",
+  "name": "Health care provider area of specialization",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0454 - Health care provider area of specialization",
+  "entries": [
+    {
+      "code": "SUGGESTION",
+      "description": "ANSI ASC X12 Health Care Provider Taxonomy, Level 3 - specialization"
+    }
+  ]
+}

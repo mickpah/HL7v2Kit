@@ -1,0 +1,30 @@
+{
+  "table": "0534",
+  "version": "2.5.1",
+  "name": "Notify Clergy Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0534 - Notify Clergy Code",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Last Rites only"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

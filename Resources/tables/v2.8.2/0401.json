@@ -1,0 +1,18 @@
+{
+  "table": "0401",
+  "version": "2.8.2",
+  "name": "Government Reimbursement Program",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0401 - Government Reimbursement Program",
+  "entries": [
+    {
+      "code": "MM",
+      "description": "Medicare"
+    },
+    {
+      "code": "C",
+      "description": "Medi-Cal"
+    }
+  ]
+}

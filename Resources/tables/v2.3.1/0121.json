@@ -1,0 +1,30 @@
+{
+  "table": "0121",
+  "version": "2.3.1",
+  "name": "Response flag",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0121 - Response flag",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Report exceptions only"
+    },
+    {
+      "code": "R",
+      "description": "Same as E, also Replacement and Parent-Child"
+    },
+    {
+      "code": "D",
+      "description": "Same as R, also other associated segments"
+    },
+    {
+      "code": "F",
+      "description": "Same as D, plus confirmations explicitly"
+    },
+    {
+      "code": "N",
+      "description": "Only the MSA segment is returned"
+    }
+  ]
+}

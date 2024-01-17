@@ -1,0 +1,18 @@
+{
+  "table": "0274",
+  "version": "2.3",
+  "name": "Document Modification Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0274 - Document Modification Status",
+  "entries": [
+    {
+      "code": "RP",
+      "description": "Replacement"
+    },
+    {
+      "code": "IN",
+      "description": "Incremental"
+    }
+  ]
+}

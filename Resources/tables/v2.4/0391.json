@@ -1,0 +1,42 @@
+{
+  "table": "0391",
+  "version": "2.4",
+  "name": "Segment group",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0391 - Segment group",
+  "entries": [
+    {
+      "code": "etc",
+      "description": ""
+    },
+    {
+      "code": "OBRG",
+      "description": "OBR group"
+    },
+    {
+      "code": "ORCG",
+      "description": "ORC group"
+    },
+    {
+      "code": "PIDG",
+      "description": "PID group"
+    },
+    {
+      "code": "RXAG",
+      "description": "RXA group"
+    },
+    {
+      "code": "RXDG",
+      "description": "RXD group"
+    },
+    {
+      "code": "RXEG",
+      "description": "RXE group"
+    },
+    {
+      "code": "RXOG",
+      "description": "RXO group"
+    }
+  ]
+}

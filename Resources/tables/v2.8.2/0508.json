@@ -1,0 +1,54 @@
+{
+  "table": "0508",
+  "version": "2.8.2",
+  "name": "Blood Product Processing Requirements",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0508 - Blood Product Processing Requirements",
+  "entries": [
+    {
+      "code": "LR",
+      "description": "Leukoreduced"
+    },
+    {
+      "code": "IR",
+      "description": "Irradiated"
+    },
+    {
+      "code": "CS",
+      "description": "CMV Safe"
+    },
+    {
+      "code": "FR",
+      "description": "Fresh unit"
+    },
+    {
+      "code": "AU",
+      "description": "Autologous Unit"
+    },
+    {
+      "code": "DI",
+      "description": "Directed Unit"
+    },
+    {
+      "code": "HL",
+      "description": "HLA Matched"
+    },
+    {
+      "code": "CM",
+      "description": "CMV Negative"
+    },
+    {
+      "code": "HB",
+      "description": "Hemoglobin S Negative"
+    },
+    {
+      "code": "WA",
+      "description": "Washed"
+    },
+    {
+      "code": "IG",
+      "description": "IgA Deficient"
+    }
+  ]
+}

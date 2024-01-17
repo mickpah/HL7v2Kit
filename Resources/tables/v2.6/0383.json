@@ -1,0 +1,54 @@
+{
+  "table": "0383",
+  "version": "2.6",
+  "name": "Substance status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0383 - Substance status",
+  "entries": [
+    {
+      "code": "CE",
+      "description": "Calibration Error"
+    },
+    {
+      "code": "CW",
+      "description": "Calibration Warning"
+    },
+    {
+      "code": "EE",
+      "description": "Expired Error"
+    },
+    {
+      "code": "EW",
+      "description": "Expired Warning"
+    },
+    {
+      "code": "NE",
+      "description": "Not Available Error"
+    },
+    {
+      "code": "NW",
+      "description": "Not Available Warning"
+    },
+    {
+      "code": "OE",
+      "description": "Other Error"
+    },
+    {
+      "code": "OK",
+      "description": "OK Status"
+    },
+    {
+      "code": "OW",
+      "description": "Other Warning"
+    },
+    {
+      "code": "QE",
+      "description": "QC Error"
+    },
+    {
+      "code": "QW",
+      "description": "QC Warning"
+    }
+  ]
+}

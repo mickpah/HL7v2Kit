@@ -1,0 +1,114 @@
+{
+  "table": "0265",
+  "version": "2.3.1",
+  "name": "Specialty type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0265 - Specialty type",
+  "entries": [
+    {
+      "code": "AMB",
+      "description": "Ambulatory"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric"
+    },
+    {
+      "code": "PPS",
+      "description": "Pediatric psychiatric"
+    },
+    {
+      "code": "REH",
+      "description": "Rehabilitation"
+    },
+    {
+      "code": "PRE",
+      "description": "Pediatric rehabilitation"
+    },
+    {
+      "code": "ISO",
+      "description": "Isolation"
+    },
+    {
+      "code": "OBG",
+      "description": "Obstetrics, gynecology"
+    },
+    {
+      "code": "PIN",
+      "description": "Pediatric/neonatal intensive care"
+    },
+    {
+      "code": "INT",
+      "description": "Intensive care"
+    },
+    {
+      "code": "SUR",
+      "description": "Surgery"
+    },
+    {
+      "code": "PSI",
+      "description": "Psychiatric intensive care"
+    },
+    {
+      "code": "EDI",
+      "description": "Education"
+    },
+    {
+      "code": "CAR",
+      "description": "Coronary/cardiac care"
+    },
+    {
+      "code": "NBI",
+      "description": "Newborn, nursery, infants"
+    },
+    {
+      "code": "CCR",
+      "description": "Critical care"
+    },
+    {
+      "code": "PED",
+      "description": "Pediatrics"
+    },
+    {
+      "code": "EMR",
+      "description": "Emergency"
+    },
+    {
+      "code": "OBS",
+      "description": "Observation"
+    },
+    {
+      "code": "WIC",
+      "description": "Walk-in clinic"
+    },
+    {
+      "code": "PHY",
+      "description": "General/family practice"
+    },
+    {
+      "code": "ALC",
+      "description": "Allergy"
+    },
+    {
+      "code": "FPC",
+      "description": "Family planning"
+    },
+    {
+      "code": "CHI",
+      "description": "Chiropractic"
+    },
+    {
+      "code": "CAN",
+      "description": "Cancer"
+    },
+    {
+      "code": "NAT",
+      "description": "Naturopathic"
+    },
+    {
+      "code": "OTH",
+      "description": "Other specialty"
+    }
+  ]
+}

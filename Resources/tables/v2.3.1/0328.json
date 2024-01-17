@@ -1,0 +1,9 @@
+{
+  "table": "0328",
+  "version": "2.3.1",
+  "name": "Employee classification",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0328 - Employee classification",
+  "entries": []
+}

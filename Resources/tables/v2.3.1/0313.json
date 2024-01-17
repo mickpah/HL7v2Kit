@@ -1,0 +1,9 @@
+{
+  "table": "0313",
+  "version": "2.3.1",
+  "name": "Policy source",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0313 - Policy source",
+  "entries": []
+}

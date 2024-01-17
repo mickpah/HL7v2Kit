@@ -1,0 +1,14 @@
+{
+  "table": "0092",
+  "version": "2.6",
+  "name": "Re-Admission Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0092 - Re-Admission Indicator",
+  "entries": [
+    {
+      "code": "R",
+      "description": "Re-admission"
+    }
+  ]
+}

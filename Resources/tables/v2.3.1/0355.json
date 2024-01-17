@@ -1,0 +1,18 @@
+{
+  "table": "0355",
+  "version": "2.3.1",
+  "name": "Primary key value type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0355 - Primary key value type",
+  "entries": [
+    {
+      "code": "PL",
+      "description": "Person location"
+    },
+    {
+      "code": "CE",
+      "description": "Coded element"
+    }
+  ]
+}

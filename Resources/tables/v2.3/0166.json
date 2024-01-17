@@ -1,0 +1,18 @@
+{
+  "table": "0166",
+  "version": "2.3",
+  "name": "RX Component Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0166 - RX Component Type",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Base"
+    },
+    {
+      "code": "A",
+      "description": "Additive"
+    }
+  ]
+}

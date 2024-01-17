@@ -1,0 +1,38 @@
+{
+  "table": "0474",
+  "version": "2.4",
+  "name": "Organization unit type - ORG",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0474 - Organization unit type - ORG",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Department"
+    },
+    {
+      "code": "F",
+      "description": "Facility"
+    },
+    {
+      "code": "L",
+      "description": "Local market area"
+    },
+    {
+      "code": "M",
+      "description": "Medical Center Area"
+    },
+    {
+      "code": "S",
+      "description": "Subdivision"
+    },
+    {
+      "code": "U",
+      "description": "Subdepartment"
+    },
+    {
+      "code": "V",
+      "description": "Division"
+    }
+  ]
+}

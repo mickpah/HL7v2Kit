@@ -1,0 +1,18 @@
+{
+  "table": "0482",
+  "version": "2.8.2",
+  "name": "Order Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0482 - Order Type",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Inpatient Order"
+    },
+    {
+      "code": "O",
+      "description": "Outpatient Order"
+    }
+  ]
+}

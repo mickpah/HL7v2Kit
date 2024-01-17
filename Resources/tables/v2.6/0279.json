@@ -1,0 +1,26 @@
+{
+  "table": "0279",
+  "version": "2.6",
+  "name": "Allow Substitution Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0279 - Allow Substitution Codes",
+  "entries": [
+    {
+      "code": "Confirm",
+      "description": "Contact the Placer Contact Person prior to making any substitutions of this resource"
+    },
+    {
+      "code": "No",
+      "description": "Substitution of this resource is not allowed"
+    },
+    {
+      "code": "Notify",
+      "description": "Notify the Placer Contact Person, through normal institutional procedures, that a substitution of this resource has been made"
+    },
+    {
+      "code": "Yes",
+      "description": "Substitution of this resource is allowed"
+    }
+  ]
+}

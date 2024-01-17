@@ -1,0 +1,114 @@
+{
+  "table": "0265",
+  "version": "2.6",
+  "name": "Specialty Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0265 - Specialty Type",
+  "entries": [
+    {
+      "code": "ALC",
+      "description": "Allergy"
+    },
+    {
+      "code": "AMB",
+      "description": "Ambulatory"
+    },
+    {
+      "code": "CAN",
+      "description": "Cancer"
+    },
+    {
+      "code": "CAR",
+      "description": "Coronary/cardiac care"
+    },
+    {
+      "code": "CCR",
+      "description": "Critical care"
+    },
+    {
+      "code": "CHI",
+      "description": "Chiropractic"
+    },
+    {
+      "code": "EDI",
+      "description": "Education"
+    },
+    {
+      "code": "EMR",
+      "description": "Emergency"
+    },
+    {
+      "code": "FPC",
+      "description": "Family planning"
+    },
+    {
+      "code": "INT",
+      "description": "Intensive care"
+    },
+    {
+      "code": "ISO",
+      "description": "Isolation"
+    },
+    {
+      "code": "NAT",
+      "description": "Naturopathic"
+    },
+    {
+      "code": "NBI",
+      "description": "Newborn, nursery, infants"
+    },
+    {
+      "code": "OBG",
+      "description": "Obstetrics, gynecology"
+    },
+    {
+      "code": "OBS",
+      "description": "Observation"
+    },
+    {
+      "code": "OTH",
+      "description": "Other specialty"
+    },
+    {
+      "code": "PED",
+      "description": "Pediatrics"
+    },
+    {
+      "code": "PHY",
+      "description": "General/family practice"
+    },
+    {
+      "code": "PIN",
+      "description": "Pediatric/neonatal intensive care"
+    },
+    {
+      "code": "PPS",
+      "description": "Pediatric psychiatric"
+    },
+    {
+      "code": "PRE",
+      "description": "Pediatric rehabilitation"
+    },
+    {
+      "code": "PSI",
+      "description": "Psychiatric intensive care"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric"
+    },
+    {
+      "code": "REH",
+      "description": "Rehabilitation"
+    },
+    {
+      "code": "SUR",
+      "description": "Surgery"
+    },
+    {
+      "code": "WIC",
+      "description": "Walk-in clinic"
+    }
+  ]
+}

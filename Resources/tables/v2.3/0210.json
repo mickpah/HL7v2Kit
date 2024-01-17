@@ -1,0 +1,18 @@
+{
+  "table": "0210",
+  "version": "2.3",
+  "name": "Relational Conjunction",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0210 - Relational Conjunction",
+  "entries": [
+    {
+      "code": "AND",
+      "description": "Default"
+    },
+    {
+      "code": "OR",
+      "description": ""
+    }
+  ]
+}

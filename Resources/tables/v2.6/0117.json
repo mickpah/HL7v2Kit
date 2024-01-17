@@ -1,0 +1,14 @@
+{
+  "table": "0117",
+  "version": "2.6",
+  "name": "Account Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0117 - Account Status",
+  "entries": [
+    {
+      "code": "...",
+      "description": "no suggested values"
+    }
+  ]
+}

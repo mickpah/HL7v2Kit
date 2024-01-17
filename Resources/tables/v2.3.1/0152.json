@@ -1,0 +1,9 @@
+{
+  "table": "0152",
+  "version": "2.3.1",
+  "name": "Second opinion documentation received",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0152 - Second opinion documentation received",
+  "entries": []
+}

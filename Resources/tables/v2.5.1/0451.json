@@ -1,0 +1,14 @@
+{
+  "table": "0451",
+  "version": "2.5.1",
+  "name": "Substance identifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0451 - Substance identifier",
+  "entries": [
+    {
+      "code": "ALL",
+      "description": "Used for query of all inventory items"
+    }
+  ]
+}

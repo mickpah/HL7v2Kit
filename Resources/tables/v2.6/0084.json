@@ -1,0 +1,14 @@
+{
+  "table": "0084",
+  "version": "2.6",
+  "name": "Performed by",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0084 - Performed by",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

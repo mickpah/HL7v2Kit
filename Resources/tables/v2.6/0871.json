@@ -1,0 +1,38 @@
+{
+  "table": "0871",
+  "version": "2.6",
+  "name": "Supply Risk Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0871 - Supply Risk Codes",
+  "entries": [
+    {
+      "code": "COR",
+      "description": "Corrosive"
+    },
+    {
+      "code": "EXP",
+      "description": "Explosive"
+    },
+    {
+      "code": "FLA",
+      "description": "Flammable"
+    },
+    {
+      "code": "INJ",
+      "description": "Injury Hazard"
+    },
+    {
+      "code": "RAD",
+      "description": "Radioactive"
+    },
+    {
+      "code": "TOX",
+      "description": "Toxic"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown"
+    }
+  ]
+}

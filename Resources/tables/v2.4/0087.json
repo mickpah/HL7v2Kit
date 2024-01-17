@@ -1,0 +1,9 @@
+{
+  "table": "0087",
+  "version": "2.4",
+  "name": "Pre-admit test indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0087 - Pre-admit test indicator",
+  "entries": []
+}

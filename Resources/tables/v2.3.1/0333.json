@@ -1,0 +1,22 @@
+{
+  "table": "0333",
+  "version": "2.3.1",
+  "name": "Network change type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0333 - Network change type",
+  "entries": [
+    {
+      "code": "SU",
+      "description": "Start up"
+    },
+    {
+      "code": "SD",
+      "description": "Shut down"
+    },
+    {
+      "code": "M",
+      "description": "Migrates to different CPU"
+    }
+  ]
+}

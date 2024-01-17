@@ -1,0 +1,14 @@
+{
+  "table": "0218",
+  "version": "2.6",
+  "name": "Patient Charge Adjustment",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0218 - Patient Charge Adjustment",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

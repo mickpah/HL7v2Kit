@@ -1,0 +1,114 @@
+{
+  "table": "0255",
+  "version": "2.6",
+  "name": "Duration categories",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0255 - Duration categories",
+  "entries": [
+    {
+      "code": "*",
+      "description": "(asterisk) Life of the \"unit.\" Used for blood products."
+    },
+    {
+      "code": "12H",
+      "description": "12 hours"
+    },
+    {
+      "code": "1H",
+      "description": "1 hour"
+    },
+    {
+      "code": "1L",
+      "description": "1 months (30 days)"
+    },
+    {
+      "code": "1W",
+      "description": "1 week"
+    },
+    {
+      "code": "2.5H",
+      "description": "2Â½ hours"
+    },
+    {
+      "code": "24H",
+      "description": "24 hours"
+    },
+    {
+      "code": "2D",
+      "description": "2 days"
+    },
+    {
+      "code": "2H",
+      "description": "2 hours"
+    },
+    {
+      "code": "2L",
+      "description": "2 months"
+    },
+    {
+      "code": "2W",
+      "description": "2 weeks"
+    },
+    {
+      "code": "30M",
+      "description": "30 minutes"
+    },
+    {
+      "code": "3D",
+      "description": "3 days"
+    },
+    {
+      "code": "3H",
+      "description": "3 hours"
+    },
+    {
+      "code": "3L",
+      "description": "3 months"
+    },
+    {
+      "code": "3W",
+      "description": "3 weeks"
+    },
+    {
+      "code": "4D",
+      "description": "4 days"
+    },
+    {
+      "code": "4H",
+      "description": "4 hours"
+    },
+    {
+      "code": "4W",
+      "description": "4 weeks"
+    },
+    {
+      "code": "5D",
+      "description": "5 days"
+    },
+    {
+      "code": "5H",
+      "description": "5 hours"
+    },
+    {
+      "code": "6D",
+      "description": "6 days"
+    },
+    {
+      "code": "6H",
+      "description": "6 hours"
+    },
+    {
+      "code": "7H",
+      "description": "7 hours"
+    },
+    {
+      "code": "8H",
+      "description": "8 hours"
+    },
+    {
+      "code": "PT",
+      "description": "To identify measures at a point in time. This is a synonym for \"spot\" or \"random\" as applied to urine measurements."
+    }
+  ]
+}

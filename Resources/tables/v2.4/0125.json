@@ -1,0 +1,110 @@
+{
+  "table": "0125",
+  "version": "2.4",
+  "name": "Value type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0125 - Value type",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Address"
+    },
+    {
+      "code": "CE",
+      "description": "Coded Entry"
+    },
+    {
+      "code": "CF",
+      "description": "Coded Element With Formatted Values"
+    },
+    {
+      "code": "CK",
+      "description": "Composite ID With Check Digit"
+    },
+    {
+      "code": "CN",
+      "description": "Composite ID And Name"
+    },
+    {
+      "code": "CP",
+      "description": "Composite Price"
+    },
+    {
+      "code": "CX",
+      "description": "Extended Composite ID With Check Digit"
+    },
+    {
+      "code": "DT",
+      "description": "Date"
+    },
+    {
+      "code": "ED",
+      "description": "Encapsulated Data"
+    },
+    {
+      "code": "FT",
+      "description": "Formatted Text (Display)"
+    },
+    {
+      "code": "MO",
+      "description": "Money"
+    },
+    {
+      "code": "NM",
+      "description": "Numeric"
+    },
+    {
+      "code": "PN",
+      "description": "Person Name"
+    },
+    {
+      "code": "RP",
+      "description": "Reference Pointer"
+    },
+    {
+      "code": "SN",
+      "description": "Structured Numeric"
+    },
+    {
+      "code": "ST",
+      "description": "String Data."
+    },
+    {
+      "code": "TM",
+      "description": "Time"
+    },
+    {
+      "code": "TN",
+      "description": "Telephone Number"
+    },
+    {
+      "code": "TS",
+      "description": "Time Stamp (Date & Time)"
+    },
+    {
+      "code": "TX",
+      "description": "Text Data (Display)"
+    },
+    {
+      "code": "XAD",
+      "description": "Extended Address"
+    },
+    {
+      "code": "XCN",
+      "description": "Extended Composite Name And Number For Persons"
+    },
+    {
+      "code": "XON",
+      "description": "Extended Composite Name And Number For Organizations"
+    },
+    {
+      "code": "XPN",
+      "description": "Extended Person Name"
+    },
+    {
+      "code": "XTN",
+      "description": "Extended Telecommunications Number"
+    }
+  ]
+}

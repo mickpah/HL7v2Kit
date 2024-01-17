@@ -1,0 +1,66 @@
+{
+  "table": "0490",
+  "version": "2.8.2",
+  "name": "Specimen Reject Reason",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0490 - Specimen Reject Reason",
+  "entries": [
+    {
+      "code": "EX",
+      "description": "Expired"
+    },
+    {
+      "code": "QS",
+      "description": "Quantity not sufficient"
+    },
+    {
+      "code": "RB",
+      "description": "Broken container"
+    },
+    {
+      "code": "RC",
+      "description": "Clotting"
+    },
+    {
+      "code": "RD",
+      "description": "Missing collection date"
+    },
+    {
+      "code": "RA",
+      "description": "Missing patient ID number"
+    },
+    {
+      "code": "RE",
+      "description": "Missing patient name"
+    },
+    {
+      "code": "RH",
+      "description": "Hemolysis"
+    },
+    {
+      "code": "RI",
+      "description": "Identification problem"
+    },
+    {
+      "code": "RM",
+      "description": "Labeling"
+    },
+    {
+      "code": "RN",
+      "description": "Contamination"
+    },
+    {
+      "code": "RP",
+      "description": "Missing phlebotomist ID"
+    },
+    {
+      "code": "RR",
+      "description": "Improper storage"
+    },
+    {
+      "code": "RS",
+      "description": "Name misspelling"
+    }
+  ]
+}

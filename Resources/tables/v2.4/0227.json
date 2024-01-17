@@ -1,0 +1,178 @@
+{
+  "table": "0227",
+  "version": "2.4",
+  "name": "Manufacturers of vaccines (code=MVX)",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0227 - Manufacturers of vaccines (code=MVX)",
+  "entries": [
+    {
+      "code": "AB",
+      "description": "Abbott Laboratories (includes Ross Products Division)"
+    },
+    {
+      "code": "AD",
+      "description": "Adams Laboratories"
+    },
+    {
+      "code": "ALP",
+      "description": "Alpha Therapeutic Corporation"
+    },
+    {
+      "code": "AR",
+      "description": "Armour [Inactive-use CEN]"
+    },
+    {
+      "code": "AVI",
+      "description": "Aviron"
+    },
+    {
+      "code": "BA",
+      "description": "Baxter Healthcare Corporation"
+    },
+    {
+      "code": "BAY",
+      "description": "Bayer Corporation(includes Miles, Inc. and Cutter Laboratories)"
+    },
+    {
+      "code": "BP",
+      "description": "Berna Products [Inactive-use BPC]"
+    },
+    {
+      "code": "BPC",
+      "description": "Berna Products Corporation (includes Swiss Serum and Vaccine Institute Berne)"
+    },
+    {
+      "code": "CEN",
+      "description": "Centeon L.L.C. (includes Armour Pharmaceutical Company)"
+    },
+    {
+      "code": "CHI",
+      "description": "Chiron Corporation"
+    },
+    {
+      "code": "CON",
+      "description": "Connaught [Inactive-use PMC]"
+    },
+    {
+      "code": "EVN",
+      "description": "Evans Medical Limited (an affiliate of Medeva Pharmaceuticals, Inc.)"
+    },
+    {
+      "code": "GRE",
+      "description": "Greer Laboratories, Inc."
+    },
+    {
+      "code": "IAG",
+      "description": "Immuno International AG"
+    },
+    {
+      "code": "IM",
+      "description": "Merieux [Inactive-use PMC]"
+    },
+    {
+      "code": "IUS",
+      "description": "Immuno-U.S., Inc."
+    },
+    {
+      "code": "JPN",
+      "description": "The Research Foundation for Microbial Diseases of Osaka University (BIKEN)"
+    },
+    {
+      "code": "KGC",
+      "description": "Korea Green Cross Corporation"
+    },
+    {
+      "code": "LED",
+      "description": "Lederle [Inactive-use WAL]"
+    },
+    {
+      "code": "MA",
+      "description": "Massachusetts Public Health Biologic Laboratories"
+    },
+    {
+      "code": "MED",
+      "description": "MedImmune, Inc."
+    },
+    {
+      "code": "MIL",
+      "description": "Miles [Inactive-use BAY]"
+    },
+    {
+      "code": "MIP",
+      "description": "Bioport Corporation (formerly Michigan Biologic Products Institute)"
+    },
+    {
+      "code": "MSD",
+      "description": "Merck & Co., Inc."
+    },
+    {
+      "code": "NAB",
+      "description": "NABI (formerly North American Biologicals, Inc.)"
+    },
+    {
+      "code": "NAV",
+      "description": "North American Vaccine, Inc."
+    },
+    {
+      "code": "NOV",
+      "description": "Novartis Pharmaceutical Corporation (includes Ciba- Geigy Limited and Sandoz Limited)"
+    },
+    {
+      "code": "NYB",
+      "description": "New York Blood Center"
+    },
+    {
+      "code": "ORT",
+      "description": "Ortho Diagnostic Systems, Inc."
+    },
+    {
+      "code": "OTC",
+      "description": "Organon Teknika Corporation"
+    },
+    {
+      "code": "OTH",
+      "description": "Other manufacturer"
+    },
+    {
+      "code": "PD",
+      "description": "Parkedale Pharmaceuticals (formerly Parke-Davis)"
+    },
+    {
+      "code": "PMC",
+      "description": "Aventis Pasteur Inc. (formerly Pasteur Merieux Connaught; includes Connaught Laboratories and Pasteur Merieux)"
+    },
+    {
+      "code": "PRX",
+      "description": "Praxis Biologics [Inactive-use WAL]"
+    },
+    {
+      "code": "SCL",
+      "description": "Sclavo, Inc."
+    },
+    {
+      "code": "SI",
+      "description": "Swiss Serum and Vaccine Inst. [Inactive-use BPC]"
+    },
+    {
+      "code": "SKB",
+      "description": "SmithKline Beecham"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown manufacturer"
+    },
+    {
+      "code": "USA",
+      "description": "United States Army Medical Research and Materiel Command"
+    },
+    {
+      "code": "WA",
+      "description": "Wyeth-Ayerst [Inactive-use WAL]"
+    },
+    {
+      "code": "WAL",
+      "description": "Wyeth-Ayerst (includes Wyeth-Lederle Vaccines and Pediatrics, Wyeth Laboratories, Lederle Laboratories, and Praxis Biologics)"
+    }
+  ]
+}

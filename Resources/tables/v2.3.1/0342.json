@@ -1,0 +1,9 @@
+{
+  "table": "0342",
+  "version": "2.3.1",
+  "name": "Dependent of military recipient",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0342 - Dependent of military recipient",
+  "entries": []
+}

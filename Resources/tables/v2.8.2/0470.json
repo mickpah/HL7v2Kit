@@ -1,0 +1,50 @@
+{
+  "table": "0470",
+  "version": "2.8.2",
+  "name": "Reimbursement Type Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0470 - Reimbursement Type Code",
+  "entries": [
+    {
+      "code": "OPPS",
+      "description": "Outpatient Prospective Payment System"
+    },
+    {
+      "code": "Pckg",
+      "description": "Packaged APC"
+    },
+    {
+      "code": "Lab",
+      "description": "Clinical Laboratory APC"
+    },
+    {
+      "code": "Thrpy",
+      "description": "Therapy APC"
+    },
+    {
+      "code": "DME",
+      "description": "Durable Medical Equipment"
+    },
+    {
+      "code": "EPO",
+      "description": "Epotein"
+    },
+    {
+      "code": "Mamm",
+      "description": "Screening Mammography APC"
+    },
+    {
+      "code": "PartH",
+      "description": "Partial Hospitalization APC"
+    },
+    {
+      "code": "Crnl",
+      "description": "Corneal Tissue APC"
+    },
+    {
+      "code": "NoPay",
+      "description": "This APC is not paid"
+    }
+  ]
+}

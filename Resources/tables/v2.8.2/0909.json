@@ -1,0 +1,34 @@
+{
+  "table": "0909",
+  "version": "2.8.2",
+  "name": "Patient Results Release Categorization Scheme",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0909 - Patient Results Release Categorization Scheme",
+  "entries": [
+    {
+      "code": "STBD",
+      "description": "Share To Be Determined – Category to be determined"
+    },
+    {
+      "code": "SIMM",
+      "description": "Share Immediately – Share result with patient immediately"
+    },
+    {
+      "code": "SWNL",
+      "description": "Share Within Normal Limits - Share result in reference/therapeutic range with patient immediately Share result out of reference/therapeutic ranges with patient after 1 or more business day as agreed to by the systems in play."
+    },
+    {
+      "code": "SID",
+      "description": "Share In1 Day - Share result regardless of reference/therapeutic range after 1 or more business day as agreed to by the systems in play."
+    },
+    {
+      "code": "SIDC",
+      "description": "Share in 1 Day Conditionally - Share result in reference ranges/therapeutic with patient after 1 or more business day as agreed to by the systems in play. Withhold result out of reference/therapeutic range until physician release"
+    },
+    {
+      "code": "SWTH",
+      "description": "Share Withhold – Withhold result regardless of reference/therapeutic ranges"
+    }
+  ]
+}

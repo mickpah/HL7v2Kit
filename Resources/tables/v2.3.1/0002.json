@@ -1,0 +1,30 @@
+{
+  "table": "0002",
+  "version": "2.3.1",
+  "name": "Marital status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0002 - Marital status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Separated"
+    },
+    {
+      "code": "D",
+      "description": "Divorced"
+    },
+    {
+      "code": "M",
+      "description": "Married"
+    },
+    {
+      "code": "S",
+      "description": "Single"
+    },
+    {
+      "code": "W",
+      "description": "Widowed"
+    }
+  ]
+}

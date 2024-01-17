@@ -1,0 +1,9 @@
+{
+  "table": "0044",
+  "version": "2.3.1",
+  "name": "Contract code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0044 - Contract code",
+  "entries": []
+}

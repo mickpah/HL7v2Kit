@@ -1,0 +1,9 @@
+{
+  "table": "0140",
+  "version": "2.3",
+  "name": "Champus Service",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0140 - Champus Service",
+  "entries": []
+}

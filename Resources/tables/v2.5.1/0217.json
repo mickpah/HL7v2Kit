@@ -1,0 +1,22 @@
+{
+  "table": "0217",
+  "version": "2.5.1",
+  "name": "Visit Priority Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0217 - Visit Priority Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Emergency"
+    },
+    {
+      "code": "2",
+      "description": "Urgent"
+    },
+    {
+      "code": "3",
+      "description": "Elective"
+    }
+  ]
+}

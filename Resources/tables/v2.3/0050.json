@@ -1,0 +1,9 @@
+{
+  "table": "0050",
+  "version": "2.3",
+  "name": "Accident Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0050 - Accident Code",
+  "entries": []
+}

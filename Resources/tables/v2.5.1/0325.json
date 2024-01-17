@@ -1,0 +1,38 @@
+{
+  "table": "0325",
+  "version": "2.5.1",
+  "name": "Location Relationship ID",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0325 - Location Relationship ID",
+  "entries": [
+    {
+      "code": "ALI",
+      "description": "Location Alias(es)"
+    },
+    {
+      "code": "DTY",
+      "description": "Nearest dietary location"
+    },
+    {
+      "code": "LAB",
+      "description": "Nearest lab"
+    },
+    {
+      "code": "LB2",
+      "description": "Second nearest lab"
+    },
+    {
+      "code": "PAR",
+      "description": "Parent location"
+    },
+    {
+      "code": "RX",
+      "description": "Nearest pharmacy"
+    },
+    {
+      "code": "RX2",
+      "description": "Second nearest pharmacy"
+    }
+  ]
+}

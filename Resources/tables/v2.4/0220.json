@@ -1,0 +1,34 @@
+{
+  "table": "0220",
+  "version": "2.4",
+  "name": "Living arrangement",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0220 - Living arrangement",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alone"
+    },
+    {
+      "code": "F",
+      "description": "Family"
+    },
+    {
+      "code": "I",
+      "description": "Institution"
+    },
+    {
+      "code": "R",
+      "description": "Relative"
+    },
+    {
+      "code": "S",
+      "description": "Spouse Only"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

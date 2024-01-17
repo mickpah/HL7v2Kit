@@ -1,0 +1,9 @@
+{
+  "table": "0215",
+  "version": "2.4",
+  "name": "Publicity code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0215 - Publicity code",
+  "entries": []
+}

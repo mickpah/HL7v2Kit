@@ -1,0 +1,42 @@
+{
+  "table": "0373",
+  "version": "2.8.2",
+  "name": "Treatment",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0373 - Treatment",
+  "entries": [
+    {
+      "code": "LDLP",
+      "description": "LDL Precipitation"
+    },
+    {
+      "code": "RECA",
+      "description": "Recalification"
+    },
+    {
+      "code": "DEFB",
+      "description": "Defibrination"
+    },
+    {
+      "code": "ACID",
+      "description": "Acidification"
+    },
+    {
+      "code": "NEUT",
+      "description": "Neutralization"
+    },
+    {
+      "code": "ALK",
+      "description": "Alkalization"
+    },
+    {
+      "code": "FILT",
+      "description": "Filtration"
+    },
+    {
+      "code": "UFIL",
+      "description": "Ultrafiltration"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "table": "0474",
+  "version": "2.6",
+  "name": "Organization Unit Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0474 - Organization Unit Type",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Department"
+    },
+    {
+      "code": "F",
+      "description": "Facility"
+    },
+    {
+      "code": "S",
+      "description": "Subdivision"
+    },
+    {
+      "code": "U",
+      "description": "Subdepartment"
+    },
+    {
+      "code": "V",
+      "description": "Division"
+    }
+  ]
+}

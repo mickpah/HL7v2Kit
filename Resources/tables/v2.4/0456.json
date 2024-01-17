@@ -1,0 +1,38 @@
+{
+  "table": "0456",
+  "version": "2.4",
+  "name": "Revenue code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0456 - Revenue code",
+  "entries": [
+    {
+      "code": "...",
+      "description": ""
+    },
+    {
+      "code": "260",
+      "description": "IV Therapy"
+    },
+    {
+      "code": "280",
+      "description": "Oncology"
+    },
+    {
+      "code": "301",
+      "description": "Lab/Chemistry"
+    },
+    {
+      "code": "991",
+      "description": "Cafeteria /Guest Tray"
+    },
+    {
+      "code": "993",
+      "description": "Telephone/Telegraph"
+    },
+    {
+      "code": "994",
+      "description": "TV/Radio"
+    }
+  ]
+}

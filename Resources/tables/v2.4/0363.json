@@ -1,0 +1,86 @@
+{
+  "table": "0363",
+  "version": "2.4",
+  "name": "Assigning authority",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0363 - Assigning authority",
+  "entries": [
+    {
+      "code": "AUSDVA",
+      "description": "Australia - Dept. of Veterans Affairs"
+    },
+    {
+      "code": "AUSHIC",
+      "description": "Australia - Health Insurance Commission"
+    },
+    {
+      "code": "CANAB",
+      "description": "Canada - Alberta"
+    },
+    {
+      "code": "CANBC",
+      "description": "Canada - British Columbia"
+    },
+    {
+      "code": "CANMB",
+      "description": "Canada - Manitoba"
+    },
+    {
+      "code": "CANNB",
+      "description": "Canada - New Brunswick"
+    },
+    {
+      "code": "CANNF",
+      "description": "Canada - Newfoundland"
+    },
+    {
+      "code": "CANNS",
+      "description": "Canada - Nova Scotia"
+    },
+    {
+      "code": "CANNT",
+      "description": "Canada - Northwest Territories"
+    },
+    {
+      "code": "CANNU",
+      "description": "Canada - Nanavut"
+    },
+    {
+      "code": "CANON",
+      "description": "Canada - Ontario"
+    },
+    {
+      "code": "CANPE",
+      "description": "Canada - Prince Edward Island"
+    },
+    {
+      "code": "CANQC",
+      "description": "Canada - Quebec"
+    },
+    {
+      "code": "CANSK",
+      "description": "Canada - Saskatchewan"
+    },
+    {
+      "code": "CANYT",
+      "description": "Canada - Yukon Territories"
+    },
+    {
+      "code": "NLVWS",
+      "description": "NL - Ministerie van Volksgezondheid, Welzijn en Sport"
+    },
+    {
+      "code": "USCDC",
+      "description": "US Center for Disease Control"
+    },
+    {
+      "code": "USHCFA",
+      "description": "US Healthcare Finance Authority"
+    },
+    {
+      "code": "USSSA",
+      "description": "US Social Security Administration"
+    }
+  ]
+}

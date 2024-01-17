@@ -1,0 +1,18 @@
+{
+  "table": "0173",
+  "version": "2.5.1",
+  "name": "Coordination of Benefits",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0173 - Coordination of Benefits",
+  "entries": [
+    {
+      "code": "CO",
+      "description": "Coordination"
+    },
+    {
+      "code": "IN",
+      "description": "Independent"
+    }
+  ]
+}

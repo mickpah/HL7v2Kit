@@ -1,0 +1,26 @@
+{
+  "table": "0273",
+  "version": "2.3.1",
+  "name": "Document availability status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0273 - Document availability status",
+  "entries": [
+    {
+      "code": "AV",
+      "description": "Available for patient care"
+    },
+    {
+      "code": "CA",
+      "description": "Deleted"
+    },
+    {
+      "code": "OB",
+      "description": "Obsolete"
+    },
+    {
+      "code": "UN",
+      "description": "Unavailable for patient care"
+    }
+  ]
+}

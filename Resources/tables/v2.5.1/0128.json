@@ -1,0 +1,26 @@
+{
+  "table": "0128",
+  "version": "2.5.1",
+  "name": "Allergy Severity",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0128 - Allergy Severity",
+  "entries": [
+    {
+      "code": "MI",
+      "description": "Mild"
+    },
+    {
+      "code": "MO",
+      "description": "Moderate"
+    },
+    {
+      "code": "SV",
+      "description": "Severe"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

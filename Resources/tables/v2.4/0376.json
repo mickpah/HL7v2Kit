@@ -1,0 +1,34 @@
+{
+  "table": "0376",
+  "version": "2.4",
+  "name": "Special handling considerations",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0376 - Special handling considerations",
+  "entries": [
+    {
+      "code": "C37",
+      "description": "Critical maintain at 37C (e.g., cryoglobulin specimen"
+    },
+    {
+      "code": "CAMB",
+      "description": "Critical ambient temperature"
+    },
+    {
+      "code": "CATM",
+      "description": "Critical do not expose to atmosphere - Do not uncap"
+    },
+    {
+      "code": "CFRZ",
+      "description": "Critical Frozen"
+    },
+    {
+      "code": "CREF",
+      "description": "Critical refrigerated"
+    },
+    {
+      "code": "PRTL",
+      "description": "Protect from light"
+    }
+  ]
+}

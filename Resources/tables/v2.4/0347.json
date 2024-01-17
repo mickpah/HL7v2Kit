@@ -1,0 +1,9 @@
+{
+  "table": "0347",
+  "version": "2.4",
+  "name": "Auto accident state",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0347 - Auto accident state",
+  "entries": []
+}

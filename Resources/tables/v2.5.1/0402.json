@@ -1,0 +1,26 @@
+{
+  "table": "0402",
+  "version": "2.5.1",
+  "name": "School type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0402 - School type",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Dental"
+    },
+    {
+      "code": "G",
+      "description": "Graduate"
+    },
+    {
+      "code": "M",
+      "description": "Medical"
+    },
+    {
+      "code": "U",
+      "description": "Undergraduate"
+    }
+  ]
+}

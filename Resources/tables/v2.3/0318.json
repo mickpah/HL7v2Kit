@@ -1,0 +1,9 @@
+{
+  "table": "0318",
+  "version": "2.3",
+  "name": "Confirmation Provided By",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0318 - Confirmation Provided By",
+  "entries": []
+}

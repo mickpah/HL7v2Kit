@@ -1,0 +1,18 @@
+{
+  "table": "0572",
+  "version": "2.8.2",
+  "name": "Provider Tax Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0572 - Provider Tax Status",
+  "entries": [
+    {
+      "code": "RVAT",
+      "description": "Registered in VAT register"
+    },
+    {
+      "code": "UVAT",
+      "description": "Unregistered in VAT register"
+    }
+  ]
+}

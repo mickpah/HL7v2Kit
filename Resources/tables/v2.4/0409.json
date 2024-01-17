@@ -1,0 +1,22 @@
+{
+  "table": "0409",
+  "version": "2.4",
+  "name": "Application change type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0409 - Application change type",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Migrates to different CPU"
+    },
+    {
+      "code": "SD",
+      "description": "Shut down"
+    },
+    {
+      "code": "SU",
+      "description": "Start up"
+    }
+  ]
+}

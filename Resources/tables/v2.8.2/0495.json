@@ -1,0 +1,74 @@
+{
+  "table": "0495",
+  "version": "2.8.2",
+  "name": "Body Site Modifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0495 - Body Site Modifier",
+  "entries": [
+    {
+      "code": "ANT",
+      "description": "Anterior"
+    },
+    {
+      "code": "BIL",
+      "description": "Bilateral"
+    },
+    {
+      "code": "DIS",
+      "description": "Distal"
+    },
+    {
+      "code": "EXT",
+      "description": "External"
+    },
+    {
+      "code": "LAT",
+      "description": "Lateral"
+    },
+    {
+      "code": "L",
+      "description": "Left"
+    },
+    {
+      "code": "LOW",
+      "description": "Lower"
+    },
+    {
+      "code": "MED",
+      "description": "Medial"
+    },
+    {
+      "code": "POS",
+      "description": "Posterior"
+    },
+    {
+      "code": "PRO",
+      "description": "Proximal"
+    },
+    {
+      "code": "LLQ",
+      "description": "Quadrant, Left Lower"
+    },
+    {
+      "code": "LUQ",
+      "description": "Quadrant, Left Upper"
+    },
+    {
+      "code": "RLQ",
+      "description": "Quadrant, Right Lower"
+    },
+    {
+      "code": "RUQ",
+      "description": "Quadrant, Right Upper"
+    },
+    {
+      "code": "R",
+      "description": "Right"
+    },
+    {
+      "code": "UPP",
+      "description": "Upper"
+    }
+  ]
+}

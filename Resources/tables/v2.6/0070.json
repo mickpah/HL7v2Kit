@@ -1,0 +1,510 @@
+{
+  "table": "0070",
+  "version": "2.6",
+  "name": "Specimen Source Codes",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0070 - Specimen Source Codes",
+  "entries": [
+    {
+      "code": "ABS",
+      "description": "Abscess"
+    },
+    {
+      "code": "AMN",
+      "description": "Amniotic fluid"
+    },
+    {
+      "code": "ASP",
+      "description": "Aspirate"
+    },
+    {
+      "code": "BBL",
+      "description": "Blood bag"
+    },
+    {
+      "code": "BDY",
+      "description": "Whole body"
+    },
+    {
+      "code": "BIFL",
+      "description": "Bile fluid"
+    },
+    {
+      "code": "BLD",
+      "description": "Whole blood"
+    },
+    {
+      "code": "BLDA",
+      "description": "Blood arterial"
+    },
+    {
+      "code": "BLDC",
+      "description": "Blood capillary"
+    },
+    {
+      "code": "BLDCO",
+      "description": "Cord blood"
+    },
+    {
+      "code": "BLDV",
+      "description": "Blood venous"
+    },
+    {
+      "code": "BON",
+      "description": "Bone"
+    },
+    {
+      "code": "BPH",
+      "description": "Basophils"
+    },
+    {
+      "code": "BPU",
+      "description": "Blood product unit"
+    },
+    {
+      "code": "BRN",
+      "description": "Burn"
+    },
+    {
+      "code": "BRO",
+      "description": "Bronchial"
+    },
+    {
+      "code": "BRTH",
+      "description": "Breath (use EXHLD)"
+    },
+    {
+      "code": "CALC",
+      "description": "Calculus (=Stone)"
+    },
+    {
+      "code": "CDM",
+      "description": "Cardiac muscle"
+    },
+    {
+      "code": "CNJT",
+      "description": "Conjunctiva"
+    },
+    {
+      "code": "CNL",
+      "description": "Cannula"
+    },
+    {
+      "code": "COL",
+      "description": "Colostrum"
+    },
+    {
+      "code": "CSF",
+      "description": "Cerebral spinal fluid"
+    },
+    {
+      "code": "CTP",
+      "description": "Catheter tip"
+    },
+    {
+      "code": "CUR",
+      "description": "Curettage"
+    },
+    {
+      "code": "CVM",
+      "description": "Cervical mucus"
+    },
+    {
+      "code": "CVX",
+      "description": "Cervix"
+    },
+    {
+      "code": "CYST",
+      "description": "Cyst"
+    },
+    {
+      "code": "DIAF",
+      "description": "Dialysis fluid"
+    },
+    {
+      "code": "DOSE",
+      "description": "Dose med or substance"
+    },
+    {
+      "code": "DRN",
+      "description": "Drain"
+    },
+    {
+      "code": "DUFL",
+      "description": "Duodenal fluid"
+    },
+    {
+      "code": "EAR",
+      "description": "Ear"
+    },
+    {
+      "code": "EARW",
+      "description": "Ear wax (cerumen)"
+    },
+    {
+      "code": "ELT",
+      "description": "Electrode"
+    },
+    {
+      "code": "ENDC",
+      "description": "Endocardium"
+    },
+    {
+      "code": "ENDM",
+      "description": "Endometrium"
+    },
+    {
+      "code": "EOS",
+      "description": "Eosinophils"
+    },
+    {
+      "code": "EXG",
+      "description": "Exhaled gas (=breath)"
+    },
+    {
+      "code": "EYE",
+      "description": "Eye"
+    },
+    {
+      "code": "FIB",
+      "description": "Fibroblasts"
+    },
+    {
+      "code": "FIST",
+      "description": "Fistula"
+    },
+    {
+      "code": "FLT",
+      "description": "Filter"
+    },
+    {
+      "code": "FLU",
+      "description": "Body fluid, unsp"
+    },
+    {
+      "code": "GAS",
+      "description": "Gas"
+    },
+    {
+      "code": "GAST",
+      "description": "Gastric fluid/contents"
+    },
+    {
+      "code": "GEN",
+      "description": "Genital"
+    },
+    {
+      "code": "GENC",
+      "description": "Genital cervix"
+    },
+    {
+      "code": "GENL",
+      "description": "Genital lochia"
+    },
+    {
+      "code": "GENV",
+      "description": "Genital vaginal"
+    },
+    {
+      "code": "HAR",
+      "description": "Hair"
+    },
+    {
+      "code": "IHG",
+      "description": "Inhaled Gas"
+    },
+    {
+      "code": "ISLT",
+      "description": "Isolate"
+    },
+    {
+      "code": "IT",
+      "description": "Intubation tube"
+    },
+    {
+      "code": "LAM",
+      "description": "Lamella"
+    },
+    {
+      "code": "LIQ",
+      "description": "Liquid NOS"
+    },
+    {
+      "code": "LN",
+      "description": "Line"
+    },
+    {
+      "code": "LNA",
+      "description": "Line arterial"
+    },
+    {
+      "code": "LNV",
+      "description": "Line venous"
+    },
+    {
+      "code": "LYM",
+      "description": "Lymphocytes"
+    },
+    {
+      "code": "MAC",
+      "description": "Macrophages"
+    },
+    {
+      "code": "MAR",
+      "description": "Marrow"
+    },
+    {
+      "code": "MBLD",
+      "description": "Menstrual blood"
+    },
+    {
+      "code": "MEC",
+      "description": "Meconium"
+    },
+    {
+      "code": "MILK",
+      "description": "Breast milk"
+    },
+    {
+      "code": "MLK",
+      "description": "Milk"
+    },
+    {
+      "code": "NAIL",
+      "description": "Nail"
+    },
+    {
+      "code": "NOS",
+      "description": "Nose (nasal passage)"
+    },
+    {
+      "code": "ORH",
+      "description": "Other"
+    },
+    {
+      "code": "PAFL",
+      "description": "Pancreatic fluid"
+    },
+    {
+      "code": "PAT",
+      "description": "Patient"
+    },
+    {
+      "code": "PLAS",
+      "description": "Plasma"
+    },
+    {
+      "code": "PLB",
+      "description": "Plasma bag"
+    },
+    {
+      "code": "PLC",
+      "description": "Placenta"
+    },
+    {
+      "code": "PLR",
+      "description": "Pleural fluid (thoracentesis fld)"
+    },
+    {
+      "code": "PMN",
+      "description": "Polymorphonuclear neutrophils"
+    },
+    {
+      "code": "PPP",
+      "description": "Platelet poor plasma"
+    },
+    {
+      "code": "PRP",
+      "description": "Platelet rich plasma"
+    },
+    {
+      "code": "PRT",
+      "description": "Peritoneal fluid /ascites"
+    },
+    {
+      "code": "PUS",
+      "description": "Pus"
+    },
+    {
+      "code": "RBC",
+      "description": "Erythrocytes"
+    },
+    {
+      "code": "RT",
+      "description": "Route of medicine"
+    },
+    {
+      "code": "SAL",
+      "description": "Saliva"
+    },
+    {
+      "code": "SER",
+      "description": "Serum"
+    },
+    {
+      "code": "SKM",
+      "description": "Skeletal muscle"
+    },
+    {
+      "code": "SKN",
+      "description": "Skin"
+    },
+    {
+      "code": "SMN",
+      "description": "Seminal fluid"
+    },
+    {
+      "code": "SNV",
+      "description": "Synovial fluid (Joint fluid)"
+    },
+    {
+      "code": "SPRM",
+      "description": "Spermatozoa"
+    },
+    {
+      "code": "SPT",
+      "description": "Sputum"
+    },
+    {
+      "code": "SPTC",
+      "description": "Sputum - coughed"
+    },
+    {
+      "code": "SPTT",
+      "description": "Sputum - tracheal aspirate"
+    },
+    {
+      "code": "STL",
+      "description": "Stool = Fecal"
+    },
+    {
+      "code": "STON",
+      "description": "Stone (use CALC)"
+    },
+    {
+      "code": "SWT",
+      "description": "Sweat"
+    },
+    {
+      "code": "TEAR",
+      "description": "Tears"
+    },
+    {
+      "code": "THRB",
+      "description": "Thrombocyte (platelet)"
+    },
+    {
+      "code": "THRT",
+      "description": "Throat"
+    },
+    {
+      "code": "TISG",
+      "description": "Tissue gall bladder"
+    },
+    {
+      "code": "TISPL",
+      "description": "Tissue placenta"
+    },
+    {
+      "code": "TISS",
+      "description": "Tissue"
+    },
+    {
+      "code": "TISU",
+      "description": "Tissue ulcer"
+    },
+    {
+      "code": "TLGI",
+      "description": "Tissue large intestine"
+    },
+    {
+      "code": "TLNG",
+      "description": "Tissue lung"
+    },
+    {
+      "code": "TSMI",
+      "description": "Tissue small intestine"
+    },
+    {
+      "code": "TUB",
+      "description": "Tube NOS"
+    },
+    {
+      "code": "ULC",
+      "description": "Ulcer"
+    },
+    {
+      "code": "UMB",
+      "description": "Umbilical blood"
+    },
+    {
+      "code": "UMED",
+      "description": "Unknown medicine"
+    },
+    {
+      "code": "UR",
+      "description": "Urine"
+    },
+    {
+      "code": "URC",
+      "description": "Urine clean catch"
+    },
+    {
+      "code": "URNS",
+      "description": "Urine sediment"
+    },
+    {
+      "code": "URT",
+      "description": "Urine catheter"
+    },
+    {
+      "code": "URTH",
+      "description": "Urethra"
+    },
+    {
+      "code": "USUB",
+      "description": "Unknown substance"
+    },
+    {
+      "code": "VITF",
+      "description": "Vitreous Fluid"
+    },
+    {
+      "code": "VOM",
+      "description": "Vomitus"
+    },
+    {
+      "code": "WAT",
+      "description": "Water"
+    },
+    {
+      "code": "WBC",
+      "description": "Leukocytes"
+    },
+    {
+      "code": "WICK",
+      "description": "Wick"
+    },
+    {
+      "code": "WND",
+      "description": "Wound"
+    },
+    {
+      "code": "WNDA",
+      "description": "Wound abscess"
+    },
+    {
+      "code": "WNDD",
+      "description": "Wound drainage"
+    },
+    {
+      "code": "WNDE",
+      "description": "Wound exudate"
+    },
+    {
+      "code": "XXX",
+      "description": "To be specified in another part of the message"
+    }
+  ]
+}

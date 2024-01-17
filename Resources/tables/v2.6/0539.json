@@ -1,0 +1,14 @@
+{
+  "table": "0539",
+  "version": "2.6",
+  "name": "Cost Center Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0539 - Cost Center Code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "no suggested values"
+    }
+  ]
+}

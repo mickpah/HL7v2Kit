@@ -1,0 +1,9 @@
+{
+  "table": "0526",
+  "version": "2.5.1",
+  "name": "Privilege class",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0526 - Privilege class",
+  "entries": []
+}

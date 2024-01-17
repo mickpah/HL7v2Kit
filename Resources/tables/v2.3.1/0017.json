@@ -1,0 +1,26 @@
+{
+  "table": "0017",
+  "version": "2.3.1",
+  "name": "Transaction type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0017 - Transaction type",
+  "entries": [
+    {
+      "code": "CG",
+      "description": "Charge"
+    },
+    {
+      "code": "CD",
+      "description": "Credit"
+    },
+    {
+      "code": "PY",
+      "description": "Payment"
+    },
+    {
+      "code": "AJ",
+      "description": "Adjustment"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0348",
+  "version": "2.6",
+  "name": "Special Program Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0348 - Special Program Indicator",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

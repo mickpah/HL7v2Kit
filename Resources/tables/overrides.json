@@ -1,0 +1,58 @@
+{
+  "0003": {
+    "permitsLocalExtensions": true,
+    "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"
+  },
+  "0076": {
+    "permitsLocalExtensions": true,
+    "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set"
+  },
+  "0104": {
+    "permitsLocalExtensions": true,
+    "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set"
+  },
+  "0396": {
+    "permitsLocalExtensions": true,
+    "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+  },
+  "0399": {
+    "permitsLocalExtensions": true,
+    "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+  },
+  "0119": {
+    "note": "The v2.6 printing of Order control codes bleeds footnote prose into the Value column. These rows are not codes in any version.",
+    "dropCodes": [
+      "MSH",
+      "ORC",
+      "OBR",
+      "OBR]",
+      "[ORC",
+      "OBX",
+      "PID",
+      "RXO",
+      "NW or RO",
+      "(2) When the fillerappli",
+      "(3) When anapplication (",
+      "Whether the OBRsegments"
+    ]
+  },
+  "0211": {
+    "note": "The v2.8.2 printing of Alternate character sets runs a footnote (its marker and its URL) through the Value column. Neither is a code in any version.",
+    "dropCodes": [
+      "1",
+      "http://www.unicode.org/unicode/consortium/consort.html"
+    ]
+  },
+  "0391": {
+    "note": "The v2.6 printing of Segment group wraps PERSONNEL RESOURCE across a line break; PERSONNEL_RESOURCE is the group's real name and is printed separately.",
+    "dropCodes": [
+      "PERSONNELRESOURCE"
+    ]
+  },
+  "0440": {
+    "note": "The v2.5.1 printing of Data types bleeds the ERL element name into the Value column. That row is not a code in any version.",
+    "dropCodes": [
+      "Error location anddescri"
+    ]
+  }
+}

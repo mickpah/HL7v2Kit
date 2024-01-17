@@ -1,0 +1,218 @@
+{
+  "table": "0292",
+  "version": "2.3",
+  "name": "Vaccines Administered",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0292 - Vaccines Administered",
+  "entries": [
+    {
+      "code": "24",
+      "description": "Anthrax"
+    },
+    {
+      "code": "19",
+      "description": "BCG"
+    },
+    {
+      "code": "27",
+      "description": "Botulinum antitoxin"
+    },
+    {
+      "code": "26",
+      "description": "Cholera"
+    },
+    {
+      "code": "29",
+      "description": "CMVIG"
+    },
+    {
+      "code": "12",
+      "description": "Diphtheria antitoxin"
+    },
+    {
+      "code": "28",
+      "description": "DT(pediatric)"
+    },
+    {
+      "code": "20",
+      "description": "DTaP"
+    },
+    {
+      "code": "50",
+      "description": "Dtap-Hib"
+    },
+    {
+      "code": "01",
+      "description": "DTP"
+    },
+    {
+      "code": "22",
+      "description": "DTP-Hib"
+    },
+    {
+      "code": "30",
+      "description": "HBIG"
+    },
+    {
+      "code": "31",
+      "description": "Hep A - pediatric"
+    },
+    {
+      "code": "52",
+      "description": "Hep A - adult"
+    },
+    {
+      "code": "08",
+      "description": "Hep B - adolescent or pediatric"
+    },
+    {
+      "code": "42",
+      "description": "Hep B - adolescent/high risk infant"
+    },
+    {
+      "code": "43",
+      "description": "Hep B-adult"
+    },
+    {
+      "code": "44",
+      "description": "Hep B-dialysis"
+    },
+    {
+      "code": "45",
+      "description": "Hep B-other or unspecified"
+    },
+    {
+      "code": "17",
+      "description": "Hib-unspecified"
+    },
+    {
+      "code": "46",
+      "description": "Hib-PRP-D"
+    },
+    {
+      "code": "47",
+      "description": "Hib-HbOC"
+    },
+    {
+      "code": "48",
+      "description": "Hib-PRP-T"
+    },
+    {
+      "code": "49",
+      "description": "Hib-PRP-OMP"
+    },
+    {
+      "code": "51",
+      "description": "Hib-Hep B"
+    },
+    {
+      "code": "14",
+      "description": "IG"
+    },
+    {
+      "code": "15",
+      "description": "Influenza-split (incl. purified surface antigen)"
+    },
+    {
+      "code": "16",
+      "description": "Influenza-whole"
+    },
+    {
+      "code": "10",
+      "description": "IPV"
+    },
+    {
+      "code": "39",
+      "description": "Japanese encephalitis"
+    },
+    {
+      "code": "03",
+      "description": "MMR"
+    },
+    {
+      "code": "04",
+      "description": "M/R"
+    },
+    {
+      "code": "05",
+      "description": "Measles"
+    },
+    {
+      "code": "32",
+      "description": "Meningococcal"
+    },
+    {
+      "code": "07",
+      "description": "Mumps"
+    },
+    {
+      "code": "11",
+      "description": "Pertussis"
+    },
+    {
+      "code": "23",
+      "description": "Plague"
+    },
+    {
+      "code": "33",
+      "description": "Pneumococcal"
+    },
+    {
+      "code": "02",
+      "description": "OPV"
+    },
+    {
+      "code": "18",
+      "description": "Rabies-intramuscular injection"
+    },
+    {
+      "code": "40",
+      "description": "Rabies-intradermal injection"
+    },
+    {
+      "code": "34",
+      "description": "RIG"
+    },
+    {
+      "code": "06",
+      "description": "Rubella"
+    },
+    {
+      "code": "38",
+      "description": "Rubella/Mumps"
+    },
+    {
+      "code": "09",
+      "description": "Td (Adult)"
+    },
+    {
+      "code": "35",
+      "description": "Tetanus toxoid"
+    },
+    {
+      "code": "13",
+      "description": "TIG"
+    },
+    {
+      "code": "25",
+      "description": "Typhoid-oral"
+    },
+    {
+      "code": "41",
+      "description": "Typhoid-parenteral"
+    },
+    {
+      "code": "21",
+      "description": "Varicella"
+    },
+    {
+      "code": "36",
+      "description": "VZIG"
+    },
+    {
+      "code": "37",
+      "description": "Yellow fever"
+    }
+  ]
+}

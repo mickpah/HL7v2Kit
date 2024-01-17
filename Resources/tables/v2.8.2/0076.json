@@ -1,0 +1,594 @@
+{
+  "table": "0076",
+  "version": "2.8.2",
+  "name": "Message Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 Table 0076 - Message type; Chapter 2 reserves the Zxx message types for site definition, so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "ACK",
+      "description": "General acknowledgment message"
+    },
+    {
+      "code": "ADR",
+      "description": "ADT response"
+    },
+    {
+      "code": "ADT",
+      "description": "ADT message"
+    },
+    {
+      "code": "BAR",
+      "description": "Add/change billing account"
+    },
+    {
+      "code": "CCF",
+      "description": "Collaborative Care Fetch"
+    },
+    {
+      "code": "CCI",
+      "description": "Collaborative Care Information"
+    },
+    {
+      "code": "CCM",
+      "description": "Collaborative Care Message"
+    },
+    {
+      "code": "CCQ",
+      "description": "Collaborative Care Referral"
+    },
+    {
+      "code": "CCU",
+      "description": "Collaborative Care Referral"
+    },
+    {
+      "code": "CQU",
+      "description": "Collaborative Care Referral"
+    },
+    {
+      "code": "CRM",
+      "description": "Clinical study registration message"
+    },
+    {
+      "code": "BPS",
+      "description": "Blood product dispense status message"
+    },
+    {
+      "code": "BRP",
+      "description": "Blood product dispense status acknowledgement message"
+    },
+    {
+      "code": "BRT",
+      "description": "Blood product transfusion/disposition acknowledgement message"
+    },
+    {
+      "code": "BTS",
+      "description": "Blood product transfusion/disposition message"
+    },
+    {
+      "code": "CSU",
+      "description": "Unsolicited study data message"
+    },
+    {
+      "code": "DBC",
+      "description": "Create Donor Record"
+    },
+    {
+      "code": "DBU",
+      "description": "Update Donor Record"
+    },
+    {
+      "code": "DEL",
+      "description": "Donor Eligibility"
+    },
+    {
+      "code": "DEO",
+      "description": "Donor Eligibility Observation"
+    },
+    {
+      "code": "DER",
+      "description": "Donor Eligibility Request"
+    },
+    {
+      "code": "DFT",
+      "description": "Detail financial transactions"
+    },
+    {
+      "code": "DOC",
+      "description": "Document response"
+    },
+    {
+      "code": "DPR",
+      "description": "Donation Procedure"
+    },
+    {
+      "code": "DRC",
+      "description": "Donor Request to Collect"
+    },
+    {
+      "code": "DSR",
+      "description": "Display response"
+    },
+    {
+      "code": "EAC",
+      "description": "Automated equipment command message"
+    },
+    {
+      "code": "EAN",
+      "description": "Automated equipment notification message"
+    },
+    {
+      "code": "EAR",
+      "description": "Automated equipment response message"
+    },
+    {
+      "code": "EHC",
+      "description": "Health Care Invoice"
+    },
+    {
+      "code": "ESR",
+      "description": "Automated equipment status update acknowledgment message"
+    },
+    {
+      "code": "ESU",
+      "description": "Automated equipment status update message"
+    },
+    {
+      "code": "INR",
+      "description": "Automated equipment inventory request message"
+    },
+    {
+      "code": "INU",
+      "description": "Automated equipment inventory update message"
+    },
+    {
+      "code": "LSR",
+      "description": "Automated equipment log/service request message"
+    },
+    {
+      "code": "LSU",
+      "description": "Automated equipment log/service update message"
+    },
+    {
+      "code": "MDM",
+      "description": "Medical document management"
+    },
+    {
+      "code": "MFD",
+      "description": "Master files delayed application acknowledgment"
+    },
+    {
+      "code": "MFK",
+      "description": "Master files application acknowledgment"
+    },
+    {
+      "code": "MFN",
+      "description": "Master files notification"
+    },
+    {
+      "code": "MFQ",
+      "description": "Master files query"
+    },
+    {
+      "code": "MFR",
+      "description": "Master files response"
+    },
+    {
+      "code": "NMD",
+      "description": "Application management data message"
+    },
+    {
+      "code": "NMQ",
+      "description": "Application management query message"
+    },
+    {
+      "code": "NMR",
+      "description": "Application management response message"
+    },
+    {
+      "code": "OMB",
+      "description": "Blood product order message"
+    },
+    {
+      "code": "OMD",
+      "description": "Dietary order"
+    },
+    {
+      "code": "OMG",
+      "description": "General clinical order message"
+    },
+    {
+      "code": "OMI",
+      "description": "Imaging order"
+    },
+    {
+      "code": "OML",
+      "description": "Laboratory order message"
+    },
+    {
+      "code": "OMN",
+      "description": "Non-stock requisition order message"
+    },
+    {
+      "code": "OMP",
+      "description": "Pharmacy/treatment order message"
+    },
+    {
+      "code": "OMQ",
+      "description": "General order message with document payload"
+    },
+    {
+      "code": "OMS",
+      "description": "Stock requisition order message"
+    },
+    {
+      "code": "OPL",
+      "description": "Population/Location-Based Laboratory Order Message"
+    },
+    {
+      "code": "OPR",
+      "description": "Population/Location-Based Laboratory Order Acknowledgment Message"
+    },
+    {
+      "code": "OPU",
+      "description": "Unsolicited Population/Location-Based Laboratory Observation Message"
+    },
+    {
+      "code": "ORA",
+      "description": "Observation Report Acknowledgment"
+    },
+    {
+      "code": "ORB",
+      "description": "Blood product order acknowledgement message"
+    },
+    {
+      "code": "ORD",
+      "description": "Dietary order acknowledgment message"
+    },
+    {
+      "code": "ORF",
+      "description": "Query for results of observation"
+    },
+    {
+      "code": "ORG",
+      "description": "General clinical order acknowledgment message"
+    },
+    {
+      "code": "ORI",
+      "description": "Imaging order acknowledgement message"
+    },
+    {
+      "code": "ORL",
+      "description": "Laboratory acknowledgment message (unsolicited)"
+    },
+    {
+      "code": "ORM",
+      "description": "Pharmacy/treatment order message"
+    },
+    {
+      "code": "ORN",
+      "description": "Non-stock requisition – General order acknowledgment message"
+    },
+    {
+      "code": "ORP",
+      "description": "Pharmacy/treatment order acknowledgment message"
+    },
+    {
+      "code": "ORR",
+      "description": "General order response message response to any ORM"
+    },
+    {
+      "code": "ORS",
+      "description": "Stock requisition – Order acknowledgment message"
+    },
+    {
+      "code": "ORU",
+      "description": "Unsolicited transmission of an observation message"
+    },
+    {
+      "code": "ORX",
+      "description": "General Order Message with Document Payload Acknowledgement"
+    },
+    {
+      "code": "OSM",
+      "description": "Specimen Shipment Message"
+    },
+    {
+      "code": "OSQ",
+      "description": "Query response for order status"
+    },
+    {
+      "code": "OSR",
+      "description": "Query response for order status"
+    },
+    {
+      "code": "OSU",
+      "description": "Order status update"
+    },
+    {
+      "code": "OUL",
+      "description": "Unsolicited laboratory observation message"
+    },
+    {
+      "code": "PEX",
+      "description": "Product experience message"
+    },
+    {
+      "code": "PGL",
+      "description": "Patient goal message"
+    },
+    {
+      "code": "PIN",
+      "description": "Patient insurance information"
+    },
+    {
+      "code": "PMU",
+      "description": "Add personnel record"
+    },
+    {
+      "code": "PPG",
+      "description": "Patient pathway message (goal-oriented)"
+    },
+    {
+      "code": "PPP",
+      "description": "Patient pathway message (problem-oriented)"
+    },
+    {
+      "code": "PPR",
+      "description": "Patient problem message"
+    },
+    {
+      "code": "PPT",
+      "description": "Patient pathway goal-oriented response"
+    },
+    {
+      "code": "PPV",
+      "description": "Patient goal response"
+    },
+    {
+      "code": "PRR",
+      "description": "Patient problem response"
+    },
+    {
+      "code": "PTR",
+      "description": "Patient pathway problem-oriented response"
+    },
+    {
+      "code": "QBP",
+      "description": "Query by parameter"
+    },
+    {
+      "code": "QCK",
+      "description": "Deferred query"
+    },
+    {
+      "code": "QCN",
+      "description": "Cancel query"
+    },
+    {
+      "code": "QRY",
+      "description": "Query, original mode"
+    },
+    {
+      "code": "QSB",
+      "description": "Create subscription"
+    },
+    {
+      "code": "QSX",
+      "description": "Cancel subscription/acknowledge message"
+    },
+    {
+      "code": "QVR",
+      "description": "Query for previous events"
+    },
+    {
+      "code": "RAR",
+      "description": "Pharmacy/treatment administration information"
+    },
+    {
+      "code": "RAS",
+      "description": "Pharmacy/treatment administration message"
+    },
+    {
+      "code": "RCI",
+      "description": "Return clinical information"
+    },
+    {
+      "code": "RCL",
+      "description": "Return clinical list"
+    },
+    {
+      "code": "RDE",
+      "description": "Pharmacy/treatment encoded order message"
+    },
+    {
+      "code": "RDR",
+      "description": "Pharmacy/treatment dispense information"
+    },
+    {
+      "code": "RDS",
+      "description": "Pharmacy/treatment dispense message"
+    },
+    {
+      "code": "RDY",
+      "description": "Display based response"
+    },
+    {
+      "code": "REF",
+      "description": "Patient referral"
+    },
+    {
+      "code": "RER",
+      "description": "Pharmacy/treatment encoded order information"
+    },
+    {
+      "code": "RGR",
+      "description": "Pharmacy/treatment dose information"
+    },
+    {
+      "code": "RGV",
+      "description": "Pharmacy/treatment give message"
+    },
+    {
+      "code": "ROR",
+      "description": "Pharmacy/treatment order response"
+    },
+    {
+      "code": "RPA",
+      "description": "Return patient authorization"
+    },
+    {
+      "code": "RPI",
+      "description": "Return patient information"
+    },
+    {
+      "code": "RPL",
+      "description": "Return patient display list"
+    },
+    {
+      "code": "RPR",
+      "description": "Return patient list"
+    },
+    {
+      "code": "RQA",
+      "description": "Request patient authorization"
+    },
+    {
+      "code": "RQC",
+      "description": "Request clinical information"
+    },
+    {
+      "code": "RQI",
+      "description": "Request patient information"
+    },
+    {
+      "code": "RQP",
+      "description": "Request patient demographics"
+    },
+    {
+      "code": "RRA",
+      "description": "Pharmacy/treatment administration acknowledgment message"
+    },
+    {
+      "code": "RRD",
+      "description": "Pharmacy/treatment dispense acknowledgment message"
+    },
+    {
+      "code": "RRE",
+      "description": "Pharmacy/treatment encoded order acknowledgment message"
+    },
+    {
+      "code": "RRG",
+      "description": "Pharmacy/treatment give acknowledgment message"
+    },
+    {
+      "code": "RRI",
+      "description": "Return referral information"
+    },
+    {
+      "code": "RSP",
+      "description": "Segment pattern response"
+    },
+    {
+      "code": "RTB",
+      "description": "Tabular response"
+    },
+    {
+      "code": "SCN",
+      "description": "Notification of Anti-Microbial Device Cycle Data"
+    },
+    {
+      "code": "SDN",
+      "description": "Notification of Anti-Microbial Device Data"
+    },
+    {
+      "code": "SDR",
+      "description": "Sterilization anti-microbial device data request"
+    },
+    {
+      "code": "SIU",
+      "description": "Schedule information unsolicited"
+    },
+    {
+      "code": "SLN",
+      "description": "Notification of New Sterilization Lot"
+    },
+    {
+      "code": "SLR",
+      "description": "Sterilization lot request"
+    },
+    {
+      "code": "SMD",
+      "description": "Sterilization anti-microbial device cycle data request"
+    },
+    {
+      "code": "SQM",
+      "description": "Schedule query message"
+    },
+    {
+      "code": "SQR",
+      "description": "Schedule query response"
+    },
+    {
+      "code": "SRM",
+      "description": "Schedule request message"
+    },
+    {
+      "code": "SRR",
+      "description": "Scheduled request response"
+    },
+    {
+      "code": "SSR",
+      "description": "Specimen status request message"
+    },
+    {
+      "code": "SSU",
+      "description": "Specimen status update message"
+    },
+    {
+      "code": "STC",
+      "description": "Notification of Sterilization Configuration"
+    },
+    {
+      "code": "STI",
+      "description": "Sterilization item request"
+    },
+    {
+      "code": "SUR",
+      "description": "Summary product experience report"
+    },
+    {
+      "code": "TBR",
+      "description": "Tabular data response"
+    },
+    {
+      "code": "TCR",
+      "description": "Automated equipment test code settings request message"
+    },
+    {
+      "code": "TCU",
+      "description": "Automated equipment test code settings update message"
+    },
+    {
+      "code": "UDM",
+      "description": "Unsolicited display update message"
+    },
+    {
+      "code": "VXQ",
+      "description": "Query for vaccination record"
+    },
+    {
+      "code": "VXR",
+      "description": "Vaccination record response"
+    },
+    {
+      "code": "VXU",
+      "description": "Unsolicited vaccination record update"
+    },
+    {
+      "code": "VXX",
+      "description": "Response for vaccination query with multiple PID matches"
+    }
+  ]
+}

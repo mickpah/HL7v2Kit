@@ -1,0 +1,30 @@
+{
+  "table": "0250",
+  "version": "2.3.1",
+  "name": "Relatedness assessment",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0250 - Relatedness assessment",
+  "entries": [
+    {
+      "code": "H",
+      "description": "Highly probable"
+    },
+    {
+      "code": "M",
+      "description": "Moderately probable"
+    },
+    {
+      "code": "S",
+      "description": "Somewhat probable"
+    },
+    {
+      "code": "I",
+      "description": "Improbable"
+    },
+    {
+      "code": "N",
+      "description": "Not related"
+    }
+  ]
+}

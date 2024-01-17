@@ -1,0 +1,22 @@
+{
+  "table": "0105",
+  "version": "2.8.2",
+  "name": "Source of Comment",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0105 - Source of Comment",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Ancillary (filler) department is source of comment"
+    },
+    {
+      "code": "P",
+      "description": "Orderer (placer) is source of comment"
+    },
+    {
+      "code": "O",
+      "description": "Other system is source of comment"
+    }
+  ]
+}

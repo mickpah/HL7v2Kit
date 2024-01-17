@@ -1,0 +1,30 @@
+{
+  "table": "0731",
+  "version": "2.6",
+  "name": "DRG Diagnosis Determination Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0731 - DRG Diagnosis Determination Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Valid code"
+    },
+    {
+      "code": "1",
+      "description": "Invalid code"
+    },
+    {
+      "code": "2",
+      "description": "Two primary diagnosis codes"
+    },
+    {
+      "code": "3",
+      "description": "Invalid for this gender"
+    },
+    {
+      "code": "4",
+      "description": "Invalid for this age"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0248",
+  "version": "2.3",
+  "name": "Product Source",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0248 - Product Source",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Actual product involved in incident was evaluated"
+    },
+    {
+      "code": "L",
+      "description": "A product from the same lot as the the actual product involved was evaluated"
+    },
+    {
+      "code": "R",
+      "description": "A product from a reserve sample was evaluated"
+    },
+    {
+      "code": "N",
+      "description": "A product from a controlled/non-related inventory was evaluated"
+    }
+  ]
+}

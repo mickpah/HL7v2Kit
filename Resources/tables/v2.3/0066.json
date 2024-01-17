@@ -1,0 +1,9 @@
+{
+  "table": "0066",
+  "version": "2.3",
+  "name": "Employment Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0066 - Employment Status",
+  "entries": []
+}

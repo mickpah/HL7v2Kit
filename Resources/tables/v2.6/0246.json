@@ -1,0 +1,14 @@
+{
+  "table": "0246",
+  "version": "2.6",
+  "name": "Product Available for Inspection",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0246 - Product Available for Inspection",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

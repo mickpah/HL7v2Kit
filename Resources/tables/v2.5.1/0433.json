@@ -1,0 +1,46 @@
+{
+  "table": "0433",
+  "version": "2.5.1",
+  "name": "Precaution Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0433 - Precaution Code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Aggressive"
+    },
+    {
+      "code": "B",
+      "description": "Blind"
+    },
+    {
+      "code": "C",
+      "description": "Confused"
+    },
+    {
+      "code": "D",
+      "description": "Deaf"
+    },
+    {
+      "code": "I",
+      "description": "On IV"
+    },
+    {
+      "code": "N",
+      "description": "â œNo-codeâ (i.e. Do not resuscitate)"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Paraplegic"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

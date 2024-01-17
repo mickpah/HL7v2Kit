@@ -1,0 +1,9 @@
+{
+  "table": "0509",
+  "version": "2.8.2",
+  "name": "Indication for Use",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0509 - Indication for Use",
+  "entries": []
+}

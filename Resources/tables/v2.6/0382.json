@@ -1,0 +1,14 @@
+{
+  "table": "0382",
+  "version": "2.6",
+  "name": "Drug interference",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0382 - Drug interference",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

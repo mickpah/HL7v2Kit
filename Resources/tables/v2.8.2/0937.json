@@ -1,0 +1,42 @@
+{
+  "table": "0937",
+  "version": "2.8.2",
+  "name": "Observation Sub-Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0937 - Observation Sub-Type",
+  "entries": [
+    {
+      "code": "MIR",
+      "description": "Micro Isolate Related"
+    },
+    {
+      "code": "MNIR",
+      "description": "Micro Non-Isolate Related"
+    },
+    {
+      "code": "MIRM",
+      "description": "Micro Isolate Related Modifier"
+    },
+    {
+      "code": "SUR",
+      "description": "Susceptibility Related"
+    },
+    {
+      "code": "SUP",
+      "description": "Supplemental Result"
+    },
+    {
+      "code": "UNSP",
+      "description": "Unspecified"
+    },
+    {
+      "code": "AOE",
+      "description": "Ask at Order Entry"
+    },
+    {
+      "code": "ASC",
+      "description": "Ask at Specimen Collection"
+    }
+  ]
+}

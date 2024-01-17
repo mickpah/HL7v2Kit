@@ -1,0 +1,22 @@
+{
+  "table": "0469",
+  "version": "2.4",
+  "name": "Packaging status code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0469 - Packaging status code",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Not packaged"
+    },
+    {
+      "code": "1",
+      "description": "Packaged service (status indicator N, or no HCPCS code and certain revenue codes)"
+    },
+    {
+      "code": "2",
+      "description": "Packaged as part of partial hospitalization per diem or daily mental health service per diem"
+    }
+  ]
+}

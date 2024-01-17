@@ -1,0 +1,9 @@
+{
+  "table": "0362",
+  "version": "2.4",
+  "name": "Sending/receiving facility",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0362 - Sending/receiving facility",
+  "entries": []
+}

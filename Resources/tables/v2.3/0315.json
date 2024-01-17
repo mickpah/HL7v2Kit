@@ -1,0 +1,30 @@
+{
+  "table": "0315",
+  "version": "2.3",
+  "name": "Living Will",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0315 - Living Will",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "Yes, patient has a living will"
+    },
+    {
+      "code": "F",
+      "description": "Yes, patient has a living will but it is not on file"
+    },
+    {
+      "code": "N",
+      "description": "No, patient does not have a living will and no information was provided"
+    },
+    {
+      "code": "I",
+      "description": "No, patient does not have a living will but information was provided"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

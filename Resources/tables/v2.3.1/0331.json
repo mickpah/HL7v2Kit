@@ -1,0 +1,26 @@
+{
+  "table": "0331",
+  "version": "2.3.1",
+  "name": "Facility type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0331 - Facility type",
+  "entries": [
+    {
+      "code": "U",
+      "description": "User"
+    },
+    {
+      "code": "M",
+      "description": "Manufacturer"
+    },
+    {
+      "code": "D",
+      "description": "Distributor"
+    },
+    {
+      "code": "A",
+      "description": "Agent for a foreign manufacturer"
+    }
+  ]
+}

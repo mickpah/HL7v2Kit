@@ -1,0 +1,198 @@
+{
+  "table": "0119",
+  "version": "2.3",
+  "name": "Order Control Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0119 - Order Control Code",
+  "entries": [
+    {
+      "code": "NW",
+      "description": "New Order"
+    },
+    {
+      "code": "OK",
+      "description": "Order accepted and OK"
+    },
+    {
+      "code": "UA",
+      "description": "Unable to accept order"
+    },
+    {
+      "code": "CA",
+      "description": "Cancel order request"
+    },
+    {
+      "code": "OC",
+      "description": "Order canceled"
+    },
+    {
+      "code": "CR",
+      "description": "Canceled as requested"
+    },
+    {
+      "code": "UC",
+      "description": "Unable to cancel"
+    },
+    {
+      "code": "DC",
+      "description": "Discontinue order request"
+    },
+    {
+      "code": "OD",
+      "description": "Order discontinued"
+    },
+    {
+      "code": "DR",
+      "description": "Discontinued as requested"
+    },
+    {
+      "code": "UD",
+      "description": "Unable to discontinue"
+    },
+    {
+      "code": "HD",
+      "description": "Hold order request"
+    },
+    {
+      "code": "OH",
+      "description": "Order held"
+    },
+    {
+      "code": "UH",
+      "description": "Unable to put on hold"
+    },
+    {
+      "code": "HR",
+      "description": "On hold as requested"
+    },
+    {
+      "code": "RL",
+      "description": "Release previous hold"
+    },
+    {
+      "code": "OE",
+      "description": "Order released"
+    },
+    {
+      "code": "OR",
+      "description": "Released as requested"
+    },
+    {
+      "code": "UR",
+      "description": "Unable to release"
+    },
+    {
+      "code": "RP",
+      "description": "Order replace request"
+    },
+    {
+      "code": "RU",
+      "description": "Replaced unsolicited"
+    },
+    {
+      "code": "RO",
+      "description": "Replacement order"
+    },
+    {
+      "code": "RQ",
+      "description": "Replaced as requested"
+    },
+    {
+      "code": "UM",
+      "description": "Unable to replace"
+    },
+    {
+      "code": "PA",
+      "description": "Parent order"
+    },
+    {
+      "code": "CH",
+      "description": "Child order"
+    },
+    {
+      "code": "XO",
+      "description": "Change order request"
+    },
+    {
+      "code": "XX",
+      "description": "Order changed, unsolicited"
+    },
+    {
+      "code": "UX",
+      "description": "Unable to change"
+    },
+    {
+      "code": "XR",
+      "description": "Changed as requested"
+    },
+    {
+      "code": "DE",
+      "description": "Data Errors"
+    },
+    {
+      "code": "RE",
+      "description": "Observations to follow"
+    },
+    {
+      "code": "RR",
+      "description": "Request received"
+    },
+    {
+      "code": "SR",
+      "description": "Response to send order status request"
+    },
+    {
+      "code": "SS",
+      "description": "Send order status request"
+    },
+    {
+      "code": "SC",
+      "description": "Status changed"
+    },
+    {
+      "code": "SN",
+      "description": "Send order number"
+    },
+    {
+      "code": "NA",
+      "description": "Number assigned"
+    },
+    {
+      "code": "CN",
+      "description": "Combined result"
+    },
+    {
+      "code": "RF",
+      "description": "Refill order request"
+    },
+    {
+      "code": "AF",
+      "description": "Order refill request approval"
+    },
+    {
+      "code": "DF",
+      "description": "Order refill request denied"
+    },
+    {
+      "code": "FU",
+      "description": "Order refilled, unsolicited"
+    },
+    {
+      "code": "OF",
+      "description": "Order refilled as requested"
+    },
+    {
+      "code": "UF",
+      "description": "Unable to refill"
+    },
+    {
+      "code": "LI",
+      "description": "Link order to patient care message"
+    },
+    {
+      "code": "UN",
+      "description": "Unlink order from patient care message"
+    }
+  ]
+}

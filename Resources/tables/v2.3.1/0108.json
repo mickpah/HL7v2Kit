@@ -1,0 +1,26 @@
+{
+  "table": "0108",
+  "version": "2.3.1",
+  "name": "Query results level",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0108 - Query results level",
+  "entries": [
+    {
+      "code": "O",
+      "description": "Order plus order status"
+    },
+    {
+      "code": "R",
+      "description": "Results without bulk text"
+    },
+    {
+      "code": "S",
+      "description": "Status only"
+    },
+    {
+      "code": "T",
+      "description": "Full results"
+    }
+  ]
+}

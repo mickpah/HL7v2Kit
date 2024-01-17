@@ -1,0 +1,178 @@
+{
+  "table": "0112",
+  "version": "2.3.1",
+  "name": "Discharge disposition",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0112 - Discharge disposition",
+  "entries": [
+    {
+      "code": "01",
+      "description": "Discharged to home or self care (routine discharge)"
+    },
+    {
+      "code": "02",
+      "description": "Discharged/transferred to another short term general hospital for inpatient care"
+    },
+    {
+      "code": "03",
+      "description": "Discharged/transferred to skilled nursing facility (SNF)"
+    },
+    {
+      "code": "04",
+      "description": "Discharged/transferred to an intermediate care facility (ICF)"
+    },
+    {
+      "code": "05",
+      "description": "Discharged/transferred to another type of institution for inpatient care or referred for outpatient services to another institution"
+    },
+    {
+      "code": "06",
+      "description": "Discharged/transferred to home under care of organized home health service organization"
+    },
+    {
+      "code": "07",
+      "description": "Left against medical advice or discontinued care"
+    },
+    {
+      "code": "08",
+      "description": "Discharged/transferred to home under care of Home IV provider"
+    },
+    {
+      "code": "09",
+      "description": "Admitted as an inpatient to this hospital"
+    },
+    {
+      "code": "10",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "11",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "12",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "13",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "14",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "15",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "16",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "17",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "18",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "19",
+      "description": "Discharge to be defined at state level, if necessary"
+    },
+    {
+      "code": "20",
+      "description": "Expired"
+    },
+    {
+      "code": "21",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "22",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "23",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "24",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "25",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "26",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "27",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "28",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "29",
+      "description": "Expired to be defined at state level, if necessary"
+    },
+    {
+      "code": "30",
+      "description": "Still patient or expected to return for outpatient services"
+    },
+    {
+      "code": "31",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "32",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "33",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "34",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "35",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "36",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "37",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "38",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "39",
+      "description": "Still patient to be defined at state level, if necessary"
+    },
+    {
+      "code": "40",
+      "description": "Expired at home"
+    },
+    {
+      "code": "41",
+      "description": "Expired in a medical facility; e.g., hospital, SNF, ICF, or free standing hospice"
+    },
+    {
+      "code": "42",
+      "description": "Expired - place unknown"
+    }
+  ]
+}

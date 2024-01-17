@@ -1,0 +1,46 @@
+{
+  "table": "0004",
+  "version": "2.6",
+  "name": "Patient Class",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0004 - Patient Class",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Obstetrics"
+    },
+    {
+      "code": "C",
+      "description": "Commercial Account"
+    },
+    {
+      "code": "E",
+      "description": "Emergency"
+    },
+    {
+      "code": "I",
+      "description": "Inpatient"
+    },
+    {
+      "code": "N",
+      "description": "Not Applicable"
+    },
+    {
+      "code": "O",
+      "description": "Outpatient"
+    },
+    {
+      "code": "P",
+      "description": "Preadmit"
+    },
+    {
+      "code": "R",
+      "description": "Recurring patient"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

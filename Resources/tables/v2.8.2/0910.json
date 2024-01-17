@@ -1,0 +1,9 @@
+{
+  "table": "0910",
+  "version": "2.8.2",
+  "name": "Acquisition Modality",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0910 - Acquisition Modality",
+  "entries": []
+}

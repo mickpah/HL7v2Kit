@@ -1,0 +1,14 @@
+{
+  "table": "0055",
+  "version": "2.6",
+  "name": "Diagnosis related group",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0055 - Diagnosis related group",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

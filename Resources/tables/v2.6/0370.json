@@ -1,0 +1,42 @@
+{
+  "table": "0370",
+  "version": "2.6",
+  "name": "Container status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0370 - Container status",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Identified"
+    },
+    {
+      "code": "L",
+      "description": "Left Equipment"
+    },
+    {
+      "code": "M",
+      "description": "Missing"
+    },
+    {
+      "code": "O",
+      "description": "In Process"
+    },
+    {
+      "code": "P",
+      "description": "In Position"
+    },
+    {
+      "code": "R",
+      "description": "Process Completed"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "X",
+      "description": "Container Unavailable"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "table": "0357",
+  "version": "2.6",
+  "name": "Message error condition codes",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0357 - Message error condition codes",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Message accepted"
+    },
+    {
+      "code": "100",
+      "description": "Segment sequence error"
+    },
+    {
+      "code": "101",
+      "description": "Required field missing"
+    },
+    {
+      "code": "102",
+      "description": "Data type error"
+    },
+    {
+      "code": "103",
+      "description": "Table value not found"
+    },
+    {
+      "code": "200",
+      "description": "Unsupported message type"
+    },
+    {
+      "code": "201",
+      "description": "Unsupported event code"
+    },
+    {
+      "code": "202",
+      "description": "Unsupported processing id"
+    },
+    {
+      "code": "203",
+      "description": "Unsupported version id"
+    },
+    {
+      "code": "204",
+      "description": "Unknown key identifier"
+    },
+    {
+      "code": "205",
+      "description": "Duplicate key identifier"
+    },
+    {
+      "code": "206",
+      "description": "Application record locked"
+    },
+    {
+      "code": "207",
+      "description": "Application internal error"
+    }
+  ]
+}

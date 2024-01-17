@@ -1,0 +1,138 @@
+{
+  "table": "0702",
+  "version": "2.8.2",
+  "name": "Cycle Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0702 - Cycle Type",
+  "entries": [
+    {
+      "code": "FLS",
+      "description": "Flash"
+    },
+    {
+      "code": "PRV",
+      "description": "Prevac"
+    },
+    {
+      "code": "GRV",
+      "description": "Gravity"
+    },
+    {
+      "code": "LQD",
+      "description": "Liquid"
+    },
+    {
+      "code": "EXP",
+      "description": "Express"
+    },
+    {
+      "code": "DRT",
+      "description": "Dart"
+    },
+    {
+      "code": "DRW",
+      "description": "Dart Warm-up Cycle"
+    },
+    {
+      "code": "THR",
+      "description": "Thermal"
+    },
+    {
+      "code": "ISO",
+      "description": "Isothermal"
+    },
+    {
+      "code": "BWD",
+      "description": "Bowie-Dick Test"
+    },
+    {
+      "code": "LKT",
+      "description": "Leak Test"
+    },
+    {
+      "code": "WFP",
+      "description": "Wrap/Steam Flush Pressure Pulse (Wrap/SFPP)"
+    },
+    {
+      "code": "SFP",
+      "description": "Steam Flush Pressure Pulse"
+    },
+    {
+      "code": "CMW",
+      "description": "Chemical Wash"
+    },
+    {
+      "code": "PEA",
+      "description": "Peracetic Acid"
+    },
+    {
+      "code": "EOH",
+      "description": "EO High Temperature"
+    },
+    {
+      "code": "EOL",
+      "description": "EO Low Temperature"
+    },
+    {
+      "code": "CRT",
+      "description": "Cart Wash"
+    },
+    {
+      "code": "UTL",
+      "description": "Utensil Wash"
+    },
+    {
+      "code": "IST",
+      "description": "Instrument Wash"
+    },
+    {
+      "code": "GLS",
+      "description": "Glassware"
+    },
+    {
+      "code": "PLA",
+      "description": "Plastic Goods Wash"
+    },
+    {
+      "code": "ANR",
+      "description": "Anesthesia/Respiratory"
+    },
+    {
+      "code": "GTL",
+      "description": "Gentle"
+    },
+    {
+      "code": "OPW",
+      "description": "Optional Wash"
+    },
+    {
+      "code": "BDP",
+      "description": "Bedpans"
+    },
+    {
+      "code": "TRB",
+      "description": "Tray/Basin"
+    },
+    {
+      "code": "GNP",
+      "description": "Gen. Purpose"
+    },
+    {
+      "code": "COD",
+      "description": "Code"
+    },
+    {
+      "code": "RNS",
+      "description": "Rinse"
+    },
+    {
+      "code": "2RS",
+      "description": "Second Rinse"
+    },
+    {
+      "code": "DEC",
+      "description": "Decontamination"
+    }
+  ]
+}

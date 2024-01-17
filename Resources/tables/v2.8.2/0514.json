@@ -1,0 +1,86 @@
+{
+  "table": "0514",
+  "version": "2.8.2",
+  "name": "Transfusion Adverse Reaction",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0514 - Transfusion Adverse Reaction",
+  "entries": [
+    {
+      "code": "ABOINC",
+      "description": "ABO Incompatible Transfusion Reaction"
+    },
+    {
+      "code": "ACUTHEHTR",
+      "description": "Acute Hemolytic Transfusion Reaction"
+    },
+    {
+      "code": "ALLERGIC1",
+      "description": "Allergic Reaction – First"
+    },
+    {
+      "code": "ALLERGIC2",
+      "description": "Allergic Reaction – Recurrent"
+    },
+    {
+      "code": "ALLERGICR",
+      "description": "Allergic Reaction – Repeating"
+    },
+    {
+      "code": "ANAPHYLAC",
+      "description": "Anaphylactic Reaction"
+    },
+    {
+      "code": "BACTCONTAM",
+      "description": "Reaction to Bacterial Contamination"
+    },
+    {
+      "code": "DELAYEDHTR",
+      "description": "Delayed Hemolytic Transfusion Reaction"
+    },
+    {
+      "code": "DELAYEDSTR",
+      "description": "Delayed Serological Transfusion Reaction"
+    },
+    {
+      "code": "GVHD",
+      "description": "Graft vs Host Disease – Transfusion – Associated"
+    },
+    {
+      "code": "HYPOTENS",
+      "description": "Non-hemolytic Hypotensive Reaction"
+    },
+    {
+      "code": "NONHTR1",
+      "description": "Non-Hemolytic Fever Chill Transfusion Reaction – First"
+    },
+    {
+      "code": "NONHTR2",
+      "description": "Non-Hemolytic Fever Chill Transfusion Reaction – Recurrent"
+    },
+    {
+      "code": "NONHTRREC",
+      "description": "Non-Hemolytic Fever Chill Transfusion Reaction – Repeating"
+    },
+    {
+      "code": "NONIMMUNE",
+      "description": "Non-Immune Hemolysis"
+    },
+    {
+      "code": "NONSPEC",
+      "description": "Non-Specific, Non-Hemolytic Transfusion Reaction"
+    },
+    {
+      "code": "NORXN",
+      "description": "No Evidence of Transfusion Reaction"
+    },
+    {
+      "code": "PTP",
+      "description": "Posttransfusion Purpura"
+    },
+    {
+      "code": "VOLOVER",
+      "description": "Symptoms most likely due to volume overload"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0151",
+  "version": "2.6",
+  "name": "Second Opinion Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0151 - Second Opinion Status",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

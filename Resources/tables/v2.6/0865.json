@@ -1,0 +1,14 @@
+{
+  "table": "0865",
+  "version": "2.6",
+  "name": "Referral Documentation Completion Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0865 - Referral Documentation Completion Status",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

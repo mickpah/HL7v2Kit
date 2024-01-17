@@ -1,0 +1,18 @@
+{
+  "table": "0790",
+  "version": "2.8.2",
+  "name": "Approving Regulatory Agency",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0790 - Approving Regulatory Agency",
+  "entries": [
+    {
+      "code": "FDA",
+      "description": "Food and Drug Administration"
+    },
+    {
+      "code": "AMA",
+      "description": "American Medical Association"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0088",
+  "version": "2.4",
+  "name": "Procedure Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0088 - Procedure Code",
+  "entries": []
+}

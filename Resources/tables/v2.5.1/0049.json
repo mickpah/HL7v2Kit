@@ -1,0 +1,9 @@
+{
+  "table": "0049",
+  "version": "2.5.1",
+  "name": "Department Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0049 - Department Code",
+  "entries": []
+}

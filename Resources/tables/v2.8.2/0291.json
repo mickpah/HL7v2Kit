@@ -1,0 +1,18 @@
+{
+  "table": "0291",
+  "version": "2.8.2",
+  "name": "Subtype of Referenced Data",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0291 - Subtype of Referenced Data",
+  "entries": [
+    {
+      "code": "x-hl7-cda-",
+      "description": "HL7 Clinical Document Architecture Level One document"
+    },
+    {
+      "code": "level-one",
+      "description": "compatibility only as of v2.6 and CDA R 2. Preferred value is text/xml."
+    }
+  ]
+}

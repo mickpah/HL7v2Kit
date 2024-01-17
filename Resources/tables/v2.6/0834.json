@@ -1,0 +1,38 @@
+{
+  "table": "0834",
+  "version": "2.6",
+  "name": "MIME Types",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0834 - MIME Types",
+  "entries": [
+    {
+      "code": "application",
+      "description": "Application data"
+    },
+    {
+      "code": "audio",
+      "description": "Audio data"
+    },
+    {
+      "code": "image",
+      "description": "Image data"
+    },
+    {
+      "code": "model",
+      "description": "Model data"
+    },
+    {
+      "code": "multipart",
+      "description": "MIME multipart package"
+    },
+    {
+      "code": "text",
+      "description": "Text data"
+    },
+    {
+      "code": "video",
+      "description": "Video data"
+    }
+  ]
+}

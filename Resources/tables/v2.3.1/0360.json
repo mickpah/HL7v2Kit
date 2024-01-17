@@ -1,0 +1,166 @@
+{
+  "table": "0360",
+  "version": "2.3.1",
+  "name": "Degree",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0360 - Degree",
+  "entries": [
+    {
+      "code": "AAS",
+      "description": "Associate of Applied Science"
+    },
+    {
+      "code": "AA",
+      "description": "Associate of Arts"
+    },
+    {
+      "code": "ABA",
+      "description": "Associate of Business Administration"
+    },
+    {
+      "code": "AE",
+      "description": "Associate of Engineering"
+    },
+    {
+      "code": "AS",
+      "description": "Associate of Science"
+    },
+    {
+      "code": "BA",
+      "description": "Bachelor of Arts"
+    },
+    {
+      "code": "BBA",
+      "description": "Bachelor of Business Administration"
+    },
+    {
+      "code": "BE",
+      "description": "Bachelor or Engineering"
+    },
+    {
+      "code": "BFA",
+      "description": "Bachelor of Fine Arts"
+    },
+    {
+      "code": "BN",
+      "description": "Bachelor of Nursing"
+    },
+    {
+      "code": "BS",
+      "description": "Bachelor of Science"
+    },
+    {
+      "code": "BSL",
+      "description": "Bachelor of Science – Law"
+    },
+    {
+      "code": "BT",
+      "description": "Bachelor of Theology"
+    },
+    {
+      "code": "CER",
+      "description": "Certificate"
+    },
+    {
+      "code": "DIP",
+      "description": "Diploma"
+    },
+    {
+      "code": "DBA",
+      "description": "Doctor of Business Administration"
+    },
+    {
+      "code": "DED",
+      "description": "Doctor of Education"
+    },
+    {
+      "code": "PHE",
+      "description": "Doctor of Engineering"
+    },
+    {
+      "code": "PHD",
+      "description": "Doctor of Philosophy"
+    },
+    {
+      "code": "PHS",
+      "description": "Doctor of Science"
+    },
+    {
+      "code": "MD",
+      "description": "Doctor of Medicine"
+    },
+    {
+      "code": "DO",
+      "description": "Doctor of Osteopathy"
+    },
+    {
+      "code": "HS",
+      "description": "High School Graduate"
+    },
+    {
+      "code": "JD",
+      "description": "Juris Doctor"
+    },
+    {
+      "code": "MA",
+      "description": "Master of Arts"
+    },
+    {
+      "code": "MBA",
+      "description": "Master of Business Administration"
+    },
+    {
+      "code": "MCE",
+      "description": "Master of Civil Engineering"
+    },
+    {
+      "code": "MDI",
+      "description": "Master of Divinity"
+    },
+    {
+      "code": "MED",
+      "description": "Master of Education"
+    },
+    {
+      "code": "MEE",
+      "description": "Master of Electrical Engineering"
+    },
+    {
+      "code": "ME",
+      "description": "Master of Engineering"
+    },
+    {
+      "code": "MFA",
+      "description": "Master of Fine Arts"
+    },
+    {
+      "code": "MME",
+      "description": "Master of Mechanical Engineering"
+    },
+    {
+      "code": "MS",
+      "description": "Master of Science"
+    },
+    {
+      "code": "MSL",
+      "description": "Master of Science – Law"
+    },
+    {
+      "code": "MT",
+      "description": "Master of Theology"
+    },
+    {
+      "code": "NG",
+      "description": "Non-Graduate"
+    },
+    {
+      "code": "SEC",
+      "description": "Secretarial Certificate"
+    },
+    {
+      "code": "TS",
+      "description": "Trade School Graduate"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0007",
+  "version": "2.3.1",
+  "name": "Admission type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0007 - Admission type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Accident"
+    },
+    {
+      "code": "E",
+      "description": "Emergency"
+    },
+    {
+      "code": "L",
+      "description": "Labor and Delivery"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    }
+  ]
+}

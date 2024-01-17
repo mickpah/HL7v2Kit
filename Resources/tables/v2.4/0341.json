@@ -1,0 +1,9 @@
+{
+  "table": "0341",
+  "version": "2.4",
+  "name": "Guarantor credit rating code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0341 - Guarantor credit rating code",
+  "entries": []
+}

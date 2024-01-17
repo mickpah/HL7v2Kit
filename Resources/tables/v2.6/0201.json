@@ -1,0 +1,46 @@
+{
+  "table": "0201",
+  "version": "2.6",
+  "name": "Telecommunication use code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0201 - Telecommunication use code",
+  "entries": [
+    {
+      "code": "ASN",
+      "description": "Answering Service Number"
+    },
+    {
+      "code": "BPN",
+      "description": "Beeper Number"
+    },
+    {
+      "code": "EMR",
+      "description": "Emergency Number"
+    },
+    {
+      "code": "NET",
+      "description": "Network (email) Address"
+    },
+    {
+      "code": "ORN",
+      "description": "Other Residence Number"
+    },
+    {
+      "code": "PRN",
+      "description": "Primary Residence Number"
+    },
+    {
+      "code": "PRS",
+      "description": "Personal"
+    },
+    {
+      "code": "VHN",
+      "description": "Vacation Home Number"
+    },
+    {
+      "code": "WPN",
+      "description": "Work Number"
+    }
+  ]
+}

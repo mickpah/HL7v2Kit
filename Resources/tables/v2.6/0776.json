@@ -1,0 +1,22 @@
+{
+  "table": "0776",
+  "version": "2.6",
+  "name": "Item Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0776 - Item Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Active"
+    },
+    {
+      "code": "I",
+      "description": "Inactive"
+    },
+    {
+      "code": "P",
+      "description": "Pending Inactive"
+    }
+  ]
+}

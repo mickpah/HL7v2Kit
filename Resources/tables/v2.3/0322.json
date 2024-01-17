@@ -1,0 +1,26 @@
+{
+  "table": "0322",
+  "version": "2.3",
+  "name": "Completion Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0322 - Completion Status",
+  "entries": [
+    {
+      "code": "CP",
+      "description": "Complete"
+    },
+    {
+      "code": "RE",
+      "description": "Refused"
+    },
+    {
+      "code": "NA",
+      "description": "Not Administered"
+    },
+    {
+      "code": "PA",
+      "description": "Partially Administered"
+    }
+  ]
+}

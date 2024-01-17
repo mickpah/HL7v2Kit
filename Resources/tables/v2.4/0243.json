@@ -1,0 +1,22 @@
+{
+  "table": "0243",
+  "version": "2.4",
+  "name": "Identity may be divulged",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0243 - Identity may be divulged",
+  "entries": [
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "NA",
+      "description": "Not applicable"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

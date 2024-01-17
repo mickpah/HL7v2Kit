@@ -1,0 +1,9 @@
+{
+  "table": "9999",
+  "version": "2.4",
+  "name": "for unknown CE data elements",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 9999 - for unknown CE data elements",
+  "entries": []
+}

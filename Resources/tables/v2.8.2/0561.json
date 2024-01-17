@@ -1,0 +1,38 @@
+{
+  "table": "0561",
+  "version": "2.8.2",
+  "name": "Product/Services Clarification Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0561 - Product/Services Clarification Codes",
+  "entries": [
+    {
+      "code": "DTCTR",
+      "description": "Data Center Number"
+    },
+    {
+      "code": "SEQ",
+      "description": "Sequence Number"
+    },
+    {
+      "code": "DGAPP",
+      "description": "Diagnostic Approval Number"
+    },
+    {
+      "code": "CLCTR",
+      "description": "Claim Center"
+    },
+    {
+      "code": "ENC",
+      "description": "Encounter Number"
+    },
+    {
+      "code": "OOP",
+      "description": "Out of Province Indicator"
+    },
+    {
+      "code": "GFTH",
+      "description": "Good Faith Indicator"
+    }
+  ]
+}

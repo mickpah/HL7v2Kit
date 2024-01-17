@@ -1,0 +1,62 @@
+{
+  "table": "0200",
+  "version": "2.5.1",
+  "name": "Name type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0200 - Name type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alias Name"
+    },
+    {
+      "code": "B",
+      "description": "Name at Birth"
+    },
+    {
+      "code": "C",
+      "description": "Adopted Name"
+    },
+    {
+      "code": "D",
+      "description": "Display Name"
+    },
+    {
+      "code": "I",
+      "description": "Licensing Name"
+    },
+    {
+      "code": "L",
+      "description": "Legal Name"
+    },
+    {
+      "code": "M",
+      "description": "Maiden Name"
+    },
+    {
+      "code": "N",
+      "description": "Nickname /â Call meâ Name/Street Name"
+    },
+    {
+      "code": "P",
+      "description": "Name of Partner/Spouse (retained for backward compatibility only)"
+    },
+    {
+      "code": "R",
+      "description": "Registered Name (animals only)"
+    },
+    {
+      "code": "S",
+      "description": "Coded Pseudo-Name to ensure anonymity"
+    },
+    {
+      "code": "T",
+      "description": "Indigenous/Tribal/Community Name"
+    },
+    {
+      "code": "U",
+      "description": "Unspecified"
+    }
+  ]
+}

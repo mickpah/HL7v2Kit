@@ -1,0 +1,30 @@
+{
+  "table": "0403",
+  "version": "2.5.1",
+  "name": "Language Ability",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0403 - Language Ability",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Read"
+    },
+    {
+      "code": "2",
+      "description": "Write"
+    },
+    {
+      "code": "3",
+      "description": "Speak"
+    },
+    {
+      "code": "4",
+      "description": "Understand"
+    },
+    {
+      "code": "5",
+      "description": "Sign"
+    }
+  ]
+}

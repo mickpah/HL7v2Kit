@@ -1,0 +1,162 @@
+{
+  "table": "0203",
+  "version": "2.3.1",
+  "name": "Identifier type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0203 - Identifier type",
+  "entries": [
+    {
+      "code": "AM",
+      "description": "American Express"
+    },
+    {
+      "code": "AN",
+      "description": "Account number"
+    },
+    {
+      "code": "BR",
+      "description": "Birth registry number"
+    },
+    {
+      "code": "DI",
+      "description": "Diner’s Club card"
+    },
+    {
+      "code": "DL",
+      "description": "Driver’s license number"
+    },
+    {
+      "code": "DN",
+      "description": "Doctor number"
+    },
+    {
+      "code": "DS",
+      "description": "Discover Card"
+    },
+    {
+      "code": "EI",
+      "description": "Employee number"
+    },
+    {
+      "code": "EN",
+      "description": "Employer number"
+    },
+    {
+      "code": "FI",
+      "description": "Facility ID"
+    },
+    {
+      "code": "GI",
+      "description": "Guarantor internal identifier"
+    },
+    {
+      "code": "GN",
+      "description": "Guarantor external identifier"
+    },
+    {
+      "code": "LN",
+      "description": "License number"
+    },
+    {
+      "code": "LR",
+      "description": "Local Registry ID"
+    },
+    {
+      "code": "MS",
+      "description": "MasterCard"
+    },
+    {
+      "code": "MA",
+      "description": "Medicaid number"
+    },
+    {
+      "code": "MC",
+      "description": "Medicare number"
+    },
+    {
+      "code": "MR",
+      "description": "Medical record number"
+    },
+    {
+      "code": "NE",
+      "description": "National employer identifier"
+    },
+    {
+      "code": "NI",
+      "description": "National unique individual identifier"
+    },
+    {
+      "code": "NH",
+      "description": "National Health Plan Identifier"
+    },
+    {
+      "code": "NNxxx",
+      "description": "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"
+    },
+    {
+      "code": "NPI",
+      "description": "National provider identifier"
+    },
+    {
+      "code": "PI",
+      "description": "Patient internal identifier"
+    },
+    {
+      "code": "PN",
+      "description": "Person number"
+    },
+    {
+      "code": "PRN",
+      "description": "Provider number"
+    },
+    {
+      "code": "PT",
+      "description": "Patient external identifier"
+    },
+    {
+      "code": "RRI",
+      "description": "Regional registry ID"
+    },
+    {
+      "code": "RR",
+      "description": "Railroad Retirement number"
+    },
+    {
+      "code": "SL",
+      "description": "State license"
+    },
+    {
+      "code": "SR",
+      "description": "State registry ID"
+    },
+    {
+      "code": "SS",
+      "description": "Social Security number"
+    },
+    {
+      "code": "U",
+      "description": "Unspecified"
+    },
+    {
+      "code": "UPIN",
+      "description": "Medicare/HCFA’s Universal Physician Identification numbers"
+    },
+    {
+      "code": "VS",
+      "description": "VISA"
+    },
+    {
+      "code": "VN",
+      "description": "Visit number"
+    },
+    {
+      "code": "WC",
+      "description": "WIC identifier"
+    },
+    {
+      "code": "XX",
+      "description": "Organization identifier"
+    }
+  ]
+}

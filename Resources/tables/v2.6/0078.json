@@ -1,0 +1,86 @@
+{
+  "table": "0078",
+  "version": "2.6",
+  "name": "Abnormal flags",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0078 - Abnormal flags",
+  "entries": [
+    {
+      "code": "<",
+      "description": "Below absolute low-off instrument scale"
+    },
+    {
+      "code": ">",
+      "description": "Above absolute high-off instrument scale"
+    },
+    {
+      "code": "A",
+      "description": "Abnormal (applies to non-numeric results)"
+    },
+    {
+      "code": "AA",
+      "description": "Very abnormal (applies to non-numeric units, analogous to panic limits for numeric units)"
+    },
+    {
+      "code": "B",
+      "description": "Better--use when direction not relevant"
+    },
+    {
+      "code": "D",
+      "description": "Significant change down"
+    },
+    {
+      "code": "H",
+      "description": "Above high normal"
+    },
+    {
+      "code": "HH",
+      "description": "Above upper panic limits"
+    },
+    {
+      "code": "I",
+      "description": "Intermediate. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "L",
+      "description": "Below low normal"
+    },
+    {
+      "code": "LL",
+      "description": "Below lower panic limits"
+    },
+    {
+      "code": "MS",
+      "description": "Moderately susceptible. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "N",
+      "description": "Normal (applies to non-numeric results)"
+    },
+    {
+      "code": "null",
+      "description": "No range defined, or normal ranges don't apply"
+    },
+    {
+      "code": "R",
+      "description": "Resistant. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "S",
+      "description": "Susceptible. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "U",
+      "description": "Significant change up"
+    },
+    {
+      "code": "VS",
+      "description": "Very susceptible. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "W",
+      "description": "Worse--use when direction not relevant"
+    }
+  ]
+}

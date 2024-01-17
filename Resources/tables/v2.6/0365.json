@@ -1,0 +1,50 @@
+{
+  "table": "0365",
+  "version": "2.6",
+  "name": "Equipment state",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0365 - Equipment state",
+  "entries": [
+    {
+      "code": "...",
+      "description": "(null) No state change"
+    },
+    {
+      "code": "CL",
+      "description": "Clearing"
+    },
+    {
+      "code": "CO",
+      "description": "Configuring"
+    },
+    {
+      "code": "ES",
+      "description": "E-stopped"
+    },
+    {
+      "code": "ID",
+      "description": "Idle"
+    },
+    {
+      "code": "IN",
+      "description": "Initializing"
+    },
+    {
+      "code": "OP",
+      "description": "Normal Operation"
+    },
+    {
+      "code": "PA",
+      "description": "Pausing"
+    },
+    {
+      "code": "PD",
+      "description": "Paused"
+    },
+    {
+      "code": "PU",
+      "description": "Powered Up"
+    }
+  ]
+}

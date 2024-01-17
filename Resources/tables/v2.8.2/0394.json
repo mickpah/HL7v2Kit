@@ -1,0 +1,22 @@
+{
+  "table": "0394",
+  "version": "2.8.2",
+  "name": "Response Modality",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0394 - Response Modality",
+  "entries": [
+    {
+      "code": "R",
+      "description": "Real Time"
+    },
+    {
+      "code": "T",
+      "description": "Bolus (a series of responses sent at the same time without use of batch formatting)"
+    },
+    {
+      "code": "B",
+      "description": "Batch"
+    }
+  ]
+}

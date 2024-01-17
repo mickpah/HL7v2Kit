@@ -1,0 +1,34 @@
+{
+  "table": "0330",
+  "version": "2.5.1",
+  "name": "Marketing basis",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0330 - Marketing basis",
+  "entries": [
+    {
+      "code": "510E",
+      "description": "510 (K) exempt"
+    },
+    {
+      "code": "510K",
+      "description": "510 (K)"
+    },
+    {
+      "code": "522S",
+      "description": "Post marketing study (522)"
+    },
+    {
+      "code": "PMA",
+      "description": "Premarketing authorization"
+    },
+    {
+      "code": "PRE",
+      "description": "Preamendment"
+    },
+    {
+      "code": "TXN",
+      "description": "Transitional"
+    }
+  ]
+}

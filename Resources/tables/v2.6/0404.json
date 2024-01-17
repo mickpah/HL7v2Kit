@@ -1,0 +1,34 @@
+{
+  "table": "0404",
+  "version": "2.6",
+  "name": "Language Proficiency",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0404 - Language Proficiency",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Excellent"
+    },
+    {
+      "code": "2",
+      "description": "Good"
+    },
+    {
+      "code": "3",
+      "description": "Fair"
+    },
+    {
+      "code": "4",
+      "description": "Poor"
+    },
+    {
+      "code": "5",
+      "description": "Some (level unknown)"
+    },
+    {
+      "code": "6",
+      "description": "None"
+    }
+  ]
+}

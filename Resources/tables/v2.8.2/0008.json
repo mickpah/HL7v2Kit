@@ -1,0 +1,34 @@
+{
+  "table": "0008",
+  "version": "2.8.2",
+  "name": "Acknowledgment Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0008 - Acknowledgment Code",
+  "entries": [
+    {
+      "code": "AA",
+      "description": "Original mode: Application Accept – Enhanced mode: Application acknowledgment: Accept"
+    },
+    {
+      "code": "AE",
+      "description": "Original mode: Application Error – Enhanced mode: Application acknowledgment: Error"
+    },
+    {
+      "code": "AR",
+      "description": "Original mode: Application Reject – Enhanced mode: Application acknowledgment: Reject"
+    },
+    {
+      "code": "CA",
+      "description": "Enhanced mode: Accept acknowledgment: Commit Accept"
+    },
+    {
+      "code": "CE",
+      "description": "Enhanced mode: Accept acknowledgment: Commit Error"
+    },
+    {
+      "code": "CR",
+      "description": "Enhanced mode: Accept acknowledgment: Commit Reject"
+    }
+  ]
+}

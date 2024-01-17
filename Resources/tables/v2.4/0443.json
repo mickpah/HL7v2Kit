@@ -1,0 +1,38 @@
+{
+  "table": "0443",
+  "version": "2.4",
+  "name": "Provider role",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0443 - Provider role",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Admitting"
+    },
+    {
+      "code": "AT",
+      "description": "Attending"
+    },
+    {
+      "code": "CP",
+      "description": "Consulting Provider"
+    },
+    {
+      "code": "FHCP",
+      "description": "Family Health Care Professional"
+    },
+    {
+      "code": "PP",
+      "description": "Primary Care Provider"
+    },
+    {
+      "code": "RP",
+      "description": "Referring Provider"
+    },
+    {
+      "code": "RT",
+      "description": "Referred to Provider"
+    }
+  ]
+}

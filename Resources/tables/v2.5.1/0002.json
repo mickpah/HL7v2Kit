@@ -1,0 +1,74 @@
+{
+  "table": "0002",
+  "version": "2.5.1",
+  "name": "Marital Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0002 - Marital Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Separated"
+    },
+    {
+      "code": "B",
+      "description": "Unmarried"
+    },
+    {
+      "code": "C",
+      "description": "Common law"
+    },
+    {
+      "code": "D",
+      "description": "Divorced"
+    },
+    {
+      "code": "E",
+      "description": "Legally Separated"
+    },
+    {
+      "code": "G",
+      "description": "Living together"
+    },
+    {
+      "code": "I",
+      "description": "Interlocutory"
+    },
+    {
+      "code": "M",
+      "description": "Married"
+    },
+    {
+      "code": "N",
+      "description": "Annulled"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Domestic partner"
+    },
+    {
+      "code": "R",
+      "description": "Registered domestic partner"
+    },
+    {
+      "code": "S",
+      "description": "Single"
+    },
+    {
+      "code": "T",
+      "description": "Unreported"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "W",
+      "description": "Widowed"
+    }
+  ]
+}

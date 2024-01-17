@@ -1,0 +1,9 @@
+{
+  "table": "0310",
+  "version": "2.3",
+  "name": "Handicap",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0310 - Handicap",
+  "entries": []
+}

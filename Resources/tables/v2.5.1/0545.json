@@ -1,0 +1,9 @@
+{
+  "table": "0545",
+  "version": "2.5.1",
+  "name": "Language Translated To",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0545 - Language Translated To",
+  "entries": []
+}

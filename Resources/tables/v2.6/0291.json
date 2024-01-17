@@ -1,0 +1,18 @@
+{
+  "table": "0291",
+  "version": "2.6",
+  "name": "Subtype of referenced data",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0291 - Subtype of referenced data",
+  "entries": [
+    {
+      "code": "...",
+      "description": "Source RFC 2046"
+    },
+    {
+      "code": "x-hl7-cda-level-one",
+      "description": "HL7 Clinical Document Architecture Level One document"
+    }
+  ]
+}

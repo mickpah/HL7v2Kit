@@ -1,0 +1,26 @@
+{
+  "table": "0208",
+  "version": "2.6",
+  "name": "Query Response Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0208 - Query Response Status",
+  "entries": [
+    {
+      "code": "AE",
+      "description": "Application error"
+    },
+    {
+      "code": "AR",
+      "description": "Application reject"
+    },
+    {
+      "code": "NF",
+      "description": "No data found, no errors"
+    },
+    {
+      "code": "OK",
+      "description": "Data found, no errors (this is the default)"
+    }
+  ]
+}

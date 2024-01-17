@@ -1,0 +1,38 @@
+{
+  "table": "0065",
+  "version": "2.5.1",
+  "name": "Specimen Action Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0065 - Specimen Action Code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Add ordered tests to the existing specimen"
+    },
+    {
+      "code": "G",
+      "description": "Generated order; reflex order"
+    },
+    {
+      "code": "L",
+      "description": "Lab to obtain specimen from patient"
+    },
+    {
+      "code": "O",
+      "description": "Specimen obtained by service other than Lab"
+    },
+    {
+      "code": "P",
+      "description": "Pending specimen; Order sent prior to delivery"
+    },
+    {
+      "code": "R",
+      "description": "Revised order"
+    },
+    {
+      "code": "S",
+      "description": "Schedule the tests specified below"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0232",
+  "version": "2.5.1",
+  "name": "Insurance Company Contact Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0232 - Insurance Company Contact Reason",
+  "entries": [
+    {
+      "code": "01",
+      "description": "Medicare claim status"
+    },
+    {
+      "code": "02",
+      "description": "Medicaid claim status"
+    },
+    {
+      "code": "03",
+      "description": "Name/address change"
+    }
+  ]
+}

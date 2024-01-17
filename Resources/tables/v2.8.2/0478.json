@@ -1,0 +1,26 @@
+{
+  "table": "0478",
+  "version": "2.8.2",
+  "name": "Formulary Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0478 - Formulary Status",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "Pharmaceutical substance is in the formulary"
+    },
+    {
+      "code": "N",
+      "description": "Pharmaceutical substance is NOT in the formulary"
+    },
+    {
+      "code": "R",
+      "description": "Pharmaceutical substance is in the formulary, but restrictions apply"
+    },
+    {
+      "code": "G",
+      "description": "Pharmaceutical substance is in the formulary, but guidelines apply"
+    }
+  ]
+}

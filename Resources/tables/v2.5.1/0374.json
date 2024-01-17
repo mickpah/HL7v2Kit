@@ -1,0 +1,14 @@
+{
+  "table": "0374",
+  "version": "2.5.1",
+  "name": "System induced contaminants",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0374 - System induced contaminants",
+  "entries": [
+    {
+      "code": "CNTM",
+      "description": "Present, type of contamination unspecified"
+    }
+  ]
+}

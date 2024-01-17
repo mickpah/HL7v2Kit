@@ -1,0 +1,270 @@
+{
+  "table": "0290",
+  "version": "2.4",
+  "name": "MIME base64 encoding characters",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0290 - MIME base64 encoding characters",
+  "entries": [
+    {
+      "code": "(pad)",
+      "description": "="
+    },
+    {
+      "code": "0",
+      "description": "A"
+    },
+    {
+      "code": "1",
+      "description": "B"
+    },
+    {
+      "code": "10",
+      "description": "K"
+    },
+    {
+      "code": "11",
+      "description": "L"
+    },
+    {
+      "code": "12",
+      "description": "M"
+    },
+    {
+      "code": "13",
+      "description": "N"
+    },
+    {
+      "code": "14",
+      "description": "O"
+    },
+    {
+      "code": "15",
+      "description": "P"
+    },
+    {
+      "code": "16",
+      "description": "Q"
+    },
+    {
+      "code": "17",
+      "description": "R"
+    },
+    {
+      "code": "18",
+      "description": "S"
+    },
+    {
+      "code": "19",
+      "description": "T"
+    },
+    {
+      "code": "2",
+      "description": "C"
+    },
+    {
+      "code": "20",
+      "description": "U"
+    },
+    {
+      "code": "21",
+      "description": "V"
+    },
+    {
+      "code": "22",
+      "description": "W"
+    },
+    {
+      "code": "23",
+      "description": "X"
+    },
+    {
+      "code": "24",
+      "description": "Y"
+    },
+    {
+      "code": "25",
+      "description": "Z"
+    },
+    {
+      "code": "26",
+      "description": "a"
+    },
+    {
+      "code": "27",
+      "description": "b"
+    },
+    {
+      "code": "28",
+      "description": "c"
+    },
+    {
+      "code": "29",
+      "description": "d"
+    },
+    {
+      "code": "3",
+      "description": "D"
+    },
+    {
+      "code": "30",
+      "description": "e"
+    },
+    {
+      "code": "31",
+      "description": "f"
+    },
+    {
+      "code": "32",
+      "description": "g"
+    },
+    {
+      "code": "33",
+      "description": "h"
+    },
+    {
+      "code": "34",
+      "description": "I"
+    },
+    {
+      "code": "35",
+      "description": "j"
+    },
+    {
+      "code": "36",
+      "description": "k"
+    },
+    {
+      "code": "37",
+      "description": "l"
+    },
+    {
+      "code": "38",
+      "description": "m"
+    },
+    {
+      "code": "39",
+      "description": "n"
+    },
+    {
+      "code": "4",
+      "description": "E"
+    },
+    {
+      "code": "40",
+      "description": "o"
+    },
+    {
+      "code": "41",
+      "description": "p"
+    },
+    {
+      "code": "42",
+      "description": "q"
+    },
+    {
+      "code": "43",
+      "description": "r"
+    },
+    {
+      "code": "44",
+      "description": "s"
+    },
+    {
+      "code": "45",
+      "description": "t"
+    },
+    {
+      "code": "46",
+      "description": "u"
+    },
+    {
+      "code": "47",
+      "description": "v"
+    },
+    {
+      "code": "48",
+      "description": "w"
+    },
+    {
+      "code": "49",
+      "description": "x"
+    },
+    {
+      "code": "5",
+      "description": "F"
+    },
+    {
+      "code": "50",
+      "description": "y"
+    },
+    {
+      "code": "51",
+      "description": "51 z"
+    },
+    {
+      "code": "52",
+      "description": "52 0"
+    },
+    {
+      "code": "53",
+      "description": "53 1"
+    },
+    {
+      "code": "54",
+      "description": "54 2"
+    },
+    {
+      "code": "55",
+      "description": "55 3"
+    },
+    {
+      "code": "56",
+      "description": "56 4"
+    },
+    {
+      "code": "57",
+      "description": "57 5"
+    },
+    {
+      "code": "58",
+      "description": "58 6"
+    },
+    {
+      "code": "59",
+      "description": "59 7"
+    },
+    {
+      "code": "6",
+      "description": "G"
+    },
+    {
+      "code": "60",
+      "description": "60 8"
+    },
+    {
+      "code": "61",
+      "description": "61 9"
+    },
+    {
+      "code": "62",
+      "description": "62 +"
+    },
+    {
+      "code": "63",
+      "description": "63 /"
+    },
+    {
+      "code": "7",
+      "description": "H"
+    },
+    {
+      "code": "8",
+      "description": "I"
+    },
+    {
+      "code": "9",
+      "description": "J"
+    }
+  ]
+}

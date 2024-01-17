@@ -1,0 +1,9 @@
+{
+  "table": "0176",
+  "version": "2.3",
+  "name": "Master File Application Identifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0176 - Master File Application Identifier",
+  "entries": []
+}

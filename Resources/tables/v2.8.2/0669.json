@@ -1,0 +1,26 @@
+{
+  "table": "0669",
+  "version": "2.8.2",
+  "name": "Load Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0669 - Load Status",
+  "entries": [
+    {
+      "code": "LLD",
+      "description": "Building a Load"
+    },
+    {
+      "code": "LCP",
+      "description": "Load In Process"
+    },
+    {
+      "code": "LCC",
+      "description": "Load is Complete"
+    },
+    {
+      "code": "LCN",
+      "description": "Load Canceled"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0161",
+  "version": "2.5.1",
+  "name": "Allow Substitution",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0161 - Allow Substitution",
+  "entries": [
+    {
+      "code": "G",
+      "description": "Allow generic substitutions."
+    },
+    {
+      "code": "N",
+      "description": "Substitutions are NOT authorized. (This is the default - null.)"
+    },
+    {
+      "code": "T",
+      "description": "Allow therapeutic substitutions"
+    }
+  ]
+}

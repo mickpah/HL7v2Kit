@@ -1,0 +1,34 @@
+{
+  "table": "0262",
+  "version": "2.4",
+  "name": "Privacy level",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0262 - Privacy level",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Isolation"
+    },
+    {
+      "code": "J",
+      "description": "Private room - medically justified"
+    },
+    {
+      "code": "P",
+      "description": "Private room"
+    },
+    {
+      "code": "Q",
+      "description": "Private room - due to overflow"
+    },
+    {
+      "code": "S",
+      "description": "Semi-private room"
+    },
+    {
+      "code": "W",
+      "description": "Ward"
+    }
+  ]
+}

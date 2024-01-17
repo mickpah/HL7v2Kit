@@ -1,0 +1,9 @@
+{
+  "table": "0255",
+  "version": "2.3",
+  "name": "Duration Categories",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0255 - Duration Categories",
+  "entries": []
+}

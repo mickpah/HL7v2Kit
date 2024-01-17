@@ -1,0 +1,9 @@
+{
+  "table": "0086",
+  "version": "2.4",
+  "name": "Plan ID",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0086 - Plan ID",
+  "entries": []
+}

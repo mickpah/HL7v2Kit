@@ -1,0 +1,22 @@
+{
+  "table": "0213",
+  "version": "2.3.1",
+  "name": "Purge status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0213 - Purge status",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Marked for purge. User is no longer able to update the visit."
+    },
+    {
+      "code": "D",
+      "description": "The visit is marked for deletion and the user cannot enter new data against it."
+    },
+    {
+      "code": "I",
+      "description": "The visit is marked inactive and the user cannot enter new data against it."
+    }
+  ]
+}

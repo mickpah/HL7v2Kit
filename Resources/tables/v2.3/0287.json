@@ -1,0 +1,38 @@
+{
+  "table": "0287",
+  "version": "2.3",
+  "name": "Action Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0287 - Action Code",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "ADD"
+    },
+    {
+      "code": "CO",
+      "description": "CORRECT"
+    },
+    {
+      "code": "DE",
+      "description": "DELETE"
+    },
+    {
+      "code": "LI",
+      "description": "LINK"
+    },
+    {
+      "code": "UC",
+      "description": "UNCHANGED"
+    },
+    {
+      "code": "UN",
+      "description": "UNLINK"
+    },
+    {
+      "code": "UP",
+      "description": "UPDATE"
+    }
+  ]
+}

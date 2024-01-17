@@ -1,0 +1,1262 @@
+{
+  "table": "0487",
+  "version": "2.8.2",
+  "name": "Specimen Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0487 - Specimen Type",
+  "entries": [
+    {
+      "code": "ABS",
+      "description": "Abscess"
+    },
+    {
+      "code": "ACNE",
+      "description": "Tissue, Acne"
+    },
+    {
+      "code": "ACNFLD",
+      "description": "Fluid, Acne"
+    },
+    {
+      "code": "AIRS",
+      "description": "Air Sample"
+    },
+    {
+      "code": "ALL",
+      "description": "Allograft"
+    },
+    {
+      "code": "AMN",
+      "description": "Amniotic fluid"
+    },
+    {
+      "code": "AMP",
+      "description": "Amputation"
+    },
+    {
+      "code": "ANGI",
+      "description": "Catheter Tip, Angio"
+    },
+    {
+      "code": "ARTC",
+      "description": "Catheter Tip, Arterial"
+    },
+    {
+      "code": "ASERU",
+      "description": "Serum, Acute"
+    },
+    {
+      "code": "ASP",
+      "description": "Aspirate"
+    },
+    {
+      "code": "ATTE",
+      "description": "Environment, Attest"
+    },
+    {
+      "code": "AUTOA",
+      "description": "Environmental, Autoclave Ampule"
+    },
+    {
+      "code": "AUTOC",
+      "description": "Environmental, Autoclave Capsule"
+    },
+    {
+      "code": "AUTP",
+      "description": "Autopsy"
+    },
+    {
+      "code": "BBL",
+      "description": "Blood bag"
+    },
+    {
+      "code": "BCYST",
+      "description": "Cyst, Baker's"
+    },
+    {
+      "code": "BDY",
+      "description": "Whole body"
+    },
+    {
+      "code": "BIFL",
+      "description": "Bile Fluid"
+    },
+    {
+      "code": "BITE",
+      "description": "Bite"
+    },
+    {
+      "code": "BLD",
+      "description": "Whole blood"
+    },
+    {
+      "code": "BLDA",
+      "description": "Blood arterial"
+    },
+    {
+      "code": "BLDCO",
+      "description": "Cord blood"
+    },
+    {
+      "code": "BLDV",
+      "description": "Blood venous"
+    },
+    {
+      "code": "BLEB",
+      "description": "Bleb"
+    },
+    {
+      "code": "BLIST",
+      "description": "Blister"
+    },
+    {
+      "code": "BOIL",
+      "description": "Boil"
+    },
+    {
+      "code": "BON",
+      "description": "Bone"
+    },
+    {
+      "code": "BOWL",
+      "description": "Bowel contents"
+    },
+    {
+      "code": "BPH",
+      "description": "Basophils"
+    },
+    {
+      "code": "BPU",
+      "description": "Blood product unit"
+    },
+    {
+      "code": "BRN",
+      "description": "Burn"
+    },
+    {
+      "code": "BRSH",
+      "description": "Brush"
+    },
+    {
+      "code": "BRTH",
+      "description": "Breath (use EXHLD)"
+    },
+    {
+      "code": "BRUS",
+      "description": "Brushing"
+    },
+    {
+      "code": "BUB",
+      "description": "Bubo"
+    },
+    {
+      "code": "BULLA",
+      "description": "Bulla/Bullae"
+    },
+    {
+      "code": "BX",
+      "description": "Biopsy"
+    },
+    {
+      "code": "CALC",
+      "description": "Calculus (=Stone)"
+    },
+    {
+      "code": "CARBU",
+      "description": "Carbuncle"
+    },
+    {
+      "code": "CAT",
+      "description": "Catheter"
+    },
+    {
+      "code": "CBITE",
+      "description": "Bite, Cat"
+    },
+    {
+      "code": "CDM",
+      "description": "Cardiac muscle"
+    },
+    {
+      "code": "CLIPP",
+      "description": "Clippings"
+    },
+    {
+      "code": "CNJT",
+      "description": "Conjunctiva"
+    },
+    {
+      "code": "CNL",
+      "description": "Cannula"
+    },
+    {
+      "code": "COL",
+      "description": "Colostrum"
+    },
+    {
+      "code": "CONE",
+      "description": "Biospy, Cone"
+    },
+    {
+      "code": "CSCR",
+      "description": "Scratch, Cat"
+    },
+    {
+      "code": "CSERU",
+      "description": "Serum, Convalescent"
+    },
+    {
+      "code": "CSF",
+      "description": "Cerebral spinal fluid"
+    },
+    {
+      "code": "CSITE",
+      "description": "Catheter Insertion Site"
+    },
+    {
+      "code": "CSMY",
+      "description": "Fluid, Cystostomy Tube"
+    },
+    {
+      "code": "CST",
+      "description": "Fluid, Cyst"
+    },
+    {
+      "code": "CSVR",
+      "description": "Blood, Cell Saver"
+    },
+    {
+      "code": "CTP",
+      "description": "Catheter tip"
+    },
+    {
+      "code": "CUR",
+      "description": "Curretage"
+    },
+    {
+      "code": "CVM",
+      "description": "Cervical Mucus"
+    },
+    {
+      "code": "CVPS",
+      "description": "Site, CVP"
+    },
+    {
+      "code": "CVPT",
+      "description": "Catheter Tip, CVP"
+    },
+    {
+      "code": "CYN",
+      "description": "Nodule, Cystic"
+    },
+    {
+      "code": "CYST",
+      "description": "Cyst"
+    },
+    {
+      "code": "DBITE",
+      "description": "Bite, Dog"
+    },
+    {
+      "code": "DCS",
+      "description": "Sputum, Deep Cough"
+    },
+    {
+      "code": "DEC",
+      "description": "Ulcer, Decubitus"
+    },
+    {
+      "code": "DEION",
+      "description": "Environmental, Water (Deionized)"
+    },
+    {
+      "code": "DIA",
+      "description": "Dialysate"
+    },
+    {
+      "code": "DIAF",
+      "description": "Dialysis Fluid"
+    },
+    {
+      "code": "DISCHG",
+      "description": "Discharge"
+    },
+    {
+      "code": "DIV",
+      "description": "Diverticulum"
+    },
+    {
+      "code": "DRN",
+      "description": "Drain"
+    },
+    {
+      "code": "DRNG",
+      "description": "Drainage, Tube"
+    },
+    {
+      "code": "DRNGP",
+      "description": "Drainage, Penrose"
+    },
+    {
+      "code": "DUFL",
+      "description": "Duodenal fluid"
+    },
+    {
+      "code": "EARW",
+      "description": "Ear wax (cerumen)"
+    },
+    {
+      "code": "EBRUSH",
+      "description": "Brush, Esophageal"
+    },
+    {
+      "code": "EEYE",
+      "description": "Environmental, Eye Wash"
+    },
+    {
+      "code": "EFF",
+      "description": "Environmental, Effluent"
+    },
+    {
+      "code": "EFFUS",
+      "description": "Effusion"
+    },
+    {
+      "code": "EFOD",
+      "description": "Environmental, Food"
+    },
+    {
+      "code": "EISO",
+      "description": "Environmental, Isolette"
+    },
+    {
+      "code": "ELT",
+      "description": "Electrode"
+    },
+    {
+      "code": "ENVIR",
+      "description": "Environmental, Unidentified Substance"
+    },
+    {
+      "code": "EOS",
+      "description": "Eosinophils"
+    },
+    {
+      "code": "EOTH",
+      "description": "Environmental, Other Substance"
+    },
+    {
+      "code": "ESOI",
+      "description": "Environmental, Soil"
+    },
+    {
+      "code": "ESOS",
+      "description": "Environmental, Solution (Sterile)"
+    },
+    {
+      "code": "ETA",
+      "description": "Aspirate, Endotrach"
+    },
+    {
+      "code": "ETTP",
+      "description": "Catheter Tip, Endotracheal"
+    },
+    {
+      "code": "ETTUB",
+      "description": "Tube, Endotracheal"
+    },
+    {
+      "code": "EWHI",
+      "description": "Environmental, Whirlpool"
+    },
+    {
+      "code": "EXG",
+      "description": "Gas, exhaled (=breath)"
+    },
+    {
+      "code": "EXS",
+      "description": "Shunt, External"
+    },
+    {
+      "code": "EXUDTE",
+      "description": "Exudate"
+    },
+    {
+      "code": "FAW",
+      "description": "Environmental, Water (Well)"
+    },
+    {
+      "code": "FBLOOD",
+      "description": "Blood, Fetal"
+    },
+    {
+      "code": "FGA",
+      "description": "Fluid, Abdomen"
+    },
+    {
+      "code": "FIB",
+      "description": "Fibroblasts"
+    },
+    {
+      "code": "FIST",
+      "description": "Fistula"
+    },
+    {
+      "code": "FLD",
+      "description": "Fluid, Other"
+    },
+    {
+      "code": "FLT",
+      "description": "Filter"
+    },
+    {
+      "code": "FLU",
+      "description": "Fluid, Body unsp"
+    },
+    {
+      "code": "FLUID",
+      "description": "Fluid"
+    },
+    {
+      "code": "FOLEY",
+      "description": "Catheter Tip, Foley"
+    },
+    {
+      "code": "FRS",
+      "description": "Fluid, Respiratory"
+    },
+    {
+      "code": "FSCLP",
+      "description": "Scalp, Fetal"
+    },
+    {
+      "code": "FUR",
+      "description": "Furuncle"
+    },
+    {
+      "code": "GAS",
+      "description": "Gas"
+    },
+    {
+      "code": "GASA",
+      "description": "Aspirate, Gastric"
+    },
+    {
+      "code": "GASAN",
+      "description": "Antrum, Gastric"
+    },
+    {
+      "code": "GASBR",
+      "description": "Brushing, Gastric"
+    },
+    {
+      "code": "GASD",
+      "description": "Drainage, Gastric"
+    },
+    {
+      "code": "GAST",
+      "description": "Fluid/contents, Gastric"
+    },
+    {
+      "code": "GENL",
+      "description": "Genital lochia"
+    },
+    {
+      "code": "GENV",
+      "description": "Genital vaginal"
+    },
+    {
+      "code": "GRAFT",
+      "description": "Graft"
+    },
+    {
+      "code": "GRAFTS",
+      "description": "Graft Site"
+    },
+    {
+      "code": "GRANU",
+      "description": "Granuloma"
+    },
+    {
+      "code": "GROSH",
+      "description": "Catheter, Groshong"
+    },
+    {
+      "code": "GSOL",
+      "description": "Solution, Gastrostomy"
+    },
+    {
+      "code": "GSPEC",
+      "description": "Biopsy, Gastric"
+    },
+    {
+      "code": "GT",
+      "description": "Tube, Gastric"
+    },
+    {
+      "code": "GTUBE",
+      "description": "Drainage Tube, Drainage (Gastrostomy)"
+    },
+    {
+      "code": "HAR",
+      "description": "Hair"
+    },
+    {
+      "code": "HBITE",
+      "description": "Bite, Human"
+    },
+    {
+      "code": "HBLUD",
+      "description": "Blood, Autopsy"
+    },
+    {
+      "code": "HEMAQ",
+      "description": "Catheter Tip, Hemaquit"
+    },
+    {
+      "code": "HEMO",
+      "description": "Catheter Tip, Hemovac"
+    },
+    {
+      "code": "HERNI",
+      "description": "Tissue, Herniated"
+    },
+    {
+      "code": "HEV",
+      "description": "Drain, Hemovac"
+    },
+    {
+      "code": "HIC",
+      "description": "Catheter, Hickman"
+    },
+    {
+      "code": "HYDC",
+      "description": "Fluid, Hydrocele"
+    },
+    {
+      "code": "IBITE",
+      "description": "Bite, Insect"
+    },
+    {
+      "code": "ICYST",
+      "description": "Cyst, Inclusion"
+    },
+    {
+      "code": "IDC",
+      "description": "Catheter Tip, Indwelling"
+    },
+    {
+      "code": "IHG",
+      "description": "Gas, Inhaled"
+    },
+    {
+      "code": "ILEO",
+      "description": "Drainage, Ileostomy"
+    },
+    {
+      "code": "ILLEG",
+      "description": "Source of Specimen Is Illegible"
+    },
+    {
+      "code": "IMP",
+      "description": "Implant"
+    },
+    {
+      "code": "INCI",
+      "description": "Site, Incision/Surgical"
+    },
+    {
+      "code": "INFIL",
+      "description": "Infiltrate"
+    },
+    {
+      "code": "INS",
+      "description": "Insect"
+    },
+    {
+      "code": "INTRD",
+      "description": "Catheter Tip, Introducer"
+    },
+    {
+      "code": "ISLT",
+      "description": "Isolate"
+    },
+    {
+      "code": "IT",
+      "description": "Intubation tube"
+    },
+    {
+      "code": "IUD",
+      "description": "Intrauterine Device"
+    },
+    {
+      "code": "IVCAT",
+      "description": "Catheter Tip, IV"
+    },
+    {
+      "code": "IVFLD",
+      "description": "Fluid, IV"
+    },
+    {
+      "code": "IVTIP",
+      "description": "Tubing Tip, IV"
+    },
+    {
+      "code": "JEJU",
+      "description": "Drainage, Jejunal"
+    },
+    {
+      "code": "JNTFLD",
+      "description": "Fluid, Joint"
+    },
+    {
+      "code": "JP",
+      "description": "Drainage, Jackson Pratt"
+    },
+    {
+      "code": "KELOI",
+      "description": "Lavage"
+    },
+    {
+      "code": "KIDFLD",
+      "description": "Fluid, Kidney"
+    },
+    {
+      "code": "LAVG",
+      "description": "Lavage, Bronhial"
+    },
+    {
+      "code": "LAVGG",
+      "description": "Lavage, Gastric"
+    },
+    {
+      "code": "LAVGP",
+      "description": "Lavage, Peritoneal"
+    },
+    {
+      "code": "LAVPG",
+      "description": "Lavage, Pre-Bronch"
+    },
+    {
+      "code": "LENS1",
+      "description": "Contact Lens"
+    },
+    {
+      "code": "LENS2",
+      "description": "Contact Lens Case"
+    },
+    {
+      "code": "LESN",
+      "description": "Lesion"
+    },
+    {
+      "code": "LIQ",
+      "description": "Liquid, Unspecified"
+    },
+    {
+      "code": "LIQO",
+      "description": "Liquid, Other"
+    },
+    {
+      "code": "LNA",
+      "description": "Line arterial"
+    },
+    {
+      "code": "LNV",
+      "description": "Line venous"
+    },
+    {
+      "code": "LSAC",
+      "description": "Fluid, Lumbar Sac"
+    },
+    {
+      "code": "LYM",
+      "description": "Lymphocytes"
+    },
+    {
+      "code": "MAC",
+      "description": "Macrophages"
+    },
+    {
+      "code": "MAHUR",
+      "description": "Catheter Tip, Makurkour"
+    },
+    {
+      "code": "MAR",
+      "description": "Marrow"
+    },
+    {
+      "code": "MASS",
+      "description": "Mass"
+    },
+    {
+      "code": "MBLD",
+      "description": "Blood, Menstrual"
+    },
+    {
+      "code": "MEC",
+      "description": "Meconium"
+    },
+    {
+      "code": "MILK",
+      "description": "Breast milk"
+    },
+    {
+      "code": "MLK",
+      "description": "Milk"
+    },
+    {
+      "code": "MUCOS",
+      "description": "Mucosa"
+    },
+    {
+      "code": "MUCUS",
+      "description": "Mucus"
+    },
+    {
+      "code": "NAIL",
+      "description": "Nail"
+    },
+    {
+      "code": "NASDR",
+      "description": "Drainage, Nasal"
+    },
+    {
+      "code": "NEDL",
+      "description": "Needle"
+    },
+    {
+      "code": "NEPH",
+      "description": "Site, Nephrostomy"
+    },
+    {
+      "code": "NGASP",
+      "description": "Aspirate, Nasogastric"
+    },
+    {
+      "code": "NGAST",
+      "description": "Drainage, Nasogastric"
+    },
+    {
+      "code": "NGS",
+      "description": "Site, Naso/Gastric"
+    },
+    {
+      "code": "NODUL",
+      "description": "Nodule(s)"
+    },
+    {
+      "code": "NSECR",
+      "description": "Secretion, Nasal"
+    },
+    {
+      "code": "ORH",
+      "description": "Other"
+    },
+    {
+      "code": "ORL",
+      "description": "Lesion, Oral"
+    },
+    {
+      "code": "OTH",
+      "description": "Source, Other"
+    },
+    {
+      "code": "PACEM",
+      "description": "Pacemaker"
+    },
+    {
+      "code": "PAFL",
+      "description": "Pancreatic fluid"
+    },
+    {
+      "code": "PCFL",
+      "description": "Fluid, Pericardial"
+    },
+    {
+      "code": "PDSIT",
+      "description": "Site, Peritoneal Dialysis"
+    },
+    {
+      "code": "PDTS",
+      "description": "Site, Peritoneal Dialysis Tunnel"
+    },
+    {
+      "code": "PELVA",
+      "description": "Abscess, Pelvic"
+    },
+    {
+      "code": "PENIL",
+      "description": "Lesion, Penile"
+    },
+    {
+      "code": "PERIA",
+      "description": "Abscess, Perianal"
+    },
+    {
+      "code": "PILOC",
+      "description": "Cyst, Pilonidal"
+    },
+    {
+      "code": "PINS",
+      "description": "Site, Pin"
+    },
+    {
+      "code": "PIS",
+      "description": "Site, Pacemaker Insetion"
+    },
+    {
+      "code": "PLAN",
+      "description": "Plant Material"
+    },
+    {
+      "code": "PLAS",
+      "description": "Plasma"
+    },
+    {
+      "code": "PLB",
+      "description": "Plasma bag"
+    },
+    {
+      "code": "PLC",
+      "description": "Placenta"
+    },
+    {
+      "code": "PLEVS",
+      "description": "Serum, Peak Level"
+    },
+    {
+      "code": "PLR",
+      "description": "Pleural fluid (thoracentesis fluid)"
+    },
+    {
+      "code": "PMN",
+      "description": "Polymorphonuclear neutrophils"
+    },
+    {
+      "code": "PND",
+      "description": "Drainage, Penile"
+    },
+    {
+      "code": "POL",
+      "description": "Polyps"
+    },
+    {
+      "code": "POPGS",
+      "description": "Graft Site, Popliteal"
+    },
+    {
+      "code": "POPLG",
+      "description": "Graft, Popliteal"
+    },
+    {
+      "code": "POPLV",
+      "description": "Site, Popliteal Vein"
+    },
+    {
+      "code": "PORTA",
+      "description": "Catheter, Porta"
+    },
+    {
+      "code": "PPP",
+      "description": "Plasma, Platelet poor"
+    },
+    {
+      "code": "PROST",
+      "description": "Prosthetic Device"
+    },
+    {
+      "code": "PRP",
+      "description": "Plasma, Platelet rich"
+    },
+    {
+      "code": "PSC",
+      "description": "Pseudocyst"
+    },
+    {
+      "code": "PUNCT",
+      "description": "Wound, Puncture"
+    },
+    {
+      "code": "PUS",
+      "description": "Pus"
+    },
+    {
+      "code": "PUSFR",
+      "description": "Pustule"
+    },
+    {
+      "code": "PUST",
+      "description": "Pus"
+    },
+    {
+      "code": "QC3",
+      "description": "Quality Control"
+    },
+    {
+      "code": "RANDU",
+      "description": "Urine, Random"
+    },
+    {
+      "code": "RBC",
+      "description": "Erythrocytes"
+    },
+    {
+      "code": "RBITE",
+      "description": "Bite, Reptile"
+    },
+    {
+      "code": "RECT",
+      "description": "Drainage, Rectal"
+    },
+    {
+      "code": "RECTA",
+      "description": "Abscess, Rectal"
+    },
+    {
+      "code": "RENALC",
+      "description": "Cyst, Renal"
+    },
+    {
+      "code": "RENC",
+      "description": "Fluid, Renal Cyst"
+    },
+    {
+      "code": "RES",
+      "description": "Respiratory"
+    },
+    {
+      "code": "SAL",
+      "description": "Saliva"
+    },
+    {
+      "code": "SCAR",
+      "description": "Tissue, Keloid (Scar)"
+    },
+    {
+      "code": "SCLV",
+      "description": "Catheter Tip, Subclavian"
+    },
+    {
+      "code": "SCROA",
+      "description": "Abscess, Scrotal"
+    },
+    {
+      "code": "SECRE",
+      "description": "Secretion(s)"
+    },
+    {
+      "code": "SER",
+      "description": "Serum"
+    },
+    {
+      "code": "SHU",
+      "description": "Site, Shunt"
+    },
+    {
+      "code": "SHUNF",
+      "description": "Fluid, Shunt"
+    },
+    {
+      "code": "SHUNT",
+      "description": "Shunt"
+    },
+    {
+      "code": "SITE",
+      "description": "Site"
+    },
+    {
+      "code": "SKBP",
+      "description": "Biopsy, Skin"
+    },
+    {
+      "code": "SKN",
+      "description": "Skin"
+    },
+    {
+      "code": "SMM",
+      "description": "Mass, Sub-Mandibular"
+    },
+    {
+      "code": "SMN",
+      "description": "Seminal fluid"
+    },
+    {
+      "code": "SNV",
+      "description": "Fluid, synovial (Joint fluid)"
+    },
+    {
+      "code": "SPRM",
+      "description": "Spermatozoa"
+    },
+    {
+      "code": "SPRP",
+      "description": "Catheter Tip, Suprapubic"
+    },
+    {
+      "code": "SPRPB",
+      "description": "Cathether Tip, Suprapubic"
+    },
+    {
+      "code": "SPS",
+      "description": "Environmental, Spore Strip"
+    },
+    {
+      "code": "SPT",
+      "description": "Sputum"
+    },
+    {
+      "code": "SPTC",
+      "description": "Sputum - coughed"
+    },
+    {
+      "code": "SPTT",
+      "description": "Sputum - tracheal aspirate"
+    },
+    {
+      "code": "SPUT1",
+      "description": "Sputum, Simulated"
+    },
+    {
+      "code": "SPUTIN",
+      "description": "Sputum, Inducted"
+    },
+    {
+      "code": "SPUTSP",
+      "description": "Sputum, Spontaneous"
+    },
+    {
+      "code": "STER",
+      "description": "Environmental, Sterrad"
+    },
+    {
+      "code": "STL",
+      "description": "Stool = Fecal"
+    },
+    {
+      "code": "STONE",
+      "description": "Stone, Kidney"
+    },
+    {
+      "code": "SUBMA",
+      "description": "Abscess, Submandibular"
+    },
+    {
+      "code": "SUBMX",
+      "description": "Abscess, Submaxillary"
+    },
+    {
+      "code": "SUMP",
+      "description": "Drainage, Sump"
+    },
+    {
+      "code": "SUP",
+      "description": "Suprapubic Tap"
+    },
+    {
+      "code": "SUTUR",
+      "description": "Suture"
+    },
+    {
+      "code": "SWGZ",
+      "description": "Catheter Tip, Swan Gantz"
+    },
+    {
+      "code": "SWT",
+      "description": "Sweat"
+    },
+    {
+      "code": "TASP",
+      "description": "Aspirate, Tracheal"
+    },
+    {
+      "code": "TEAR",
+      "description": "Tears"
+    },
+    {
+      "code": "THRB",
+      "description": "Thrombocyte (platelet)"
+    },
+    {
+      "code": "TISS",
+      "description": "Tissue"
+    },
+    {
+      "code": "TISU",
+      "description": "Tissue ulcer"
+    },
+    {
+      "code": "TLC",
+      "description": "Cathether Tip, Triple Lumen"
+    },
+    {
+      "code": "TRAC",
+      "description": "Site, Tracheostomy"
+    },
+    {
+      "code": "TRANS",
+      "description": "Transudate"
+    },
+    {
+      "code": "TSERU",
+      "description": "Serum, Trough"
+    },
+    {
+      "code": "TSTES",
+      "description": "Abscess, Testicular"
+    },
+    {
+      "code": "TTRA",
+      "description": "Aspirate, Transtracheal"
+    },
+    {
+      "code": "TUBES",
+      "description": "Tubes"
+    },
+    {
+      "code": "TUMOR",
+      "description": "Tumor"
+    },
+    {
+      "code": "TZANC",
+      "description": "Smear, Tzanck"
+    },
+    {
+      "code": "UDENT",
+      "description": "Source, Unidentified"
+    },
+    {
+      "code": "UMED",
+      "description": "Unknown Medicine"
+    },
+    {
+      "code": "UR",
+      "description": "Urine"
+    },
+    {
+      "code": "URC",
+      "description": "Urine clean catch"
+    },
+    {
+      "code": "URINB",
+      "description": "Urine, Bladder Washings"
+    },
+    {
+      "code": "URINC",
+      "description": "Urine, Catheterized"
+    },
+    {
+      "code": "URINM",
+      "description": "Urine, Midstream"
+    },
+    {
+      "code": "URINN",
+      "description": "Urine, Nephrostomy"
+    },
+    {
+      "code": "URINP",
+      "description": "Urine, Pedibag"
+    },
+    {
+      "code": "URNS",
+      "description": "Urine sediment"
+    },
+    {
+      "code": "URT",
+      "description": "Urine catheter"
+    },
+    {
+      "code": "USCOP",
+      "description": "Urine, Cystoscopy"
+    },
+    {
+      "code": "USPEC",
+      "description": "Source, Unspecified"
+    },
+    {
+      "code": "USUB",
+      "description": "Unkown substance"
+    },
+    {
+      "code": "VASTIP",
+      "description": "Catheter Tip, Vas"
+    },
+    {
+      "code": "VENT",
+      "description": "Catheter Tip, Ventricular"
+    },
+    {
+      "code": "VITF",
+      "description": "Vitreous Fluid"
+    },
+    {
+      "code": "VOM",
+      "description": "Vomitus"
+    },
+    {
+      "code": "WASH",
+      "description": "Wash"
+    },
+    {
+      "code": "WASI",
+      "description": "Washing, e.g. bronchial washing"
+    },
+    {
+      "code": "WAT",
+      "description": "Water"
+    },
+    {
+      "code": "WB",
+      "description": "Blood, Whole"
+    },
+    {
+      "code": "WBC",
+      "description": "Leukocytes"
+    },
+    {
+      "code": "WEN",
+      "description": "Wen"
+    },
+    {
+      "code": "WICK",
+      "description": "Wick"
+    },
+    {
+      "code": "WND",
+      "description": "Wound"
+    },
+    {
+      "code": "WNDA",
+      "description": "Wound abscess"
+    },
+    {
+      "code": "WNDD",
+      "description": "Wound drainage"
+    },
+    {
+      "code": "WNDE",
+      "description": "Wound exudate"
+    },
+    {
+      "code": "WORM",
+      "description": "Worm"
+    },
+    {
+      "code": "WRT",
+      "description": "Wart"
+    },
+    {
+      "code": "WWA",
+      "description": "Environmental, Water"
+    },
+    {
+      "code": "WWO",
+      "description": "Environmental, Water (Ocean)"
+    },
+    {
+      "code": "WWT",
+      "description": "Environmental, Water (Tap)"
+    }
+  ]
+}

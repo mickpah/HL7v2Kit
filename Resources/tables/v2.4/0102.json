@@ -1,0 +1,18 @@
+{
+  "table": "0102",
+  "version": "2.4",
+  "name": "Delayed acknowledgment type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0102 - Delayed acknowledgment type",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Message received, stored for later processing"
+    },
+    {
+      "code": "F",
+      "description": "acknowledgment after processing"
+    }
+  ]
+}

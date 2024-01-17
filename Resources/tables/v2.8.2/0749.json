@@ -1,0 +1,26 @@
+{
+  "table": "0749",
+  "version": "2.8.2",
+  "name": "DRG Grouping Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0749 - DRG Grouping Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Valid code; not used for grouping"
+    },
+    {
+      "code": "1",
+      "description": "Valid code; used for grouping"
+    },
+    {
+      "code": "2",
+      "description": "Invalid code; not used for grouping"
+    },
+    {
+      "code": "3",
+      "description": "Invalid code; code is relevant for grouping"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "table": "0429",
+  "version": "2.5.1",
+  "name": "Production Class Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0429 - Production Class Code",
+  "entries": [
+    {
+      "code": "BR",
+      "description": "Breeding/genetic stock"
+    },
+    {
+      "code": "DA",
+      "description": "Dairy"
+    },
+    {
+      "code": "DR",
+      "description": "Draft"
+    },
+    {
+      "code": "DU",
+      "description": "Dual Purpose"
+    },
+    {
+      "code": "LY",
+      "description": "Layer, Includes Multiplier flocks"
+    },
+    {
+      "code": "MT",
+      "description": "Meat"
+    },
+    {
+      "code": "NA",
+      "description": "Not Applicable"
+    },
+    {
+      "code": "OT",
+      "description": "Other"
+    },
+    {
+      "code": "PL",
+      "description": "Pleasure"
+    },
+    {
+      "code": "RA",
+      "description": "Racing"
+    },
+    {
+      "code": "SH",
+      "description": "Show"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "table": "0719",
+  "version": "2.8.2",
+  "name": "Access Restriction Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0719 - Access Restriction Reason",
+  "entries": [
+    {
+      "code": "PAT",
+      "description": "Patient Request"
+    },
+    {
+      "code": "PHY",
+      "description": "Physician Request"
+    },
+    {
+      "code": "REG",
+      "description": "Regulatory requirement"
+    },
+    {
+      "code": "ORG",
+      "description": "Organizational policy or requirement"
+    },
+    {
+      "code": "EMP",
+      "description": "Employee of this organization"
+    },
+    {
+      "code": "DIA",
+      "description": "Diagnosis-related"
+    },
+    {
+      "code": "VIP",
+      "description": "Very important person or celebrity"
+    }
+  ]
+}

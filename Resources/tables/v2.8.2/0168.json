@@ -1,0 +1,38 @@
+{
+  "table": "0168",
+  "version": "2.8.2",
+  "name": "Processing Priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0168 - Processing Priority",
+  "entries": [
+    {
+      "code": "S",
+      "description": "Stat (do immediately)"
+    },
+    {
+      "code": "A",
+      "description": "As soon as possible (a priority lower than stat)"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "P",
+      "description": "Preoperative (to be done prior to surgery)"
+    },
+    {
+      "code": "T",
+      "description": "Timing critical (do as near as possible to requested time)"
+    },
+    {
+      "code": "C",
+      "description": "Measure continuously (e.g., arterial line blood pressure)"
+    },
+    {
+      "code": "B",
+      "description": "Do at bedside or portable (may be used with other codes)"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0625",
+  "version": "2.8.2",
+  "name": "Item Status Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0625 - Item Status Codes",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Active"
+    },
+    {
+      "code": "2",
+      "description": "Pending Inactive"
+    },
+    {
+      "code": "3",
+      "description": "Inactive"
+    }
+  ]
+}

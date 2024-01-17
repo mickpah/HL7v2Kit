@@ -1,0 +1,14 @@
+{
+  "table": "0068",
+  "version": "2.6",
+  "name": "Guarantor Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0068 - Guarantor Type",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

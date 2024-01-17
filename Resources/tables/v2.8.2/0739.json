@@ -1,0 +1,22 @@
+{
+  "table": "0739",
+  "version": "2.8.2",
+  "name": "DRG Status Patient",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0739 - DRG Status Patient",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Normal length of stay"
+    },
+    {
+      "code": "2",
+      "description": "Short length of stay"
+    },
+    {
+      "code": "3",
+      "description": "Long length of stay"
+    }
+  ]
+}

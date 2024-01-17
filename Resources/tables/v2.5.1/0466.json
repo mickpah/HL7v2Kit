@@ -1,0 +1,22 @@
+{
+  "table": "0466",
+  "version": "2.5.1",
+  "name": "Ambulatory Payment Classification Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0466 - Ambulatory Payment Classification Code",
+  "entries": [
+    {
+      "code": "031",
+      "description": "Dental procedures"
+    },
+    {
+      "code": "163",
+      "description": "Excision/biopsy"
+    },
+    {
+      "code": "181",
+      "description": "Level 1 skin repair."
+    }
+  ]
+}

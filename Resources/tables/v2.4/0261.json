@@ -1,0 +1,42 @@
+{
+  "table": "0261",
+  "version": "2.4",
+  "name": "Location equipment",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0261 - Location equipment",
+  "entries": [
+    {
+      "code": "EEG",
+      "description": "Electro-Encephalogram"
+    },
+    {
+      "code": "EKG",
+      "description": "Electro-Cardiogram"
+    },
+    {
+      "code": "INF",
+      "description": "Infusion pump"
+    },
+    {
+      "code": "IVP",
+      "description": "IV pump"
+    },
+    {
+      "code": "OXY",
+      "description": "Oxygen"
+    },
+    {
+      "code": "SUC",
+      "description": "Suction"
+    },
+    {
+      "code": "VEN",
+      "description": "Ventilator"
+    },
+    {
+      "code": "VIT",
+      "description": "Vital signs monitor"
+    }
+  ]
+}

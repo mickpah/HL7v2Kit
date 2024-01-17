@@ -1,0 +1,14 @@
+{
+  "table": "0452",
+  "version": "2.6",
+  "name": "Health care provider type code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0452 - Health care provider type code",
+  "entries": [
+    {
+      "code": "SUGGESTION",
+      "description": "ANSI ASC X12 Health Care Provider Taxonomy, Level 1 - Type"
+    }
+  ]
+}

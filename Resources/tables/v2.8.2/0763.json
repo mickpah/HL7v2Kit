@@ -1,0 +1,22 @@
+{
+  "table": "0763",
+  "version": "2.8.2",
+  "name": "DRG Procedure Relevance",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0763 - DRG Procedure Relevance",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Neither operation relevant nor non-operation relevant procedure"
+    },
+    {
+      "code": "1",
+      "description": "Operation relevant procedure"
+    },
+    {
+      "code": "2",
+      "description": "Non-operation relevant procedure"
+    }
+  ]
+}

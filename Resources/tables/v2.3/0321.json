@@ -1,0 +1,26 @@
+{
+  "table": "0321",
+  "version": "2.3",
+  "name": "Dispense Method",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0321 - Dispense Method",
+  "entries": [
+    {
+      "code": "TR",
+      "description": "Traditional"
+    },
+    {
+      "code": "UD",
+      "description": "Unit Dose"
+    },
+    {
+      "code": "F",
+      "description": "Floor Stock"
+    },
+    {
+      "code": "AD",
+      "description": "Automatic Dispensing"
+    }
+  ]
+}

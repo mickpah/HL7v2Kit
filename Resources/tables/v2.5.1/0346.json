@@ -1,0 +1,9 @@
+{
+  "table": "0346",
+  "version": "2.5.1",
+  "name": "Certification Agency",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0346 - Certification Agency",
+  "entries": []
+}

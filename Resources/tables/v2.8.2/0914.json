@@ -1,0 +1,30 @@
+{
+  "table": "0914",
+  "version": "2.8.2",
+  "name": "Root Cause",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0914 - Root Cause",
+  "entries": [
+    {
+      "code": "AP",
+      "description": "Analysis Process"
+    },
+    {
+      "code": "IM",
+      "description": "Information Management"
+    },
+    {
+      "code": "L",
+      "description": "Laboratory"
+    },
+    {
+      "code": "NA",
+      "description": "Not Applicable"
+    },
+    {
+      "code": "PD",
+      "description": "Placer Data"
+    }
+  ]
+}

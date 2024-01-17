@@ -1,0 +1,18 @@
+{
+  "table": "0332",
+  "version": "2.3",
+  "name": "Network Source Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0332 - Network Source Type",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Initiate"
+    },
+    {
+      "code": "A",
+      "description": "Accept"
+    }
+  ]
+}

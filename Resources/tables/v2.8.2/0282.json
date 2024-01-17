@@ -1,0 +1,26 @@
+{
+  "table": "0282",
+  "version": "2.8.2",
+  "name": "Referral Disposition",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0282 - Referral Disposition",
+  "entries": [
+    {
+      "code": "WR",
+      "description": "Send Written Report"
+    },
+    {
+      "code": "RP",
+      "description": "Return Patient After Evaluation"
+    },
+    {
+      "code": "AM",
+      "description": "Assume Management"
+    },
+    {
+      "code": "SO",
+      "description": "Second Opinion"
+    }
+  ]
+}

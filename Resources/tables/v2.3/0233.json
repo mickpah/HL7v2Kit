@@ -1,0 +1,9 @@
+{
+  "table": "0233",
+  "version": "2.3",
+  "name": "Non-concur Code/Description",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0233 - Non-concur Code/Description",
+  "entries": []
+}

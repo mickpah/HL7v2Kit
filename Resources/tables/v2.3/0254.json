@@ -1,0 +1,9 @@
+{
+  "table": "0254",
+  "version": "2.3",
+  "name": "Kind of Quantity",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0254 - Kind of Quantity",
+  "entries": []
+}

@@ -1,0 +1,34 @@
+{
+  "table": "0116",
+  "version": "2.8.2",
+  "name": "Bed Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0116 - Bed Status",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Closed"
+    },
+    {
+      "code": "H",
+      "description": "Housekeeping"
+    },
+    {
+      "code": "O",
+      "description": "Occupied"
+    },
+    {
+      "code": "U",
+      "description": "Unoccupied"
+    },
+    {
+      "code": "K",
+      "description": "Contaminated"
+    },
+    {
+      "code": "I",
+      "description": "Isolated"
+    }
+  ]
+}

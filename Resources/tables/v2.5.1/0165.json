@@ -1,0 +1,70 @@
+{
+  "table": "0165",
+  "version": "2.5.1",
+  "name": "Administration Method",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0165 - Administration Method",
+  "entries": [
+    {
+      "code": "CH",
+      "description": "Chew"
+    },
+    {
+      "code": "DI",
+      "description": "Dissolve"
+    },
+    {
+      "code": "DU",
+      "description": "Dust"
+    },
+    {
+      "code": "IF",
+      "description": "Infiltrate"
+    },
+    {
+      "code": "IR",
+      "description": "Irrigate"
+    },
+    {
+      "code": "IS",
+      "description": "Insert"
+    },
+    {
+      "code": "IVP",
+      "description": "IV Push"
+    },
+    {
+      "code": "IVPB",
+      "description": "IV Piggyback"
+    },
+    {
+      "code": "NB",
+      "description": "Nebulized"
+    },
+    {
+      "code": "PF",
+      "description": "Perfuse"
+    },
+    {
+      "code": "PT",
+      "description": "Pain"
+    },
+    {
+      "code": "SH",
+      "description": "Shampoo"
+    },
+    {
+      "code": "SO",
+      "description": "Soak"
+    },
+    {
+      "code": "WA",
+      "description": "Wash"
+    },
+    {
+      "code": "WI",
+      "description": "Wipe"
+    }
+  ]
+}

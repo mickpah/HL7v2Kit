@@ -1,0 +1,38 @@
+{
+  "table": "0267",
+  "version": "2.3",
+  "name": "Days of the Week",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0267 - Days of the Week",
+  "entries": [
+    {
+      "code": "SAT",
+      "description": "Saturday"
+    },
+    {
+      "code": "SUN",
+      "description": "Sunday"
+    },
+    {
+      "code": "MON",
+      "description": "Monday"
+    },
+    {
+      "code": "TUE",
+      "description": "Tuesday"
+    },
+    {
+      "code": "WED",
+      "description": "Wednesday"
+    },
+    {
+      "code": "THU",
+      "description": "Thursday"
+    },
+    {
+      "code": "FRI",
+      "description": "Friday"
+    }
+  ]
+}

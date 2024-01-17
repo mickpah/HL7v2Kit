@@ -1,0 +1,26 @@
+{
+  "table": "0158",
+  "version": "2.6",
+  "name": "Date/time selection qualifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0158 - Date/time selection qualifier",
+  "entries": [
+    {
+      "code": "1ST",
+      "description": "First value within range"
+    },
+    {
+      "code": "ALL",
+      "description": "All values within the range"
+    },
+    {
+      "code": "LST",
+      "description": "Last value within the range"
+    },
+    {
+      "code": "REV",
+      "description": "All values within the range returned in reverse chronological order (This is the default if not otherwise specified.)"
+    }
+  ]
+}

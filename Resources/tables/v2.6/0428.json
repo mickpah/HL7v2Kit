@@ -1,0 +1,22 @@
+{
+  "table": "0428",
+  "version": "2.6",
+  "name": "Incident Type Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0428 - Incident Type Code",
+  "entries": [
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Preventable"
+    },
+    {
+      "code": "U",
+      "description": "User Error"
+    }
+  ]
+}

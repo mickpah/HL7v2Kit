@@ -1,0 +1,26 @@
+{
+  "table": "0131",
+  "version": "2.3",
+  "name": "Contact Role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0131 - Contact Role",
+  "entries": [
+    {
+      "code": "CP",
+      "description": "Contact person"
+    },
+    {
+      "code": "EP",
+      "description": "Emergency contact person"
+    },
+    {
+      "code": "BP",
+      "description": "Billing contact person"
+    },
+    {
+      "code": "PR",
+      "description": "Person preparing referral"
+    }
+  ]
+}

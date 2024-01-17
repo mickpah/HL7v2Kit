@@ -1,0 +1,42 @@
+{
+  "table": "0122",
+  "version": "2.3.1",
+  "name": "Charge type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0122 - Charge type",
+  "entries": [
+    {
+      "code": "CH",
+      "description": "Charge"
+    },
+    {
+      "code": "CO",
+      "description": "Contract"
+    },
+    {
+      "code": "CR",
+      "description": "Credit"
+    },
+    {
+      "code": "DP",
+      "description": "Department"
+    },
+    {
+      "code": "GR",
+      "description": "Grant"
+    },
+    {
+      "code": "NC",
+      "description": "No Charge"
+    },
+    {
+      "code": "PC",
+      "description": "Professional"
+    },
+    {
+      "code": "RS",
+      "description": "Research"
+    }
+  ]
+}

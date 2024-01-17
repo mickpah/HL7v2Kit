@@ -1,0 +1,26 @@
+{
+  "table": "0207",
+  "version": "2.3",
+  "name": "Processing Mode",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0207 - Processing Mode",
+  "entries": [
+    {
+      "code": "a",
+      "description": "Archive"
+    },
+    {
+      "code": "r",
+      "description": "Restore from Archive"
+    },
+    {
+      "code": "i",
+      "description": "Initial Load"
+    },
+    {
+      "code": "not present",
+      "description": "Not Present (the default, meaning current processing)"
+    }
+  ]
+}

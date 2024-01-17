@@ -1,0 +1,34 @@
+{
+  "table": "0281",
+  "version": "2.3",
+  "name": "Referral Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0281 - Referral Type",
+  "entries": [
+    {
+      "code": "LAB",
+      "description": "Laboratory"
+    },
+    {
+      "code": "RAD",
+      "description": "Radiology"
+    },
+    {
+      "code": "MED",
+      "description": "Medical"
+    },
+    {
+      "code": "SKN",
+      "description": "Skilled Nursing"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric"
+    },
+    {
+      "code": "HOM",
+      "description": "Home Care"
+    }
+  ]
+}

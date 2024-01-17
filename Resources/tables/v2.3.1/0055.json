@@ -1,0 +1,9 @@
+{
+  "table": "0055",
+  "version": "2.3.1",
+  "name": "Diagnostic related group",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0055 - Diagnostic related group",
+  "entries": []
+}

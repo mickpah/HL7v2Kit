@@ -1,0 +1,14 @@
+{
+  "table": "0423",
+  "version": "2.8.2",
+  "name": "Case Category Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0423 - Case Category Code",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Doctor’s Office Closed"
+    }
+  ]
+}

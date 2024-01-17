@@ -1,0 +1,22 @@
+{
+  "table": "0919",
+  "version": "2.8.2",
+  "name": "Exclusive Test",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0919 - Exclusive Test",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "This test should be exclusive"
+    },
+    {
+      "code": "N",
+      "description": "This test can be included with any number of other tests"
+    },
+    {
+      "code": "D",
+      "description": "In some cases, this test should be only exclusively with like tests (examples are cyto or pathology)"
+    }
+  ]
+}

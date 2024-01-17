@@ -1,0 +1,34 @@
+{
+  "table": "0145",
+  "version": "2.8.2",
+  "name": "Room Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0145 - Room Type",
+  "entries": [
+    {
+      "code": "PRI",
+      "description": "Private room"
+    },
+    {
+      "code": "2PRI",
+      "description": "Second private room"
+    },
+    {
+      "code": "SPR",
+      "description": "Semi-private room"
+    },
+    {
+      "code": "2SPR",
+      "description": "Second semi-private room"
+    },
+    {
+      "code": "ICU",
+      "description": "Intensive care unit"
+    },
+    {
+      "code": "2ICU",
+      "description": "Second intensive care unit"
+    }
+  ]
+}

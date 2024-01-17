@@ -1,0 +1,30 @@
+{
+  "table": "0353",
+  "version": "2.8.2",
+  "name": "CWE Statuses",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0353 - CWE Statuses",
+  "entries": [
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "UASK",
+      "description": "Asked but Unknown"
+    },
+    {
+      "code": "NAV",
+      "description": "Not available"
+    },
+    {
+      "code": "NA",
+      "description": "Not applicable"
+    },
+    {
+      "code": "NASK",
+      "description": "Not asked"
+    }
+  ]
+}

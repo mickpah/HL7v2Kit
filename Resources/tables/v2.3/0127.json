@@ -1,0 +1,26 @@
+{
+  "table": "0127",
+  "version": "2.3",
+  "name": "Allergy Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0127 - Allergy Type",
+  "entries": [
+    {
+      "code": "DA",
+      "description": "Drug Allergy"
+    },
+    {
+      "code": "FA",
+      "description": "Food Allergy"
+    },
+    {
+      "code": "MA",
+      "description": "Miscellaneous Allergy"
+    },
+    {
+      "code": "MC",
+      "description": "Miscellaneous Contraindication"
+    }
+  ]
+}

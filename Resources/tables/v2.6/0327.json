@@ -1,0 +1,14 @@
+{
+  "table": "0327",
+  "version": "2.6",
+  "name": "Job code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0327 - Job code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

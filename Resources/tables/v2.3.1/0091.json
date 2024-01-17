@@ -1,0 +1,18 @@
+{
+  "table": "0091",
+  "version": "2.3.1",
+  "name": "Query priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0091 - Query priority",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Deferred"
+    },
+    {
+      "code": "I",
+      "description": "Immediate"
+    }
+  ]
+}

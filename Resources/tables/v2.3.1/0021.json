@@ -1,0 +1,9 @@
+{
+  "table": "0021",
+  "version": "2.3.1",
+  "name": "Bad debt agency code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0021 - Bad debt agency code",
+  "entries": []
+}

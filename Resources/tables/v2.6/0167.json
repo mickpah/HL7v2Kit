@@ -1,0 +1,54 @@
+{
+  "table": "0167",
+  "version": "2.6",
+  "name": "Substitution Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0167 - Substitution Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "No product selection indicated"
+    },
+    {
+      "code": "1",
+      "description": "Substitution not allowed by prescriber"
+    },
+    {
+      "code": "2",
+      "description": "Substitution allowed - patient requested product dispensed"
+    },
+    {
+      "code": "3",
+      "description": "Substitution allowed - pharmacist selected product dispensed"
+    },
+    {
+      "code": "4",
+      "description": "Substitution allowed - generic drug not in stock"
+    },
+    {
+      "code": "5",
+      "description": "Substitution allowed - brand drug dispensed as a generic"
+    },
+    {
+      "code": "7",
+      "description": "Substitution not allowed - brand drug mandated by law"
+    },
+    {
+      "code": "8",
+      "description": "Substitution allowed - generic drug not available in marketplace"
+    },
+    {
+      "code": "G",
+      "description": "A generic substitution was dispensed."
+    },
+    {
+      "code": "N",
+      "description": "No substitute was dispensed. This is equivalent to the default (null) value."
+    },
+    {
+      "code": "T",
+      "description": "A therapeutic substitution was dispensed."
+    }
+  ]
+}

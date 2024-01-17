@@ -1,0 +1,14 @@
+{
+  "table": "0634",
+  "version": "2.8.2",
+  "name": "Item Importance Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0634 - Item Importance Codes",
+  "entries": [
+    {
+      "code": "CRT",
+      "description": "Critical"
+    }
+  ]
+}

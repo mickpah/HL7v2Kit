@@ -1,0 +1,62 @@
+{
+  "table": "0417",
+  "version": "2.8.2",
+  "name": "Tissue Type Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0417 - Tissue Type Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Insufficient Tissue"
+    },
+    {
+      "code": "2",
+      "description": "Not abnormal"
+    },
+    {
+      "code": "3",
+      "description": "Abnormal-not categorized"
+    },
+    {
+      "code": "4",
+      "description": "Mechanical abnormal"
+    },
+    {
+      "code": "5",
+      "description": "Growth alteration"
+    },
+    {
+      "code": "6",
+      "description": "Degeneration & necrosis"
+    },
+    {
+      "code": "7",
+      "description": "Non-acute inflammation"
+    },
+    {
+      "code": "8",
+      "description": "Non-malignant neoplasm"
+    },
+    {
+      "code": "9",
+      "description": "Malignant neoplasm"
+    },
+    {
+      "code": "0",
+      "description": "No tissue expected"
+    },
+    {
+      "code": "B",
+      "description": "Basal cell carcinoma"
+    },
+    {
+      "code": "C",
+      "description": "Carcinoma-unspecified type"
+    },
+    {
+      "code": "G",
+      "description": "Additional tissue required"
+    }
+  ]
+}

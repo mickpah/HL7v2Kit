@@ -1,0 +1,14 @@
+{
+  "table": "0343",
+  "version": "2.8.2",
+  "name": "Military Handicapped Program Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0343 - Military Handicapped Program Code",
+  "entries": [
+    {
+      "code": "contractors.",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0524",
+  "version": "2.5.1",
+  "name": "Sequence condition",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0524 - Sequence condition",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Repeating cycle of orders"
+    },
+    {
+      "code": "R",
+      "description": "Reserved for possible future use"
+    },
+    {
+      "code": "S",
+      "description": "Sequence conditions"
+    }
+  ]
+}

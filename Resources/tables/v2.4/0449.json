@@ -1,0 +1,9 @@
+{
+  "table": "0449",
+  "version": "2.4",
+  "name": "Conformance statements",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0449 - Conformance statements",
+  "entries": []
+}

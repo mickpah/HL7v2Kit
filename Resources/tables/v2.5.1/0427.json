@@ -1,0 +1,66 @@
+{
+  "table": "0427",
+  "version": "2.5.1",
+  "name": "Risk Management Incident Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0427 - Risk Management Incident Code",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Body fluid exposure"
+    },
+    {
+      "code": "C",
+      "description": "Contaminated Substance"
+    },
+    {
+      "code": "D",
+      "description": "Diet Errors"
+    },
+    {
+      "code": "E",
+      "description": "Equipment problem"
+    },
+    {
+      "code": "F",
+      "description": "Patient fell (not from bed)"
+    },
+    {
+      "code": "H",
+      "description": "Patient fell from bed"
+    },
+    {
+      "code": "I",
+      "description": "Infusion error"
+    },
+    {
+      "code": "J",
+      "description": "Foreign object left during surgery"
+    },
+    {
+      "code": "K",
+      "description": "Sterile precaution violated"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Procedure error"
+    },
+    {
+      "code": "R",
+      "description": "Pharmaceutical error"
+    },
+    {
+      "code": "S",
+      "description": "Suicide Attempt"
+    },
+    {
+      "code": "T",
+      "description": "Transfusion error"
+    }
+  ]
+}

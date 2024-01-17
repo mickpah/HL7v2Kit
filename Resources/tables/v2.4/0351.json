@@ -1,0 +1,54 @@
+{
+  "table": "0351",
+  "version": "2.4",
+  "name": "Occurrence span",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0351 - Occurrence span",
+  "entries": [
+    {
+      "code": "70",
+      "description": "Qualifying stay dates for SNF"
+    },
+    {
+      "code": "71",
+      "description": "Prior stay dates"
+    },
+    {
+      "code": "72",
+      "description": "First/last visit"
+    },
+    {
+      "code": "73",
+      "description": "Benefit eligibility period"
+    },
+    {
+      "code": "74",
+      "description": "Non-covered level of care"
+    },
+    {
+      "code": "75",
+      "description": "SNF level of care"
+    },
+    {
+      "code": "76",
+      "description": "Patient liability"
+    },
+    {
+      "code": "77",
+      "description": "Provider liability period"
+    },
+    {
+      "code": "78",
+      "description": "SNF prior stay dates"
+    },
+    {
+      "code": "79",
+      "description": "Payer code"
+    },
+    {
+      "code": "M0",
+      "description": "PSRO/UR approved stay dates"
+    }
+  ]
+}

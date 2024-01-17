@@ -1,0 +1,14 @@
+{
+  "table": "0435",
+  "version": "2.4",
+  "name": "Advance directive code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0435 - Advance directive code",
+  "entries": [
+    {
+      "code": "DNR",
+      "description": "Do not resuscitate"
+    }
+  ]
+}

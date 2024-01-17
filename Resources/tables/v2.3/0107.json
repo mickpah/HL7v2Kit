@@ -1,0 +1,18 @@
+{
+  "table": "0107",
+  "version": "2.3",
+  "name": "Deferred Response Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0107 - Deferred Response Type",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Before the date/time specified"
+    },
+    {
+      "code": "L",
+      "description": "Later than the date/time specified"
+    }
+  ]
+}

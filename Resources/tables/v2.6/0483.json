@@ -1,0 +1,50 @@
+{
+  "table": "0483",
+  "version": "2.6",
+  "name": "Authorization Mode",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0483 - Authorization Mode",
+  "entries": [
+    {
+      "code": "EL",
+      "description": "Electronic"
+    },
+    {
+      "code": "EM",
+      "description": "E-mail"
+    },
+    {
+      "code": "FX",
+      "description": "Fax"
+    },
+    {
+      "code": "IP",
+      "description": "In Person"
+    },
+    {
+      "code": "MA",
+      "description": "Mail"
+    },
+    {
+      "code": "PA",
+      "description": "Paper"
+    },
+    {
+      "code": "PH",
+      "description": "Phone"
+    },
+    {
+      "code": "RE",
+      "description": "Reflexive (Automated system)"
+    },
+    {
+      "code": "VC",
+      "description": "Video-conference"
+    },
+    {
+      "code": "VO",
+      "description": "Voice"
+    }
+  ]
+}

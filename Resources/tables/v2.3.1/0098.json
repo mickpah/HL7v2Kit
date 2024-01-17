@@ -1,0 +1,22 @@
+{
+  "table": "0098",
+  "version": "2.3.1",
+  "name": "Type of agreement",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0098 - Type of agreement",
+  "entries": [
+    {
+      "code": "S",
+      "description": "Standard"
+    },
+    {
+      "code": "U",
+      "description": "Unified"
+    },
+    {
+      "code": "M",
+      "description": "Maternity"
+    }
+  ]
+}

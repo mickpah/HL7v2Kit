@@ -1,0 +1,22 @@
+{
+  "table": "0460",
+  "version": "2.5.1",
+  "name": "Denial or Rejection Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0460 - Denial or Rejection Code",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Line item not denied or rejected"
+    },
+    {
+      "code": "1",
+      "description": "Line item denied or rejected"
+    },
+    {
+      "code": "2",
+      "description": "Line item is on a multiple-day claim. The line item is not denied or rejected, but occurs on a day that has been denied or rejected."
+    }
+  ]
+}

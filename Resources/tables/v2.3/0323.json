@@ -1,0 +1,22 @@
+{
+  "table": "0323",
+  "version": "2.3",
+  "name": "Action Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0323 - Action Code",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Delete"
+    },
+    {
+      "code": "U",
+      "description": "Update"
+    },
+    {
+      "code": "A",
+      "description": "Add"
+    }
+  ]
+}

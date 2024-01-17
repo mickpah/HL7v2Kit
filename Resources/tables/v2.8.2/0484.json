@@ -1,0 +1,46 @@
+{
+  "table": "0484",
+  "version": "2.8.2",
+  "name": "Dispense Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0484 - Dispense Type",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Trial Quantity Balance"
+    },
+    {
+      "code": "C",
+      "description": "Compassionate Fill"
+    },
+    {
+      "code": "N",
+      "description": "New/Renew - Full Fill"
+    },
+    {
+      "code": "P",
+      "description": "New/Renew - Part Fill"
+    },
+    {
+      "code": "Q",
+      "description": "Refill - Part Fill"
+    },
+    {
+      "code": "R",
+      "description": "Refill - Full Fill"
+    },
+    {
+      "code": "S",
+      "description": "Manufacturer Sample"
+    },
+    {
+      "code": "T",
+      "description": "Trial Quantity"
+    },
+    {
+      "code": "Z",
+      "description": "Non-Prescription Fill"
+    }
+  ]
+}

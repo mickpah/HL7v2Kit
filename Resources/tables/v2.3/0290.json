@@ -1,0 +1,9 @@
+{
+  "table": "0290",
+  "version": "2.3",
+  "name": "MIME base64 encoding Characters",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0290 - MIME base64 encoding Characters",
+  "entries": []
+}

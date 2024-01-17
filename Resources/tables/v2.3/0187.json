@@ -1,0 +1,18 @@
+{
+  "table": "0187",
+  "version": "2.3",
+  "name": "Provider Billing",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0187 - Provider Billing",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Provider does own billing"
+    },
+    {
+      "code": "I",
+      "description": "Institution bills for provider"
+    }
+  ]
+}

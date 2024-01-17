@@ -1,0 +1,9 @@
+{
+  "table": "0153",
+  "version": "2.5.1",
+  "name": "Value code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0153 - Value code",
+  "entries": []
+}

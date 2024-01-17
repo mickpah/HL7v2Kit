@@ -1,0 +1,22 @@
+{
+  "table": "0918",
+  "version": "2.8.2",
+  "name": "PCA Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0918 - PCA Type",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Continuous"
+    },
+    {
+      "code": "P",
+      "description": "PCA Only"
+    },
+    {
+      "code": "PC",
+      "description": "PCA + Continuous"
+    }
+  ]
+}

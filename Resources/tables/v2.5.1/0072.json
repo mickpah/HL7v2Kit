@@ -1,0 +1,9 @@
+{
+  "table": "0072",
+  "version": "2.5.1",
+  "name": "Insurance Plan ID",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0072 - Insurance Plan ID",
+  "entries": []
+}

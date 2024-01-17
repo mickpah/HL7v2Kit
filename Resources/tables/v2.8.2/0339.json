@@ -1,0 +1,26 @@
+{
+  "table": "0339",
+  "version": "2.8.2",
+  "name": "Advanced Beneficiary Notice Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0339 - Advanced Beneficiary Notice Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Service is subject to medical necessity procedures"
+    },
+    {
+      "code": "2",
+      "description": "Patient has been informed of responsibility, and agrees to pay for service"
+    },
+    {
+      "code": "3",
+      "description": "Patient has been informed of responsibility, and asks that the payer be billed"
+    },
+    {
+      "code": "4",
+      "description": "Advanced Beneficiary Notice has not been signed"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "table": "0017",
+  "version": "2.8.2",
+  "name": "Transaction Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0017 - Transaction Type",
+  "entries": [
+    {
+      "code": "CG",
+      "description": "Charge"
+    },
+    {
+      "code": "CD",
+      "description": "Credit"
+    },
+    {
+      "code": "PY",
+      "description": "Payment"
+    },
+    {
+      "code": "AJ",
+      "description": "Adjustment"
+    },
+    {
+      "code": "CO",
+      "description": "Co-payment"
+    }
+  ]
+}

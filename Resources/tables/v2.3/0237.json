@@ -1,0 +1,42 @@
+{
+  "table": "0237",
+  "version": "2.3",
+  "name": "Event Qualification",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0237 - Event Qualification",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Interaction"
+    },
+    {
+      "code": "O",
+      "description": "Overdose"
+    },
+    {
+      "code": "A",
+      "description": "Abuse"
+    },
+    {
+      "code": "M",
+      "description": "Misuse"
+    },
+    {
+      "code": "D",
+      "description": "Dependency"
+    },
+    {
+      "code": "L",
+      "description": "Lack of expect therapeutic effect"
+    },
+    {
+      "code": "W",
+      "description": "Drug withdrawal"
+    },
+    {
+      "code": "B",
+      "description": "Unexpected beneficial effect"
+    }
+  ]
+}

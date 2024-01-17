@@ -1,0 +1,26 @@
+{
+  "table": "0504",
+  "version": "2.5.1",
+  "name": "Sequence Condition Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0504 - Sequence Condition Code",
+  "entries": [
+    {
+      "code": "EE",
+      "description": "End related service request(s), end current service request."
+    },
+    {
+      "code": "ES",
+      "description": "End related service request(s), start current service request."
+    },
+    {
+      "code": "SE",
+      "description": "Start related service request(s), end current service request."
+    },
+    {
+      "code": "SS",
+      "description": "Start related service request(s), start current service request."
+    }
+  ]
+}

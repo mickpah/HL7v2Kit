@@ -1,0 +1,106 @@
+{
+  "table": "0368",
+  "version": "2.8.2",
+  "name": "Remote Control Command",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0368 - Remote Control Command",
+  "entries": [
+    {
+      "code": "SA",
+      "description": "Sampling"
+    },
+    {
+      "code": "LO",
+      "description": "Load"
+    },
+    {
+      "code": "UN",
+      "description": "Unload"
+    },
+    {
+      "code": "LK",
+      "description": "Lock"
+    },
+    {
+      "code": "UC",
+      "description": "Unlock"
+    },
+    {
+      "code": "TT",
+      "description": "Transport To"
+    },
+    {
+      "code": "CN",
+      "description": "Clear Notification"
+    },
+    {
+      "code": "IN",
+      "description": "Initialize/Initiate"
+    },
+    {
+      "code": "SU",
+      "description": "Setup"
+    },
+    {
+      "code": "CL",
+      "description": "Clear"
+    },
+    {
+      "code": "PA",
+      "description": "Pause"
+    },
+    {
+      "code": "RE",
+      "description": "Resume"
+    },
+    {
+      "code": "ES",
+      "description": "Emergency –stop"
+    },
+    {
+      "code": "LC",
+      "description": "Local Control Request"
+    },
+    {
+      "code": "RC",
+      "description": "Remote Control Request"
+    },
+    {
+      "code": "AB",
+      "description": "Abort"
+    },
+    {
+      "code": "EN",
+      "description": "Enable Sending Events"
+    },
+    {
+      "code": "DI",
+      "description": "Disable Sending Events"
+    },
+    {
+      "code": "EX",
+      "description": "Execute (command specified in field Parameters (ST) 01394)"
+    },
+    {
+      "code": "AF",
+      "description": "Aliquot From container"
+    },
+    {
+      "code": "AT",
+      "description": "Aliquot To container"
+    },
+    {
+      "code": "MSH|…|…|…|…|…|…|…|EAC^U07|…",
+      "description": ""
+    },
+    {
+      "code": "EQU|…",
+      "description": ""
+    },
+    {
+      "code": "[SPM]",
+      "description": ""
+    }
+  ]
+}

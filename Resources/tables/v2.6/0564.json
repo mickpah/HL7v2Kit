@@ -1,0 +1,26 @@
+{
+  "table": "0564",
+  "version": "2.6",
+  "name": "Adjustment Category Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0564 - Adjustment Category Code",
+  "entries": [
+    {
+      "code": "EA",
+      "description": "Edit/Adjudication Response"
+    },
+    {
+      "code": "IN",
+      "description": "Information"
+    },
+    {
+      "code": "PA",
+      "description": "Provider Adjustment"
+    },
+    {
+      "code": "PR",
+      "description": "Processing Result"
+    }
+  ]
+}

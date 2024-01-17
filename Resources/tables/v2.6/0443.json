@@ -1,0 +1,54 @@
+{
+  "table": "0443",
+  "version": "2.6",
+  "name": "Provider role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0443 - Provider role",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Admitting"
+    },
+    {
+      "code": "AI",
+      "description": "Assistant/Alternate Interpreter"
+    },
+    {
+      "code": "AT",
+      "description": "Attending"
+    },
+    {
+      "code": "CP",
+      "description": "Consulting Provider"
+    },
+    {
+      "code": "FHCP",
+      "description": "Family Health Care Professional"
+    },
+    {
+      "code": "PI",
+      "description": "Primary Interpreter"
+    },
+    {
+      "code": "PP",
+      "description": "Primary Care Provider"
+    },
+    {
+      "code": "RP",
+      "description": "Referring Provider"
+    },
+    {
+      "code": "RT",
+      "description": "Referred to Provider"
+    },
+    {
+      "code": "TN",
+      "description": "Technician"
+    },
+    {
+      "code": "TR",
+      "description": "Transcriptionist"
+    }
+  ]
+}

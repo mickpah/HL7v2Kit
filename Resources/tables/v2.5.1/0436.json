@@ -1,0 +1,26 @@
+{
+  "table": "0436",
+  "version": "2.5.1",
+  "name": "Sensitivity to Causative Agent Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0436 - Sensitivity to Causative Agent Code",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Adverse Reaction (Not otherwise classified)"
+    },
+    {
+      "code": "AL",
+      "description": "Allergy"
+    },
+    {
+      "code": "CT",
+      "description": "Contraindication"
+    },
+    {
+      "code": "IN",
+      "description": "Intolerance"
+    }
+  ]
+}

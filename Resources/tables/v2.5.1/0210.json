@@ -1,0 +1,14 @@
+{
+  "table": "0210",
+  "version": "2.5.1",
+  "name": "Relational conjunction",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0210 - Relational conjunction",
+  "entries": [
+    {
+      "code": "AND",
+      "description": "Default"
+    }
+  ]
+}

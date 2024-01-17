@@ -1,0 +1,14 @@
+{
+  "table": "0413",
+  "version": "2.6",
+  "name": "Consent Identifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0413 - Consent Identifier",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

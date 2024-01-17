@@ -1,0 +1,22 @@
+{
+  "table": "0921",
+  "version": "2.8.2",
+  "name": "Certification Type Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0921 - Certification Type Code",
+  "entries": [
+    {
+      "code": "ADM",
+      "description": "Admitting"
+    },
+    {
+      "code": "SERV",
+      "description": "Service"
+    },
+    {
+      "code": "PROC",
+      "description": "Procedure"
+    }
+  ]
+}

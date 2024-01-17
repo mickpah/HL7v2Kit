@@ -1,0 +1,26 @@
+{
+  "table": "0334",
+  "version": "2.3",
+  "name": "Disabled Person",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0334 - Disabled Person",
+  "entries": [
+    {
+      "code": "PT",
+      "description": "Patient"
+    },
+    {
+      "code": "GT",
+      "description": "Guarantor"
+    },
+    {
+      "code": "IN",
+      "description": "Insured"
+    },
+    {
+      "code": "AP",
+      "description": "Associated Party"
+    }
+  ]
+}

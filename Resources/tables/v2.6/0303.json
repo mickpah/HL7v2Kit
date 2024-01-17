@@ -1,0 +1,14 @@
+{
+  "table": "0303",
+  "version": "2.6",
+  "name": "Room",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0303 - Room",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

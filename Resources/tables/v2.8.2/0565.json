@@ -1,0 +1,30 @@
+{
+  "table": "0565",
+  "version": "2.8.2",
+  "name": "Provider Adjustment Reason Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0565 - Provider Adjustment Reason Code",
+  "entries": [
+    {
+      "code": "PST",
+      "description": "Provincial Sales Tax"
+    },
+    {
+      "code": "GST",
+      "description": "Goods and Services Tax"
+    },
+    {
+      "code": "HST",
+      "description": "Harmonized Sales Tax"
+    },
+    {
+      "code": "DISP",
+      "description": "Dispensing Fee"
+    },
+    {
+      "code": "MKUP",
+      "description": "Mark up Fee"
+    }
+  ]
+}

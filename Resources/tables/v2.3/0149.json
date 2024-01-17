@@ -1,0 +1,22 @@
+{
+  "table": "0149",
+  "version": "2.3",
+  "name": "Days Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0149 - Days Type",
+  "entries": [
+    {
+      "code": "AP",
+      "description": "Approved"
+    },
+    {
+      "code": "DE",
+      "description": "Denied"
+    },
+    {
+      "code": "PE",
+      "description": "Pending"
+    }
+  ]
+}

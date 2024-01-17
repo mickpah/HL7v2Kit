@@ -1,0 +1,34 @@
+{
+  "table": "0477",
+  "version": "2.8.2",
+  "name": "Controlled Substance Schedule",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0477 - Controlled Substance Schedule",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Schedule I"
+    },
+    {
+      "code": "II",
+      "description": "Schedule II"
+    },
+    {
+      "code": "III",
+      "description": "Schedule III"
+    },
+    {
+      "code": "IV",
+      "description": "Schedule IV"
+    },
+    {
+      "code": "V",
+      "description": "Schedule V"
+    },
+    {
+      "code": "VI",
+      "description": "Schedule VI *Pharmacy Law Digest July 1988"
+    }
+  ]
+}

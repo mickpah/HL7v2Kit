@@ -1,0 +1,26 @@
+{
+  "table": "0759",
+  "version": "2.8.2",
+  "name": "Status Admission",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0759 - Status Admission",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Admission status is valid; used for grouping"
+    },
+    {
+      "code": "1",
+      "description": "Admission status is valid; not used for grouping"
+    },
+    {
+      "code": "2",
+      "description": "Admission status is invalid; not used for grouping"
+    },
+    {
+      "code": "3",
+      "description": "Admission status is invalid; default value used for grouping"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0193",
+  "version": "2.8.2",
+  "name": "Amount Class",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0193 - Amount Class",
+  "entries": [
+    {
+      "code": "AT",
+      "description": "Amount"
+    },
+    {
+      "code": "LM",
+      "description": "Limit"
+    },
+    {
+      "code": "PC",
+      "description": "Percentage"
+    },
+    {
+      "code": "UL",
+      "description": "Unlimited"
+    }
+  ]
+}

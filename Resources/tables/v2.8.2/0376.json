@@ -1,0 +1,78 @@
+{
+  "table": "0376",
+  "version": "2.8.2",
+  "name": "Special Handling Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0376 - Special Handling Code",
+  "entries": [
+    {
+      "code": "C37",
+      "description": "Body temperature"
+    },
+    {
+      "code": "AMB",
+      "description": "Ambient temperature"
+    },
+    {
+      "code": "CAMB",
+      "description": "Critical ambient temperature"
+    },
+    {
+      "code": "REF",
+      "description": "Refrigerated temperature"
+    },
+    {
+      "code": "CREF",
+      "description": "Critical refrigerated temperature"
+    },
+    {
+      "code": "FRZ",
+      "description": "Frozen temperature"
+    },
+    {
+      "code": "CFRZ",
+      "description": "Critical frozen temperature"
+    },
+    {
+      "code": "DFRZ",
+      "description": "Deep frozen"
+    },
+    {
+      "code": "UFRZ",
+      "description": "Ultra frozen"
+    },
+    {
+      "code": "NTR",
+      "description": "Liquid nitrogen"
+    },
+    {
+      "code": "PRTL",
+      "description": "Protect from light"
+    },
+    {
+      "code": "CATM",
+      "description": "Protect from air"
+    },
+    {
+      "code": "DRY",
+      "description": "Dry"
+    },
+    {
+      "code": "PSO",
+      "description": "No shock"
+    },
+    {
+      "code": "PSA",
+      "description": "Do not shake"
+    },
+    {
+      "code": "UPR",
+      "description": "Upright"
+    },
+    {
+      "code": "MTLF",
+      "description": "Metal Free"
+    }
+  ]
+}

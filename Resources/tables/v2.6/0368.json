@@ -1,0 +1,86 @@
+{
+  "table": "0368",
+  "version": "2.6",
+  "name": "Remote control command",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0368 - Remote control command",
+  "entries": [
+    {
+      "code": "AB",
+      "description": "Abort"
+    },
+    {
+      "code": "CL",
+      "description": "Clear"
+    },
+    {
+      "code": "CN",
+      "description": "Clear Notification"
+    },
+    {
+      "code": "DI",
+      "description": "Disable Sending Events"
+    },
+    {
+      "code": "EN",
+      "description": "Enable Sending Events"
+    },
+    {
+      "code": "ES",
+      "description": "Emergency -stop"
+    },
+    {
+      "code": "EX",
+      "description": "Execute (command specified in field Parameters (ST) 01394)"
+    },
+    {
+      "code": "IN",
+      "description": "Initialize/Initiate"
+    },
+    {
+      "code": "LC",
+      "description": "Local Control Request"
+    },
+    {
+      "code": "LK",
+      "description": "Lock"
+    },
+    {
+      "code": "LO",
+      "description": "Load"
+    },
+    {
+      "code": "PA",
+      "description": "Pause"
+    },
+    {
+      "code": "RC",
+      "description": "Remote Control Request"
+    },
+    {
+      "code": "RE",
+      "description": "Resume"
+    },
+    {
+      "code": "SA",
+      "description": "Sampling"
+    },
+    {
+      "code": "SU",
+      "description": "Setup"
+    },
+    {
+      "code": "TT",
+      "description": "Transport To"
+    },
+    {
+      "code": "UC",
+      "description": "Unlock"
+    },
+    {
+      "code": "UN",
+      "description": "Unload"
+    }
+  ]
+}

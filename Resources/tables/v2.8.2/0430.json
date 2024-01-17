@@ -1,0 +1,38 @@
+{
+  "table": "0430",
+  "version": "2.8.2",
+  "name": "Mode of Arrival Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0430 - Mode of Arrival Code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Ambulance"
+    },
+    {
+      "code": "C",
+      "description": "Car"
+    },
+    {
+      "code": "F",
+      "description": "On foot"
+    },
+    {
+      "code": "H",
+      "description": "Helicopter"
+    },
+    {
+      "code": "P",
+      "description": "Public Transport"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

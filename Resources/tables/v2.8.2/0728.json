@@ -1,0 +1,30 @@
+{
+  "table": "0728",
+  "version": "2.8.2",
+  "name": "CCL Value",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0728 - CCL Value",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Nothing obvious"
+    },
+    {
+      "code": "1",
+      "description": "Low"
+    },
+    {
+      "code": "2",
+      "description": "Moderate"
+    },
+    {
+      "code": "3",
+      "description": "High"
+    },
+    {
+      "code": "4",
+      "description": "Very high"
+    }
+  ]
+}

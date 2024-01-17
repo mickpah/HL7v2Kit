@@ -1,0 +1,54 @@
+{
+  "table": "0066",
+  "version": "2.8.2",
+  "name": "Employment Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0066 - Employment Status",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Full time employed"
+    },
+    {
+      "code": "2",
+      "description": "Part time employed"
+    },
+    {
+      "code": "4",
+      "description": "Self-employed,"
+    },
+    {
+      "code": "C",
+      "description": "Contract, per diem"
+    },
+    {
+      "code": "L",
+      "description": "Leave of absence (e.g., family leave, sabbatical, etc.)"
+    },
+    {
+      "code": "T",
+      "description": "Temporarily unemployed"
+    },
+    {
+      "code": "3",
+      "description": "Unemployed"
+    },
+    {
+      "code": "5",
+      "description": "Retired"
+    },
+    {
+      "code": "6",
+      "description": "On active military duty"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "9",
+      "description": "Unknown"
+    }
+  ]
+}

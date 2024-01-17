@@ -1,0 +1,418 @@
+{
+  "table": "0292",
+  "version": "2.4",
+  "name": "Vaccines administered (code = CVX)(parenteral, unless oral is",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0292 - Vaccines administered (code = CVX)(parenteral, unless oral is",
+  "entries": [
+    {
+      "code": "01",
+      "description": "diphtheria, tetanus toxoids and pertussis vaccine"
+    },
+    {
+      "code": "02",
+      "description": "poliovirus vaccine, live, oral"
+    },
+    {
+      "code": "03",
+      "description": "measles, mumps and rubella virus vaccine"
+    },
+    {
+      "code": "04",
+      "description": "measles and rubella virus vaccine"
+    },
+    {
+      "code": "05",
+      "description": "measles virus vaccine"
+    },
+    {
+      "code": "06",
+      "description": "rubella virus vaccine"
+    },
+    {
+      "code": "07",
+      "description": "mumps virus vaccine"
+    },
+    {
+      "code": "08",
+      "description": "hepatitis B vaccine, pediatric or pediatric/adolescent dosage"
+    },
+    {
+      "code": "09",
+      "description": "tetanus and diphtheria toxoids, adsorbed for adult use"
+    },
+    {
+      "code": "10",
+      "description": "poliovirus vaccine, inactivated"
+    },
+    {
+      "code": "100",
+      "description": "pneumococcal conjugate vaccine, polyvalent"
+    },
+    {
+      "code": "101",
+      "description": "Typhoid Vi capsular polysaccharide vaccine"
+    },
+    {
+      "code": "11",
+      "description": "pertussis vaccine"
+    },
+    {
+      "code": "12",
+      "description": "diphtheria antitoxin"
+    },
+    {
+      "code": "13",
+      "description": "tetanus immune globulin"
+    },
+    {
+      "code": "14",
+      "description": "immune globulin, NOS"
+    },
+    {
+      "code": "15",
+      "description": "influenza virus vaccine, split virus (incl. purified surface antigen)"
+    },
+    {
+      "code": "16",
+      "description": "influenza virus vaccine, whole virus"
+    },
+    {
+      "code": "17",
+      "description": "Haemophilus influenzae type b vaccine, conjugate NOS"
+    },
+    {
+      "code": "18",
+      "description": "rabies vaccine, for intramuscular injection"
+    },
+    {
+      "code": "19",
+      "description": "Bacillus Calmette-Guerin vaccine"
+    },
+    {
+      "code": "20",
+      "description": "diphtheria, tetanus toxoids and acellular pertussis vaccine"
+    },
+    {
+      "code": "21",
+      "description": "varicella virus vaccine"
+    },
+    {
+      "code": "22",
+      "description": "DTP-Haemophilus influenzae type b conjugate vaccine"
+    },
+    {
+      "code": "23",
+      "description": "plague vaccine"
+    },
+    {
+      "code": "24",
+      "description": "anthrax vaccine"
+    },
+    {
+      "code": "25",
+      "description": "typhoid vaccine, live, oral"
+    },
+    {
+      "code": "26",
+      "description": "cholera vaccine"
+    },
+    {
+      "code": "27",
+      "description": "botulinum antitoxin"
+    },
+    {
+      "code": "28",
+      "description": "diphtheria and tetanus toxoids, adsorbed for pediatric use"
+    },
+    {
+      "code": "29",
+      "description": "cytomegalovirus immune globulin, intravenous"
+    },
+    {
+      "code": "30",
+      "description": "hepatitis B immune globulin"
+    },
+    {
+      "code": "31",
+      "description": "hepatitis A vaccine, pediatric dosage, NOS"
+    },
+    {
+      "code": "32",
+      "description": "meningococcal polysaccharide vaccine"
+    },
+    {
+      "code": "33",
+      "description": "pneumococcal polysaccharide vaccine"
+    },
+    {
+      "code": "34",
+      "description": "rabies immune globulin"
+    },
+    {
+      "code": "35",
+      "description": "tetanus toxoid"
+    },
+    {
+      "code": "36",
+      "description": "varicella zoster immune globulin"
+    },
+    {
+      "code": "37",
+      "description": "yellow fever vaccine"
+    },
+    {
+      "code": "38",
+      "description": "rubella and mumps virus vaccine"
+    },
+    {
+      "code": "39",
+      "description": "Japanese encephalitis vaccine"
+    },
+    {
+      "code": "40",
+      "description": "rabies vaccine, for intradermal injection"
+    },
+    {
+      "code": "41",
+      "description": "typhoid vaccine, parenteral, other than acetone-killed, dried"
+    },
+    {
+      "code": "42",
+      "description": "hepatitis B vaccine, adolescent/high risk infant dosage"
+    },
+    {
+      "code": "43",
+      "description": "hepatitis B vaccine, adult dosage"
+    },
+    {
+      "code": "44",
+      "description": "hepatitis B vaccine, dialysis patient dosage"
+    },
+    {
+      "code": "45",
+      "description": "hepatitis B vaccine, NOS"
+    },
+    {
+      "code": "46",
+      "description": "Haemophilus influenzae type b vaccine, PRP-D conjugate"
+    },
+    {
+      "code": "47",
+      "description": "Haemophilus influenzae type b vaccine, HbOC conjugate"
+    },
+    {
+      "code": "48",
+      "description": "Haemophilus influenzae type b vaccine, PRP-T conjugate"
+    },
+    {
+      "code": "49",
+      "description": "Haemophilus influenzae type b vaccine, PRP-OMP conjugate"
+    },
+    {
+      "code": "50",
+      "description": "DTaP-Haemophilus influenzae type b conjugate vaccine"
+    },
+    {
+      "code": "51",
+      "description": "Haemophilus influenzae type b conjugate and Hepatitis B vaccine"
+    },
+    {
+      "code": "52",
+      "description": "hepatitis A vaccine, adult dosage"
+    },
+    {
+      "code": "53",
+      "description": "typhoid vaccine, parenteral, acetone-killed, dried (U.S. military)"
+    },
+    {
+      "code": "54",
+      "description": "adenovirus vaccine, type 4, live, oral"
+    },
+    {
+      "code": "55",
+      "description": "adenovirus vaccine, type 7, live, oral"
+    },
+    {
+      "code": "56",
+      "description": "dengue fever vaccine"
+    },
+    {
+      "code": "57",
+      "description": "hantavirus vaccine"
+    },
+    {
+      "code": "58",
+      "description": "hepatitis C vaccine"
+    },
+    {
+      "code": "59",
+      "description": "hepatitis E vaccine"
+    },
+    {
+      "code": "60",
+      "description": "herpes simplex virus, type 2 vaccine"
+    },
+    {
+      "code": "61",
+      "description": "human immunodeficiency virus vaccine"
+    },
+    {
+      "code": "62",
+      "description": "human papilloma virus vaccine"
+    },
+    {
+      "code": "63",
+      "description": "Junin virus vaccine"
+    },
+    {
+      "code": "64",
+      "description": "leishmaniasis vaccine"
+    },
+    {
+      "code": "65",
+      "description": "leprosy vaccine"
+    },
+    {
+      "code": "66",
+      "description": "Lyme disease vaccine"
+    },
+    {
+      "code": "67",
+      "description": "malaria vaccine"
+    },
+    {
+      "code": "68",
+      "description": "melanoma vaccine"
+    },
+    {
+      "code": "69",
+      "description": "parainfluenza-3 virus vaccine"
+    },
+    {
+      "code": "70",
+      "description": "Q fever vaccine"
+    },
+    {
+      "code": "71",
+      "description": "respiratory syncytial virus immune globulin, intravenous"
+    },
+    {
+      "code": "72",
+      "description": "rheumatic fever vaccine"
+    },
+    {
+      "code": "73",
+      "description": "Rift Valley fever vaccine"
+    },
+    {
+      "code": "74",
+      "description": "rotavirus vaccine, tetravalent, live, oral"
+    },
+    {
+      "code": "75",
+      "description": "smallpox vaccine"
+    },
+    {
+      "code": "76",
+      "description": "Staphylococcus bacteriophage lysate"
+    },
+    {
+      "code": "77",
+      "description": "tick-borne encephalitis vaccine"
+    },
+    {
+      "code": "78",
+      "description": "tularemia vaccine"
+    },
+    {
+      "code": "79",
+      "description": "vaccinia immune globulin"
+    },
+    {
+      "code": "80",
+      "description": "Venezuelan equine encephalitis, live, attenuated"
+    },
+    {
+      "code": "81",
+      "description": "Venezuelan equine encephalitis, inactivated"
+    },
+    {
+      "code": "82",
+      "description": "adenovirus vaccine, NOS"
+    },
+    {
+      "code": "83",
+      "description": "hepatitis A vaccine, pediatric/adolescent dosage, 2 dose schedule"
+    },
+    {
+      "code": "84",
+      "description": "hepatitis A vaccine, pediatric/adolescent dosage, 3 dose schedule"
+    },
+    {
+      "code": "85",
+      "description": "hepatitis A vaccine, NOS"
+    },
+    {
+      "code": "86",
+      "description": "immune globulin, intramuscular"
+    },
+    {
+      "code": "87",
+      "description": "immune globulin, intravenous"
+    },
+    {
+      "code": "88",
+      "description": "influenza virus vaccine, NOS"
+    },
+    {
+      "code": "89",
+      "description": "poliovirus vaccine, NOS"
+    },
+    {
+      "code": "90",
+      "description": "rabies vaccine, NOS"
+    },
+    {
+      "code": "91",
+      "description": "typhoid vaccine, NOS"
+    },
+    {
+      "code": "92",
+      "description": "Venezuelan equine encephalitis vaccine, NOS"
+    },
+    {
+      "code": "93",
+      "description": "respiratory syncytial virus monoclonal antibody (palivizumab), intramuscular"
+    },
+    {
+      "code": "94",
+      "description": "measles, mumps, rubella, and varicella virus vaccine"
+    },
+    {
+      "code": "95",
+      "description": "tuberculin skin test; old tuberculin, multipuncture device"
+    },
+    {
+      "code": "96",
+      "description": "tuberculin skin test; purified protein derivative solution, intradermal"
+    },
+    {
+      "code": "97",
+      "description": "tuberculin skin test; purified protein derivative, multipuncture device"
+    },
+    {
+      "code": "98",
+      "description": "tuberculin skin test; NOS"
+    },
+    {
+      "code": "99",
+      "description": "RESERVED - do not use"
+    },
+    {
+      "code": "999",
+      "description": "unknown vaccine or immune globulin"
+    }
+  ]
+}

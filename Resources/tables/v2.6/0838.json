@@ -1,0 +1,9 @@
+{
+  "table": "0838",
+  "version": "2.6",
+  "name": "Problem Perspective",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0838 - Problem Perspective",
+  "entries": []
+}

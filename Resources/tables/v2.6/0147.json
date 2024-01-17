@@ -1,0 +1,30 @@
+{
+  "table": "0147",
+  "version": "2.6",
+  "name": "Policy type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0147 - Policy type",
+  "entries": [
+    {
+      "code": "2ANC",
+      "description": "Second ancillary"
+    },
+    {
+      "code": "2MMD",
+      "description": "Second major medical"
+    },
+    {
+      "code": "3MMD",
+      "description": "Third major medical"
+    },
+    {
+      "code": "ANC",
+      "description": "Ancillary"
+    },
+    {
+      "code": "MMD",
+      "description": "Major medical"
+    }
+  ]
+}

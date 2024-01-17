@@ -1,0 +1,34 @@
+{
+  "table": "0001",
+  "version": "2.4",
+  "name": "Administrative sex",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0001 - Administrative sex",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Ambiguous"
+    },
+    {
+      "code": "F",
+      "description": "Female"
+    },
+    {
+      "code": "M",
+      "description": "Male"
+    },
+    {
+      "code": "N",
+      "description": "Not applicable"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

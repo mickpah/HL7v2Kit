@@ -1,0 +1,30 @@
+{
+  "table": "0100",
+  "version": "2.4",
+  "name": "When to charge",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0100 - When to charge",
+  "entries": [
+    {
+      "code": "D",
+      "description": "On discharge"
+    },
+    {
+      "code": "O",
+      "description": "On receipt of order"
+    },
+    {
+      "code": "R",
+      "description": "At time service is completed"
+    },
+    {
+      "code": "S",
+      "description": "At time service is started"
+    },
+    {
+      "code": "T",
+      "description": "At a designated date/time"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "table": "0924",
+  "version": "2.8.2",
+  "name": "Cumulative Dosage Limit UoM",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0924 - Cumulative Dosage Limit UoM",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Annual"
+    },
+    {
+      "code": "D",
+      "description": "Per Day"
+    },
+    {
+      "code": "M",
+      "description": "Per Month"
+    },
+    {
+      "code": "O",
+      "description": "Duration of the Order"
+    },
+    {
+      "code": "PL",
+      "description": "Patients Lifetime"
+    },
+    {
+      "code": "WK",
+      "description": "Per Week"
+    }
+  ]
+}

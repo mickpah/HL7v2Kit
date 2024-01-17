@@ -1,0 +1,34 @@
+{
+  "table": "0477",
+  "version": "2.6",
+  "name": "Controlled Substance Schedule*",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0477 - Controlled Substance Schedule*",
+  "entries": [
+    {
+      "code": "I",
+      "description": "Schedule I"
+    },
+    {
+      "code": "II",
+      "description": "Schedule II"
+    },
+    {
+      "code": "III",
+      "description": "Schedule III"
+    },
+    {
+      "code": "IV",
+      "description": "Schedule IV"
+    },
+    {
+      "code": "V",
+      "description": "Schedule V"
+    },
+    {
+      "code": "VI",
+      "description": "Schedule VI"
+    }
+  ]
+}

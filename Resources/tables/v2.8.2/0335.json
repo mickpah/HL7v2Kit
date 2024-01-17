@@ -1,0 +1,126 @@
+{
+  "table": "0335",
+  "version": "2.8.2",
+  "name": "Repeat Pattern",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0335 - Repeat Pattern",
+  "entries": [
+    {
+      "code": "Q<integer>S",
+      "description": "every <integer> seconds"
+    },
+    {
+      "code": "Q<integer>M",
+      "description": "every <integer> minutes"
+    },
+    {
+      "code": "Q<integer>H",
+      "description": "every <integer> hours"
+    },
+    {
+      "code": "Q<integer>D",
+      "description": "every <integer> days"
+    },
+    {
+      "code": "Q<integer>W",
+      "description": "every <integer> weeks"
+    },
+    {
+      "code": "Q<integer>L",
+      "description": "every <integer> months (Lunar cycle)"
+    },
+    {
+      "code": "Q<integer>J<day#>",
+      "description": "repeats on a particular day of the week,"
+    },
+    {
+      "code": "BID",
+      "description": "twice a day at institution-specified times"
+    },
+    {
+      "code": "TID",
+      "description": "three times a day at institution- specified times"
+    },
+    {
+      "code": "QID",
+      "description": "four times a day at institution-specified times"
+    },
+    {
+      "code": "xID",
+      "description": "“X” times per day at institution- specified times, where X is a numeral 5 or greater."
+    },
+    {
+      "code": "QAM",
+      "description": "in the morning at institution-specified time"
+    },
+    {
+      "code": "QSHIFT",
+      "description": "during each of three eight-hour shifts at institution-specified times"
+    },
+    {
+      "code": "QOD",
+      "description": "every other day"
+    },
+    {
+      "code": "QHS",
+      "description": "every day before the hour of sleep"
+    },
+    {
+      "code": "QPM",
+      "description": "in the evening at institution-specified time"
+    },
+    {
+      "code": "C",
+      "description": "service is provided continuously between start time and stop time"
+    },
+    {
+      "code": "U <spec>",
+      "description": "for future use, where <spec> is an interval specification as defined by the UNIX cron specification."
+    },
+    {
+      "code": "PRN",
+      "description": "given as needed"
+    },
+    {
+      "code": "PRNxxx",
+      "description": "where xxx is some frequency code"
+    },
+    {
+      "code": "Once",
+      "description": "one time only."
+    },
+    {
+      "code": "Meal Related",
+      "description": "<timing>C (“cum”)<meal>"
+    },
+    {
+      "code": "Timings",
+      "description": ""
+    },
+    {
+      "code": "A",
+      "description": "Ante (before)"
+    },
+    {
+      "code": "P",
+      "description": "Post (after)"
+    },
+    {
+      "code": "I",
+      "description": "Inter"
+    },
+    {
+      "code": "M",
+      "description": "Cibus Matutinus (breakfast)"
+    },
+    {
+      "code": "D",
+      "description": "Cibus Diurnus (lunch)"
+    },
+    {
+      "code": "V",
+      "description": "Cibus Vespertinus (dinner)"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0356",
+  "version": "2.3.1",
+  "name": "Alternate character set handling scheme",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0356 - Alternate character set handling scheme",
+  "entries": [
+    {
+      "code": "ISO 2022-1994",
+      "description": "This standard is titled \"Information Technology - Character Code Structure and Extension Technique\". This standard specifies an escape sequence from basic one byte character set to specified other character set, and vice versa. The escape sequence expl"
+    },
+    {
+      "code": "<null>",
+      "description": "This is the default, indicating that there is no character set switching occurring in this message."
+    }
+  ]
+}

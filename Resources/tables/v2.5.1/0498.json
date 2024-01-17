@@ -1,0 +1,34 @@
+{
+  "table": "0498",
+  "version": "2.5.1",
+  "name": "Consent Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0498 - Consent Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Active - Consent has been granted"
+    },
+    {
+      "code": "B",
+      "description": "Bypassed (Consent not sought)"
+    },
+    {
+      "code": "L",
+      "description": "Limited - Consent has been granted with limitations"
+    },
+    {
+      "code": "P",
+      "description": "Pending - Consent has not yet been sought"
+    },
+    {
+      "code": "R",
+      "description": "Refused - Consent has been refused"
+    },
+    {
+      "code": "X",
+      "description": "Rescinded - Consent was initially granted, but was subsequently revoked or ended."
+    }
+  ]
+}

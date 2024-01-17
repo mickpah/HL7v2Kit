@@ -1,0 +1,18 @@
+{
+  "table": "0444",
+  "version": "2.4",
+  "name": "Name assembly order",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0444 - Name assembly order",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Prefix Family Middle Given Suffix"
+    },
+    {
+      "code": "G",
+      "description": "Prefix Given Middle Family Suffix"
+    }
+  ]
+}

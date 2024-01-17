@@ -1,0 +1,62 @@
+{
+  "table": "0528",
+  "version": "2.6",
+  "name": "Event related period",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0528 - Event related period",
+  "entries": [
+    {
+      "code": "AC",
+      "description": "before meal (from lat. ante cibus)"
+    },
+    {
+      "code": "ACD",
+      "description": "before lunch (from lat. ante cibus diurnus)"
+    },
+    {
+      "code": "ACM",
+      "description": "before breakfast (from lat. ante cibus matutinus)"
+    },
+    {
+      "code": "ACV",
+      "description": "before dinner (from lat. ante cibus vespertinus)"
+    },
+    {
+      "code": "HS",
+      "description": "the hour of sleep (e.g., H18-22)"
+    },
+    {
+      "code": "IC",
+      "description": "between meals (from lat. inter cibus)"
+    },
+    {
+      "code": "ICD",
+      "description": "between lunch and dinner"
+    },
+    {
+      "code": "ICM",
+      "description": "between breakfast and lunch"
+    },
+    {
+      "code": "ICV",
+      "description": "between dinner and the hour of sleep"
+    },
+    {
+      "code": "PC",
+      "description": "after meal (from lat. post cibus)"
+    },
+    {
+      "code": "PCD",
+      "description": "after lunch (from lat. post cibus diurnus)"
+    },
+    {
+      "code": "PCM",
+      "description": "after breakfast (from lat. post cibus matutinus)"
+    },
+    {
+      "code": "PCV",
+      "description": "after dinner (from lat. post cibus vespertinus)"
+    }
+  ]
+}

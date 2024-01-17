@@ -1,0 +1,94 @@
+{
+  "table": "0939",
+  "version": "2.8.2",
+  "name": "Communication Location",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0939 - Communication Location",
+  "entries": [
+    {
+      "code": "OBR-OBX",
+      "description": "OBX segment following an OBR segment"
+    },
+    {
+      "code": "SPM-OBX",
+      "description": "OBX segment following an SPM segment"
+    },
+    {
+      "code": "DG1-3",
+      "description": "Diagnosis Code"
+    },
+    {
+      "code": "NK1-11",
+      "description": "Next of Kin / Associated Parties Job Code/Class"
+    },
+    {
+      "code": "NK1-13",
+      "description": "Organization Name – NK1"
+    },
+    {
+      "code": "NK1-28",
+      "description": "Ethnic Group"
+    },
+    {
+      "code": "NK1-35",
+      "description": "Race"
+    },
+    {
+      "code": "OBR-16",
+      "description": "Ordering Provider"
+    },
+    {
+      "code": "OBR-13",
+      "description": "Relevant Clinical Information"
+    },
+    {
+      "code": "OBR-49",
+      "description": "Result Handling"
+    },
+    {
+      "code": "PID-11",
+      "description": "Patient Address"
+    },
+    {
+      "code": "PID-3",
+      "description": "Patient Identifier List"
+    },
+    {
+      "code": "PID-5",
+      "description": "Patient Name"
+    },
+    {
+      "code": "PID-6",
+      "description": "Mother’s Maiden Name"
+    },
+    {
+      "code": "PID-7",
+      "description": "Date/Time of Birth"
+    },
+    {
+      "code": "PID-13",
+      "description": "Phone Number – Home"
+    },
+    {
+      "code": "PID-14",
+      "description": "Phone Number – Business"
+    },
+    {
+      "code": "PID-40",
+      "description": "Phone Number"
+    },
+    {
+      "code": "PRT-5",
+      "description": "Participation Person"
+    },
+    {
+      "code": "SPM-4",
+      "description": "Specimen Type"
+    },
+    {
+      "code": "SPM-8",
+      "description": "Specimen Source Site"
+    }
+  ]
+}

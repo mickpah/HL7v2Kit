@@ -1,0 +1,18 @@
+{
+  "table": "0572",
+  "version": "2.6",
+  "name": "Tax status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0572 - Tax status",
+  "entries": [
+    {
+      "code": "RVAT",
+      "description": "Registered in VAT register"
+    },
+    {
+      "code": "UVAT",
+      "description": "Unregistered in VAT register"
+    }
+  ]
+}

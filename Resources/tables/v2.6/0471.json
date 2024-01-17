@@ -1,0 +1,14 @@
+{
+  "table": "0471",
+  "version": "2.6",
+  "name": "Query name",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0471 - Query name",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

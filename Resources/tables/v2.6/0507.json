@@ -1,0 +1,18 @@
+{
+  "table": "0507",
+  "version": "2.6",
+  "name": "Observation Result Handling",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0507 - Observation Result Handling",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Film-with-patient"
+    },
+    {
+      "code": "N",
+      "description": "Notify provider when ready"
+    }
+  ]
+}

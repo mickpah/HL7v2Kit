@@ -1,0 +1,22 @@
+{
+  "table": "0229",
+  "version": "2.3",
+  "name": "Outlier Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0229 - Outlier Type",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Medicare"
+    },
+    {
+      "code": "C",
+      "description": "Champus"
+    },
+    {
+      "code": "G",
+      "description": "Managed Care Organization"
+    }
+  ]
+}

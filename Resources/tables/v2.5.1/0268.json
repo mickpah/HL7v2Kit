@@ -1,0 +1,22 @@
+{
+  "table": "0268",
+  "version": "2.5.1",
+  "name": "Override",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0268 - Override",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Override allowed"
+    },
+    {
+      "code": "R",
+      "description": "Override required"
+    },
+    {
+      "code": "X",
+      "description": "Override not allowed"
+    }
+  ]
+}

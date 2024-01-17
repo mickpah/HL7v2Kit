@@ -1,0 +1,30 @@
+{
+  "table": "0868",
+  "version": "2.6",
+  "name": "Telecommunication expiration reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0868 - Telecommunication expiration reason",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Corrected"
+    },
+    {
+      "code": "E",
+      "description": "Added in error"
+    },
+    {
+      "code": "M",
+      "description": "Moved"
+    },
+    {
+      "code": "N",
+      "description": "No longer in service"
+    },
+    {
+      "code": "R",
+      "description": "On request"
+    }
+  ]
+}

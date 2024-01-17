@@ -1,0 +1,9 @@
+{
+  "table": "0405",
+  "version": "2.4",
+  "name": "Organization unit",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0405 - Organization unit",
+  "entries": []
+}

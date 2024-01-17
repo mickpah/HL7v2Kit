@@ -1,0 +1,22 @@
+{
+  "table": "0520",
+  "version": "2.6",
+  "name": "Message waiting priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0520 - Message waiting priority",
+  "entries": [
+    {
+      "code": "H",
+      "description": "High"
+    },
+    {
+      "code": "L",
+      "description": "Low"
+    },
+    {
+      "code": "M",
+      "description": "Medium"
+    }
+  ]
+}

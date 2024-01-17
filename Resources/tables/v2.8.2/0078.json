@@ -1,0 +1,162 @@
+{
+  "table": "0078",
+  "version": "2.8.2",
+  "name": "Interpretation Codes",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0078 - Interpretation Codes",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Low"
+    },
+    {
+      "code": "H",
+      "description": "High"
+    },
+    {
+      "code": "LU",
+      "description": "Very low"
+    },
+    {
+      "code": "HU",
+      "description": "Very high"
+    },
+    {
+      "code": "LL",
+      "description": "Critically low"
+    },
+    {
+      "code": "HH",
+      "description": "Critically high"
+    },
+    {
+      "code": "<",
+      "description": "Off scale low"
+    },
+    {
+      "code": ">",
+      "description": "Off scale high"
+    },
+    {
+      "code": "N",
+      "description": "Normal"
+    },
+    {
+      "code": "A",
+      "description": "Abnormal"
+    },
+    {
+      "code": "AA",
+      "description": "Critically abnormal"
+    },
+    {
+      "code": "null",
+      "description": "No range defined, or normal ranges don’t apply"
+    },
+    {
+      "code": "U",
+      "description": "Significant change up"
+    },
+    {
+      "code": "D",
+      "description": "Significant change down"
+    },
+    {
+      "code": "B",
+      "description": "Better"
+    },
+    {
+      "code": "W",
+      "description": "Worse"
+    },
+    {
+      "code": "S",
+      "description": "Susceptible"
+    },
+    {
+      "code": "R",
+      "description": "Resistant"
+    },
+    {
+      "code": "I",
+      "description": "Intermediate"
+    },
+    {
+      "code": "MS",
+      "description": "Moderately susceptible. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "NS",
+      "description": "Non-susceptible"
+    },
+    {
+      "code": "SDD",
+      "description": "Susceptible-dose dependent"
+    },
+    {
+      "code": "IE",
+      "description": "Insufficient evidence"
+    },
+    {
+      "code": "SYN-",
+      "description": "Synergy – resistant"
+    },
+    {
+      "code": "VS",
+      "description": "Very susceptible. Indicates for microbiology susceptibilities only."
+    },
+    {
+      "code": "POS",
+      "description": "Positive"
+    },
+    {
+      "code": "NEG",
+      "description": "Negative"
+    },
+    {
+      "code": "IND",
+      "description": "Indeterminate"
+    },
+    {
+      "code": "DET",
+      "description": "Detected"
+    },
+    {
+      "code": "ND",
+      "description": "Not Detected"
+    },
+    {
+      "code": "AC",
+      "description": "Anti-complementary substances present"
+    },
+    {
+      "code": "TOX",
+      "description": "Cytotoxic substance present"
+    },
+    {
+      "code": "QCF",
+      "description": "Quality Control Failure"
+    },
+    {
+      "code": "RR",
+      "description": "Reactive"
+    },
+    {
+      "code": "WR",
+      "description": "Weakly reactive"
+    },
+    {
+      "code": "NR",
+      "description": "Non-reactive"
+    },
+    {
+      "code": "OBX",
+      "description": "Interpretation qualifiers in separate OBX segments"
+    },
+    {
+      "code": "HM",
+      "description": "Hold for Medical Review"
+    }
+  ]
+}

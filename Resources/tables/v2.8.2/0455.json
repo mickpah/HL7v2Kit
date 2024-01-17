@@ -1,0 +1,9 @@
+{
+  "table": "0455",
+  "version": "2.8.2",
+  "name": "Type of Bill Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0455 - Type of Bill Code",
+  "entries": []
+}

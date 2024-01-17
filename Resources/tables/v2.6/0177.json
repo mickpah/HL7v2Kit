@@ -1,0 +1,50 @@
+{
+  "table": "0177",
+  "version": "2.6",
+  "name": "Confidentiality code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0177 - Confidentiality code",
+  "entries": [
+    {
+      "code": "AID",
+      "description": "AIDS patient"
+    },
+    {
+      "code": "EMP",
+      "description": "Employee"
+    },
+    {
+      "code": "ETH",
+      "description": "Alcohol/drug treatment patient"
+    },
+    {
+      "code": "HIV",
+      "description": "HIV(+) patient"
+    },
+    {
+      "code": "PSY",
+      "description": "Psychiatric patient"
+    },
+    {
+      "code": "R",
+      "description": "Restricted"
+    },
+    {
+      "code": "U",
+      "description": "Usual control"
+    },
+    {
+      "code": "UWM",
+      "description": "Unwed mother"
+    },
+    {
+      "code": "V",
+      "description": "Very restricted"
+    },
+    {
+      "code": "VIP",
+      "description": "Very important person or celebrity"
+    }
+  ]
+}

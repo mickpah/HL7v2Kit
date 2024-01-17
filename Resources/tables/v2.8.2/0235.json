@@ -1,0 +1,50 @@
+{
+  "table": "0235",
+  "version": "2.8.2",
+  "name": "Report Source",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0235 - Report Source",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Clinical trial"
+    },
+    {
+      "code": "L",
+      "description": "Literature"
+    },
+    {
+      "code": "H",
+      "description": "Health professional"
+    },
+    {
+      "code": "R",
+      "description": "Regulatory agency"
+    },
+    {
+      "code": "D",
+      "description": "Database/registry/poison control center"
+    },
+    {
+      "code": "N",
+      "description": "Non-healthcare professional"
+    },
+    {
+      "code": "P",
+      "description": "Patient"
+    },
+    {
+      "code": "M",
+      "description": "Manufacturer/marketing authority holder"
+    },
+    {
+      "code": "E",
+      "description": "Distributor"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    }
+  ]
+}

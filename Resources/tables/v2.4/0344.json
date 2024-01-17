@@ -1,0 +1,86 @@
+{
+  "table": "0344",
+  "version": "2.4",
+  "name": "Patient's relationship to insured",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0344 - Patient's relationship to insured",
+  "entries": [
+    {
+      "code": "01",
+      "description": "Patient is insured"
+    },
+    {
+      "code": "02",
+      "description": "Spouse"
+    },
+    {
+      "code": "03",
+      "description": "Natural child/insured financial responsibility"
+    },
+    {
+      "code": "04",
+      "description": "Natural child/Insured does not have financial responsibility"
+    },
+    {
+      "code": "05",
+      "description": "Step child"
+    },
+    {
+      "code": "06",
+      "description": "Foster child"
+    },
+    {
+      "code": "07",
+      "description": "Ward of the court"
+    },
+    {
+      "code": "08",
+      "description": "Employee"
+    },
+    {
+      "code": "09",
+      "description": "Unknown"
+    },
+    {
+      "code": "10",
+      "description": "Handicapped dependent"
+    },
+    {
+      "code": "11",
+      "description": "Organ donor"
+    },
+    {
+      "code": "12",
+      "description": "Cadaver donor"
+    },
+    {
+      "code": "13",
+      "description": "Grandchild"
+    },
+    {
+      "code": "14",
+      "description": "Niece/nephew"
+    },
+    {
+      "code": "15",
+      "description": "Injured plaintiff"
+    },
+    {
+      "code": "16",
+      "description": "Sponsored dependent"
+    },
+    {
+      "code": "17",
+      "description": "Minor dependent of a minor dependent"
+    },
+    {
+      "code": "18",
+      "description": "Parent"
+    },
+    {
+      "code": "19",
+      "description": "Grandparent"
+    }
+  ]
+}

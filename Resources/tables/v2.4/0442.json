@@ -1,0 +1,26 @@
+{
+  "table": "0442",
+  "version": "2.4",
+  "name": "Location service code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0442 - Location service code",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Diagnostic"
+    },
+    {
+      "code": "E",
+      "description": "Emergency Room Casualty"
+    },
+    {
+      "code": "P",
+      "description": "Primary Care"
+    },
+    {
+      "code": "T",
+      "description": "Therapeutic"
+    }
+  ]
+}

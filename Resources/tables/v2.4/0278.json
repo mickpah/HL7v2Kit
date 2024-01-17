@@ -1,0 +1,50 @@
+{
+  "table": "0278",
+  "version": "2.4",
+  "name": "Filler status codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0278 - Filler status codes",
+  "entries": [
+    {
+      "code": "Blocked",
+      "description": "The indicated time slot(s) is(are) blocked"
+    },
+    {
+      "code": "Booked",
+      "description": "The indicated appointment is booked"
+    },
+    {
+      "code": "Cancelled",
+      "description": "The indicated appointment was stopped from occurring (canceled prior to starting)"
+    },
+    {
+      "code": "Complete",
+      "description": "The indicated appointment has completed normally (was not discontinued, canceled, or deleted)"
+    },
+    {
+      "code": "Dc",
+      "description": "The indicated appointment was discontinued (DC'ed while in progress, discontinued parent appointment, or discontinued child appointment)"
+    },
+    {
+      "code": "Deleted",
+      "description": "The indicated appointment was deleted from the filler application"
+    },
+    {
+      "code": "Overbook",
+      "description": "The appointment has been confirmed; however it is confirmed in an overbooked state"
+    },
+    {
+      "code": "Pending",
+      "description": "Appointment has not yet been confirmed"
+    },
+    {
+      "code": "Started",
+      "description": "The indicated appointment has begun and is currently in progress"
+    },
+    {
+      "code": "Waitlist",
+      "description": "Appointment has been placed on a waiting list for a particular slot, or set of slots"
+    }
+  ]
+}

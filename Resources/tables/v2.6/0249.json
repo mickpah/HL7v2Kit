@@ -1,0 +1,14 @@
+{
+  "table": "0249",
+  "version": "2.6",
+  "name": "Generic Product",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0249 - Generic Product",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "table": "0933",
+  "version": "2.8.2",
+  "name": "Intended Procedure Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0933 - Intended Procedure Type",
+  "entries": [
+    {
+      "code": "WBL",
+      "description": "Whole Blood"
+    },
+    {
+      "code": "2RC",
+      "description": "Double Red Cells"
+    },
+    {
+      "code": "PLS",
+      "description": "Plasma"
+    },
+    {
+      "code": "PLT",
+      "description": "Platelets"
+    },
+    {
+      "code": "PNP",
+      "description": "Platelets and Plasma"
+    },
+    {
+      "code": "PNR",
+      "description": "Platelets and Red Cells"
+    },
+    {
+      "code": "PPR",
+      "description": "Platelets, Plasma, and Red Cells"
+    },
+    {
+      "code": "GRN",
+      "description": "Granulocytes"
+    },
+    {
+      "code": "HEM",
+      "description": "Hemachromatosis"
+    },
+    {
+      "code": "HPC",
+      "description": "Hematopoietic Progenitor Cells"
+    },
+    {
+      "code": "LYM",
+      "description": "Lymphocytes"
+    },
+    {
+      "code": "THA",
+      "description": "Therapeutic Apheresis"
+    },
+    {
+      "code": "THW",
+      "description": "Therapeutic Whole Blood"
+    }
+  ]
+}

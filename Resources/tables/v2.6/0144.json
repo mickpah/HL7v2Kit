@@ -1,0 +1,38 @@
+{
+  "table": "0144",
+  "version": "2.6",
+  "name": "Eligibility Source",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0144 - Eligibility Source",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Insurance company"
+    },
+    {
+      "code": "2",
+      "description": "Employer"
+    },
+    {
+      "code": "3",
+      "description": "Insured presented policy"
+    },
+    {
+      "code": "4",
+      "description": "Insured presented card"
+    },
+    {
+      "code": "5",
+      "description": "Signed statement on file"
+    },
+    {
+      "code": "6",
+      "description": "Verbal information"
+    },
+    {
+      "code": "7",
+      "description": "None"
+    }
+  ]
+}

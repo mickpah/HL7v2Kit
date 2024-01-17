@@ -1,0 +1,30 @@
+{
+  "table": "0425",
+  "version": "2.4",
+  "name": "Newborn code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0425 - Newborn code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Born in facility"
+    },
+    {
+      "code": "2",
+      "description": "Transfer in"
+    },
+    {
+      "code": "3",
+      "description": "Born en route"
+    },
+    {
+      "code": "4",
+      "description": "Other"
+    },
+    {
+      "code": "5",
+      "description": "Born at home"
+    }
+  ]
+}

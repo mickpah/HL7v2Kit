@@ -1,0 +1,14 @@
+{
+  "table": "0285",
+  "version": "2.6",
+  "name": "Insurance company ID codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0285 - Insurance company ID codes",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

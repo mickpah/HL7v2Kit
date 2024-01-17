@@ -1,0 +1,26 @@
+{
+  "table": "0492",
+  "version": "2.5.1",
+  "name": "Specimen Appropriateness",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0492 - Specimen Appropriateness",
+  "entries": [
+    {
+      "code": "??",
+      "description": "Inappropriate due to ..."
+    },
+    {
+      "code": "A",
+      "description": "Appropriate"
+    },
+    {
+      "code": "I",
+      "description": "Inappropriate"
+    },
+    {
+      "code": "P",
+      "description": "Preferred"
+    }
+  ]
+}

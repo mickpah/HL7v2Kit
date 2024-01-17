@@ -1,0 +1,14 @@
+{
+  "table": "0092",
+  "version": "2.3",
+  "name": "Re-admission Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0092 - Re-admission Indicator",
+  "entries": [
+    {
+      "code": "R",
+      "description": "Readmission"
+    }
+  ]
+}

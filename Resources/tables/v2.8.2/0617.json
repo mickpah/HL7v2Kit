@@ -1,0 +1,22 @@
+{
+  "table": "0617",
+  "version": "2.8.2",
+  "name": "Address Usage",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0617 - Address Usage",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Mailing"
+    },
+    {
+      "code": "V",
+      "description": "Visit"
+    },
+    {
+      "code": "C",
+      "description": "Classification"
+    }
+  ]
+}

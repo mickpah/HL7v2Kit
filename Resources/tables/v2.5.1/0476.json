@@ -1,0 +1,9 @@
+{
+  "table": "0476",
+  "version": "2.5.1",
+  "name": "Medically Necessary Duplicate Procedure Reason for suggested values. User-define 4.5.3.48",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0476 - Medically Necessary Duplicate Procedure Reason for suggested values. User-define 4.5.3.48",
+  "entries": []
+}

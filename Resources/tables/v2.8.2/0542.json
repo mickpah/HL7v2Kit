@@ -1,0 +1,9 @@
+{
+  "table": "0542",
+  "version": "2.8.2",
+  "name": "Specimen Source Type Modifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0542 - Specimen Source Type Modifier",
+  "entries": []
+}

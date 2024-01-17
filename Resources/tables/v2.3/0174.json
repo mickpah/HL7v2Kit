@@ -1,0 +1,30 @@
+{
+  "table": "0174",
+  "version": "2.3",
+  "name": "Nature of Test/Observation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0174 - Nature of Test/Observation",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Profile or battery consisting of many independent atomic observations (e.g., SMA12, electrolytes), usually done at one instrument on one specimen"
+    },
+    {
+      "code": "F",
+      "description": "Functional procedure that may consist of one or more interrelated measures (e.g., glucose tolerance test, creatine clearance), usually done at different times and/or on different specimens"
+    },
+    {
+      "code": "A",
+      "description": "Atomic test/observation (test code or treatment code)"
+    },
+    {
+      "code": "S",
+      "description": "Superset--a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes)This set indicates that the code being described is used to order multiple test/observation batteries. For example, a client who routinely orders a CBC, a differential, and a thyroxine as an outpatient profile might use a single, special code to order all three test batteries, instead of having to submit three separate order codes."
+    },
+    {
+      "code": "C",
+      "description": "Single observation calculated via a rule or formula from other independent observations (e.g., Alveolar--arterial ratio, cardiac output)"
+    }
+  ]
+}

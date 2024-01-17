@@ -1,0 +1,46 @@
+{
+  "table": "0133",
+  "version": "2.4",
+  "name": "Procedure practitioner identifier code type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0133 - Procedure practitioner identifier code type",
+  "entries": [
+    {
+      "code": "AN",
+      "description": "Anesthesiologist/Anesthetist"
+    },
+    {
+      "code": "AS",
+      "description": "Assistant Surgeon"
+    },
+    {
+      "code": "CM",
+      "description": "Certified Nurse Midwife"
+    },
+    {
+      "code": "NP",
+      "description": "Nurse Practitioner"
+    },
+    {
+      "code": "PR",
+      "description": "Procedure MD/ Surgeon"
+    },
+    {
+      "code": "PS",
+      "description": "Primary Surgeon"
+    },
+    {
+      "code": "RD",
+      "description": "Radiologist"
+    },
+    {
+      "code": "RS",
+      "description": "Resident"
+    },
+    {
+      "code": "SN",
+      "description": "Scrub Nurse"
+    }
+  ]
+}

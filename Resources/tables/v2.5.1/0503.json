@@ -1,0 +1,22 @@
+{
+  "table": "0503",
+  "version": "2.5.1",
+  "name": "Sequence/Results Flag",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0503 - Sequence/Results Flag",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Cyclical"
+    },
+    {
+      "code": "R",
+      "description": "Reserved for future use"
+    },
+    {
+      "code": "S",
+      "description": "Sequential"
+    }
+  ]
+}

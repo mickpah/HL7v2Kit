@@ -1,0 +1,18 @@
+{
+  "table": "0366",
+  "version": "2.8.2",
+  "name": "Local/Remote Control State",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0366 - Local/Remote Control State",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Local"
+    },
+    {
+      "code": "R",
+      "description": "Remote (null) No state change"
+    }
+  ]
+}

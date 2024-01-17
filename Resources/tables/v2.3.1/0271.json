@@ -1,0 +1,38 @@
+{
+  "table": "0271",
+  "version": "2.3.1",
+  "name": "Document completion status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0271 - Document completion status",
+  "entries": [
+    {
+      "code": "DI",
+      "description": "Dictated"
+    },
+    {
+      "code": "DO",
+      "description": "Documented"
+    },
+    {
+      "code": "IP",
+      "description": "In Progress"
+    },
+    {
+      "code": "IN",
+      "description": "Incomplete"
+    },
+    {
+      "code": "PA",
+      "description": "Pre-authenticated"
+    },
+    {
+      "code": "AU",
+      "description": "Authenticated"
+    },
+    {
+      "code": "LA",
+      "description": "Legally authenticated"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0521",
+  "version": "2.5.1",
+  "name": "Override code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0521 - Override code",
+  "entries": []
+}

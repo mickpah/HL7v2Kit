@@ -1,0 +1,18 @@
+{
+  "table": "0148",
+  "version": "2.8.2",
+  "name": "Money or Percentage Indicator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0148 - Money or Percentage Indicator",
+  "entries": [
+    {
+      "code": "AT",
+      "description": "Currency amount"
+    },
+    {
+      "code": "PC",
+      "description": "Percentage"
+    }
+  ]
+}

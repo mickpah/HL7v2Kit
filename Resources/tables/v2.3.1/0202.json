@@ -1,0 +1,38 @@
+{
+  "table": "0202",
+  "version": "2.3.1",
+  "name": "Telecommunication equipment type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0202 - Telecommunication equipment type",
+  "entries": [
+    {
+      "code": "PH",
+      "description": "Telephone"
+    },
+    {
+      "code": "FX",
+      "description": "Fax"
+    },
+    {
+      "code": "MD",
+      "description": "Modem"
+    },
+    {
+      "code": "CP",
+      "description": "Cellular Phone"
+    },
+    {
+      "code": "BP",
+      "description": "Beeper"
+    },
+    {
+      "code": "Internet",
+      "description": "Internet Address: Use Only If Telecommunication Use Code Is NET"
+    },
+    {
+      "code": "X.400",
+      "description": "X.400 email address: Use Only If Telecommunication Use Code Is NET"
+    }
+  ]
+}

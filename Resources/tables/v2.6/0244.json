@@ -1,0 +1,14 @@
+{
+  "table": "0244",
+  "version": "2.6",
+  "name": "Single Use Device",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0244 - Single Use Device",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

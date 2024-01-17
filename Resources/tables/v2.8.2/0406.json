@@ -1,0 +1,38 @@
+{
+  "table": "0406",
+  "version": "2.8.2",
+  "name": "Organization Unit Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0406 - Organization Unit Type",
+  "entries": [
+    {
+      "code": "H",
+      "description": "Home"
+    },
+    {
+      "code": "O",
+      "description": "Office"
+    },
+    {
+      "code": "1",
+      "description": "Hospital"
+    },
+    {
+      "code": "2",
+      "description": "Physician Clinic"
+    },
+    {
+      "code": "3",
+      "description": "Long Term Care"
+    },
+    {
+      "code": "4",
+      "description": "Acute Care"
+    },
+    {
+      "code": "5",
+      "description": "Other"
+    }
+  ]
+}

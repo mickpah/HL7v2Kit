@@ -1,0 +1,78 @@
+{
+  "table": "0553",
+  "version": "2.6",
+  "name": "Invoice Control Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0553 - Invoice Control Code",
+  "entries": [
+    {
+      "code": "AA",
+      "description": "Authorization request for inpatient admission"
+    },
+    {
+      "code": "AI",
+      "description": "Combined Authorization and Adjudication request"
+    },
+    {
+      "code": "CA",
+      "description": "Cancel Authorization request"
+    },
+    {
+      "code": "CG",
+      "description": "Cancel Invoice Product/Service Group"
+    },
+    {
+      "code": "CL",
+      "description": "Cancel Invoice Product/Service Line Item"
+    },
+    {
+      "code": "CN",
+      "description": "Cancel Invoice"
+    },
+    {
+      "code": "CP",
+      "description": "Copy of Invoice"
+    },
+    {
+      "code": "CQ",
+      "description": "Coverage Register Query"
+    },
+    {
+      "code": "EA",
+      "description": "Authorization request for inpatient stay extension"
+    },
+    {
+      "code": "OA",
+      "description": "Original Authorization"
+    },
+    {
+      "code": "OR",
+      "description": "Original Invoice"
+    },
+    {
+      "code": "PA",
+      "description": "Pre-Authorization"
+    },
+    {
+      "code": "PD",
+      "description": "Pre-Determination Invoice"
+    },
+    {
+      "code": "RA",
+      "description": "Re-Assessment"
+    },
+    {
+      "code": "RC",
+      "description": "Referral Pre-Authorization"
+    },
+    {
+      "code": "RU",
+      "description": "Referral authorization"
+    },
+    {
+      "code": "SA",
+      "description": "Special Authorization"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0245",
+  "version": "2.6",
+  "name": "Product Problem",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0245 - Product Problem",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

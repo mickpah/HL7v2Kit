@@ -1,0 +1,42 @@
+{
+  "table": "0127",
+  "version": "2.6",
+  "name": "Allergen Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0127 - Allergen Type",
+  "entries": [
+    {
+      "code": "AA",
+      "description": "Animal Allergy"
+    },
+    {
+      "code": "DA",
+      "description": "Drug allergy"
+    },
+    {
+      "code": "EA",
+      "description": "Environmental Allergy"
+    },
+    {
+      "code": "FA",
+      "description": "Food allergy"
+    },
+    {
+      "code": "LA",
+      "description": "Pollen Allergy"
+    },
+    {
+      "code": "MA",
+      "description": "Miscellaneous allergy"
+    },
+    {
+      "code": "MC",
+      "description": "Miscellaneous contraindication"
+    },
+    {
+      "code": "PA",
+      "description": "Plant Allergy"
+    }
+  ]
+}

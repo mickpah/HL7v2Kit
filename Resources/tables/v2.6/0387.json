@@ -1,0 +1,30 @@
+{
+  "table": "0387",
+  "version": "2.6",
+  "name": "Command response",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0387 - Command response",
+  "entries": [
+    {
+      "code": "ER",
+      "description": "Command cannot be completed because of error condition"
+    },
+    {
+      "code": "OK",
+      "description": "Command completed successfully"
+    },
+    {
+      "code": "ST",
+      "description": "Command cannot be completed because of the status of the requested equipment"
+    },
+    {
+      "code": "TI",
+      "description": "Command cannot be completed within requested completion time"
+    },
+    {
+      "code": "UN",
+      "description": "Command cannot be completed for unknown reasons"
+    }
+  ]
+}

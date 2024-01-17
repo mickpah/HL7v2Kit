@@ -1,0 +1,34 @@
+{
+  "table": "0530",
+  "version": "2.8.2",
+  "name": "Organization, Agency, Department",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0530 - Organization, Agency, Department",
+  "entries": [
+    {
+      "code": "AE",
+      "description": "American Express"
+    },
+    {
+      "code": "DEA",
+      "description": "Drug Enforcement Agency"
+    },
+    {
+      "code": "DOD",
+      "description": "Department of Defense"
+    },
+    {
+      "code": "MC",
+      "description": "Master Card"
+    },
+    {
+      "code": "VA",
+      "description": "Veterans Affairs"
+    },
+    {
+      "code": "VI",
+      "description": "Visa"
+    }
+  ]
+}

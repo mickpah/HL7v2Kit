@@ -1,0 +1,14 @@
+{
+  "table": "0297",
+  "version": "2.6",
+  "name": "CN ID source",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0297 - CN ID source",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "table": "0532",
+  "version": "2.5.1",
+  "name": "Expanded yes/no indicator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0532 - Expanded yes/no indicator",
+  "entries": [
+    {
+      "code": "ASKU",
+      "description": "asked but unknown"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "NA",
+      "description": "not applicable"
+    },
+    {
+      "code": "NASK",
+      "description": "not asked"
+    },
+    {
+      "code": "NAV",
+      "description": "temporarily unavailable"
+    },
+    {
+      "code": "NI",
+      "description": "No Information"
+    },
+    {
+      "code": "NP",
+      "description": "not present"
+    },
+    {
+      "code": "UNK",
+      "description": "unknown"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0880",
+  "version": "2.6",
+  "name": "Product/Service Code Modifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0880 - Product/Service Code Modifier",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

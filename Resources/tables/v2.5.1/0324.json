@@ -1,0 +1,58 @@
+{
+  "table": "0324",
+  "version": "2.5.1",
+  "name": "Location characteristic ID",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0324 - Location characteristic ID",
+  "entries": [
+    {
+      "code": "GEN",
+      "description": "Gender of patient(s)"
+    },
+    {
+      "code": "IMP",
+      "description": "Implant: can be used for radiation implant patients"
+    },
+    {
+      "code": "INF",
+      "description": "Infectious disease: this location can be used for isolation"
+    },
+    {
+      "code": "LCR",
+      "description": "Level of care"
+    },
+    {
+      "code": "LIC",
+      "description": "Licensed"
+    },
+    {
+      "code": "OVR",
+      "description": "Overflow"
+    },
+    {
+      "code": "PRL",
+      "description": "Privacy level: indicating the level of private versus non-private room"
+    },
+    {
+      "code": "SET",
+      "description": "Bed is set up"
+    },
+    {
+      "code": "SHA",
+      "description": "Shadow: a temporary holding location that does not physically exist"
+    },
+    {
+      "code": "SMK",
+      "description": "Smoking"
+    },
+    {
+      "code": "STF",
+      "description": "Bed is staffed"
+    },
+    {
+      "code": "TEA",
+      "description": "Teaching location"
+    }
+  ]
+}

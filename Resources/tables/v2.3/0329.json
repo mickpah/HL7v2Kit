@@ -1,0 +1,18 @@
+{
+  "table": "0329",
+  "version": "2.3",
+  "name": "Quantity Method",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0329 - Quantity Method",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Actual Count"
+    },
+    {
+      "code": "E",
+      "description": "Estimated (see comment)"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "table": "0548",
+  "version": "2.5.1",
+  "name": "Signatory's Relationship to Subject",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0548 - Signatory's Relationship to Subject",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Self"
+    },
+    {
+      "code": "2",
+      "description": "Parent"
+    },
+    {
+      "code": "3",
+      "description": "Next of Kin"
+    },
+    {
+      "code": "4",
+      "description": "Durable Power of Attorney in Healthcare Affairs"
+    },
+    {
+      "code": "5",
+      "description": "Conservator"
+    },
+    {
+      "code": "6",
+      "description": "Emergent Practitioner (practitioner judging case as emergency requiring care without a consent)"
+    },
+    {
+      "code": "7",
+      "description": "Non-Emergent Practitioner (i.e. medical ethics committee)"
+    }
+  ]
+}

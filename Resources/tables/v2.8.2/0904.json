@@ -1,0 +1,22 @@
+{
+  "table": "0904",
+  "version": "2.8.2",
+  "name": "Security Check Scheme",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0904 - Security Check Scheme",
+  "entries": [
+    {
+      "code": "BCV",
+      "description": "Bank Card Validation Number"
+    },
+    {
+      "code": "CCS",
+      "description": "Credit Card Security code"
+    },
+    {
+      "code": "VID",
+      "description": "Version ID"
+    }
+  ]
+}

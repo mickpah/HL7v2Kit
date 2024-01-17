@@ -1,0 +1,130 @@
+{
+  "table": "0227",
+  "version": "2.3",
+  "name": "Manufacturers of vaccines (code = MVX)",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0227 - Manufacturers of vaccines (code = MVX)",
+  "entries": [
+    {
+      "code": "AB",
+      "description": "Abbott"
+    },
+    {
+      "code": "AD",
+      "description": "Adams"
+    },
+    {
+      "code": "ALP",
+      "description": "Alpha"
+    },
+    {
+      "code": "AR",
+      "description": "Armour"
+    },
+    {
+      "code": "BA",
+      "description": "Baxter"
+    },
+    {
+      "code": "BAY",
+      "description": "Bayer"
+    },
+    {
+      "code": "BP",
+      "description": "Berna"
+    },
+    {
+      "code": "CON",
+      "description": "Connaught"
+    },
+    {
+      "code": "EVN",
+      "description": "Evans"
+    },
+    {
+      "code": "GRE",
+      "description": "Greer"
+    },
+    {
+      "code": "IUS",
+      "description": "Immuno-US"
+    },
+    {
+      "code": "KGC",
+      "description": "Korea Green Cross"
+    },
+    {
+      "code": "LED",
+      "description": "Lederle"
+    },
+    {
+      "code": "MA",
+      "description": "Massachusetts Public Health"
+    },
+    {
+      "code": "MSD",
+      "description": "Merck"
+    },
+    {
+      "code": "IM",
+      "description": "Merieux"
+    },
+    {
+      "code": "MIP",
+      "description": "Michigan Dept Public Health"
+    },
+    {
+      "code": "JPN",
+      "description": "Microbial Dis/Osaka U"
+    },
+    {
+      "code": "MIL",
+      "description": "Miles"
+    },
+    {
+      "code": "NYB",
+      "description": "New York Blood Center"
+    },
+    {
+      "code": "NAB",
+      "description": "North American Biologicals, Inc."
+    },
+    {
+      "code": "OTC",
+      "description": "Organon Teknika"
+    },
+    {
+      "code": "OTH",
+      "description": "Other"
+    },
+    {
+      "code": "PD",
+      "description": "Parke Davis"
+    },
+    {
+      "code": "PRX",
+      "description": "Praxis Biologics"
+    },
+    {
+      "code": "SCL",
+      "description": "Sclavo"
+    },
+    {
+      "code": "SKB",
+      "description": "SmithKline"
+    },
+    {
+      "code": "SI",
+      "description": "Swiss Serum and Vaccine Inst."
+    },
+    {
+      "code": "WA",
+      "description": "Wyeth-Ayerst"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown manufacturer"
+    }
+  ]
+}

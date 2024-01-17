@@ -1,0 +1,22 @@
+{
+  "table": "0642",
+  "version": "2.6",
+  "name": "Reorder Theory Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0642 - Reorder Theory Codes",
+  "entries": [
+    {
+      "code": "D",
+      "description": "DOP/DOQ"
+    },
+    {
+      "code": "M",
+      "description": "MIN/MAX"
+    },
+    {
+      "code": "O",
+      "description": "Override"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0061",
+  "version": "2.3",
+  "name": "Check Digit Scheme",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0061 - Check Digit Scheme",
+  "entries": [
+    {
+      "code": "M10",
+      "description": "Mod 10 algorithm"
+    },
+    {
+      "code": "M11",
+      "description": "Mod 11 algorithm"
+    }
+  ]
+}

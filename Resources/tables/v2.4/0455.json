@@ -1,0 +1,22 @@
+{
+  "table": "0455",
+  "version": "2.4",
+  "name": "Type of bill code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0455 - Type of bill code",
+  "entries": [
+    {
+      "code": "...",
+      "description": ""
+    },
+    {
+      "code": "131",
+      "description": "Hospital - Outpatient - Admit thru Discharge Claim"
+    },
+    {
+      "code": "141",
+      "description": "Hospital - Other - Admit thru Discharge Claim"
+    }
+  ]
+}

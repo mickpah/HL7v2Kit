@@ -1,0 +1,30 @@
+{
+  "table": "0160",
+  "version": "2.4",
+  "name": "Tray type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0160 - Tray type",
+  "entries": [
+    {
+      "code": "EARLY",
+      "description": "Early tray"
+    },
+    {
+      "code": "GUEST",
+      "description": "Guest tray"
+    },
+    {
+      "code": "LATE",
+      "description": "Late tray"
+    },
+    {
+      "code": "MSG",
+      "description": "Tray message only"
+    },
+    {
+      "code": "NO",
+      "description": "No tray"
+    }
+  ]
+}

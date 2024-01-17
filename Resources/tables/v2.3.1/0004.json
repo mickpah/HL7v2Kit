@@ -1,0 +1,34 @@
+{
+  "table": "0004",
+  "version": "2.3.1",
+  "name": "Patient class",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0004 - Patient class",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Emergency"
+    },
+    {
+      "code": "I",
+      "description": "Inpatient"
+    },
+    {
+      "code": "O",
+      "description": "Outpatient"
+    },
+    {
+      "code": "P",
+      "description": "Preadmit"
+    },
+    {
+      "code": "R",
+      "description": "Recurring patient"
+    },
+    {
+      "code": "B",
+      "description": "Obstetrics"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0340",
+  "version": "2.8.2",
+  "name": "Procedure Code Modifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0340 - Procedure Code Modifier",
+  "entries": [
+    {
+      "code": "CPTM",
+      "description": "CPT Modifier Code"
+    },
+    {
+      "code": "HPC",
+      "description": "CMS (formerly HCFA) Procedure Codes"
+    },
+    {
+      "code": "2",
+      "description": "The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental Association’s Current Dental Terminology (CDT-2) code by reference. Level II also includes the genuine HCPCS codes, approved and maintained jointly by the Alpha-Numeric Editorial Panel, consisting of CMS, the Health Insurance Association of America, and the Blue Cross and Blue Shield Association. Level III are codes developed locally by Medicare"
+    },
+    {
+      "code": "(HCPCS)",
+      "description": ""
+    }
+  ]
+}

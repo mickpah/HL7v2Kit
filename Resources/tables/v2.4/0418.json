@@ -1,0 +1,22 @@
+{
+  "table": "0418",
+  "version": "2.4",
+  "name": "Procedure priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0418 - Procedure priority",
+  "entries": [
+    {
+      "code": "0",
+      "description": "the admitting procedure"
+    },
+    {
+      "code": "1",
+      "description": "the primary procedure"
+    },
+    {
+      "code": "2 ...",
+      "description": "for ranked secondary procedures"
+    }
+  ]
+}

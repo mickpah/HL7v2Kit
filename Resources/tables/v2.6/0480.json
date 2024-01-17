@@ -1,0 +1,22 @@
+{
+  "table": "0480",
+  "version": "2.6",
+  "name": "Pharmacy Order Types",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0480 - Pharmacy Order Types",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Medication"
+    },
+    {
+      "code": "O",
+      "description": "Other solution as medication orders"
+    },
+    {
+      "code": "S",
+      "description": "IV Large Volume Solutions"
+    }
+  ]
+}

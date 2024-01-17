@@ -1,0 +1,26 @@
+{
+  "table": "0236",
+  "version": "2.3",
+  "name": "Reported To",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0236 - Reported To",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Manufacturer"
+    },
+    {
+      "code": "L",
+      "description": "Local facility/user facility"
+    },
+    {
+      "code": "R",
+      "description": "Regulatory agency"
+    },
+    {
+      "code": "D",
+      "description": "Distributor"
+    }
+  ]
+}

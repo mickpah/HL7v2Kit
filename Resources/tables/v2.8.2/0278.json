@@ -1,0 +1,54 @@
+{
+  "table": "0278",
+  "version": "2.8.2",
+  "name": "Filler Status Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0278 - Filler Status Code",
+  "entries": [
+    {
+      "code": "Pending",
+      "description": "Appointment has not yet been confirmed"
+    },
+    {
+      "code": "Waitlist",
+      "description": "Appointment has been placed on a waiting list for a particular slot, or set of slots"
+    },
+    {
+      "code": "Booked",
+      "description": "The indicated appointment is booked"
+    },
+    {
+      "code": "Started",
+      "description": "The indicated appointment has begun and is currently in progress"
+    },
+    {
+      "code": "Complete",
+      "description": "The indicated appointment has completed normally (was not discontinued, canceled, or deleted)"
+    },
+    {
+      "code": "Cancelled",
+      "description": "The indicated appointment was stopped from occurring (canceled prior to starting)"
+    },
+    {
+      "code": "Dc",
+      "description": "The indicated appointment was discontinued (DC’ed while in progress, discontinued parent appointment, or discontinued child appointment)"
+    },
+    {
+      "code": "Deleted",
+      "description": "The indicated appointment was deleted from the filler application"
+    },
+    {
+      "code": "Blocked",
+      "description": "The indicated time slot(s) is(are) blocked"
+    },
+    {
+      "code": "Overbook",
+      "description": "The appointment has been confirmed; however it is confirmed in an overbooked state"
+    },
+    {
+      "code": "Noshow",
+      "description": "The patient did not show up for the appointment"
+    }
+  ]
+}

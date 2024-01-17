@@ -1,0 +1,22 @@
+{
+  "table": "0170",
+  "version": "2.3",
+  "name": "Derived Specimen",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0170 - Derived Specimen",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Parent Observation"
+    },
+    {
+      "code": "C",
+      "description": "Child Observation"
+    },
+    {
+      "code": "N",
+      "description": "Not Applicable"
+    }
+  ]
+}

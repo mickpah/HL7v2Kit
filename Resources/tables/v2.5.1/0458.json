@@ -1,0 +1,178 @@
+{
+  "table": "0458",
+  "version": "2.5.1",
+  "name": "OCE Edit Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0458 - OCE Edit Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Invalid diagnosis code"
+    },
+    {
+      "code": "10",
+      "description": "Non-covered service submitted for verification of denial (condition code 21 from header information on claim)"
+    },
+    {
+      "code": "11",
+      "description": "Non-covered service submitted for FI review (condition code 20 from header information on claim)"
+    },
+    {
+      "code": "12",
+      "description": "Questionable covered service"
+    },
+    {
+      "code": "13",
+      "description": "Additional payment for service not provided by Medicare"
+    },
+    {
+      "code": "14",
+      "description": "Code indicates a site of service not included in OPPS"
+    },
+    {
+      "code": "15",
+      "description": "Service unit out of range for procedure"
+    },
+    {
+      "code": "16",
+      "description": "Multiple bilateral procedures without modifier 50 (see Appendix A)"
+    },
+    {
+      "code": "17",
+      "description": "Multiple bilateral procedures with modifier 50 (see Appendix A)"
+    },
+    {
+      "code": "18",
+      "description": "Inpatient procedure"
+    },
+    {
+      "code": "19",
+      "description": "Mutually exclusive procedure that is not allowed even if appropriate modifier present"
+    },
+    {
+      "code": "2",
+      "description": "Diagnosis and age conflict"
+    },
+    {
+      "code": "20",
+      "description": "Component of a comprehensive procedure that is not allowed even if appropriate modifier present"
+    },
+    {
+      "code": "21",
+      "description": "Medical visit on same day as a type \"T\" or \"S\" procedure without modifier 25 (see Appendix B)"
+    },
+    {
+      "code": "22",
+      "description": "Invalid modifier"
+    },
+    {
+      "code": "23",
+      "description": "Invalid date"
+    },
+    {
+      "code": "24",
+      "description": "Date out of OCE range"
+    },
+    {
+      "code": "25",
+      "description": "Invalid age"
+    },
+    {
+      "code": "26",
+      "description": "Invalid sex"
+    },
+    {
+      "code": "27",
+      "description": "Only incidental services reported"
+    },
+    {
+      "code": "28",
+      "description": "Code not recognized by Medicare; alternate code for same service available"
+    },
+    {
+      "code": "29",
+      "description": "Partial hospitalization service for non-mental health diagnosis"
+    },
+    {
+      "code": "3",
+      "description": "Diagnosis and sex conflict"
+    },
+    {
+      "code": "30",
+      "description": "Insufficient services on day of partial hospitalization"
+    },
+    {
+      "code": "31",
+      "description": "Partial hospitalization on same day as ECT or type \"T\" procedure"
+    },
+    {
+      "code": "32",
+      "description": "Partial hospitalization claim spans 3 or less days with in-sufficient services, or ECT or significant procedure on at least one of the days"
+    },
+    {
+      "code": "33",
+      "description": "Partial hospitalization claim spans more than 3 days with insufficient number of days having mental health services"
+    },
+    {
+      "code": "34",
+      "description": "Partial hospitalization claim spans more than 3 days with insufficient number of days meeting partial hospitalization criteria"
+    },
+    {
+      "code": "35.",
+      "description": "Only activity therapy and/or occupational therapy services provided"
+    },
+    {
+      "code": "36.",
+      "description": "Extensive mental health services provided on day of ECT or significant procedure"
+    },
+    {
+      "code": "37",
+      "description": "Terminated bilateral procedure or terminated procedure with units greater than one"
+    },
+    {
+      "code": "38.",
+      "description": "Inconsistency between implanted device and implantation procedure"
+    },
+    {
+      "code": "39.",
+      "description": "Mutually exclusive procedure that would be allowed if appropriate modifier were present"
+    },
+    {
+      "code": "4",
+      "description": "Medicare secondary payer alert"
+    },
+    {
+      "code": "40.",
+      "description": "Component of a comprehensive procedure that would be allowed if appropriate modifier were present"
+    },
+    {
+      "code": "41.",
+      "description": "Invalid revenue code"
+    },
+    {
+      "code": "42.",
+      "description": "Multiple medical visits on same day with same revenue code without condition code G0 (see Appendix B)"
+    },
+    {
+      "code": "5",
+      "description": "E-code as reason for visit"
+    },
+    {
+      "code": "6",
+      "description": "Invalid procedure code"
+    },
+    {
+      "code": "7",
+      "description": "Procedure and age conflict"
+    },
+    {
+      "code": "8",
+      "description": "Procedure and sex conflict"
+    },
+    {
+      "code": "9",
+      "description": "Nov-covered service"
+    }
+  ]
+}

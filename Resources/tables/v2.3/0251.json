@@ -1,0 +1,34 @@
+{
+  "table": "0251",
+  "version": "2.3",
+  "name": "Action Taken in Response to the Event",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0251 - Action Taken in Response to the Event",
+  "entries": [
+    {
+      "code": "WP",
+      "description": "Product withdrawn permanently"
+    },
+    {
+      "code": "WT",
+      "description": "Product withdrawn temporarily"
+    },
+    {
+      "code": "DR",
+      "description": "Product dose or frequency of use reduced"
+    },
+    {
+      "code": "DI",
+      "description": "Product dose or frequency of use increased"
+    },
+    {
+      "code": "OT",
+      "description": "Other"
+    },
+    {
+      "code": "N",
+      "description": "None"
+    }
+  ]
+}

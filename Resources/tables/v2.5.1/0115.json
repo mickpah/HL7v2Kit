@@ -1,0 +1,9 @@
+{
+  "table": "0115",
+  "version": "2.5.1",
+  "name": "Servicing Facility",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0115 - Servicing Facility",
+  "entries": []
+}

@@ -1,0 +1,30 @@
+{
+  "table": "0397",
+  "version": "2.8.2",
+  "name": "Sequencing",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0397 - Sequencing",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Ascending"
+    },
+    {
+      "code": "AN",
+      "description": "Ascending, case insensitive"
+    },
+    {
+      "code": "D",
+      "description": "Descending"
+    },
+    {
+      "code": "DN",
+      "description": "Descending, case insensitive"
+    },
+    {
+      "code": "N",
+      "description": "None"
+    }
+  ]
+}

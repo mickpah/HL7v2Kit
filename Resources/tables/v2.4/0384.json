@@ -1,0 +1,58 @@
+{
+  "table": "0384",
+  "version": "2.4",
+  "name": "Substance type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0384 - Substance type",
+  "entries": [
+    {
+      "code": "CO",
+      "description": "Control"
+    },
+    {
+      "code": "DI",
+      "description": "Diluent"
+    },
+    {
+      "code": "LI",
+      "description": "Measurable Liquid Item"
+    },
+    {
+      "code": "LW",
+      "description": "Liquid Waste"
+    },
+    {
+      "code": "MR",
+      "description": "Multiple Test Reagent (consumption cannot be tied to orders for single test)"
+    },
+    {
+      "code": "OT",
+      "description": "Other"
+    },
+    {
+      "code": "PT",
+      "description": "Pretreatment"
+    },
+    {
+      "code": "PW",
+      "description": "Purified Water"
+    },
+    {
+      "code": "RC",
+      "description": "Reagent Calibrator"
+    },
+    {
+      "code": "SC",
+      "description": "Countable Solid Item (e.g., Tip, etc.)"
+    },
+    {
+      "code": "SR",
+      "description": "Single Test Reagent"
+    },
+    {
+      "code": "SW",
+      "description": "Solid Waste"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0217",
+  "version": "2.3",
+  "name": "Visit Priority",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0217 - Visit Priority",
+  "entries": []
+}

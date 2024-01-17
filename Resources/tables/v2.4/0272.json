@@ -1,0 +1,22 @@
+{
+  "table": "0272",
+  "version": "2.4",
+  "name": "Document confidentiality status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0272 - Document confidentiality status",
+  "entries": [
+    {
+      "code": "R",
+      "description": "Restricted"
+    },
+    {
+      "code": "U",
+      "description": "Usual control"
+    },
+    {
+      "code": "V",
+      "description": "Very restricted"
+    }
+  ]
+}

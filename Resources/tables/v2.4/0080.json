@@ -1,0 +1,26 @@
+{
+  "table": "0080",
+  "version": "2.4",
+  "name": "Nature of abnormal testing",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0080 - Nature of abnormal testing",
+  "entries": [
+    {
+      "code": "A",
+      "description": "An age-based population"
+    },
+    {
+      "code": "N",
+      "description": "None - generic normal range"
+    },
+    {
+      "code": "R",
+      "description": "A race-based population"
+    },
+    {
+      "code": "S",
+      "description": "A sex-based population"
+    }
+  ]
+}

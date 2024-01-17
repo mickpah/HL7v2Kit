@@ -1,0 +1,42 @@
+{
+  "table": "0371",
+  "version": "2.4",
+  "name": "Additive",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0371 - Additive",
+  "entries": [
+    {
+      "code": "BOR",
+      "description": "Borate"
+    },
+    {
+      "code": "C32",
+      "description": "3.2% Citrate"
+    },
+    {
+      "code": "C38",
+      "description": "3.8% Citrate"
+    },
+    {
+      "code": "EDTK",
+      "description": "Potassium/K EDTA"
+    },
+    {
+      "code": "EDTN",
+      "description": "Sodium/Na EDTA"
+    },
+    {
+      "code": "HCL6",
+      "description": "6N HCL"
+    },
+    {
+      "code": "HEPL",
+      "description": "Lithium/Li Heparin"
+    },
+    {
+      "code": "HEPN",
+      "description": "Sodium/Na Heparin"
+    }
+  ]
+}

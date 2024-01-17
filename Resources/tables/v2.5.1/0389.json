@@ -1,0 +1,26 @@
+{
+  "table": "0389",
+  "version": "2.5.1",
+  "name": "Analyte repeat status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0389 - Analyte repeat status",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Repeated with dilution"
+    },
+    {
+      "code": "F",
+      "description": "Reflex test"
+    },
+    {
+      "code": "O",
+      "description": "Original, first run"
+    },
+    {
+      "code": "R",
+      "description": "Repeated without dilution"
+    }
+  ]
+}

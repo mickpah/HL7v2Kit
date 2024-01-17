@@ -1,0 +1,58 @@
+{
+  "table": "0291",
+  "version": "2.3",
+  "name": "Subtype of Referenced Data",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0291 - Subtype of Referenced Data",
+  "entries": [
+    {
+      "code": "TIFF",
+      "description": "TIFF image data"
+    },
+    {
+      "code": "PICT",
+      "description": "PICT format image data"
+    },
+    {
+      "code": "DICOM",
+      "description": "Digital Imaging and Communications in Medicine"
+    },
+    {
+      "code": "FAX",
+      "description": "Facsimile data"
+    },
+    {
+      "code": "JOT",
+      "description": "Electronic ink data (Jot 1.0 standard)"
+    },
+    {
+      "code": "BASIC",
+      "description": "ISDN PCM audio data"
+    },
+    {
+      "code": "Octet-stream",
+      "description": "Uninterpreted binary data"
+    },
+    {
+      "code": "PostScript",
+      "description": "PostScript program"
+    },
+    {
+      "code": "JPEG",
+      "description": "Needs formal description"
+    },
+    {
+      "code": "GIF",
+      "description": "Needs formal description"
+    },
+    {
+      "code": "HTML",
+      "description": "Hypertext Markup Language"
+    },
+    {
+      "code": "RTF",
+      "description": "Rich Te xt Format"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0084",
+  "version": "2.3",
+  "name": "Performed By",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0084 - Performed By",
+  "entries": []
+}

@@ -1,0 +1,30 @@
+{
+  "table": "0369",
+  "version": "2.4",
+  "name": "Specimen role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0369 - Specimen role",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Blind Sample"
+    },
+    {
+      "code": "C",
+      "description": "Calibrator"
+    },
+    {
+      "code": "P",
+      "description": "Patient (default if blank component value)"
+    },
+    {
+      "code": "Q",
+      "description": "Control specimen"
+    },
+    {
+      "code": "R",
+      "description": "Replicate (of patient sample as a control)"
+    }
+  ]
+}

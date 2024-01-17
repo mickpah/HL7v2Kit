@@ -1,0 +1,14 @@
+{
+  "table": "0296",
+  "version": "2.6",
+  "name": "Primary Language",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0296 - Primary Language",
+  "entries": [
+    {
+      "code": "...",
+      "description": "no suggested values"
+    }
+  ]
+}

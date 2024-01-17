@@ -1,0 +1,9 @@
+{
+  "table": "0447",
+  "version": "2.4",
+  "name": "Breed Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0447 - Breed Code",
+  "entries": []
+}

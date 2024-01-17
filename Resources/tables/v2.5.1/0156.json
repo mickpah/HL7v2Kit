@@ -1,0 +1,34 @@
+{
+  "table": "0156",
+  "version": "2.5.1",
+  "name": "Which date/time qualifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0156 - Which date/time qualifier",
+  "entries": [
+    {
+      "code": "ANY",
+      "description": "Any date/time within a range"
+    },
+    {
+      "code": "COL",
+      "description": "Collection date/time, equivalent to film or sample collection date/time"
+    },
+    {
+      "code": "ORD",
+      "description": "Order date/time"
+    },
+    {
+      "code": "RCT",
+      "description": "Specimen receipt date/time, receipt of specimen in filling ancillary (Lab)"
+    },
+    {
+      "code": "REP",
+      "description": "Report date/time, report date/time at filing ancillary (i.e., Lab)"
+    },
+    {
+      "code": "SCHED",
+      "description": "Schedule date/time"
+    }
+  ]
+}

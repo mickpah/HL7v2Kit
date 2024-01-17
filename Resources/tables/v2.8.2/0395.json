@@ -1,0 +1,18 @@
+{
+  "table": "0395",
+  "version": "2.8.2",
+  "name": "Modify Indicator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0395 - Modify Indicator",
+  "entries": [
+    {
+      "code": "N",
+      "description": "New Subscription"
+    },
+    {
+      "code": "M",
+      "description": "Modified Subscription"
+    }
+  ]
+}

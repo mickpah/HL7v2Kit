@@ -1,0 +1,22 @@
+{
+  "table": "0231",
+  "version": "2.4",
+  "name": "Student status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0231 - Student status",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Full-time student"
+    },
+    {
+      "code": "N",
+      "description": "Not a student"
+    },
+    {
+      "code": "P",
+      "description": "Part-time student"
+    }
+  ]
+}

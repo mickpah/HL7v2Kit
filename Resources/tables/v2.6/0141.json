@@ -1,0 +1,22 @@
+{
+  "table": "0141",
+  "version": "2.6",
+  "name": "Military Rank/Grade",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0141 - Military Rank/Grade",
+  "entries": [
+    {
+      "code": "E1... E9",
+      "description": "Enlisted"
+    },
+    {
+      "code": "O1 ... O9",
+      "description": "Officers"
+    },
+    {
+      "code": "W1 ... W4",
+      "description": "Warrant Officers"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "table": "0074",
+  "version": "2.3",
+  "name": "Diagnostic Service Section ID",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0074 - Diagnostic Service Section ID",
+  "entries": [
+    {
+      "code": "AU",
+      "description": "Audiology"
+    },
+    {
+      "code": "BG",
+      "description": "Blood gases"
+    },
+    {
+      "code": "BLB",
+      "description": "Blood bank"
+    },
+    {
+      "code": "CUS",
+      "description": "Cardiac Ultrasound"
+    },
+    {
+      "code": "CTH",
+      "description": "Cardiac catheterization"
+    },
+    {
+      "code": "CT",
+      "description": "CAT scan"
+    },
+    {
+      "code": "CH",
+      "description": "Chemistry"
+    },
+    {
+      "code": "CP",
+      "description": "Cytopathology"
+    },
+    {
+      "code": "EC",
+      "description": "Electrocardiac (e.g., EKG, EEC, Holter)"
+    },
+    {
+      "code": "EN",
+      "description": "Electroneuro (EEG, EMG,EP,PSG)"
+    },
+    {
+      "code": "HM",
+      "description": "Hematology"
+    },
+    {
+      "code": "ICU",
+      "description": "Bedside ICU Monitoring"
+    },
+    {
+      "code": "IMM",
+      "description": "Immunology"
+    },
+    {
+      "code": "LAB",
+      "description": "Laboratory"
+    },
+    {
+      "code": "MB",
+      "description": "Microbiology"
+    },
+    {
+      "code": "MCB",
+      "description": "Mycobacteriology"
+    },
+    {
+      "code": "MYC",
+      "description": "Mycology"
+    },
+    {
+      "code": "NMS",
+      "description": "Nuclear medicine scan"
+    },
+    {
+      "code": "NMR",
+      "description": "Nuclear magnetic resonance"
+    },
+    {
+      "code": "NRS",
+      "description": "Nursing service measures"
+    },
+    {
+      "code": "OUS",
+      "description": "OB Ultrasound"
+    },
+    {
+      "code": "OT",
+      "description": "Occupational Therapy"
+    },
+    {
+      "code": "OTH",
+      "description": "Other"
+    },
+    {
+      "code": "OSL",
+      "description": "Outside Lab"
+    },
+    {
+      "code": "PHR",
+      "description": "Pharmacy"
+    },
+    {
+      "code": "PT",
+      "description": "Physical Therapy"
+    },
+    {
+      "code": "PHY",
+      "description": "Physician (Hx. Dx, admission note, etc.l)"
+    },
+    {
+      "code": "PF",
+      "description": "Pulmonary function"
+    },
+    {
+      "code": "RAD",
+      "description": "Radiology"
+    },
+    {
+      "code": "RX",
+      "description": "Radiograph"
+    },
+    {
+      "code": "RUS",
+      "description": "Radiology ultrasound"
+    },
+    {
+      "code": "RC",
+      "description": "Respiratory Care (therapy)"
+    },
+    {
+      "code": "RT",
+      "description": "Radiation therapy"
+    },
+    {
+      "code": "SR",
+      "description": "Serology"
+    },
+    {
+      "code": "SP",
+      "description": "Surgidal Pathology"
+    },
+    {
+      "code": "TX",
+      "description": "Toxicology"
+    },
+    {
+      "code": "VUS",
+      "description": "Vascular Ultrasound"
+    },
+    {
+      "code": "VR",
+      "description": "Virology"
+    },
+    {
+      "code": "XRC",
+      "description": "Cineradiograph"
+    }
+  ]
+}

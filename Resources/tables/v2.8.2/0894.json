@@ -1,0 +1,18 @@
+{
+  "table": "0894",
+  "version": "2.8.2",
+  "name": "Side of Body",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0894 - Side of Body",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Left"
+    },
+    {
+      "code": "R",
+      "description": "Right"
+    }
+  ]
+}

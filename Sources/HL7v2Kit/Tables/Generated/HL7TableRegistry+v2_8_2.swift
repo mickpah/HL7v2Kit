@@ -3,5 +3,10752 @@
 // Regenerate via scripts/regenerate-typed-segments.sh
 
 extension HL7TableRegistry {
-    public static let v2_8_2: [String: HL7Table] = [:]
+    public static let v2_8_2: [String: HL7Table] = [
+        "0001": t0001_v2_8_2,
+        "0002": t0002_v2_8_2,
+        "0003": t0003_v2_8_2,
+        "0004": t0004_v2_8_2,
+        "0005": t0005_v2_8_2,
+        "0006": t0006_v2_8_2,
+        "0007": t0007_v2_8_2,
+        "0008": t0008_v2_8_2,
+        "0009": t0009_v2_8_2,
+        "0010": t0010_v2_8_2,
+        "0017": t0017_v2_8_2,
+        "0018": t0018_v2_8_2,
+        "0019": t0019_v2_8_2,
+        "0021": t0021_v2_8_2,
+        "0022": t0022_v2_8_2,
+        "0023": t0023_v2_8_2,
+        "0024": t0024_v2_8_2,
+        "0027": t0027_v2_8_2,
+        "0032": t0032_v2_8_2,
+        "0038": t0038_v2_8_2,
+        "0042": t0042_v2_8_2,
+        "0043": t0043_v2_8_2,
+        "0044": t0044_v2_8_2,
+        "0045": t0045_v2_8_2,
+        "0046": t0046_v2_8_2,
+        "0049": t0049_v2_8_2,
+        "0050": t0050_v2_8_2,
+        "0051": t0051_v2_8_2,
+        "0052": t0052_v2_8_2,
+        "0055": t0055_v2_8_2,
+        "0056": t0056_v2_8_2,
+        "0059": t0059_v2_8_2,
+        "0061": t0061_v2_8_2,
+        "0062": t0062_v2_8_2,
+        "0063": t0063_v2_8_2,
+        "0064": t0064_v2_8_2,
+        "0065": t0065_v2_8_2,
+        "0066": t0066_v2_8_2,
+        "0068": t0068_v2_8_2,
+        "0069": t0069_v2_8_2,
+        "0070": t0070_v2_8_2,
+        "0072": t0072_v2_8_2,
+        "0073": t0073_v2_8_2,
+        "0074": t0074_v2_8_2,
+        "0076": t0076_v2_8_2,
+        "0078": t0078_v2_8_2,
+        "0080": t0080_v2_8_2,
+        "0083": t0083_v2_8_2,
+        "0084": t0084_v2_8_2,
+        "0085": t0085_v2_8_2,
+        "0086": t0086_v2_8_2,
+        "0087": t0087_v2_8_2,
+        "0088": t0088_v2_8_2,
+        "0091": t0091_v2_8_2,
+        "0092": t0092_v2_8_2,
+        "0093": t0093_v2_8_2,
+        "0098": t0098_v2_8_2,
+        "0099": t0099_v2_8_2,
+        "0100": t0100_v2_8_2,
+        "0103": t0103_v2_8_2,
+        "0104": t0104_v2_8_2,
+        "0105": t0105_v2_8_2,
+        "0110": t0110_v2_8_2,
+        "0111": t0111_v2_8_2,
+        "0112": t0112_v2_8_2,
+        "0113": t0113_v2_8_2,
+        "0114": t0114_v2_8_2,
+        "0115": t0115_v2_8_2,
+        "0116": t0116_v2_8_2,
+        "0117": t0117_v2_8_2,
+        "0118": t0118_v2_8_2,
+        "0119": t0119_v2_8_2,
+        "0121": t0121_v2_8_2,
+        "0122": t0122_v2_8_2,
+        "0123": t0123_v2_8_2,
+        "0124": t0124_v2_8_2,
+        "0125": t0125_v2_8_2,
+        "0126": t0126_v2_8_2,
+        "0127": t0127_v2_8_2,
+        "0128": t0128_v2_8_2,
+        "0129": t0129_v2_8_2,
+        "0130": t0130_v2_8_2,
+        "0131": t0131_v2_8_2,
+        "0132": t0132_v2_8_2,
+        "0135": t0135_v2_8_2,
+        "0136": t0136_v2_8_2,
+        "0137": t0137_v2_8_2,
+        "0139": t0139_v2_8_2,
+        "0140": t0140_v2_8_2,
+        "0141": t0141_v2_8_2,
+        "0142": t0142_v2_8_2,
+        "0143": t0143_v2_8_2,
+        "0144": t0144_v2_8_2,
+        "0145": t0145_v2_8_2,
+        "0146": t0146_v2_8_2,
+        "0147": t0147_v2_8_2,
+        "0148": t0148_v2_8_2,
+        "0149": t0149_v2_8_2,
+        "0150": t0150_v2_8_2,
+        "0151": t0151_v2_8_2,
+        "0152": t0152_v2_8_2,
+        "0153": t0153_v2_8_2,
+        "0155": t0155_v2_8_2,
+        "0159": t0159_v2_8_2,
+        "0160": t0160_v2_8_2,
+        "0161": t0161_v2_8_2,
+        "0162": t0162_v2_8_2,
+        "0163": t0163_v2_8_2,
+        "0164": t0164_v2_8_2,
+        "0165": t0165_v2_8_2,
+        "0166": t0166_v2_8_2,
+        "0167": t0167_v2_8_2,
+        "0168": t0168_v2_8_2,
+        "0169": t0169_v2_8_2,
+        "0170": t0170_v2_8_2,
+        "0171": t0171_v2_8_2,
+        "0172": t0172_v2_8_2,
+        "0173": t0173_v2_8_2,
+        "0174": t0174_v2_8_2,
+        "0175": t0175_v2_8_2,
+        "0177": t0177_v2_8_2,
+        "0178": t0178_v2_8_2,
+        "0179": t0179_v2_8_2,
+        "0180": t0180_v2_8_2,
+        "0181": t0181_v2_8_2,
+        "0182": t0182_v2_8_2,
+        "0183": t0183_v2_8_2,
+        "0184": t0184_v2_8_2,
+        "0185": t0185_v2_8_2,
+        "0186": t0186_v2_8_2,
+        "0187": t0187_v2_8_2,
+        "0188": t0188_v2_8_2,
+        "0189": t0189_v2_8_2,
+        "0190": t0190_v2_8_2,
+        "0191": t0191_v2_8_2,
+        "0193": t0193_v2_8_2,
+        "0200": t0200_v2_8_2,
+        "0201": t0201_v2_8_2,
+        "0202": t0202_v2_8_2,
+        "0203": t0203_v2_8_2,
+        "0204": t0204_v2_8_2,
+        "0205": t0205_v2_8_2,
+        "0206": t0206_v2_8_2,
+        "0207": t0207_v2_8_2,
+        "0208": t0208_v2_8_2,
+        "0209": t0209_v2_8_2,
+        "0210": t0210_v2_8_2,
+        "0211": t0211_v2_8_2,
+        "0212": t0212_v2_8_2,
+        "0213": t0213_v2_8_2,
+        "0214": t0214_v2_8_2,
+        "0215": t0215_v2_8_2,
+        "0216": t0216_v2_8_2,
+        "0217": t0217_v2_8_2,
+        "0218": t0218_v2_8_2,
+        "0219": t0219_v2_8_2,
+        "0220": t0220_v2_8_2,
+        "0222": t0222_v2_8_2,
+        "0223": t0223_v2_8_2,
+        "0224": t0224_v2_8_2,
+        "0225": t0225_v2_8_2,
+        "0227": t0227_v2_8_2,
+        "0228": t0228_v2_8_2,
+        "0229": t0229_v2_8_2,
+        "0230": t0230_v2_8_2,
+        "0231": t0231_v2_8_2,
+        "0232": t0232_v2_8_2,
+        "0233": t0233_v2_8_2,
+        "0234": t0234_v2_8_2,
+        "0235": t0235_v2_8_2,
+        "0236": t0236_v2_8_2,
+        "0237": t0237_v2_8_2,
+        "0238": t0238_v2_8_2,
+        "0239": t0239_v2_8_2,
+        "0240": t0240_v2_8_2,
+        "0241": t0241_v2_8_2,
+        "0242": t0242_v2_8_2,
+        "0243": t0243_v2_8_2,
+        "0244": t0244_v2_8_2,
+        "0245": t0245_v2_8_2,
+        "0246": t0246_v2_8_2,
+        "0247": t0247_v2_8_2,
+        "0248": t0248_v2_8_2,
+        "0249": t0249_v2_8_2,
+        "0250": t0250_v2_8_2,
+        "0251": t0251_v2_8_2,
+        "0252": t0252_v2_8_2,
+        "0253": t0253_v2_8_2,
+        "0254": t0254_v2_8_2,
+        "0255": t0255_v2_8_2,
+        "0256": t0256_v2_8_2,
+        "0257": t0257_v2_8_2,
+        "0258": t0258_v2_8_2,
+        "0259": t0259_v2_8_2,
+        "0260": t0260_v2_8_2,
+        "0261": t0261_v2_8_2,
+        "0262": t0262_v2_8_2,
+        "0263": t0263_v2_8_2,
+        "0264": t0264_v2_8_2,
+        "0265": t0265_v2_8_2,
+        "0267": t0267_v2_8_2,
+        "0268": t0268_v2_8_2,
+        "0269": t0269_v2_8_2,
+        "0270": t0270_v2_8_2,
+        "0271": t0271_v2_8_2,
+        "0272": t0272_v2_8_2,
+        "0273": t0273_v2_8_2,
+        "0275": t0275_v2_8_2,
+        "0276": t0276_v2_8_2,
+        "0277": t0277_v2_8_2,
+        "0278": t0278_v2_8_2,
+        "0279": t0279_v2_8_2,
+        "0280": t0280_v2_8_2,
+        "0281": t0281_v2_8_2,
+        "0282": t0282_v2_8_2,
+        "0283": t0283_v2_8_2,
+        "0284": t0284_v2_8_2,
+        "0285": t0285_v2_8_2,
+        "0286": t0286_v2_8_2,
+        "0287": t0287_v2_8_2,
+        "0288": t0288_v2_8_2,
+        "0289": t0289_v2_8_2,
+        "0291": t0291_v2_8_2,
+        "0292": t0292_v2_8_2,
+        "0293": t0293_v2_8_2,
+        "0294": t0294_v2_8_2,
+        "0295": t0295_v2_8_2,
+        "0296": t0296_v2_8_2,
+        "0297": t0297_v2_8_2,
+        "0298": t0298_v2_8_2,
+        "0299": t0299_v2_8_2,
+        "0300": t0300_v2_8_2,
+        "0301": t0301_v2_8_2,
+        "0302": t0302_v2_8_2,
+        "0303": t0303_v2_8_2,
+        "0304": t0304_v2_8_2,
+        "0305": t0305_v2_8_2,
+        "0306": t0306_v2_8_2,
+        "0307": t0307_v2_8_2,
+        "0308": t0308_v2_8_2,
+        "0309": t0309_v2_8_2,
+        "0311": t0311_v2_8_2,
+        "0312": t0312_v2_8_2,
+        "0313": t0313_v2_8_2,
+        "0315": t0315_v2_8_2,
+        "0316": t0316_v2_8_2,
+        "0317": t0317_v2_8_2,
+        "0319": t0319_v2_8_2,
+        "0320": t0320_v2_8_2,
+        "0321": t0321_v2_8_2,
+        "0322": t0322_v2_8_2,
+        "0324": t0324_v2_8_2,
+        "0325": t0325_v2_8_2,
+        "0326": t0326_v2_8_2,
+        "0327": t0327_v2_8_2,
+        "0328": t0328_v2_8_2,
+        "0329": t0329_v2_8_2,
+        "0330": t0330_v2_8_2,
+        "0331": t0331_v2_8_2,
+        "0332": t0332_v2_8_2,
+        "0333": t0333_v2_8_2,
+        "0334": t0334_v2_8_2,
+        "0335": t0335_v2_8_2,
+        "0336": t0336_v2_8_2,
+        "0337": t0337_v2_8_2,
+        "0338": t0338_v2_8_2,
+        "0339": t0339_v2_8_2,
+        "0340": t0340_v2_8_2,
+        "0341": t0341_v2_8_2,
+        "0342": t0342_v2_8_2,
+        "0343": t0343_v2_8_2,
+        "0344": t0344_v2_8_2,
+        "0345": t0345_v2_8_2,
+        "0346": t0346_v2_8_2,
+        "0347": t0347_v2_8_2,
+        "0350": t0350_v2_8_2,
+        "0351": t0351_v2_8_2,
+        "0353": t0353_v2_8_2,
+        "0354": t0354_v2_8_2,
+        "0355": t0355_v2_8_2,
+        "0356": t0356_v2_8_2,
+        "0357": t0357_v2_8_2,
+        "0358": t0358_v2_8_2,
+        "0359": t0359_v2_8_2,
+        "0360": t0360_v2_8_2,
+        "0361": t0361_v2_8_2,
+        "0362": t0362_v2_8_2,
+        "0363": t0363_v2_8_2,
+        "0364": t0364_v2_8_2,
+        "0365": t0365_v2_8_2,
+        "0366": t0366_v2_8_2,
+        "0367": t0367_v2_8_2,
+        "0368": t0368_v2_8_2,
+        "0369": t0369_v2_8_2,
+        "0370": t0370_v2_8_2,
+        "0371": t0371_v2_8_2,
+        "0372": t0372_v2_8_2,
+        "0373": t0373_v2_8_2,
+        "0374": t0374_v2_8_2,
+        "0375": t0375_v2_8_2,
+        "0376": t0376_v2_8_2,
+        "0377": t0377_v2_8_2,
+        "0378": t0378_v2_8_2,
+        "0379": t0379_v2_8_2,
+        "0380": t0380_v2_8_2,
+        "0381": t0381_v2_8_2,
+        "0382": t0382_v2_8_2,
+        "0383": t0383_v2_8_2,
+        "0384": t0384_v2_8_2,
+        "0385": t0385_v2_8_2,
+        "0386": t0386_v2_8_2,
+        "0387": t0387_v2_8_2,
+        "0388": t0388_v2_8_2,
+        "0389": t0389_v2_8_2,
+        "0391": t0391_v2_8_2,
+        "0392": t0392_v2_8_2,
+        "0393": t0393_v2_8_2,
+        "0394": t0394_v2_8_2,
+        "0395": t0395_v2_8_2,
+        "0396": t0396_v2_8_2,
+        "0397": t0397_v2_8_2,
+        "0398": t0398_v2_8_2,
+        "0401": t0401_v2_8_2,
+        "0402": t0402_v2_8_2,
+        "0403": t0403_v2_8_2,
+        "0404": t0404_v2_8_2,
+        "0405": t0405_v2_8_2,
+        "0406": t0406_v2_8_2,
+        "0409": t0409_v2_8_2,
+        "0411": t0411_v2_8_2,
+        "0412": t0412_v2_8_2,
+        "0413": t0413_v2_8_2,
+        "0414": t0414_v2_8_2,
+        "0415": t0415_v2_8_2,
+        "0416": t0416_v2_8_2,
+        "0417": t0417_v2_8_2,
+        "0418": t0418_v2_8_2,
+        "0421": t0421_v2_8_2,
+        "0422": t0422_v2_8_2,
+        "0423": t0423_v2_8_2,
+        "0424": t0424_v2_8_2,
+        "0425": t0425_v2_8_2,
+        "0426": t0426_v2_8_2,
+        "0427": t0427_v2_8_2,
+        "0428": t0428_v2_8_2,
+        "0429": t0429_v2_8_2,
+        "0430": t0430_v2_8_2,
+        "0431": t0431_v2_8_2,
+        "0432": t0432_v2_8_2,
+        "0433": t0433_v2_8_2,
+        "0434": t0434_v2_8_2,
+        "0435": t0435_v2_8_2,
+        "0436": t0436_v2_8_2,
+        "0437": t0437_v2_8_2,
+        "0438": t0438_v2_8_2,
+        "0440": t0440_v2_8_2,
+        "0441": t0441_v2_8_2,
+        "0442": t0442_v2_8_2,
+        "0443": t0443_v2_8_2,
+        "0444": t0444_v2_8_2,
+        "0445": t0445_v2_8_2,
+        "0446": t0446_v2_8_2,
+        "0447": t0447_v2_8_2,
+        "0448": t0448_v2_8_2,
+        "0450": t0450_v2_8_2,
+        "0451": t0451_v2_8_2,
+        "0452": t0452_v2_8_2,
+        "0453": t0453_v2_8_2,
+        "0454": t0454_v2_8_2,
+        "0455": t0455_v2_8_2,
+        "0456": t0456_v2_8_2,
+        "0457": t0457_v2_8_2,
+        "0458": t0458_v2_8_2,
+        "0459": t0459_v2_8_2,
+        "0460": t0460_v2_8_2,
+        "0461": t0461_v2_8_2,
+        "0462": t0462_v2_8_2,
+        "0463": t0463_v2_8_2,
+        "0464": t0464_v2_8_2,
+        "0465": t0465_v2_8_2,
+        "0466": t0466_v2_8_2,
+        "0467": t0467_v2_8_2,
+        "0468": t0468_v2_8_2,
+        "0469": t0469_v2_8_2,
+        "0470": t0470_v2_8_2,
+        "0471": t0471_v2_8_2,
+        "0472": t0472_v2_8_2,
+        "0473": t0473_v2_8_2,
+        "0474": t0474_v2_8_2,
+        "0475": t0475_v2_8_2,
+        "0476": t0476_v2_8_2,
+        "0477": t0477_v2_8_2,
+        "0478": t0478_v2_8_2,
+        "0479": t0479_v2_8_2,
+        "0480": t0480_v2_8_2,
+        "0482": t0482_v2_8_2,
+        "0483": t0483_v2_8_2,
+        "0484": t0484_v2_8_2,
+        "0485": t0485_v2_8_2,
+        "0487": t0487_v2_8_2,
+        "0488": t0488_v2_8_2,
+        "0489": t0489_v2_8_2,
+        "0490": t0490_v2_8_2,
+        "0491": t0491_v2_8_2,
+        "0492": t0492_v2_8_2,
+        "0493": t0493_v2_8_2,
+        "0494": t0494_v2_8_2,
+        "0495": t0495_v2_8_2,
+        "0496": t0496_v2_8_2,
+        "0497": t0497_v2_8_2,
+        "0498": t0498_v2_8_2,
+        "0499": t0499_v2_8_2,
+        "0500": t0500_v2_8_2,
+        "0501": t0501_v2_8_2,
+        "0502": t0502_v2_8_2,
+        "0503": t0503_v2_8_2,
+        "0504": t0504_v2_8_2,
+        "0505": t0505_v2_8_2,
+        "0506": t0506_v2_8_2,
+        "0507": t0507_v2_8_2,
+        "0508": t0508_v2_8_2,
+        "0509": t0509_v2_8_2,
+        "0510": t0510_v2_8_2,
+        "0511": t0511_v2_8_2,
+        "0512": t0512_v2_8_2,
+        "0513": t0513_v2_8_2,
+        "0514": t0514_v2_8_2,
+        "0515": t0515_v2_8_2,
+        "0516": t0516_v2_8_2,
+        "0517": t0517_v2_8_2,
+        "0518": t0518_v2_8_2,
+        "0519": t0519_v2_8_2,
+        "0520": t0520_v2_8_2,
+        "0521": t0521_v2_8_2,
+        "0523": t0523_v2_8_2,
+        "0525": t0525_v2_8_2,
+        "0526": t0526_v2_8_2,
+        "0527": t0527_v2_8_2,
+        "0528": t0528_v2_8_2,
+        "0530": t0530_v2_8_2,
+        "0531": t0531_v2_8_2,
+        "0532": t0532_v2_8_2,
+        "0533": t0533_v2_8_2,
+        "0534": t0534_v2_8_2,
+        "0535": t0535_v2_8_2,
+        "0536": t0536_v2_8_2,
+        "0537": t0537_v2_8_2,
+        "0538": t0538_v2_8_2,
+        "0539": t0539_v2_8_2,
+        "0540": t0540_v2_8_2,
+        "0541": t0541_v2_8_2,
+        "0542": t0542_v2_8_2,
+        "0543": t0543_v2_8_2,
+        "0544": t0544_v2_8_2,
+        "0547": t0547_v2_8_2,
+        "0548": t0548_v2_8_2,
+        "0549": t0549_v2_8_2,
+        "0550": t0550_v2_8_2,
+        "0552": t0552_v2_8_2,
+        "0553": t0553_v2_8_2,
+        "0554": t0554_v2_8_2,
+        "0555": t0555_v2_8_2,
+        "0556": t0556_v2_8_2,
+        "0557": t0557_v2_8_2,
+        "0558": t0558_v2_8_2,
+        "0559": t0559_v2_8_2,
+        "0560": t0560_v2_8_2,
+        "0561": t0561_v2_8_2,
+        "0562": t0562_v2_8_2,
+        "0564": t0564_v2_8_2,
+        "0565": t0565_v2_8_2,
+        "0566": t0566_v2_8_2,
+        "0567": t0567_v2_8_2,
+        "0568": t0568_v2_8_2,
+        "0569": t0569_v2_8_2,
+        "0570": t0570_v2_8_2,
+        "0571": t0571_v2_8_2,
+        "0572": t0572_v2_8_2,
+        "0615": t0615_v2_8_2,
+        "0616": t0616_v2_8_2,
+        "0617": t0617_v2_8_2,
+        "0618": t0618_v2_8_2,
+        "0625": t0625_v2_8_2,
+        "0634": t0634_v2_8_2,
+        "0642": t0642_v2_8_2,
+        "0651": t0651_v2_8_2,
+        "0653": t0653_v2_8_2,
+        "0657": t0657_v2_8_2,
+        "0659": t0659_v2_8_2,
+        "0667": t0667_v2_8_2,
+        "0669": t0669_v2_8_2,
+        "0682": t0682_v2_8_2,
+        "0702": t0702_v2_8_2,
+        "0717": t0717_v2_8_2,
+        "0719": t0719_v2_8_2,
+        "0725": t0725_v2_8_2,
+        "0728": t0728_v2_8_2,
+        "0731": t0731_v2_8_2,
+        "0734": t0734_v2_8_2,
+        "0739": t0739_v2_8_2,
+        "0742": t0742_v2_8_2,
+        "0749": t0749_v2_8_2,
+        "0755": t0755_v2_8_2,
+        "0757": t0757_v2_8_2,
+        "0759": t0759_v2_8_2,
+        "0761": t0761_v2_8_2,
+        "0763": t0763_v2_8_2,
+        "0771": t0771_v2_8_2,
+        "0776": t0776_v2_8_2,
+        "0778": t0778_v2_8_2,
+        "0790": t0790_v2_8_2,
+        "0793": t0793_v2_8_2,
+        "0806": t0806_v2_8_2,
+        "0809": t0809_v2_8_2,
+        "0811": t0811_v2_8_2,
+        "0818": t0818_v2_8_2,
+        "0834": t0834_v2_8_2,
+        "0836": t0836_v2_8_2,
+        "0838": t0838_v2_8_2,
+        "0865": t0865_v2_8_2,
+        "0868": t0868_v2_8_2,
+        "0871": t0871_v2_8_2,
+        "0879": t0879_v2_8_2,
+        "0880": t0880_v2_8_2,
+        "0881": t0881_v2_8_2,
+        "0882": t0882_v2_8_2,
+        "0894": t0894_v2_8_2,
+        "0895": t0895_v2_8_2,
+        "0904": t0904_v2_8_2,
+        "0905": t0905_v2_8_2,
+        "0906": t0906_v2_8_2,
+        "0907": t0907_v2_8_2,
+        "0908": t0908_v2_8_2,
+        "0909": t0909_v2_8_2,
+        "0910": t0910_v2_8_2,
+        "0912": t0912_v2_8_2,
+        "0913": t0913_v2_8_2,
+        "0914": t0914_v2_8_2,
+        "0915": t0915_v2_8_2,
+        "0916": t0916_v2_8_2,
+        "0917": t0917_v2_8_2,
+        "0918": t0918_v2_8_2,
+        "0919": t0919_v2_8_2,
+        "0920": t0920_v2_8_2,
+        "0921": t0921_v2_8_2,
+        "0922": t0922_v2_8_2,
+        "0923": t0923_v2_8_2,
+        "0924": t0924_v2_8_2,
+        "0925": t0925_v2_8_2,
+        "0926": t0926_v2_8_2,
+        "0927": t0927_v2_8_2,
+        "0929": t0929_v2_8_2,
+        "0930": t0930_v2_8_2,
+        "0931": t0931_v2_8_2,
+        "0932": t0932_v2_8_2,
+        "0933": t0933_v2_8_2,
+        "0934": t0934_v2_8_2,
+        "0935": t0935_v2_8_2,
+        "0936": t0936_v2_8_2,
+        "0937": t0937_v2_8_2,
+        "0938": t0938_v2_8_2,
+        "0939": t0939_v2_8_2,
+        "0940": t0940_v2_8_2,
+        "0941": t0941_v2_8_2,
+    ]
+
+    static let t0001_v2_8_2 = HL7Table(
+        number: "0001",
+        name: "Administrative Sex",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Female"),
+            HL7Table.Entry(code: "M", description: "Male"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "A", description: "Ambiguous"),
+            HL7Table.Entry(code: "N", description: "Not applicable"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0002_v2_8_2 = HL7Table(
+        number: "0002",
+        name: "Marital Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Separated"),
+            HL7Table.Entry(code: "D", description: "Divorced"),
+            HL7Table.Entry(code: "M", description: "Married"),
+            HL7Table.Entry(code: "S", description: "Single"),
+            HL7Table.Entry(code: "W", description: "Widowed"),
+            HL7Table.Entry(code: "C", description: "Common law"),
+            HL7Table.Entry(code: "G", description: "Living together"),
+            HL7Table.Entry(code: "P", description: "Domestic partner"),
+            HL7Table.Entry(code: "R", description: "Registered domestic partner"),
+            HL7Table.Entry(code: "E", description: "Legally Separated"),
+            HL7Table.Entry(code: "N", description: "Annulled"),
+            HL7Table.Entry(code: "I", description: "Interlocutory"),
+            HL7Table.Entry(code: "B", description: "Unmarried"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "T", description: "Unreported"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0003_v2_8_2 = HL7Table(
+        number: "0003",
+        name: "Event Type",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "A01", description: "ADT/ACK - Admit/visit notification"),
+            HL7Table.Entry(code: "A02", description: "ADT/ACK - Transfer a patient"),
+            HL7Table.Entry(code: "A03", description: "ADT/ACK - Discharge/end visit"),
+            HL7Table.Entry(code: "A04", description: "ADT/ACK - Register a patient"),
+            HL7Table.Entry(code: "A05", description: "ADT/ACK - Pre-admit a patient"),
+            HL7Table.Entry(code: "A06", description: "ADT/ACK - Change an outpatient to an inpatient"),
+            HL7Table.Entry(code: "A07", description: "ADT/ACK - Change an inpatient to an outpatient"),
+            HL7Table.Entry(code: "A08", description: "ADT/ACK - Update patient information"),
+            HL7Table.Entry(code: "A09", description: "ADT/ACK - Patient departing - tracking"),
+            HL7Table.Entry(code: "A10", description: "ADT/ACK - Patient arriving - tracking"),
+            HL7Table.Entry(code: "A11", description: "ADT/ACK - Cancel admit/visit notification"),
+            HL7Table.Entry(code: "A12", description: "ADT/ACK - Cancel transfer"),
+            HL7Table.Entry(code: "A13", description: "ADT/ACK - Cancel discharge/end visit"),
+            HL7Table.Entry(code: "A14", description: "ADT/ACK - Pending admit"),
+            HL7Table.Entry(code: "A15", description: "ADT/ACK - Pending transfer"),
+            HL7Table.Entry(code: "A16", description: "ADT/ACK - Pending discharge"),
+            HL7Table.Entry(code: "A17", description: "ADT/ACK - Swap patients"),
+            HL7Table.Entry(code: "A18", description: "ADT/ACK - Merge patient information"),
+            HL7Table.Entry(code: "A19", description: "QRY/ADR - Patient query"),
+            HL7Table.Entry(code: "A20", description: "ADT/ACK - Bed status update"),
+            HL7Table.Entry(code: "A21", description: "ADT/ACK - Patient goes on a \"leave of absence\""),
+            HL7Table.Entry(code: "A22", description: "ADT/ACK - Patient returns from a \"leave of absence\""),
+            HL7Table.Entry(code: "A23", description: "ADT/ACK - Delete a patient record"),
+            HL7Table.Entry(code: "A24", description: "ADT/ACK - Link patient information"),
+            HL7Table.Entry(code: "A25", description: "ADT/ACK - Cancel pending discharge"),
+            HL7Table.Entry(code: "A26", description: "ADT/ACK - Cancel pending transfer"),
+            HL7Table.Entry(code: "A27", description: "ADT/ACK - Cancel pending admit"),
+            HL7Table.Entry(code: "A28", description: "ADT/ACK - Add person information"),
+            HL7Table.Entry(code: "A29", description: "ADT/ACK - Delete person information"),
+            HL7Table.Entry(code: "A30", description: "ADT/ACK - Merge person information"),
+            HL7Table.Entry(code: "A31", description: "ADT/ACK - Update person information"),
+            HL7Table.Entry(code: "A32", description: "ADT/ACK - Cancel patient arriving - tracking"),
+            HL7Table.Entry(code: "A33", description: "ADT/ACK - Cancel patient departing - tracking"),
+            HL7Table.Entry(code: "A34", description: "ADT/ACK - Merge patient information - patient ID only"),
+            HL7Table.Entry(code: "A35", description: "ADT/ACK - Merge patient information - account number only"),
+            HL7Table.Entry(code: "A36", description: "ADT/ACK - Merge patient information - patient ID and account number"),
+            HL7Table.Entry(code: "A37", description: "ADT/ACK - Unlink patient information"),
+            HL7Table.Entry(code: "A38", description: "ADT/ACK - Cancel pre-admit"),
+            HL7Table.Entry(code: "A39", description: "ADT/ACK - Merge person – patient ID"),
+            HL7Table.Entry(code: "A40", description: "ADT/ACK - Merge patient – patient identifier list"),
+            HL7Table.Entry(code: "A41", description: "ADT/ACK - Merge account - patient account number"),
+            HL7Table.Entry(code: "A42", description: "ADT/ACK - Merge visit - visit number"),
+            HL7Table.Entry(code: "A43", description: "ADT/ACK - Move patient information – patient identifier list"),
+            HL7Table.Entry(code: "A44", description: "ADT/ACK - Move account information - patient account number"),
+            HL7Table.Entry(code: "A45", description: "ADT/ACK - Move visit information - visit number"),
+            HL7Table.Entry(code: "A46", description: "ADT/ACK - Change patient ID"),
+            HL7Table.Entry(code: "A47", description: "ADT/ACK - Change patient identifier list"),
+            HL7Table.Entry(code: "A48", description: "ADT/ACK - Change alternate patient ID"),
+            HL7Table.Entry(code: "A49", description: "ADT/ACK - Change patient account number"),
+            HL7Table.Entry(code: "A50", description: "ADT/ACK - Change visit number"),
+            HL7Table.Entry(code: "A51", description: "ADT/ACK - Change alternate visit ID"),
+            HL7Table.Entry(code: "A52", description: "ADT/ACK – Cancel leave of absence for a patient"),
+            HL7Table.Entry(code: "A53", description: "ADT/ACK – Cancel patient returns from a leave of absence"),
+            HL7Table.Entry(code: "A54", description: "ADT/ACK - Change attending doctor"),
+            HL7Table.Entry(code: "A55", description: "ADT/ACK – Cancel change attending doctor"),
+            HL7Table.Entry(code: "A60", description: "ADT/ACK – Update allergy information"),
+            HL7Table.Entry(code: "A61", description: "ADT/ACK – Change consulting doctor"),
+            HL7Table.Entry(code: "A62", description: "ADT/ACK – Cancel change consulting doctor"),
+            HL7Table.Entry(code: "B01", description: "PMU/ACK – Add personnel record"),
+            HL7Table.Entry(code: "B02", description: "PMU/ACK – Update personnel record"),
+            HL7Table.Entry(code: "B03", description: "PMU/ACK – Delete personnel re cord"),
+            HL7Table.Entry(code: "B04", description: "PMU/ACK – Active practicing person"),
+            HL7Table.Entry(code: "B05", description: "PMU/ACK – Deactivate practicing person"),
+            HL7Table.Entry(code: "B06", description: "PMU/ACK – Terminate practicing person"),
+            HL7Table.Entry(code: "B07", description: "PMU/ACK – Grant Certificate/Permission"),
+            HL7Table.Entry(code: "B08", description: "PMU/ACK – Revoke Certificate/Permission"),
+            HL7Table.Entry(code: "C01", description: "CRM - Register a patient on a clinical trial"),
+            HL7Table.Entry(code: "C02", description: "CRM - Cancel a patient registration on clinical trial (for clerical mistakes only)"),
+            HL7Table.Entry(code: "C03", description: "CRM - Correct/update registration information"),
+            HL7Table.Entry(code: "C04", description: "CRM - Patient has gone off a clinical trial"),
+            HL7Table.Entry(code: "C05", description: "CRM - Patient enters phase of clinical trial"),
+            HL7Table.Entry(code: "C06", description: "CRM - Cancel patient entering a phase (clerical mistake)"),
+            HL7Table.Entry(code: "C07", description: "CRM - Correct/update phase information"),
+            HL7Table.Entry(code: "C08", description: "CRM - Patient has gone off phase of clinical trial"),
+            HL7Table.Entry(code: "C09", description: "CSU - Automated time intervals for reporting, like monthly"),
+            HL7Table.Entry(code: "C10", description: "CSU - Patient completes the clinical trial"),
+            HL7Table.Entry(code: "C11", description: "CSU - Patient completes a phase of the clinical trial"),
+            HL7Table.Entry(code: "C12", description: "CSU - Update/correction of patient order/result information"),
+            HL7Table.Entry(code: "E01", description: "Submit HealthCare Services Invoice"),
+            HL7Table.Entry(code: "E02", description: "Cancel HealthCare Services Invoice"),
+            HL7Table.Entry(code: "E03", description: "HealthCare Services Invoice Status"),
+            HL7Table.Entry(code: "E04", description: "Re-Assess HealthCare Services Invoice Request"),
+            HL7Table.Entry(code: "E10", description: "Edit/Adjudication Results"),
+            HL7Table.Entry(code: "E12", description: "Request Additional Information"),
+            HL7Table.Entry(code: "E13", description: "Additional Information Response"),
+            HL7Table.Entry(code: "E15", description: "Payment/Remittance Advice"),
+            HL7Table.Entry(code: "E20", description: "Submit Authorization Request"),
+            HL7Table.Entry(code: "E21", description: "Cancel Authorization Request"),
+            HL7Table.Entry(code: "E22", description: "Authorization Request Status"),
+            HL7Table.Entry(code: "E24", description: "Authorization Response"),
+            HL7Table.Entry(code: "E30", description: "Submit Health Document related to Authorization Request"),
+            HL7Table.Entry(code: "E31", description: "Cancel Health Document related to Authorization Request"),
+            HL7Table.Entry(code: "I01", description: "RQI/RPI - Request for insurance information"),
+            HL7Table.Entry(code: "I02", description: "RQI/RPL - Request/receipt of patient selection display list"),
+            HL7Table.Entry(code: "I03", description: "RQI/RPR - Request/receipt of patient selection list"),
+            HL7Table.Entry(code: "I04", description: "RQD/RPI - Request for patient demographic data"),
+            HL7Table.Entry(code: "I05", description: "RQC/RCI - Request for patient clinical information"),
+            HL7Table.Entry(code: "I06", description: "RQC/RCL - Request/receipt of clinical data listing"),
+            HL7Table.Entry(code: "I07", description: "PIN/ACK - Unsolicited insurance information"),
+            HL7Table.Entry(code: "I08", description: "RQA/RPA - Request for treatment authorization information"),
+            HL7Table.Entry(code: "I09", description: "RQA/RPA - Request for modification to an authorization"),
+            HL7Table.Entry(code: "I10", description: "RQA/RPA - Request for resubmission of an authorization"),
+            HL7Table.Entry(code: "I11", description: "RQA/RPA - Request for cancellation of an authorization"),
+            HL7Table.Entry(code: "I12", description: "REF/RRI - Patient referral"),
+            HL7Table.Entry(code: "I13", description: "REF/RRI - Modify patient referral"),
+            HL7Table.Entry(code: "I14", description: "REF/RRI - Cancel patient referral"),
+            HL7Table.Entry(code: "I15", description: "REF/RRI - Request patient referral status"),
+            HL7Table.Entry(code: "I16", description: "Collaborative Care Referral"),
+            HL7Table.Entry(code: "I17", description: "Modify Collaborative Care Referral"),
+            HL7Table.Entry(code: "I18", description: "Cancel Collaborative Care Referral"),
+            HL7Table.Entry(code: "I19", description: "Collaborative Care Query/Collaborative Care Query Update"),
+            HL7Table.Entry(code: "I20", description: "Asynchronous Collaborative Care Update"),
+            HL7Table.Entry(code: "I21", description: "Collaborative Care Message"),
+            HL7Table.Entry(code: "I22", description: "Collaborative Care Fetch / Collaborative Care Information"),
+            HL7Table.Entry(code: "J01", description: "QCN/ACK – Cancel query/acknowledge message"),
+            HL7Table.Entry(code: "J02", description: "QSX/ACK – Cancel subscription/acknowledge message"),
+            HL7Table.Entry(code: "K11", description: "RSP - Segment pattern response in response to QBP^Q11"),
+            HL7Table.Entry(code: "K13", description: "RTB - Tabular response in response to QBP^Q13"),
+            HL7Table.Entry(code: "K15", description: "RDY - Display response in response to QBP^Q15"),
+            HL7Table.Entry(code: "K21", description: "RSP – Get person demographics response"),
+            HL7Table.Entry(code: "K22", description: "RSP – Find candidates response"),
+            HL7Table.Entry(code: "K23", description: "RSP – Get corresponding identifiers response"),
+            HL7Table.Entry(code: "K24", description: "RSP – Allocate identifiers response"),
+            HL7Table.Entry(code: "K25", description: "RSP - Personnel Information by Segment Response"),
+            HL7Table.Entry(code: "K31", description: "RSP –Dispense History Response"),
+            HL7Table.Entry(code: "K32", description: "Find Candidates including Visit Information Response"),
+            HL7Table.Entry(code: "K33", description: "Get Donor Record Candidates Response Message"),
+            HL7Table.Entry(code: "K34", description: "Segment Pattern Response Message"),
+            HL7Table.Entry(code: "M01", description: "MFN/MFK - Master file not otherwise specified"),
+            HL7Table.Entry(code: "M02", description: "MFN/MFK - Master file – staff practitioner"),
+            HL7Table.Entry(code: "M03", description: "MFN/MFK - Master file - test/observation"),
+            HL7Table.Entry(code: "M04", description: "MFN/MFK - Master files charge description"),
+            HL7Table.Entry(code: "M05", description: "MFN/MFK - Patient location master file"),
+            HL7Table.Entry(code: "M06", description: "MFN/MFK - Clinical study with phases and schedules master file"),
+            HL7Table.Entry(code: "M07", description: "MFN/MFK - Clinical study without phases but with schedules master file"),
+            HL7Table.Entry(code: "M08", description: "MFN/MFK - Test/observation (numeric) master file"),
+            HL7Table.Entry(code: "M09", description: "MFN/MFK - Test/observation (categorical) master file"),
+            HL7Table.Entry(code: "M10", description: "MFN/MFK - Test /observation batteries master file"),
+            HL7Table.Entry(code: "M11", description: "MFN/MFK - Test/calculated observations master file"),
+            HL7Table.Entry(code: "M12", description: "MFN/MFK – Master file notification message"),
+            HL7Table.Entry(code: "M13", description: "MFN/MFK - Master file notification – general"),
+            HL7Table.Entry(code: "M14", description: "MFN/MFK - Master file notification – site defined"),
+            HL7Table.Entry(code: "M15", description: "MFN/MFK – Inventory item master file notification"),
+            HL7Table.Entry(code: "M16", description: "MFN/MFK - Master File Notification Inventory Item Enhanced"),
+            HL7Table.Entry(code: "M17", description: "DRG Master File Message"),
+            HL7Table.Entry(code: "M18", description: "MFN/MFK – Master file notification – Test/Observation (Payer)"),
+            HL7Table.Entry(code: "N01", description: "NMQ/NMR - Application management query message"),
+            HL7Table.Entry(code: "N02", description: "NMD/ACK - Application management data message (unsolicited)"),
+            HL7Table.Entry(code: "O01", description: "ORM - Order message (also RDE, RDS, RGV, RAS)"),
+            HL7Table.Entry(code: "O02", description: "ORR - Order response (also RRE, RRD, RRG, RRA)"),
+            HL7Table.Entry(code: "O03", description: "OMD – Diet order"),
+            HL7Table.Entry(code: "O04", description: "ORD – Diet order acknowledgment"),
+            HL7Table.Entry(code: "O05", description: "OMS – Stock requisition order"),
+            HL7Table.Entry(code: "O06", description: "ORS – Stock requisition acknowledgment"),
+            HL7Table.Entry(code: "O07", description: "OMN – Non-stock requisition order"),
+            HL7Table.Entry(code: "O08", description: "ORN – Non-stock requisition acknowledgment"),
+            HL7Table.Entry(code: "O09", description: "OMP – Pharmacy/treatment order"),
+            HL7Table.Entry(code: "O10", description: "ORP – Pharmacy/treatment order acknowledgment"),
+            HL7Table.Entry(code: "O11", description: "RDE – Pharmacy/treatment encoded order"),
+            HL7Table.Entry(code: "O12", description: "RRE – Pharmacy/treatment encoded order acknowledgment"),
+            HL7Table.Entry(code: "O13", description: "RDS – Pharmacy/treatment dispense"),
+            HL7Table.Entry(code: "O14", description: "RRD – Pharmacy/treatment dispense acknowledgment"),
+            HL7Table.Entry(code: "O15", description: "RGV – Pharmacy/treatment give"),
+            HL7Table.Entry(code: "O16", description: "RRG – Pharmacy/treatment give acknowledgment"),
+            HL7Table.Entry(code: "O17", description: "RAS – Pharmacy/treatment administration"),
+            HL7Table.Entry(code: "O18", description: "RRA – Pharmacy/treatment administration acknowledgment"),
+            HL7Table.Entry(code: "O19", description: "OMG – General clinical order"),
+            HL7Table.Entry(code: "O20", description: "ORG/ORL – General clinical order response"),
+            HL7Table.Entry(code: "O21", description: "OML - Laboratory order"),
+            HL7Table.Entry(code: "O22", description: "ORL - General laboratory order response message to any OML"),
+            HL7Table.Entry(code: "O23", description: "OMI – Imaging order"),
+            HL7Table.Entry(code: "O24", description: "ORI – Imaging order response message to any OMI"),
+            HL7Table.Entry(code: "O25", description: "RDE - Pharmacy/treatment refill authorization request"),
+            HL7Table.Entry(code: "O26", description: "RRE - Pharmacy/Treatment Refill Authorization Acknowledgement"),
+            HL7Table.Entry(code: "O27", description: "OMB – Blood product order"),
+            HL7Table.Entry(code: "O28", description: "ORB – Blood product order acknowledgment"),
+            HL7Table.Entry(code: "O29", description: "BPS – Blood product dispense status"),
+            HL7Table.Entry(code: "O30", description: "BRP – Blood product dispense status acknowledgment"),
+            HL7Table.Entry(code: "O31", description: "BTS – Blood product transfusion/disposition"),
+            HL7Table.Entry(code: "O32", description: "BRT – Blood product transfusion/disposition acknowledgment"),
+            HL7Table.Entry(code: "O33", description: "OML – Laboratory order for multiple orders related to a single specimen"),
+            HL7Table.Entry(code: "O34", description: "ORL – Laboratory order response message to a multiple order related to single specimen OML"),
+            HL7Table.Entry(code: "O35", description: "OML – Laboratory order for multiple orders related to a single container of a specimen"),
+            HL7Table.Entry(code: "O36", description: "ORL - Laboratory order response message to a single container of a specimen OML"),
+            HL7Table.Entry(code: "O37", description: "OPL – Population/Location-Based Laboratory Order Message"),
+            HL7Table.Entry(code: "O38", description: "OPR – Population/Location-Based Laboratory Order Acknowledgment Message"),
+            HL7Table.Entry(code: "O39", description: "Specimen shipment centric laboratory order"),
+            HL7Table.Entry(code: "O40", description: "Specimen Shipment Centric Laboratory Order Acknowledgment Message"),
+            HL7Table.Entry(code: "O41", description: "DBC - Create Donor Record Message"),
+            HL7Table.Entry(code: "O42", description: "DBU - Update Donor Record Message"),
+            HL7Table.Entry(code: "O43", description: "General Order Message with Document Payload Acknowledgement Message"),
+            HL7Table.Entry(code: "O44", description: "Donor Registration - Minimal Message"),
+            HL7Table.Entry(code: "O45", description: "Donor Eligibility Observations Message"),
+            HL7Table.Entry(code: "O46", description: "Donor Eligiblity Message"),
+            HL7Table.Entry(code: "O47", description: "Donor Request to Collect Message"),
+            HL7Table.Entry(code: "O48", description: "Donation Procedure Message"),
+            HL7Table.Entry(code: "P01", description: "BAR/ACK - Add patient accounts"),
+            HL7Table.Entry(code: "P02", description: "BAR/ACK - Purge patient accounts"),
+            HL7Table.Entry(code: "P03", description: "DFT/ACK - Post detail financial transaction"),
+            HL7Table.Entry(code: "P04", description: "QRY/DSP – Generate bill and A/R statements"),
+            HL7Table.Entry(code: "P05", description: "BAR/ACK – Update account"),
+            HL7Table.Entry(code: "P06", description: "BAR/ACK - End account"),
+            HL7Table.Entry(code: "P07", description: "PEX - Unsolicited initial individual product experience report"),
+            HL7Table.Entry(code: "P08", description: "PEX - Unsolicited update individual product experience report"),
+            HL7Table.Entry(code: "P09", description: "SUR - Summary product experience report"),
+            HL7Table.Entry(code: "P10", description: "BAR/ACK –Transmit Ambulatory Payment Classification(APC)"),
+            HL7Table.Entry(code: "P11", description: "DFT/ACK - Post Detail Financial Transactions - New"),
+            HL7Table.Entry(code: "P12", description: "BAR/ACK - Update Diagnosis/Procedure"),
+            HL7Table.Entry(code: "PC1", description: "PPR - PC/ problem add"),
+            HL7Table.Entry(code: "PC2", description: "PPR - PC/ problem update"),
+            HL7Table.Entry(code: "PC3", description: "PPR - PC/ problem delete"),
+            HL7Table.Entry(code: "PC4", description: "QRY - PC/ problem query"),
+            HL7Table.Entry(code: "PC5", description: "PRR - PC/ problem response"),
+            HL7Table.Entry(code: "PC6", description: "PGL - PC/ goal add"),
+            HL7Table.Entry(code: "PC7", description: "PGL - PC/ goal update"),
+            HL7Table.Entry(code: "PC8", description: "PGL - PC/ goal delete"),
+            HL7Table.Entry(code: "PC9", description: "QRY - PC/ goal query"),
+            HL7Table.Entry(code: "PCA", description: "PPV - PC/ goal response"),
+            HL7Table.Entry(code: "PCB", description: "PPP - PC/ pathway (problem-oriented) add"),
+            HL7Table.Entry(code: "PCC", description: "PPP - PC/ pathway (problem-oriented) update"),
+            HL7Table.Entry(code: "PCD", description: "PPP - PC/ pathway (problem-oriented) delete"),
+            HL7Table.Entry(code: "PCE", description: "QRY - PC/ pathway (problem-oriented) query"),
+            HL7Table.Entry(code: "PCF", description: "PTR - PC/ pathway (problem-oriented) query response"),
+            HL7Table.Entry(code: "PCG", description: "PPG - PC/ pathway (goal-oriented) add"),
+            HL7Table.Entry(code: "PCH", description: "PPG - PC/ pathway (goal-oriented) update"),
+            HL7Table.Entry(code: "PCJ", description: "PPG - PC/ pathway (goal-oriented) delete"),
+            HL7Table.Entry(code: "PCK", description: "QRY - PC/ pathway (goal-oriented) query"),
+            HL7Table.Entry(code: "PCL", description: "PPT - PC/ pathway (goal-oriented) query response"),
+            HL7Table.Entry(code: "Q01", description: "QRY/DSR - Query sent for immediate response"),
+            HL7Table.Entry(code: "Q02", description: "QRY/QCK - Query sent for deferred response"),
+            HL7Table.Entry(code: "Q03", description: "DSR/ACK - Deferred response to a query"),
+            HL7Table.Entry(code: "Q05", description: "UDM/ACK - Unsolicited display update message"),
+            HL7Table.Entry(code: "Q06", description: "OSQ/OSR - Query for order status"),
+            HL7Table.Entry(code: "Q11", description: "QBP - Query by parameter requesting an RSP segment pattern response"),
+            HL7Table.Entry(code: "Q13", description: "QBP - Query by parameter requesting an RTB - tabular response"),
+            HL7Table.Entry(code: "Q15", description: "QBP - Query by parameter requesting an RDY display response"),
+            HL7Table.Entry(code: "Q16", description: "QSB – Create subscription"),
+            HL7Table.Entry(code: "Q17", description: "QVR – Query for previous events"),
+            HL7Table.Entry(code: "Q21", description: "QBP – Get person demographics"),
+            HL7Table.Entry(code: "Q22", description: "QBP – Find candidates"),
+            HL7Table.Entry(code: "Q23", description: "QBP – Get corresponding identifiers"),
+            HL7Table.Entry(code: "Q24", description: "QBP – Allocate identifiers"),
+            HL7Table.Entry(code: "Q25", description: "QBP - Personnel Information by Segment Query"),
+            HL7Table.Entry(code: "Q26", description: "ROR - Pharmacy/treatment order response"),
+            HL7Table.Entry(code: "Q27", description: "RAR - Pharmacy/treatment administration information"),
+            HL7Table.Entry(code: "Q28", description: "RDR - Pharmacy/treatment dispense information"),
+            HL7Table.Entry(code: "Q29", description: "RER - Pharmacy/treatment encoded order information"),
+            HL7Table.Entry(code: "Q30", description: "RGR - Pharmacy/treatment dose information"),
+            HL7Table.Entry(code: "Q31", description: "QBP Query Dispense history"),
+            HL7Table.Entry(code: "Q32", description: "Find Candidates including Visit Information"),
+            HL7Table.Entry(code: "Q33", description: "QBP - Get Donor Record Candidates"),
+            HL7Table.Entry(code: "Q34", description: "QBP – Get Donor Record"),
+            HL7Table.Entry(code: "R01", description: "ORU/ACK – Unsolicited transmission of an observation message"),
+            HL7Table.Entry(code: "R02", description: "QRY – Query for results of observation"),
+            HL7Table.Entry(code: "R04", description: "ORF – Response to query; transmission of requested observation"),
+            HL7Table.Entry(code: "ROR", description: "ROR – Pharmacy prescription order query response"),
+            HL7Table.Entry(code: "R21", description: "OUL – Unsolicited laboratory observation"),
+            HL7Table.Entry(code: "R22", description: "OUL – Unsolicited Specimen Oriented Observation Message"),
+            HL7Table.Entry(code: "R23", description: "OUL – Unsolicited Specimen Container Oriented Observation Message"),
+            HL7Table.Entry(code: "R24", description: "OUL – Unsolicited Order Oriented Observation Message"),
+            HL7Table.Entry(code: "R25", description: "OPU – Unsolicited Population/Location-Based Laboratory Observation Message"),
+            HL7Table.Entry(code: "R26", description: "OSM – Unsolicited Specimen Shipment Manifest Message"),
+            HL7Table.Entry(code: "R30", description: "ORU – Unsolicited Point-Of-Care Observation Message Without Existing Order – Place An Order"),
+            HL7Table.Entry(code: "R31", description: "ORU – Unsolicited New Point-Of-Care Observation Message – Search For An Order"),
+            HL7Table.Entry(code: "R32", description: "ORU – Unsolicited Pre-Ordered Point-Of-Care Observation"),
+            HL7Table.Entry(code: "R33", description: "ORA – Observation Report Acknowledgement"),
+            HL7Table.Entry(code: "R40", description: "ORU – Unsolicited Report Alarm"),
+            HL7Table.Entry(code: "R41", description: "Observation Report Alert Acknowledgement"),
+            HL7Table.Entry(code: "S01", description: "SRM/SRR – Request new appointment booking"),
+            HL7Table.Entry(code: "S02", description: "SRM/SRR – Request appointment rescheduling"),
+            HL7Table.Entry(code: "S03", description: "SRM/SRR – Request appointment modification"),
+            HL7Table.Entry(code: "S04", description: "SRM/SRR – Request appointment cancellation"),
+            HL7Table.Entry(code: "S05", description: "SRM/SRR – Request appointment discontinuation"),
+            HL7Table.Entry(code: "S06", description: "SRM/SRR – Request appointment deletion"),
+            HL7Table.Entry(code: "S07", description: "SRM/SRR – Request addition of service/resource on appointment"),
+            HL7Table.Entry(code: "S08", description: "SRM/SRR – Request modification of service/resource on appointment"),
+            HL7Table.Entry(code: "S09", description: "SRM/SRR – Request cancellation of service/resource on appointment"),
+            HL7Table.Entry(code: "S10", description: "SRM/SRR – Request discontinuation of service/resource on appointment"),
+            HL7Table.Entry(code: "S11", description: "SRM/SRR – Request deletion of service/resource on appointment"),
+            HL7Table.Entry(code: "S12", description: "SIU/ACK – Notification of new appointment booking"),
+            HL7Table.Entry(code: "S13", description: "SIU/ACK – Notification of appointment rescheduling"),
+            HL7Table.Entry(code: "S14", description: "SIU/ACK – Notification of appointment modification"),
+            HL7Table.Entry(code: "S15", description: "SIU/ACK – Notification of appointment cancellation"),
+            HL7Table.Entry(code: "S16", description: "SIU/ACK – Notification of appointment discontinuation"),
+            HL7Table.Entry(code: "S17", description: "SIU/ACK – Notification of appointment deletion"),
+            HL7Table.Entry(code: "S18", description: "SIU/ACK – Notification of addition of service/resource on appointment"),
+            HL7Table.Entry(code: "S19", description: "SIU/ACK – Notification of modification of service/resource on appointment"),
+            HL7Table.Entry(code: "S20", description: "SIU/ACK – Notification of cancellation of service/resource on appointment"),
+            HL7Table.Entry(code: "S21", description: "SIU/ACK – Notification of discontinuation of service/resource on appointment"),
+            HL7Table.Entry(code: "S22", description: "SIU/ACK – Notification of deletion of service/resource on appointment"),
+            HL7Table.Entry(code: "S23", description: "SIU/ACK – Notification of blocked schedule time slot(s)"),
+            HL7Table.Entry(code: "S24", description: "SIU/ACK – Notification of opened (“unblocked”) schedule time slot(s)"),
+            HL7Table.Entry(code: "S25", description: "SQM/SQR – Schedule query message and response"),
+            HL7Table.Entry(code: "S26", description: "SIU/ACK Notification that patient did not show up for schedule appointment"),
+            HL7Table.Entry(code: "S27", description: "SIU/ACK – Broadcast Notification of Scheduled Appointments"),
+            HL7Table.Entry(code: "S28", description: "SLR/SLS – Request new sterilization lot"),
+            HL7Table.Entry(code: "S29", description: "SLR/SLS – Request Sterilization lot deletion"),
+            HL7Table.Entry(code: "S30", description: "STI/STS – Request item"),
+            HL7Table.Entry(code: "S31", description: "SDR/SDS – Request anti-microbial device data"),
+            HL7Table.Entry(code: "S32", description: "SMD/SMS – Request anti-microbial device cycle data"),
+            HL7Table.Entry(code: "S33", description: "STC/ACK – Notification of sterilization configuration"),
+            HL7Table.Entry(code: "S34", description: "SLN/ACK – Notification of sterilization lot"),
+            HL7Table.Entry(code: "S35", description: "SLN/ACK – Notification of sterilization lot deletion"),
+            HL7Table.Entry(code: "S36", description: "SDN/ACK – Notification of anti-microbial device data"),
+            HL7Table.Entry(code: "S37", description: "SCN/ACK – Notification of anti-microbial device cycle data"),
+            HL7Table.Entry(code: "T01", description: "MDM/ACK – Original document notification"),
+            HL7Table.Entry(code: "T02", description: "MDM/ACK – Original document notification and content"),
+            HL7Table.Entry(code: "T03", description: "MDM/ACK – Document status change notification"),
+            HL7Table.Entry(code: "T04", description: "MDM/ACK – Document status change notification and content"),
+            HL7Table.Entry(code: "T05", description: "MDM/ACK – Document addendum notification"),
+            HL7Table.Entry(code: "T06", description: "MDM/ACK – Document addendum notification and content"),
+            HL7Table.Entry(code: "T07", description: "MDM/ACK – Document edit notification"),
+            HL7Table.Entry(code: "T08", description: "MDM/ACK – Document edit notification and content"),
+            HL7Table.Entry(code: "T09", description: "MDM/ACK – Document replacement notification"),
+            HL7Table.Entry(code: "T10", description: "MDM/ACK – Document replacement notification and content"),
+            HL7Table.Entry(code: "T11", description: "MDM/ACK – Document cancel notification"),
+            HL7Table.Entry(code: "T12", description: "QRY/DOC – Document query"),
+            HL7Table.Entry(code: "U01", description: "ESU/ACK – Automated equipment status update"),
+            HL7Table.Entry(code: "U02", description: "ESR/ACK – Automated equipment status request"),
+            HL7Table.Entry(code: "U03", description: "SSU/ACK – Specimen status update"),
+            HL7Table.Entry(code: "U04", description: "SSR/ACK – specimen status request"),
+            HL7Table.Entry(code: "U05", description: "INU/ACK - Automated equipment inventory update"),
+            HL7Table.Entry(code: "U06", description: "INR/ACK – Automated equipment inventory request"),
+            HL7Table.Entry(code: "U07", description: "EAC/ACK – Automated equipment command"),
+            HL7Table.Entry(code: "U08", description: "EAR/ACK – Automated equipment response"),
+            HL7Table.Entry(code: "U09", description: "EAN/ACK – Automated equipment notification"),
+            HL7Table.Entry(code: "U10", description: "TCU/ACK – Automated equipment test code settings update"),
+            HL7Table.Entry(code: "U11", description: "TCR/ACK – Automated equipment test code settings request"),
+            HL7Table.Entry(code: "U12", description: "LSU/ACK – Automated equipment log/service update"),
+            HL7Table.Entry(code: "U13", description: "LSR/ACK – Automated equipment log/service request"),
+            HL7Table.Entry(code: "V01", description: "VXQ – Query for vaccination record"),
+            HL7Table.Entry(code: "V02", description: "VXX – Response to vaccination query returning multiple PID matches"),
+            HL7Table.Entry(code: "V03", description: "VXR – Vaccination record response"),
+            HL7Table.Entry(code: "V04", description: "VXU – Unsolicited vaccination record update"),
+            HL7Table.Entry(code: "Varies", description: "MFQ/MFR – Master files query (use event same as asking for e.g., M05 – location)"),
+            HL7Table.Entry(code: "W01", description: "ORU – Waveform result, unsolicited transmission of requested information"),
+            HL7Table.Entry(code: "W02", description: "QRF – Waveform result, response to query"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0004_v2_8_2 = HL7Table(
+        number: "0004",
+        name: "Patient Class",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Emergency"),
+            HL7Table.Entry(code: "I", description: "Inpatient"),
+            HL7Table.Entry(code: "O", description: "Outpatient"),
+            HL7Table.Entry(code: "P", description: "Preadmit"),
+            HL7Table.Entry(code: "R", description: "Recurring patient"),
+            HL7Table.Entry(code: "B", description: "Obstetrics"),
+            HL7Table.Entry(code: "C", description: "Commercial Account"),
+            HL7Table.Entry(code: "N", description: "Not Applicable"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0005_v2_8_2 = HL7Table(
+        number: "0005",
+        name: "Race",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1002-5", description: "American Indian or Alaska Native"),
+            HL7Table.Entry(code: "2028-9", description: "Asian"),
+            HL7Table.Entry(code: "2054-5", description: "Black or African American"),
+            HL7Table.Entry(code: "2076-8", description: "Native Hawaiian or Other Pacific Islander"),
+            HL7Table.Entry(code: "2106-3", description: "White"),
+            HL7Table.Entry(code: "2131-1", description: "Other Race"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0006_v2_8_2 = HL7Table(
+        number: "0006",
+        name: "Religion",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AGN", description: "Agnostic"),
+            HL7Table.Entry(code: "ATH", description: "Atheist"),
+            HL7Table.Entry(code: "BAH", description: "Baha’i"),
+            HL7Table.Entry(code: "BRE", description: "Brethren"),
+            HL7Table.Entry(code: "BUD", description: "Buddhist"),
+            HL7Table.Entry(code: "BMA", description: "Buddhist: Mahayana"),
+            HL7Table.Entry(code: "BTH", description: "Buddhist: Theravada"),
+            HL7Table.Entry(code: "BTA", description: "Buddhist: Tantrayana"),
+            HL7Table.Entry(code: "BOT", description: "Buddhist: Other"),
+            HL7Table.Entry(code: "CFR", description: "Chinese Folk Religionist"),
+            HL7Table.Entry(code: "CHR", description: "Christian"),
+            HL7Table.Entry(code: "ABC", description: "Christian: American Baptist Church"),
+            HL7Table.Entry(code: "AMT", description: "Christian: African Methodist Episcopal"),
+            HL7Table.Entry(code: "AME", description: "Christian: African Methodist Episcopal Zion"),
+            HL7Table.Entry(code: "ANG", description: "Christian: Anglican"),
+            HL7Table.Entry(code: "AOG", description: "Christian: Assembly of God"),
+            HL7Table.Entry(code: "BAP", description: "Christian: Baptist"),
+            HL7Table.Entry(code: "CRR", description: "Christian: Christian Reformed"),
+            HL7Table.Entry(code: "CHS", description: "Christian: Christian Science"),
+            HL7Table.Entry(code: "CMA", description: "Christian: Christian Missionary Alliance"),
+            HL7Table.Entry(code: "COC", description: "Christian: Church of Christ"),
+            HL7Table.Entry(code: "COG", description: "Christian: Church of God"),
+            HL7Table.Entry(code: "COI", description: "Christian: Church of God in Christ"),
+            HL7Table.Entry(code: "COM", description: "Christian: Community"),
+            HL7Table.Entry(code: "COL", description: "Christian: Congregational"),
+            HL7Table.Entry(code: "EOT", description: "Christian: Eastern Orthodox"),
+            HL7Table.Entry(code: "EVC", description: "Christian: Evangelical Church"),
+            HL7Table.Entry(code: "EPI", description: "Christian: Episcopalian"),
+            HL7Table.Entry(code: "FWB", description: "Christian: Free Will Baptist"),
+            HL7Table.Entry(code: "FRQ", description: "Christian: Friends"),
+            HL7Table.Entry(code: "FUL", description: "Christian: Full Gospel"),
+            HL7Table.Entry(code: "GRE", description: "Christian: Greek Orthodox"),
+            HL7Table.Entry(code: "JWN", description: "Christian: Jehovah’s Witness"),
+            HL7Table.Entry(code: "MOM", description: "Christian: Latter-day Saints"),
+            HL7Table.Entry(code: "LUT", description: "Christian: Lutheran"),
+            HL7Table.Entry(code: "LMS", description: "Christian: Lutheran Missouri Synod"),
+            HL7Table.Entry(code: "MEN", description: "Christian: Mennonite"),
+            HL7Table.Entry(code: "MET", description: "Christian: Methodist"),
+            HL7Table.Entry(code: "NAZ", description: "Christian: Church of the Nazarene"),
+            HL7Table.Entry(code: "ORT", description: "Christian: Orthodox"),
+            HL7Table.Entry(code: "PEN", description: "Christian: Pentecostal"),
+            HL7Table.Entry(code: "COP", description: "Christian: Other Pentecostal"),
+            HL7Table.Entry(code: "PRE", description: "Christian: Presbyterian"),
+            HL7Table.Entry(code: "PRO", description: "Christian: Protestant"),
+            HL7Table.Entry(code: "PRC", description: "Christian: Other Protestant"),
+            HL7Table.Entry(code: "REC", description: "Christian: Reformed Church"),
+            HL7Table.Entry(code: "REO", description: "Christian: Reorganized Church of Jesus Christ-LDS"),
+            HL7Table.Entry(code: "CAT", description: "Christian: Roman Catholic"),
+            HL7Table.Entry(code: "SAA", description: "Christian: Salvation Army"),
+            HL7Table.Entry(code: "SEV", description: "Christian: Seventh Day Adventist"),
+            HL7Table.Entry(code: "SOU", description: "Christian: Southern Baptist"),
+            HL7Table.Entry(code: "UCC", description: "Christian: United Church of Christ"),
+            HL7Table.Entry(code: "UMD", description: "Christian: United Methodist"),
+            HL7Table.Entry(code: "UNI", description: "Christian: Unitarian"),
+            HL7Table.Entry(code: "UNU", description: "Christian: Unitarian Universalist"),
+            HL7Table.Entry(code: "WES", description: "Christian: Wesleyan"),
+            HL7Table.Entry(code: "WMC", description: "Christian: Wesleyan Methodist"),
+            HL7Table.Entry(code: "COT", description: "Christian: Other"),
+            HL7Table.Entry(code: "CNF", description: "Confucian"),
+            HL7Table.Entry(code: "DOC", description: "Disciples of Christ"),
+            HL7Table.Entry(code: "ERL", description: "Ethnic Religionist"),
+            HL7Table.Entry(code: "HIN", description: "Hindu"),
+            HL7Table.Entry(code: "HSH", description: "Hindu: Shaivites"),
+            HL7Table.Entry(code: "HVA", description: "Hindu: Vaishnavites"),
+            HL7Table.Entry(code: "HOT", description: "Hindu: Other"),
+            HL7Table.Entry(code: "JAI", description: "Jain"),
+            HL7Table.Entry(code: "JEW", description: "Jewish"),
+            HL7Table.Entry(code: "JCO", description: "Jewish: Conservative"),
+            HL7Table.Entry(code: "JOR", description: "Jewish: Orthodox"),
+            HL7Table.Entry(code: "JRC", description: "Jewish: Reconstructionist"),
+            HL7Table.Entry(code: "JRF", description: "Jewish: Reform"),
+            HL7Table.Entry(code: "JRN", description: "Jewish: Renewal"),
+            HL7Table.Entry(code: "JOT", description: "Jewish: Other"),
+            HL7Table.Entry(code: "MOS", description: "Muslim"),
+            HL7Table.Entry(code: "MSH", description: "Muslim: Shiite"),
+            HL7Table.Entry(code: "MSU", description: "Muslim: Sunni"),
+            HL7Table.Entry(code: "MOT", description: "Muslim: Other"),
+            HL7Table.Entry(code: "NAM", description: "Native American"),
+            HL7Table.Entry(code: "NRL", description: "New Religionist"),
+            HL7Table.Entry(code: "NOE", description: "Nonreligious"),
+            HL7Table.Entry(code: "SHN", description: "Shintoist"),
+            HL7Table.Entry(code: "SIK", description: "Sikh"),
+            HL7Table.Entry(code: "SPI", description: "Spiritist"),
+            HL7Table.Entry(code: "OTH", description: "Other"),
+            HL7Table.Entry(code: "VAR", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0007_v2_8_2 = HL7Table(
+        number: "0007",
+        name: "Admission Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Accident"),
+            HL7Table.Entry(code: "E", description: "Emergency"),
+            HL7Table.Entry(code: "L", description: "Labor and Delivery"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+            HL7Table.Entry(code: "N", description: "Newborn (Birth in healthcare facility)"),
+            HL7Table.Entry(code: "U", description: "Urgent"),
+            HL7Table.Entry(code: "C", description: "Elective"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0008_v2_8_2 = HL7Table(
+        number: "0008",
+        name: "Acknowledgment Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AA", description: "Original mode: Application Accept – Enhanced mode: Application acknowledgment: Accept"),
+            HL7Table.Entry(code: "AE", description: "Original mode: Application Error – Enhanced mode: Application acknowledgment: Error"),
+            HL7Table.Entry(code: "AR", description: "Original mode: Application Reject – Enhanced mode: Application acknowledgment: Reject"),
+            HL7Table.Entry(code: "CA", description: "Enhanced mode: Accept acknowledgment: Commit Accept"),
+            HL7Table.Entry(code: "CE", description: "Enhanced mode: Accept acknowledgment: Commit Error"),
+            HL7Table.Entry(code: "CR", description: "Enhanced mode: Accept acknowledgment: Commit Reject"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0009_v2_8_2 = HL7Table(
+        number: "0009",
+        name: "Ambulatory Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A0", description: "No functional limitations"),
+            HL7Table.Entry(code: "A1", description: "Ambulates with assistive device"),
+            HL7Table.Entry(code: "A2", description: "Wheelchair/stretcher bound"),
+            HL7Table.Entry(code: "A3", description: "Comatose; non-responsive"),
+            HL7Table.Entry(code: "A4", description: "Disoriented"),
+            HL7Table.Entry(code: "A5", description: "Vision impaired"),
+            HL7Table.Entry(code: "A6", description: "Hearing impaired"),
+            HL7Table.Entry(code: "A7", description: "Speech impaired"),
+            HL7Table.Entry(code: "A8", description: "Non-English speaking"),
+            HL7Table.Entry(code: "A9", description: "Functional level unknown"),
+            HL7Table.Entry(code: "B1", description: "Oxygen therapy"),
+            HL7Table.Entry(code: "B2", description: "Special equipment (tubes, IVs, catheters)"),
+            HL7Table.Entry(code: "B3", description: "Amputee"),
+            HL7Table.Entry(code: "B4", description: "Mastectomy"),
+            HL7Table.Entry(code: "B5", description: "Paraplegic"),
+            HL7Table.Entry(code: "B6", description: "Pregnant"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0010_v2_8_2 = HL7Table(
+        number: "0010",
+        name: "Physician Id",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0017_v2_8_2 = HL7Table(
+        number: "0017",
+        name: "Transaction Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CG", description: "Charge"),
+            HL7Table.Entry(code: "CD", description: "Credit"),
+            HL7Table.Entry(code: "PY", description: "Payment"),
+            HL7Table.Entry(code: "AJ", description: "Adjustment"),
+            HL7Table.Entry(code: "CO", description: "Co-payment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0018_v2_8_2 = HL7Table(
+        number: "0018",
+        name: "Patient Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0019_v2_8_2 = HL7Table(
+        number: "0019",
+        name: "Anesthesia Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0021_v2_8_2 = HL7Table(
+        number: "0021",
+        name: "Bad Debt Agency Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0022_v2_8_2 = HL7Table(
+        number: "0022",
+        name: "Billing Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0023_v2_8_2 = HL7Table(
+        number: "0023",
+        name: "Admit Source",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0024_v2_8_2 = HL7Table(
+        number: "0024",
+        name: "Fee Schedule",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0027_v2_8_2 = HL7Table(
+        number: "0027",
+        name: "Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Stat (do immediately)"),
+            HL7Table.Entry(code: "A", description: "As soon as possible (a priority lower than stat)"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+            HL7Table.Entry(code: "P", description: "Preoperative (to be done prior to surgery)"),
+            HL7Table.Entry(code: "T", description: "Timing critical (do as near as possible to requested time)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0032_v2_8_2 = HL7Table(
+        number: "0032",
+        name: "Charge Price Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0038_v2_8_2 = HL7Table(
+        number: "0038",
+        name: "Order status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Some, but not all, results available"),
+            HL7Table.Entry(code: "CA", description: "Order was canceled"),
+            HL7Table.Entry(code: "CM", description: "Order is completed"),
+            HL7Table.Entry(code: "DC", description: "Order was discontinued"),
+            HL7Table.Entry(code: "ER", description: "Error, order not found"),
+            HL7Table.Entry(code: "HD", description: "Order is on hold"),
+            HL7Table.Entry(code: "IP", description: "In process, unspecified"),
+            HL7Table.Entry(code: "RP", description: "Order has been replaced"),
+            HL7Table.Entry(code: "SC", description: "In process, scheduled"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0042_v2_8_2 = HL7Table(
+        number: "0042",
+        name: "Company Plan Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0043_v2_8_2 = HL7Table(
+        number: "0043",
+        name: "Condition Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0044_v2_8_2 = HL7Table(
+        number: "0044",
+        name: "Contract Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0045_v2_8_2 = HL7Table(
+        number: "0045",
+        name: "Courtesy Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0046_v2_8_2 = HL7Table(
+        number: "0046",
+        name: "Credit Rating",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0049_v2_8_2 = HL7Table(
+        number: "0049",
+        name: "Department Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0050_v2_8_2 = HL7Table(
+        number: "0050",
+        name: "Accident Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0051_v2_8_2 = HL7Table(
+        number: "0051",
+        name: "Diagnosis Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0052_v2_8_2 = HL7Table(
+        number: "0052",
+        name: "Diagnosis Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Admitting"),
+            HL7Table.Entry(code: "W", description: "Working"),
+            HL7Table.Entry(code: "F", description: "Final"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0055_v2_8_2 = HL7Table(
+        number: "0055",
+        name: "Diagnosis Related Group",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0056_v2_8_2 = HL7Table(
+        number: "0056",
+        name: "DRG Grouper Review Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0059_v2_8_2 = HL7Table(
+        number: "0059",
+        name: "Consent Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0061_v2_8_2 = HL7Table(
+        number: "0061",
+        name: "Check Digit Scheme",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BCV", description: "Bank Card Validation Number"),
+            HL7Table.Entry(code: "NPI", description: "Check digit algorithm in the US National Provider Identifier"),
+            HL7Table.Entry(code: "ISO", description: "ISO 7064: 1983"),
+            HL7Table.Entry(code: "M10", description: "Mod 10 algorithm"),
+            HL7Table.Entry(code: "M11", description: "Mod 11 algorithm"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0062_v2_8_2 = HL7Table(
+        number: "0062",
+        name: "Event Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "01", description: "Patient request"),
+            HL7Table.Entry(code: "02", description: "Physician/health practitioner order"),
+            HL7Table.Entry(code: "03", description: "Census management"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0063_v2_8_2 = HL7Table(
+        number: "0063",
+        name: "Relationship",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SEL", description: "Self"),
+            HL7Table.Entry(code: "SPO", description: "Spouse"),
+            HL7Table.Entry(code: "DOM", description: "Life partner"),
+            HL7Table.Entry(code: "CHD", description: "Child"),
+            HL7Table.Entry(code: "GCH", description: "Grandchild"),
+            HL7Table.Entry(code: "NCH", description: "Natural child"),
+            HL7Table.Entry(code: "SCH", description: "Stepchild"),
+            HL7Table.Entry(code: "FCH", description: "Foster child"),
+            HL7Table.Entry(code: "DEP", description: "Handicapped dependent"),
+            HL7Table.Entry(code: "WRD", description: "Ward of court"),
+            HL7Table.Entry(code: "PAR", description: "Parent"),
+            HL7Table.Entry(code: "MTH", description: "Mother"),
+            HL7Table.Entry(code: "FTH", description: "Father"),
+            HL7Table.Entry(code: "CGV", description: "Care giver"),
+            HL7Table.Entry(code: "GRD", description: "Guardian"),
+            HL7Table.Entry(code: "GRP", description: "Grandparent"),
+            HL7Table.Entry(code: "EXF", description: "Extended family"),
+            HL7Table.Entry(code: "SIB", description: "Sibling"),
+            HL7Table.Entry(code: "BRO", description: "Brother"),
+            HL7Table.Entry(code: "SIS", description: "Sister"),
+            HL7Table.Entry(code: "FND", description: "Friend"),
+            HL7Table.Entry(code: "OAD", description: "Other adult"),
+            HL7Table.Entry(code: "EME", description: "Employee"),
+            HL7Table.Entry(code: "EMR", description: "Employer"),
+            HL7Table.Entry(code: "ASC", description: "Associate"),
+            HL7Table.Entry(code: "EMC", description: "Emergency contact"),
+            HL7Table.Entry(code: "OWN", description: "Owner"),
+            HL7Table.Entry(code: "TRA", description: "Trainer"),
+            HL7Table.Entry(code: "MGR", description: "Manager"),
+            HL7Table.Entry(code: "NON", description: "None"),
+            HL7Table.Entry(code: "UNK", description: "Unknown"),
+            HL7Table.Entry(code: "OTH", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0064_v2_8_2 = HL7Table(
+        number: "0064",
+        name: "Financial Class",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0065_v2_8_2 = HL7Table(
+        number: "0065",
+        name: "Specimen Action Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Add ordered tests to the existing specimen"),
+            HL7Table.Entry(code: "G", description: "Generated order; reflex order"),
+            HL7Table.Entry(code: "L", description: "Lab to obtain specimen from patient"),
+            HL7Table.Entry(code: "O", description: "Specimen obtained by service other than Lab"),
+            HL7Table.Entry(code: "P", description: "Pending specimen; Order sent prior to delivery"),
+            HL7Table.Entry(code: "R", description: "Revised order"),
+            HL7Table.Entry(code: "S", description: "Schedule the tests specified below"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0066_v2_8_2 = HL7Table(
+        number: "0066",
+        name: "Employment Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Full time employed"),
+            HL7Table.Entry(code: "2", description: "Part time employed"),
+            HL7Table.Entry(code: "4", description: "Self-employed,"),
+            HL7Table.Entry(code: "C", description: "Contract, per diem"),
+            HL7Table.Entry(code: "L", description: "Leave of absence (e.g., family leave, sabbatical, etc.)"),
+            HL7Table.Entry(code: "T", description: "Temporarily unemployed"),
+            HL7Table.Entry(code: "3", description: "Unemployed"),
+            HL7Table.Entry(code: "5", description: "Retired"),
+            HL7Table.Entry(code: "6", description: "On active military duty"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "9", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0068_v2_8_2 = HL7Table(
+        number: "0068",
+        name: "Guarantor Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0069_v2_8_2 = HL7Table(
+        number: "0069",
+        name: "Hospital Service",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MED", description: "Medical Service"),
+            HL7Table.Entry(code: "SUR", description: "Surgical Service"),
+            HL7Table.Entry(code: "URO", description: "Urology Service"),
+            HL7Table.Entry(code: "PUL", description: "Pulmonary Service"),
+            HL7Table.Entry(code: "CAR", description: "Cardiac Service"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0070_v2_8_2 = HL7Table(
+        number: "0070",
+        name: "Specimen Source Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0072_v2_8_2 = HL7Table(
+        number: "0072",
+        name: "Insurance Plan ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0073_v2_8_2 = HL7Table(
+        number: "0073",
+        name: "Interest Rate Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0074_v2_8_2 = HL7Table(
+        number: "0074",
+        name: "Diagnostic Service Section ID",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AU", description: "Audiology"),
+            HL7Table.Entry(code: "BG", description: "Blood Gases"),
+            HL7Table.Entry(code: "BLB", description: "Blood Bank"),
+            HL7Table.Entry(code: "CG", description: "Cytogenetics"),
+            HL7Table.Entry(code: "CUS", description: "Cardiac Ultrasound"),
+            HL7Table.Entry(code: "CTH", description: "Cardiac Catheterization"),
+            HL7Table.Entry(code: "CT", description: "CAT Scan"),
+            HL7Table.Entry(code: "CH", description: "Chemistry"),
+            HL7Table.Entry(code: "CP", description: "Cytopathology"),
+            HL7Table.Entry(code: "EC", description: "Electrocardiac (e.g., EKG, EEC, Holter)"),
+            HL7Table.Entry(code: "EN", description: "Electroneuro (EEG, EMG,EP,PSG)"),
+            HL7Table.Entry(code: "GE", description: "Genetics"),
+            HL7Table.Entry(code: "HM", description: "Hematology"),
+            HL7Table.Entry(code: "ICU", description: "Bedside ICU Monitoring"),
+            HL7Table.Entry(code: "IMM", description: "Immunology"),
+            HL7Table.Entry(code: "LAB", description: "Laboratory"),
+            HL7Table.Entry(code: "MB", description: "Microbiology"),
+            HL7Table.Entry(code: "MCB", description: "Mycobacteriology"),
+            HL7Table.Entry(code: "MYC", description: "Mycology"),
+            HL7Table.Entry(code: "NMS", description: "Nuclear Medicine Scan"),
+            HL7Table.Entry(code: "NMR", description: "Nuclear Magnetic Resonance"),
+            HL7Table.Entry(code: "NRS", description: "Nursing Service Measures"),
+            HL7Table.Entry(code: "OUS", description: "OB Ultrasound"),
+            HL7Table.Entry(code: "OT", description: "Occupational Therapy"),
+            HL7Table.Entry(code: "OTH", description: "Other"),
+            HL7Table.Entry(code: "OSL", description: "Outside Lab"),
+            HL7Table.Entry(code: "PHR", description: "Pharmacy"),
+            HL7Table.Entry(code: "PT", description: "Physical Therapy"),
+            HL7Table.Entry(code: "PHY", description: "Physician (Hx. Dx, admission note, etc.)"),
+            HL7Table.Entry(code: "PF", description: "Pulmonary Function"),
+            HL7Table.Entry(code: "RAD", description: "Radiology"),
+            HL7Table.Entry(code: "RX", description: "Radiograph"),
+            HL7Table.Entry(code: "RUS", description: "Radiology Ultrasound"),
+            HL7Table.Entry(code: "RC", description: "Respiratory Care (therapy)"),
+            HL7Table.Entry(code: "RT", description: "Radiation Therapy"),
+            HL7Table.Entry(code: "SR", description: "Serology"),
+            HL7Table.Entry(code: "SP", description: "Surgical Pathology"),
+            HL7Table.Entry(code: "TX", description: "Toxicology"),
+            HL7Table.Entry(code: "VUS", description: "Vascular Ultrasound"),
+            HL7Table.Entry(code: "VR", description: "Virology"),
+            HL7Table.Entry(code: "XRC", description: "Cineradiograph"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0076_v2_8_2 = HL7Table(
+        number: "0076",
+        name: "Message Type",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "ACK", description: "General acknowledgment message"),
+            HL7Table.Entry(code: "ADR", description: "ADT response"),
+            HL7Table.Entry(code: "ADT", description: "ADT message"),
+            HL7Table.Entry(code: "BAR", description: "Add/change billing account"),
+            HL7Table.Entry(code: "CCF", description: "Collaborative Care Fetch"),
+            HL7Table.Entry(code: "CCI", description: "Collaborative Care Information"),
+            HL7Table.Entry(code: "CCM", description: "Collaborative Care Message"),
+            HL7Table.Entry(code: "CCQ", description: "Collaborative Care Referral"),
+            HL7Table.Entry(code: "CCU", description: "Collaborative Care Referral"),
+            HL7Table.Entry(code: "CQU", description: "Collaborative Care Referral"),
+            HL7Table.Entry(code: "CRM", description: "Clinical study registration message"),
+            HL7Table.Entry(code: "BPS", description: "Blood product dispense status message"),
+            HL7Table.Entry(code: "BRP", description: "Blood product dispense status acknowledgement message"),
+            HL7Table.Entry(code: "BRT", description: "Blood product transfusion/disposition acknowledgement message"),
+            HL7Table.Entry(code: "BTS", description: "Blood product transfusion/disposition message"),
+            HL7Table.Entry(code: "CSU", description: "Unsolicited study data message"),
+            HL7Table.Entry(code: "DBC", description: "Create Donor Record"),
+            HL7Table.Entry(code: "DBU", description: "Update Donor Record"),
+            HL7Table.Entry(code: "DEL", description: "Donor Eligibility"),
+            HL7Table.Entry(code: "DEO", description: "Donor Eligibility Observation"),
+            HL7Table.Entry(code: "DER", description: "Donor Eligibility Request"),
+            HL7Table.Entry(code: "DFT", description: "Detail financial transactions"),
+            HL7Table.Entry(code: "DOC", description: "Document response"),
+            HL7Table.Entry(code: "DPR", description: "Donation Procedure"),
+            HL7Table.Entry(code: "DRC", description: "Donor Request to Collect"),
+            HL7Table.Entry(code: "DSR", description: "Display response"),
+            HL7Table.Entry(code: "EAC", description: "Automated equipment command message"),
+            HL7Table.Entry(code: "EAN", description: "Automated equipment notification message"),
+            HL7Table.Entry(code: "EAR", description: "Automated equipment response message"),
+            HL7Table.Entry(code: "EHC", description: "Health Care Invoice"),
+            HL7Table.Entry(code: "ESR", description: "Automated equipment status update acknowledgment message"),
+            HL7Table.Entry(code: "ESU", description: "Automated equipment status update message"),
+            HL7Table.Entry(code: "INR", description: "Automated equipment inventory request message"),
+            HL7Table.Entry(code: "INU", description: "Automated equipment inventory update message"),
+            HL7Table.Entry(code: "LSR", description: "Automated equipment log/service request message"),
+            HL7Table.Entry(code: "LSU", description: "Automated equipment log/service update message"),
+            HL7Table.Entry(code: "MDM", description: "Medical document management"),
+            HL7Table.Entry(code: "MFD", description: "Master files delayed application acknowledgment"),
+            HL7Table.Entry(code: "MFK", description: "Master files application acknowledgment"),
+            HL7Table.Entry(code: "MFN", description: "Master files notification"),
+            HL7Table.Entry(code: "MFQ", description: "Master files query"),
+            HL7Table.Entry(code: "MFR", description: "Master files response"),
+            HL7Table.Entry(code: "NMD", description: "Application management data message"),
+            HL7Table.Entry(code: "NMQ", description: "Application management query message"),
+            HL7Table.Entry(code: "NMR", description: "Application management response message"),
+            HL7Table.Entry(code: "OMB", description: "Blood product order message"),
+            HL7Table.Entry(code: "OMD", description: "Dietary order"),
+            HL7Table.Entry(code: "OMG", description: "General clinical order message"),
+            HL7Table.Entry(code: "OMI", description: "Imaging order"),
+            HL7Table.Entry(code: "OML", description: "Laboratory order message"),
+            HL7Table.Entry(code: "OMN", description: "Non-stock requisition order message"),
+            HL7Table.Entry(code: "OMP", description: "Pharmacy/treatment order message"),
+            HL7Table.Entry(code: "OMQ", description: "General order message with document payload"),
+            HL7Table.Entry(code: "OMS", description: "Stock requisition order message"),
+            HL7Table.Entry(code: "OPL", description: "Population/Location-Based Laboratory Order Message"),
+            HL7Table.Entry(code: "OPR", description: "Population/Location-Based Laboratory Order Acknowledgment Message"),
+            HL7Table.Entry(code: "OPU", description: "Unsolicited Population/Location-Based Laboratory Observation Message"),
+            HL7Table.Entry(code: "ORA", description: "Observation Report Acknowledgment"),
+            HL7Table.Entry(code: "ORB", description: "Blood product order acknowledgement message"),
+            HL7Table.Entry(code: "ORD", description: "Dietary order acknowledgment message"),
+            HL7Table.Entry(code: "ORF", description: "Query for results of observation"),
+            HL7Table.Entry(code: "ORG", description: "General clinical order acknowledgment message"),
+            HL7Table.Entry(code: "ORI", description: "Imaging order acknowledgement message"),
+            HL7Table.Entry(code: "ORL", description: "Laboratory acknowledgment message (unsolicited)"),
+            HL7Table.Entry(code: "ORM", description: "Pharmacy/treatment order message"),
+            HL7Table.Entry(code: "ORN", description: "Non-stock requisition – General order acknowledgment message"),
+            HL7Table.Entry(code: "ORP", description: "Pharmacy/treatment order acknowledgment message"),
+            HL7Table.Entry(code: "ORR", description: "General order response message response to any ORM"),
+            HL7Table.Entry(code: "ORS", description: "Stock requisition – Order acknowledgment message"),
+            HL7Table.Entry(code: "ORU", description: "Unsolicited transmission of an observation message"),
+            HL7Table.Entry(code: "ORX", description: "General Order Message with Document Payload Acknowledgement"),
+            HL7Table.Entry(code: "OSM", description: "Specimen Shipment Message"),
+            HL7Table.Entry(code: "OSQ", description: "Query response for order status"),
+            HL7Table.Entry(code: "OSR", description: "Query response for order status"),
+            HL7Table.Entry(code: "OSU", description: "Order status update"),
+            HL7Table.Entry(code: "OUL", description: "Unsolicited laboratory observation message"),
+            HL7Table.Entry(code: "PEX", description: "Product experience message"),
+            HL7Table.Entry(code: "PGL", description: "Patient goal message"),
+            HL7Table.Entry(code: "PIN", description: "Patient insurance information"),
+            HL7Table.Entry(code: "PMU", description: "Add personnel record"),
+            HL7Table.Entry(code: "PPG", description: "Patient pathway message (goal-oriented)"),
+            HL7Table.Entry(code: "PPP", description: "Patient pathway message (problem-oriented)"),
+            HL7Table.Entry(code: "PPR", description: "Patient problem message"),
+            HL7Table.Entry(code: "PPT", description: "Patient pathway goal-oriented response"),
+            HL7Table.Entry(code: "PPV", description: "Patient goal response"),
+            HL7Table.Entry(code: "PRR", description: "Patient problem response"),
+            HL7Table.Entry(code: "PTR", description: "Patient pathway problem-oriented response"),
+            HL7Table.Entry(code: "QBP", description: "Query by parameter"),
+            HL7Table.Entry(code: "QCK", description: "Deferred query"),
+            HL7Table.Entry(code: "QCN", description: "Cancel query"),
+            HL7Table.Entry(code: "QRY", description: "Query, original mode"),
+            HL7Table.Entry(code: "QSB", description: "Create subscription"),
+            HL7Table.Entry(code: "QSX", description: "Cancel subscription/acknowledge message"),
+            HL7Table.Entry(code: "QVR", description: "Query for previous events"),
+            HL7Table.Entry(code: "RAR", description: "Pharmacy/treatment administration information"),
+            HL7Table.Entry(code: "RAS", description: "Pharmacy/treatment administration message"),
+            HL7Table.Entry(code: "RCI", description: "Return clinical information"),
+            HL7Table.Entry(code: "RCL", description: "Return clinical list"),
+            HL7Table.Entry(code: "RDE", description: "Pharmacy/treatment encoded order message"),
+            HL7Table.Entry(code: "RDR", description: "Pharmacy/treatment dispense information"),
+            HL7Table.Entry(code: "RDS", description: "Pharmacy/treatment dispense message"),
+            HL7Table.Entry(code: "RDY", description: "Display based response"),
+            HL7Table.Entry(code: "REF", description: "Patient referral"),
+            HL7Table.Entry(code: "RER", description: "Pharmacy/treatment encoded order information"),
+            HL7Table.Entry(code: "RGR", description: "Pharmacy/treatment dose information"),
+            HL7Table.Entry(code: "RGV", description: "Pharmacy/treatment give message"),
+            HL7Table.Entry(code: "ROR", description: "Pharmacy/treatment order response"),
+            HL7Table.Entry(code: "RPA", description: "Return patient authorization"),
+            HL7Table.Entry(code: "RPI", description: "Return patient information"),
+            HL7Table.Entry(code: "RPL", description: "Return patient display list"),
+            HL7Table.Entry(code: "RPR", description: "Return patient list"),
+            HL7Table.Entry(code: "RQA", description: "Request patient authorization"),
+            HL7Table.Entry(code: "RQC", description: "Request clinical information"),
+            HL7Table.Entry(code: "RQI", description: "Request patient information"),
+            HL7Table.Entry(code: "RQP", description: "Request patient demographics"),
+            HL7Table.Entry(code: "RRA", description: "Pharmacy/treatment administration acknowledgment message"),
+            HL7Table.Entry(code: "RRD", description: "Pharmacy/treatment dispense acknowledgment message"),
+            HL7Table.Entry(code: "RRE", description: "Pharmacy/treatment encoded order acknowledgment message"),
+            HL7Table.Entry(code: "RRG", description: "Pharmacy/treatment give acknowledgment message"),
+            HL7Table.Entry(code: "RRI", description: "Return referral information"),
+            HL7Table.Entry(code: "RSP", description: "Segment pattern response"),
+            HL7Table.Entry(code: "RTB", description: "Tabular response"),
+            HL7Table.Entry(code: "SCN", description: "Notification of Anti-Microbial Device Cycle Data"),
+            HL7Table.Entry(code: "SDN", description: "Notification of Anti-Microbial Device Data"),
+            HL7Table.Entry(code: "SDR", description: "Sterilization anti-microbial device data request"),
+            HL7Table.Entry(code: "SIU", description: "Schedule information unsolicited"),
+            HL7Table.Entry(code: "SLN", description: "Notification of New Sterilization Lot"),
+            HL7Table.Entry(code: "SLR", description: "Sterilization lot request"),
+            HL7Table.Entry(code: "SMD", description: "Sterilization anti-microbial device cycle data request"),
+            HL7Table.Entry(code: "SQM", description: "Schedule query message"),
+            HL7Table.Entry(code: "SQR", description: "Schedule query response"),
+            HL7Table.Entry(code: "SRM", description: "Schedule request message"),
+            HL7Table.Entry(code: "SRR", description: "Scheduled request response"),
+            HL7Table.Entry(code: "SSR", description: "Specimen status request message"),
+            HL7Table.Entry(code: "SSU", description: "Specimen status update message"),
+            HL7Table.Entry(code: "STC", description: "Notification of Sterilization Configuration"),
+            HL7Table.Entry(code: "STI", description: "Sterilization item request"),
+            HL7Table.Entry(code: "SUR", description: "Summary product experience report"),
+            HL7Table.Entry(code: "TBR", description: "Tabular data response"),
+            HL7Table.Entry(code: "TCR", description: "Automated equipment test code settings request message"),
+            HL7Table.Entry(code: "TCU", description: "Automated equipment test code settings update message"),
+            HL7Table.Entry(code: "UDM", description: "Unsolicited display update message"),
+            HL7Table.Entry(code: "VXQ", description: "Query for vaccination record"),
+            HL7Table.Entry(code: "VXR", description: "Vaccination record response"),
+            HL7Table.Entry(code: "VXU", description: "Unsolicited vaccination record update"),
+            HL7Table.Entry(code: "VXX", description: "Response for vaccination query with multiple PID matches"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0078_v2_8_2 = HL7Table(
+        number: "0078",
+        name: "Interpretation Codes",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Low"),
+            HL7Table.Entry(code: "H", description: "High"),
+            HL7Table.Entry(code: "LU", description: "Very low"),
+            HL7Table.Entry(code: "HU", description: "Very high"),
+            HL7Table.Entry(code: "LL", description: "Critically low"),
+            HL7Table.Entry(code: "HH", description: "Critically high"),
+            HL7Table.Entry(code: "<", description: "Off scale low"),
+            HL7Table.Entry(code: ">", description: "Off scale high"),
+            HL7Table.Entry(code: "N", description: "Normal"),
+            HL7Table.Entry(code: "A", description: "Abnormal"),
+            HL7Table.Entry(code: "AA", description: "Critically abnormal"),
+            HL7Table.Entry(code: "null", description: "No range defined, or normal ranges don’t apply"),
+            HL7Table.Entry(code: "U", description: "Significant change up"),
+            HL7Table.Entry(code: "D", description: "Significant change down"),
+            HL7Table.Entry(code: "B", description: "Better"),
+            HL7Table.Entry(code: "W", description: "Worse"),
+            HL7Table.Entry(code: "S", description: "Susceptible"),
+            HL7Table.Entry(code: "R", description: "Resistant"),
+            HL7Table.Entry(code: "I", description: "Intermediate"),
+            HL7Table.Entry(code: "MS", description: "Moderately susceptible. Indicates for microbiology susceptibilities only."),
+            HL7Table.Entry(code: "NS", description: "Non-susceptible"),
+            HL7Table.Entry(code: "SDD", description: "Susceptible-dose dependent"),
+            HL7Table.Entry(code: "IE", description: "Insufficient evidence"),
+            HL7Table.Entry(code: "SYN-", description: "Synergy – resistant"),
+            HL7Table.Entry(code: "VS", description: "Very susceptible. Indicates for microbiology susceptibilities only."),
+            HL7Table.Entry(code: "POS", description: "Positive"),
+            HL7Table.Entry(code: "NEG", description: "Negative"),
+            HL7Table.Entry(code: "IND", description: "Indeterminate"),
+            HL7Table.Entry(code: "DET", description: "Detected"),
+            HL7Table.Entry(code: "ND", description: "Not Detected"),
+            HL7Table.Entry(code: "AC", description: "Anti-complementary substances present"),
+            HL7Table.Entry(code: "TOX", description: "Cytotoxic substance present"),
+            HL7Table.Entry(code: "QCF", description: "Quality Control Failure"),
+            HL7Table.Entry(code: "RR", description: "Reactive"),
+            HL7Table.Entry(code: "WR", description: "Weakly reactive"),
+            HL7Table.Entry(code: "NR", description: "Non-reactive"),
+            HL7Table.Entry(code: "OBX", description: "Interpretation qualifiers in separate OBX segments"),
+            HL7Table.Entry(code: "HM", description: "Hold for Medical Review"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0080_v2_8_2 = HL7Table(
+        number: "0080",
+        name: "Nature of Abnormal Testing",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "An age-based population"),
+            HL7Table.Entry(code: "N", description: "None – generic normal range"),
+            HL7Table.Entry(code: "R", description: "A race-based population"),
+            HL7Table.Entry(code: "S", description: "A sex-based population"),
+            HL7Table.Entry(code: "SP", description: "Species"),
+            HL7Table.Entry(code: "B", description: "Breed"),
+            HL7Table.Entry(code: "ST", description: "Strain"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0083_v2_8_2 = HL7Table(
+        number: "0083",
+        name: "Outlier Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Outlier days"),
+            HL7Table.Entry(code: "C", description: "Outlier cost"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0084_v2_8_2 = HL7Table(
+        number: "0084",
+        name: "Performed by",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0085_v2_8_2 = HL7Table(
+        number: "0085",
+        name: "Observation Result Status Codes Interpretation",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Amended based on adjustments provided by the Placer (Physician) regarding patient demographics (such as age and/or gender or other patient specific information"),
+            HL7Table.Entry(code: "B", description: "Appended Report – Final results reviewed and further information provided for clarity without change to the original result values."),
+            HL7Table.Entry(code: "C", description: "Record coming over is a correction and thus replaces a final result"),
+            HL7Table.Entry(code: "D", description: "Deletes the OBX record"),
+            HL7Table.Entry(code: "F", description: "Final results"),
+            HL7Table.Entry(code: "I", description: "Specimen in lab; results pending"),
+            HL7Table.Entry(code: "N", description: "Not asked; used to affirmatively document that the observation identified in the OBX was not sought when the universal service ID in OBR-4 implies that it would be sought."),
+            HL7Table.Entry(code: "O", description: "Order detail description only (no result)"),
+            HL7Table.Entry(code: "P", description: "Preliminary results"),
+            HL7Table.Entry(code: "R", description: "Results entered – not verified"),
+            HL7Table.Entry(code: "S", description: "Partial results. Deprecated. Retained only for backward compatibility as of V2.6."),
+            HL7Table.Entry(code: "V", description: "Verified – Final results reviewed and confirmed to be correct, no change to result value, normal range or abnormal flag"),
+            HL7Table.Entry(code: "X", description: "Results cannot be obtained for this observation"),
+            HL7Table.Entry(code: "U", description: "Results status change to final without retransmitting results already sent as ‘preliminary.’ E.g., radiology changes status from preliminary to final"),
+            HL7Table.Entry(code: "W", description: "Post original as wrong, e.g., transmitted for wrong patient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0086_v2_8_2 = HL7Table(
+        number: "0086",
+        name: "Plan ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0087_v2_8_2 = HL7Table(
+        number: "0087",
+        name: "Pre-Admit Test Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0088_v2_8_2 = HL7Table(
+        number: "0088",
+        name: "Procedure Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C4", description: "CPT-4"),
+            HL7Table.Entry(code: "C5", description: "CPT-5"),
+            HL7Table.Entry(code: "HCPCS", description: "CMS (formerly HCFA) Common Procedure Coding System"),
+            HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA )Procedure Codes (HCPCS)"),
+            HL7Table.Entry(code: "I10P", description: "ICD-10 Procedure Codes"),
+            HL7Table.Entry(code: "SCT", description: "SNOMED CT"),
+            HL7Table.Entry(code: "contractors.", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0091_v2_8_2 = HL7Table(
+        number: "0091",
+        name: "Query Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Deferred"),
+            HL7Table.Entry(code: "I", description: "Immediate"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0092_v2_8_2 = HL7Table(
+        number: "0092",
+        name: "Re-Admission Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "R", description: "Re-admission"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0093_v2_8_2 = HL7Table(
+        number: "0093",
+        name: "Release Information",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0098_v2_8_2 = HL7Table(
+        number: "0098",
+        name: "Type of Agreement",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Standard"),
+            HL7Table.Entry(code: "U", description: "Unified"),
+            HL7Table.Entry(code: "M", description: "Maternity"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0099_v2_8_2 = HL7Table(
+        number: "0099",
+        name: "VIP Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0100_v2_8_2 = HL7Table(
+        number: "0100",
+        name: "Invocation event",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "On discharge"),
+            HL7Table.Entry(code: "O", description: "On receipt of order"),
+            HL7Table.Entry(code: "R", description: "At time service is completed"),
+            HL7Table.Entry(code: "S", description: "At time service is started"),
+            HL7Table.Entry(code: "T", description: "At a designated date/time"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0103_v2_8_2 = HL7Table(
+        number: "0103",
+        name: "Processing ID",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Debugging"),
+            HL7Table.Entry(code: "P", description: "Production"),
+            HL7Table.Entry(code: "T", description: "Training"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0104_v2_8_2 = HL7Table(
+        number: "0104",
+        name: "Version ID",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "2.0", description: "Release 2.0"),
+            HL7Table.Entry(code: "2.0D", description: "Demo 2.0"),
+            HL7Table.Entry(code: "2.1", description: "Release 2.1"),
+            HL7Table.Entry(code: "2.2", description: "Release 2.2"),
+            HL7Table.Entry(code: "2.3", description: "Release 2.3"),
+            HL7Table.Entry(code: "2.3.1", description: "Release 2.3.1"),
+            HL7Table.Entry(code: "2.4", description: "Release 2.4"),
+            HL7Table.Entry(code: "2.5", description: "Release 2.5"),
+            HL7Table.Entry(code: "2.5.1", description: "Release 2.5.1"),
+            HL7Table.Entry(code: "2.6", description: "Release 2.6"),
+            HL7Table.Entry(code: "2.7", description: "Release 2.7"),
+            HL7Table.Entry(code: "2.7.1", description: "Release 2.7.1"),
+            HL7Table.Entry(code: "2.8", description: "Release 2.8"),
+            HL7Table.Entry(code: "2.8.1", description: "Release 2.8.1"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0105_v2_8_2 = HL7Table(
+        number: "0105",
+        name: "Source of Comment",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
+            HL7Table.Entry(code: "P", description: "Orderer (placer) is source of comment"),
+            HL7Table.Entry(code: "O", description: "Other system is source of comment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0110_v2_8_2 = HL7Table(
+        number: "0110",
+        name: "Transfer to Bad Debt Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0111_v2_8_2 = HL7Table(
+        number: "0111",
+        name: "Delete Account Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0112_v2_8_2 = HL7Table(
+        number: "0112",
+        name: "Discharge Disposition",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0113_v2_8_2 = HL7Table(
+        number: "0113",
+        name: "Discharged to Location",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0114_v2_8_2 = HL7Table(
+        number: "0114",
+        name: "Diet Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0115_v2_8_2 = HL7Table(
+        number: "0115",
+        name: "Servicing Facilities",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0116_v2_8_2 = HL7Table(
+        number: "0116",
+        name: "Bed Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Closed"),
+            HL7Table.Entry(code: "H", description: "Housekeeping"),
+            HL7Table.Entry(code: "O", description: "Occupied"),
+            HL7Table.Entry(code: "U", description: "Unoccupied"),
+            HL7Table.Entry(code: "K", description: "Contaminated"),
+            HL7Table.Entry(code: "I", description: "Isolated"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0117_v2_8_2 = HL7Table(
+        number: "0117",
+        name: "Account Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0118_v2_8_2 = HL7Table(
+        number: "0118",
+        name: "Major Diagnostic Category",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0119_v2_8_2 = HL7Table(
+        number: "0119",
+        name: "Order Control Codes",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AF", description: "Order/service refill request approval"),
+            HL7Table.Entry(code: "CA", description: "Cancel order/service request"),
+            HL7Table.Entry(code: "CH", description: "Child order/service"),
+            HL7Table.Entry(code: "CN", description: "Combined result"),
+            HL7Table.Entry(code: "CP", description: "Cancel process step"),
+            HL7Table.Entry(code: "CR", description: "Canceled as requested"),
+            HL7Table.Entry(code: "DC", description: "Discontinue order/service request"),
+            HL7Table.Entry(code: "DE", description: "Data errors"),
+            HL7Table.Entry(code: "DF", description: "Order/service refill request denied"),
+            HL7Table.Entry(code: "DR", description: "Discontinued as requested"),
+            HL7Table.Entry(code: "FU", description: "Order/service refilled, unsolicited"),
+            HL7Table.Entry(code: "HD", description: "Hold order request"),
+            HL7Table.Entry(code: "HR", description: "On hold as requested"),
+            HL7Table.Entry(code: "LI", description: "Link order/service to patient care problem or goal"),
+            HL7Table.Entry(code: "NA", description: "Number assigned"),
+            HL7Table.Entry(code: "NW", description: "New order/Service"),
+            HL7Table.Entry(code: "OC", description: "Order/service canceled"),
+            HL7Table.Entry(code: "OD", description: "Order/service discontinued"),
+            HL7Table.Entry(code: "OE", description: "Order/service released"),
+            HL7Table.Entry(code: "OF", description: "Order/service refilled as requested"),
+            HL7Table.Entry(code: "OH", description: "Order/service held"),
+            HL7Table.Entry(code: "OK", description: "Order/service accepted & OK"),
+            HL7Table.Entry(code: "OP", description: "Notification of order for outside dispense"),
+            HL7Table.Entry(code: "OR", description: "Released as requested"),
+            HL7Table.Entry(code: "PA", description: "Parent order/service"),
+            HL7Table.Entry(code: "PR", description: "Previous Results with new order/service"),
+            HL7Table.Entry(code: "PY", description: "Notification of replacement order for outside dispense"),
+            HL7Table.Entry(code: "RE", description: "Observations/Performed Service to follow"),
+            HL7Table.Entry(code: "RF", description: "Refill order/service request"),
+            HL7Table.Entry(code: "RL", description: "Release previous hold"),
+            HL7Table.Entry(code: "RO", description: "Replacement order"),
+            HL7Table.Entry(code: "RP", description: "Order/service replace request"),
+            HL7Table.Entry(code: "RQ", description: "Replaced as requested"),
+            HL7Table.Entry(code: "RR", description: "Request received"),
+            HL7Table.Entry(code: "RU", description: "Replaced unsolicited"),
+            HL7Table.Entry(code: "SC", description: "Status changed"),
+            HL7Table.Entry(code: "SN", description: "Send order/service number"),
+            HL7Table.Entry(code: "SR", description: "Response to send order/service status request"),
+            HL7Table.Entry(code: "SS", description: "Send order/service status request"),
+            HL7Table.Entry(code: "UA", description: "Unable to accept order/service"),
+            HL7Table.Entry(code: "UC", description: "Unable to cancel"),
+            HL7Table.Entry(code: "UD", description: "Unable to discontinue"),
+            HL7Table.Entry(code: "UF", description: "Unable to refill"),
+            HL7Table.Entry(code: "UH", description: "Unable to put on hold"),
+            HL7Table.Entry(code: "UM", description: "Unable to replace"),
+            HL7Table.Entry(code: "UN", description: "Unlink order/service from patient care problem or goal"),
+            HL7Table.Entry(code: "UR", description: "Unable to release"),
+            HL7Table.Entry(code: "UX", description: "Unable to change"),
+            HL7Table.Entry(code: "XO", description: "Change order/service request"),
+            HL7Table.Entry(code: "XR", description: "Changed as requested"),
+            HL7Table.Entry(code: "XX", description: "Order/service changed, unsol."),
+            HL7Table.Entry(code: "MC", description: "Miscellaneous Charge – not associated with an order"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0121_v2_8_2 = HL7Table(
+        number: "0121",
+        name: "Response Flag",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Report exceptions only"),
+            HL7Table.Entry(code: "R", description: "Same as E, also Replacement and Parent-Child"),
+            HL7Table.Entry(code: "D", description: "Same as R, also other associated segments"),
+            HL7Table.Entry(code: "F", description: "Same as D, plus confirmations explicitly"),
+            HL7Table.Entry(code: "N", description: "Only the MSA segment is returned"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0122_v2_8_2 = HL7Table(
+        number: "0122",
+        name: "Charge Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CH", description: "Charge"),
+            HL7Table.Entry(code: "CO", description: "Contract"),
+            HL7Table.Entry(code: "CR", description: "Credit"),
+            HL7Table.Entry(code: "DP", description: "Department"),
+            HL7Table.Entry(code: "GR", description: "Grant"),
+            HL7Table.Entry(code: "NC", description: "No Charge"),
+            HL7Table.Entry(code: "PC", description: "Professional"),
+            HL7Table.Entry(code: "RS", description: "Research"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0123_v2_8_2 = HL7Table(
+        number: "0123",
+        name: "Result Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "O", description: "Order received; specimen not yet received"),
+            HL7Table.Entry(code: "I", description: "No results available; specimen received, procedure incomplete"),
+            HL7Table.Entry(code: "S", description: "No results available; procedure scheduled, but not done"),
+            HL7Table.Entry(code: "A", description: "Some, but not all, results available"),
+            HL7Table.Entry(code: "P", description: "Preliminary: A verified early result is available, final results not yet obtained"),
+            HL7Table.Entry(code: "C", description: "Correction to results"),
+            HL7Table.Entry(code: "R", description: "Results stored; not yet verified"),
+            HL7Table.Entry(code: "F", description: "Final results; results stored and verified. Can only be changed with a corrected result."),
+            HL7Table.Entry(code: "X", description: "No results available; Order canceled."),
+            HL7Table.Entry(code: "Y", description: "No order on record for this test. (Used only on queries)"),
+            HL7Table.Entry(code: "Z", description: "No record of this patient. (Used only on queries)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0124_v2_8_2 = HL7Table(
+        number: "0124",
+        name: "Transportation Mode",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CART", description: "Cart – patient travels on cart or gurney"),
+            HL7Table.Entry(code: "PORT", description: "The examining device goes to patient’s location"),
+            HL7Table.Entry(code: "WALK", description: "Patient walks to diagnostic service"),
+            HL7Table.Entry(code: "WHLC", description: "Wheelchair"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0125_v2_8_2 = HL7Table(
+        number: "0125",
+        name: "Value Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AUI", description: "Authorization information"),
+            HL7Table.Entry(code: "CCD", description: "Charge code and date"),
+            HL7Table.Entry(code: "CCP", description: "Channel calibration parameters"),
+            HL7Table.Entry(code: "CD", description: "Channel definition"),
+            HL7Table.Entry(code: "CF", description: "Coded element with formatted values"),
+            HL7Table.Entry(code: "CNE", description: "Coded with no exceptions"),
+            HL7Table.Entry(code: "CNN", description: "Composite ID number and name simplified"),
+            HL7Table.Entry(code: "CP", description: "Composite price"),
+            HL7Table.Entry(code: "CSU", description: "Channel sensitivity and units"),
+            HL7Table.Entry(code: "CWE", description: "Coded with exceptions"),
+            HL7Table.Entry(code: "CX", description: "Extended composite ID with check digit"),
+            HL7Table.Entry(code: "DDI", description: "Daily deductible information"),
+            HL7Table.Entry(code: "DIN", description: "Date and institution name"),
+            HL7Table.Entry(code: "DLD", description: "Discharge to location and date"),
+            HL7Table.Entry(code: "DLN", description: "Driver’s license number"),
+            HL7Table.Entry(code: "DLT", description: "Delta"),
+            HL7Table.Entry(code: "DR", description: "Date/time range"),
+            HL7Table.Entry(code: "DT", description: "Date"),
+            HL7Table.Entry(code: "DTM", description: "Date/time"),
+            HL7Table.Entry(code: "DTN", description: "Day type and number"),
+            HL7Table.Entry(code: "ED", description: "Encapsulated data"),
+            HL7Table.Entry(code: "EI", description: "Entity identifier"),
+            HL7Table.Entry(code: "EIP", description: "Entity identifier pair"),
+            HL7Table.Entry(code: "ERL", description: "Error location"),
+            HL7Table.Entry(code: "FC", description: "Financial class"),
+            HL7Table.Entry(code: "FT", description: "Formatted text"),
+            HL7Table.Entry(code: "GTS", description: "General timing specification"),
+            HL7Table.Entry(code: "HD", description: "Hierarchic designator"),
+            HL7Table.Entry(code: "ICD", description: "Insurance certification definition"),
+            HL7Table.Entry(code: "IS", description: "Coded value for user-defined tables"),
+            HL7Table.Entry(code: "JCC", description: "Job code/class"),
+            HL7Table.Entry(code: "LA1", description: "Location with address variation 1"),
+            HL7Table.Entry(code: "LA2", description: "Location with address variation 2"),
+            HL7Table.Entry(code: "MA", description: "Multiplexed array"),
+            HL7Table.Entry(code: "MO", description: "Money"),
+            HL7Table.Entry(code: "MOC", description: "Money and charge code"),
+            HL7Table.Entry(code: "MOP", description: "Money or percentage"),
+            HL7Table.Entry(code: "MSG", description: "Message type"),
+            HL7Table.Entry(code: "NA", description: "Numeric array"),
+            HL7Table.Entry(code: "NDL", description: "Name with date and location"),
+            HL7Table.Entry(code: "NM", description: "Numeric"),
+            HL7Table.Entry(code: "NR", description: "Numeric range"),
+            HL7Table.Entry(code: "OCD", description: "Occurrence code and date"),
+            HL7Table.Entry(code: "OSP", description: "Occurrence span code and date"),
+            HL7Table.Entry(code: "PIP", description: "Practitioner institutional privileges"),
+            HL7Table.Entry(code: "PL", description: "Person location"),
+            HL7Table.Entry(code: "PLN", description: "Practitioner license or other ID number"),
+            HL7Table.Entry(code: "PPN", description: "Performing person time stamp"),
+            HL7Table.Entry(code: "PRL", description: "Parent result link"),
+            HL7Table.Entry(code: "PT", description: "Processing type"),
+            HL7Table.Entry(code: "PTA", description: "Policy type and amount"),
+            HL7Table.Entry(code: "QIP", description: "Query input parameter list"),
+            HL7Table.Entry(code: "QSC", description: "Query selection criteria"),
+            HL7Table.Entry(code: "RCD", description: "Row column definition"),
+            HL7Table.Entry(code: "RFR", description: "Reference range"),
+            HL7Table.Entry(code: "RI", description: "Repeat interval"),
+            HL7Table.Entry(code: "RMC", description: "Room coverage"),
+            HL7Table.Entry(code: "RP", description: "Reference pointer"),
+            HL7Table.Entry(code: "RPT", description: "Repeat pattern"),
+            HL7Table.Entry(code: "SCV", description: "Scheduling class value pair"),
+            HL7Table.Entry(code: "SN", description: "Structured numeric"),
+            HL7Table.Entry(code: "SNM", description: "String of telephone number digits"),
+            HL7Table.Entry(code: "SPD", description: "Specialty description"),
+            HL7Table.Entry(code: "SRT", description: "Sort order"),
+            HL7Table.Entry(code: "ST", description: "String data"),
+            HL7Table.Entry(code: "TM", description: "Time"),
+            HL7Table.Entry(code: "TX", description: "Text data"),
+            HL7Table.Entry(code: "UVC", description: "UB value code and amount"),
+            HL7Table.Entry(code: "VH", description: "Visiting hours"),
+            HL7Table.Entry(code: "VID", description: "Version identifier"),
+            HL7Table.Entry(code: "VR", description: "Value range"),
+            HL7Table.Entry(code: "WVI", description: "Channel Identifier"),
+            HL7Table.Entry(code: "WVS", description: "Waveform source"),
+            HL7Table.Entry(code: "XAD", description: "Extended address"),
+            HL7Table.Entry(code: "XCN", description: "Extended composite ID number and name for persons"),
+            HL7Table.Entry(code: "XON", description: "Extended composite name and ID number for organizations"),
+            HL7Table.Entry(code: "XPN", description: "Extended person name"),
+            HL7Table.Entry(code: "XTN", description: "Extended telecommunications number"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0126_v2_8_2 = HL7Table(
+        number: "0126",
+        name: "Quantity Limited Request",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CH", description: "Characters"),
+            HL7Table.Entry(code: "LI", description: "Lines"),
+            HL7Table.Entry(code: "PG", description: "Pages"),
+            HL7Table.Entry(code: "RD", description: "Records"),
+            HL7Table.Entry(code: "ZO", description: "Locally defined"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0127_v2_8_2 = HL7Table(
+        number: "0127",
+        name: "Allergen Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DA", description: "Drug allergy"),
+            HL7Table.Entry(code: "FA", description: "Food allergy"),
+            HL7Table.Entry(code: "MA", description: "Miscellaneous allergy"),
+            HL7Table.Entry(code: "MC", description: "Miscellaneous contraindication"),
+            HL7Table.Entry(code: "EA", description: "Environmental Allergy"),
+            HL7Table.Entry(code: "AA", description: "Animal Allergy"),
+            HL7Table.Entry(code: "PA", description: "Plant Allergy"),
+            HL7Table.Entry(code: "LA", description: "Pollen Allergy"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0128_v2_8_2 = HL7Table(
+        number: "0128",
+        name: "Allergy Severity",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SV", description: "Severe"),
+            HL7Table.Entry(code: "MO", description: "Moderate"),
+            HL7Table.Entry(code: "MI", description: "Mild"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0129_v2_8_2 = HL7Table(
+        number: "0129",
+        name: "Accommodation Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0130_v2_8_2 = HL7Table(
+        number: "0130",
+        name: "Visit user Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "TE", description: "Teaching"),
+            HL7Table.Entry(code: "HO", description: "Home"),
+            HL7Table.Entry(code: "MO", description: "Mobile Unit"),
+            HL7Table.Entry(code: "PH", description: "Phone"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0131_v2_8_2 = HL7Table(
+        number: "0131",
+        name: "Contact Role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Employer"),
+            HL7Table.Entry(code: "C", description: "Emergency Contact"),
+            HL7Table.Entry(code: "F", description: "Federal Agency"),
+            HL7Table.Entry(code: "I", description: "Insurance Company"),
+            HL7Table.Entry(code: "N", description: "Next-of-Kin"),
+            HL7Table.Entry(code: "S", description: "State Agency"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0132_v2_8_2 = HL7Table(
+        number: "0132",
+        name: "Transaction Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0135_v2_8_2 = HL7Table(
+        number: "0135",
+        name: "Assignment of Benefits",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "M", description: "Modified assignment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0136_v2_8_2 = HL7Table(
+        number: "0136",
+        name: "Yes/no Indicator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0137_v2_8_2 = HL7Table(
+        number: "0137",
+        name: "Mail Claim Party",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Employer"),
+            HL7Table.Entry(code: "G", description: "Guarantor"),
+            HL7Table.Entry(code: "I", description: "Insurance company"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "P", description: "Patient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0139_v2_8_2 = HL7Table(
+        number: "0139",
+        name: "Employer Information Data",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0140_v2_8_2 = HL7Table(
+        number: "0140",
+        name: "Military Service",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "USA", description: "US Army"),
+            HL7Table.Entry(code: "USN", description: "US Navy"),
+            HL7Table.Entry(code: "USAF", description: "US Air Force"),
+            HL7Table.Entry(code: "USMC", description: "US Marine Corps"),
+            HL7Table.Entry(code: "USCG", description: "US Coast Guard"),
+            HL7Table.Entry(code: "USPHS", description: "US Public Health Service"),
+            HL7Table.Entry(code: "NOAA", description: "National Oceanic and Atmospheric Administration"),
+            HL7Table.Entry(code: "NATO", description: "North Atlantic Treaty Organization"),
+            HL7Table.Entry(code: "AUSA", description: "Australian Army"),
+            HL7Table.Entry(code: "AUSN", description: "Australian Navy"),
+            HL7Table.Entry(code: "AUSAF", description: "Australian Air Force"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0141_v2_8_2 = HL7Table(
+        number: "0141",
+        name: "Military Rank/Grade",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0142_v2_8_2 = HL7Table(
+        number: "0142",
+        name: "Military Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ACT", description: "Active duty"),
+            HL7Table.Entry(code: "RET", description: "Retired"),
+            HL7Table.Entry(code: "DEC", description: "Deceased"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0143_v2_8_2 = HL7Table(
+        number: "0143",
+        name: "Non-covered Insurance Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0144_v2_8_2 = HL7Table(
+        number: "0144",
+        name: "Eligibility Source",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Insurance company"),
+            HL7Table.Entry(code: "2", description: "Employer"),
+            HL7Table.Entry(code: "3", description: "Insured presented policy"),
+            HL7Table.Entry(code: "4", description: "Insured presented card"),
+            HL7Table.Entry(code: "5", description: "Signed statement on file"),
+            HL7Table.Entry(code: "6", description: "Verbal information"),
+            HL7Table.Entry(code: "7", description: "None"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0145_v2_8_2 = HL7Table(
+        number: "0145",
+        name: "Room Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PRI", description: "Private room"),
+            HL7Table.Entry(code: "2PRI", description: "Second private room"),
+            HL7Table.Entry(code: "SPR", description: "Semi-private room"),
+            HL7Table.Entry(code: "2SPR", description: "Second semi-private room"),
+            HL7Table.Entry(code: "ICU", description: "Intensive care unit"),
+            HL7Table.Entry(code: "2ICU", description: "Second intensive care unit"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0146_v2_8_2 = HL7Table(
+        number: "0146",
+        name: "Amount Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DF", description: "Differential"),
+            HL7Table.Entry(code: "LM", description: "Limit"),
+            HL7Table.Entry(code: "PC", description: "Percentage"),
+            HL7Table.Entry(code: "RT", description: "Rate"),
+            HL7Table.Entry(code: "UL", description: "Unlimited"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0147_v2_8_2 = HL7Table(
+        number: "0147",
+        name: "Policy Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ANC", description: "Ancillary"),
+            HL7Table.Entry(code: "2ANC", description: "Second ancillary"),
+            HL7Table.Entry(code: "MMD", description: "Major medical"),
+            HL7Table.Entry(code: "2MMD", description: "Second major medical"),
+            HL7Table.Entry(code: "3MMD", description: "Third major medical"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0148_v2_8_2 = HL7Table(
+        number: "0148",
+        name: "Money or Percentage Indicator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AT", description: "Currency amount"),
+            HL7Table.Entry(code: "PC", description: "Percentage"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0149_v2_8_2 = HL7Table(
+        number: "0149",
+        name: "Day Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Approved"),
+            HL7Table.Entry(code: "DE", description: "Denied"),
+            HL7Table.Entry(code: "PE", description: "Pending"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0150_v2_8_2 = HL7Table(
+        number: "0150",
+        name: "Certification Patient Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ER", description: "Emergency"),
+            HL7Table.Entry(code: "IPE", description: "Inpatient elective"),
+            HL7Table.Entry(code: "OPE", description: "Outpatient elective"),
+            HL7Table.Entry(code: "UR", description: "Urgent"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0151_v2_8_2 = HL7Table(
+        number: "0151",
+        name: "Second Opinion Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0152_v2_8_2 = HL7Table(
+        number: "0152",
+        name: "Second Opinion Documentation Received",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0153_v2_8_2 = HL7Table(
+        number: "0153",
+        name: "Value Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0155_v2_8_2 = HL7Table(
+        number: "0155",
+        name: "Accept/Application Acknowledgment Conditions",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AL", description: "Always"),
+            HL7Table.Entry(code: "NE", description: "Never"),
+            HL7Table.Entry(code: "ER", description: "Error/reject conditions only"),
+            HL7Table.Entry(code: "SU", description: "Successful completion only"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0159_v2_8_2 = HL7Table(
+        number: "0159",
+        name: "Diet Code Specification Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Diet"),
+            HL7Table.Entry(code: "S", description: "Supplement"),
+            HL7Table.Entry(code: "P", description: "Preference"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0160_v2_8_2 = HL7Table(
+        number: "0160",
+        name: "Tray Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EARLY", description: "Early tray"),
+            HL7Table.Entry(code: "LATE", description: "Late tray"),
+            HL7Table.Entry(code: "GUEST", description: "Guest tray"),
+            HL7Table.Entry(code: "NO", description: "No tray"),
+            HL7Table.Entry(code: "MSG", description: "Tray message only"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0161_v2_8_2 = HL7Table(
+        number: "0161",
+        name: "Allow Substitution",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "Substitutions are NOT authorized. (This is the default – null.)"),
+            HL7Table.Entry(code: "G", description: "Allow generic substitutions."),
+            HL7Table.Entry(code: "T", description: "Allow therapeutic substitutions"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0162_v2_8_2 = HL7Table(
+        number: "0162",
+        name: "Route of Administration",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Apply Externally"),
+            HL7Table.Entry(code: "B", description: "Buccal"),
+            HL7Table.Entry(code: "DT", description: "Dental"),
+            HL7Table.Entry(code: "EP", description: "Epidural"),
+            HL7Table.Entry(code: "ET", description: "Endotrachial Tube*"),
+            HL7Table.Entry(code: "GTT", description: "Gastrostomy Tube"),
+            HL7Table.Entry(code: "GU", description: "GU Irrigant"),
+            HL7Table.Entry(code: "IMR", description: "Immerse (Soak) Body Part"),
+            HL7Table.Entry(code: "IA", description: "Intra-arterial"),
+            HL7Table.Entry(code: "IB", description: "Intrabursal"),
+            HL7Table.Entry(code: "IC", description: "Intracardiac"),
+            HL7Table.Entry(code: "ICV", description: "Intracervical (uterus)"),
+            HL7Table.Entry(code: "ID", description: "Intradermal"),
+            HL7Table.Entry(code: "IH", description: "Inhalation"),
+            HL7Table.Entry(code: "IHA", description: "Intrahepatic Artery"),
+            HL7Table.Entry(code: "IM", description: "Intramuscular"),
+            HL7Table.Entry(code: "IN", description: "Intranasal"),
+            HL7Table.Entry(code: "IO", description: "Intraocular"),
+            HL7Table.Entry(code: "IP", description: "Intraperitoneal"),
+            HL7Table.Entry(code: "IS", description: "Intrasynovial"),
+            HL7Table.Entry(code: "IT", description: "Intrathecal"),
+            HL7Table.Entry(code: "IU", description: "Intrauterine"),
+            HL7Table.Entry(code: "IV", description: "Intravenous"),
+            HL7Table.Entry(code: "MTH", description: "Mouth/Throat"),
+            HL7Table.Entry(code: "MM", description: "Mucous Membrane"),
+            HL7Table.Entry(code: "NS", description: "Nasal"),
+            HL7Table.Entry(code: "NG", description: "Nasogastric"),
+            HL7Table.Entry(code: "NP", description: "Nasal Prongs*"),
+            HL7Table.Entry(code: "NT", description: "Nasotrachial Tube"),
+            HL7Table.Entry(code: "OP", description: "Ophthalmic"),
+            HL7Table.Entry(code: "OT", description: "Otic"),
+            HL7Table.Entry(code: "OTH", description: "Other/Miscellaneous"),
+            HL7Table.Entry(code: "PF", description: "Perfusion"),
+            HL7Table.Entry(code: "PO", description: "Oral"),
+            HL7Table.Entry(code: "PR", description: "Rectal"),
+            HL7Table.Entry(code: "RM", description: "Rebreather Mask*"),
+            HL7Table.Entry(code: "SD", description: "Soaked Dressing"),
+            HL7Table.Entry(code: "SC", description: "Subcutaneous"),
+            HL7Table.Entry(code: "SL", description: "Sublingual"),
+            HL7Table.Entry(code: "TP", description: "Topical"),
+            HL7Table.Entry(code: "TRA", description: "Tracheostomy*"),
+            HL7Table.Entry(code: "TD", description: "Transdermal"),
+            HL7Table.Entry(code: "TL", description: "Translingual"),
+            HL7Table.Entry(code: "UR", description: "Urethral"),
+            HL7Table.Entry(code: "VG", description: "Vaginal"),
+            HL7Table.Entry(code: "VM", description: "Ventimask"),
+            HL7Table.Entry(code: "WND", description: "Wound"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0163_v2_8_2 = HL7Table(
+        number: "0163",
+        name: "Body Site",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BE", description: "Bilateral Ears"),
+            HL7Table.Entry(code: "OU", description: "Bilateral Eyes"),
+            HL7Table.Entry(code: "BN", description: "Bilateral Nares"),
+            HL7Table.Entry(code: "BU", description: "Buttock"),
+            HL7Table.Entry(code: "CT", description: "Chest Tube"),
+            HL7Table.Entry(code: "LA", description: "Left Arm"),
+            HL7Table.Entry(code: "LAC", description: "Left Anterior Chest"),
+            HL7Table.Entry(code: "LACF", description: "Left Antecubital Fossa"),
+            HL7Table.Entry(code: "LD", description: "Left Deltoid"),
+            HL7Table.Entry(code: "LE", description: "Left Ear"),
+            HL7Table.Entry(code: "LEJ", description: "Left External Jugular"),
+            HL7Table.Entry(code: "OS", description: "Left Eye"),
+            HL7Table.Entry(code: "LF", description: "Left Foot"),
+            HL7Table.Entry(code: "LG", description: "Left Gluteus Medius"),
+            HL7Table.Entry(code: "LH", description: "Left Hand"),
+            HL7Table.Entry(code: "LIJ", description: "Left Internal Jugular"),
+            HL7Table.Entry(code: "LLAQ", description: "Left Lower Abd Quadrant"),
+            HL7Table.Entry(code: "LLFA", description: "Left Lower Forearm"),
+            HL7Table.Entry(code: "LMFA", description: "Left Mid Forearm"),
+            HL7Table.Entry(code: "LN", description: "Left Naris"),
+            HL7Table.Entry(code: "LPC", description: "Left Posterior Chest"),
+            HL7Table.Entry(code: "LSC", description: "Left Subclavian"),
+            HL7Table.Entry(code: "LT", description: "Left Thigh"),
+            HL7Table.Entry(code: "LUA", description: "Left Upper Arm"),
+            HL7Table.Entry(code: "LUAQ", description: "Left Upper Abd Quadrant"),
+            HL7Table.Entry(code: "LUFA", description: "Left Upper Forearm"),
+            HL7Table.Entry(code: "LVG", description: "Left Ventragluteal"),
+            HL7Table.Entry(code: "LVL", description: "Left Vastus Lateralis"),
+            HL7Table.Entry(code: "NB", description: "Nebulized"),
+            HL7Table.Entry(code: "PA", description: "Perianal"),
+            HL7Table.Entry(code: "PERIN", description: "Perineal"),
+            HL7Table.Entry(code: "RA", description: "Right Arm"),
+            HL7Table.Entry(code: "RAC", description: "Right Anterior Chest"),
+            HL7Table.Entry(code: "RACF", description: "Right Antecubital Fossa"),
+            HL7Table.Entry(code: "RD", description: "Right Deltoid"),
+            HL7Table.Entry(code: "RE", description: "Right Ear"),
+            HL7Table.Entry(code: "REJ", description: "Right External Jugular"),
+            HL7Table.Entry(code: "OD", description: "Right Eye"),
+            HL7Table.Entry(code: "RF", description: "Right Foot"),
+            HL7Table.Entry(code: "RG", description: "Right Gluteus Medius"),
+            HL7Table.Entry(code: "RH", description: "Right Hand"),
+            HL7Table.Entry(code: "RIJ", description: "Right Internal Jugular"),
+            HL7Table.Entry(code: "RLAQ", description: "Rt Lower Abd Quadrant"),
+            HL7Table.Entry(code: "RLFA", description: "Right Lower Forearm"),
+            HL7Table.Entry(code: "RMFA", description: "Right Mid Forearm"),
+            HL7Table.Entry(code: "RN", description: "Right Naris"),
+            HL7Table.Entry(code: "RPC", description: "Right Posterior Chest"),
+            HL7Table.Entry(code: "RSC", description: "Right Subclavian"),
+            HL7Table.Entry(code: "RT", description: "Right Thigh"),
+            HL7Table.Entry(code: "RUA", description: "Right Upper Arm"),
+            HL7Table.Entry(code: "RUAQ", description: "Right Upper Abd Quadrant"),
+            HL7Table.Entry(code: "RUFA", description: "Right Upper Forearm"),
+            HL7Table.Entry(code: "RVL", description: "Right Vastus Lateralis"),
+            HL7Table.Entry(code: "RVG", description: "Right Ventragluteal"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0164_v2_8_2 = HL7Table(
+        number: "0164",
+        name: "Administration Device",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Applicator"),
+            HL7Table.Entry(code: "BT", description: "Buretrol"),
+            HL7Table.Entry(code: "HL", description: "Heparin Lock"),
+            HL7Table.Entry(code: "IPPB", description: "IPPB"),
+            HL7Table.Entry(code: "IVP", description: "IV Pump"),
+            HL7Table.Entry(code: "IVS", description: "IV Soluset"),
+            HL7Table.Entry(code: "MI", description: "Metered Inhaler"),
+            HL7Table.Entry(code: "NEB", description: "Nebulizer"),
+            HL7Table.Entry(code: "PCA", description: "PCA Pump"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0165_v2_8_2 = HL7Table(
+        number: "0165",
+        name: "Administration Method",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CH", description: "Chew"),
+            HL7Table.Entry(code: "DI", description: "Dissolve"),
+            HL7Table.Entry(code: "DU", description: "Dust"),
+            HL7Table.Entry(code: "IF", description: "Infiltrate"),
+            HL7Table.Entry(code: "IS", description: "Insert"),
+            HL7Table.Entry(code: "IR", description: "Irrigate"),
+            HL7Table.Entry(code: "IVPB", description: "IV Piggyback"),
+            HL7Table.Entry(code: "IVP", description: "IV Push"),
+            HL7Table.Entry(code: "NB", description: "Nebulized"),
+            HL7Table.Entry(code: "PT", description: "Paint"),
+            HL7Table.Entry(code: "PF", description: "Perfuse"),
+            HL7Table.Entry(code: "SH", description: "Shampoo"),
+            HL7Table.Entry(code: "SO", description: "Soak"),
+            HL7Table.Entry(code: "WA", description: "Wash"),
+            HL7Table.Entry(code: "WI", description: "Wipe"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0166_v2_8_2 = HL7Table(
+        number: "0166",
+        name: "RX Component Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Base"),
+            HL7Table.Entry(code: "A", description: "Additive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0167_v2_8_2 = HL7Table(
+        number: "0167",
+        name: "Substitution Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "No substitute was dispensed. This is equivalent to the default (null) value."),
+            HL7Table.Entry(code: "G", description: "A generic substitution was dispensed."),
+            HL7Table.Entry(code: "T", description: "A therapeutic substitution was dispensed."),
+            HL7Table.Entry(code: "0", description: "No product selection indicated"),
+            HL7Table.Entry(code: "1", description: "Substitution not allowed by prescriber"),
+            HL7Table.Entry(code: "2", description: "Substitution allowed – patient requested product dispensed"),
+            HL7Table.Entry(code: "3", description: "Substitution allowed – pharmacist selected product dispensed"),
+            HL7Table.Entry(code: "4", description: "Substitution allowed – generic drug not in stock"),
+            HL7Table.Entry(code: "5", description: "Substitution allowed – brand drug dispensed as a generic"),
+            HL7Table.Entry(code: "7", description: "Substitution not allowed – brand drug mandated by law"),
+            HL7Table.Entry(code: "8", description: "Substitution allowed – generic drug not available in marketplace"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0168_v2_8_2 = HL7Table(
+        number: "0168",
+        name: "Processing Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Stat (do immediately)"),
+            HL7Table.Entry(code: "A", description: "As soon as possible (a priority lower than stat)"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+            HL7Table.Entry(code: "P", description: "Preoperative (to be done prior to surgery)"),
+            HL7Table.Entry(code: "T", description: "Timing critical (do as near as possible to requested time)"),
+            HL7Table.Entry(code: "C", description: "Measure continuously (e.g., arterial line blood pressure)"),
+            HL7Table.Entry(code: "B", description: "Do at bedside or portable (may be used with other codes)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0169_v2_8_2 = HL7Table(
+        number: "0169",
+        name: "Reporting Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Call back results"),
+            HL7Table.Entry(code: "R", description: "Rush reporting"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0170_v2_8_2 = HL7Table(
+        number: "0170",
+        name: "Derived Specimen",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Parent Observation"),
+            HL7Table.Entry(code: "C", description: "Child Observation"),
+            HL7Table.Entry(code: "N", description: "Not Applicable"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0171_v2_8_2 = HL7Table(
+        number: "0171",
+        name: "Citizenship",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0172_v2_8_2 = HL7Table(
+        number: "0172",
+        name: "Veterans Military Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0173_v2_8_2 = HL7Table(
+        number: "0173",
+        name: "Coordination of Benefits",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CO", description: "Coordination"),
+            HL7Table.Entry(code: "IN", description: "Independent"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0174_v2_8_2 = HL7Table(
+        number: "0174",
+        name: "Nature of Service/Test/Observation",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Profile or battery consisting of many independent atomic observations (e.g., SMA12, electrolytes), usually done at one instrument on one specimen"),
+            HL7Table.Entry(code: "F", description: "Functional procedure that may consist of one or more interrelated measures (e.g., glucose tolerance test, creatinine clearance), usually done at different times and/or on different specimens"),
+            HL7Table.Entry(code: "A", description: "Atomic service/test/observation (test code or treatment code)"),
+            HL7Table.Entry(code: "S", description: "Superset—a set of batteries or procedures ordered under a single code unit but processed as separate batteries (e.g., routines = CBC, UA, electrolytes) This set indicates that the code being described is used to order multiple service/test/observation batteries. For example, a client who routinely orders a CBC, a differential, and a thyroxine as an outpatient profile might use a single, special code to order all three test batteries, instead of having to submit three separate order codes."),
+            HL7Table.Entry(code: "C", description: "Single observation calculated via a rule or formula from other independent observations (e.g., Alveolar—arterial ratio, cardiac output)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0175_v2_8_2 = HL7Table(
+        number: "0175",
+        name: "Master File Identifier Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CDM", description: "Charge description master file"),
+            HL7Table.Entry(code: "CMA", description: "Clinical study with phases and scheduled master file"),
+            HL7Table.Entry(code: "CMB", description: "Clinical study without phases but with scheduled master file"),
+            HL7Table.Entry(code: "LOC", description: "Location master file"),
+            HL7Table.Entry(code: "OMA", description: "Numerical observation master file"),
+            HL7Table.Entry(code: "OMB", description: "Categorical observation master file"),
+            HL7Table.Entry(code: "OMC", description: "Observation batteries master file"),
+            HL7Table.Entry(code: "OMD", description: "Calculated observations master file"),
+            HL7Table.Entry(code: "OMM", description: "Mixed type observation master file"),
+            HL7Table.Entry(code: "PRA", description: "Practitioner master file"),
+            HL7Table.Entry(code: "STF", description: "Staff master file"),
+            HL7Table.Entry(code: "CLN", description: "Clinic master file"),
+            HL7Table.Entry(code: "OME", description: "Other Observation/Service Item master file"),
+            HL7Table.Entry(code: "INV", description: "Inventory master file"),
+            HL7Table.Entry(code: "MLCP", description: "Medicare Limited Coverage Process"),
+            HL7Table.Entry(code: "MACP", description: "Medicare Approved Coverage Process"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0177_v2_8_2 = HL7Table(
+        number: "0177",
+        name: "Confidentiality Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "V", description: "Very restricted"),
+            HL7Table.Entry(code: "R", description: "Restricted"),
+            HL7Table.Entry(code: "U", description: "Usual control"),
+            HL7Table.Entry(code: "EMP", description: "Employee"),
+            HL7Table.Entry(code: "UWM", description: "Unwed mother"),
+            HL7Table.Entry(code: "VIP", description: "Very important person or celebrity"),
+            HL7Table.Entry(code: "PSY", description: "Psychiatric patient"),
+            HL7Table.Entry(code: "AID", description: "AIDS patient"),
+            HL7Table.Entry(code: "HIV", description: "HIV(+) patient"),
+            HL7Table.Entry(code: "ETH", description: "Alcohol/drug treatment patient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0178_v2_8_2 = HL7Table(
+        number: "0178",
+        name: "File Level Event Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "REP", description: "Replace current version of this master file with the version contained in this message"),
+            HL7Table.Entry(code: "UPD", description: "Change file records as defined in the record-level event codes for each record that follows"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0179_v2_8_2 = HL7Table(
+        number: "0179",
+        name: "Response Level",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "NE", description: "Never. No application-level response needed"),
+            HL7Table.Entry(code: "ER", description: "Error/Reject conditions only. Only MFA segments denoting errors must be returned via the application-level acknowledgment for this message"),
+            HL7Table.Entry(code: "AL", description: "Always. All MFA segments (whether denoting errors or not) must be returned via the application-level acknowledgment message"),
+            HL7Table.Entry(code: "SU", description: "Success. Only MFA segments denoting success must be returned via the application-level acknowledgment for this message"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0180_v2_8_2 = HL7Table(
+        number: "0180",
+        name: "Record-level Event Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MAD", description: "Add record to master file"),
+            HL7Table.Entry(code: "MDL", description: "Delete record from master file"),
+            HL7Table.Entry(code: "MUP", description: "Update record for master file"),
+            HL7Table.Entry(code: "MDC", description: "Deactivate: discontinue using record in master file, but do not delete from database"),
+            HL7Table.Entry(code: "MAC", description: "Reactivate deactivated record"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0181_v2_8_2 = HL7Table(
+        number: "0181",
+        name: "MFN Record-level Error Return",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Successful posting of the record defined by the MFE segment"),
+            HL7Table.Entry(code: "U", description: "Unsuccessful posting of the record defined by the MFE segment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0182_v2_8_2 = HL7Table(
+        number: "0182",
+        name: "Staff Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0183_v2_8_2 = HL7Table(
+        number: "0183",
+        name: "Active/Inactive",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Active Staff"),
+            HL7Table.Entry(code: "I", description: "Inactive Staff"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0184_v2_8_2 = HL7Table(
+        number: "0184",
+        name: "Department",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0185_v2_8_2 = HL7Table(
+        number: "0185",
+        name: "Preferred Method of Contact",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Beeper Number"),
+            HL7Table.Entry(code: "C", description: "Cellular Phone Number"),
+            HL7Table.Entry(code: "E", description: "E-Mail Address (for backward compatibility)"),
+            HL7Table.Entry(code: "F", description: "FAX Number"),
+            HL7Table.Entry(code: "H", description: "Home Phone Number"),
+            HL7Table.Entry(code: "O", description: "Office Phone Number"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0186_v2_8_2 = HL7Table(
+        number: "0186",
+        name: "Practitioner Category",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0187_v2_8_2 = HL7Table(
+        number: "0187",
+        name: "Provider Billing",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Institution bills for provider"),
+            HL7Table.Entry(code: "P", description: "Provider does own billing"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0188_v2_8_2 = HL7Table(
+        number: "0188",
+        name: "Operator ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0189_v2_8_2 = HL7Table(
+        number: "0189",
+        name: "Ethnic Group",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "H", description: "Hispanic or Latino"),
+            HL7Table.Entry(code: "N", description: "Not Hispanic or Latino"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0190_v2_8_2 = HL7Table(
+        number: "0190",
+        name: "Address Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BA", description: "Bad address"),
+            HL7Table.Entry(code: "BI", description: "Billing Address"),
+            HL7Table.Entry(code: "N", description: "Birth (nee) (birth address, not otherwise specified)"),
+            HL7Table.Entry(code: "BDL", description: "Birth delivery location (address where birth occurred)"),
+            HL7Table.Entry(code: "F", description: "Country Of Origin"),
+            HL7Table.Entry(code: "C", description: "Current Or Temporary"),
+            HL7Table.Entry(code: "B", description: "Firm/Business"),
+            HL7Table.Entry(code: "H", description: "Home"),
+            HL7Table.Entry(code: "L", description: "Legal Address"),
+            HL7Table.Entry(code: "M", description: "Mailing"),
+            HL7Table.Entry(code: "O", description: "Office/Business"),
+            HL7Table.Entry(code: "P", description: "Permanent"),
+            HL7Table.Entry(code: "RH", description: "Registry home. Refers to the information system, typically managed by a public health agency, that stores patient information such as immunization histories or cancer data, regardless of where the patient obtains services."),
+            HL7Table.Entry(code: "BR", description: "Residence at birth (home address at time of birth)"),
+            HL7Table.Entry(code: "S", description: "Service Location"),
+            HL7Table.Entry(code: "SH", description: "Shipping Address"),
+            HL7Table.Entry(code: "TM", description: "Tube Address"),
+            HL7Table.Entry(code: "V", description: "Vacation"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0191_v2_8_2 = HL7Table(
+        number: "0191",
+        name: "Type of Referenced Data",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Other application data, typically uninterpreted binary data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "AU", description: "Audio data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "FT", description: "Formatted text (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "IM", description: "Image data (HL7 V2.3 and later)"),
+            HL7Table.Entry(code: "multipart", description: "MIME multipart package"),
+            HL7Table.Entry(code: "NS", description: "Non-scanned image (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "SD", description: "Scanned document (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "SI", description: "Scanned image (HL7 V2.2 only)"),
+            HL7Table.Entry(code: "TEXT", description: "Machine readable text document (HL7 V2.3.1 and later)"),
+            HL7Table.Entry(code: "TX", description: "Machine readable text document (HL7 V2.2 only)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0193_v2_8_2 = HL7Table(
+        number: "0193",
+        name: "Amount Class",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AT", description: "Amount"),
+            HL7Table.Entry(code: "LM", description: "Limit"),
+            HL7Table.Entry(code: "PC", description: "Percentage"),
+            HL7Table.Entry(code: "UL", description: "Unlimited"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0200_v2_8_2 = HL7Table(
+        number: "0200",
+        name: "Name Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Assigned"),
+            HL7Table.Entry(code: "B", description: "Birth name"),
+            HL7Table.Entry(code: "BAD", description: "Bad Name"),
+            HL7Table.Entry(code: "C", description: "Adopted Name"),
+            HL7Table.Entry(code: "D", description: "Customary Name"),
+            HL7Table.Entry(code: "F", description: "Fathers Name"),
+            HL7Table.Entry(code: "I", description: "Licensing Name"),
+            HL7Table.Entry(code: "K", description: "Business name"),
+            HL7Table.Entry(code: "L", description: "Official Registry Name"),
+            HL7Table.Entry(code: "M", description: "Maiden Name"),
+            HL7Table.Entry(code: "MSK", description: "Masked"),
+            HL7Table.Entry(code: "N", description: "Nickname"),
+            HL7Table.Entry(code: "NAV", description: "Temporarily Unavailable"),
+            HL7Table.Entry(code: "NB", description: "Newborn Name"),
+            HL7Table.Entry(code: "NOUSE", description: "No Longer To Be Used"),
+            HL7Table.Entry(code: "P", description: "Name of Partner/Spouse"),
+            HL7Table.Entry(code: "R", description: "Registered Name"),
+            HL7Table.Entry(code: "REL", description: "Religious"),
+            HL7Table.Entry(code: "S", description: "Pseudonym"),
+            HL7Table.Entry(code: "T", description: "Indigenous/Tribal"),
+            HL7Table.Entry(code: "TEMP", description: "Temporary Name"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "Note:", description: "The content of Legal Name is country specific. In the US the legal name is the same as the current"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0201_v2_8_2 = HL7Table(
+        number: "0201",
+        name: "Telecommunication Use Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PRN", description: "Primary Residence Number"),
+            HL7Table.Entry(code: "ORN", description: "Other Residence Number"),
+            HL7Table.Entry(code: "WPN", description: "Work Number"),
+            HL7Table.Entry(code: "VHN", description: "Vacation Home Number"),
+            HL7Table.Entry(code: "ASN", description: "Answering Service Number"),
+            HL7Table.Entry(code: "EMR", description: "Emergency Number"),
+            HL7Table.Entry(code: "NET", description: "Network (email) Address"),
+            HL7Table.Entry(code: "BPN", description: "Beeper Number"),
+            HL7Table.Entry(code: "PRS", description: "Personal"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0202_v2_8_2 = HL7Table(
+        number: "0202",
+        name: "Telecommunication Equipment Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PH", description: "Telephone"),
+            HL7Table.Entry(code: "FX", description: "Fax"),
+            HL7Table.Entry(code: "MD", description: "Modem"),
+            HL7Table.Entry(code: "CP", description: "Cellular or Mobile Phone"),
+            HL7Table.Entry(code: "SAT", description: "Satellite Phone"),
+            HL7Table.Entry(code: "BP", description: "Beeper"),
+            HL7Table.Entry(code: "Internet", description: "Internet Address"),
+            HL7Table.Entry(code: "X.400", description: "X.400 email address"),
+            HL7Table.Entry(code: "TDD", description: "Telecommunications Device for the Deaf"),
+            HL7Table.Entry(code: "TTY", description: "Teletypewriter"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0203_v2_8_2 = HL7Table(
+        number: "0203",
+        name: "Identifier Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ACSN", description: "Accession ID"),
+            HL7Table.Entry(code: "AM", description: "American Express"),
+            HL7Table.Entry(code: "AMA", description: "American Medical Association Number"),
+            HL7Table.Entry(code: "AN", description: "Account number"),
+            HL7Table.Entry(code: "ANON", description: "Anonymous identifier"),
+            HL7Table.Entry(code: "ANC", description: "Account number Creditor"),
+            HL7Table.Entry(code: "AND", description: "Account number debitor"),
+            HL7Table.Entry(code: "ANT", description: "Temporary Account Number"),
+            HL7Table.Entry(code: "APRN", description: "Advanced Practice Registered Nurse number"),
+            HL7Table.Entry(code: "ASID", description: "Ancestor Specimen ID"),
+            HL7Table.Entry(code: "BA", description: "Bank Account Number"),
+            HL7Table.Entry(code: "BC", description: "Bank Card Number"),
+            HL7Table.Entry(code: "BCT", description: "Birth Certificate"),
+            HL7Table.Entry(code: "BR", description: "Birth registry number"),
+            HL7Table.Entry(code: "BRN", description: "Breed Registry Number"),
+            HL7Table.Entry(code: "BSNR", description: "Primary physician office number"),
+            HL7Table.Entry(code: "CC", description: "Cost Center number"),
+            HL7Table.Entry(code: "CONM", description: "Change of Name Document"),
+            HL7Table.Entry(code: "CZ", description: "Citizenship Card"),
+            HL7Table.Entry(code: "CY", description: "County number"),
+            HL7Table.Entry(code: "DDS", description: "Dentist license number"),
+            HL7Table.Entry(code: "DEA", description: "Drug Enforcement Administration registration number"),
+            HL7Table.Entry(code: "DI", description: "Diner’s Club card"),
+            HL7Table.Entry(code: "DFN", description: "Drug Furnishing or prescriptive authority Number"),
+            HL7Table.Entry(code: "DL", description: "Driver’s license number"),
+            HL7Table.Entry(code: "DN", description: "Doctor number"),
+            HL7Table.Entry(code: "DO", description: "Osteopathic License number"),
+            HL7Table.Entry(code: "DP", description: "Diplomatic Passport"),
+            HL7Table.Entry(code: "DPM", description: "Podiatrist license number"),
+            HL7Table.Entry(code: "DR", description: "Donor Registration Number"),
+            HL7Table.Entry(code: "DS", description: "Discover Card"),
+            HL7Table.Entry(code: "EI", description: "Employee number"),
+            HL7Table.Entry(code: "EN", description: "Employer number"),
+            HL7Table.Entry(code: "ESN", description: "Staff Enterprise Number"),
+            HL7Table.Entry(code: "FI", description: "Facility ID"),
+            HL7Table.Entry(code: "GI", description: "Guarantor internal identifier"),
+            HL7Table.Entry(code: "GL", description: "General ledger number"),
+            HL7Table.Entry(code: "GN", description: "Guarantor external identifier"),
+            HL7Table.Entry(code: "HC", description: "Health Card Number"),
+            HL7Table.Entry(code: "JHN", description: "Jurisdictional health number (Canada)"),
+            HL7Table.Entry(code: "IND", description: "Indigenous/Aboriginal"),
+            HL7Table.Entry(code: "LACSN", description: "Laboratory Accession ID"),
+            HL7Table.Entry(code: "LANR", description: "Lifelong physician number"),
+            HL7Table.Entry(code: "LI", description: "Labor and industries number"),
+            HL7Table.Entry(code: "LN", description: "License number"),
+            HL7Table.Entry(code: "LR", description: "Local Registry ID"),
+            HL7Table.Entry(code: "MA", description: "Patient Medicaid number"),
+            HL7Table.Entry(code: "MB", description: "Member Number"),
+            HL7Table.Entry(code: "MC", description: "Patient’s Medicare number"),
+            HL7Table.Entry(code: "MCD", description: "Practitioner Medicaid number"),
+            HL7Table.Entry(code: "MCN", description: "Microchip Number"),
+            HL7Table.Entry(code: "MCR", description: "Practitioner Medicare number"),
+            HL7Table.Entry(code: "MCT", description: "Marriage Certificate"),
+            HL7Table.Entry(code: "MD", description: "Medical License number"),
+            HL7Table.Entry(code: "MI", description: "Military ID number"),
+            HL7Table.Entry(code: "MR", description: "Medical record number"),
+            HL7Table.Entry(code: "MRT", description: "Temporary Medical Record Number"),
+            HL7Table.Entry(code: "MS", description: "MasterCard"),
+            HL7Table.Entry(code: "NBSNR", description: "Secondary physician office number"),
+            HL7Table.Entry(code: "NCT", description: "Naturalization Certificate"),
+            HL7Table.Entry(code: "NE", description: "National employer identifier"),
+            HL7Table.Entry(code: "NH", description: "National Health Plan Identifier"),
+            HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
+            HL7Table.Entry(code: "NII", description: "National Insurance Organization Identifier"),
+            HL7Table.Entry(code: "NIIP", description: "National Insurance Payor Identifier (Payor)"),
+            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
+            HL7Table.Entry(code: "NP", description: "Nurse practitioner number"),
+            HL7Table.Entry(code: "NPI", description: "National provider identifier"),
+            HL7Table.Entry(code: "OD", description: "Optometrist license number"),
+            HL7Table.Entry(code: "PA", description: "Physician Assistant number"),
+            HL7Table.Entry(code: "PC", description: "Parole Card"),
+            HL7Table.Entry(code: "PCN", description: "Penitentiary/correctional institution Number"),
+            HL7Table.Entry(code: "PE", description: "Living Subject Enterprise Number"),
+            HL7Table.Entry(code: "PEN", description: "Pension Number"),
+            HL7Table.Entry(code: "PI", description: "Patient internal identifier"),
+            HL7Table.Entry(code: "PN", description: "Person number"),
+            HL7Table.Entry(code: "PNT", description: "Temporary Living Subject Number"),
+            HL7Table.Entry(code: "PPIN", description: "Medicare/CMS Performing Provider Identification Number"),
+            HL7Table.Entry(code: "PPN", description: "Passport number"),
+            HL7Table.Entry(code: "PRC", description: "Permanent Resident Card Number"),
+            HL7Table.Entry(code: "PRN", description: "Provider number"),
+            HL7Table.Entry(code: "PT", description: "Patient external identifier"),
+            HL7Table.Entry(code: "QA", description: "QA number"),
+            HL7Table.Entry(code: "RI", description: "Resource identifier"),
+            HL7Table.Entry(code: "RPH", description: "Pharmacist license number"),
+            HL7Table.Entry(code: "RN", description: "Registered Nurse Number"),
+            HL7Table.Entry(code: "RR", description: "Railroad Retirement number"),
+            HL7Table.Entry(code: "RRI", description: "Regional registry ID"),
+            HL7Table.Entry(code: "RRP", description: "Railroad Retirement Provider"),
+            HL7Table.Entry(code: "SID", description: "Specimen ID"),
+            HL7Table.Entry(code: "SL", description: "State license"),
+            HL7Table.Entry(code: "SN", description: "Subscriber Number"),
+            HL7Table.Entry(code: "SP", description: "Study Permit"),
+            HL7Table.Entry(code: "SR", description: "State registry ID"),
+            HL7Table.Entry(code: "SS", description: "Social Security number"),
+            HL7Table.Entry(code: "TAX", description: "Tax ID number"),
+            HL7Table.Entry(code: "TN", description: "Treaty Number/ (Canada)"),
+            HL7Table.Entry(code: "TPR", description: "Temporary Permanent Resident (Canada)"),
+            HL7Table.Entry(code: "U", description: "Unspecified identifier"),
+            HL7Table.Entry(code: "UPIN", description: "Medicare/CMS (formerly HCFA)’s Universal Physician Identification numbers"),
+            HL7Table.Entry(code: "USID", description: "Unique Specimen ID"),
+            HL7Table.Entry(code: "VN", description: "Visit number"),
+            HL7Table.Entry(code: "VP", description: "Visitor Permit"),
+            HL7Table.Entry(code: "VS", description: "VISA"),
+            HL7Table.Entry(code: "WC", description: "WIC identifier"),
+            HL7Table.Entry(code: "WCN", description: "Workers’ Comp Number"),
+            HL7Table.Entry(code: "WP", description: "Work Permit"),
+            HL7Table.Entry(code: "XX", description: "Organization identifier"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0204_v2_8_2 = HL7Table(
+        number: "0204",
+        name: "Organizational Name Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Alias name"),
+            HL7Table.Entry(code: "L", description: "Legal name"),
+            HL7Table.Entry(code: "D", description: "Display name"),
+            HL7Table.Entry(code: "SL", description: "Stock exchange listing name"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0205_v2_8_2 = HL7Table(
+        number: "0205",
+        name: "Price Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "administrative price or handling fee"),
+            HL7Table.Entry(code: "DC", description: "direct unit cost"),
+            HL7Table.Entry(code: "IC", description: "indirect unit cost"),
+            HL7Table.Entry(code: "PF", description: "professional fee for performing provider"),
+            HL7Table.Entry(code: "TF", description: "technology fee for use of equipment"),
+            HL7Table.Entry(code: "TP", description: "total price"),
+            HL7Table.Entry(code: "UP", description: "unit price, may be based on length of procedure or service"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0206_v2_8_2 = HL7Table(
+        number: "0206",
+        name: "Segment Action Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Add/Insert"),
+            HL7Table.Entry(code: "D", description: "Delete"),
+            HL7Table.Entry(code: "U", description: "Update"),
+            HL7Table.Entry(code: "X", description: "No Change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0207_v2_8_2 = HL7Table(
+        number: "0207",
+        name: "Processing Mode",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Archive"),
+            HL7Table.Entry(code: "R", description: "Restore from archive"),
+            HL7Table.Entry(code: "I", description: "Initial load"),
+            HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
+            HL7Table.Entry(code: "Not present", description: "Not present (the default, meaning current processing)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0208_v2_8_2 = HL7Table(
+        number: "0208",
+        name: "Query Response Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OK", description: "Data found, no errors (this is the default)"),
+            HL7Table.Entry(code: "NF", description: "No data found, no errors"),
+            HL7Table.Entry(code: "AE", description: "Application error"),
+            HL7Table.Entry(code: "AR", description: "Application reject"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0209_v2_8_2 = HL7Table(
+        number: "0209",
+        name: "Relational Operator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0210_v2_8_2 = HL7Table(
+        number: "0210",
+        name: "Relational Conjunction",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0211_v2_8_2 = HL7Table(
+        number: "0211",
+        name: "Alternate Character Sets",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ASCII", description: "The printable 7-bit ASCII character set."),
+            HL7Table.Entry(code: "8859/1", description: "The printable characters from the ISO 8859/1 Character set"),
+            HL7Table.Entry(code: "8859/2", description: "The printable characters from the ISO 8859/2 Character set"),
+            HL7Table.Entry(code: "8859/3", description: "The printable characters from the ISO 8859/3 Character set"),
+            HL7Table.Entry(code: "8859/4", description: "The printable characters from the ISO 8859/4 Character set"),
+            HL7Table.Entry(code: "8859/5", description: "The printable characters from the ISO 8859/5 Character set"),
+            HL7Table.Entry(code: "8859/6", description: "The printable characters from the ISO 8859/6 Character set"),
+            HL7Table.Entry(code: "8859/7", description: "The printable characters from the ISO 8859/7 Character set"),
+            HL7Table.Entry(code: "8859/8", description: "The printable characters from the ISO 8859/8 Character set"),
+            HL7Table.Entry(code: "8859/9", description: "The printable characters from the ISO 8859/9 Character set"),
+            HL7Table.Entry(code: "8859/15", description: "The printable characters from the ISO 8859/15 (Latin-15)"),
+            HL7Table.Entry(code: "ISO IR6", description: "ASCII graphic character set consisting of 94 characters."),
+            HL7Table.Entry(code: "ISO IR14", description: "Code for Information Exchange (one byte)(JIS X 0201-1976)."),
+            HL7Table.Entry(code: "ISO IR87", description: "Code for the Japanese Graphic Character set for information interchange (JIS X 0208-1990),"),
+            HL7Table.Entry(code: "ISO IR159", description: "Code of the supplementary Japanese Graphic Character set for information interchange (JIS X 0212-1990)."),
+            HL7Table.Entry(code: "GB 18030-2000", description: "Code for Chinese Character Set (GB 18030- 2000)"),
+            HL7Table.Entry(code: "KS X 1001", description: "Code for Korean Character Set (KS X 1001)"),
+            HL7Table.Entry(code: "CNS 11643-1992", description: "Code for Taiwanese Character Set (CNS 11643-1992)"),
+            HL7Table.Entry(code: "BIG-5", description: "Code for Taiwanese Character Set (BIG-5)"),
+            HL7Table.Entry(code: "UNICODE", description: "The world wide character standard from ISO/IEC 10646-1-19931"),
+            HL7Table.Entry(code: "UNICODE UTF-8", description: "UCS Transformation Format, 8-bit form"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0212_v2_8_2 = HL7Table(
+        number: "0212",
+        name: "Nationality",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0213_v2_8_2 = HL7Table(
+        number: "0213",
+        name: "Purge Status Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Marked for purge. User is no longer able to update the visit."),
+            HL7Table.Entry(code: "D", description: "The visit is marked for deletion and the user cannot enter new data against it."),
+            HL7Table.Entry(code: "I", description: "The visit is marked inactive and the user cannot enter new data against it."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0214_v2_8_2 = HL7Table(
+        number: "0214",
+        name: "Special Program Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CH", description: "Child Health Assistance"),
+            HL7Table.Entry(code: "ES", description: "Elective Surgery Program"),
+            HL7Table.Entry(code: "FP", description: "Family Planning"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0215_v2_8_2 = HL7Table(
+        number: "0215",
+        name: "Publicity Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Family only"),
+            HL7Table.Entry(code: "N", description: "No Publicity"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0216_v2_8_2 = HL7Table(
+        number: "0216",
+        name: "Patient Status Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AI", description: "Active Inpatient"),
+            HL7Table.Entry(code: "DI", description: "Discharged Inpatient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0217_v2_8_2 = HL7Table(
+        number: "0217",
+        name: "Visit Priority Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Emergency"),
+            HL7Table.Entry(code: "2", description: "Urgent"),
+            HL7Table.Entry(code: "3", description: "Elective"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0218_v2_8_2 = HL7Table(
+        number: "0218",
+        name: "Patient Charge Adjustment",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0219_v2_8_2 = HL7Table(
+        number: "0219",
+        name: "Recurring Service Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0220_v2_8_2 = HL7Table(
+        number: "0220",
+        name: "Living Arrangements",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Alone"),
+            HL7Table.Entry(code: "F", description: "Family"),
+            HL7Table.Entry(code: "I", description: "Institution"),
+            HL7Table.Entry(code: "R", description: "Relative"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "S", description: "Spouse Only"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0222_v2_8_2 = HL7Table(
+        number: "0222",
+        name: "Contact Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0223_v2_8_2 = HL7Table(
+        number: "0223",
+        name: "Living Dependency",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Spouse Dependent"),
+            HL7Table.Entry(code: "M", description: "Medical Supervision Required"),
+            HL7Table.Entry(code: "C", description: "Small Children Dependent"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0224_v2_8_2 = HL7Table(
+        number: "0224",
+        name: "Transport Arranged",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Arranged"),
+            HL7Table.Entry(code: "N", description: "Not Arranged"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0225_v2_8_2 = HL7Table(
+        number: "0225",
+        name: "Escort Required",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "R", description: "Required"),
+            HL7Table.Entry(code: "N", description: "Not Required"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0227_v2_8_2 = HL7Table(
+        number: "0227",
+        name: "Manufacturers of Vaccines",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0228_v2_8_2 = HL7Table(
+        number: "0228",
+        name: "Diagnosis Classification",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Consultation"),
+            HL7Table.Entry(code: "D", description: "Diagnosis"),
+            HL7Table.Entry(code: "M", description: "Medication (antibiotic)"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "R", description: "Radiological scheduling (not using ICDA codes)"),
+            HL7Table.Entry(code: "S", description: "Sign and symptom"),
+            HL7Table.Entry(code: "T", description: "Tissue diagnosis"),
+            HL7Table.Entry(code: "I", description: "Invasive procedure not classified elsewhere (I.V., catheter, etc.)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0229_v2_8_2 = HL7Table(
+        number: "0229",
+        name: "DRG Payor",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0230_v2_8_2 = HL7Table(
+        number: "0230",
+        name: "Procedure Functional Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Anesthesia"),
+            HL7Table.Entry(code: "P", description: "Procedure for treatment (therapeutic, including operations)"),
+            HL7Table.Entry(code: "I", description: "Invasive procedure not classified elsewhere (e.g., IV, catheter, etc.)"),
+            HL7Table.Entry(code: "D", description: "Diagnostic procedure"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0231_v2_8_2 = HL7Table(
+        number: "0231",
+        name: "Student Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Full-time student"),
+            HL7Table.Entry(code: "P", description: "Part-time student"),
+            HL7Table.Entry(code: "N", description: "Not a student"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0232_v2_8_2 = HL7Table(
+        number: "0232",
+        name: "Insurance Company Contact Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "01", description: "Medicare claim status"),
+            HL7Table.Entry(code: "02", description: "Medicaid claim status"),
+            HL7Table.Entry(code: "03", description: "Name/address change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0233_v2_8_2 = HL7Table(
+        number: "0233",
+        name: "Non-Concur Code/Description",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0234_v2_8_2 = HL7Table(
+        number: "0234",
+        name: "Report Timing",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CO", description: "Correction"),
+            HL7Table.Entry(code: "AD", description: "Additional information"),
+            HL7Table.Entry(code: "RQ", description: "Requested information"),
+            HL7Table.Entry(code: "DE", description: "Device evaluation"),
+            HL7Table.Entry(code: "PD", description: "Periodic"),
+            HL7Table.Entry(code: "3D", description: "3 day report"),
+            HL7Table.Entry(code: "7D", description: "7 day report"),
+            HL7Table.Entry(code: "10D", description: "10 day report"),
+            HL7Table.Entry(code: "15D", description: "15 day report"),
+            HL7Table.Entry(code: "30D", description: "30 day report"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0235_v2_8_2 = HL7Table(
+        number: "0235",
+        name: "Report Source",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Clinical trial"),
+            HL7Table.Entry(code: "L", description: "Literature"),
+            HL7Table.Entry(code: "H", description: "Health professional"),
+            HL7Table.Entry(code: "R", description: "Regulatory agency"),
+            HL7Table.Entry(code: "D", description: "Database/registry/poison control center"),
+            HL7Table.Entry(code: "N", description: "Non-healthcare professional"),
+            HL7Table.Entry(code: "P", description: "Patient"),
+            HL7Table.Entry(code: "M", description: "Manufacturer/marketing authority holder"),
+            HL7Table.Entry(code: "E", description: "Distributor"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0236_v2_8_2 = HL7Table(
+        number: "0236",
+        name: "Event Reported To",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "M", description: "Manufacturer"),
+            HL7Table.Entry(code: "L", description: "Local facility/user facility"),
+            HL7Table.Entry(code: "R", description: "Regulatory agency"),
+            HL7Table.Entry(code: "D", description: "Distributor"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0237_v2_8_2 = HL7Table(
+        number: "0237",
+        name: "Event Qualification",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Interaction"),
+            HL7Table.Entry(code: "O", description: "Overdose"),
+            HL7Table.Entry(code: "A", description: "Abuse"),
+            HL7Table.Entry(code: "M", description: "Misuse"),
+            HL7Table.Entry(code: "D", description: "Dependency"),
+            HL7Table.Entry(code: "L", description: "Lack of expect therapeutic effect"),
+            HL7Table.Entry(code: "W", description: "Drug withdrawal"),
+            HL7Table.Entry(code: "B", description: "Unexpected beneficial effect"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0238_v2_8_2 = HL7Table(
+        number: "0238",
+        name: "Event Seriousness",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "S", description: "Significant"),
+            HL7Table.Entry(code: "N", description: "No"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0239_v2_8_2 = HL7Table(
+        number: "0239",
+        name: "Event Expected",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0240_v2_8_2 = HL7Table(
+        number: "0240",
+        name: "Event Consequence",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Death"),
+            HL7Table.Entry(code: "L", description: "Life threatening"),
+            HL7Table.Entry(code: "H", description: "Caused hospitalized"),
+            HL7Table.Entry(code: "P", description: "Prolonged hospitalization"),
+            HL7Table.Entry(code: "C", description: "Congenital anomaly/birth defect"),
+            HL7Table.Entry(code: "I", description: "Incapacity which is significant, persistent or permanent"),
+            HL7Table.Entry(code: "J", description: "Disability which is significant, persistent or permanent"),
+            HL7Table.Entry(code: "R", description: "Required intervention to prevent permanent impairment/damage"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0241_v2_8_2 = HL7Table(
+        number: "0241",
+        name: "Patient Outcome",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Died"),
+            HL7Table.Entry(code: "R", description: "Recovering"),
+            HL7Table.Entry(code: "N", description: "Not recovering/unchanged"),
+            HL7Table.Entry(code: "W", description: "Worsening"),
+            HL7Table.Entry(code: "S", description: "Sequelae"),
+            HL7Table.Entry(code: "F", description: "Fully recovered"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0242_v2_8_2 = HL7Table(
+        number: "0242",
+        name: "Primary Observer’s Qualification",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Physician (osteopath, homeopath)"),
+            HL7Table.Entry(code: "R", description: "Pharmacist"),
+            HL7Table.Entry(code: "M", description: "Mid-level professional (nurse, nurse practitioner, physician’s assistant)"),
+            HL7Table.Entry(code: "H", description: "Other health professional"),
+            HL7Table.Entry(code: "C", description: "Health care consumer/patient"),
+            HL7Table.Entry(code: "L", description: "Lawyer/attorney"),
+            HL7Table.Entry(code: "O", description: "Other non-health professional"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0243_v2_8_2 = HL7Table(
+        number: "0243",
+        name: "Identity May Be Divulged",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "NA", description: "Not applicable"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0244_v2_8_2 = HL7Table(
+        number: "0244",
+        name: "Single Use Device",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0245_v2_8_2 = HL7Table(
+        number: "0245",
+        name: "Product Problem",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0246_v2_8_2 = HL7Table(
+        number: "0246",
+        name: "Product Available for Inspection",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0247_v2_8_2 = HL7Table(
+        number: "0247",
+        name: "Status of Evaluation",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Evaluation completed"),
+            HL7Table.Entry(code: "P", description: "Evaluation in progress"),
+            HL7Table.Entry(code: "K", description: "Problem already known, no evaluation necessary"),
+            HL7Table.Entry(code: "X", description: "Product not made by company"),
+            HL7Table.Entry(code: "A", description: "Evaluation anticipated, but not yet begun"),
+            HL7Table.Entry(code: "D", description: "Product discarded – unable to follow up"),
+            HL7Table.Entry(code: "C", description: "Product received in condition which made analysis impossible"),
+            HL7Table.Entry(code: "I", description: "Product remains implanted – unable to follow up"),
+            HL7Table.Entry(code: "U", description: "Product unavailable for follow up investigation"),
+            HL7Table.Entry(code: "Q", description: "Product under quarantine – unable to follow up"),
+            HL7Table.Entry(code: "R", description: "Product under recall/corrective action"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0248_v2_8_2 = HL7Table(
+        number: "0248",
+        name: "Product Source",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Actual product involved in incident was evaluated"),
+            HL7Table.Entry(code: "L", description: "A product from the same lot as the actual product involved was evaluated"),
+            HL7Table.Entry(code: "R", description: "A product from a reserve sample was evaluated"),
+            HL7Table.Entry(code: "N", description: "A product from a controlled/non-related inventory was evaluated"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0249_v2_8_2 = HL7Table(
+        number: "0249",
+        name: "Generic Product",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0250_v2_8_2 = HL7Table(
+        number: "0250",
+        name: "Relatedness Assessment",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "H", description: "Highly probable"),
+            HL7Table.Entry(code: "M", description: "Moderately probable"),
+            HL7Table.Entry(code: "S", description: "Somewhat probable"),
+            HL7Table.Entry(code: "I", description: "Improbable"),
+            HL7Table.Entry(code: "N", description: "Not related"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0251_v2_8_2 = HL7Table(
+        number: "0251",
+        name: "Action Taken in Response to the Event",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "WP", description: "Product withdrawn permanently"),
+            HL7Table.Entry(code: "WT", description: "Product withdrawn temporarily"),
+            HL7Table.Entry(code: "DR", description: "Product dose or frequency of use reduced"),
+            HL7Table.Entry(code: "DI", description: "Product dose or frequency of use increased"),
+            HL7Table.Entry(code: "OT", description: "Other"),
+            HL7Table.Entry(code: "N", description: "None"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0252_v2_8_2 = HL7Table(
+        number: "0252",
+        name: "Causality Observations",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AW", description: "Abatement of event after product withdrawn"),
+            HL7Table.Entry(code: "BE", description: "Event recurred after product reintroduced"),
+            HL7Table.Entry(code: "LI", description: "Literature reports association of product with event"),
+            HL7Table.Entry(code: "IN", description: "Event occurred after product introduced"),
+            HL7Table.Entry(code: "EX", description: "Alternative explanations for the event available"),
+            HL7Table.Entry(code: "PL", description: "Effect observed when patient receives placebo"),
+            HL7Table.Entry(code: "TC", description: "Toxic levels of product documented in blood or body fluids"),
+            HL7Table.Entry(code: "DR", description: "Dose response observed"),
+            HL7Table.Entry(code: "SE", description: "Similar events in past for this patient"),
+            HL7Table.Entry(code: "OE", description: "Occurrence of event was confirmed by objective evidence"),
+            HL7Table.Entry(code: "OT", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0253_v2_8_2 = HL7Table(
+        number: "0253",
+        name: "Indirect Exposure Mechanism",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Breast milk"),
+            HL7Table.Entry(code: "P", description: "Transplacental"),
+            HL7Table.Entry(code: "F", description: "Father"),
+            HL7Table.Entry(code: "X", description: "Blood product"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0254_v2_8_2 = HL7Table(
+        number: "0254",
+        name: "Kind of Quantity",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CACT", description: "*Catalytic Activity"),
+            HL7Table.Entry(code: "CNC", description: "*Catalytic Concentration"),
+            HL7Table.Entry(code: "CCRTO", description: "Catalytic Concentration Ratio"),
+            HL7Table.Entry(code: "CCNT", description: "*Catalytic Content"),
+            HL7Table.Entry(code: "CFR", description: "*Catalytic Fraction"),
+            HL7Table.Entry(code: "CRAT", description: "*Catalytic Rate"),
+            HL7Table.Entry(code: "CRTO", description: "Catalytic Ratio"),
+            HL7Table.Entry(code: "ENT", description: "*Entitic"),
+            HL7Table.Entry(code: "ENTSUB", description: "*Entitic Substance of Amount"),
+            HL7Table.Entry(code: "ENTCAT", description: "*Entitic Catalytic Activity"),
+            HL7Table.Entry(code: "ENTNUM", description: "*Entitic Number"),
+            HL7Table.Entry(code: "ENTVOL", description: "*Entitic Volume"),
+            HL7Table.Entry(code: "MASS", description: "*Mass"),
+            HL7Table.Entry(code: "MCNC", description: "*Mass Concentration"),
+            HL7Table.Entry(code: "MCRTO", description: "*Mass Concentration Ratio"),
+            HL7Table.Entry(code: "MCNT", description: "Mass Content"),
+            HL7Table.Entry(code: "MFR", description: "*Mass Fraction"),
+            HL7Table.Entry(code: "MINC", description: "*Mass Increment"),
+            HL7Table.Entry(code: "MRAT", description: "*Mass Rate"),
+            HL7Table.Entry(code: "MRTO", description: "*Mass Ratio"),
+            HL7Table.Entry(code: "NUM", description: "*Number"),
+            HL7Table.Entry(code: "NCNC", description: "*Number Concentration"),
+            HL7Table.Entry(code: "NCNT", description: "*Number Content"),
+            HL7Table.Entry(code: "NFR", description: "*Number Fraction"),
+            HL7Table.Entry(code: "NRTO", description: "*Number Ratio"),
+            HL7Table.Entry(code: "SUB", description: "*Substance Amount"),
+            HL7Table.Entry(code: "SCNC", description: "*Substance Concentration"),
+            HL7Table.Entry(code: "SCRTO", description: "*Substance Concentration Ratio"),
+            HL7Table.Entry(code: "SCNT", description: "*Substance Content"),
+            HL7Table.Entry(code: "SCNTR", description: "*Substance Content Rate"),
+            HL7Table.Entry(code: "SFR", description: "*Substance Fraction"),
+            HL7Table.Entry(code: "SCNCIN", description: "*Substance Concentration Increment"),
+            HL7Table.Entry(code: "SRAT", description: "*Substance Rate"),
+            HL7Table.Entry(code: "SRTO", description: "*Substance Ratio"),
+            HL7Table.Entry(code: "VOL", description: "*Volume"),
+            HL7Table.Entry(code: "VCNT", description: "*Volume Content"),
+            HL7Table.Entry(code: "VFR", description: "*Volume Fraction"),
+            HL7Table.Entry(code: "VRAT", description: "*Volume Rate"),
+            HL7Table.Entry(code: "VRTO", description: "*Volume Ratio"),
+            HL7Table.Entry(code: "ACNC", description: "Concentration, Arbitrary Substance"),
+            HL7Table.Entry(code: "RLMCNC", description: "*Relative Mass Concentration"),
+            HL7Table.Entry(code: "RLSCNC", description: "*Relative Substance Concentration"),
+            HL7Table.Entry(code: "THRMCNC", description: "*Threshold Mass Concentration"),
+            HL7Table.Entry(code: "THRSCNC", description: "*Threshold Substance Concentration"),
+            HL7Table.Entry(code: "TIME", description: "*Time (e.g. seconds)"),
+            HL7Table.Entry(code: "TMDF", description: "*Time Difference"),
+            HL7Table.Entry(code: "TMSTP", description: "*Time Stamp—Date and Time"),
+            HL7Table.Entry(code: "TRTO", description: "*Time Ratio"),
+            HL7Table.Entry(code: "RCRLTM", description: "*Reciprocal Relative Time"),
+            HL7Table.Entry(code: "RLTM", description: "*Relative Time"),
+            HL7Table.Entry(code: "ABS", description: "Absorbance"),
+            HL7Table.Entry(code: "ACT", description: "*Activity"),
+            HL7Table.Entry(code: "APER", description: "Appearance"),
+            HL7Table.Entry(code: "ARB", description: "*Arbitrary"),
+            HL7Table.Entry(code: "AREA", description: "Area"),
+            HL7Table.Entry(code: "ASPECT", description: "Aspect"),
+            HL7Table.Entry(code: "CLAS", description: "Class"),
+            HL7Table.Entry(code: "CNST", description: "*Constant"),
+            HL7Table.Entry(code: "COEF", description: "*Coefficient"),
+            HL7Table.Entry(code: "COLOR", description: "Color"),
+            HL7Table.Entry(code: "CONS", description: "Consistency"),
+            HL7Table.Entry(code: "DEN", description: "Density"),
+            HL7Table.Entry(code: "DEV", description: "Device"),
+            HL7Table.Entry(code: "DIFF", description: "*Difference"),
+            HL7Table.Entry(code: "ELAS", description: "Elasticity"),
+            HL7Table.Entry(code: "ELPOT", description: "Electrical Potential (Voltage)"),
+            HL7Table.Entry(code: "ELRAT", description: "Electrical current (amperage)"),
+            HL7Table.Entry(code: "ELRES", description: "Electrical Resistance"),
+            HL7Table.Entry(code: "ENGR", description: "Energy"),
+            HL7Table.Entry(code: "EQL", description: "Equilibrium"),
+            HL7Table.Entry(code: "FORCE", description: "Mechanical force"),
+            HL7Table.Entry(code: "FREQ", description: "Frequency"),
+            HL7Table.Entry(code: "IMP", description: "Impression/ interpretation of study"),
+            HL7Table.Entry(code: "KINV", description: "*Kinematic Viscosity"),
+            HL7Table.Entry(code: "LEN", description: "Length"),
+            HL7Table.Entry(code: "LINC", description: "*Length Increment"),
+            HL7Table.Entry(code: "LIQ", description: "*Liquefaction"),
+            HL7Table.Entry(code: "MGFLUX", description: "Magnetic flux"),
+            HL7Table.Entry(code: "MORPH", description: "Morphology"),
+            HL7Table.Entry(code: "MOTIL", description: "Motility"),
+            HL7Table.Entry(code: "OD", description: "Optical density"),
+            HL7Table.Entry(code: "OSMOL", description: "*Osmolality"),
+            HL7Table.Entry(code: "PRID", description: "Presence/Identity/Existence"),
+            HL7Table.Entry(code: "PRES", description: "*Pressure (Partial)"),
+            HL7Table.Entry(code: "PWR", description: "Power (wattage)"),
+            HL7Table.Entry(code: "RANGE", description: "*Ranges"),
+            HL7Table.Entry(code: "RATIO", description: "*Ratios"),
+            HL7Table.Entry(code: "RDEN", description: "*Relative Density"),
+            HL7Table.Entry(code: "REL", description: "*Relative"),
+            HL7Table.Entry(code: "SATFR", description: "*Saturation Fraction"),
+            HL7Table.Entry(code: "SHAPE", description: "Shape"),
+            HL7Table.Entry(code: "SMELL", description: "Smell"),
+            HL7Table.Entry(code: "SUSC", description: "*Susceptibility"),
+            HL7Table.Entry(code: "TASTE", description: "Taste"),
+            HL7Table.Entry(code: "TEMP", description: "*Temperature"),
+            HL7Table.Entry(code: "TEMPDF", description: "*Temperature Difference"),
+            HL7Table.Entry(code: "TEMPIN", description: "*Temperature Increment"),
+            HL7Table.Entry(code: "TITR", description: "*Dilution Factor (Titer)"),
+            HL7Table.Entry(code: "TYPE", description: "*Type"),
+            HL7Table.Entry(code: "VEL", description: "*Velocity"),
+            HL7Table.Entry(code: "VELRT", description: "*Velocity Ratio"),
+            HL7Table.Entry(code: "VISC", description: "*Viscosity"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0255_v2_8_2 = HL7Table(
+        number: "0255",
+        name: "Duration Categories",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PT", description: "To identify measures at a point in time. This is a synonym for “spot” or “random” as applied to urine measurements."),
+            HL7Table.Entry(code: "*", description: "(asterisk) Life of the “unit.” Used for blood products."),
+            HL7Table.Entry(code: "30M", description: "30 minutes"),
+            HL7Table.Entry(code: "1H", description: "1 hour"),
+            HL7Table.Entry(code: "2H", description: "2 hours"),
+            HL7Table.Entry(code: "2.5H", description: "2½ hours"),
+            HL7Table.Entry(code: "3H", description: "3 hours"),
+            HL7Table.Entry(code: "4H", description: "4 hours"),
+            HL7Table.Entry(code: "5H", description: "5 hours"),
+            HL7Table.Entry(code: "6H", description: "6 hours"),
+            HL7Table.Entry(code: "7H", description: "7 hours"),
+            HL7Table.Entry(code: "8H", description: "8 hours"),
+            HL7Table.Entry(code: "12H", description: "12 hours"),
+            HL7Table.Entry(code: "24H", description: "24 hours"),
+            HL7Table.Entry(code: "2D", description: "2 days"),
+            HL7Table.Entry(code: "3D", description: "3 days"),
+            HL7Table.Entry(code: "4D", description: "4 days"),
+            HL7Table.Entry(code: "5D", description: "5 days"),
+            HL7Table.Entry(code: "6D", description: "6 days"),
+            HL7Table.Entry(code: "1W", description: "1 week"),
+            HL7Table.Entry(code: "2W", description: "2 weeks"),
+            HL7Table.Entry(code: "3W", description: "3 weeks"),
+            HL7Table.Entry(code: "4W", description: "4 weeks"),
+            HL7Table.Entry(code: "1L", description: "1 months (30 days)"),
+            HL7Table.Entry(code: "2L", description: "2 months"),
+            HL7Table.Entry(code: "3L", description: "3 months"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0256_v2_8_2 = HL7Table(
+        number: "0256",
+        name: "Time Delay Post Challenge",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BS", description: "Baseline (time just before the challenge)"),
+            HL7Table.Entry(code: "PEAK", description: "The time post drug dose at which the highest drug level is reached (differs by drug)"),
+            HL7Table.Entry(code: "TROUGH", description: "The time post drug dose at which the lowest drug level is reached (varies with drug)"),
+            HL7Table.Entry(code: "RANDOM", description: "Time from the challenge, or dose not specified. (random)"),
+            HL7Table.Entry(code: "1M", description: "1 minute post challenge"),
+            HL7Table.Entry(code: "2M", description: "2 minutes post challenge"),
+            HL7Table.Entry(code: "3M", description: "3 minutes post challenge"),
+            HL7Table.Entry(code: "4M", description: "4 minutes post challenge"),
+            HL7Table.Entry(code: "5M", description: "5 minutes post challenge"),
+            HL7Table.Entry(code: "6M", description: "6 minutes post challenge"),
+            HL7Table.Entry(code: "7M", description: "7 minutes post challenge"),
+            HL7Table.Entry(code: "8M", description: "8 minutes post challenge"),
+            HL7Table.Entry(code: "9M", description: "9 minutes post challenge"),
+            HL7Table.Entry(code: "10M", description: "10 minutes post challenge"),
+            HL7Table.Entry(code: "15M", description: "15 minutes post challenge"),
+            HL7Table.Entry(code: "20M", description: "20 minutes post challenge"),
+            HL7Table.Entry(code: "25M", description: "25 minutes post challenge"),
+            HL7Table.Entry(code: "30M", description: "30 minutes post challenge"),
+            HL7Table.Entry(code: "1H", description: "1 hour post challenge"),
+            HL7Table.Entry(code: "2H", description: "2 hours post challenge"),
+            HL7Table.Entry(code: "2.5H", description: "2 ½ hours post challenge"),
+            HL7Table.Entry(code: "3H", description: "3 hours post challenge"),
+            HL7Table.Entry(code: "4H", description: "4 hours post challenge"),
+            HL7Table.Entry(code: "5H", description: "5 hours post challenge"),
+            HL7Table.Entry(code: "6H", description: "6 hours post challenge"),
+            HL7Table.Entry(code: "7H", description: "7 hours post challenge"),
+            HL7Table.Entry(code: "8H", description: "8 hours post challenge"),
+            HL7Table.Entry(code: "8H SHIFT", description: "8 hours aligned on nursing shifts"),
+            HL7Table.Entry(code: "12H", description: "12 hours post challenge"),
+            HL7Table.Entry(code: "24H", description: "24 hours post challenge"),
+            HL7Table.Entry(code: "2D", description: "2 days"),
+            HL7Table.Entry(code: "3D", description: "3 days"),
+            HL7Table.Entry(code: "4D", description: "4 days"),
+            HL7Table.Entry(code: "5D", description: "5 days"),
+            HL7Table.Entry(code: "6D", description: "6 days"),
+            HL7Table.Entry(code: "7D", description: "7 days"),
+            HL7Table.Entry(code: "1W", description: "1 week"),
+            HL7Table.Entry(code: "10D", description: "10 days"),
+            HL7Table.Entry(code: "2W", description: "2 weeks"),
+            HL7Table.Entry(code: "3W", description: "3 weeks"),
+            HL7Table.Entry(code: "4W", description: "4 weeks"),
+            HL7Table.Entry(code: "1L", description: "1 month (30 days) post challenge"),
+            HL7Table.Entry(code: "2L", description: "2 months (60 days) post challenge"),
+            HL7Table.Entry(code: "3L", description: "3 months (90 days) post challenge"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0257_v2_8_2 = HL7Table(
+        number: "0257",
+        name: "Nature of Challenge",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CFST", description: "Fasting (no calorie intake) for the period specified in the time component of the term, e.g., 1H POST CFST"),
+            HL7Table.Entry(code: "EXCZ", description: "Exercise undertaken as challenge (can be quantified)"),
+            HL7Table.Entry(code: "FFST", description: "No fluid intake for the period specified in the time component of the term"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0258_v2_8_2 = HL7Table(
+        number: "0258",
+        name: "Relationship Modifier",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CONTROL", description: "Control"),
+            HL7Table.Entry(code: "PATIENT", description: "Patient"),
+            HL7Table.Entry(code: "DONOR", description: "Donor"),
+            HL7Table.Entry(code: "BPU", description: "Blood product unit"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0259_v2_8_2 = HL7Table(
+        number: "0259",
+        name: "Modality",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AS", description: "Angioscopy"),
+            HL7Table.Entry(code: "BS", description: "Biomagnetic imaging"),
+            HL7Table.Entry(code: "CD", description: "Color flow Doppler"),
+            HL7Table.Entry(code: "CP", description: "Colposcopy"),
+            HL7Table.Entry(code: "CR", description: "Computed radiography"),
+            HL7Table.Entry(code: "CS", description: "Cystoscopy"),
+            HL7Table.Entry(code: "CT", description: "Computed tomography"),
+            HL7Table.Entry(code: "DD", description: "Duplex Doppler"),
+            HL7Table.Entry(code: "DG", description: "Diapanography"),
+            HL7Table.Entry(code: "DM", description: "Digital microscopy"),
+            HL7Table.Entry(code: "EC", description: "Echocardiography"),
+            HL7Table.Entry(code: "ES", description: "Endoscopy"),
+            HL7Table.Entry(code: "FA", description: "Fluorescein angiography"),
+            HL7Table.Entry(code: "FS", description: "Fundoscopy"),
+            HL7Table.Entry(code: "LP", description: "Laparoscopy"),
+            HL7Table.Entry(code: "LS", description: "Laser surface scan"),
+            HL7Table.Entry(code: "MA", description: "Magnetic resonance angiography"),
+            HL7Table.Entry(code: "MS", description: "Magnetic resonance spectroscopy"),
+            HL7Table.Entry(code: "NM", description: "Nuclear Medicine (radioisotope study)"),
+            HL7Table.Entry(code: "OT", description: "Other"),
+            HL7Table.Entry(code: "PT", description: "Positron emission tomography (PET)"),
+            HL7Table.Entry(code: "RF", description: "Radio fluoroscopy"),
+            HL7Table.Entry(code: "ST", description: "Single photon emission computed tomography (SPECT)"),
+            HL7Table.Entry(code: "TG", description: "Thermography"),
+            HL7Table.Entry(code: "US", description: "Ultrasound"),
+            HL7Table.Entry(code: "XA", description: "X-ray Angiography"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0260_v2_8_2 = HL7Table(
+        number: "0260",
+        name: "Patient Location Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "Nursing Unit"),
+            HL7Table.Entry(code: "R", description: "Room"),
+            HL7Table.Entry(code: "B", description: "Bed"),
+            HL7Table.Entry(code: "E", description: "Exam Room"),
+            HL7Table.Entry(code: "O", description: "Operating Room"),
+            HL7Table.Entry(code: "C", description: "Clinic"),
+            HL7Table.Entry(code: "D", description: "Department"),
+            HL7Table.Entry(code: "L", description: "Other Location"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0261_v2_8_2 = HL7Table(
+        number: "0261",
+        name: "Location Equipment",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OXY", description: "Oxygen"),
+            HL7Table.Entry(code: "SUC", description: "Suction"),
+            HL7Table.Entry(code: "VIT", description: "Vital signs monitor"),
+            HL7Table.Entry(code: "INF", description: "Infusion pump"),
+            HL7Table.Entry(code: "IVP", description: "IV pump"),
+            HL7Table.Entry(code: "EEG", description: "Electro-Encephalogram"),
+            HL7Table.Entry(code: "EKG", description: "Electro-Cardiogram"),
+            HL7Table.Entry(code: "VEN", description: "Ventilator"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0262_v2_8_2 = HL7Table(
+        number: "0262",
+        name: "Privacy Level",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Isolation"),
+            HL7Table.Entry(code: "P", description: "Private room"),
+            HL7Table.Entry(code: "J", description: "Private room – medically justified"),
+            HL7Table.Entry(code: "Q", description: "Private room – due to overflow"),
+            HL7Table.Entry(code: "S", description: "Semi-private room"),
+            HL7Table.Entry(code: "W", description: "Ward"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0263_v2_8_2 = HL7Table(
+        number: "0263",
+        name: "Level of Care",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Ambulatory"),
+            HL7Table.Entry(code: "E", description: "Emergency"),
+            HL7Table.Entry(code: "F", description: "Isolation"),
+            HL7Table.Entry(code: "N", description: "Intensive care"),
+            HL7Table.Entry(code: "C", description: "Critical care"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+            HL7Table.Entry(code: "S", description: "Surgery"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0264_v2_8_2 = HL7Table(
+        number: "0264",
+        name: "Location Department",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0265_v2_8_2 = HL7Table(
+        number: "0265",
+        name: "Specialty Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AMB", description: "Ambulatory"),
+            HL7Table.Entry(code: "PSY", description: "Psychiatric"),
+            HL7Table.Entry(code: "PPS", description: "Pediatric psychiatric"),
+            HL7Table.Entry(code: "REH", description: "Rehabilitation"),
+            HL7Table.Entry(code: "PRE", description: "Pediatric rehabilitation"),
+            HL7Table.Entry(code: "ISO", description: "Isolation"),
+            HL7Table.Entry(code: "OBG", description: "Obstetrics, gynecology"),
+            HL7Table.Entry(code: "PIN", description: "Pediatric/neonatal intensive care"),
+            HL7Table.Entry(code: "INT", description: "Intensive care"),
+            HL7Table.Entry(code: "SUR", description: "Surgery"),
+            HL7Table.Entry(code: "PSI", description: "Psychiatric intensive care"),
+            HL7Table.Entry(code: "EDI", description: "Education"),
+            HL7Table.Entry(code: "CAR", description: "Coronary/cardiac care"),
+            HL7Table.Entry(code: "NBI", description: "Newborn, nursery, infants"),
+            HL7Table.Entry(code: "CCR", description: "Critical care"),
+            HL7Table.Entry(code: "PED", description: "Pediatrics"),
+            HL7Table.Entry(code: "EMR", description: "Emergency"),
+            HL7Table.Entry(code: "OBS", description: "Observation"),
+            HL7Table.Entry(code: "WIC", description: "Walk-in clinic"),
+            HL7Table.Entry(code: "PHY", description: "General/family practice"),
+            HL7Table.Entry(code: "ALC", description: "Allergy"),
+            HL7Table.Entry(code: "FPC", description: "Family planning"),
+            HL7Table.Entry(code: "CHI", description: "Chiropractic"),
+            HL7Table.Entry(code: "CAN", description: "Cancer"),
+            HL7Table.Entry(code: "NAT", description: "Naturopathic"),
+            HL7Table.Entry(code: "OTH", description: "Other specialty"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0267_v2_8_2 = HL7Table(
+        number: "0267",
+        name: "Days of the Week",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SAT", description: "Saturday"),
+            HL7Table.Entry(code: "SUN", description: "Sunday"),
+            HL7Table.Entry(code: "MON", description: "Monday"),
+            HL7Table.Entry(code: "TUE", description: "Tuesday"),
+            HL7Table.Entry(code: "WED", description: "Wednesday"),
+            HL7Table.Entry(code: "THU", description: "Thursday"),
+            HL7Table.Entry(code: "FRI", description: "Friday"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0268_v2_8_2 = HL7Table(
+        number: "0268",
+        name: "Override",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "X", description: "Override not allowed"),
+            HL7Table.Entry(code: "A", description: "Override allowed"),
+            HL7Table.Entry(code: "R", description: "Override required"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0269_v2_8_2 = HL7Table(
+        number: "0269",
+        name: "Charge On Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "O", description: "Charge on Order"),
+            HL7Table.Entry(code: "R", description: "Charge on Result"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0270_v2_8_2 = HL7Table(
+        number: "0270",
+        name: "Document Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AR", description: "Autopsy report"),
+            HL7Table.Entry(code: "CD", description: "Cardiodiagnostics"),
+            HL7Table.Entry(code: "CN", description: "Consultation"),
+            HL7Table.Entry(code: "DI", description: "Diagnostic imaging"),
+            HL7Table.Entry(code: "DS", description: "Discharge summary"),
+            HL7Table.Entry(code: "ED", description: "Emergency department report"),
+            HL7Table.Entry(code: "HP", description: "History and physical examination"),
+            HL7Table.Entry(code: "OP", description: "Operative report"),
+            HL7Table.Entry(code: "PC", description: "Psychiatric consultation"),
+            HL7Table.Entry(code: "PH", description: "Psychiatric history and physical examination"),
+            HL7Table.Entry(code: "PN", description: "Procedure note"),
+            HL7Table.Entry(code: "PR", description: "Progress note"),
+            HL7Table.Entry(code: "SP", description: "Surgical pathology"),
+            HL7Table.Entry(code: "TS", description: "Transfer summary"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0271_v2_8_2 = HL7Table(
+        number: "0271",
+        name: "Document Completion Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DI", description: "Dictated"),
+            HL7Table.Entry(code: "DO", description: "Documented"),
+            HL7Table.Entry(code: "IP", description: "In Progress"),
+            HL7Table.Entry(code: "IN", description: "Incomplete"),
+            HL7Table.Entry(code: "PA", description: "Pre-authenticated"),
+            HL7Table.Entry(code: "AU", description: "Authenticated"),
+            HL7Table.Entry(code: "LA", description: "Legally authenticated"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0272_v2_8_2 = HL7Table(
+        number: "0272",
+        name: "Document Confidentiality Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "V", description: "Very restricted"),
+            HL7Table.Entry(code: "R", description: "Restricted"),
+            HL7Table.Entry(code: "U", description: "Usual control"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0273_v2_8_2 = HL7Table(
+        number: "0273",
+        name: "Document Availability Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AV", description: "Available for patient care"),
+            HL7Table.Entry(code: "CA", description: "Deleted"),
+            HL7Table.Entry(code: "OB", description: "Obsolete"),
+            HL7Table.Entry(code: "UN", description: "Unavailable for patient care"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0275_v2_8_2 = HL7Table(
+        number: "0275",
+        name: "Document Storage Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AC", description: "Active"),
+            HL7Table.Entry(code: "AA", description: "Active and archived"),
+            HL7Table.Entry(code: "AR", description: "Archived (not active)"),
+            HL7Table.Entry(code: "PU", description: "Purged"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0276_v2_8_2 = HL7Table(
+        number: "0276",
+        name: "Appointment Reason Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ROUTINE", description: "Routine appointment – default if not valued"),
+            HL7Table.Entry(code: "WALKIN", description: "A previously unscheduled walk-in visit"),
+            HL7Table.Entry(code: "CHECKUP", description: "A routine check-up, such as an annual physical"),
+            HL7Table.Entry(code: "FOLLOWUP", description: "A follow up visit from a previous appointment"),
+            HL7Table.Entry(code: "EMERGENCY", description: "Emergency appointment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0277_v2_8_2 = HL7Table(
+        number: "0277",
+        name: "Appointment Type Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Normal", description: "Routine schedule request type – default if not valued"),
+            HL7Table.Entry(code: "Tentative", description: "A request for a tentative (e.g., “penciled in”) appointment"),
+            HL7Table.Entry(code: "Complete", description: "A request to add a completed appointment, used to maintain records of completed appointments that did not appear in the schedule (e.g., STAT, walk-in, etc.)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0278_v2_8_2 = HL7Table(
+        number: "0278",
+        name: "Filler Status Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Pending", description: "Appointment has not yet been confirmed"),
+            HL7Table.Entry(code: "Waitlist", description: "Appointment has been placed on a waiting list for a particular slot, or set of slots"),
+            HL7Table.Entry(code: "Booked", description: "The indicated appointment is booked"),
+            HL7Table.Entry(code: "Started", description: "The indicated appointment has begun and is currently in progress"),
+            HL7Table.Entry(code: "Complete", description: "The indicated appointment has completed normally (was not discontinued, canceled, or deleted)"),
+            HL7Table.Entry(code: "Cancelled", description: "The indicated appointment was stopped from occurring (canceled prior to starting)"),
+            HL7Table.Entry(code: "Dc", description: "The indicated appointment was discontinued (DC’ed while in progress, discontinued parent appointment, or discontinued child appointment)"),
+            HL7Table.Entry(code: "Deleted", description: "The indicated appointment was deleted from the filler application"),
+            HL7Table.Entry(code: "Blocked", description: "The indicated time slot(s) is(are) blocked"),
+            HL7Table.Entry(code: "Overbook", description: "The appointment has been confirmed; however it is confirmed in an overbooked state"),
+            HL7Table.Entry(code: "Noshow", description: "The patient did not show up for the appointment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0279_v2_8_2 = HL7Table(
+        number: "0279",
+        name: "Allow Substitutions Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "No", description: "Substitution of this resource is not allowed"),
+            HL7Table.Entry(code: "Confirm", description: "Contact the Placer Contact Person prior to making any substitutions of this resource"),
+            HL7Table.Entry(code: "Notify", description: "Notify the Placer Contact Person, through normal institutional procedures, that a substitution of this resource has been made"),
+            HL7Table.Entry(code: "Yes", description: "Substitution of this resource is allowed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0280_v2_8_2 = HL7Table(
+        number: "0280",
+        name: "Referral Priority",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "STAT"),
+            HL7Table.Entry(code: "A", description: "ASAP"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0281_v2_8_2 = HL7Table(
+        number: "0281",
+        name: "Referral Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Lab", description: "Laboratory"),
+            HL7Table.Entry(code: "Rad", description: "Radiology"),
+            HL7Table.Entry(code: "Med", description: "Medical"),
+            HL7Table.Entry(code: "Skn", description: "Skilled Nursing"),
+            HL7Table.Entry(code: "Psy", description: "Psychiatric"),
+            HL7Table.Entry(code: "Hom", description: "Home Care"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0282_v2_8_2 = HL7Table(
+        number: "0282",
+        name: "Referral Disposition",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "WR", description: "Send Written Report"),
+            HL7Table.Entry(code: "RP", description: "Return Patient After Evaluation"),
+            HL7Table.Entry(code: "AM", description: "Assume Management"),
+            HL7Table.Entry(code: "SO", description: "Second Opinion"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0283_v2_8_2 = HL7Table(
+        number: "0283",
+        name: "Referral Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Accepted"),
+            HL7Table.Entry(code: "P", description: "Pending"),
+            HL7Table.Entry(code: "R", description: "Rejected"),
+            HL7Table.Entry(code: "E", description: "Expired"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0284_v2_8_2 = HL7Table(
+        number: "0284",
+        name: "Referral Category",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Inpatient"),
+            HL7Table.Entry(code: "O", description: "Outpatient"),
+            HL7Table.Entry(code: "A", description: "Ambulatory"),
+            HL7Table.Entry(code: "E", description: "Emergency"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0285_v2_8_2 = HL7Table(
+        number: "0285",
+        name: "Insurance Company ID Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0286_v2_8_2 = HL7Table(
+        number: "0286",
+        name: "Provider Role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "RP", description: "Referring Provider"),
+            HL7Table.Entry(code: "PP", description: "Primary Care Provider"),
+            HL7Table.Entry(code: "CP", description: "Consulting Provider"),
+            HL7Table.Entry(code: "RT", description: "Referred to Provider"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0287_v2_8_2 = HL7Table(
+        number: "0287",
+        name: "Problem/Goal Action Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AD", description: "ADD"),
+            HL7Table.Entry(code: "CO", description: "CORRECT"),
+            HL7Table.Entry(code: "DE", description: "DELETE"),
+            HL7Table.Entry(code: "LI", description: "LINK"),
+            HL7Table.Entry(code: "UC", description: "UNCHANGED *"),
+            HL7Table.Entry(code: "UN", description: "UNLINK"),
+            HL7Table.Entry(code: "UP", description: "UPDATE"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0288_v2_8_2 = HL7Table(
+        number: "0288",
+        name: "Census Tract",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0289_v2_8_2 = HL7Table(
+        number: "0289",
+        name: "County/Parish",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0291_v2_8_2 = HL7Table(
+        number: "0291",
+        name: "Subtype of Referenced Data",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "x-hl7-cda-", description: "HL7 Clinical Document Architecture Level One document"),
+            HL7Table.Entry(code: "level-one", description: "compatibility only as of v2.6 and CDA R 2. Preferred value is text/xml."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0292_v2_8_2 = HL7Table(
+        number: "0292",
+        name: "Vaccines Administered (code = CVX)",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0293_v2_8_2 = HL7Table(
+        number: "0293",
+        name: "Billing Category",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0294_v2_8_2 = HL7Table(
+        number: "0294",
+        name: "Time Selection Criteria Parameter Class Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Prefstart", description: "An indicator that there is a preferred start time for the appointment request, service or resource."),
+            HL7Table.Entry(code: "Prefend", description: "An indicator that there is a preferred end time for the appointment request, service or resource."),
+            HL7Table.Entry(code: "Mon", description: "An indicator that Monday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Tue", description: "An indicator that Tuesday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Wed", description: "An indicator that Wednesday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Thu", description: "An indicator that Thursday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Fri", description: "An indicator that Friday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Sat", description: "An indicator that Saturday is or is not preferred for the day on which the appointment will occur."),
+            HL7Table.Entry(code: "Sun", description: "An indicator that Sunday is or is not preferred for the day on which the appointment will occur."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0295_v2_8_2 = HL7Table(
+        number: "0295",
+        name: "Handicap",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0296_v2_8_2 = HL7Table(
+        number: "0296",
+        name: "Primary Language",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0297_v2_8_2 = HL7Table(
+        number: "0297",
+        name: "CN ID Source",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0298_v2_8_2 = HL7Table(
+        number: "0298",
+        name: "CP Range Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Pro-rate. Apply this price to this interval, pro-rated by whatever portion of the interval has occurred/been consumed"),
+            HL7Table.Entry(code: "F", description: "Flat-rate. Apply the entire price to this interval, do not pro-rate the price if the full interval has not occurred/been consumed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0299_v2_8_2 = HL7Table(
+        number: "0299",
+        name: "Encoding",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "No encoding – data are displayable ASCII characters."),
+            HL7Table.Entry(code: "Hex", description: "Hexadecimal encoding – consecutive pairs of hexadecimal digits represent consecutive single octets."),
+            HL7Table.Entry(code: "Base64", description: "Encoding as defined by MIME (Multipurpose Internet Mail Extensions) standard RFC 1521. Four consecutive ASCII characters represent three consecutive octets of binary data. Base64 utilizes a 65-character subset of US-ASCII, consisting of both the upper and lower case alphabetic characters, digits “0” through “9”, “+”, “/”, and “=”."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0300_v2_8_2 = HL7Table(
+        number: "0300",
+        name: "Namespace ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0301_v2_8_2 = HL7Table(
+        number: "0301",
+        name: "Universal ID Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DNS", description: "An Internet host name, in accordance with RFC 1035; or an IP address. Either in ASCII or as integers, with periods between components (“dotted” notation)."),
+            HL7Table.Entry(code: "EUI64", description: "IEEE 64-bit Extended Unique Identifier is comprised of a 24-bit company identifier and a 40-bit instance identifier. The value shall be formatted as 16 ASCII HEX digits, for example, “AABBCC1122334455”. The 24-bit company identifier, formally known as Organizationally Unique Identifier (OUI-24), is guaranteed to be globally unique. The 40-bit extensions are assigned by manufacturers. This identifier is often used in equipment interfaces (e.g., “MAC” address format for IPv4 & IPv6). [See http://standards.ieee.org/regauth/oui/tutorials/EUI64.html for a detailed explanation of the format.]"),
+            HL7Table.Entry(code: "CLIA", description: "Clinical Laboratory Improvement Amendments. Allows for the ability to designate organization identifier as a “CLIA” assigned number (for labs)"),
+            HL7Table.Entry(code: "CLIP", description: "Clinical laboratory Improvement Program. Allows for the ability to designate organization identifier as a “CLIP” assigned number (for labs). Used by US Department of Defense."),
+            HL7Table.Entry(code: "GUID", description: "Same as UUID."),
+            HL7Table.Entry(code: "HCD", description: "The CEN Healthcare Coding Scheme Designator"),
+            HL7Table.Entry(code: "HL7", description: "HL7 registration schemes"),
+            HL7Table.Entry(code: "ISO", description: "An International Standards Organization Object Identifier (OID), in accordance with ISO/IEC 8824. Formatted as decimal digits separated by periods; recommended limit of 64 characters"),
+            HL7Table.Entry(code: "L,M,N", description: "Locally defined coding entity identifier."),
+            HL7Table.Entry(code: "Random", description: "Usually a base64 encoded string of random bits. Note: Random IDs are typically used for instance identifiers, rather than an identifier of an Assigning Authority that issues instance identifiers"),
+            HL7Table.Entry(code: "URI", description: "Uniform Resource Identifier"),
+            HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier, in accordance with RFC 4122. Recommended format is 32 hexadecimal digits separated by hyphens, in the digit grouping 8-4-4-4- 12"),
+            HL7Table.Entry(code: "x400", description: "An X.400 MHS identifier. Recommended format is in accordance with RFC 1649"),
+            HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
+            HL7Table.Entry(code: "Note:", description: "X400, X500, and DNS are not technically universally valid for all time. Names can be de-registered"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0302_v2_8_2 = HL7Table(
+        number: "0302",
+        name: "Point of Care",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0303_v2_8_2 = HL7Table(
+        number: "0303",
+        name: "Room",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0304_v2_8_2 = HL7Table(
+        number: "0304",
+        name: "Bed",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0305_v2_8_2 = HL7Table(
+        number: "0305",
+        name: "Person Location Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Clinic"),
+            HL7Table.Entry(code: "D", description: "Department"),
+            HL7Table.Entry(code: "H", description: "Home"),
+            HL7Table.Entry(code: "N", description: "Nursing Unit"),
+            HL7Table.Entry(code: "O", description: "Provider’s Office"),
+            HL7Table.Entry(code: "P", description: "Phone"),
+            HL7Table.Entry(code: "S", description: "SNF"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0306_v2_8_2 = HL7Table(
+        number: "0306",
+        name: "Location Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0307_v2_8_2 = HL7Table(
+        number: "0307",
+        name: "Building",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0308_v2_8_2 = HL7Table(
+        number: "0308",
+        name: "Floor",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0309_v2_8_2 = HL7Table(
+        number: "0309",
+        name: "Coverage Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "H", description: "Hospital/institutional"),
+            HL7Table.Entry(code: "P", description: "Physician/professional"),
+            HL7Table.Entry(code: "B", description: "Both hospital and physician"),
+            HL7Table.Entry(code: "RX", description: "Pharmacy"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0311_v2_8_2 = HL7Table(
+        number: "0311",
+        name: "Job Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Permanent"),
+            HL7Table.Entry(code: "T", description: "Temporary"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0312_v2_8_2 = HL7Table(
+        number: "0312",
+        name: "Policy Scope",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0313_v2_8_2 = HL7Table(
+        number: "0313",
+        name: "Policy Source",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0315_v2_8_2 = HL7Table(
+        number: "0315",
+        name: "Living Will Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes, patient has a living will"),
+            HL7Table.Entry(code: "F", description: "Yes, patient has a living will but it is not on file"),
+            HL7Table.Entry(code: "N", description: "No, patient does not have a living will and no information was provided"),
+            HL7Table.Entry(code: "I", description: "No, patient does not have a living will but information was provided"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0316_v2_8_2 = HL7Table(
+        number: "0316",
+        name: "Organ Donor Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes, patient is a documented donor and documentation is on file"),
+            HL7Table.Entry(code: "F", description: "Yes, patient is a documented donor, but documentation is not on file"),
+            HL7Table.Entry(code: "N", description: "No, patient has not agreed to be a donor"),
+            HL7Table.Entry(code: "I", description: "No, patient is not a documented donor, but information was provided"),
+            HL7Table.Entry(code: "R", description: "Patient leaves organ donation decision to relatives"),
+            HL7Table.Entry(code: "P", description: "Patient leaves organ donation decision to a specific person"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0317_v2_8_2 = HL7Table(
+        number: "0317",
+        name: "Annotations",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "9900", description: "Pace spike"),
+            HL7Table.Entry(code: "9901", description: "SAS marker"),
+            HL7Table.Entry(code: "9902", description: "Sense marker"),
+            HL7Table.Entry(code: "9903", description: "Beat marker"),
+            HL7Table.Entry(code: "9904", description: "etc."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0319_v2_8_2 = HL7Table(
+        number: "0319",
+        name: "Department Cost Center",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0320_v2_8_2 = HL7Table(
+        number: "0320",
+        name: "Item Natural Account Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0321_v2_8_2 = HL7Table(
+        number: "0321",
+        name: "Dispense Method",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "TR", description: "Traditional"),
+            HL7Table.Entry(code: "UD", description: "Unit Dose"),
+            HL7Table.Entry(code: "F", description: "Floor Stock"),
+            HL7Table.Entry(code: "AD", description: "Automatic Dispensing"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0322_v2_8_2 = HL7Table(
+        number: "0322",
+        name: "Completion Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CP", description: "Complete"),
+            HL7Table.Entry(code: "RE", description: "Refused"),
+            HL7Table.Entry(code: "NA", description: "Not Administered"),
+            HL7Table.Entry(code: "PA", description: "Partially Administered"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0324_v2_8_2 = HL7Table(
+        number: "0324",
+        name: "Location Characteristic ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SMK", description: "Smoking"),
+            HL7Table.Entry(code: "LIC", description: "Licensed"),
+            HL7Table.Entry(code: "IMP", description: "Implant: can be used for radiation implant patients"),
+            HL7Table.Entry(code: "SHA", description: "Shadow: a temporary holding location that does not physically exist"),
+            HL7Table.Entry(code: "INF", description: "Infectious disease: this location can be used for isolation"),
+            HL7Table.Entry(code: "PRL", description: "Privacy level: indicating the level of private versus non-private room"),
+            HL7Table.Entry(code: "LCR", description: "Level of care"),
+            HL7Table.Entry(code: "OVR", description: "Overflow"),
+            HL7Table.Entry(code: "STF", description: "Bed is staffed"),
+            HL7Table.Entry(code: "SET", description: "Bed is set up"),
+            HL7Table.Entry(code: "GEN", description: "Gender of patient(s)"),
+            HL7Table.Entry(code: "TEA", description: "Teaching location"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0325_v2_8_2 = HL7Table(
+        number: "0325",
+        name: "Location Relationship ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "RX", description: "Nearest pharmacy"),
+            HL7Table.Entry(code: "RX2", description: "Second nearest pharmacy"),
+            HL7Table.Entry(code: "LAB", description: "Nearest lab"),
+            HL7Table.Entry(code: "LB2", description: "Second nearest lab"),
+            HL7Table.Entry(code: "DTY", description: "Nearest dietary location"),
+            HL7Table.Entry(code: "ALI", description: "Location Alias(es)"),
+            HL7Table.Entry(code: "PAR", description: "Parent location"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0326_v2_8_2 = HL7Table(
+        number: "0326",
+        name: "Visit Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Account level (default)"),
+            HL7Table.Entry(code: "V", description: "Visit level"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0327_v2_8_2 = HL7Table(
+        number: "0327",
+        name: "Job Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0328_v2_8_2 = HL7Table(
+        number: "0328",
+        name: "Employee Classification",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0329_v2_8_2 = HL7Table(
+        number: "0329",
+        name: "Quantity Method",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Actual count"),
+            HL7Table.Entry(code: "E", description: "Estimated (see comment)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0330_v2_8_2 = HL7Table(
+        number: "0330",
+        name: "Marketing Basis",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "510K", description: "510 (K)"),
+            HL7Table.Entry(code: "510E", description: "510 (K) exempt"),
+            HL7Table.Entry(code: "PMA", description: "Premarketing authorization"),
+            HL7Table.Entry(code: "PRE", description: "Preamendment"),
+            HL7Table.Entry(code: "TXN", description: "Transitional"),
+            HL7Table.Entry(code: "522S", description: "Post marketing study (522)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0331_v2_8_2 = HL7Table(
+        number: "0331",
+        name: "Facility Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "U", description: "User"),
+            HL7Table.Entry(code: "M", description: "Manufacturer"),
+            HL7Table.Entry(code: "D", description: "Distributor"),
+            HL7Table.Entry(code: "A", description: "Agent for a foreign manufacturer"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0332_v2_8_2 = HL7Table(
+        number: "0332",
+        name: "Source Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Initiate"),
+            HL7Table.Entry(code: "A", description: "Accept"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0333_v2_8_2 = HL7Table(
+        number: "0333",
+        name: "Driver’s License Issuing Authority",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0334_v2_8_2 = HL7Table(
+        number: "0334",
+        name: "Disabled Person Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PT", description: "Patient"),
+            HL7Table.Entry(code: "GT", description: "Guarantor"),
+            HL7Table.Entry(code: "IN", description: "Insured"),
+            HL7Table.Entry(code: "AP", description: "Associated party"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0335_v2_8_2 = HL7Table(
+        number: "0335",
+        name: "Repeat Pattern",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Q<integer>S", description: "every <integer> seconds"),
+            HL7Table.Entry(code: "Q<integer>M", description: "every <integer> minutes"),
+            HL7Table.Entry(code: "Q<integer>H", description: "every <integer> hours"),
+            HL7Table.Entry(code: "Q<integer>D", description: "every <integer> days"),
+            HL7Table.Entry(code: "Q<integer>W", description: "every <integer> weeks"),
+            HL7Table.Entry(code: "Q<integer>L", description: "every <integer> months (Lunar cycle)"),
+            HL7Table.Entry(code: "Q<integer>J<day#>", description: "repeats on a particular day of the week,"),
+            HL7Table.Entry(code: "BID", description: "twice a day at institution-specified times"),
+            HL7Table.Entry(code: "TID", description: "three times a day at institution- specified times"),
+            HL7Table.Entry(code: "QID", description: "four times a day at institution-specified times"),
+            HL7Table.Entry(code: "xID", description: "“X” times per day at institution- specified times, where X is a numeral 5 or greater."),
+            HL7Table.Entry(code: "QAM", description: "in the morning at institution-specified time"),
+            HL7Table.Entry(code: "QSHIFT", description: "during each of three eight-hour shifts at institution-specified times"),
+            HL7Table.Entry(code: "QOD", description: "every other day"),
+            HL7Table.Entry(code: "QHS", description: "every day before the hour of sleep"),
+            HL7Table.Entry(code: "QPM", description: "in the evening at institution-specified time"),
+            HL7Table.Entry(code: "C", description: "service is provided continuously between start time and stop time"),
+            HL7Table.Entry(code: "U <spec>", description: "for future use, where <spec> is an interval specification as defined by the UNIX cron specification."),
+            HL7Table.Entry(code: "PRN", description: "given as needed"),
+            HL7Table.Entry(code: "PRNxxx", description: "where xxx is some frequency code"),
+            HL7Table.Entry(code: "Once", description: "one time only."),
+            HL7Table.Entry(code: "Meal Related", description: "<timing>C (“cum”)<meal>"),
+            HL7Table.Entry(code: "Timings", description: ""),
+            HL7Table.Entry(code: "A", description: "Ante (before)"),
+            HL7Table.Entry(code: "P", description: "Post (after)"),
+            HL7Table.Entry(code: "I", description: "Inter"),
+            HL7Table.Entry(code: "M", description: "Cibus Matutinus (breakfast)"),
+            HL7Table.Entry(code: "D", description: "Cibus Diurnus (lunch)"),
+            HL7Table.Entry(code: "V", description: "Cibus Vespertinus (dinner)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0336_v2_8_2 = HL7Table(
+        number: "0336",
+        name: "Referral Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Second Opinion"),
+            HL7Table.Entry(code: "P", description: "Patient Preference"),
+            HL7Table.Entry(code: "O", description: "Provider Ordered"),
+            HL7Table.Entry(code: "W", description: "Work Load"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0337_v2_8_2 = HL7Table(
+        number: "0337",
+        name: "Certification Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Certified"),
+            HL7Table.Entry(code: "E", description: "Eligible"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0338_v2_8_2 = HL7Table(
+        number: "0338",
+        name: "Practitioner ID Number Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CY", description: "County number"),
+            HL7Table.Entry(code: "DEA", description: "Drug Enforcement Agency no."),
+            HL7Table.Entry(code: "GL", description: "General ledger number"),
+            HL7Table.Entry(code: "LI", description: "Labor and industries number"),
+            HL7Table.Entry(code: "L&I", description: "Labor and industries number"),
+            HL7Table.Entry(code: "MCD", description: "Medicaid number"),
+            HL7Table.Entry(code: "MCR", description: "Medicare number"),
+            HL7Table.Entry(code: "QA", description: "QA number"),
+            HL7Table.Entry(code: "SL", description: "State license number"),
+            HL7Table.Entry(code: "TAX", description: "Tax ID number"),
+            HL7Table.Entry(code: "TRL", description: "Training license number"),
+            HL7Table.Entry(code: "UPIN", description: "Unique physician ID no."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0339_v2_8_2 = HL7Table(
+        number: "0339",
+        name: "Advanced Beneficiary Notice Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Service is subject to medical necessity procedures"),
+            HL7Table.Entry(code: "2", description: "Patient has been informed of responsibility, and agrees to pay for service"),
+            HL7Table.Entry(code: "3", description: "Patient has been informed of responsibility, and asks that the payer be billed"),
+            HL7Table.Entry(code: "4", description: "Advanced Beneficiary Notice has not been signed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0340_v2_8_2 = HL7Table(
+        number: "0340",
+        name: "Procedure Code Modifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
+            HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA) Procedure Codes"),
+            HL7Table.Entry(code: "2", description: "The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental Association’s Current Dental Terminology (CDT-2) code by reference. Level II also includes the genuine HCPCS codes, approved and maintained jointly by the Alpha-Numeric Editorial Panel, consisting of CMS, the Health Insurance Association of America, and the Blue Cross and Blue Shield Association. Level III are codes developed locally by Medicare"),
+            HL7Table.Entry(code: "(HCPCS)", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0341_v2_8_2 = HL7Table(
+        number: "0341",
+        name: "Guarantor Credit Rating Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0342_v2_8_2 = HL7Table(
+        number: "0342",
+        name: "Military Recipient",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0343_v2_8_2 = HL7Table(
+        number: "0343",
+        name: "Military Handicapped Program Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "contractors.", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0344_v2_8_2 = HL7Table(
+        number: "0344",
+        name: "Patient’s Relationship to Insured",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "01", description: "Patient is insured"),
+            HL7Table.Entry(code: "02", description: "Spouse"),
+            HL7Table.Entry(code: "03", description: "Natural child/insured financial responsibility"),
+            HL7Table.Entry(code: "04", description: "Natural child/Insured does not have financial responsibility"),
+            HL7Table.Entry(code: "05", description: "Step child"),
+            HL7Table.Entry(code: "06", description: "Foster child"),
+            HL7Table.Entry(code: "07", description: "Ward of the court"),
+            HL7Table.Entry(code: "08", description: "Employee"),
+            HL7Table.Entry(code: "09", description: "Unknown"),
+            HL7Table.Entry(code: "10", description: "Handicapped dependent"),
+            HL7Table.Entry(code: "11", description: "Organ donor"),
+            HL7Table.Entry(code: "12", description: "Cadaver donor"),
+            HL7Table.Entry(code: "13", description: "Grandchild"),
+            HL7Table.Entry(code: "14", description: "Niece/nephew"),
+            HL7Table.Entry(code: "15", description: "Injured plaintiff"),
+            HL7Table.Entry(code: "16", description: "Sponsored dependent"),
+            HL7Table.Entry(code: "17", description: "Minor dependent of a minor dependent"),
+            HL7Table.Entry(code: "18", description: "Parent"),
+            HL7Table.Entry(code: "19", description: "Grandparent"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0345_v2_8_2 = HL7Table(
+        number: "0345",
+        name: "Appeal Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0346_v2_8_2 = HL7Table(
+        number: "0346",
+        name: "Certification Agency",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0347_v2_8_2 = HL7Table(
+        number: "0347",
+        name: "State/Province",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AB", description: "Alberta (US and Canada)"),
+            HL7Table.Entry(code: "MI", description: "Michigan (US)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0350_v2_8_2 = HL7Table(
+        number: "0350",
+        name: "Occurrence Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0351_v2_8_2 = HL7Table(
+        number: "0351",
+        name: "Occurrence Span",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0353_v2_8_2 = HL7Table(
+        number: "0353",
+        name: "CWE Statuses",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "UASK", description: "Asked but Unknown"),
+            HL7Table.Entry(code: "NAV", description: "Not available"),
+            HL7Table.Entry(code: "NA", description: "Not applicable"),
+            HL7Table.Entry(code: "NASK", description: "Not asked"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0354_v2_8_2 = HL7Table(
+        number: "0354",
+        name: "Message Structure",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0355_v2_8_2 = HL7Table(
+        number: "0355",
+        name: "Primary Key Value Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PL", description: "Person location"),
+            HL7Table.Entry(code: "CE", description: "Coded element"),
+            HL7Table.Entry(code: "CWE", description: "Coded with Exceptions"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0356_v2_8_2 = HL7Table(
+        number: "0356",
+        name: "Alternate Character Set Handling Scheme",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ISO 2022-", description: "This standard is titled “Information Technology –"),
+            HL7Table.Entry(code: "1994", description: "Character Code Structure and Extension Technique”. ."),
+            HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.5, section 2.7.2 and section 2.A.46, “XPN – extended person name”."),
+            HL7Table.Entry(code: "<null>", description: "This is the default, indicating that there is no character set switching occurring in this message."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0357_v2_8_2 = HL7Table(
+        number: "0357",
+        name: "Message Error Condition Codes",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Message accepted"),
+            HL7Table.Entry(code: "100", description: "Segment sequence error"),
+            HL7Table.Entry(code: "101", description: "Required field missing"),
+            HL7Table.Entry(code: "102", description: "Data type error"),
+            HL7Table.Entry(code: "103", description: "Table value not found"),
+            HL7Table.Entry(code: "104", description: "Value too long"),
+            HL7Table.Entry(code: "200", description: "Unsupported message type"),
+            HL7Table.Entry(code: "201", description: "Unsupported event code"),
+            HL7Table.Entry(code: "202", description: "Unsupported processing id"),
+            HL7Table.Entry(code: "203", description: "Unsupported version id"),
+            HL7Table.Entry(code: "204", description: "Unknown key identifier"),
+            HL7Table.Entry(code: "205", description: "Duplicate key identifier"),
+            HL7Table.Entry(code: "206", description: "Application record locked"),
+            HL7Table.Entry(code: "207", description: "Application internal error"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0358_v2_8_2 = HL7Table(
+        number: "0358",
+        name: "Practitioner Group",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0359_v2_8_2 = HL7Table(
+        number: "0359",
+        name: "Diagnosis Priority",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Not included in diagnosis ranking"),
+            HL7Table.Entry(code: "1", description: "The primary diagnosis"),
+            HL7Table.Entry(code: "2", description: "For ranked secondary diagnosis"),
+            HL7Table.Entry(code: "…", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0360_v2_8_2 = HL7Table(
+        number: "0360",
+        name: "Degree/License/Certificate",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PN", description: "Advanced Practice Nurse"),
+            HL7Table.Entry(code: "AAS", description: "Associate of Applied Science"),
+            HL7Table.Entry(code: "AA", description: "Associate of Arts"),
+            HL7Table.Entry(code: "ABA", description: "Associate of Business Administration"),
+            HL7Table.Entry(code: "AE", description: "Associate of Engineering"),
+            HL7Table.Entry(code: "AS", description: "Associate of Science"),
+            HL7Table.Entry(code: "BA", description: "Bachelor of Arts"),
+            HL7Table.Entry(code: "BBA", description: "Bachelor of Business Administration"),
+            HL7Table.Entry(code: "BE", description: "Bachelor or Engineering"),
+            HL7Table.Entry(code: "BFA", description: "Bachelor of Fine Arts"),
+            HL7Table.Entry(code: "BN", description: "Bachelor of Nursing"),
+            HL7Table.Entry(code: "BS", description: "Bachelor of Science"),
+            HL7Table.Entry(code: "BSL", description: "Bachelor of Science – Law"),
+            HL7Table.Entry(code: "BSN", description: "Bachelor on Science – Nursing"),
+            HL7Table.Entry(code: "BT", description: "Bachelor of Theology"),
+            HL7Table.Entry(code: "CER", description: "Certificate"),
+            HL7Table.Entry(code: "CANP", description: "Certified Adult Nurse Practitioner"),
+            HL7Table.Entry(code: "CMA", description: "Certified Medical Assistant"),
+            HL7Table.Entry(code: "CNP", description: "Certified Nurse Practitioner"),
+            HL7Table.Entry(code: "CNM", description: "Certified Nurse Midwife"),
+            HL7Table.Entry(code: "CRN", description: "Certified Registered Nurse"),
+            HL7Table.Entry(code: "CNS", description: "Certified Nurse Specialist"),
+            HL7Table.Entry(code: "CPNP", description: "Certified Pediatric Nurse Practitioner"),
+            HL7Table.Entry(code: "CTR", description: "Certified Tumor Registrar"),
+            HL7Table.Entry(code: "DIP", description: "Diploma"),
+            HL7Table.Entry(code: "DBA", description: "Doctor of Business Administration"),
+            HL7Table.Entry(code: "DED", description: "Doctor of Education"),
+            HL7Table.Entry(code: "PharmD", description: "Doctor of Pharmacy"),
+            HL7Table.Entry(code: "PHE", description: "Doctor of Engineering"),
+            HL7Table.Entry(code: "PHD", description: "Doctor of Philosophy"),
+            HL7Table.Entry(code: "PHS", description: "Doctor of Science"),
+            HL7Table.Entry(code: "MD", description: "Doctor of Medicine"),
+            HL7Table.Entry(code: "DO", description: "Doctor of Osteopathy"),
+            HL7Table.Entry(code: "EMT", description: "Emergency Medical Technician"),
+            HL7Table.Entry(code: "EMTP", description: "Emergency Medical Technician – Paramedic"),
+            HL7Table.Entry(code: "FPNP", description: "Family Practice Nurse Practitioner"),
+            HL7Table.Entry(code: "HS", description: "High School Graduate"),
+            HL7Table.Entry(code: "JD", description: "Juris Doctor"),
+            HL7Table.Entry(code: "MA", description: "Master of Arts"),
+            HL7Table.Entry(code: "MBA", description: "Master of Business Administration"),
+            HL7Table.Entry(code: "MCE", description: "Master of Civil Engineering"),
+            HL7Table.Entry(code: "MDI", description: "Master of Divinity"),
+            HL7Table.Entry(code: "MED", description: "Master of Education"),
+            HL7Table.Entry(code: "MEE", description: "Master of Electrical Engineering"),
+            HL7Table.Entry(code: "ME", description: "Master of Engineering"),
+            HL7Table.Entry(code: "MFA", description: "Master of Fine Arts"),
+            HL7Table.Entry(code: "MME", description: "Master of Mechanical Engineering"),
+            HL7Table.Entry(code: "MS", description: "Master of Science"),
+            HL7Table.Entry(code: "MSL", description: "Master of Science – Law"),
+            HL7Table.Entry(code: "MSN", description: "Master of Science – Nursing"),
+            HL7Table.Entry(code: "MTH", description: "Master of Theology"),
+            HL7Table.Entry(code: "MDA", description: "Medical Assistant"),
+            HL7Table.Entry(code: "MT", description: "Medical Technician"),
+            HL7Table.Entry(code: "NG", description: "Non-Graduate"),
+            HL7Table.Entry(code: "NP", description: "Nurse Practitioner"),
+            HL7Table.Entry(code: "PA", description: "Physician Assistant"),
+            HL7Table.Entry(code: "RMA", description: "Registered Medical Assistant"),
+            HL7Table.Entry(code: "RN", description: "Registered Nurse"),
+            HL7Table.Entry(code: "RPH", description: "Registered Pharmacist"),
+            HL7Table.Entry(code: "SEC", description: "Secretarial Certificate"),
+            HL7Table.Entry(code: "TS", description: "Trade School Graduate"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0361_v2_8_2 = HL7Table(
+        number: "0361",
+        name: "Application",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0362_v2_8_2 = HL7Table(
+        number: "0362",
+        name: "Facility",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0363_v2_8_2 = HL7Table(
+        number: "0363",
+        name: "Assigning Authority",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0364_v2_8_2 = HL7Table(
+        number: "0364",
+        name: "Comment Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PI", description: "Patient Instructions"),
+            HL7Table.Entry(code: "AI", description: "Ancillary Instructions"),
+            HL7Table.Entry(code: "GI", description: "General Instructions"),
+            HL7Table.Entry(code: "1R", description: "Primary Reason"),
+            HL7Table.Entry(code: "2R", description: "Secondary Reason"),
+            HL7Table.Entry(code: "GR", description: "General Reason"),
+            HL7Table.Entry(code: "RE", description: "Remark"),
+            HL7Table.Entry(code: "DR", description: "Duplicate/Interaction Reason"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0365_v2_8_2 = HL7Table(
+        number: "0365",
+        name: "Equipment State",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PU", description: "Powered Up"),
+            HL7Table.Entry(code: "IN", description: "Initializing"),
+            HL7Table.Entry(code: "ID", description: "Idle"),
+            HL7Table.Entry(code: "CO", description: "Configuring"),
+            HL7Table.Entry(code: "OP", description: "Normal Operation"),
+            HL7Table.Entry(code: "CL", description: "Clearing"),
+            HL7Table.Entry(code: "PA", description: "Pausing"),
+            HL7Table.Entry(code: "PD", description: "Paused"),
+            HL7Table.Entry(code: "ES", description: "E-stopped"),
+            HL7Table.Entry(code: "TS", description: "Transport stopped"),
+            HL7Table.Entry(code: "SS", description: "Sampling stopped"),
+            HL7Table.Entry(code: "SD", description: "Shutting down"),
+            HL7Table.Entry(code: "DI", description: "Diagnose"),
+            HL7Table.Entry(code: "MA", description: "Maintenance (null) No state change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0366_v2_8_2 = HL7Table(
+        number: "0366",
+        name: "Local/Remote Control State",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Local"),
+            HL7Table.Entry(code: "R", description: "Remote (null) No state change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0367_v2_8_2 = HL7Table(
+        number: "0367",
+        name: "Alert Level",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "Normal"),
+            HL7Table.Entry(code: "W", description: "Warning"),
+            HL7Table.Entry(code: "S", description: "Serious"),
+            HL7Table.Entry(code: "C", description: "Critical (null) No level change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0368_v2_8_2 = HL7Table(
+        number: "0368",
+        name: "Remote Control Command",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SA", description: "Sampling"),
+            HL7Table.Entry(code: "LO", description: "Load"),
+            HL7Table.Entry(code: "UN", description: "Unload"),
+            HL7Table.Entry(code: "LK", description: "Lock"),
+            HL7Table.Entry(code: "UC", description: "Unlock"),
+            HL7Table.Entry(code: "TT", description: "Transport To"),
+            HL7Table.Entry(code: "CN", description: "Clear Notification"),
+            HL7Table.Entry(code: "IN", description: "Initialize/Initiate"),
+            HL7Table.Entry(code: "SU", description: "Setup"),
+            HL7Table.Entry(code: "CL", description: "Clear"),
+            HL7Table.Entry(code: "PA", description: "Pause"),
+            HL7Table.Entry(code: "RE", description: "Resume"),
+            HL7Table.Entry(code: "ES", description: "Emergency –stop"),
+            HL7Table.Entry(code: "LC", description: "Local Control Request"),
+            HL7Table.Entry(code: "RC", description: "Remote Control Request"),
+            HL7Table.Entry(code: "AB", description: "Abort"),
+            HL7Table.Entry(code: "EN", description: "Enable Sending Events"),
+            HL7Table.Entry(code: "DI", description: "Disable Sending Events"),
+            HL7Table.Entry(code: "EX", description: "Execute (command specified in field Parameters (ST) 01394)"),
+            HL7Table.Entry(code: "AF", description: "Aliquot From container"),
+            HL7Table.Entry(code: "AT", description: "Aliquot To container"),
+            HL7Table.Entry(code: "MSH|…|…|…|…|…|…|…|EAC^U07|…", description: ""),
+            HL7Table.Entry(code: "EQU|…", description: ""),
+            HL7Table.Entry(code: "[SPM]", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0369_v2_8_2 = HL7Table(
+        number: "0369",
+        name: "Specimen Role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Blind Sample"),
+            HL7Table.Entry(code: "C", description: "Calibrator, used for initial setting of calibration"),
+            HL7Table.Entry(code: "E", description: "Electronic QC, used with manufactured reference providing signals that simulate QC results"),
+            HL7Table.Entry(code: "F", description: "Specimen used for testing proficiency of the organization performing the testing (Filler)"),
+            HL7Table.Entry(code: "G", description: "Group (where a specimen consists of multiple individual elements that are not individually identified)"),
+            HL7Table.Entry(code: "L", description: "Pool (aliquots of individual specimens combined to form a single specimen representing all of the components.)"),
+            HL7Table.Entry(code: "O", description: "Specimen used for testing Operator Proficiency"),
+            HL7Table.Entry(code: "P", description: "Patient (default if blank component value)"),
+            HL7Table.Entry(code: "Q", description: "Control specimen"),
+            HL7Table.Entry(code: "R", description: "Replicate (of patient sample as a control)"),
+            HL7Table.Entry(code: "V", description: "Verifying Calibrator, used for periodic calibration checks"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0370_v2_8_2 = HL7Table(
+        number: "0370",
+        name: "Container Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Identified"),
+            HL7Table.Entry(code: "P", description: "In Position"),
+            HL7Table.Entry(code: "O", description: "In Process"),
+            HL7Table.Entry(code: "R", description: "Process Completed"),
+            HL7Table.Entry(code: "L", description: "Left Equipment"),
+            HL7Table.Entry(code: "M", description: "Missing"),
+            HL7Table.Entry(code: "X", description: "Container Unavailable"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0371_v2_8_2 = HL7Table(
+        number: "0371",
+        name: "Additive/Preservative",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F10", description: "10% Formalin"),
+            HL7Table.Entry(code: "C32", description: "3.2% Citrate"),
+            HL7Table.Entry(code: "C38", description: "3.8% Citrate"),
+            HL7Table.Entry(code: "HCL6", description: "6N HCL"),
+            HL7Table.Entry(code: "ACDA", description: "ACD Solution A"),
+            HL7Table.Entry(code: "ACDB", description: "ACD Solution B"),
+            HL7Table.Entry(code: "ACET", description: "Acetic Acid"),
+            HL7Table.Entry(code: "AMIES", description: "Amies transport medium"),
+            HL7Table.Entry(code: "HEPA", description: "Ammonium heparin"),
+            HL7Table.Entry(code: "BACTM", description: "Bacterial Transport medium"),
+            HL7Table.Entry(code: "BOR", description: "Borate Boric Acid"),
+            HL7Table.Entry(code: "BOUIN", description: "Bouin’s solution"),
+            HL7Table.Entry(code: "BF10", description: "Buffered 10% formalin"),
+            HL7Table.Entry(code: "WEST", description: "Buffered Citrate (Westergren Sedimentation Rate)"),
+            HL7Table.Entry(code: "BSKM", description: "Buffered skim milk"),
+            HL7Table.Entry(code: "CARS", description: "Carson’s Modified 10% formalin"),
+            HL7Table.Entry(code: "CARY", description: "Cary Blair Medium"),
+            HL7Table.Entry(code: "CHLTM", description: "Chlamydia transport medium"),
+            HL7Table.Entry(code: "CTAD", description: "CTAD (this should be spelled out if not universally understood)"),
+            HL7Table.Entry(code: "ENT", description: "Enteric bacteria transport medium"),
+            HL7Table.Entry(code: "ENT+", description: "Enteric plus"),
+            HL7Table.Entry(code: "JKM", description: "Jones Kendrick Medium"),
+            HL7Table.Entry(code: "KARN", description: "Karnovsky’s fixative"),
+            HL7Table.Entry(code: "LIA", description: "Lithium iodoacetate"),
+            HL7Table.Entry(code: "HEPL", description: "Lithium/Li Heparin"),
+            HL7Table.Entry(code: "M4", description: "M4"),
+            HL7Table.Entry(code: "M4RT", description: "M4-RT"),
+            HL7Table.Entry(code: "M5", description: "M5"),
+            HL7Table.Entry(code: "MICHTM", description: "Michel’s transport medium"),
+            HL7Table.Entry(code: "MMDTM", description: "MMD transport medium"),
+            HL7Table.Entry(code: "HNO3", description: "Nitric Acid"),
+            HL7Table.Entry(code: "NONE", description: "None"),
+            HL7Table.Entry(code: "PAGE", description: "Pages’s Saline"),
+            HL7Table.Entry(code: "PHENOL", description: "Phenol"),
+            HL7Table.Entry(code: "KOX", description: "Potassium Oxalate"),
+            HL7Table.Entry(code: "EDTK", description: "Potassium/K EDTA"),
+            HL7Table.Entry(code: "EDTK15", description: "Potassium/K EDTA 15%"),
+            HL7Table.Entry(code: "EDTK75", description: "Potassium/K EDTA 7.5%"),
+            HL7Table.Entry(code: "PVA", description: "PVA (polyvinylalcohol)"),
+            HL7Table.Entry(code: "RLM", description: "Reagan Lowe Medium"),
+            HL7Table.Entry(code: "SST", description: "Serum Separator Tube (Polymer Gel)"),
+            HL7Table.Entry(code: "SILICA", description: "Siliceous earth, 12 mg"),
+            HL7Table.Entry(code: "NAF", description: "Sodium Fluoride"),
+            HL7Table.Entry(code: "FL100", description: "Sodium Fluoride, 100mg"),
+            HL7Table.Entry(code: "FL10", description: "Sodium Fluoride, 10mg"),
+            HL7Table.Entry(code: "NAPS", description: "Sodium polyanethol sulfonate 0.35% in 0.85% sodium chloride"),
+            HL7Table.Entry(code: "HEPN", description: "Sodium/Na Heparin"),
+            HL7Table.Entry(code: "EDTN", description: "Sodium/Na EDTA"),
+            HL7Table.Entry(code: "SPS", description: "SPS(this should be spelled out if not universally understood)"),
+            HL7Table.Entry(code: "STUTM", description: "Stuart transport medium"),
+            HL7Table.Entry(code: "THROM", description: "Thrombin"),
+            HL7Table.Entry(code: "FDP", description: "Thrombin NIH; soybean trypsin inhibitor (Fibrin Degradation Products)"),
+            HL7Table.Entry(code: "THYMOL", description: "Thymol"),
+            HL7Table.Entry(code: "THYO", description: "Thyoglycollate broth"),
+            HL7Table.Entry(code: "TOLU", description: "Toluene"),
+            HL7Table.Entry(code: "URETM", description: "Ureaplasma transport medium"),
+            HL7Table.Entry(code: "VIRTM", description: "Viral Transport medium"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0372_v2_8_2 = HL7Table(
+        number: "0372",
+        name: "Specimen Component",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SUP", description: "Supernatant"),
+            HL7Table.Entry(code: "SED", description: "Sediment"),
+            HL7Table.Entry(code: "BLD", description: "Whole blood, homogeneous"),
+            HL7Table.Entry(code: "BSEP", description: "Whole blood, separated"),
+            HL7Table.Entry(code: "PRP", description: "Platelet rich plasma"),
+            HL7Table.Entry(code: "PPP", description: "Platelet poor plasma"),
+            HL7Table.Entry(code: "SER", description: "Serum, NOS (not otherwise specified)"),
+            HL7Table.Entry(code: "PLAS", description: "Plasma, NOS (not otherwise specified)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0373_v2_8_2 = HL7Table(
+        number: "0373",
+        name: "Treatment",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LDLP", description: "LDL Precipitation"),
+            HL7Table.Entry(code: "RECA", description: "Recalification"),
+            HL7Table.Entry(code: "DEFB", description: "Defibrination"),
+            HL7Table.Entry(code: "ACID", description: "Acidification"),
+            HL7Table.Entry(code: "NEUT", description: "Neutralization"),
+            HL7Table.Entry(code: "ALK", description: "Alkalization"),
+            HL7Table.Entry(code: "FILT", description: "Filtration"),
+            HL7Table.Entry(code: "UFIL", description: "Ultrafiltration"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0374_v2_8_2 = HL7Table(
+        number: "0374",
+        name: "System Induced Contaminants",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CNTM", description: "Present, type of contamination unspecified"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0375_v2_8_2 = HL7Table(
+        number: "0375",
+        name: "Artificial Blood",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SFHB", description: "Stromal free hemoglobin preparations"),
+            HL7Table.Entry(code: "FLUR", description: "Fluorocarbons"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0376_v2_8_2 = HL7Table(
+        number: "0376",
+        name: "Special Handling Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C37", description: "Body temperature"),
+            HL7Table.Entry(code: "AMB", description: "Ambient temperature"),
+            HL7Table.Entry(code: "CAMB", description: "Critical ambient temperature"),
+            HL7Table.Entry(code: "REF", description: "Refrigerated temperature"),
+            HL7Table.Entry(code: "CREF", description: "Critical refrigerated temperature"),
+            HL7Table.Entry(code: "FRZ", description: "Frozen temperature"),
+            HL7Table.Entry(code: "CFRZ", description: "Critical frozen temperature"),
+            HL7Table.Entry(code: "DFRZ", description: "Deep frozen"),
+            HL7Table.Entry(code: "UFRZ", description: "Ultra frozen"),
+            HL7Table.Entry(code: "NTR", description: "Liquid nitrogen"),
+            HL7Table.Entry(code: "PRTL", description: "Protect from light"),
+            HL7Table.Entry(code: "CATM", description: "Protect from air"),
+            HL7Table.Entry(code: "DRY", description: "Dry"),
+            HL7Table.Entry(code: "PSO", description: "No shock"),
+            HL7Table.Entry(code: "PSA", description: "Do not shake"),
+            HL7Table.Entry(code: "UPR", description: "Upright"),
+            HL7Table.Entry(code: "MTLF", description: "Metal Free"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0377_v2_8_2 = HL7Table(
+        number: "0377",
+        name: "Other Environmental Factors",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ATM", description: "Opened container, atmosphere and duration unspecified"),
+            HL7Table.Entry(code: "A60", description: "Opened container, indoor atmosphere, 60 minutes duration"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0378_v2_8_2 = HL7Table(
+        number: "0378",
+        name: "Carrier Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0379_v2_8_2 = HL7Table(
+        number: "0379",
+        name: "Tray Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0380_v2_8_2 = HL7Table(
+        number: "0380",
+        name: "Separator Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0381_v2_8_2 = HL7Table(
+        number: "0381",
+        name: "Cap Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0382_v2_8_2 = HL7Table(
+        number: "0382",
+        name: "Drug Interference",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0383_v2_8_2 = HL7Table(
+        number: "0383",
+        name: "Substance Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EW", description: "Expired Warning"),
+            HL7Table.Entry(code: "EE", description: "Expired Error"),
+            HL7Table.Entry(code: "CW", description: "Calibration Warning"),
+            HL7Table.Entry(code: "CE", description: "Calibration Error"),
+            HL7Table.Entry(code: "QW", description: "QC Warning"),
+            HL7Table.Entry(code: "QE", description: "QC Error"),
+            HL7Table.Entry(code: "NW", description: "Not Available Warning"),
+            HL7Table.Entry(code: "NE", description: "Not Available Error"),
+            HL7Table.Entry(code: "OW", description: "Other Warning"),
+            HL7Table.Entry(code: "OE", description: "Other Error"),
+            HL7Table.Entry(code: "OK", description: "OK Status"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0384_v2_8_2 = HL7Table(
+        number: "0384",
+        name: "Substance Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SR", description: "Single Test Reagent"),
+            HL7Table.Entry(code: "MR", description: "Multiple Test Reagent"),
+            HL7Table.Entry(code: "DI", description: "Diluent"),
+            HL7Table.Entry(code: "PT", description: "Pretreatment"),
+            HL7Table.Entry(code: "RC", description: "Reagent Calibrator"),
+            HL7Table.Entry(code: "CO", description: "Control"),
+            HL7Table.Entry(code: "PW", description: "Purified Water"),
+            HL7Table.Entry(code: "LW", description: "Liquid Waste"),
+            HL7Table.Entry(code: "SW", description: "Solid Waste"),
+            HL7Table.Entry(code: "SC", description: "Countable Solid Item"),
+            HL7Table.Entry(code: "LI", description: "Measurable Liquid Item"),
+            HL7Table.Entry(code: "OT", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0385_v2_8_2 = HL7Table(
+        number: "0385",
+        name: "Manufacturer Identifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0386_v2_8_2 = HL7Table(
+        number: "0386",
+        name: "Supplier Identifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0387_v2_8_2 = HL7Table(
+        number: "0387",
+        name: "Command Response",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OK", description: "Command completed successfully"),
+            HL7Table.Entry(code: "TI", description: "Command cannot be completed within requested completion time"),
+            HL7Table.Entry(code: "ER", description: "Command cannot be completed because of error condition"),
+            HL7Table.Entry(code: "ST", description: "Command cannot be completed because of the status of the requested equipment"),
+            HL7Table.Entry(code: "UN", description: "Command cannot be completed for unknown reasons"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0388_v2_8_2 = HL7Table(
+        number: "0388",
+        name: "Processing Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Regular Production"),
+            HL7Table.Entry(code: "E", description: "Evaluation"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0389_v2_8_2 = HL7Table(
+        number: "0389",
+        name: "Analyte Repeat Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "O", description: "Original, first run"),
+            HL7Table.Entry(code: "R", description: "Repeated without dilution"),
+            HL7Table.Entry(code: "D", description: "Repeated with dilution"),
+            HL7Table.Entry(code: "F", description: "Reflex test"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0391_v2_8_2 = HL7Table(
+        number: "0391",
+        name: "Segment Group",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ADMINISTRATION", description: ""),
+            HL7Table.Entry(code: "ALLERGY", description: ""),
+            HL7Table.Entry(code: "APP_STATS", description: ""),
+            HL7Table.Entry(code: "APP_STATUS", description: ""),
+            HL7Table.Entry(code: "ASSOCIATED_PERSON", description: ""),
+            HL7Table.Entry(code: "ASSOCIATED_RX_ADMIN", description: ""),
+            HL7Table.Entry(code: "ASSOCIATED_RX_ORDER", description: ""),
+            HL7Table.Entry(code: "AUTHORIZATION", description: ""),
+            HL7Table.Entry(code: "AUTHORIZATION_CONTACT", description: ""),
+            HL7Table.Entry(code: "CERTIFICATE", description: ""),
+            HL7Table.Entry(code: "CLOCK", description: ""),
+            HL7Table.Entry(code: "CLOCK_AND_STATISTICS", description: ""),
+            HL7Table.Entry(code: "CLOCK_AND_STATS_WITH_NOTES", description: ""),
+            HL7Table.Entry(code: "CLOCK_AND_STATS_WITH_NOTES_ALT", description: ""),
+            HL7Table.Entry(code: "COMMAND", description: ""),
+            HL7Table.Entry(code: "COMMAND_RESPONSE", description: ""),
+            HL7Table.Entry(code: "COMMON_ORDER", description: ""),
+            HL7Table.Entry(code: "COMPONENT", description: ""),
+            HL7Table.Entry(code: "COMPONENTS", description: ""),
+            HL7Table.Entry(code: "CONTAINER", description: ""),
+            HL7Table.Entry(code: "DEFINITION", description: ""),
+            HL7Table.Entry(code: "DIET", description: ""),
+            HL7Table.Entry(code: "DISPENSE", description: ""),
+            HL7Table.Entry(code: "ENCODED_ORDER", description: ""),
+            HL7Table.Entry(code: "ENCODING", description: ""),
+            HL7Table.Entry(code: "EXPERIENCE", description: ""),
+            HL7Table.Entry(code: "FINANCIAL", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_COMMON_ORDER", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_INSURANCE", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_ORDER", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_PROCEDURE", description: ""),
+            HL7Table.Entry(code: "FINANCIAL_TIMING_QUANTITY", description: ""),
+            HL7Table.Entry(code: "GENERAL_RESOURCE", description: ""),
+            HL7Table.Entry(code: "GIVE", description: ""),
+            HL7Table.Entry(code: "GOAL", description: ""),
+            HL7Table.Entry(code: "GOAL_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "GOAL_PATHWAY", description: ""),
+            HL7Table.Entry(code: "GOAL_ROLE", description: ""),
+            HL7Table.Entry(code: "GUARANTOR_INSURANCE", description: ""),
+            HL7Table.Entry(code: "INSURANCE", description: ""),
+            HL7Table.Entry(code: "LOCATION_RESOURCE", description: ""),
+            HL7Table.Entry(code: "MERGE_INFO", description: ""),
+            HL7Table.Entry(code: "MF", description: ""),
+            HL7Table.Entry(code: "MF_CDM", description: ""),
+            HL7Table.Entry(code: "MF_CLIN_STUDY", description: ""),
+            HL7Table.Entry(code: "MF_CLIN_STUDY_SCHED", description: ""),
+            HL7Table.Entry(code: "MF_INV_ITEM", description: ""),
+            HL7Table.Entry(code: "MF_LOC_DEPT", description: ""),
+            HL7Table.Entry(code: "MF_LOCATION", description: ""),
+            HL7Table.Entry(code: "MF_OBS_ATTRIBUTES", description: ""),
+            HL7Table.Entry(code: "MF_PHASE_SCHED_DETAIL", description: ""),
+            HL7Table.Entry(code: "MF_QUERY", description: ""),
+            HL7Table.Entry(code: "MF_SITE_DEFINED", description: ""),
+            HL7Table.Entry(code: "MF_STAFF", description: ""),
+            HL7Table.Entry(code: "MF_TEST", description: ""),
+            HL7Table.Entry(code: "MF_TEST_BATT_DETAIL", description: ""),
+            HL7Table.Entry(code: "MF_TEST_BATTERIES", description: ""),
+            HL7Table.Entry(code: "MF_TEST_CALC_DETAIL", description: ""),
+            HL7Table.Entry(code: "MF_TEST_CALCULATED", description: ""),
+            HL7Table.Entry(code: "MF_TEST_CAT_DETAIL", description: ""),
+            HL7Table.Entry(code: "MF_TEST_CATEGORICAL", description: ""),
+            HL7Table.Entry(code: "MF_TEST_NUMERIC", description: ""),
+            HL7Table.Entry(code: "NK1_TIMING_QTY", description: ""),
+            HL7Table.Entry(code: "NOTIFICATION", description: ""),
+            HL7Table.Entry(code: "OBSERVATION", description: ""),
+            HL7Table.Entry(code: "OBSERVATION_PRIOR", description: ""),
+            HL7Table.Entry(code: "OBSERVATION_REQUEST", description: ""),
+            HL7Table.Entry(code: "OMSERVATION", description: ""),
+            HL7Table.Entry(code: "ORDER", description: ""),
+            HL7Table.Entry(code: "ORDER_CHOICE", description: ""),
+            HL7Table.Entry(code: "ORDER_DETAIL", description: ""),
+            HL7Table.Entry(code: "ORDER_DETAIL_SUPPLEMENT", description: ""),
+            HL7Table.Entry(code: "ORDER_DIET", description: ""),
+            HL7Table.Entry(code: "ORDER_ENCODED", description: ""),
+            HL7Table.Entry(code: "ORDER_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "ORDER_PRIOR", description: ""),
+            HL7Table.Entry(code: "ORDER_TRAY", description: ""),
+            HL7Table.Entry(code: "PATHWAY", description: ""),
+            HL7Table.Entry(code: "PATHWAY_ROLE", description: ""),
+            HL7Table.Entry(code: "PATIENT", description: ""),
+            HL7Table.Entry(code: "PATIENT_PRIOR", description: ""),
+            HL7Table.Entry(code: "PATIENT_RESULT", description: ""),
+            HL7Table.Entry(code: "PATIENT_VISIT", description: ""),
+            HL7Table.Entry(code: "PATIENT_VISIT_PRIOR", description: ""),
+            HL7Table.Entry(code: "PERSONNEL_RESOURCE", description: ""),
+            HL7Table.Entry(code: "PEX_CAUSE", description: ""),
+            HL7Table.Entry(code: "PEX_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "PRIOR_RESULT", description: ""),
+            HL7Table.Entry(code: "PROBLEM", description: ""),
+            HL7Table.Entry(code: "PROBLEM_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "PROBLEM_PATHWAY", description: ""),
+            HL7Table.Entry(code: "PROBLEM_ROLE", description: ""),
+            HL7Table.Entry(code: "PROCEDURE", description: ""),
+            HL7Table.Entry(code: "PRODUCT", description: ""),
+            HL7Table.Entry(code: "PRODUCT_STATUS", description: ""),
+            HL7Table.Entry(code: "PROVIDER", description: ""),
+            HL7Table.Entry(code: "PROVIDER_CONTACT", description: ""),
+            HL7Table.Entry(code: "QBP", description: ""),
+            HL7Table.Entry(code: "QRY_WITH_DETAIL", description: ""),
+            HL7Table.Entry(code: "QUERY_RESPONSE", description: ""),
+            HL7Table.Entry(code: "QUERY_RESULT_CLUSTER", description: ""),
+            HL7Table.Entry(code: "REQUEST", description: ""),
+            HL7Table.Entry(code: "RESOURCE", description: ""),
+            HL7Table.Entry(code: "RESOURCES", description: ""),
+            HL7Table.Entry(code: "RESPONSE", description: ""),
+            HL7Table.Entry(code: "RESULT", description: ""),
+            HL7Table.Entry(code: "RESULTS", description: ""),
+            HL7Table.Entry(code: "RESULTS_NOTES", description: ""),
+            HL7Table.Entry(code: "ROW_DEFINITION", description: ""),
+            HL7Table.Entry(code: "RX_ADMINISTRATION", description: ""),
+            HL7Table.Entry(code: "RX_ORDER", description: ""),
+            HL7Table.Entry(code: "SCHEDULE", description: ""),
+            HL7Table.Entry(code: "SERVICE", description: ""),
+            HL7Table.Entry(code: "SPECIMEN", description: ""),
+            HL7Table.Entry(code: "SPECIMEN_CONTAINER", description: ""),
+            HL7Table.Entry(code: "STAFF", description: ""),
+            HL7Table.Entry(code: "STUDY", description: ""),
+            HL7Table.Entry(code: "STUDY_OBSERVATION", description: ""),
+            HL7Table.Entry(code: "STUDY_PHASE", description: ""),
+            HL7Table.Entry(code: "STUDY_SCHEDULE", description: ""),
+            HL7Table.Entry(code: "TEST_CONFIGURATION", description: ""),
+            HL7Table.Entry(code: "TIMING", description: ""),
+            HL7Table.Entry(code: "TIMING_DIET", description: ""),
+            HL7Table.Entry(code: "TIMING_ENCODED", description: ""),
+            HL7Table.Entry(code: "TIMING_GIVE", description: ""),
+            HL7Table.Entry(code: "TIMING_PRIOR", description: ""),
+            HL7Table.Entry(code: "TIMING_QTY", description: ""),
+            HL7Table.Entry(code: "TIMING_QUANTITY", description: ""),
+            HL7Table.Entry(code: "TIMING_TRAY", description: ""),
+            HL7Table.Entry(code: "TREATMENT", description: ""),
+            HL7Table.Entry(code: "VISIT", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0392_v2_8_2 = HL7Table(
+        number: "0392",
+        name: "Match Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DB", description: "Match on Date of Birth"),
+            HL7Table.Entry(code: "NA", description: "Match on Name (Alpha Match)"),
+            HL7Table.Entry(code: "NP", description: "Match on Name (Phonetic Match)"),
+            HL7Table.Entry(code: "SS", description: "Match on Social Security Number"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0393_v2_8_2 = HL7Table(
+        number: "0393",
+        name: "Match Algorithms",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LINKSOFT_2.01", description: "Proprietary algorithm for LinkSoft v2.01"),
+            HL7Table.Entry(code: "MATCHWARE_1.2", description: "Proprietary algorithm for MatchWare v1.2"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0394_v2_8_2 = HL7Table(
+        number: "0394",
+        name: "Response Modality",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "R", description: "Real Time"),
+            HL7Table.Entry(code: "T", description: "Bolus (a series of responses sent at the same time without use of batch formatting)"),
+            HL7Table.Entry(code: "B", description: "Batch"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0395_v2_8_2 = HL7Table(
+        number: "0395",
+        name: "Modify Indicator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "New Subscription"),
+            HL7Table.Entry(code: "M", description: "Modified Subscription"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0396_v2_8_2 = HL7Table(
+        number: "0396",
+        name: "Coding System",
+        kind: .hl7,
+        permitsLocalExtensions: true,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Local general code"),
+            HL7Table.Entry(code: "99zzz", description: "Local general code where z is an alphanumeric character character)."),
+            HL7Table.Entry(code: "ACR", description: "American College of Radiology finding codes 1986, American College of Radiology, Reston, VA. Code"),
+            HL7Table.Entry(code: "ALPHAID2006", description: "German Alpha-ID v2006 ID of the alphabetical Index ICD-10-GM-2006."),
+            HL7Table.Entry(code: "ALPHAID2007", description: "German Alpha-ID v2007 ID of the alphabetical Index ICD-10-GM-2007."),
+            HL7Table.Entry(code: "ALPHAID2008", description: "German Alpha-ID v2008 ID of the alphabetical Index ICD-10-GM-2008."),
+            HL7Table.Entry(code: "ALPHAID2009", description: "German Alpha-ID v2009 ID of the alphabetical Index ICD-10-GM-2009."),
+            HL7Table.Entry(code: "ALPHAID2010", description: "German Alpha-ID v2010 ID of the alphabetical Index ICD-10-GM-2010."),
+            HL7Table.Entry(code: "ALPHAID2011", description: "German Alpha-ID v2011 ID of the alphabetical Index ICD-10-GM-2011."),
+            HL7Table.Entry(code: "ART", description: "WHO Adverse Reaction WHO Collaborating Centre for International Drug Terms"),
+            HL7Table.Entry(code: "ANS+", description: "HL7 set of units of measure"),
+            HL7Table.Entry(code: "AS4", description: "ASTM E1238/ E1467 Universal"),
+            HL7Table.Entry(code: "AS4E", description: "AS4 Neurophysiology Codes"),
+            HL7Table.Entry(code: "ATC", description: "American Type Culture Reference cultures (microorganisms, tissue cultures, Specific Non-Drug Collection"),
+            HL7Table.Entry(code: "C4", description: "CPT-4"),
+            HL7Table.Entry(code: "CAPECC", description: "College of American Pathologists Electronic a database template for the College of American Cancer Checklist"),
+            HL7Table.Entry(code: "CAS", description: "Chemical abstract codes These include unique codes for each unique"),
+            HL7Table.Entry(code: "CCC", description: "Clinical Care Classification system"),
+            HL7Table.Entry(code: "CD2", description: "CDT-2 Codes"),
+            HL7Table.Entry(code: "CDCA", description: "CDC Analyte Codes"),
+            HL7Table.Entry(code: "CDCEDACUITY CDC Emergency", description: "Patient Acuity indicates level of care required (Acute, Public Health Code"),
+            HL7Table.Entry(code: "Department Acuity", description: "Chronic, Critical)"),
+            HL7Table.Entry(code: "CDCM", description: "CDC Methods/Instruments Codes"),
+            HL7Table.Entry(code: "CDCOBS", description: "CDC BioSense RT observations (Census) - OBX-3 like Temperature, Bloodpressure and Census"),
+            HL7Table.Entry(code: "CDCPHINVS", description: "CDC PHIN Vocabulary CDC Public Health Information Network Vocabulary Public Health Code Coding System"),
+            HL7Table.Entry(code: "CDCREC", description: "Race & Ethnicity - CDC The U.S. Centers for Disease Control and"),
+            HL7Table.Entry(code: "CDS", description: "CDC Surveillance"),
+            HL7Table.Entry(code: "CE (obsolete) CEN ECG diagnostic", description: "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"),
+            HL7Table.Entry(code: "codes", description: "backwards compatibility only. See the entry for the Code MDC coding system.)"),
+            HL7Table.Entry(code: "CLP", description: "CLIP"),
+            HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
+            HL7Table.Entry(code: "CST", description: "COSTART"),
+            HL7Table.Entry(code: "CVX", description: "CDC Vaccine Codes"),
+            HL7Table.Entry(code: "DCM", description: "DICOM Controlled Terminology"),
+            HL7Table.Entry(code: "E", description: "EUCLIDES"),
+            HL7Table.Entry(code: "E5", description: "Euclides quantity codes Available from Euclides Foundation International nv Specific Non-Drug"),
+            HL7Table.Entry(code: "E6", description: "Euclides Lab method codes"),
+            HL7Table.Entry(code: "E7", description: "Euclides Lab equipment Available from Euclides Foundation International nv Specific Non-Drug codes"),
+            HL7Table.Entry(code: "ENZC", description: "Enzyme Codes"),
+            HL7Table.Entry(code: "EPASRS", description: "EPA SRS"),
+            HL7Table.Entry(code: "FDAUDI", description: "FDA Unique Device Identifier"),
+            HL7Table.Entry(code: "FDAUNII", description: "Unique Identifier (UNII)"),
+            HL7Table.Entry(code: "FDDC", description: "First DataBank Drug Codes"),
+            HL7Table.Entry(code: "FDDX", description: "First DataBank Diagnostic Codes"),
+            HL7Table.Entry(code: "FDK", description: "FDA K10"),
+            HL7Table.Entry(code: "FIPS5_2", description: "FIPS 5-2 (State)"),
+            HL7Table.Entry(code: "FIPS6_4", description: "FIPS 6-4 (County)"),
+            HL7Table.Entry(code: "GDRG2004", description: "G-DRG German DRG Codes v2004"),
+            HL7Table.Entry(code: "GDRG2005", description: "G-DRG German DRG Codes v2005"),
+            HL7Table.Entry(code: "GDRG2006", description: "G-DRG German DRG Codes v2006"),
+            HL7Table.Entry(code: "GDRG2007", description: "G-DRG German DRG Codes v2007"),
+            HL7Table.Entry(code: "GDRG2008", description: "G-DRG German DRG Codes v2008"),
+            HL7Table.Entry(code: "GDRG2009", description: "G-DRG German DRG Codes v2009"),
+            HL7Table.Entry(code: "GMDC2004", description: "German Major Diagnostic Codes v2004"),
+            HL7Table.Entry(code: "GMDC2005", description: "German Major Diagnostic Codes v2005"),
+            HL7Table.Entry(code: "GMDC2006", description: "German Major Diagnostic Codes v2006"),
+            HL7Table.Entry(code: "GMDC2007", description: "German Major Diagnostic Codes v2007"),
+            HL7Table.Entry(code: "GMDC2008", description: "German Major Diagnostic Codes v2008"),
+            HL7Table.Entry(code: "GMDC2009", description: "German Major Diagnostic Codes v2009"),
+            HL7Table.Entry(code: "GS1UDI", description: "GS1 Unique Device Identifier"),
+            HL7Table.Entry(code: "HB", description: "HIBCC"),
+            HL7Table.Entry(code: "HCPCS", description: "CMS (formerly HCFA) HCPCS: contains codes for medical equipment, Common Procedure Coding System"),
+            HL7Table.Entry(code: "HCPT", description: "Health Care Provider Taxonomy"),
+            HL7Table.Entry(code: "HHC", description: "Home Health Care"),
+            HL7Table.Entry(code: "HI", description: "Health Outcomes"),
+            HL7Table.Entry(code: "HIBUDI", description: "HIBCC Unique Device Identifier"),
+            HL7Table.Entry(code: "HL7nnnn", description: "HL7 Defined Codes where nnnn is the HL7 table number"),
+            HL7Table.Entry(code: "HOT", description: "Japanese Nationwide Medicine Code"),
+            HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA )Procedure Codes (HCPCS)"),
+            HL7Table.Entry(code: "I10", description: "ICD-10"),
+            HL7Table.Entry(code: "I10G2004", description: "ICD 10 Germany 2004"),
+            HL7Table.Entry(code: "I10G2005", description: "ICD 10 Germany 2005"),
+            HL7Table.Entry(code: "I10G2006", description: "ICD 10 Germany 2006"),
+            HL7Table.Entry(code: "I10P", description: "ICD-10 Procedure Codes"),
+            HL7Table.Entry(code: "I9", description: "ICD9"),
+            HL7Table.Entry(code: "I9C", description: "ICD-9CM"),
+            HL7Table.Entry(code: "I9CDX", description: "ICD-9CM Diagnosis codes"),
+            HL7Table.Entry(code: "I9CP", description: "ICD-9CM Procedure codes"),
+            HL7Table.Entry(code: "IBT", description: "ISBT"),
+            HL7Table.Entry(code: "IBTnnnn", description: "ISBT 128 codes where nnnn specifies a specific table within ISBT 128."),
+            HL7Table.Entry(code: "IC2", description: "ICHPPC-2"),
+            HL7Table.Entry(code: "3", description: "The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental Association’s Current Dental Terminology (CDT-2) code by reference. Level II also includes the genuine HCPCS codes, approved and maintained jointly by the Alpha-Numeric Editorial Panel, consisting of CMS, the Health Insurance Association of America, and the Blue Cross and Blue Shield Association. Level III are codes developed locally by Medicare carriers. The HCPCS modifiers are divided into the same three levels, I being CPT-4 modifiers, II CDT-2 and genuine HCPCS modifiers, and III being locally agreed modifiers. The genuine HCPCS codes and modifiers of level II can be found at http://www.cms.hhs.gov/MedHCPCSGenInfo/. CMS distributes the HCPCS codes via the National Technical Information Service (NTIS, www.ntis.gov) and NTIS distribution includes the CDT-2 part of HCPCS Level II, but does not include the CPT-4 part (Level I). CMS may distribute the CPT-4 part to its contractors."),
+            HL7Table.Entry(code: "ICCUDI", description: "ICCBBA Unique Device Identifier"),
+            HL7Table.Entry(code: "ICD10GM2007", description: "ICD 10 Germany v2007"),
+            HL7Table.Entry(code: "ICD10GM2008", description: "ICD 10 Germany v2008"),
+            HL7Table.Entry(code: "ICD10GM2009", description: "ICD 10 Germany v2009"),
+            HL7Table.Entry(code: "ICD10GM2010", description: "ICD 10 Germany v2010"),
+            HL7Table.Entry(code: "ICD10GM2011", description: "ICD 10 Germany v2011"),
+            HL7Table.Entry(code: "ICD10AM", description: "ICD-10 Australian modification"),
+            HL7Table.Entry(code: "ICD10CA", description: "ICD-10 Canada"),
+            HL7Table.Entry(code: "ICDO", description: "International Classification of Diseases for Oncology"),
+            HL7Table.Entry(code: "ICDO2", description: "International Classification of Disease International Classification of Diseases for Oncology. Code for Oncology Second Edition"),
+            HL7Table.Entry(code: "ICDO3", description: "International Classification of Disease L, Parkin D, et al, editors. International Classification Code for Oncology Third Edition"),
+            HL7Table.Entry(code: "ICS", description: "ICCS"),
+            HL7Table.Entry(code: "ICSD", description: "International Classification of Sleep Disorders"),
+            HL7Table.Entry(code: "ISOnnnn", description: "ISO Defined Codes"),
+            HL7Table.Entry(code: "(deprecated)", description: "where nnnn is the ISO table number"),
+            HL7Table.Entry(code: "ISO", description: "ISO 2955.83 (units of measure) with HL7 extensions"),
+            HL7Table.Entry(code: "ISO3166_1", description: "ISO 3166-1 Country Codes"),
+            HL7Table.Entry(code: "ISO3166_2", description: "ISO 3166-2 Country subdivisions"),
+            HL7Table.Entry(code: "ISO4217", description: "ISO4217 Currency Codes"),
+            HL7Table.Entry(code: "ISO639", description: "ISO 639 Language"),
+            HL7Table.Entry(code: "ITIS", description: "Integrated Taxonomic Information System"),
+            HL7Table.Entry(code: "IUPP", description: "IUPAC/IFCC Property Codes"),
+            HL7Table.Entry(code: "IUPC", description: "IUPAC/IFCC Component Codes"),
+            HL7Table.Entry(code: "JC8", description: "Japanese Chemistry"),
+            HL7Table.Entry(code: "JC10", description: "JLAC/JSLM, nationwide Source: Classification &Coding for Clinical laboratory code"),
+            HL7Table.Entry(code: "JJ1017", description: "Japanese Image Examination Cache"),
+            HL7Table.Entry(code: "LB", description: "Local billing code"),
+            HL7Table.Entry(code: "LN", description: "Logical Observation Identifier Names and Codes (LOINC®)"),
+            HL7Table.Entry(code: "MCD", description: "Medicaid"),
+            HL7Table.Entry(code: "MCR", description: "Medicare"),
+            HL7Table.Entry(code: "MDC", description: "Medical Device Communication"),
+            HL7Table.Entry(code: "MDDX", description: "Medispan Diagnostic Codes"),
+            HL7Table.Entry(code: "MEDC", description: "Medical Economics Drug Proprietary Codes for identifying drugs. Proprietary Drug code Codes"),
+            HL7Table.Entry(code: "MEDR", description: "Medical Dictionary for Drug Regulatory Affairs 12011 Sunset Hills Road, VAR1/7B52 (MEDDRA)"),
+            HL7Table.Entry(code: "MEDX", description: "Medical Economics Diagnostic Codes"),
+            HL7Table.Entry(code: "MGPI", description: "Medispan GPI"),
+            HL7Table.Entry(code: "MVX", description: "CDC Vaccine Manufacturer Codes"),
+            HL7Table.Entry(code: "NAICS", description: "Industry (NAICS)"),
+            HL7Table.Entry(code: "NCPDPnnnnsss NCPDP code list for", description: "NCPDP maintain code list associated with the"),
+            HL7Table.Entry(code: "data element nnnn [as", description: "specified Data Element (nnnn) and Segment (sss)."),
+            HL7Table.Entry(code: "used in segment sss]", description: "The Segment portion is optional if there is no specialization of the Data Element codes between segments. Examples: NCPDP1131RES = code set defined for NCPDP data element 1131 as used in the RES segment (Code List Qualifier – Response Code) NCPDP1131STS = code set defined for NCPDP data element 1131 as used in the STS segment (Code List Qualifier – Reject Code) NCPDP9701 = code set defined for NCPDP data element 9701 (Individual Relationship, Coded). No specialization to a segment exists for this data element. National Council for Prescription Drug Programs, 924Ø ast Raintree Drive, Scottsdale, AZ 8526Ø. Phone: (48Ø) 477-1ØØØ Fax: (48Ø) 767-1Ø42 e-mail: ncpdp@ncpdp.org www.ncpdp.org"),
+            HL7Table.Entry(code: "NDA", description: "NANDA"),
+            HL7Table.Entry(code: "NDC", description: "National drug codes"),
+            HL7Table.Entry(code: "NDFRT", description: "NDF-RT (Drug Classification)"),
+            HL7Table.Entry(code: "NIC", description: "Nursing Interventions Classification"),
+            HL7Table.Entry(code: "NIP001", description: "Source of Information (Immunization)"),
+            HL7Table.Entry(code: "NIP002", description: "Substance refusal reason"),
+            HL7Table.Entry(code: "NIP004", description: "Vaccination - Contraindications, Precautions, and Immunities"),
+            HL7Table.Entry(code: "NIP007", description: "Vaccinated at location (facility)"),
+            HL7Table.Entry(code: "NIP008", description: "Vaccine purchased with CDC National Immunization Program's (NIP) defined Public Health Code (Type of funding)"),
+            HL7Table.Entry(code: "NIP009", description: "Reported adverse event CDC National Immunization Program's (NIP) defined Public Health Code previously"),
+            HL7Table.Entry(code: "NIP010", description: "VAERS Report type"),
+            HL7Table.Entry(code: "NND", description: "Notifiable Event (Disease/Condition) Code List"),
+            HL7Table.Entry(code: "NPI", description: "National Provider Identifier"),
+            HL7Table.Entry(code: "NUBC", description: "National Uniform Billing The NUBC was formed to develop a single billing Committee"),
+            HL7Table.Entry(code: "NULLFL", description: "Null Flavor"),
+            HL7Table.Entry(code: "OHA", description: "Omaha System"),
+            HL7Table.Entry(code: "O301", description: "German Procedure Codes"),
+            HL7Table.Entry(code: "O3012004", description: "OPS Germany v2004"),
+            HL7Table.Entry(code: "O3012005", description: "OPS Germany v2005"),
+            HL7Table.Entry(code: "O3012006", description: "OPS Germany v2006"),
+            HL7Table.Entry(code: "OPS2007", description: "OPS Germany v2007"),
+            HL7Table.Entry(code: "OPS2008", description: "OPS Germany v2008"),
+            HL7Table.Entry(code: "OPS2009", description: "OPS Germany v2009"),
+            HL7Table.Entry(code: "OPS2010", description: "OPS Germany v2010"),
+            HL7Table.Entry(code: "OPS2011", description: "OPS Germany v2011"),
+            HL7Table.Entry(code: "PHINQUESTION CDC Public Health", description: "CDC Public Health Questions used in HL7 Message Public Health Code"),
+            HL7Table.Entry(code: "Information Network", description: "as observation identifiers. These question or"),
+            HL7Table.Entry(code: "(PHIN) Question", description: "observation identifiers are used in CDC's message implementation guides and will be passed in HL7 OBX-3 or Observation.Code"),
+            HL7Table.Entry(code: "PLR", description: "CDC PHLIP Lab result codes that are not covered in SNOMED at the time of this implementation"),
+            HL7Table.Entry(code: "PLT", description: "CDC PHLIP Lab test codes, where LOINC concept is too broad or not yet available, especially as needed for ordering and or lab to lab reporting )"),
+            HL7Table.Entry(code: "POS", description: "POS Codes"),
+            HL7Table.Entry(code: "RC", description: "Read Classification"),
+            HL7Table.Entry(code: "RXNORM", description: "RxNorm"),
+            HL7Table.Entry(code: "SCT", description: "SNOMED Clinical Terms SNOMED-CT concept identifier codes."),
+            HL7Table.Entry(code: "SCT2", description: "SNOMED Clinical Terms Used to indicate that the code value is the legacy- alphanumeric codes"),
+            HL7Table.Entry(code: "SDM", description: "SNOMED- DICOM Microglossary"),
+            HL7Table.Entry(code: "SIC", description: "Industry (SIC)"),
+            HL7Table.Entry(code: "SNM", description: "Systemized Nomenclature of Medicine (SNOMED)"),
+            HL7Table.Entry(code: "SNM3", description: "SNOMED International"),
+            HL7Table.Entry(code: "SNT", description: "SNOMED topology codes (anatomic sites) Road, Skokie, IL 60077-1034."),
+            HL7Table.Entry(code: "SOC", description: "Occupation (SOC 2000) The 2000 Standard Occupational Classification"),
+            HL7Table.Entry(code: "UB04FL14", description: "Priority (Type) of Visit Source: Official UB-04 Data Specification Manual,"),
+            HL7Table.Entry(code: "UB04FL15", description: "Point of Origin"),
+            HL7Table.Entry(code: "UB04FL17", description: "Patient Discharge Status Source: Official UB-04 Data Specification Manual,"),
+            HL7Table.Entry(code: "UB04FL31", description: "Occurrence Code"),
+            HL7Table.Entry(code: "UB04FL35", description: "Occurrence Span"),
+            HL7Table.Entry(code: "UB04FL39", description: "Value Code"),
+            HL7Table.Entry(code: "UC", description: "UCDS"),
+            HL7Table.Entry(code: "UCUM", description: "UCUM code set for units Added by motion of VOCABULARY T.C. 20060308 of measure(from Regenstrief)"),
+            HL7Table.Entry(code: "UMD", description: "MDNS"),
+            HL7Table.Entry(code: "UML", description: "Unified Medical Language"),
+            HL7Table.Entry(code: "UPC", description: "Universal Product Code The Uniform Code Council. 8163 Old Yankee Road, Specific Non-Drug"),
+            HL7Table.Entry(code: "UPIN", description: "UPIN"),
+            HL7Table.Entry(code: "USPS", description: "United States Postal Service"),
+            HL7Table.Entry(code: "W1", description: "WHO record # drug codes (6 digit)"),
+            HL7Table.Entry(code: "W2", description: "WHO record # drug codes (8 digit)"),
+            HL7Table.Entry(code: "W4", description: "WHO record # code with With ASTM extensions (see Implementation Guide), Drug code ASTM extension"),
+            HL7Table.Entry(code: "WC", description: "WHO ATC"),
+            HL7Table.Entry(code: "X12Dennnn", description: "ASC X12 Code List nnnn"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0397_v2_8_2 = HL7Table(
+        number: "0397",
+        name: "Sequencing",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Ascending"),
+            HL7Table.Entry(code: "AN", description: "Ascending, case insensitive"),
+            HL7Table.Entry(code: "D", description: "Descending"),
+            HL7Table.Entry(code: "DN", description: "Descending, case insensitive"),
+            HL7Table.Entry(code: "N", description: "None"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0398_v2_8_2 = HL7Table(
+        number: "0398",
+        name: "Continuation Style Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Fragmentation"),
+            HL7Table.Entry(code: "I", description: "Interactive Continuation"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0401_v2_8_2 = HL7Table(
+        number: "0401",
+        name: "Government Reimbursement Program",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MM", description: "Medicare"),
+            HL7Table.Entry(code: "C", description: "Medi-Cal"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0402_v2_8_2 = HL7Table(
+        number: "0402",
+        name: "School Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Dental"),
+            HL7Table.Entry(code: "G", description: "Graduate"),
+            HL7Table.Entry(code: "M", description: "Medical"),
+            HL7Table.Entry(code: "U", description: "Undergraduate"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0403_v2_8_2 = HL7Table(
+        number: "0403",
+        name: "Language Ability",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Read"),
+            HL7Table.Entry(code: "2", description: "Write"),
+            HL7Table.Entry(code: "3", description: "Speak"),
+            HL7Table.Entry(code: "4", description: "Understand"),
+            HL7Table.Entry(code: "5", description: "Sign"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0404_v2_8_2 = HL7Table(
+        number: "0404",
+        name: "Language Proficiency",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Excellent"),
+            HL7Table.Entry(code: "2", description: "Good"),
+            HL7Table.Entry(code: "3", description: "Fair"),
+            HL7Table.Entry(code: "4", description: "Poor"),
+            HL7Table.Entry(code: "5", description: "Some (level unknown)"),
+            HL7Table.Entry(code: "6", description: "None"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0405_v2_8_2 = HL7Table(
+        number: "0405",
+        name: "Organization Unit",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0406_v2_8_2 = HL7Table(
+        number: "0406",
+        name: "Organization Unit Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "H", description: "Home"),
+            HL7Table.Entry(code: "O", description: "Office"),
+            HL7Table.Entry(code: "1", description: "Hospital"),
+            HL7Table.Entry(code: "2", description: "Physician Clinic"),
+            HL7Table.Entry(code: "3", description: "Long Term Care"),
+            HL7Table.Entry(code: "4", description: "Acute Care"),
+            HL7Table.Entry(code: "5", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0409_v2_8_2 = HL7Table(
+        number: "0409",
+        name: "Application Change Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SU", description: "Start up"),
+            HL7Table.Entry(code: "SD", description: "Shut down"),
+            HL7Table.Entry(code: "M", description: "Migrates to different CPU"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0411_v2_8_2 = HL7Table(
+        number: "0411",
+        name: "Supplemental Service Information Values",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0412_v2_8_2 = HL7Table(
+        number: "0412",
+        name: "Category Identifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0413_v2_8_2 = HL7Table(
+        number: "0413",
+        name: "Consent Identifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0414_v2_8_2 = HL7Table(
+        number: "0414",
+        name: "Units of Time",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0415_v2_8_2 = HL7Table(
+        number: "0415",
+        name: "DRG Transfer Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "DRG Non Exempt"),
+            HL7Table.Entry(code: "E", description: "DRG Exempt"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0416_v2_8_2 = HL7Table(
+        number: "0416",
+        name: "Procedure DRG Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "1st non-Operative"),
+            HL7Table.Entry(code: "2", description: "2nd non-Operative"),
+            HL7Table.Entry(code: "3", description: "Major Operative"),
+            HL7Table.Entry(code: "4", description: "2nd Operative"),
+            HL7Table.Entry(code: "5", description: "3rd Operative"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0417_v2_8_2 = HL7Table(
+        number: "0417",
+        name: "Tissue Type Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Insufficient Tissue"),
+            HL7Table.Entry(code: "2", description: "Not abnormal"),
+            HL7Table.Entry(code: "3", description: "Abnormal-not categorized"),
+            HL7Table.Entry(code: "4", description: "Mechanical abnormal"),
+            HL7Table.Entry(code: "5", description: "Growth alteration"),
+            HL7Table.Entry(code: "6", description: "Degeneration & necrosis"),
+            HL7Table.Entry(code: "7", description: "Non-acute inflammation"),
+            HL7Table.Entry(code: "8", description: "Non-malignant neoplasm"),
+            HL7Table.Entry(code: "9", description: "Malignant neoplasm"),
+            HL7Table.Entry(code: "0", description: "No tissue expected"),
+            HL7Table.Entry(code: "B", description: "Basal cell carcinoma"),
+            HL7Table.Entry(code: "C", description: "Carcinoma-unspecified type"),
+            HL7Table.Entry(code: "G", description: "Additional tissue required"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0418_v2_8_2 = HL7Table(
+        number: "0418",
+        name: "Procedure Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "the admitting procedure"),
+            HL7Table.Entry(code: "1", description: "the primary procedure"),
+            HL7Table.Entry(code: "2", description: "for ranked secondary procedures"),
+            HL7Table.Entry(code: "…", description: ""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0421_v2_8_2 = HL7Table(
+        number: "0421",
+        name: "Severity of Illness Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MI", description: "Mild"),
+            HL7Table.Entry(code: "MO", description: "Moderate"),
+            HL7Table.Entry(code: "SE", description: "Severe"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0422_v2_8_2 = HL7Table(
+        number: "0422",
+        name: "Triage Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Non-acute"),
+            HL7Table.Entry(code: "2", description: "Acute"),
+            HL7Table.Entry(code: "3", description: "Urgent"),
+            HL7Table.Entry(code: "4", description: "Severe"),
+            HL7Table.Entry(code: "5", description: "Dead on Arrival (DOA)"),
+            HL7Table.Entry(code: "99", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0423_v2_8_2 = HL7Table(
+        number: "0423",
+        name: "Case Category Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Doctor’s Office Closed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0424_v2_8_2 = HL7Table(
+        number: "0424",
+        name: "Gestation Category Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Premature / Pre-term"),
+            HL7Table.Entry(code: "2", description: "Full Term"),
+            HL7Table.Entry(code: "3", description: "Overdue / Post-term"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0425_v2_8_2 = HL7Table(
+        number: "0425",
+        name: "Newborn Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "5", description: "Born at home"),
+            HL7Table.Entry(code: "3", description: "Born en route"),
+            HL7Table.Entry(code: "1", description: "Born in facility"),
+            HL7Table.Entry(code: "4", description: "Other"),
+            HL7Table.Entry(code: "2", description: "Transfer in"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0426_v2_8_2 = HL7Table(
+        number: "0426",
+        name: "Blood Product Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CRYO", description: "Cryoprecipitated AHF"),
+            HL7Table.Entry(code: "CRYOP", description: "Pooled Cryoprecipitate"),
+            HL7Table.Entry(code: "FFP", description: "Fresh Frozen Plasma"),
+            HL7Table.Entry(code: "FFPTH", description: "Fresh Frozen Plasma - Thawed"),
+            HL7Table.Entry(code: "PC", description: "Packed Cells"),
+            HL7Table.Entry(code: "PCA", description: "Autologous Packed Cells"),
+            HL7Table.Entry(code: "PCNEO", description: "Packed Cells - Neonatal"),
+            HL7Table.Entry(code: "PCW", description: "Washed Packed Cells"),
+            HL7Table.Entry(code: "PLT", description: "Platelet Concentrate"),
+            HL7Table.Entry(code: "PLTNEO", description: "Reduced Volume Platelets"),
+            HL7Table.Entry(code: "PLTP", description: "Pooled Platelets"),
+            HL7Table.Entry(code: "PLTPH", description: "Platelet Pheresis"),
+            HL7Table.Entry(code: "PLTPHLR", description: "Leukoreduced Platelet Pheresis"),
+            HL7Table.Entry(code: "RWB", description: "Reconstituted Whole Blood"),
+            HL7Table.Entry(code: "WBA", description: "Autologous Whole Blood"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0427_v2_8_2 = HL7Table(
+        number: "0427",
+        name: "Risk Management Incident Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Body fluid exposure"),
+            HL7Table.Entry(code: "C", description: "Contaminated Substance"),
+            HL7Table.Entry(code: "D", description: "Diet Errors"),
+            HL7Table.Entry(code: "E", description: "Equipment problem"),
+            HL7Table.Entry(code: "F", description: "Patient fell (not from bed)"),
+            HL7Table.Entry(code: "H", description: "Patient fell from bed"),
+            HL7Table.Entry(code: "I", description: "Infusion error"),
+            HL7Table.Entry(code: "J", description: "Foreign object left during surgery"),
+            HL7Table.Entry(code: "K", description: "Sterile precaution violated"),
+            HL7Table.Entry(code: "P", description: "Procedure error"),
+            HL7Table.Entry(code: "R", description: "Pharmaceutical error"),
+            HL7Table.Entry(code: "S", description: "Suicide Attempt"),
+            HL7Table.Entry(code: "T", description: "Transfusion error"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0428_v2_8_2 = HL7Table(
+        number: "0428",
+        name: "Incident Type Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Preventable"),
+            HL7Table.Entry(code: "U", description: "User Error"),
+            HL7Table.Entry(code: "O", description: "Other"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0429_v2_8_2 = HL7Table(
+        number: "0429",
+        name: "Production Class Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BR", description: "Breeding/genetic stock"),
+            HL7Table.Entry(code: "DA", description: "Dairy"),
+            HL7Table.Entry(code: "DR", description: "Draft"),
+            HL7Table.Entry(code: "DU", description: "Dual Purpose"),
+            HL7Table.Entry(code: "LY", description: "Layer, Includes Multiplier flocks"),
+            HL7Table.Entry(code: "MT", description: "Meat"),
+            HL7Table.Entry(code: "OT", description: "Other"),
+            HL7Table.Entry(code: "PL", description: "Pleasure"),
+            HL7Table.Entry(code: "RA", description: "Racing"),
+            HL7Table.Entry(code: "SH", description: "Show"),
+            HL7Table.Entry(code: "NA", description: "Not Applicable"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0430_v2_8_2 = HL7Table(
+        number: "0430",
+        name: "Mode of Arrival Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Ambulance"),
+            HL7Table.Entry(code: "C", description: "Car"),
+            HL7Table.Entry(code: "F", description: "On foot"),
+            HL7Table.Entry(code: "H", description: "Helicopter"),
+            HL7Table.Entry(code: "P", description: "Public Transport"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0431_v2_8_2 = HL7Table(
+        number: "0431",
+        name: "Recreational Drug use Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Alcohol"),
+            HL7Table.Entry(code: "K", description: "Kava"),
+            HL7Table.Entry(code: "M", description: "Marijuana"),
+            HL7Table.Entry(code: "T", description: "Tobacco - smoked"),
+            HL7Table.Entry(code: "C", description: "Tobacco - chewed"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0432_v2_8_2 = HL7Table(
+        number: "0432",
+        name: "Admission level of Care Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AC", description: "Acute"),
+            HL7Table.Entry(code: "CH", description: "Chronic"),
+            HL7Table.Entry(code: "CO", description: "Comatose"),
+            HL7Table.Entry(code: "CR", description: "Critical"),
+            HL7Table.Entry(code: "IM", description: "Improved"),
+            HL7Table.Entry(code: "MO", description: "Moribund"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0433_v2_8_2 = HL7Table(
+        number: "0433",
+        name: "Precaution Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Aggressive"),
+            HL7Table.Entry(code: "B", description: "Blind"),
+            HL7Table.Entry(code: "C", description: "Confused"),
+            HL7Table.Entry(code: "D", description: "Deaf"),
+            HL7Table.Entry(code: "I", description: "On IV"),
+            HL7Table.Entry(code: "N", description: "\"No-code\" (i.e. Do not resuscitate)"),
+            HL7Table.Entry(code: "P", description: "Paraplegic"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0434_v2_8_2 = HL7Table(
+        number: "0434",
+        name: "Patient Condition Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Satisfactory"),
+            HL7Table.Entry(code: "C", description: "Critical"),
+            HL7Table.Entry(code: "P", description: "Poor"),
+            HL7Table.Entry(code: "S", description: "Stable"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0435_v2_8_2 = HL7Table(
+        number: "0435",
+        name: "Advance Directive Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DNR", description: "Do not resuscitate"),
+            HL7Table.Entry(code: "N", description: "No directive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0436_v2_8_2 = HL7Table(
+        number: "0436",
+        name: "Sensitivity to Causative Agent Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AD", description: "Adverse Reaction (Not otherwise classified)"),
+            HL7Table.Entry(code: "AL", description: "Allergy"),
+            HL7Table.Entry(code: "CT", description: "Contraindication"),
+            HL7Table.Entry(code: "IN", description: "Intolerance"),
+            HL7Table.Entry(code: "SE", description: "Side Effect"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0437_v2_8_2 = HL7Table(
+        number: "0437",
+        name: "Alert Device Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Bracelet"),
+            HL7Table.Entry(code: "N", description: "Necklace"),
+            HL7Table.Entry(code: "W", description: "Wallet Card"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0438_v2_8_2 = HL7Table(
+        number: "0438",
+        name: "Allergy Clinical Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "U", description: "Unconfirmed"),
+            HL7Table.Entry(code: "P", description: "Pending"),
+            HL7Table.Entry(code: "S", description: "Suspect"),
+            HL7Table.Entry(code: "C", description: "Confirmed or verified"),
+            HL7Table.Entry(code: "I", description: "Confirmed but inactive"),
+            HL7Table.Entry(code: "E", description: "Erroneous"),
+            HL7Table.Entry(code: "D", description: "Doubt raised"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0440_v2_8_2 = HL7Table(
+        number: "0440",
+        name: "Data types",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0441_v2_8_2 = HL7Table(
+        number: "0441",
+        name: "Immunization Registry Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Active"),
+            HL7Table.Entry(code: "I", description: "Inactive"),
+            HL7Table.Entry(code: "L", description: "Inactive - Lost to follow-up (cancel contract)"),
+            HL7Table.Entry(code: "M", description: "Inactive - Moved or gone elsewhere (cancel contract)"),
+            HL7Table.Entry(code: "P", description: "Inactive - Permanently inactive (Do not reactivate or add new entries to the record)"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0442_v2_8_2 = HL7Table(
+        number: "0442",
+        name: "Location Service Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Diagnostic"),
+            HL7Table.Entry(code: "T", description: "Therapeutic"),
+            HL7Table.Entry(code: "P", description: "Primary Care"),
+            HL7Table.Entry(code: "E", description: "Emergency Room Casualty"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0443_v2_8_2 = HL7Table(
+        number: "0443",
+        name: "Provider Role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AD", description: "Admitting"),
+            HL7Table.Entry(code: "AP", description: "Administering Provider"),
+            HL7Table.Entry(code: "AT", description: "Attending"),
+            HL7Table.Entry(code: "CLP", description: "Collecting Provider"),
+            HL7Table.Entry(code: "CP", description: "Consulting Provider"),
+            HL7Table.Entry(code: "DP", description: "Dispensing Provider"),
+            HL7Table.Entry(code: "EP", description: "Entering Provider (probably not the same as transcriptionist?)"),
+            HL7Table.Entry(code: "FHCP", description: "Family Health Care Professional"),
+            HL7Table.Entry(code: "IP", description: "Initiating Provider (as in action by)"),
+            HL7Table.Entry(code: "MDIR", description: "Medical Director"),
+            HL7Table.Entry(code: "OP", description: "Ordering Provider"),
+            HL7Table.Entry(code: "PH", description: "Pharmacist (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+            HL7Table.Entry(code: "PP", description: "Primary Care Provider"),
+            HL7Table.Entry(code: "RO", description: "Responsible Observer"),
+            HL7Table.Entry(code: "RP", description: "Referring Provider"),
+            HL7Table.Entry(code: "RT", description: "Referred to Provider"),
+            HL7Table.Entry(code: "TR", description: "Transcriptionist"),
+            HL7Table.Entry(code: "PI", description: "Primary Interpreter"),
+            HL7Table.Entry(code: "AI", description: "Assistant/Alternate Interpreter"),
+            HL7Table.Entry(code: "TN", description: "Technician"),
+            HL7Table.Entry(code: "VP", description: "Verifying Provider"),
+            HL7Table.Entry(code: "VPS", description: "Verifying Pharmaceutical Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+            HL7Table.Entry(code: "VTS", description: "Verifying Treatment Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0444_v2_8_2 = HL7Table(
+        number: "0444",
+        name: "Name Assembly Order",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "G", description: "Prefix Given Middle Family Suffix"),
+            HL7Table.Entry(code: "F", description: "Prefix Family Middle Given Suffix"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0445_v2_8_2 = HL7Table(
+        number: "0445",
+        name: "Identity Reliability Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "US", description: "Unknown/Default Social Security Number"),
+            HL7Table.Entry(code: "UD", description: "Unknown/Default Date of Birth"),
+            HL7Table.Entry(code: "UA", description: "Unknown/Default Address"),
+            HL7Table.Entry(code: "AL", description: "Patient/Person Name is an Alias"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0446_v2_8_2 = HL7Table(
+        number: "0446",
+        name: "Species Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0447_v2_8_2 = HL7Table(
+        number: "0447",
+        name: "Breed Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0448_v2_8_2 = HL7Table(
+        number: "0448",
+        name: "Name Context",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0450_v2_8_2 = HL7Table(
+        number: "0450",
+        name: "Event Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LOG", description: "Log Event"),
+            HL7Table.Entry(code: "SER", description: "Service Event"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0451_v2_8_2 = HL7Table(
+        number: "0451",
+        name: "Substance Identifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ALL", description: "Used for query of all inventory items"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0452_v2_8_2 = HL7Table(
+        number: "0452",
+        name: "Health Care Provider Type Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SUGGESTION", description: "ANSI ASC X12 Health Care Provider Taxonomy, Level 1 - Type"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0453_v2_8_2 = HL7Table(
+        number: "0453",
+        name: "Health Care Provider Classification",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SUGGESTION", description: "ANSI ASC X12 Health Care Provider Taxonomy, Level 2 - Classification"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0454_v2_8_2 = HL7Table(
+        number: "0454",
+        name: "Health Care Provider Area of Specialization",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SUGGESTION", description: "ANSI ASC X12 Health Care Provider Taxonomy, Level 3 - specialization"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0455_v2_8_2 = HL7Table(
+        number: "0455",
+        name: "Type of Bill Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0456_v2_8_2 = HL7Table(
+        number: "0456",
+        name: "Revenue code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0457_v2_8_2 = HL7Table(
+        number: "0457",
+        name: "Overall Claim Disposition Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "No edits present on claim"),
+            HL7Table.Entry(code: "1", description: "Only edits present are for line item denial or rejection"),
+            HL7Table.Entry(code: "2", description: "Multiple-day claim with one or more days denied or rejected"),
+            HL7Table.Entry(code: "3", description: "Claim denied, rejected, suspended or returned to provider with only post payment edits"),
+            HL7Table.Entry(code: "4", description: "Claim denied, rejected, suspended or returned to provider with only pre payment edits"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0458_v2_8_2 = HL7Table(
+        number: "0458",
+        name: "OCE Edit Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Invalid diagnosis code"),
+            HL7Table.Entry(code: "2", description: "Diagnosis and age conflict"),
+            HL7Table.Entry(code: "3", description: "Diagnosis and sex conflict"),
+            HL7Table.Entry(code: "4", description: "Medicare secondary payer alert"),
+            HL7Table.Entry(code: "5", description: "E-code as reason for visit"),
+            HL7Table.Entry(code: "6", description: "Invalid procedure code"),
+            HL7Table.Entry(code: "7", description: "Procedure and age conflict"),
+            HL7Table.Entry(code: "8", description: "Procedure and sex conflict"),
+            HL7Table.Entry(code: "9", description: "Nov-covered service"),
+            HL7Table.Entry(code: "10", description: "Non-covered service submitted for verification of denial (condition code 21 from header information on claim)"),
+            HL7Table.Entry(code: "11", description: "Non-covered service submitted for FI review (condition code 20 from header information on claim)"),
+            HL7Table.Entry(code: "12", description: "Questionable covered service"),
+            HL7Table.Entry(code: "13", description: "Additional payment for service not provided by Medicare"),
+            HL7Table.Entry(code: "14", description: "Code indicates a site of service not included in OPPS"),
+            HL7Table.Entry(code: "15", description: "Service unit out of range for procedure"),
+            HL7Table.Entry(code: "16", description: "Multiple bilateral procedures without modifier 50 (see Appendix A)"),
+            HL7Table.Entry(code: "17", description: "Multiple bilateral procedures with modifier 50 (see Appendix A)"),
+            HL7Table.Entry(code: "18", description: "Inpatient procedure"),
+            HL7Table.Entry(code: "19", description: "Mutually exclusive procedure that is not allowed even if appropriate modifier present"),
+            HL7Table.Entry(code: "20", description: "Component of a comprehensive procedure that is not allowed even if appropriate modifier present"),
+            HL7Table.Entry(code: "21", description: "Medical visit on same day as a type \"T\" or \"S\" procedure without modifier 25 (see Appendix B)"),
+            HL7Table.Entry(code: "22", description: "Invalid modifier"),
+            HL7Table.Entry(code: "23", description: "Invalid date"),
+            HL7Table.Entry(code: "24", description: "Date out of OCE range"),
+            HL7Table.Entry(code: "25", description: "Invalid age"),
+            HL7Table.Entry(code: "26", description: "Invalid sex"),
+            HL7Table.Entry(code: "27", description: "Only incidental services reported"),
+            HL7Table.Entry(code: "28", description: "Code not recognized by Medicare; alternate code for same service available"),
+            HL7Table.Entry(code: "29", description: "Partial hospitalization service for non-mental health diagnosis"),
+            HL7Table.Entry(code: "30", description: "Insufficient services on day of partial hospitalization"),
+            HL7Table.Entry(code: "31", description: "Partial hospitalization on same day as ECT or type \"T\" procedure"),
+            HL7Table.Entry(code: "32", description: "Partial hospitalization claim spans 3 or less days with in-sufficient services, or ECT or significant procedure on at least one of the days"),
+            HL7Table.Entry(code: "33", description: "Partial hospitalization claim spans more than 3 days with insufficient number of days having mental health services"),
+            HL7Table.Entry(code: "34", description: "Partial hospitalization claim spans more than 3 days with insufficient number of days meeting partial hospitalization criteria"),
+            HL7Table.Entry(code: "35", description: "Only activity therapy and/or occupational therapy services provided"),
+            HL7Table.Entry(code: "36", description: "Extensive mental health services provided on day of ECT or significant procedure"),
+            HL7Table.Entry(code: "37", description: "Terminated bilateral procedure or terminated procedure with units greater than one"),
+            HL7Table.Entry(code: "38", description: "Inconsistency between implanted device and implantation procedure"),
+            HL7Table.Entry(code: "39", description: "Mutually exclusive procedure that would be allowed if appropriate modifier were present"),
+            HL7Table.Entry(code: "40", description: "Component of a comprehensive procedure that would be allowed if appropriate modifier were present"),
+            HL7Table.Entry(code: "41", description: "Invalid revenue code"),
+            HL7Table.Entry(code: "42", description: "Multiple medical visits on same day with same revenue code without condition code G0 (see Appendix B)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0459_v2_8_2 = HL7Table(
+        number: "0459",
+        name: "Reimbursement Action Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "OCE line item denial or rejection is not ignored"),
+            HL7Table.Entry(code: "1", description: "OCE line item denial or rejection is ignored"),
+            HL7Table.Entry(code: "2", description: "External line item denial. Line item is denied even if no OCE edits"),
+            HL7Table.Entry(code: "3", description: "External line item rejection. Line item is rejected even if no OCE edits"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0460_v2_8_2 = HL7Table(
+        number: "0460",
+        name: "Denial or Rejection Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Line item not denied or rejected"),
+            HL7Table.Entry(code: "1", description: "Line item denied or rejected"),
+            HL7Table.Entry(code: "2", description: "Line item is on a multiple-day claim. The line item is not denied or rejected, but occurs on a day that has been denied or rejected."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0461_v2_8_2 = HL7Table(
+        number: "0461",
+        name: "License Number",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0462_v2_8_2 = HL7Table(
+        number: "0462",
+        name: "Location Cost Center",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0463_v2_8_2 = HL7Table(
+        number: "0463",
+        name: "Inventory Number",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0464_v2_8_2 = HL7Table(
+        number: "0464",
+        name: "Facility ID",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0465_v2_8_2 = HL7Table(
+        number: "0465",
+        name: "Name/Address Representation",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Ideographic (i.e., Kanji)"),
+            HL7Table.Entry(code: "A", description: "Alphabetic (i.e., Default or some single-byte)"),
+            HL7Table.Entry(code: "P", description: "Phonetic (i.e., ASCII, Katakana, Hiragana, etc.)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0466_v2_8_2 = HL7Table(
+        number: "0466",
+        name: "Ambulatory Payment Classification Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "031", description: "Dental procedures"),
+            HL7Table.Entry(code: "163", description: "Excision/biopsy"),
+            HL7Table.Entry(code: "181", description: "Level 1 skin repair."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0467_v2_8_2 = HL7Table(
+        number: "0467",
+        name: "Modifier Edit Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Modifier does NOT exist"),
+            HL7Table.Entry(code: "1", description: "Modifier present, no errors"),
+            HL7Table.Entry(code: "2", description: "Modifier invalid"),
+            HL7Table.Entry(code: "3", description: "Modifier NOT approved for ASC/HOPD use"),
+            HL7Table.Entry(code: "4", description: "Modifier approved for ASC/HOPD use, inappropriate for code"),
+            HL7Table.Entry(code: "U", description: "Modifier edit code unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0468_v2_8_2 = HL7Table(
+        number: "0468",
+        name: "Payment Adjustment Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "No payment adjustment"),
+            HL7Table.Entry(code: "2", description: "Designated current drug or biological payment adjustment applies to APC (status indicator G)"),
+            HL7Table.Entry(code: "3", description: "Designated new device payment adjustment applies to APC (status indicator H)"),
+            HL7Table.Entry(code: "4", description: "Designated new drug or new biological payment adjustment applies to APC (status indicator J)"),
+            HL7Table.Entry(code: "5", description: "Deductible not applicable (specific list of HCPCS codes)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0469_v2_8_2 = HL7Table(
+        number: "0469",
+        name: "Packaging Status Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Not packaged"),
+            HL7Table.Entry(code: "1", description: "Packaged service (status indicator N, or no HCPCS code and certain revenue codes)"),
+            HL7Table.Entry(code: "2", description: "Packaged as part of partial hospitalization per diem or daily mental health service per diem"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0470_v2_8_2 = HL7Table(
+        number: "0470",
+        name: "Reimbursement Type Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OPPS", description: "Outpatient Prospective Payment System"),
+            HL7Table.Entry(code: "Pckg", description: "Packaged APC"),
+            HL7Table.Entry(code: "Lab", description: "Clinical Laboratory APC"),
+            HL7Table.Entry(code: "Thrpy", description: "Therapy APC"),
+            HL7Table.Entry(code: "DME", description: "Durable Medical Equipment"),
+            HL7Table.Entry(code: "EPO", description: "Epotein"),
+            HL7Table.Entry(code: "Mamm", description: "Screening Mammography APC"),
+            HL7Table.Entry(code: "PartH", description: "Partial Hospitalization APC"),
+            HL7Table.Entry(code: "Crnl", description: "Corneal Tissue APC"),
+            HL7Table.Entry(code: "NoPay", description: "This APC is not paid"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0471_v2_8_2 = HL7Table(
+        number: "0471",
+        name: "Query Name",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0472_v2_8_2 = HL7Table(
+        number: "0472",
+        name: "TQ Conjunction ID",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Synchronous"),
+            HL7Table.Entry(code: "A", description: "Asynchronous"),
+            HL7Table.Entry(code: "C", description: "Actuation Time"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0473_v2_8_2 = HL7Table(
+        number: "0473",
+        name: "Formulary Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "G", description: "This observation/service is on the formulary, and has guidelines"),
+            HL7Table.Entry(code: "N", description: "This observation/service is not on the formulary"),
+            HL7Table.Entry(code: "R", description: "This observation/service is on the formulary, but is restricted"),
+            HL7Table.Entry(code: "Y", description: "This observation/service is on the formulary"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0474_v2_8_2 = HL7Table(
+        number: "0474",
+        name: "Organization Unit Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "Department"),
+            HL7Table.Entry(code: "F", description: "Facility"),
+            HL7Table.Entry(code: "U", description: "Subdepartment"),
+            HL7Table.Entry(code: "S", description: "Subdivision"),
+            HL7Table.Entry(code: "V", description: "Division"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0475_v2_8_2 = HL7Table(
+        number: "0475",
+        name: "Charge Type Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "01", description: "Allergy"),
+            HL7Table.Entry(code: "02", description: "Intolerance"),
+            HL7Table.Entry(code: "03", description: "Treatment Failure"),
+            HL7Table.Entry(code: "04", description: "Patient Request"),
+            HL7Table.Entry(code: "05", description: "No Exception"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0476_v2_8_2 = HL7Table(
+        number: "0476",
+        name: "Medically Necessary Duplicate Procedure Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0477_v2_8_2 = HL7Table(
+        number: "0477",
+        name: "Controlled Substance Schedule",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Schedule I"),
+            HL7Table.Entry(code: "II", description: "Schedule II"),
+            HL7Table.Entry(code: "III", description: "Schedule III"),
+            HL7Table.Entry(code: "IV", description: "Schedule IV"),
+            HL7Table.Entry(code: "V", description: "Schedule V"),
+            HL7Table.Entry(code: "VI", description: "Schedule VI *Pharmacy Law Digest July 1988"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0478_v2_8_2 = HL7Table(
+        number: "0478",
+        name: "Formulary Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Pharmaceutical substance is in the formulary"),
+            HL7Table.Entry(code: "N", description: "Pharmaceutical substance is NOT in the formulary"),
+            HL7Table.Entry(code: "R", description: "Pharmaceutical substance is in the formulary, but restrictions apply"),
+            HL7Table.Entry(code: "G", description: "Pharmaceutical substance is in the formulary, but guidelines apply"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0479_v2_8_2 = HL7Table(
+        number: "0479",
+        name: "Pharmaceutical Substances",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0480_v2_8_2 = HL7Table(
+        number: "0480",
+        name: "Pharmacy Order Types",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "M", description: "Medication"),
+            HL7Table.Entry(code: "S", description: "IV Large Volume Solutions"),
+            HL7Table.Entry(code: "O", description: "Other solution as medication orders"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0482_v2_8_2 = HL7Table(
+        number: "0482",
+        name: "Order Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "I", description: "Inpatient Order"),
+            HL7Table.Entry(code: "O", description: "Outpatient Order"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0483_v2_8_2 = HL7Table(
+        number: "0483",
+        name: "Authorization Mode",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EL", description: "Electronic"),
+            HL7Table.Entry(code: "EM", description: "E-mail"),
+            HL7Table.Entry(code: "FX", description: "Fax"),
+            HL7Table.Entry(code: "IP", description: "In Person"),
+            HL7Table.Entry(code: "MA", description: "Mail"),
+            HL7Table.Entry(code: "PA", description: "Paper"),
+            HL7Table.Entry(code: "PH", description: "Phone"),
+            HL7Table.Entry(code: "RE", description: "Reflexive (Automated system)"),
+            HL7Table.Entry(code: "VC", description: "Video-conference"),
+            HL7Table.Entry(code: "VO", description: "Voice"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0484_v2_8_2 = HL7Table(
+        number: "0484",
+        name: "Dispense Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Trial Quantity Balance"),
+            HL7Table.Entry(code: "C", description: "Compassionate Fill"),
+            HL7Table.Entry(code: "N", description: "New/Renew - Full Fill"),
+            HL7Table.Entry(code: "P", description: "New/Renew - Part Fill"),
+            HL7Table.Entry(code: "Q", description: "Refill - Part Fill"),
+            HL7Table.Entry(code: "R", description: "Refill - Full Fill"),
+            HL7Table.Entry(code: "S", description: "Manufacturer Sample"),
+            HL7Table.Entry(code: "T", description: "Trial Quantity"),
+            HL7Table.Entry(code: "Z", description: "Non-Prescription Fill"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0485_v2_8_2 = HL7Table(
+        number: "0485",
+        name: "Extended Priority Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Stat"),
+            HL7Table.Entry(code: "A", description: "ASAP"),
+            HL7Table.Entry(code: "R", description: "Routine"),
+            HL7Table.Entry(code: "P", description: "Preop"),
+            HL7Table.Entry(code: "C", description: "Callback"),
+            HL7Table.Entry(code: "T", description: "Timing critical"),
+            HL7Table.Entry(code: "TS<integer>", description: "Timing critical within <integer> seconds."),
+            HL7Table.Entry(code: "TM<integer>", description: "Timing critical within <integer> minutes."),
+            HL7Table.Entry(code: "TH<integer>", description: "Timing critical within <integer> hours."),
+            HL7Table.Entry(code: "TD<integer>", description: "Timing critical within <integer> days."),
+            HL7Table.Entry(code: "TW<integer>", description: "Timing critical within <integer> weeks."),
+            HL7Table.Entry(code: "TL<integer>", description: "Timing critical within <integer> months."),
+            HL7Table.Entry(code: "PRN", description: "As needed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0487_v2_8_2 = HL7Table(
+        number: "0487",
+        name: "Specimen Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ABS", description: "Abscess"),
+            HL7Table.Entry(code: "ACNE", description: "Tissue, Acne"),
+            HL7Table.Entry(code: "ACNFLD", description: "Fluid, Acne"),
+            HL7Table.Entry(code: "AIRS", description: "Air Sample"),
+            HL7Table.Entry(code: "ALL", description: "Allograft"),
+            HL7Table.Entry(code: "AMN", description: "Amniotic fluid"),
+            HL7Table.Entry(code: "AMP", description: "Amputation"),
+            HL7Table.Entry(code: "ANGI", description: "Catheter Tip, Angio"),
+            HL7Table.Entry(code: "ARTC", description: "Catheter Tip, Arterial"),
+            HL7Table.Entry(code: "ASERU", description: "Serum, Acute"),
+            HL7Table.Entry(code: "ASP", description: "Aspirate"),
+            HL7Table.Entry(code: "ATTE", description: "Environment, Attest"),
+            HL7Table.Entry(code: "AUTOA", description: "Environmental, Autoclave Ampule"),
+            HL7Table.Entry(code: "AUTOC", description: "Environmental, Autoclave Capsule"),
+            HL7Table.Entry(code: "AUTP", description: "Autopsy"),
+            HL7Table.Entry(code: "BBL", description: "Blood bag"),
+            HL7Table.Entry(code: "BCYST", description: "Cyst, Baker's"),
+            HL7Table.Entry(code: "BDY", description: "Whole body"),
+            HL7Table.Entry(code: "BIFL", description: "Bile Fluid"),
+            HL7Table.Entry(code: "BITE", description: "Bite"),
+            HL7Table.Entry(code: "BLD", description: "Whole blood"),
+            HL7Table.Entry(code: "BLDA", description: "Blood arterial"),
+            HL7Table.Entry(code: "BLDCO", description: "Cord blood"),
+            HL7Table.Entry(code: "BLDV", description: "Blood venous"),
+            HL7Table.Entry(code: "BLEB", description: "Bleb"),
+            HL7Table.Entry(code: "BLIST", description: "Blister"),
+            HL7Table.Entry(code: "BOIL", description: "Boil"),
+            HL7Table.Entry(code: "BON", description: "Bone"),
+            HL7Table.Entry(code: "BOWL", description: "Bowel contents"),
+            HL7Table.Entry(code: "BPH", description: "Basophils"),
+            HL7Table.Entry(code: "BPU", description: "Blood product unit"),
+            HL7Table.Entry(code: "BRN", description: "Burn"),
+            HL7Table.Entry(code: "BRSH", description: "Brush"),
+            HL7Table.Entry(code: "BRTH", description: "Breath (use EXHLD)"),
+            HL7Table.Entry(code: "BRUS", description: "Brushing"),
+            HL7Table.Entry(code: "BUB", description: "Bubo"),
+            HL7Table.Entry(code: "BULLA", description: "Bulla/Bullae"),
+            HL7Table.Entry(code: "BX", description: "Biopsy"),
+            HL7Table.Entry(code: "CALC", description: "Calculus (=Stone)"),
+            HL7Table.Entry(code: "CARBU", description: "Carbuncle"),
+            HL7Table.Entry(code: "CAT", description: "Catheter"),
+            HL7Table.Entry(code: "CBITE", description: "Bite, Cat"),
+            HL7Table.Entry(code: "CDM", description: "Cardiac muscle"),
+            HL7Table.Entry(code: "CLIPP", description: "Clippings"),
+            HL7Table.Entry(code: "CNJT", description: "Conjunctiva"),
+            HL7Table.Entry(code: "CNL", description: "Cannula"),
+            HL7Table.Entry(code: "COL", description: "Colostrum"),
+            HL7Table.Entry(code: "CONE", description: "Biospy, Cone"),
+            HL7Table.Entry(code: "CSCR", description: "Scratch, Cat"),
+            HL7Table.Entry(code: "CSERU", description: "Serum, Convalescent"),
+            HL7Table.Entry(code: "CSF", description: "Cerebral spinal fluid"),
+            HL7Table.Entry(code: "CSITE", description: "Catheter Insertion Site"),
+            HL7Table.Entry(code: "CSMY", description: "Fluid, Cystostomy Tube"),
+            HL7Table.Entry(code: "CST", description: "Fluid, Cyst"),
+            HL7Table.Entry(code: "CSVR", description: "Blood, Cell Saver"),
+            HL7Table.Entry(code: "CTP", description: "Catheter tip"),
+            HL7Table.Entry(code: "CUR", description: "Curretage"),
+            HL7Table.Entry(code: "CVM", description: "Cervical Mucus"),
+            HL7Table.Entry(code: "CVPS", description: "Site, CVP"),
+            HL7Table.Entry(code: "CVPT", description: "Catheter Tip, CVP"),
+            HL7Table.Entry(code: "CYN", description: "Nodule, Cystic"),
+            HL7Table.Entry(code: "CYST", description: "Cyst"),
+            HL7Table.Entry(code: "DBITE", description: "Bite, Dog"),
+            HL7Table.Entry(code: "DCS", description: "Sputum, Deep Cough"),
+            HL7Table.Entry(code: "DEC", description: "Ulcer, Decubitus"),
+            HL7Table.Entry(code: "DEION", description: "Environmental, Water (Deionized)"),
+            HL7Table.Entry(code: "DIA", description: "Dialysate"),
+            HL7Table.Entry(code: "DIAF", description: "Dialysis Fluid"),
+            HL7Table.Entry(code: "DISCHG", description: "Discharge"),
+            HL7Table.Entry(code: "DIV", description: "Diverticulum"),
+            HL7Table.Entry(code: "DRN", description: "Drain"),
+            HL7Table.Entry(code: "DRNG", description: "Drainage, Tube"),
+            HL7Table.Entry(code: "DRNGP", description: "Drainage, Penrose"),
+            HL7Table.Entry(code: "DUFL", description: "Duodenal fluid"),
+            HL7Table.Entry(code: "EARW", description: "Ear wax (cerumen)"),
+            HL7Table.Entry(code: "EBRUSH", description: "Brush, Esophageal"),
+            HL7Table.Entry(code: "EEYE", description: "Environmental, Eye Wash"),
+            HL7Table.Entry(code: "EFF", description: "Environmental, Effluent"),
+            HL7Table.Entry(code: "EFFUS", description: "Effusion"),
+            HL7Table.Entry(code: "EFOD", description: "Environmental, Food"),
+            HL7Table.Entry(code: "EISO", description: "Environmental, Isolette"),
+            HL7Table.Entry(code: "ELT", description: "Electrode"),
+            HL7Table.Entry(code: "ENVIR", description: "Environmental, Unidentified Substance"),
+            HL7Table.Entry(code: "EOS", description: "Eosinophils"),
+            HL7Table.Entry(code: "EOTH", description: "Environmental, Other Substance"),
+            HL7Table.Entry(code: "ESOI", description: "Environmental, Soil"),
+            HL7Table.Entry(code: "ESOS", description: "Environmental, Solution (Sterile)"),
+            HL7Table.Entry(code: "ETA", description: "Aspirate, Endotrach"),
+            HL7Table.Entry(code: "ETTP", description: "Catheter Tip, Endotracheal"),
+            HL7Table.Entry(code: "ETTUB", description: "Tube, Endotracheal"),
+            HL7Table.Entry(code: "EWHI", description: "Environmental, Whirlpool"),
+            HL7Table.Entry(code: "EXG", description: "Gas, exhaled (=breath)"),
+            HL7Table.Entry(code: "EXS", description: "Shunt, External"),
+            HL7Table.Entry(code: "EXUDTE", description: "Exudate"),
+            HL7Table.Entry(code: "FAW", description: "Environmental, Water (Well)"),
+            HL7Table.Entry(code: "FBLOOD", description: "Blood, Fetal"),
+            HL7Table.Entry(code: "FGA", description: "Fluid, Abdomen"),
+            HL7Table.Entry(code: "FIB", description: "Fibroblasts"),
+            HL7Table.Entry(code: "FIST", description: "Fistula"),
+            HL7Table.Entry(code: "FLD", description: "Fluid, Other"),
+            HL7Table.Entry(code: "FLT", description: "Filter"),
+            HL7Table.Entry(code: "FLU", description: "Fluid, Body unsp"),
+            HL7Table.Entry(code: "FLUID", description: "Fluid"),
+            HL7Table.Entry(code: "FOLEY", description: "Catheter Tip, Foley"),
+            HL7Table.Entry(code: "FRS", description: "Fluid, Respiratory"),
+            HL7Table.Entry(code: "FSCLP", description: "Scalp, Fetal"),
+            HL7Table.Entry(code: "FUR", description: "Furuncle"),
+            HL7Table.Entry(code: "GAS", description: "Gas"),
+            HL7Table.Entry(code: "GASA", description: "Aspirate, Gastric"),
+            HL7Table.Entry(code: "GASAN", description: "Antrum, Gastric"),
+            HL7Table.Entry(code: "GASBR", description: "Brushing, Gastric"),
+            HL7Table.Entry(code: "GASD", description: "Drainage, Gastric"),
+            HL7Table.Entry(code: "GAST", description: "Fluid/contents, Gastric"),
+            HL7Table.Entry(code: "GENL", description: "Genital lochia"),
+            HL7Table.Entry(code: "GENV", description: "Genital vaginal"),
+            HL7Table.Entry(code: "GRAFT", description: "Graft"),
+            HL7Table.Entry(code: "GRAFTS", description: "Graft Site"),
+            HL7Table.Entry(code: "GRANU", description: "Granuloma"),
+            HL7Table.Entry(code: "GROSH", description: "Catheter, Groshong"),
+            HL7Table.Entry(code: "GSOL", description: "Solution, Gastrostomy"),
+            HL7Table.Entry(code: "GSPEC", description: "Biopsy, Gastric"),
+            HL7Table.Entry(code: "GT", description: "Tube, Gastric"),
+            HL7Table.Entry(code: "GTUBE", description: "Drainage Tube, Drainage (Gastrostomy)"),
+            HL7Table.Entry(code: "HAR", description: "Hair"),
+            HL7Table.Entry(code: "HBITE", description: "Bite, Human"),
+            HL7Table.Entry(code: "HBLUD", description: "Blood, Autopsy"),
+            HL7Table.Entry(code: "HEMAQ", description: "Catheter Tip, Hemaquit"),
+            HL7Table.Entry(code: "HEMO", description: "Catheter Tip, Hemovac"),
+            HL7Table.Entry(code: "HERNI", description: "Tissue, Herniated"),
+            HL7Table.Entry(code: "HEV", description: "Drain, Hemovac"),
+            HL7Table.Entry(code: "HIC", description: "Catheter, Hickman"),
+            HL7Table.Entry(code: "HYDC", description: "Fluid, Hydrocele"),
+            HL7Table.Entry(code: "IBITE", description: "Bite, Insect"),
+            HL7Table.Entry(code: "ICYST", description: "Cyst, Inclusion"),
+            HL7Table.Entry(code: "IDC", description: "Catheter Tip, Indwelling"),
+            HL7Table.Entry(code: "IHG", description: "Gas, Inhaled"),
+            HL7Table.Entry(code: "ILEO", description: "Drainage, Ileostomy"),
+            HL7Table.Entry(code: "ILLEG", description: "Source of Specimen Is Illegible"),
+            HL7Table.Entry(code: "IMP", description: "Implant"),
+            HL7Table.Entry(code: "INCI", description: "Site, Incision/Surgical"),
+            HL7Table.Entry(code: "INFIL", description: "Infiltrate"),
+            HL7Table.Entry(code: "INS", description: "Insect"),
+            HL7Table.Entry(code: "INTRD", description: "Catheter Tip, Introducer"),
+            HL7Table.Entry(code: "ISLT", description: "Isolate"),
+            HL7Table.Entry(code: "IT", description: "Intubation tube"),
+            HL7Table.Entry(code: "IUD", description: "Intrauterine Device"),
+            HL7Table.Entry(code: "IVCAT", description: "Catheter Tip, IV"),
+            HL7Table.Entry(code: "IVFLD", description: "Fluid, IV"),
+            HL7Table.Entry(code: "IVTIP", description: "Tubing Tip, IV"),
+            HL7Table.Entry(code: "JEJU", description: "Drainage, Jejunal"),
+            HL7Table.Entry(code: "JNTFLD", description: "Fluid, Joint"),
+            HL7Table.Entry(code: "JP", description: "Drainage, Jackson Pratt"),
+            HL7Table.Entry(code: "KELOI", description: "Lavage"),
+            HL7Table.Entry(code: "KIDFLD", description: "Fluid, Kidney"),
+            HL7Table.Entry(code: "LAVG", description: "Lavage, Bronhial"),
+            HL7Table.Entry(code: "LAVGG", description: "Lavage, Gastric"),
+            HL7Table.Entry(code: "LAVGP", description: "Lavage, Peritoneal"),
+            HL7Table.Entry(code: "LAVPG", description: "Lavage, Pre-Bronch"),
+            HL7Table.Entry(code: "LENS1", description: "Contact Lens"),
+            HL7Table.Entry(code: "LENS2", description: "Contact Lens Case"),
+            HL7Table.Entry(code: "LESN", description: "Lesion"),
+            HL7Table.Entry(code: "LIQ", description: "Liquid, Unspecified"),
+            HL7Table.Entry(code: "LIQO", description: "Liquid, Other"),
+            HL7Table.Entry(code: "LNA", description: "Line arterial"),
+            HL7Table.Entry(code: "LNV", description: "Line venous"),
+            HL7Table.Entry(code: "LSAC", description: "Fluid, Lumbar Sac"),
+            HL7Table.Entry(code: "LYM", description: "Lymphocytes"),
+            HL7Table.Entry(code: "MAC", description: "Macrophages"),
+            HL7Table.Entry(code: "MAHUR", description: "Catheter Tip, Makurkour"),
+            HL7Table.Entry(code: "MAR", description: "Marrow"),
+            HL7Table.Entry(code: "MASS", description: "Mass"),
+            HL7Table.Entry(code: "MBLD", description: "Blood, Menstrual"),
+            HL7Table.Entry(code: "MEC", description: "Meconium"),
+            HL7Table.Entry(code: "MILK", description: "Breast milk"),
+            HL7Table.Entry(code: "MLK", description: "Milk"),
+            HL7Table.Entry(code: "MUCOS", description: "Mucosa"),
+            HL7Table.Entry(code: "MUCUS", description: "Mucus"),
+            HL7Table.Entry(code: "NAIL", description: "Nail"),
+            HL7Table.Entry(code: "NASDR", description: "Drainage, Nasal"),
+            HL7Table.Entry(code: "NEDL", description: "Needle"),
+            HL7Table.Entry(code: "NEPH", description: "Site, Nephrostomy"),
+            HL7Table.Entry(code: "NGASP", description: "Aspirate, Nasogastric"),
+            HL7Table.Entry(code: "NGAST", description: "Drainage, Nasogastric"),
+            HL7Table.Entry(code: "NGS", description: "Site, Naso/Gastric"),
+            HL7Table.Entry(code: "NODUL", description: "Nodule(s)"),
+            HL7Table.Entry(code: "NSECR", description: "Secretion, Nasal"),
+            HL7Table.Entry(code: "ORH", description: "Other"),
+            HL7Table.Entry(code: "ORL", description: "Lesion, Oral"),
+            HL7Table.Entry(code: "OTH", description: "Source, Other"),
+            HL7Table.Entry(code: "PACEM", description: "Pacemaker"),
+            HL7Table.Entry(code: "PAFL", description: "Pancreatic fluid"),
+            HL7Table.Entry(code: "PCFL", description: "Fluid, Pericardial"),
+            HL7Table.Entry(code: "PDSIT", description: "Site, Peritoneal Dialysis"),
+            HL7Table.Entry(code: "PDTS", description: "Site, Peritoneal Dialysis Tunnel"),
+            HL7Table.Entry(code: "PELVA", description: "Abscess, Pelvic"),
+            HL7Table.Entry(code: "PENIL", description: "Lesion, Penile"),
+            HL7Table.Entry(code: "PERIA", description: "Abscess, Perianal"),
+            HL7Table.Entry(code: "PILOC", description: "Cyst, Pilonidal"),
+            HL7Table.Entry(code: "PINS", description: "Site, Pin"),
+            HL7Table.Entry(code: "PIS", description: "Site, Pacemaker Insetion"),
+            HL7Table.Entry(code: "PLAN", description: "Plant Material"),
+            HL7Table.Entry(code: "PLAS", description: "Plasma"),
+            HL7Table.Entry(code: "PLB", description: "Plasma bag"),
+            HL7Table.Entry(code: "PLC", description: "Placenta"),
+            HL7Table.Entry(code: "PLEVS", description: "Serum, Peak Level"),
+            HL7Table.Entry(code: "PLR", description: "Pleural fluid (thoracentesis fluid)"),
+            HL7Table.Entry(code: "PMN", description: "Polymorphonuclear neutrophils"),
+            HL7Table.Entry(code: "PND", description: "Drainage, Penile"),
+            HL7Table.Entry(code: "POL", description: "Polyps"),
+            HL7Table.Entry(code: "POPGS", description: "Graft Site, Popliteal"),
+            HL7Table.Entry(code: "POPLG", description: "Graft, Popliteal"),
+            HL7Table.Entry(code: "POPLV", description: "Site, Popliteal Vein"),
+            HL7Table.Entry(code: "PORTA", description: "Catheter, Porta"),
+            HL7Table.Entry(code: "PPP", description: "Plasma, Platelet poor"),
+            HL7Table.Entry(code: "PROST", description: "Prosthetic Device"),
+            HL7Table.Entry(code: "PRP", description: "Plasma, Platelet rich"),
+            HL7Table.Entry(code: "PSC", description: "Pseudocyst"),
+            HL7Table.Entry(code: "PUNCT", description: "Wound, Puncture"),
+            HL7Table.Entry(code: "PUS", description: "Pus"),
+            HL7Table.Entry(code: "PUSFR", description: "Pustule"),
+            HL7Table.Entry(code: "PUST", description: "Pus"),
+            HL7Table.Entry(code: "QC3", description: "Quality Control"),
+            HL7Table.Entry(code: "RANDU", description: "Urine, Random"),
+            HL7Table.Entry(code: "RBC", description: "Erythrocytes"),
+            HL7Table.Entry(code: "RBITE", description: "Bite, Reptile"),
+            HL7Table.Entry(code: "RECT", description: "Drainage, Rectal"),
+            HL7Table.Entry(code: "RECTA", description: "Abscess, Rectal"),
+            HL7Table.Entry(code: "RENALC", description: "Cyst, Renal"),
+            HL7Table.Entry(code: "RENC", description: "Fluid, Renal Cyst"),
+            HL7Table.Entry(code: "RES", description: "Respiratory"),
+            HL7Table.Entry(code: "SAL", description: "Saliva"),
+            HL7Table.Entry(code: "SCAR", description: "Tissue, Keloid (Scar)"),
+            HL7Table.Entry(code: "SCLV", description: "Catheter Tip, Subclavian"),
+            HL7Table.Entry(code: "SCROA", description: "Abscess, Scrotal"),
+            HL7Table.Entry(code: "SECRE", description: "Secretion(s)"),
+            HL7Table.Entry(code: "SER", description: "Serum"),
+            HL7Table.Entry(code: "SHU", description: "Site, Shunt"),
+            HL7Table.Entry(code: "SHUNF", description: "Fluid, Shunt"),
+            HL7Table.Entry(code: "SHUNT", description: "Shunt"),
+            HL7Table.Entry(code: "SITE", description: "Site"),
+            HL7Table.Entry(code: "SKBP", description: "Biopsy, Skin"),
+            HL7Table.Entry(code: "SKN", description: "Skin"),
+            HL7Table.Entry(code: "SMM", description: "Mass, Sub-Mandibular"),
+            HL7Table.Entry(code: "SMN", description: "Seminal fluid"),
+            HL7Table.Entry(code: "SNV", description: "Fluid, synovial (Joint fluid)"),
+            HL7Table.Entry(code: "SPRM", description: "Spermatozoa"),
+            HL7Table.Entry(code: "SPRP", description: "Catheter Tip, Suprapubic"),
+            HL7Table.Entry(code: "SPRPB", description: "Cathether Tip, Suprapubic"),
+            HL7Table.Entry(code: "SPS", description: "Environmental, Spore Strip"),
+            HL7Table.Entry(code: "SPT", description: "Sputum"),
+            HL7Table.Entry(code: "SPTC", description: "Sputum - coughed"),
+            HL7Table.Entry(code: "SPTT", description: "Sputum - tracheal aspirate"),
+            HL7Table.Entry(code: "SPUT1", description: "Sputum, Simulated"),
+            HL7Table.Entry(code: "SPUTIN", description: "Sputum, Inducted"),
+            HL7Table.Entry(code: "SPUTSP", description: "Sputum, Spontaneous"),
+            HL7Table.Entry(code: "STER", description: "Environmental, Sterrad"),
+            HL7Table.Entry(code: "STL", description: "Stool = Fecal"),
+            HL7Table.Entry(code: "STONE", description: "Stone, Kidney"),
+            HL7Table.Entry(code: "SUBMA", description: "Abscess, Submandibular"),
+            HL7Table.Entry(code: "SUBMX", description: "Abscess, Submaxillary"),
+            HL7Table.Entry(code: "SUMP", description: "Drainage, Sump"),
+            HL7Table.Entry(code: "SUP", description: "Suprapubic Tap"),
+            HL7Table.Entry(code: "SUTUR", description: "Suture"),
+            HL7Table.Entry(code: "SWGZ", description: "Catheter Tip, Swan Gantz"),
+            HL7Table.Entry(code: "SWT", description: "Sweat"),
+            HL7Table.Entry(code: "TASP", description: "Aspirate, Tracheal"),
+            HL7Table.Entry(code: "TEAR", description: "Tears"),
+            HL7Table.Entry(code: "THRB", description: "Thrombocyte (platelet)"),
+            HL7Table.Entry(code: "TISS", description: "Tissue"),
+            HL7Table.Entry(code: "TISU", description: "Tissue ulcer"),
+            HL7Table.Entry(code: "TLC", description: "Cathether Tip, Triple Lumen"),
+            HL7Table.Entry(code: "TRAC", description: "Site, Tracheostomy"),
+            HL7Table.Entry(code: "TRANS", description: "Transudate"),
+            HL7Table.Entry(code: "TSERU", description: "Serum, Trough"),
+            HL7Table.Entry(code: "TSTES", description: "Abscess, Testicular"),
+            HL7Table.Entry(code: "TTRA", description: "Aspirate, Transtracheal"),
+            HL7Table.Entry(code: "TUBES", description: "Tubes"),
+            HL7Table.Entry(code: "TUMOR", description: "Tumor"),
+            HL7Table.Entry(code: "TZANC", description: "Smear, Tzanck"),
+            HL7Table.Entry(code: "UDENT", description: "Source, Unidentified"),
+            HL7Table.Entry(code: "UMED", description: "Unknown Medicine"),
+            HL7Table.Entry(code: "UR", description: "Urine"),
+            HL7Table.Entry(code: "URC", description: "Urine clean catch"),
+            HL7Table.Entry(code: "URINB", description: "Urine, Bladder Washings"),
+            HL7Table.Entry(code: "URINC", description: "Urine, Catheterized"),
+            HL7Table.Entry(code: "URINM", description: "Urine, Midstream"),
+            HL7Table.Entry(code: "URINN", description: "Urine, Nephrostomy"),
+            HL7Table.Entry(code: "URINP", description: "Urine, Pedibag"),
+            HL7Table.Entry(code: "URNS", description: "Urine sediment"),
+            HL7Table.Entry(code: "URT", description: "Urine catheter"),
+            HL7Table.Entry(code: "USCOP", description: "Urine, Cystoscopy"),
+            HL7Table.Entry(code: "USPEC", description: "Source, Unspecified"),
+            HL7Table.Entry(code: "USUB", description: "Unkown substance"),
+            HL7Table.Entry(code: "VASTIP", description: "Catheter Tip, Vas"),
+            HL7Table.Entry(code: "VENT", description: "Catheter Tip, Ventricular"),
+            HL7Table.Entry(code: "VITF", description: "Vitreous Fluid"),
+            HL7Table.Entry(code: "VOM", description: "Vomitus"),
+            HL7Table.Entry(code: "WASH", description: "Wash"),
+            HL7Table.Entry(code: "WASI", description: "Washing, e.g. bronchial washing"),
+            HL7Table.Entry(code: "WAT", description: "Water"),
+            HL7Table.Entry(code: "WB", description: "Blood, Whole"),
+            HL7Table.Entry(code: "WBC", description: "Leukocytes"),
+            HL7Table.Entry(code: "WEN", description: "Wen"),
+            HL7Table.Entry(code: "WICK", description: "Wick"),
+            HL7Table.Entry(code: "WND", description: "Wound"),
+            HL7Table.Entry(code: "WNDA", description: "Wound abscess"),
+            HL7Table.Entry(code: "WNDD", description: "Wound drainage"),
+            HL7Table.Entry(code: "WNDE", description: "Wound exudate"),
+            HL7Table.Entry(code: "WORM", description: "Worm"),
+            HL7Table.Entry(code: "WRT", description: "Wart"),
+            HL7Table.Entry(code: "WWA", description: "Environmental, Water"),
+            HL7Table.Entry(code: "WWO", description: "Environmental, Water (Ocean)"),
+            HL7Table.Entry(code: "WWT", description: "Environmental, Water (Tap)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0488_v2_8_2 = HL7Table(
+        number: "0488",
+        name: "Specimen Collection Method",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "FNA", description: "Aspiration, Fine Needle"),
+            HL7Table.Entry(code: "PNA", description: "Arterial puncture"),
+            HL7Table.Entry(code: "BIO", description: "Biopsy"),
+            HL7Table.Entry(code: "BCAE", description: "Blood Culture, Aerobic Bottle"),
+            HL7Table.Entry(code: "BCAN", description: "Blood Culture, Anaerobic Bottle"),
+            HL7Table.Entry(code: "BCPD", description: "Blood Culture, Pediatric Bottle"),
+            HL7Table.Entry(code: "CAP", description: "Capillary Specimen"),
+            HL7Table.Entry(code: "CATH", description: "Catheterized"),
+            HL7Table.Entry(code: "EPLA", description: "Environmental, Plate"),
+            HL7Table.Entry(code: "ESWA", description: "Environmental, Swab"),
+            HL7Table.Entry(code: "LNA", description: "Line, Arterial"),
+            HL7Table.Entry(code: "CVP", description: "Line, CVP"),
+            HL7Table.Entry(code: "LNV", description: "Line, Venous"),
+            HL7Table.Entry(code: "MARTL", description: "Martin-Lewis Agar"),
+            HL7Table.Entry(code: "ML11", description: "Mod. Martin-Lewis Agar"),
+            HL7Table.Entry(code: "PACE", description: "Pace, Gen-Probe"),
+            HL7Table.Entry(code: "PIN", description: "Pinworm Prep"),
+            HL7Table.Entry(code: "KOFFP", description: "Plate, Cough"),
+            HL7Table.Entry(code: "MLP", description: "Plate, Martin-Lewis"),
+            HL7Table.Entry(code: "NYP", description: "Plate, New York City"),
+            HL7Table.Entry(code: "TMP", description: "Plate, Thayer-Martin"),
+            HL7Table.Entry(code: "ANP", description: "Plates, Anaerobic"),
+            HL7Table.Entry(code: "BAP", description: "Plates, Blood Agar"),
+            HL7Table.Entry(code: "PRIME", description: "Pump Prime"),
+            HL7Table.Entry(code: "PUMP", description: "Pump Specimen"),
+            HL7Table.Entry(code: "QC5", description: "Quality Control For Micro"),
+            HL7Table.Entry(code: "SCLP", description: "Scalp, Fetal Vein"),
+            HL7Table.Entry(code: "SCRAPS", description: "Scrapings"),
+            HL7Table.Entry(code: "SHA", description: "Shaving"),
+            HL7Table.Entry(code: "SWA", description: "Swab"),
+            HL7Table.Entry(code: "SWD", description: "Swab, Dacron tipped"),
+            HL7Table.Entry(code: "WOOD", description: "Swab, Wooden Shaft"),
+            HL7Table.Entry(code: "TMOT", description: "Transport Media,"),
+            HL7Table.Entry(code: "TMAN", description: "Transport Media, Anaerobic"),
+            HL7Table.Entry(code: "TMCH", description: "Transport Media, Chalamydia"),
+            HL7Table.Entry(code: "TMM4", description: "Transport Media, M4"),
+            HL7Table.Entry(code: "TMMY", description: "Transport Media, Mycoplasma"),
+            HL7Table.Entry(code: "TMPV", description: "Transport Media, PVA"),
+            HL7Table.Entry(code: "TMSC", description: "Transport Media, Stool Culture"),
+            HL7Table.Entry(code: "TMUP", description: "Transport Media, Ureaplasma"),
+            HL7Table.Entry(code: "TMVI", description: "Transport Media, Viral"),
+            HL7Table.Entry(code: "VENIP", description: "Venipuncture"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0489_v2_8_2 = HL7Table(
+        number: "0489",
+        name: "Risk Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BIO", description: "Biological"),
+            HL7Table.Entry(code: "COR", description: "Corrosive"),
+            HL7Table.Entry(code: "ESC", description: "Escape Risk"),
+            HL7Table.Entry(code: "AGG", description: "Aggressive"),
+            HL7Table.Entry(code: "IFL", description: "MaterialDangerInflammable"),
+            HL7Table.Entry(code: "EXP", description: "Explosive"),
+            HL7Table.Entry(code: "INF", description: "MaterialDangerInfectious"),
+            HL7Table.Entry(code: "BHZ", description: "Biohazard"),
+            HL7Table.Entry(code: "INJ", description: "Injury Hazard"),
+            HL7Table.Entry(code: "POI", description: "Poison"),
+            HL7Table.Entry(code: "RAD", description: "Radioactive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0490_v2_8_2 = HL7Table(
+        number: "0490",
+        name: "Specimen Reject Reason",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EX", description: "Expired"),
+            HL7Table.Entry(code: "QS", description: "Quantity not sufficient"),
+            HL7Table.Entry(code: "RB", description: "Broken container"),
+            HL7Table.Entry(code: "RC", description: "Clotting"),
+            HL7Table.Entry(code: "RD", description: "Missing collection date"),
+            HL7Table.Entry(code: "RA", description: "Missing patient ID number"),
+            HL7Table.Entry(code: "RE", description: "Missing patient name"),
+            HL7Table.Entry(code: "RH", description: "Hemolysis"),
+            HL7Table.Entry(code: "RI", description: "Identification problem"),
+            HL7Table.Entry(code: "RM", description: "Labeling"),
+            HL7Table.Entry(code: "RN", description: "Contamination"),
+            HL7Table.Entry(code: "RP", description: "Missing phlebotomist ID"),
+            HL7Table.Entry(code: "RR", description: "Improper storage"),
+            HL7Table.Entry(code: "RS", description: "Name misspelling"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0491_v2_8_2 = HL7Table(
+        number: "0491",
+        name: "Specimen Quality",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Excellent"),
+            HL7Table.Entry(code: "G", description: "Good"),
+            HL7Table.Entry(code: "F", description: "Fair"),
+            HL7Table.Entry(code: "P", description: "Poor"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0492_v2_8_2 = HL7Table(
+        number: "0492",
+        name: "Specimen Appropriateness",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Preferred"),
+            HL7Table.Entry(code: "A", description: "Appropriate"),
+            HL7Table.Entry(code: "I", description: "Inappropriate"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0493_v2_8_2 = HL7Table(
+        number: "0493",
+        name: "Specimen Condition",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AUT", description: "Autolyzed"),
+            HL7Table.Entry(code: "CLOT", description: "Clotted"),
+            HL7Table.Entry(code: "CON", description: "Contaminated"),
+            HL7Table.Entry(code: "COOL", description: "Cool"),
+            HL7Table.Entry(code: "FROZ", description: "Frozen"),
+            HL7Table.Entry(code: "HEM", description: "Hemolyzed"),
+            HL7Table.Entry(code: "LIVE", description: "Live"),
+            HL7Table.Entry(code: "ROOM", description: "Room temperature"),
+            HL7Table.Entry(code: "SNR", description: "Sample not received"),
+            HL7Table.Entry(code: "CFU", description: "Centrifuged"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0494_v2_8_2 = HL7Table(
+        number: "0494",
+        name: "Specimen Child Role",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Aliquot"),
+            HL7Table.Entry(code: "C", description: "Component"),
+            HL7Table.Entry(code: "M", description: "Modified from original specimen"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0495_v2_8_2 = HL7Table(
+        number: "0495",
+        name: "Body Site Modifier",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ANT", description: "Anterior"),
+            HL7Table.Entry(code: "BIL", description: "Bilateral"),
+            HL7Table.Entry(code: "DIS", description: "Distal"),
+            HL7Table.Entry(code: "EXT", description: "External"),
+            HL7Table.Entry(code: "LAT", description: "Lateral"),
+            HL7Table.Entry(code: "L", description: "Left"),
+            HL7Table.Entry(code: "LOW", description: "Lower"),
+            HL7Table.Entry(code: "MED", description: "Medial"),
+            HL7Table.Entry(code: "POS", description: "Posterior"),
+            HL7Table.Entry(code: "PRO", description: "Proximal"),
+            HL7Table.Entry(code: "LLQ", description: "Quadrant, Left Lower"),
+            HL7Table.Entry(code: "LUQ", description: "Quadrant, Left Upper"),
+            HL7Table.Entry(code: "RLQ", description: "Quadrant, Right Lower"),
+            HL7Table.Entry(code: "RUQ", description: "Quadrant, Right Upper"),
+            HL7Table.Entry(code: "R", description: "Right"),
+            HL7Table.Entry(code: "UPP", description: "Upper"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0496_v2_8_2 = HL7Table(
+        number: "0496",
+        name: "Consent Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "001", description: "Protected Health Information"),
+            HL7Table.Entry(code: "002", description: "Medical Procedure (invasive)"),
+            HL7Table.Entry(code: "003", description: "Acknowledge Receipt of Privacy Notice"),
+            HL7Table.Entry(code: "004", description: "Abortion"),
+            HL7Table.Entry(code: "005", description: "Abortion/Laminaria"),
+            HL7Table.Entry(code: "006", description: "Accutane – Information"),
+            HL7Table.Entry(code: "007", description: "Accutane – Woman"),
+            HL7Table.Entry(code: "008", description: "Advanced Beneficiary Notice"),
+            HL7Table.Entry(code: "009", description: "AFP (Alpha Fetoprotein) Screening"),
+            HL7Table.Entry(code: "010", description: "Amniocentesis (consent & refusal)"),
+            HL7Table.Entry(code: "011", description: "Anatomical Gift (organ donation)"),
+            HL7Table.Entry(code: "012", description: "Anesthesia - Complications"),
+            HL7Table.Entry(code: "013", description: "Anesthesia - Questionnaire"),
+            HL7Table.Entry(code: "014", description: "Angiogram"),
+            HL7Table.Entry(code: "015", description: "Angioplasty"),
+            HL7Table.Entry(code: "016", description: "Anticancer Drugs"),
+            HL7Table.Entry(code: "017", description: "Antipsychotic Medications"),
+            HL7Table.Entry(code: "018", description: "Arthrogram"),
+            HL7Table.Entry(code: "019", description: "Autopsy"),
+            HL7Table.Entry(code: "020", description: "AZT Therapy"),
+            HL7Table.Entry(code: "021", description: "Biliary Drainage"),
+            HL7Table.Entry(code: "022", description: "Biliary Stone Extraction"),
+            HL7Table.Entry(code: "023", description: "Biopsy"),
+            HL7Table.Entry(code: "024", description: "Bleeding Time Test"),
+            HL7Table.Entry(code: "025", description: "Bronchogram"),
+            HL7Table.Entry(code: "026", description: "Cardiac Catheterization"),
+            HL7Table.Entry(code: "027", description: "Coronary Angiography"),
+            HL7Table.Entry(code: "028", description: "\"\""),
+            HL7Table.Entry(code: "029", description: "Cataract Op/Implant of FDA Aprvd Lens"),
+            HL7Table.Entry(code: "030", description: "Cataract Op/Implant of Investigational Lens"),
+            HL7Table.Entry(code: "031", description: "Cataract Surgery"),
+            HL7Table.Entry(code: "032", description: "Cholera Immunization"),
+            HL7Table.Entry(code: "033", description: "Cholesterol Screening"),
+            HL7Table.Entry(code: "034", description: "Circumcision – Newborn"),
+            HL7Table.Entry(code: "035", description: "Colonoscopy"),
+            HL7Table.Entry(code: "036", description: "Contact Lenses"),
+            HL7Table.Entry(code: "037", description: "CT Scan - Cervical & Lumbar"),
+            HL7Table.Entry(code: "038", description: "CT Scan w/ IV Contrast Media into Vein"),
+            HL7Table.Entry(code: "039", description: "CVS (Chorionic Villus) Sampling"),
+            HL7Table.Entry(code: "040", description: "Cystospy Disclosure of Protected Health Information to"),
+            HL7Table.Entry(code: "041", description: "Family/Friends"),
+            HL7Table.Entry(code: "042", description: "D & C and Conization"),
+            HL7Table.Entry(code: "043", description: "Dacryocystogram"),
+            HL7Table.Entry(code: "044", description: "Diagnostic Isotope"),
+            HL7Table.Entry(code: "045", description: "Drainage of an Abscess"),
+            HL7Table.Entry(code: "046", description: "Drug Screening"),
+            HL7Table.Entry(code: "047", description: "Electronic Monitoring of Labor - Refusal"),
+            HL7Table.Entry(code: "048", description: "Endometrial Biopsy"),
+            HL7Table.Entry(code: "049", description: "Endoscopy/Sclerosis of Esophageal Varices"),
+            HL7Table.Entry(code: "050", description: "ERCP"),
+            HL7Table.Entry(code: "051", description: "Exposure to reportable Communicable Disease"),
+            HL7Table.Entry(code: "052", description: "External Version"),
+            HL7Table.Entry(code: "053", description: "Fluorescein Angioscopy"),
+            HL7Table.Entry(code: "054", description: "Hepatitis B - Consent/Declination"),
+            HL7Table.Entry(code: "055", description: "Herniogram"),
+            HL7Table.Entry(code: "056", description: "HIV Test - Consent Refusal"),
+            HL7Table.Entry(code: "057", description: "HIV Test - Disclosure"),
+            HL7Table.Entry(code: "058", description: "HIV Test - Prenatal"),
+            HL7Table.Entry(code: "059", description: "Home IV Treatment Program"),
+            HL7Table.Entry(code: "060", description: "Home Parenteral Treatment Program"),
+            HL7Table.Entry(code: "061", description: "Hysterectomy"),
+            HL7Table.Entry(code: "062", description: "Hysterosalpingogram"),
+            HL7Table.Entry(code: "063", description: "Injection Slip/ Consent"),
+            HL7Table.Entry(code: "064", description: "Intrauterine Device"),
+            HL7Table.Entry(code: "065", description: "Intrauterine Device/Sterilization"),
+            HL7Table.Entry(code: "066", description: "Intravascular Infusion of Streptokinase/Urokinase"),
+            HL7Table.Entry(code: "067", description: "Intravenous Cholangiogram"),
+            HL7Table.Entry(code: "068", description: "Intravenous Digital Angiography"),
+            HL7Table.Entry(code: "069", description: "Iodine Administration"),
+            HL7Table.Entry(code: "070", description: "ISG"),
+            HL7Table.Entry(code: "071", description: "IVP"),
+            HL7Table.Entry(code: "072", description: "Laser Photocoagulation"),
+            HL7Table.Entry(code: "073", description: "Laser treatment"),
+            HL7Table.Entry(code: "074", description: "Lithium Carbonate"),
+            HL7Table.Entry(code: "075", description: "Liver Biopsy"),
+            HL7Table.Entry(code: "076", description: "Lumbar Puncture"),
+            HL7Table.Entry(code: "077", description: "Lymphangiogram"),
+            HL7Table.Entry(code: "078", description: "MAO Inhibitors"),
+            HL7Table.Entry(code: "079", description: "Med, Psych, and/or Drug/Alcohol"),
+            HL7Table.Entry(code: "080", description: "Medical Treatment - Refusal"),
+            HL7Table.Entry(code: "081", description: "Morning-after Pill"),
+            HL7Table.Entry(code: "082", description: "MRI – Adult"),
+            HL7Table.Entry(code: "083", description: "MRI – Pediatric"),
+            HL7Table.Entry(code: "084", description: "Myelogram"),
+            HL7Table.Entry(code: "085", description: "Needle Biopsy"),
+            HL7Table.Entry(code: "086", description: "Needle Biopsy of Lung"),
+            HL7Table.Entry(code: "087", description: "Newborn Treatment and Release"),
+            HL7Table.Entry(code: "088", description: "Norplant Subdermal Birth Control Implant"),
+            HL7Table.Entry(code: "089", description: "Operations, Anesthesia, Transfusions"),
+            HL7Table.Entry(code: "090", description: "Oral Contraceptives"),
+            HL7Table.Entry(code: "091", description: "Organ Donation"),
+            HL7Table.Entry(code: "092", description: "Patient Permits, Consents"),
+            HL7Table.Entry(code: "093", description: "Patient Treatment Permit, Release & Admission"),
+            HL7Table.Entry(code: "094", description: "Penile Injections"),
+            HL7Table.Entry(code: "095", description: "Percutaneous Nephrostomy"),
+            HL7Table.Entry(code: "096", description: "Percutaneous Transhepatic Cholangiogram"),
+            HL7Table.Entry(code: "097", description: "Photographs"),
+            HL7Table.Entry(code: "098", description: "Photographs - Employee"),
+            HL7Table.Entry(code: "099", description: "Photographs - Medical Research"),
+            HL7Table.Entry(code: "100", description: "Photographs - news Media"),
+            HL7Table.Entry(code: "101", description: "Psychiatric Admission - Next of Kin"),
+            HL7Table.Entry(code: "102", description: "Psychiatric Information During Hospital Stay"),
+            HL7Table.Entry(code: "103", description: "Public Release of Information"),
+            HL7Table.Entry(code: "104", description: "Radiologic Procedure"),
+            HL7Table.Entry(code: "105", description: "Refusal of Treatment"),
+            HL7Table.Entry(code: "106", description: "Release of Body"),
+            HL7Table.Entry(code: "107", description: "Release of Limb"),
+            HL7Table.Entry(code: "108", description: "Rh Immune Globulin"),
+            HL7Table.Entry(code: "109", description: "Rights of Medical Research Participants Request to Restrict Access/Disclosure to Medical"),
+            HL7Table.Entry(code: "110", description: "Record/Protected Health Information"),
+            HL7Table.Entry(code: "111", description: "Request for Remain Anonymous"),
+            HL7Table.Entry(code: "112", description: "Seat Belt Exemption"),
+            HL7Table.Entry(code: "113", description: "Sialogram"),
+            HL7Table.Entry(code: "114", description: "Sigmoidoscopy"),
+            HL7Table.Entry(code: "115", description: "Sterilization - Anesthesia & Medical Services"),
+            HL7Table.Entry(code: "116", description: "Sterilization -Federally Funded"),
+            HL7Table.Entry(code: "117", description: "Sterilization – Female"),
+            HL7Table.Entry(code: "118", description: "Sterilization - Laparoscopy/Pomeroy"),
+            HL7Table.Entry(code: "119", description: "Sterilization - Non-Federally Funded"),
+            HL7Table.Entry(code: "120", description: "Sterilization - Secondary"),
+            HL7Table.Entry(code: "121", description: "Tranquilizers"),
+            HL7Table.Entry(code: "122", description: "Transfer - Acknowledgement"),
+            HL7Table.Entry(code: "123", description: "Transfer – Authorization"),
+            HL7Table.Entry(code: "124", description: "Transfer Certification - Physician"),
+            HL7Table.Entry(code: "125", description: "Transfer/Discharge Request"),
+            HL7Table.Entry(code: "126", description: "Transfer for Non-Medical Reasons"),
+            HL7Table.Entry(code: "127", description: "Transfer - Interfaculty Neonatal"),
+            HL7Table.Entry(code: "128", description: "Transfer Refusal"),
+            HL7Table.Entry(code: "129", description: "Transfer Refusal of Further Treatment"),
+            HL7Table.Entry(code: "130", description: "Treadmill & EKG"),
+            HL7Table.Entry(code: "131", description: "Treadmill, Thallium-201"),
+            HL7Table.Entry(code: "132", description: "Typhoid"),
+            HL7Table.Entry(code: "133", description: "Use of Investigational Device"),
+            HL7Table.Entry(code: "134", description: "Use of Investigational Drug"),
+            HL7Table.Entry(code: "135", description: "Venogram"),
+            HL7Table.Entry(code: "136", description: "Videotape"),
+            HL7Table.Entry(code: "1137", description: "Voiding Cystogram"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0497_v2_8_2 = HL7Table(
+        number: "0497",
+        name: "Consent Mode",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "V", description: "Verbal"),
+            HL7Table.Entry(code: "W", description: "Written"),
+            HL7Table.Entry(code: "T", description: "Telephone"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0498_v2_8_2 = HL7Table(
+        number: "0498",
+        name: "Consent Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Active – Consent has been granted"),
+            HL7Table.Entry(code: "L", description: "Limited – Consent has been granted with limitations"),
+            HL7Table.Entry(code: "R", description: "Refused – Consent has been refused"),
+            HL7Table.Entry(code: "P", description: "Pending – Consent has not yet been sought"),
+            HL7Table.Entry(code: "X", description: "Rescinded – Consent was initially granted, but was subsequently revoked or ended."),
+            HL7Table.Entry(code: "B", description: "Bypassed (Consent not sought)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0499_v2_8_2 = HL7Table(
+        number: "0499",
+        name: "Consent Bypass Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Emergency"),
+            HL7Table.Entry(code: "PJ", description: "Professional Judgment"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0500_v2_8_2 = HL7Table(
+        number: "0500",
+        name: "Consent Disclosure Level",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Full Disclosure"),
+            HL7Table.Entry(code: "P", description: "Partial Disclosure"),
+            HL7Table.Entry(code: "N", description: "No Disclosure"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0501_v2_8_2 = HL7Table(
+        number: "0501",
+        name: "Consent Non-Disclosure Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Emergency"),
+            HL7Table.Entry(code: "RX", description: "Rx Private"),
+            HL7Table.Entry(code: "PR", description: "Patient Request"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0502_v2_8_2 = HL7Table(
+        number: "0502",
+        name: "Non-Subject Consenter Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MIN", description: "Subject is a minor"),
+            HL7Table.Entry(code: "NC", description: "Subject is not competent to consent"),
+            HL7Table.Entry(code: "LM", description: "Legally mandated"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0503_v2_8_2 = HL7Table(
+        number: "0503",
+        name: "Sequence/Results Flag",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Sequential"),
+            HL7Table.Entry(code: "C", description: "Cyclical"),
+            HL7Table.Entry(code: "R", description: "Reserved for future use"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0504_v2_8_2 = HL7Table(
+        number: "0504",
+        name: "Sequence Condition Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EE", description: "End related service request(s), end current service request."),
+            HL7Table.Entry(code: "ES", description: "End related service request(s), start current service request."),
+            HL7Table.Entry(code: "SS", description: "Start related service request(s), start current service request."),
+            HL7Table.Entry(code: "SE", description: "Start related service request(s), end current service request."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0505_v2_8_2 = HL7Table(
+        number: "0505",
+        name: "Cyclic Entry/Exit Indicator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "*", description: "The first service request in a cyclic group"),
+            HL7Table.Entry(code: "#", description: "The last service request in a cyclic group."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0506_v2_8_2 = HL7Table(
+        number: "0506",
+        name: "Service Request Relationship",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "N", description: "Nurse prerogative"),
+            HL7Table.Entry(code: "C", description: "Compound"),
+            HL7Table.Entry(code: "T", description: "Tapering"),
+            HL7Table.Entry(code: "E", description: "Exclusive"),
+            HL7Table.Entry(code: "S", description: "Simultaneous"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0507_v2_8_2 = HL7Table(
+        number: "0507",
+        name: "Observation Result Handling",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Film-with-patient"),
+            HL7Table.Entry(code: "N", description: "Notify provider when ready"),
+            HL7Table.Entry(code: "A", description: "Alert provider when abnormal"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0508_v2_8_2 = HL7Table(
+        number: "0508",
+        name: "Blood Product Processing Requirements",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LR", description: "Leukoreduced"),
+            HL7Table.Entry(code: "IR", description: "Irradiated"),
+            HL7Table.Entry(code: "CS", description: "CMV Safe"),
+            HL7Table.Entry(code: "FR", description: "Fresh unit"),
+            HL7Table.Entry(code: "AU", description: "Autologous Unit"),
+            HL7Table.Entry(code: "DI", description: "Directed Unit"),
+            HL7Table.Entry(code: "HL", description: "HLA Matched"),
+            HL7Table.Entry(code: "CM", description: "CMV Negative"),
+            HL7Table.Entry(code: "HB", description: "Hemoglobin S Negative"),
+            HL7Table.Entry(code: "WA", description: "Washed"),
+            HL7Table.Entry(code: "IG", description: "IgA Deficient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0509_v2_8_2 = HL7Table(
+        number: "0509",
+        name: "Indication for Use",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0510_v2_8_2 = HL7Table(
+        number: "0510",
+        name: "Blood Product Dispense Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "RI", description: "Received into inventory (for specified patient)"),
+            HL7Table.Entry(code: "RD", description: "Reserved and ready to dispense"),
+            HL7Table.Entry(code: "RS", description: "Reserved (ordered and product allocated for the patient)"),
+            HL7Table.Entry(code: "RE", description: "Released (no longer allocated for the patient)"),
+            HL7Table.Entry(code: "DS", description: "Dispensed to patient location"),
+            HL7Table.Entry(code: "RA", description: "Returned unused/no longer needed"),
+            HL7Table.Entry(code: "RL", description: "Returned unused/keep linked to patient for possible use later"),
+            HL7Table.Entry(code: "WA", description: "Wasted (product no longer viable)"),
+            HL7Table.Entry(code: "PT", description: "Presumed transfused (dispensed and not returned)"),
+            HL7Table.Entry(code: "CR", description: "Released into inventory for general availability"),
+            HL7Table.Entry(code: "RQ", description: "Request to dispense blood product"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0511_v2_8_2 = HL7Table(
+        number: "0511",
+        name: "BP Observation Status Codes Interpretation",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Record coming over is a correction and thus replaces a final status"),
+            HL7Table.Entry(code: "D", description: "Deletes the BPX record"),
+            HL7Table.Entry(code: "F", description: "Final status; Can only be changed with a corrected status"),
+            HL7Table.Entry(code: "O", description: "Order detail description only (no status)"),
+            HL7Table.Entry(code: "P", description: "Preliminary status"),
+            HL7Table.Entry(code: "W", description: "Post original as wrong, e.g., transmitted for wrong patient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0512_v2_8_2 = HL7Table(
+        number: "0512",
+        name: "Commercial Product",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0513_v2_8_2 = HL7Table(
+        number: "0513",
+        name: "Blood Product Transfusion/Disposition Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "RA", description: "Returned unused/no longer needed"),
+            HL7Table.Entry(code: "RL", description: "Returned unused/keep linked to patient for possible use later"),
+            HL7Table.Entry(code: "WA", description: "Wasted (product no longer viable)"),
+            HL7Table.Entry(code: "TX", description: "Transfused"),
+            HL7Table.Entry(code: "TR", description: "Transfused with adverse reaction"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0514_v2_8_2 = HL7Table(
+        number: "0514",
+        name: "Transfusion Adverse Reaction",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ABOINC", description: "ABO Incompatible Transfusion Reaction"),
+            HL7Table.Entry(code: "ACUTHEHTR", description: "Acute Hemolytic Transfusion Reaction"),
+            HL7Table.Entry(code: "ALLERGIC1", description: "Allergic Reaction – First"),
+            HL7Table.Entry(code: "ALLERGIC2", description: "Allergic Reaction – Recurrent"),
+            HL7Table.Entry(code: "ALLERGICR", description: "Allergic Reaction – Repeating"),
+            HL7Table.Entry(code: "ANAPHYLAC", description: "Anaphylactic Reaction"),
+            HL7Table.Entry(code: "BACTCONTAM", description: "Reaction to Bacterial Contamination"),
+            HL7Table.Entry(code: "DELAYEDHTR", description: "Delayed Hemolytic Transfusion Reaction"),
+            HL7Table.Entry(code: "DELAYEDSTR", description: "Delayed Serological Transfusion Reaction"),
+            HL7Table.Entry(code: "GVHD", description: "Graft vs Host Disease – Transfusion – Associated"),
+            HL7Table.Entry(code: "HYPOTENS", description: "Non-hemolytic Hypotensive Reaction"),
+            HL7Table.Entry(code: "NONHTR1", description: "Non-Hemolytic Fever Chill Transfusion Reaction – First"),
+            HL7Table.Entry(code: "NONHTR2", description: "Non-Hemolytic Fever Chill Transfusion Reaction – Recurrent"),
+            HL7Table.Entry(code: "NONHTRREC", description: "Non-Hemolytic Fever Chill Transfusion Reaction – Repeating"),
+            HL7Table.Entry(code: "NONIMMUNE", description: "Non-Immune Hemolysis"),
+            HL7Table.Entry(code: "NONSPEC", description: "Non-Specific, Non-Hemolytic Transfusion Reaction"),
+            HL7Table.Entry(code: "NORXN", description: "No Evidence of Transfusion Reaction"),
+            HL7Table.Entry(code: "PTP", description: "Posttransfusion Purpura"),
+            HL7Table.Entry(code: "VOLOVER", description: "Symptoms most likely due to volume overload"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0515_v2_8_2 = HL7Table(
+        number: "0515",
+        name: "Transfusion Interrupted Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0516_v2_8_2 = HL7Table(
+        number: "0516",
+        name: "Error Severity",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "W", description: "Warning"),
+            HL7Table.Entry(code: "I", description: "Information"),
+            HL7Table.Entry(code: "E", description: "Error"),
+            HL7Table.Entry(code: "F", description: "Fatal Error"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0517_v2_8_2 = HL7Table(
+        number: "0517",
+        name: "Inform Person Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PAT", description: "Inform patient"),
+            HL7Table.Entry(code: "NPAT", description: "Do NOT inform patient"),
+            HL7Table.Entry(code: "USR", description: "Inform User"),
+            HL7Table.Entry(code: "HD", description: "Inform help desk"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0518_v2_8_2 = HL7Table(
+        number: "0518",
+        name: "Override Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EXTN", description: "Extension Override"),
+            HL7Table.Entry(code: "INLV", description: "Interval Override"),
+            HL7Table.Entry(code: "EQV", description: "Equivalence Override"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0519_v2_8_2 = HL7Table(
+        number: "0519",
+        name: "Override Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0520_v2_8_2 = HL7Table(
+        number: "0520",
+        name: "Message Waiting Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "H", description: "High"),
+            HL7Table.Entry(code: "M", description: "Medium"),
+            HL7Table.Entry(code: "L", description: "Low"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0521_v2_8_2 = HL7Table(
+        number: "0521",
+        name: "Override Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0523_v2_8_2 = HL7Table(
+        number: "0523",
+        name: "Computation Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "%", description: "Indicates a percent change"),
+            HL7Table.Entry(code: "a", description: "Absolute Change"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0525_v2_8_2 = HL7Table(
+        number: "0525",
+        name: "Privilege",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0526_v2_8_2 = HL7Table(
+        number: "0526",
+        name: "Privilege Class",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0527_v2_8_2 = HL7Table(
+        number: "0527",
+        name: "Calendar Alignment",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MY", description: "month of the year"),
+            HL7Table.Entry(code: "WY", description: "week of the year"),
+            HL7Table.Entry(code: "DM", description: "day of the month"),
+            HL7Table.Entry(code: "DY", description: "day of the year"),
+            HL7Table.Entry(code: "DW", description: "day of the week (begins with Monday)"),
+            HL7Table.Entry(code: "HD", description: "hour of the day"),
+            HL7Table.Entry(code: "NH", description: "minute of the hour"),
+            HL7Table.Entry(code: "SN", description: "second of the minute"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0528_v2_8_2 = HL7Table(
+        number: "0528",
+        name: "Event Related Period",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "HS", description: "the hour of sleep (e.g., H18-22)"),
+            HL7Table.Entry(code: "AC", description: "before meal (from lat. ante cibus)"),
+            HL7Table.Entry(code: "PC", description: "after meal (from lat. post cibus)"),
+            HL7Table.Entry(code: "IC", description: "between meals (from lat. inter cibus)"),
+            HL7Table.Entry(code: "ACM", description: "before breakfast (from lat. ante cibus matutinus)"),
+            HL7Table.Entry(code: "ACD", description: "before lunch (from lat. ante cibus diurnus)"),
+            HL7Table.Entry(code: "ACV", description: "before dinner (from lat. ante cibus vespertinus)"),
+            HL7Table.Entry(code: "PCM", description: "after breakfast (from lat. post cibus matutinus)"),
+            HL7Table.Entry(code: "PCD", description: "after lunch (from lat. post cibus diurnus)"),
+            HL7Table.Entry(code: "PCV", description: "after dinner (from lat. post cibus vespertinus)"),
+            HL7Table.Entry(code: "ICM", description: "between breakfast and lunch"),
+            HL7Table.Entry(code: "ICD", description: "between lunch and dinner"),
+            HL7Table.Entry(code: "ICV", description: "between dinner and the hour of sleep"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0530_v2_8_2 = HL7Table(
+        number: "0530",
+        name: "Organization, Agency, Department",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AE", description: "American Express"),
+            HL7Table.Entry(code: "DEA", description: "Drug Enforcement Agency"),
+            HL7Table.Entry(code: "DOD", description: "Department of Defense"),
+            HL7Table.Entry(code: "MC", description: "Master Card"),
+            HL7Table.Entry(code: "VA", description: "Veterans Affairs"),
+            HL7Table.Entry(code: "VI", description: "Visa"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0531_v2_8_2 = HL7Table(
+        number: "0531",
+        name: "Institution",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0532_v2_8_2 = HL7Table(
+        number: "0532",
+        name: "Expanded Yes/No Indicator",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "NI", description: "No Information"),
+            HL7Table.Entry(code: "NA", description: "not applicable"),
+            HL7Table.Entry(code: "UNK", description: "unknown"),
+            HL7Table.Entry(code: "NASK", description: "not asked"),
+            HL7Table.Entry(code: "ASKU", description: "asked but unknown"),
+            HL7Table.Entry(code: "NAV", description: "temporarily unavailable"),
+            HL7Table.Entry(code: "NP", description: "not present"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0533_v2_8_2 = HL7Table(
+        number: "0533",
+        name: "Application Error Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0534_v2_8_2 = HL7Table(
+        number: "0534",
+        name: "Notify Clergy Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "L", description: "Last Rites only"),
+            HL7Table.Entry(code: "O", description: "Other"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0535_v2_8_2 = HL7Table(
+        number: "0535",
+        name: "Signature Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Signed CMS-1500 claim form on file, e.g., authorization for release of any medical or other information necessary to process this claim and assignment of benefits."),
+            HL7Table.Entry(code: "S", description: "Signed authorization for release of any medical or other information necessary to process this claim on file."),
+            HL7Table.Entry(code: "M", description: "Signed authorization for assignment of benefits on file."),
+            HL7Table.Entry(code: "P", description: "Signature generated by provider because the patient was not physically present for services."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0536_v2_8_2 = HL7Table(
+        number: "0536",
+        name: "Certificate Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Provisional"),
+            HL7Table.Entry(code: "R", description: "Revoked"),
+            HL7Table.Entry(code: "V", description: "Active/Valid"),
+            HL7Table.Entry(code: "E", description: "Expired"),
+            HL7Table.Entry(code: "I", description: "Inactive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0537_v2_8_2 = HL7Table(
+        number: "0537",
+        name: "Institution",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0538_v2_8_2 = HL7Table(
+        number: "0538",
+        name: "Institution Relationship Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EMP", description: "Employee"),
+            HL7Table.Entry(code: "VOL", description: "Volunteer"),
+            HL7Table.Entry(code: "CON", description: "Contractor"),
+            HL7Table.Entry(code: "CST", description: "Consultant"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0539_v2_8_2 = HL7Table(
+        number: "0539",
+        name: "Cost Center Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0540_v2_8_2 = HL7Table(
+        number: "0540",
+        name: "Inactive Reason Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Leave of Absence"),
+            HL7Table.Entry(code: "T", description: "Termination"),
+            HL7Table.Entry(code: "R", description: "Retired"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0541_v2_8_2 = HL7Table(
+        number: "0541",
+        name: "Specimen Type Modifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0542_v2_8_2 = HL7Table(
+        number: "0542",
+        name: "Specimen Source Type Modifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0543_v2_8_2 = HL7Table(
+        number: "0543",
+        name: "Specimen Collection Site",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0544_v2_8_2 = HL7Table(
+        number: "0544",
+        name: "Container Condition",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "XC37", description: "Not Body temperature"),
+            HL7Table.Entry(code: "XAMB", description: "Not Ambient temperature Not Critical ambient"),
+            HL7Table.Entry(code: "XCAMB", description: "Failed to keep critical ambient."),
+            HL7Table.Entry(code: "temperature", description: "Not Refrigerated"),
+            HL7Table.Entry(code: "XREF", description: "Failed to keep at refrigerated temperature: 4-8 degrees C."),
+            HL7Table.Entry(code: "XCREF", description: "Failed to keep critical refrigerated."),
+            HL7Table.Entry(code: "XFRZ", description: "Not Frozen temperature Not Critical frozen"),
+            HL7Table.Entry(code: "XCFRZ", description: "Failed to keep critical frozen"),
+            HL7Table.Entry(code: "XDFRZ", description: "Not Deep frozen"),
+            HL7Table.Entry(code: "XUFRZ", description: "Not Ultra frozen"),
+            HL7Table.Entry(code: "XNTR", description: "Not Liquid nitrogen"),
+            HL7Table.Entry(code: "XPRTL", description: "Not Protected from light"),
+            HL7Table.Entry(code: "XCATM", description: "Exposed to Air"),
+            HL7Table.Entry(code: "XDRY", description: "Not Dry"),
+            HL7Table.Entry(code: "XPSO", description: "Exposed to shock"),
+            HL7Table.Entry(code: "XPSA", description: "Shaken"),
+            HL7Table.Entry(code: "XUPR", description: "Not Upright"),
+            HL7Table.Entry(code: "XMTLF", description: "Metal Exposed"),
+            HL7Table.Entry(code: "SB", description: "Seal Broken"),
+            HL7Table.Entry(code: "CC", description: "Container Cracked"),
+            HL7Table.Entry(code: "CT", description: "Container Torn"),
+            HL7Table.Entry(code: "CL", description: "Container Leaking"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0547_v2_8_2 = HL7Table(
+        number: "0547",
+        name: "Jurisdictional Breadth",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "County/Parish"),
+            HL7Table.Entry(code: "S", description: "State/Province"),
+            HL7Table.Entry(code: "N", description: "Country"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0548_v2_8_2 = HL7Table(
+        number: "0548",
+        name: "Signatory’s Relationship to Subject",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Self"),
+            HL7Table.Entry(code: "2", description: "Parent"),
+            HL7Table.Entry(code: "3", description: "Next of Kin"),
+            HL7Table.Entry(code: "4", description: "Durable Power of Attorney in Healthcare Affairs"),
+            HL7Table.Entry(code: "5", description: "Conservator"),
+            HL7Table.Entry(code: "6", description: "Emergent Practitioner (practitioner judging case as emergency requiring care without a consent)"),
+            HL7Table.Entry(code: "7", description: "Non-Emergent Practitioner (i.e. medical ethics committee)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0549_v2_8_2 = HL7Table(
+        number: "0549",
+        name: "NDC Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0550_v2_8_2 = HL7Table(
+        number: "0550",
+        name: "Body Parts",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ADB", description: "Abdomen"),
+            HL7Table.Entry(code: "ACET", description: "Acetabulum"),
+            HL7Table.Entry(code: "ACHIL", description: "Achilles"),
+            HL7Table.Entry(code: "ADE", description: "Adenoids"),
+            HL7Table.Entry(code: "ADR", description: "Adrenal"),
+            HL7Table.Entry(code: "AMN", description: "Amniotic fluid"),
+            HL7Table.Entry(code: "AMS", description: "Amniotic Sac"),
+            HL7Table.Entry(code: "ANAL", description: "Anal"),
+            HL7Table.Entry(code: "ANKL", description: "Ankle"),
+            HL7Table.Entry(code: "ANTEC", description: "Antecubital"),
+            HL7Table.Entry(code: "ANTECF", description: "Antecubital Fossa"),
+            HL7Table.Entry(code: "ANTR", description: "Antrum"),
+            HL7Table.Entry(code: "ANUS", description: "Anus"),
+            HL7Table.Entry(code: "AORTA", description: "Aorta"),
+            HL7Table.Entry(code: "AR", description: "Aortic Rim"),
+            HL7Table.Entry(code: "AV", description: "Aortic Valve"),
+            HL7Table.Entry(code: "APDX", description: "Appendix"),
+            HL7Table.Entry(code: "AREO", description: "Areola"),
+            HL7Table.Entry(code: "ARM", description: "Arm"),
+            HL7Table.Entry(code: "ARTE", description: "Artery"),
+            HL7Table.Entry(code: "ASCIT", description: "Ascites"),
+            HL7Table.Entry(code: "ASCT", description: "Ascitic Fluid"),
+            HL7Table.Entry(code: "ATR", description: "Atrium"),
+            HL7Table.Entry(code: "AURI", description: "Auricular"),
+            HL7Table.Entry(code: "AXI", description: "Axilla"),
+            HL7Table.Entry(code: "BACK", description: "Back"),
+            HL7Table.Entry(code: "BARTD", description: "Bartholin Duct"),
+            HL7Table.Entry(code: "BARTG", description: "Bartholin Gland"),
+            HL7Table.Entry(code: "BRTGF", description: "Bartholin Gland Fluid"),
+            HL7Table.Entry(code: "BPH", description: "Basophils"),
+            HL7Table.Entry(code: "BID", description: "Bile Duct"),
+            HL7Table.Entry(code: "BIFL", description: "Bile fluid"),
+            HL7Table.Entry(code: "BLAD", description: "Bladder"),
+            HL7Table.Entry(code: "BLOOD", description: "Blood"),
+            HL7Table.Entry(code: "BLDA", description: "Blood, Arterial"),
+            HL7Table.Entry(code: "BLDC", description: "Blood, Capillary"),
+            HL7Table.Entry(code: "BLDV", description: "Blood, Venous"),
+            HL7Table.Entry(code: "CBLD", description: "Blood, Cord"),
+            HL7Table.Entry(code: "BLD", description: "Blood, Whole"),
+            HL7Table.Entry(code: "BDY", description: "Body, Whole"),
+            HL7Table.Entry(code: "BON", description: "Bone"),
+            HL7Table.Entry(code: "BMAR", description: "Bone marrow"),
+            HL7Table.Entry(code: "BOWEL", description: "Bowel"),
+            HL7Table.Entry(code: "BOWLA", description: "Bowel, Large"),
+            HL7Table.Entry(code: "BOWSM", description: "Bowel, Small"),
+            HL7Table.Entry(code: "BRA", description: "Brachial"),
+            HL7Table.Entry(code: "BRAIN", description: "Brain"),
+            HL7Table.Entry(code: "BCYS", description: "Brain Cyst Fluid"),
+            HL7Table.Entry(code: "BRST", description: "Breast"),
+            HL7Table.Entry(code: "BRSTFL", description: "Breast fluid"),
+            HL7Table.Entry(code: "BRO", description: "Bronchial"),
+            HL7Table.Entry(code: "BROCH", description: "Bronchiole/Bronchiolar"),
+            HL7Table.Entry(code: "BRONC", description: "Bronchus/Bronchial"),
+            HL7Table.Entry(code: "BRV", description: "Broviac"),
+            HL7Table.Entry(code: "BUCCA", description: "Buccal"),
+            HL7Table.Entry(code: "BURSA", description: "Bursa"),
+            HL7Table.Entry(code: "BURSF", description: "Bursa Fluid"),
+            HL7Table.Entry(code: "BUTT", description: "Buttocks"),
+            HL7Table.Entry(code: "CALF", description: "Calf"),
+            HL7Table.Entry(code: "CANAL", description: "Canal"),
+            HL7Table.Entry(code: "CANLI", description: "Canaliculis"),
+            HL7Table.Entry(code: "CNL", description: "Cannula"),
+            HL7Table.Entry(code: "CANTH", description: "Canthus"),
+            HL7Table.Entry(code: "CDM", description: "Cardiac Muscle"),
+            HL7Table.Entry(code: "CARO", description: "Carotid"),
+            HL7Table.Entry(code: "CARP", description: "Carpal"),
+            HL7Table.Entry(code: "CAVIT", description: "Cavity"),
+            HL7Table.Entry(code: "CHE", description: "Cavity, Chest"),
+            HL7Table.Entry(code: "CECUM", description: "Cecum/Cecal"),
+            HL7Table.Entry(code: "CSF", description: "Cerebral Spinal Fluid"),
+            HL7Table.Entry(code: "CVX", description: "Cervix"),
+            HL7Table.Entry(code: "CERVUT", description: "Cervix/Uterus"),
+            HL7Table.Entry(code: "CHEEK", description: "Cheek"),
+            HL7Table.Entry(code: "CHES", description: "Chest"),
+            HL7Table.Entry(code: "CHEST", description: "Chest Tube"),
+            HL7Table.Entry(code: "CHIN", description: "Chin"),
+            HL7Table.Entry(code: "CIRCU", description: "Circumcision Site"),
+            HL7Table.Entry(code: "CLAVI", description: "Clavicle/Clavicular"),
+            HL7Table.Entry(code: "CLITO", description: "Clitoral"),
+            HL7Table.Entry(code: "CLIT", description: "Clitoris"),
+            HL7Table.Entry(code: "COCCG", description: "Coccygeal"),
+            HL7Table.Entry(code: "COCCY", description: "Coccyx"),
+            HL7Table.Entry(code: "COLON", description: "Colon"),
+            HL7Table.Entry(code: "COLOS", description: "Colostomy"),
+            HL7Table.Entry(code: "COS", description: "Colostomy Stoma"),
+            HL7Table.Entry(code: "CDUCT", description: "Common Duct"),
+            HL7Table.Entry(code: "CONJ", description: "Conjunctiva"),
+            HL7Table.Entry(code: "CORAL", description: "Coral"),
+            HL7Table.Entry(code: "COR", description: "Cord"),
+            HL7Table.Entry(code: "CORD", description: "Cord Blood"),
+            HL7Table.Entry(code: "CORN", description: "Cornea"),
+            HL7Table.Entry(code: "CRANE", description: "Cranium, ethmoid"),
+            HL7Table.Entry(code: "CRANF", description: "Cranium, frontal"),
+            HL7Table.Entry(code: "CRANO", description: "Cranium, occipital"),
+            HL7Table.Entry(code: "CRANP", description: "Cranium, parietal"),
+            HL7Table.Entry(code: "CRANS", description: "Cranium, sphenoid"),
+            HL7Table.Entry(code: "CRANT", description: "Cranium, temporal"),
+            HL7Table.Entry(code: "CUBIT", description: "Cubitus"),
+            HL7Table.Entry(code: "CUFF", description: "Cuff"),
+            HL7Table.Entry(code: "CULD", description: "Cul De Sac"),
+            HL7Table.Entry(code: "CULDO", description: "Culdocentesis"),
+            HL7Table.Entry(code: "DELT", description: "Deltoid"),
+            HL7Table.Entry(code: "DENTA", description: "Dental"),
+            HL7Table.Entry(code: "DEN", description: "Dental Gingiva"),
+            HL7Table.Entry(code: "DIAF", description: "Dialysis Fluid"),
+            HL7Table.Entry(code: "DPH", description: "Diaphragm"),
+            HL7Table.Entry(code: "DIGIT", description: "Digit"),
+            HL7Table.Entry(code: "DISC", description: "Disc"),
+            HL7Table.Entry(code: "DORS", description: "Dorsum/Dorsal"),
+            HL7Table.Entry(code: "DUFL", description: "Duodenal Fluid"),
+            HL7Table.Entry(code: "DUODE", description: "Duodenum/Duodenal"),
+            HL7Table.Entry(code: "DUR", description: "Dura"),
+            HL7Table.Entry(code: "EAR", description: "Ear"),
+            HL7Table.Entry(code: "EARBI", description: "Ear bone, incus"),
+            HL7Table.Entry(code: "EARBM", description: "Ear bone, malleus"),
+            HL7Table.Entry(code: "EARBS", description: "Ear bone,stapes"),
+            HL7Table.Entry(code: "EARLO", description: "Ear Lobe"),
+            HL7Table.Entry(code: "ELBOW", description: "Elbow"),
+            HL7Table.Entry(code: "ELBOWJ", description: "Elbow Joint"),
+            HL7Table.Entry(code: "ENDC", description: "Endocardium"),
+            HL7Table.Entry(code: "EC", description: "Endocervical"),
+            HL7Table.Entry(code: "EOLPH", description: "endolpthamitis"),
+            HL7Table.Entry(code: "ENDM", description: "Endometrium"),
+            HL7Table.Entry(code: "ET", description: "Endotracheal"),
+            HL7Table.Entry(code: "EUR", description: "Endourethral"),
+            HL7Table.Entry(code: "EOS", description: "Eosinophils"),
+            HL7Table.Entry(code: "EPICA", description: "Epicardial"),
+            HL7Table.Entry(code: "EPICM", description: "Epicardium"),
+            HL7Table.Entry(code: "EPD", description: "Epididymis"),
+            HL7Table.Entry(code: "EPIDU", description: "Epidural"),
+            HL7Table.Entry(code: "EPIGL", description: "Epiglottis"),
+            HL7Table.Entry(code: "ESOPG", description: "Esophageal"),
+            HL7Table.Entry(code: "ESO", description: "Esophagus"),
+            HL7Table.Entry(code: "ETHMO", description: "Ethmoid External Jugular"),
+            HL7Table.Entry(code: "EYE", description: "Eye"),
+            HL7Table.Entry(code: "BROW", description: "Eyebrow"),
+            HL7Table.Entry(code: "EYELI", description: "Eyelid"),
+            HL7Table.Entry(code: "FACE", description: "Face"),
+            HL7Table.Entry(code: "FBINC", description: "Facial bone, inferior nasal concha"),
+            HL7Table.Entry(code: "FBLAC", description: "Facial bone, lacrimal"),
+            HL7Table.Entry(code: "FBMAX", description: "Facial bone, maxilla"),
+            HL7Table.Entry(code: "FBNAS", description: "Facial bone, nasal"),
+            HL7Table.Entry(code: "FBPAL", description: "Facial bone, palatine"),
+            HL7Table.Entry(code: "FBVOM", description: "Facial bone, vomer"),
+            HL7Table.Entry(code: "FBZYG", description: "Facial bone, zygomatic"),
+            HL7Table.Entry(code: "FALLT", description: "Fallopian Tube"),
+            HL7Table.Entry(code: "FEMOR", description: "Femoral"),
+            HL7Table.Entry(code: "FMH", description: "Femoral Head"),
+            HL7Table.Entry(code: "FEMUR", description: "Femur"),
+            HL7Table.Entry(code: "FET", description: "Fetus"),
+            HL7Table.Entry(code: "FIBU", description: "Fibula"),
+            HL7Table.Entry(code: "FING", description: "Finger"),
+            HL7Table.Entry(code: "FINGN", description: "Finger Nail"),
+            HL7Table.Entry(code: "FOL", description: "Follicle"),
+            HL7Table.Entry(code: "FOOT", description: "Foot"),
+            HL7Table.Entry(code: "FOREA", description: "Forearm"),
+            HL7Table.Entry(code: "FOREH", description: "Forehead"),
+            HL7Table.Entry(code: "FORES", description: "Foreskin"),
+            HL7Table.Entry(code: "FOURC", description: "Fourchette"),
+            HL7Table.Entry(code: "GB", description: "Gall Bladder"),
+            HL7Table.Entry(code: "GEN", description: "Genital"),
+            HL7Table.Entry(code: "GVU", description: "Genital - Vulva"),
+            HL7Table.Entry(code: "GENC", description: "Genital Cervix"),
+            HL7Table.Entry(code: "GL", description: "Genital Lesion"),
+            HL7Table.Entry(code: "GENL", description: "Genital Lochia"),
+            HL7Table.Entry(code: "GLAND", description: "Gland"),
+            HL7Table.Entry(code: "GLANS", description: "Glans"),
+            HL7Table.Entry(code: "GLUTE", description: "Gluteal"),
+            HL7Table.Entry(code: "GLUT", description: "Gluteus"),
+            HL7Table.Entry(code: "GLUTM", description: "Gluteus Medius"),
+            HL7Table.Entry(code: "GROIN", description: "Groin"),
+            HL7Table.Entry(code: "GUM", description: "Gum"),
+            HL7Table.Entry(code: "HAR", description: "Hair"),
+            HL7Table.Entry(code: "HAL", description: "Hallux"),
+            HL7Table.Entry(code: "HAND", description: "Hand"),
+            HL7Table.Entry(code: "HEAD", description: "Head"),
+            HL7Table.Entry(code: "HART", description: "Heart"),
+            HL7Table.Entry(code: "HV", description: "Heart Valve"),
+            HL7Table.Entry(code: "HVB", description: "Heart Valve, Bicuspid"),
+            HL7Table.Entry(code: "HVT", description: "Heart Valve, Tricuspid"),
+            HL7Table.Entry(code: "HEEL", description: "Heel"),
+            HL7Table.Entry(code: "HEM", description: "Hemorrhoid"),
+            HL7Table.Entry(code: "HIP", description: "Hip"),
+            HL7Table.Entry(code: "HIPJ", description: "Hip Joint"),
+            HL7Table.Entry(code: "HUMER", description: "Humerus"),
+            HL7Table.Entry(code: "HYMEN", description: "Hymen"),
+            HL7Table.Entry(code: "ILC", description: "Ileal Conduit"),
+            HL7Table.Entry(code: "ILE", description: "Ileal Loop"),
+            HL7Table.Entry(code: "ILEOS", description: "Ileostomy"),
+            HL7Table.Entry(code: "ILEUM", description: "Ileum"),
+            HL7Table.Entry(code: "ILIAC", description: "Iliac"),
+            HL7Table.Entry(code: "ILCR", description: "Iliac Crest"),
+            HL7Table.Entry(code: "ILCON", description: "Ilical Conduit"),
+            HL7Table.Entry(code: "INGUI", description: "Inguinal"),
+            HL7Table.Entry(code: "JUGI", description: "Jugular, Internal"),
+            HL7Table.Entry(code: "INT", description: "Intestine"),
+            HL7Table.Entry(code: "ICX", description: "Intracervical"),
+            HL7Table.Entry(code: "INASA", description: "Intranasal"),
+            HL7Table.Entry(code: "INTRU", description: "Intrauterine"),
+            HL7Table.Entry(code: "INTRO", description: "Introitus"),
+            HL7Table.Entry(code: "ISCHI", description: "Ischium"),
+            HL7Table.Entry(code: "JAW", description: "Jaw"),
+            HL7Table.Entry(code: "KIDN", description: "Kidney"),
+            HL7Table.Entry(code: "KNEE", description: "Knee"),
+            HL7Table.Entry(code: "KNEEF", description: "Knee Fluid"),
+            HL7Table.Entry(code: "KNEEJ", description: "Knee Joint"),
+            HL7Table.Entry(code: "LABIA", description: "Labia"),
+            HL7Table.Entry(code: "LABMA", description: "Labia Majora"),
+            HL7Table.Entry(code: "LABMI", description: "Labia Minora"),
+            HL7Table.Entry(code: "LACRI", description: "Lacrimal"),
+            HL7Table.Entry(code: "LAM", description: "Lamella"),
+            HL7Table.Entry(code: "INSTL", description: "Intestine, Large"),
+            HL7Table.Entry(code: "LARYN", description: "Larynx"),
+            HL7Table.Entry(code: "LEG", description: "Leg"),
+            HL7Table.Entry(code: "LENS", description: "Lens"),
+            HL7Table.Entry(code: "WBC", description: "Leukocytes"),
+            HL7Table.Entry(code: "LING", description: "Lingual"),
+            HL7Table.Entry(code: "LINGU", description: "Lingula"),
+            HL7Table.Entry(code: "LIP", description: "Lip"),
+            HL7Table.Entry(code: "STOOLL", description: "Liquid Stool"),
+            HL7Table.Entry(code: "LIVER", description: "Liver"),
+            HL7Table.Entry(code: "LOBE", description: "Lobe"),
+            HL7Table.Entry(code: "LOCH", description: "Lochia"),
+            HL7Table.Entry(code: "ISH", description: "Loop, Ishial"),
+            HL7Table.Entry(code: "LUMBA", description: "Lumbar"),
+            HL7Table.Entry(code: "LMN", description: "Lumen"),
+            HL7Table.Entry(code: "LUNG", description: "Lung"),
+            HL7Table.Entry(code: "LN", description: "Lymph Node"),
+            HL7Table.Entry(code: "LNG", description: "Lymph Node, Groin"),
+            HL7Table.Entry(code: "LYM", description: "Lymphocytes"),
+            HL7Table.Entry(code: "MAC", description: "Macrophages"),
+            HL7Table.Entry(code: "MALLE", description: "Malleolus"),
+            HL7Table.Entry(code: "MANDI", description: "Mandible/Mandibular"),
+            HL7Table.Entry(code: "MAR", description: "Marrow"),
+            HL7Table.Entry(code: "MAST", description: "Mastoid"),
+            HL7Table.Entry(code: "MAXIL", description: "Maxilla/Maxillary"),
+            HL7Table.Entry(code: "MAXS", description: "Maxillary Sinus"),
+            HL7Table.Entry(code: "MEATU", description: "Meatus"),
+            HL7Table.Entry(code: "MEC", description: "Meconium"),
+            HL7Table.Entry(code: "MEDST", description: "Mediastinum"),
+            HL7Table.Entry(code: "MEDU", description: "Medullary"),
+            HL7Table.Entry(code: "MOU", description: "Membrane"),
+            HL7Table.Entry(code: "MPB", description: "Meninges"),
+            HL7Table.Entry(code: "METAC", description: "Metacarpal"),
+            HL7Table.Entry(code: "METAT", description: "Metatarsal"),
+            HL7Table.Entry(code: "MILK", description: "Milk, Breast"),
+            HL7Table.Entry(code: "MITRL", description: "Mitral Valve"),
+            HL7Table.Entry(code: "MOLAR", description: "Molar"),
+            HL7Table.Entry(code: "MP", description: "Mons Pubis"),
+            HL7Table.Entry(code: "MONSU", description: "Mons Ureteris"),
+            HL7Table.Entry(code: "MONSV", description: "Mons Veneris(Mons Pubis)"),
+            HL7Table.Entry(code: "MOUTH", description: "Mouth"),
+            HL7Table.Entry(code: "MRSA2", description: "Mrsa:"),
+            HL7Table.Entry(code: "MYO", description: "Myocardium"),
+            HL7Table.Entry(code: "NAIL", description: "Nail"),
+            HL7Table.Entry(code: "NAILB", description: "Nail Bed"),
+            HL7Table.Entry(code: "NAILF", description: "Nail, Finger"),
+            HL7Table.Entry(code: "NAILT", description: "Nail, Toe"),
+            HL7Table.Entry(code: "NARES", description: "Nares"),
+            HL7Table.Entry(code: "NASL", description: "Nasal"),
+            HL7Table.Entry(code: "NSS", description: "Nasal Septum"),
+            HL7Table.Entry(code: "NLACR", description: "Nasolacrimal"),
+            HL7Table.Entry(code: "NP", description: "Nasopharyngeal/Nasopharynx"),
+            HL7Table.Entry(code: "NTRAC", description: "Nasotracheal"),
+            HL7Table.Entry(code: "NAVEL", description: "Navel"),
+            HL7Table.Entry(code: "NECK", description: "Neck"),
+            HL7Table.Entry(code: "NERVE", description: "Nerve"),
+            HL7Table.Entry(code: "NIPPL", description: "Nipple"),
+            HL7Table.Entry(code: "NOS", description: "Nose (Nasal Passage)"),
+            HL7Table.Entry(code: "NOSE", description: "Nose/Nose(outside)"),
+            HL7Table.Entry(code: "NOSTR", description: "Nostril"),
+            HL7Table.Entry(code: "OCCIP", description: "Occipital"),
+            HL7Table.Entry(code: "OLECR", description: "Olecranon"),
+            HL7Table.Entry(code: "OMEN", description: "Omentum"),
+            HL7Table.Entry(code: "ORBIT", description: "Orbit/Orbital"),
+            HL7Table.Entry(code: "ORO", description: "Oropharynx"),
+            HL7Table.Entry(code: "OSCOX", description: "Os coxa (pelvic girdle)"),
+            HL7Table.Entry(code: "OVARY", description: "Ovary"),
+            HL7Table.Entry(code: "PALAT", description: "Palate"),
+            HL7Table.Entry(code: "PLATH", description: "Palate, Hard"),
+            HL7Table.Entry(code: "PLATS", description: "Palate, Soft"),
+            HL7Table.Entry(code: "PALM", description: "Palm"),
+            HL7Table.Entry(code: "PANCR", description: "Pancreas"),
+            HL7Table.Entry(code: "PAFL", description: "Pancreatic Fluid"),
+            HL7Table.Entry(code: "PAS", description: "Parasternal"),
+            HL7Table.Entry(code: "PARAT", description: "Paratracheal"),
+            HL7Table.Entry(code: "PARIE", description: "Parietal"),
+            HL7Table.Entry(code: "PARON", description: "Paronychia"),
+            HL7Table.Entry(code: "PAROT", description: "Parotid/Parotid Gland"),
+            HL7Table.Entry(code: "PATEL", description: "Patella"),
+            HL7Table.Entry(code: "PELV", description: "Pelvis"),
+            HL7Table.Entry(code: "PENSH", description: "Penile Shaft"),
+            HL7Table.Entry(code: "PENIS", description: "Penis"),
+            HL7Table.Entry(code: "PANAL", description: "Perianal/Perirectal"),
+            HL7Table.Entry(code: "PERI", description: "Pericardial Fluid"),
+            HL7Table.Entry(code: "PCARD", description: "Pericardium"),
+            HL7Table.Entry(code: "PCLIT", description: "Periclitoral"),
+            HL7Table.Entry(code: "PERIH", description: "Perihepatic"),
+            HL7Table.Entry(code: "PNEAL", description: "Perineal"),
+            HL7Table.Entry(code: "PERIN", description: "Perineal Abscess"),
+            HL7Table.Entry(code: "PNEPH", description: "Perinephric"),
+            HL7Table.Entry(code: "PNM", description: "Perineum"),
+            HL7Table.Entry(code: "PORBI", description: "Periorbital"),
+            HL7Table.Entry(code: "PERRA", description: "Perirectal"),
+            HL7Table.Entry(code: "PERIS", description: "Perisplenic"),
+            HL7Table.Entry(code: "PER", description: "Peritoneal"),
+            HL7Table.Entry(code: "PERT", description: "Peritoneal Fluid"),
+            HL7Table.Entry(code: "PERIT", description: "Peritoneum"),
+            HL7Table.Entry(code: "PTONS", description: "Peritonsillar"),
+            HL7Table.Entry(code: "PERIU", description: "Periurethal"),
+            HL7Table.Entry(code: "PERIV", description: "Perivesicular"),
+            HL7Table.Entry(code: "PHALA", description: "Phalanyx"),
+            HL7Table.Entry(code: "PILO", description: "Pilonidal"),
+            HL7Table.Entry(code: "PINNA", description: "Pinna"),
+            HL7Table.Entry(code: "PLC", description: "Placenta"),
+            HL7Table.Entry(code: "PLACF", description: "Placenta (Fetal Side)"),
+            HL7Table.Entry(code: "PLACM", description: "Placenta (Maternal Side)"),
+            HL7Table.Entry(code: "PLANT", description: "Plantar"),
+            HL7Table.Entry(code: "PLEUR", description: "Pleura"),
+            HL7Table.Entry(code: "PLEU", description: "Pleural Fluid"),
+            HL7Table.Entry(code: "PLR", description: "Pleural Fluid (Thoracentesis Fld)"),
+            HL7Table.Entry(code: "POPLI", description: "Popliteal"),
+            HL7Table.Entry(code: "PREAU", description: "Preauricular"),
+            HL7Table.Entry(code: "PRERE", description: "Prerenal"),
+            HL7Table.Entry(code: "PRST", description: "Prostate Gland"),
+            HL7Table.Entry(code: "PROS", description: "Prostatic Fluid"),
+            HL7Table.Entry(code: "PUBIC", description: "Pubic"),
+            HL7Table.Entry(code: "PUL", description: "Pulmonary Artery"),
+            HL7Table.Entry(code: "RADI", description: "Radial"),
+            HL7Table.Entry(code: "RADIUS", description: "Radius"),
+            HL7Table.Entry(code: "RECTL", description: "Rectal"),
+            HL7Table.Entry(code: "RECTU", description: "Rectum"),
+            HL7Table.Entry(code: "RBC", description: "Red Blood Cells"),
+            HL7Table.Entry(code: "RENL", description: "Renal"),
+            HL7Table.Entry(code: "RNP", description: "Renal Pelvis"),
+            HL7Table.Entry(code: "RPERI", description: "Retroperitoneal"),
+            HL7Table.Entry(code: "RIB", description: "Rib"),
+            HL7Table.Entry(code: "SACRA", description: "Sacral"),
+            HL7Table.Entry(code: "SACRO", description: "Sacrococcygeal"),
+            HL7Table.Entry(code: "SACIL", description: "Sacroiliac"),
+            HL7Table.Entry(code: "SACRU", description: "Sacrum"),
+            HL7Table.Entry(code: "SALGL", description: "Salivary Gland"),
+            HL7Table.Entry(code: "SCALP", description: "Scalp"),
+            HL7Table.Entry(code: "SCAPU", description: "Scapula/Scapular"),
+            HL7Table.Entry(code: "SCLER", description: "Sclera"),
+            HL7Table.Entry(code: "SCROT", description: "Scrotum/Scrotal"),
+            HL7Table.Entry(code: "SEMN", description: "Semen"),
+            HL7Table.Entry(code: "SEM", description: "Seminal Fluid"),
+            HL7Table.Entry(code: "SEPTU", description: "Septum/Septal"),
+            HL7Table.Entry(code: "SEROM", description: "Seroma"),
+            HL7Table.Entry(code: "SHIN", description: "Shin"),
+            HL7Table.Entry(code: "SHOLJ", description: "Sholder Joint"),
+            HL7Table.Entry(code: "SHOL", description: "Shoulder"),
+            HL7Table.Entry(code: "SIGMO", description: "Sigmoid"),
+            HL7Table.Entry(code: "SINUS", description: "Sinus"),
+            HL7Table.Entry(code: "SKM", description: "Skeletal Muscle"),
+            HL7Table.Entry(code: "SKENE", description: "Skene's Gland"),
+            HL7Table.Entry(code: "SKULL", description: "Skull"),
+            HL7Table.Entry(code: "INSTS", description: "Intestine, Small"),
+            HL7Table.Entry(code: "SOLE", description: "Sole"),
+            HL7Table.Entry(code: "SPRM", description: "Spermatozoa"),
+            HL7Table.Entry(code: "SPHEN", description: "Sphenoid"),
+            HL7Table.Entry(code: "SPCOR", description: "Spinal Cord"),
+            HL7Table.Entry(code: "SPLN", description: "Spleen"),
+            HL7Table.Entry(code: "STER", description: "Sternum/Sternal"),
+            HL7Table.Entry(code: "STOM", description: "Stoma"),
+            HL7Table.Entry(code: "USTOM", description: "Stoma, Urinary"),
+            HL7Table.Entry(code: "STOMA", description: "Stomach"),
+            HL7Table.Entry(code: "STUMP", description: "Stump"),
+            HL7Table.Entry(code: "SCLV", description: "Sub Clavian"),
+            HL7Table.Entry(code: "SDP", description: "Subdiaphramatic"),
+            HL7Table.Entry(code: "SUB", description: "Subdural"),
+            HL7Table.Entry(code: "SUBD", description: "Subdural Fluid"),
+            HL7Table.Entry(code: "SGF", description: "Subgaleal Fluid"),
+            HL7Table.Entry(code: "SUBM", description: "Submandibular"),
+            HL7Table.Entry(code: "SUBX", description: "Submaxillary"),
+            HL7Table.Entry(code: "SUBME", description: "Submental"),
+            HL7Table.Entry(code: "SUBPH", description: "Subphrenic"),
+            HL7Table.Entry(code: "SPX", description: "Supra Cervical"),
+            HL7Table.Entry(code: "SCLAV", description: "Supraclavicle/Supraclavicular"),
+            HL7Table.Entry(code: "SUPRA", description: "Suprapubic"),
+            HL7Table.Entry(code: "SUPB", description: "Suprapubic Specimen"),
+            HL7Table.Entry(code: "SWT", description: "Sweat"),
+            HL7Table.Entry(code: "SWTG", description: "Sweat Gland"),
+            HL7Table.Entry(code: "SYNOL", description: "Synovial"),
+            HL7Table.Entry(code: "SYN", description: "Synovial Fluid"),
+            HL7Table.Entry(code: "SYNOV", description: "Synovium"),
+            HL7Table.Entry(code: "TARS", description: "Tarsal"),
+            HL7Table.Entry(code: "TDUCT", description: "Tear Duct"),
+            HL7Table.Entry(code: "TEAR", description: "Tears"),
+            HL7Table.Entry(code: "TEMPL", description: "Temple"),
+            HL7Table.Entry(code: "TEMPO", description: "Temporal"),
+            HL7Table.Entry(code: "TML", description: "Temporal Lobe"),
+            HL7Table.Entry(code: "TESTI", description: "Testicle(Testis)"),
+            HL7Table.Entry(code: "THIGH", description: "Thigh"),
+            HL7Table.Entry(code: "THORA", description: "Thorax/Thoracic/Thoracentesis"),
+            HL7Table.Entry(code: "THRB", description: "Throat"),
+            HL7Table.Entry(code: "THUMB", description: "Thumb"),
+            HL7Table.Entry(code: "TNL", description: "Thumbnail"),
+            HL7Table.Entry(code: "THM", description: "Thymus"),
+            HL7Table.Entry(code: "THYRD", description: "Thyroid"),
+            HL7Table.Entry(code: "TIBIA", description: "Tibia"),
+            HL7Table.Entry(code: "TOE", description: "Toe"),
+            HL7Table.Entry(code: "TOEN", description: "Toe Nail"),
+            HL7Table.Entry(code: "TONG", description: "Tongue"),
+            HL7Table.Entry(code: "TONS", description: "Tonsil"),
+            HL7Table.Entry(code: "TOOTH", description: "Tooth"),
+            HL7Table.Entry(code: "TSK", description: "Tooth Socket"),
+            HL7Table.Entry(code: "TRCHE", description: "Trachea/Tracheal"),
+            HL7Table.Entry(code: "TBRON", description: "Transbronchial"),
+            HL7Table.Entry(code: "TCN", description: "Transcarina Asp"),
+            HL7Table.Entry(code: "ULNA", description: "Ulna/Ulnar"),
+            HL7Table.Entry(code: "UMB", description: "Umbilical Blood"),
+            HL7Table.Entry(code: "UMBL", description: "Umbilicus/Umbilical"),
+            HL7Table.Entry(code: "URET", description: "Ureter"),
+            HL7Table.Entry(code: "URTH", description: "Urethra"),
+            HL7Table.Entry(code: "UTERI", description: "Uterine"),
+            HL7Table.Entry(code: "SAC", description: "Uterine Cul/De/Sac"),
+            HL7Table.Entry(code: "UTER", description: "Uterus"),
+            HL7Table.Entry(code: "VAGIN", description: "Vagina/Vaginal"),
+            HL7Table.Entry(code: "VCUFF", description: "Vaginal Cuff"),
+            HL7Table.Entry(code: "VGV", description: "Vaginal Vault"),
+            HL7Table.Entry(code: "VAL", description: "Valve"),
+            HL7Table.Entry(code: "VAS", description: "Vas Deferens"),
+            HL7Table.Entry(code: "VASTL", description: "Vastus Lateralis"),
+            HL7Table.Entry(code: "VAULT", description: "Vault"),
+            HL7Table.Entry(code: "VEIN", description: "Vein"),
+            HL7Table.Entry(code: "VENTG", description: "Ventragluteal"),
+            HL7Table.Entry(code: "VCSF", description: "Ventricular CSF"),
+            HL7Table.Entry(code: "VERMI", description: "Vermis Cerebelli"),
+            HL7Table.Entry(code: "VERTC", description: "Vertebra, cervical"),
+            HL7Table.Entry(code: "VERTL", description: "Vertebra, lumbar"),
+            HL7Table.Entry(code: "VERTT", description: "Vertebra, thoracic"),
+            HL7Table.Entry(code: "VESI", description: "Vesicle"),
+            HL7Table.Entry(code: "VESCL", description: "Vesicular"),
+            HL7Table.Entry(code: "VESFLD", description: "Vesicular Fluid"),
+            HL7Table.Entry(code: "VESTI", description: "Vestibule(Genital)"),
+            HL7Table.Entry(code: "VITR", description: "Vitreous Fluid"),
+            HL7Table.Entry(code: "VOC", description: "Vocal Cord"),
+            HL7Table.Entry(code: "VULVA", description: "Vulva"),
+            HL7Table.Entry(code: "WRIST", description: "Wrist"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0552_v2_8_2 = HL7Table(
+        number: "0552",
+        name: "Advanced Beneficiary Notice Override Reason",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0553_v2_8_2 = HL7Table(
+        number: "0553",
+        name: "Invoice Control Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OR", description: "Original Invoice"),
+            HL7Table.Entry(code: "CN", description: "Cancel Invoice"),
+            HL7Table.Entry(code: "CG", description: "Cancel Invoice Product/Service Group"),
+            HL7Table.Entry(code: "CL", description: "Cancel Invoice Product/Service Line Item"),
+            HL7Table.Entry(code: "PD", description: "Pre-Determination Invoice"),
+            HL7Table.Entry(code: "RA", description: "Re–Assessment"),
+            HL7Table.Entry(code: "OA", description: "Original Authorization"),
+            HL7Table.Entry(code: "SA", description: "Special Authorization"),
+            HL7Table.Entry(code: "AI", description: "Combined Authorization and Adjudication request"),
+            HL7Table.Entry(code: "PA", description: "Pre-Authorization"),
+            HL7Table.Entry(code: "AA", description: "Authorization request for inpatient admission"),
+            HL7Table.Entry(code: "EA", description: "Authorization request for inpatient stay extension"),
+            HL7Table.Entry(code: "RC", description: "Referral Pre-Authorization"),
+            HL7Table.Entry(code: "CA", description: "Cancel Authorization request"),
+            HL7Table.Entry(code: "CP", description: "Copy of Invoice"),
+            HL7Table.Entry(code: "CQ", description: "Coverage Register Query"),
+            HL7Table.Entry(code: "RU", description: "Referral authorization"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0554_v2_8_2 = HL7Table(
+        number: "0554",
+        name: "Invoice Reason Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LATE", description: "Late Invoice"),
+            HL7Table.Entry(code: "NORM", description: "Normal submission"),
+            HL7Table.Entry(code: "SUB", description: "Subscriber coverage problem"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0555_v2_8_2 = HL7Table(
+        number: "0555",
+        name: "Invoice Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "FS", description: "Fee for Service"),
+            HL7Table.Entry(code: "SS", description: "By Session"),
+            HL7Table.Entry(code: "GP", description: "Group"),
+            HL7Table.Entry(code: "BK", description: "Block"),
+            HL7Table.Entry(code: "SL", description: "Salary"),
+            HL7Table.Entry(code: "IN", description: "Information Only"),
+            HL7Table.Entry(code: "NP", description: "Non Patient"),
+            HL7Table.Entry(code: "FN", description: "Final"),
+            HL7Table.Entry(code: "PA", description: "Partial"),
+            HL7Table.Entry(code: "SU", description: "Supplemental"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0556_v2_8_2 = HL7Table(
+        number: "0556",
+        name: "Benefit Group",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AMB", description: "AMBULATORY CARE"),
+            HL7Table.Entry(code: "DENT", description: "DENTAL"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0557_v2_8_2 = HL7Table(
+        number: "0557",
+        name: "Payee Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ORG", description: "Payee Organization"),
+            HL7Table.Entry(code: "PERS", description: "Person"),
+            HL7Table.Entry(code: "PPER", description: "Pay Person"),
+            HL7Table.Entry(code: "EMPL", description: "Employer"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0558_v2_8_2 = HL7Table(
+        number: "0558",
+        name: "Payee Relationship to Invoice",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PT", description: "Patient"),
+            HL7Table.Entry(code: "FM", description: "Family Member"),
+            HL7Table.Entry(code: "SB", description: "Subscriber"),
+            HL7Table.Entry(code: "GT", description: "Guarantor"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0559_v2_8_2 = HL7Table(
+        number: "0559",
+        name: "Product/Service Line Item Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Processed"),
+            HL7Table.Entry(code: "D", description: "Denied"),
+            HL7Table.Entry(code: "R", description: "Rejected"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0560_v2_8_2 = HL7Table(
+        number: "0560",
+        name: "Quantity Units",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "FL", description: "Units"),
+            HL7Table.Entry(code: "HS", description: "Hours"),
+            HL7Table.Entry(code: "DY", description: "Days"),
+            HL7Table.Entry(code: "MN", description: "Month"),
+            HL7Table.Entry(code: "YY", description: "Years"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0561_v2_8_2 = HL7Table(
+        number: "0561",
+        name: "Product/Services Clarification Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DTCTR", description: "Data Center Number"),
+            HL7Table.Entry(code: "SEQ", description: "Sequence Number"),
+            HL7Table.Entry(code: "DGAPP", description: "Diagnostic Approval Number"),
+            HL7Table.Entry(code: "CLCTR", description: "Claim Center"),
+            HL7Table.Entry(code: "ENC", description: "Encounter Number"),
+            HL7Table.Entry(code: "OOP", description: "Out of Province Indicator"),
+            HL7Table.Entry(code: "GFTH", description: "Good Faith Indicator"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0562_v2_8_2 = HL7Table(
+        number: "0562",
+        name: "Processing Consideration Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PAPER", description: "Paper documentation to follow"),
+            HL7Table.Entry(code: "EFORM", description: "Electronic form to follow"),
+            HL7Table.Entry(code: "FAX", description: "Fax to follow"),
+            HL7Table.Entry(code: "RTADJ", description: "Real Time Adjudication Processing"),
+            HL7Table.Entry(code: "DFADJ", description: "Deferred Adjudication Processing"),
+            HL7Table.Entry(code: "PYRDELAY", description: "Delayed by a Previous Payer"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0564_v2_8_2 = HL7Table(
+        number: "0564",
+        name: "Adjustment Category Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EA", description: "Edit/Adjudication Response"),
+            HL7Table.Entry(code: "IN", description: "Information"),
+            HL7Table.Entry(code: "PA", description: "Provider Adjustment"),
+            HL7Table.Entry(code: "PR", description: "Processing Result"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0565_v2_8_2 = HL7Table(
+        number: "0565",
+        name: "Provider Adjustment Reason Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PST", description: "Provincial Sales Tax"),
+            HL7Table.Entry(code: "GST", description: "Goods and Services Tax"),
+            HL7Table.Entry(code: "HST", description: "Harmonized Sales Tax"),
+            HL7Table.Entry(code: "DISP", description: "Dispensing Fee"),
+            HL7Table.Entry(code: "MKUP", description: "Mark up Fee"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0566_v2_8_2 = HL7Table(
+        number: "0566",
+        name: "Blood Unit Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "WBL", description: "Whole Blood"),
+            HL7Table.Entry(code: "RBC", description: "Red Blood Cells"),
+            HL7Table.Entry(code: "PLS", description: "Plasma"),
+            HL7Table.Entry(code: "PLT", description: "Platelets"),
+            HL7Table.Entry(code: "GRN", description: "Granulocytes"),
+            HL7Table.Entry(code: "PSC", description: "Peripheral Stem Cells"),
+            HL7Table.Entry(code: "LYM", description: "Lymphocytes"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0567_v2_8_2 = HL7Table(
+        number: "0567",
+        name: "Weight Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "[lb_av]", description: "Pound"),
+            HL7Table.Entry(code: "[oz_av]", description: "Ounce"),
+            HL7Table.Entry(code: "kg", description: "Kilogram"),
+            HL7Table.Entry(code: "g", description: "Gram"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0568_v2_8_2 = HL7Table(
+        number: "0568",
+        name: "Volume Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "l", description: "Liter"),
+            HL7Table.Entry(code: "[pt_us]", description: "Pint"),
+            HL7Table.Entry(code: "ml", description: "Milliliters"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0569_v2_8_2 = HL7Table(
+        number: "0569",
+        name: "Adjustment Action",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EOB", description: "Print on EOB"),
+            HL7Table.Entry(code: "PAT", description: "Inform Patient"),
+            HL7Table.Entry(code: "PRO", description: "Inform Provider"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0570_v2_8_2 = HL7Table(
+        number: "0570",
+        name: "Payment Method Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CASH", description: "Cash"),
+            HL7Table.Entry(code: "CCCA", description: "Credit Card"),
+            HL7Table.Entry(code: "CCHK", description: "Cashier's Check"),
+            HL7Table.Entry(code: "CDAC", description: "Credit/Debit Account"),
+            HL7Table.Entry(code: "CHCK", description: "Check"),
+            HL7Table.Entry(code: "DDPO", description: "Direct Deposit"),
+            HL7Table.Entry(code: "DEBC", description: "Debit Card"),
+            HL7Table.Entry(code: "SWFT", description: "Society for Worldwide Interbank Financial Telecommunications (S.W.I.F.T.)"),
+            HL7Table.Entry(code: "TRAC", description: "Traveler's Check"),
+            HL7Table.Entry(code: "VISN", description: "VISA Special Electronic Funds Transfer Network"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0571_v2_8_2 = HL7Table(
+        number: "0571",
+        name: "Invoice Processing Results Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ACK", description: "Acknowledge"),
+            HL7Table.Entry(code: "REJECT", description: "Reject"),
+            HL7Table.Entry(code: "PEND", description: "Pending"),
+            HL7Table.Entry(code: "ADJZER", description: "Adjudicated to Zero"),
+            HL7Table.Entry(code: "ADJSUB", description: "Adjudicated as Submitted"),
+            HL7Table.Entry(code: "ADJ", description: "Adjudicated with Adjustments"),
+            HL7Table.Entry(code: "PAID", description: "Paid"),
+            HL7Table.Entry(code: "PRED", description: "Pre-Determination"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0572_v2_8_2 = HL7Table(
+        number: "0572",
+        name: "Provider Tax Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "RVAT", description: "Registered in VAT register"),
+            HL7Table.Entry(code: "UVAT", description: "Unregistered in VAT register"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0615_v2_8_2 = HL7Table(
+        number: "0615",
+        name: "User Authentication Credential Type Code",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "KERB", description: "Kerberos Service Ticket"),
+            HL7Table.Entry(code: "SAML", description: "Authenticated User Identity Assertion"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0616_v2_8_2 = HL7Table(
+        number: "0616",
+        name: "Address Expiration Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "M", description: "Moved"),
+            HL7Table.Entry(code: "E", description: "Added in error"),
+            HL7Table.Entry(code: "R", description: "On request"),
+            HL7Table.Entry(code: "C", description: "Corrected"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0617_v2_8_2 = HL7Table(
+        number: "0617",
+        name: "Address Usage",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "M", description: "Mailing"),
+            HL7Table.Entry(code: "V", description: "Visit"),
+            HL7Table.Entry(code: "C", description: "Classification"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0618_v2_8_2 = HL7Table(
+        number: "0618",
+        name: "Protection Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LI", description: "Listed"),
+            HL7Table.Entry(code: "UL", description: "Unlisted (Should not appear in directories)"),
+            HL7Table.Entry(code: "UP", description: "Unpublished"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0625_v2_8_2 = HL7Table(
+        number: "0625",
+        name: "Item Status Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Active"),
+            HL7Table.Entry(code: "2", description: "Pending Inactive"),
+            HL7Table.Entry(code: "3", description: "Inactive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0634_v2_8_2 = HL7Table(
+        number: "0634",
+        name: "Item Importance Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CRT", description: "Critical"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0642_v2_8_2 = HL7Table(
+        number: "0642",
+        name: "Reorder Theory Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "D", description: "DOP/DOQ"),
+            HL7Table.Entry(code: "M", description: "MIN/MAX"),
+            HL7Table.Entry(code: "O", description: "Override"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0651_v2_8_2 = HL7Table(
+        number: "0651",
+        name: "Labor Calculation Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "TME", description: "Time"),
+            HL7Table.Entry(code: "CST", description: "Cost"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0653_v2_8_2 = HL7Table(
+        number: "0653",
+        name: "Date Format",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "mm/dd/yy"),
+            HL7Table.Entry(code: "2", description: "yy.mm.dd"),
+            HL7Table.Entry(code: "3", description: "dd/mm/yy"),
+            HL7Table.Entry(code: "4", description: "dd.mm.yy"),
+            HL7Table.Entry(code: "5", description: "yy/mm/dd"),
+            HL7Table.Entry(code: "6", description: "Yymmdd"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0657_v2_8_2 = HL7Table(
+        number: "0657",
+        name: "Device Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "EO Gas Sterilizer"),
+            HL7Table.Entry(code: "2", description: "Steam Sterilizer"),
+            HL7Table.Entry(code: "3", description: "Peracetic Acid"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0659_v2_8_2 = HL7Table(
+        number: "0659",
+        name: "Lot Control",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "OR Mode Without Operator"),
+            HL7Table.Entry(code: "2", description: "OR Mode with Operator"),
+            HL7Table.Entry(code: "3", description: "CPD Mode Without Operator"),
+            HL7Table.Entry(code: "4", description: "CPD Mode With Operator"),
+            HL7Table.Entry(code: "5", description: "Offline Mode"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0667_v2_8_2 = HL7Table(
+        number: "0667",
+        name: "Device Data State",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Real Time Values"),
+            HL7Table.Entry(code: "1", description: "Historic Values"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0669_v2_8_2 = HL7Table(
+        number: "0669",
+        name: "Load Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LLD", description: "Building a Load"),
+            HL7Table.Entry(code: "LCP", description: "Load In Process"),
+            HL7Table.Entry(code: "LCC", description: "Load is Complete"),
+            HL7Table.Entry(code: "LCN", description: "Load Canceled"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0682_v2_8_2 = HL7Table(
+        number: "0682",
+        name: "Device Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Ready"),
+            HL7Table.Entry(code: "1", description: "Not Ready"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0702_v2_8_2 = HL7Table(
+        number: "0702",
+        name: "Cycle Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "FLS", description: "Flash"),
+            HL7Table.Entry(code: "PRV", description: "Prevac"),
+            HL7Table.Entry(code: "GRV", description: "Gravity"),
+            HL7Table.Entry(code: "LQD", description: "Liquid"),
+            HL7Table.Entry(code: "EXP", description: "Express"),
+            HL7Table.Entry(code: "DRT", description: "Dart"),
+            HL7Table.Entry(code: "DRW", description: "Dart Warm-up Cycle"),
+            HL7Table.Entry(code: "THR", description: "Thermal"),
+            HL7Table.Entry(code: "ISO", description: "Isothermal"),
+            HL7Table.Entry(code: "BWD", description: "Bowie-Dick Test"),
+            HL7Table.Entry(code: "LKT", description: "Leak Test"),
+            HL7Table.Entry(code: "WFP", description: "Wrap/Steam Flush Pressure Pulse (Wrap/SFPP)"),
+            HL7Table.Entry(code: "SFP", description: "Steam Flush Pressure Pulse"),
+            HL7Table.Entry(code: "CMW", description: "Chemical Wash"),
+            HL7Table.Entry(code: "PEA", description: "Peracetic Acid"),
+            HL7Table.Entry(code: "EOH", description: "EO High Temperature"),
+            HL7Table.Entry(code: "EOL", description: "EO Low Temperature"),
+            HL7Table.Entry(code: "CRT", description: "Cart Wash"),
+            HL7Table.Entry(code: "UTL", description: "Utensil Wash"),
+            HL7Table.Entry(code: "IST", description: "Instrument Wash"),
+            HL7Table.Entry(code: "GLS", description: "Glassware"),
+            HL7Table.Entry(code: "PLA", description: "Plastic Goods Wash"),
+            HL7Table.Entry(code: "ANR", description: "Anesthesia/Respiratory"),
+            HL7Table.Entry(code: "GTL", description: "Gentle"),
+            HL7Table.Entry(code: "OPW", description: "Optional Wash"),
+            HL7Table.Entry(code: "BDP", description: "Bedpans"),
+            HL7Table.Entry(code: "TRB", description: "Tray/Basin"),
+            HL7Table.Entry(code: "GNP", description: "Gen. Purpose"),
+            HL7Table.Entry(code: "COD", description: "Code"),
+            HL7Table.Entry(code: "RNS", description: "Rinse"),
+            HL7Table.Entry(code: "2RS", description: "Second Rinse"),
+            HL7Table.Entry(code: "DEC", description: "Decontamination"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0717_v2_8_2 = HL7Table(
+        number: "0717",
+        name: "Access Restriction Value",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ALL", description: "All"),
+            HL7Table.Entry(code: "DEM", description: "All demographic data"),
+            HL7Table.Entry(code: "LOC", description: "Patient Location"),
+            HL7Table.Entry(code: "PID-7", description: "Date of Birth"),
+            HL7Table.Entry(code: "PID-17", description: "Religion"),
+            HL7Table.Entry(code: "HIV", description: "HIV status and results"),
+            HL7Table.Entry(code: "STD", description: "Sexually transmitted diseases"),
+            HL7Table.Entry(code: "PSY", description: "Psychiatric Mental health"),
+            HL7Table.Entry(code: "DRG", description: "Drug"),
+            HL7Table.Entry(code: "SMD", description: "Sensitive medical data"),
+            HL7Table.Entry(code: "NO", description: "None"),
+            HL7Table.Entry(code: "OO", description: "Opt out all registries (HIPAA)"),
+            HL7Table.Entry(code: "OI", description: "Opt in all registries (HIPAA)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0719_v2_8_2 = HL7Table(
+        number: "0719",
+        name: "Access Restriction Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "PAT", description: "Patient Request"),
+            HL7Table.Entry(code: "PHY", description: "Physician Request"),
+            HL7Table.Entry(code: "REG", description: "Regulatory requirement"),
+            HL7Table.Entry(code: "ORG", description: "Organizational policy or requirement"),
+            HL7Table.Entry(code: "EMP", description: "Employee of this organization"),
+            HL7Table.Entry(code: "DIA", description: "Diagnosis-related"),
+            HL7Table.Entry(code: "VIP", description: "Very important person or celebrity"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0725_v2_8_2 = HL7Table(
+        number: "0725",
+        name: "Mood Codes",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "INT", description: "Intent"),
+            HL7Table.Entry(code: "APT", description: "Appointment"),
+            HL7Table.Entry(code: "ARQ", description: "Appointment Request"),
+            HL7Table.Entry(code: "PRMS", description: "Promise"),
+            HL7Table.Entry(code: "PRP", description: "Proposal"),
+            HL7Table.Entry(code: "RQO", description: "Request-Order"),
+            HL7Table.Entry(code: "EVN", description: "Event"),
+            HL7Table.Entry(code: "EVN.CRT", description: "Event Criterion"),
+            HL7Table.Entry(code: "EXP", description: "Expectation"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0728_v2_8_2 = HL7Table(
+        number: "0728",
+        name: "CCL Value",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Nothing obvious"),
+            HL7Table.Entry(code: "1", description: "Low"),
+            HL7Table.Entry(code: "2", description: "Moderate"),
+            HL7Table.Entry(code: "3", description: "High"),
+            HL7Table.Entry(code: "4", description: "Very high"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0731_v2_8_2 = HL7Table(
+        number: "0731",
+        name: "DRG Diagnosis Determination Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Valid code"),
+            HL7Table.Entry(code: "1", description: "Invalid code"),
+            HL7Table.Entry(code: "2", description: "Two primary diagnosis codes"),
+            HL7Table.Entry(code: "3", description: "Invalid for this gender"),
+            HL7Table.Entry(code: "4", description: "Invalid for this age"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0734_v2_8_2 = HL7Table(
+        number: "0734",
+        name: "Grouper Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Normal grouping"),
+            HL7Table.Entry(code: "1", description: "Invalid or missing primary diagnosis"),
+            HL7Table.Entry(code: "2", description: "Diagnosis is not allowed to be primary"),
+            HL7Table.Entry(code: "3", description: "Data does not fulfill DRG criteria"),
+            HL7Table.Entry(code: "4", description: "Invalid age, admission date, date of birth or discharge date"),
+            HL7Table.Entry(code: "5", description: "Invalid gender"),
+            HL7Table.Entry(code: "6", description: "Invalid discharge status"),
+            HL7Table.Entry(code: "7", description: "Invalid weight ad admission"),
+            HL7Table.Entry(code: "8", description: "Invalid length of stay"),
+            HL7Table.Entry(code: "9", description: "Invalid field \"same day\""),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0739_v2_8_2 = HL7Table(
+        number: "0739",
+        name: "DRG Status Patient",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "1", description: "Normal length of stay"),
+            HL7Table.Entry(code: "2", description: "Short length of stay"),
+            HL7Table.Entry(code: "3", description: "Long length of stay"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0742_v2_8_2 = HL7Table(
+        number: "0742",
+        name: "DRG Status Financial Calculation",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "00", description: "Effective weight calculated"),
+            HL7Table.Entry(code: "01", description: "Hospital specific contract"),
+            HL7Table.Entry(code: "03", description: "Eeffective weight for transfer/referral calculated"),
+            HL7Table.Entry(code: "04", description: "Referral from other hospital based on a cooperation (no DRG reimbursement)"),
+            HL7Table.Entry(code: "05", description: "Invalid length of stay"),
+            HL7Table.Entry(code: "10", description: "No information/entry in cost data for this DRG"),
+            HL7Table.Entry(code: "11", description: "No relative weight found for department (type)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0749_v2_8_2 = HL7Table(
+        number: "0749",
+        name: "DRG Grouping Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Valid code; not used for grouping"),
+            HL7Table.Entry(code: "1", description: "Valid code; used for grouping"),
+            HL7Table.Entry(code: "2", description: "Invalid code; not used for grouping"),
+            HL7Table.Entry(code: "3", description: "Invalid code; code is relevant for grouping"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0755_v2_8_2 = HL7Table(
+        number: "0755",
+        name: "DRG Status Weight At Birth",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "No weight reported at admission used for grouping"),
+            HL7Table.Entry(code: "1", description: "Weight reported at admission used for grouping"),
+            HL7Table.Entry(code: "2", description: "Default weight (>2499g) used for grouping"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0757_v2_8_2 = HL7Table(
+        number: "0757",
+        name: "Status Respiration Minutes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Respiration minutes not used for grouping"),
+            HL7Table.Entry(code: "1", description: "Listed respiration minutes used for grouping"),
+            HL7Table.Entry(code: "2", description: "OPS code value used for grouping"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0759_v2_8_2 = HL7Table(
+        number: "0759",
+        name: "Status Admission",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Admission status is valid; used for grouping"),
+            HL7Table.Entry(code: "1", description: "Admission status is valid; not used for grouping"),
+            HL7Table.Entry(code: "2", description: "Admission status is invalid; not used for grouping"),
+            HL7Table.Entry(code: "3", description: "Admission status is invalid; default value used for grouping"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0761_v2_8_2 = HL7Table(
+        number: "0761",
+        name: "DRG Procedure Determination Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Valid code"),
+            HL7Table.Entry(code: "1", description: "Invalid code"),
+            HL7Table.Entry(code: "2", description: "Not used"),
+            HL7Table.Entry(code: "3", description: "Invalid for this gender"),
+            HL7Table.Entry(code: "4", description: "Invalid for this age"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0763_v2_8_2 = HL7Table(
+        number: "0763",
+        name: "DRG Procedure Relevance",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "0", description: "Neither operation relevant nor non-operation relevant procedure"),
+            HL7Table.Entry(code: "1", description: "Operation relevant procedure"),
+            HL7Table.Entry(code: "2", description: "Non-operation relevant procedure"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0771_v2_8_2 = HL7Table(
+        number: "0771",
+        name: "Resource Type or Category",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0776_v2_8_2 = HL7Table(
+        number: "0776",
+        name: "Item Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Active"),
+            HL7Table.Entry(code: "P", description: "Pending Inactive"),
+            HL7Table.Entry(code: "I", description: "Inactive"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0778_v2_8_2 = HL7Table(
+        number: "0778",
+        name: "Item Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EQP", description: "Equipment"),
+            HL7Table.Entry(code: "SUP", description: "Supply"),
+            HL7Table.Entry(code: "IMP", description: "Implant"),
+            HL7Table.Entry(code: "MED", description: "Medication"),
+            HL7Table.Entry(code: "TDC", description: "Tubes, Drains, and Catheters"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0790_v2_8_2 = HL7Table(
+        number: "0790",
+        name: "Approving Regulatory Agency",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "FDA", description: "Food and Drug Administration"),
+            HL7Table.Entry(code: "AMA", description: "American Medical Association"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0793_v2_8_2 = HL7Table(
+        number: "0793",
+        name: "Ruling Act",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SMDA", description: "Safe Medical Devices Act"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0806_v2_8_2 = HL7Table(
+        number: "0806",
+        name: "Sterilization Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "EOG", description: "Ethylene Oxide Gas"),
+            HL7Table.Entry(code: "PCA", description: "Peracetic acid"),
+            HL7Table.Entry(code: "STM", description: "Steam"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0809_v2_8_2 = HL7Table(
+        number: "0809",
+        name: "Maintenance Cycle",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0811_v2_8_2 = HL7Table(
+        number: "0811",
+        name: "Maintenance Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0818_v2_8_2 = HL7Table(
+        number: "0818",
+        name: "Package",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "CS", description: "Case"),
+            HL7Table.Entry(code: "BX", description: "Box"),
+            HL7Table.Entry(code: "EA", description: "Each"),
+            HL7Table.Entry(code: "SET", description: "Set"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0834_v2_8_2 = HL7Table(
+        number: "0834",
+        name: "Mime Types",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "application", description: "Application data"),
+            HL7Table.Entry(code: "audio", description: "Audio data"),
+            HL7Table.Entry(code: "image", description: "Image data"),
+            HL7Table.Entry(code: "model", description: "Model data"),
+            HL7Table.Entry(code: "text", description: "Text data"),
+            HL7Table.Entry(code: "video", description: "Video data"),
+            HL7Table.Entry(code: "multipart", description: "MIME multipart package"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0836_v2_8_2 = HL7Table(
+        number: "0836",
+        name: "Problem Severity",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0838_v2_8_2 = HL7Table(
+        number: "0838",
+        name: "Problem Perspective",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0865_v2_8_2 = HL7Table(
+        number: "0865",
+        name: "Referral Documentation Completion Status",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0868_v2_8_2 = HL7Table(
+        number: "0868",
+        name: "Telecommunication Expiration Reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "M", description: "Moved"),
+            HL7Table.Entry(code: "E", description: "Added in error"),
+            HL7Table.Entry(code: "R", description: "On request"),
+            HL7Table.Entry(code: "C", description: "Corrected"),
+            HL7Table.Entry(code: "N", description: "No longer in service"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0871_v2_8_2 = HL7Table(
+        number: "0871",
+        name: "Supply Risk Codes",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "COR", description: "Corrosive"),
+            HL7Table.Entry(code: "FLA", description: "Flammable"),
+            HL7Table.Entry(code: "EXP", description: "Explosive"),
+            HL7Table.Entry(code: "INJ", description: "Injury Hazard"),
+            HL7Table.Entry(code: "TOX", description: "Toxic"),
+            HL7Table.Entry(code: "RAD", description: "Radioactive"),
+            HL7Table.Entry(code: "UNK", description: "Unknown"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0879_v2_8_2 = HL7Table(
+        number: "0879",
+        name: "Product/Service Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0880_v2_8_2 = HL7Table(
+        number: "0880",
+        name: "Product/Service Code Modifier",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0881_v2_8_2 = HL7Table(
+        number: "0881",
+        name: "Role Executing Physician",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "T", description: "Technical Part"),
+            HL7Table.Entry(code: "P", description: "Professional Part"),
+            HL7Table.Entry(code: "B", description: "Both"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0882_v2_8_2 = HL7Table(
+        number: "0882",
+        name: "Medical Role Executing Physician",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "E", description: "Employed"),
+            HL7Table.Entry(code: "SE", description: "Self-employed"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0894_v2_8_2 = HL7Table(
+        number: "0894",
+        name: "Side of Body",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Left"),
+            HL7Table.Entry(code: "R", description: "Right"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0895_v2_8_2 = HL7Table(
+        number: "0895",
+        name: "Present On Admission (POA) Indicator",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "Yes"),
+            HL7Table.Entry(code: "N", description: "No"),
+            HL7Table.Entry(code: "U", description: "Unknown"),
+            HL7Table.Entry(code: "W", description: "Not applicable"),
+            HL7Table.Entry(code: "E", description: "Exempt"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0904_v2_8_2 = HL7Table(
+        number: "0904",
+        name: "Security Check Scheme",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "BCV", description: "Bank Card Validation Number"),
+            HL7Table.Entry(code: "CCS", description: "Credit Card Security code"),
+            HL7Table.Entry(code: "VID", description: "Version ID"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0905_v2_8_2 = HL7Table(
+        number: "0905",
+        name: "Shipment Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ONH", description: "On Hold"),
+            HL7Table.Entry(code: "INV", description: "Inventoried"),
+            HL7Table.Entry(code: "PRC", description: "Processing"),
+            HL7Table.Entry(code: "REJ", description: "Rejected"),
+            HL7Table.Entry(code: "TTL", description: "Triaged to Lab"),
+            HL7Table.Entry(code: "TRN", description: "In Transit"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0906_v2_8_2 = HL7Table(
+        number: "0906",
+        name: "Shipment Priority",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "ASAP – As soon as possible, next highest priority after stat"),
+            HL7Table.Entry(code: "CR", description: "Callback results – filler should contact the placer as soon as results are available, even for preliminary results"),
+            HL7Table.Entry(code: "CS", description: "Callback for scheduling – Filler should contact the placer (or target) to schedule the service."),
+            HL7Table.Entry(code: "CSP", description: "Callback placer for scheduling – filler should contact the placer to schedule the service"),
+            HL7Table.Entry(code: "CSR", description: "Contact recipient for scheduling – Filler should contact the service recipient (target) to schedule the service"),
+            HL7Table.Entry(code: "EL", description: "Elective – Beneficial to the patient but not essential for survival."),
+            HL7Table.Entry(code: "EM", description: "Emergency – An unforeseen combination of circumstances or the resulting state that calls for immediate action"),
+            HL7Table.Entry(code: "P", description: "Preop – Used to indicate that a service is to be performed prior to a scheduled surgery. When ordering a service and using the pre-op priority, a check is done to see the amount of time that must be allowed for performance of the service. When the order is placed, a message can be generated indicating the time needed for the service so that it is not ordered in conflict with a scheduled operation."),
+            HL7Table.Entry(code: "PRN", description: "As needed – An “as needed” order should be accompanied by a description of what constitutes a need. This description is represented by an observation service predicate as a precondition."),
+            HL7Table.Entry(code: "R", description: "Routine – Routine service, do at usual work hours"),
+            HL7Table.Entry(code: "RR", description: "Rush reporting – A report should be prepared and sent as quickly as possible"),
+            HL7Table.Entry(code: "S", description: "Stat – With highest priority (e.g. emergency)."),
+            HL7Table.Entry(code: "T", description: "Timing critical – It is critical to come as close as possible to the requested time (e.g. for a through antimicrobial level)."),
+            HL7Table.Entry(code: "UD", description: "Use as directed – Drug is to be used as directed by the prescriber."),
+            HL7Table.Entry(code: "UR", description: "Urgent – Calls for prompt action"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0907_v2_8_2 = HL7Table(
+        number: "0907",
+        name: "Shipment Confidentiality",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "B", description: "Business – Since the service class can represent knowledge structures that may be considered a trade or business secret, there is sometimes (though rarely) the need to flag those items as of business level confidentiality. However, no patient related information may ever be of this confidentiality level."),
+            HL7Table.Entry(code: "D", description: "Clinician – Only clinicians may see this item, billing and administration persons can not access this item without special permission."),
+            HL7Table.Entry(code: "I", description: "Individual – Access only to individual persons who are mentioned explicitly as actors of this service and whose actor type warrants that access (cf. to actor typed code)."),
+            HL7Table.Entry(code: "L", description: "Low – No patient record item can be of low confidentiality. However, some service objects are not patient related and therefore may have low confidentiality."),
+            HL7Table.Entry(code: "N", description: "Normal – Normal confidentiality rules (according to good health care practice) apply, that is, only authorized individuals with a legitimate medical or business need may access this item."),
+            HL7Table.Entry(code: "R", description: "Restricted – Restricted access, e.g. only to providers having a current care relationship to the patient."),
+            HL7Table.Entry(code: "V", description: "Very restricted – Very restricted access as declared by the Privacy Officer of the record holder."),
+            HL7Table.Entry(code: "ETH", description: "Substance abuse related – Alcohol/drug-abuse related item"),
+            HL7Table.Entry(code: "HIV", description: "HIV Related – HIV and AIDS related item"),
+            HL7Table.Entry(code: "PSY", description: "Psychiatry related – Psychiatry related item"),
+            HL7Table.Entry(code: "SDV", description: "Sexual and domestic violence related – Sexual assault / domestic violence related item"),
+            HL7Table.Entry(code: "C", description: "Celebrity – Celebrities are people of public interest (VIP) including employees, whose information require special protection."),
+            HL7Table.Entry(code: "S", description: "Sensitive – Information for which the patient seeks heightened confidentiality. Sensitive information is not to be shared with family members. Information reported by the patient about family members is sensitive by default. Flag can be set or cleared on patient's request."),
+            HL7Table.Entry(code: "T", description: "Taboo – Information not to be disclosed or discussed with patient except through physician assigned to patient in this case. This is usually a temporary constraint only; example use is a new fatal diagnosis or finding, such as malignancy or HIV."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0908_v2_8_2 = HL7Table(
+        number: "0908",
+        name: "Package Type",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0909_v2_8_2 = HL7Table(
+        number: "0909",
+        name: "Patient Results Release Categorization Scheme",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "STBD", description: "Share To Be Determined – Category to be determined"),
+            HL7Table.Entry(code: "SIMM", description: "Share Immediately – Share result with patient immediately"),
+            HL7Table.Entry(code: "SWNL", description: "Share Within Normal Limits - Share result in reference/therapeutic range with patient immediately Share result out of reference/therapeutic ranges with patient after 1 or more business day as agreed to by the systems in play."),
+            HL7Table.Entry(code: "SID", description: "Share In1 Day - Share result regardless of reference/therapeutic range after 1 or more business day as agreed to by the systems in play."),
+            HL7Table.Entry(code: "SIDC", description: "Share in 1 Day Conditionally - Share result in reference ranges/therapeutic with patient after 1 or more business day as agreed to by the systems in play. Withhold result out of reference/therapeutic range until physician release"),
+            HL7Table.Entry(code: "SWTH", description: "Share Withhold – Withhold result regardless of reference/therapeutic ranges"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0910_v2_8_2 = HL7Table(
+        number: "0910",
+        name: "Acquisition Modality",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0912_v2_8_2 = HL7Table(
+        number: "0912",
+        name: "Participation",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AAP", description: "Alert Acknowledging Provider"),
+            HL7Table.Entry(code: "AC", description: "Administration Cosigner"),
+            HL7Table.Entry(code: "AD", description: "Admitting Provider"),
+            HL7Table.Entry(code: "AI", description: "Assistant/Alternate Interpreter"),
+            HL7Table.Entry(code: "AP", description: "Administering Provider"),
+            HL7Table.Entry(code: "ARI", description: "Assistant Result Interpreter"),
+            HL7Table.Entry(code: "AT", description: "Attending Provider"),
+            HL7Table.Entry(code: "AUT", description: "AUT Author/Event Initiator"),
+            HL7Table.Entry(code: "CP", description: "Consulting Provider"),
+            HL7Table.Entry(code: "DP", description: "Dispensing Provider"),
+            HL7Table.Entry(code: "EP", description: "Entering Provider (probably not the same as transcriptionist)"),
+            HL7Table.Entry(code: "EQUIP", description: "Equipment"),
+            HL7Table.Entry(code: "FHCP", description: "Family Health Care Professional"),
+            HL7Table.Entry(code: "MDIR", description: "Medical Director"),
+            HL7Table.Entry(code: "OP", description: "Ordering Provider"),
+            HL7Table.Entry(code: "OS", description: "Outside Site(s) Where Observation May Be Performed"),
+            HL7Table.Entry(code: "PB", description: "Packed by"),
+            HL7Table.Entry(code: "PH", description: "Pharmacist (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+            HL7Table.Entry(code: "PI", description: "Primary Interpreter"),
+            HL7Table.Entry(code: "PO", description: "Performing Organization"),
+            HL7Table.Entry(code: "POMD", description: "Performing Organization Medical Director"),
+            HL7Table.Entry(code: "PP", description: "Primary Care Provider"),
+            HL7Table.Entry(code: "PRI", description: "Principal Result Interpreter"),
+            HL7Table.Entry(code: "RCT", description: "Results Copies To"),
+            HL7Table.Entry(code: "RO", description: "Responsible Observer"),
+            HL7Table.Entry(code: "RP", description: "Referring Provider"),
+            HL7Table.Entry(code: "RT", description: "Referred to Provider"),
+            HL7Table.Entry(code: "SB", description: "Send by"),
+            HL7Table.Entry(code: "SC", description: "Specimen Collector"),
+            HL7Table.Entry(code: "TN", description: "Technician"),
+            HL7Table.Entry(code: "TR", description: "Transcriptionist"),
+            HL7Table.Entry(code: "VP", description: "Verifying Provider"),
+            HL7Table.Entry(code: "VPS", description: "Verifying Pharmaceutical Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+            HL7Table.Entry(code: "VTS", description: "Verifying Treatment Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"),
+            HL7Table.Entry(code: "WAY", description: "Waypoint"),
+            HL7Table.Entry(code: "WAYR", description: "Waypoint Recipient"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0913_v2_8_2 = HL7Table(
+        number: "0913",
+        name: "ISO-4217 Monetary Denomination Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0914_v2_8_2 = HL7Table(
+        number: "0914",
+        name: "Root Cause",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AP", description: "Analysis Process"),
+            HL7Table.Entry(code: "IM", description: "Information Management"),
+            HL7Table.Entry(code: "L", description: "Laboratory"),
+            HL7Table.Entry(code: "NA", description: "Not Applicable"),
+            HL7Table.Entry(code: "PD", description: "Placer Data"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0915_v2_8_2 = HL7Table(
+        number: "0915",
+        name: "Process Control Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0916_v2_8_2 = HL7Table(
+        number: "0916",
+        name: "Relevant Clinical Information",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "F", description: "Patient was fasting prior to the procedure."),
+            HL7Table.Entry(code: "NF", description: "The patient indicated they did not fast prior to the procedure."),
+            HL7Table.Entry(code: "NG", description: "Not Given – Patient was not asked at the time of the procedure."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0917_v2_8_2 = HL7Table(
+        number: "0917",
+        name: "Bolus Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Supplemental"),
+            HL7Table.Entry(code: "L", description: "Loading"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0918_v2_8_2 = HL7Table(
+        number: "0918",
+        name: "PCA Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "C", description: "Continuous"),
+            HL7Table.Entry(code: "P", description: "PCA Only"),
+            HL7Table.Entry(code: "PC", description: "PCA + Continuous"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0919_v2_8_2 = HL7Table(
+        number: "0919",
+        name: "Exclusive Test",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "Y", description: "This test should be exclusive"),
+            HL7Table.Entry(code: "N", description: "This test can be included with any number of other tests"),
+            HL7Table.Entry(code: "D", description: "In some cases, this test should be only exclusively with like tests (examples are cyto or pathology)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0920_v2_8_2 = HL7Table(
+        number: "0920",
+        name: "Preferred Specimen/Attribute Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Preferred"),
+            HL7Table.Entry(code: "A", description: "Alternate"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0921_v2_8_2 = HL7Table(
+        number: "0921",
+        name: "Certification Type Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ADM", description: "Admitting"),
+            HL7Table.Entry(code: "SERV", description: "Service"),
+            HL7Table.Entry(code: "PROC", description: "Procedure"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0922_v2_8_2 = HL7Table(
+        number: "0922",
+        name: "Certification Category Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "IR", description: "Initial Request"),
+            HL7Table.Entry(code: "RA", description: "Request for Appeal"),
+            HL7Table.Entry(code: "RE", description: "Request for Extension"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0923_v2_8_2 = HL7Table(
+        number: "0923",
+        name: "Process Interruption",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "NIN", description: "Process was not interrupted"),
+            HL7Table.Entry(code: "WOT", description: "Walk Out: Process interrupted before the Phlebotomist inserts the needle in the Donor’s arm"),
+            HL7Table.Entry(code: "ABR", description: "Aborted Run: Process interrupted after the Phlebotomist inserts the needle in the Donor’s arm"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0924_v2_8_2 = HL7Table(
+        number: "0924",
+        name: "Cumulative Dosage Limit UoM",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "Annual"),
+            HL7Table.Entry(code: "D", description: "Per Day"),
+            HL7Table.Entry(code: "M", description: "Per Month"),
+            HL7Table.Entry(code: "O", description: "Duration of the Order"),
+            HL7Table.Entry(code: "PL", description: "Patients Lifetime"),
+            HL7Table.Entry(code: "WK", description: "Per Week"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0925_v2_8_2 = HL7Table(
+        number: "0925",
+        name: "Phlebotomy Issue",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "INF", description: "Infiltration"),
+            HL7Table.Entry(code: "VSM", description: "Vein Spasm"),
+            HL7Table.Entry(code: "COL", description: "Collapse"),
+            HL7Table.Entry(code: "MIS", description: "Missed / in tissue"),
+            HL7Table.Entry(code: "NAD", description: "Needle adjustment (this may not end a procedure, if successful will impact component production)"),
+            HL7Table.Entry(code: "PFL", description: "Poor flow"),
+            HL7Table.Entry(code: "CLT", description: "Clotted"),
+            HL7Table.Entry(code: "DND", description: "Defective Needle"),
+            HL7Table.Entry(code: "DBG", description: "Defective Bag"),
+            HL7Table.Entry(code: "DAK", description: "Defective Apheresis Kit"),
+            HL7Table.Entry(code: "DMT", description: "Defective Instrument"),
+            HL7Table.Entry(code: "IPF", description: "Instrument Power Failure"),
+            HL7Table.Entry(code: "ACN", description: "Air Contamination"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0926_v2_8_2 = HL7Table(
+        number: "0926",
+        name: "Phlebotomy Status",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "SUC", description: "Successful"),
+            HL7Table.Entry(code: "NDR", description: "Not Drawn"),
+            HL7Table.Entry(code: "UL5", description: "Unsuccessful Less than 50 ml drawn"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0927_v2_8_2 = HL7Table(
+        number: "0927",
+        name: "Arm Stick",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "L", description: "Left Arm"),
+            HL7Table.Entry(code: "R", description: "Right Arm"),
+            HL7Table.Entry(code: "B", description: "Both Arms"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0929_v2_8_2 = HL7Table(
+        number: "0929",
+        name: "Weight Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "[lb_av]", description: "Pound"),
+            HL7Table.Entry(code: "[oz_av]", description: "Ounce"),
+            HL7Table.Entry(code: "kg", description: "Kilogram"),
+            HL7Table.Entry(code: "g", description: "Gram"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0930_v2_8_2 = HL7Table(
+        number: "0930",
+        name: "Volume Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "l", description: "Liter"),
+            HL7Table.Entry(code: "[pt_us]", description: "Pint"),
+            HL7Table.Entry(code: "ml", description: "Milliliters"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0931_v2_8_2 = HL7Table(
+        number: "0931",
+        name: "Transport Temperature Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "degF", description: "Degrees Fahrenheit"),
+            HL7Table.Entry(code: "Cel", description: "Degrees Celsius"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0932_v2_8_2 = HL7Table(
+        number: "0932",
+        name: "Donation Duration Units",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "min", description: "Minutes"),
+            HL7Table.Entry(code: "s", description: "Seconds"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0933_v2_8_2 = HL7Table(
+        number: "0933",
+        name: "Intended Procedure Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "WBL", description: "Whole Blood"),
+            HL7Table.Entry(code: "2RC", description: "Double Red Cells"),
+            HL7Table.Entry(code: "PLS", description: "Plasma"),
+            HL7Table.Entry(code: "PLT", description: "Platelets"),
+            HL7Table.Entry(code: "PNP", description: "Platelets and Plasma"),
+            HL7Table.Entry(code: "PNR", description: "Platelets and Red Cells"),
+            HL7Table.Entry(code: "PPR", description: "Platelets, Plasma, and Red Cells"),
+            HL7Table.Entry(code: "GRN", description: "Granulocytes"),
+            HL7Table.Entry(code: "HEM", description: "Hemachromatosis"),
+            HL7Table.Entry(code: "HPC", description: "Hematopoietic Progenitor Cells"),
+            HL7Table.Entry(code: "LYM", description: "Lymphocytes"),
+            HL7Table.Entry(code: "THA", description: "Therapeutic Apheresis"),
+            HL7Table.Entry(code: "THW", description: "Therapeutic Whole Blood"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0934_v2_8_2 = HL7Table(
+        number: "0934",
+        name: "Order Workflow Profile",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0935_v2_8_2 = HL7Table(
+        number: "0935",
+        name: "Process Interruption Reason",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "NRG", description: "No reason given, donor decided to stop without giving a reason"),
+            HL7Table.Entry(code: "PCD", description: "Phone Call-Donor"),
+            HL7Table.Entry(code: "DCW", description: "Couldn’t wait"),
+            HL7Table.Entry(code: "CFT", description: "Couldn’t follow through with donation (scared)"),
+            HL7Table.Entry(code: "DBB", description: "Bathroom"),
+            HL7Table.Entry(code: "DNI", description: "Phlebotomy Issue"),
+            HL7Table.Entry(code: "ASC", description: "Apheresis Software Crash"),
+            HL7Table.Entry(code: "BSC", description: "Manufacturing Software Crash"),
+            HL7Table.Entry(code: "GFE", description: "General Facility Emergency"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0936_v2_8_2 = HL7Table(
+        number: "0936",
+        name: "Observation Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "QST", description: "Question"),
+            HL7Table.Entry(code: "RSLT", description: "Result"),
+            HL7Table.Entry(code: "SCI", description: "Supporting Clinical Information"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0937_v2_8_2 = HL7Table(
+        number: "0937",
+        name: "Observation Sub-Type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "MIR", description: "Micro Isolate Related"),
+            HL7Table.Entry(code: "MNIR", description: "Micro Non-Isolate Related"),
+            HL7Table.Entry(code: "MIRM", description: "Micro Isolate Related Modifier"),
+            HL7Table.Entry(code: "SUR", description: "Susceptibility Related"),
+            HL7Table.Entry(code: "SUP", description: "Supplemental Result"),
+            HL7Table.Entry(code: "UNSP", description: "Unspecified"),
+            HL7Table.Entry(code: "AOE", description: "Ask at Order Entry"),
+            HL7Table.Entry(code: "ASC", description: "Ask at Specimen Collection"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0938_v2_8_2 = HL7Table(
+        number: "0938",
+        name: "Collection Event/Process Step Limit",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "ORD", description: "Placing the order"),
+            HL7Table.Entry(code: "DRW", description: "Collecting the specimen"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0939_v2_8_2 = HL7Table(
+        number: "0939",
+        name: "Communication Location",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "OBR-OBX", description: "OBX segment following an OBR segment"),
+            HL7Table.Entry(code: "SPM-OBX", description: "OBX segment following an SPM segment"),
+            HL7Table.Entry(code: "DG1-3", description: "Diagnosis Code"),
+            HL7Table.Entry(code: "NK1-11", description: "Next of Kin / Associated Parties Job Code/Class"),
+            HL7Table.Entry(code: "NK1-13", description: "Organization Name – NK1"),
+            HL7Table.Entry(code: "NK1-28", description: "Ethnic Group"),
+            HL7Table.Entry(code: "NK1-35", description: "Race"),
+            HL7Table.Entry(code: "OBR-16", description: "Ordering Provider"),
+            HL7Table.Entry(code: "OBR-13", description: "Relevant Clinical Information"),
+            HL7Table.Entry(code: "OBR-49", description: "Result Handling"),
+            HL7Table.Entry(code: "PID-11", description: "Patient Address"),
+            HL7Table.Entry(code: "PID-3", description: "Patient Identifier List"),
+            HL7Table.Entry(code: "PID-5", description: "Patient Name"),
+            HL7Table.Entry(code: "PID-6", description: "Mother’s Maiden Name"),
+            HL7Table.Entry(code: "PID-7", description: "Date/Time of Birth"),
+            HL7Table.Entry(code: "PID-13", description: "Phone Number – Home"),
+            HL7Table.Entry(code: "PID-14", description: "Phone Number – Business"),
+            HL7Table.Entry(code: "PID-40", description: "Phone Number"),
+            HL7Table.Entry(code: "PRT-5", description: "Participation Person"),
+            HL7Table.Entry(code: "SPM-4", description: "Specimen Type"),
+            HL7Table.Entry(code: "SPM-8", description: "Specimen Source Site"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0940_v2_8_2 = HL7Table(
+        number: "0940",
+        name: "Limitation Type Codes",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "LCP", description: "Limited Coverage Policy"),
+            HL7Table.Entry(code: "NFDA", description: "Non-FDA Approved Diagnositic Procedure"),
+            HL7Table.Entry(code: "FLDP", description: "Frequency Limited Diagnostics Procedure"),
+            HL7Table.Entry(code: "NT", description: "New Test – Limited Diagnostic History"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0941_v2_8_2 = HL7Table(
+        number: "0941",
+        name: "Procedure Code",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "2.C.2.565", description: "ISO-3166-1 use 3-character (alphabetic) form of ISO 3166-1"),
+        ] as [HL7Table.Entry]
+    )
 }

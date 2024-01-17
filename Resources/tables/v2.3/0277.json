@@ -1,0 +1,22 @@
+{
+  "table": "0277",
+  "version": "2.3",
+  "name": "Appointment Type Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0277 - Appointment Type Codes",
+  "entries": [
+    {
+      "code": "NORMAL",
+      "description": "Routine schedule request type - default if not valued"
+    },
+    {
+      "code": "TENTATIVE",
+      "description": "A request for a tentative (e.g., “penciled in”) appointment"
+    },
+    {
+      "code": "COMPLETE",
+      "description": "A request to add a completed appointment, used to maintain records of completed appointments that did not appear in the schedule (e.g., STAT, w alk-in, etc.)"
+    }
+  ]
+}

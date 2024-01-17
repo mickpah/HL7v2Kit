@@ -1,0 +1,9 @@
+{
+  "table": "0043",
+  "version": "2.3",
+  "name": "Condition Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0043 - Condition Code",
+  "entries": []
+}

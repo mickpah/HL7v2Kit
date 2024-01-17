@@ -1,0 +1,254 @@
+{
+  "table": "0360",
+  "version": "2.8.2",
+  "name": "Degree/License/Certificate",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0360 - Degree/License/Certificate",
+  "entries": [
+    {
+      "code": "PN",
+      "description": "Advanced Practice Nurse"
+    },
+    {
+      "code": "AAS",
+      "description": "Associate of Applied Science"
+    },
+    {
+      "code": "AA",
+      "description": "Associate of Arts"
+    },
+    {
+      "code": "ABA",
+      "description": "Associate of Business Administration"
+    },
+    {
+      "code": "AE",
+      "description": "Associate of Engineering"
+    },
+    {
+      "code": "AS",
+      "description": "Associate of Science"
+    },
+    {
+      "code": "BA",
+      "description": "Bachelor of Arts"
+    },
+    {
+      "code": "BBA",
+      "description": "Bachelor of Business Administration"
+    },
+    {
+      "code": "BE",
+      "description": "Bachelor or Engineering"
+    },
+    {
+      "code": "BFA",
+      "description": "Bachelor of Fine Arts"
+    },
+    {
+      "code": "BN",
+      "description": "Bachelor of Nursing"
+    },
+    {
+      "code": "BS",
+      "description": "Bachelor of Science"
+    },
+    {
+      "code": "BSL",
+      "description": "Bachelor of Science – Law"
+    },
+    {
+      "code": "BSN",
+      "description": "Bachelor on Science – Nursing"
+    },
+    {
+      "code": "BT",
+      "description": "Bachelor of Theology"
+    },
+    {
+      "code": "CER",
+      "description": "Certificate"
+    },
+    {
+      "code": "CANP",
+      "description": "Certified Adult Nurse Practitioner"
+    },
+    {
+      "code": "CMA",
+      "description": "Certified Medical Assistant"
+    },
+    {
+      "code": "CNP",
+      "description": "Certified Nurse Practitioner"
+    },
+    {
+      "code": "CNM",
+      "description": "Certified Nurse Midwife"
+    },
+    {
+      "code": "CRN",
+      "description": "Certified Registered Nurse"
+    },
+    {
+      "code": "CNS",
+      "description": "Certified Nurse Specialist"
+    },
+    {
+      "code": "CPNP",
+      "description": "Certified Pediatric Nurse Practitioner"
+    },
+    {
+      "code": "CTR",
+      "description": "Certified Tumor Registrar"
+    },
+    {
+      "code": "DIP",
+      "description": "Diploma"
+    },
+    {
+      "code": "DBA",
+      "description": "Doctor of Business Administration"
+    },
+    {
+      "code": "DED",
+      "description": "Doctor of Education"
+    },
+    {
+      "code": "PharmD",
+      "description": "Doctor of Pharmacy"
+    },
+    {
+      "code": "PHE",
+      "description": "Doctor of Engineering"
+    },
+    {
+      "code": "PHD",
+      "description": "Doctor of Philosophy"
+    },
+    {
+      "code": "PHS",
+      "description": "Doctor of Science"
+    },
+    {
+      "code": "MD",
+      "description": "Doctor of Medicine"
+    },
+    {
+      "code": "DO",
+      "description": "Doctor of Osteopathy"
+    },
+    {
+      "code": "EMT",
+      "description": "Emergency Medical Technician"
+    },
+    {
+      "code": "EMTP",
+      "description": "Emergency Medical Technician – Paramedic"
+    },
+    {
+      "code": "FPNP",
+      "description": "Family Practice Nurse Practitioner"
+    },
+    {
+      "code": "HS",
+      "description": "High School Graduate"
+    },
+    {
+      "code": "JD",
+      "description": "Juris Doctor"
+    },
+    {
+      "code": "MA",
+      "description": "Master of Arts"
+    },
+    {
+      "code": "MBA",
+      "description": "Master of Business Administration"
+    },
+    {
+      "code": "MCE",
+      "description": "Master of Civil Engineering"
+    },
+    {
+      "code": "MDI",
+      "description": "Master of Divinity"
+    },
+    {
+      "code": "MED",
+      "description": "Master of Education"
+    },
+    {
+      "code": "MEE",
+      "description": "Master of Electrical Engineering"
+    },
+    {
+      "code": "ME",
+      "description": "Master of Engineering"
+    },
+    {
+      "code": "MFA",
+      "description": "Master of Fine Arts"
+    },
+    {
+      "code": "MME",
+      "description": "Master of Mechanical Engineering"
+    },
+    {
+      "code": "MS",
+      "description": "Master of Science"
+    },
+    {
+      "code": "MSL",
+      "description": "Master of Science – Law"
+    },
+    {
+      "code": "MSN",
+      "description": "Master of Science – Nursing"
+    },
+    {
+      "code": "MTH",
+      "description": "Master of Theology"
+    },
+    {
+      "code": "MDA",
+      "description": "Medical Assistant"
+    },
+    {
+      "code": "MT",
+      "description": "Medical Technician"
+    },
+    {
+      "code": "NG",
+      "description": "Non-Graduate"
+    },
+    {
+      "code": "NP",
+      "description": "Nurse Practitioner"
+    },
+    {
+      "code": "PA",
+      "description": "Physician Assistant"
+    },
+    {
+      "code": "RMA",
+      "description": "Registered Medical Assistant"
+    },
+    {
+      "code": "RN",
+      "description": "Registered Nurse"
+    },
+    {
+      "code": "RPH",
+      "description": "Registered Pharmacist"
+    },
+    {
+      "code": "SEC",
+      "description": "Secretarial Certificate"
+    },
+    {
+      "code": "TS",
+      "description": "Trade School Graduate"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0337",
+  "version": "2.6",
+  "name": "Certification status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0337 - Certification status",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Certified"
+    },
+    {
+      "code": "E",
+      "description": "Eligible"
+    }
+  ]
+}

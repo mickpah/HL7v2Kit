@@ -1,0 +1,14 @@
+{
+  "table": "0519",
+  "version": "2.5.1",
+  "name": "Override reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0519 - Override reason",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values"
+    }
+  ]
+}

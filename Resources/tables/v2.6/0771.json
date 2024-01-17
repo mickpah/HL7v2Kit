@@ -1,0 +1,14 @@
+{
+  "table": "0771",
+  "version": "2.6",
+  "name": "Resource Type or Category",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0771 - Resource Type or Category",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

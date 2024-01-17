@@ -1,0 +1,14 @@
+{
+  "table": "0219",
+  "version": "2.6",
+  "name": "Recurring Service Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0219 - Recurring Service Code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "no suggested values"
+    }
+  ]
+}

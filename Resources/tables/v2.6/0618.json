@@ -1,0 +1,22 @@
+{
+  "table": "0618",
+  "version": "2.6",
+  "name": "Protection Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0618 - Protection Code",
+  "entries": [
+    {
+      "code": "LI",
+      "description": "Listed"
+    },
+    {
+      "code": "UL",
+      "description": "Unlisted (Should not appear in directories)"
+    },
+    {
+      "code": "UP",
+      "description": "Unpublished"
+    }
+  ]
+}

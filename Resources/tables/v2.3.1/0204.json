@@ -1,0 +1,26 @@
+{
+  "table": "0204",
+  "version": "2.3.1",
+  "name": "Organizational name type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0204 - Organizational name type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alias name"
+    },
+    {
+      "code": "L",
+      "description": "Legal name"
+    },
+    {
+      "code": "D",
+      "description": "Display name"
+    },
+    {
+      "code": "SL",
+      "description": "Stock exchange listing name"
+    }
+  ]
+}

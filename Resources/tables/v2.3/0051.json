@@ -1,0 +1,9 @@
+{
+  "table": "0051",
+  "version": "2.3",
+  "name": "Diagnosis Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0051 - Diagnosis Code",
+  "entries": []
+}

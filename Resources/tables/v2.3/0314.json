@@ -1,0 +1,9 @@
+{
+  "table": "0314",
+  "version": "2.3",
+  "name": "Document Change Reason",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0314 - Document Change Reason",
+  "entries": []
+}

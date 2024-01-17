@@ -1,0 +1,46 @@
+{
+  "table": "0023",
+  "version": "2.3.1",
+  "name": "Admit source",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0023 - Admit source",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Physician referral"
+    },
+    {
+      "code": "2",
+      "description": "Clinic referral"
+    },
+    {
+      "code": "3",
+      "description": "HMO referral"
+    },
+    {
+      "code": "4",
+      "description": "Transfer from a hospital"
+    },
+    {
+      "code": "5",
+      "description": "Transfer from a skilled nursing facility"
+    },
+    {
+      "code": "6",
+      "description": "Transfer from another health care facility"
+    },
+    {
+      "code": "7",
+      "description": "Emergency room"
+    },
+    {
+      "code": "8",
+      "description": "Court/law enforcement"
+    },
+    {
+      "code": "9",
+      "description": "Information not available"
+    }
+  ]
+}

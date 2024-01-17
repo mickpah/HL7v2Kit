@@ -1,0 +1,22 @@
+{
+  "table": "0309",
+  "version": "2.3",
+  "name": "Coverage Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0309 - Coverage Type",
+  "entries": [
+    {
+      "code": "H",
+      "description": "Hospital/institutional"
+    },
+    {
+      "code": "P",
+      "description": "Physician/professional"
+    },
+    {
+      "code": "B",
+      "description": "Both hospital and physician"
+    }
+  ]
+}

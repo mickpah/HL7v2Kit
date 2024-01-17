@@ -1,0 +1,22 @@
+{
+  "table": "0554",
+  "version": "2.6",
+  "name": "Invoice Reason Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0554 - Invoice Reason Codes",
+  "entries": [
+    {
+      "code": "LATE",
+      "description": "Late Invoice"
+    },
+    {
+      "code": "NORM",
+      "description": "Normal submission"
+    },
+    {
+      "code": "SUB",
+      "description": "Subscriber coverage problem"
+    }
+  ]
+}

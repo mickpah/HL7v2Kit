@@ -1,0 +1,22 @@
+{
+  "table": "0224",
+  "version": "2.8.2",
+  "name": "Transport Arranged",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0224 - Transport Arranged",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Arranged"
+    },
+    {
+      "code": "N",
+      "description": "Not Arranged"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

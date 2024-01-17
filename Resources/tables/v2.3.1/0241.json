@@ -1,0 +1,38 @@
+{
+  "table": "0241",
+  "version": "2.3.1",
+  "name": "Patient outcome",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0241 - Patient outcome",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Died"
+    },
+    {
+      "code": "R",
+      "description": "Recovering"
+    },
+    {
+      "code": "N",
+      "description": "Not recovering/unchanged"
+    },
+    {
+      "code": "W",
+      "description": "Worsening"
+    },
+    {
+      "code": "S",
+      "description": "Sequelae"
+    },
+    {
+      "code": "F",
+      "description": "Fully recovered"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

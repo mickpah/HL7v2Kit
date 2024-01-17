@@ -1,0 +1,18 @@
+{
+  "table": "0269",
+  "version": "2.3",
+  "name": "Charge on Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0269 - Charge on Indicator",
+  "entries": [
+    {
+      "code": "O",
+      "description": "Charge on order"
+    },
+    {
+      "code": "R",
+      "description": "Charge on result"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "table": "0411",
+  "version": "2.4",
+  "name": "Supplemental service information values",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0411 - Supplemental service information values",
+  "entries": [
+    {
+      "code": "1ST",
+      "description": "First"
+    },
+    {
+      "code": "2ND",
+      "description": "Second"
+    },
+    {
+      "code": "3RD",
+      "description": "Third"
+    },
+    {
+      "code": "4TH",
+      "description": "Fourth"
+    },
+    {
+      "code": "5TH",
+      "description": "Fifth"
+    },
+    {
+      "code": "A/P",
+      "description": "Anterior/Posterior"
+    },
+    {
+      "code": "ANT",
+      "description": "Anterior"
+    },
+    {
+      "code": "BLT",
+      "description": "Bilateral"
+    },
+    {
+      "code": "DEC",
+      "description": "Decubitus"
+    },
+    {
+      "code": "DST",
+      "description": "Distal"
+    },
+    {
+      "code": "LAT",
+      "description": "Lateral"
+    },
+    {
+      "code": "LFT",
+      "description": "Left"
+    },
+    {
+      "code": "LLQ",
+      "description": "Left Lower Quadrant"
+    },
+    {
+      "code": "LOW",
+      "description": "Lower"
+    },
+    {
+      "code": "LUQ",
+      "description": "Left Upper Quadrant"
+    },
+    {
+      "code": "MED",
+      "description": "Medial"
+    },
+    {
+      "code": "OR",
+      "description": "Operating Room"
+    },
+    {
+      "code": "PED",
+      "description": "Pediatric"
+    },
+    {
+      "code": "POS",
+      "description": "Posterior"
+    },
+    {
+      "code": "PRT",
+      "description": "Portable"
+    },
+    {
+      "code": "PRX",
+      "description": "Proximal"
+    },
+    {
+      "code": "REC",
+      "description": "Recumbent"
+    },
+    {
+      "code": "RGH",
+      "description": "Right"
+    },
+    {
+      "code": "RLQ",
+      "description": "Right Lower Quadrant"
+    },
+    {
+      "code": "RUQ",
+      "description": "Right Upper Quadrant"
+    },
+    {
+      "code": "UPP",
+      "description": "Upper"
+    },
+    {
+      "code": "UPR",
+      "description": "Upright"
+    },
+    {
+      "code": "WCT",
+      "description": "With Contrast"
+    },
+    {
+      "code": "WOC",
+      "description": "Without Contrast"
+    },
+    {
+      "code": "WSD",
+      "description": "With Sedation"
+    }
+  ]
+}

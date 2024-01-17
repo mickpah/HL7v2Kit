@@ -1,0 +1,38 @@
+{
+  "table": "0263",
+  "version": "2.8.2",
+  "name": "Level of Care",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0263 - Level of Care",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Ambulatory"
+    },
+    {
+      "code": "E",
+      "description": "Emergency"
+    },
+    {
+      "code": "F",
+      "description": "Isolation"
+    },
+    {
+      "code": "N",
+      "description": "Intensive care"
+    },
+    {
+      "code": "C",
+      "description": "Critical care"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "S",
+      "description": "Surgery"
+    }
+  ]
+}

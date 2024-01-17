@@ -54,4 +54,32 @@ struct HL7TableRegistryTests {
         #expect(obr.field(24)?.dataType == "ID")
         #expect(obr.field(25)?.table == nil)
     }
+
+    @Test("0074 and 0155 are closed HL7 tables on every grammar version")
+    func closedTablesEverywhere() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            for number in ["0074", "0155"] {
+                let t = try #require(HL7TableRegistry.table(number, version: version), "\(version) \(number)")
+                #expect(t.isClosed, "\(version) \(number)")
+            }
+        }
+    }
+
+    @Test("Tables the spec opens to local codes are HL7-owned but never closed")
+    func openHL7Tables() throws {
+        for number in ["0003", "0076", "0396", "0399", "0104"] {
+            let t = try #require(HL7TableRegistry.table(number, version: .v2_5_1), "\(number)")
+            #expect(t.kind == .hl7, "\(number)")
+            #expect(!t.isClosed, "\(number)")
+        }
+    }
+
+    @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has no CWE")
+    func extractionSanity() throws {
+        #expect(HL7TableRegistry.table("0003", version: .v2_5_1)?.entries.count == 286)
+        #expect(HL7TableRegistry.table("0155", version: .v2_5_1)?.entries.count == 4)
+        let t0125 = try #require(HL7TableRegistry.table("0125", version: .v2_5_1))
+        #expect(t0125.entries.count == 25)
+        #expect(!t0125.contains("CWE"), "CWE is a v2.6 addition")
+    }
 }

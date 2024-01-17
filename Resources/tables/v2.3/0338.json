@@ -1,0 +1,54 @@
+{
+  "table": "0338",
+  "version": "2.3",
+  "name": "Practitioner ID number type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0338 - Practitioner ID number type",
+  "entries": [
+    {
+      "code": "UPIN",
+      "description": "University Physician Id. No."
+    },
+    {
+      "code": "SL",
+      "description": "State License Number"
+    },
+    {
+      "code": "MCD",
+      "description": "Medicaid Number"
+    },
+    {
+      "code": "GL",
+      "description": "General Ledger Number"
+    },
+    {
+      "code": "CY",
+      "description": "County Number"
+    },
+    {
+      "code": "TAX",
+      "description": "Tax ID Number"
+    },
+    {
+      "code": "DEA",
+      "description": "Drug Enforcement Agency No."
+    },
+    {
+      "code": "MCR",
+      "description": "Medicare Number"
+    },
+    {
+      "code": "L&I",
+      "description": "Labor and Industries Number"
+    },
+    {
+      "code": "QA",
+      "description": "QA Number"
+    },
+    {
+      "code": "TRL",
+      "description": "Training License Number"
+    }
+  ]
+}

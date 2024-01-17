@@ -1,0 +1,18 @@
+{
+  "table": "0938",
+  "version": "2.8.2",
+  "name": "Collection Event/Process Step Limit",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0938 - Collection Event/Process Step Limit",
+  "entries": [
+    {
+      "code": "ORD",
+      "description": "Placing the order"
+    },
+    {
+      "code": "DRW",
+      "description": "Collecting the specimen"
+    }
+  ]
+}

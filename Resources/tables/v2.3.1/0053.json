@@ -1,0 +1,9 @@
+{
+  "table": "0053",
+  "version": "2.3.1",
+  "name": "Diagnosis coding method",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0053 - Diagnosis coding method",
+  "entries": []
+}

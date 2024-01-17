@@ -1,0 +1,38 @@
+{
+  "table": "0305",
+  "version": "2.6",
+  "name": "Person location type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0305 - Person location type",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Clinic"
+    },
+    {
+      "code": "D",
+      "description": "Department"
+    },
+    {
+      "code": "H",
+      "description": "Home"
+    },
+    {
+      "code": "N",
+      "description": "Nursing Unit"
+    },
+    {
+      "code": "O",
+      "description": "Provider's Office"
+    },
+    {
+      "code": "P",
+      "description": "Phone"
+    },
+    {
+      "code": "S",
+      "description": "SNF"
+    }
+  ]
+}

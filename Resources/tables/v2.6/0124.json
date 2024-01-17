@@ -1,0 +1,26 @@
+{
+  "table": "0124",
+  "version": "2.6",
+  "name": "Transportation Mode",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0124 - Transportation Mode",
+  "entries": [
+    {
+      "code": "CART",
+      "description": "Cart - patient travels on cart or gurney"
+    },
+    {
+      "code": "PORT",
+      "description": "The examining device goes to patient's location"
+    },
+    {
+      "code": "WALK",
+      "description": "Patient walks to diagnostic service"
+    },
+    {
+      "code": "WHLC",
+      "description": "Wheelchair"
+    }
+  ]
+}

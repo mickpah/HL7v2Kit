@@ -1,0 +1,34 @@
+{
+  "table": "0157",
+  "version": "2.5.1",
+  "name": "Which date/time status qualifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0157 - Which date/time status qualifier",
+  "entries": [
+    {
+      "code": "ANY",
+      "description": "Any status"
+    },
+    {
+      "code": "CFN",
+      "description": "Current final value, whether final or corrected"
+    },
+    {
+      "code": "COR",
+      "description": "Corrected only (no final with corrections)"
+    },
+    {
+      "code": "FIN",
+      "description": "Final only (no corrections)"
+    },
+    {
+      "code": "PRE",
+      "description": "Preliminary"
+    },
+    {
+      "code": "REP",
+      "description": "Report completion date/time"
+    }
+  ]
+}

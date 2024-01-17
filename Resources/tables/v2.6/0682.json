@@ -1,0 +1,18 @@
+{
+  "table": "0682",
+  "version": "2.6",
+  "name": "Device Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0682 - Device Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Ready"
+    },
+    {
+      "code": "1",
+      "description": "Not Ready"
+    }
+  ]
+}

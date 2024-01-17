@@ -1,0 +1,50 @@
+{
+  "table": "0301",
+  "version": "2.4",
+  "name": "Universal ID type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0301 - Universal ID type",
+  "entries": [
+    {
+      "code": "DNS",
+      "description": "An Internet dotted name. Either in ASCII or as integers"
+    },
+    {
+      "code": "GUID",
+      "description": "Same as UUID."
+    },
+    {
+      "code": "HCD",
+      "description": "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"
+    },
+    {
+      "code": "HL7",
+      "description": "Reserved for future HL7 registration schemes"
+    },
+    {
+      "code": "ISO",
+      "description": "An International Standards Organization Object Identifier"
+    },
+    {
+      "code": "L,M,N",
+      "description": "These are reserved for locally defined coding schemes."
+    },
+    {
+      "code": "Random",
+      "description": "Usually a base64 encoded string of random bits. The uniqueness depends on the length of the bits. Mail systems often generate ASCII string \"unique names,\" from a combination of random bits and system names. Obviously, such identifiers will not be con"
+    },
+    {
+      "code": "UUID",
+      "description": "The DCE Universal Unique Identifier"
+    },
+    {
+      "code": "x400",
+      "description": "An X.400 MHS format identifier"
+    },
+    {
+      "code": "x500",
+      "description": "An X.500 directory name"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0230",
+  "version": "2.5.1",
+  "name": "Procedure Functional Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0230 - Procedure Functional Type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Anesthesia"
+    },
+    {
+      "code": "D",
+      "description": "Diagnostic procedure"
+    },
+    {
+      "code": "I",
+      "description": "Invasive procedure not classified elsewhere (e.g., IV, catheter, etc.)"
+    },
+    {
+      "code": "P",
+      "description": "Procedure for treatment (therapeutic, including operations)"
+    }
+  ]
+}

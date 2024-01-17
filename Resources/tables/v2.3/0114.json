@@ -1,0 +1,9 @@
+{
+  "table": "0114",
+  "version": "2.3",
+  "name": "Diet Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0114 - Diet Type",
+  "entries": []
+}

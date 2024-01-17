@@ -1,0 +1,50 @@
+{
+  "table": "0202",
+  "version": "2.8.2",
+  "name": "Telecommunication Equipment Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0202 - Telecommunication Equipment Type",
+  "entries": [
+    {
+      "code": "PH",
+      "description": "Telephone"
+    },
+    {
+      "code": "FX",
+      "description": "Fax"
+    },
+    {
+      "code": "MD",
+      "description": "Modem"
+    },
+    {
+      "code": "CP",
+      "description": "Cellular or Mobile Phone"
+    },
+    {
+      "code": "SAT",
+      "description": "Satellite Phone"
+    },
+    {
+      "code": "BP",
+      "description": "Beeper"
+    },
+    {
+      "code": "Internet",
+      "description": "Internet Address"
+    },
+    {
+      "code": "X.400",
+      "description": "X.400 email address"
+    },
+    {
+      "code": "TDD",
+      "description": "Telecommunications Device for the Deaf"
+    },
+    {
+      "code": "TTY",
+      "description": "Teletypewriter"
+    }
+  ]
+}

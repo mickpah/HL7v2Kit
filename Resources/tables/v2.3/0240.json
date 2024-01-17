@@ -1,0 +1,46 @@
+{
+  "table": "0240",
+  "version": "2.3",
+  "name": "Event Consequence",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0240 - Event Consequence",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Death"
+    },
+    {
+      "code": "L",
+      "description": "Life threatening"
+    },
+    {
+      "code": "H",
+      "description": "Caused hospitalized"
+    },
+    {
+      "code": "P",
+      "description": "Prolonged hospitalization"
+    },
+    {
+      "code": "C",
+      "description": "Congenital anomaly/birth defect"
+    },
+    {
+      "code": "I",
+      "description": "Incapacity which is significant, persistent or permanent"
+    },
+    {
+      "code": "J",
+      "description": "Disability which is significant, persistent or permanent"
+    },
+    {
+      "code": "R",
+      "description": "Required intervention to prevent permanent impairment/damage"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    }
+  ]
+}

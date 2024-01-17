@@ -1,0 +1,42 @@
+{
+  "table": "0364",
+  "version": "2.8.2",
+  "name": "Comment Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0364 - Comment Type",
+  "entries": [
+    {
+      "code": "PI",
+      "description": "Patient Instructions"
+    },
+    {
+      "code": "AI",
+      "description": "Ancillary Instructions"
+    },
+    {
+      "code": "GI",
+      "description": "General Instructions"
+    },
+    {
+      "code": "1R",
+      "description": "Primary Reason"
+    },
+    {
+      "code": "2R",
+      "description": "Secondary Reason"
+    },
+    {
+      "code": "GR",
+      "description": "General Reason"
+    },
+    {
+      "code": "RE",
+      "description": "Remark"
+    },
+    {
+      "code": "DR",
+      "description": "Duplicate/Interaction Reason"
+    }
+  ]
+}

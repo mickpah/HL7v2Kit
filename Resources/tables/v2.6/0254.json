@@ -1,0 +1,418 @@
+{
+  "table": "0254",
+  "version": "2.6",
+  "name": "Kind of quantity",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0254 - Kind of quantity",
+  "entries": [
+    {
+      "code": "ABS",
+      "description": "Absorbance"
+    },
+    {
+      "code": "ACNC",
+      "description": "Concentration, Arbitrary Substance"
+    },
+    {
+      "code": "ACT",
+      "description": "*Activity"
+    },
+    {
+      "code": "APER",
+      "description": "Appearance"
+    },
+    {
+      "code": "ARB",
+      "description": "*Arbitrary"
+    },
+    {
+      "code": "AREA",
+      "description": "Area"
+    },
+    {
+      "code": "ASPECT",
+      "description": "Aspect"
+    },
+    {
+      "code": "CACT",
+      "description": "*Catalytic Activity"
+    },
+    {
+      "code": "CCNT",
+      "description": "*Catalytic Content"
+    },
+    {
+      "code": "CCRTO",
+      "description": "Catalytic Concentration Ratio"
+    },
+    {
+      "code": "CFR",
+      "description": "*Catalytic Fraction"
+    },
+    {
+      "code": "CLAS",
+      "description": "Class"
+    },
+    {
+      "code": "CNC",
+      "description": "*Catalytic Concentration"
+    },
+    {
+      "code": "CNST",
+      "description": "*Constant"
+    },
+    {
+      "code": "COEF",
+      "description": "*Coefficient"
+    },
+    {
+      "code": "COLOR",
+      "description": "Color"
+    },
+    {
+      "code": "CONS",
+      "description": "Consistency"
+    },
+    {
+      "code": "CRAT",
+      "description": "*Catalytic Rate"
+    },
+    {
+      "code": "CRTO",
+      "description": "Catalytic Ratio"
+    },
+    {
+      "code": "DEN",
+      "description": "Density"
+    },
+    {
+      "code": "DEV",
+      "description": "Device"
+    },
+    {
+      "code": "DIFF",
+      "description": "*Difference"
+    },
+    {
+      "code": "ELAS",
+      "description": "Elasticity"
+    },
+    {
+      "code": "ELPOT",
+      "description": "Electrical Potential (Voltage)"
+    },
+    {
+      "code": "ELRAT",
+      "description": "Electrical current (amperage)"
+    },
+    {
+      "code": "ELRES",
+      "description": "Electrical Resistance"
+    },
+    {
+      "code": "ENGR",
+      "description": "Energy"
+    },
+    {
+      "code": "ENT",
+      "description": "*Entitic"
+    },
+    {
+      "code": "ENTCAT",
+      "description": "*Entitic Catalytic Activity"
+    },
+    {
+      "code": "ENTNUM",
+      "description": "*Entitic Number"
+    },
+    {
+      "code": "ENTSUB",
+      "description": "*Entitic Substance of Amount"
+    },
+    {
+      "code": "ENTVOL",
+      "description": "*Entitic Volume"
+    },
+    {
+      "code": "EQL",
+      "description": "Equilibrium"
+    },
+    {
+      "code": "FORCE",
+      "description": "Mechanical force"
+    },
+    {
+      "code": "FREQ",
+      "description": "Frequency"
+    },
+    {
+      "code": "IMP",
+      "description": "Impression/ interpretation of study"
+    },
+    {
+      "code": "KINV",
+      "description": "*Kinematic Viscosity"
+    },
+    {
+      "code": "LEN",
+      "description": "Length"
+    },
+    {
+      "code": "LINC",
+      "description": "*Length Increment"
+    },
+    {
+      "code": "LIQ",
+      "description": "*Liquefaction"
+    },
+    {
+      "code": "MASS",
+      "description": "*Mass"
+    },
+    {
+      "code": "MCNC",
+      "description": "*Mass Concentration"
+    },
+    {
+      "code": "MCNT",
+      "description": "Mass Content"
+    },
+    {
+      "code": "MCRTO",
+      "description": "*Mass Concentration Ratio"
+    },
+    {
+      "code": "MFR",
+      "description": "*Mass Fraction"
+    },
+    {
+      "code": "MGFLUX",
+      "description": "Magnetic flux"
+    },
+    {
+      "code": "MINC",
+      "description": "*Mass Increment"
+    },
+    {
+      "code": "MORPH",
+      "description": "Morphology"
+    },
+    {
+      "code": "MOTIL",
+      "description": "Motility"
+    },
+    {
+      "code": "MRAT",
+      "description": "*Mass Rate"
+    },
+    {
+      "code": "MRTO",
+      "description": "*Mass Ratio"
+    },
+    {
+      "code": "NCNC",
+      "description": "*Number Concentration"
+    },
+    {
+      "code": "NCNT",
+      "description": "*Number Content"
+    },
+    {
+      "code": "NFR",
+      "description": "*Number Fraction"
+    },
+    {
+      "code": "NRTO",
+      "description": "*Number Ratio"
+    },
+    {
+      "code": "NUM",
+      "description": "*Number"
+    },
+    {
+      "code": "OD",
+      "description": "Optical density"
+    },
+    {
+      "code": "OSMOL",
+      "description": "*Osmolality"
+    },
+    {
+      "code": "PRES",
+      "description": "*Pressure (Partial)"
+    },
+    {
+      "code": "PRID",
+      "description": "Presence/Identity/Existence"
+    },
+    {
+      "code": "PWR",
+      "description": "Power (wattage)"
+    },
+    {
+      "code": "RANGE",
+      "description": "*Ranges"
+    },
+    {
+      "code": "RATIO",
+      "description": "*Ratios"
+    },
+    {
+      "code": "RCRLTM",
+      "description": "*Reciprocal Relative Time"
+    },
+    {
+      "code": "RDEN",
+      "description": "*Relative Density"
+    },
+    {
+      "code": "REL",
+      "description": "*Relative"
+    },
+    {
+      "code": "RLMCNC",
+      "description": "*Relative Mass Concentration"
+    },
+    {
+      "code": "RLSCNC",
+      "description": "*Relative Substance Concentration"
+    },
+    {
+      "code": "RLTM",
+      "description": "*Relative Time"
+    },
+    {
+      "code": "SATFR",
+      "description": "*Saturation Fraction"
+    },
+    {
+      "code": "SCNC",
+      "description": "*Substance Concentration"
+    },
+    {
+      "code": "SCNCIN",
+      "description": "*Substance Concentration Increment"
+    },
+    {
+      "code": "SCNT",
+      "description": "*Substance Content"
+    },
+    {
+      "code": "SCNTR",
+      "description": "*Substance Content Rate"
+    },
+    {
+      "code": "SCRTO",
+      "description": "*Substance Concentration Ratio"
+    },
+    {
+      "code": "SFR",
+      "description": "*Substance Fraction"
+    },
+    {
+      "code": "SHAPE",
+      "description": "Shape"
+    },
+    {
+      "code": "SMELL",
+      "description": "Smell"
+    },
+    {
+      "code": "SRAT",
+      "description": "*Substance Rate"
+    },
+    {
+      "code": "SRTO",
+      "description": "*Substance Ratio"
+    },
+    {
+      "code": "SUB",
+      "description": "*Substance Amount"
+    },
+    {
+      "code": "SUSC",
+      "description": "*Susceptibility"
+    },
+    {
+      "code": "TASTE",
+      "description": "Taste"
+    },
+    {
+      "code": "TEMP",
+      "description": "*Temperature"
+    },
+    {
+      "code": "TEMPDF",
+      "description": "*Temperature Difference"
+    },
+    {
+      "code": "TEMPIN",
+      "description": "*Temperature Increment"
+    },
+    {
+      "code": "THRMCNC",
+      "description": "*Threshold Mass Concentration"
+    },
+    {
+      "code": "THRSCNC",
+      "description": "*Threshold Substance Concentration"
+    },
+    {
+      "code": "TIME",
+      "description": "*Time (e.g. seconds)"
+    },
+    {
+      "code": "TITR",
+      "description": "*Dilution Factor (Titer)"
+    },
+    {
+      "code": "TMDF",
+      "description": "*Time Difference"
+    },
+    {
+      "code": "TMSTP",
+      "description": "*Time Stamp-Date and Time"
+    },
+    {
+      "code": "TRTO",
+      "description": "*Time Ratio"
+    },
+    {
+      "code": "TYPE",
+      "description": "*Type"
+    },
+    {
+      "code": "VCNT",
+      "description": "*Volume Content"
+    },
+    {
+      "code": "VEL",
+      "description": "*Velocity"
+    },
+    {
+      "code": "VELRT",
+      "description": "*Velocity Ratio"
+    },
+    {
+      "code": "VFR",
+      "description": "*Volume Fraction"
+    },
+    {
+      "code": "VISC",
+      "description": "*Viscosity"
+    },
+    {
+      "code": "VOL",
+      "description": "*Volume"
+    },
+    {
+      "code": "VRAT",
+      "description": "*Volume Rate"
+    },
+    {
+      "code": "VRTO",
+      "description": "*Volume Ratio"
+    }
+  ]
+}

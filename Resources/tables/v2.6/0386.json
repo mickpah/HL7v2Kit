@@ -1,0 +1,14 @@
+{
+  "table": "0386",
+  "version": "2.6",
+  "name": "Supplier identifier",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0386 - Supplier identifier",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested value defined"
+    }
+  ]
+}

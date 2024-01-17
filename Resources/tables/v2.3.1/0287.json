@@ -1,0 +1,38 @@
+{
+  "table": "0287",
+  "version": "2.3.1",
+  "name": "Problem/goal action code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0287 - Problem/goal action code",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "ADD"
+    },
+    {
+      "code": "CO",
+      "description": "CORRECT"
+    },
+    {
+      "code": "DE",
+      "description": "DELETE"
+    },
+    {
+      "code": "LI",
+      "description": "LINK"
+    },
+    {
+      "code": "UC",
+      "description": "UNCHANGED *"
+    },
+    {
+      "code": "UN",
+      "description": "UNLINK"
+    },
+    {
+      "code": "UP",
+      "description": "UPDATE"
+    }
+  ]
+}

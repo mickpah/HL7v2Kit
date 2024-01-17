@@ -1,0 +1,18 @@
+{
+  "table": "0183",
+  "version": "2.3.1",
+  "name": "Active/inactive",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0183 - Active/inactive",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Active Staff"
+    },
+    {
+      "code": "I",
+      "description": "Inactive Staff"
+    }
+  ]
+}

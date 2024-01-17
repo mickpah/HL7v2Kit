@@ -1,0 +1,9 @@
+{
+  "table": "0246",
+  "version": "2.5.1",
+  "name": "Product Available for Inspection",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0246 - Product Available for Inspection",
+  "entries": []
+}

@@ -1,0 +1,14 @@
+{
+  "table": "0293",
+  "version": "2.6",
+  "name": "Billing Category",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0293 - Billing Category",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

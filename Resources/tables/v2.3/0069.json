@@ -1,0 +1,9 @@
+{
+  "table": "0069",
+  "version": "2.3",
+  "name": "Hospital Service",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0069 - Hospital Service",
+  "entries": []
+}

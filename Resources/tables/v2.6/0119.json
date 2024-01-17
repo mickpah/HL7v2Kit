@@ -1,0 +1,214 @@
+{
+  "table": "0119",
+  "version": "2.6",
+  "name": "Order control codes",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0119 - Order control codes",
+  "entries": [
+    {
+      "code": "AF",
+      "description": "Order/service refill request approval"
+    },
+    {
+      "code": "CA",
+      "description": "Cancel order/service request"
+    },
+    {
+      "code": "CH",
+      "description": "Child order/service"
+    },
+    {
+      "code": "CN",
+      "description": "Combined result"
+    },
+    {
+      "code": "CR",
+      "description": "Canceled as requested"
+    },
+    {
+      "code": "DC",
+      "description": "Discontinue order/service request"
+    },
+    {
+      "code": "DE",
+      "description": "Data errors"
+    },
+    {
+      "code": "DF",
+      "description": "Order/service refill request denied"
+    },
+    {
+      "code": "DR",
+      "description": "Discontinued as requested"
+    },
+    {
+      "code": "FU",
+      "description": "Order/service refilled, unsolicited"
+    },
+    {
+      "code": "HD",
+      "description": "Hold order request"
+    },
+    {
+      "code": "HR",
+      "description": "On hold as requested"
+    },
+    {
+      "code": "LI",
+      "description": "Link order/service to patient care problem or goal"
+    },
+    {
+      "code": "MC",
+      "description": "Miscellaneous Charge - not associated with an order"
+    },
+    {
+      "code": "NA",
+      "description": "Number assigned"
+    },
+    {
+      "code": "NW",
+      "description": "New order/service"
+    },
+    {
+      "code": "OC",
+      "description": "Order/service canceled"
+    },
+    {
+      "code": "OD",
+      "description": "Order/service discontinued"
+    },
+    {
+      "code": "OE",
+      "description": "Order/service released"
+    },
+    {
+      "code": "OF",
+      "description": "Order/service refilled as requested"
+    },
+    {
+      "code": "OH",
+      "description": "Order/service held"
+    },
+    {
+      "code": "OK",
+      "description": "Order/service accepted & OK"
+    },
+    {
+      "code": "OP",
+      "description": "Notification of order for outside dispense"
+    },
+    {
+      "code": "OR",
+      "description": "Released as requested"
+    },
+    {
+      "code": "PA",
+      "description": "Parent order/service"
+    },
+    {
+      "code": "PR",
+      "description": "Previous Results with new order/service"
+    },
+    {
+      "code": "PY",
+      "description": "Notification of replacement order for outside dispense"
+    },
+    {
+      "code": "RE",
+      "description": "Observations/Performed Service to follow"
+    },
+    {
+      "code": "RF",
+      "description": "Refill order/service request"
+    },
+    {
+      "code": "RL",
+      "description": "Release previous hold"
+    },
+    {
+      "code": "RO",
+      "description": "Replacement order"
+    },
+    {
+      "code": "RP",
+      "description": "Order/service replace request"
+    },
+    {
+      "code": "RQ",
+      "description": "Replaced as requested"
+    },
+    {
+      "code": "RR",
+      "description": "Request received"
+    },
+    {
+      "code": "RU",
+      "description": "Replaced unsolicited"
+    },
+    {
+      "code": "SC",
+      "description": "Status changed"
+    },
+    {
+      "code": "SN",
+      "description": "filler application"
+    },
+    {
+      "code": "SR",
+      "description": "Response to send order/service status request"
+    },
+    {
+      "code": "SS",
+      "description": "Send order/service status request"
+    },
+    {
+      "code": "UA",
+      "description": "Unable to accept order/service"
+    },
+    {
+      "code": "UC",
+      "description": "Unable to cancel"
+    },
+    {
+      "code": "UD",
+      "description": "Unable to discontinue"
+    },
+    {
+      "code": "UF",
+      "description": "Unable to refill"
+    },
+    {
+      "code": "UH",
+      "description": "Unable to put on hold"
+    },
+    {
+      "code": "UM",
+      "description": "Unable to replace"
+    },
+    {
+      "code": "UN",
+      "description": "Unlink order/service from patient care problem or goal"
+    },
+    {
+      "code": "UR",
+      "description": "Unable to release"
+    },
+    {
+      "code": "UX",
+      "description": "Unable to change"
+    },
+    {
+      "code": "XO",
+      "description": "Change order/service request"
+    },
+    {
+      "code": "XR",
+      "description": "Changed as requested"
+    },
+    {
+      "code": "XX",
+      "description": "Order/service changed, unsol."
+    }
+  ]
+}

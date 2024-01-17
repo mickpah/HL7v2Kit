@@ -1,0 +1,9 @@
+{
+  "table": "0024",
+  "version": "2.8.2",
+  "name": "Fee Schedule",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0024 - Fee Schedule",
+  "entries": []
+}

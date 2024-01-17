@@ -1,0 +1,14 @@
+{
+  "table": "0399",
+  "version": "2.6",
+  "name": "Country code",
+  "kind": "User",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "...",
+      "description": "use 3-character (alphabetic) form of ISO 3166"
+    }
+  ]
+}

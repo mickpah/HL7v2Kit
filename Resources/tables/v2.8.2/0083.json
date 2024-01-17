@@ -1,0 +1,18 @@
+{
+  "table": "0083",
+  "version": "2.8.2",
+  "name": "Outlier Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0083 - Outlier Type",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Outlier days"
+    },
+    {
+      "code": "C",
+      "description": "Outlier cost"
+    }
+  ]
+}

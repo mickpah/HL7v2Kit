@@ -1,0 +1,58 @@
+{
+  "table": "0247",
+  "version": "2.8.2",
+  "name": "Status of Evaluation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0247 - Status of Evaluation",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "Evaluation completed"
+    },
+    {
+      "code": "P",
+      "description": "Evaluation in progress"
+    },
+    {
+      "code": "K",
+      "description": "Problem already known, no evaluation necessary"
+    },
+    {
+      "code": "X",
+      "description": "Product not made by company"
+    },
+    {
+      "code": "A",
+      "description": "Evaluation anticipated, but not yet begun"
+    },
+    {
+      "code": "D",
+      "description": "Product discarded – unable to follow up"
+    },
+    {
+      "code": "C",
+      "description": "Product received in condition which made analysis impossible"
+    },
+    {
+      "code": "I",
+      "description": "Product remains implanted – unable to follow up"
+    },
+    {
+      "code": "U",
+      "description": "Product unavailable for follow up investigation"
+    },
+    {
+      "code": "Q",
+      "description": "Product under quarantine – unable to follow up"
+    },
+    {
+      "code": "R",
+      "description": "Product under recall/corrective action"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    }
+  ]
+}

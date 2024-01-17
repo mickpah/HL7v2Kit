@@ -1,0 +1,26 @@
+{
+  "table": "0189",
+  "version": "2.6",
+  "name": "Ethnic Group",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0189 - Ethnic Group",
+  "entries": [
+    {
+      "code": "...",
+      "description": "see chapter 3"
+    },
+    {
+      "code": "H",
+      "description": "Hispanic or Latino"
+    },
+    {
+      "code": "N",
+      "description": "Not Hispanic or Latino"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

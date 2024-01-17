@@ -1,0 +1,9 @@
+{
+  "table": "0111",
+  "version": "2.3",
+  "name": "Delete Account Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0111 - Delete Account Code",
+  "entries": []
+}

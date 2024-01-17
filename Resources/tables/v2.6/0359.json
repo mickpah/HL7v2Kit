@@ -1,0 +1,26 @@
+{
+  "table": "0359",
+  "version": "2.6",
+  "name": "Diagnosis Priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0359 - Diagnosis Priority",
+  "entries": [
+    {
+      "code": "...",
+      "description": ""
+    },
+    {
+      "code": "0",
+      "description": "Not included in diagnosis ranking"
+    },
+    {
+      "code": "1",
+      "description": "The primary diagnosis"
+    },
+    {
+      "code": "2",
+      "description": "For ranked secondary diagnoses"
+    }
+  ]
+}

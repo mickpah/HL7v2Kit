@@ -1,0 +1,22 @@
+{
+  "table": "0167",
+  "version": "2.3",
+  "name": "Substitution Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0167 - Substitution Status",
+  "entries": [
+    {
+      "code": "N",
+      "description": "No substitute was dispensed. This is equivalent to the default (null) value."
+    },
+    {
+      "code": "G",
+      "description": "A generic substitution was dispensed"
+    },
+    {
+      "code": "T",
+      "description": "A therapeutic substitution was dispensed"
+    }
+  ]
+}

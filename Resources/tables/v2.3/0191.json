@@ -1,0 +1,42 @@
+{
+  "table": "0191",
+  "version": "2.3",
+  "name": "Main Type of Reference Data",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0191 - Main Type of Reference Data",
+  "entries": [
+    {
+      "code": "SI",
+      "description": "Scanned Image"
+    },
+    {
+      "code": "NS",
+      "description": "Non-scanned Image"
+    },
+    {
+      "code": "SD",
+      "description": "Scanned Document"
+    },
+    {
+      "code": "TX",
+      "description": "Machine Readable Text Document"
+    },
+    {
+      "code": "FT",
+      "description": "Formatted Text"
+    },
+    {
+      "code": "IM",
+      "description": "Image Data"
+    },
+    {
+      "code": "AU",
+      "description": "Audio Data"
+    },
+    {
+      "code": "AP",
+      "description": "Other application data, typically uninterpreted binary data"
+    }
+  ]
+}

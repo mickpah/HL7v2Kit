@@ -1,0 +1,14 @@
+{
+  "table": "0512",
+  "version": "2.6",
+  "name": "Commercial Product",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0512 - Commercial Product",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values"
+    }
+  ]
+}

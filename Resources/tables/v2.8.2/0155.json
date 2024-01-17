@@ -1,0 +1,26 @@
+{
+  "table": "0155",
+  "version": "2.8.2",
+  "name": "Accept/Application Acknowledgment Conditions",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0155 - Accept/Application Acknowledgment Conditions",
+  "entries": [
+    {
+      "code": "AL",
+      "description": "Always"
+    },
+    {
+      "code": "NE",
+      "description": "Never"
+    },
+    {
+      "code": "ER",
+      "description": "Error/reject conditions only"
+    },
+    {
+      "code": "SU",
+      "description": "Successful completion only"
+    }
+  ]
+}

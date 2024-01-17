@@ -1,0 +1,30 @@
+{
+  "table": "0027",
+  "version": "2.3",
+  "name": "Priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0027 - Priority",
+  "entries": [
+    {
+      "code": "S",
+      "description": "Stat (do immediately)"
+    },
+    {
+      "code": "A",
+      "description": "As soon as possible (a priority lower than stat)"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "P",
+      "description": "Preoperative (to be done prior to surgery)"
+    },
+    {
+      "code": "T",
+      "description": "Timing critical (do as near as possible to requested time)"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0333",
+  "version": "2.5.1",
+  "name": "Driver's license issuing authority",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0333 - Driver's license issuing authority",
+  "entries": []
+}

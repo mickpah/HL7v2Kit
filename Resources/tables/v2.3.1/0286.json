@@ -1,0 +1,26 @@
+{
+  "table": "0286",
+  "version": "2.3.1",
+  "name": "Provider role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0286 - Provider role",
+  "entries": [
+    {
+      "code": "RP",
+      "description": "Referring Provider"
+    },
+    {
+      "code": "PP",
+      "description": "Primary Care Provider"
+    },
+    {
+      "code": "CP",
+      "description": "Consulting Provider"
+    },
+    {
+      "code": "RT",
+      "description": "Referred to Provider"
+    }
+  ]
+}

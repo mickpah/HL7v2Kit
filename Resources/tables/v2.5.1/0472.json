@@ -1,0 +1,22 @@
+{
+  "table": "0472",
+  "version": "2.5.1",
+  "name": "TQ conjunction ID",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0472 - TQ conjunction ID",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Asynchronous"
+    },
+    {
+      "code": "C",
+      "description": "This is an actuation time"
+    },
+    {
+      "code": "S",
+      "description": "Synchronous."
+    }
+  ]
+}

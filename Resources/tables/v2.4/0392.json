@@ -1,0 +1,26 @@
+{
+  "table": "0392",
+  "version": "2.4",
+  "name": "Match reason",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0392 - Match reason",
+  "entries": [
+    {
+      "code": "DB",
+      "description": "Match on Date of Birth"
+    },
+    {
+      "code": "NA",
+      "description": "Match on Name (Alpha Match)"
+    },
+    {
+      "code": "NP",
+      "description": "Match on Name (Phonetic Match)"
+    },
+    {
+      "code": "SS",
+      "description": "Match on Social Security Number"
+    }
+  ]
+}

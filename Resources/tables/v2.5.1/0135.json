@@ -1,0 +1,22 @@
+{
+  "table": "0135",
+  "version": "2.5.1",
+  "name": "Assignment of Benefits",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0135 - Assignment of Benefits",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Modified assignment"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

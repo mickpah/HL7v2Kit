@@ -1,0 +1,74 @@
+{
+  "table": "0175",
+  "version": "2.8.2",
+  "name": "Master File Identifier Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0175 - Master File Identifier Code",
+  "entries": [
+    {
+      "code": "CDM",
+      "description": "Charge description master file"
+    },
+    {
+      "code": "CMA",
+      "description": "Clinical study with phases and scheduled master file"
+    },
+    {
+      "code": "CMB",
+      "description": "Clinical study without phases but with scheduled master file"
+    },
+    {
+      "code": "LOC",
+      "description": "Location master file"
+    },
+    {
+      "code": "OMA",
+      "description": "Numerical observation master file"
+    },
+    {
+      "code": "OMB",
+      "description": "Categorical observation master file"
+    },
+    {
+      "code": "OMC",
+      "description": "Observation batteries master file"
+    },
+    {
+      "code": "OMD",
+      "description": "Calculated observations master file"
+    },
+    {
+      "code": "OMM",
+      "description": "Mixed type observation master file"
+    },
+    {
+      "code": "PRA",
+      "description": "Practitioner master file"
+    },
+    {
+      "code": "STF",
+      "description": "Staff master file"
+    },
+    {
+      "code": "CLN",
+      "description": "Clinic master file"
+    },
+    {
+      "code": "OME",
+      "description": "Other Observation/Service Item master file"
+    },
+    {
+      "code": "INV",
+      "description": "Inventory master file"
+    },
+    {
+      "code": "MLCP",
+      "description": "Medicare Limited Coverage Process"
+    },
+    {
+      "code": "MACP",
+      "description": "Medicare Approved Coverage Process"
+    }
+  ]
+}

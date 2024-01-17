@@ -1,0 +1,54 @@
+{
+  "table": "0510",
+  "version": "2.8.2",
+  "name": "Blood Product Dispense Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0510 - Blood Product Dispense Status",
+  "entries": [
+    {
+      "code": "RI",
+      "description": "Received into inventory (for specified patient)"
+    },
+    {
+      "code": "RD",
+      "description": "Reserved and ready to dispense"
+    },
+    {
+      "code": "RS",
+      "description": "Reserved (ordered and product allocated for the patient)"
+    },
+    {
+      "code": "RE",
+      "description": "Released (no longer allocated for the patient)"
+    },
+    {
+      "code": "DS",
+      "description": "Dispensed to patient location"
+    },
+    {
+      "code": "RA",
+      "description": "Returned unused/no longer needed"
+    },
+    {
+      "code": "RL",
+      "description": "Returned unused/keep linked to patient for possible use later"
+    },
+    {
+      "code": "WA",
+      "description": "Wasted (product no longer viable)"
+    },
+    {
+      "code": "PT",
+      "description": "Presumed transfused (dispensed and not returned)"
+    },
+    {
+      "code": "CR",
+      "description": "Released into inventory for general availability"
+    },
+    {
+      "code": "RQ",
+      "description": "Request to dispense blood product"
+    }
+  ]
+}

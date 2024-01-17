@@ -1,0 +1,34 @@
+{
+  "table": "0529",
+  "version": "2.5.1",
+  "name": "Precision",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0529 - Precision",
+  "entries": [
+    {
+      "code": "D",
+      "description": "day"
+    },
+    {
+      "code": "H",
+      "description": "hour"
+    },
+    {
+      "code": "L",
+      "description": "month"
+    },
+    {
+      "code": "M",
+      "description": "minute"
+    },
+    {
+      "code": "S",
+      "description": "second"
+    },
+    {
+      "code": "Y",
+      "description": "year"
+    }
+  ]
+}

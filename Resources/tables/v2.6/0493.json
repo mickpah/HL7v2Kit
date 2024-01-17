@@ -1,0 +1,46 @@
+{
+  "table": "0493",
+  "version": "2.6",
+  "name": "Specimen Condition",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0493 - Specimen Condition",
+  "entries": [
+    {
+      "code": "AUT",
+      "description": "Autolyzed"
+    },
+    {
+      "code": "CLOT",
+      "description": "Clotted"
+    },
+    {
+      "code": "CON",
+      "description": "Contaminated"
+    },
+    {
+      "code": "COOL",
+      "description": "Cool"
+    },
+    {
+      "code": "FROZ",
+      "description": "Frozen"
+    },
+    {
+      "code": "HEM",
+      "description": "Hemolyzed"
+    },
+    {
+      "code": "LIVE",
+      "description": "Live"
+    },
+    {
+      "code": "ROOM",
+      "description": "Room temperature"
+    },
+    {
+      "code": "SNR",
+      "description": "Sample not received"
+    }
+  ]
+}

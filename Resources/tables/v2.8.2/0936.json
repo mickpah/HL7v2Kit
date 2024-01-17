@@ -1,0 +1,22 @@
+{
+  "table": "0936",
+  "version": "2.8.2",
+  "name": "Observation Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0936 - Observation Type",
+  "entries": [
+    {
+      "code": "QST",
+      "description": "Question"
+    },
+    {
+      "code": "RSLT",
+      "description": "Result"
+    },
+    {
+      "code": "SCI",
+      "description": "Supporting Clinical Information"
+    }
+  ]
+}

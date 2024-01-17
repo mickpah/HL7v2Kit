@@ -1,0 +1,22 @@
+{
+  "table": "0052",
+  "version": "2.3",
+  "name": "Diagnosis Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0052 - Diagnosis Type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Admitting"
+    },
+    {
+      "code": "W",
+      "description": "Working"
+    },
+    {
+      "code": "F",
+      "description": "Final"
+    }
+  ]
+}

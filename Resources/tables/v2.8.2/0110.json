@@ -1,0 +1,9 @@
+{
+  "table": "0110",
+  "version": "2.8.2",
+  "name": "Transfer to Bad Debt Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0110 - Transfer to Bad Debt Code",
+  "entries": []
+}

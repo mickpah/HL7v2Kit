@@ -1,0 +1,30 @@
+{
+  "table": "0180",
+  "version": "2.6",
+  "name": "Record-level event code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0180 - Record-level event code",
+  "entries": [
+    {
+      "code": "MAC",
+      "description": "Reactivate deactivated record"
+    },
+    {
+      "code": "MAD",
+      "description": "Add record to master file"
+    },
+    {
+      "code": "MDC",
+      "description": "Deactivate: discontinue using record in master file, but do not delete from database"
+    },
+    {
+      "code": "MDL",
+      "description": "Delete record from master file"
+    },
+    {
+      "code": "MUP",
+      "description": "Update record for master file"
+    }
+  ]
+}

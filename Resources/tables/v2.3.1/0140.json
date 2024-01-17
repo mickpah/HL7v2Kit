@@ -1,0 +1,42 @@
+{
+  "table": "0140",
+  "version": "2.3.1",
+  "name": "Military service",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0140 - Military service",
+  "entries": [
+    {
+      "code": "USA",
+      "description": "U.S. Army"
+    },
+    {
+      "code": "USN",
+      "description": "U.S. Navy"
+    },
+    {
+      "code": "USAF",
+      "description": "U.S. Air Force"
+    },
+    {
+      "code": "USMC",
+      "description": "U.S. Marines"
+    },
+    {
+      "code": "USCG",
+      "description": "U.S. Coast Guard"
+    },
+    {
+      "code": "USPHS",
+      "description": "U.S. Public Health Service"
+    },
+    {
+      "code": "NOAA",
+      "description": "National Oceanic and Atmospheric Administration"
+    },
+    {
+      "code": "NATO",
+      "description": "North Atlantic Treaty Organization"
+    }
+  ]
+}

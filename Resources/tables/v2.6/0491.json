@@ -1,0 +1,26 @@
+{
+  "table": "0491",
+  "version": "2.6",
+  "name": "Specimen Quality",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0491 - Specimen Quality",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Excellent"
+    },
+    {
+      "code": "F",
+      "description": "Fair"
+    },
+    {
+      "code": "G",
+      "description": "Good"
+    },
+    {
+      "code": "P",
+      "description": "Poor"
+    }
+  ]
+}

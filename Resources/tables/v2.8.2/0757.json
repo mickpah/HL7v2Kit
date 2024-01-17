@@ -1,0 +1,22 @@
+{
+  "table": "0757",
+  "version": "2.8.2",
+  "name": "Status Respiration Minutes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0757 - Status Respiration Minutes",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Respiration minutes not used for grouping"
+    },
+    {
+      "code": "1",
+      "description": "Listed respiration minutes used for grouping"
+    },
+    {
+      "code": "2",
+      "description": "OPS code value used for grouping"
+    }
+  ]
+}

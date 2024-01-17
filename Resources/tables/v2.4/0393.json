@@ -1,0 +1,18 @@
+{
+  "table": "0393",
+  "version": "2.4",
+  "name": "Match algorithms",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0393 - Match algorithms",
+  "entries": [
+    {
+      "code": "LINKSOFT_2.01",
+      "description": ""
+    },
+    {
+      "code": "MATCHWARE_1.2",
+      "description": ""
+    }
+  ]
+}

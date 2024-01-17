@@ -1,0 +1,38 @@
+{
+  "table": "0104",
+  "version": "2.4",
+  "name": "Version ID",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 Table 0104 - Version ID; MSH-12 may carry a locally agreed version identifier, so the printed rows are not a closed set",
+  "entries": [
+    {
+      "code": "2.0",
+      "description": "Release 2.0"
+    },
+    {
+      "code": "2.0D",
+      "description": "Demo 2.0"
+    },
+    {
+      "code": "2.1",
+      "description": "Release 2. 1"
+    },
+    {
+      "code": "2.2",
+      "description": "Release 2.2"
+    },
+    {
+      "code": "2.3",
+      "description": "Release 2.3"
+    },
+    {
+      "code": "2.3.1",
+      "description": "Release 2.3.1"
+    },
+    {
+      "code": "2.4",
+      "description": "Release 2.4"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0073",
+  "version": "2.3",
+  "name": "Interest Rate Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0073 - Interest Rate Code",
+  "entries": []
+}

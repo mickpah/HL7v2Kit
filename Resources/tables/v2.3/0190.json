@@ -1,0 +1,38 @@
+{
+  "table": "0190",
+  "version": "2.3",
+  "name": "Address Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0190 - Address Type",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Current or Temporary"
+    },
+    {
+      "code": "P",
+      "description": "Permanent"
+    },
+    {
+      "code": "M",
+      "description": "Mailing"
+    },
+    {
+      "code": "B",
+      "description": "Business"
+    },
+    {
+      "code": "O",
+      "description": "Office"
+    },
+    {
+      "code": "H",
+      "description": "Home"
+    },
+    {
+      "code": "F",
+      "description": "County of Origin"
+    }
+  ]
+}

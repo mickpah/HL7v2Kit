@@ -1,0 +1,98 @@
+{
+  "table": "0203",
+  "version": "2.3",
+  "name": "Identifier Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0203 - Identifier Type",
+  "entries": [
+    {
+      "code": "AM",
+      "description": "American Express"
+    },
+    {
+      "code": "BR",
+      "description": "Birth Registry Number"
+    },
+    {
+      "code": "DI",
+      "description": "Diner's Club Card"
+    },
+    {
+      "code": "DL",
+      "description": "Driver's License Number"
+    },
+    {
+      "code": "DN",
+      "description": "Doctor Number"
+    },
+    {
+      "code": "DS",
+      "description": "Discover Card"
+    },
+    {
+      "code": "EI",
+      "description": "Employee Number"
+    },
+    {
+      "code": "EN",
+      "description": "Employer Number"
+    },
+    {
+      "code": "GI",
+      "description": "Guarantor Internal Identifier"
+    },
+    {
+      "code": "GN",
+      "description": "Guarantor External Identifier"
+    },
+    {
+      "code": "MS",
+      "description": "Master Card"
+    },
+    {
+      "code": "MA",
+      "description": "Medicaid Number"
+    },
+    {
+      "code": "MC",
+      "description": "Medicare Number"
+    },
+    {
+      "code": "MR",
+      "description": "Medical Record Number"
+    },
+    {
+      "code": "PI",
+      "description": "Patient Internal Identifier"
+    },
+    {
+      "code": "PT",
+      "description": "Patient External Identifier"
+    },
+    {
+      "code": "RR",
+      "description": "Railroad Retirement Number"
+    },
+    {
+      "code": "SS",
+      "description": "Social Security Number"
+    },
+    {
+      "code": "XX",
+      "description": "Organization Identifier"
+    },
+    {
+      "code": "VS",
+      "description": "VISA"
+    },
+    {
+      "code": "VN",
+      "description": "Visit Number"
+    },
+    {
+      "code": "AN",
+      "description": "Account Number"
+    }
+  ]
+}

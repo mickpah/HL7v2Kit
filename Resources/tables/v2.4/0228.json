@@ -1,0 +1,42 @@
+{
+  "table": "0228",
+  "version": "2.4",
+  "name": "Diagnosis classification",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0228 - Diagnosis classification",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Consultation"
+    },
+    {
+      "code": "D",
+      "description": "Diagnosis"
+    },
+    {
+      "code": "I",
+      "description": "Invasive procedure not classified elsewhere (I.V., catheter, etc.)"
+    },
+    {
+      "code": "M",
+      "description": "Medication (antibiotic)"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "R",
+      "description": "Radiological scheduling (not using ICDA codes)"
+    },
+    {
+      "code": "S",
+      "description": "Sign and symptom"
+    },
+    {
+      "code": "T",
+      "description": "Tissue diagnosis"
+    }
+  ]
+}

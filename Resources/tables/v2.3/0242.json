@@ -1,0 +1,38 @@
+{
+  "table": "0242",
+  "version": "2.3",
+  "name": "Primary Observer's Qualification",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0242 - Primary Observer's Qualification",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Physician (osteopath, homeopath)"
+    },
+    {
+      "code": "R",
+      "description": "Pharmacist"
+    },
+    {
+      "code": "M",
+      "description": "Mid-level professional (nurse, nurse practitioner, physician's assistant)"
+    },
+    {
+      "code": "H",
+      "description": "Other health professional"
+    },
+    {
+      "code": "C",
+      "description": "Health care consumer/patient"
+    },
+    {
+      "code": "L",
+      "description": "Lawyer/attorney"
+    },
+    {
+      "code": "O",
+      "description": "Other non-health professional"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0056",
+  "version": "2.5.1",
+  "name": "DRG grouper review code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0056 - DRG grouper review code",
+  "entries": []
+}

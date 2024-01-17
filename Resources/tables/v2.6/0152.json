@@ -1,0 +1,14 @@
+{
+  "table": "0152",
+  "version": "2.6",
+  "name": "Second Opinion Documentation Received",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0152 - Second Opinion Documentation Received",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

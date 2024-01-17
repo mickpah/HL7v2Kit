@@ -1,0 +1,30 @@
+{
+  "table": "0253",
+  "version": "2.3",
+  "name": "Indirect Exposure Mechanism",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0253 - Indirect Exposure Mechanism",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Breast milk"
+    },
+    {
+      "code": "P",
+      "description": "Transplacental"
+    },
+    {
+      "code": "F",
+      "description": "Father"
+    },
+    {
+      "code": "X",
+      "description": "Blood product"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    }
+  ]
+}

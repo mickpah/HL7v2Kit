@@ -1,0 +1,138 @@
+{
+  "table": "0063",
+  "version": "2.8.2",
+  "name": "Relationship",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0063 - Relationship",
+  "entries": [
+    {
+      "code": "SEL",
+      "description": "Self"
+    },
+    {
+      "code": "SPO",
+      "description": "Spouse"
+    },
+    {
+      "code": "DOM",
+      "description": "Life partner"
+    },
+    {
+      "code": "CHD",
+      "description": "Child"
+    },
+    {
+      "code": "GCH",
+      "description": "Grandchild"
+    },
+    {
+      "code": "NCH",
+      "description": "Natural child"
+    },
+    {
+      "code": "SCH",
+      "description": "Stepchild"
+    },
+    {
+      "code": "FCH",
+      "description": "Foster child"
+    },
+    {
+      "code": "DEP",
+      "description": "Handicapped dependent"
+    },
+    {
+      "code": "WRD",
+      "description": "Ward of court"
+    },
+    {
+      "code": "PAR",
+      "description": "Parent"
+    },
+    {
+      "code": "MTH",
+      "description": "Mother"
+    },
+    {
+      "code": "FTH",
+      "description": "Father"
+    },
+    {
+      "code": "CGV",
+      "description": "Care giver"
+    },
+    {
+      "code": "GRD",
+      "description": "Guardian"
+    },
+    {
+      "code": "GRP",
+      "description": "Grandparent"
+    },
+    {
+      "code": "EXF",
+      "description": "Extended family"
+    },
+    {
+      "code": "SIB",
+      "description": "Sibling"
+    },
+    {
+      "code": "BRO",
+      "description": "Brother"
+    },
+    {
+      "code": "SIS",
+      "description": "Sister"
+    },
+    {
+      "code": "FND",
+      "description": "Friend"
+    },
+    {
+      "code": "OAD",
+      "description": "Other adult"
+    },
+    {
+      "code": "EME",
+      "description": "Employee"
+    },
+    {
+      "code": "EMR",
+      "description": "Employer"
+    },
+    {
+      "code": "ASC",
+      "description": "Associate"
+    },
+    {
+      "code": "EMC",
+      "description": "Emergency contact"
+    },
+    {
+      "code": "OWN",
+      "description": "Owner"
+    },
+    {
+      "code": "TRA",
+      "description": "Trainer"
+    },
+    {
+      "code": "MGR",
+      "description": "Manager"
+    },
+    {
+      "code": "NON",
+      "description": "None"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown"
+    },
+    {
+      "code": "OTH",
+      "description": "Other"
+    }
+  ]
+}

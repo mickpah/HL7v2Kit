@@ -1,0 +1,9 @@
+{
+  "table": "0285",
+  "version": "2.4",
+  "name": "Insurance Company ID Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0285 - Insurance Company ID Codes",
+  "entries": []
+}

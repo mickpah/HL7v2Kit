@@ -1,0 +1,46 @@
+{
+  "table": "0725",
+  "version": "2.6",
+  "name": "Mood Codes",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0725 - Mood Codes",
+  "entries": [
+    {
+      "code": "APT",
+      "description": "Appointment"
+    },
+    {
+      "code": "ARQ",
+      "description": "Appointment Request"
+    },
+    {
+      "code": "EVN",
+      "description": "Event"
+    },
+    {
+      "code": "EVN.CRT",
+      "description": "Event Criterion"
+    },
+    {
+      "code": "EXP",
+      "description": "Expectation"
+    },
+    {
+      "code": "INT",
+      "description": "Intent"
+    },
+    {
+      "code": "PRMS",
+      "description": "Promise"
+    },
+    {
+      "code": "PRP",
+      "description": "Proposal"
+    },
+    {
+      "code": "RQO",
+      "description": "Request-Order"
+    }
+  ]
+}

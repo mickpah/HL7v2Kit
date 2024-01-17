@@ -1,0 +1,14 @@
+{
+  "table": "0378",
+  "version": "2.6",
+  "name": "Carrier type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0378 - Carrier type",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

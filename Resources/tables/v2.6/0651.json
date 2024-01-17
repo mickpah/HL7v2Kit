@@ -1,0 +1,18 @@
+{
+  "table": "0651",
+  "version": "2.6",
+  "name": "Labor Calculation Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0651 - Labor Calculation Type",
+  "entries": [
+    {
+      "code": "CST",
+      "description": "Cost"
+    },
+    {
+      "code": "TME",
+      "description": "Time"
+    }
+  ]
+}

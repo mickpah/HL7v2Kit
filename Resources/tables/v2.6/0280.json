@@ -1,0 +1,22 @@
+{
+  "table": "0280",
+  "version": "2.6",
+  "name": "Referral priority",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0280 - Referral priority",
+  "entries": [
+    {
+      "code": "A",
+      "description": "ASAP"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "S",
+      "description": "STAT"
+    }
+  ]
+}

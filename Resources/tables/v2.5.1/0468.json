@@ -1,0 +1,30 @@
+{
+  "table": "0468",
+  "version": "2.5.1",
+  "name": "Payment Adjustment Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0468 - Payment Adjustment Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "No payment adjustment"
+    },
+    {
+      "code": "2",
+      "description": "Designated current drug or biological payment adjustment applies to APC (status indicator G)"
+    },
+    {
+      "code": "3",
+      "description": "Designated new device payment adjustment"
+    },
+    {
+      "code": "4",
+      "description": "Designated new drug or new biological payment adjustment applies to APC (status indicator J)"
+    },
+    {
+      "code": "5",
+      "description": "Deductible not applicable (specific list of HCPCS codes)"
+    }
+  ]
+}

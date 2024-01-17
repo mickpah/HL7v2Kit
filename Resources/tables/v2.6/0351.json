@@ -1,0 +1,14 @@
+{
+  "table": "0351",
+  "version": "2.6",
+  "name": "Occurrence span",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0351 - Occurrence span",
+  "entries": [
+    {
+      "code": "...",
+      "description": "use NUBC codes"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0239",
+  "version": "2.3",
+  "name": "Event Expected",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0239 - Event Expected",
+  "entries": [
+    {
+      "code": "Y",
+      "description": "Yes"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

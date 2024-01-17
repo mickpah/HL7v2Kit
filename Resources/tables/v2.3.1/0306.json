@@ -1,0 +1,9 @@
+{
+  "table": "0306",
+  "version": "2.3.1",
+  "name": "Location status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0306 - Location status",
+  "entries": []
+}

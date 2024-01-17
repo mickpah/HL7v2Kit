@@ -1,0 +1,18 @@
+{
+  "table": "0298",
+  "version": "2.4",
+  "name": "CP range type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0298 - CP range type",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Flat-rate. Apply the entire price to this interval, do not pro-rate the price if the full interval has not occurred/been consumed"
+    },
+    {
+      "code": "P",
+      "description": "Pro-rate. Apply this price to this interval, pro-rated by whatever portion of the interval has occurred/been consumed"
+    }
+  ]
+}

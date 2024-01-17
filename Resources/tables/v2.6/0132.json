@@ -1,0 +1,14 @@
+{
+  "table": "0132",
+  "version": "2.6",
+  "name": "Transaction Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0132 - Transaction Code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

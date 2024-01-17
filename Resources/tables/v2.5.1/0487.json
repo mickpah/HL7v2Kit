@@ -1,0 +1,9 @@
+{
+  "table": "0487",
+  "version": "2.5.1",
+  "name": "Specimen Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0487 - Specimen Type",
+  "entries": []
+}

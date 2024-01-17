@@ -1,0 +1,86 @@
+{
+  "table": "0078",
+  "version": "2.3.1",
+  "name": "Abnormal flags",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0078 - Abnormal flags",
+  "entries": [
+    {
+      "code": "L",
+      "description": "Below low normal"
+    },
+    {
+      "code": "H",
+      "description": "Above high normal"
+    },
+    {
+      "code": "LL",
+      "description": "Below lower panic limits"
+    },
+    {
+      "code": "HH",
+      "description": "Above upper panic limits"
+    },
+    {
+      "code": "<",
+      "description": "Below absolute low-off instrument scale"
+    },
+    {
+      "code": ">",
+      "description": "Above absolute high-off instrument scale"
+    },
+    {
+      "code": "N",
+      "description": "Normal (applies to non-numeric results)"
+    },
+    {
+      "code": "A",
+      "description": "Abnormal (applies to non-numeric results)"
+    },
+    {
+      "code": "AA",
+      "description": "Very abnormal (applies to non-numeric units, analogous to panic limits for numeric units)"
+    },
+    {
+      "code": "null",
+      "description": "No range defined, or normal ranges don't apply"
+    },
+    {
+      "code": "U",
+      "description": "Significant change up"
+    },
+    {
+      "code": "D",
+      "description": "Significant change down"
+    },
+    {
+      "code": "B",
+      "description": "Better--use when direction not relevant"
+    },
+    {
+      "code": "W",
+      "description": "Worse--use when direction not relevant"
+    },
+    {
+      "code": "S",
+      "description": "Susceptible*"
+    },
+    {
+      "code": "R",
+      "description": "Resistant*"
+    },
+    {
+      "code": "I",
+      "description": "Intermediate*"
+    },
+    {
+      "code": "MS",
+      "description": "Moderately susceptible*"
+    },
+    {
+      "code": "VS",
+      "description": "Very susceptible*"
+    }
+  ]
+}

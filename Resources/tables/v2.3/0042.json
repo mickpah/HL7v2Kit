@@ -1,0 +1,9 @@
+{
+  "table": "0042",
+  "version": "2.3",
+  "name": "Company Plan Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0042 - Company Plan Code",
+  "entries": []
+}

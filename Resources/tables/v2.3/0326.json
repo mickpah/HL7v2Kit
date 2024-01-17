@@ -1,0 +1,18 @@
+{
+  "table": "0326",
+  "version": "2.3",
+  "name": "Visit Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0326 - Visit Indicator",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Account level"
+    },
+    {
+      "code": "V",
+      "description": "Visit level"
+    }
+  ]
+}

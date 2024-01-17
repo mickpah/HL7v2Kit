@@ -1,0 +1,70 @@
+{
+  "table": "0291",
+  "version": "2.4",
+  "name": "Subtype of referenced data",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0291 - Subtype of referenced data",
+  "entries": [
+    {
+      "code": "BASIC",
+      "description": "ISDN PCM audio data"
+    },
+    {
+      "code": "DICOM",
+      "description": "Digital Imaging and Communications in Medicine"
+    },
+    {
+      "code": "FAX",
+      "description": "Facsimile data"
+    },
+    {
+      "code": "GIF",
+      "description": "Graphics Interchange Format"
+    },
+    {
+      "code": "HTML",
+      "description": "Hypertext Markup Language"
+    },
+    {
+      "code": "JOT",
+      "description": "Electronic ink data (Jot 1.0 standard)"
+    },
+    {
+      "code": "JPEG",
+      "description": "Joint Photographic Experts Group"
+    },
+    {
+      "code": "Octet-stream",
+      "description": "Uninterpreted binary data"
+    },
+    {
+      "code": "PICT",
+      "description": "PICT format image data"
+    },
+    {
+      "code": "PostScript",
+      "description": "PostScript program"
+    },
+    {
+      "code": "RTF",
+      "description": "Rich Text Format"
+    },
+    {
+      "code": "SGML",
+      "description": "Standard Generalized Markup Language (HL7 V2.3.1 and later)"
+    },
+    {
+      "code": "TIFF",
+      "description": "TIFF image data"
+    },
+    {
+      "code": "x-hl7-cda-level-one",
+      "description": "HL7 Clinical Document Architecture Level One document"
+    },
+    {
+      "code": "XML",
+      "description": "Extensible Markup Language (HL7 V2.3.1 and later)"
+    }
+  ]
+}

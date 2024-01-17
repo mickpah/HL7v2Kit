@@ -1,0 +1,82 @@
+{
+  "table": "0294",
+  "version": "2.3.1",
+  "name": "Time selection criteria parameter class codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0294 - Time selection criteria parameter class codes",
+  "entries": [
+    {
+      "code": "Prefstart",
+      "description": "The preferred start time for the appointment request, service or resource. Any legal time specification in the format HHMM, using 24-hour clock notation"
+    },
+    {
+      "code": "PREFSTART",
+      "description": "The preferred start time for the appointment request, service or resource. Any legal time specification in the format HHMM, using 24-hour clock notation"
+    },
+    {
+      "code": "Prefend",
+      "description": "The preferred end time for the appointment request, service or resource. Any legal time specification in the format HHMM, using 24-hour clock notation"
+    },
+    {
+      "code": "PREFEND",
+      "description": "The preferred end time for the appointment request, service or resource. Any legal time specification in the format HHMM, using 24-hour clock notation"
+    },
+    {
+      "code": "Mon",
+      "description": "An indicator that Monday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "MON",
+      "description": "An indicator that Monday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "TUE",
+      "description": "An indicator that Tuesday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Tue",
+      "description": "An indicator that Tuesday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Wed",
+      "description": "An indicator that Wednesday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "WED",
+      "description": "An indicator that Wednesday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Thu",
+      "description": "An indicator that Thursday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "THU",
+      "description": "An indicator that Thursday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Fri",
+      "description": "An indicator that Friday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "FRI",
+      "description": "An indicator that Friday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Sat",
+      "description": "An indicator that Saturday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "SAT",
+      "description": "An indicator that Saturday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "Sun",
+      "description": "An indicator that Sunday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    },
+    {
+      "code": "SUN",
+      "description": "An indicator that Sunday is or is not preferred for the day on which the appointment will occur. OK = Preferred appointment day NO = Day is not preferred"
+    }
+  ]
+}

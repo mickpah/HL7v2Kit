@@ -1,0 +1,74 @@
+{
+  "table": "0009",
+  "version": "2.8.2",
+  "name": "Ambulatory Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0009 - Ambulatory Status",
+  "entries": [
+    {
+      "code": "A0",
+      "description": "No functional limitations"
+    },
+    {
+      "code": "A1",
+      "description": "Ambulates with assistive device"
+    },
+    {
+      "code": "A2",
+      "description": "Wheelchair/stretcher bound"
+    },
+    {
+      "code": "A3",
+      "description": "Comatose; non-responsive"
+    },
+    {
+      "code": "A4",
+      "description": "Disoriented"
+    },
+    {
+      "code": "A5",
+      "description": "Vision impaired"
+    },
+    {
+      "code": "A6",
+      "description": "Hearing impaired"
+    },
+    {
+      "code": "A7",
+      "description": "Speech impaired"
+    },
+    {
+      "code": "A8",
+      "description": "Non-English speaking"
+    },
+    {
+      "code": "A9",
+      "description": "Functional level unknown"
+    },
+    {
+      "code": "B1",
+      "description": "Oxygen therapy"
+    },
+    {
+      "code": "B2",
+      "description": "Special equipment (tubes, IVs, catheters)"
+    },
+    {
+      "code": "B3",
+      "description": "Amputee"
+    },
+    {
+      "code": "B4",
+      "description": "Mastectomy"
+    },
+    {
+      "code": "B5",
+      "description": "Paraplegic"
+    },
+    {
+      "code": "B6",
+      "description": "Pregnant"
+    }
+  ]
+}

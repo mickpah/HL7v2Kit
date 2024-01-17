@@ -1,0 +1,22 @@
+{
+  "table": "0208",
+  "version": "2.3",
+  "name": "Query Response Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0208 - Query Response Status",
+  "entries": [
+    {
+      "code": "OK",
+      "description": "Data found, no errors (this is the default)"
+    },
+    {
+      "code": "NF",
+      "description": "No data found, no errors"
+    },
+    {
+      "code": "AR",
+      "description": "Application reject"
+    }
+  ]
+}

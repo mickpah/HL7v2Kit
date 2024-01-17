@@ -1,0 +1,18 @@
+{
+  "table": "0398",
+  "version": "2.4",
+  "name": "Continuation style code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0398 - Continuation style code",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Fragmentation"
+    },
+    {
+      "code": "I",
+      "description": "Interactive Continuation"
+    }
+  ]
+}

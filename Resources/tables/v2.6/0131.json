@@ -1,0 +1,42 @@
+{
+  "table": "0131",
+  "version": "2.6",
+  "name": "Contact Role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0131 - Contact Role",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Emergency Contact"
+    },
+    {
+      "code": "E",
+      "description": "Employer"
+    },
+    {
+      "code": "F",
+      "description": "Federal Agency"
+    },
+    {
+      "code": "I",
+      "description": "Insurance Company"
+    },
+    {
+      "code": "N",
+      "description": "Next-of-Kin"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "S",
+      "description": "State Agency"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

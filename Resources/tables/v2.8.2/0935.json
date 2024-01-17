@@ -1,0 +1,46 @@
+{
+  "table": "0935",
+  "version": "2.8.2",
+  "name": "Process Interruption Reason",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0935 - Process Interruption Reason",
+  "entries": [
+    {
+      "code": "NRG",
+      "description": "No reason given, donor decided to stop without giving a reason"
+    },
+    {
+      "code": "PCD",
+      "description": "Phone Call-Donor"
+    },
+    {
+      "code": "DCW",
+      "description": "Couldn’t wait"
+    },
+    {
+      "code": "CFT",
+      "description": "Couldn’t follow through with donation (scared)"
+    },
+    {
+      "code": "DBB",
+      "description": "Bathroom"
+    },
+    {
+      "code": "DNI",
+      "description": "Phlebotomy Issue"
+    },
+    {
+      "code": "ASC",
+      "description": "Apheresis Software Crash"
+    },
+    {
+      "code": "BSC",
+      "description": "Manufacturing Software Crash"
+    },
+    {
+      "code": "GFE",
+      "description": "General Facility Emergency"
+    }
+  ]
+}

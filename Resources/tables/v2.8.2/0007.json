@@ -1,0 +1,38 @@
+{
+  "table": "0007",
+  "version": "2.8.2",
+  "name": "Admission Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0007 - Admission Type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Accident"
+    },
+    {
+      "code": "E",
+      "description": "Emergency"
+    },
+    {
+      "code": "L",
+      "description": "Labor and Delivery"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "N",
+      "description": "Newborn (Birth in healthcare facility)"
+    },
+    {
+      "code": "U",
+      "description": "Urgent"
+    },
+    {
+      "code": "C",
+      "description": "Elective"
+    }
+  ]
+}

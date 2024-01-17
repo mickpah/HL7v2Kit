@@ -1,0 +1,9 @@
+{
+  "table": "0188",
+  "version": "2.3.1",
+  "name": "Operator ID",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0188 - Operator ID",
+  "entries": []
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0113",
+  "version": "2.3",
+  "name": "Discharged to Location",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0113 - Discharged to Location",
+  "entries": []
+}

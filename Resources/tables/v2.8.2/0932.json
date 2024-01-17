@@ -1,0 +1,18 @@
+{
+  "table": "0932",
+  "version": "2.8.2",
+  "name": "Donation Duration Units",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0932 - Donation Duration Units",
+  "entries": [
+    {
+      "code": "min",
+      "description": "Minutes"
+    },
+    {
+      "code": "s",
+      "description": "Seconds"
+    }
+  ]
+}

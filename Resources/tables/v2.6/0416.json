@@ -1,0 +1,30 @@
+{
+  "table": "0416",
+  "version": "2.6",
+  "name": "Procedure DRG Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0416 - Procedure DRG Type",
+  "entries": [
+    {
+      "code": "1",
+      "description": "1st non-Operative"
+    },
+    {
+      "code": "2",
+      "description": "2nd non-Operative"
+    },
+    {
+      "code": "3",
+      "description": "Major Operative"
+    },
+    {
+      "code": "4",
+      "description": "2nd Operative"
+    },
+    {
+      "code": "5",
+      "description": "3rd Operative"
+    }
+  ]
+}

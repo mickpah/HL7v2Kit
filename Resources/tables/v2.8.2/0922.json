@@ -1,0 +1,22 @@
+{
+  "table": "0922",
+  "version": "2.8.2",
+  "name": "Certification Category Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0922 - Certification Category Code",
+  "entries": [
+    {
+      "code": "IR",
+      "description": "Initial Request"
+    },
+    {
+      "code": "RA",
+      "description": "Request for Appeal"
+    },
+    {
+      "code": "RE",
+      "description": "Request for Extension"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "table": "0778",
+  "version": "2.8.2",
+  "name": "Item Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0778 - Item Type",
+  "entries": [
+    {
+      "code": "EQP",
+      "description": "Equipment"
+    },
+    {
+      "code": "SUP",
+      "description": "Supply"
+    },
+    {
+      "code": "IMP",
+      "description": "Implant"
+    },
+    {
+      "code": "MED",
+      "description": "Medication"
+    },
+    {
+      "code": "TDC",
+      "description": "Tubes, Drains, and Catheters"
+    }
+  ]
+}

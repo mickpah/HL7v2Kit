@@ -1,0 +1,9 @@
+{
+  "table": "0018",
+  "version": "2.8.2",
+  "name": "Patient Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0018 - Patient Type",
+  "entries": []
+}

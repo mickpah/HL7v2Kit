@@ -1,0 +1,42 @@
+{
+  "table": "0260",
+  "version": "2.6",
+  "name": "Patient location type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0260 - Patient location type",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Bed"
+    },
+    {
+      "code": "C",
+      "description": "Clinic"
+    },
+    {
+      "code": "D",
+      "description": "Department"
+    },
+    {
+      "code": "E",
+      "description": "Exam Room"
+    },
+    {
+      "code": "L",
+      "description": "Other Location"
+    },
+    {
+      "code": "N",
+      "description": "Nursing Unit"
+    },
+    {
+      "code": "O",
+      "description": "Operating Room"
+    },
+    {
+      "code": "R",
+      "description": "Room"
+    }
+  ]
+}

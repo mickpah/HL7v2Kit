@@ -1,0 +1,14 @@
+{
+  "table": "0153",
+  "version": "2.6",
+  "name": "Value code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, HL7 Table 0153 - Value code",
+  "entries": [
+    {
+      "code": "...",
+      "description": "See NUBC codes"
+    }
+  ]
+}

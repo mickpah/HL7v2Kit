@@ -1,0 +1,198 @@
+{
+  "table": "0119",
+  "version": "2.3.1",
+  "name": "Order control codes and their meaning",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0119 - Order control codes and their meaning",
+  "entries": [
+    {
+      "code": "NW",
+      "description": "New order (O01)"
+    },
+    {
+      "code": "OK",
+      "description": "Order accepted & OK (O02)"
+    },
+    {
+      "code": "UA",
+      "description": "Unable to accept order (O02/ORR)"
+    },
+    {
+      "code": "CA",
+      "description": "Cancel order request (O01)"
+    },
+    {
+      "code": "OC",
+      "description": "Order canceled (O01)"
+    },
+    {
+      "code": "CR",
+      "description": "Canceled as requested (O02)"
+    },
+    {
+      "code": "UC",
+      "description": "Unable to cancel (O02)"
+    },
+    {
+      "code": "DC",
+      "description": "Discontinue order request (O01)"
+    },
+    {
+      "code": "OD",
+      "description": "Order discontinued (O01)"
+    },
+    {
+      "code": "DR",
+      "description": "Discontinued as requested (O02)"
+    },
+    {
+      "code": "UD",
+      "description": "Unable to discontinue (O02)"
+    },
+    {
+      "code": "HD",
+      "description": "Hold order request (O01)"
+    },
+    {
+      "code": "OH",
+      "description": "Order held (O01)"
+    },
+    {
+      "code": "UH",
+      "description": "Unable to put on hold (O02)"
+    },
+    {
+      "code": "HR",
+      "description": "On hold as requested (O02)"
+    },
+    {
+      "code": "RL",
+      "description": "Release previous hold (O01)"
+    },
+    {
+      "code": "OE",
+      "description": "Order released (O01)"
+    },
+    {
+      "code": "OR",
+      "description": "Released as requested"
+    },
+    {
+      "code": "UR",
+      "description": "Unable to release (O02)"
+    },
+    {
+      "code": "RP",
+      "description": "Order replace request (O01)"
+    },
+    {
+      "code": "RU",
+      "description": "Replaced unsolicited (O01)"
+    },
+    {
+      "code": "RO",
+      "description": "Replacement order (O01)"
+    },
+    {
+      "code": "RQ",
+      "description": "Replaced as requested (O02)"
+    },
+    {
+      "code": "UM",
+      "description": "Unable to replace (O02)"
+    },
+    {
+      "code": "PA",
+      "description": "Parent order (O01/ORU)"
+    },
+    {
+      "code": "CH",
+      "description": "Child order (O01/ORU)"
+    },
+    {
+      "code": "XO",
+      "description": "Change order request (O01)"
+    },
+    {
+      "code": "XX",
+      "description": "Order changed, unsol. (O01)"
+    },
+    {
+      "code": "UX",
+      "description": "Unable to change (O02)"
+    },
+    {
+      "code": "XR",
+      "description": "Changed as requested (O02)"
+    },
+    {
+      "code": "DE",
+      "description": "Data errors (O01/O02)"
+    },
+    {
+      "code": "RE",
+      "description": "Observations to follow (O01/R01)"
+    },
+    {
+      "code": "RR",
+      "description": "Request received (O02)"
+    },
+    {
+      "code": "SR",
+      "description": "Response to send order status request (O02(Q06)"
+    },
+    {
+      "code": "SS",
+      "description": "Send order status request (O01)"
+    },
+    {
+      "code": "SC",
+      "description": "Status changed (O01)"
+    },
+    {
+      "code": "SN",
+      "description": "Send order number (O01)"
+    },
+    {
+      "code": "NA",
+      "description": "Number assigned (O02)"
+    },
+    {
+      "code": "CN",
+      "description": "Combined result (R01)"
+    },
+    {
+      "code": "RF",
+      "description": "Refill order request (O01)"
+    },
+    {
+      "code": "AF",
+      "description": "Order refill request approval (O02)"
+    },
+    {
+      "code": "DF",
+      "description": "Order refill request denied (O02)"
+    },
+    {
+      "code": "FU",
+      "description": "Order refilled, unsolicited (O01)"
+    },
+    {
+      "code": "OF",
+      "description": "Order refilled as requested (O02)"
+    },
+    {
+      "code": "UF",
+      "description": "Unable to refill (O02)"
+    },
+    {
+      "code": "LI",
+      "description": "Link order to patient care problem or goal"
+    },
+    {
+      "code": "UN",
+      "description": "Unlink order from patient care problem or goal"
+    }
+  ]
+}

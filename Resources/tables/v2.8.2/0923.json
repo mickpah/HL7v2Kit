@@ -1,0 +1,22 @@
+{
+  "table": "0923",
+  "version": "2.8.2",
+  "name": "Process Interruption",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0923 - Process Interruption",
+  "entries": [
+    {
+      "code": "NIN",
+      "description": "Process was not interrupted"
+    },
+    {
+      "code": "WOT",
+      "description": "Walk Out: Process interrupted before the Phlebotomist inserts the needle in the Donor’s arm"
+    },
+    {
+      "code": "ABR",
+      "description": "Aborted Run: Process interrupted after the Phlebotomist inserts the needle in the Donor’s arm"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0216",
+  "version": "2.6",
+  "name": "Patient Status Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0216 - Patient Status Code",
+  "entries": [
+    {
+      "code": "AI",
+      "description": "Active Inpatient"
+    },
+    {
+      "code": "DI",
+      "description": "Discharged Inpatient"
+    }
+  ]
+}

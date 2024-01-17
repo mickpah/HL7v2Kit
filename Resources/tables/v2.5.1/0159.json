@@ -1,0 +1,22 @@
+{
+  "table": "0159",
+  "version": "2.5.1",
+  "name": "Diet Code Specification Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0159 - Diet Code Specification Type",
+  "entries": [
+    {
+      "code": "D",
+      "description": "Diet"
+    },
+    {
+      "code": "P",
+      "description": "Preference"
+    },
+    {
+      "code": "S",
+      "description": "Supplement"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "table": "0215",
+  "version": "2.6",
+  "name": "Publicity Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0215 - Publicity Code",
+  "entries": [
+    {
+      "code": "F",
+      "description": "Family only"
+    },
+    {
+      "code": "N",
+      "description": "No Publicity"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

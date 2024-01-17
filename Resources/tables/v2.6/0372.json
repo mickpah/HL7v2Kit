@@ -1,0 +1,42 @@
+{
+  "table": "0372",
+  "version": "2.6",
+  "name": "Specimen component",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0372 - Specimen component",
+  "entries": [
+    {
+      "code": "BLD",
+      "description": "Whole blood, homogeneous"
+    },
+    {
+      "code": "BSEP",
+      "description": "Whole blood, separated"
+    },
+    {
+      "code": "PLAS",
+      "description": "Plasma, NOS (not otherwise specified)"
+    },
+    {
+      "code": "PPP",
+      "description": "Platelet poor plasma"
+    },
+    {
+      "code": "PRP",
+      "description": "Platelet rich plasma"
+    },
+    {
+      "code": "SED",
+      "description": "Sediment"
+    },
+    {
+      "code": "SER",
+      "description": "Serum, NOS (not otherwise specified)"
+    },
+    {
+      "code": "SUP",
+      "description": "Supernatant"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0266",
+  "version": "2.3",
+  "name": "Gender Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0266 - Gender Indicator",
+  "entries": [
+    {
+      "code": "M",
+      "description": "Only Male Patients"
+    },
+    {
+      "code": "F",
+      "description": "Only Female Patients"
+    },
+    {
+      "code": "E",
+      "description": "Either Male Or Female Patients"
+    }
+  ]
+}

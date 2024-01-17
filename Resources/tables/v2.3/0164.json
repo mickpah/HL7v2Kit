@@ -1,0 +1,46 @@
+{
+  "table": "0164",
+  "version": "2.3",
+  "name": "Administration Device",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0164 - Administration Device",
+  "entries": [
+    {
+      "code": "AP",
+      "description": "Appliator"
+    },
+    {
+      "code": "BT",
+      "description": "Buretrol"
+    },
+    {
+      "code": "HL",
+      "description": "Heparin Lock"
+    },
+    {
+      "code": "IPPB",
+      "description": "IPPB"
+    },
+    {
+      "code": "IVP",
+      "description": "IV Pump"
+    },
+    {
+      "code": "IVS",
+      "description": "IV Soluset"
+    },
+    {
+      "code": "MI",
+      "description": "Metered Inhaler"
+    },
+    {
+      "code": "NEB",
+      "description": "Nebulizer"
+    },
+    {
+      "code": "PCA",
+      "description": "PCA Pump"
+    }
+  ]
+}

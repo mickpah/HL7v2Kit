@@ -1,0 +1,14 @@
+{
+  "table": "0312",
+  "version": "2.6",
+  "name": "Policy Scope",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0312 - Policy Scope",
+  "entries": [
+    {
+      "code": "...",
+      "description": "No suggested values defined"
+    }
+  ]
+}

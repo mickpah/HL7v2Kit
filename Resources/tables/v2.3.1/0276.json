@@ -1,0 +1,30 @@
+{
+  "table": "0276",
+  "version": "2.3.1",
+  "name": "Appointment reason codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0276 - Appointment reason codes",
+  "entries": [
+    {
+      "code": "Routine",
+      "description": "Routine appointment - default if not valued"
+    },
+    {
+      "code": "Walkin",
+      "description": "A previously unscheduled walk-in visit"
+    },
+    {
+      "code": "Checkup",
+      "description": "A routine check-up, such as an annual physical"
+    },
+    {
+      "code": "Followup",
+      "description": "A follow up visit from a previous appointment"
+    },
+    {
+      "code": "Emergency",
+      "description": "Emergency appointment"
+    }
+  ]
+}

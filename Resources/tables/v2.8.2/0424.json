@@ -1,0 +1,22 @@
+{
+  "table": "0424",
+  "version": "2.8.2",
+  "name": "Gestation Category Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0424 - Gestation Category Code",
+  "entries": [
+    {
+      "code": "1",
+      "description": "Premature / Pre-term"
+    },
+    {
+      "code": "2",
+      "description": "Full Term"
+    },
+    {
+      "code": "3",
+      "description": "Overdue / Post-term"
+    }
+  ]
+}

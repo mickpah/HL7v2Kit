@@ -1,0 +1,18 @@
+{
+  "table": "0136",
+  "version": "2.5.1",
+  "name": "Yes/no indicator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0136 - Yes/no indicator",
+  "entries": [
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

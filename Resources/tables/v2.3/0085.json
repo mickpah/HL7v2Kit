@@ -1,0 +1,50 @@
+{
+  "table": "0085",
+  "version": "2.3",
+  "name": "Observation Result Status Codes Interpretation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0085 - Observation Result Status Codes Interpretation",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Record coming over is a correction and thus replaces a final result"
+    },
+    {
+      "code": "D",
+      "description": "Deletes the OBX record"
+    },
+    {
+      "code": "F",
+      "description": "Final results; Can only be changed with a corrected result."
+    },
+    {
+      "code": "I",
+      "description": "Specimen in lab; results pending"
+    },
+    {
+      "code": "P",
+      "description": "Preliminary results"
+    },
+    {
+      "code": "R",
+      "description": "Results entered -- not verified"
+    },
+    {
+      "code": "S",
+      "description": "Partial results"
+    },
+    {
+      "code": "X",
+      "description": "Results cannot be obtained for this observation"
+    },
+    {
+      "code": "U",
+      "description": "Results status change to Final. Results did not change (don't transmit test). E.g., radiology changes status from preliminary to final"
+    },
+    {
+      "code": "W",
+      "description": "Post original as wrong, e.g., transmitted for wrong patient"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "table": "0225",
+  "version": "2.4",
+  "name": "Escort required",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 0225 - Escort required",
+  "entries": [
+    {
+      "code": "N",
+      "description": "Not Required"
+    },
+    {
+      "code": "R",
+      "description": "Required"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

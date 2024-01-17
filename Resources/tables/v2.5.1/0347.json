@@ -1,0 +1,18 @@
+{
+  "table": "0347",
+  "version": "2.5.1",
+  "name": "State/province",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0347 - State/province",
+  "entries": [
+    {
+      "code": "AB",
+      "description": "Alberta (US and Canada)"
+    },
+    {
+      "code": "MI",
+      "description": "Michigan (US)"
+    }
+  ]
+}

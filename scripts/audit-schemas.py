@@ -15,6 +15,14 @@ NTE, and v1.7 found five corrupted element names that a marker-word regex had mi
     xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin
     python3 scripts/audit-schemas.py --depth
 
+    # + the M6-O6 code-table registry (JSON only; no PDFs needed)
+    python3 scripts/audit-schemas.py --tables
+
+    # ... and re-extract every table from the Appendix A / Chapter 2C PDFs to
+    # confirm the committed JSON is still what the tool reads out of the spec
+    xcrun swiftc -O scripts/extract-code-tables.swift -o /tmp/tablesbin
+    python3 scripts/audit-schemas.py --tables --depth
+
 Two directions matter in the depth pass, and they mean different things:
 
   GAP     schema shallower than the spec  -> candidate missing fields
@@ -25,7 +33,7 @@ Predicates are deliberately *shape*-based (length, character class, emptiness) r
 enumerated content lists: a marker-word list only finds the corruption you already thought
 of. That distinction is what surfaced the v1.7 names.
 """
-import argparse, collections, glob, json, os, re, subprocess, sys
+import argparse, collections, glob, json, os, re, shutil, subprocess, sys, tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCHEMAS = os.path.join(REPO, "Resources/schemas")
@@ -104,6 +112,29 @@ CHAPTER_GLOBS = {
     "v2.6":   ["HL7_v26_PDF/V26_CH*.pdf"],
     "v2.8.2": ["HL7_V2.8.2_PDF/PDF/V282_CH*.pdf"],
 }
+
+# M6-O6 code-table registry. The per-version table JSON lives beside the schemas; the
+# hand-kept overlay (permitsLocalExtensions / dropCodes) sits at the root of that tree and
+# is deliberately NOT a version directory, so the codegen's `v*` scan ignores it.
+TABLES = os.path.join(REPO, "Resources/tables")
+
+# Source PDFs for `--tables --depth`, one per version, and the extractor that reads them.
+TABLE_PDFS = {
+    "v2.3":   "HL7_v23_PDF/APPA.pdf",
+    "v2.3.1": "HL7_v231_PDF/Hl7V231.pdf",
+    "v2.4":   "HL7_v24_PDF/AppendixA.PDF",
+    "v2.5.1": "HL7_v251_PDF/V251_Appendix_A.pdf",
+    "v2.6":   "HL7_v26_PDF/V26_Appendix_A.pdf",
+    "v2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH02C_CodeTables.pdf",
+}
+TABLE_EXTRACTOR = "/tmp/tablesbin"
+
+# Codes the source PDFs print that are not values: the spec's own prose bleeding into the
+# Value column (v2.6 table 0119 prints six segment IDs and three sentence fragments as if
+# they were order control codes). Those are dropped by Resources/tables/overrides.json;
+# SUSPECT is how the next one gets found. Shape-based, deliberately narrow — a space or a
+# parenthesis is normal in a printed code ("ISO IR14", "99zzz or L", "* (star)").
+SUSPECT_CODE = re.compile(r"[\[\]|]|^.{31,}$")
 
 
 def integrity():
@@ -235,9 +266,116 @@ def depth():
     return gaps, suspects, exact, presence, backlog, deferred, datatype_findings
 
 
+def extracted_tables(version):
+    """{number: row count} for one version, re-run from that version's source PDF.
+
+    Only for `--tables --depth`: it needs the author-local PDFs and the compiled
+    extractor. The plain `--tables` pass reads the committed JSON alone.
+    """
+    pdf = os.path.join(STANDARDS, TABLE_PDFS[version])
+    if not os.path.exists(pdf) or not os.path.exists(TABLE_EXTRACTOR):
+        return None
+    # The extractor reads the overrides overlay from <outDir>/../overrides.json, so the
+    # scratch tree mirrors Resources/tables or every dropCodes table reads as DRIFT.
+    root = tempfile.mkdtemp(prefix=f"hl7-tables-{version}-")
+    shutil.copy(os.path.join(TABLES, "overrides.json"), os.path.join(root, "overrides.json"))
+    out = os.path.join(root, version)
+    subprocess.run([TABLE_EXTRACTOR, pdf, version[1:], out],
+                   capture_output=True, text=True, timeout=900)
+    counts = {}
+    for path in glob.glob(f"{out}/*.json"):
+        counts[os.path.basename(path)[:-5]] = len(json.load(open(path))["entries"])
+    return counts
+
+
+def tables(depth=False):
+    """Integrity of the M6-O6 code-table registry. Returns (file count, findings).
+
+    Findings are (relative path, table number, message). KINDMISMATCH and SUSPECT are
+    reported but do not fail: an ID field pointing at a User table is the spec's own
+    doing, and a structurally odd code may be exactly what the spec prints.
+    """
+    findings, files = [], 0
+    catalogue = {}                      # version -> {number: doc}
+    for path in sorted(glob.glob(f"{TABLES}/v*/*.json")):
+        files += 1
+        rel = os.path.relpath(path, REPO)
+        version = os.path.basename(os.path.dirname(path))
+        stem = os.path.basename(path)[:-5]
+        try:
+            doc = json.load(open(path))
+        except ValueError as exc:
+            findings.append((rel, stem, f"malformed JSON: {exc}"))
+            continue
+        if doc.get("table") != stem:
+            findings.append((rel, stem, f"table {doc.get('table')!r} does not match the filename"))
+        if doc.get("version") != version[1:]:
+            findings.append((rel, stem, f"version {doc.get('version')!r} does not match the directory"))
+        if doc.get("kind") not in ("HL7", "User"):
+            findings.append((rel, stem, f"kind {doc.get('kind')!r} is not HL7 or User"))
+        if not (doc.get("name") or "").strip():
+            findings.append((rel, stem, "empty table name"))
+        seen = collections.Counter()
+        for entry in doc.get("entries", []):
+            code = entry.get("code", "")
+            seen[code] += 1
+            if not code:
+                findings.append((rel, stem, "entry with an empty code"))
+            elif SUSPECT_CODE.search(code):
+                findings.append((rel, stem, f"SUSPECT code {code!r} -> investigate the TOOL"))
+        for code, n in seen.items():
+            if n > 1:
+                findings.append((rel, stem, f"duplicate code {code!r} ({n}x)"))
+        catalogue.setdefault(version, {})[stem] = doc
+
+    # Every schema field that links a table must resolve to that version's table, and the
+    # field's dataType must agree with the table's owner (ID -> HL7, IS -> User).
+    for path in sorted(glob.glob(f"{SCHEMAS}/*/*.json")):
+        rel = os.path.relpath(path, REPO)
+        version = os.path.basename(os.path.dirname(path))
+        for f in json.load(open(path))["fields"]:
+            number = f.get("table")
+            if not number:
+                continue
+            doc = catalogue.get(version, {}).get(number)
+            if doc is None:
+                findings.append((rel, number,
+                                 f"field {f['index']} links a table with no {version} JSON"))
+                continue
+            dt = f.get("dataType")
+            if dt == "ID" and doc["kind"] != "HL7":
+                findings.append((rel, number,
+                                 f"KINDMISMATCH field {f['index']} is ID but the table is User"))
+            elif dt == "IS" and doc["kind"] != "User":
+                findings.append((rel, number,
+                                 f"KINDMISMATCH field {f['index']} is IS but the table is HL7"))
+
+    if depth:
+        for version in sorted(catalogue):
+            counts = extracted_tables(version)
+            if counts is None:
+                findings.append((f"Resources/tables/{version}", "-",
+                                 "cannot re-extract (missing PDF or /tmp/tablesbin)"))
+                continue
+            for number, doc in sorted(catalogue[version].items()):
+                got = counts.get(number)
+                if got is None:
+                    findings.append((f"Resources/tables/{version}/{number}.json", number,
+                                     "committed but the extractor does not produce it"))
+                elif got != len(doc["entries"]):
+                    findings.append((f"Resources/tables/{version}/{number}.json", number,
+                                     f"DRIFT committed {len(doc['entries'])} rows, extract {got}"))
+            for number in sorted(set(counts) - set(catalogue[version])):
+                findings.append((f"Resources/tables/{version}/{number}.json", number,
+                                 "extractor produces it but it is not committed"))
+    return files, findings
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", action="store_true", help="also diff depth against the spec PDFs")
+    ap.add_argument("--tables", action="store_true",
+                    help="also audit the M6-O6 code-table registry (add --depth to re-extract)")
     args = ap.parse_args()
 
     bad = integrity()
@@ -267,6 +405,15 @@ def main():
         for v, seg, idx, got, want in dt_findings:
             print(f"   DATATYPE {v} {seg}-{idx}: schema {got!r}, spec saw {want}")
         if gaps or suspects or presence or dt_findings:
+            rc = 1
+
+    if args.tables:
+        files, table_findings = tables(depth=args.depth)
+        print(f"\n== tables: {files} files, {len(table_findings)} findings")
+        for rel, number, why in table_findings:
+            print(f"   {rel} table {number}: {why}")
+        if any("KINDMISMATCH" not in why and "SUSPECT" not in why
+               for _, _, why in table_findings):
             rc = 1
 
     print("\nclean" if rc == 0 else "\nfindings above")

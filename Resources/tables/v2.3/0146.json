@@ -1,0 +1,30 @@
+{
+  "table": "0146",
+  "version": "2.3",
+  "name": "Amount Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, User-defined Table 0146 - Amount Type",
+  "entries": [
+    {
+      "code": "DF",
+      "description": "Differential"
+    },
+    {
+      "code": "LM",
+      "description": "Limit"
+    },
+    {
+      "code": "PC",
+      "description": "Percentage"
+    },
+    {
+      "code": "RT",
+      "description": "Rate"
+    },
+    {
+      "code": "UL",
+      "description": "Unlimited"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "table": "0925",
+  "version": "2.8.2",
+  "name": "Phlebotomy Issue",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0925 - Phlebotomy Issue",
+  "entries": [
+    {
+      "code": "INF",
+      "description": "Infiltration"
+    },
+    {
+      "code": "VSM",
+      "description": "Vein Spasm"
+    },
+    {
+      "code": "COL",
+      "description": "Collapse"
+    },
+    {
+      "code": "MIS",
+      "description": "Missed / in tissue"
+    },
+    {
+      "code": "NAD",
+      "description": "Needle adjustment (this may not end a procedure, if successful will impact component production)"
+    },
+    {
+      "code": "PFL",
+      "description": "Poor flow"
+    },
+    {
+      "code": "CLT",
+      "description": "Clotted"
+    },
+    {
+      "code": "DND",
+      "description": "Defective Needle"
+    },
+    {
+      "code": "DBG",
+      "description": "Defective Bag"
+    },
+    {
+      "code": "DAK",
+      "description": "Defective Apheresis Kit"
+    },
+    {
+      "code": "DMT",
+      "description": "Defective Instrument"
+    },
+    {
+      "code": "IPF",
+      "description": "Instrument Power Failure"
+    },
+    {
+      "code": "ACN",
+      "description": "Air Contamination"
+    }
+  ]
+}

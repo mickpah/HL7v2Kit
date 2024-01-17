@@ -1,0 +1,26 @@
+{
+  "table": "0275",
+  "version": "2.8.2",
+  "name": "Document Storage Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0275 - Document Storage Status",
+  "entries": [
+    {
+      "code": "AC",
+      "description": "Active"
+    },
+    {
+      "code": "AA",
+      "description": "Active and archived"
+    },
+    {
+      "code": "AR",
+      "description": "Archived (not active)"
+    },
+    {
+      "code": "PU",
+      "description": "Purged"
+    }
+  ]
+}

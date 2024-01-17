@@ -1,0 +1,54 @@
+{
+  "table": "0252",
+  "version": "2.3.1",
+  "name": "Causality observations",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0252 - Causality observations",
+  "entries": [
+    {
+      "code": "AW",
+      "description": "Abatement of event after product withdrawn"
+    },
+    {
+      "code": "BE",
+      "description": "Event recurred after product reintroduced"
+    },
+    {
+      "code": "LI",
+      "description": "Literature reports association of product with event"
+    },
+    {
+      "code": "IN",
+      "description": "Event occurred after product introduced"
+    },
+    {
+      "code": "EX",
+      "description": "Alternative explanations for the event available"
+    },
+    {
+      "code": "PL",
+      "description": "Effect observed when patient receives placebo"
+    },
+    {
+      "code": "TC",
+      "description": "Toxic levels of product documented in blood or body fluids"
+    },
+    {
+      "code": "DR",
+      "description": "Dose response observed"
+    },
+    {
+      "code": "SE",
+      "description": "Similar events in past for this patient"
+    },
+    {
+      "code": "OE",
+      "description": "Occurrence of event was confirmed by objective evidence"
+    },
+    {
+      "code": "OT",
+      "description": "Other"
+    }
+  ]
+}

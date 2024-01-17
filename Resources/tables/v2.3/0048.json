@@ -1,0 +1,122 @@
+{
+  "table": "0048",
+  "version": "2.3",
+  "name": "What Subject Filter",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0048 - What Subject Filter",
+  "entries": [
+    {
+      "code": "ADV",
+      "description": "Advice/diagnosis"
+    },
+    {
+      "code": "ANU",
+      "description": "Nursing unit lookup (returns patients in beds, excluding empty beds)"
+    },
+    {
+      "code": "APN",
+      "description": "Patient name lookup"
+    },
+    {
+      "code": "APP",
+      "description": "Physician lookup"
+    },
+    {
+      "code": "ARN",
+      "description": "Nursing unit lookup (returns patients in beds, including empty beds)"
+    },
+    {
+      "code": "APM",
+      "description": "Medical record number query, returns visits for a medical record number"
+    },
+    {
+      "code": "APA",
+      "description": "Account number query, return matching visit"
+    },
+    {
+      "code": "CAN",
+      "description": "Cancel. Used to cancel a query"
+    },
+    {
+      "code": "DEM",
+      "description": "Demographics"
+    },
+    {
+      "code": "FIN",
+      "description": "Financial"
+    },
+    {
+      "code": "GOL",
+      "description": "Goals"
+    },
+    {
+      "code": "MRI",
+      "description": "Most recent inpatient"
+    },
+    {
+      "code": "MRO",
+      "description": "Most recent outpatient"
+    },
+    {
+      "code": "NCK",
+      "description": "Network clock"
+    },
+    {
+      "code": "NSC",
+      "description": "Network status change"
+    },
+    {
+      "code": "NST",
+      "description": "Network statistic"
+    },
+    {
+      "code": "ORD",
+      "description": "Order"
+    },
+    {
+      "code": "OTH",
+      "description": "Other"
+    },
+    {
+      "code": "PRB",
+      "description": "Problems"
+    },
+    {
+      "code": "PRO",
+      "description": "Procedure"
+    },
+    {
+      "code": "RES",
+      "description": "Result"
+    },
+    {
+      "code": "RAR",
+      "description": "Pharmacy administration information"
+    },
+    {
+      "code": "RER",
+      "description": "Pharmacy encoded order information"
+    },
+    {
+      "code": "RDR",
+      "description": "Pharmacy dispense information"
+    },
+    {
+      "code": "RGR",
+      "description": "Pharmacy give information"
+    },
+    {
+      "code": "ROR",
+      "description": "Pharmacy prescription information"
+    },
+    {
+      "code": "STA",
+      "description": "Status"
+    },
+    {
+      "code": "VXI",
+      "description": "Vaccine Information"
+    }
+  ]
+}

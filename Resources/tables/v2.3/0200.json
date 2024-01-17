@@ -1,0 +1,34 @@
+{
+  "table": "0200",
+  "version": "2.3",
+  "name": "Name Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Appendix A, HL7 Table 0200 - Name Type",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alias Name"
+    },
+    {
+      "code": "L",
+      "description": "Legal Name"
+    },
+    {
+      "code": "D",
+      "description": "Display Name"
+    },
+    {
+      "code": "M",
+      "description": "Maiden Name"
+    },
+    {
+      "code": "C",
+      "description": "Adopted Name"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    }
+  ]
+}

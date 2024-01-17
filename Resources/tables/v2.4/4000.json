@@ -1,0 +1,9 @@
+{
+  "table": "4000",
+  "version": "2.4",
+  "name": "Name/address representation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, HL7 Table 4000 - Name/address representation",
+  "entries": []
+}

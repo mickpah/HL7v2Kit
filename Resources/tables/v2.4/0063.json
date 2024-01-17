@@ -1,0 +1,138 @@
+{
+  "table": "0063",
+  "version": "2.4",
+  "name": "Relationship",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0063 - Relationship",
+  "entries": [
+    {
+      "code": "ASC",
+      "description": "Associate"
+    },
+    {
+      "code": "BRO",
+      "description": "Brother"
+    },
+    {
+      "code": "CGV",
+      "description": "Care giver"
+    },
+    {
+      "code": "CHD",
+      "description": "Child"
+    },
+    {
+      "code": "DEP",
+      "description": "Handicapped dependent"
+    },
+    {
+      "code": "DOM",
+      "description": "Life partner"
+    },
+    {
+      "code": "EMC",
+      "description": "Emergency contact"
+    },
+    {
+      "code": "EME",
+      "description": "Employee"
+    },
+    {
+      "code": "EMR",
+      "description": "Employer"
+    },
+    {
+      "code": "EXF",
+      "description": "Extended family"
+    },
+    {
+      "code": "FCH",
+      "description": "Foster child"
+    },
+    {
+      "code": "FND",
+      "description": "Friend"
+    },
+    {
+      "code": "FTH",
+      "description": "Father"
+    },
+    {
+      "code": "GCH",
+      "description": "Grandchild"
+    },
+    {
+      "code": "GRD",
+      "description": "Guardian"
+    },
+    {
+      "code": "GRP",
+      "description": "Grandparent"
+    },
+    {
+      "code": "MGR",
+      "description": "Manager"
+    },
+    {
+      "code": "MTH",
+      "description": "Mother"
+    },
+    {
+      "code": "NCH",
+      "description": "Natural child"
+    },
+    {
+      "code": "NON",
+      "description": "None"
+    },
+    {
+      "code": "OAD",
+      "description": "Other adult"
+    },
+    {
+      "code": "OTH",
+      "description": "Other"
+    },
+    {
+      "code": "OWN",
+      "description": "Owner"
+    },
+    {
+      "code": "PAR",
+      "description": "Parent"
+    },
+    {
+      "code": "SCH",
+      "description": "Stepchild"
+    },
+    {
+      "code": "SEL",
+      "description": "Self"
+    },
+    {
+      "code": "SIB",
+      "description": "Sibling"
+    },
+    {
+      "code": "SIS",
+      "description": "Sister"
+    },
+    {
+      "code": "SPO",
+      "description": "Spouse"
+    },
+    {
+      "code": "TRA",
+      "description": "Trainer"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown"
+    },
+    {
+      "code": "WRD",
+      "description": "Ward of court"
+    }
+  ]
+}

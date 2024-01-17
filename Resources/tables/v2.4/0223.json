@@ -1,0 +1,42 @@
+{
+  "table": "0223",
+  "version": "2.4",
+  "name": "Living dependency",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.4 Appendix A, User-defined Table 0223 - Living dependency",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Small Children Dependent"
+    },
+    {
+      "code": "CB",
+      "description": "Common Bath"
+    },
+    {
+      "code": "D",
+      "description": "Spouse dependent"
+    },
+    {
+      "code": "M",
+      "description": "Medical Supervision Required"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "S",
+      "description": "Spouse Dependent"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "WU",
+      "description": "Walk up"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "table": "0131",
+  "version": "2.3.1",
+  "name": "Contact role",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0131 - Contact role",
+  "entries": []
+}

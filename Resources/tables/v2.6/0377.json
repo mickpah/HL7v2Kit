@@ -1,0 +1,18 @@
+{
+  "table": "0377",
+  "version": "2.6",
+  "name": "Other environmental factors",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0377 - Other environmental factors",
+  "entries": [
+    {
+      "code": "A60",
+      "description": "Opened container, indoor atmosphere, 60 minutes duration"
+    },
+    {
+      "code": "ATM",
+      "description": "Opened container, atmosphere and duration unspecified"
+    }
+  ]
+}

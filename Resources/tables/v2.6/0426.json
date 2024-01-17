@@ -1,0 +1,70 @@
+{
+  "table": "0426",
+  "version": "2.6",
+  "name": "Blood Product Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.6 Appendix A, User-defined Table 0426 - Blood Product Code",
+  "entries": [
+    {
+      "code": "CRYO",
+      "description": "Cryoprecipitated AHF"
+    },
+    {
+      "code": "CRYOP",
+      "description": "Pooled Cryoprecipitate"
+    },
+    {
+      "code": "FFP",
+      "description": "Fresh Frozen Plasma"
+    },
+    {
+      "code": "FFPTH",
+      "description": "Fresh Frozen Plasma - Thawed"
+    },
+    {
+      "code": "PC",
+      "description": "Packed Cells"
+    },
+    {
+      "code": "PCA",
+      "description": "Autologous Packed Cells"
+    },
+    {
+      "code": "PCNEO",
+      "description": "Packed Cells - Neonatal"
+    },
+    {
+      "code": "PCW",
+      "description": "Washed Packed Cells"
+    },
+    {
+      "code": "PLT",
+      "description": "Platelet Concentrate"
+    },
+    {
+      "code": "PLTNEO",
+      "description": "Reduced Volume Platelets"
+    },
+    {
+      "code": "PLTP",
+      "description": "Pooled Platelets"
+    },
+    {
+      "code": "PLTPH",
+      "description": "Platelet Pheresis"
+    },
+    {
+      "code": "PLTPHLR",
+      "description": "Leukoreduced Platelet Pheresis"
+    },
+    {
+      "code": "RWB",
+      "description": "Reconstituted Whole Blood"
+    },
+    {
+      "code": "WBA",
+      "description": "Autologous Whole Blood"
+    }
+  ]
+}

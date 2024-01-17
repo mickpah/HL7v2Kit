@@ -1,0 +1,38 @@
+{
+  "table": "0431",
+  "version": "2.8.2",
+  "name": "Recreational Drug use Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, User-defined Table 0431 - Recreational Drug use Code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alcohol"
+    },
+    {
+      "code": "K",
+      "description": "Kava"
+    },
+    {
+      "code": "M",
+      "description": "Marijuana"
+    },
+    {
+      "code": "T",
+      "description": "Tobacco - smoked"
+    },
+    {
+      "code": "C",
+      "description": "Tobacco - chewed"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

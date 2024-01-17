@@ -1,0 +1,98 @@
+{
+  "table": "0544",
+  "version": "2.8.2",
+  "name": "Container Condition",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0544 - Container Condition",
+  "entries": [
+    {
+      "code": "XC37",
+      "description": "Not Body temperature"
+    },
+    {
+      "code": "XAMB",
+      "description": "Not Ambient temperature Not Critical ambient"
+    },
+    {
+      "code": "XCAMB",
+      "description": "Failed to keep critical ambient."
+    },
+    {
+      "code": "temperature",
+      "description": "Not Refrigerated"
+    },
+    {
+      "code": "XREF",
+      "description": "Failed to keep at refrigerated temperature: 4-8 degrees C."
+    },
+    {
+      "code": "XCREF",
+      "description": "Failed to keep critical refrigerated."
+    },
+    {
+      "code": "XFRZ",
+      "description": "Not Frozen temperature Not Critical frozen"
+    },
+    {
+      "code": "XCFRZ",
+      "description": "Failed to keep critical frozen"
+    },
+    {
+      "code": "XDFRZ",
+      "description": "Not Deep frozen"
+    },
+    {
+      "code": "XUFRZ",
+      "description": "Not Ultra frozen"
+    },
+    {
+      "code": "XNTR",
+      "description": "Not Liquid nitrogen"
+    },
+    {
+      "code": "XPRTL",
+      "description": "Not Protected from light"
+    },
+    {
+      "code": "XCATM",
+      "description": "Exposed to Air"
+    },
+    {
+      "code": "XDRY",
+      "description": "Not Dry"
+    },
+    {
+      "code": "XPSO",
+      "description": "Exposed to shock"
+    },
+    {
+      "code": "XPSA",
+      "description": "Shaken"
+    },
+    {
+      "code": "XUPR",
+      "description": "Not Upright"
+    },
+    {
+      "code": "XMTLF",
+      "description": "Metal Exposed"
+    },
+    {
+      "code": "SB",
+      "description": "Seal Broken"
+    },
+    {
+      "code": "CC",
+      "description": "Container Cracked"
+    },
+    {
+      "code": "CT",
+      "description": "Container Torn"
+    },
+    {
+      "code": "CL",
+      "description": "Container Leaking"
+    }
+  ]
+}
