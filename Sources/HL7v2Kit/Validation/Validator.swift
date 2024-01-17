@@ -500,6 +500,7 @@ public struct Validator: Sendable {
             checkComponents(
                 fieldGrammar,
                 field: field,
+                fieldIndex: position,
                 segmentID: grammar.segmentID,
                 segmentIndex: occurrence,
                 issues: &issues
@@ -532,6 +533,7 @@ public struct Validator: Sendable {
                 profile: profile,
                 fieldGrammar: fieldGrammar,
                 field: field,
+                fieldIndex: position,
                 segment: segment,
                 segmentArrayIndex: segmentIndex,
                 message: message,
@@ -544,6 +546,7 @@ public struct Validator: Sendable {
                 profile: profile,
                 fieldGrammar: fieldGrammar,
                 field: field,
+                fieldIndex: position,
                 segment: segment,
                 segmentArrayIndex: segmentIndex,
                 message: message,
@@ -607,6 +610,7 @@ public struct Validator: Sendable {
         profile: Profile,
         fieldGrammar: FieldGrammar,
         field: Field,
+        fieldIndex: Int,
         segment: Segment,
         segmentArrayIndex: Int,
         message: Message,
@@ -652,7 +656,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: requirement.component
                 )
                 let citation = requirement.specCitation
@@ -677,7 +681,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: rule.thenComponent
                 )
                 let citation = rule.specCitation
@@ -704,7 +708,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: rule.componentB
                 )
                 let citation = rule.specCitation
@@ -734,7 +738,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: rule.component
                 )
                 let citation = rule.specCitation
@@ -769,7 +773,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: segmentIndex,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: valueSet.component
                 )
                 let citation = valueSet.specCitation
@@ -791,7 +795,7 @@ public struct Validator: Sendable {
                 message: message,
                 segmentID: segmentID,
                 occurrence: segmentIndex,
-                fieldIndex: fieldGrammar.index,
+                fieldIndex: fieldIndex,
                 profile: profile,
                 issues: &issues
             )
@@ -810,7 +814,7 @@ public struct Validator: Sendable {
                     let location = IssueLocation(
                         segmentID: segmentID,
                         segmentIndex: segmentIndex,
-                        fieldIndex: fieldGrammar.index,
+                        fieldIndex: fieldIndex,
                         componentIndex: 1
                     )
                     appendProfileIssue(
@@ -1145,6 +1149,7 @@ public struct Validator: Sendable {
         profile: Profile,
         fieldGrammar: FieldGrammar,
         field: Field,
+        fieldIndex: Int,
         segment: Segment,
         segmentArrayIndex: Int,
         message: Message,
@@ -1179,7 +1184,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: componentIndex
                 )
                 let citation = override.specCitation
@@ -1218,7 +1223,7 @@ public struct Validator: Sendable {
                 let location = IssueLocation(
                     segmentID: segmentID,
                     segmentIndex: occurrence,
-                    fieldIndex: fieldGrammar.index,
+                    fieldIndex: fieldIndex,
                     componentIndex: valueSet.component
                 )
                 let citation = valueSet.specCitation
@@ -1242,7 +1247,7 @@ public struct Validator: Sendable {
                 message: message,
                 segmentID: segmentID,
                 occurrence: occurrence,
-                fieldIndex: fieldGrammar.index,
+                fieldIndex: fieldIndex,
                 profile: profile,
                 issues: &issues
             )
@@ -1403,6 +1408,7 @@ public struct Validator: Sendable {
     private func checkComponents(
         _ grammar: FieldGrammar,
         field: Field,
+        fieldIndex: Int,
         segmentID: String,
         segmentIndex: Int,
         issues: inout [ValidationIssue]
@@ -1417,7 +1423,7 @@ public struct Validator: Sendable {
                     let location = IssueLocation(
                         segmentID: segmentID,
                         segmentIndex: segmentIndex,
-                        fieldIndex: grammar.index,
+                        fieldIndex: fieldIndex,
                         componentIndex: spec.index
                     )
                     issues.append(ValidationIssue(
@@ -1435,7 +1441,7 @@ public struct Validator: Sendable {
                     let location = IssueLocation(
                         segmentID: segmentID,
                         segmentIndex: segmentIndex,
-                        fieldIndex: grammar.index
+                        fieldIndex: fieldIndex
                     )
                     issues.append(ValidationIssue(
                         severity: .error,
