@@ -4,7 +4,7 @@
   "description": "Facility",
   "fields": [
     { "index": 1, "swiftName": "facilityIdFac", "name": "Facility ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "facilityType", "name": "Facility Type", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "facilityType", "name": "Facility Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0331"] },
     { "index": 3, "swiftName": "facilityAddress", "name": "Facility Address", "dataType": "XAD", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "facilityTelecommunication", "name": "Facility Telecommunication", "dataType": "XTN", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "contactPerson", "name": "Contact Person", "dataType": "XCN", "optionality": "O", "repeatability": "*" },

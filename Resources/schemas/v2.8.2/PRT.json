@@ -17,7 +17,8 @@
       "name": "Action Code",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0287"]
     },
     {
       "index": 3,
@@ -33,7 +34,8 @@
       "name": "Participation",
       "dataType": "CWE",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0912"]
     },
     {
       "index": 5,
@@ -60,6 +62,7 @@
       "dataType": "CWE",
       "optionality": "C",
       "repeatability": "1",
+      "tables": ["0406"],
       "prohibitedWhen": "PRT-8 empty"
     },
     {

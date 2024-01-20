@@ -9,7 +9,8 @@
       "name": "Acknowledgment Code",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0008"]
     },
     {
       "index": 2,
@@ -49,7 +50,8 @@
       "name": "Error Condition",
       "dataType": "CE",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0357"]
     }
   ]
 }

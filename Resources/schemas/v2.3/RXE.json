@@ -4,14 +4,14 @@
   "description": "RXE",
   "fields": [
     { "index": 1, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "TQ", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "giveCode", "name": "Give Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "giveCode", "name": "Give Code", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0292"] },
     { "index": 3, "swiftName": "giveAmountMinimum", "name": "Give Amount - Minimum", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "giveAmountMaximum", "name": "Give Amount - Maximum", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "giveUnits", "name": "Give Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "giveDosageForm", "name": "Give Dosage Form", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "providerSAdministrationInstructions", "name": "Provider's Administration Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "deliverToLocation", "name": "Deliver-to Location", "dataType": "CM", "optionality": "C", "repeatability": "1" },
-    { "index": 9, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0167"] },
     { "index": 10, "swiftName": "dispenseAmount", "name": "Dispense Amount", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 11, "swiftName": "dispenseUnits", "name": "Dispense Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
     { "index": 12, "swiftName": "numberOfRefills", "name": "Number of Refills", "dataType": "NM", "optionality": "O", "repeatability": "1" },
@@ -22,7 +22,7 @@
     { "index": 17, "swiftName": "numberOfRefillsDosesDispensed", "name": "Number of Refills/Doses Dispensed", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 18, "swiftName": "dTOfMostRecentRefillOrDoseDispensed", "name": "D/T of Most Recent Refill or Dose Dispensed", "dataType": "TS", "optionality": "C", "repeatability": "1" },
     { "index": 19, "swiftName": "totalDailyDose", "name": "Total Daily Dose", "dataType": "CQ", "optionality": "C", "repeatability": "1" },
-    { "index": 20, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 20, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 21, "swiftName": "pharmacyTreatmentSupplierSSpecialDispensingInstructions", "name": "Pharmacy/Treatment Supplier's Special Dispensing Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 22, "swiftName": "givePerTimeUnit", "name": "Give Per (Time Unit)", "dataType": "ST", "optionality": "C", "repeatability": "1" },
     { "index": 23, "swiftName": "giveRateAmount", "name": "Give Rate Amount", "dataType": "ST", "optionality": "O", "repeatability": "1" },
@@ -32,6 +32,6 @@
     { "index": 27, "swiftName": "giveIndication", "name": "Give Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 28, "swiftName": "dispensePackageSize", "name": "Dispense Package Size", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 29, "swiftName": "dispensePackageSizeUnit", "name": "Dispense Package Size Unit", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 30, "swiftName": "dispensePackageMethod", "name": "Dispense Package Method", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 30, "swiftName": "dispensePackageMethod", "name": "Dispense Package Method", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0321"] }
   ]
 }

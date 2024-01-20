@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "setIdBpo", "name": "Set ID – BPO", "dataType": "SI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "bpUniversalServiceId", "name": "BP Universal Service ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "bpProcessingRequirements", "name": "BP Processing Requirements", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "bpProcessingRequirements", "name": "BP Processing Requirements", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0508"] },
     { "index": 4, "swiftName": "bpQuantity", "name": "BP Quantity", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "bpAmount", "name": "BP Amount", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "bpUnits", "name": "BP Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "bpRequestedDispenseDateTime", "name": "BP Requested Dispense Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "bpRequestedDispenseToLocation", "name": "BP Requested Dispense To Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "bpRequestedDispenseToAddress", "name": "BP Requested Dispense To Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "bpIndicationForUse", "name": "BP Indication for Use", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
-    { "index": 14, "swiftName": "bpInformedConsentIndicator", "name": "BP Informed Consent Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 13, "swiftName": "bpIndicationForUse", "name": "BP Indication for Use", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0509"] },
+    { "index": 14, "swiftName": "bpInformedConsentIndicator", "name": "BP Informed Consent Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

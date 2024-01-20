@@ -42,7 +42,8 @@
       "name": "Package Type",
       "dataType": "CWE",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0908"]
     },
     {
       "index": 6,
@@ -50,7 +51,8 @@
       "name": "Package Condition",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0544"]
     },
     {
       "index": 7,
@@ -58,7 +60,8 @@
       "name": "Package Handling Code",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0376"]
     },
     {
       "index": 8,
@@ -66,7 +69,8 @@
       "name": "Package Risk Code",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0489"]
     }
   ]
 }

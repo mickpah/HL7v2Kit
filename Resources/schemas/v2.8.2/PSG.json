@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "providerProductServiceGroupNumber", "name": "Provider Product/Service Group Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "payerProductServiceGroupNumber", "name": "Payer Product/Service Group Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "productServiceGroupSequenceNumber", "name": "Product/Service Group Sequence Number", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "adjudicateAsGroup", "name": "Adjudicate as Group", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "adjudicateAsGroup", "name": "Adjudicate as Group", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
     { "index": 5, "swiftName": "productServiceGroupBilledAmount", "name": "Product/Service Group Billed Amount", "dataType": "CP", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "productServiceGroupDescription", "name": "Product/Service Group Description", "dataType": "ST", "optionality": "R", "repeatability": "1" }
   ]

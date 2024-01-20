@@ -9,7 +9,8 @@
       "name": "Order Control",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0119"]
     },
     {
       "index": 2,
@@ -43,7 +44,8 @@
       "name": "Order Status",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0038"]
     },
     {
       "index": 6,
@@ -51,7 +53,8 @@
       "name": "Response Flag",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0121"]
     },
     {
       "index": 7,
@@ -164,7 +167,8 @@
       "name": "Advanced Beneficiary Notice Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0339"]
     },
     {
       "index": 21,
@@ -212,7 +216,8 @@
       "name": "Advanced Beneficiary Notice Override Reason",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0552"]
     },
     {
       "index": 27,
@@ -228,7 +233,8 @@
       "name": "Confidentiality Code",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0177"]
     },
     {
       "index": 29,
@@ -236,7 +242,8 @@
       "name": "Order Type",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0482"]
     },
     {
       "index": 30,
@@ -244,7 +251,8 @@
       "name": "Enterer Authorization Mode",
       "dataType": "CNE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0483"]
     },
     {
       "index": 31,

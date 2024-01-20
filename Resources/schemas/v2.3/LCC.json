@@ -4,8 +4,8 @@
   "description": "LCC",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLcc", "name": "Primary Key Value - LCC", "dataType": "PL", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "IS", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "IS", "optionality": "R", "repeatability": "1", "tables": ["0264"] },
     { "index": 3, "swiftName": "accommodationType", "name": "Accommodation Type", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "chargeCode", "name": "Charge Code", "dataType": "CE", "optionality": "R", "repeatability": "1" }
+    { "index": 4, "swiftName": "chargeCode", "name": "Charge Code", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0132"] }
   ]
 }

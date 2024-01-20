@@ -5,10 +5,10 @@
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValuePra", "name": "Primary Key Value - PRA", "dataType": "ST", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "practitionerGroup", "name": "Practitioner Group", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 3, "swiftName": "practitionerCategory", "name": "Practitioner Category", "dataType": "IS", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "providerBilling", "name": "Provider Billing", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "specialty", "name": "Specialty", "dataType": "CM", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "practitionerIdNumbers", "name": "Practitioner ID Numbers", "dataType": "CM", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "practitionerCategory", "name": "Practitioner Category", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0186"] },
+    { "index": 4, "swiftName": "providerBilling", "name": "Provider Billing", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0187"] },
+    { "index": 5, "swiftName": "specialty", "name": "Specialty", "dataType": "CM", "optionality": "O", "repeatability": "*", "tables": ["0337"] },
+    { "index": 6, "swiftName": "practitionerIdNumbers", "name": "Practitioner ID Numbers", "dataType": "CM", "optionality": "O", "repeatability": "*", "tables": ["0338"] },
     { "index": 7, "swiftName": "privileges", "name": "Privileges", "dataType": "CM", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "dateEnteredPractice", "name": "Date Entered Practice", "dataType": "DT", "optionality": "O", "repeatability": "1" }
   ]

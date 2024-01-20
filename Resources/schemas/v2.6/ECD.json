@@ -4,8 +4,8 @@
   "description": "Equipment Command",
   "fields": [
     { "index": 1, "swiftName": "referenceCommandNumber", "name": "Reference Command Number", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "remoteControlCommand", "name": "Remote Control Command", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "responseRequired", "name": "Response Required", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "remoteControlCommand", "name": "Remote Control Command", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0368"] },
+    { "index": 3, "swiftName": "responseRequired", "name": "Response Required", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 4, "swiftName": "requestedCompletionTime", "name": "Requested Completion Time", "dataType": "TQ", "optionality": "B", "repeatability": "1" },
     { "index": 5, "swiftName": "parameters", "name": "Parameters", "dataType": "TX", "optionality": "O", "repeatability": "*" }
   ]

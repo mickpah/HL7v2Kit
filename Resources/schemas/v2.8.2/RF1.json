@@ -3,18 +3,18 @@
   "version": "2.8.2",
   "description": "RF1",
   "fields": [
-    { "index": 1, "swiftName": "referralStatus", "name": "Referral Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "referralPriority", "name": "Referral Priority", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "referralType", "name": "Referral Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "referralDisposition", "name": "Referral Disposition", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "referralCategory", "name": "Referral Category", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "referralStatus", "name": "Referral Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0283"] },
+    { "index": 2, "swiftName": "referralPriority", "name": "Referral Priority", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0280"] },
+    { "index": 3, "swiftName": "referralType", "name": "Referral Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0281"] },
+    { "index": 4, "swiftName": "referralDisposition", "name": "Referral Disposition", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0282"] },
+    { "index": 5, "swiftName": "referralCategory", "name": "Referral Category", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0284"] },
     { "index": 6, "swiftName": "originatingReferralIdentifier", "name": "Originating Referral Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 7, "swiftName": "effectiveDate", "name": "Effective Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "expirationDate", "name": "Expiration Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "processDate", "name": "Process Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "referralReason", "name": "Referral Reason", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "referralReason", "name": "Referral Reason", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0336"] },
     { "index": 11, "swiftName": "externalReferralIdentifier", "name": "External Referral Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" },
-    { "index": 12, "swiftName": "referralDocumentationCompletionStatus", "name": "Referral Documentation Completion Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "referralDocumentationCompletionStatus", "name": "Referral Documentation Completion Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0865"] },
     { "index": 13, "swiftName": "plannedTreatmentStopDate", "name": "Planned Treatment Stop Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "referralReasonText", "name": "Referral Reason Text", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 15, "swiftName": "numberOfAuthorizedTreatmentsUnits", "name": "Number of Authorized Treatments/Units", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
@@ -27,6 +27,6 @@
     { "index": 22, "swiftName": "sourceDate", "name": "Source Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 23, "swiftName": "sourcePhone", "name": "Source Phone", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "comment", "name": "Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 25, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 25, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
   ]
 }

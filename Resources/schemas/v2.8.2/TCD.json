@@ -3,13 +3,13 @@
   "version": "2.8.2",
   "description": "TCD",
   "fields": [
-    { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 2, "swiftName": "autoDilutionFactor", "name": "Auto-Dilution Factor", "dataType": "SN", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "rerunDilutionFactor", "name": "Rerun Dilution Factor", "dataType": "SN", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "preDilutionFactor", "name": "Pre-Dilution Factor", "dataType": "SN", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "endogenousContentOfPreDilutionDiluent", "name": "Endogenous Content of Pre-Dilution Diluent", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "automaticRepeatAllowed", "name": "Automatic Repeat Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "reflexAllowed", "name": "Reflex Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "analyteRepeatStatus", "name": "Analyte Repeat Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+    { "index": 6, "swiftName": "automaticRepeatAllowed", "name": "Automatic Repeat Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 7, "swiftName": "reflexAllowed", "name": "Reflex Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 8, "swiftName": "analyteRepeatStatus", "name": "Analyte Repeat Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0389"] }
   ]
 }

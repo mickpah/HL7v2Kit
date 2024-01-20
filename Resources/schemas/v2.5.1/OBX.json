@@ -18,6 +18,7 @@
       "dataType": "ID",
       "optionality": "C",
       "repeatability": "1",
+      "tables": ["0125"],
       "condition": "OBX-11 != X"
     },
     {
@@ -66,7 +67,8 @@
       "name": "Abnormal Flags",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0078"]
     },
     {
       "index": 9,
@@ -82,7 +84,8 @@
       "name": "Nature of Abnormal Test",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0080"]
     },
     {
       "index": 11,
@@ -90,7 +93,8 @@
       "name": "Observation Result Status",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0085"]
     },
     {
       "index": 12,

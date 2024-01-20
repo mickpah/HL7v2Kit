@@ -3,9 +3,9 @@
   "version": "2.5.1",
   "description": "Inventory Detail",
   "fields": [
-    { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CE", "optionality": "R", "repeatability": "*" },
-    { "index": 3, "swiftName": "substanceType", "name": "Substance Type", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "substanceIdentifier", "name": "Substance Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0451"] },
+    { "index": 2, "swiftName": "substanceStatus", "name": "Substance Status", "dataType": "CE", "optionality": "R", "repeatability": "*", "tables": ["0383"] },
+    { "index": 3, "swiftName": "substanceType", "name": "Substance Type", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0384"] },
     { "index": 4, "swiftName": "inventoryContainerIdentifier", "name": "Inventory Container Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "containerCarrierIdentifier", "name": "Container Carrier Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "positionOnCarrier", "name": "Position on Carrier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
@@ -19,8 +19,8 @@
     { "index": 14, "swiftName": "onBoardStabilityDuration", "name": "On Board Stability Duration", "dataType": "TQ", "optionality": "B", "repeatability": "1" },
     { "index": 15, "swiftName": "testFluidIdentifierS", "name": "Test/Fluid Identifier(s)", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 16, "swiftName": "manufacturerLotNumber", "name": "Manufacturer Lot Number", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 17, "swiftName": "manufacturerIdentifier", "name": "Manufacturer Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 18, "swiftName": "supplierIdentifier", "name": "Supplier Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 17, "swiftName": "manufacturerIdentifier", "name": "Manufacturer Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0385"] },
+    { "index": 18, "swiftName": "supplierIdentifier", "name": "Supplier Identifier", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0386"] },
     { "index": 19, "swiftName": "onBoardStabilityTime", "name": "On Board Stability Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "targetValue", "name": "Target Value", "dataType": "CQ", "optionality": "O", "repeatability": "1" }
   ]

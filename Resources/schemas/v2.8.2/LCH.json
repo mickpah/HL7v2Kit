@@ -4,9 +4,9 @@
   "description": "LCH",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLch", "name": "Primary Key Value - LCH", "dataType": "PL", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "segmentUniqueKey", "name": "Segment Unique Key", "dataType": "EI", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "locationCharacteristicId", "name": "Location Characteristic ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "locationCharacteristicValueLch", "name": "Location Characteristic Value - LCH", "dataType": "CWE", "optionality": "R", "repeatability": "1" }
+    { "index": 4, "swiftName": "locationCharacteristicId", "name": "Location Characteristic ID", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0324"] },
+    { "index": 5, "swiftName": "locationCharacteristicValueLch", "name": "Location Characteristic Value - LCH", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0136", "0262", "0263"] }
   ]
 }

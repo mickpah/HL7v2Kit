@@ -3,7 +3,7 @@
   "version": "2.6",
   "description": "Equipment Command Response",
   "fields": [
-    { "index": 1, "swiftName": "commandResponse", "name": "Command Response", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "commandResponse", "name": "Command Response", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0387"] },
     { "index": 2, "swiftName": "dateTimeCompleted", "name": "Date/Time Completed", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "commandResponseParameters", "name": "Command Response Parameters", "dataType": "TX", "optionality": "O", "repeatability": "*" }
   ]

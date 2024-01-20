@@ -4,9 +4,9 @@
   "description": "Numeric Observation",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "unitsOfMeasure", "name": "Units of Measure", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "unitsOfMeasure", "name": "Units of Measure", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 3, "swiftName": "rangeOfDecimalPrecision", "name": "Range of Decimal Precision", "dataType": "NM", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "correspondingSiUnitsOfMeasure", "name": "Corresponding SI Units of Measure", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "correspondingSiUnitsOfMeasure", "name": "Corresponding SI Units of Measure", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 5, "swiftName": "siConversionFactor", "name": "SI Conversion Factor", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "referenceNormalRangeOrdinalAndContinuousObservations", "name": "Reference (Normal) Range - Ordinal and Continuous Observations", "dataType": "RFR", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "criticalRangeForOrdinalAndContinuousObservations", "name": "Critical Range for Ordinal and Continuous Observations", "dataType": "RFR", "optionality": "O", "repeatability": "*" },

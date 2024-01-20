@@ -4,6 +4,6 @@
   "description": "Continuation Pointer",
   "fields": [
     { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "continuationStyle", "name": "Continuation Style", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 2, "swiftName": "continuationStyle", "name": "Continuation Style", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0398"] }
   ]
 }

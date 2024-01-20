@@ -3,13 +3,13 @@
   "version": "2.6",
   "description": "Message Acknowledgment",
   "fields": [
-    { "index": 1, "swiftName": "acknowledgmentCode", "name": "Acknowledgment Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "acknowledgmentCode", "name": "Acknowledgment Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0008"] },
     { "index": 2, "swiftName": "messageControlID", "name": "Message Control ID", "dataType": "ST", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "textMessage", "name": "Text Message", "dataType": "ST", "optionality": "B", "repeatability": "1" },
     { "index": 4, "swiftName": "expectedSequenceNumber", "name": "Expected Sequence Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "delayedAcknowledgmentType", "name": "Delayed Acknowledgment Type", "dataType": "ID", "optionality": "B", "repeatability": "1" },
-    { "index": 6, "swiftName": "errorCondition", "name": "Error Condition", "dataType": "CE", "optionality": "B", "repeatability": "1" },
+    { "index": 6, "swiftName": "errorCondition", "name": "Error Condition", "dataType": "CE", "optionality": "B", "repeatability": "1", "tables": ["0357"] },
     { "index": 7, "swiftName": "messageWaitingNumber", "name": "Message Waiting Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "messageWaitingPriority", "name": "Message Waiting Priority", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 8, "swiftName": "messageWaitingPriority", "name": "Message Waiting Priority", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0520"] }
   ]
 }

@@ -7,7 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M9-A: HL7 table bindings in every schema (M9, the code-table registry cycle, opened)
+
+- **Schema key `tables`** — every field the spec binds to an HL7 table now
+  carries `"tables": ["NNNN", ...]`, taken from that version's own attribute
+  table (TBL# column). A list, because the spec binds more than one table to
+  some fields (`NK1-11` 0327/0328, `OBR-15` 0070/0163/0369, `LCH-5`
+  0136/0262/0263). 4,290 bindings across 724 of the 853 schemas; every schema
+  edit is additive (proven by diffing each file against its pre-sweep JSON
+  with `tables` removed). The key is data-only in this stage: codegen ignores
+  it and the generated sources are unchanged. `FieldGrammar` exposure and the
+  validator membership rule are M9-C / M9-D.
+- **Audit predicate `tables`** (`scripts/audit-schemas.py --depth`) — a
+  schema's `tables` must equal the spec's TBL# cell in both directions. A
+  malformed extracted cell is a finding until it carries a hand-verified,
+  cited entry in the new `scripts/table-repairs.json` (26 entries: the
+  v2.3.1 PCR rows 5-23 whose columns shift after a headerless page break,
+  RP-flag bleed on LCC-3 / ERR-12 / LRL-5, the non-numeric `*` and `----`
+  cells on v2.4 ROL-9 / STF-14, the mid-number wrap on v2.5.1 OM1-44, and
+  v2.3.1 NSC-1, whose segment is depth-whitelisted so takes repairs only).
+  `--write-tables` performs the sweep and verifies what it wrote.
+- **Verification beyond shape.** Cross-version sandwich check (a slot unbound
+  between identically-bound neighbours): one hit, v2.6 DG1-7, spec-correct
+  (withdrawn, blank cell). All 18 ID/IS fields left unbound were read against
+  the printed rows: the spec prints a blank TBL# for each.
+
+### Fixed — extractor dropped wrapped TBL# fragments
+
+- `scripts/extract-segment-tables.swift`: a continuation line holding only a
+  table-number fragment ("0328" under "0327/") is shorter than the NAME
+  column start and was discarded, so every multi-table cell whose element
+  name did not also wrap lost its tail. The fragment is now kept, and only
+  when the open cell ends in "/" — an unconditional append swallowed wrapped
+  LEN digits (v2.5.1 OM1-32 "6553" + "6"). Depth and dataType audits are
+  unchanged by the fix (842 exact, 0 findings).
 
 ## [3.2.0] — 2026-09-17
 

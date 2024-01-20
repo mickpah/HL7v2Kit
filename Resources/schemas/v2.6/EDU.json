@@ -4,12 +4,12 @@
   "description": "Educational Detail",
   "fields": [
     { "index": 1, "swiftName": "setIdEdu", "name": "Set ID – EDU", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "academicDegree", "name": "Academic Degree", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "academicDegree", "name": "Academic Degree", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0360"] },
     { "index": 3, "swiftName": "academicDegreeProgramDateRange", "name": "Academic Degree Program Date Range", "dataType": "DR", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "academicDegreeProgramParticipationDateRange", "name": "Academic Degree Program Participation Date Range", "dataType": "DR", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "academicDegreeGrantedDate", "name": "Academic Degree Granted Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "school", "name": "School", "dataType": "XON", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "schoolTypeCode", "name": "School Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "schoolTypeCode", "name": "School Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0402"] },
     { "index": 8, "swiftName": "schoolAddress", "name": "School Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "majorFieldOfStudy", "name": "Major Field of Study", "dataType": "CWE", "optionality": "O", "repeatability": "*" }
   ]

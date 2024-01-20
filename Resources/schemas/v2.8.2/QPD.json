@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "QPD",
   "fields": [
-    { "index": 1, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0471"] },
     { "index": 2, "swiftName": "queryTagUserParametersInSuccessiveFields", "name": "Query Tag User Parameters (in successive fields)", "dataType": "ST", "optionality": "C", "repeatability": "1" }
   ]
 }

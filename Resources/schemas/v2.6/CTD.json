@@ -3,12 +3,12 @@
   "version": "2.6",
   "description": "CTD",
   "fields": [
-    { "index": 1, "swiftName": "contactRole", "name": "Contact Role", "dataType": "CWE", "optionality": "R", "repeatability": "*" },
+    { "index": 1, "swiftName": "contactRole", "name": "Contact Role", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0131"] },
     { "index": 2, "swiftName": "contactName", "name": "Contact Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "contactAddress", "name": "Contact Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 4, "swiftName": "contactLocation", "name": "Contact Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "contactCommunicationInformation", "name": "Contact Communication Information", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "contactIdentifiers", "name": "Contact Identifiers", "dataType": "PLN", "optionality": "O", "repeatability": "*" }
+    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
+    { "index": 7, "swiftName": "contactIdentifiers", "name": "Contact Identifiers", "dataType": "PLN", "optionality": "O", "repeatability": "*", "tables": ["0338"] }
   ]
 }

@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "requestDate", "name": "Request Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "responseDueDate", "name": "Response Due Date", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "patientConsent", "name": "Patient Consent", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "patientConsent", "name": "Patient Consent", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 4, "swiftName": "dateAdditionalInformationWasSubmitted", "name": "Date Additional Information Was Submitted", "dataType": "DTM", "optionality": "O", "repeatability": "1" }
   ]
 }

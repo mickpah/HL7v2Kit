@@ -9,7 +9,8 @@
       "name": "Living Dependency",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0223"]
     },
     {
       "index": 2,
@@ -17,7 +18,8 @@
       "name": "Living Arrangement",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0220"]
     },
     {
       "index": 3,
@@ -41,7 +43,8 @@
       "name": "Student Indicator",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0231"]
     },
     {
       "index": 6,
@@ -49,7 +52,8 @@
       "name": "Handicap",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0295"]
     },
     {
       "index": 7,
@@ -57,7 +61,8 @@
       "name": "Living Will Code",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0315"]
     },
     {
       "index": 8,
@@ -65,7 +70,8 @@
       "name": "Organ Donor Code",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0316"]
     },
     {
       "index": 9,
@@ -73,7 +79,8 @@
       "name": "Separate Bill",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 10,
@@ -89,7 +96,8 @@
       "name": "Publicity Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0215"]
     },
     {
       "index": 12,
@@ -97,7 +105,8 @@
       "name": "Protection Indicator",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 13,
@@ -121,7 +130,8 @@
       "name": "Advance Directive Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0435"]
     },
     {
       "index": 16,
@@ -129,7 +139,8 @@
       "name": "Immunization Registry Status",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0441"]
     },
     {
       "index": 17,
@@ -153,7 +164,8 @@
       "name": "Military Branch",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0140"]
     },
     {
       "index": 20,
@@ -161,7 +173,8 @@
       "name": "Military Rank/Grade",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0141"]
     },
     {
       "index": 21,
@@ -169,7 +182,8 @@
       "name": "Military Status",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0142"]
     }
   ]
 }

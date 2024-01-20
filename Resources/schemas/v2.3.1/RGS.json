@@ -4,7 +4,7 @@
   "description": "RGS",
   "fields": [
     { "index": 1, "swiftName": "setIdRgs", "name": "Set ID - RGS", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "resourceGroupId", "name": "Resource Group ID", "dataType": "CE", "optionality": "O", "repeatability": "1" }
   ]
 }

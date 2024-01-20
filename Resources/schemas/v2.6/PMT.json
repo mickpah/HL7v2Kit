@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "paymentRemittanceAdviceNumber", "name": "Payment/Remittance Advice Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "paymentRemittanceEffectiveDateTime", "name": "Payment/Remittance Effective Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "paymentRemittanceExpirationDateTime", "name": "Payment/Remittance Expiration Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "paymentMethod", "name": "Payment Method", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "paymentMethod", "name": "Payment Method", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0570"] },
     { "index": 5, "swiftName": "paymentRemittanceDateTime", "name": "Payment/Remittance Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "paymentRemittanceAmount", "name": "Payment/Remittance Amount", "dataType": "CP", "optionality": "R", "repeatability": "1" },
     { "index": 7, "swiftName": "checkNumber", "name": "Check Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },

@@ -10,11 +10,11 @@
     { "index": 5, "swiftName": "eventImprovedDateTime", "name": "Event Improved Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "eventEndedDataTime", "name": "Event Ended Data/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "eventLocationOccurredAddress", "name": "Event Location Occurred Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "eventQualification", "name": "Event Qualification", "dataType": "ID", "optionality": "O", "repeatability": "*" },
-    { "index": 9, "swiftName": "eventSerious", "name": "Event Serious", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "eventExpected", "name": "Event Expected", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "eventOutcome", "name": "Event Outcome", "dataType": "ID", "optionality": "O", "repeatability": "*" },
-    { "index": 12, "swiftName": "patientOutcome", "name": "Patient Outcome", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "eventQualification", "name": "Event Qualification", "dataType": "ID", "optionality": "O", "repeatability": "*", "tables": ["0237"] },
+    { "index": 9, "swiftName": "eventSerious", "name": "Event Serious", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0238"] },
+    { "index": 10, "swiftName": "eventExpected", "name": "Event Expected", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0239"] },
+    { "index": 11, "swiftName": "eventOutcome", "name": "Event Outcome", "dataType": "ID", "optionality": "O", "repeatability": "*", "tables": ["0240"] },
+    { "index": 12, "swiftName": "patientOutcome", "name": "Patient Outcome", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0241"] },
     { "index": 13, "swiftName": "eventDescriptionFromOthers", "name": "Event Description From Others", "dataType": "FT", "optionality": "O", "repeatability": "*" },
     { "index": 14, "swiftName": "eventFromOriginalReporter", "name": "Event From Original Reporter", "dataType": "FT", "optionality": "O", "repeatability": "*" },
     { "index": 15, "swiftName": "eventDescriptionFromPatient", "name": "Event Description From Patient", "dataType": "FT", "optionality": "O", "repeatability": "*" },
@@ -24,9 +24,9 @@
     { "index": 19, "swiftName": "primaryObserverName", "name": "Primary Observer Name", "dataType": "XPN", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "primaryObserverAddress", "name": "Primary Observer Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 21, "swiftName": "primaryObserverTelephone", "name": "Primary Observer Telephone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 22, "swiftName": "primaryObserverQualification", "name": "Primary Observer's Qualification", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 23, "swiftName": "confirmationProvidedBy", "name": "Confirmation Provided By", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "primaryObserverQualification", "name": "Primary Observer's Qualification", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0242"] },
+    { "index": 23, "swiftName": "confirmationProvidedBy", "name": "Confirmation Provided By", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0242"] },
     { "index": 24, "swiftName": "primaryObserverAwareDateTime", "name": "Primary Observer Aware Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 25, "swiftName": "primaryObserverIdentityMayBeDivulged", "name": "Primary Observer's identity May Be Divulged", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 25, "swiftName": "primaryObserverIdentityMayBeDivulged", "name": "Primary Observer's identity May Be Divulged", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0243"] }
   ]
 }

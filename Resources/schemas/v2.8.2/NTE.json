@@ -4,9 +4,9 @@
   "description": "Notes and Comments",
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - NTE", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "sourceOfComment", "name": "Source of Comment", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "sourceOfComment", "name": "Source of Comment", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0105"] },
     { "index": 3, "swiftName": "comment", "name": "Comment", "dataType": "FT", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "commentType", "name": "Comment Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "commentType", "name": "Comment Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0364"] },
     { "index": 5, "swiftName": "enteredBy", "name": "Entered By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "enteredDateTime", "name": "Entered Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "effectiveStartDate", "name": "Effective Start Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },

@@ -3,11 +3,11 @@
   "version": "2.6",
   "description": "Event Type",
   "fields": [
-    { "index": 1, "swiftName": "eventTypeCode", "name": "Event Type Code", "dataType": "ID", "optionality": "B", "repeatability": "1" },
+    { "index": 1, "swiftName": "eventTypeCode", "name": "Event Type Code", "dataType": "ID", "optionality": "B", "repeatability": "1", "tables": ["0003"] },
     { "index": 2, "swiftName": "recordedDateTime", "name": "Recorded Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "dateTimePlannedEvent", "name": "Date/Time Planned Event", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "eventReasonCode", "name": "Event Reason Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "operatorID", "name": "Operator ID", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "eventReasonCode", "name": "Event Reason Code", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0062"] },
+    { "index": 5, "swiftName": "operatorID", "name": "Operator ID", "dataType": "XCN", "optionality": "O", "repeatability": "*", "tables": ["0188"] },
     { "index": 6, "swiftName": "eventOccurred", "name": "Event Occurred", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "eventFacility", "name": "Event Facility", "dataType": "HD", "optionality": "O", "repeatability": "1" }
   ]

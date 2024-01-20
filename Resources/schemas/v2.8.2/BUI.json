@@ -5,15 +5,15 @@
   "fields": [
     { "index": 1, "swiftName": "setIdBui", "name": "Set ID – BUI", "dataType": "SI", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "bloodUnitIdentifier", "name": "Blood Unit Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "bloodUnitType", "name": "Blood Unit Type", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "bloodUnitType", "name": "Blood Unit Type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0566"] },
     { "index": 4, "swiftName": "bloodUnitWeight", "name": "Blood Unit Weight", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "weightUnits", "name": "Weight Units", "dataType": "CNE", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "weightUnits", "name": "Weight Units", "dataType": "CNE", "optionality": "R", "repeatability": "1", "tables": ["0929"] },
     { "index": 6, "swiftName": "bloodUnitVolume", "name": "Blood Unit Volume", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 7, "swiftName": "volumeUnits", "name": "Volume Units", "dataType": "CNE", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "volumeUnits", "name": "Volume Units", "dataType": "CNE", "optionality": "R", "repeatability": "1", "tables": ["0930"] },
     { "index": 8, "swiftName": "containerCatalogNumber", "name": "Container Catalog Number", "dataType": "ST", "optionality": "R", "repeatability": "1" },
     { "index": 9, "swiftName": "containerLotNumber", "name": "Container Lot Number", "dataType": "ST", "optionality": "R", "repeatability": "1" },
     { "index": 10, "swiftName": "containerManufacturer", "name": "Container Manufacturer", "dataType": "XON", "optionality": "R", "repeatability": "1" },
     { "index": 11, "swiftName": "transportTemperature", "name": "Transport Temperature", "dataType": "NR", "optionality": "R", "repeatability": "1" },
-    { "index": 12, "swiftName": "transportTemperatureUnits", "name": "Transport Temperature Units", "dataType": "CNE", "optionality": "R", "repeatability": "1" }
+    { "index": 12, "swiftName": "transportTemperatureUnits", "name": "Transport Temperature Units", "dataType": "CNE", "optionality": "R", "repeatability": "1", "tables": ["0931"] }
   ]
 }

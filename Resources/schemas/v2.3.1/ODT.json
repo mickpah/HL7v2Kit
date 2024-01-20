@@ -3,7 +3,7 @@
   "version": "2.3.1",
   "description": "Diet Tray Instructions",
   "fields": [
-    { "index": 1, "swiftName": "trayType", "name": "Tray Type", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "trayType", "name": "Tray Type", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0160"] },
     { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "textInstruction", "name": "Text Instruction", "dataType": "ST", "optionality": "O", "repeatability": "1" }
   ]
