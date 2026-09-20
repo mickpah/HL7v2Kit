@@ -59,4 +59,13 @@ struct CodeTableValidationTests {
         // v2.8 is grammar-less (ADR-013); nothing to look up.
         #expect(try tableIssues(oru(obr24: "XX", version: "2.8")).isEmpty)
     }
+
+    @Test("IS-typed fields are never enforced even when their table is linked")
+    func userDefinedNeverEnforced() throws {
+        // PID-8 Administrative Sex is IS / user-defined table 0001 on v2.5.1.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN||19700101|ZZZ\r"
+        #expect(try tableIssues(wire).isEmpty)
+        #expect(SegmentGrammarTable.v2_5_1["PID"]?.field(8)?.table == "0001", "the link exists; only enforcement is gated")
+    }
 }

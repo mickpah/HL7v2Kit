@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "setIdBpx", "name": "Set ID – BPX", "dataType": "SI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "bpDispenseStatus", "name": "BP Dispense Status", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0510"] },
-    { "index": 3, "swiftName": "bpStatus", "name": "BP Status", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0511"] },
+    { "index": 3, "swiftName": "bpStatus", "name": "BP Status", "dataType": "ID", "table": "0511", "optionality": "R", "repeatability": "1", "tables": ["0511"] },
     { "index": 4, "swiftName": "bpDateTimeOfStatus", "name": "BP Date/Time of Status", "dataType": "TS", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "bcDonationId", "name": "BC Donation ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
     { "index": 6, "swiftName": "bcComponent", "name": "BC Component", "dataType": "CNE", "optionality": "C", "repeatability": "1" },

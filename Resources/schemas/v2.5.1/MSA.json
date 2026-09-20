@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "acknowledgmentCode",
       "name": "Acknowledgment Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0008",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0008"]

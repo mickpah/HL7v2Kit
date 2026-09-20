@@ -63,7 +63,7 @@
       "index": 8,
       "swiftName": "administrativeSex",
       "name": "Administrative Sex",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0001",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0001"]
@@ -97,7 +97,7 @@
       "index": 12,
       "swiftName": "countyCode",
       "name": "County Code (deprecated)",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0289",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0289"]
@@ -198,7 +198,7 @@
       "index": 24,
       "swiftName": "multipleBirthIndicator",
       "name": "Multiple Birth Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -250,7 +250,7 @@
       "index": 30,
       "swiftName": "patientDeathIndicator",
       "name": "Patient Death Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -259,7 +259,7 @@
       "index": 31,
       "swiftName": "identityUnknownIndicator",
       "name": "Identity Unknown Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -268,7 +268,7 @@
       "index": 32,
       "swiftName": "identityReliabilityCode",
       "name": "Identity Reliability Code",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0445",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0445"]

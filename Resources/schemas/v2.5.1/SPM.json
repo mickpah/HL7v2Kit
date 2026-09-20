@@ -22,7 +22,7 @@
     { "index": 17, "swiftName": "specimenCollectionDateTime", "name": "Specimen Collection Date/Time", "dataType": "DR", "optionality": "O", "repeatability": "1" },
     { "index": 18, "swiftName": "specimenReceivedDateTime", "name": "Specimen Received Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 19, "swiftName": "specimenExpirationDateTime", "name": "Specimen Expiration Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 20, "swiftName": "specimenAvailability", "name": "Specimen Availability", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 20, "swiftName": "specimenAvailability", "name": "Specimen Availability", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 21, "swiftName": "specimenRejectReason", "name": "Specimen Reject Reason", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0490"] },
     { "index": 22, "swiftName": "specimenQuality", "name": "Specimen Quality", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0491"] },
     { "index": 23, "swiftName": "specimenAppropriateness", "name": "Specimen Appropriateness", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0492"] },

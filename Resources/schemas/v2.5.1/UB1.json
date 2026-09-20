@@ -9,7 +9,7 @@
     { "index": 4, "swiftName": "bloodReplacedPints41", "name": "Blood Replaced-Pints (41)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "bloodNotReplacedPints42", "name": "Blood Not Replaced-Pints(42)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "coInsuranceDays25", "name": "Co-Insurance Days (25)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "conditionCode3539", "name": "Condition Code (35-39)", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0043"] },
+    { "index": 7, "swiftName": "conditionCode3539", "name": "Condition Code (35-39)", "dataType": "IS", "table": "0043", "optionality": "O", "repeatability": "*", "tables": ["0043"] },
     { "index": 8, "swiftName": "coveredDays23", "name": "Covered Days - (23)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "nonCoveredDays24", "name": "Non Covered Days - (24)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "valueAmountCode4649", "name": "Value Amount & Code (46-49)", "dataType": "UVC", "optionality": "O", "repeatability": "*" },

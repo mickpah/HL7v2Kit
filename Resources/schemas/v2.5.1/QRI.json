@@ -4,7 +4,7 @@
   "description": "Query Response Instance",
   "fields": [
     { "index": 1, "swiftName": "candidateConfidence", "name": "Candidate Confidence", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "matchReasonCode", "name": "Match Reason Code", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0392"] },
+    { "index": 2, "swiftName": "matchReasonCode", "name": "Match Reason Code", "dataType": "IS", "table": "0392", "optionality": "O", "repeatability": "*", "tables": ["0392"] },
     { "index": 3, "swiftName": "algorithmDescriptor", "name": "Algorithm Descriptor", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0393"] }
   ]
 }

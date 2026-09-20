@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Goal Detail",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "goalId", "name": "Goal ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "goalInstanceId", "name": "Goal Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },

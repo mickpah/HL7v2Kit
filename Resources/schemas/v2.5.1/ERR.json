@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "severity",
       "name": "Severity",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0516",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0516"]
@@ -74,7 +74,7 @@
       "index": 9,
       "swiftName": "informPersonIndicator",
       "name": "Inform Person Indicator",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0517",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0517"]

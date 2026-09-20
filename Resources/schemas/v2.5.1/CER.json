@@ -55,7 +55,7 @@
       "index": 7,
       "swiftName": "grantingCountry",
       "name": "Granting Country",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]
@@ -138,7 +138,7 @@
       "index": 17,
       "swiftName": "basicConstraint",
       "name": "Basic Constraint",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -155,7 +155,7 @@
       "index": 19,
       "swiftName": "jurisdictionCountry",
       "name": "Jurisdiction Country",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]

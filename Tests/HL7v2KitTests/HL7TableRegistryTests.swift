@@ -47,12 +47,14 @@ struct HL7TableRegistryTests {
         }
     }
 
-    @Test("OBR-24 grammar carries table 0074 on v2.5.1; neighbours carry nil until backfill")
+    @Test("Coded OBR fields carry their table on v2.5.1; composite-typed fields never do")
     func obr24TableRef() throws {
         let obr = try #require(SegmentGrammarTable.v2_5_1["OBR"])
         #expect(obr.field(24)?.table == "0074")
         #expect(obr.field(24)?.dataType == "ID")
-        #expect(obr.field(25)?.table == nil)
+        #expect(obr.field(25)?.table == "0123", "A5 backfill: Result Status")
+        // OBR-23 Charge to Practice is MOC: a link is only ever set on ID / IS fields.
+        #expect(obr.field(23)?.table == nil)
     }
 
     @Test("0074 and 0155 are closed HL7 tables on every grammar version")
