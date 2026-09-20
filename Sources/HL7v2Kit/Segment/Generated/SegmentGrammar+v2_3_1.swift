@@ -5,29 +5,143 @@
 
 extension SegmentGrammarTable {
     public static let v2_3_1: [String: SegmentGrammar] = [
-        "ACC": SegmentGrammar(
-            segmentID: "ACC",
-            version: "2.3.1",
-            fields: [
+        "ACC": v2_3_1_ACC,
+        "ADD": v2_3_1_ADD,
+        "AIG": v2_3_1_AIG,
+        "AIL": v2_3_1_AIL,
+        "AIP": v2_3_1_AIP,
+        "AIS": v2_3_1_AIS,
+        "AL1": v2_3_1_AL1,
+        "APR": v2_3_1_APR,
+        "ARQ": v2_3_1_ARQ,
+        "AUT": v2_3_1_AUT,
+        "BHS": v2_3_1_BHS,
+        "BLG": v2_3_1_BLG,
+        "BTS": v2_3_1_BTS,
+        "CDM": v2_3_1_CDM,
+        "CM0": v2_3_1_CM0,
+        "CM1": v2_3_1_CM1,
+        "CM2": v2_3_1_CM2,
+        "CSP": v2_3_1_CSP,
+        "CSR": v2_3_1_CSR,
+        "CSS": v2_3_1_CSS,
+        "CTD": v2_3_1_CTD,
+        "CTI": v2_3_1_CTI,
+        "DB1": v2_3_1_DB1,
+        "DG1": v2_3_1_DG1,
+        "DRG": v2_3_1_DRG,
+        "DSC": v2_3_1_DSC,
+        "DSP": v2_3_1_DSP,
+        "EQL": v2_3_1_EQL,
+        "ERQ": v2_3_1_ERQ,
+        "ERR": v2_3_1_ERR,
+        "EVN": v2_3_1_EVN,
+        "FAC": v2_3_1_FAC,
+        "FHS": v2_3_1_FHS,
+        "FT1": v2_3_1_FT1,
+        "FTS": v2_3_1_FTS,
+        "GOL": v2_3_1_GOL,
+        "GT1": v2_3_1_GT1,
+        "IN1": v2_3_1_IN1,
+        "IN2": v2_3_1_IN2,
+        "IN3": v2_3_1_IN3,
+        "LCC": v2_3_1_LCC,
+        "LCH": v2_3_1_LCH,
+        "LDP": v2_3_1_LDP,
+        "LOC": v2_3_1_LOC,
+        "LRL": v2_3_1_LRL,
+        "MFA": v2_3_1_MFA,
+        "MFE": v2_3_1_MFE,
+        "MFI": v2_3_1_MFI,
+        "MRG": v2_3_1_MRG,
+        "MSA": v2_3_1_MSA,
+        "MSH": v2_3_1_MSH,
+        "NCK": v2_3_1_NCK,
+        "NK1": v2_3_1_NK1,
+        "NPU": v2_3_1_NPU,
+        "NSC": v2_3_1_NSC,
+        "NST": v2_3_1_NST,
+        "NTE": v2_3_1_NTE,
+        "OBR": v2_3_1_OBR,
+        "OBX": v2_3_1_OBX,
+        "ODS": v2_3_1_ODS,
+        "ODT": v2_3_1_ODT,
+        "OM1": v2_3_1_OM1,
+        "OM2": v2_3_1_OM2,
+        "OM3": v2_3_1_OM3,
+        "OM4": v2_3_1_OM4,
+        "OM5": v2_3_1_OM5,
+        "OM6": v2_3_1_OM6,
+        "ORC": v2_3_1_ORC,
+        "PCR": v2_3_1_PCR,
+        "PD1": v2_3_1_PD1,
+        "PDC": v2_3_1_PDC,
+        "PEO": v2_3_1_PEO,
+        "PES": v2_3_1_PES,
+        "PID": v2_3_1_PID,
+        "PR1": v2_3_1_PR1,
+        "PRA": v2_3_1_PRA,
+        "PRB": v2_3_1_PRB,
+        "PRC": v2_3_1_PRC,
+        "PRD": v2_3_1_PRD,
+        "PSH": v2_3_1_PSH,
+        "PTH": v2_3_1_PTH,
+        "PV1": v2_3_1_PV1,
+        "PV2": v2_3_1_PV2,
+        "QAK": v2_3_1_QAK,
+        "QRD": v2_3_1_QRD,
+        "QRF": v2_3_1_QRF,
+        "RDF": v2_3_1_RDF,
+        "RDT": v2_3_1_RDT,
+        "RF1": v2_3_1_RF1,
+        "RGS": v2_3_1_RGS,
+        "ROL": v2_3_1_ROL,
+        "RQ1": v2_3_1_RQ1,
+        "RQD": v2_3_1_RQD,
+        "RXA": v2_3_1_RXA,
+        "RXC": v2_3_1_RXC,
+        "RXD": v2_3_1_RXD,
+        "RXE": v2_3_1_RXE,
+        "RXG": v2_3_1_RXG,
+        "RXO": v2_3_1_RXO,
+        "RXR": v2_3_1_RXR,
+        "SCH": v2_3_1_SCH,
+        "SPR": v2_3_1_SPR,
+        "STF": v2_3_1_STF,
+        "TXA": v2_3_1_TXA,
+        "UB1": v2_3_1_UB1,
+        "UB2": v2_3_1_UB2,
+        "URD": v2_3_1_URD,
+        "URS": v2_3_1_URS,
+        "VAR": v2_3_1_VAR,
+        "VTQ": v2_3_1_VTQ,
+    ]
+
+    private static let v2_3_1_ACC: SegmentGrammar = SegmentGrammar(
+        segmentID: "ACC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Accident Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Accident Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Accident Location", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Auto Accident State", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Accident Job Related Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Accident Death Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ADD": SegmentGrammar(
-            segmentID: "ADD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ADD: SegmentGrammar = SegmentGrammar(
+        segmentID: "ADD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Addendum Continuation Pointer", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: true, table: nil),
-            ]
-        ),
-        "AIG": SegmentGrammar(
-            segmentID: "AIG",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AIG: SegmentGrammar = SegmentGrammar(
+        segmentID: "AIG",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - AIG", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Resource ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -42,12 +156,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 12, name: "Duration Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 13, name: "Allow Substitution Code", dataType: "IS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 14, name: "Filler Status Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "AIL": SegmentGrammar(
-            segmentID: "AIL",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AIL: SegmentGrammar = SegmentGrammar(
+        segmentID: "AIL",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - AIL", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Location Resource ID", dataType: "PL", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -60,12 +175,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Duration Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Allow Substitution Code", dataType: "IS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "AIP": SegmentGrammar(
-            segmentID: "AIP",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AIP: SegmentGrammar = SegmentGrammar(
+        segmentID: "AIP",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - AIP", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Personnel Resource ID", dataType: "XCN", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -78,12 +194,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Duration Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Allow Substitution Code", dataType: "IS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "AIS": SegmentGrammar(
-            segmentID: "AIS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AIS: SegmentGrammar = SegmentGrammar(
+        segmentID: "AIS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - AIS", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Universal Service ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -94,35 +211,38 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "Duration Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Allow Substitution Code", dataType: "IS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Filler Status Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "AL1": SegmentGrammar(
-            segmentID: "AL1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AL1: SegmentGrammar = SegmentGrammar(
+        segmentID: "AL1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - AL1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Allergen Type Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Allergen Code/Mnemonic/Description", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Allergy Severity Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Allergy Reaction Code", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Identification Date (deprecated)", dataType: "DT", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "APR": SegmentGrammar(
-            segmentID: "APR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_APR: SegmentGrammar = SegmentGrammar(
+        segmentID: "APR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Time Selection Criteria", dataType: "SCV", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Resource Selection Criteria", dataType: "SCV", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Location Selection Criteria", dataType: "SCV", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Slot Spacing Criteria", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Filler Override Criteria", dataType: "SCV", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ARQ": SegmentGrammar(
-            segmentID: "ARQ",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ARQ: SegmentGrammar = SegmentGrammar(
+        segmentID: "ARQ",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Placer Appointment ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Occurrence Number", dataType: "NM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -146,12 +266,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "Entered By Location", dataType: "PL", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "Parent Placer Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Parent Filler Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "AUT": SegmentGrammar(
-            segmentID: "AUT",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_AUT: SegmentGrammar = SegmentGrammar(
+        segmentID: "AUT",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Authorizing Payor, Plan ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Authorizing Payor, Company ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Authorizing Payor, Company Name", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -162,12 +283,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "Requested Number of Treatments", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Authorized Number of Treatments", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Process Date", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "BHS": SegmentGrammar(
-            segmentID: "BHS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_BHS: SegmentGrammar = SegmentGrammar(
+        segmentID: "BHS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Batch Field Separator", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Batch Encoding Characters", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Batch Sending Application", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -180,30 +302,33 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Batch Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Batch Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Reference Batch Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "BLG": SegmentGrammar(
-            segmentID: "BLG",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_BLG: SegmentGrammar = SegmentGrammar(
+        segmentID: "BLG",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "When to Charge", dataType: "CM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Charge Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Account ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "BTS": SegmentGrammar(
-            segmentID: "BTS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_BTS: SegmentGrammar = SegmentGrammar(
+        segmentID: "BTS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Batch Message Count", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Batch Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Batch Totals", dataType: "NM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CDM": SegmentGrammar(
-            segmentID: "CDM",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CDM: SegmentGrammar = SegmentGrammar(
+        segmentID: "CDM",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - CDM", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Charge Code Alias", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Charge Description Short", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -217,12 +342,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Contract Number", dataType: "CK", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Contract Organization", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 13, name: "Room Fee Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CM0": SegmentGrammar(
-            segmentID: "CM0",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CM0: SegmentGrammar = SegmentGrammar(
+        segmentID: "CM0",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - CM0", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Sponsor Study ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Alternate Study ID", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -234,41 +360,45 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Contact for Study", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Contact's Tel. Number", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Contact's Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CM1": SegmentGrammar(
-            segmentID: "CM1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CM1: SegmentGrammar = SegmentGrammar(
+        segmentID: "CM1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - CM1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Study Phase Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Description of Study Phase", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CM2": SegmentGrammar(
-            segmentID: "CM2",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CM2: SegmentGrammar = SegmentGrammar(
+        segmentID: "CM2",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - CM2", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Scheduled Time Point", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Description of Time Point", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Events Scheduled This Time Point", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CSP": SegmentGrammar(
-            segmentID: "CSP",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CSP: SegmentGrammar = SegmentGrammar(
+        segmentID: "CSP",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Study Phase Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Date/time Study Phase Began", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Date/time Study Phase Ended", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Study Phase Evaluability", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CSR": SegmentGrammar(
-            segmentID: "CSR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CSR: SegmentGrammar = SegmentGrammar(
+        segmentID: "CSR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sponsor Study ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Alternate Study ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Institution Registering the Patient", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -285,21 +415,23 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 14, name: "Patient Evaluability Status", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "triggerEvent = C04", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 15, name: "Date/time Ended Study", dataType: "TS", optionality: .conditional, repeatability: .single, condition: "triggerEvent = C04", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 16, name: "Reason Ended Study", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "triggerEvent = C04", prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CSS": SegmentGrammar(
-            segmentID: "CSS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CSS: SegmentGrammar = SegmentGrammar(
+        segmentID: "CSS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Study Scheduled Time Point", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Study Scheduled Patient Time Point", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Study Quality Control Codes", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CTD": SegmentGrammar(
-            segmentID: "CTD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CTD: SegmentGrammar = SegmentGrammar(
+        segmentID: "CTD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Contact Role", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Contact Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Contact Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -307,21 +439,23 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Contact Communication Information", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Preferred Method of Contact", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Contact Identifiers", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "CTI": SegmentGrammar(
-            segmentID: "CTI",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_CTI: SegmentGrammar = SegmentGrammar(
+        segmentID: "CTI",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sponsor Study ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Study Phase Identifier", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "CTI-3 populated", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Study Scheduled Time Point", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "DB1": SegmentGrammar(
-            segmentID: "DB1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_DB1: SegmentGrammar = SegmentGrammar(
+        segmentID: "DB1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - DB1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Disabled Person Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Disabled Person Identifier", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -330,12 +464,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Disability End Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Disability Return to Work Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Disability Unable to Work Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "DG1": SegmentGrammar(
-            segmentID: "DG1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_DG1: SegmentGrammar = SegmentGrammar(
+        segmentID: "DG1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - DG1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Diagnosis Coding Method", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Diagnosis Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -355,12 +490,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 17, name: "Diagnosis Classification", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 18, name: "Confidential Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 19, name: "Attestation Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "DRG": SegmentGrammar(
-            segmentID: "DRG",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_DRG: SegmentGrammar = SegmentGrammar(
+        segmentID: "DRG",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Diagnostic Related Group", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "DRG Assigned Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "DRG Approval Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -371,68 +507,75 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "DRG Payor", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Outlier Reimbursement", dataType: "CP", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Confidential Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "DSC": SegmentGrammar(
-            segmentID: "DSC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_DSC: SegmentGrammar = SegmentGrammar(
+        segmentID: "DSC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Continuation Pointer", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "DSP": SegmentGrammar(
-            segmentID: "DSP",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_DSP: SegmentGrammar = SegmentGrammar(
+        segmentID: "DSP",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - DSP", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Display Level", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Data Line", dataType: "TX", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Logical Break Point", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Result ID", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "EQL": SegmentGrammar(
-            segmentID: "EQL",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_EQL: SegmentGrammar = SegmentGrammar(
+        segmentID: "EQL",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Query/Response Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "EQL Query Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "EQL Query Statement", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ERQ": SegmentGrammar(
-            segmentID: "ERQ",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ERQ: SegmentGrammar = SegmentGrammar(
+        segmentID: "ERQ",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Event Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Input Parameter List", dataType: "QIP", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ERR": SegmentGrammar(
-            segmentID: "ERR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ERR: SegmentGrammar = SegmentGrammar(
+        segmentID: "ERR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Error Code and Location", dataType: "CM", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "EVN": SegmentGrammar(
-            segmentID: "EVN",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_EVN: SegmentGrammar = SegmentGrammar(
+        segmentID: "EVN",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Event Type Code", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Recorded Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Date/Time Planned Event", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Event Reason Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Operator ID", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Event Occurred", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "FAC": SegmentGrammar(
-            segmentID: "FAC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_FAC: SegmentGrammar = SegmentGrammar(
+        segmentID: "FAC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Facility ID-FAC", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Facility Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Facility Address", dataType: "XAD", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -445,12 +588,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Signature Authority Title", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Signature Authority Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Signature Authority Telecommunication", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "FHS": SegmentGrammar(
-            segmentID: "FHS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_FHS: SegmentGrammar = SegmentGrammar(
+        segmentID: "FHS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "File Field Separator", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "File Encoding Characters", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "File Sending Application", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -463,12 +607,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "File Header Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "File Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Reference File Control ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "FT1": SegmentGrammar(
-            segmentID: "FT1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_FT1: SegmentGrammar = SegmentGrammar(
+        segmentID: "FT1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - FT1", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Transaction ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Transaction Batch ID", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -495,20 +640,22 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 24, name: "Entered By Code", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Procedure Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 26, name: "Procedure Code Modifier", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "FTS": SegmentGrammar(
-            segmentID: "FTS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_FTS: SegmentGrammar = SegmentGrammar(
+        segmentID: "FTS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "File Batch Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "File Trailer Comment", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "GOL": SegmentGrammar(
-            segmentID: "GOL",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_GOL: SegmentGrammar = SegmentGrammar(
+        segmentID: "GOL",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Action Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Goal ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -530,12 +677,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 19, name: "Goal Life Cycle Status Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 20, name: "Goal Target Type", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 21, name: "Goal Target Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "GT1": SegmentGrammar(
-            segmentID: "GT1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_GT1: SegmentGrammar = SegmentGrammar(
+        segmentID: "GT1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - GT1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Guarantor Number", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Guarantor Name", dataType: "XPN", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -591,12 +739,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 53, name: "Job Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 54, name: "Guarantor Financial Class", dataType: "FC", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 55, name: "Guarantor Race", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "IN1": SegmentGrammar(
-            segmentID: "IN1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_IN1: SegmentGrammar = SegmentGrammar(
+        segmentID: "IN1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - IN1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Insurance Plan ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Insurance Company ID", dataType: "CX", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -646,12 +795,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 47, name: "Coverage Type", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 48, name: "Handicap", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 49, name: "Insured's ID Number", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "IN2": SegmentGrammar(
-            segmentID: "IN2",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_IN2: SegmentGrammar = SegmentGrammar(
+        segmentID: "IN2",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Insured's Employee ID", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Insured's Social Security Number", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Insured's Employer's Name and ID", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -724,12 +874,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 70, name: "Insured Employer Organization Name And ID", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 71, name: "Race", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 72, name: "HCFA Patient's Relationship to Insured", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "IN3": SegmentGrammar(
-            segmentID: "IN3",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_IN3: SegmentGrammar = SegmentGrammar(
+        segmentID: "IN3",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - IN3", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Certification Number", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Certified By", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -755,33 +906,36 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Second Opinion Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Second Opinion Documentation Received", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Second Opinion Physician", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "LCC": SegmentGrammar(
-            segmentID: "LCC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_LCC: SegmentGrammar = SegmentGrammar(
+        segmentID: "LCC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - LCC", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Location Department", dataType: "IS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Accommodation Type", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Charge Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "LCH": SegmentGrammar(
-            segmentID: "LCH",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_LCH: SegmentGrammar = SegmentGrammar(
+        segmentID: "LCH",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - LCH", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Segment Unique Key", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Location Characteristic ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Location Characteristic Value-LCH", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "LDP": SegmentGrammar(
-            segmentID: "LDP",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_LDP: SegmentGrammar = SegmentGrammar(
+        segmentID: "LDP",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - LDP", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Location Department", dataType: "IS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Location Service", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -793,12 +947,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Inactivated Reason", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Visiting Hours", dataType: "VH", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Contact Phone", dataType: "XTN", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "LOC": SegmentGrammar(
-            segmentID: "LOC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_LOC: SegmentGrammar = SegmentGrammar(
+        segmentID: "LOC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - LOC", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Location Description", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Location Type - LOC", dataType: "IS", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -807,59 +962,64 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Location Phone", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "License Number", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Location Equipment", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "LRL": SegmentGrammar(
-            segmentID: "LRL",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_LRL: SegmentGrammar = SegmentGrammar(
+        segmentID: "LRL",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - LRL", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Segment Unique Key", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Location Relationship ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Organizational Location Relationship Value", dataType: "XON", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Patient Location Relationship Value", dataType: "PL", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MFA": SegmentGrammar(
-            segmentID: "MFA",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MFA: SegmentGrammar = SegmentGrammar(
+        segmentID: "MFA",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Record-Level Event Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "MFN Control ID", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Event Completion Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "MFN Record Level Error Return", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Primary Key Value – MFA", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Primary Key Value Type - MFA", dataType: "ID", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MFE": SegmentGrammar(
-            segmentID: "MFE",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MFE: SegmentGrammar = SegmentGrammar(
+        segmentID: "MFE",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Record-Level Event Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "MFN Control ID", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Effective Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Primary Key Value - MFE", dataType: "Varies", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Primary Key Value Type", dataType: "ID", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MFI": SegmentGrammar(
-            segmentID: "MFI",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MFI: SegmentGrammar = SegmentGrammar(
+        segmentID: "MFI",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Master File Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Master File Application Identifier", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "File-Level Event Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Entered Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Effective Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Response Level Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MRG": SegmentGrammar(
-            segmentID: "MRG",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MRG: SegmentGrammar = SegmentGrammar(
+        segmentID: "MRG",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Prior Patient Identifier List", dataType: "CX", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Prior Alternate Patient ID", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Prior Patient Account Number", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -867,24 +1027,26 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Prior Visit Number", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Prior Alternate Visit ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Prior Patient Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MSA": SegmentGrammar(
-            segmentID: "MSA",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MSA: SegmentGrammar = SegmentGrammar(
+        segmentID: "MSA",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Acknowledgment Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Message Control ID", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Text Message", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Expected Sequence Number", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Delayed Acknowledgment Type", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Error Condition", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "MSH": SegmentGrammar(
-            segmentID: "MSH",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_MSH: SegmentGrammar = SegmentGrammar(
+        segmentID: "MSH",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Field Separator", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Encoding Characters", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Sending Application", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -905,19 +1067,21 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 18, name: "Character Set", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 19, name: "Principal Language Of Message", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 20, name: "Alternate Character Set Handling Scheme", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NCK": SegmentGrammar(
-            segmentID: "NCK",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NCK: SegmentGrammar = SegmentGrammar(
+        segmentID: "NCK",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "System Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NK1": SegmentGrammar(
-            segmentID: "NK1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NK1: SegmentGrammar = SegmentGrammar(
+        segmentID: "NK1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - NK1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Relationship", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -955,20 +1119,22 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 35, name: "Race", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 36, name: "Handicap", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 37, name: "Contact Person Social Security Number", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NPU": SegmentGrammar(
-            segmentID: "NPU",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NPU: SegmentGrammar = SegmentGrammar(
+        segmentID: "NPU",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Bed Location", dataType: "PL", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Bed Status", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NSC": SegmentGrammar(
-            segmentID: "NSC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NSC: SegmentGrammar = SegmentGrammar(
+        segmentID: "NSC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Network Change Type", dataType: "IS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Current CPU", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Current Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -978,12 +1144,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "New Fileserver", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "New Application", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "New Facility", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NST": SegmentGrammar(
-            segmentID: "NST",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NST: SegmentGrammar = SegmentGrammar(
+        segmentID: "NST",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Statistics Available", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Source Identifier", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Source Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -999,22 +1166,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 13, name: "Connect Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 14, name: "Receive Timeouts", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 15, name: "Network Errors", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "NTE": SegmentGrammar(
-            segmentID: "NTE",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_NTE: SegmentGrammar = SegmentGrammar(
+        segmentID: "NTE",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - NTE", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Source of Comment", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Comment", dataType: "FT", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Comment Type", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OBR": SegmentGrammar(
-            segmentID: "OBR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OBR: SegmentGrammar = SegmentGrammar(
+        segmentID: "OBR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - OBR", dataType: "SI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-2 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1060,12 +1229,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 43, name: "Planned Patient Transport Comment", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 44, name: "Procedure Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 45, name: "Procedure Code Modifier", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OBX": SegmentGrammar(
-            segmentID: "OBX",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OBX: SegmentGrammar = SegmentGrammar(
+        segmentID: "OBX",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - OBX", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Observation Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1083,31 +1253,34 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "Producer's ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 16, name: "Responsible Observer", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 17, name: "Observation Method", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ODS": SegmentGrammar(
-            segmentID: "ODS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ODS: SegmentGrammar = SegmentGrammar(
+        segmentID: "ODS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Type", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Service Period", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Diet, Supplement, or Preference Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ODT": SegmentGrammar(
-            segmentID: "ODT",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ODT: SegmentGrammar = SegmentGrammar(
+        segmentID: "ODT",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Tray Type", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Service Period", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Text Instruction", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM1": SegmentGrammar(
-            segmentID: "OM1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM1: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Producer's Test/Observation ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Permitted Data Types", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1155,12 +1328,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 45, name: "Relationship Modifier", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 46, name: "Target Anatomic Site Of Test", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 47, name: "Modality Of Imaging Measurement", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM2": SegmentGrammar(
-            segmentID: "OM2",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM2: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM2",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Units of Measure", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Range of Decimal Precision", dataType: "NM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1171,12 +1345,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "Absolute Range for Ordinal & Continuous Obs", dataType: "CM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Delta Check Criteria", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Minimum Meaningful Increments", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM3": SegmentGrammar(
-            segmentID: "OM3",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM3: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM3",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Preferred Coding System", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Valid Coded \"Answers\"", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1184,12 +1359,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Abnormal Text/Codes for Categorical Observations", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Critical Text Codes for Categorical Observations", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Value Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM4": SegmentGrammar(
-            segmentID: "OM4",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM4: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM4",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Derived Specimen", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Container Description", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1204,29 +1380,32 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 12, name: "Specimen Requirements", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 13, name: "Specimen Priorities", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 14, name: "Specimen Retention Time", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM5": SegmentGrammar(
-            segmentID: "OM5",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM5: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM5",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Test/Observations Included within an Ordered Test Battery", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Observation ID Suffixes", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "OM6": SegmentGrammar(
-            segmentID: "OM6",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_OM6: SegmentGrammar = SegmentGrammar(
+        segmentID: "OM6",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sequence Number – Test/Observation Master File", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Derivation Rule", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ORC": SegmentGrammar(
-            segmentID: "ORC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ORC: SegmentGrammar = SegmentGrammar(
+        segmentID: "ORC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Order Control", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "OBR-2 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "OBR-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1251,12 +1430,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Ordering Facility Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Ordering Facility Phone Number", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Ordering Provider Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PCR": SegmentGrammar(
-            segmentID: "PCR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PCR: SegmentGrammar = SegmentGrammar(
+        segmentID: "PCR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Implicated Product", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Generic Product", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Product Class", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1280,12 +1460,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "Action Taken In Response To The Event", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "Event Causality Observations", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Indirect Exposure Mechanism", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PD1": SegmentGrammar(
-            segmentID: "PD1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PD1: SegmentGrammar = SegmentGrammar(
+        segmentID: "PD1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Living Dependency", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Living Arrangement", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Patient Primary Facility", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1298,12 +1479,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "Duplicate Patient", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "Publicity Indicator", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Protection Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PDC": SegmentGrammar(
-            segmentID: "PDC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PDC: SegmentGrammar = SegmentGrammar(
+        segmentID: "PDC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Manufacturer/Distributor", dataType: "XON", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Country", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Brand Name", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1319,12 +1501,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 13, name: "Expected Shelf Life", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 14, name: "Date First Marketed", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 15, name: "Date Last Marketed", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PEO": SegmentGrammar(
-            segmentID: "PEO",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PEO: SegmentGrammar = SegmentGrammar(
+        segmentID: "PEO",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Event Identifiers Used", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Event Symptom/Diagnosis Code", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Event Onset Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1350,12 +1533,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Confirmation Provided By", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Primary Observer Aware Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Primary Observer's identity May Be Divulged", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PES": SegmentGrammar(
-            segmentID: "PES",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PES: SegmentGrammar = SegmentGrammar(
+        segmentID: "PES",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Sender Organization Name", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Sender Individual Name", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Sender Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1369,12 +1553,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Event Report Timing/Type", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Event Report Source", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 13, name: "Event Reported To", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PID": SegmentGrammar(
-            segmentID: "PID",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PID: SegmentGrammar = SegmentGrammar(
+        segmentID: "PID",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - PID", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Patient ID (deprecated)", dataType: "CX", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Patient Identifier List", dataType: "CX", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1405,12 +1590,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 28, name: "Nationality (deprecated)", dataType: "CE", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 29, name: "Patient Death Date and Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 30, name: "Patient Death Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PR1": SegmentGrammar(
-            segmentID: "PR1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PR1: SegmentGrammar = SegmentGrammar(
+        segmentID: "PR1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - PR1", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Procedure Coding Method", dataType: "IS", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Procedure Code", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1427,12 +1613,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 14, name: "Procedure Priority", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 15, name: "Associated Diagnosis Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 16, name: "Procedure Code Modifier", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PRA": SegmentGrammar(
-            segmentID: "PRA",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PRA: SegmentGrammar = SegmentGrammar(
+        segmentID: "PRA",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Practitioner Group", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Practitioner Category", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1441,12 +1628,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Practitioner ID Numbers", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Privileges", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Date Entered Practice", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PRB": SegmentGrammar(
-            segmentID: "PRB",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PRB: SegmentGrammar = SegmentGrammar(
+        segmentID: "PRB",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Action Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Problem ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1472,12 +1660,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Individual Awareness of Prognosis", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Family/Significant Other Awareness of Problem/Prognosis", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Security/Sensitivity", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PRC": SegmentGrammar(
-            segmentID: "PRC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PRC: SegmentGrammar = SegmentGrammar(
+        segmentID: "PRC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - PRC", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Facility ID - PRC", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Department", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1496,12 +1685,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 16, name: "Active/Inactive Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 17, name: "Cost", dataType: "MO", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 18, name: "Charge On Indicator", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PRD": SegmentGrammar(
-            segmentID: "PRD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PRD: SegmentGrammar = SegmentGrammar(
+        segmentID: "PRD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Provider Role", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Provider Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Provider Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1511,12 +1701,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Provider Identifiers", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Effective Start Date of Provider Role", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Effective End Date of Provider Role", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PSH": SegmentGrammar(
-            segmentID: "PSH",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PSH: SegmentGrammar = SegmentGrammar(
+        segmentID: "PSH",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Report Type", dataType: "ST", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Report Form Identifier", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Report Date", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1531,24 +1722,26 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 12, name: "Quantity in Use Comment", dataType: "FT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 13, name: "Number of Product Experience Reports Filed by Facility", dataType: "NM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 14, name: "Number of Product Experience Reports Filed by Distributor", dataType: "NM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PTH": SegmentGrammar(
-            segmentID: "PTH",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PTH: SegmentGrammar = SegmentGrammar(
+        segmentID: "PTH",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Pathway ID", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Pathway Instance ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Pathway Established Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Pathway Life Cycle Status", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Change Pathway Life Cycle Status Date/Time", dataType: "TS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PV1": SegmentGrammar(
-            segmentID: "PV1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PV1: SegmentGrammar = SegmentGrammar(
+        segmentID: "PV1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - PV1", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Patient Class", dataType: "IS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Assigned Patient Location", dataType: "PL", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1601,12 +1794,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 50, name: "Alternate Visit ID", dataType: "CX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 51, name: "Visit Indicator", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 52, name: "Other Healthcare Provider", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "PV2": SegmentGrammar(
-            segmentID: "PV2",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_PV2: SegmentGrammar = SegmentGrammar(
+        segmentID: "PV2",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Prior Pending Location", dataType: "PL", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Accommodation Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Admit Reason", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1644,20 +1838,22 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 35, name: "Military Non-Availability Code", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 36, name: "Newborn Baby Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 37, name: "Baby Detained Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "QAK": SegmentGrammar(
-            segmentID: "QAK",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_QAK: SegmentGrammar = SegmentGrammar(
+        segmentID: "QAK",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Query Response Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "QRD": SegmentGrammar(
-            segmentID: "QRD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_QRD: SegmentGrammar = SegmentGrammar(
+        segmentID: "QRD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Query Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Query Priority", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1670,12 +1866,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 10, name: "What Department Data Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "What Data Code Value Qual.", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 12, name: "Query Results Level", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "QRF": SegmentGrammar(
-            segmentID: "QRF",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_QRF: SegmentGrammar = SegmentGrammar(
+        segmentID: "QRF",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Where Subject Filter", dataType: "ST", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "When Data Start Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "When Data End Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1685,27 +1882,30 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Which Date/Time Status Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Date/Time Selection Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "When Quantity/Timing Qualifier", dataType: "TQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RDF": SegmentGrammar(
-            segmentID: "RDF",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RDF: SegmentGrammar = SegmentGrammar(
+        segmentID: "RDF",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Number of Columns per Row", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Column Description", dataType: "RCD", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RDT": SegmentGrammar(
-            segmentID: "RDT",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RDT: SegmentGrammar = SegmentGrammar(
+        segmentID: "RDT",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Column Value", dataType: "Variable", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: true, table: nil),
-            ]
-        ),
-        "RF1": SegmentGrammar(
-            segmentID: "RF1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RF1: SegmentGrammar = SegmentGrammar(
+        segmentID: "RF1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Referral Status", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Referral Priority", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Referral Type", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1717,21 +1917,23 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Process Date", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Referral Reason", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 11, name: "External Referral Identifier", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RGS": SegmentGrammar(
-            segmentID: "RGS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RGS: SegmentGrammar = SegmentGrammar(
+        segmentID: "RGS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - RGS", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Segment Action Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Resource Group ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "ROL": SegmentGrammar(
-            segmentID: "ROL",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_ROL: SegmentGrammar = SegmentGrammar(
+        segmentID: "ROL",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Role Instance ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Role-ROL", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1740,12 +1942,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 6, name: "Role End Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Role Duration", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Role Action Reason", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RQ1": SegmentGrammar(
-            segmentID: "RQ1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RQ1: SegmentGrammar = SegmentGrammar(
+        segmentID: "RQ1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Anticipated Price", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Manufacturer ID", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Manufacturer's Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-4 empty OR RQ1-5 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1753,12 +1956,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RQD": SegmentGrammar(
-            segmentID: "RQD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RQD: SegmentGrammar = SegmentGrammar(
+        segmentID: "RQD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Requisition Line Number", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Item Code - Internal", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-3 empty AND RQD-4 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Item Code - External", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "RQD-2 empty AND RQD-4 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1769,12 +1973,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "Item Natural Account Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Deliver To ID", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Date Needed", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXA": SegmentGrammar(
-            segmentID: "RXA",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXA: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXA",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Give Sub-ID Counter", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Administration Sub-ID Counter", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Date/Time Start of Administration", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1797,24 +2002,26 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Completion Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 21, name: "Action Code-RXA", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "System Entry Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXC": SegmentGrammar(
-            segmentID: "RXC",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXC: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXC",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "RX Component Type", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Component Code", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Component Amount", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Component Units", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Component Strength", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Component Strength Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXD": SegmentGrammar(
-            segmentID: "RXD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXD: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Dispense Sub-ID Counter", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Dispense/Give Code", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Date/Time Dispensed", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1839,12 +2046,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Dispense Package Size", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Dispense Package Size Unit", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Dispense Package Method", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXE": SegmentGrammar(
-            segmentID: "RXE",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXE: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXE",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "ing", dataType: "TQ", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "- Minimum", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1875,12 +2083,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 28, name: "ge Size", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 29, name: "ge Size Unit", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 30, name: "ge Method", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXG": SegmentGrammar(
-            segmentID: "RXG",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXG: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXG",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Give Sub-ID Counter", dataType: "NM", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Dispense Sub-ID Counter", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Quantity/Timing", dataType: "TQ", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1903,12 +2112,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 20, name: "Substance Expiration Date", dataType: "TS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 21, name: "Substance Manufacturer Name", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "Indication", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXO": SegmentGrammar(
-            segmentID: "RXO",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXO: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXO",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Requested Give Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Requested Give Amount - Minimum", dataType: "NM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Requested Give Amount - Maximum", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1932,23 +2142,25 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "Requested Give Rate Amount", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "Requested Give Rate Units", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Total Daily Dose", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "RXR": SegmentGrammar(
-            segmentID: "RXR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_RXR: SegmentGrammar = SegmentGrammar(
+        segmentID: "RXR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Route", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Site", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Administration Device", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Administration Method", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Routing Instruction", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "SCH": SegmentGrammar(
-            segmentID: "SCH",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_SCH: SegmentGrammar = SegmentGrammar(
+        segmentID: "SCH",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Placer Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Occurrence Number", dataType: "NM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -1974,22 +2186,24 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 23, name: "Parent Placer Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 24, name: "Parent Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Filler Status Code", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "SPR": SegmentGrammar(
-            segmentID: "SPR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_SPR: SegmentGrammar = SegmentGrammar(
+        segmentID: "SPR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Query/Response Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Stored Procedure Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Input Parameter List", dataType: "QIP", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "STF": SegmentGrammar(
-            segmentID: "STF",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_STF: SegmentGrammar = SegmentGrammar(
+        segmentID: "STF",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Staff ID Code", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Staff Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2016,12 +2230,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 24, name: "Auto Ins. Expires", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 25, name: "Date Last DMV Review", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 26, name: "Date Next DMV Review", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "TXA": SegmentGrammar(
-            segmentID: "TXA",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_TXA: SegmentGrammar = SegmentGrammar(
+        segmentID: "TXA",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID- TXA", dataType: "SI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Document Type", dataType: "IS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Document Content Presentation", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2045,12 +2260,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "Document Change Reason", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "Authentication Person, Time Stamp", dataType: "PPN", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "Distributed Copies (Code and Name of Recipients)", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "UB1": SegmentGrammar(
-            segmentID: "UB1",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_UB1: SegmentGrammar = SegmentGrammar(
+        segmentID: "UB1",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - UB1", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Blood Deductible (43)", dataType: "NM", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Blood Furnished-Pints Of (40)", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2074,12 +2290,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 21, name: "UB-82 Locator 9", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 22, name: "UB-82 Locator 27", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 23, name: "UB-82 Locator 45", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "UB2": SegmentGrammar(
-            segmentID: "UB2",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_UB2: SegmentGrammar = SegmentGrammar(
+        segmentID: "UB2",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Set ID - UB2", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Co-Insurance Days (9)", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Condition Code (24-30)", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2097,12 +2314,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "UB92 Locator 57 (National)", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 16, name: "UB92 Locator 78 (State)", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 17, name: "Special Visit Count", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "URD": SegmentGrammar(
-            segmentID: "URD",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_URD: SegmentGrammar = SegmentGrammar(
+        segmentID: "URD",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "R/U Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Report Priority", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "R/U Who Subject Definition", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2110,12 +2328,13 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 5, name: "R/U What Department Code", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "R/U Display/Print Locations", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "R/U Results Level", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "URS": SegmentGrammar(
-            segmentID: "URS",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_URS: SegmentGrammar = SegmentGrammar(
+        segmentID: "URS",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "R/U Where Subject Definition", dataType: "ST", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "R/U When Data Start Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "R/U When Data End Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2125,30 +2344,31 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "R/U Which Date/Time Status Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "R/U Date/Time Selection Qualifier", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "R/U Quantity/Timing Qualifier", dataType: "TQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "VAR": SegmentGrammar(
-            segmentID: "VAR",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_VAR: SegmentGrammar = SegmentGrammar(
+        segmentID: "VAR",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Variance Instance ID", dataType: "EI", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Documented Date/Time", dataType: "TS", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Stated Variance Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Variance Originator", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Variance Classification", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Variance Description", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-        "VTQ": SegmentGrammar(
-            segmentID: "VTQ",
-            version: "2.3.1",
-            fields: [
+        ]
+    )
+
+    private static let v2_3_1_VTQ: SegmentGrammar = SegmentGrammar(
+        segmentID: "VTQ",
+        version: "2.3.1",
+        fields: [
             FieldGrammar(index: 1, name: "Query Tag", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 2, name: "Query/ Response Format Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "VT Query Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Virtual Table Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Selection Criteria", dataType: "QSC", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            ]
-        ),
-    ]
+        ]
+    )
 }
