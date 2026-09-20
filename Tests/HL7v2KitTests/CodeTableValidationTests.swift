@@ -68,4 +68,24 @@ struct CodeTableValidationTests {
         #expect(try tableIssues(wire).isEmpty)
         #expect(SegmentGrammarTable.v2_5_1["PID"]?.field(8)?.table == "0001", "the link exists; only enforcement is gated")
     }
+
+    @Test("A locale's rendering of a table widens the check: UNICODE UTF-8 in MSH-18 on v2.4")
+    func localeRenderingWidensTheCheck() throws {
+        // Base v2.4 Table 0211 has no UNICODE UTF-8; AU ADRM-2021 back-ports it (p. 55 footnote).
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.4|||AL|NE|AU|UNICODE UTF-8\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+        let message = try Parser().parse(wire)
+        func tableIssues(_ locale: HL7Locale) -> [ValidationIssue] {
+            Validator(locale: locale).validate(message).issues
+                .filter { if case .valueNotInTable = $0.code { return true } else { return false } }
+        }
+        let base = tableIssues(.international)
+        #expect(base.count == 1)
+        #expect(base.first?.code == .valueNotInTable(table: "0211"))
+        #expect(tableIssues(.auLocalisation).isEmpty)
+        // The widening is a union by construction: the locale rendering is only consulted
+        // after the message's own version table has rejected the value, so it can never
+        // reject what that version prints. (Not expressible as a wire here: the Parser
+        // accepts only ASCII, 8859/1 and UNICODE UTF-8 as declared character sets.)
+    }
 }

@@ -4,22 +4,22 @@
   "description": "Procedures",
   "fields": [
     { "index": 1, "swiftName": "setIdPr1", "name": "Set ID - PR1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "procedureCodingMethod", "name": "Procedure Coding Method", "dataType": "IS", "optionality": "B", "repeatability": "1", "tables": ["0089"] },
+    { "index": 2, "swiftName": "procedureCodingMethod", "name": "Procedure Coding Method", "dataType": "IS", "table": "0089", "optionality": "B", "repeatability": "1", "tables": ["0089"] },
     { "index": 3, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0088"] },
     { "index": 4, "swiftName": "procedureDescription", "name": "Procedure Description", "dataType": "ST", "optionality": "B", "repeatability": "1" },
     { "index": 5, "swiftName": "procedureDateTime", "name": "Procedure Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
-    { "index": 6, "swiftName": "procedureFunctionalType", "name": "Procedure Functional Type", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0230"] },
+    { "index": 6, "swiftName": "procedureFunctionalType", "name": "Procedure Functional Type", "dataType": "IS", "table": "0230", "optionality": "O", "repeatability": "1", "tables": ["0230"] },
     { "index": 7, "swiftName": "procedureMinutes", "name": "Procedure Minutes", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "anesthesiologist", "name": "Anesthesiologist", "dataType": "XCN", "optionality": "B", "repeatability": "*", "tables": ["0010"] },
-    { "index": 9, "swiftName": "anesthesiaCode", "name": "Anesthesia Code", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0019"] },
+    { "index": 9, "swiftName": "anesthesiaCode", "name": "Anesthesia Code", "dataType": "IS", "table": "0019", "optionality": "O", "repeatability": "1", "tables": ["0019"] },
     { "index": 10, "swiftName": "anesthesiaMinutes", "name": "Anesthesia Minutes", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "surgeon", "name": "Surgeon", "dataType": "XCN", "optionality": "B", "repeatability": "*", "tables": ["0010"] },
     { "index": 12, "swiftName": "procedurePractitioner", "name": "Procedure Practitioner", "dataType": "XCN", "optionality": "B", "repeatability": "*", "tables": ["0010"] },
     { "index": 13, "swiftName": "consentCode", "name": "Consent Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0059"] },
-    { "index": 14, "swiftName": "procedurePriority", "name": "Procedure Priority", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0418"] },
+    { "index": 14, "swiftName": "procedurePriority", "name": "Procedure Priority", "dataType": "ID", "table": "0418", "optionality": "O", "repeatability": "1", "tables": ["0418"] },
     { "index": 15, "swiftName": "associatedDiagnosisCode", "name": "Associated Diagnosis Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0051"] },
     { "index": 16, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0340"] },
-    { "index": 17, "swiftName": "procedureDrgType", "name": "Procedure DRG Type", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0416"] },
+    { "index": 17, "swiftName": "procedureDrgType", "name": "Procedure DRG Type", "dataType": "IS", "table": "0416", "optionality": "O", "repeatability": "1", "tables": ["0416"] },
     { "index": 18, "swiftName": "tissueTypeCode", "name": "Tissue Type Code", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0417"] }
   ]
 }

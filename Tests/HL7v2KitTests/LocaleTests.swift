@@ -140,6 +140,11 @@ struct LocaleTests {
             }
             #expect(intlNonProfileErrors.count == auNonProfileErrors.count,
                     "\(url.lastPathComponent): AU locale must not introduce or remove base-spec (non-profile) errors")
+            // Known exception (A6a): a locale's own rendering of a table can WIDEN the
+            // valueNotInTable check (AU ADRM-2021 back-ports UNICODE UTF-8 into v2.4 Table
+            // 0211), so a base-v2.4 message declaring it errors internationally and not under
+            // AU. No valid fixture does that (oru_r01_v24 declares ASCII); if one ever must,
+            // exclude that issue here rather than weakening the invariant for every table.
             #expect(auReport.errors.count >= intlReport.errors.count,
                     "\(url.lastPathComponent): AU locale must never remove an error")
         }

@@ -125,7 +125,7 @@
       "index": 15,
       "swiftName": "acceptAcknowledgmentType",
       "name": "Accept Acknowledgment Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -134,7 +134,7 @@
       "index": 16,
       "swiftName": "applicationAcknowledgmentType",
       "name": "Application Acknowledgment Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -143,7 +143,7 @@
       "index": 17,
       "swiftName": "countryCode",
       "name": "Country Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]
@@ -152,7 +152,7 @@
       "index": 18,
       "swiftName": "characterSet",
       "name": "Character Set",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0211",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0211"]
@@ -169,7 +169,7 @@
       "index": 20,
       "swiftName": "alternateCharacterSetHandlingScheme",
       "name": "Alternate Character Set Handling Scheme",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0356",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0356"]
@@ -178,7 +178,7 @@
       "index": 21,
       "swiftName": "conformanceStatementId",
       "name": "Conformance Statement ID",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0449",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0449"]

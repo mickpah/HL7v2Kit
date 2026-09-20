@@ -1408,6 +1408,11 @@ public struct Validator: Sendable {
               table.isClosed else { return }
         for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
             guard let value = repetition.stringValue, value != "\"\"", !table.contains(value) else { continue }
+            // A localisation may print its own rendering of the table (AU ADRM-2021 back-ports
+            // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
+            // version's rows, so it can never reject what the message's own version prints;
+            // narrowing is the profile's job, not this rule's.
+            if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),

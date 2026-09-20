@@ -4,7 +4,7 @@
   "description": "QAK",
   "fields": [
     { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0208"] },
+    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "table": "0208", "optionality": "O", "repeatability": "1", "tables": ["0208"] },
     { "index": 3, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "hitCount", "name": "Hit Count", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "thisPayload", "name": "This payload", "dataType": "NM", "optionality": "O", "repeatability": "1" },

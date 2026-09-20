@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "Application Status Change",
   "fields": [
-    { "index": 1, "swiftName": "applicationChangeType", "name": "Application Change Type", "dataType": "IS", "optionality": "R", "repeatability": "1", "tables": ["0409"] },
+    { "index": 1, "swiftName": "applicationChangeType", "name": "Application Change Type", "dataType": "IS", "table": "0409", "optionality": "R", "repeatability": "1", "tables": ["0409"] },
     { "index": 2, "swiftName": "currentCpu", "name": "Current CPU", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "currentFileserver", "name": "Current Fileserver", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "currentApplication", "name": "Current Application", "dataType": "HD", "optionality": "O", "repeatability": "1" },

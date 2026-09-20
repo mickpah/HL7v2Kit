@@ -145,7 +145,7 @@ struct MultiVersionTests {
     // cap. MSH-18 (charset) populated to exercise the v2.4 MSH addition.
     // Pipe count between PID-8 ("M") and PID-31 ("N"): 23 (= 31 - 8).
     private static let v24Wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.4|||AL|NE|AU|UNICODE UTF-8\r\
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.4|||AL|NE|AU|ASCII\r\
     PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M|||||||||||||||||||||||N|US\r
     """
 

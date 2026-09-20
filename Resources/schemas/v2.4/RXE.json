@@ -11,7 +11,7 @@
     { "index": 6, "swiftName": "field4", "name": "", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "inistrationInstructions", "name": "inistration Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "ation", "name": "ation", "dataType": "CM", "optionality": "C", "repeatability": "1" },
-    { "index": 9, "swiftName": "tatus", "name": "tatus", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0167"] },
+    { "index": 9, "swiftName": "tatus", "name": "tatus", "dataType": "ID", "table": "0167", "optionality": "O", "repeatability": "1", "tables": ["0167"] },
     { "index": 10, "swiftName": "field5", "name": "", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 11, "swiftName": "field6", "name": "", "dataType": "CE", "optionality": "C", "repeatability": "1" },
     { "index": 12, "swiftName": "lls", "name": "lls", "dataType": "NM", "optionality": "O", "repeatability": "1" },
@@ -22,7 +22,7 @@
     { "index": 17, "swiftName": "llsDosesDispensed", "name": "lls/Doses Dispensed", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 18, "swiftName": "centRefillOrDoseDispensed", "name": "cent Refill or Dose Dispensed", "dataType": "TS", "optionality": "C", "repeatability": "1" },
     { "index": 19, "swiftName": "field7", "name": "", "dataType": "CQ", "optionality": "C", "repeatability": "1" },
-    { "index": 20, "swiftName": "view", "name": "view", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 20, "swiftName": "view", "name": "view", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 21, "swiftName": "mentSupplierSSpecialTructions", "name": "ment Supplier's Special tructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 22, "swiftName": "unit", "name": "Unit)", "dataType": "ST", "optionality": "C", "repeatability": "1" },
     { "index": 23, "swiftName": "field8", "name": "", "dataType": "ST", "optionality": "O", "repeatability": "1" },
@@ -32,7 +32,7 @@
     { "index": 27, "swiftName": "field11", "name": "", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 28, "swiftName": "ageSize", "name": "age Size", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 29, "swiftName": "ageSizeUnit", "name": "age Size Unit", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 30, "swiftName": "ageMethod", "name": "age Method", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0321"] },
+    { "index": 30, "swiftName": "ageMethod", "name": "age Method", "dataType": "ID", "table": "0321", "optionality": "O", "repeatability": "1", "tables": ["0321"] },
     { "index": 31, "swiftName": "code", "name": "Code", "dataType": "CE", "optionality": "O", "repeatability": "*" }
   ]
 }
