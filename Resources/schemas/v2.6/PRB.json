@@ -3,7 +3,7 @@
   "version": "2.6",
   "description": "PRB",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "problemId", "name": "Problem ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "problemInstanceId", "name": "Problem Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },

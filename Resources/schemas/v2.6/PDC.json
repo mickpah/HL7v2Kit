@@ -12,7 +12,7 @@
     { "index": 7, "swiftName": "catalogueIdentifier", "name": "Catalogue Identifier", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "otherIdentifier", "name": "Other Identifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 9, "swiftName": "productCode", "name": "Product Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 10, "swiftName": "marketingBasis", "name": "Marketing Basis", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0330"] },
+    { "index": 10, "swiftName": "marketingBasis", "name": "Marketing Basis", "dataType": "ID", "table": "0330", "optionality": "O", "repeatability": "1", "tables": ["0330"] },
     { "index": 11, "swiftName": "marketingApprovalId", "name": "Marketing Approval ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "labeledShelfLife", "name": "Labeled Shelf Life", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "expectedShelfLife", "name": "Expected Shelf Life", "dataType": "CQ", "optionality": "O", "repeatability": "1" },

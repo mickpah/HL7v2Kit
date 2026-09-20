@@ -9,6 +9,6 @@
     { "index": 4, "swiftName": "normalTextCodesForCategoricalObservations", "name": "Normal Text/Codes for Categorical Observations", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 5, "swiftName": "abnormalTextCodesForCategoricalObservations", "name": "Abnormal Text/Codes for Categorical Observations", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 6, "swiftName": "criticalTextCodesForCategoricalObservations", "name": "Critical Text/Codes for Categorical Observations", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
-    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0125"] }
+    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "table": "0125", "optionality": "O", "repeatability": "1", "tables": ["0125"] }
   ]
 }

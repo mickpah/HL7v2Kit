@@ -4,11 +4,11 @@
   "description": "Results/Update Definition",
   "fields": [
     { "index": 1, "swiftName": "ruDateTime", "name": "R/U Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "reportPriority", "name": "Report Priority", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0109"] },
+    { "index": 2, "swiftName": "reportPriority", "name": "Report Priority", "dataType": "ID", "table": "0109", "optionality": "O", "repeatability": "1", "tables": ["0109"] },
     { "index": 3, "swiftName": "ruWhoSubjectDefinition", "name": "R/U Who Subject Definition", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
     { "index": 4, "swiftName": "ruWhatSubjectDefinition", "name": "R/U What Subject Definition", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0048"] },
     { "index": 5, "swiftName": "ruWhatDepartmentCode", "name": "R/U What Department Code", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "ruDisplayPrintLocations", "name": "R/U Display/Print Locations", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "ruResultsLevel", "name": "R/U Results Level", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0108"] }
+    { "index": 7, "swiftName": "ruResultsLevel", "name": "R/U Results Level", "dataType": "ID", "table": "0108", "optionality": "O", "repeatability": "1", "tables": ["0108"] }
   ]
 }
