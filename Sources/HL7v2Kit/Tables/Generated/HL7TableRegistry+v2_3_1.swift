@@ -5260,7 +5260,7 @@ extension HL7TableRegistry {
         number: "0354",
         name: "Message structure",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADT_A01", description: "A01, A04, A05, A08, A13, A14, A28, A31"),
             HL7Table.Entry(code: "ADT_A02", description: "A02, A21, A22, A23, A25, A26, A27, A29, A32, A33"),

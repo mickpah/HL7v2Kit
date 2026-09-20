@@ -3,8 +3,8 @@
   "version": "2.6",
   "name": "Message structure",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0354 - Message structure",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 15 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4).",
   "entries": [
     {
       "code": "ACK",

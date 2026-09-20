@@ -5,5 +5,226 @@
   "kind": "HL7",
   "permitsLocalExtensions": true,
   "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0227 - Manufacturers of Vaccines",
-  "entries": []
+  "entries": [
+    {
+      "code": "AB",
+      "description": "Abbott Laboratories"
+    },
+    {
+      "code": "AD",
+      "description": "Adams Laboratories, Inc."
+    },
+    {
+      "code": "ALP",
+      "description": "Alpha Therapeutic Corporation"
+    },
+    {
+      "code": "AR",
+      "description": "Armour"
+    },
+    {
+      "code": "AVB",
+      "description": "Aventis Behring L.L.C."
+    },
+    {
+      "code": "AVI",
+      "description": "Aviron"
+    },
+    {
+      "code": "BA",
+      "description": "Baxter Healthcare Corporation"
+    },
+    {
+      "code": "BAH",
+      "description": "Baxter Healthcare Corporation"
+    },
+    {
+      "code": "BAY",
+      "description": "Bayer Corporation"
+    },
+    {
+      "code": "BP",
+      "description": "Berna Products"
+    },
+    {
+      "code": "BPC",
+      "description": "Berna Products Corporation"
+    },
+    {
+      "code": "MIP",
+      "description": "Bioport Corporation"
+    },
+    {
+      "code": "CNJ",
+      "description": "Cangene Corporation"
+    },
+    {
+      "code": "CMP",
+      "description": "Celltech Medeva Pharmaceuticals"
+    },
+    {
+      "code": "CEN",
+      "description": "Centeon L.L.C."
+    },
+    {
+      "code": "CHI",
+      "description": "Chiron Corporation"
+    },
+    {
+      "code": "CON",
+      "description": "Connaught"
+    },
+    {
+      "code": "DVC",
+      "description": "DynPort Vaccine Company, LLC"
+    },
+    {
+      "code": "EVN",
+      "description": "Evans Medical Limited"
+    },
+    {
+      "code": "GEO",
+      "description": "GeoVax Labs, Inc."
+    },
+    {
+      "code": "SKB",
+      "description": "GlaxoSmithKline"
+    },
+    {
+      "code": "GRE",
+      "description": "Greer Laboratories, Inc."
+    },
+    {
+      "code": "IAG",
+      "description": "Immuno International AG"
+    },
+    {
+      "code": "IUS",
+      "description": "Immuno-U.S., Inc."
+    },
+    {
+      "code": "KGC",
+      "description": "Korea Green Cross Corporation"
+    },
+    {
+      "code": "LED",
+      "description": "Lederle"
+    },
+    {
+      "code": "MBL",
+      "description": "Massachusetts Biologic Laboratories"
+    },
+    {
+      "code": "MA",
+      "description": "Massachusetts Public Health Biologic Laboratories"
+    },
+    {
+      "code": "MED",
+      "description": "MedImmune, Inc."
+    },
+    {
+      "code": "MSD",
+      "description": "Merck & Co., Inc."
+    },
+    {
+      "code": "IM",
+      "description": "Merieux"
+    },
+    {
+      "code": "MIL",
+      "description": "Miles"
+    },
+    {
+      "code": "NAB",
+      "description": "NABI"
+    },
+    {
+      "code": "NYB",
+      "description": "New York Blood Center"
+    },
+    {
+      "code": "NAV",
+      "description": "North American Vaccine, Inc."
+    },
+    {
+      "code": "NOV",
+      "description": "Novartis Pharmaceutical Corporation"
+    },
+    {
+      "code": "NVX",
+      "description": "Novavax, Inc."
+    },
+    {
+      "code": "OTC",
+      "description": "Organon Teknika Corporation"
+    },
+    {
+      "code": "ORT",
+      "description": "Ortho-Clinical Diagnostics"
+    },
+    {
+      "code": "PD",
+      "description": "Parkedale Pharmaceuticals"
+    },
+    {
+      "code": "PWJ",
+      "description": "PowderJect Pharmaceuticals"
+    },
+    {
+      "code": "PRX",
+      "description": "Praxis Biologics"
+    },
+    {
+      "code": "PMC",
+      "description": "sanofi asteur"
+    },
+    {
+      "code": "JPN",
+      "description": "The Research Foundation for Microbial Diseases of Osaka University"
+    },
+    {
+      "code": "SCL",
+      "description": "Sclavo, Inc."
+    },
+    {
+      "code": "SOL",
+      "description": "Solvay Pharmaceuticals"
+    },
+    {
+      "code": "SI",
+      "description": "Swiss Serum and Vaccine Inst."
+    },
+    {
+      "code": "TAL",
+      "description": "Talecris Biotherapeutics"
+    },
+    {
+      "code": "USA",
+      "description": "United States Army Medical Research and Material Command"
+    },
+    {
+      "code": "VXG",
+      "description": "VaxGen"
+    },
+    {
+      "code": "WA",
+      "description": "Wyeth-Ayerst"
+    },
+    {
+      "code": "WAL",
+      "description": "Wyeth-Ayerst"
+    },
+    {
+      "code": "ZLB",
+      "description": "ZLB Behring"
+    },
+    {
+      "code": "OTH",
+      "description": "Other manufacturer"
+    },
+    {
+      "code": "UNK",
+      "description": "Unknown manufacturer"
+    }
+  ]
 }

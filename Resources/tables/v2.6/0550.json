@@ -7,10 +7,6 @@
   "citation": "HL7 v2.6 Appendix A, HL7 Table 0550 - Body Parts",
   "entries": [
     {
-      "code": "Â",
-      "description": "External Jugular"
-    },
-    {
       "code": "ACET",
       "description": "Acetabulum"
     },
@@ -303,7 +299,7 @@
       "description": "Chest"
     },
     {
-      "code": "CHESTÂ",
+      "code": "CHEST",
       "description": "Chest Tube"
     },
     {
@@ -831,7 +827,7 @@
       "description": "Jugular, Internal"
     },
     {
-      "code": "KIDNÂ",
+      "code": "KIDN",
       "description": "Kidney"
     },
     {

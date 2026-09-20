@@ -5680,7 +5680,7 @@ extension HL7TableRegistry {
         number: "0354",
         name: "Message structure",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ACK", description: "Varies"),
             HL7Table.Entry(code: "ADR_A19", description: "A19"),

@@ -204,7 +204,7 @@ SUSPECT_ALLOW = {
     # 0290 Base64 alphabet prints the pad row's Value as "(pad)" with code "="
     ("0290", "(pad)"),
 }
-MOJIBAKE = re.compile("[\u00e2\u00c3]")
+MOJIBAKE = re.compile("[\u00c2\u00e2\u00c3]")
 
 
 def integrity():

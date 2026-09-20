@@ -155,4 +155,39 @@ struct HL7TableRegistryTests {
         }
         #expect(HL7TableRegistry.table("0203", locale: .international) == nil)
     }
+
+    @Test("Table 0354 is never closed: every version's chapters use structures it does not print")
+    func messageStructureTableIsOpen() throws {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            let t = try #require(HL7TableRegistry.table("0354", version: version), "\(version)")
+            #expect(t.contains("ADT_A01"))
+            #expect(!t.isClosed, "0354 on \(version): v2.5.1 CH15 defines RSP_K25, which Appendix A omits")
+        }
+    }
+
+    @Test("v2.8.2 tables with non-standard column headers extract whole, across page breaks")
+    func nonStandardHeaders() throws {
+        let structures = try #require(HL7TableRegistry.table("0354", version: .v2_8_2))
+        #expect(structures.codes.count > 200, "was 0, then 26 when rows stopped at the first page break")
+        #expect(structures.contains("ORU_W01"))
+        let types = try #require(HL7TableRegistry.table("0440", version: .v2_8_2))
+        #expect(types.contains("XTN") && types.contains("AD"))
+        let operators = try #require(HL7TableRegistry.table("0209", version: .v2_8_2))
+        #expect(operators.codes.count == 8 && operators.isClosed)
+    }
+
+    @Test("A row the appendix drops is restored from the defining chapter: v2.5.1 0210 OR")
+    func restoredRow() throws {
+        for version in [Version.v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            let t = try #require(HL7TableRegistry.table("0210", version: version))
+            #expect(Set(t.codes) == ["AND", "OR"], "0210 on \(version)")
+        }
+    }
+
+    @Test("No code carries mis-decoded characters: v2.6 0550 CHEST and KIDN")
+    func noCorruptCodes() throws {
+        let parts = try #require(HL7TableRegistry.table("0550", version: .v2_6))
+        #expect(parts.contains("CHEST") && parts.contains("KIDN"))
+        #expect(parts.codes.allSatisfy { !$0.isEmpty && $0.unicodeScalars.allSatisfy { $0.value < 128 } })
+    }
 }

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — code-table registry defects found while vetting component enforcement (2026-09-20)
+
+- **v2.8.2 tables with non-standard column headers extracted EMPTY in
+  v3.3.0:** 0354 Message structure ("Value / Events"), 0440 Data types, 0209
+  Relational operator, 0210, 0227 and 0292 ("Code / ..."). The line under a
+  table caption is now the column header whatever it says, and the table's
+  own header, reprinted after a page break, resumes its rows (0354 went
+  0 -> 243). No false error was possible in v3.3.0, because an empty table
+  is never enforced; the registry was simply incomplete.
+- **Table 0354 is no longer treated as closed, on any version.** Measured:
+  15 to 25 message structures used by each version's own chapters are absent
+  from its printed table (v2.5.1 Chapter 15 defines `RSP^K25^RSP_K25`;
+  Appendix A omits it). Opened by override with that evidence cited.
+- **v2.5.1 Table 0210 restored to AND / OR.** Appendix A drops OR; the
+  defining table in Chapter 2A prints it. New `addEntries` override.
+- **Mis-decoded no-break space:** v2.6 0550 carried `CHEST` and `KIDN` with a
+  trailing U+00C2 and one lone corrupt row; eight descriptions read
+  "2Â½ hours" / "LOINCÂ®". Restored in the extractor; the audit's mojibake
+  test now includes that character.
+- Four regression tests.
+
 ### Added — M10-B: per-version datatype grammar (2026-09-20)
 
 - `DataTypeGrammarTable.grammar(_:version:)` returns a `DataTypeGrammar`
