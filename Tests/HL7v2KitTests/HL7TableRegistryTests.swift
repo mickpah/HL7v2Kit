@@ -129,4 +129,15 @@ struct HL7TableRegistryTests {
         // UCUM units are printed in square brackets and are genuine codes.
         #expect(try #require(HL7TableRegistry.table("0567", version: .v2_8_2)).contains("[lb_av]"))
     }
+
+    @Test("A locale can print its own rendering of a table: AU ADRM-2021 back-ports UNICODE UTF-8 into 0211")
+    func auLocaleTable0211() throws {
+        let au = try #require(HL7TableRegistry.table("0211", locale: .auLocalisation))
+        #expect(au.contains("UNICODE UTF-8"), "ADRM-2021.1 p. 55 footnote")
+        #expect(au.isClosed)
+        let base = try #require(HL7TableRegistry.table("0211", version: .v2_4))
+        #expect(!base.contains("UNICODE UTF-8"), "base v2.4 does not print it")
+        #expect(Set(au.codes) == Set(base.codes).union(["UNICODE UTF-8"]))
+        #expect(HL7TableRegistry.table("0211", locale: .international) == nil, "the base locale adds nothing")
+    }
 }

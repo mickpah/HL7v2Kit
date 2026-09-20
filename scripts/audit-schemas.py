@@ -405,10 +405,14 @@ def tables(depth=False):
     """
     findings, files = [], 0
     catalogue = {}                      # version -> {number: doc}
-    for path in sorted(glob.glob(f"{TABLES}/v*/*.json")):
+    # Locale renderings (Resources/tables/locale/<locale-id>/) get the same shape checks.
+    # Their "version" is the locale id, and they stay out of `catalogue`, which drives the
+    # schema-link and re-extraction checks against the base-spec PDFs only.
+    for path in sorted(glob.glob(f"{TABLES}/v*/*.json") + glob.glob(f"{TABLES}/locale/*/*.json")):
         files += 1
         rel = os.path.relpath(path, REPO)
-        version = os.path.basename(os.path.dirname(path))
+        is_locale = os.path.basename(os.path.dirname(os.path.dirname(path))) == "locale"
+        version = ("v" if is_locale else "") + os.path.basename(os.path.dirname(path))
         stem = os.path.basename(path)[:-5]
         try:
             doc = json.load(open(path))
@@ -446,7 +450,8 @@ def tables(depth=False):
             if len(spellings) > 1:
                 findings.append((rel, stem,
                                  f"SUSPECT separator variants {sorted(spellings)} -> investigate the TOOL"))
-        catalogue.setdefault(version, {})[stem] = doc
+        if not is_locale:
+            catalogue.setdefault(version, {})[stem] = doc
 
     # Every schema field that links a table must resolve to that version's table, and the
     # field's dataType must agree with the table's owner (ID -> HL7, IS -> User).

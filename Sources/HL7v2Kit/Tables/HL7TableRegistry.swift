@@ -14,6 +14,17 @@ public enum HL7TableRegistry {
         tables(for: version)[number]
     }
 
+    /// A locale's own printed rendering of table `number`, or `nil` when the
+    /// locale does not reprint it. A localisation may widen or narrow a base
+    /// table: AU ADRM-2021 back-ports `UNICODE UTF-8` into its v2.4 Table
+    /// 0211 (p. 55 footnote). `.international` adds nothing to the base spec.
+    public static func table(_ number: String, locale: HL7Locale) -> HL7Table? {
+        switch locale {
+        case .international:  return nil
+        case .auLocalisation: return au_adrm_2021[number]
+        }
+    }
+
     /// Every table printed by `version`, keyed by table number. Empty
     /// for versions HL7v2Kit does not carry tables for.
     static func tables(for version: Version) -> [String: HL7Table] {
