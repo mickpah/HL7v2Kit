@@ -3452,7 +3452,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "R", description: "Restore from archive"),
             HL7Table.Entry(code: "I", description: "Initial load"),
             HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
-            HL7Table.Entry(code: "Not present", description: "Not present (the default, meaning current processing)"),
         ] as [HL7Table.Entry]
     )
 
@@ -5232,8 +5231,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "PRN", description: "given as needed"),
             HL7Table.Entry(code: "PRNxxx", description: "where xxx is some frequency code"),
             HL7Table.Entry(code: "Once", description: "one time only."),
-            HL7Table.Entry(code: "Meal Related", description: "<timing>C (“cum”)<meal>"),
-            HL7Table.Entry(code: "Timings", description: ""),
+            HL7Table.Entry(code: "Meal Related Timings", description: "<timing>C (“cum”)<meal>"),
             HL7Table.Entry(code: "A", description: "Ante (before)"),
             HL7Table.Entry(code: "P", description: "Post (after)"),
             HL7Table.Entry(code: "I", description: "Inter"),
@@ -5310,7 +5308,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
             HL7Table.Entry(code: "HPC", description: "CMS (formerly HCFA) Procedure Codes"),
             HL7Table.Entry(code: "2", description: "The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental Association’s Current Dental Terminology (CDT-2) code by reference. Level II also includes the genuine HCPCS codes, approved and maintained jointly by the Alpha-Numeric Editorial Panel, consisting of CMS, the Health Insurance Association of America, and the Blue Cross and Blue Shield Association. Level III are codes developed locally by Medicare"),
-            HL7Table.Entry(code: "(HCPCS)", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -5708,9 +5705,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "EX", description: "Execute (command specified in field Parameters (ST) 01394)"),
             HL7Table.Entry(code: "AF", description: "Aliquot From container"),
             HL7Table.Entry(code: "AT", description: "Aliquot To container"),
-            HL7Table.Entry(code: "MSH|…|…|…|…|…|…|…|EAC^U07|…", description: ""),
-            HL7Table.Entry(code: "EQU|…", description: ""),
-            HL7Table.Entry(code: "[SPM]", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -6272,14 +6266,13 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CCC", description: "Clinical Care Classification system"),
             HL7Table.Entry(code: "CD2", description: "CDT-2 Codes"),
             HL7Table.Entry(code: "CDCA", description: "CDC Analyte Codes"),
-            HL7Table.Entry(code: "CDCEDACUITY CDC Emergency", description: "Patient Acuity indicates level of care required (Acute, Public Health Code"),
-            HL7Table.Entry(code: "Department Acuity", description: "Chronic, Critical)"),
+            HL7Table.Entry(code: "CDCEDACUITY", description: "Patient Acuity indicates level of care required (Acute, Public Health Code"),
             HL7Table.Entry(code: "CDCM", description: "CDC Methods/Instruments Codes"),
             HL7Table.Entry(code: "CDCOBS", description: "CDC BioSense RT observations (Census) - OBX-3 like Temperature, Bloodpressure and Census"),
             HL7Table.Entry(code: "CDCPHINVS", description: "CDC PHIN Vocabulary CDC Public Health Information Network Vocabulary Public Health Code Coding System"),
             HL7Table.Entry(code: "CDCREC", description: "Race & Ethnicity - CDC The U.S. Centers for Disease Control and"),
             HL7Table.Entry(code: "CDS", description: "CDC Surveillance"),
-            HL7Table.Entry(code: "CE (obsolete) CEN ECG diagnostic", description: "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"),
+            HL7Table.Entry(code: "CE", description: "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"),
             HL7Table.Entry(code: "codes", description: "backwards compatibility only. See the entry for the Code MDC coding system.)"),
             HL7Table.Entry(code: "CLP", description: "CLIP"),
             HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
@@ -6348,7 +6341,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "ICS", description: "ICCS"),
             HL7Table.Entry(code: "ICSD", description: "International Classification of Sleep Disorders"),
             HL7Table.Entry(code: "ISOnnnn", description: "ISO Defined Codes"),
-            HL7Table.Entry(code: "(deprecated)", description: "where nnnn is the ISO table number"),
             HL7Table.Entry(code: "ISO", description: "ISO 2955.83 (units of measure) with HL7 extensions"),
             HL7Table.Entry(code: "ISO3166_1", description: "ISO 3166-1 Country Codes"),
             HL7Table.Entry(code: "ISO3166_2", description: "ISO 3166-2 Country subdivisions"),
@@ -6372,9 +6364,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "MGPI", description: "Medispan GPI"),
             HL7Table.Entry(code: "MVX", description: "CDC Vaccine Manufacturer Codes"),
             HL7Table.Entry(code: "NAICS", description: "Industry (NAICS)"),
-            HL7Table.Entry(code: "NCPDPnnnnsss NCPDP code list for", description: "NCPDP maintain code list associated with the"),
-            HL7Table.Entry(code: "data element nnnn [as", description: "specified Data Element (nnnn) and Segment (sss)."),
-            HL7Table.Entry(code: "used in segment sss]", description: "The Segment portion is optional if there is no specialization of the Data Element codes between segments. Examples: NCPDP1131RES = code set defined for NCPDP data element 1131 as used in the RES segment (Code List Qualifier – Response Code) NCPDP1131STS = code set defined for NCPDP data element 1131 as used in the STS segment (Code List Qualifier – Reject Code) NCPDP9701 = code set defined for NCPDP data element 9701 (Individual Relationship, Coded). No specialization to a segment exists for this data element. National Council for Prescription Drug Programs, 924Ø ast Raintree Drive, Scottsdale, AZ 8526Ø. Phone: (48Ø) 477-1ØØØ Fax: (48Ø) 767-1Ø42 e-mail: ncpdp@ncpdp.org www.ncpdp.org"),
+            HL7Table.Entry(code: "NCPDPnnnnsss", description: "NCPDP maintain code list associated with the"),
             HL7Table.Entry(code: "NDA", description: "NANDA"),
             HL7Table.Entry(code: "NDC", description: "National drug codes"),
             HL7Table.Entry(code: "NDFRT", description: "NDF-RT (Drug Classification)"),
@@ -6400,9 +6390,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "OPS2009", description: "OPS Germany v2009"),
             HL7Table.Entry(code: "OPS2010", description: "OPS Germany v2010"),
             HL7Table.Entry(code: "OPS2011", description: "OPS Germany v2011"),
-            HL7Table.Entry(code: "PHINQUESTION CDC Public Health", description: "CDC Public Health Questions used in HL7 Message Public Health Code"),
-            HL7Table.Entry(code: "Information Network", description: "as observation identifiers. These question or"),
-            HL7Table.Entry(code: "(PHIN) Question", description: "observation identifiers are used in CDC's message implementation guides and will be passed in HL7 OBX-3 or Observation.Code"),
+            HL7Table.Entry(code: "PHINQUESTION", description: "CDC Public Health Questions used in HL7 Message Public Health Code"),
             HL7Table.Entry(code: "PLR", description: "CDC PHLIP Lab result codes that are not covered in SNOMED at the time of this implementation"),
             HL7Table.Entry(code: "PLT", description: "CDC PHLIP Lab test codes, where LOINC concept is too broad or not yet available, especially as needed for ordering and or lab to lab reporting )"),
             HL7Table.Entry(code: "POS", description: "POS Codes"),

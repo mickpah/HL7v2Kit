@@ -5,10 +5,5 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0386 - Supplier identifier",
-  "entries": [
-    {
-      "code": "...",
-      "description": "No suggested value defined"
-    }
-  ]
+  "entries": []
 }

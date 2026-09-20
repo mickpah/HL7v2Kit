@@ -678,9 +678,19 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     let source = appendix ? "Appendix A" : "Chapter 2C"
     let citation = override?.citation
         ?? "HL7 v\(version) \(source), \(kindLabel) \(t.number) - \(t.name)"
-    let permits = override?.permitsLocalExtensions ?? t.externallyDefined
-    let (rowPairs, notes) = survivingRows(t, drop: Set(override?.dropCodes ?? []),
-                                          rename: override?.renameCodes ?? [:])
+    // A bare "..." row is never a code. The specs print it for "no suggested values" (an
+    // otherwise empty table), for an external or open-ended list that continues (v2.6 0153
+    // "See NUBC codes", 0359 / 0418 ranks), and for a null row (v2.6 0365 "(null) No state
+    // change"). It is dropped structurally. Fail-safe (req #4): when other rows remain, the
+    // printed rows are NOT taken as a closed set unless overrides.json says so explicitly.
+    let hasEllipsis = t.codes.contains("...")
+    let (allPairs, allNotes) = survivingRows(t, drop: Set(override?.dropCodes ?? []),
+                                             rename: override?.renameCodes ?? [:])
+    let rowPairs = allPairs.filter { $0.0 != "..." }
+    let notes = allNotes + (hasEllipsis ? ["\(t.number): dropped the bare \"...\" row"
+        + (rowPairs.isEmpty ? "" : "; table left open unless overridden")] : [])
+    let permits = override?.permitsLocalExtensions
+        ?? (t.externallyDefined || (hasEllipsis && !rowPairs.isEmpty))
     var lines: [String] = []
     lines.append("{")
     lines.append("  \"table\": \(jsonString(t.number)),")
@@ -739,7 +749,13 @@ guard args.count == 3 else {
 let pdfPath = args[0], version = args[1], outDir = args[2]
 let appendix = version != "2.8.2"
 
+// The v2.5.1 Appendix A text layer carries mis-decoded curly quotes: an opening quote
+// arrives as U+00E2, a space, U+0153 and a closing quote as a bare U+00E2 (nine
+// descriptions, e.g. 0003 A21 "leave of absence"; never a code). No HL7 table text
+// contains a genuine U+00E2, so both forms are restored to the quotes the page prints.
 let text = runPdftotext(pdfPath)
+    .replacingOccurrences(of: "\u{00E2} \u{0153}", with: "\u{201C}")
+    .replacingOccurrences(of: "\u{00E2}", with: "\u{201D}")
 guard !text.isEmpty else {
     FileHandle.standardError.write("error: pdftotext produced no text for \(pdfPath)\n".data(using: .utf8)!)
     exit(2)

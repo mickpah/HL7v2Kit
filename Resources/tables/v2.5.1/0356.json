@@ -12,7 +12,7 @@
     },
     {
       "code": "2.3",
-      "description": "The character set switching mode specified in HL7 2.5, section 2.7.2, â œEscape sequences supporting multiple character setsâ and section 2.A.46, \"XPN - extended person name\"."
+      "description": "The character set switching mode specified in HL7 2.5, section 2.7.2, “Escape sequences supporting multiple character sets” and section 2.A.46, \"XPN - extended person name\"."
     },
     {
       "code": "ISO 2022-1994",

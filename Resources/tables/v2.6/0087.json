@@ -5,10 +5,5 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0087 - Pre-Admit Test Indicator",
-  "entries": [
-    {
-      "code": "...",
-      "description": "no suggested values"
-    }
-  ]
+  "entries": []
 }

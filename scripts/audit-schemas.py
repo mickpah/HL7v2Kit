@@ -182,7 +182,29 @@ TABLE_EXTRACTOR = "/tmp/tablesbin"
 # Deliberately narrow otherwise. A space is normal in a printed code ("ISO IR14", "99zzz or
 # L") and so is a lone capitalised word ("Routine", "Booked", "Internet" are real values in
 # 0276 / 0278 / 0202), so neither is suspect on its own.
-SUSPECT_CODE = re.compile(r"[\[\]|]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S")
+#   ( or )           a status annotation or wrapped Description in the Value column
+#                    (v2.6 0396 "CE (obsolete)", v2.8.2 0340 "(HCPCS)")
+#   three+ words     a Value wider than its column run into the Description
+#                    (v2.8.2 0396 "CDCEDACUITY CDC Emergency"); "..." ranges are exempt
+#   bare "..."       an ellipsis row: the list continues or the row means null — never a code
+SUSPECT_CODE = re.compile(r"[\[\]|()]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^\.\.\.$")
+
+# Printed codes the shape test would wrongly flag. Each was read against the PDF. Keyed
+# (table, code): version-agnostic because the same printed value recurs across versions.
+SUSPECT_ALLOW = {
+    # UCUM units, printed in square brackets by the spec (v2.8.2 CH02C lines 15924-15941, 17610-17625)
+    ("0567", "[lb_av]"), ("0567", "[oz_av]"), ("0568", "[pt_us]"),
+    ("0929", "[lb_av]"), ("0929", "[oz_av]"), ("0930", "[pt_us]"),
+    # Character-set standard names are printed with spaces
+    ("0211", "JIS X 0202"), ("0211", "KS X 1001"),
+    # 0396 prints the local-code forms as one Value: "99zzz or L"
+    ("0396", "99zzz or L"),
+    # 0335 Repeat pattern: a row LABEL for the <timing>C<meal> pattern family (User table)
+    ("0335", "Meal Related Timings"),
+    # 0290 Base64 alphabet prints the pad row's Value as "(pad)" with code "="
+    ("0290", "(pad)"),
+}
+MOJIBAKE = re.compile("[\u00e2\u00c3]")
 
 
 def integrity():
@@ -407,8 +429,10 @@ def tables(depth=False):
             seen[code] += 1
             if not code:
                 findings.append((rel, stem, "entry with an empty code"))
-            elif SUSPECT_CODE.search(code):
+            elif SUSPECT_CODE.search(code) and (stem, code) not in SUSPECT_ALLOW:
                 findings.append((rel, stem, f"SUSPECT code {code!r} -> investigate the TOOL"))
+            if MOJIBAKE.search(code + entry.get("description", "")):
+                findings.append((rel, stem, f"mis-decoded text in entry {code!r} -> investigate the TOOL"))
         for code, n in seen.items():
             if n > 1:
                 findings.append((rel, stem, f"duplicate code {code!r} ({n}x)"))

@@ -5,10 +5,5 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0139 - Employer Information Data",
-  "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values defined"
-    }
-  ]
+  "entries": []
 }

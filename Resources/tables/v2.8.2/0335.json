@@ -91,12 +91,8 @@
       "description": "one time only."
     },
     {
-      "code": "Meal Related",
+      "code": "Meal Related Timings",
       "description": "<timing>C (“cum”)<meal>"
-    },
-    {
-      "code": "Timings",
-      "description": ""
     },
     {
       "code": "A",

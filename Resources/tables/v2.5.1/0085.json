@@ -44,7 +44,7 @@
     },
     {
       "code": "U",
-      "description": "Results status change to final without retransmitting results already sent as â ˜preliminary.' E.g., radiology changes status from preliminary to final"
+      "description": "Results status change to final without retransmitting results already sent as ” ˜preliminary.' E.g., radiology changes status from preliminary to final"
     },
     {
       "code": "W",

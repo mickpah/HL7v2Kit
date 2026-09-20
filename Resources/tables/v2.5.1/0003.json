@@ -88,11 +88,11 @@
     },
     {
       "code": "A21",
-      "description": "ADT/ACK - Patient goes on a â œleave of absenceâ"
+      "description": "ADT/ACK - Patient goes on a “leave of absence”"
     },
     {
       "code": "A22",
-      "description": "ADT/ACK - Patient returns from a â œleave of absenceâ"
+      "description": "ADT/ACK - Patient returns from a “leave of absence”"
     },
     {
       "code": "A23",
@@ -1012,7 +1012,7 @@
     },
     {
       "code": "S24",
-      "description": "SIU/ACK - Notification of opened (â œunblockedâ ) schedule time slot(s)"
+      "description": "SIU/ACK - Notification of opened (“unblocked” ) schedule time slot(s)"
     },
     {
       "code": "S25",

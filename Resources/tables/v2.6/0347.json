@@ -3,13 +3,9 @@
   "version": "2.6",
   "name": "State/province",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0347 - State/province",
   "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values defined"
-    },
     {
       "code": "AB",
       "description": "Alberta (US and Canada)"

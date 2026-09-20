@@ -3,12 +3,7 @@
   "version": "2.6",
   "name": "Occurrence code",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0350 - Occurrence code",
-  "entries": [
-    {
-      "code": "...",
-      "description": "Use NUBC codes"
-    }
-  ]
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Appendix A Table 0350: The only printed row is '...' with the text 'Use NUBC codes': the values are an external NUBC code set, so the printed table is not a closed set.",
+  "entries": []
 }

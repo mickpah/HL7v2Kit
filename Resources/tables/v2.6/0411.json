@@ -5,10 +5,5 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0411 - Supplemental Service Information Values",
-  "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values<p>Individual implementations may use vocabularies such as the SNOMED DICOM Micro-glossary (SDM) or private (local) entries."
-    }
-  ]
+  "entries": []
 }

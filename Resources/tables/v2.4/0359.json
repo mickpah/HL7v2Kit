@@ -3,8 +3,8 @@
   "version": "2.4",
   "name": "Diagnosis priority",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0359 - Diagnosis priority",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.4 Appendix A Table 0359: the row '2 ...' (For ranked secondary diagnoses) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set.",
   "entries": [
     {
       "code": "0",

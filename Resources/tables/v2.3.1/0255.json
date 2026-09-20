@@ -11,7 +11,7 @@
       "description": "To identify measures at a point in time. This is a synonym for \"spot\" or \"random\" as applied to urine measurements."
     },
     {
-      "code": "* (star)",
+      "code": "*",
       "description": "Life of the \"unit.\" Used for blood products."
     },
     {

@@ -548,8 +548,8 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "A18", description: "ADT/ACK - Merge patient information (for backward compatibility only)"),
             HL7Table.Entry(code: "A19", description: "QRY/ADR - Patient query"),
             HL7Table.Entry(code: "A20", description: "ADT/ACK - Bed status update"),
-            HL7Table.Entry(code: "A21", description: "ADT/ACK - Patient goes on a â œleave of absenceâ"),
-            HL7Table.Entry(code: "A22", description: "ADT/ACK - Patient returns from a â œleave of absenceâ"),
+            HL7Table.Entry(code: "A21", description: "ADT/ACK - Patient goes on a “leave of absence”"),
+            HL7Table.Entry(code: "A22", description: "ADT/ACK - Patient returns from a “leave of absence”"),
             HL7Table.Entry(code: "A23", description: "ADT/ACK - Delete a patient record"),
             HL7Table.Entry(code: "A24", description: "ADT/ACK - Link patient information"),
             HL7Table.Entry(code: "A25", description: "ADT/ACK - Cancel pending discharge"),
@@ -779,7 +779,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "S21", description: "SIU/ACK - Notification of discontinuation of service/resource on appointment"),
             HL7Table.Entry(code: "S22", description: "SIU/ACK - Notification of deletion of service/resource on appointment"),
             HL7Table.Entry(code: "S23", description: "SIU/ACK - Notification of blocked schedule time slot(s)"),
-            HL7Table.Entry(code: "S24", description: "SIU/ACK - Notification of opened (â œunblockedâ ) schedule time slot(s)"),
+            HL7Table.Entry(code: "S24", description: "SIU/ACK - Notification of opened (“unblocked” ) schedule time slot(s)"),
             HL7Table.Entry(code: "S25", description: "SQM/SQR - Schedule query message and response"),
             HL7Table.Entry(code: "S26", description: "SIU/ACK Notification that patient did not show up for schedule appointment"),
             HL7Table.Entry(code: "T01", description: "MDM/ACK - Original document notification"),
@@ -839,9 +839,8 @@ extension HL7TableRegistry {
         number: "0005",
         name: "Race",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 3"),
             HL7Table.Entry(code: "1002-5", description: "American Indian or Alaska Native"),
             HL7Table.Entry(code: "2028-9", description: "Asian"),
             HL7Table.Entry(code: "2054-5", description: "Black or African American"),
@@ -2078,7 +2077,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "P", description: "Preliminary results"),
             HL7Table.Entry(code: "R", description: "Results entered -- not verified"),
             HL7Table.Entry(code: "S", description: "Partial results"),
-            HL7Table.Entry(code: "U", description: "Results status change to final without retransmitting results already sent as â ˜preliminary.' E.g., radiology changes status from preliminary to final"),
+            HL7Table.Entry(code: "U", description: "Results status change to final without retransmitting results already sent as ” ˜preliminary.' E.g., radiology changes status from preliminary to final"),
             HL7Table.Entry(code: "W", description: "Post original as wrong, e.g., transmitted for wrong patient"),
             HL7Table.Entry(code: "X", description: "Results cannot be obtained for this observation"),
         ] as [HL7Table.Entry]
@@ -2149,9 +2148,8 @@ extension HL7TableRegistry {
         number: "0093",
         name: "Release Information",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "user-defined codes"),
             HL7Table.Entry(code: "N", description: "No"),
             HL7Table.Entry(code: "Y", description: "Yes"),
         ] as [HL7Table.Entry]
@@ -3354,7 +3352,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3375,7 +3373,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3429,9 +3427,8 @@ extension HL7TableRegistry {
         number: "0189",
         name: "Ethnic Group",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 3"),
             HL7Table.Entry(code: "H", description: "Hispanic or Latino"),
             HL7Table.Entry(code: "N", description: "Not Hispanic or Latino"),
             HL7Table.Entry(code: "U", description: "Unknown"),
@@ -3505,7 +3502,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "I", description: "Licensing Name"),
             HL7Table.Entry(code: "L", description: "Legal Name"),
             HL7Table.Entry(code: "M", description: "Maiden Name"),
-            HL7Table.Entry(code: "N", description: "Nickname /â Call meâ Name/Street Name"),
+            HL7Table.Entry(code: "N", description: "Nickname /” Call me” Name/Street Name"),
             HL7Table.Entry(code: "P", description: "Name of Partner/Spouse (retained for backward compatibility only)"),
             HL7Table.Entry(code: "R", description: "Registered Name (animals only)"),
             HL7Table.Entry(code: "S", description: "Coded Pseudo-Name to ensure anonymity"),
@@ -3692,7 +3689,6 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "A", description: "Archive"),
             HL7Table.Entry(code: "I", description: "Initial load"),
-            HL7Table.Entry(code: "Not present", description: "Not present (the default, meaning current processing)"),
             HL7Table.Entry(code: "R", description: "Restore from archive"),
             HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
         ] as [HL7Table.Entry]
@@ -5647,7 +5643,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "D", description: "Cibus Diurnus (lunch)"),
             HL7Table.Entry(code: "I", description: "Inter"),
             HL7Table.Entry(code: "M", description: "Cibus Matutinus (breakfast)"),
-            HL7Table.Entry(code: "Meal RelatedTimings", description: "<timing>C (â œcumâ )<meal>"),
+            HL7Table.Entry(code: "Meal Related Timings", description: "<timing>C (“cum” )<meal>"),
             HL7Table.Entry(code: "Once", description: "one time only."),
             HL7Table.Entry(code: "P", description: "Post (after)"),
             HL7Table.Entry(code: "PRN", description: "given as needed"),
@@ -5668,7 +5664,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "TID", description: "three times a day at institution-specified times"),
             HL7Table.Entry(code: "U <spec>", description: "for future use, where <spec> is an interval specification as defined by the UNIX cron specification."),
             HL7Table.Entry(code: "V", description: "Cibus Vespertinus (dinner)"),
-            HL7Table.Entry(code: "xID", description: "â œXâ times per day at institution-specified times, where X is a numeral 5 or greater."),
+            HL7Table.Entry(code: "xID", description: "“X” times per day at institution-specified times, where X is a numeral 5 or greater."),
         ] as [HL7Table.Entry]
     )
 
@@ -6104,7 +6100,7 @@ extension HL7TableRegistry {
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "<null>", description: "This is the default, indicating that there is no character set switching occurring in this message."),
-            HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.5, section 2.7.2, â œEscape sequences supporting multiple character setsâ and section 2.A.46, \"XPN - extended person name\"."),
+            HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.5, section 2.7.2, “Escape sequences supporting multiple character sets” and section 2.A.46, \"XPN - extended person name\"."),
             HL7Table.Entry(code: "ISO 2022-1994", description: "This standard is titled \"Information Technology - Character Code Structure and Extension Technique\". ."),
         ] as [HL7Table.Entry]
     )
@@ -6145,7 +6141,7 @@ extension HL7TableRegistry {
         number: "0359",
         name: "Diagnosis Priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "Not included in diagnosis ranking"),
             HL7Table.Entry(code: "1", description: "The primary diagnosis"),
@@ -7057,7 +7053,7 @@ extension HL7TableRegistry {
         number: "0418",
         name: "Procedure Priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "the admitting procedure"),
             HL7Table.Entry(code: "1", description: "the primary procedure"),
@@ -7266,7 +7262,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "C", description: "Confused"),
             HL7Table.Entry(code: "D", description: "Deaf"),
             HL7Table.Entry(code: "I", description: "On IV"),
-            HL7Table.Entry(code: "N", description: "â œNo-codeâ (i.e. Do not resuscitate)"),
+            HL7Table.Entry(code: "N", description: "“No-code” (i.e. Do not resuscitate)"),
             HL7Table.Entry(code: "O", description: "Other"),
             HL7Table.Entry(code: "P", description: "Paraplegic"),
             HL7Table.Entry(code: "U", description: "Unknown"),
@@ -7598,7 +7594,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7608,7 +7604,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8655,7 +8651,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8866,7 +8862,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 

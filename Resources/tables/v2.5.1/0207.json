@@ -15,10 +15,6 @@
       "description": "Initial load"
     },
     {
-      "code": "Not present",
-      "description": "Not present (the default, meaning current processing)"
-    },
-    {
       "code": "R",
       "description": "Restore from archive"
     },

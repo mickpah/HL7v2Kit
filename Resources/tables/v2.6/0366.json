@@ -7,10 +7,6 @@
   "citation": "HL7 v2.6 Appendix A, HL7 Table 0366 - Local/remote control state",
   "entries": [
     {
-      "code": "...",
-      "description": "(null) No state change"
-    },
-    {
       "code": "L",
       "description": "Local"
     },

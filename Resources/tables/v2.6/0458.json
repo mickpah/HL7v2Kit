@@ -3,13 +3,9 @@
   "version": "2.6",
   "name": "OCE Edit Code",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0458 - OCE Edit Code",
   "entries": [
-    {
-      "code": "...",
-      "description": ""
-    },
     {
       "code": "1",
       "description": "Invalid diagnosis code"

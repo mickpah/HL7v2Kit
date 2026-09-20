@@ -3,12 +3,7 @@
   "version": "2.6",
   "name": "Occurrence span",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0351 - Occurrence span",
-  "entries": [
-    {
-      "code": "...",
-      "description": "use NUBC codes"
-    }
-  ]
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Appendix A Table 0351: The only printed row is '...' with the text 'use NUBC codes': the values are an external NUBC code set, so the printed table is not a closed set.",
+  "entries": []
 }

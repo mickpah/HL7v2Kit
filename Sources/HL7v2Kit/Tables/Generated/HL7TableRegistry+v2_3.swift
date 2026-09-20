@@ -2808,10 +2808,9 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "a", description: "Archive"),
-            HL7Table.Entry(code: "r", description: "Restore from Archive"),
-            HL7Table.Entry(code: "i", description: "Initial Load"),
-            HL7Table.Entry(code: "not present", description: "Not Present (the default, meaning current processing)"),
+            HL7Table.Entry(code: "A", description: "Archive"),
+            HL7Table.Entry(code: "R", description: "Restore from Archive"),
+            HL7Table.Entry(code: "I", description: "Initial Load"),
         ] as [HL7Table.Entry]
     )
 

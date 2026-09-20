@@ -3,13 +3,9 @@
   "version": "2.6",
   "name": "Employment Status",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0066 - Employment Status",
   "entries": [
-    {
-      "code": "...",
-      "description": "see chapter 6"
-    },
     {
       "code": "1",
       "description": "Full time employed"

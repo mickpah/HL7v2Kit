@@ -87,12 +87,8 @@
       "description": "CDC Analyte Codes"
     },
     {
-      "code": "CDCEDACUITY CDC Emergency",
+      "code": "CDCEDACUITY",
       "description": "Patient Acuity indicates level of care required (Acute, Public Health Code"
-    },
-    {
-      "code": "Department Acuity",
-      "description": "Chronic, Critical)"
     },
     {
       "code": "CDCM",
@@ -115,7 +111,7 @@
       "description": "CDC Surveillance"
     },
     {
-      "code": "CE (obsolete) CEN ECG diagnostic",
+      "code": "CE",
       "description": "CEN ECG diagnostic codes – (Obsolete, retained for Specific Non-Drug"
     },
     {
@@ -391,10 +387,6 @@
       "description": "ISO Defined Codes"
     },
     {
-      "code": "(deprecated)",
-      "description": "where nnnn is the ISO table number"
-    },
-    {
       "code": "ISO",
       "description": "ISO 2955.83 (units of measure) with HL7 extensions"
     },
@@ -487,16 +479,8 @@
       "description": "Industry (NAICS)"
     },
     {
-      "code": "NCPDPnnnnsss NCPDP code list for",
+      "code": "NCPDPnnnnsss",
       "description": "NCPDP maintain code list associated with the"
-    },
-    {
-      "code": "data element nnnn [as",
-      "description": "specified Data Element (nnnn) and Segment (sss)."
-    },
-    {
-      "code": "used in segment sss]",
-      "description": "The Segment portion is optional if there is no specialization of the Data Element codes between segments. Examples: NCPDP1131RES = code set defined for NCPDP data element 1131 as used in the RES segment (Code List Qualifier – Response Code) NCPDP1131STS = code set defined for NCPDP data element 1131 as used in the STS segment (Code List Qualifier – Reject Code) NCPDP9701 = code set defined for NCPDP data element 9701 (Individual Relationship, Coded). No specialization to a segment exists for this data element. National Council for Prescription Drug Programs, 924Ø ast Raintree Drive, Scottsdale, AZ 8526Ø. Phone: (48Ø) 477-1ØØØ Fax: (48Ø) 767-1Ø42 e-mail: ncpdp@ncpdp.org www.ncpdp.org"
     },
     {
       "code": "NDA",
@@ -599,16 +583,8 @@
       "description": "OPS Germany v2011"
     },
     {
-      "code": "PHINQUESTION CDC Public Health",
+      "code": "PHINQUESTION",
       "description": "CDC Public Health Questions used in HL7 Message Public Health Code"
-    },
-    {
-      "code": "Information Network",
-      "description": "as observation identifiers. These question or"
-    },
-    {
-      "code": "(PHIN) Question",
-      "description": "observation identifiers are used in CDC's message implementation guides and will be passed in HL7 OBX-3 or Observation.Code"
     },
     {
       "code": "PLR",

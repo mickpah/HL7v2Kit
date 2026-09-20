@@ -42,6 +42,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (withdrawn, blank cell). All 18 ID/IS fields left unbound were read against
   the printed rows: the spec prints a blank TBL# for each.
 
+### Fixed — A4 close-out: extracted code tables cleared of non-codes (2026-09-20)
+
+- **Ellipsis rows are structural, not codes.** 171 tables print a bare `...`
+  row ("no suggested values", a list that continues, or a null row). The
+  extractor now drops it, and fail-safe (req #4) leaves an HL7 table OPEN
+  when other rows remain, unless `overrides.json` says otherwise. Verified
+  per table: v2.6 0153 / 0350 / 0351 (external NUBC sets) and 0359 / 0418 on
+  v2.4 / v2.5.1 / v2.6 (open-ended rank, "2 ...") are open; v2.6 0365 / 0366 /
+  0367, whose `...` is the "(null) no change" row, stay closed by explicit
+  override.
+- **Rows that denote an absent field are not codes:** 0207 "Not present" on
+  all six versions (the Validator only checks populated values).
+- **v2.3 0207 misprint corrected:** Appendix A prints `a` / `r` / `i`; the
+  defining table in Chapter 2 sec 2.24.1.11 prints `A` / `R` / `I`. A closed
+  table with the lowercase forms would have rejected a valid `A`.
+- **Prose and example bleed removed:** v2.8.2 0368 (three lines of the
+  EAC^U07 example message), 0396 (four Values fused with their Description,
+  six wrapped Description lines; `CE (obsolete)` -> `CE` on v2.6 and
+  v2.8.2), 0340 `(HCPCS)`, 0335 "Meal Related Timings" split or joined
+  without its space on four versions, v2.3.1 0255 `* (star)` -> `*`.
+- **Mis-decoded quotes:** the v2.5.1 Appendix A text layer carries corrupt
+  curly quotes in nine descriptions (never a code); restored in the
+  extractor, and the audit now fails on any recurrence.
+- **Audit:** the SUSPECT shape test now also catches parentheses, three-word
+  codes and bare ellipses, with a cited `SUSPECT_ALLOW` list for genuine
+  printed codes it would otherwise flag (UCUM units such as `[lb_av]`,
+  `KS X 1001`, `99zzz or L`). `--tables` went 22 -> 0 findings; the 22 it
+  reported before understated the defects, which the wider test exposed.
+- Every override is version-scoped and cites the text lines it was read
+  against. Two regression tests added (629 tests green).
+
 ### Changed — `main` (M9-A) merged into `v3.3-open-items`, now the primary line (2026-09-20)
 
 - Both schema keys coexist: `tables` (list, any datatype) is the verified

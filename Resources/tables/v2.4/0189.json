@@ -3,13 +3,9 @@
   "version": "2.4",
   "name": "Ethnic group",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.4 Appendix A, User-defined Table 0189 - Ethnic group",
   "entries": [
-    {
-      "code": "...",
-      "description": "see chapter 3"
-    },
     {
       "code": "H",
       "description": "Hispanic or Latino"

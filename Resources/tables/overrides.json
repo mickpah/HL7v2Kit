@@ -19,6 +19,17 @@
     "0399": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0207": {
+      "dropCodes": [
+        "not present"
+      ],
+      "note": "Processing mode prints 'not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code. v2.3 Appendix A also misprints the three codes in lowercase (a / r / i); the defining table in Chapter 2 section 2.24.1.11 prints A / R / I, as does every later version. Corrected to the chapter's printing.",
+      "renameCodes": {
+        "a": "A",
+        "r": "R",
+        "i": "I"
+      }
     }
   },
   "2.3.1": {
@@ -41,6 +52,18 @@
     "0399": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0207": {
+      "dropCodes": [
+        "not present"
+      ],
+      "note": "Processing mode prints 'not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code."
+    },
+    "0255": {
+      "renameCodes": {
+        "* (star)": "*"
+      },
+      "note": "The Value column prints '* (star)': the code is the asterisk, '(star)' names it."
     }
   },
   "2.4": {
@@ -63,6 +86,26 @@
     "0399": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0399 - Country code; the values are ISO 3166 by reference, not enumerated by HL7, so the printed rows are not a closed set"
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code."
+    },
+    "0335": {
+      "renameCodes": {
+        "MealRelatedTimings": "Meal Related Timings"
+      },
+      "note": "Repeat pattern prints the row label 'Meal Related Timings' wrapped over two lines in the Value column; the extractor joined it without the space."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Appendix A Table 0359: the row '2 ...' (For ranked secondary diagnoses) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Appendix A Table 0418: the row '2 ...' (for ranked secondary procedures) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
     }
   },
   "2.5.1": {
@@ -91,6 +134,26 @@
       "dropCodes": [
         "Error location anddescri"
       ]
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code."
+    },
+    "0335": {
+      "renameCodes": {
+        "Meal RelatedTimings": "Meal Related Timings"
+      },
+      "note": "Repeat pattern prints the row label 'Meal Related Timings' wrapped over two lines in the Value column; the extractor joined it without the space."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Appendix A Table 0359: the row '2 ...' (For ranked secondary diagnoses) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Appendix A Table 0418: the row '2 ...' (for ranked secondary procedures) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
     }
   },
   "2.6": {
@@ -108,7 +171,11 @@
     },
     "0396": {
       "permitsLocalExtensions": true,
-      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set",
+      "renameCodes": {
+        "CE (obsolete)": "CE"
+      },
+      "note": "'(obsolete)' is a status annotation printed in the Value column; v2.4 and v2.5.1 print the row as plain CE."
     },
     "0399": {
       "permitsLocalExtensions": true,
@@ -136,6 +203,50 @@
         "(3) When anapplication (",
         "Whether the OBRsegments"
       ]
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code."
+    },
+    "0335": {
+      "renameCodes": {
+        "Meal RelatedTimings": "Meal Related Timings"
+      },
+      "note": "Repeat pattern prints the row label 'Meal Related Timings' wrapped over two lines in the Value column; the extractor joined it without the space."
+    },
+    "0153": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A Table 0153: The only printed row is '...' with the text 'See NUBC codes': the values are an external NUBC code set, so the printed table is not a closed set."
+    },
+    "0350": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A Table 0350: The only printed row is '...' with the text 'Use NUBC codes': the values are an external NUBC code set, so the printed table is not a closed set."
+    },
+    "0351": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A Table 0351: The only printed row is '...' with the text 'use NUBC codes': the values are an external NUBC code set, so the printed table is not a closed set."
+    },
+    "0365": {
+      "note": "v2.6 Appendix A prints '...' for the row '(null) No state/level change'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code. The remaining printed rows ARE the closed set, so the table is explicitly kept closed.",
+      "permitsLocalExtensions": false
+    },
+    "0366": {
+      "note": "v2.6 Appendix A prints '...' for the row '(null) No state/level change'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code. The remaining printed rows ARE the closed set, so the table is explicitly kept closed.",
+      "permitsLocalExtensions": false
+    },
+    "0367": {
+      "note": "v2.6 Appendix A prints '...' for the row '(null) No state/level change'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code. The remaining printed rows ARE the closed set, so the table is explicitly kept closed.",
+      "permitsLocalExtensions": false
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A Table 0359: prints 0, 1, 2 and a bare '...' row; with v2.4/v2.5.1's '2 ...' this is an open-ended rank, so the printed rows are not a closed set."
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Appendix A Table 0418: prints 0, 1, 2 and a bare '...' row; with v2.4/v2.5.1's '2 ...' this is an open-ended rank, so the printed rows are not a closed set."
     }
   },
   "2.8.2": {
@@ -153,7 +264,22 @@
     },
     "0396": {
       "permitsLocalExtensions": true,
-      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set"
+      "citation": "HL7 Table 0396 - Coding system; the table itself prints the local forms 99zzz and L, so the printed rows are not a closed set",
+      "renameCodes": {
+        "CDCEDACUITY CDC Emergency": "CDCEDACUITY",
+        "CE (obsolete) CEN ECG diagnostic": "CE",
+        "NCPDPnnnnsss NCPDP code list for": "NCPDPnnnnsss",
+        "PHINQUESTION CDC Public Health": "PHINQUESTION"
+      },
+      "dropCodes": [
+        "(PHIN) Question",
+        "(deprecated)",
+        "Department Acuity",
+        "Information Network",
+        "data element nnnn [as",
+        "used in segment sss]"
+      ],
+      "note": "Four Values wider than their column ran into the Description (text lines 10652, 10701, 11123, 11254) and their wrapped Description lines parsed as rows. 'CE (obsolete)' and '(deprecated)' under ISOnnnn (line 10978) are status annotations printed in the Value column, not part of the code; v2.4 and v2.5.1 print the same row as plain CE."
     },
     "0399": {
       "permitsLocalExtensions": true,
@@ -165,6 +291,35 @@
         "1",
         "http://www.unicode.org/unicode/consortium/consort.html"
       ]
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The printed row denotes an ABSENT field, not a literal value: the Validator only checks populated values, so the row is not a code."
+    },
+    "0335": {
+      "renameCodes": {
+        "Meal Related": "Meal Related Timings"
+      },
+      "dropCodes": [
+        "Timings"
+      ],
+      "note": "Chapter 2C wraps the row label 'Meal Related / Timings' over two lines (text lines 8789-8790); the second line was emitted as its own row."
+    },
+    "0368": {
+      "dropCodes": [
+        "EQU|…",
+        "MSH|…|…|…|…|…|…|…|EAC^U07|…",
+        "[SPM]"
+      ],
+      "note": "An explanatory paragraph and an example EAC^U07 message follow the table with no separator (text lines 9791-9814); three of its lines parsed as rows. The table ends at AT."
+    },
+    "0340": {
+      "dropCodes": [
+        "(HCPCS)"
+      ],
+      "note": "'(HCPCS)' is the wrapped tail of HPC's Description 'CMS (formerly HCFA) Procedure Codes (HCPCS)'."
     }
   }
 }

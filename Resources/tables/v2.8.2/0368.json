@@ -89,18 +89,6 @@
     {
       "code": "AT",
       "description": "Aliquot To container"
-    },
-    {
-      "code": "MSH|…|…|…|…|…|…|…|EAC^U07|…",
-      "description": ""
-    },
-    {
-      "code": "EQU|…",
-      "description": ""
-    },
-    {
-      "code": "[SPM]",
-      "description": ""
     }
   ]
 }

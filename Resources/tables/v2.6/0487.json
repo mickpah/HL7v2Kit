@@ -3,13 +3,9 @@
   "version": "2.6",
   "name": "Specimen Type",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0487 - Specimen Type",
   "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values"
-    },
     {
       "code": "ABS",
       "description": "Abscess"

@@ -3,13 +3,9 @@
   "version": "2.4",
   "name": "Revenue code",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.4 Appendix A, User-defined Table 0456 - Revenue code",
   "entries": [
-    {
-      "code": "...",
-      "description": ""
-    },
     {
       "code": "260",
       "description": "IV Therapy"

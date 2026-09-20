@@ -5,10 +5,5 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.6 Appendix A, User-defined Table 0342 - Military Recipient",
-  "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values defined"
-    }
-  ]
+  "entries": []
 }

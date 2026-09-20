@@ -5,10 +5,5 @@
   "kind": "HL7",
   "permitsLocalExtensions": true,
   "citation": "HL7 v2.6 Appendix A, HL7 Table 0340 - Procedure Code Modifier",
-  "entries": [
-    {
-      "code": "...",
-      "description": "No suggested values defined"
-    }
-  ]
+  "entries": []
 }

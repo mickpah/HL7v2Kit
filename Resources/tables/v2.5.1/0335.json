@@ -31,8 +31,8 @@
       "description": "Cibus Matutinus (breakfast)"
     },
     {
-      "code": "Meal RelatedTimings",
-      "description": "<timing>C (â œcumâ )<meal>"
+      "code": "Meal Related Timings",
+      "description": "<timing>C (“cum” )<meal>"
     },
     {
       "code": "Once",
@@ -116,7 +116,7 @@
     },
     {
       "code": "xID",
-      "description": "â œXâ times per day at institution-specified times, where X is a numeral 5 or greater."
+      "description": "“X” times per day at institution-specified times, where X is a numeral 5 or greater."
     }
   ]
 }

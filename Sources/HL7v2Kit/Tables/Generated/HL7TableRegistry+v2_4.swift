@@ -1883,9 +1883,8 @@ extension HL7TableRegistry {
         number: "0093",
         name: "Release information",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "user-defined codes"),
             HL7Table.Entry(code: "N", description: "No"),
             HL7Table.Entry(code: "Y", description: "Yes"),
         ] as [HL7Table.Entry]
@@ -3083,7 +3082,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3104,7 +3103,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3158,9 +3157,8 @@ extension HL7TableRegistry {
         number: "0189",
         name: "Ethnic group",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 3"),
             HL7Table.Entry(code: "H", description: "Hispanic or Latino"),
             HL7Table.Entry(code: "N", description: "Not Hispanic or Latino"),
             HL7Table.Entry(code: "U", description: "Unknown"),
@@ -3380,7 +3378,6 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "A", description: "Archive"),
             HL7Table.Entry(code: "I", description: "Initial load"),
-            HL7Table.Entry(code: "Not present", description: "Not present (the default, meaning current processing)"),
             HL7Table.Entry(code: "R", description: "Restore from archive"),
             HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
         ] as [HL7Table.Entry]
@@ -5381,7 +5378,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "D", description: "Cibus Diurnus (lunch)"),
             HL7Table.Entry(code: "I", description: "Inter (e.g., between this meal and the next, between dinner and sleep"),
             HL7Table.Entry(code: "M", description: "Cibus Matutinus (breakfast)"),
-            HL7Table.Entry(code: "MealRelatedTimings", description: "<timing>C (\"cum\")<meal>"),
+            HL7Table.Entry(code: "Meal Related Timings", description: "<timing>C (\"cum\")<meal>"),
             HL7Table.Entry(code: "Once", description: "one time only. This is also the default when this component is null."),
             HL7Table.Entry(code: "P", description: "Post (after)"),
             HL7Table.Entry(code: "PRN", description: "given as needed"),
@@ -5921,7 +5918,7 @@ extension HL7TableRegistry {
         number: "0359",
         name: "Diagnosis priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "Not included in diagnosis ranking"),
             HL7Table.Entry(code: "1", description: "The primary diagnosis"),
@@ -7025,7 +7022,7 @@ extension HL7TableRegistry {
         number: "0418",
         name: "Procedure priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "0", description: "the admitting procedure"),
             HL7Table.Entry(code: "1", description: "the primary procedure"),
@@ -7535,9 +7532,8 @@ extension HL7TableRegistry {
         number: "0455",
         name: "Type of bill code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "131", description: "Hospital - Outpatient - Admit thru Discharge Claim"),
             HL7Table.Entry(code: "141", description: "Hospital - Other - Admit thru Discharge Claim"),
         ] as [HL7Table.Entry]
@@ -7547,9 +7543,8 @@ extension HL7TableRegistry {
         number: "0456",
         name: "Revenue code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "260", description: "IV Therapy"),
             HL7Table.Entry(code: "280", description: "Oncology"),
             HL7Table.Entry(code: "301", description: "Lab/Chemistry"),
@@ -7577,9 +7572,8 @@ extension HL7TableRegistry {
         number: "0458",
         name: "OCE edit code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "1", description: "Invalid diagnosis code"),
             HL7Table.Entry(code: "10", description: "Non-covered service submitted for verification of denial (condition code 21 from header information on claim)"),
             HL7Table.Entry(code: "11", description: "Non-covered service submitted for FI review (condition code 20 from header information on claim)"),
@@ -7706,9 +7700,8 @@ extension HL7TableRegistry {
         number: "0466",
         name: "Ambulatory payment classification code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "031", description: "Dental procedures"),
             HL7Table.Entry(code: "163", description: "Excision/biopsy"),
             HL7Table.Entry(code: "181", description: "Level 1 skin repair."),

@@ -3,13 +3,9 @@
   "version": "2.5.1",
   "name": "Release Information",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.5.1 Appendix A, User-defined Table 0093 - Release Information",
   "entries": [
-    {
-      "code": "...",
-      "description": "user-defined codes"
-    },
     {
       "code": "N",
       "description": "No"

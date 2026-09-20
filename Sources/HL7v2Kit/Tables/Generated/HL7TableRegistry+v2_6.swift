@@ -922,9 +922,8 @@ extension HL7TableRegistry {
         number: "0005",
         name: "Race",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 3"),
             HL7Table.Entry(code: "1002-5", description: "American Indian or Alaska Native"),
             HL7Table.Entry(code: "2028-9", description: "Asian"),
             HL7Table.Entry(code: "2054-5", description: "Black or African American"),
@@ -1090,7 +1089,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1114,7 +1113,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1124,7 +1123,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1134,7 +1133,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1144,7 +1143,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1172,7 +1171,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1196,7 +1195,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1224,7 +1223,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1234,7 +1233,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1244,7 +1243,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1254,7 +1253,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1264,7 +1263,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1320,7 +1319,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1330,7 +1329,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1340,7 +1339,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1362,7 +1361,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1372,7 +1371,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1382,7 +1381,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1461,7 +1460,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1485,9 +1484,8 @@ extension HL7TableRegistry {
         number: "0066",
         name: "Employment Status",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 6"),
             HL7Table.Entry(code: "1", description: "Full time employed"),
             HL7Table.Entry(code: "2", description: "Part time employed"),
             HL7Table.Entry(code: "3", description: "Unemployed"),
@@ -1508,7 +1506,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1666,7 +1664,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1676,7 +1674,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1926,7 +1924,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1957,7 +1955,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1967,7 +1965,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -1977,7 +1975,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2006,9 +2004,8 @@ extension HL7TableRegistry {
         number: "0093",
         name: "Release Information",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "user-defined codes"),
             HL7Table.Entry(code: "N", description: "No"),
             HL7Table.Entry(code: "Y", description: "Yes"),
         ] as [HL7Table.Entry]
@@ -2032,7 +2029,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2146,7 +2143,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2156,7 +2153,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2192,7 +2189,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2202,7 +2199,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2212,7 +2209,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2237,7 +2234,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2247,7 +2244,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2459,7 +2456,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2499,7 +2496,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2546,7 +2543,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2600,7 +2597,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2705,7 +2702,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2715,7 +2712,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -2723,9 +2720,9 @@ extension HL7TableRegistry {
         number: "0153",
         name: "Value code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "See NUBC codes"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3060,7 +3057,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3070,7 +3067,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3195,7 +3192,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3216,7 +3213,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3241,7 +3238,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3262,7 +3259,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3270,9 +3267,8 @@ extension HL7TableRegistry {
         number: "0189",
         name: "Ethnic Group",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "see chapter 3"),
             HL7Table.Entry(code: "H", description: "Hispanic or Latino"),
             HL7Table.Entry(code: "N", description: "Not Hispanic or Latino"),
             HL7Table.Entry(code: "U", description: "Unknown"),
@@ -3556,7 +3552,6 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "A", description: "Archive"),
             HL7Table.Entry(code: "I", description: "Initial load"),
-            HL7Table.Entry(code: "Not present", description: "Not present (the default, meaning current processing)"),
             HL7Table.Entry(code: "R", description: "Restore from archive"),
             HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
         ] as [HL7Table.Entry]
@@ -3640,7 +3635,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3712,7 +3707,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3722,7 +3717,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3747,7 +3742,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -3925,7 +3920,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4089,7 +4084,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4099,7 +4094,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4109,7 +4104,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4153,7 +4148,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4550,7 +4545,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4836,7 +4831,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4875,7 +4870,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4885,7 +4880,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -4895,7 +4890,6 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "Source RFC 2046"),
             HL7Table.Entry(code: "x-hl7-cda-level-one", description: "HL7 Clinical Document Architecture Level One document"),
         ] as [HL7Table.Entry]
     )
@@ -5039,7 +5033,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5067,7 +5061,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5077,7 +5071,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5087,7 +5081,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5120,7 +5114,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5150,7 +5144,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5160,7 +5154,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5170,7 +5164,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5196,7 +5190,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5206,7 +5200,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5216,7 +5210,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined."),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5252,7 +5246,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5262,7 +5256,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5316,7 +5310,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5326,7 +5320,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5410,7 +5404,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5420,7 +5414,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5480,7 +5474,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5509,7 +5503,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "D", description: "Cibus Diurnus (lunch)"),
             HL7Table.Entry(code: "I", description: "Inter"),
             HL7Table.Entry(code: "M", description: "Cibus Matutinus (breakfast)"),
-            HL7Table.Entry(code: "Meal RelatedTimings", description: "<timing>C (\"cum\")<meal>"),
+            HL7Table.Entry(code: "Meal Related Timings", description: "<timing>C (\"cum\")<meal>"),
             HL7Table.Entry(code: "Once", description: "one time only."),
             HL7Table.Entry(code: "P", description: "Post (after)"),
             HL7Table.Entry(code: "PRN", description: "given as needed"),
@@ -5598,7 +5592,7 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5608,7 +5602,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5618,7 +5612,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5628,7 +5622,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5666,7 +5660,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5676,7 +5670,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5684,9 +5678,8 @@ extension HL7TableRegistry {
         number: "0347",
         name: "State/province",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
             HL7Table.Entry(code: "AB", description: "Alberta (US and Canada)"),
             HL7Table.Entry(code: "MI", description: "Michigan (US)"),
         ] as [HL7Table.Entry]
@@ -5698,7 +5691,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5708,7 +5701,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5716,9 +5709,9 @@ extension HL7TableRegistry {
         number: "0350",
         name: "Occurrence code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "Use NUBC codes"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -5726,9 +5719,9 @@ extension HL7TableRegistry {
         number: "0351",
         name: "Occurrence span",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "use NUBC codes"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6017,7 +6010,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6025,9 +6018,8 @@ extension HL7TableRegistry {
         number: "0359",
         name: "Diagnosis Priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "0", description: "Not included in diagnosis ranking"),
             HL7Table.Entry(code: "1", description: "The primary diagnosis"),
             HL7Table.Entry(code: "2", description: "For ranked secondary diagnoses"),
@@ -6107,7 +6099,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6117,7 +6109,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6127,7 +6119,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6154,7 +6146,6 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "(null) No state change"),
             HL7Table.Entry(code: "CL", description: "Clearing"),
             HL7Table.Entry(code: "CO", description: "Configuring"),
             HL7Table.Entry(code: "ES", description: "E-stopped"),
@@ -6173,7 +6164,6 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "(null) No state change"),
             HL7Table.Entry(code: "L", description: "Local"),
             HL7Table.Entry(code: "R", description: "Remote"),
         ] as [HL7Table.Entry]
@@ -6185,7 +6175,6 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "(null) No level change"),
             HL7Table.Entry(code: "C", description: "Critical"),
             HL7Table.Entry(code: "N", description: "Normal"),
             HL7Table.Entry(code: "S", description: "Serious"),
@@ -6422,7 +6411,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6432,7 +6421,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6442,7 +6431,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6452,7 +6441,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6462,7 +6451,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6513,7 +6502,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested value defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6523,7 +6512,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested value defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6776,7 +6765,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "CDCA", description: "CDC Analyte Codes"),
             HL7Table.Entry(code: "CDCM", description: "CDC Methods/Instruments Codes"),
             HL7Table.Entry(code: "CDS", description: "CDC Surveillance"),
-            HL7Table.Entry(code: "CE (obsolete)", description: "CEN ECG diagnostic codes"),
+            HL7Table.Entry(code: "CE", description: "CEN ECG diagnostic codes"),
             HL7Table.Entry(code: "CLP", description: "CLIP"),
             HL7Table.Entry(code: "CPTM", description: "CPT Modifier Code"),
             HL7Table.Entry(code: "CST", description: "COSTART"),
@@ -6915,7 +6904,7 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "use 3-character (alphabetic) form of ISO 3166"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -6978,7 +6967,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7016,7 +7005,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values<p>Individual implementations may use vocabularies such as the SNOMED DICOM Micro-glossary (SDM) or private (local) entries."),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7026,7 +7015,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7036,7 +7025,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7046,7 +7035,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7101,9 +7090,8 @@ extension HL7TableRegistry {
         number: "0418",
         name: "Procedure Priority",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "0", description: "the admitting procedure"),
             HL7Table.Entry(code: "1", description: "the primary procedure"),
             HL7Table.Entry(code: "2", description: "for ranked secondary procedures"),
@@ -7567,7 +7555,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7577,7 +7565,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7587,7 +7575,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7648,7 +7636,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7658,7 +7646,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7680,9 +7668,8 @@ extension HL7TableRegistry {
         number: "0458",
         name: "OCE Edit Code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "1", description: "Invalid diagnosis code"),
             HL7Table.Entry(code: "10", description: "Non-covered service submitted for verification of denial (condition code 21 from header information on claim)"),
             HL7Table.Entry(code: "11", description: "Non-covered service submitted for FI review (condition code 20 from header information on claim)"),
@@ -7759,7 +7746,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7769,7 +7756,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7779,7 +7766,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7789,7 +7776,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7809,9 +7796,8 @@ extension HL7TableRegistry {
         number: "0466",
         name: "Ambulatory Payment Classification Code",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: ""),
             HL7Table.Entry(code: "031", description: "Dental procedures"),
             HL7Table.Entry(code: "163", description: "Excision/biopsy"),
             HL7Table.Entry(code: "181", description: "Level 1 skin repair."),
@@ -7884,7 +7870,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7947,7 +7933,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -7985,7 +7971,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8075,9 +8061,8 @@ extension HL7TableRegistry {
         number: "0487",
         name: "Specimen Type",
         kind: .userDefined,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
             HL7Table.Entry(code: "ABS", description: "Abscess"),
             HL7Table.Entry(code: "ACNE", description: "Tissue, Acne"),
             HL7Table.Entry(code: "ACNFLD", description: "Fluid, Acne"),
@@ -8832,7 +8817,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8877,7 +8862,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8929,7 +8914,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8977,7 +8962,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -8999,7 +8984,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9032,7 +9017,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9042,7 +9027,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9106,7 +9091,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9134,7 +9119,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values."),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9185,7 +9170,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9208,7 +9193,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "no suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9230,7 +9215,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9240,7 +9225,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9250,7 +9235,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9260,7 +9245,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9298,7 +9283,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -9759,7 +9744,7 @@ extension HL7TableRegistry {
         kind: .hl7,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values."),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10423,7 +10408,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10492,7 +10477,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10502,7 +10487,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10561,7 +10546,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10601,7 +10586,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 
@@ -10611,7 +10596,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "...", description: "No suggested values defined"),
+
         ] as [HL7Table.Entry]
     )
 

@@ -94,4 +94,37 @@ struct HL7TableRegistryTests {
         #expect(t0125.entries.count == 25)
         #expect(!t0125.contains("CWE"), "CWE is a v2.6 addition")
     }
+
+    @Test("A printed \"...\" row is never a code, and leaves an HL7 table open unless the row means null")
+    func ellipsisRows() throws {
+        // v2.6 0418 Procedure priority prints 0, 1, 2 and "...": ranks continue, so not closed.
+        let ranks = try #require(HL7TableRegistry.table("0418", version: .v2_6))
+        #expect(!ranks.contains("..."))
+        #expect(ranks.contains("2"))
+        #expect(!ranks.isClosed, "an open-ended rank must never drive valueNotInTable (req #4)")
+        // v2.6 0365 Equipment state prints "..." for "(null) No state change": the rest IS the set.
+        let state = try #require(HL7TableRegistry.table("0365", version: .v2_6))
+        #expect(!state.contains("..."))
+        #expect(state.isClosed)
+        // v2.6 0153 prints only "... See NUBC codes": external, empty, never closed.
+        let nubc = try #require(HL7TableRegistry.table("0153", version: .v2_6))
+        #expect(nubc.codes.isEmpty && !nubc.isClosed)
+    }
+
+    @Test("Rows that denote an absent field, and prose bled into the Value column, are not codes")
+    func absenceAndBleedRows() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            let mode = try #require(HL7TableRegistry.table("0207", version: version))
+            #expect(mode.codes.allSatisfy { $0.lowercased() != "not present" }, "0207 on \(version)")
+            // v2.3 has no T; its Appendix A misprints a / r / i, corrected to Chapter 2's A / R / I.
+            #expect(mode.contains("A") && mode.contains("R") && mode.contains("I"), "0207 on \(version)")
+        }
+        let commands = try #require(HL7TableRegistry.table("0368", version: .v2_8_2))
+        #expect(commands.codes.last == "AT", "the example EAC^U07 message after the table is not part of it")
+        let systems = try #require(HL7TableRegistry.table("0396", version: .v2_8_2))
+        for code in ["CDCEDACUITY", "CE", "NCPDPnnnnsss", "PHINQUESTION"] { #expect(systems.contains(code)) }
+        #expect(systems.codes.allSatisfy { !$0.contains("(") && !$0.contains("[") })
+        // UCUM units are printed in square brackets and are genuine codes.
+        #expect(try #require(HL7TableRegistry.table("0567", version: .v2_8_2)).contains("[lb_av]"))
+    }
 }

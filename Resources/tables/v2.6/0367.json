@@ -7,10 +7,6 @@
   "citation": "HL7 v2.6 Appendix A, HL7 Table 0367 - Alert level",
   "entries": [
     {
-      "code": "...",
-      "description": "(null) No level change"
-    },
-    {
       "code": "C",
       "description": "Critical"
     },

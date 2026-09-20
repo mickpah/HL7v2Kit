@@ -21,10 +21,6 @@
     {
       "code": "T",
       "description": "Current processing, transmitted at intervals (scheduled or on demand)"
-    },
-    {
-      "code": "Not present",
-      "description": "Not present (the default, meaning current processing)"
     }
   ]
 }

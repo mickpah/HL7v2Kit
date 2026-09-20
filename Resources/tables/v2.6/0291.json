@@ -7,10 +7,6 @@
   "citation": "HL7 v2.6 Appendix A, HL7 Table 0291 - Subtype of referenced data",
   "entries": [
     {
-      "code": "...",
-      "description": "Source RFC 2046"
-    },
-    {
       "code": "x-hl7-cda-level-one",
       "description": "HL7 Clinical Document Architecture Level One document"
     }

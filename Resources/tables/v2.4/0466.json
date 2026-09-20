@@ -3,13 +3,9 @@
   "version": "2.4",
   "name": "Ambulatory payment classification code",
   "kind": "User",
-  "permitsLocalExtensions": false,
+  "permitsLocalExtensions": true,
   "citation": "HL7 v2.4 Appendix A, User-defined Table 0466 - Ambulatory payment classification code",
   "entries": [
-    {
-      "code": "...",
-      "description": ""
-    },
     {
       "code": "031",
       "description": "Dental procedures"

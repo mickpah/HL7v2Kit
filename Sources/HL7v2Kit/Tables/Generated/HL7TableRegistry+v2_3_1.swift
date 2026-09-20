@@ -3068,7 +3068,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "R", description: "Restore from archive"),
             HL7Table.Entry(code: "I", description: "Initial load"),
             HL7Table.Entry(code: "T", description: "Current processing, transmitted at intervals (scheduled or on demand)"),
-            HL7Table.Entry(code: "not present", description: "Not present (the default, meaning current processing)"),
         ] as [HL7Table.Entry]
     )
 
@@ -3817,7 +3816,7 @@ extension HL7TableRegistry {
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "PT", description: "To identify measures at a point in time. This is a synonym for \"spot\" or \"random\" as applied to urine measurements."),
-            HL7Table.Entry(code: "* (star)", description: "Life of the \"unit.\" Used for blood products."),
+            HL7Table.Entry(code: "*", description: "Life of the \"unit.\" Used for blood products."),
             HL7Table.Entry(code: "30M", description: "30 minutes"),
             HL7Table.Entry(code: "1H", description: "1 hour"),
             HL7Table.Entry(code: "2H", description: "2 hours"),
