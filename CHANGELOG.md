@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M10-B: per-version datatype grammar (2026-09-20)
+
+- `DataTypeGrammarTable.grammar(_:version:)` returns a `DataTypeGrammar`
+  (code, name, components) whose `ComponentGrammar` entries carry index,
+  name, datatype, the printed optionality code and the bound table numbers.
+  Generated from `Resources/datatypes/` into
+  `Sources/HL7v2Kit/DataTypes/Generated/`, one constant per datatype; the
+  regenerate script and the CI drift check cover the new directory.
+- The optionality is kept as the printed code (`optionalityCode`): v2.8.2
+  XPN.1 is `RE`, which `FieldOptionality` cannot express, and mapping it
+  would misstate the spec.
+- v2.3, v2.3.1 and v2.4 return `nil`: they print no component tables.
+
 ### Added — M10-A: datatype component tables extracted (2026-09-20)
 
 - `Resources/datatypes/v{2.5.1,2.6,2.8.2}/<DT>.json` — every "HL7 Component

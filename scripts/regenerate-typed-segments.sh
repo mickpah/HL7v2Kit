@@ -2,7 +2,9 @@
 # regenerate-typed-segments.sh
 # Re-runs HL7v2KitCodegen against the schema JSONs and overwrites the generated
 # Swift sources under Sources/HL7v2Kit/Segment/Generated/, and against the code
-# tables under Resources/tables/ (output: Sources/HL7v2Kit/Tables/Generated/).
+# tables under Resources/tables/ (output: Sources/HL7v2Kit/Tables/Generated/),
+# and the datatype component tables under Resources/datatypes/ (output:
+# Sources/HL7v2Kit/DataTypes/Generated/).
 # Commit the result.
 #
 # Run from the repo root:
@@ -15,6 +17,8 @@ SCHEMAS_DIR="$REPO_ROOT/Resources/schemas"
 OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/Segment/Generated"
 TABLES_DIR="$REPO_ROOT/Resources/tables"
 TABLES_OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/Tables/Generated"
+DATATYPES_DIR="$REPO_ROOT/Resources/datatypes"
+DATATYPES_OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/DataTypes/Generated"
 
 # The Testing module ships with full Xcode, not Command Line Tools. The
 # codegen target itself only imports Foundation, but `swift run` plans the
@@ -23,4 +27,4 @@ if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
   export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fi
 
-xcrun swift run --package-path "$REPO_ROOT" HL7v2KitCodegen "$SCHEMAS_DIR" "$OUTPUT_DIR" "$TABLES_DIR" "$TABLES_OUTPUT_DIR"
+xcrun swift run --package-path "$REPO_ROOT" HL7v2KitCodegen "$SCHEMAS_DIR" "$OUTPUT_DIR" "$TABLES_DIR" "$TABLES_OUTPUT_DIR" "$DATATYPES_DIR" "$DATATYPES_OUTPUT_DIR"

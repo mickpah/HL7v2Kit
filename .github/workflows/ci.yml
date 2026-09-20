@@ -43,7 +43,7 @@ jobs:
         run: bash scripts/regenerate-typed-segments.sh
       - name: Fail if Generated/ is out of date
         run: |
-          if ! git diff --exit-code Sources/HL7v2Kit/Segment/Generated/ Sources/HL7v2Kit/Tables/Generated/; then
+          if ! git diff --exit-code Sources/HL7v2Kit/Segment/Generated/ Sources/HL7v2Kit/Tables/Generated/ Sources/HL7v2Kit/DataTypes/Generated/; then
             echo "::error::Generated typed segments or code tables are out of date. Run scripts/regenerate-typed-segments.sh and commit the result."
             exit 1
           fi
