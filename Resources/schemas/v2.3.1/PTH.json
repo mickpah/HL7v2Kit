@@ -3,7 +3,7 @@
   "version": "2.3.1",
   "description": "PTH",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "pathwayInstanceId", "name": "Pathway Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "pathwayEstablishedDateTime", "name": "Pathway Established Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },

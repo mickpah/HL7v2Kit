@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "livingDependency",
       "name": "Living Dependency",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0223",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0223"]
@@ -16,7 +16,7 @@
       "index": 2,
       "swiftName": "livingArrangement",
       "name": "Living Arrangement",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0220",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0220"]
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "studentIndicator",
       "name": "Student Indicator",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0231",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0231"]
@@ -50,7 +50,7 @@
       "index": 6,
       "swiftName": "handicap",
       "name": "Handicap",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0295",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0295"]
@@ -59,7 +59,7 @@
       "index": 7,
       "swiftName": "livingWillCode",
       "name": "Living Will",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0315",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0315"]
@@ -68,7 +68,7 @@
       "index": 8,
       "swiftName": "organDonorCode",
       "name": "Organ Donor",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0316",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0316"]
@@ -77,7 +77,7 @@
       "index": 9,
       "swiftName": "separateBill",
       "name": "Separate Bill",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -103,7 +103,7 @@
       "index": 12,
       "swiftName": "protectionIndicator",
       "name": "Protection Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]

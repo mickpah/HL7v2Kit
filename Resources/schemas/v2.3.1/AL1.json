@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "allergenTypeCode",
       "name": "Allergen Type Code",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0127",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0127"]
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "allergySeverityCode",
       "name": "Allergy Severity Code",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0128",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0128"]

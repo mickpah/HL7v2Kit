@@ -22,8 +22,8 @@
     { "index": 17, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0227"] },
     { "index": 18, "swiftName": "substanceRefusalReason", "name": "Substance Refusal Reason", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 19, "swiftName": "indication", "name": "Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 20, "swiftName": "completionStatus", "name": "Completion Status", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0322"] },
-    { "index": 21, "swiftName": "actionCodeRxa", "name": "Action Code-RXA", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0323"] },
+    { "index": 20, "swiftName": "completionStatus", "name": "Completion Status", "dataType": "ID", "table": "0322", "optionality": "O", "repeatability": "1", "tables": ["0322"] },
+    { "index": 21, "swiftName": "actionCodeRxa", "name": "Action Code-RXA", "dataType": "ID", "table": "0323", "optionality": "O", "repeatability": "1", "tables": ["0323"] },
     { "index": 22, "swiftName": "systemEntryDateTime", "name": "System Entry Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" }
   ]
 }

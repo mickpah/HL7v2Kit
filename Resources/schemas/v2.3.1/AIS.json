@@ -4,14 +4,14 @@
   "description": "AIS",
   "fields": [
     { "index": 1, "swiftName": "setIdAis", "name": "Set ID - AIS", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "universalServiceId", "name": "Universal Service ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "TS", "optionality": "C", "repeatability": "1" },
     { "index": 5, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 6, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
     { "index": 7, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "optionality": "C", "repeatability": "1", "tables": ["0279"] },
+    { "index": 9, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "table": "0279", "optionality": "C", "repeatability": "1", "tables": ["0279"] },
     { "index": 10, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "C", "repeatability": "1", "tables": ["0278"] }
   ]
 }

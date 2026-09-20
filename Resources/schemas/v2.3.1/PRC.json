@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "primaryKeyValuePrc", "name": "Primary Key Value - PRC", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0132"] },
     { "index": 2, "swiftName": "facilityIdPrc", "name": "Facility ID - PRC", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "department", "name": "Department", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0184"] },
-    { "index": 4, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
+    { "index": 4, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "table": "0004", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
     { "index": 5, "swiftName": "price", "name": "Price", "dataType": "CP", "optionality": "C", "repeatability": "*" },
     { "index": 6, "swiftName": "formula", "name": "Formula", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "minimumQuantity", "name": "Minimum Quantity", "dataType": "NM", "optionality": "O", "repeatability": "1" },
@@ -15,11 +15,11 @@
     { "index": 10, "swiftName": "maximumPrice", "name": "Maximum Price", "dataType": "MO", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "effectiveStartDate", "name": "Effective Start Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "effectiveEndDate", "name": "Effective End Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "priceOverrideFlag", "name": "Price Override Flag", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0268"] },
+    { "index": 13, "swiftName": "priceOverrideFlag", "name": "Price Override Flag", "dataType": "IS", "table": "0268", "optionality": "O", "repeatability": "1", "tables": ["0268"] },
     { "index": 14, "swiftName": "billingCategory", "name": "Billing Category", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0293"] },
-    { "index": 15, "swiftName": "chargeableFlag", "name": "Chargeable Flag", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 16, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
+    { "index": 15, "swiftName": "chargeableFlag", "name": "Chargeable Flag", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 16, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
     { "index": 17, "swiftName": "cost", "name": "Cost", "dataType": "MO", "optionality": "O", "repeatability": "1" },
-    { "index": 18, "swiftName": "chargeOnIndicator", "name": "Charge On Indicator", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0269"] }
+    { "index": 18, "swiftName": "chargeOnIndicator", "name": "Charge On Indicator", "dataType": "IS", "table": "0269", "optionality": "O", "repeatability": "1", "tables": ["0269"] }
   ]
 }

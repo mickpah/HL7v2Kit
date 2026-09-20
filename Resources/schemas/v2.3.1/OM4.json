@@ -4,7 +4,7 @@
   "description": "OM4",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number – Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "derivedSpecimen", "name": "Derived Specimen", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0170"] },
+    { "index": 2, "swiftName": "derivedSpecimen", "name": "Derived Specimen", "dataType": "ID", "table": "0170", "optionality": "O", "repeatability": "1", "tables": ["0170"] },
     { "index": 3, "swiftName": "containerDescription", "name": "Container Description", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "containerVolume", "name": "Container Volume", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "containerUnits", "name": "Container Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "normalCollectionVolume", "name": "Normal Collection Volume", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "minimumCollectionVolume", "name": "Minimum Collection Volume", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "specimenRequirements", "name": "Specimen Requirements", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "specimenPriorities", "name": "Specimen Priorities", "dataType": "ID", "optionality": "O", "repeatability": "*", "tables": ["0027"] },
+    { "index": 13, "swiftName": "specimenPriorities", "name": "Specimen Priorities", "dataType": "ID", "table": "0027", "optionality": "O", "repeatability": "*", "tables": ["0027"] },
     { "index": 14, "swiftName": "specimenRetentionTime", "name": "Specimen Retention Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" }
   ]
 }

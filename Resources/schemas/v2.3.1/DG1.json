@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "diagnosisCodingMethod",
       "name": "Diagnosis Coding Method",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0053",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0053"]
@@ -49,7 +49,7 @@
       "index": 6,
       "swiftName": "diagnosisType",
       "name": "Diagnosis Type",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0052",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0052"]
@@ -76,7 +76,7 @@
       "index": 9,
       "swiftName": "drgApprovalIndicator",
       "name": "DRG Approval Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0136"]
@@ -85,7 +85,7 @@
       "index": 10,
       "swiftName": "drgGrouperReviewCode",
       "name": "DRG Grouper Review Code",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0056",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0056"]
@@ -127,7 +127,7 @@
       "index": 15,
       "swiftName": "diagnosisPriority",
       "name": "Diagnosis Priority",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0359",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0359"]
@@ -144,7 +144,7 @@
       "index": 17,
       "swiftName": "diagnosisClassification",
       "name": "Diagnosis Classification",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0228",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0228"]
@@ -153,7 +153,7 @@
       "index": 18,
       "swiftName": "confidentialIndicator",
       "name": "Confidential Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
