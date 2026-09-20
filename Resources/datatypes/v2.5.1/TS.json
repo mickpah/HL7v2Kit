@@ -1,0 +1,22 @@
+{
+  "dataType": "TS",
+  "version": "2.5.1",
+  "name": "Time Stamp",
+  "components": [
+    {
+      "index": 1,
+      "name": "Time",
+      "dataType": "DTM",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Degree of Precision",
+      "dataType": "ID",
+      "optionality": "B",
+      "tables": [
+        "0529"
+      ]
+    }
+  ]
+}

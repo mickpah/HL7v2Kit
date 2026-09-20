@@ -1,0 +1,25 @@
+{
+  "dataType": "AUI",
+  "version": "2.6",
+  "name": "Authorization Information",
+  "components": [
+    {
+      "index": 1,
+      "name": "Authorization Number",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Source",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

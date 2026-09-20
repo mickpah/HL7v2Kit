@@ -30,6 +30,10 @@
         "r": "R",
         "i": "I"
       }
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     }
   },
   "2.3.1": {
@@ -64,6 +68,10 @@
         "* (star)": "*"
       },
       "note": "The Value column prints '* (star)': the code is the asterisk, '(star)' names it."
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     }
   },
   "2.4": {
@@ -106,6 +114,10 @@
     "0418": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.4 Appendix A Table 0418: the row '2 ...' (for ranked secondary procedures) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     }
   },
   "2.5.1": {
@@ -154,6 +166,19 @@
     "0418": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Appendix A Table 0418: the row '2 ...' (for ranked secondary procedures) is an open-ended range, 2 and every higher rank, so the printed rows are not a closed set."
+    },
+    "0210": {
+      "note": "v2.5.1 Appendix A prints Relational conjunction with the single row AND (text line 3685). The defining table in Chapter 2A sec 2.A.60.4 (QSC.4) prints AND and OR, as do v2.4, v2.6 and v2.8.2. The appendix dropped a row; OR is restored from the defining chapter.",
+      "addEntries": [
+        [
+          "OR",
+          ""
+        ]
+      ]
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 24 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     }
   },
   "2.6": {
@@ -247,6 +272,10 @@
     "0418": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.6 Appendix A Table 0418: prints 0, 1, 2 and a bare '...' row; with v2.4/v2.5.1's '2 ...' this is an open-ended rank, so the printed rows are not a closed set."
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 15 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     }
   },
   "2.8.2": {
@@ -320,6 +349,10 @@
         "(HCPCS)"
       ],
       "note": "'(HCPCS)' is the wrapped tail of HPC's Description 'CMS (formerly HCFA) Procedure Codes (HCPCS)'."
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 25 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     }
   }
 }

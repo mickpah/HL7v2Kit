@@ -1,0 +1,28 @@
+{
+  "dataType": "DLN",
+  "version": "2.8.2",
+  "name": "Driver’s License Number",
+  "components": [
+    {
+      "index": 1,
+      "name": "License Number",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Issuing State, Province, Country",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0333"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Expiration Date",
+      "dataType": "DT",
+      "optionality": "O"
+    }
+  ]
+}

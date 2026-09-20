@@ -7,7 +7,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+**M10 — code tables on composite components (ADR-017).** Additive API; the default code-table check now reaches `ID` components on v2.5.1 / v2.6 / v2.8.2 messages.
+
+### Docs
+
+- ADR-017; design index; limitations register (component links shipped, the
+  remaining gaps registered); DocC `Validation.md` and `Migration.md`;
+  fixtures README corrections log; STATUS / NEXT_STEPS / ROADMAP closed out.
+
+### Added — M10-C: code-table check on composite components (2026-09-20)
+
+- `valueNotInTable` now also fires for a populated `ID` COMPONENT bound to
+  exactly one closed HL7-defined table, located at the component
+  (`PID[1]-3.5`). Examples: CX.5 identifier type (0203), XPN.7 name type
+  (0200), XTN.2 / XTN.3 (0201 / 0202), XAD.7 address type (0190), HD.3
+  universal ID type (0301). About 50 components per version qualify.
+- Same guards as the field rule: `IS` components and user-defined or open
+  tables are never enforced (MSG.3 / 0354 is open, so an unusual message
+  structure is never rejected); empty and HL7-null values are never checked;
+  a locale's rendering widens the check (AU ADRM-2021 prints `NOI` in 0203).
+- Applies to v2.5.1, v2.6 and v2.8.2 messages only: earlier versions print
+  no component tables, so nothing fires there. One level deep: a component
+  that is itself composite (the HD inside CX.4) is not descended into.
+- Suppressed by `checkCodeTables = false` and the `lenient` preset.
+- **Fallout traced: a real defect in 13 synthetic fixtures.** Each carried the
+  ordering provider (`DR12121212^Foster^Taylor`, an XCN) in OBR-17, the
+  callback phone number, with OBR-16 empty. Moved to OBR-16; logged in the
+  fixtures README; PHI scan clean.
+
+### Fixed — code-table registry defects found while vetting component enforcement (2026-09-20)
+
+- **v2.8.2 tables with non-standard column headers extracted EMPTY in
+  v3.3.0:** 0354 Message structure ("Value / Events"), 0440 Data types, 0209
+  Relational operator, 0210, 0227 and 0292 ("Code / ..."). The line under a
+  table caption is now the column header whatever it says, and the table's
+  own header, reprinted after a page break, resumes its rows (0354 went
+  0 -> 243). No false error was possible in v3.3.0, because an empty table
+  is never enforced; the registry was simply incomplete.
+- **Table 0354 is no longer treated as closed, on any version.** Measured:
+  15 to 25 message structures used by each version's own chapters are absent
+  from its printed table (v2.5.1 Chapter 15 defines `RSP^K25^RSP_K25`;
+  Appendix A omits it). Opened by override with that evidence cited.
+- **v2.5.1 Table 0210 restored to AND / OR.** Appendix A drops OR; the
+  defining table in Chapter 2A prints it. New `addEntries` override.
+- **Mis-decoded no-break space:** v2.6 0550 carried `CHEST` and `KIDN` with a
+  trailing U+00C2 and one lone corrupt row; eight descriptions read
+  "2Â½ hours" / "LOINCÂ®". Restored in the extractor; the audit's mojibake
+  test now includes that character.
+- Four regression tests.
+
+### Added — M10-B: per-version datatype grammar (2026-09-20)
+
+- `DataTypeGrammarTable.grammar(_:version:)` returns a `DataTypeGrammar`
+  (code, name, components) whose `ComponentGrammar` entries carry index,
+  name, datatype, the printed optionality code and the bound table numbers.
+  Generated from `Resources/datatypes/` into
+  `Sources/HL7v2Kit/DataTypes/Generated/`, one constant per datatype; the
+  regenerate script and the CI drift check cover the new directory.
+- The optionality is kept as the printed code (`optionalityCode`): v2.8.2
+  XPN.1 is `RE`, which `FieldOptionality` cannot express, and mapping it
+  would misstate the spec.
+- v2.3, v2.3.1 and v2.4 return `nil`: they print no component tables.
+
+### Added — M10-A: datatype component tables extracted (2026-09-20)
+
+- `Resources/datatypes/v{2.5.1,2.6,2.8.2}/<DT>.json` — every "HL7 Component
+  Table" of Chapter 2A: 227 datatype files, 1,323 components, each with its
+  name, datatype, optionality and the table numbers its TBL# cell binds
+  (437 bound components; CX.5 -> 0203, CE.3 -> 0396, and so on). Data only
+  in this stage; codegen and the component-level membership check follow.
+- `scripts/extract-datatype-components.py` is the only author of those files.
+  Rules verified against the print: a name can start under the TBL# header
+  (v2.5.1 AD), a withdrawn component prints no datatype (v2.6 XTN.1), v2.5.1
+  MA prints its first row without a SEQ number, and v2.6 LA2 prints table
+  numbers without the leading zero (302 for 0302).
+- `scripts/audit-schemas.py --datatypes` (shape, table resolution; with
+  `--depth`, re-extraction drift). `9999` is the spec's "no table assigned"
+  sentinel from v2.7 and is accepted as such.
+- **Scope:** v2.3, v2.3.1 and v2.4 define components in prose and print no
+  component tables; they are out of this cycle. Datatypes v2.8.2 prints as
+  WITHDRAWN (CE, TQ, TS, ELD, LA1, LA2, OSD, SPS) are absent there by design.
 
 ## [3.3.0] — 2026-09-20
 

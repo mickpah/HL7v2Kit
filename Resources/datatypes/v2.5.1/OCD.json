@@ -1,0 +1,22 @@
+{
+  "dataType": "OCD",
+  "version": "2.5.1",
+  "name": "Occurrence Code and Date",
+  "components": [
+    {
+      "index": 1,
+      "name": "Occurrence Code",
+      "dataType": "CNE",
+      "optionality": "R",
+      "tables": [
+        "0350"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Occurrence Date",
+      "dataType": "DT",
+      "optionality": "R"
+    }
+  ]
+}

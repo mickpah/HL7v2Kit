@@ -1,0 +1,37 @@
+{
+  "dataType": "RP",
+  "version": "2.8.2",
+  "name": "Reference Pointer",
+  "components": [
+    {
+      "index": 1,
+      "name": "Pointer",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Application ID",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Type of Data",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0834"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Subtype",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0291"
+      ]
+    }
+  ]
+}

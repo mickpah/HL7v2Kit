@@ -1,0 +1,43 @@
+{
+  "dataType": "PIP",
+  "version": "2.8.2",
+  "name": "Practitioner Institutional Privileges",
+  "components": [
+    {
+      "index": 1,
+      "name": "Privilege",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0525"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Privilege Class",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0526"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Expiration Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Activation Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Facility",
+      "dataType": "EI",
+      "optionality": "O"
+    }
+  ]
+}

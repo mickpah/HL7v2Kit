@@ -1,0 +1,31 @@
+{
+  "dataType": "NA",
+  "version": "2.6",
+  "name": "Numeric Array",
+  "components": [
+    {
+      "index": 1,
+      "name": "Value1",
+      "dataType": "NM",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Value2",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Value3",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Value4",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

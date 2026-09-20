@@ -1,0 +1,148 @@
+{
+  "dataType": "CNE",
+  "version": "2.8.2",
+  "name": "Coded with No Exceptions",
+  "components": [
+    {
+      "index": 1,
+      "name": "Identifier",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Name of Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Alternate Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Alternate Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Name of Alternate Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 8,
+      "name": "Alternate Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Original Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 10,
+      "name": "Second Alternate Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 11,
+      "name": "Second Alternate Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "Name of Second Alternate Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Second Alternate Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 14,
+      "name": "Coding System OID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 15,
+      "name": "Value Set OID",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 16,
+      "name": "Value Set Version ID",
+      "dataType": "DTM",
+      "optionality": "C"
+    },
+    {
+      "index": 17,
+      "name": "Alternate Coding System OID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 18,
+      "name": "Alternate Value Set OID",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 19,
+      "name": "Alternate Value Set Version ID",
+      "dataType": "DTM",
+      "optionality": "C"
+    },
+    {
+      "index": 20,
+      "name": "Second Alternate Coding System OID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 21,
+      "name": "Second Alternate Value Set OID",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 22,
+      "name": "Second Alternate Value Set Version ID",
+      "dataType": "DTM",
+      "optionality": "C"
+    }
+  ]
+}

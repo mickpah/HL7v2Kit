@@ -1,0 +1,19 @@
+{
+  "dataType": "EIP",
+  "version": "2.6",
+  "name": "Entity Identifier Pair",
+  "components": [
+    {
+      "index": 1,
+      "name": "Placer Assigned Identifier",
+      "dataType": "EI",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Filler Assigned Identifier",
+      "dataType": "EI",
+      "optionality": "O"
+    }
+  ]
+}

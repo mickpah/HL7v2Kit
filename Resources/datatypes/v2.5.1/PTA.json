@@ -1,0 +1,37 @@
+{
+  "dataType": "PTA",
+  "version": "2.5.1",
+  "name": "Policy Type and Amount",
+  "components": [
+    {
+      "index": 1,
+      "name": "Policy Type",
+      "dataType": "IS",
+      "optionality": "R",
+      "tables": [
+        "0147"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Amount Class",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0193"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Money or Percentage Quantity",
+      "dataType": "NM",
+      "optionality": "B"
+    },
+    {
+      "index": 4,
+      "name": "Money or Percentage",
+      "dataType": "MOP",
+      "optionality": "R"
+    }
+  ]
+}

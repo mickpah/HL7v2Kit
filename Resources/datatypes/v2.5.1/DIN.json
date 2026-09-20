@@ -1,0 +1,22 @@
+{
+  "dataType": "DIN",
+  "version": "2.5.1",
+  "name": "Date and Institution Name",
+  "components": [
+    {
+      "index": 1,
+      "name": "Date",
+      "dataType": "TS",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Institution Name",
+      "dataType": "CE",
+      "optionality": "R",
+      "tables": [
+        "0531"
+      ]
+    }
+  ]
+}

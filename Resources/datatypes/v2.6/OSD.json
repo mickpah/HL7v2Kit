@@ -1,0 +1,88 @@
+{
+  "dataType": "OSD",
+  "version": "2.6",
+  "name": "Order Sequence Definition",
+  "components": [
+    {
+      "index": 1,
+      "name": "Sequence/Results Flag",
+      "dataType": "ID",
+      "optionality": "R",
+      "tables": [
+        "0524"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Placer Order Number: Entity Identifier",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 3,
+      "name": "Placer Order Number: Namespace ID",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Filler Order Number: Entity Identifier",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 5,
+      "name": "Filler Order Number: Namespace ID",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Sequence Condition Value",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Maximum Number of Repeats",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Placer Order Number: Universal ID",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 9,
+      "name": "Placer Order Number: Universal ID Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0301"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Filler Order Number: Universal ID",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 11,
+      "name": "Filler Order Number: Universal ID Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0301"
+      ]
+    }
+  ]
+}

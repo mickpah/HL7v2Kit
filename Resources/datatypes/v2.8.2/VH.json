@@ -1,0 +1,37 @@
+{
+  "dataType": "VH",
+  "version": "2.8.2",
+  "name": "Visiting Hours",
+  "components": [
+    {
+      "index": 1,
+      "name": "Start Day Range",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0267"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "End Day Range",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0267"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Start Hour Range",
+      "dataType": "TM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "End Hour Range",
+      "dataType": "TM",
+      "optionality": "O"
+    }
+  ]
+}

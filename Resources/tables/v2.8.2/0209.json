@@ -5,5 +5,38 @@
   "kind": "HL7",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0209 - Relational Operator",
-  "entries": []
+  "entries": [
+    {
+      "code": "EQ",
+      "description": "Equal"
+    },
+    {
+      "code": "NE",
+      "description": "Not Equal"
+    },
+    {
+      "code": "LT",
+      "description": "Less than"
+    },
+    {
+      "code": "GT",
+      "description": "Greater than"
+    },
+    {
+      "code": "LE",
+      "description": "Less than or equal"
+    },
+    {
+      "code": "GE",
+      "description": "Greater than or equal"
+    },
+    {
+      "code": "CT",
+      "description": "Contains"
+    },
+    {
+      "code": "GN",
+      "description": "Generic"
+    }
+  ]
 }

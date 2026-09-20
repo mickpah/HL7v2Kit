@@ -1,0 +1,31 @@
+{
+  "dataType": "MOP",
+  "version": "2.8.2",
+  "name": "Money or Percentage",
+  "components": [
+    {
+      "index": 1,
+      "name": "Money or Percentage Indicator",
+      "dataType": "ID",
+      "optionality": "R",
+      "tables": [
+        "0148"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Money or Percentage Quantity",
+      "dataType": "NM",
+      "optionality": "R"
+    },
+    {
+      "index": 3,
+      "name": "Monetary Denomination",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0913"
+      ]
+    }
+  ]
+}

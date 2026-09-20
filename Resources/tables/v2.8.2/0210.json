@@ -5,5 +5,14 @@
   "kind": "HL7",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0210 - Relational Conjunction",
-  "entries": []
+  "entries": [
+    {
+      "code": "AND",
+      "description": "Default"
+    },
+    {
+      "code": "OR",
+      "description": ""
+    }
+  ]
 }

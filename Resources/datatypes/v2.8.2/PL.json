@@ -1,0 +1,97 @@
+{
+  "dataType": "PL",
+  "version": "2.8.2",
+  "name": "Person Location",
+  "components": [
+    {
+      "index": 1,
+      "name": "Point of Care",
+      "dataType": "HD",
+      "optionality": "C",
+      "tables": [
+        "0302"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Room",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0303"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Bed",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0304"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Location Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0306"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Person Location Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0305"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Building",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0307"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Floor",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0308"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Location Description",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 10,
+      "name": "Comprehensive Location Identifier",
+      "dataType": "EI",
+      "optionality": "O"
+    },
+    {
+      "index": 11,
+      "name": "Assigning Authority for Location",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0363"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "dataType": "XPN",
+  "version": "2.6",
+  "name": "Extended Person Name",
+  "components": [
+    {
+      "index": 1,
+      "name": "Family Name",
+      "dataType": "FN",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Given Name",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Second and Further Given Names or Initials Thereof",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Degree (e.g., MD)",
+      "dataType": "IS",
+      "optionality": "B",
+      "tables": [
+        "0360"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Name Type Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0200"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Name Representation Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Name Context",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0448"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Name Validity Range",
+      "dataType": "DR",
+      "optionality": "B"
+    },
+    {
+      "index": 11,
+      "name": "Name Assembly Order",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0444"
+      ]
+    },
+    {
+      "index": 12,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 13,
+      "name": "Expiration Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 14,
+      "name": "Professional Suffix",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

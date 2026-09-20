@@ -1,0 +1,85 @@
+{
+  "dataType": "XTN",
+  "version": "2.5.1",
+  "name": "Extended Telecommunication Number",
+  "components": [
+    {
+      "index": 1,
+      "name": "Telephone Number",
+      "dataType": "ST",
+      "optionality": "B"
+    },
+    {
+      "index": 2,
+      "name": "Telecommunication Use Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0201"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Telecommunication Equipment Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0202"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Email Address",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Country Code",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Area/City Code",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Local Number",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Extension",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Any Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 10,
+      "name": "Extension Prefix",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 11,
+      "name": "Speed Dial Code",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "Unformatted Telephone number",
+      "dataType": "ST",
+      "optionality": "C"
+    }
+  ]
+}

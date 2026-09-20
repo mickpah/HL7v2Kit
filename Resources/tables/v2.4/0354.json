@@ -3,8 +3,8 @@
   "version": "2.4",
   "name": "Message structure",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0354 - Message structure",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.4 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4).",
   "entries": [
     {
       "code": "ACK",

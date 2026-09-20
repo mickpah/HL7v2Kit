@@ -1,0 +1,82 @@
+{
+  "dataType": "LA1",
+  "version": "2.5.1",
+  "name": "Location with Address Variation 1",
+  "components": [
+    {
+      "index": 1,
+      "name": "Point of Care",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0302"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Room",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0303"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Bed",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0304"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Location Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0306"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Patient Location Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0305"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Building",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0307"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Floor",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0308"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Address",
+      "dataType": "AD",
+      "optionality": "O"
+    }
+  ]
+}

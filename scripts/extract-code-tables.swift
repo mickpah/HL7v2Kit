@@ -122,6 +122,10 @@ struct Override {
     /// Hand-verified corrections of a value the source PDF misprints exactly
     /// once, so the separator-variant rule below has no sibling to learn from.
     var renameCodes: [String: String] = [:]
+    /// Rows the source PDF omits but the version's DEFINING chapter prints
+    /// (v2.5.1 Appendix A prints 0210 with AND only; Chapter 2A sec 2.A.60.4
+    /// prints AND and OR). `[code, description]` pairs, appended in order.
+    var addEntries: [[String]] = []
 }
 
 // MARK: - shared line classification
@@ -476,6 +480,20 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
     var inRows = false
     var descCol = -1
     var commentCol = -1
+    // Set by a table caption, cleared by the first line after it. Chapter 2C does not
+    // always head its columns "Value / Description": 0354 prints "Value / Events", 0440
+    // "Data type / Data Type Name", 0209 "Relational operator / Value", 0227 and 0292
+    // "Code / ...". The line directly under a caption IS the column header whatever it
+    // says, provided it has at least two cells; those tables used to extract empty.
+    var awaitingHeader = false
+    // The non-standard header of the current table, whitespace-collapsed. Chapter 2C
+    // reprints it at the top of every page the table runs onto; a footer ends the rows, so
+    // the reprint is what resumes them. Without this a long table (0354, 240 rows) stopped
+    // at its first page break and would have shipped as a PARTIAL closed set.
+    var customHeader: String? = nil
+    func collapsed(_ line: String) -> String {
+        line.split(whereSeparator: { $0 == " " }).joined(separator: " ")
+    }
 
     func table(_ number: String, name: String, kind: String, external: Bool) -> Table {
         if let t = tables[number] { return t }
@@ -495,6 +513,8 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             let name = g[2].trimmingCharacters(in: .whitespaces)
             current = table(number, name: name, kind: "User", external: false)
             inRows = false
+            customHeader = nil
+            awaitingHeader = false
             descCol = -1
             commentCol = -1
             continue
@@ -515,10 +535,31 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             inRows = false
             descCol = -1
             commentCol = -1
+            awaitingHeader = true
+            customHeader = nil
             continue
         }
-        if reMetaHeader282.matches(raw) { inRows = false; continue }
+        if reMetaHeader282.matches(raw) { inRows = false; awaitingHeader = false; continue }
+        if awaitingHeader && !reValueHeader282.matches(raw) {
+            awaitingHeader = false
+            let headerCells = splitCells(raw)
+            if headerCells.count >= 2 && !isFurniture(s) && !noValuesPhrase.matches(s) {
+                descCol = headerCells[1].offset
+                commentCol = column(of: "Comment", in: raw)
+                customHeader = collapsed(s)
+                inRows = true
+                continue
+            }
+        }
+        if !inRows, current != nil, let header = customHeader, collapsed(s) == header {
+            let headerCells = splitCells(raw)
+            if headerCells.count >= 2 { descCol = headerCells[1].offset }
+            commentCol = column(of: "Comment", in: raw)
+            inRows = true
+            continue
+        }
         if reValueHeader282.matches(raw) {
+            awaitingHeader = false
             descCol = column(of: "Description", in: raw)
             commentCol = column(of: "Comment", in: raw)
             if commentCol < 0 { commentCol = column(of: "Chapter", in: raw) }
@@ -686,8 +727,13 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     let hasEllipsis = t.codes.contains("...")
     let (allPairs, allNotes) = survivingRows(t, drop: Set(override?.dropCodes ?? []),
                                              rename: override?.renameCodes ?? [:])
-    let rowPairs = allPairs.filter { $0.0 != "..." }
-    let notes = allNotes + (hasEllipsis ? ["\(t.number): dropped the bare \"...\" row"
+    var rowPairs = allPairs.filter { $0.0 != "..." }
+    var addedNotes: [String] = []
+    for pair in override?.addEntries ?? [] where pair.count == 2 && !rowPairs.contains(where: { $0.0 == pair[0] }) {
+        rowPairs.append((pair[0], pair[1]))
+        addedNotes.append("\(t.number): added by overrides.json: \(pair[0])")
+    }
+    let notes = allNotes + addedNotes + (hasEllipsis ? ["\(t.number): dropped the bare \"...\" row"
         + (rowPairs.isEmpty ? "" : "; table left open unless overridden")] : [])
     let permits = override?.permitsLocalExtensions
         ?? (t.externallyDefined || (hasEllipsis && !rowPairs.isEmpty))
@@ -731,7 +777,8 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
             permitsLocalExtensions: d["permitsLocalExtensions"] as? Bool,
             citation: d["citation"] as? String,
             dropCodes: (d["dropCodes"] as? [String]) ?? [],
-            renameCodes: (d["renameCodes"] as? [String: String]) ?? [:]
+            renameCodes: (d["renameCodes"] as? [String: String]) ?? [:],
+            addEntries: (d["addEntries"] as? [[String]]) ?? []
         )
     }
     return out
@@ -756,6 +803,9 @@ let appendix = version != "2.8.2"
 let text = runPdftotext(pdfPath)
     .replacingOccurrences(of: "\u{00E2} \u{0153}", with: "\u{201C}")
     .replacingOccurrences(of: "\u{00E2}", with: "\u{201D}")
+    // v2.6 Appendix A Table 0550 carries a mis-decoded no-break space after three codes
+    // ("CHEST", "KIDN" and a lone one): it arrives as U+00C2. No table text uses it.
+    .replacingOccurrences(of: "\u{00C2}", with: "")
 guard !text.isEmpty else {
     FileHandle.standardError.write("error: pdftotext produced no text for \(pdfPath)\n".data(using: .utf8)!)
     exit(2)

@@ -1,0 +1,85 @@
+{
+  "dataType": "RPT",
+  "version": "2.6",
+  "name": "Repeat Pattern",
+  "components": [
+    {
+      "index": 1,
+      "name": "Repeat Pattern Code",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0335"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Calendar Alignment",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0527"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Phase Range Begin Value",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Phase Range End Value",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Period Quantity",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Period Units",
+      "dataType": "IS",
+      "optionality": "C"
+    },
+    {
+      "index": 7,
+      "name": "Institution Specified Time",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0136"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Event",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0528"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Event Offset Quantity",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 10,
+      "name": "Event Offset Units",
+      "dataType": "IS",
+      "optionality": "C"
+    },
+    {
+      "index": 11,
+      "name": "General Timing Specification",
+      "dataType": "GTS",
+      "optionality": "O"
+    }
+  ]
+}

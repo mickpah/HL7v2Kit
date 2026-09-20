@@ -528,6 +528,10 @@ public struct Validator: Sendable {
             checkCodeTable(fieldGrammar, tableNumber: tableNumber, field: field,
                            version: message.version, location: location, issues: &issues)
         }
+        if options.checkCodeTables, let field, isPopulated {
+            checkComponentCodeTables(fieldGrammar, field: field, version: message.version,
+                                     location: location, issues: &issues)
+        }
 
         // v0.5-S5-B-1: layer the loaded profile's field overrides
         // on top of the base-spec checks. Only fires when locale
@@ -1395,6 +1399,43 @@ public struct Validator: Sendable {
     /// the field's datatype must be `ID` AND the table must be closed
     /// for this version. A repetition whose value is not a bare scalar
     /// is a structure fault, not a table fault — skipped, never misfired.
+    /// Component-level code-table check (M10-C, ADR-017). For a field whose datatype
+    /// has a component table on the message's version, every populated `ID` component
+    /// bound to exactly one closed HL7-defined table must carry one of its codes.
+    ///
+    /// The same guards as the field-level rule: `IS` components and user-defined or open
+    /// tables are never enforced; empty and HL7-null values are never checked; a locale's
+    /// rendering of the table widens the check and never narrows it. Versions that print
+    /// no component tables (v2.3 to v2.4) have no grammar, so nothing fires there. One
+    /// level only: a component that is itself composite (the HD inside CX.4) is not
+    /// descended into.
+    private func checkComponentCodeTables(
+        _ grammar: FieldGrammar,
+        field: Field,
+        version: Version,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
+        for component in dataType.components where component.dataType == "ID" && component.tables.count == 1 {
+            let tableNumber = component.tables[0]
+            guard let table = HL7TableRegistry.table(tableNumber, version: version), table.isClosed else { continue }
+            for (offset, repetition) in field.repetitions.enumerated()
+            where repetition.components.count >= component.index {
+                guard let value = repetition.components[component.index - 1].stringValue,
+                      !value.isEmpty, value != "\"\"", !table.contains(value) else { continue }
+                if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
+                issues.append(ValidationIssue(
+                    severity: .error,
+                    code: .valueNotInTable(table: table.number),
+                    location: IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                            fieldIndex: location.fieldIndex, componentIndex: component.index),
+                    message: "Component \(location.pathDescription).\(component.index) ('\(component.name)') repetition \(offset + 1) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(dataType.version)."
+                ))
+            }
+        }
+    }
+
     private func checkCodeTable(
         _ grammar: FieldGrammar,
         tableNumber: String,

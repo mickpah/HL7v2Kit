@@ -1,0 +1,19 @@
+{
+  "dataType": "MOC",
+  "version": "2.5.1",
+  "name": "Money and Code",
+  "components": [
+    {
+      "index": 1,
+      "name": "Monetary Amount",
+      "dataType": "MO",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Charge Code",
+      "dataType": "CE",
+      "optionality": "O"
+    }
+  ]
+}

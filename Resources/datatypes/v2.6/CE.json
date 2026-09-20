@@ -1,0 +1,43 @@
+{
+  "dataType": "CE",
+  "version": "2.6",
+  "name": "Coded Element",
+  "components": [
+    {
+      "index": 1,
+      "name": "Identifier",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 2,
+      "name": "Text",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 3,
+      "name": "Name of Coding System",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 4,
+      "name": "Alternate Identifier",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 5,
+      "name": "Alternate Text",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 6,
+      "name": "Name of Alternate Coding System",
+      "dataType": "",
+      "optionality": "W"
+    }
+  ]
+}

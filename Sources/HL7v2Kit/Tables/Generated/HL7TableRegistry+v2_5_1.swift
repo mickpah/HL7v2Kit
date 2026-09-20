@@ -3731,6 +3731,7 @@ extension HL7TableRegistry {
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "AND", description: "Default"),
+            HL7Table.Entry(code: "OR", description: ""),
         ] as [HL7Table.Entry]
     )
 
@@ -4464,7 +4465,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "1H", description: "1 hour"),
             HL7Table.Entry(code: "1L", description: "1 months (30 days)"),
             HL7Table.Entry(code: "1W", description: "1 week"),
-            HL7Table.Entry(code: "2.5H", description: "2Â½ hours"),
+            HL7Table.Entry(code: "2.5H", description: "2½ hours"),
             HL7Table.Entry(code: "24H", description: "24 hours"),
             HL7Table.Entry(code: "2D", description: "2 days"),
             HL7Table.Entry(code: "2H", description: "2 hours"),
@@ -5100,7 +5101,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "47", description: "Hib (HbOC)"),
             HL7Table.Entry(code: "48", description: "Hib (PRP-T)"),
             HL7Table.Entry(code: "49", description: "Hib (PRP-OMP)"),
-            HL7Table.Entry(code: "50", description: "DTaP-HibÂ"),
+            HL7Table.Entry(code: "50", description: "DTaP-Hib"),
             HL7Table.Entry(code: "51", description: "Hib-Hep B"),
             HL7Table.Entry(code: "52", description: "Hep A, adult"),
             HL7Table.Entry(code: "53", description: "typhoid, parenteral, AKD (U.S. military)"),
@@ -5121,7 +5122,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "68", description: "melanoma"),
             HL7Table.Entry(code: "69", description: "parainfluenza-3"),
             HL7Table.Entry(code: "70", description: "Q fever"),
-            HL7Table.Entry(code: "71", description: "RSV-IGIVÂ"),
+            HL7Table.Entry(code: "71", description: "RSV-IGIV"),
             HL7Table.Entry(code: "72", description: "rheumatic fever"),
             HL7Table.Entry(code: "73", description: "Rift Valley fever"),
             HL7Table.Entry(code: "74", description: "rotavirus"),
@@ -5883,7 +5884,7 @@ extension HL7TableRegistry {
         number: "0354",
         name: "Message structure",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ACK", description: "Varies"),
             HL7Table.Entry(code: "ADR_A19", description: "A19"),
@@ -6802,7 +6803,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "JC8", description: "Japanese Chemistry"),
             HL7Table.Entry(code: "JJ1017", description: "Japanese Image Examination Cache"),
             HL7Table.Entry(code: "LB", description: "Local billing code"),
-            HL7Table.Entry(code: "LN", description: "Logical Observation Identifier Names and Codes (LOINCÂ®)"),
+            HL7Table.Entry(code: "LN", description: "Logical Observation Identifier Names and Codes (LOINC®)"),
             HL7Table.Entry(code: "MCD", description: "Medicaid"),
             HL7Table.Entry(code: "MCR", description: "Medicare"),
             HL7Table.Entry(code: "MDDX", description: "Medispan Diagnostic Codes"),

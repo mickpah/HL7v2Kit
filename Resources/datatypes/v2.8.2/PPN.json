@@ -1,0 +1,190 @@
+{
+  "dataType": "PPN",
+  "version": "2.8.2",
+  "name": "Performing Person Time Stamp",
+  "components": [
+    {
+      "index": 1,
+      "name": "Person Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Family Name",
+      "dataType": "FN",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Given Name",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Second and Further Given Names or Initials Thereof",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Degree (e.g., MD)",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 8,
+      "name": "Source Table",
+      "dataType": "CWE",
+      "optionality": "B",
+      "tables": [
+        "0297"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Assigning Authority",
+      "dataType": "HD",
+      "optionality": "C",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Name Type Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0200"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Identifier Check Digit",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "Check Digit Scheme",
+      "dataType": "ID",
+      "optionality": "C",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Identifier Type Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Assigning Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 15,
+      "name": "Date/Time Action Performed",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 16,
+      "name": "Name Representation Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Name Context",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0448"
+      ]
+    },
+    {
+      "index": 18,
+      "name": "Name Validity Range",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 19,
+      "name": "Name Assembly Order",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0444"
+      ]
+    },
+    {
+      "index": 20,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 21,
+      "name": "Expiration Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 22,
+      "name": "Professional Suffix",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 23,
+      "name": "Assigning Jurisdiction",
+      "dataType": "CWE",
+      "optionality": "O"
+    },
+    {
+      "index": 24,
+      "name": "Assigning Agency or Department",
+      "dataType": "CWE",
+      "optionality": "O"
+    },
+    {
+      "index": 25,
+      "name": "Security Check",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 26,
+      "name": "Security Check Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0904"
+      ]
+    }
+  ]
+}

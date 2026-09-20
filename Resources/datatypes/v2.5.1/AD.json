@@ -1,0 +1,61 @@
+{
+  "dataType": "AD",
+  "version": "2.5.1",
+  "name": "Address",
+  "components": [
+    {
+      "index": 1,
+      "name": "Street Address",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Other Designation",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "City",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "State or Province",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Zip or Postal Code",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Country",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0399"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Address Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0190"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Other Geographic Designation",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

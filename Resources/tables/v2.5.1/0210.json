@@ -9,6 +9,10 @@
     {
       "code": "AND",
       "description": "Default"
+    },
+    {
+      "code": "OR",
+      "description": ""
     }
   ]
 }

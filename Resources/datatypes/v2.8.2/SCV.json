@@ -1,0 +1,22 @@
+{
+  "dataType": "SCV",
+  "version": "2.8.2",
+  "name": "Scheduling Class Value Pair",
+  "components": [
+    {
+      "index": 1,
+      "name": "Parameter Class",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0294"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Parameter Value",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}
