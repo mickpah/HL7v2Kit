@@ -1,0 +1,22 @@
+{
+  "dataType": "FC",
+  "version": "2.5.1",
+  "name": "Financial Class",
+  "components": [
+    {
+      "index": 1,
+      "name": "Financial Class Code",
+      "dataType": "IS",
+      "optionality": "R",
+      "tables": [
+        "0064"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Effective Date",
+      "dataType": "TS",
+      "optionality": "O"
+    }
+  ]
+}

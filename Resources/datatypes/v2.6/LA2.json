@@ -1,0 +1,130 @@
+{
+  "dataType": "LA2",
+  "version": "2.6",
+  "name": "Location with Address Variation 2",
+  "components": [
+    {
+      "index": 1,
+      "name": "Point of Care",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0302"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Room",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0303"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Bed",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0304"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Location Status",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0306"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Patient Location Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0305"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Building",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0307"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Floor",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0308"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Street Address",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 10,
+      "name": "Other Designation",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 11,
+      "name": "City",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "State or Province",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 13,
+      "name": "Zip or Postal Code",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 14,
+      "name": "Country",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0399"
+      ]
+    },
+    {
+      "index": 15,
+      "name": "Address Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0190"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Other Geographic Designation",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

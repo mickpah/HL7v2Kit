@@ -1,0 +1,25 @@
+{
+  "dataType": "PT",
+  "version": "2.8.2",
+  "name": "Processing Type",
+  "components": [
+    {
+      "index": 1,
+      "name": "Processing ID",
+      "dataType": "ID",
+      "optionality": "R",
+      "tables": [
+        "0103"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Processing Mode",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0207"
+      ]
+    }
+  ]
+}

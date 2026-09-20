@@ -1,0 +1,82 @@
+{
+  "dataType": "TQ",
+  "version": "2.5.1",
+  "name": "Timing Quantity",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity",
+      "dataType": "CQ",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Interval",
+      "dataType": "RI",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Duration",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Start Date/Time",
+      "dataType": "TS",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "End Date/Time",
+      "dataType": "TS",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Priority",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Condition",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Text",
+      "dataType": "TX",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Conjunction",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0472"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Order Sequencing",
+      "dataType": "OSD",
+      "optionality": "O"
+    },
+    {
+      "index": 11,
+      "name": "Occurrence Duration",
+      "dataType": "CE",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "Total Occurrences",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

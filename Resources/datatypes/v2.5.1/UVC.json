@@ -1,0 +1,22 @@
+{
+  "dataType": "UVC",
+  "version": "2.5.1",
+  "name": "UB Value Code and Amount",
+  "components": [
+    {
+      "index": 1,
+      "name": "Value Code",
+      "dataType": "CNE",
+      "optionality": "R",
+      "tables": [
+        "0153"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Value Amount",
+      "dataType": "MO",
+      "optionality": "O"
+    }
+  ]
+}

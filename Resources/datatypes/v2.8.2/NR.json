@@ -1,0 +1,19 @@
+{
+  "dataType": "NR",
+  "version": "2.8.2",
+  "name": "Numeric Range",
+  "components": [
+    {
+      "index": 1,
+      "name": "Low Value",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "High Value",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "dataType": "OSP",
+  "version": "2.5.1",
+  "name": "Occurrence Span Code and Date",
+  "components": [
+    {
+      "index": 1,
+      "name": "Occurrence Span Code",
+      "dataType": "CNE",
+      "optionality": "R",
+      "tables": [
+        "0351"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Occurrence Span Start Date",
+      "dataType": "DT",
+      "optionality": "C"
+    },
+    {
+      "index": 3,
+      "name": "Occurrence Span Stop Date",
+      "dataType": "DT",
+      "optionality": "C"
+    }
+  ]
+}

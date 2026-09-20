@@ -1,0 +1,31 @@
+{
+  "dataType": "JCC",
+  "version": "2.5.1",
+  "name": "Job Code/Class",
+  "components": [
+    {
+      "index": 1,
+      "name": "Job Code",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0327"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Job Class",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0328"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Job Description Text",
+      "dataType": "TX",
+      "optionality": "O"
+    }
+  ]
+}

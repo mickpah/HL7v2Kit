@@ -1,0 +1,31 @@
+{
+  "dataType": "ICD",
+  "version": "2.6",
+  "name": "Insurance Certification Definition",
+  "components": [
+    {
+      "index": 1,
+      "name": "Certification Patient Type",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0150"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Certification Required",
+      "dataType": "ID",
+      "optionality": "R",
+      "tables": [
+        "0136"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Date/Time Certification Required",
+      "dataType": "DTM",
+      "optionality": "O"
+    }
+  ]
+}

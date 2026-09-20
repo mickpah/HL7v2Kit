@@ -1,0 +1,82 @@
+{
+  "dataType": "XON",
+  "version": "2.5.1",
+  "name": "Extended Composite Name and Identification Number for Organizations",
+  "components": [
+    {
+      "index": 1,
+      "name": "Organization Name",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Organization Name Type Code",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0204"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "ID Number",
+      "dataType": "NM",
+      "optionality": "B"
+    },
+    {
+      "index": 4,
+      "name": "Check Digit",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Check Digit Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Assigning Authority",
+      "dataType": "HD",
+      "optionality": "O",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Identifier Type Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Assigning Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Name Representation Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Organization Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

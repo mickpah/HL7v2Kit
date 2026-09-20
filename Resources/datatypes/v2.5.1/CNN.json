@@ -1,0 +1,85 @@
+{
+  "dataType": "CNN",
+  "version": "2.5.1",
+  "name": "Composite ID Number and Name Simplified",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID Number",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Family Name",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Given Name",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Second and Further Given Names or Initials Thereof",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Degree (e.g., MD",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0360"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Source Table",
+      "dataType": "IS",
+      "optionality": "C",
+      "tables": [
+        "0297"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Assigning Authority - Namespace ID",
+      "dataType": "IS",
+      "optionality": "C",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Assigning Authority - Universal ID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 11,
+      "name": "Assigning Authority - Universal ID Type",
+      "dataType": "ID",
+      "optionality": "C",
+      "tables": [
+        "0301"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "dataType": "CX",
+  "version": "2.8.2",
+  "name": "Extended Composite ID with Check Digit",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID Number",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Identifier Check Digit",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Check Digit Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Assigning Authority",
+      "dataType": "HD",
+      "optionality": "C",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Identifier Type Code",
+      "dataType": "ID",
+      "optionality": "R",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Assigning Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Effective Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Expiration Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Assigning Jurisdiction",
+      "dataType": "CWE",
+      "optionality": "C"
+    },
+    {
+      "index": 10,
+      "name": "Assigning Agency or Department",
+      "dataType": "CWE",
+      "optionality": "C"
+    },
+    {
+      "index": 11,
+      "name": "Security Check",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 12,
+      "name": "Security Check Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0904"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "dataType": "DLD",
+  "version": "2.8.2",
+  "name": "Discharge to Location and Date",
+  "components": [
+    {
+      "index": 1,
+      "name": "Discharge to Location",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0113"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    }
+  ]
+}

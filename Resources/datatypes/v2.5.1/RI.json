@@ -1,0 +1,22 @@
+{
+  "dataType": "RI",
+  "version": "2.5.1",
+  "name": "Repeat Interval",
+  "components": [
+    {
+      "index": 1,
+      "name": "Repeat Pattern",
+      "dataType": "IS",
+      "optionality": "O",
+      "tables": [
+        "0335"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Explicit Time Interval",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

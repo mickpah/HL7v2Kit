@@ -1,0 +1,49 @@
+{
+  "dataType": "CP",
+  "version": "2.5.1",
+  "name": "Composite Price",
+  "components": [
+    {
+      "index": 1,
+      "name": "Price",
+      "dataType": "MO",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Price Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0205"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "From Value",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "To Value",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Range Units",
+      "dataType": "CE",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Range Type",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0298"
+      ]
+    }
+  ]
+}

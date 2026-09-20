@@ -1,0 +1,49 @@
+{
+  "dataType": "CF",
+  "version": "2.5.1",
+  "name": "Coded Element with Formatted Values",
+  "components": [
+    {
+      "index": 1,
+      "name": "Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Formatted Text",
+      "dataType": "FT",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Name of Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Alternate Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Alternate Formatted Text",
+      "dataType": "FT",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Name of Alternate Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    }
+  ]
+}

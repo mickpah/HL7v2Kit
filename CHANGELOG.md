@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M10-A: datatype component tables extracted (2026-09-20)
+
+- `Resources/datatypes/v{2.5.1,2.6,2.8.2}/<DT>.json` — every "HL7 Component
+  Table" of Chapter 2A: 227 datatype files, 1,323 components, each with its
+  name, datatype, optionality and the table numbers its TBL# cell binds
+  (437 bound components; CX.5 -> 0203, CE.3 -> 0396, and so on). Data only
+  in this stage; codegen and the component-level membership check follow.
+- `scripts/extract-datatype-components.py` is the only author of those files.
+  Rules verified against the print: a name can start under the TBL# header
+  (v2.5.1 AD), a withdrawn component prints no datatype (v2.6 XTN.1), v2.5.1
+  MA prints its first row without a SEQ number, and v2.6 LA2 prints table
+  numbers without the leading zero (302 for 0302).
+- `scripts/audit-schemas.py --datatypes` (shape, table resolution; with
+  `--depth`, re-extraction drift). `9999` is the spec's "no table assigned"
+  sentinel from v2.7 and is accepted as such.
+- **Scope:** v2.3, v2.3.1 and v2.4 define components in prose and print no
+  component tables; they are out of this cycle. Datatypes v2.8.2 prints as
+  WITHDRAWN (CE, TQ, TS, ELD, LA1, LA2, OSD, SPS) are absent there by design.
 
 ## [3.3.0] — 2026-09-20
 

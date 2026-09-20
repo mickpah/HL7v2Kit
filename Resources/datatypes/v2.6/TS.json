@@ -1,0 +1,19 @@
+{
+  "dataType": "TS",
+  "version": "2.6",
+  "name": "Time Stamp",
+  "components": [
+    {
+      "index": 1,
+      "name": "Time",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 2,
+      "name": "Degree of Precision",
+      "dataType": "",
+      "optionality": "W"
+    }
+  ]
+}

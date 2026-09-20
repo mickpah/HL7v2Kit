@@ -1,0 +1,25 @@
+{
+  "dataType": "DDI",
+  "version": "2.6",
+  "name": "Daily Deductible Information",
+  "components": [
+    {
+      "index": 1,
+      "name": "Delay Days",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Monetary Amount",
+      "dataType": "MO",
+      "optionality": "R"
+    },
+    {
+      "index": 3,
+      "name": "Number of Days",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

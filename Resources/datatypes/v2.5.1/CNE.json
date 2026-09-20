@@ -1,0 +1,67 @@
+{
+  "dataType": "CNE",
+  "version": "2.5.1",
+  "name": "Coded with No Exceptions",
+  "components": [
+    {
+      "index": 1,
+      "name": "Identifier",
+      "dataType": "ST",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Name of Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Alternate Identifier",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 5,
+      "name": "Alternate Text",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 6,
+      "name": "Name of Alternate Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "C"
+    },
+    {
+      "index": 8,
+      "name": "Alternate Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Original Text",
+      "dataType": "ST",
+      "optionality": "O"
+    }
+  ]
+}

@@ -496,11 +496,77 @@ def tables(depth=False):
     return files, findings
 
 
+DATATYPES = os.path.join(REPO, "Resources/datatypes")
+# v2.7+ prints 9999 in a TBL# cell for "no table assigned yet": a sentinel, not a table.
+NO_TABLE_SENTINEL = "9999"
+COMPONENT_OPT = {"R", "O", "C", "B", "W", "X", "RE"}
+
+
+def datatypes(depth=False):
+    """M10-A — audit Resources/datatypes/ (the Chapter 2A component tables).
+
+    Shape: contiguous component indexes from 1, a known OPT, a datatype unless the
+    component is withdrawn, a plausible name, four-digit table numbers that resolve to
+    Resources/tables/ for the same version. With `depth`, every file is re-extracted from
+    the PDF and must match byte for byte in content (the extractor is the only author)."""
+    findings, files = [], 0
+    by_version = collections.defaultdict(dict)
+    for path in sorted(glob.glob(f"{DATATYPES}/v*/*.json")):
+        files += 1
+        rel, version, stem = os.path.relpath(path, REPO), os.path.basename(os.path.dirname(path)), os.path.basename(path)[:-5]
+        try:
+            doc = json.load(open(path))
+        except ValueError as exc:
+            findings.append((rel, f"malformed JSON: {exc}"))
+            continue
+        by_version[version][stem] = doc
+        if doc.get("dataType") != stem or doc.get("version") != version[1:]:
+            findings.append((rel, "dataType / version do not match the path"))
+        comps = doc.get("components", [])
+        if [c.get("index") for c in comps] != list(range(1, len(comps) + 1)) or not comps:
+            findings.append((rel, f"component indexes are not 1..n: {[c.get('index') for c in comps]}"))
+        for c in comps:
+            where = f"{stem}.{c.get('index')}"
+            if c.get("optionality") not in COMPONENT_OPT:
+                findings.append((rel, f"{where}: unknown optionality {c.get('optionality')!r}"))
+            if not c.get("dataType") and c.get("optionality") not in ("W", "X"):
+                findings.append((rel, f"{where}: no datatype on a live component"))
+            if c.get("dataType") and not re.fullmatch(r"[A-Z][A-Z0-9]{1,3}|[Vv]aries", c["dataType"]):
+                findings.append((rel, f"{where}: implausible datatype {c['dataType']!r}"))
+            if not c.get("name") or len(c["name"]) > 70:
+                findings.append((rel, f"{where}: empty or over-long name — prose bleed?"))
+            for number in c.get("tables", []):
+                if not re.fullmatch(r"\d{4}", number):
+                    findings.append((rel, f"{where}: malformed table number {number!r}"))
+                elif number != NO_TABLE_SENTINEL and not os.path.exists(f"{TABLES}/{version}/{number}.json"):
+                    findings.append((rel, f"{where}: table {number} has no file under Resources/tables/{version}"))
+    if depth:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("dtx", os.path.join(REPO, "scripts/extract-datatype-components.py"))
+        dtx = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dtx)
+        for version, committed in sorted(by_version.items()):
+            if not os.path.exists(os.path.join(STANDARDS, dtx.PDFS[version[1:]])):
+                findings.append((f"Resources/datatypes/{version}", "cannot re-extract (missing PDF)"))
+                continue
+            fresh = dtx.extract(version[1:])
+            for code in sorted(set(fresh) | set(committed)):
+                got = [(c["index"], c["name"], c["dataType"], c["optionality"], dtx.table_numbers(c["tbl"]))
+                       for c in fresh.get(code, {}).get("components", [])]
+                have = [(c["index"], c["name"], c.get("dataType", ""), c["optionality"], c.get("tables", []))
+                        for c in committed.get(code, {}).get("components", [])]
+                if got != have:
+                    findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh extraction"))
+    return files, findings
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", action="store_true", help="also diff depth against the spec PDFs")
     ap.add_argument("--tables", action="store_true",
                     help="also audit the M6-O6 code-table registry (add --depth to re-extract)")
+    ap.add_argument("--datatypes", action="store_true",
+                    help="also audit the M10 datatype component tables (add --depth to re-extract)")
     ap.add_argument("--write-tables", action="store_true",
                     help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
     args = ap.parse_args()
@@ -547,6 +613,14 @@ def main():
             print(f"   {rel} table {number}: {why}")
         if any("KINDMISMATCH" not in why and "SUSPECT" not in why
                for _, _, why in table_findings):
+            rc = 1
+
+    if args.datatypes:
+        dfiles, dfindings = datatypes(depth=args.depth)
+        print(f"\n== datatypes (M10-A): {dfiles} files, {len(dfindings)} findings")
+        for rel, why in dfindings[:40]:
+            print(f"   {rel}: {why}")
+        if dfindings:
             rc = 1
 
     print("\nclean" if rc == 0 else "\nfindings above")
