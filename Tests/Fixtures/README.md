@@ -113,6 +113,11 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 | `Batches/batch_file_full.hl7` | Batch (fully wrapped) | FHS + BHS + 2 MSH + BTS + FTS — exercises all four framing markers in one file | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_multi_groups.hl7` | Batch (multi-group) | FHS + 2 BHS/BTS pairs + FTS — one ADT batch followed by one ORU batch | N/A — synthetic from scratch (v0.3-Z2) |
 
+## Corrections log
+
+- **2026-09-20 — ordering provider moved from OBR-17 to OBR-16 in 13 synthetic fixtures** (`oru_r01_*`, `edge_many_nte`, `edge_obx_repeating_values`). Each carried a provider value such as `DR12121212^Foster^Taylor` (an XCN) in OBR-17, Order Callback Phone Number (XTN), with OBR-16 empty: an off-by-one from when the fixtures were written. The component-level code-table check (M10-C) exposed it, because XTN.2 and XTN.3 are coded. Synthetic data; no PHI implications.
+- **2026-09-20 — `oru_r01_v24.hl7` MSH-18 changed from `UNICODE UTF-8` to `ASCII`** (A5): base v2.4 Table 0211 does not print the UTF-8 value.
+
 ## Anonymise tool semantics
 
 The `anonymise-fixture.sh` script is deterministic but **one-shot**:

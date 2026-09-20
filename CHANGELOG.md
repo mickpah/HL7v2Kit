@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M10-C: code-table check on composite components (2026-09-20)
+
+- `valueNotInTable` now also fires for a populated `ID` COMPONENT bound to
+  exactly one closed HL7-defined table, located at the component
+  (`PID[1]-3.5`). Examples: CX.5 identifier type (0203), XPN.7 name type
+  (0200), XTN.2 / XTN.3 (0201 / 0202), XAD.7 address type (0190), HD.3
+  universal ID type (0301). About 50 components per version qualify.
+- Same guards as the field rule: `IS` components and user-defined or open
+  tables are never enforced (MSG.3 / 0354 is open, so an unusual message
+  structure is never rejected); empty and HL7-null values are never checked;
+  a locale's rendering widens the check (AU ADRM-2021 prints `NOI` in 0203).
+- Applies to v2.5.1, v2.6 and v2.8.2 messages only: earlier versions print
+  no component tables, so nothing fires there. One level deep: a component
+  that is itself composite (the HD inside CX.4) is not descended into.
+- Suppressed by `checkCodeTables = false` and the `lenient` preset.
+- **Fallout traced: a real defect in 13 synthetic fixtures.** Each carried the
+  ordering provider (`DR12121212^Foster^Taylor`, an XCN) in OBR-17, the
+  callback phone number, with OBR-16 empty. Moved to OBR-16; logged in the
+  fixtures README; PHI scan clean.
+
 ### Fixed — code-table registry defects found while vetting component enforcement (2026-09-20)
 
 - **v2.8.2 tables with non-standard column headers extracted EMPTY in
