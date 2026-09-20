@@ -1,0 +1,34 @@
+{
+  "table": "0363",
+  "version": "au-adrm-2021",
+  "name": "Assigning Authority",
+  "kind": "User",
+  "permitsLocalExtensions": true,
+  "citation": "HL7au ADRM-2021.1 p. 310, User-defined Table 0363 - Assigning Authority, as printed by the localisation",
+  "entries": [
+    {
+      "code": "AUSHIC",
+      "description": "Medicare Australia"
+    },
+    {
+      "code": "AUSDVA",
+      "description": "Dept of Veteran’s Affairs"
+    },
+    {
+      "code": "AUSNATA",
+      "description": "National Association of Testing Authorities, Australia"
+    },
+    {
+      "code": "AUSLINK",
+      "description": "Australian CentreLink"
+    },
+    {
+      "code": "AUSHICPR",
+      "description": "Medicare Australia provider number"
+    },
+    {
+      "code": "IHI",
+      "description": "Accommodation carried from the M6 seed: Individual Healthcare Identifier; not printed in ADRM Table 0363 (p. 310)"
+    }
+  ]
+}

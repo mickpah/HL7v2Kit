@@ -5,6 +5,8 @@
 // that cite it, and it can differ from the base-spec vintage (the
 // ADRM's 0203 carries post-v2.4 additions and the AU 0363 values).
 //
+// (A6b) The four value-set arrays below now READ from the general registry's
+// locale axis; the text that follows describes the original M6-B-4 seed.
 // This is a SEED, not the general registry M6-O6 asks for: only the
 // tables a shipped conformance point consumes are modelled, values
 // only (no descriptions), hand-verified against the printed tables.
@@ -12,50 +14,40 @@
 // remains the §D capability (permanent-limitations-register.md).
 
 enum HL7CodeTables {
+    /// The codes of the AU ADRM-2021 rendering of table `number`. The rows,
+    /// with the descriptions the localisation prints, live in
+    /// `Resources/tables/locale/au-adrm-2021/` and reach here through the
+    /// generated `HL7TableRegistry` (A6b). Codegen emits every file in that
+    /// directory, so a missing table is a build-content error, not a
+    /// runtime condition: fail loudly rather than hand a profile rule an
+    /// empty allowed-value list, which would reject every value.
+    private static func auCodes(_ number: String) -> [String] {
+        guard let table = HL7TableRegistry.table(number, locale: .auLocalisation) else {
+            preconditionFailure("AU ADRM-2021 table \(number) is missing from the generated registry")
+        }
+        return table.codes
+    }
+
     /// HL7 Table 0074 — Diagnostic Service Section ID, as printed in
     /// AU ADRM-2021 §4.4.1.24 (pp. 225–226). Consumed by
     /// HL7au:000032 / 000032.2 (OBR-24 membership).
-    static let table0074: [String] = [
-        "AU", "BG", "BLB", "CG", "CUS", "CTH", "CT", "CH", "CP", "EC",
-        "EN", "HM", "ICU", "IMM", "LAB", "MB", "MCB", "MYC", "NMR",
-        "NMS", "NRS", "OUS", "OT", "OTH", "OSL", "PHR", "PT", "PHY",
-        "PF", "RAD", "RUS", "RC", "RT", "RX", "SR", "SP", "TX", "VUS",
-        "VR", "XRC",
-    ]
+    static let table0074: [String] = auCodes("0074")
 
     /// HL7 Table 0200 — Name Type, as printed in AU ADRM-2021 (p. 62).
     /// Not yet consumed by a shipped rule: XCN-10's HL7au:00044.7.3
     /// stays PARTIAL until the composite-override track grows a
     /// value-set rule (§D).
-    static let table0200: [String] = [
-        "A", "B", "C", "D", "I", "L", "M", "N", "P", "R", "S", "T", "U",
-    ]
+    static let table0200: [String] = auCodes("0200")
 
     /// HL7 Table 0203 — Identifier Type, as printed in AU ADRM-2021
     /// (pp. 301–309; the ADRM prints a post-v2.4 vintage). Consumed by
     /// HL7au:00104.7.3.1 (PRD-7.3 membership).
-    static let table0203: [String] = [
-        "ACSN", "AM", "AMA", "AN", "ANON", "ANC", "AND", "ANT", "APRN",
-        "ASID", "BA", "BC", "BCT", "BR", "BRN", "BSNR", "CC", "CONM",
-        "CZ", "CY", "DDS", "DEA", "DI", "DFN", "DL", "DN", "DO", "DP",
-        "DPM", "DR", "DS", "DVW", "DVG", "DVO", "DV", "EI", "EN", "ESN",
-        "FI", "GI", "GL", "GN", "HC", "JHN", "IND", "LACSN", "LANR",
-        "LI", "LN", "LR", "MA", "MB", "MC", "MCD", "MCN", "MCR", "MCT",
-        "MD", "MI", "MR", "MRT", "MS", "NBSNR", "NCT", "NE", "NH", "NI",
-        "NII", "NIIP", "NP", "NPI", "NPIO", "OD", "PA", "PC", "PCN",
-        "PE", "PEN", "PI", "PN", "PNT", "PPIN", "PPN", "PRC", "PRES",
-        "PRN", "PT", "QA", "RI", "RPH", "RN", "RR", "RRI", "RRP", "SID",
-        "SL", "SN", "SP", "SR", "SS", "TAX", "TN", "TPR", "U", "USID",
-        "VDI", "VN", "VP", "VS", "WC", "WCN", "WP", "XX",
-        // M6-B-8 accommodation: the ADRM's own PRD-7 component-matches
-        // table (p. 334) uses UPIN and NOI as <other qualifying info>
-        // values, but neither appears in its printed 0203 (pp. 301-309)
-        // — the document reprints a post-v2.4 0203 vintage while its
-        // examples keep v2.4-era codes. The union never misfires on
-        // ADRM-sanctioned traffic; a strict printed-table check would
-        // fire on the spec's own examples (req #4).
-        "UPIN", "NOI",
-    ]
+    /// `UPIN` and `NOI` ARE printed there, as `UPIN*` and `NOI**` with
+    /// footnotes (p. 309: UPIN "must be used for Australian Medicare
+    /// Provider numbers"; NOI is accepted for HL7 v2.9). The M6-B-8 seed
+    /// recorded them as accommodations absent from the printed table; the
+    /// footnote markers had hidden them from that transcription.
+    static let table0203: [String] = auCodes("0203")
 
     /// User-defined Table 0363 — Assigning Authority, the AU-defined
     /// value set printed in AU ADRM-2021 (p. 310). NOT consumed by a
@@ -64,9 +56,7 @@ enum HL7CodeTables {
     /// (`Medical-Objects`, `Argus`), so a closed-set check would
     /// misfire (req #4) — HL7au:00104.7.2.1 is registered instead.
     /// Kept for reference and for the correspondence map's AU keys.
-    static let table0363: [String] = [
-        "AUSHIC", "AUSDVA", "AUSNATA", "AUSLINK", "AUSHICPR", "IHI",
-    ]
+    static let table0363: [String] = auCodes("0363")
 
     /// ED/RP subtype ⇒ allowed type-of-data values (M6-B-8, for
     /// HL7au:00044.10.1.5/.6 and .11.1.5/.6). Lowercased keys; values

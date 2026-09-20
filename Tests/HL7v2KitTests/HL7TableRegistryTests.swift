@@ -140,4 +140,19 @@ struct HL7TableRegistryTests {
         #expect(Set(au.codes) == Set(base.codes).union(["UNICODE UTF-8"]))
         #expect(HL7TableRegistry.table("0211", locale: .international) == nil, "the base locale adds nothing")
     }
+
+    @Test("AU locale tables exist with descriptions and back the profile seed unchanged")
+    func auLocaleTables() throws {
+        let t0203 = try #require(HL7TableRegistry.table("0203", locale: .auLocalisation))
+        #expect(t0203.contains("MR") && t0203.contains("UPIN") && t0203.contains("NOI"))
+        #expect(t0203.entries.allSatisfy { !$0.description.isEmpty })
+        #expect(HL7CodeTables.table0203 == t0203.codes)
+        #expect(HL7CodeTables.table0074.count == 40, "the ADRM printed rendering, not the base-spec 39")
+        #expect(HL7CodeTables.table0200.count == 13 && HL7CodeTables.table0363.count == 6)
+        for number in ["0074", "0200", "0203", "0363"] {
+            let t = try #require(HL7TableRegistry.table(number, locale: .auLocalisation), "\(number)")
+            #expect(t.entries.allSatisfy { !$0.description.isEmpty }, "\(number)")
+        }
+        #expect(HL7TableRegistry.table("0203", locale: .international) == nil)
+    }
 }

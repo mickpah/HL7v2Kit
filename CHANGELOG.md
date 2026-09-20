@@ -66,6 +66,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The other five versions produced no fallout.
 - **Spec typo registered:** v2.3 DB1-2 prints TBL# 0033 for 0334.
 
+### Changed — A6b: the AU seed tables moved onto the locale table axis (2026-09-20)
+
+- Tables 0074 / 0200 / 0203 / 0363 as printed by AU ADRM-2021 now live in
+  `Resources/tables/locale/au-adrm-2021/` with the descriptions the
+  localisation prints (174 rows), and `HL7CodeTables.table0074` etc. read
+  from the generated registry. Value sets are identical to the hand seed
+  (proven by set comparison); the AU profile tests pass unchanged.
+- **Correction to the M6-B-8 record:** `UPIN` and `NOI` are NOT accommodations
+  absent from the ADRM's Table 0203. They are printed there as `UPIN*` and
+  `NOI**` with footnotes (p. 309: UPIN "must be used for Australian Medicare
+  Provider numbers"); the footnote markers had hidden them from the original
+  transcription. They now carry their printed descriptions and positions.
+- `IHI` in 0363 is genuinely not printed (p. 310 lists five authorities); it
+  stays, marked as an accommodation carried from the seed.
+
 ### Fixed — a 16-minute type-check in the generated grammar
 
 - A version's grammar was one dictionary literal, solved as a single

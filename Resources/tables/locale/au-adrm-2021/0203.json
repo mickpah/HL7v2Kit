@@ -1,0 +1,470 @@
+{
+  "table": "0203",
+  "version": "au-adrm-2021",
+  "name": "Identifier Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7au ADRM-2021.1 pp. 301-309, HL7 Table 0203 - Identifier Type, as printed by the localisation",
+  "entries": [
+    {
+      "code": "ACSN",
+      "description": "Accession ID"
+    },
+    {
+      "code": "AM",
+      "description": "American Express"
+    },
+    {
+      "code": "AMA",
+      "description": "American Medical Association Number"
+    },
+    {
+      "code": "AN",
+      "description": "Account number"
+    },
+    {
+      "code": "ANON",
+      "description": "Anonymous identifier"
+    },
+    {
+      "code": "ANC",
+      "description": "Account number Creditor"
+    },
+    {
+      "code": "AND",
+      "description": "Account number debitor"
+    },
+    {
+      "code": "ANT",
+      "description": "Temporary Account Number"
+    },
+    {
+      "code": "APRN",
+      "description": "Advanced Practice Registered Nurse number"
+    },
+    {
+      "code": "ASID",
+      "description": "Ancestor Specimen ID"
+    },
+    {
+      "code": "BA",
+      "description": "Bank Account Number"
+    },
+    {
+      "code": "BC",
+      "description": "Bank Card Number"
+    },
+    {
+      "code": "BCT",
+      "description": "Birth Certificate"
+    },
+    {
+      "code": "BR",
+      "description": "Birth registry number"
+    },
+    {
+      "code": "BRN",
+      "description": "Breed Registry Number"
+    },
+    {
+      "code": "BSNR",
+      "description": "Primary physician office number"
+    },
+    {
+      "code": "CC",
+      "description": "Cost Center number"
+    },
+    {
+      "code": "CONM",
+      "description": "Change of Name Document"
+    },
+    {
+      "code": "CZ",
+      "description": "Citizenship Card"
+    },
+    {
+      "code": "CY",
+      "description": "County number"
+    },
+    {
+      "code": "DDS",
+      "description": "Dentist license number"
+    },
+    {
+      "code": "DEA",
+      "description": "Drug Enforcement Administration registration number"
+    },
+    {
+      "code": "DI",
+      "description": "Diner’s Club card"
+    },
+    {
+      "code": "DFN",
+      "description": "Drug Furnishing or prescriptive authority Number"
+    },
+    {
+      "code": "DL",
+      "description": "Driver’s license number"
+    },
+    {
+      "code": "DN",
+      "description": "Doctor number"
+    },
+    {
+      "code": "DO",
+      "description": "Osteopathic License number"
+    },
+    {
+      "code": "DP",
+      "description": "Diplomatic Passport"
+    },
+    {
+      "code": "DPM",
+      "description": "Podiatrist license number"
+    },
+    {
+      "code": "DR",
+      "description": "Donor Registration Number"
+    },
+    {
+      "code": "DS",
+      "description": "Discover Card"
+    },
+    {
+      "code": "DVW",
+      "description": "DVA Card - White"
+    },
+    {
+      "code": "DVG",
+      "description": "DVA Card - Gold"
+    },
+    {
+      "code": "DVO",
+      "description": "DVA Card - Orange"
+    },
+    {
+      "code": "DV",
+      "description": "Veterans number"
+    },
+    {
+      "code": "EI",
+      "description": "Employee number"
+    },
+    {
+      "code": "EN",
+      "description": "Employer number"
+    },
+    {
+      "code": "ESN",
+      "description": "Staff Enterprise Number"
+    },
+    {
+      "code": "FI",
+      "description": "Facility ID"
+    },
+    {
+      "code": "GI",
+      "description": "Guarantor internal identifier"
+    },
+    {
+      "code": "GL",
+      "description": "General ledger number"
+    },
+    {
+      "code": "GN",
+      "description": "Guarantor external identifier"
+    },
+    {
+      "code": "HC",
+      "description": "Health Card Number"
+    },
+    {
+      "code": "JHN",
+      "description": "Jurisdictional health number (Canada)"
+    },
+    {
+      "code": "IND",
+      "description": "Indigenous/ Aboriginal"
+    },
+    {
+      "code": "LACSN",
+      "description": "Laboratory Accession ID"
+    },
+    {
+      "code": "LANR",
+      "description": "Lifelong physician number"
+    },
+    {
+      "code": "LI",
+      "description": "Labor and industries number"
+    },
+    {
+      "code": "LN",
+      "description": "License number"
+    },
+    {
+      "code": "LR",
+      "description": "Local Registry ID"
+    },
+    {
+      "code": "MA",
+      "description": "Patient Medicaid number"
+    },
+    {
+      "code": "MB",
+      "description": "Member Number"
+    },
+    {
+      "code": "MC",
+      "description": "Patient's Medicare number"
+    },
+    {
+      "code": "MCD",
+      "description": "Practitioner Medicaid number"
+    },
+    {
+      "code": "MCN",
+      "description": "Microchip Number"
+    },
+    {
+      "code": "MCR",
+      "description": "Practitioner Medicare number"
+    },
+    {
+      "code": "MCT",
+      "description": "Marriage Certificate"
+    },
+    {
+      "code": "MD",
+      "description": "Medical License number"
+    },
+    {
+      "code": "MI",
+      "description": "Military ID number"
+    },
+    {
+      "code": "MR",
+      "description": "Medical record number"
+    },
+    {
+      "code": "MRT",
+      "description": "Temporary Medical Record Number"
+    },
+    {
+      "code": "MS",
+      "description": "MasterCard"
+    },
+    {
+      "code": "NBSNR",
+      "description": "Secondary physician office number"
+    },
+    {
+      "code": "NCT",
+      "description": "Naturalization Certificate"
+    },
+    {
+      "code": "NE",
+      "description": "National employer identifier"
+    },
+    {
+      "code": "NH",
+      "description": "National Health Plan Identifier"
+    },
+    {
+      "code": "NI",
+      "description": "National unique individual identifier"
+    },
+    {
+      "code": "NII",
+      "description": "National Insurance Organization Identifier"
+    },
+    {
+      "code": "NIIP",
+      "description": "National Insurance Payor Identifier (Payor)"
+    },
+    {
+      "code": "NOI",
+      "description": "National Organisation Identifier"
+    },
+    {
+      "code": "NP",
+      "description": "Nurse practitioner number"
+    },
+    {
+      "code": "NPI",
+      "description": "National provider identifier"
+    },
+    {
+      "code": "NPIO",
+      "description": "National provider at organisation identifier"
+    },
+    {
+      "code": "OD",
+      "description": "Optometrist license number"
+    },
+    {
+      "code": "PA",
+      "description": "Physician Assistant number"
+    },
+    {
+      "code": "PC",
+      "description": "Parole Card"
+    },
+    {
+      "code": "PCN",
+      "description": "Penitentiary/ correctional institution Number"
+    },
+    {
+      "code": "PE",
+      "description": "Living Subject Enterprise Number"
+    },
+    {
+      "code": "PEN",
+      "description": "Pension Number"
+    },
+    {
+      "code": "PI",
+      "description": "Patient internal identifier"
+    },
+    {
+      "code": "PN",
+      "description": "Person number"
+    },
+    {
+      "code": "PNT",
+      "description": "Temporary Living Subject Number"
+    },
+    {
+      "code": "PPIN",
+      "description": "Medicare/CMS Performing Provider Identification Number"
+    },
+    {
+      "code": "PPN",
+      "description": "Passport number"
+    },
+    {
+      "code": "PRC",
+      "description": "Permanent Resident Card Number"
+    },
+    {
+      "code": "PRES",
+      "description": "Prescriber Number"
+    },
+    {
+      "code": "PRN",
+      "description": "Provider number"
+    },
+    {
+      "code": "PT",
+      "description": "Patient external identifier"
+    },
+    {
+      "code": "QA",
+      "description": "QA number"
+    },
+    {
+      "code": "RI",
+      "description": "Resource identifier"
+    },
+    {
+      "code": "RPH",
+      "description": "Pharmacist license number"
+    },
+    {
+      "code": "RN",
+      "description": "Registered Nurse Number"
+    },
+    {
+      "code": "RR",
+      "description": "Railroad Retirement number"
+    },
+    {
+      "code": "RRI",
+      "description": "Regional registry ID"
+    },
+    {
+      "code": "RRP",
+      "description": "Railroad Retirement Provider"
+    },
+    {
+      "code": "SID",
+      "description": "Specimen ID"
+    },
+    {
+      "code": "SL",
+      "description": "State license"
+    },
+    {
+      "code": "SN",
+      "description": "Subscriber Number"
+    },
+    {
+      "code": "SP",
+      "description": "Study Permit"
+    },
+    {
+      "code": "SR",
+      "description": "State registry ID"
+    },
+    {
+      "code": "SS",
+      "description": "Social Security number"
+    },
+    {
+      "code": "TAX",
+      "description": "Tax ID number"
+    },
+    {
+      "code": "TN",
+      "description": "Treaty Number/ (Canada)"
+    },
+    {
+      "code": "TPR",
+      "description": "Temporary Permanent Resident (Canada)"
+    },
+    {
+      "code": "U",
+      "description": "Unspecified identifier"
+    },
+    {
+      "code": "UPIN",
+      "description": "Medicare/CMS (formerly HCFA)’s Universal Physician Identification numbers"
+    },
+    {
+      "code": "USID",
+      "description": "Unique Specimen ID"
+    },
+    {
+      "code": "VDI",
+      "description": "Vendor Directory Identifier"
+    },
+    {
+      "code": "VN",
+      "description": "Visit number"
+    },
+    {
+      "code": "VP",
+      "description": "Visitor Permit"
+    },
+    {
+      "code": "VS",
+      "description": "VISA"
+    },
+    {
+      "code": "WC",
+      "description": "WIC identifier"
+    },
+    {
+      "code": "WCN",
+      "description": "Workers’ Comp Number"
+    },
+    {
+      "code": "WP",
+      "description": "Work Permit"
+    },
+    {
+      "code": "XX",
+      "description": "Organization identifier"
+    }
+  ]
+}
