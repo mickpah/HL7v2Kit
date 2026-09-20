@@ -88,13 +88,19 @@ public struct ValidationOptions: Sendable {
     /// Only structural / grammar-required checks. No Z-segment chatter,
     /// no deprecated-field warnings, no conditional-field evaluation, no
     /// component-grammar enforcement. Useful when you just want a yes/no
-    /// "would HL7v2Kit be happy parsing this round-trip?" answer.
-    public static let lenient = ValidationOptions(
-        zSegmentPolicy: .ignore,
-        checkRequiredFields: true,
-        checkConditionalFields: false,
-        checkComponentGrammar: false,
-        checkCardinality: false,
-        warnDeprecatedFields: false
-    )
+    /// "would HL7v2Kit be happy parsing this round-trip?" answer. The
+    /// code-table membership check (`checkCodeTables`) is a content rule,
+    /// not a structural one, so this preset turns it off too.
+    public static let lenient: ValidationOptions = {
+        var options = ValidationOptions(
+            zSegmentPolicy: .ignore,
+            checkRequiredFields: true,
+            checkConditionalFields: false,
+            checkComponentGrammar: false,
+            checkCardinality: false,
+            warnDeprecatedFields: false
+        )
+        options.checkCodeTables = false
+        return options
+    }()
 }

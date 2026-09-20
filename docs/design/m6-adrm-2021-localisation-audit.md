@@ -214,6 +214,8 @@ render the spec covers the datatype column**.
 
 ### M6-O6 — HL7 code tables are not modelled at all
 
+> **Addendum 2026-09-20 — closed by ADR-016.** The finding below is kept as written. Since then: every TBL# binding is in the schemas (`tables`, 4,290 bindings), 2,565 per-version tables are extracted with descriptions and generated into `HL7TableRegistry`, `valueNotInTable` enforces closed HL7 tables on ID fields, and the four AU tables live on the registry's locale axis. One correction to this audit's own record: `UPIN` and `NOI` ARE printed in the ADRM's Table 0203, as `UPIN*` and `NOI**` with footnotes on p. 309.
+
 The schemas carry `index`, `swiftName`, `name`, `dataType`, `optionality`,
 `repeatability` — the extractor drops the spec's `TBL#` column, and there is no
 code-table registry anywhere in the package. Every conformance point of the

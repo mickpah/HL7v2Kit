@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+**M9 — the code-table registry (ADR-016), with the 1-n variable-column model.** Additive API; one new check is on by default (see Changed).
+
+### Added — public API summary (ADR-016)
+
+- `HL7Table` (number, name, `Kind`, `permitsLocalExtensions`, entries with
+  descriptions, `codes`, `contains(_:)`, `isClosed`) and `HL7TableRegistry`
+  (`table(_:version:)`, `table(_:locale:)`).
+- `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)`,
+  `ValidationOptions.checkCodeTables` (default `true`).
+- `FieldGrammar.variableColumns` and the plural accessors `RDT.columnValues` /
+  `ADD.addendumContinuationPointers`.
+- `Resources/tables/` (2,565 per-version tables + 5 AU locale tables),
+  `scripts/extract-code-tables.swift`, `scripts/backfill-schema-tables.py`,
+  and the `--tables` pass of `scripts/audit-schemas.py`.
+
+### Changed
+
+- **`valueNotInTable` is on by default** for `ID` fields bound to a closed
+  HL7-defined table (1,073 fields). Messages that carried an out-of-table
+  value there used to pass. Suppress with `checkCodeTables = false`.
+- `ValidationOptions.lenient` now turns the code-table check off, as its
+  documentation always promised ("only structural checks"); it was left on.
+- `HL7CodeTables` (internal) reads the AU tables from the registry's locale
+  axis instead of hand-written arrays.
+
+### Docs
+
+- ADR-016; design index; `permanent-limitations-register.md` (M6-O6 row
+  shipped, composite-component links registered in section C); dated
+  addendum under M6-O6 in the M6 audit; DocC `Validation.md` and
+  `Migration.md`; `the working notes` regeneration note.
+
 ### Added
 
 - **Track B — SEQ 1-n variable-column segments modelled.** New schema key

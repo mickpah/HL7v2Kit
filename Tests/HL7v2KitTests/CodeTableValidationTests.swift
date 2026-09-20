@@ -54,6 +54,13 @@ struct CodeTableValidationTests {
         #expect(try tableIssues(oru(obr24: "XX"), options: options).isEmpty)
     }
 
+    @Test("The lenient preset is structural only: it never runs the code-table check")
+    func lenientSkipsCodeTables() throws {
+        #expect(try !tableIssues(oru(obr24: "XX")).isEmpty, "the default options do flag it")
+        #expect(try tableIssues(oru(obr24: "XX"), options: .lenient).isEmpty)
+        #expect(!ValidationOptions.lenient.checkCodeTables)
+    }
+
     @Test("A version with no table for the field is silent")
     func versionWithoutTable() throws {
         // v2.8 is grammar-less (ADR-013); nothing to look up.

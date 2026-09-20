@@ -96,6 +96,15 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v0.18.0 | ADR-014 evolution policy + public-API-surface inventory (DocC/docs only) |
 | v0.19.0 | Canonical NK1/PV1/IN1 typed accessors extended to full depth (additive) |
 | **v1.0.0** | **API frozen** — the surface above is now the SemVer contract |
+| *Unreleased* | Code-table registry (ADR-016): `HL7Table`, `HL7TableRegistry`, `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)`, `ValidationOptions.checkCodeTables`; `FieldGrammar.variableColumns` and plural accessors for the `1-n` segments RDT / ADD. **Additive API, but a new default check:** see below. |
+
+## The code-table check is on by default (ADR-016)
+
+The registry release adds no source break, but it does change validation results. A message that carried an out-of-table value in an `ID` field bound to a closed HL7 table (1,073 fields across the six versions) used to validate clean and now reports ``IssueCode/valueNotInTable(table:)`` as an error.
+
+- **To keep the old results:** set `options.checkCodeTables = false`. The ``ValidationOptions/lenient`` preset already does.
+- **If you switch over `IssueCode`:** it is an open enum; the new case lands in your `@unknown default` branch.
+- **AU v2.4 traffic declaring `UNICODE UTF-8` in MSH-18:** an error under ``HL7Locale/international``, because base v2.4 Table 0211 does not print it, and accepted under ``HL7Locale/auLocalisation``, because ADRM-2021 back-ports it. Validate AU traffic with the AU locale.
 
 ## Historical: 0.1.0 → 0.5.0
 

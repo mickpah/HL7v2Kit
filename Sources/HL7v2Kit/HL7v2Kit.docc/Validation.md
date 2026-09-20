@@ -28,6 +28,7 @@ For each segment whose ID is in the loaded grammar table (currently HL7 v2.5.1 o
 - **Component-grammar check.** When a populated field uses a composite data type HL7v2Kit ships typed metadata for (XPN / CX / XAD), required sub-components are enforced. PID-5 (XPN) populated without an XPN-1 family name produces ``IssueCode/requiredComponentMissing`` at `PID[1]-5.1`; PID-3 (CX) populated without an ID number produces it at `PID[1]-3.1`; PID-11 (XAD) populated without a street address produces it at `PID[1]-11.1`. Each typed composite carries its own `static let requiredComponents` (see ``XPN``, ``CX``, ``XAD``). Composites HL7v2Kit hasn't typed yet (CE / CWE / EI / XCN / ...) skip silently — they can be promoted incrementally. v0.2-V2.
 - **Cardinality check.** Fields declared `repeatability=1` carrying multiple `~`-separated repetitions produce ``IssueCode/cardinalityExceeded`` errors.
 - **Deprecation warning.** Fields with optionality `B` (backward-compat) or `X` (not-supported) that are populated produce ``IssueCode/fieldNotSupported`` warnings (severity `.warning`, not `.error`).
+- **Code-table check.** A populated `ID` field bound to a closed HL7-defined table must carry one of that table's codes, as printed by the message's own HL7 version; otherwise ``IssueCode/valueNotInTable(table:)`` is an error. A table is closed when it is HL7-defined, permits no local extensions, and has rows (``HL7Table/isClosed``). `IS` fields and user-defined tables are never enforced, and neither are empty or HL7-null (`""`) values. Under a localisation, the locale's own rendering of the table is consulted before an error is raised, so a locale can widen a table and never narrows it: AU ADRM-2021 back-ports `UNICODE UTF-8` into v2.4 Table 0211. Turn the check off with ``ValidationOptions/checkCodeTables``. Look tables up with ``HL7TableRegistry``.
 
 For each segment whose ID is **not** in the loaded grammar table:
 
@@ -40,7 +41,7 @@ Three presets cover the common configurations:
 ```swift
 Validator(options: .default)    // grammar + conditional checks on, Z-segments silently tolerated
 Validator(options: .strict)     // grammar + conditional checks on, Z-segments rejected as errors
-Validator(options: .lenient)    // only required-field check; no conditional, no cardinality, no warnings, no Z policy
+Validator(options: .lenient)    // only required-field check; no conditional, no cardinality, no code tables, no warnings, no Z policy
 ```
 
 ``ValidationOptions/default`` is appropriate for AU clinical inbound traffic where Z-segments are routine and you want grammar conformance flagged. ``ValidationOptions/strict`` is appropriate for outgoing-message validation where you control every segment. ``ValidationOptions/lenient`` is for "would HL7v2Kit be happy serialising this back?" round-trip pre-check.
@@ -114,6 +115,7 @@ Conditions live in the per-segment JSON schemas under `Resources/schemas/<versio
 
 ## What the validator does not check
 
+- **Code tables on composite components.** The code-table check works at field level on `ID` fields. Tables bound to a component (`CX.5` identifier type, `CE.3` coding system) and fields whose TBL# cell names several tables are recorded but not enforced (ADR-016).
 - **Component grammar for untyped composites.** XPN / CX / XAD enforce their `requiredComponents`; the other composites (CE / CWE / EI / XCN / HD / MSG / PT / VID / XTN / PL / CNE / XON / EIP) still skip silently because HL7v2Kit doesn't ship typed metadata for them yet. Each can be promoted incrementally — add a `static let requiredComponents: [RequiredComponent]` and extend `Validator.requiredComponents(forCompositeCode:)`.
 - **Field-level type conformance.** A TS field carrying `"hello"` is not a well-formed timestamp, but the validator doesn't currently check that. Tracked for a future release.
 - **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.

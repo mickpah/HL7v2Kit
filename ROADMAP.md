@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-20 (document review: header brought up to `v3.2.0`; M9 section added) |
+| Last updated | 2026-09-20 (M9 closed: the code-table registry, ADR-016) |
 | Current release | **`v3.2.0`** (2026-09-17) — the spec-exhaustion release: M7 prose sweep + M8 base-consistency/batch cycle, additive on `v3.1.0` under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
-| Next planned cycle | **M9 — general per-version code-table registry (open).** Work exists on two lines that must be reconciled first: branch `v3.3-open-items` (registry, codegen, validator rule, 2,564 extracted tables; also the 1-n variable-column model) and `main`'s M9-A (schema table bindings). See the M9 section and `STATUS.md`. |
+| Next planned cycle | **None scheduled.** M9 is complete and merged (untagged; the owner versions it). Candidates: composite-component table links, the VMR implementation table and OBX-4 sub-ID tree. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -209,14 +209,12 @@ Validator could not carry.*
   (PAC-2, PRT-6/7 — the bare-C guard set shrank by three). New `IssueCode` cases:
   `pairedFieldMismatch(item:)`, `conditionalFieldProhibited`.
 
-### M9 — General per-version code-table registry **(OPEN, 2026-09-17 →)**
+### M9 — General per-version code-table registry **CLOSED (2026-09-20; ADR-016; merged, untagged)**
 *Goal: every HL7 table the spec binds to a field is bound in the schema, available as per-version data with descriptions, and consumable by the validator — defensible against the spec text alone (req #2). Closes M6-O6.*
 
-- **Done on branch `v3.3-open-items` (not merged):** `HL7Table` / `HL7TableRegistry` with table codegen (A1); `FieldGrammar.table` (A2); the `valueNotInTable` closed-set check, enforced for HL7-defined tables on ID fields and never for user-defined IS tables (A3); `scripts/extract-code-tables.swift` with 2,564 tables across the six versions (A4). The same branch carries the **1-n variable-column model** for RDT/ADD (`variableColumns`, Track B), which retires that documented limitation.
-- **Done on `main`:** M9-A — schema key `tables` (a list; 4,290 bindings, 539 distinct tables), the audit `tables` predicate, 26 hand-verified repairs, and the extractor fix for wrapped TBL# cells.
-- **To reconcile:** the branch plans a singular `table` on ID/IS only; `main` binds a list on every datatype, because the spec binds several tables to some composite-typed fields (NK1-11, OBR-15, LCH-5). Owner decides the primary line; see `STATUS.md`.
-- **Remaining:** A5 (schema key wired to `FieldGrammar`), A6 (AU locale tables; retire the `HL7CodeTables` seed), A7 (docs + merge), then the first consumers — the VMR implementation table and OBX-4 sub-ID tree validation.
-- **Gate to close:** every bound table has content or a cited reason; no membership rule misfires on spec-compliant input (req #4); additive under ADR-014.
+- **Outcome:** 2,565 per-version tables with descriptions, extracted from each version's own Appendix A / Chapter 2C and generated into `HL7TableRegistry`; schema keys `tables` (4,290 verified bindings) and `table` (1,893 enforced links); `valueNotInTable` on 1,073 `ID` fields over closed HL7-defined tables, never on IS or user-defined tables; a locale table axis carrying the five AU ADRM-2021 tables, which can widen a base table (0211 `UNICODE UTF-8`) and never narrows it. The same cycle landed **Track B**, the `variableColumns` model for the 1-n segments RDT / ADD.
+- **Honesty points (req #3/#4):** a table that printed `...` beside other rows stays open unless explicitly closed; rows that denote an absent field are not codes; corrections are version-scoped, cited overrides, never hand edits. Two registered spec typos (v2.3 DB1-2 TBL# 0033 for 0334; v2.3 Appendix A Table 0207 in lowercase).
+- **Deferred, registered:** table links on composite components and multi-table field bindings.
 
 ### R — Over-engineering remediation **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 
