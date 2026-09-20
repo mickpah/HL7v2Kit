@@ -32,6 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (withdrawn, blank cell). All 18 ID/IS fields left unbound were read against
   the printed rows: the spec prints a blank TBL# for each.
 
+### Docs — STATUS / NEXT_STEPS / ROADMAP reviewed against the repository (2026-09-20)
+
+- Recorded the `v3.3-open-items` branch and worktree, which the live documents
+  omitted: Track B (1-n variable columns) complete, Track A (code-table
+  registry) complete through A4. M9-A on `main` duplicated that plan's A5
+  with a different key design; the runway is now "reconcile, then A5-A7".
+- Corrected stale facts: ROADMAP's current release (`v2.1.0` -> `v3.2.0`),
+  typed-segment counts (150/109 -> 188), test counts, the closed M7 prose
+  sweep and M8 items still listed as open, the fixture gate (source material,
+  not IP), and the `private` remote's actual state.
+- Commit-message rule: no co-author or AI-attribution line anywhere
+  (`the working notes`, NEXT_STEPS working rules). Icons removed from the three live
+  documents. Pre-review snapshots archived as `*-2026-09-20-pre-doc-review.md`.
+
 ### Fixed — extractor dropped wrapped TBL# fragments
 
 - `scripts/extract-segment-tables.swift`: a continuation line holding only a
