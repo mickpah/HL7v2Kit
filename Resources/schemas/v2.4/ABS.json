@@ -3,19 +3,19 @@
   "version": "2.4",
   "description": "Abstract",
   "fields": [
-    { "index": 1, "swiftName": "dischargeCareProvider", "name": "Discharge Care Provider", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "transferMedicalServiceCode", "name": "Transfer Medical Service Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "severityOfIllnessCode", "name": "Severity of Illness Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "dischargeCareProvider", "name": "Discharge Care Provider", "dataType": "XCN", "optionality": "O", "repeatability": "1", "tables": ["0010"] },
+    { "index": 2, "swiftName": "transferMedicalServiceCode", "name": "Transfer Medical Service Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0069"] },
+    { "index": 3, "swiftName": "severityOfIllnessCode", "name": "Severity of Illness Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0421"] },
     { "index": 4, "swiftName": "dateTimeOfAttestation", "name": "Date/Time of Attestation", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "attestedBy", "name": "Attested By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "triageCode", "name": "Triage Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "triageCode", "name": "Triage Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0422"] },
     { "index": 7, "swiftName": "abstractCompletionDateTime", "name": "Abstract Completion Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "abstractedBy", "name": "Abstracted By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "caseCategoryCode", "name": "Case Category Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "caesarianSectionIndicator", "name": "Caesarian Section Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "gestationCategoryCode", "name": "Gestation Category Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "caseCategoryCode", "name": "Case Category Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0423"] },
+    { "index": 10, "swiftName": "caesarianSectionIndicator", "name": "Caesarian Section Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 11, "swiftName": "gestationCategoryCode", "name": "Gestation Category Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0424"] },
     { "index": 12, "swiftName": "gestationPeriodWeeks", "name": "Gestation Period - Weeks", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "newbornCode", "name": "Newborn Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 14, "swiftName": "stillbornIndicator", "name": "Stillborn Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 13, "swiftName": "newbornCode", "name": "Newborn Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0425"] },
+    { "index": 14, "swiftName": "stillbornIndicator", "name": "Stillborn Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

@@ -104,6 +104,46 @@ SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", 
 #                 the schema's `varies` is hand-verified (M6-D5).
 DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
 
+# M9-A tables predicate. A TBL# cell is well-formed when it is one or more
+# 4-digit table numbers joined by "/" (a field may bind more than one table:
+# NK1-11 is 0327/0328). Anything else is the TOOL failing — a cell cut at a
+# line wrap ("0327/") or a neighbouring column bleeding in ("01107") — and the
+# slot must carry a hand-verified entry in scripts/table-repairs.json, keyed
+# "<version>/<SEG>-<index>", with the citation it was verified against.
+TABLE_REPAIRS_PATH = os.path.join(REPO, "scripts/table-repairs.json")
+TABLE_REPAIRS = ({k: v["tables"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()}
+                 if os.path.exists(TABLE_REPAIRS_PATH) else {})
+
+
+def expected_tables(version, seg, index, raw_cells):
+    """(tables, problem) for one slot from the raw TBL# cells seen for it."""
+    key = f"{version}/{seg}-{index}"
+    if key in TABLE_REPAIRS:
+        return sorted(TABLE_REPAIRS[key]), None
+    tokens = [t.strip() for cell in raw_cells for t in cell.split("/")]
+    if any(not re.fullmatch(r"\d{4}", t) for t in tokens):
+        return None, f"malformed TBL# cell {sorted(raw_cells)} — verify and add to table-repairs.json"
+    return sorted(set(tokens)), None
+
+
+def write_tables(path, wanted):
+    """Insert/replace each field's `tables` entry, textually: the schemas are
+    hand-formatted (one-field-per-line and one-key-per-line both occur) and do
+    not survive a json round-trip byte for byte. `tables` always directly
+    follows `repeatability`, so removal restores the original bytes."""
+    text = open(path, encoding="utf-8").read()
+    text = re.sub(r',\s*"tables"\s*:\s*\[[^\]]*\]', "", text)
+    out, pos, index = [], 0, None
+    for m in re.finditer(r'"index"\s*:\s*(\d+)|(\n[ \t]*)?"repeatability"\s*:\s*"[^"]*"', text):
+        if m.group(1):
+            index = int(m.group(1))
+        elif wanted.get(index):
+            sep = "," + m.group(2) if m.group(2) else ", "  # own-line key vs inline field
+            out.append(text[pos:m.end()] + f'{sep}"tables": {json.dumps(wanted[index])}')
+            pos = m.end()
+    open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
+
+
 CHAPTER_GLOBS = {
     "v2.3":   ["HL7_v23_PDF/CH*.pdf"],
     "v2.3.1": ["HL7_v231_PDF/Hl7V231.pdf"],
@@ -167,6 +207,11 @@ def integrity():
             table = f.get("table")
             if table is not None and not (re.fullmatch(r"\d{4}", table) and dt in ("ID", "IS")):
                 findings.append((rel, f["index"], f"malformed table ref {table!r} (dataType {dt!r})"))
+            # Merge of M9-A into Track A: `tables` is the verified spec binding (a list, any
+            # datatype); `table` is the enforced link codegen reads. They must never disagree.
+            if table is not None and table not in f.get("tables", []):
+                findings.append((rel, f["index"],
+                                 f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))
@@ -192,7 +237,7 @@ def extracted_depths(version):
     schema value is a finding only when it matches NO extracted candidate.
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
-    best, dts = {}, {}
+    best, dts, tbls = {}, {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -212,24 +257,27 @@ def extracted_depths(version):
                     dt = (f.get("dataType") or "").strip()
                     if dt:
                         dts.setdefault((seg, f["index"]), set()).add(dt)
-    return best, dts
+                    tbl = (f.get("tbl") or "").strip()
+                    if tbl:
+                        tbls.setdefault((seg, f["index"]), set()).add(tbl)
+    return best, dts, tbls
 
 
-def depth():
+def depth(write=False):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], []
+        return [], [], 0, [], {}, [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
-    datatype_findings = []
+    datatype_findings, table_findings = [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts = extracted_depths(version)
+        found, spec_dts, spec_tbls = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -246,6 +294,18 @@ def depth():
         for path in sorted(glob.glob(f"{SCHEMAS}/{version}/*.json")):
             seg = os.path.basename(path)[:-5].upper()
             if seg in DEPTH_WHITELIST or f"{version}/{seg}" in DEPTH_WHITELIST or seg not in found:
+                # M9-A: a segment the extractor cannot be trusted on still takes its
+                # hand-verified table bindings (repairs-only; no extracted cell is believed).
+                prefix = f"{version}/{seg}-"
+                wanted = {int(k[len(prefix):]): sorted(v) for k, v in TABLE_REPAIRS.items()
+                          if k.startswith(prefix)}
+                if wanted:
+                    if write:
+                        write_tables(path, wanted)
+                    for f in json.load(open(path))["fields"]:
+                        if sorted(f.get("tables", [])) != wanted.get(f["index"], []):
+                            table_findings.append((version, seg, f["index"],
+                                                   f"schema {f.get('tables', [])}, repair {wanted.get(f['index'], [])}"))
                 continue
             schema_fields = json.load(open(path))["fields"]
             schema_depth = max(f["index"] for f in schema_fields)
@@ -271,7 +331,25 @@ def depth():
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings
+            # M9-A: the schema's `tables` must equal the version's own TBL#
+            # column, both directions (a stale binding is as wrong as a
+            # missing one).
+            wanted = {}
+            for f in schema_fields:
+                tables, problem = expected_tables(
+                    version, seg, f["index"], spec_tbls.get((seg, f["index"]), set()))
+                if problem:
+                    table_findings.append((version, seg, f["index"], problem))
+                    continue
+                wanted[f["index"]] = tables
+            if write:
+                write_tables(path, wanted)
+                schema_fields = json.load(open(path))["fields"]  # verify what was written
+            for f in schema_fields:
+                if f["index"] in wanted and sorted(f.get("tables", [])) != wanted[f["index"]]:
+                    table_findings.append((version, seg, f["index"],
+                                           f"schema {f.get('tables', [])}, spec {wanted[f['index']]}"))
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings
 
 
 def extracted_tables(version):
@@ -394,6 +472,8 @@ def main():
     ap.add_argument("--depth", action="store_true", help="also diff depth against the spec PDFs")
     ap.add_argument("--tables", action="store_true",
                     help="also audit the M6-O6 code-table registry (add --depth to re-extract)")
+    ap.add_argument("--write-tables", action="store_true",
+                    help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
     args = ap.parse_args()
 
     bad = integrity()
@@ -404,7 +484,8 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings = depth()
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings = depth(
+            write=args.write_tables)
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -422,7 +503,12 @@ def main():
         print(f"\n== dataType (M6-O5): {len(dt_findings)} findings")
         for v, seg, idx, got, want in dt_findings:
             print(f"   DATATYPE {v} {seg}-{idx}: schema {got!r}, spec saw {want}")
-        if gaps or suspects or presence or dt_findings:
+        print(f"\n== table bindings (M9-A): {len(tbl_findings)} findings")
+        for v, seg, idx, why in sorted(tbl_findings, key=lambda t: "malformed" not in t[3])[:60]:
+            print(f"   TABLES   {v} {seg}-{idx}: {why}")
+        if len(tbl_findings) > 60:
+            print(f"   ... and {len(tbl_findings) - 60} more")
+        if gaps or suspects or presence or dt_findings or tbl_findings:
             rc = 1
 
     if args.tables:

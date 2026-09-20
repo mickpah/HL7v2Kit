@@ -9,7 +9,8 @@
       "name": "Acknowledgment Code",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0008"]
     },
     {
       "index": 2,
@@ -41,7 +42,8 @@
       "name": "Delayed Acknowledgment Type",
       "dataType": "ID",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0102"]
     },
     {
       "index": 6,

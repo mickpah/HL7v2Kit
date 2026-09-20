@@ -5,10 +5,10 @@
   "fields": [
     { "index": 1, "swiftName": "setIdUb2", "name": "Set ID - UB2", "dataType": "SI", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "coInsuranceDays9", "name": "Co-Insurance Days (9)", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "conditionCode2430", "name": "Condition Code (24-30)", "dataType": "IS", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "conditionCode2430", "name": "Condition Code (24-30)", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0043"] },
     { "index": 4, "swiftName": "coveredDays7", "name": "Covered Days (7)", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "nonCoveredDays8", "name": "Non-Covered Days (8)", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "valueAmountCode", "name": "Value Amount & Code", "dataType": "CM", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "valueAmountCode", "name": "Value Amount & Code", "dataType": "CM", "optionality": "O", "repeatability": "*", "tables": ["0153"] },
     { "index": 7, "swiftName": "occurrenceCodeDate3235", "name": "Occurrence Code & Date (32-35)", "dataType": "CM", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "occurrenceSpanCodeDates36", "name": "Occurrence Span Code/Dates (36)", "dataType": "CM", "optionality": "O", "repeatability": "*" },
     { "index": 9, "swiftName": "ub92Locator2State", "name": "UB92 Locator 2 (State)", "dataType": "ST", "optionality": "O", "repeatability": "*" },

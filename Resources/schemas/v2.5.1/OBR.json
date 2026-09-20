@@ -92,7 +92,8 @@
       "name": "Specimen Action Code",
       "dataType": "ID",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0065"]
     },
     {
       "index": 12,
@@ -198,7 +199,8 @@
       "dataType": "ID",
       "table": "0074",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0074"]
     },
     {
       "index": 25,
@@ -207,6 +209,7 @@
       "dataType": "ID",
       "optionality": "C",
       "repeatability": "1",
+      "tables": ["0123"],
       "condition": "messageCode = ORU"
     },
     {
@@ -248,7 +251,8 @@
       "name": "Transportation Mode",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0124"]
     },
     {
       "index": 31,
@@ -336,7 +340,8 @@
       "name": "Transport Arranged",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0224"]
     },
     {
       "index": 42,
@@ -344,7 +349,8 @@
       "name": "Escort Required",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0225"]
     },
     {
       "index": 43,
@@ -360,7 +366,8 @@
       "name": "Procedure Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0088"]
     },
     {
       "index": 45,
@@ -368,7 +375,8 @@
       "name": "Procedure Code Modifier",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0340"]
     },
     {
       "index": 46,
@@ -376,7 +384,8 @@
       "name": "Placer Supplemental Service Information",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0411"]
     },
     {
       "index": 47,
@@ -384,7 +393,8 @@
       "name": "Filler Supplemental Service Information",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0411"]
     },
     {
       "index": 48,
@@ -392,7 +402,8 @@
       "name": "Medically Necessary Duplicate Procedure Reason",
       "dataType": "CWE",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0476"]
     },
     {
       "index": 49,
@@ -400,7 +411,8 @@
       "name": "Result Handling",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0507"]
     },
     {
       "index": 50,

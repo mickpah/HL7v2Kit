@@ -3,12 +3,12 @@
   "version": "2.8.2",
   "description": "MRG",
   "fields": [
-    { "index": 1, "swiftName": "priorPatientIdentifierList", "name": "Prior Patient Identifier List", "dataType": "CX", "optionality": "R", "repeatability": "*" },
+    { "index": 1, "swiftName": "priorPatientIdentifierList", "name": "Prior Patient Identifier List", "dataType": "CX", "optionality": "R", "repeatability": "*", "tables": ["0061"] },
     { "index": 2, "swiftName": "priorAlternatePatientId", "name": "Prior Alternate Patient ID", "dataType": "", "optionality": "W", "repeatability": "1" },
-    { "index": 3, "swiftName": "priorPatientAccountNumber", "name": "Prior Patient Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "priorPatientAccountNumber", "name": "Prior Patient Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1", "tables": ["0061"] },
     { "index": 4, "swiftName": "priorPatientId", "name": "Prior Patient ID", "dataType": "", "optionality": "W", "repeatability": "1" },
-    { "index": 5, "swiftName": "priorVisitNumber", "name": "Prior Visit Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "priorAlternateVisitId", "name": "Prior Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "priorPatientName", "name": "Prior Patient Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" }
+    { "index": 5, "swiftName": "priorVisitNumber", "name": "Prior Visit Number", "dataType": "CX", "optionality": "O", "repeatability": "1", "tables": ["0061"] },
+    { "index": 6, "swiftName": "priorAlternateVisitId", "name": "Prior Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "*", "tables": ["0061"] },
+    { "index": 7, "swiftName": "priorPatientName", "name": "Prior Patient Name", "dataType": "XPN", "optionality": "O", "repeatability": "*", "tables": ["0200"] }
   ]
 }

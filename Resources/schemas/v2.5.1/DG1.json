@@ -17,7 +17,8 @@
       "name": "Diagnosis Coding Method",
       "dataType": "ID",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0053"]
     },
     {
       "index": 3,
@@ -25,7 +26,8 @@
       "name": "Diagnosis Code - DG1",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0051"]
     },
     {
       "index": 4,
@@ -49,7 +51,8 @@
       "name": "Diagnosis Type",
       "dataType": "IS",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0052"]
     },
     {
       "index": 7,
@@ -57,7 +60,8 @@
       "name": "Major Diagnostic Category",
       "dataType": "CE",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0118"]
     },
     {
       "index": 8,
@@ -65,7 +69,8 @@
       "name": "Diagnostic Related Group",
       "dataType": "CE",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0055"]
     },
     {
       "index": 9,
@@ -73,7 +78,8 @@
       "name": "DRG Approval Indicator",
       "dataType": "ID",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 10,
@@ -81,7 +87,8 @@
       "name": "DRG Grouper Review Code",
       "dataType": "IS",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0056"]
     },
     {
       "index": 11,
@@ -89,7 +96,8 @@
       "name": "Outlier Type",
       "dataType": "CE",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0083"]
     },
     {
       "index": 12,
@@ -121,7 +129,8 @@
       "name": "Diagnosis Priority",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0359"]
     },
     {
       "index": 16,
@@ -137,7 +146,8 @@
       "name": "Diagnosis Classification",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0228"]
     },
     {
       "index": 18,
@@ -145,7 +155,8 @@
       "name": "Confidential Indicator",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 19,
@@ -171,6 +182,7 @@
       "dataType": "ID",
       "optionality": "C",
       "repeatability": "1",
+      "tables": ["0206"],
       "condition": "triggerEvent = P12"
     }
   ]

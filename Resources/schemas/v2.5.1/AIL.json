@@ -4,16 +4,16 @@
   "description": "Appointment Information - Location Resource",
   "fields": [
     { "index": 1, "swiftName": "setIdAil", "name": "Set ID - AIL", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "locationResourceId", "name": "Location Resource ID", "dataType": "PL", "optionality": "C", "repeatability": "*" },
-    { "index": 4, "swiftName": "locationTypeAil", "name": "Location Type-AIL", "dataType": "CE", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "locationTypeAil", "name": "Location Type-AIL", "dataType": "CE", "optionality": "C", "repeatability": "1", "tables": ["0305"] },
     { "index": 5, "swiftName": "locationGroup", "name": "Location Group", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "TS", "optionality": "C", "repeatability": "1" },
     { "index": 7, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 8, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
     { "index": 9, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "optionality": "C", "repeatability": "1" },
-    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "C", "repeatability": "1" }
+    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "optionality": "C", "repeatability": "1", "tables": ["0279"] },
+    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "C", "repeatability": "1", "tables": ["0278"] }
   ]
 }

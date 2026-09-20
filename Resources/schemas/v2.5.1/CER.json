@@ -57,7 +57,8 @@
       "name": "Granting Country",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0399"]
     },
     {
       "index": 8,
@@ -65,7 +66,8 @@
       "name": "Granting State/Province",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0347"]
     },
     {
       "index": 9,
@@ -73,7 +75,8 @@
       "name": "Granting County/Parish",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0289"]
     },
     {
       "index": 10,
@@ -137,7 +140,8 @@
       "name": "Basic Constraint",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 18,
@@ -153,7 +157,8 @@
       "name": "Jurisdiction Country",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0399"]
     },
     {
       "index": 20,
@@ -161,7 +166,8 @@
       "name": "Jurisdiction State/Province",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0347"]
     },
     {
       "index": 21,
@@ -169,7 +175,8 @@
       "name": "Jurisdiction County/Parish",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0289"]
     },
     {
       "index": 22,
@@ -177,7 +184,8 @@
       "name": "Jurisdiction Breadth",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0547"]
     },
     {
       "index": 23,
@@ -249,7 +257,8 @@
       "name": "Certificate Status",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0536"]
     }
   ]
 }

@@ -4,11 +4,11 @@
   "description": "Categorical Test/Observation",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "preferredCodingSystem", "name": "Preferred Coding System", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "validCodedAnswers", "name": "Valid Coded \"Answers\"", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "normalTextCodesForCategoricalObservations", "name": "Normal Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "abnormalTextCodesForCategoricalObservations", "name": "Abnormal Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "criticalTextCodesForCategoricalObservations", "name": "Critical Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 2, "swiftName": "preferredCodingSystem", "name": "Preferred Coding System", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 3, "swiftName": "validCodedAnswers", "name": "Valid Coded \"Answers\"", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 4, "swiftName": "normalTextCodesForCategoricalObservations", "name": "Normal Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
+    { "index": 5, "swiftName": "abnormalTextCodesForCategoricalObservations", "name": "Abnormal Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
+    { "index": 6, "swiftName": "criticalTextCodesForCategoricalObservations", "name": "Critical Text/Codes for Categorical Observations", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
+    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0125"] }
   ]
 }

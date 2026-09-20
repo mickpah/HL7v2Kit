@@ -25,7 +25,8 @@
       "name": "Sending Application",
       "dataType": "HD",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0361"]
     },
     {
       "index": 4,
@@ -33,7 +34,8 @@
       "name": "Sending Facility",
       "dataType": "HD",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0362"]
     },
     {
       "index": 5,
@@ -41,7 +43,8 @@
       "name": "Receiving Application",
       "dataType": "HD",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0361"]
     },
     {
       "index": 6,
@@ -49,7 +52,8 @@
       "name": "Receiving Facility",
       "dataType": "HD",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0362"]
     },
     {
       "index": 7,
@@ -73,7 +77,8 @@
       "name": "Message Type",
       "dataType": "MSG",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0003", "0076"]
     },
     {
       "index": 10,
@@ -97,7 +102,8 @@
       "name": "Version ID",
       "dataType": "VID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0104"]
     },
     {
       "index": 13,
@@ -121,7 +127,8 @@
       "name": "Accept Acknowledgment Type",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0155"]
     },
     {
       "index": 16,
@@ -129,7 +136,8 @@
       "name": "Application Acknowledgment Type",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0155"]
     },
     {
       "index": 17,
@@ -137,7 +145,8 @@
       "name": "Country Code",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0399"]
     },
     {
       "index": 18,
@@ -145,7 +154,8 @@
       "name": "Character Set",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0211"]
     },
     {
       "index": 19,
@@ -161,7 +171,8 @@
       "name": "Alternate Character Set Handling Scheme",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0356"]
     },
     {
       "index": 21,
@@ -169,7 +180,8 @@
       "name": "Conformance Statement ID",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0449"]
     }
   ]
 }

@@ -3,12 +3,12 @@
   "version": "2.3",
   "description": "PRD",
   "fields": [
-    { "index": 1, "swiftName": "role", "name": "Role", "dataType": "CE", "optionality": "R", "repeatability": "*" },
+    { "index": 1, "swiftName": "role", "name": "Role", "dataType": "CE", "optionality": "R", "repeatability": "*", "tables": ["0286"] },
     { "index": 2, "swiftName": "providerName", "name": "Provider Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "providerAddress", "name": "Provider Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "providerLocation", "name": "Provider Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "providerCommunicationInformation", "name": "Provider Communication Information", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
     { "index": 7, "swiftName": "providerIdentifiers", "name": "Provider Identifiers", "dataType": "CM", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "effectiveStartDateOfRole", "name": "Effective Start Date of Role", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "effectiveEndDateOfRole", "name": "Effective End Date of Role", "dataType": "TS", "optionality": "O", "repeatability": "1" }

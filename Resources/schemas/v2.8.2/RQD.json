@@ -4,14 +4,14 @@
   "description": "Requisition Detail",
   "fields": [
     { "index": 1, "swiftName": "requisitionLineNumber", "name": "Requisition Line Number", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "itemCodeInternal", "name": "Item Code - Internal", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "RQD-3 empty AND RQD-4 empty" },
-    { "index": 3, "swiftName": "itemCodeExternal", "name": "Item Code - External", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "RQD-2 empty AND RQD-4 empty" },
-    { "index": 4, "swiftName": "hospitalItemCode", "name": "Hospital Item Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "condition": "RQD-2 empty AND RQD-3 empty" },
+    { "index": 2, "swiftName": "itemCodeInternal", "name": "Item Code - Internal", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "RQD-3 empty AND RQD-4 empty" },
+    { "index": 3, "swiftName": "itemCodeExternal", "name": "Item Code - External", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "RQD-2 empty AND RQD-4 empty" },
+    { "index": 4, "swiftName": "hospitalItemCode", "name": "Hospital Item Code", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "RQD-2 empty AND RQD-3 empty" },
     { "index": 5, "swiftName": "requisitionQuantity", "name": "Requisition Quantity", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "requisitionUnitOfMeasure", "name": "Requisition Unit of Measure", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "deptCostCenter", "name": "Cost Center Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "itemNaturalAccountCode", "name": "Item Natural Account Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "deliverToId", "name": "Deliver To ID", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "requisitionUnitOfMeasure", "name": "Requisition Unit of Measure", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 7, "swiftName": "deptCostCenter", "name": "Cost Center Account Number", "dataType": "CX", "optionality": "O", "repeatability": "1", "tables": ["0319"] },
+    { "index": 8, "swiftName": "itemNaturalAccountCode", "name": "Item Natural Account Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0320"] },
+    { "index": 9, "swiftName": "deliverToId", "name": "Deliver To ID", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 10, "swiftName": "dateNeeded", "name": "Date Needed", "dataType": "DT", "optionality": "O", "repeatability": "1" }
   ]
 }

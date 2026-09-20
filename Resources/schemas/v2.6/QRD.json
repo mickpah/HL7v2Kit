@@ -4,16 +4,16 @@
   "description": "QRD",
   "fields": [
     { "index": 1, "swiftName": "queryDateTime", "name": "Query Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryFormatCode", "name": "Query Format Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "queryPriority", "name": "Query Priority", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryFormatCode", "name": "Query Format Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0106"] },
+    { "index": 3, "swiftName": "queryPriority", "name": "Query Priority", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0091"] },
     { "index": 4, "swiftName": "queryId", "name": "Query ID", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "deferredResponseType", "name": "Deferred Response Type", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "deferredResponseType", "name": "Deferred Response Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0107"] },
     { "index": 6, "swiftName": "deferredResponseDateTime", "name": "Deferred Response Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "quantityLimitedRequest", "name": "Quantity Limited Request", "dataType": "CQ", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "quantityLimitedRequest", "name": "Quantity Limited Request", "dataType": "CQ", "optionality": "R", "repeatability": "1", "tables": ["0126"] },
     { "index": 8, "swiftName": "whoSubjectFilter", "name": "Who Subject Filter", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
-    { "index": 9, "swiftName": "whatSubjectFilter", "name": "What Subject Filter", "dataType": "CWE", "optionality": "R", "repeatability": "*" },
+    { "index": 9, "swiftName": "whatSubjectFilter", "name": "What Subject Filter", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0048"] },
     { "index": 10, "swiftName": "whatDepartmentDataCode", "name": "What Department Data Code", "dataType": "CWE", "optionality": "R", "repeatability": "*" },
     { "index": 11, "swiftName": "whatDataCodeValueQual", "name": "What Data Code Value Qual.", "dataType": "VR", "optionality": "O", "repeatability": "*" },
-    { "index": 12, "swiftName": "queryResultsLevel", "name": "Query Results Level", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 12, "swiftName": "queryResultsLevel", "name": "Query Results Level", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0108"] }
   ]
 }

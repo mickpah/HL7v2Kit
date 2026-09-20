@@ -65,7 +65,8 @@
       "name": "Administrative Sex",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0001"]
     },
     {
       "index": 9,
@@ -81,7 +82,8 @@
       "name": "Race",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0005"]
     },
     {
       "index": 11,
@@ -121,7 +123,8 @@
       "name": "Primary Language",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0296"]
     },
     {
       "index": 16,
@@ -129,7 +132,8 @@
       "name": "Marital Status",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0002"]
     },
     {
       "index": 17,
@@ -137,7 +141,8 @@
       "name": "Religion",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0006"]
     },
     {
       "index": 18,
@@ -177,7 +182,8 @@
       "name": "Ethnic Group",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0189"]
     },
     {
       "index": 23,
@@ -193,7 +199,8 @@
       "name": "Multiple Birth Indicator",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     },
     {
       "index": 25,
@@ -209,7 +216,8 @@
       "name": "Citizenship",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0171"]
     },
     {
       "index": 27,
@@ -217,7 +225,8 @@
       "name": "Veterans Military Status",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0172"]
     },
     {
       "index": 28,
@@ -241,7 +250,8 @@
       "name": "Patient Death Indicator",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0136"]
     }
   ]
 }

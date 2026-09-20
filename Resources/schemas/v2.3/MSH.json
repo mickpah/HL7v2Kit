@@ -97,7 +97,8 @@
       "name": "Version ID",
       "dataType": "ID",
       "optionality": "R",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0104"]
     },
     {
       "index": 13,
@@ -121,7 +122,8 @@
       "name": "Accept Acknowledgment Type",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0155"]
     },
     {
       "index": 16,
@@ -129,7 +131,8 @@
       "name": "Application Acknowledgment Type",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0155"]
     },
     {
       "index": 17,
@@ -145,7 +148,8 @@
       "name": "Character Set",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0211"]
     },
     {
       "index": 19,

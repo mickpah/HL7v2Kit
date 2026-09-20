@@ -3,7 +3,7 @@
   "version": "2.6",
   "description": "PRB",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 2, "swiftName": "actionDateTime", "name": "Action Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "problemId", "name": "Problem ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "problemInstanceId", "name": "Problem Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
@@ -28,8 +28,8 @@
     { "index": 23, "swiftName": "individualAwarenessOfPrognosis", "name": "Individual Awareness of Prognosis", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "familySignificantOtherAwarenessOfProblemPrognosis", "name": "Family/Significant Other Awareness of Problem/Prognosis", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 25, "swiftName": "securitySensitivity", "name": "Security/Sensitivity", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 26, "swiftName": "problemSeverity", "name": "Problem Severity", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 27, "swiftName": "problemPerspective", "name": "Problem Perspective", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 28, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1" }
+    { "index": 26, "swiftName": "problemSeverity", "name": "Problem Severity", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0836"] },
+    { "index": 27, "swiftName": "problemPerspective", "name": "Problem Perspective", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0838"] },
+    { "index": 28, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["0725"] }
   ]
 }

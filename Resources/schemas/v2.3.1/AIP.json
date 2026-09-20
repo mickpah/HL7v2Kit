@@ -4,7 +4,7 @@
   "description": "AIP",
   "fields": [
     { "index": 1, "swiftName": "setIdAip", "name": "Set ID - AIP", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "personnelResourceId", "name": "Personnel Resource ID", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
     { "index": 4, "swiftName": "resourceRole", "name": "Resource Role", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "resourceGroup", "name": "Resource Group", "dataType": "CE", "optionality": "O", "repeatability": "1" },
@@ -13,7 +13,7 @@
     { "index": 8, "swiftName": "startDateTimeOffsetUnits", "name": "Start Date/Time Offset Units", "dataType": "CE", "optionality": "C", "repeatability": "1" },
     { "index": 9, "swiftName": "duration", "name": "Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "optionality": "C", "repeatability": "1" },
-    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "C", "repeatability": "1" }
+    { "index": 11, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "optionality": "C", "repeatability": "1", "tables": ["0279"] },
+    { "index": 12, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "C", "repeatability": "1", "tables": ["0278"] }
   ]
 }

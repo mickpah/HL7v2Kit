@@ -37,3 +37,7 @@ docs/standards/
 
 # SDD plan workspaces (ledger, briefs, review packages) - local scratch
 .superpowers/
+
+# Local planning documents (sprint plans, WBS) — not version controlled
+planning/
+__pycache__/

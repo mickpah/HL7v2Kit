@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Equipment/Log Service",
   "fields": [
-    { "index": 1, "swiftName": "eventType", "name": "Event type", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "eventType", "name": "Event type", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0450"] },
     { "index": 2, "swiftName": "fileName", "name": "File Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "endDateTime", "name": "End Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },

@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Blood Code",
   "fields": [
-    { "index": 1, "swiftName": "bloodProductCode", "name": "Blood Product Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "bloodProductCode", "name": "Blood Product Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0426"] },
     { "index": 2, "swiftName": "bloodAmount", "name": "Blood Amount", "dataType": "CQ", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -1,0 +1,131 @@
+{
+  "v2.3/LCC-3": {
+    "tables": [],
+    "cite": "v2.3 CH8 LCC attribute table: TBL# blank; the RP 'Y' bled into the TBL# column"
+  },
+  "v2.3.1/PCR-5": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-6": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-7": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-8": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-9": {
+    "tables": [
+      "0244"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-10": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-11": {
+    "tables": [
+      "0245"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-12": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-13": {
+    "tables": [
+      "0246"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-14": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-15": {
+    "tables": [
+      "0247"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-16": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-17": {
+    "tables": [
+      "0248"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-18": {
+    "tables": [],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-19": {
+    "tables": [
+      "0242"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-20": {
+    "tables": [
+      "0250"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-21": {
+    "tables": [
+      "0251"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-22": {
+    "tables": [
+      "0252"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.3.1/PCR-23": {
+    "tables": [
+      "0253"
+    ],
+    "cite": "v2.3.1 sec 7.11.3 PCR attribute table, rows continued on p. 7-96 with no repeated header: columns shift left, ITEM# lands in TBL#. Values read from the printed row"
+  },
+  "v2.4/ROL-9": {
+    "tables": [],
+    "cite": "v2.4 CH12 ROL attribute table prints '*' in TBL#: not a table number"
+  },
+  "v2.4/STF-14": {
+    "tables": [],
+    "cite": "v2.4 CH15 STF attribute table prints '----' in TBL#: not a table number"
+  },
+  "v2.5.1/OM1-44": {
+    "tables": [
+      "0256",
+      "0257"
+    ],
+    "cite": "v2.5.1 CH08 OM1 attribute table: cell wraps mid-number as '0256/02' + '57'"
+  },
+  "v2.6/ERR-12": {
+    "tables": [],
+    "cite": "v2.6 CH02 sec 2.14.5 ERR attribute table: TBL# blank; the RP 'Y' bled into the TBL# column"
+  },
+  "v2.8.2/LRL-5": {
+    "tables": [],
+    "cite": "v2.8.2 CH08 LRL attribute table: TBL# blank; the RP 'Y' bled into the TBL# column"
+  },
+  "v2.3.1/NSC-1": {
+    "tables": [
+      "0333"
+    ],
+    "cite": "v2.3.1 Appendix C sec C.2.3 NSC attribute table row 1 (TBL# 0333, ITEM# 01188); the segment is depth-whitelisted (extraction noise), so its bindings are repairs-only"
+  }
+}

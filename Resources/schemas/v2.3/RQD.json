@@ -9,8 +9,8 @@
     { "index": 4, "swiftName": "hospitalItemCode", "name": "Hospital Item Code", "dataType": "CE", "optionality": "C", "repeatability": "1", "condition": "RQD-2 empty AND RQD-3 empty" },
     { "index": 5, "swiftName": "requisitionQuantity", "name": "Requisition Quantity", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "requisitionUnitOfMeasure", "name": "Requisition Unit of Measure", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "deptCostCenter", "name": "Dept. Cost Center", "dataType": "IS", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "itemNaturalAccountCode", "name": "Item Natural Account Code", "dataType": "IS", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "deptCostCenter", "name": "Dept. Cost Center", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0319"] },
+    { "index": 8, "swiftName": "itemNaturalAccountCode", "name": "Item Natural Account Code", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0320"] },
     { "index": 9, "swiftName": "deliverToId", "name": "Deliver To ID", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "dateNeeded", "name": "Date Needed", "dataType": "DT", "optionality": "O", "repeatability": "1" }
   ]

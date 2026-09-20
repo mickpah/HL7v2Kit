@@ -5,12 +5,12 @@
   "fields": [
     { "index": 1, "swiftName": "alueLoc", "name": "alue - LOC", "dataType": "PL", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "ription", "name": "ription", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "loc", "name": "- LOC", "dataType": "IS", "optionality": "R", "repeatability": "*" },
+    { "index": 3, "swiftName": "loc", "name": "- LOC", "dataType": "IS", "optionality": "R", "repeatability": "*", "tables": ["0260"] },
     { "index": 4, "swiftName": "nameLoc", "name": "Name - LOC", "dataType": "XON", "optionality": "O", "repeatability": "*" },
     { "index": 5, "swiftName": "ess", "name": "ess", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "field", "name": "", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "field2", "name": "", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 8, "swiftName": "pment", "name": "pment", "dataType": "IS", "optionality": "O", "repeatability": "*" },
-    { "index": 9, "swiftName": "iceCode", "name": "ice Code", "dataType": "IS", "optionality": "O", "repeatability": "1" }
+    { "index": 7, "swiftName": "field2", "name": "", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0461"] },
+    { "index": 8, "swiftName": "pment", "name": "pment", "dataType": "IS", "optionality": "O", "repeatability": "*", "tables": ["0261"] },
+    { "index": 9, "swiftName": "iceCode", "name": "ice Code", "dataType": "IS", "optionality": "O", "repeatability": "1", "tables": ["0442"] }
   ]
 }

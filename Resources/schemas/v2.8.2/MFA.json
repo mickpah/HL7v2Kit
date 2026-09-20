@@ -3,11 +3,11 @@
   "version": "2.8.2",
   "description": "MFA",
   "fields": [
-    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0180"] },
     { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "optionality": "C", "repeatability": "1" },
     { "index": 3, "swiftName": "eventCompletionDateTime", "name": "Event Completion Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "mfnRecordLevelErrorReturn", "name": "MFN Record Level Error Return", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "primaryKeyValueMfa", "name": "Primary Key Value - MFA", "dataType": "Varies", "optionality": "R", "repeatability": "*" },
-    { "index": 6, "swiftName": "primaryKeyValueTypeMfa", "name": "Primary Key Value Type - MFA", "dataType": "ID", "optionality": "R", "repeatability": "*" }
+    { "index": 4, "swiftName": "mfnRecordLevelErrorReturn", "name": "MFN Record Level Error Return", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0181"] },
+    { "index": 5, "swiftName": "primaryKeyValueMfa", "name": "Primary Key Value - MFA", "dataType": "Varies", "optionality": "R", "repeatability": "*", "tables": ["9999"] },
+    { "index": 6, "swiftName": "primaryKeyValueTypeMfa", "name": "Primary Key Value Type - MFA", "dataType": "ID", "optionality": "R", "repeatability": "*", "tables": ["0355"] }
   ]
 }

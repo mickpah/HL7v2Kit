@@ -3,8 +3,8 @@
   "version": "2.3.1",
   "description": "AUT",
   "fields": [
-    { "index": 1, "swiftName": "authorizingPayorPlanId", "name": "Authorizing Payor, Plan ID", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "authorizingPayorCompanyId", "name": "Authorizing Payor, Company ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "authorizingPayorPlanId", "name": "Authorizing Payor, Plan ID", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0072"] },
+    { "index": 2, "swiftName": "authorizingPayorCompanyId", "name": "Authorizing Payor, Company ID", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0285"] },
     { "index": 3, "swiftName": "authorizingPayorCompanyName", "name": "Authorizing Payor, Company Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "authorizationEffectiveDate", "name": "Authorization Effective Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "authorizationExpirationDate", "name": "Authorization Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },

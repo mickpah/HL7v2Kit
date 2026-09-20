@@ -3,8 +3,8 @@
   "version": "2.8.2",
   "description": "Override Segment",
   "fields": [
-    { "index": 1, "swiftName": "businessRuleOverrideType", "name": "Business Rule Override Type", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "businessRuleOverrideCode", "name": "Business Rule Override Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "businessRuleOverrideType", "name": "Business Rule Override Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0518"] },
+    { "index": 2, "swiftName": "businessRuleOverrideCode", "name": "Business Rule Override Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0521"] },
     { "index": 3, "swiftName": "overrideComments", "name": "Override Comments", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "overrideEnteredBy", "name": "Override Entered By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "overrideAuthorizedBy", "name": "Override Authorized By", "dataType": "XCN", "optionality": "O", "repeatability": "1" }

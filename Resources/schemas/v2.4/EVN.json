@@ -9,7 +9,8 @@
       "name": "Event Type Code",
       "dataType": "ID",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0003"]
     },
     {
       "index": 2,
@@ -33,7 +34,8 @@
       "name": "Event Reason Code",
       "dataType": "IS",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0062"]
     },
     {
       "index": 5,
@@ -41,7 +43,8 @@
       "name": "Operator ID",
       "dataType": "XCN",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0188"]
     },
     {
       "index": 6,

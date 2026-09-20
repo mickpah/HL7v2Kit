@@ -9,7 +9,8 @@
       "name": "Business Rule Override Type",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0518"]
     },
     {
       "index": 2,
@@ -17,7 +18,8 @@
       "name": "Business Rule Override Code",
       "dataType": "CWE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0521"]
     },
     {
       "index": 3,

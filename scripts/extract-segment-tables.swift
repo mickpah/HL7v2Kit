@@ -243,8 +243,14 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     let line = raw.replacingOccurrences(of: "\t", with: "    ")
     let chars = Array(line)
     let nameStart = columns.first { $0.key == "NAME" }?.start ?? Int.max
-    let preName = nameStart < chars.count ? String(chars[0..<nameStart]) : ""
-    for r in runs(in: preName) where r.text.allSatisfy({ $0.isNumber || $0 == "/" }) {
+    // A continuation carrying only a TBL# fragment ("0328" under "0327/") is SHORTER than
+    // the NAME column start; clamp rather than discard it (M9-A: the fragment was lost on
+    // every wrap whose element name did not also wrap).
+    let preName = String(chars[0..<min(nameStart, chars.count)])
+    // Only a cell left open by a trailing "/" continues: an unconditional append also
+    // swallowed wrapped LEN digits (v2.5.1 OM1-32 "6553" + "6") into the TBL# cell.
+    for r in runs(in: preName) where r.text.allSatisfy({ $0.isNumber || $0 == "/" })
+        && rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/") {
         rows[rows.count-1].tbl += r.text
     }
     let cont = elementName(from: line, nameStart: nameStart)

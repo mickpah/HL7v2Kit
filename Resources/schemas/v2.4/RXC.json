@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "RXC",
   "fields": [
-    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
     { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },

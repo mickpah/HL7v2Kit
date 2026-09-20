@@ -9,8 +9,8 @@
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "scheduleId", "name": "Schedule ID", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "eventReason", "name": "Event Reason", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 7, "swiftName": "appointmentReason", "name": "Appointment Reason", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "appointmentType", "name": "Appointment Type", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "appointmentReason", "name": "Appointment Reason", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0276"] },
+    { "index": 8, "swiftName": "appointmentType", "name": "Appointment Type", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0277"] },
     { "index": 9, "swiftName": "appointmentDuration", "name": "Appointment Duration", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "appointmentDurationUnits", "name": "Appointment Duration Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "appointmentTimingQuantity", "name": "Appointment Timing Quantity", "dataType": "TQ", "optionality": "R", "repeatability": "*" },
@@ -27,7 +27,7 @@
     { "index": 22, "swiftName": "enteredByLocation", "name": "Entered by Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 23, "swiftName": "parentPlacerAppointmentId", "name": "Parent Placer Appointment ID", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "parentFillerAppointmentId", "name": "Parent Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 25, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
+    { "index": 25, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0278"] },
     { "index": 26, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "C", "repeatability": "*" },
     { "index": 27, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "*" }
   ]

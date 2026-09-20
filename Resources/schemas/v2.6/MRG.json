@@ -9,6 +9,6 @@
     { "index": 4, "swiftName": "priorPatientId", "name": "Prior Patient ID", "dataType": "CX", "optionality": "B", "repeatability": "1" },
     { "index": 5, "swiftName": "priorVisitNumber", "name": "Prior Visit Number", "dataType": "CX", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "priorAlternateVisitId", "name": "Prior Alternate Visit ID", "dataType": "CX", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "priorPatientName", "name": "Prior Patient Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" }
+    { "index": 7, "swiftName": "priorPatientName", "name": "Prior Patient Name", "dataType": "XPN", "optionality": "O", "repeatability": "*", "tables": ["0200"] }
   ]
 }

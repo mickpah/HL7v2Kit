@@ -92,7 +92,8 @@
       "name": "Specimen Action Code",
       "dataType": "ID",
       "optionality": "C",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0065"]
     },
     {
       "index": 12,
@@ -125,7 +126,8 @@
       "name": "Specimen Source (deprecated)",
       "dataType": "SPS",
       "optionality": "B",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0070", "0163", "0369"]
     },
     {
       "index": 16,
@@ -197,7 +199,8 @@
       "name": "Diagnostic Serv Sect ID",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0074"]
     },
     {
       "index": 25,
@@ -206,6 +209,7 @@
       "dataType": "ID",
       "optionality": "C",
       "repeatability": "1",
+      "tables": ["0123"],
       "condition": "messageCode = ORU"
     },
     {
@@ -247,7 +251,8 @@
       "name": "Transportation Mode",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0124"]
     },
     {
       "index": 31,
@@ -335,7 +340,8 @@
       "name": "Transport Arranged",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0224"]
     },
     {
       "index": 42,
@@ -343,7 +349,8 @@
       "name": "Escort Required",
       "dataType": "ID",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0225"]
     },
     {
       "index": 43,
@@ -359,7 +366,8 @@
       "name": "Procedure Code",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "tables": ["0088"]
     },
     {
       "index": 45,
@@ -367,7 +375,8 @@
       "name": "Procedure Code Modifier",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0340"]
     },
     {
       "index": 46,
@@ -375,7 +384,8 @@
       "name": "Placer Supplemental Service Information",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0411"]
     },
     {
       "index": 47,
@@ -383,7 +393,8 @@
       "name": "Filler Supplemental Service Information",
       "dataType": "CE",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "*",
+      "tables": ["0411"]
     }
   ]
 }

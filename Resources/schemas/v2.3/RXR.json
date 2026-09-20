@@ -3,9 +3,9 @@
   "version": "2.3",
   "description": "RXR",
   "fields": [
-    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "site", "name": "Site", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0162"] },
+    { "index": 2, "swiftName": "site", "name": "Site", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0163"] },
+    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0164"] },
+    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0165"] }
   ]
 }

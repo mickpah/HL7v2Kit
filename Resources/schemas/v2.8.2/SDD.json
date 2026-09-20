@@ -6,8 +6,8 @@
     { "index": 1, "swiftName": "lotNumber", "name": "Lot Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "deviceDataState", "name": "Device Data State", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "loadStatus", "name": "Load Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "deviceDataState", "name": "Device Data State", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0667"] },
+    { "index": 5, "swiftName": "loadStatus", "name": "Load Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0669"] },
     { "index": 6, "swiftName": "controlCode", "name": "Control Code", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "operatorName", "name": "Operator Name", "dataType": "ST", "optionality": "O", "repeatability": "1" }
   ]

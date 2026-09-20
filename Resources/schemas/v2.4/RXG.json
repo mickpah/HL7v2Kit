@@ -6,15 +6,15 @@
     { "index": 1, "swiftName": "giveSubIdCounter", "name": "Give Sub-ID Counter", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "dispenseSubIdCounter", "name": "Dispense Sub-ID Counter", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "TQ", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "giveCode", "name": "Give Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "giveCode", "name": "Give Code", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0292"] },
     { "index": 5, "swiftName": "giveAmountMinimum", "name": "Give Amount - Minimum", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "giveAmountMaximum", "name": "Give Amount - Maximum", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "giveUnits", "name": "Give Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },
     { "index": 8, "swiftName": "giveDosageForm", "name": "Give Dosage Form", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "administrationNotes", "name": "Administration Notes", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 10, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0167"] },
     { "index": 11, "swiftName": "dispenseToLocation", "name": "Dispense-To Location", "dataType": "CM", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 13, "swiftName": "pharmacyTreatmentSupplierSSpecialAdministrationInstructions", "name": "Pharmacy/Treatment Supplier's Special Administration Instructions", "dataType": "CE", "optionality": "O", "repeatability": "*" },
     { "index": 14, "swiftName": "givePerTimeUnit", "name": "Give Per (Time Unit)", "dataType": "ST", "optionality": "C", "repeatability": "1" },
     { "index": 15, "swiftName": "giveRateAmount", "name": "Give Rate Amount", "dataType": "ST", "optionality": "O", "repeatability": "1" },
@@ -23,7 +23,7 @@
     { "index": 18, "swiftName": "giveStrengthUnits", "name": "Give Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
     { "index": 19, "swiftName": "substanceLotNumber", "name": "Substance Lot Number", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 20, "swiftName": "substanceExpirationDate", "name": "Substance Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "*" },
-    { "index": 21, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CE", "optionality": "O", "repeatability": "*" },
+    { "index": 21, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0227"] },
     { "index": 22, "swiftName": "indication", "name": "Indication", "dataType": "CE", "optionality": "O", "repeatability": "*" }
   ]
 }

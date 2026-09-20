@@ -4,6 +4,6 @@
   "description": "QAK",
   "fields": [
     { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "optionality": "O", "repeatability": "1" }
+    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0208"] }
   ]
 }

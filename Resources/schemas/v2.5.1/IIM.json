@@ -16,7 +16,7 @@
     { "index": 11, "swiftName": "inventoryOnHandDate", "name": "Inventory On Hand Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "inventoryOnHandQuantity", "name": "Inventory On Hand Quantity", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "inventoryOnHandQuantityUnit", "name": "Inventory On Hand Quantity Unit", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 14, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 15, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CE", "optionality": "O", "repeatability": "*" }
+    { "index": 14, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0088"] },
+    { "index": 15, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0340"] }
   ]
 }
