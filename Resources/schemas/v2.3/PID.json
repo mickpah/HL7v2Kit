@@ -63,7 +63,7 @@
       "index": 8,
       "swiftName": "administrativeSex",
       "name": "Administrative Sex",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0001",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0001"]
@@ -80,7 +80,7 @@
       "index": 10,
       "swiftName": "race",
       "name": "Race",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0005",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0005"]
@@ -130,7 +130,7 @@
       "index": 16,
       "swiftName": "maritalStatus",
       "name": "Marital Status",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0002",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0002"]
@@ -139,7 +139,7 @@
       "index": 17,
       "swiftName": "religion",
       "name": "Religion",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0006",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0006"]
@@ -180,7 +180,7 @@
       "index": 22,
       "swiftName": "ethnicGroup",
       "name": "Ethnic Group",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0189",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0189"]
@@ -197,7 +197,7 @@
       "index": 24,
       "swiftName": "multipleBirthIndicator",
       "name": "Multiple Birth Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -214,7 +214,7 @@
       "index": 26,
       "swiftName": "citizenship",
       "name": "Citizenship",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0171",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0171"]
@@ -248,7 +248,7 @@
       "index": 30,
       "swiftName": "patientDeathIndicator",
       "name": "Patient Death Indicator",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]

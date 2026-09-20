@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "acknowledgmentCode",
       "name": "Acknowledgment Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0008",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0008"]
@@ -40,7 +40,7 @@
       "index": 5,
       "swiftName": "delayedAcknowledgmentType",
       "name": "Delayed Acknowledgment Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0102",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0102"]

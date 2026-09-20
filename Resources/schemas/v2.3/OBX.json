@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "valueType",
       "name": "Value Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0125",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0125"],
@@ -65,7 +65,7 @@
       "index": 8,
       "swiftName": "abnormalFlags",
       "name": "Abnormal Flags",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0078",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0078"]
@@ -82,7 +82,7 @@
       "index": 10,
       "swiftName": "natureOfAbnormalTest",
       "name": "Nature of Abnormal Test",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0080",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0080"]
@@ -91,7 +91,7 @@
       "index": 11,
       "swiftName": "observationResultStatus",
       "name": "Observation Result Status",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0085",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0085"]

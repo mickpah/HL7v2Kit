@@ -95,7 +95,7 @@
       "index": 12,
       "swiftName": "versionID",
       "name": "Version ID",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0104",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0104"]
@@ -120,7 +120,7 @@
       "index": 15,
       "swiftName": "acceptAcknowledgmentType",
       "name": "Accept Acknowledgment Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -129,7 +129,7 @@
       "index": 16,
       "swiftName": "applicationAcknowledgmentType",
       "name": "Application Acknowledgment Type",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -146,7 +146,7 @@
       "index": 18,
       "swiftName": "characterSet",
       "name": "Character Set",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0211",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0211"]

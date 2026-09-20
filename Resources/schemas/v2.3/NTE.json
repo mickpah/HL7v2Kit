@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "sourceOfComment",
       "name": "Source of Comment",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0105",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0105"]

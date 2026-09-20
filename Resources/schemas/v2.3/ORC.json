@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "orderControl",
       "name": "Order Control",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0119",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0119"]
@@ -42,7 +42,7 @@
       "index": 5,
       "swiftName": "orderStatus",
       "name": "Order Status",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0038",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0038"]
@@ -51,7 +51,7 @@
       "index": 6,
       "swiftName": "responseFlag",
       "name": "Response Flag",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0121",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0121"]

@@ -90,7 +90,7 @@
       "index": 11,
       "swiftName": "specimenActionCode",
       "name": "Specimen Action Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0065",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0065"]
@@ -197,7 +197,7 @@
       "index": 24,
       "swiftName": "diagnosticServSectID",
       "name": "Diagnostic Serv Sect ID",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0074",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0074"]
@@ -206,7 +206,7 @@
       "index": 25,
       "swiftName": "resultStatus",
       "name": "Result Status",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0123",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0123"],
@@ -249,7 +249,7 @@
       "index": 30,
       "swiftName": "transportationMode",
       "name": "Transportation Mode",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0124",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0124"]
@@ -338,7 +338,7 @@
       "index": 41,
       "swiftName": "transportArranged",
       "name": "Transport Arranged",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0224",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0224"]
@@ -347,7 +347,7 @@
       "index": 42,
       "swiftName": "escortRequired",
       "name": "Escort Required",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0225",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0225"]

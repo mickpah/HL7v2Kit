@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "eventTypeCode",
       "name": "Event Type Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0003",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0003"]
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "eventReasonCode",
       "name": "Event Reason Code",
-      "dataType": "IS",
+      "dataType": "IS", "table": "0062",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0062"]
