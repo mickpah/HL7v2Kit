@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-20 (M9 closed: the code-table registry, ADR-016) |
-| Current release | **`v3.2.0`** (2026-09-17) — the spec-exhaustion release: M7 prose sweep + M8 base-consistency/batch cycle, additive on `v3.1.0` under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
-| Next planned cycle | **None scheduled.** M9 is complete and merged (untagged; the owner versions it). Candidates: composite-component table links, the VMR implementation table and OBX-4 sub-ID tree. |
+| Last updated | 2026-09-20 (**`v3.3.0` tagged** — M9 closed: the code-table registry, ADR-016) |
+| Current release | **`v3.3.0`** (2026-09-20) — the code-table release: per-version HL7 code tables (2,565 files) in `HL7TableRegistry`, `valueNotInTable` on 1,073 closed-table ID fields, the AU locale table axis, and the 1-n variable-column model; additive on `v3.2.0` under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
+| Next planned cycle | **None scheduled.** Candidates: composite-component table links, the VMR implementation table and OBX-4 sub-ID tree. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.2.0`)
+## Where we are (`v3.3.0`)
 
 **Shipped and solid:**
 
@@ -209,7 +209,7 @@ Validator could not carry.*
   (PAC-2, PRT-6/7 — the bare-C guard set shrank by three). New `IssueCode` cases:
   `pairedFieldMismatch(item:)`, `conditionalFieldProhibited`.
 
-### M9 — General per-version code-table registry **CLOSED (2026-09-20; ADR-016; merged, untagged)**
+### M9 — General per-version code-table registry **CLOSED (2026-09-20; ADR-016; released in `v3.3.0`)**
 *Goal: every HL7 table the spec binds to a field is bound in the schema, available as per-version data with descriptions, and consumable by the validator — defensible against the spec text alone (req #2). Closes M6-O6.*
 
 - **Outcome:** 2,565 per-version tables with descriptions, extracted from each version's own Appendix A / Chapter 2C and generated into `HL7TableRegistry`; schema keys `tables` (4,290 verified bindings) and `table` (1,893 enforced links); `valueNotInTable` on 1,073 `ID` fields over closed HL7-defined tables, never on IS or user-defined tables; a locale table axis carrying the five AU ADRM-2021 tables, which can widen a base table (0211 `UNICODE UTF-8`) and never narrows it. The same cycle landed **Track B**, the `variableColumns` model for the 1-n segments RDT / ADD.

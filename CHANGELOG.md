@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-**M9 — the code-table registry (ADR-016), with the 1-n variable-column model.** Additive API; one new check is on by default (see Changed).
+*(nothing yet)*
+
+## [3.3.0] — 2026-09-20
+
+**The code-table release: M9, the code-table registry (ADR-016), with the 1-n variable-column model.** Additive API; one new check is on by default (see Changed).
 
 ### Added — public API summary (ADR-016)
 
