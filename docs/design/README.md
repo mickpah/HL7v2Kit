@@ -32,6 +32,7 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 | 014 — API evolution policy | Additive-only 1.x; breaking waits for 2.0 | In force; addendum: the 2.0 lane was exercised at R10 (2026-08-27) — additive-only resumes for 2.x |
 | 015 — segment-coverage extraction pipeline | pdftotext-based authoring/audit pipeline | In force (method doc: `segment-coverage-extraction.md`) |
 | 016 — code-table registry | per-version generated HL7 tables, closed-set enforcement for ID fields, locale axis | In force |
+| 017 — datatype component grammar | per-version component tables (v2.5.1 / v2.6 / v2.8.2), code-table check on ID components | In force |
 
 ## Conformance registers (point-in-time; guard-tested where noted)
 

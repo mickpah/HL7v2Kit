@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+**M10 — code tables on composite components (ADR-017).** Additive API; the default code-table check now reaches `ID` components on v2.5.1 / v2.6 / v2.8.2 messages.
+
+### Docs
+
+- ADR-017; design index; limitations register (component links shipped, the
+  remaining gaps registered); DocC `Validation.md` and `Migration.md`;
+  fixtures README corrections log; STATUS / NEXT_STEPS / ROADMAP closed out.
+
 ### Added — M10-C: code-table check on composite components (2026-09-20)
 
 - `valueNotInTable` now also fires for a populated `ID` COMPONENT bound to
