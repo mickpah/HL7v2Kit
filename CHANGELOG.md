@@ -42,6 +42,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (withdrawn, blank cell). All 18 ID/IS fields left unbound were read against
   the printed rows: the spec prints a blank TBL# for each.
 
+### Added — A5: coded fields linked to their HL7 tables on all six versions (2026-09-20)
+
+- **1,893 ID/IS fields now carry the enforced `table` link**, derived from the
+  hand-verified `tables` bindings (M9-A) by `scripts/backfill-schema-tables.py`;
+  nothing was re-extracted. **1,073 of them are ID fields on a closed
+  HL7-defined table, so `valueNotInTable` is live for them.** IS fields and
+  user-defined or open tables are linked but never enforced (guard test:
+  PID-8). Zero conflicts and zero multi-table coded fields on any version.
+- **Behaviour change to expect:** a message that carried an out-of-table
+  value in an ID field used to pass and now reports an error. Set
+  `ValidationOptions.checkCodeTables = false` to suppress the check.
+- **A6a — locale table axis.** `Resources/tables/locale/<locale-id>/` holds a
+  locale's own printed rendering of a table; `HL7TableRegistry.table(_:locale:)`.
+  First table: AU ADRM-2021 Table 0211, which back-ports `UNICODE UTF-8` from
+  v2.6 into its v2.4 localisation (p. 55 footnote). The Validator consults the
+  locale rendering only after the message's own version table rejects a value,
+  so a locale can widen the check and can never reject what the version
+  prints; narrowing stays with the profile.
+- **Fallout, all traced (none dismissed):** base v2.4 Table 0211 has no
+  `UNICODE UTF-8`. One pure-ASCII synthetic fixture (`oru_r01_v24.hl7`) and one
+  test wire declared it on a base v2.4 message; both now declare `ASCII`.
+  The other five versions produced no fallout.
+- **Spec typo registered:** v2.3 DB1-2 prints TBL# 0033 for 0334.
+
+### Fixed — a 16-minute type-check in the generated grammar
+
+- A version's grammar was one dictionary literal, solved as a single
+  expression. With a String literal for the optional `table` on hundreds of
+  fields, one generated file went from 13 s to 967 s to type-check. Codegen
+  now emits one private typed constant per segment (0.5 s per file; a full
+  build and test run is about 18 s). The public dictionaries are unchanged.
+
 ### Fixed — A4 close-out: extracted code tables cleared of non-codes (2026-09-20)
 
 - **Ellipsis rows are structural, not codes.** 171 tables print a bare `...`
