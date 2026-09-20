@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "providerOrganization", "name": "Provider Organization", "dataType": "XON", "optionality": "R", "repeatability": "1" },
     { "index": 11, "swiftName": "payerOrganization", "name": "Payer Organization", "dataType": "XON", "optionality": "R", "repeatability": "1" },
     { "index": 12, "swiftName": "attention", "name": "Attention", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "lastInvoiceIndicator", "name": "Last Invoice Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 13, "swiftName": "lastInvoiceIndicator", "name": "Last Invoice Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 14, "swiftName": "invoiceBookingPeriod", "name": "Invoice Booking Period", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 15, "swiftName": "origin", "name": "Origin", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 16, "swiftName": "invoiceFixedAmount", "name": "Invoice Fixed Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },

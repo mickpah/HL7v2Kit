@@ -23,7 +23,7 @@
     { "index": 18, "swiftName": "productServiceClarificationCodeValue", "name": "Product/Service Clarification Code Value", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 19, "swiftName": "healthDocumentReferenceIdentifier", "name": "Health Document Reference Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" },
     { "index": 20, "swiftName": "processingConsiderationCode", "name": "Processing Consideration Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0562"] },
-    { "index": 21, "swiftName": "restrictedDisclosureIndicator", "name": "Restricted Disclosure Indicator", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0532"] },
+    { "index": 21, "swiftName": "restrictedDisclosureIndicator", "name": "Restricted Disclosure Indicator", "dataType": "ID", "table": "0532", "optionality": "R", "repeatability": "1", "tables": ["0532"] },
     { "index": 22, "swiftName": "relatedProductServiceCodeIndicator", "name": "Related Product/Service Code Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0879"] },
     { "index": 23, "swiftName": "productServiceAmountForPhysician", "name": "Product/Service Amount for Physician", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "productServiceCostFactor", "name": "Product/Service Cost Factor", "dataType": "NM", "optionality": "O", "repeatability": "1" },
@@ -49,7 +49,7 @@
     { "index": 44, "swiftName": "totalAmountProfessionalPartTechnicalPart", "name": "Total Amount Professional Part + Technical Part", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 45, "swiftName": "vatRate", "name": "VAT-Rate", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 46, "swiftName": "mainService", "name": "Main-Service", "dataType": "ID", "optionality": "O", "repeatability": "1" },
-    { "index": 47, "swiftName": "validation", "name": "Validation", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 47, "swiftName": "validation", "name": "Validation", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 48, "swiftName": "comment", "name": "Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" }
   ]
 }

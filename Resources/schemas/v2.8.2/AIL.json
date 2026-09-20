@@ -4,7 +4,7 @@
   "description": "AIL",
   "fields": [
     { "index": 1, "swiftName": "setIdAil", "name": "Set ID - AIL", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "locationResourceId", "name": "Location Resource ID", "dataType": "PL", "optionality": "C", "repeatability": "*" },
     { "index": 4, "swiftName": "locationTypeAil", "name": "Location Type - AIL", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0305"] },
     { "index": 5, "swiftName": "locationGroup", "name": "Location Group", "dataType": "CWE", "optionality": "O", "repeatability": "1" },

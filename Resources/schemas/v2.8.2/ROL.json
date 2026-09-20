@@ -4,7 +4,7 @@
   "description": "ROL",
   "fields": [
     { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0443"] },
     { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
     { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },

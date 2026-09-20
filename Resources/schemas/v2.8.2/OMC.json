@@ -4,15 +4,15 @@
   "description": "Supporting Clinical Information",
   "fields": [
     { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "OMC-3 populated" },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "OMC-3 populated" },
     { "index": 3, "swiftName": "segmentUniqueKey", "name": "Segment Unique Key", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "OMC-2 populated" },
     { "index": 4, "swiftName": "clinicalInformationRequest", "name": "Clinical Information Request", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 5, "swiftName": "collectionEventProcessStep", "name": "Collection Event/Process Step", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0938"] },
     { "index": 6, "swiftName": "communicationLocation", "name": "Communication Location", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0939"] },
-    { "index": 7, "swiftName": "answerRequired", "name": "Answer Required", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 7, "swiftName": "answerRequired", "name": "Answer Required", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 8, "swiftName": "hintHelpText", "name": "Hint/Help Text", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "typeOfAnswer", "name": "Type of Answer", "dataType": "Varies", "optionality": "O", "repeatability": "1", "tables": ["0125"] },
-    { "index": 10, "swiftName": "multipleAnswersAllowed", "name": "Multiple Answers Allowed", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 10, "swiftName": "multipleAnswersAllowed", "name": "Multiple Answers Allowed", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 11, "swiftName": "answerChoices", "name": "Answer Choices", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 12, "swiftName": "characterLimit", "name": "Character Limit", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "numberOfDecimals", "name": "Number of Decimals", "dataType": "NM", "optionality": "O", "repeatability": "1" }

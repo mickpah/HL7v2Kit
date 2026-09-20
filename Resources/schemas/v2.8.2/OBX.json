@@ -4,7 +4,7 @@
   "description": "Observation/Result",
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - OBX", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0125"], "condition": "OBX-11 != X" },
+    { "index": 2, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "table": "0125", "optionality": "C", "repeatability": "1", "tables": ["0125"], "condition": "OBX-11 != X" },
     { "index": 3, "swiftName": "observationIdentifier", "name": "Observation Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 4, "swiftName": "observationSubID", "name": "Observation Sub-ID", "dataType": "OG", "optionality": "C", "repeatability": "1" },
     { "index": 5, "swiftName": "observationValue", "name": "Observation Value", "dataType": "varies", "optionality": "C", "repeatability": "*", "tables": ["9999"] },
@@ -12,8 +12,8 @@
     { "index": 7, "swiftName": "referencesRange", "name": "References Range", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "interpretationCodes", "name": "Interpretation Codes", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0078"] },
     { "index": 9, "swiftName": "probability", "name": "Probability", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "natureOfAbnormalTest", "name": "Nature of Abnormal Test", "dataType": "ID", "optionality": "O", "repeatability": "*", "tables": ["0080"] },
-    { "index": 11, "swiftName": "observationResultStatus", "name": "Observation Result Status", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0085"] },
+    { "index": 10, "swiftName": "natureOfAbnormalTest", "name": "Nature of Abnormal Test", "dataType": "ID", "table": "0080", "optionality": "O", "repeatability": "*", "tables": ["0080"] },
+    { "index": 11, "swiftName": "observationResultStatus", "name": "Observation Result Status", "dataType": "ID", "table": "0085", "optionality": "R", "repeatability": "1", "tables": ["0085"] },
     { "index": 12, "swiftName": "effectiveDateOfReferenceRange", "name": "Effective Date of Reference Range", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "userDefinedAccessChecks", "name": "User Defined Access Checks", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "dateTimeOfTheObservation", "name": "Date/Time of the Observation", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
@@ -28,10 +28,10 @@
     { "index": 23, "swiftName": "performingOrganizationName", "name": "Performing Organization Name", "dataType": "XON", "optionality": "B", "repeatability": "1" },
     { "index": 24, "swiftName": "performingOrganizationAddress", "name": "Performing Organization Address", "dataType": "XAD", "optionality": "B", "repeatability": "1" },
     { "index": 25, "swiftName": "performingOrganizationMedicalDirector", "name": "Performing Organization Medical Director", "dataType": "XCN", "optionality": "B", "repeatability": "1" },
-    { "index": 26, "swiftName": "patientResultsReleaseCategory", "name": "Patient Results Release Category", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0909"] },
+    { "index": 26, "swiftName": "patientResultsReleaseCategory", "name": "Patient Results Release Category", "dataType": "ID", "table": "0909", "optionality": "O", "repeatability": "1", "tables": ["0909"] },
     { "index": 27, "swiftName": "rootCause", "name": "Root Cause", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0914"] },
     { "index": 28, "swiftName": "localProcessControl", "name": "Local Process Control", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0915"] },
-    { "index": 29, "swiftName": "observationType", "name": "Observation Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0936"] },
-    { "index": 30, "swiftName": "observationSubType", "name": "Observation Sub-Type", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0937"] }
+    { "index": 29, "swiftName": "observationType", "name": "Observation Type", "dataType": "ID", "table": "0936", "optionality": "O", "repeatability": "1", "tables": ["0936"] },
+    { "index": 30, "swiftName": "observationSubType", "name": "Observation Sub-Type", "dataType": "ID", "table": "0937", "optionality": "O", "repeatability": "1", "tables": ["0937"] }
   ]
 }

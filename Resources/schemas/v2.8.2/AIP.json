@@ -4,7 +4,7 @@
   "description": "AIP",
   "fields": [
     { "index": 1, "swiftName": "setIdAip", "name": "Set ID - AIP", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "personnelResourceId", "name": "Personnel Resource ID", "dataType": "XCN", "optionality": "C", "repeatability": "*" },
     { "index": 4, "swiftName": "resourceType", "name": "Resource Type", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0182"] },
     { "index": 5, "swiftName": "resourceGroup", "name": "Resource Group", "dataType": "CWE", "optionality": "O", "repeatability": "1" },

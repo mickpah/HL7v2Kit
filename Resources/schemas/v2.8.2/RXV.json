@@ -4,12 +4,12 @@
   "description": "RXV",
   "fields": [
     { "index": 1, "swiftName": "setIdRxv", "name": "Set ID - RXV", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "bolusType", "name": "Bolus Type", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0917"] },
+    { "index": 2, "swiftName": "bolusType", "name": "Bolus Type", "dataType": "ID", "table": "0917", "optionality": "R", "repeatability": "1", "tables": ["0917"] },
     { "index": 3, "swiftName": "bolusDoseAmount", "name": "Bolus Dose Amount", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "bolusDoseAmountUnits", "name": "Bolus Dose Amount Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 5, "swiftName": "bolusDoseVolume", "name": "Bolus Dose Volume", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "bolusDoseVolumeUnits", "name": "Bolus Dose Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 7, "swiftName": "pcaType", "name": "PCA Type", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0918"] },
+    { "index": 7, "swiftName": "pcaType", "name": "PCA Type", "dataType": "ID", "table": "0918", "optionality": "R", "repeatability": "1", "tables": ["0918"] },
     { "index": 8, "swiftName": "pcaDoseAmount", "name": "PCA Dose Amount", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "pcaDoseAmountUnits", "name": "PCA Dose Amount Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 10, "swiftName": "pcaDoseAmountVolume", "name": "PCA Dose Amount Volume", "dataType": "NM", "optionality": "O", "repeatability": "1" },
@@ -24,6 +24,6 @@
     { "index": 19, "swiftName": "syringeModelNumber", "name": "Syringe Model Number", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "syringeSize", "name": "Syringe Size", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 21, "swiftName": "syringeSizeUnits", "name": "Syringe Size Units", "dataType": "CWE", "optionality": "C", "repeatability": "1" },
-    { "index": 22, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
+    { "index": 22, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
   ]
 }

@@ -4,7 +4,7 @@
   "description": "AIS",
   "fields": [
     { "index": 1, "swiftName": "setIdAis", "name": "Set ID - AIS", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
+    { "index": 2, "swiftName": "segmentActionCode", "name": "Segment Action Code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"] },
     { "index": 3, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
     { "index": 5, "swiftName": "startDateTimeOffset", "name": "Start Date/Time Offset", "dataType": "NM", "optionality": "C", "repeatability": "1" },

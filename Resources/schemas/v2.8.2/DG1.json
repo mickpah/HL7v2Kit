@@ -20,13 +20,13 @@
     { "index": 15, "swiftName": "diagnosisPriority", "name": "Diagnosis Priority", "dataType": "NM", "optionality": "O", "repeatability": "1", "tables": ["0359"] },
     { "index": 16, "swiftName": "diagnosingClinician", "name": "Diagnosing Clinician", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
     { "index": 17, "swiftName": "diagnosisClassification", "name": "Diagnosis Classification", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0228"] },
-    { "index": 18, "swiftName": "confidentialIndicator", "name": "Confidential Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 18, "swiftName": "confidentialIndicator", "name": "Confidential Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 19, "swiftName": "attestationDateTime", "name": "Attestation Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "diagnosisIdentifier", "name": "Diagnosis Identifier", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = P12" },
-    { "index": 21, "swiftName": "diagnosisActionCode", "name": "Diagnosis Action Code", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "triggerEvent = P12" },
+    { "index": 21, "swiftName": "diagnosisActionCode", "name": "Diagnosis Action Code", "dataType": "ID", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "triggerEvent = P12" },
     { "index": 22, "swiftName": "parentDiagnosis", "name": "Parent Diagnosis", "dataType": "EI", "optionality": "C", "repeatability": "1" },
     { "index": 23, "swiftName": "drgCCLValueCode", "name": "DRG CCL Value Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0728"] },
-    { "index": 24, "swiftName": "drgGroupingUsage", "name": "DRG Grouping Usage", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 24, "swiftName": "drgGroupingUsage", "name": "DRG Grouping Usage", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 25, "swiftName": "drgDiagnosisDeterminationStatus", "name": "DRG Diagnosis Determination Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0731"] },
     { "index": 26, "swiftName": "presentOnAdmissionIndicator", "name": "Present On Admission (POA) Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0895"] }
   ]

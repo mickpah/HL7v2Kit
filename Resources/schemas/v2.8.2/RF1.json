@@ -27,6 +27,6 @@
     { "index": 22, "swiftName": "sourceDate", "name": "Source Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 23, "swiftName": "sourcePhone", "name": "Source Phone", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "comment", "name": "Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 25, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
+    { "index": 25, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0206", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
   ]
 }

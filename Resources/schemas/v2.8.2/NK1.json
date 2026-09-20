@@ -25,7 +25,7 @@
     { "index": 20, "swiftName": "primaryLanguage", "name": "Primary Language", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0296"] },
     { "index": 21, "swiftName": "livingArrangement", "name": "Living Arrangement", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0220"] },
     { "index": 22, "swiftName": "publicityCode", "name": "Publicity Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0215"] },
-    { "index": 23, "swiftName": "protectionIndicator", "name": "Protection Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 23, "swiftName": "protectionIndicator", "name": "Protection Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 24, "swiftName": "studentIndicator", "name": "Student Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0231"] },
     { "index": 25, "swiftName": "religion", "name": "Religion", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0006"] },
     { "index": 26, "swiftName": "mothersMaidenName", "name": "Mother's Maiden Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },

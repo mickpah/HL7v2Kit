@@ -13,7 +13,7 @@
     { "index": 8, "swiftName": "testServiceDefaultDurationQuantity", "name": "Test/Service Default Duration Quantity", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "testServiceDefaultDurationUnits", "name": "Test/Service Default Duration Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 10, "swiftName": "testServiceDefaultFrequency", "name": "Test/Service Default Frequency", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "consentIndicator", "name": "Consent Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 11, "swiftName": "consentIndicator", "name": "Consent Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 12, "swiftName": "consentIdentifier", "name": "Consent Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0413"] },
     { "index": 13, "swiftName": "consentEffectiveStartDateTime", "name": "Consent Effective Start Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "consentEffectiveEndDateTime", "name": "Consent Effective End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
@@ -25,7 +25,7 @@
     { "index": 20, "swiftName": "enteredBy", "name": "Entered By", "dataType": "XCN", "optionality": "B", "repeatability": "1" },
     { "index": 21, "swiftName": "orderableAtLocation", "name": "Orderable-at Location", "dataType": "PL", "optionality": "B", "repeatability": "*" },
     { "index": 22, "swiftName": "formularyStatus", "name": "Formulary Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0473"] },
-    { "index": 23, "swiftName": "specialOrderIndicator", "name": "Special Order Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 23, "swiftName": "specialOrderIndicator", "name": "Special Order Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 24, "swiftName": "primaryKeyValueCdm", "name": "Primary Key Value - CDM", "dataType": "CWE", "optionality": "O", "repeatability": "*" }
   ]
 }

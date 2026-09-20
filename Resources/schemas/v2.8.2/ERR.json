@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "errorCodeAndLocation", "name": "Error Code and Location", "dataType": "ELD", "optionality": "W", "repeatability": "*" },
     { "index": 2, "swiftName": "errorLocation", "name": "Error Location", "dataType": "ERL", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "hl7ErrorCode", "name": "HL7 Error Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0357"] },
-    { "index": 4, "swiftName": "severity", "name": "Severity", "dataType": "ID", "optionality": "R", "repeatability": "1", "tables": ["0516"] },
+    { "index": 4, "swiftName": "severity", "name": "Severity", "dataType": "ID", "table": "0516", "optionality": "R", "repeatability": "1", "tables": ["0516"] },
     { "index": 5, "swiftName": "applicationErrorCode", "name": "Application Error Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0533"] },
     { "index": 6, "swiftName": "applicationErrorParameter", "name": "Application Error Parameter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "diagnosticInformation", "name": "Diagnostic Information", "dataType": "TX", "optionality": "O", "repeatability": "1" },

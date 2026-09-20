@@ -25,9 +25,9 @@
     { "index": 20, "swiftName": "assignmentOfBenefits", "name": "Assignment Of Benefits", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0135"] },
     { "index": 21, "swiftName": "coordinationOfBenefits", "name": "Coordination Of Benefits", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0173"] },
     { "index": 22, "swiftName": "coordOfBenPriority", "name": "Coord Of Ben. Priority", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 23, "swiftName": "noticeOfAdmissionFlag", "name": "Notice Of Admission Flag", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 23, "swiftName": "noticeOfAdmissionFlag", "name": "Notice Of Admission Flag", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 24, "swiftName": "noticeOfAdmissionDate", "name": "Notice Of Admission Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
-    { "index": 25, "swiftName": "reportOfEligibilityFlag", "name": "Report Of Eligibility Flag", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 25, "swiftName": "reportOfEligibilityFlag", "name": "Report Of Eligibility Flag", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 26, "swiftName": "reportOfEligibilityDate", "name": "Report Of Eligibility Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
     { "index": 27, "swiftName": "releaseInformationCode", "name": "Release Information Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0093"] },
     { "index": 28, "swiftName": "preAdmitCert", "name": "Pre-Admit Cert (PAC)", "dataType": "ST", "optionality": "O", "repeatability": "1" },
@@ -57,6 +57,6 @@
     { "index": 52, "swiftName": "insuredsBirthPlace", "name": "Insured's Birth Place", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 53, "swiftName": "vipIndicator", "name": "VIP Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0099"] },
     { "index": 54, "swiftName": "externalHealthPlanIdentifiers", "name": "External Health Plan Identifiers", "dataType": "CX", "optionality": "O", "repeatability": "*" },
-    { "index": 55, "swiftName": "insuranceActionCode", "name": "Insurance Action Code", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
+    { "index": 55, "swiftName": "insuranceActionCode", "name": "Insurance Action Code", "dataType": "ID", "table": "0206", "optionality": "O", "repeatability": "1", "tables": ["0206"] }
   ]
 }

@@ -10,11 +10,11 @@
     { "index": 5, "swiftName": "descriptionOverrideIndicator", "name": "Description Override Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0268"] },
     { "index": 6, "swiftName": "explodingCharges", "name": "Exploding Charges", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0132"] },
     { "index": 7, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CNE", "optionality": "O", "repeatability": "*", "tables": ["0088"] },
-    { "index": 8, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
+    { "index": 8, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
     { "index": 9, "swiftName": "inventoryNumber", "name": "Inventory Number", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0463"] },
     { "index": 10, "swiftName": "resourceLoad", "name": "Resource Load", "dataType": "NM", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "contractNumber", "name": "Contract Number", "dataType": "CX", "optionality": "O", "repeatability": "*" },
     { "index": 12, "swiftName": "contractOrganization", "name": "Contract Organization", "dataType": "XON", "optionality": "O", "repeatability": "*" },
-    { "index": 13, "swiftName": "roomFeeIndicator", "name": "Room Fee Indicator", "dataType": "ID", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 13, "swiftName": "roomFeeIndicator", "name": "Room Fee Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

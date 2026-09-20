@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "actionCode",
       "name": "Action Code",
-      "dataType": "ID",
+      "dataType": "ID", "table": "0287",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0287"]

@@ -14,7 +14,7 @@
     { "index": 9, "swiftName": "priority", "name": "Priority", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0485"] },
     { "index": 10, "swiftName": "conditionText", "name": "Condition text", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "textInstruction", "name": "Text instruction", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "conjunction", "name": "Conjunction", "dataType": "ID", "optionality": "C", "repeatability": "1", "tables": ["0472"] },
+    { "index": 12, "swiftName": "conjunction", "name": "Conjunction", "dataType": "ID", "table": "0472", "optionality": "C", "repeatability": "1", "tables": ["0472"] },
     { "index": 13, "swiftName": "occurrenceDuration", "name": "Occurrence duration", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "totalOccurrences", "name": "Total occurrences", "dataType": "NM", "optionality": "O", "repeatability": "1" }
   ]
