@@ -1,0 +1,23 @@
+{
+  "dataType": "SRT",
+  "version": "2.4",
+  "name": "sort order",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Sort-by field",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Sequencing",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0397"
+      ]
+    }
+  ]
+}

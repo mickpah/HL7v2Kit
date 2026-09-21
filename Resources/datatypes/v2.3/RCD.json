@@ -1,0 +1,26 @@
+{
+  "dataType": "RCD",
+  "version": "2.3",
+  "name": "row column definition",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "HL7 item number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "HL7 data type",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Maximum column width",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

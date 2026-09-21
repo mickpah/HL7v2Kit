@@ -1,0 +1,20 @@
+{
+  "dataType": "RI",
+  "version": "2.3",
+  "name": "repeat interval",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Repeat pattern",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Explicit time interval",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

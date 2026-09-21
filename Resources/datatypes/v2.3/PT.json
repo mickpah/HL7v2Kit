@@ -1,0 +1,26 @@
+{
+  "dataType": "PT",
+  "version": "2.3",
+  "name": "processing type",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Processing ID",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0103"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Processing mode",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0207"
+      ]
+    }
+  ]
+}

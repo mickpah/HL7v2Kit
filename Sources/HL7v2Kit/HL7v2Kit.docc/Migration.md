@@ -98,7 +98,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | **v1.0.0** | **API frozen** — the surface above is now the SemVer contract |
 | v3.3.0 | Code-table registry (ADR-016): `HL7Table`, `HL7TableRegistry`, `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)`, `ValidationOptions.checkCodeTables`; `FieldGrammar.variableColumns` and plural accessors for the `1-n` segments RDT / ADD. **Additive API, but a new default check:** see below. |
 | v3.4.0 | Datatype component grammar (ADR-017): `DataTypeGrammarTable`, `DataTypeGrammar`, `ComponentGrammar`. Additive API; the code-table check now also covers `ID` components on v2.5.1 / v2.6 / v2.8.2 messages. |
-| *Unreleased* | `IssueLocation.subcomponentIndex` (additive; a defaulted initialiser parameter). The component code-table check descends into nested composites and covers OBX-5 under its OBX-2 datatype. Fix: Table 0301 `L,M,N` split into three codes. |
+| *Unreleased* | `IssueLocation.subcomponentIndex` (additive; a defaulted initialiser parameter). The component code-table check descends into nested composites, covers OBX-5 under its OBX-2 datatype, and now runs on v2.3, v2.3.1 and v2.4 too. AU rules ADRM-prose P-8 to P-10 (the VMR sub-ID tree). AU locale renderings of Tables 0125 and 0301. Fix: Table 0301 `L,M,N` split into three codes. |
 
 ## The code-table check is on by default (ADR-016)
 
@@ -107,6 +107,7 @@ The registry release adds no source break, but it does change validation results
 - **To keep the old results:** set `options.checkCodeTables = false`. The ``ValidationOptions/lenient`` preset already does.
 - **If you switch over `IssueCode`:** it is an open enum; the new case lands in your `@unknown default` branch.
 - **Component level too (ADR-017):** on v2.5.1, v2.6 and v2.8.2 messages the same check covers `ID` components such as `CX.5`, `XPN.7`, `XTN.2` and `XAD.7`. A value in the wrong field is the usual cause: a provider name left in OBR-17 (a phone number) reports `OBR[1]-17.2`.
+- **Validate Australian traffic with the AU locale.** Base v2.4 rejects values the ADRM adds: `OBX-2` of `CWE` / `DR` / `CNE` / `EI` (Table 0125), a universal ID type of `AUSNATA` in `MSH-4.3` (Table 0301), and `UNICODE UTF-8` below. Under ``HL7Locale/auLocalisation`` all are valid.
 - **AU v2.4 traffic declaring `UNICODE UTF-8` in MSH-18:** an error under ``HL7Locale/international``, because base v2.4 Table 0211 does not print it, and accepted under ``HL7Locale/auLocalisation``, because ADRM-2021 back-ports it. Validate AU traffic with the AU locale.
 
 ## Historical: 0.1.0 → 0.5.0

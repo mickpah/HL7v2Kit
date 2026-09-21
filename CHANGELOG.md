@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M13-B: the component check runs on v2.3, v2.3.1 and v2.4
+
+- `DataTypeGrammarTable` answers for all six versions; the component-level
+  `valueNotInTable` rule now applies to the older three under their own,
+  prose-derived grammar (18 / 25 / 35 enforceable components). No fixture
+  fallout.
+- Each version's own facts decide: Table 0203 is user-defined until v2.5, so
+  an unknown `CX.5` identifier type is an error only from v2.5.1.
+
+### Fixed — AU locale false errors (one live since v3.3.0)
+
+- **OBX-2 of `CWE`, `DR`, `CNE` or `EI` was rejected under the AU locale.**
+  ADRM-2021 Table 0125 (p. 237) prints them; base v2.4 does not. OBX-2 has
+  been enforced at field level since v3.3.0, so this has been wrong since
+  then, including for the ADRM's own VMR examples. The ADRM rendering is now
+  on the locale table axis.
+- **A universal ID type of `AUSNATA` would have been rejected** once v2.4
+  components were checked (`QML^2184^AUSNATA` in MSH-4). ADRM-2021 Table
+  0301 (p. 161) adds AUSHICPR, AUSHIC, AUSDVA, AUSNATA and AUSLSPN as
+  daggered Australian extensions; added to the locale axis before enabling.
+- Found by sweeping every closed table enforced on v2.4 against the ADRM's
+  own print of it. Those were the only two with codes base v2.4 lacks.
+
+### Added — M13-A: datatype component grammar recovered from prose for v2.3, v2.3.1, v2.4
+
+- These versions print no component tables, but every composite has a
+  numbered section whose components each get a numbered subsection
+  ("2.9.12.5 Identifier type code (ID)"). `scripts/extract-datatype-prose.py`
+  reads index, name and datatype from those headings and writes
+  `Resources/datatypes/v2.3`, `v2.3.1`, `v2.4` (105 datatype files, 575
+  components), marked `"source": "prose"`.
+- **A table binding must pass three tests:** exactly one table is named in
+  the subsection; that number is in the version's own registry; and, when
+  the prose states the table's name, it matches the registry's name. The
+  third test caught real misprints: v2.3 sec 2.8.31.4 binds QSC.4 to "HL7
+  table 0102 - Relation conjunction", but v2.3's 0102 is Delayed
+  Acknowledgment Type, a closed table that would have rejected AND / OR.
+  Anything that fails is left unbound: an absent check, never a wrong one.
+- **Measured:** every surviving binding with a v2.5.1 counterpart agrees
+  with v2.5.1's printed component table (28 / 48 / 70 on the three versions,
+  zero conflicts). 168 bound components; 39 mentions rejected.
+- Version differences the prose preserves: CX.5 is `IS` in v2.3 and v2.3.1
+  and `ID` from v2.4; XCN.13 and XON.7 are `IS` in v2.4. Table 0203 itself is
+  user-defined until v2.5, so identifier types are never enforced before it.
+- `audit-schemas.py --datatypes` is prose-aware (no optionality, optional
+  datatype code, no trailing note subsections; prose re-extraction drift).
+
 ### Added — M12: the AU HL7v2 VMR sub-ID tree (ADRM-2021 Appendix 9, Normative)
 
 - New profile model track `SubIDTreeRule` and three AU rules, reported as

@@ -527,11 +527,21 @@ def datatypes(depth=False):
         comps = doc.get("components", [])
         if [c.get("index") for c in comps] != list(range(1, len(comps) + 1)) or not comps:
             findings.append((rel, f"component indexes are not 1..n: {[c.get('index') for c in comps]}"))
+        # M13: v2.3 to v2.4 files are recovered from prose (`"source": "prose"`). Prose gives
+        # no optionality, and a heading can print no datatype code (XTN.1), so those two
+        # checks apply to the printed component tables only. A trailing component with no
+        # datatype would be a note the extractor failed to drop.
+        prose = doc.get("source") == "prose"
+        if prose and comps and not comps[-1].get("dataType"):
+            findings.append((rel, f"{stem}: trailing component without a datatype — a note, not a component?"))
         for c in comps:
             where = f"{stem}.{c.get('index')}"
-            if c.get("optionality") not in COMPONENT_OPT:
+            if prose:
+                if c.get("optionality") != "":
+                    findings.append((rel, f"{where}: a prose-derived component cannot carry an optionality"))
+            elif c.get("optionality") not in COMPONENT_OPT:
                 findings.append((rel, f"{where}: unknown optionality {c.get('optionality')!r}"))
-            if not c.get("dataType") and c.get("optionality") not in ("W", "X"):
+            if not prose and not c.get("dataType") and c.get("optionality") not in ("W", "X"):
                 findings.append((rel, f"{where}: no datatype on a live component"))
             if c.get("dataType") and not re.fullmatch(r"[A-Z][A-Z0-9]{1,3}|[Vv]aries", c["dataType"]):
                 findings.append((rel, f"{where}: implausible datatype {c['dataType']!r}"))
@@ -547,7 +557,19 @@ def datatypes(depth=False):
         spec = importlib.util.spec_from_file_location("dtx", os.path.join(REPO, "scripts/extract-datatype-components.py"))
         dtx = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(dtx)
+        spec = importlib.util.spec_from_file_location("dtp", os.path.join(REPO, "scripts/extract-datatype-prose.py"))
+        dtp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dtp)
         for version, committed in sorted(by_version.items()):
+            if version[1:] in dtp.SOURCES:
+                if not os.path.exists(os.path.join(STANDARDS, dtp.SOURCES[version[1:]][0])):
+                    findings.append((f"Resources/datatypes/{version}", "cannot re-extract (missing PDF)"))
+                    continue
+                fresh = {code: dtp.document(t) for code, t in dtp.extract(version[1:]).items()}
+                for code in sorted(set(fresh) | set(committed)):
+                    if fresh.get(code) != committed.get(code):
+                        findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh prose extraction"))
+                continue
             if not os.path.exists(os.path.join(STANDARDS, dtx.PDFS[version[1:]])):
                 findings.append((f"Resources/datatypes/{version}", "cannot re-extract (missing PDF)"))
                 continue

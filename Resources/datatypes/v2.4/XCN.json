@@ -1,0 +1,143 @@
+{
+  "dataType": "XCN",
+  "version": "2.4",
+  "name": "extended composite ID number and name for persons",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Family name",
+      "dataType": "FN",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Given name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Second and further given names or initials thereof",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Suffix",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Prefix",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Degree",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0360"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Source table",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0297"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Assigning authority",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 10,
+      "name": "Name type code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0200"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Identifier check digit",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 12,
+      "name": "Code identifying the check digit scheme employed",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Identifier type code",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Assigning facility",
+      "dataType": "HD",
+      "optionality": "",
+      "tables": [
+        "0300"
+      ]
+    },
+    {
+      "index": 15,
+      "name": "Name representation code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Name context",
+      "dataType": "CE",
+      "optionality": "",
+      "tables": [
+        "0448"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Name validity range",
+      "dataType": "DR",
+      "optionality": ""
+    },
+    {
+      "index": 18,
+      "name": "Name assembly order",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0444"
+      ]
+    }
+  ]
+}

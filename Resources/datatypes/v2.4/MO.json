@@ -1,0 +1,20 @@
+{
+  "dataType": "MO",
+  "version": "2.4",
+  "name": "money",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Denomination",
+      "dataType": "ID",
+      "optionality": ""
+    }
+  ]
+}

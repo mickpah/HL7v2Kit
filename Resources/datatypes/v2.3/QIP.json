@@ -1,0 +1,20 @@
+{
+  "dataType": "QIP",
+  "version": "2.3",
+  "name": "query input parameter list",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Field name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Value1 & value2 & value3",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

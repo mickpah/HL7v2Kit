@@ -95,4 +95,23 @@ struct CodeTableValidationTests {
         // reject what that version prints. (Not expressible as a wire here: the Parser
         // accepts only ASCII, 8859/1 and UNICODE UTF-8 as declared character sets.)
     }
+
+    @Test("AU v2.4: OBX-2 of CWE or DR is valid under the AU locale, as ADRM-2021 Table 0125 prints")
+    func auValueTypes() throws {
+        func oru(_ obx2: String) -> String {
+            "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01|MSG1|P|2.4\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+                + "OBR|1|||GLU^Glucose^L\r"
+                + "OBX|1|\(obx2)|GLU^Glucose^L||x||||||F\r"
+        }
+        func issues(_ wire: String, _ locale: HL7Locale) throws -> [ValidationIssue] {
+            Validator(locale: locale).validate(try Parser(locale: locale).parse(wire)).issues
+                .filter { if case .valueNotInTable(let t) = $0.code { return t == "0125" } else { return false } }
+        }
+        for type in ["CWE", "DR", "CNE", "EI"] {
+            #expect(try issues(oru(type), .auLocalisation).isEmpty, "OBX-2 = \(type) under the AU locale")
+            #expect(try issues(oru(type), .international).count == 1, "base v2.4 Table 0125 has no \(type)")
+        }
+        #expect(try issues(oru("QQ"), .auLocalisation).count == 1, "the widening is a union, not a free pass")
+    }
 }

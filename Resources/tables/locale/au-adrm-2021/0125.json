@@ -1,0 +1,126 @@
+{
+  "table": "0125",
+  "version": "au-adrm-2021",
+  "name": "Value type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7au ADRM-2021.1 OBX-2 Value type, HL7 Table 0125 (pp. 237-238). The localisation prints CNE, CWE, DR and EI, which base v2.4 Table 0125 lacks; its own VMR examples (Appendix 9) use CWE and DR in OBX-2.",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Address"
+    },
+    {
+      "code": "CE",
+      "description": "Coded Entry"
+    },
+    {
+      "code": "CNE",
+      "description": "Coded with no exceptions"
+    },
+    {
+      "code": "CWE",
+      "description": "Coded with exceptions"
+    },
+    {
+      "code": "CF",
+      "description": "Coded Element with Formatted values"
+    },
+    {
+      "code": "CK",
+      "description": "Composite ID With Check Digit"
+    },
+    {
+      "code": "CN",
+      "description": "Composite ID And Name"
+    },
+    {
+      "code": "CP",
+      "description": "Composite Price"
+    },
+    {
+      "code": "CX",
+      "description": "Extended Composite ID With Check Digit"
+    },
+    {
+      "code": "DR",
+      "description": "Date/Time Range"
+    },
+    {
+      "code": "DT",
+      "description": "Date"
+    },
+    {
+      "code": "ED",
+      "description": "Encapsulated Data"
+    },
+    {
+      "code": "EI",
+      "description": "Entity Identifier"
+    },
+    {
+      "code": "FT",
+      "description": "Formatted Text (Display)"
+    },
+    {
+      "code": "MO",
+      "description": "Money"
+    },
+    {
+      "code": "NM",
+      "description": "Numeric"
+    },
+    {
+      "code": "PN",
+      "description": "Person Name"
+    },
+    {
+      "code": "RP",
+      "description": "Reference Pointer"
+    },
+    {
+      "code": "SN",
+      "description": "Structured Numeric"
+    },
+    {
+      "code": "ST",
+      "description": "String Data."
+    },
+    {
+      "code": "TM",
+      "description": "Time"
+    },
+    {
+      "code": "TN",
+      "description": "Telephone Number"
+    },
+    {
+      "code": "TS",
+      "description": "Time Stamp (Date & Time)"
+    },
+    {
+      "code": "TX",
+      "description": "Text Data (Display)"
+    },
+    {
+      "code": "XAD",
+      "description": "Extended Address"
+    },
+    {
+      "code": "XCN",
+      "description": "Extended Composite Name And Number For Persons"
+    },
+    {
+      "code": "XON",
+      "description": "Extended Composite Name And Number For Organizations"
+    },
+    {
+      "code": "XPN",
+      "description": "Extended Person Name"
+    },
+    {
+      "code": "XTN",
+      "description": "Extended Telecommunications Number"
+    }
+  ]
+}

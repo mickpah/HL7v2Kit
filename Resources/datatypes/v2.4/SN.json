@@ -1,0 +1,32 @@
+{
+  "dataType": "SN",
+  "version": "2.4",
+  "name": "structured numeric",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Comparator",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Num1",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Separator/suffix",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Num2",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

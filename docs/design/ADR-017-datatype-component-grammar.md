@@ -43,7 +43,20 @@ Two items from the deferred list shipped, both as extensions of the rule above r
 - **OBX-5.** The datatype OBX-2 declares is resolved once (`effectiveDataType`, shared with the AU composite overrides) and the component check runs under it. A primitive or absent OBX-2 has no grammar and nothing fires.
 - **A defect this exposed in v3.4.0:** Table 0301 prints the three local-scheme codes in one row, `L,M,N`. As a single code the closed table rejected a valid `HD.3` of `L`, `M` or `N`. Split by cited override; the audit now treats a comma in a code as suspect.
 
-**Still deferred:** component grammar for v2.3 to v2.4 (prose only); TBL# cells naming several tables; component optionality and length, recorded and not enforced.
+**Still deferred after M11:** component grammar for v2.3 to v2.4 (prose only); TBL# cells naming several tables; component optionality and length, recorded and not enforced.
+
+## Addendum 2026-09-21 — M13: v2.3, v2.3.1 and v2.4 from prose
+
+Option 3 was deferred above for want of a standard of evidence. M13 sets one and meets it.
+
+- **Structure comes from headings, not free text.** Each composite has a numbered section and each component a numbered subsection ("2.9.12.5 Identifier type code (ID)"): index, name and datatype are read from that heading. A trailing subsection with no datatype code is a note ("Usage notes:") and is dropped. 105 datatype files, 575 components, marked `"source": "prose"`; `optionalityCode` is `""` because the prose prints none.
+- **A table binding must pass three tests:** the subsection names exactly one table; that number is in the version's own registry; and when the prose states the table's name, it matches the registry's name for that number. Anything else stays unbound.
+- **The name test is not theoretical.** v2.3 sec 2.8.31.4 binds QSC.4 to "HL7 table 0102 - Relation conjunction"; v2.3's 0102 is Delayed Acknowledgment Type, a closed table that would have rejected AND and OR. It also caught v2.3 XCN.8 / PPN.8 ("0207 - CN ID source"; 0207 is Processing mode), JCC.2 ("0329 - job class"; 0329 is Quantity method) and v2.3.1 DLN.2 (0333 printed for two different tables).
+- **Measured:** every surviving binding that has a v2.5.1 counterpart equals v2.5.1's printed component table: 28, 48 and 70 on the three versions, zero conflicts. 39 mentions were rejected.
+- **Multi-table field cells** (NK1-11 `0327/0328`) are the successive coded components of the field's composite (JCC.1, JCC.2), so the component grammar is what gives them meaning; no separate mechanism is needed.
+- **AU consequence, found by sweeping before enabling:** with v2.4 checked, the AU locale needed the ADRM's own renderings of two more tables. Table 0301 (p. 161) adds AUSHICPR, AUSHIC, AUSDVA, AUSNATA and AUSLSPN as daggered Australian extensions, and `QML^2184^AUSNATA` in MSH-4 is everyday AU traffic. Table 0125 (p. 237) adds CNE, CWE, DR and EI as OBX-2 value types — and that one was a live false error under the AU locale since v3.3.0, because OBX-2 has been enforced at field level since then.
+
+**Still deferred:** component optionality and length, recorded where printed and not enforced; TBL# cells that name several tables on a component with no grammar to resolve them.
 
 ## References
 

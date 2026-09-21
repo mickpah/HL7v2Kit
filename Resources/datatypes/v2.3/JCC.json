@@ -1,0 +1,23 @@
+{
+  "dataType": "JCC",
+  "version": "2.3",
+  "name": "job code/class",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Job code",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0327"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Job class",
+      "dataType": "IS",
+      "optionality": ""
+    }
+  ]
+}

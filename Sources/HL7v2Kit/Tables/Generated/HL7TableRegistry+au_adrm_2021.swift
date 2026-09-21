@@ -5,9 +5,11 @@
 extension HL7TableRegistry {
     public static let au_adrm_2021: [String: HL7Table] = [
         "0074": t0074_au_adrm_2021,
+        "0125": t0125_au_adrm_2021,
         "0200": t0200_au_adrm_2021,
         "0203": t0203_au_adrm_2021,
         "0211": t0211_au_adrm_2021,
+        "0301": t0301_au_adrm_2021,
         "0363": t0363_au_adrm_2021,
     ]
 
@@ -57,6 +59,44 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "VUS", description: "Vascular Ultrasound"),
             HL7Table.Entry(code: "VR", description: "Virology"),
             HL7Table.Entry(code: "XRC", description: "Cineradiograph"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0125_au_adrm_2021 = HL7Table(
+        number: "0125",
+        name: "Value type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AD", description: "Address"),
+            HL7Table.Entry(code: "CE", description: "Coded Entry"),
+            HL7Table.Entry(code: "CNE", description: "Coded with no exceptions"),
+            HL7Table.Entry(code: "CWE", description: "Coded with exceptions"),
+            HL7Table.Entry(code: "CF", description: "Coded Element with Formatted values"),
+            HL7Table.Entry(code: "CK", description: "Composite ID With Check Digit"),
+            HL7Table.Entry(code: "CN", description: "Composite ID And Name"),
+            HL7Table.Entry(code: "CP", description: "Composite Price"),
+            HL7Table.Entry(code: "CX", description: "Extended Composite ID With Check Digit"),
+            HL7Table.Entry(code: "DR", description: "Date/Time Range"),
+            HL7Table.Entry(code: "DT", description: "Date"),
+            HL7Table.Entry(code: "ED", description: "Encapsulated Data"),
+            HL7Table.Entry(code: "EI", description: "Entity Identifier"),
+            HL7Table.Entry(code: "FT", description: "Formatted Text (Display)"),
+            HL7Table.Entry(code: "MO", description: "Money"),
+            HL7Table.Entry(code: "NM", description: "Numeric"),
+            HL7Table.Entry(code: "PN", description: "Person Name"),
+            HL7Table.Entry(code: "RP", description: "Reference Pointer"),
+            HL7Table.Entry(code: "SN", description: "Structured Numeric"),
+            HL7Table.Entry(code: "ST", description: "String Data."),
+            HL7Table.Entry(code: "TM", description: "Time"),
+            HL7Table.Entry(code: "TN", description: "Telephone Number"),
+            HL7Table.Entry(code: "TS", description: "Time Stamp (Date & Time)"),
+            HL7Table.Entry(code: "TX", description: "Text Data (Display)"),
+            HL7Table.Entry(code: "XAD", description: "Extended Address"),
+            HL7Table.Entry(code: "XCN", description: "Extended Composite Name And Number For Persons"),
+            HL7Table.Entry(code: "XON", description: "Extended Composite Name And Number For Organizations"),
+            HL7Table.Entry(code: "XPN", description: "Extended Person Name"),
+            HL7Table.Entry(code: "XTN", description: "Extended Telecommunications Number"),
         ] as [HL7Table.Entry]
     )
 
@@ -227,6 +267,33 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "ISO IR159", description: "Code of the supplementary Japanese Graphic Character set for information interchange (JIS X 0212-1990). Note that the code contains a space, i.e. \"ISO IR159\"."),
             HL7Table.Entry(code: "UNICODE", description: "The world wide character standard from ISO/IEC 10646- 1-19931"),
             HL7Table.Entry(code: "UNICODE UTF-8", description: "UCS Transformation Format, 8-bit form. Introduced in HL7 v2.6 and back-ported into this v2.4 localisation."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0301_au_adrm_2021 = HL7Table(
+        number: "0301",
+        name: "Universal ID type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "AUSHICPR", description: "Australian HIC Provider Number (AU extension, marked with a dagger in the ADRM)"),
+            HL7Table.Entry(code: "AUSHIC", description: "Medicare Australia (AU extension)"),
+            HL7Table.Entry(code: "AUSDVA", description: "Australia - Dept. of Veterans Affairs (AU extension)"),
+            HL7Table.Entry(code: "AUSNATA", description: "National Association of Testing Authorities, Australia (AU extension)"),
+            HL7Table.Entry(code: "AUSLSPN", description: "Australian location specific practice number for Diagnostic Imaging (AU extension)"),
+            HL7Table.Entry(code: "DNS", description: "An Internet dotted name. Either in ASCII or as integers"),
+            HL7Table.Entry(code: "GUID", description: "Same as UUID"),
+            HL7Table.Entry(code: "HCD", description: "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"),
+            HL7Table.Entry(code: "HL7", description: "Reserved for future HL7 registration schemes"),
+            HL7Table.Entry(code: "ISO", description: "An International Standards Organization Object Identifier"),
+            HL7Table.Entry(code: "L", description: "Reserved for locally defined coding scheme"),
+            HL7Table.Entry(code: "M", description: "Reserved for locally defined coding scheme"),
+            HL7Table.Entry(code: "N", description: "Reserved for locally defined coding scheme"),
+            HL7Table.Entry(code: "Random", description: "Usually a base64 encoded string of random bits. The uniqueness depends on the length of the bits."),
+            HL7Table.Entry(code: "URI", description: "Uniform Resource Identifier"),
+            HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier"),
+            HL7Table.Entry(code: "x400", description: "An X.400 MHS format identifier"),
+            HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
         ] as [HL7Table.Entry]
     )
 
