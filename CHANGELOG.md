@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — a false error in v3.4.0: HD.3 of `L`, `M` or `N` was rejected
+
+- HL7 Table 0301 (Universal ID type) prints the three local-scheme codes in
+  ONE row, `L,M,N`. Extracted as a single code, the closed table rejected a
+  valid universal ID type of `L`, `M` or `N` wherever HD is a field's own
+  datatype (MSH-3 to MSH-6 and the like) once v3.4.0's component check went
+  live. Split into three rows by a cited override on the five versions that
+  print the table. It is the only comma-joined code in the registry; the
+  audit's suspect-code test now flags a comma.
 
 ## [3.4.0] — 2026-09-21
 

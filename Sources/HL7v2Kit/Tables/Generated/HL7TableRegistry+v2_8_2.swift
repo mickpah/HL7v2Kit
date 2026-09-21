@@ -5027,12 +5027,14 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "HCD", description: "The CEN Healthcare Coding Scheme Designator"),
             HL7Table.Entry(code: "HL7", description: "HL7 registration schemes"),
             HL7Table.Entry(code: "ISO", description: "An International Standards Organization Object Identifier (OID), in accordance with ISO/IEC 8824. Formatted as decimal digits separated by periods; recommended limit of 64 characters"),
-            HL7Table.Entry(code: "L,M,N", description: "Locally defined coding entity identifier."),
+            HL7Table.Entry(code: "L", description: "Locally defined coding entity identifier."),
             HL7Table.Entry(code: "Random", description: "Usually a base64 encoded string of random bits. Note: Random IDs are typically used for instance identifiers, rather than an identifier of an Assigning Authority that issues instance identifiers"),
             HL7Table.Entry(code: "URI", description: "Uniform Resource Identifier"),
             HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier, in accordance with RFC 4122. Recommended format is 32 hexadecimal digits separated by hyphens, in the digit grouping 8-4-4-4- 12"),
             HL7Table.Entry(code: "x400", description: "An X.400 MHS identifier. Recommended format is in accordance with RFC 1649"),
             HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
+            HL7Table.Entry(code: "M", description: "Locally defined coding entity identifier."),
+            HL7Table.Entry(code: "N", description: "Locally defined coding entity identifier."),
         ] as [HL7Table.Entry]
     )
 

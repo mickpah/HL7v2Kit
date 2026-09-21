@@ -39,7 +39,7 @@
       "description": "An International Standards Organization Object Identifier (OID), in accordance with ISO/IEC 8824. Formatted as decimal digits separated by periods; recommended limit of 64 characters"
     },
     {
-      "code": "L,M,N",
+      "code": "L",
       "description": "Locally defined coding entity identifier."
     },
     {
@@ -61,6 +61,14 @@
     {
       "code": "x500",
       "description": "An X.500 directory name"
+    },
+    {
+      "code": "M",
+      "description": "Locally defined coding entity identifier."
+    },
+    {
+      "code": "N",
+      "description": "Locally defined coding entity identifier."
     }
   ]
 }

@@ -4611,11 +4611,13 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "HCD", description: "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"),
             HL7Table.Entry(code: "HL7", description: "Reserved for future HL7 registration schemes"),
             HL7Table.Entry(code: "ISO", description: "An International Standards Organization Object Identifier"),
-            HL7Table.Entry(code: "L,M,N", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "L", description: "These are reserved for locally defined coding schemes."),
             HL7Table.Entry(code: "Random", description: "Usually a base64 encoded string of random bits. The uniqueness depends on the length of the bits. Mail systems often generate ASCII string \"unique names,\" from a combination of random bits and system names. Obviously, such identifiers will not be con"),
             HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier"),
             HL7Table.Entry(code: "x400", description: "An X.400 MHS format identifier"),
             HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
+            HL7Table.Entry(code: "M", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "N", description: "These are reserved for locally defined coding schemes."),
         ] as [HL7Table.Entry]
     )
 

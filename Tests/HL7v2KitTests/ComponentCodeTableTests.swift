@@ -70,4 +70,19 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(wire(pid3: "123^^^AUTH^NOI")).count == 1)
         #expect(try tableIssues(wire(pid3: "123^^^AUTH^NOI"), locale: .auLocalisation).isEmpty)
     }
+
+    @Test("Table 0301 prints L,M,N in one row: they are three codes, and each is valid in HD.3")
+    func localUniversalIDTypes() throws {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            let t = try #require(HL7TableRegistry.table("0301", version: version))
+            #expect(t.contains("L") && t.contains("M") && t.contains("N"), "0301 on \(version)")
+            #expect(!t.contains("L,M,N"))
+        }
+        for type in ["L", "M", "N", "ISO"] {
+            let w = wire().replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^\(type)|FAC|")
+            #expect(try tableIssues(w).isEmpty, "MSH-3 HD.3 = \(type)")
+        }
+        let bad = wire().replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^QQQ|FAC|")
+        #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
+    }
 }

@@ -27,7 +27,7 @@
       "description": "An International Standards Organization Object Identifier"
     },
     {
-      "code": "L,M,N",
+      "code": "L",
       "description": "These are reserved for locally defined coding schemes."
     },
     {
@@ -45,6 +45,14 @@
     {
       "code": "x500",
       "description": "An X.500 directory name"
+    },
+    {
+      "code": "M",
+      "description": "These are reserved for locally defined coding schemes."
+    },
+    {
+      "code": "N",
+      "description": "These are reserved for locally defined coding schemes."
     }
   ]
 }

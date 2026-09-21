@@ -72,6 +72,22 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.3.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0301": {
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "N",
+          "These are reserved for locally defined coding schemes."
+        ]
+      ]
     }
   },
   "2.4": {
@@ -118,6 +134,22 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.4 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0301": {
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "N",
+          "These are reserved for locally defined coding schemes."
+        ]
+      ]
     }
   },
   "2.5.1": {
@@ -179,6 +211,22 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 24 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0301": {
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "N",
+          "These are reserved for locally defined coding schemes."
+        ]
+      ]
     }
   },
   "2.6": {
@@ -276,6 +324,22 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.6 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 15 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0301": {
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "N",
+          "These are reserved for locally defined coding schemes."
+        ]
+      ]
     }
   },
   "2.8.2": {
@@ -353,6 +417,22 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.8.2 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 25 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0301": {
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "Locally defined coding entity identifier."
+        ],
+        [
+          "N",
+          "Locally defined coding entity identifier."
+        ]
+      ]
     }
   }
 }

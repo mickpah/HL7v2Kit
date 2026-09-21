@@ -187,7 +187,9 @@ TABLE_EXTRACTOR = "/tmp/tablesbin"
 #   three+ words     a Value wider than its column run into the Description
 #                    (v2.8.2 0396 "CDCEDACUITY CDC Emergency"); "..." ranges are exempt
 #   bare "..."       an ellipsis row: the list continues or the row means null — never a code
-SUSPECT_CODE = re.compile(r"[\[\]|()]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^\.\.\.$")
+#   a comma           several codes printed in one Value cell (0301 "L,M,N"): as one code the
+#                    closed table rejects each of them
+SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^\.\.\.$")
 
 # Printed codes the shape test would wrongly flag. Each was read against the PDF. Keyed
 # (table, code): version-agnostic because the same printed value recurs across versions.
