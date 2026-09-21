@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.4] — 2026-09-21
+
+**One fix and tooling; no API change.** Waveform value types `NA`, `MA` and `CD` are no longer rejected in OBX-2 (a false error since `v3.3.0`); the spec's 616 example messages can now be run through the Validator.
+
 ### Fixed — waveform value types rejected in OBX-2 (since v3.3.0)
 
 - HL7 Table 0125 omits `NA`, `MA` and `CD` on v2.3 to v2.6, yet Chapter 7's own
