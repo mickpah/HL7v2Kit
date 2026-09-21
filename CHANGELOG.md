@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.5.0] — 2026-09-21
+
+**Component checks on every version, the AU VMR sub-ID tree, and fixes for two false errors in tagged releases** (HD.3 `L` / `M` / `N` in `v3.4.0`; AU OBX-2 `CWE` / `DR` since `v3.3.0`). Additive API: `IssueLocation.subcomponentIndex`.
+
 ### Added — M13-B: the component check runs on v2.3, v2.3.1 and v2.4
 
 - `DataTypeGrammarTable` answers for all six versions; the component-level
