@@ -239,6 +239,15 @@
           "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
+    },
+    "0528": {
+      "note": "Event related period prints HS ('the hour of sleep'); the RPT section's own example is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|' (sec 2.A.66), whose RPT.8 'AHS' is in no row. Codes are matched exactly, so the closed table rejected the specification's example; the example's spelling is accepted beside the printed rows.",
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ]
     }
   },
   "2.6": {
@@ -356,6 +365,15 @@
           "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
+    },
+    "0528": {
+      "note": "Event related period prints HS ('the hour of sleep'); the RPT section's own example is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|' (sec 2.A.66), whose RPT.8 'AHS' is in no row. Codes are matched exactly, so the closed table rejected the specification's example; the example's spelling is accepted beside the printed rows.",
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ]
     }
   },
   "2.8.2": {
@@ -447,6 +465,15 @@
         [
           "N",
           "Locally defined coding entity identifier."
+        ]
+      ]
+    },
+    "0528": {
+      "note": "Event related period prints HS ('the hour of sleep'); the RPT section's own example is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|' (sec 2.A.66), whose RPT.8 'AHS' is in no row. Codes are matched exactly, so the closed table rejected the specification's example; the example's spelling is accepted beside the printed rows.",
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
         ]
       ]
     }

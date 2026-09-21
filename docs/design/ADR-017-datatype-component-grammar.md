@@ -80,6 +80,12 @@ Tables could not audit these five rules, so the spec's own prose and examples di
 
 Registered at the time, **shipped in M16**: the same HD section says components 2 and 3 "must either both be valued (both non-null), or both be not valued", a sentence all six versions print. A partially populated group now fails the rule. M16's must-pass test over every HD example the section prints also caught a false error live since v3.5.0: the table prints `Random`, the example `RANDOM`; the example's spelling is now in Table 0301 by cited override.
 
+## Addendum 2026-09-21 — M17: the printed examples as a standing audit
+
+Checking a rule against an example the spec prints had found a false error every time it was tried by hand (XTN, PL, CWE, HD). M17 makes it systematic: `audit-schemas.py --examples` extracts every pipe-delimited composite example from each version's datatype chapter and applies the component rules to it. 352 example repetitions; it found two more self-contradictions (`NA.1` printed `R` beside a prose sentence and an example that leave it empty; Table 0528 printing `HS` beside an RPT example that uses `AHS`), both resolved in favour of the example by cited override. Three rejections are registered as the example's fault rather than the rule's, each with its reason in `EXPECTED_EXAMPLE_REJECTIONS`.
+
+**Limit of the audit, stated:** it re-implements the two component rules in Python over the extracted data, which is where every misfire so far has originated; it does not drive the Swift Validator. The Swift tests cover the rule logic; this covers the data.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

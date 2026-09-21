@@ -575,7 +575,7 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Numeric Array",
         components: [
-            ComponentGrammar(index: 1, name: "Value1", dataType: "NM", optionalityCode: "R", tables: []),
+            ComponentGrammar(index: 1, name: "Value1", dataType: "NM", optionalityCode: "O", tables: []),
             ComponentGrammar(index: 2, name: "Value2", dataType: "NM", optionalityCode: "O", tables: []),
             ComponentGrammar(index: 3, name: "Value3", dataType: "NM", optionalityCode: "O", tables: []),
             ComponentGrammar(index: 4, name: "Value4", dataType: "NM", optionalityCode: "O", tables: []),

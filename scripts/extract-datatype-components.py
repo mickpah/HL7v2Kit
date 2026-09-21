@@ -115,7 +115,18 @@ def extract(version):
             if c.get("NAME") and first >= start.get("TBL", 0) and end <= start.get("COMMENTS", 10**6) + 2 \
                     and not c.get("COMMENTS") and not c.get("SECREF"):
                 last["name"] = (last["name"] + " " + c["NAME"]).strip()
-    return {k: v for k, v in types.items() if v["components"]}   # primitives print no rows
+    types = {k: v for k, v in types.items() if v["components"]}   # primitives print no rows
+    # Resources/datatypes/overrides.json: hand-verified, cited corrections for the rare
+    # component whose printed optionality the same section's prose and example contradict
+    # ({"<version>": {"<DT>": {"<index>": {"optionality": "O", "note": "..."}}}}).
+    path = os.path.join(REPO, "Resources/datatypes/overrides.json")
+    overrides = json.load(open(path)).get(version, {}) if os.path.exists(path) else {}
+    for code, comps in overrides.items():
+        for index, change in comps.items():
+            for c in types.get(code, {}).get("components", []):
+                if c["index"] == int(index):
+                    c["optionality"] = change["optionality"]
+    return types
 
 
 def main():

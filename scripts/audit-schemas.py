@@ -633,6 +633,102 @@ def vmr(depth=False):
     return len(rows), findings
 
 
+# M17 — the specification's own printed examples are the must-pass test for the component
+# rules. Every pipe-delimited composite example in each version's datatype chapter is
+# checked the way the Validator checks a field: a component printed R must be valued, and an
+# ID component (or ID subcomponent of a nested composite) bound to one closed HL7 table
+# must carry one of its codes. A rejection is a finding unless it is listed here, with the
+# reason the example, not the rule, is at fault.
+EXAMPLE_SOURCES = {
+    "v2.3":   ("HL7_v23_PDF/CH2.pdf", r"2\.8"),
+    "v2.3.1": ("HL7_v231_PDF/Hl7V231.pdf", r"2\.8"),
+    "v2.4":   ("HL7_v24_PDF/CH02.PDF", r"2\.9"),
+    "v2.5.1": ("HL7_v251_PDF/V251_CH02A.pdf", r"2\.A"),
+    "v2.6":   ("HL7_v26_PDF/V26_CH02A_DataTypes.pdf", r"2\.A"),
+    "v2.8.2": ("HL7_V2.8.2_PDF/PDF/V282_CH02A_DataTypes.pdf", r"2\.?A"),
+}
+EXPECTED_EXAMPLE_REJECTIONS = {
+    # The example omits XON.4 (check digit), so its scheme "M11" sits in XON.4 and the
+    # assigning authority "HCFA" in XON.5. v2.3.1 onward print a corrected example.
+    ("v2.3", "XON", "HL7 Health Center^L^6^M11^HCFA", "XON.5"),
+    # Fragments printed INSIDE the XTN.9 and XTN.12 component descriptions to illustrate
+    # that one component; they are not complete XTN values. v2.8.2 prints XTN.3 as R.
+    ("v2.8.2", "XTN", "^^^^^^^^Do not use after 5PM", "XTN.3"),
+    ("v2.8.2", "XTN", "^^^^^^^^^^^1-800-Dentist", "XTN.3"),
+}
+_EXAMPLE_FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|\.{6,}")
+
+
+def _closed_codes(version, number):
+    path = f"{TABLES}/{version}/{number}.json"
+    if not os.path.exists(path):
+        return None
+    doc = json.load(open(path))
+    if doc["kind"] == "HL7" and not doc["permitsLocalExtensions"] and doc["entries"]:
+        return {e["code"] for e in doc["entries"]}
+    return None
+
+
+def spec_examples():
+    """(example repetitions checked, findings). Skipped without the author-local PDFs."""
+    findings, checked = [], 0
+    if not os.path.isdir(STANDARDS):
+        print("docs/standards/ absent — skipping the spec-example sweep (author-local PDFs).")
+        return 0, []
+    for version, (pdf, sec) in EXAMPLE_SOURCES.items():
+        path = os.path.join(STANDARDS, pdf)
+        if not os.path.exists(path):
+            findings.append((version, f"cannot read {pdf}"))
+            continue
+        grammar = {os.path.basename(p)[:-5]: json.load(open(p)) for p in glob.glob(f"{DATATYPES}/{version}/*.json")}
+        text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"], capture_output=True, text=True).stdout
+        current, inside, seen = None, False, set()
+        for line in text.split("\n"):
+            if _EXAMPLE_FURNITURE.search(line):
+                continue
+            m = re.match(rf"^\s*{sec}\.(\d+)\s+([A-Z][A-Z0-9]{{1,2}})\s*[-–]\s+\S", line)
+            if m:
+                current, inside = m.group(2), True
+                continue
+            if inside and re.match(r"^\s*2\.\d+\s+[A-Z]", line) and not re.match(rf"^\s*{sec}\.", line):
+                current, inside = None, False
+            if current is None or current not in grammar:
+                continue
+            for example in re.findall(r"\|([^|\s][^|]*\^[^|]*)\|", line):
+                example = example.strip()
+                if not (3 <= len(example) <= 200) or example.startswith("^~") or (current, example) in seen:
+                    continue
+                seen.add((current, example))
+                for repetition in example.split("~"):
+                    checked += 1
+                    comps, problems = repetition.split("^"), []
+                    for c in grammar[current]["components"]:
+                        value = comps[c["index"] - 1].strip() if len(comps) >= c["index"] else ""
+                        where = f"{current}.{c['index']}"
+                        if c.get("optionality") == "R" and not value:
+                            problems.append((where, where, "printed R but empty in the example"))
+                        if not value or value == '""':
+                            continue
+                        bound = c.get("tables", [])
+                        if c.get("dataType") == "ID" and len(bound) == 1:
+                            codes = _closed_codes(version, bound[0])
+                            if codes is not None and value not in codes:
+                                problems.append((where, where, f"{value!r} is not in closed Table {bound[0]}"))
+                        elif c.get("dataType") in grammar and "&" in value:
+                            subs = value.split("&")
+                            for sc in grammar[c["dataType"]]["components"]:
+                                sv = subs[sc["index"] - 1].strip() if len(subs) >= sc["index"] else ""
+                                sb = sc.get("tables", [])
+                                if sv and sc.get("dataType") == "ID" and len(sb) == 1:
+                                    codes = _closed_codes(version, sb[0])
+                                    if codes is not None and sv not in codes:
+                                        problems.append((where, f"{where}.{sc['index']}", f"{sv!r} is not in closed Table {sb[0]}"))
+                    for component, at, why in problems:
+                        if (version, current, example, component) not in EXPECTED_EXAMPLE_REJECTIONS:
+                            findings.append((version, f"{at}: {why} <- |{example}|"))
+    return checked, findings
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", action="store_true", help="also diff depth against the spec PDFs")
@@ -640,6 +736,8 @@ def main():
                     help="also audit the M6-O6 code-table registry (add --depth to re-extract)")
     ap.add_argument("--datatypes", action="store_true",
                     help="also audit the M10 datatype component tables (add --depth to re-extract)")
+    ap.add_argument("--examples", action="store_true",
+                    help="also run every example the datatype chapters print through the component rules (M17)")
     ap.add_argument("--vmr", action="store_true",
                     help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
     ap.add_argument("--write-tables", action="store_true",
@@ -696,6 +794,15 @@ def main():
         for rel, why in dfindings[:40]:
             print(f"   {rel}: {why}")
         if dfindings:
+            rc = 1
+
+    if args.examples:
+        echecked, efindings = spec_examples()
+        print(f"\n== spec examples (M17): {echecked} example repetitions, {len(efindings)} findings "
+              f"({len(EXPECTED_EXAMPLE_REJECTIONS)} registered exceptions)")
+        for version, why in efindings[:40]:
+            print(f"   EXAMPLE  {version} {why}")
+        if efindings:
             rc = 1
 
     if args.vmr:

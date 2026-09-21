@@ -1,0 +1,18 @@
+{
+  "2.5.1": {
+    "NA": {
+      "1": {
+        "optionality": "O",
+        "note": "The component table prints NA.1 Value1 as R, but the same section says 'Arrays that have one or more values not present may be transmitted using this data type' and prints |^2^3^4~5^^^8~9^10~~17^18^19^20| with Value1 absent. v2.8.2 corrects the table to O. Treated as O here so the required-component rule does not reject the specification's own example (req #4)."
+      }
+    }
+  },
+  "2.6": {
+    "NA": {
+      "1": {
+        "optionality": "O",
+        "note": "The component table prints NA.1 Value1 as R, but the same section says 'Arrays that have one or more values not present may be transmitted using this data type' and prints |^2^3^4~5^^^8~9^10~~17^18^19^20| with Value1 absent. v2.8.2 corrects the table to O. Treated as O here so the required-component rule does not reject the specification's own example (req #4)."
+      }
+    }
+  }
+}

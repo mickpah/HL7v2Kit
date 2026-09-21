@@ -57,6 +57,10 @@
     {
       "code": "PCV",
       "description": "after dinner (from lat. post cibus vespertinus)"
+    },
+    {
+      "code": "AHS",
+      "description": "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
     }
   ]
 }

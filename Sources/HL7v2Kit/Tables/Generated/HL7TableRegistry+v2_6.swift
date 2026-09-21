@@ -9070,6 +9070,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "PCD", description: "after lunch (from lat. post cibus diurnus)"),
             HL7Table.Entry(code: "PCM", description: "after breakfast (from lat. post cibus matutinus)"),
             HL7Table.Entry(code: "PCV", description: "after dinner (from lat. post cibus vespertinus)"),
+            HL7Table.Entry(code: "AHS", description: "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"),
         ] as [HL7Table.Entry]
     )
 

@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M17: the spec's printed examples are a permanent audit
+
+- `scripts/audit-schemas.py --examples` runs every pipe-delimited composite
+  example the datatype chapters print (352 example repetitions across the
+  six versions) through the component rules: a component printed `R` must
+  be valued, and an `ID` component or nested subcomponent on a closed table
+  must carry one of its codes. Any rejection is a finding unless it is in a
+  cited exception list. Proven to fail on an injected fault.
+- Three registered exceptions, where the example and not the rule is at
+  fault: the v2.3 XON example omits its check digit, so every later
+  component sits one place early; and two v2.8.2 XTN lines are fragments
+  printed inside a component's description, not complete values.
+
+### Fixed — two more rules that rejected the spec's own examples
+
+- **`NA.1` is not required** on v2.5.1 and v2.6. The table prints `R`, but the
+  same section says "arrays that have one or more values not present may be
+  transmitted" and prints `|^2^3^4~5^^^8~9^10~~17^18^19^20|`; v2.8.2 corrects
+  the table to `O`. New `Resources/datatypes/overrides.json` (cited, applied
+  by the extractor).
+- **`AHS` accepted in Table 0528** on v2.5.1, v2.6 and v2.8.2. The table prints
+  `HS`; the RPT section's own example carries `AHS` in RPT.8.
 
 ## [3.6.2] — 2026-09-21
 
