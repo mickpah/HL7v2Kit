@@ -28,14 +28,10 @@ public struct EIP: CompositeView {
     /// EIP-2 (Filler Assigned Identifier) populated. v0.4-S4 supersedes
     /// the empty `requiredComponents` v0.3-C4 shipped — the spec's
     /// actual conformance is the OR-rule, not "no constraint".
-    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
-        components: [
-            RequiredComponent(index: 1, name: "Placer Assigned Identifier"),
-            RequiredComponent(index: 2, name: "Filler Assigned Identifier"),
-        ],
-        semantics: .atLeastOneOf,
-        description: "EIP-1 (Placer Assigned Identifier) OR EIP-2 (Filler Assigned Identifier)"
-    )
+
+    /// No either-or rule (M15). "EIP-1 OR EIP-2" was vacuous: EIP has two components, so
+    /// any populated EIP already satisfied it. Both are printed `O`.
+    public static let requiredComponentSet: RequiredComponentSet? = nil
 
     /// The underlying ``Field``.
     public let field: Field

@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M15: three either-or component rules rejected the spec's own examples
+
+- The five hand-written either-or rules were checked against the spec's
+  prose and examples, which are now must-pass tests:
+  - **`XTN` ("XTN-1 OR XTN-4 OR XTN-12") removed.** v2.5.1 sec 2.A.89 prints
+    the fax example `^ORN^FX^^^734^6777777` and recommends that delimited
+    form as of v2.3; the rule reported it, and every structured phone number,
+    as an error.
+  - **`PL` ("PL-1 OR PL-4") removed.** The definition says "for a patient
+    treated at home, only the person location type is valued".
+  - **`CWE` ("CWE-1 OR CWE-9") removed.** Usage case b) "Uncoded: Text is
+    valued, the identifier has no value", example `^Wesnerian^SNM3^^^^3.4`.
+  - **`EIP` ("EIP-1 OR EIP-2") removed** as vacuous: any populated
+    two-component field satisfied it.
+  - **`HD` kept**: "either as a local identifier (with only the namespace ID
+    valued) or ... a UID (universal ID and universal ID type both valued)".
+- Registered, not shipped: the HD prose also says components 2 and 3 "must
+  either both be valued ... or both be not valued"; with HD-1 present that
+  half is not checked (an absent check, not a false error).
+- `XTN.requiredComponentSet`, `PL`, `CWE` and `EIP` are now `nil`.
 
 ## [3.6.0] — 2026-09-21
 

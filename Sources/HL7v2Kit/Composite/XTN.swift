@@ -47,15 +47,13 @@ public struct XTN: CompositeView {
     /// modern primary) populated. v0.4-S4 supersedes the empty
     /// `requiredComponents` v0.3-C3 shipped — the spec's actual
     /// conformance is the OR-rule, not "no constraint".
-    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
-        components: [
-            RequiredComponent(index: 1, name: "Telephone Number"),
-            RequiredComponent(index: 4, name: "Email Address"),
-            RequiredComponent(index: 12, name: "Unformatted Telephone Number"),
-        ],
-        semantics: .atLeastOneOf,
-        description: "XTN-1 (Telephone Number) OR XTN-4 (Email Address) OR XTN-12 (Unformatted Telephone Number)"
-    )
+
+    /// No either-or rule (M15). The hand-written "XTN-1 OR XTN-4 OR XTN-12" rejected the
+    /// spec's own example: v2.5.1 sec 2.A.89 prints the fax number `^ORN^FX^^^734^6777777`
+    /// and RECOMMENDS that delimited form (components 5 to 9) as of v2.3, keeping XTN-1
+    /// "for backward compatibility only". Required components come from the version's
+    /// printed component table (``DataTypeGrammarTable``): none before v2.8.2, XTN-3 from it.
+    public static let requiredComponentSet: RequiredComponentSet? = nil
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first or to XTN components beyond

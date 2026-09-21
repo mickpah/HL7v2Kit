@@ -66,6 +66,20 @@ The grammar made an audit possible that was not before: the Validator's hand-wri
 - **Consequence in both directions.** False errors disappear (an address with no street line). Spec requirements the old lists waived are now enforced, the visible one being `MSH-9.3`: all three `MSG` components are `R` from v2.5, and the old list's comment that the structure is "often left empty" is the consumer-profile reasoning requirement #1 rules out. The project's own synthetic corpus was non-conformant on it (48 fixtures) and was corrected from Table 0354.
 - **Not enforced, stated:** `C` components (no predicate is printed for them), `RE` (by definition never a missing value), and everything on v2.3 to v2.4, whose prose prints no optionality. The either-or sets (`HD`, `CWE`, `EIP`, `PL`, `XTN`) are hand-written from prose and were not part of this audit; they remain as they were.
 
+## Addendum 2026-09-21 — M15: the either-or rules, held to the spec's examples
+
+Tables could not audit these five rules, so the spec's own prose and examples did. Three reject an example the spec prints, and one can never fire:
+
+| Rule | Verdict | Evidence (v2.5.1) |
+|---|---|---|
+| `XTN`: 1 OR 4 OR 12 | **removed — misfire** | sec 2.A.89 example `^ORN^FX^^^734^6777777`; the delimited form is the recommended one as of v2.3 |
+| `PL`: 1 OR 4 | **removed — misfire** | sec 2.A.53: "for a patient treated at home, only the person location type is valued" |
+| `CWE`: 1 OR 9 | **removed — misfire** | sec 2.A.13 usage b) "Uncoded: Text is valued, the identifier has no value", `^Wesnerian^SNM3^^^^3.4` |
+| `EIP`: 1 OR 2 | **removed — vacuous** | two components; a populated field always satisfied it |
+| `HD`: 1 OR (2 AND 3) | **kept** | sec 2.A.33: "either as a local identifier ... or ... a UID (<universal ID> and <universal ID type> both valued)" |
+
+Registered, not shipped: the same HD section says components 2 and 3 "must either both be valued (both non-null), or both be not valued"; when HD-1 is present the rule does not check that half.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

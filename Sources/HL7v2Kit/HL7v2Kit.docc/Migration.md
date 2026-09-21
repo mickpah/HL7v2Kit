@@ -117,6 +117,7 @@ Until now the Validator took required components from hand-written lists applied
 - **No longer errors:** a populated `XAD` with no street line, `XPN` with no family name, `XCN` / `XON` / `CE` / `EI` with no first component, and (before v2.8.2) `PT` / `VID` with none. The spec prints all of these as optional.
 - **Newly errors, on v2.5.1 and later messages:** an `MSH-9` without its trigger event or message structure (`ADT^A01` must be `ADT^A01^ADT_A01`), because the spec prints all three `MSG` components as required from v2.5; on v2.8.2 also `CX.5`, `PT.1`, `VID.1` and `XTN.3`; and the `R` components of the other printed datatypes (`ED.2` / `ED.4` / `ED.5`, `TS.1`, ...).
 - **Unchanged:** v2.3 to v2.4 messages, which print no component optionality, now have nothing required of them at component level; localisation rules (the AU profile) keep their own requirements.
+- **Either-or rules (v3.7):** `XTN`, `PL`, `CWE` and `EIP` no longer carry one. The first three rejected the spec's own examples: a delimited phone number (`^ORN^FX^^^734^6777777`), a location with only its person location type, an uncoded `CWE` with only its text. `HD` keeps its rule.
 - `XPN.requiredComponents` and its siblings now hold what v2.5.1 prints and are informational; `checkComponentGrammar = false` still turns the whole check off.
 
 ## Historical: 0.1.0 → 0.5.0
