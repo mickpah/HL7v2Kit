@@ -529,7 +529,8 @@ public struct Validator: Sendable {
                            version: message.version, location: location, issues: &issues)
         }
         if options.checkCodeTables, let field, isPopulated {
-            checkComponentCodeTables(fieldGrammar, field: field, version: message.version,
+            checkComponentCodeTables(dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                     field: field, version: message.version,
                                      location: location, issues: &issues)
         }
 
@@ -633,12 +634,7 @@ public struct Validator: Sendable {
         // it here is what makes the ED/RP datatype points
         // (HL7au:00044.10/.11) reachable at all: no field declares ED
         // or RP statically except CER-6.
-        var effectiveDataType = fieldGrammar.dataType
-        if segmentID == "OBX", fieldGrammar.index == 5,
-           effectiveDataType == "varies" || effectiveDataType == "*" || effectiveDataType == "Variable",
-           let declared = segment.field(2)?.stringValue, !declared.isEmpty {
-            effectiveDataType = declared
-        }
+        let effectiveDataType = effectiveDataType(of: fieldGrammar, in: segment)
         guard let composite = profile.compositeOverrides.first(where: {
             $0.dataType == effectiveDataType
         }) else { return }
@@ -1399,39 +1395,68 @@ public struct Validator: Sendable {
     /// the field's datatype must be `ID` AND the table must be closed
     /// for this version. A repetition whose value is not a bare scalar
     /// is a structure fault, not a table fault — skipped, never misfired.
-    /// Component-level code-table check (M10-C, ADR-017). For a field whose datatype
-    /// has a component table on the message's version, every populated `ID` component
-    /// bound to exactly one closed HL7-defined table must carry one of its codes.
+    /// The datatype a field actually carries. OBX-5's grammar datatype is the variable
+    /// placeholder (`varies` from v2.5.1, `*` on the pre-v2.5 tables); its effective type
+    /// is whatever OBX-2 names at runtime (M6-B-7). Every other field carries its own.
+    private func effectiveDataType(of grammar: FieldGrammar, in segment: Segment) -> String {
+        guard segment.segmentID == "OBX", grammar.index == 5,
+              ["varies", "*", "Variable"].contains(grammar.dataType),
+              let declared = segment.field(2)?.stringValue, !declared.isEmpty else { return grammar.dataType }
+        return declared
+    }
+
+    /// Component-level code-table check (M10-C / M11, ADR-017). For a field whose datatype
+    /// has a component table on the message's version, every populated `ID` component bound
+    /// to exactly one closed HL7-defined table must carry one of its codes. A component that
+    /// is itself a composite is descended into once (HL7 v2 has no deeper level): the HD in
+    /// `CX.4` makes `CX.4.3` a checked universal ID type.
     ///
-    /// The same guards as the field-level rule: `IS` components and user-defined or open
-    /// tables are never enforced; empty and HL7-null values are never checked; a locale's
-    /// rendering of the table widens the check and never narrows it. Versions that print
-    /// no component tables (v2.3 to v2.4) have no grammar, so nothing fires there. One
-    /// level only: a component that is itself composite (the HD inside CX.4) is not
-    /// descended into.
+    /// The same guards as the field-level rule: `IS` and user-defined or open tables are
+    /// never enforced; empty and HL7-null values are never checked; a locale's rendering of
+    /// the table widens the check and never narrows it. Versions that print no component
+    /// tables (v2.3 to v2.4) have no grammar, so nothing fires there.
     private func checkComponentCodeTables(
-        _ grammar: FieldGrammar,
+        dataType: String,
         field: Field,
         version: Version,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
-        for component in dataType.components where component.dataType == "ID" && component.tables.count == 1 {
-            let tableNumber = component.tables[0]
-            guard let table = HL7TableRegistry.table(tableNumber, version: version), table.isClosed else { continue }
-            for (offset, repetition) in field.repetitions.enumerated()
-            where repetition.components.count >= component.index {
-                guard let value = repetition.components[component.index - 1].stringValue,
-                      !value.isEmpty, value != "\"\"", !table.contains(value) else { continue }
-                if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
-                issues.append(ValidationIssue(
-                    severity: .error,
-                    code: .valueNotInTable(table: table.number),
-                    location: IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
-                                            fieldIndex: location.fieldIndex, componentIndex: component.index),
-                    message: "Component \(location.pathDescription).\(component.index) ('\(component.name)') repetition \(offset + 1) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(dataType.version)."
-                ))
+        guard let grammar = DataTypeGrammarTable.grammar(dataType, version: version) else { return }
+
+        /// The closed table an `ID` entry is bound to, or nil when it is not enforceable.
+        func closedTable(_ entry: ComponentGrammar) -> HL7Table? {
+            guard entry.dataType == "ID", entry.tables.count == 1,
+                  let table = HL7TableRegistry.table(entry.tables[0], version: version), table.isClosed else { return nil }
+            return table
+        }
+        func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
+            guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
+                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true else { return }
+            let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                       fieldIndex: location.fieldIndex, componentIndex: component,
+                                       subcomponentIndex: subcomponent)
+            issues.append(ValidationIssue(
+                severity: .error,
+                code: .valueNotInTable(table: table.number),
+                location: where_,
+                message: "Component \(where_.pathDescription) ('\(name)') repetition \(repetition) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(grammar.version)."
+            ))
+        }
+
+        for (offset, repetition) in field.repetitions.enumerated() {
+            for entry in grammar.components where repetition.components.count >= entry.index {
+                let component = repetition.components[entry.index - 1]
+                if let table = closedTable(entry) {
+                    report(component.stringValue, table: table, name: entry.name,
+                           component: entry.index, subcomponent: nil, repetition: offset + 1)
+                } else if let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version) {
+                    for inner in nested.components where component.subcomponents.count >= inner.index {
+                        guard let table = closedTable(inner) else { continue }
+                        report(component.subcomponents[inner.index - 1].value, table: table, name: inner.name,
+                               component: entry.index, subcomponent: inner.index, repetition: offset + 1)
+                    }
+                }
             }
         }
     }

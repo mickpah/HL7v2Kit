@@ -33,17 +33,24 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
     /// missing — e.g. PID-5 (XPN) populated with no XPN-1 family name
     /// renders as `"PID[1]-5.1"`. v0.2-V2.
     public let componentIndex: Int?
+    /// 1-based subcomponent index within a component that is itself a
+    /// composite, or nil. Set by ``IssueCode/valueNotInTable(table:)`` when
+    /// the offending value is one level further down — `PID[1]-3.4.3` is the
+    /// universal ID type (`HD.3`) of the assigning authority in `CX.4`. M11.
+    public let subcomponentIndex: Int?
 
     public init(
         segmentID: String,
         segmentIndex: Int,
         fieldIndex: Int? = nil,
-        componentIndex: Int? = nil
+        componentIndex: Int? = nil,
+        subcomponentIndex: Int? = nil
     ) {
         self.segmentID = segmentID
         self.segmentIndex = segmentIndex
         self.fieldIndex = fieldIndex
         self.componentIndex = componentIndex
+        self.subcomponentIndex = subcomponentIndex
     }
 
     /// Human-readable v2 path (e.g. `"PID[1]-3"`, `"PID[1]-5.1"`, `"ZAU[1]"`).
@@ -51,6 +58,7 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
         var s = "\(segmentID)[\(segmentIndex)]"
         if let fieldIndex { s += "-\(fieldIndex)" }
         if let componentIndex { s += ".\(componentIndex)" }
+        if componentIndex != nil, let subcomponentIndex { s += ".\(subcomponentIndex)" }
         return s
     }
 }

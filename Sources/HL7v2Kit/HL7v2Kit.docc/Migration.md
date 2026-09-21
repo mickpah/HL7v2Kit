@@ -98,6 +98,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | **v1.0.0** | **API frozen** — the surface above is now the SemVer contract |
 | v3.3.0 | Code-table registry (ADR-016): `HL7Table`, `HL7TableRegistry`, `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)`, `ValidationOptions.checkCodeTables`; `FieldGrammar.variableColumns` and plural accessors for the `1-n` segments RDT / ADD. **Additive API, but a new default check:** see below. |
 | v3.4.0 | Datatype component grammar (ADR-017): `DataTypeGrammarTable`, `DataTypeGrammar`, `ComponentGrammar`. Additive API; the code-table check now also covers `ID` components on v2.5.1 / v2.6 / v2.8.2 messages. |
+| *Unreleased* | `IssueLocation.subcomponentIndex` (additive; a defaulted initialiser parameter). The component code-table check descends into nested composites and covers OBX-5 under its OBX-2 datatype. Fix: Table 0301 `L,M,N` split into three codes. |
 
 ## The code-table check is on by default (ADR-016)
 
