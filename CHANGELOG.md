@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — a false error on the spec's own HD example (since v3.5.0)
+
+- HL7 Table 0301 prints the code `Random`; the HD section's own example is
+  `^40C983F09183B0295822009258A3290582^RANDOM` (v2.3.1, v2.4, v2.5.1, v2.6).
+  Codes are matched exactly, so the HD.3 check rejected the spec's example.
+  The example's spelling is added beside the printed one by cited override.
+- Every HD example the spec prints in its HD section is now a must-pass test.
+
+### Added — M16: HD's universal ID and its type are valued together or not at all
+
+- "The second and third components must either both be valued (both
+  non-null), or both be not valued (both null)", printed by all six versions.
+  `LAB1^1.2.3` and `LAB1^^ISO` now report `requiredComponentMissing` at the
+  field; `LAB1`, `^1.2.3^ISO` and `LAB1^1.2.3^ISO` are valid. Registered in
+  M15, shipped here. No fixture fallout.
+- No API change: `RequiredComponentSet.Semantics.allOfGroupOrAtLeastOne` now
+  fails on a partially populated group; HD is its only user.
 
 ## [3.6.1] — 2026-09-21
 

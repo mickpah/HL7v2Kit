@@ -55,4 +55,35 @@ struct EitherOrComponentAuditTests {
         #expect(EIP.requiredComponentSet == nil, "vacuous: a populated two-component field always satisfied it")
         #expect(HD.requiredComponentSet != nil)
     }
+
+    @Test("Every HD example the spec prints in its HD section validates (v2.5.1 sec 2.A.33)")
+    func specHDExamples() throws {
+        let base = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.5.1\rPID|1||123^^^AUTH^MR||DOE^JOHN\r"
+        for example in ["^1.2.344.24.1.1.3^ISO", "^14344.14144321.4122344.14434.654^GUID", "^falcon.iupui.edu^DNS",
+                        "^40C983F09183B0295822009258A3290582^RANDOM", "^RX.PIMS.SystemB.CA.SCA^M",
+                        "PathLab^PL.UCF.UC^L", "LAB1^1.2.3.3.4.6.7^ISO"] {
+            let wire = base.replacingOccurrences(of: "|HIS|FAC|HOSPITAL", with: "|HIS|\(example)|HOSPITAL")
+            let errors = Validator().validate(try Parser().parse(wire)).errors.filter { $0.location.fieldIndex == 4 }
+            #expect(errors.isEmpty, "\(example): \(errors.map(\.message))")
+        }
+    }
+
+    @Test("HD: the universal ID and its type 'must either both be valued ... or both be not valued'")
+    func hdBothOrNeither() throws {
+        let base = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|VERSION\rPID|1||123^^^AUTH^MR||DOE^JOHN\r"
+        func issues(_ msh4: String, _ version: String) throws -> [String] {
+            let wire = base.replacingOccurrences(of: "VERSION", with: version)
+                .replacingOccurrences(of: "|HIS|FAC|HOSPITAL", with: "|HIS|\(msh4)|HOSPITAL")
+            return Validator().validate(try Parser().parse(wire)).issues
+                .filter { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 4 }.map(\.location.pathDescription)
+        }
+        // The sentence is printed by all six versions, v2.3 to v2.8.2.
+        for version in ["2.3", "2.4", "2.5.1", "2.8.2"] {
+            #expect(try issues("LAB1", version).isEmpty, "v\(version): local identifier")
+            #expect(try issues("LAB1^1.2.3^ISO", version).isEmpty, "v\(version): all three")
+            #expect(try issues("^1.2.3^ISO", version).isEmpty, "v\(version): a UID")
+            #expect(try issues("LAB1^1.2.3", version) == ["MSH[1]-4"], "v\(version): universal ID without its type")
+            #expect(try issues("LAB1^^ISO", version) == ["MSH[1]-4"], "v\(version): a type without its universal ID")
+        }
+    }
 }
