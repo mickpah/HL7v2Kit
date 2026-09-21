@@ -29,10 +29,11 @@
 /// and agency) are reachable via ``CX/field`` but not exposed as named
 /// accessors in v0.2.
 public struct CX: CompositeView {
-    /// Required components for the CX composite per HL7 v2.5.1 §2.A.14.
-    /// ``Validator`` consults this when the `checkComponentGrammar` toggle
-    /// is on: if CX is populated but one of these components is empty,
-    /// the validator emits ``IssueCode/requiredComponentMissing``. v0.2-V2.
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the CX component
+    /// table (CX.1). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
     public static let requiredComponents: [RequiredComponent] = [
         RequiredComponent(index: 1, name: "ID Number"),
     ]

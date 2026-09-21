@@ -35,8 +35,8 @@ struct MultiVersionTests {
         (v231Wire, .v2_3_1),
         (v24Wire, .v2_4),
         (v23Wire, .v2_3),
-        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.6\r", .v2_6),
-        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8.2\r", .v2_8_2),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.6\r", .v2_6),
+        ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r", .v2_8_2),
         // The legacy grammar-less case must still resolve for a bare "2.8" wire.
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r", .v2_8),
     ]
@@ -128,7 +128,7 @@ struct MultiVersionTests {
     @Test("A v2.5.1 wire still validates against the v2.5.1 grammar (regression)")
     func v251StillRoutes() throws {
         let v251Wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John||19800101|M\r
         """
         let message = try Parser().parse(v251Wire)
@@ -480,7 +480,7 @@ struct MultiVersionTests {
     // segments (PID etc.) are not yet authored — S2+ — so this wire is
     // deliberately limited to S1 segments.
     private let v26AckWire = """
-    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.6\r\
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK^A01^ACK|MSG00001|P|2.6\r\
     MSA|AA|MSG00001\r\
     NTE|1||All results verified\r
     """
@@ -552,7 +552,7 @@ struct MultiVersionTests {
         // "CANINE^Dog^L" lands in PID-36 (Breed). PID-35/37/38 stay empty,
         // so only PID-35 fires (PID-36's own "PID-37 populated" is false).
         let pid = "PID|1||X^^^F^MR||Doe^Jane||19800101|F" + String(repeating: "|", count: 28) + "CANINE^Dog^L"
-        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r" + pid + "\r"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01^ADT_A01|MSG|P|2.6\r" + pid + "\r"
         let message = try Parser().parse(wire)
         #expect(message.version == .v2_6)
         let report = Validator().validate(message)
@@ -668,7 +668,7 @@ struct MultiVersionTests {
         // DG1 base ends at DG1-6 (F); 2 pipes advance f6→f9 so "1" lands in
         // DG1-9 (DRG Approval Indicator), which is withdrawn in v2.6.
         let dg1 = "DG1|1||A00.0^Cholera^I10||20240301120000|F" + String(repeating: "|", count: 3) + "1"
-        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.6\r"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01^ADT_A01|MSG|P|2.6\r"
             + "EVN|A01|20240301120000\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
             + dg1 + "\r"
@@ -691,7 +691,7 @@ struct MultiVersionTests {
         let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
             + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
         let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
-        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01|MSG1|P|2.6\r"
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01^ORU_R01|MSG1|P|2.6\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
             + "ORC|RE|PON123|FON456\r"
             + obr + "\r"
@@ -735,7 +735,7 @@ struct MultiVersionTests {
     // A v2.8.2 ACK-shaped wire (MSH/MSA/NTE) dispatches to the v2.8.2
     // grammar — S1 only; PID etc. arrive in later substages.
     private let v282AckWire = """
-    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK|MSG00001|P|2.8.2\r\
+    MSH|^~\\&|LAB|FAC|HIS|FAC|20240301120000||ACK^A01^ACK|MSG00001|P|2.8.2\r\
     MSA|AA|MSG00001\r\
     NTE|1||All results verified\r
     """
@@ -897,7 +897,7 @@ struct MultiVersionTests {
         let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
             + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
         let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
-        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01|MSG1|P|2.8.2\r"
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01^ORU_R01|MSG1|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
             + "ORC|RE|PON123|FON456\r"
             + obr + "\r"
@@ -925,7 +925,7 @@ struct MultiVersionTests {
         // PD1-22 populated (a date), PD1-15 empty: 22 pipes after PD1 land
         // the date in PD1-22 (field index = pipe count); PD1-15 stays empty.
         let pd1 = "PD1" + String(repeating: "|", count: 22) + "20240101"
-        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01|MSG|P|2.8.2\r"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ADT^A01^ADT_A01|MSG|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
             + pd1 + "\r"
         let message = try Parser().parse(wire)
@@ -944,7 +944,7 @@ struct MultiVersionTests {
         // ORC-1=RE, ORC-2/3 populated (so their XOR does not fire), ORC-20=3;
         // ORC-26 empty. From ORC-3, 17 pipes reach ORC-20.
         let orc = "ORC|RE|PON|FON" + String(repeating: "|", count: 17) + "3"
-        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01|MSG|P|2.8.2\r"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01^ORU_R01|MSG|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
             + orc + "\r"
         let message = try Parser().parse(wire)
@@ -956,7 +956,7 @@ struct MultiVersionTests {
                 "ORC-26 should fire when ORC-20 in (3,4) + ORC-26 empty; got \(report.errors.map(\.message))")
         // And it must NOT fire when ORC-20 is a signed value (e.g. "1").
         let orcSigned = "ORC|RE|PON|FON" + String(repeating: "|", count: 17) + "1"
-        let signed = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01|MSG|P|2.8.2\r"
+        let signed = try Parser().parse("MSH|^~\\&|HIS|FAC|HOSP|FAC|20240301120000||ORU^R01^ORU_R01|MSG|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r" + orcSigned + "\r")
         let noHit = Validator().validate(signed).errors.filter {
             $0.code == .conditionalFieldMissing && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 26

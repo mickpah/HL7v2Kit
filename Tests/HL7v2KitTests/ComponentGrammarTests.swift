@@ -17,19 +17,15 @@ struct ComponentGrammarTests {
 
     // MARK: - XPN-1 (Family Name)
 
-    @Test("PID-5 (XPN) populated without family name fires .requiredComponentMissing at PID[1]-5.1")
+    @Test("PID-5 (XPN) without a family name is VALID: v2.5.1 prints XPN.1 as O")
     func xpnFamilyNameMissing() throws {
         // PID-5 = ^John^A — given+middle present, family empty.
         let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 5 })
-        #expect(issue.location.segmentID == "PID")
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "PID[1]-5.1")
-        #expect(issue.message.contains("Family Name"))
-        #expect(issue.message.contains("XPN"))
-        #expect(issue.severity == .error)
+        // M14: required components come from the version's printed component table. XPN.1 is
+        // printed O there; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 5 })
     }
 
     @Test("PID-5 populated with family name → no .requiredComponentMissing")
@@ -84,7 +80,7 @@ struct ComponentGrammarTests {
 
     // MARK: - XAD-1 (Street Address)
 
-    @Test("PID-11 (XAD) populated without street address fires at PID[1]-11.1")
+    @Test("PID-11 (XAD) without a street address is VALID: v2.5.1 prints XAD.1 as O")
     func xadStreetMissing() throws {
         // Field map (counted pipe-by-pipe):
         //  1 setID=1, 2 empty, 3 ids=123456..., 4 empty, 5 name=Smith^John,
@@ -95,11 +91,9 @@ struct ComponentGrammarTests {
         // Sanity-check pipe count: PID-11.3 should be "Sydney".
         #expect(message["PID-11.3"] == "Sydney", "Wire mis-counted: XAD should land at PID-11")
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 11 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "PID[1]-11.1")
-        #expect(issue.message.contains("Street Address"))
-        #expect(issue.message.contains("XAD"))
+        // M14: required components come from the version's printed component table. XAD.1 is
+        // printed O there; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 11 })
     }
 
     // MARK: - Toggle behaviour
@@ -123,10 +117,11 @@ struct ComponentGrammarTests {
 
     @Test(".strict preset enables component-grammar enforcement")
     func strictPresetEnables() throws {
-        let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||^John^A||19800101|M")
+        // CX.1 ID Number is printed R on every version that prints a component table.
+        let wire = TestWires.adt("PID|1||^^^HOSP^MR||Smith^John^A||19800101|M")
         let message = try Parser().parse(wire)
         let report = Validator(options: .strict).validate(message)
-        #expect(report.errors.contains { $0.code == .requiredComponentMissing })
+        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "PID[1]-3.1" })
     }
 
     // MARK: - Composites with empty requiredComponents (OR-rule design choice)
@@ -153,7 +148,7 @@ struct ComponentGrammarTests {
         #expect(!pid34Issues.contains { $0.code == .requiredComponentMissing })
     }
 
-    @Test("CE typed composite (v0.3-C2) fires .requiredComponentMissing on empty CE-1")
+    @Test("CE with text only is VALID: v2.5.1 prints CE.1 as O")
     func ceFiresComponentMissingOnEmptyIdentifier() throws {
         // PID-10 (race) is CE-typed. v0.3-C2 promoted CE; CE-1 (identifier)
         // is the required component. An empty PID-10.1 with PID-10.2
@@ -161,11 +156,9 @@ struct ComponentGrammarTests {
         let wire = TestWires.adt("PID|1||123456^^^HOSP^MR||Smith^John||19800101|M||^WhiteTextOnly")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 10 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "PID[1]-10.1")
-        #expect(issue.message.contains("Identifier"))
-        #expect(issue.message.contains("CE"))
+        // M14: required components come from the version's printed component table. CE.1 is
+        // printed O there; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 10 })
     }
 
     @Test("CWE typed composite (v0.3-C2/v0.4-S4) fires OR-rule violation on empty CWE-1 + CWE-9")
@@ -205,26 +198,26 @@ struct ComponentGrammarTests {
         #expect(pid39Issues.isEmpty, "OR-rule satisfied via CWE-9; no issue expected")
     }
 
-    @Test("EI typed composite (v0.3-C3) fires .requiredComponentMissing on empty EI-1")
+    @Test("EI without an entity identifier is VALID in the base spec: EI.1 is printed O")
     func eiFiresComponentMissingOnEmptyEntityIdentifier() throws {
         // ORC-2 (placerOrderNumber) is EI-typed. v0.3-C3 promoted EI;
         // EI-1 (entityIdentifier) is the required component. An empty
         // ORC-2.1 with ORC-2.2 populated must fire .requiredComponentMissing
         // at ORC[1]-2.1.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01^ORM_O01|MSG00001|P|2.5.1\r\
         ORC|NW|^HOSP^1.2.840.10008^ISO\r
         """
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 2 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "ORC[1]-2.1")
-        #expect(issue.message.contains("Entity Identifier"))
-        #expect(issue.message.contains("EI"))
+        // M14: required components come from the version's printed component table. EI.1 is
+        // printed O in v2.5.1; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains {
+            $0.code == .requiredComponentMissing && $0.location.segmentID == "ORC" && $0.location.fieldIndex == 2
+        })
     }
 
-    @Test("XCN typed composite (v0.3-C3) fires .requiredComponentMissing on empty XCN-1")
+    @Test("XCN without an ID number is VALID: v2.5.1 prints XCN.1 as O")
     func xcnFiresComponentMissingOnEmptyIdNumber() throws {
         // PV1-7 (attendingDoctor) is XCN-typed. Empty XCN-1 (idNumber)
         // with XCN-2 (familyName) populated must fire
@@ -232,11 +225,11 @@ struct ComponentGrammarTests {
         let wire = TestWires.adt("PV1|1|I|||||^Jones^Mary")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 7 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "PV1[1]-7.1")
-        #expect(issue.message.contains("ID Number"))
-        #expect(issue.message.contains("XCN"))
+        // M14: required components come from the version's printed component table. XCN.1 is
+        // printed O in v2.5.1; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains {
+            $0.code == .requiredComponentMissing && $0.location.segmentID == "PV1" && $0.location.fieldIndex == 7
+        })
     }
 
     @Test("MSG typed composite (v0.3-C4) fires .requiredComponentMissing on empty MSG-1")
@@ -255,7 +248,7 @@ struct ComponentGrammarTests {
         #expect(issue.message.contains("MSG"))
     }
 
-    @Test("VID typed composite (v0.3-C4) fires .requiredComponentMissing on empty VID-1")
+    @Test("VID without a version ID: v2.5.1 prints VID.1 as O (it becomes R in v2.8.2)")
     func vidFiresComponentMissingOnEmptyVersionID() throws {
         // MSH-12 (versionID) is VID-typed. Empty VID-1 with VID-2 (the
         // nested internationalization CE composite) populated must fire
@@ -268,13 +261,14 @@ struct ComponentGrammarTests {
         """
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 12 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.message.contains("Version ID"))
-        #expect(issue.message.contains("VID"))
+        // M14: required components come from the version's printed component table. VID.1 is
+        // printed O in v2.5.1; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains {
+            $0.code == .requiredComponentMissing && $0.location.segmentID == "MSH" && $0.location.fieldIndex == 12
+        })
     }
 
-    @Test("PT typed composite (v0.3-C4) fires .requiredComponentMissing on empty PT-1")
+    @Test("PT without a processing ID: v2.5.1 prints PT.1 as O (it becomes R in v2.8.2)")
     func ptFiresComponentMissingOnEmptyProcessingID() throws {
         // MSH-11 (processingID) is PT-typed. Empty PT-1 (processingID)
         // with PT-2 (processingMode) populated must fire at MSH[1]-11.1.
@@ -283,10 +277,11 @@ struct ComponentGrammarTests {
         """
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 11 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.message.contains("Processing ID"))
-        #expect(issue.message.contains("PT"))
+        // M14: required components come from the version's printed component table. PT.1 is
+        // printed O in v2.5.1; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains {
+            $0.code == .requiredComponentMissing && $0.location.segmentID == "MSH" && $0.location.fieldIndex == 11
+        })
     }
 
     @Test("CNE typed composite (v0.3-C4) fires .requiredComponentMissing on empty CNE-1")
@@ -295,7 +290,7 @@ struct ComponentGrammarTests {
         // with CNE-2 populated must fire at ORC[1]-30.1.
         // Pipe count between "NW" and "^ElectronicTextOnly": 29.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01^ORM_O01|MSG00001|P|2.5.1\r\
         ORC|NW|||||||||||||||||||||||||||||^ElectronicTextOnly\r
         """
         let message = try Parser().parse(wire)
@@ -308,7 +303,7 @@ struct ComponentGrammarTests {
         #expect(issue.message.contains("CNE"))
     }
 
-    @Test("XON typed composite (v0.3-C4) fires .requiredComponentMissing on empty XON-1")
+    @Test("XON without an organization name is VALID: v2.5.1 prints XON.1 as O")
     func xonFiresComponentMissingOnEmptyOrganizationName() throws {
         // NK1-13 (organizationName) is XON-typed. Empty XON-1 with
         // XON-2 populated must fire at NK1[1]-13.1.
@@ -316,11 +311,11 @@ struct ComponentGrammarTests {
         let wire = TestWires.adt("NK1|1|Smith^Jane||SPO|||||||||^L")
         let message = try Parser().parse(wire)
         let report = Validator().validate(message)
-        let issue = try #require(report.errors.first { $0.code == .requiredComponentMissing && $0.location.fieldIndex == 13 })
-        #expect(issue.location.componentIndex == 1)
-        #expect(issue.location.pathDescription == "NK1[1]-13.1")
-        #expect(issue.message.contains("Organization Name"))
-        #expect(issue.message.contains("XON"))
+        // M14: required components come from the version's printed component table. XON.1 is
+        // printed O in v2.5.1; the old hand-written list called it required against the spec (req #4).
+        #expect(!report.errors.contains {
+            $0.code == .requiredComponentMissing && $0.location.segmentID == "NK1" && $0.location.fieldIndex == 13
+        })
     }
 
     @Test("PL typed composite (v0.3-C4) has no required components — sparse PL field does NOT fire")
@@ -342,7 +337,7 @@ struct ComponentGrammarTests {
         // requiredComponents — a child order may populate only one
         // slot of the pair, neither slot is strictly required.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ORM^O01^ORM_O01|MSG00001|P|2.5.1\r\
         ORC|NW|||||||^FILLER456&LAB\r
         """
         let message = try Parser().parse(wire)
@@ -385,5 +380,13 @@ struct ComponentGrammarTests {
             #expect(componentIssues.isEmpty,
                     "\(url.lastPathComponent) unexpectedly hit a component-grammar check: \(componentIssues.map(\.message))")
         }
+    }
+
+    @Test("v2.8.2 prints PT.1 and VID.1 as R: the same omissions ARE errors there")
+    func ptAndVidRequiredFromV282() throws {
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|^T|^AUS\r"
+        let v282 = wire.replacingOccurrences(of: "|^T|^AUS", with: "|^T|2.8.2")
+        let report = Validator().validate(try Parser().parse(v282 + "PID|1||123^^^HOSP^MR||Smith^John\r"))
+        #expect(report.errors.contains { $0.code == .requiredComponentMissing && $0.location.pathDescription == "MSH[1]-11.1" })
     }
 }

@@ -21,11 +21,12 @@
 ///    Same nested-CE shape as VID-2; returns CE-1 of the nested
 ///    composite.
 public struct VID: CompositeView {
-    /// Required components for the VID composite per HL7 v2.5.1
-    /// §2.A.79.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "Version ID"),
-    ]
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the VID component
+    /// table (none: every VID component is optional there). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
+    public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``.
     public let field: Field

@@ -32,11 +32,12 @@
 /// (assigning facility, nested HD), and XON-9 (name representation
 /// code) remain accessible via ``XON/field``.
 public struct XON: CompositeView {
-    /// Required components for the XON composite per HL7 v2.5.1
-    /// §2.A.86.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "Organization Name"),
-    ]
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XON component
+    /// table (none: every XON component is optional there). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
+    public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``.
     public let field: Field

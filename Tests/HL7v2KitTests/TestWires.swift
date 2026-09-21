@@ -7,10 +7,10 @@
 
 enum TestWires {
     /// The canonical ADT^A01 v2.5.1 header.
-    static let adtMSH = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.5.1\r"
+    static let adtMSH = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r"
 
     /// The canonical ORU^R01 v2.5.1 header (LAB-sender twin).
-    static let oruMSH = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1\r"
+    static let oruMSH = "MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01^ORU_R01|MSG00001|P|2.5.1\r"
 
     /// Canonical ADT^A01 wire: header + the given segment lines (each
     /// gains its `\r` terminator).

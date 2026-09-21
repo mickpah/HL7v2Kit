@@ -56,7 +56,15 @@ Option 3 was deferred above for want of a standard of evidence. M13 sets one and
 - **Multi-table field cells** (NK1-11 `0327/0328`) are the successive coded components of the field's composite (JCC.1, JCC.2), so the component grammar is what gives them meaning; no separate mechanism is needed.
 - **AU consequence, found by sweeping before enabling:** with v2.4 checked, the AU locale needed the ADRM's own renderings of two more tables. Table 0301 (p. 161) adds AUSHICPR, AUSHIC, AUSDVA, AUSNATA and AUSLSPN as daggered Australian extensions, and `QML^2184^AUSNATA` in MSH-4 is everyday AU traffic. Table 0125 (p. 237) adds CNE, CWE, DR and EI as OBX-2 value types — and that one was a live false error under the AU locale since v3.3.0, because OBX-2 has been enforced at field level since then.
 
-**Still deferred:** component optionality and length, recorded where printed and not enforced; TBL# cells that name several tables on a component with no grammar to resolve them.
+**Still deferred after M13:** component length; TBL# cells that name several tables on a component with no grammar to resolve them.
+
+## Addendum 2026-09-21 — M14: required components from the grammar
+
+The grammar made an audit possible that was not before: the Validator's hand-written required-component lists against the optionality each version prints. Eight of eleven flat lists contradicted v2.5.1's own table (`XAD.1`, `XPN.1`, `XCN.1`, `XON.1`, `CE.1`, `EI.1`, `PT.1`, `VID.1` are all printed `O`), while citing the very sections that print it. They predate any extracted data (v0.2 to v0.3).
+
+- **Decision:** the required components of a composite are exactly those its version's component table prints `R`. The hand-written lists are no longer read by the Validator; the public constants now hold the v2.5.1 print and are informational.
+- **Consequence in both directions.** False errors disappear (an address with no street line). Spec requirements the old lists waived are now enforced, the visible one being `MSH-9.3`: all three `MSG` components are `R` from v2.5, and the old list's comment that the structure is "often left empty" is the consumer-profile reasoning requirement #1 rules out. The project's own synthetic corpus was non-conformant on it (48 fixtures) and was corrected from Table 0354.
+- **Not enforced, stated:** `C` components (no predicate is printed for them), `RE` (by definition never a missing value), and everything on v2.3 to v2.4, whose prose prints no optionality. The either-or sets (`HD`, `CWE`, `EIP`, `PL`, `XTN`) are hand-written from prose and were not part of this audit; they remain as they were.
 
 ## References
 

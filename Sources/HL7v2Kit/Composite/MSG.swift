@@ -18,10 +18,15 @@
 /// 3. Message Structure (ID) → ``MSG/messageStructure``. The combined
 ///    structure name (e.g. `"ADT_A01"`); often left empty.
 public struct MSG: CompositeView {
-    /// Required components for the MSG composite per HL7 v2.5.1
-    /// §2.A.46.
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the MSG component
+    /// table (MSG.1, MSG.2, MSG.3). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
     public static let requiredComponents: [RequiredComponent] = [
         RequiredComponent(index: 1, name: "Message Code"),
+        RequiredComponent(index: 2, name: "Trigger Event"),
+        RequiredComponent(index: 3, name: "Message Structure"),
     ]
 
     /// The underlying ``Field``.

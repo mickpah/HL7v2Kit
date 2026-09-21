@@ -7,7 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M14: eight "required component" rules contradicted the spec they cited
+
+- The Validator took required components from hand-written per-type lists,
+  applied to every version. Audited against the extracted component tables,
+  eight contradict v2.5.1's own print, where the component is `O`: `XAD.1`
+  street address, `XPN.1` family name, `XCN.1`, `XON.1`, `CE.1`, `EI.1`,
+  `PT.1`, `VID.1`. An address such as `^^Sydney^NSW^2000`, or a name with
+  only a given name, was reported as an error against the spec (req #4).
+- Required components now come from `DataTypeGrammarTable` for the
+  message's own version: exactly the components its table prints as `R`.
+  v2.3 to v2.4 print no component optionality, so nothing is required of
+  them at component level. Either-or sets (`HD`, `CWE`, ...) are unchanged.
+
+### Changed — spec-required components are now enforced (v2.5.1 and later)
+
+- **`MSH-9` needs all three components from v2.5**: `ADT^A01` must be
+  `ADT^A01^ADT_A01`. The spec prints `MSG.1`, `MSG.2` and `MSG.3` as `R`; the
+  old list required only `MSG.1`, noting the structure is "often left
+  empty". Also newly required where printed: `CX.5`, `PT.1`, `VID.1`, `XTN.3`
+  on v2.8.2; `ED.2` / `ED.4` / `ED.5`, `TS.1` and the `R` components of the
+  other printed datatypes.
+- 48 synthetic fixtures and the shared test headers gained their message
+  structure, taken from v2.5.1 Table 0354 (A01 / A04 / A08 use `ADT_A01`);
+  two ACK fixtures gained trigger event and structure. PHI scan clean.
+- `XPN.requiredComponents` and its ten siblings now hold what v2.5.1 prints
+  (eight became empty; `MSG` became `[1, 2, 3]`) and are informational.
+- Eight tests that asserted the old behaviour now assert the spec's; one
+  test pins the v2.8.2 difference (`PT.1` required there).
+- Suppress with `checkComponentGrammar = false` (the `lenient` preset does).
 
 ## [3.5.0] — 2026-09-21
 

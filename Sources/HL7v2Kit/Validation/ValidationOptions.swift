@@ -31,9 +31,9 @@ public struct ValidationOptions: Sendable {
     public var checkConditionalFields: Bool
 
     /// If true (default), check component-level required-component rules
-    /// on populated composite-typed fields (XPN / CX / XAD). When a
-    /// composite is populated but one of its `requiredComponents` is
-    /// empty (e.g. PID-5 XPN populated without an XPN-1 family name), the
+    /// on populated composite-typed fields. When a composite is populated
+    /// but a component its version's component table prints as `R` is
+    /// empty (e.g. PID-3 CX populated without a CX-1 ID number), the
     /// validator emits ``IssueCode/requiredComponentMissing``. Other
     /// composites (CE / CWE / EI / XCN / ...) carry no required-component
     /// metadata yet — they're skipped. v0.2-V2.

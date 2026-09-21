@@ -16,11 +16,12 @@
 /// 2. Processing Mode (ID) → ``PT/processingMode``. `"A"` archive,
 ///    `"R"` restore, `"I"` initial load, `"T"` current processing.
 public struct PT: CompositeView {
-    /// Required components for the PT composite per HL7 v2.5.1
-    /// §2.A.55.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "Processing ID"),
-    ]
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the PT component
+    /// table (none: every PT component is optional there). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
+    public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``.
     public let field: Field

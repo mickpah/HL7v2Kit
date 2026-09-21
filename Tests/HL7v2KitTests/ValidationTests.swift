@@ -15,7 +15,7 @@ struct ValidationTests {
     @Test("A valid PID-bearing message has an empty report")
     func wellFormedMessageIsValid() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John^A||19800101|M\r
         """
         let message = try Parser().parse(wire)
@@ -28,7 +28,7 @@ struct ValidationTests {
     func missingRequiredField() throws {
         // PID-3 (Patient Identifier List) is `R`. Omitting it should error.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1\r
         """
         let message = try Parser().parse(wire)
@@ -43,7 +43,7 @@ struct ValidationTests {
     @Test("checkRequiredFields=false suppresses the required-field error")
     func canDisableRequiredFieldCheck() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1\r
         """
         let message = try Parser().parse(wire)
@@ -59,7 +59,7 @@ struct ValidationTests {
     @Test(".ignore (default) does not report Z-segment presence")
     func defaultIgnoresZSegments() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John^A\r\
         ZAU|1|something\r
         """
@@ -71,7 +71,7 @@ struct ValidationTests {
     @Test(".warnPresence yields a .info issue per Z-segment")
     func warnPresenceFlagsZSegments() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John^A\r\
         ZAU|1|something\r
         """
@@ -88,7 +88,7 @@ struct ValidationTests {
     @Test(".reject yields an .error issue per Z-segment and report becomes invalid")
     func rejectFlagsZSegmentsAsErrors() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John^A\r\
         ZAU|1|something\r
         """
@@ -106,7 +106,7 @@ struct ValidationTests {
     func cardinalityExceededOnSingleField() throws {
         // PID-7 (DOB, TS) has repeatability=1. Force two ~-separated reps.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR||Smith^John^A||19800101~19850101|M\r
         """
         let message = try Parser().parse(wire)
@@ -120,7 +120,7 @@ struct ValidationTests {
         // PID-3 (Identifier List, CX) has repeatability=*. Two reps should
         // not trigger a cardinality issue.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1||123456^^^HOSP^MR~789012^^^GOV^IHI||Smith^John^A\r
         """
         let message = try Parser().parse(wire)
@@ -136,7 +136,7 @@ struct ValidationTests {
     func deprecatedFieldEmitsWarning() throws {
         // PID-2 (Patient ID, deprecated B) — populating it should warn.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1|OLDID|123456^^^HOSP^MR||Smith^John^A\r
         """
         let message = try Parser().parse(wire)
@@ -150,7 +150,7 @@ struct ValidationTests {
     @Test("warnDeprecatedFields=false suppresses deprecation warnings")
     func canDisableDeprecationWarnings() throws {
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
         PID|1|OLDID|123456^^^HOSP^MR||Smith^John^A\r
         """
         let message = try Parser().parse(wire)
@@ -166,7 +166,7 @@ struct ValidationTests {
         // The validator only runs on a parsed Message — so emptiness etc
         // are the parser's problem. This test pins the no-throw contract.
         let wire = """
-        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r
+        MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r
         """
         let message = try Parser().parse(wire)
         // Smoke test — Validator.validate(_:) is not `throws`. If it were,
@@ -196,7 +196,7 @@ struct ValidationTests {
 
     @Test("ORC-2/OBR-2 carrying different values in one group fires item 00216")
     func orcObrPlacerMismatchFires() throws {
-        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "PID|1||999999^^^HOSP^MR\r"
             + "ORC|NW|PLACER-A^HOSP|FIL-1^LAB\r"
             + "OBR|1|PLACER-B^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
@@ -208,14 +208,14 @@ struct ValidationTests {
 
     @Test("ORC-3/OBR-3 mismatch fires item 00217; matching pairs are silent")
     func orcObrFillerMismatchFires() throws {
-        let mismatch = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let mismatch = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "PID|1||999999^^^HOSP^MR\r"
             + "ORC|NW|PL-1^HOSP|FIL-A^LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-B^LAB|GLU^Glucose^L\r"
         let fired = try pairMismatches(mismatch)
         #expect(fired.count == 1)
         #expect(fired.first?.code == .pairedFieldMismatch(item: "00217"))
-        let matching = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let matching = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "PID|1||999999^^^HOSP^MR\r"
             + "ORC|NW|PL-1^HOSP|FIL-1^LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
@@ -226,7 +226,7 @@ struct ValidationTests {
     func orcObrPairEmptySideSkips() throws {
         // The spec's own upward-compatibility pattern: the value lives
         // in the OBR and the ORC omits it (or vice versa).
-        let orcOnly = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let orcOnly = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "PID|1||999999^^^HOSP^MR\r"
             + "ORC|NW|PL-1^HOSP\r"
             + "OBR|1||FIL-1^LAB|GLU^Glucose^L\r"
@@ -235,7 +235,7 @@ struct ValidationTests {
 
     @Test("Per-group evaluation: a mismatch in the second ORC group fires once, at OBR[2]")
     func orcObrPairPerGroup() throws {
-        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "PID|1||999999^^^HOSP^MR\r"
             + "ORC|NW|PL-1^HOSP|FIL-1^LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\r"
@@ -249,7 +249,7 @@ struct ValidationTests {
     @Test("The pair rule is base-spec: it fires under the international locale")
     func orcObrPairIsBaseSpec() throws {
         // No profile is loaded for .international — this rule still runs.
-        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "ORC|NW|PL-A^HOSP\r"
             + "OBR|1|PL-B^HOSP||GLU^Glucose^L\r"
         let report = Validator(locale: .international)
@@ -261,7 +261,7 @@ struct ValidationTests {
     func orcObrOrderingProviderPair() throws {
         // Same provider list on both sides: silent.
         func wire(orc12: String, obr16: String) -> String {
-            "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+            "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
                 + "ORC|NW|PL-1^HOSP|FIL-1^LAB|||||||||\(orc12)\r"
                 + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L||||||||||||\(obr16)\r"
         }
@@ -310,7 +310,7 @@ struct ValidationTests {
     @Test("PRT-6/7 are prohibited unless their subject is valued (conditional prohibition)")
     func prtConditionalProhibition() throws {
         func report(_ prt: String) throws -> [ValidationIssue] {
-            let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|MSG1|P|2.8.2\r"
+            let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01^ORU_R01|MSG1|P|2.8.2\r"
                 + prt + "\r"
             return Validator().validate(try Parser().parse(wire)).errors.filter {
                 $0.code == .conditionalFieldProhibited
@@ -333,7 +333,7 @@ struct ValidationTests {
 
     // MARK: - M8-C: BatchValidator
 
-    private let batchORU = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|M-ORU|P|2.5.1\r"
+    private let batchORU = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01^ORU_R01|M-ORU|P|2.5.1\r"
         + "PID|1||1^^^H^MR\r"
     private let batchREF = "MSH|^~\\&|GP|FAC|SPEC|FAC|||REF^I12^REF_I12|M-REF|P|2.4\r"
         + "PID|1||X^^^F^MR\r"
@@ -396,7 +396,7 @@ struct ValidationTests {
     @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.8.2")
     func orcObrParentPairMovesAcrossVersions() throws {
         // v2.5.1: parent lives at OBR-29 (both sides EIP).
-        let v251 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG1|P|2.5.1\r"
+        let v251 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
             + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
         let firedOld = try pairMismatches(v251)
@@ -405,14 +405,14 @@ struct ValidationTests {
         #expect(firedOld.first?.location.pathDescription == "OBR[1]-29")
         // v2.8.2: OBR-29 is a DIFFERENT element (00261) — a differing
         // OBR-29 must NOT fire; the pair reads OBR-54 instead.
-        let v282Obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21|MSG1|P|2.8.2\r"
+        let v282Obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
             + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
         #expect(try pairMismatches(v282Obr29).isEmpty,
                 "OBR-29 is not the v2.8.2 parent peer")
         // v2.8.2 with a mismatching OBR-54 fires.
         let obr54Tail = String(repeating: "|", count: 50)
-        let v282Obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21|MSG1|P|2.8.2\r"
+        let v282Obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
             + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
             + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
         let fired282 = try pairMismatches(v282Obr54)

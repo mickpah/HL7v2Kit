@@ -62,7 +62,7 @@ In `Tests/HL7v2KitTests/TypedSegmentTests.swift`, add a test that exercises the 
 @Test("Segment-X hydration and cross-check")
 func segmentXCrossCheck() throws {
     let wire = """
-    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01|MSG00001|P|2.5.1\r\
+    MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r\
     XYZ|1|some-value\r
     """
     let message = try Parser().parse(wire)
