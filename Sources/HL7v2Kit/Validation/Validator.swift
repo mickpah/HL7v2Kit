@@ -101,6 +101,8 @@ public struct Validator: Sendable {
             checkUniquenessRules(profile: profile, message: message, issues: &issues)
             // M7-P3: prohibited escape-sequence scan (ADRM-prose:P-4).
             checkEscapeProhibitions(profile: profile, message: message, issues: &issues)
+            // M12: OBX-4 sub-ID trees (ADRM-prose:P-8..P-10, the HL7v2 VMR).
+            checkSubIDTrees(profile: profile, message: message, issues: &issues)
         }
 
         // M8-B1: base-spec ORC/OBR paired-field equality (items
@@ -1011,6 +1013,77 @@ public struct Validator: Sendable {
     /// families plus \E\-adjacency), so the scan runs on the
     /// RE-ENCODED value. MSH-1 / MSH-2 are exempt (they carry the
     /// delimiter literals).
+    /// OBX-4 sub-ID tree rules (M12; see `SubIDTreeRule`). Per observation group — the
+    /// OBX run after each OBR — find the header OBX; without one the group is skipped.
+    /// Then every other OBX whose sub-ID is the root or lies under it must instantiate a
+    /// row of the element table, and must not instantiate a virtual row.
+    private func checkSubIDTrees(
+        profile: Profile,
+        message: Message,
+        issues: inout [ValidationIssue]
+    ) {
+        guard !profile.subIDTrees.isEmpty, let first = message.segments.first else { return }
+        let active = profile.subIDTrees.filter { rule in
+            guard let gate = rule.applicableWhen, !gate.isEmpty else { return true }
+            return conditionTriggers(gate, in: first, segmentIndex: 0, message: message, currentSegmentID: first.segmentID)
+        }
+        guard !active.isEmpty else { return }
+
+        // Observation groups, each OBX paired with its 1-based OBX occurrence in the message.
+        var groups: [[(segment: Segment, occurrence: Int)]] = [[]]
+        var obxCount = 0
+        for segment in message.segments {
+            if segment.segmentID == "OBR" { groups.append([]) }
+            if segment.segmentID == "OBX" {
+                obxCount += 1
+                groups[groups.count - 1].append((segment, obxCount))
+            }
+        }
+        func subID(_ segment: Segment) -> String { segment.field(4)?.stringValue ?? "" }
+        func isDottedDecimal(_ s: String) -> Bool {
+            !s.isEmpty && s.split(separator: ".", omittingEmptySubsequences: false)
+                .allSatisfy { !$0.isEmpty && $0.allSatisfy(\.isNumber) }
+        }
+
+        for rule in active {
+            for group in groups {
+                guard let header = group.first(where: {
+                    $0.segment.field(3)?.first?.components.first?.stringValue == rule.headerObservationID
+                }) else { continue }
+                let root = subID(header.segment)
+                func at(_ occurrence: Int) -> IssueLocation {
+                    IssueLocation(segmentID: "OBX", segmentIndex: occurrence, fieldIndex: 4, componentIndex: nil)
+                }
+                guard isDottedDecimal(root) else {
+                    appendProfileIssue(
+                        citation: rule.headerShapeCitation, location: at(header.occurrence),
+                        message: "AU profile rule violated at \(at(header.occurrence).pathDescription): the template header's OBX-4 sub-ID \"\(root)\" is not a dotted decimal value.",
+                        into: &issues)
+                    continue   // no usable root: the group's other sub-IDs cannot be judged
+                }
+                for entry in group where entry.occurrence != header.occurrence {
+                    let value = subID(entry.segment)
+                    guard value == root || value.hasPrefix(root + ".") else { continue }
+                    let relative = rule.tableRoot + value.dropFirst(root.count)
+                    let location = at(entry.occurrence)
+                    guard let element = VMRImplementationTable.element(matching: relative, in: rule.elements) else {
+                        appendProfileIssue(
+                            citation: rule.unknownPathCitation, location: location,
+                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \"\(value)\" shares the template root \"\(root)\" but matches no element of the implementation table.",
+                            into: &issues)
+                        continue
+                    }
+                    if element.kind == rule.virtualKind {
+                        appendProfileIssue(
+                            citation: rule.virtualRowCitation, location: location,
+                            message: "AU profile rule violated at \(location.pathDescription): sub-ID \"\(value)\" is the \(element.kind) row '\(element.name)', which is virtual and must not be written as an OBX.",
+                            into: &issues)
+                    }
+                }
+            }
+        }
+    }
+
     private func checkEscapeProhibitions(
         profile: Profile,
         message: Message,

@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M12: the AU HL7v2 VMR sub-ID tree (ADRM-2021 Appendix 9, Normative)
+
+- New profile model track `SubIDTreeRule` and three AU rules, reported as
+  `profileConstraintViolation` at the offending `OBX[n]-4`:
+  **ADRM-prose:P-8** an observation whose sub-ID shares the VMR header's
+  root must instantiate a row of the implementation table (p. 515);
+  **P-9** a STRUCTURAL row, purely virtual, must not be written as an OBX;
+  **P-10** the header's own sub-ID must be dotted decimal (p. 490).
+- Scope is the observation group (the OBX run after one OBR). A group with
+  no VMR header is never touched, so a structured pathology report using
+  `1.x` sub-IDs is unaffected. The root is read from the header, not assumed
+  to be 1. AU locale and REF messages only, the same gate as P-6.
+- Proven not to fire on the appendix's own worked examples (pp. 363, 516),
+  which are the must-pass test.
+- Registered, not shipped: the table's OBX-2 / OBX-3 columns (the appendix's
+  example contradicts both) and its OCCURRENCES column.
+- Codegen emits the table as internal Swift
+  (`Locale/Generated/VMRImplementationTable+au_adrm_2021.swift`); the
+  regenerate script and CI drift check cover it.
+
 ### Added — M12-A: the AU VMR implementation table extracted (2026-09-21)
 
 - `Resources/profiles/au-adrm-2021/vmr-table.json` — the 89 rows of ADRM-2021

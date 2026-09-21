@@ -1309,6 +1309,21 @@ extension Profile {
                 applicableWhen: "messageCode in (ORM, ORU, REF, RRI, ACK)",
                 specCitation: "ADRM-prose:P-4 — the multi-byte character escape sequence (\\Mxxyyzz\\) must not be used (variance to HL7 International); AU ADRM-2021 §3.1.1.6 p. 136"
             ),
+        ],
+        // M12 — the HL7v2 VMR sub-ID tree (Appendix 9, Normative). Gate: the
+        // same message-type gate as P-6 (the VMR header pins), the referral
+        // message in which chapter 7 (p. 362) places VMR content.
+        subIDTrees: [
+            SubIDTreeRule(
+                headerObservationID: "74028-2",
+                tableRoot: "1",
+                elements: VMRImplementationTable.au_adrm_2021,
+                virtualKind: "STRUCTURAL",
+                applicableWhen: "messageCode = REF",
+                unknownPathCitation: "ADRM-prose:P-8 — \"Observations which are not specified by the HL7v2 VMR must not have a OBX-4 subID sharing the same root\"; AU ADRM-2021 Appendix 9 A9.2.3.4 p. 515 (table A9.T.1 pp. 492-515)",
+                virtualRowCitation: "ADRM-prose:P-9 — rows marked STRUCTURAL \"must not be written to OBX segments\"; AU ADRM-2021 Appendix 9 A9.2.3.4 p. 515",
+                headerShapeCitation: "ADRM-prose:P-10 — the VMR header must \"specify an OBX-4 sub-ID which must be a dotted decimal value\"; AU ADRM-2021 Appendix 9 A9.2.1 p. 490"
+            ),
         ]
     )
 
