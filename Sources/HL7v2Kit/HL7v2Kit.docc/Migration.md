@@ -110,6 +110,15 @@ The registry release adds no source break, but it does change validation results
 - **Validate Australian traffic with the AU locale.** Base v2.4 rejects values the ADRM adds: `OBX-2` of `CWE` / `DR` / `CNE` / `EI` (Table 0125), a universal ID type of `AUSNATA` in `MSH-4.3` (Table 0301), and `UNICODE UTF-8` below. Under ``HL7Locale/auLocalisation`` all are valid.
 - **AU v2.4 traffic declaring `UNICODE UTF-8` in MSH-18:** an error under ``HL7Locale/international``, because base v2.4 Table 0211 does not print it, and accepted under ``HL7Locale/auLocalisation``, because ADRM-2021 back-ports it. Validate AU traffic with the AU locale.
 
+## Required components follow the printed spec (ADR-017, M14)
+
+Until now the Validator took required components from hand-written lists applied to every version. Eight of them contradicted the component tables they cited, so results change in both directions:
+
+- **No longer errors:** a populated `XAD` with no street line, `XPN` with no family name, `XCN` / `XON` / `CE` / `EI` with no first component, and (before v2.8.2) `PT` / `VID` with none. The spec prints all of these as optional.
+- **Newly errors, on v2.5.1 and later messages:** an `MSH-9` without its trigger event or message structure (`ADT^A01` must be `ADT^A01^ADT_A01`), because the spec prints all three `MSG` components as required from v2.5; on v2.8.2 also `CX.5`, `PT.1`, `VID.1` and `XTN.3`; and the `R` components of the other printed datatypes (`ED.2` / `ED.4` / `ED.5`, `TS.1`, ...).
+- **Unchanged:** v2.3 to v2.4 messages, which print no component optionality, now have nothing required of them at component level; localisation rules (the AU profile) keep their own requirements.
+- `XPN.requiredComponents` and its siblings now hold what v2.5.1 prints and are informational; `checkComponentGrammar = false` still turns the whole check off.
+
 ## Historical: 0.1.0 → 0.5.0
 
 The early minors (0.2–0.5) included source-breaking refactors while the surface settled: typed-composite accessors moving from raw `Field?` to struct views (`XPN`/`CX`/`XAD`), component-level and conditional-field validation, the MLLP codec, and the `HL7Locale` API. These predate the v0.5.0 stability anchor; consumers starting at v0.5.0+ are unaffected. Full detail is in `CHANGELOG.md` and the `docs/archive/` snapshots.

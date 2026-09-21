@@ -44,13 +44,12 @@
 /// expiration date, professional suffix, assigning jurisdiction, assigning
 /// agency or department) remain accessible via ``XCN/field``.
 public struct XCN: CompositeView {
-    /// Required components for the XCN composite per HL7 v2.5.1 §2.A.85.
-    /// ``Validator`` consults this when the `checkComponentGrammar`
-    /// toggle is on: if XCN is populated but XCN-1 is empty, the
-    /// validator emits ``IssueCode/requiredComponentMissing``. v0.2-V2.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "ID Number"),
-    ]
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XCN component
+    /// table (none: every XCN component is optional there). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
+    public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first, or to XCN components beyond

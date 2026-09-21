@@ -30,8 +30,8 @@ public struct IssueLocation: Sendable, Equatable, Hashable {
     /// 1-based component index within a composite-typed field, or nil for
     /// a field-level issue. Set by ``IssueCode/requiredComponentMissing``
     /// when a composite is populated but a required sub-component is
-    /// missing — e.g. PID-5 (XPN) populated with no XPN-1 family name
-    /// renders as `"PID[1]-5.1"`. v0.2-V2.
+    /// missing — e.g. PID-3 (CX) populated with no CX-1 ID number
+    /// renders as `"PID[1]-3.1"`. v0.2-V2.
     public let componentIndex: Int?
     /// 1-based subcomponent index within a component that is itself a
     /// composite, or nil. Set by ``IssueCode/valueNotInTable(table:)`` when
@@ -75,7 +75,8 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// (Reserved — v0.1.0 doesn't evaluate conditions.)
     case conditionalFieldMissing
     /// A composite field is populated but a required component within it
-    /// is empty (e.g. PID-5 XPN populated with no XPN-1 family name).
+    /// is empty (e.g. PID-3 CX populated with no CX-1 ID number). Required means
+    /// printed `R` in the component table of the message's own HL7 version.
     /// Set on issues emitted by the component-grammar check. v0.2-V2.
     case requiredComponentMissing
     /// A deprecated (`B`) or unsupported (`X`) field was populated.

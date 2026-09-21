@@ -23,8 +23,11 @@
 /// 5. Alternate Text (ST) → ``CNE/altText``.
 /// 6. Name of Alternate Coding System (ID) → ``CNE/nameOfAltCodingSystem``.
 public struct CNE: CompositeView {
-    /// Required components for the CNE composite per HL7 v2.5.1
-    /// §2.A.14.
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the CNE component
+    /// table (CNE.1). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
     public static let requiredComponents: [RequiredComponent] = [
         RequiredComponent(index: 1, name: "Identifier"),
     ]

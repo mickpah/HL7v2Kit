@@ -505,6 +505,7 @@ public struct Validator: Sendable {
                 fieldIndex: position,
                 segmentID: grammar.segmentID,
                 segmentIndex: occurrence,
+                version: message.version,
                 issues: &issues
             )
         }
@@ -1586,9 +1587,10 @@ public struct Validator: Sendable {
         fieldIndex: Int,
         segmentID: String,
         segmentIndex: Int,
+        version: Version,
         issues: inout [ValidationIssue]
     ) {
-        let required = requiredComponents(forCompositeCode: grammar.dataType)
+        let required = requiredComponents(forCompositeCode: grammar.dataType, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
@@ -1632,26 +1634,24 @@ public struct Validator: Sendable {
     /// Map an HL7 composite data-type code (e.g. `"XPN"`) to the type's
     /// `requiredComponents` metadata. Unknown codes return an empty list
     /// so the check is a no-op for composites HL7v2Kit hasn't typed yet.
-    private func requiredComponents(forCompositeCode code: String) -> [RequiredComponent] {
-        switch code {
-        case "XPN": return XPN.requiredComponents
-        case "CX":  return CX.requiredComponents
-        case "XAD": return XAD.requiredComponents
-        case "CE":  return CE.requiredComponents
-        case "CWE": return CWE.requiredComponents
-        case "EI":  return EI.requiredComponents
-        case "XCN": return XCN.requiredComponents
-        case "XTN": return XTN.requiredComponents
-        case "HD":  return HD.requiredComponents
-        case "MSG": return MSG.requiredComponents
-        case "PT":  return PT.requiredComponents
-        case "VID": return VID.requiredComponents
-        case "PL":  return PL.requiredComponents
-        case "CNE": return CNE.requiredComponents
-        case "XON": return XON.requiredComponents
-        case "EIP": return EIP.requiredComponents
-        default:    return []
-        }
+    /// The components a composite REQUIRES when it is populated: exactly those its
+    /// version's component table prints as `R` (M14, ADR-017).
+    ///
+    /// This replaces hand-written per-type lists that were applied to every version and
+    /// cited v2.5.1 sections whose tables print the opposite: XAD.1, XPN.1, XCN.1, XON.1,
+    /// CE.1, EI.1, PT.1 and VID.1 are all printed `O` in v2.5.1, so an address with no
+    /// street line (`^^Sydney^NSW^2000`) or a name with no family name was reported as an
+    /// error against the spec (req #4). The grammar also carries what a fixed list could
+    /// not: CX.5, PT.1, VID.1 and XTN.3 become `R` in v2.8.2.
+    ///
+    /// v2.3 to v2.4 define components in prose and print no optionality, and the
+    /// grammar-less v2.8 has no tables at all, so nothing is required of them here.
+    /// `RE` (required but may be empty) is, by its own definition, never a missing value.
+    private func requiredComponents(forCompositeCode code: String, version: Version) -> [RequiredComponent] {
+        guard let grammar = DataTypeGrammarTable.grammar(code, version: version) else { return [] }
+        return grammar.components
+            .filter { $0.optionalityCode == "R" }
+            .map { RequiredComponent(index: $0.index, name: $0.name) }
     }
 
     /// Map an HL7 composite data-type code to the type's OR-rule

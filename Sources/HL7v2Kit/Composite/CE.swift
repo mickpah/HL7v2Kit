@@ -29,13 +29,12 @@
 /// 5. Alternate Text (ST) → ``CE/altText``.
 /// 6. Name of Alternate Coding System (ID) → ``CE/nameOfAltCodingSystem``.
 public struct CE: CompositeView {
-    /// Required components for the CE composite per HL7 v2.5.1 §2.A.13.
-    /// ``Validator`` consults this when the `checkComponentGrammar`
-    /// toggle is on: if CE is populated but CE-1 is empty, the
-    /// validator emits ``IssueCode/requiredComponentMissing``. v0.2-V2.
-    public static let requiredComponents: [RequiredComponent] = [
-        RequiredComponent(index: 1, name: "Identifier"),
-    ]
+    /// The components HL7 v2.5.1 PRINTS as required (`R`) in the CE component
+    /// table (none: every CE component is optional there). Informational, for the canonical
+    /// version only: the ``Validator`` does not read this list. It takes required
+    /// components from ``DataTypeGrammarTable`` for the MESSAGE's own version, because
+    /// they differ between versions (M14, ADR-017).
+    public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first.

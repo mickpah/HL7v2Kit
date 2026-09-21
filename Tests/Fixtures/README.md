@@ -115,6 +115,7 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 
 ## Corrections log
 
+- **2026-09-21 — `MSH-9` completed in 48 v2.5.1 fixtures (49 MSH segments, batches included)** (M14). v2.5 onward prints all three `MSG` components as required; the fixtures carried `ADT^A01`-style values with no message structure, and the two ACK fixtures a bare `ACK`. Structures taken from v2.5.1 Table 0354 (`ADT_A01` for A01 / A04 / A08, `ORM_O01`, `ORU_R01`, `ACK^A01^ACK`). The v2.3, v2.3.1 and v2.4 fixtures are unchanged: those versions print no component optionality. Synthetic data; no PHI implications.
 - **2026-09-20 — ordering provider moved from OBR-17 to OBR-16 in 13 synthetic fixtures** (`oru_r01_*`, `edge_many_nte`, `edge_obx_repeating_values`). Each carried a provider value such as `DR12121212^Foster^Taylor` (an XCN) in OBR-17, Order Callback Phone Number (XTN), with OBR-16 empty: an off-by-one from when the fixtures were written. The component-level code-table check (M10-C) exposed it, because XTN.2 and XTN.3 are coded. Synthetic data; no PHI implications.
 - **2026-09-20 — `oru_r01_v24.hl7` MSH-18 changed from `UNICODE UTF-8` to `ASCII`** (A5): base v2.4 Table 0211 does not print the UTF-8 value.
 

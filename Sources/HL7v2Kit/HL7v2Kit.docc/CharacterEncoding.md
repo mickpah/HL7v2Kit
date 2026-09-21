@@ -46,7 +46,7 @@ An MSH-18 value HL7v2Kit doesn't recognise (e.g. `EBCDIC`, `GB18030`) throws ``P
 
 ```swift
 // A real sender writes "Café au lait" as a Latin-1-encoded byte stream:
-var bytes = Data("MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01|MSG00001|P|2.5.1||||||8859/1\r".utf8)
+var bytes = Data("MSH|^~\\&|LAB|FAC|HOSPITAL|FAC|||ORU^R01^ORU_R01|MSG00001|P|2.5.1||||||8859/1\r".utf8)
 bytes.append(Data("OBX|1|TX|MSG^TEXT||Caf".utf8))
 bytes.append(0xE9)                                          // 'é' in Latin-1
 bytes.append(Data(" au lait\r".utf8))
