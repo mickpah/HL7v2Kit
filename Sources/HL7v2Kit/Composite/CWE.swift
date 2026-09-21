@@ -32,26 +32,13 @@
 ///    sender saw before mapping to CWE-1; useful when CWE-1 can't be
 ///    resolved.
 ///
-/// **Required components.** The v2.5.1 spec says "at least one of CWE-1
-/// or CWE-9 must be populated". For v0.3 the ``Validator`` only enforces
-/// **CWE-1**; the OR-rule with CWE-9 is documented but not implemented
-/// because the conditional-field DSL doesn't yet support disjunctive
-/// component conditions. Senders that populate CWE-9 alone will trip
-/// the CWE-1 check today — flag as known divergence.
+/// **Required components.** None: v2.5.1 prints every CWE component as `O`, and its usage
+/// notes include an "Uncoded" case with only the text (CWE-2) valued.
 public struct CWE: CompositeView {
-    /// OR-rule conformance per HL7 v2.5.1 §2.A.16: a populated CWE field
-    /// must have at least one of CWE-1 (Identifier) OR CWE-9 (Original
-    /// Text) populated. v0.4-S4 supersedes the earlier v0.3-C2 flat
-    /// `requiredComponents = [CWE-1]` which false-positive'd on
-    /// legitimate CWE-9-only payloads.
-    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
-        components: [
-            RequiredComponent(index: 1, name: "Identifier"),
-            RequiredComponent(index: 9, name: "Original Text"),
-        ],
-        semantics: .atLeastOneOf,
-        description: "CWE-1 (Identifier) OR CWE-9 (Original Text)"
-    )
+    /// No either-or rule (M15). The hand-written "CWE-1 OR CWE-9" rejected the spec's own
+    /// usage case b) "Uncoded: Text is valued, the identifier has no value", whose example is
+    /// `^Wesnerian^SNM3^^^^3.4` (v2.5.1 sec 2.A.13). Every CWE component is printed `O`.
+    public static let requiredComponentSet: RequiredComponentSet? = nil
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first.

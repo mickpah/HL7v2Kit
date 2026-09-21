@@ -30,14 +30,12 @@ public struct PL: CompositeView {
     /// (Facility, nested HD) populated. v0.4-S4 supersedes the empty
     /// `requiredComponents` v0.3-C4 shipped — the spec's actual
     /// conformance is the OR-rule, not "no constraint".
-    public static let requiredComponentSet: RequiredComponentSet? = RequiredComponentSet(
-        components: [
-            RequiredComponent(index: 1, name: "Point of Care"),
-            RequiredComponent(index: 4, name: "Facility"),
-        ],
-        semantics: .atLeastOneOf,
-        description: "PL-1 (Point of Care) OR PL-4 (Facility)"
-    )
+
+    /// No either-or rule (M15). The hand-written "PL-1 OR PL-4" contradicted the spec's
+    /// definition (v2.5.1 sec 2.A.53): "Which components are valued depends on the needs of
+    /// the site. For example for a patient treated at home, only the person location type
+    /// is valued." Every PL component is printed `O` or `C`.
+    public static let requiredComponentSet: RequiredComponentSet? = nil
 
     /// The underlying ``Field``. Use this when you need access to
     /// repetitions beyond the first or to PL components beyond PL-4.
