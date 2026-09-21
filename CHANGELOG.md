@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.1] — 2026-09-21
+
+**Fixes only.** Three false "required component" errors are gone: a structured phone number (`XTN`), a location with only its person location type (`PL`), and an uncoded `CWE` with only its text. Each rejected an example the spec itself prints.
+
 ### Fixed — M15: three either-or component rules rejected the spec's own examples
 
 - The five hand-written either-or rules were checked against the spec's

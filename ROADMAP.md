@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (M15 merged, unreleased: the either-or component rules audited; `v3.6.0` tagged earlier) |
-| Current release | **`v3.6.0`** (2026-09-21) — required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
-| Next planned cycle | **None scheduled.** Unreleased on `main`: M15 (fixes only). Every hand-written component rule has now been audited against the spec. |
+| Last updated | 2026-09-21 (**`v3.6.1` tagged** — M15 closed) |
+| Current release | **`v3.6.1`** (2026-09-21) — three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
+| Next planned cycle | **None scheduled.** Every hand-written component rule has been audited against the spec. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.6.0`)
+## Where we are (`v3.6.1`)
 
 **Shipped and solid:**
 
@@ -241,7 +241,7 @@ Validator could not carry.*
 - **Outcome:** eight of eleven hand-written lists contradicted the v2.5.1 tables they cited; required components are now exactly those the message's own version prints `R`. False errors removed (`XAD.1`, `XPN.1`, ...); waived requirements enforced (`MSH-9.3` from v2.5; `CX.5`, `PT.1`, `VID.1`, `XTN.3` on v2.8.2). 48 fixtures corrected.
 - **Honesty points:** the old `MSG` list waived the message structure as "often left empty" — the reasoning req #1 rules out; v2.3 to v2.4 get no component requirements because their prose prints none.
 
-### M15 — The either-or component rules, held to the spec's examples **CLOSED (2026-09-21; merged, unreleased)**
+### M15 — The either-or component rules, held to the spec's examples **CLOSED (2026-09-21; released in `v3.6.1`)**
 *Goal: finish the M14 audit for the five rules no table could check.*
 
 - **Outcome:** `XTN`, `PL` and `CWE` rules removed — each rejected an example the spec prints; `EIP` removed as vacuous; `HD` kept, supported by the prose. The spec's examples are now must-pass tests.
