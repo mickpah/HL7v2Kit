@@ -1,0 +1,38 @@
+{
+  "dataType": "QSC",
+  "version": "2.3.1",
+  "name": "query selection criteria                                                           2-43",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Segment field name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Relational operator",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0209"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Value",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Relational conjunction",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0210"
+      ]
+    }
+  ]
+}

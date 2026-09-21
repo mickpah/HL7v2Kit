@@ -1,0 +1,104 @@
+{
+  "dataType": "PPN",
+  "version": "2.3",
+  "name": "performing person time stamp",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Family name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Given name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Middle initial or name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Suffix",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Prefix",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Degree",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 8,
+      "name": "Source table",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Assigning authority",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 10,
+      "name": "Name type code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0200"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Identifier check digit",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 12,
+      "name": "Code identifying the check digit scheme employed",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 13,
+      "name": "Identifier type code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Assigning facility",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 15,
+      "name": "Date/time action performed",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

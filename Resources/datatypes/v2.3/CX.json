@@ -1,0 +1,50 @@
+{
+  "dataType": "CX",
+  "version": "2.3",
+  "name": "extended composite ID with check digit",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Check digit",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Code identifying the check digit scheme employed",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Assigning authority",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Identifier type code",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Assigning facility",
+      "dataType": "HD",
+      "optionality": ""
+    }
+  ]
+}

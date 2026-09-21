@@ -1,0 +1,35 @@
+{
+  "dataType": "EI",
+  "version": "2.3.1",
+  "name": "entity identifier                                                                                2-31",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Entity identifier",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Namespace ID",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Universal ID",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Universal ID type",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0301"
+      ]
+    }
+  ]
+}

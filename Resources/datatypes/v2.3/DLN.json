@@ -1,0 +1,26 @@
+{
+  "dataType": "DLN",
+  "version": "2.3",
+  "name": "driver’s license number",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Driver’s license number (as ST data type)",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Issuing state, province, country",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Expiration date",
+      "dataType": "DT",
+      "optionality": ""
+    }
+  ]
+}

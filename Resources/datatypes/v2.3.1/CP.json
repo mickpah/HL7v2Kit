@@ -1,0 +1,50 @@
+{
+  "dataType": "CP",
+  "version": "2.3.1",
+  "name": "composite price                                                                                  2-21",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Price",
+      "dataType": "MO",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Price type",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0205"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "From value",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "To value",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Range units",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Range type",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0298"
+      ]
+    }
+  ]
+}

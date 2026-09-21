@@ -1,0 +1,68 @@
+{
+  "dataType": "XTN",
+  "version": "2.3",
+  "name": "extended telecommunication number",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "[(999)] 999-9999 [X99999] [C any text]",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Telecommunication use code",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0201"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Telecommunication equipment type",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0202"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Email address",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Country code",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Area/city code",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Phone number",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 8,
+      "name": "Extension",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Any text",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

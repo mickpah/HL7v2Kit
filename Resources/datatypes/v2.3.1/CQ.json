@@ -1,0 +1,20 @@
+{
+  "dataType": "CQ",
+  "version": "2.3.1",
+  "name": "composite quantity with units                                                                    2-23",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Units",
+      "dataType": "CE",
+      "optionality": ""
+    }
+  ]
+}

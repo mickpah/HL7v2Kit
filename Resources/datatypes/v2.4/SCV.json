@@ -1,0 +1,23 @@
+{
+  "dataType": "SCV",
+  "version": "2.4",
+  "name": "scheduling class value pair",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Parameter class",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0294"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Parameter value",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

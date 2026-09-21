@@ -1,0 +1,23 @@
+{
+  "dataType": "FC",
+  "version": "2.3",
+  "name": "financial class",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Financial class",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0064"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Effective date",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

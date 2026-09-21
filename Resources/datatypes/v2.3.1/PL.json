@@ -1,0 +1,83 @@
+{
+  "dataType": "PL",
+  "version": "2.3.1",
+  "name": "person location                                                                     2-36",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Point of care",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0302"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Room",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0303"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Bed",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0304"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Facility",
+      "dataType": "HD",
+      "optionality": "",
+      "tables": [
+        "0300"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Location status",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0306"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Person location type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Building",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0307"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Floor",
+      "dataType": "IS",
+      "optionality": "",
+      "tables": [
+        "0308"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Location description",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

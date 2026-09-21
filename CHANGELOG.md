@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M13-A: datatype component grammar recovered from prose for v2.3, v2.3.1, v2.4
+
+- These versions print no component tables, but every composite has a
+  numbered section whose components each get a numbered subsection
+  ("2.9.12.5 Identifier type code (ID)"). `scripts/extract-datatype-prose.py`
+  reads index, name and datatype from those headings and writes
+  `Resources/datatypes/v2.3`, `v2.3.1`, `v2.4` (105 datatype files, 575
+  components), marked `"source": "prose"`.
+- **A table binding must pass three tests:** exactly one table is named in
+  the subsection; that number is in the version's own registry; and, when
+  the prose states the table's name, it matches the registry's name. The
+  third test caught real misprints: v2.3 sec 2.8.31.4 binds QSC.4 to "HL7
+  table 0102 - Relation conjunction", but v2.3's 0102 is Delayed
+  Acknowledgment Type, a closed table that would have rejected AND / OR.
+  Anything that fails is left unbound: an absent check, never a wrong one.
+- **Measured:** every surviving binding with a v2.5.1 counterpart agrees
+  with v2.5.1's printed component table (28 / 48 / 70 on the three versions,
+  zero conflicts). 168 bound components; 39 mentions rejected.
+- Version differences the prose preserves: CX.5 is `IS` in v2.3 and `ID`
+  from v2.3.1; XCN.13 and XON.7 are `IS` in v2.4.
+- `audit-schemas.py --datatypes` is prose-aware (no optionality, optional
+  datatype code, no trailing note subsections; prose re-extraction drift).
+
 ### Added — M12: the AU HL7v2 VMR sub-ID tree (ADRM-2021 Appendix 9, Normative)
 
 - New profile model track `SubIDTreeRule` and three AU rules, reported as
