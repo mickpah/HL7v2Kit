@@ -34,6 +34,23 @@
     "0354": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.3 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
+    },
+    "0125": {
+      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages.",
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ],
+        [
+          "MA",
+          "Multiplexed array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "NA",
+          "Numeric array (Chapter 7 waveform: WAV category)"
+        ]
+      ]
     }
   },
   "2.3.1": {
@@ -90,6 +107,23 @@
         [
           "RANDOM",
           "Spelling used by the specification's own HD example; the table row prints Random"
+        ]
+      ]
+    },
+    "0125": {
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ],
+        [
+          "MA",
+          "Multiplexed array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "NA",
+          "Numeric array (Chapter 7 waveform: WAV category)"
         ]
       ]
     }
@@ -156,6 +190,23 @@
         [
           "RANDOM",
           "Spelling used by the specification's own HD example; the table row prints Random"
+        ]
+      ]
+    },
+    "0125": {
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ],
+        [
+          "MA",
+          "Multiplexed array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "NA",
+          "Numeric array (Chapter 7 waveform: WAV category)"
         ]
       ]
     }
@@ -246,6 +297,23 @@
         [
           "AHS",
           "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ]
+    },
+    "0125": {
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ],
+        [
+          "MA",
+          "Multiplexed array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "NA",
+          "Numeric array (Chapter 7 waveform: WAV category)"
         ]
       ]
     }
@@ -372,6 +440,23 @@
         [
           "AHS",
           "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ]
+    },
+    "0125": {
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ],
+        [
+          "MA",
+          "Multiplexed array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "NA",
+          "Numeric array (Chapter 7 waveform: WAV category)"
         ]
       ]
     }

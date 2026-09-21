@@ -7,7 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — waveform value types rejected in OBX-2 (since v3.3.0)
+
+- HL7 Table 0125 omits `NA`, `MA` and `CD` on v2.3 to v2.6, yet Chapter 7's own
+  normative text directs them into OBX-2: "The data type of the WAV category
+  result segment can be NA (Numeric Array) or MA (Multiplexed Array)" and
+  "for the CHN category, OBX-2 should be valued to CD". v2.8.2 corrects the
+  table. As a closed table it rejected every spec-directed waveform
+  observation. The three are restored by cited override on the five versions.
+
+### Added — M18: the spec's example MESSAGES, run through the Swift Validator
+
+- `scripts/extract-example-messages.py` reassembles the complete example
+  messages the chapters print (616 across six versions; segments wrap over
+  several lines) into a local JSON file. `SpecExampleMessageTests`, enabled
+  by `SPEC_EXAMPLE_MESSAGES`, validates each end to end and writes a report;
+  `--triage` ranks the table rejections worth a look. The spec text stays out
+  of the repository, like the PDFs.
+- **A triage source, not a must-pass oracle.** Unlike the datatype examples,
+  the printed messages are informative and often wrong themselves: half
+  carry a stale MSH-12 (a v2.6 chapter printing `|2.4|`), many are truncated
+  with `...` or have fields shifted by one, and they produce 701
+  missing-required-field errors. Triage is restricted to examples whose
+  declared version matches their chapter. After the fix above, every
+  remaining table rejection is example damage.
+- **Observed, not changed:** 35 of the 68 examples that declare v2.5.1 omit
+  `MSH-9.3`, which the MSG component table prints as `R` and v3.6.0 enforces.
+  The MSH-9 prose is silent on the point, so the normative table stands;
+  recorded as an owner decision in STATUS.
 
 ## [3.6.3] — 2026-09-21
 

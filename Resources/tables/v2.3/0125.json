@@ -109,6 +109,18 @@
     {
       "code": "XTN",
       "description": "Extended Telecommunications Number"
+    },
+    {
+      "code": "CD",
+      "description": "Channel definition (Chapter 7 waveform: CHN category)"
+    },
+    {
+      "code": "MA",
+      "description": "Multiplexed array (Chapter 7 waveform: WAV category)"
+    },
+    {
+      "code": "NA",
+      "description": "Numeric array (Chapter 7 waveform: WAV category)"
     }
   ]
 }

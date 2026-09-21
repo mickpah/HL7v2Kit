@@ -93,7 +93,9 @@ struct HL7TableRegistryTests {
         #expect(HL7TableRegistry.table("0003", version: .v2_5_1)?.entries.count == 286)
         #expect(HL7TableRegistry.table("0155", version: .v2_5_1)?.entries.count == 4)
         let t0125 = try #require(HL7TableRegistry.table("0125", version: .v2_5_1))
-        #expect(t0125.entries.count == 25)
+        // 25 printed rows, plus CD / MA / NA restored from Chapter 7's waveform text (M18).
+        #expect(t0125.entries.count == 28)
+        #expect(t0125.contains("NA") && t0125.contains("MA") && t0125.contains("CD"))
         #expect(!t0125.contains("CWE"), "CWE is a v2.6 addition")
     }
 
