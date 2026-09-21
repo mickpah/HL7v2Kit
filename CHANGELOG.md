@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-**M10 — code tables on composite components (ADR-017).** Additive API; the default code-table check now reaches `ID` components on v2.5.1 / v2.6 / v2.8.2 messages.
+*(nothing yet)*
+
+## [3.4.0] — 2026-09-21
+
+**The component-table release: M10, code tables on composite components (ADR-017).** Additive API; the default code-table check now reaches `ID` components on v2.5.1 / v2.6 / v2.8.2 messages.
 
 ### Docs
 

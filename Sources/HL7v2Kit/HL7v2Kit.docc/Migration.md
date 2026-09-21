@@ -97,7 +97,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v0.19.0 | Canonical NK1/PV1/IN1 typed accessors extended to full depth (additive) |
 | **v1.0.0** | **API frozen** — the surface above is now the SemVer contract |
 | v3.3.0 | Code-table registry (ADR-016): `HL7Table`, `HL7TableRegistry`, `FieldGrammar.table`, `IssueCode.valueNotInTable(table:)`, `ValidationOptions.checkCodeTables`; `FieldGrammar.variableColumns` and plural accessors for the `1-n` segments RDT / ADD. **Additive API, but a new default check:** see below. |
-| *Unreleased* | Datatype component grammar (ADR-017): `DataTypeGrammarTable`, `DataTypeGrammar`, `ComponentGrammar`. Additive API; the code-table check now also covers `ID` components on v2.5.1 / v2.6 / v2.8.2 messages. |
+| v3.4.0 | Datatype component grammar (ADR-017): `DataTypeGrammarTable`, `DataTypeGrammar`, `ComponentGrammar`. Additive API; the code-table check now also covers `ID` components on v2.5.1 / v2.6 / v2.8.2 messages. |
 
 ## The code-table check is on by default (ADR-016)
 

@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-20 (M10 closed: datatype component grammar, ADR-017; `v3.3.0` tagged earlier the same day) |
-| Current release | **`v3.3.0`** (2026-09-20) — the code-table release: per-version HL7 code tables (2,565 files) in `HL7TableRegistry`, `valueNotInTable` on 1,073 closed-table ID fields, the AU locale table axis, and the 1-n variable-column model; additive on `v3.2.0` under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
-| Next planned cycle | **None scheduled.** M10 is merged and unreleased. Candidates: the ADR-017 deferred list (nested composites, OBX-5, v2.3 to v2.4 prose), the VMR implementation table and OBX-4 sub-ID tree. |
+| Last updated | 2026-09-21 (**`v3.4.0` tagged** — M10 closed: datatype component grammar, ADR-017) |
+| Current release | **`v3.4.0`** (2026-09-21) — the component-table release: `DataTypeGrammarTable` for v2.5.1 / v2.6 / v2.8.2 and the code-table check on ID components, on top of `v3.3.0`'s per-version code-table registry (2,570 table files, `valueNotInTable` on 1,073 closed-table ID fields, the AU locale table axis); additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
+| Next planned cycle | **None scheduled.** Candidates: the ADR-017 deferred list (nested composites, OBX-5, v2.3 to v2.4 prose), the VMR implementation table and OBX-4 sub-ID tree. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.3.0`)
+## Where we are (`v3.4.0`)
 
 **Shipped and solid:**
 
@@ -216,7 +216,7 @@ Validator could not carry.*
 - **Honesty points (req #3/#4):** a table that printed `...` beside other rows stays open unless explicitly closed; rows that denote an absent field are not codes; corrections are version-scoped, cited overrides, never hand edits. Two registered spec typos (v2.3 DB1-2 TBL# 0033 for 0334; v2.3 Appendix A Table 0207 in lowercase).
 - **Deferred, registered:** table links on composite components and multi-table field bindings.
 
-### M10 — Code tables on composite components **CLOSED (2026-09-20; ADR-017; merged, unreleased)**
+### M10 — Code tables on composite components **CLOSED (2026-09-20; ADR-017; released in `v3.4.0`)**
 *Goal: the table bindings integrators ask about most live on components (`CX.5`, `XPN.7`, `XTN.2`), not fields. Model each version's datatype components and enforce their closed tables, under the same honesty rules as the field check.*
 
 - **Outcome:** `Resources/datatypes/` (227 datatype files, 1,323 components) from the Chapter 2A component tables of v2.5.1 / v2.6 / v2.8.2; `DataTypeGrammarTable` generated from it; `valueNotInTable` on populated `ID` components over closed tables, located at the component. About 50 components per version.
