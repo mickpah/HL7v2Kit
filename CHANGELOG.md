@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M12-A: the AU VMR implementation table extracted (2026-09-21)
+
+- `Resources/profiles/au-adrm-2021/vmr-table.json` — the 89 rows of ADRM-2021
+  Appendix 9 table A9.T.1 (pp. 492-515): element name, OBX-2, the OBX-4
+  sub-ID path (`RepeatOf[...]` becomes `*`), occurrences, VMR datatype.
+  Written only by `scripts/extract-vmr-table.py`.
+- OBX-3 and the suggested OBX-5 values are deliberately NOT extracted: the
+  appendix's own worked example (p. 516) contradicts the table on OBX-2 (CE
+  for CWE) and OBX-3 (70949-3 for 73983-9), so neither can back a rule.
+- `scripts/audit-schemas.py --vmr` (shape, unique rooted paths, and the
+  appendix's own invariant that a row is unbounded exactly when its path ends
+  in a repeat marker; re-extraction drift with `--depth`).
+
 ### Added — M11: nested composites and OBX-5 in the component check
 
 - A component that is itself a composite is descended into once: the HD in
