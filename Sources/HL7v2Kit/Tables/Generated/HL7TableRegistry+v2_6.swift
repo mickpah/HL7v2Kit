@@ -5137,6 +5137,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
             HL7Table.Entry(code: "M", description: "These are reserved for locally defined coding schemes."),
             HL7Table.Entry(code: "N", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "RANDOM", description: "Spelling used by the specification's own HD example; the table row prints Random"),
         ] as [HL7Table.Entry]
     )
 

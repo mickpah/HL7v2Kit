@@ -74,7 +74,7 @@
       "citation": "HL7 v2.3.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0301": {
-      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description. The table prints the code as 'Random', but the HD section's own example is '^40C983F09183B0295822009258A3290582^RANDOM'; the example's spelling is added beside the printed one.",
       "renameCodes": {
         "L,M,N": "L"
       },
@@ -86,6 +86,10 @@
         [
           "N",
           "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "RANDOM",
+          "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
     }
@@ -136,7 +140,7 @@
       "citation": "HL7 v2.4 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0301": {
-      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description. The table prints the code as 'Random', but the HD section's own example is '^40C983F09183B0295822009258A3290582^RANDOM'; the example's spelling is added beside the printed one.",
       "renameCodes": {
         "L,M,N": "L"
       },
@@ -148,6 +152,10 @@
         [
           "N",
           "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "RANDOM",
+          "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
     }
@@ -213,7 +221,7 @@
       "citation": "HL7 v2.5.1 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 24 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0301": {
-      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description. The table prints the code as 'Random', but the HD section's own example (sec 2.A.33) is '^40C983F09183B0295822009258A3290582^RANDOM'. Codes are matched exactly, so the closed table rejected the spec's example; the example's spelling is added beside the printed one rather than making the match case-insensitive for one table.",
       "renameCodes": {
         "L,M,N": "L"
       },
@@ -225,6 +233,10 @@
         [
           "N",
           "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "RANDOM",
+          "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
     }
@@ -326,7 +338,7 @@
       "citation": "HL7 v2.6 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Measured on this version: 15 structures that the chapters' own trigger and example lines use are absent from the printed table (v2.5.1 Chapter 15 defines RSP^K25^RSP_K25, which Appendix A omits). Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0301": {
-      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description.",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'reserved for locally defined coding schemes', not one. Kept as a single code the closed table rejected a valid HD.3 of L, M or N (a live misfire in v3.4.0's component check). Split into three rows carrying the printed description. The table prints the code as 'Random', but the HD section's own example (sec 2.A.33) is '^40C983F09183B0295822009258A3290582^RANDOM'. Codes are matched exactly, so the closed table rejected the spec's example; the example's spelling is added beside the printed one rather than making the match case-insensitive for one table.",
       "renameCodes": {
         "L,M,N": "L"
       },
@@ -338,6 +350,10 @@
         [
           "N",
           "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "RANDOM",
+          "Spelling used by the specification's own HD example; the table row prints Random"
         ]
       ]
     }

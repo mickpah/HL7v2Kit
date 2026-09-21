@@ -25,14 +25,17 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
     /// How the `components` list combines for conformance:
     ///
     /// - `.atLeastOneOf` — at least one component in the list must be
-    ///   populated. Used by composites like `CWE` (CWE-1 OR CWE-9
-    ///   must be populated), `XTN` (XTN-1 / XTN-4 / XTN-12), `PL`
-    ///   (PL-1 / PL-4), `EIP` (EIP-1 / EIP-2).
+    ///   populated. No shipped composite uses it any more: the `CWE`,
+    ///   `XTN` and `PL` rules built on it rejected examples the spec itself
+    ///   prints, and `EIP`'s was vacuous (M15).
     /// - `.allOfGroupOrAtLeastOne(group:)` — either every component in
     ///   the `group` sub-list is populated, OR at least one of the
     ///   non-group components is. Used by `HD` to express "HD-1
     ///   populated OR (HD-2 AND HD-3 populated)" — the `group` is
-    ///   `[2, 3]`, the non-group fallback is `[1]`.
+    ///   `[2, 3]`, the non-group fallback is `[1]`. The group stands or
+    ///   falls together: a PARTIALLY populated group never satisfies the
+    ///   rule, because the HD definition says components 2 and 3 "must
+    ///   either both be valued ... or both be not valued" (M16).
     public enum Semantics: Sendable, Equatable, Hashable {
         case atLeastOneOf
         case allOfGroupOrAtLeastOne(group: [Int])
@@ -72,6 +75,11 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
         case .allOfGroupOrAtLeastOne(let group):
             let groupSet = Set(group)
             let groupSatisfied = group.allSatisfy { populatedIndices.contains($0) }
+            // The group stands or falls together: a partially populated group never
+            // satisfies the rule, whatever else is valued. HD is the case in point, on every
+            // version from v2.3: "The second and third components must either both be valued
+            // (both non-null), or both be not valued (both null)."
+            if !groupSatisfied && group.contains(where: { populatedIndices.contains($0) }) { return false }
             if groupSatisfied { return true }
             let nonGroupIndices = components
                 .map(\.index)

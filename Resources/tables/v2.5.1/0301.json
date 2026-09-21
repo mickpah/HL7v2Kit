@@ -57,6 +57,10 @@
     {
       "code": "N",
       "description": "These are reserved for locally defined coding schemes."
+    },
+    {
+      "code": "RANDOM",
+      "description": "Spelling used by the specification's own HD example; the table row prints Random"
     }
   ]
 }

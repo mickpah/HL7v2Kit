@@ -78,7 +78,7 @@ Tables could not audit these five rules, so the spec's own prose and examples di
 | `EIP`: 1 OR 2 | **removed — vacuous** | two components; a populated field always satisfied it |
 | `HD`: 1 OR (2 AND 3) | **kept** | sec 2.A.33: "either as a local identifier ... or ... a UID (<universal ID> and <universal ID type> both valued)" |
 
-Registered, not shipped: the same HD section says components 2 and 3 "must either both be valued (both non-null), or both be not valued"; when HD-1 is present the rule does not check that half.
+Registered at the time, **shipped in M16**: the same HD section says components 2 and 3 "must either both be valued (both non-null), or both be not valued", a sentence all six versions print. A partially populated group now fails the rule. M16's must-pass test over every HD example the section prints also caught a false error live since v3.5.0: the table prints `Random`, the example `RANDOM`; the example's spelling is now in Table 0301 by cited override.
 
 ## References
 
