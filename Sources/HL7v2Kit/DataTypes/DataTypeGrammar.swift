@@ -17,6 +17,7 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// The printed optionality code, verbatim: `R`, `O`, `C`, `B`, `W`, or
     /// `RE` (required but may be empty, v2.7+). Kept as printed because `RE`
     /// has no `FieldOptionality` equivalent and mapping it would misstate it.
+    /// `""` on v2.3 to v2.4, whose prose definitions print no optionality.
     public let optionalityCode: String
     /// The HL7 table numbers the component's TBL# cell binds. `9999` is the
     /// spec's "no table assigned" sentinel (v2.7+), not a table.
@@ -57,9 +58,12 @@ public struct DataTypeGrammar: Sendable, Equatable, Hashable {
     }
 }
 
-/// Per-version lookup of datatype component tables. Only v2.5.1, v2.6 and
-/// v2.8.2 print them; earlier versions define components in prose, so their
-/// lookups return `nil` (ADR-017).
+/// Per-version lookup of datatype component tables. v2.5.1, v2.6 and v2.8.2
+/// print them as figures. v2.3, v2.3.1 and v2.4 define components in numbered
+/// prose subsections; their grammar is recovered from those headings, a table
+/// binding is kept only when it names one table whose number and stated name
+/// both match the version's own registry, and `optionalityCode` is `""`
+/// because the prose prints none (ADR-017 addendum, M13).
 public enum DataTypeGrammarTable {
     /// The component table of `dataType` as printed by `version`, or `nil`
     /// when that version prints none (or has withdrawn the datatype).
@@ -70,6 +74,9 @@ public enum DataTypeGrammarTable {
     /// Every datatype component table printed by `version`, keyed by code.
     static func grammars(for version: Version) -> [String: DataTypeGrammar] {
         switch version {
+        case .v2_3:   return v2_3
+        case .v2_3_1: return v2_3_1
+        case .v2_4:   return v2_4
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
         case .v2_8_2: return v2_8_2

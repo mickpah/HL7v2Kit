@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (M12 merged, unreleased: the AU VMR sub-ID tree; M11; hotfix to `v3.4.0`) |
+| Last updated | 2026-09-21 (M13 merged, unreleased: component grammar on all six versions; M12; M11; hotfix to `v3.4.0`) |
 | Current release | **`v3.4.0`** (2026-09-21) — the component-table release: `DataTypeGrammarTable` for v2.5.1 / v2.6 / v2.8.2 and the code-table check on ID components, on top of `v3.3.0`'s per-version code-table registry (2,570 table files, `valueNotInTable` on 1,073 closed-table ID fields, the AU locale table axis); additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
-| Next planned cycle | **None scheduled.** Unreleased on `main`: the Table 0301 hotfix, M11 and M12. Candidates: v2.3 to v2.4 component definitions from prose; multi-table TBL# cells. |
+| Next planned cycle | **None scheduled.** Unreleased on `main`: the Table 0301 hotfix, M11, M12 and M13. Every item the runway named is closed. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -228,6 +228,12 @@ Validator could not carry.*
 
 - **Outcome:** the 89-row implementation table of ADRM-2021 Appendix 9 as extracted, audited data; a `SubIDTreeRule` model track (req #3: extend the model); rules ADRM-prose P-8, P-9 and P-10, scoped per OBR group and rooted at whatever the header declares.
 - **Honesty points (req #4):** the appendix's own examples are the must-pass test; the table's OBX-2 and OBX-3 columns are registered and not enforced because that example contradicts them; OCCURRENCES is registered because the appendix never says which repeats the VMR forbids.
+
+### M13 — Component grammar for v2.3, v2.3.1 and v2.4 **CLOSED (2026-09-21; merged, unreleased)**
+*Goal: Australian traffic is v2.4, and the component check never fired for it, because those versions print no component tables.*
+
+- **Outcome:** the component grammar of the three older versions recovered from their numbered prose subsections under a three-test evidence rule (one table named, present in the registry, stated name matching); 105 datatype files, 168 bound components, zero conflicts with v2.5.1's printed tables. The component check now runs on all six versions.
+- **Honesty points (req #4):** the name test caught real v2.3 misprints that would have become wrong rules; a sweep of every closed table enforced on v2.4 against the ADRM's own print found two AU widenings (Tables 0125 and 0301), one of them a false error live since `v3.3.0`.
 
 ### R — Over-engineering remediation **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 

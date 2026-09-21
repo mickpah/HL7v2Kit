@@ -47,13 +47,28 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(odd).isEmpty)
     }
 
-    @Test("Versions that print no component tables are silent")
-    func noGrammarNoCheck() throws {
+    @Test("Every version is checked under ITS OWN component grammar")
+    func perVersionGrammar() throws {
+        // Table 0203 Identifier type is USER-DEFINED until v2.5 (and CX.5 is IS in v2.3 and
+        // v2.3.1), so an unknown identifier type is never an error on the three older versions.
         for version in ["2.3", "2.3.1", "2.4"] {
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^ZZZZ")).isEmpty, "v\(version)")
         }
-        #expect(try tableIssues(wire(version: "2.6", pid3: "123^^^AUTH^ZZZZ")).count == 1)
-        #expect(try tableIssues(wire(version: "2.8.2", pid3: "123^^^AUTH^ZZZZ")).count == 1)
+        for version in ["2.5.1", "2.6", "2.8.2"] {
+            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^ZZZZ")).count == 1, "v\(version)")
+        }
+        // XPN.7 Name type code is ID / 0200 on every version, v2.3 included (prose-derived grammar).
+        #expect(try tableIssues(wire(version: "2.3", pid5: "DOE^JOHN^^^^^QQQ")).count == 1)
+        #expect(try tableIssues(wire(version: "2.4", pid5: "DOE^JOHN^^^^^L")).isEmpty)
+        // The grammar-less v2.8 still has nothing to check against.
+        #expect(try tableIssues(wire(version: "2.8", pid3: "123^^^AUTH^ZZZZ")).isEmpty)
+    }
+
+    @Test("A prose misprint never becomes a rule: v2.3 QSC.4 names table 0102 for Relational conjunction")
+    func proseMisprintStaysUnbound() throws {
+        let qsc = try #require(DataTypeGrammarTable.grammar("QSC", version: .v2_3))
+        #expect(qsc.component(4)?.tables.isEmpty == true, "v2.3 0102 is Delayed Acknowledgment Type")
+        #expect(DataTypeGrammarTable.grammar("QSC", version: .v2_4)?.component(4)?.tables == ["0210"])
     }
 
     @Test("checkCodeTables = false and the lenient preset suppress the component check")
@@ -120,5 +135,16 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(oru("XTN", "^PRN^PH")).isEmpty)
         #expect(try tableIssues(oru("ST", "QQQ")).isEmpty, "a primitive OBX-2 has no component grammar")
         #expect(try tableIssues(oru("", "^QQQ^PH")).isEmpty, "no OBX-2, no datatype, no check")
+    }
+
+    @Test("AU v2.4 traffic: AUSNATA is a universal ID type under the AU locale, and not under base v2.4")
+    func auUniversalIDTypes() throws {
+        // MSH-4 Sending Facility as Australian pathology labs send it: QML^2184^AUSNATA.
+        let au = wire(version: "2.4").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS|QML^2184^AUSNATA|")
+        #expect(try tableIssues(au, locale: .auLocalisation).isEmpty, "ADRM-2021 Table 0301 p. 161 prints AUSNATA")
+        let base = try tableIssues(au)
+        #expect(base.map(\.location.pathDescription) == ["MSH[1]-4.3"], "base v2.4 Table 0301 does not print it")
+        let t = try #require(HL7TableRegistry.table("0301", locale: .auLocalisation))
+        for code in ["AUSHICPR", "AUSHIC", "AUSDVA", "AUSNATA", "AUSLSPN", "L", "M", "N", "ISO"] { #expect(t.contains(code)) }
     }
 }

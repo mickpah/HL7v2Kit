@@ -1,0 +1,82 @@
+{
+  "table": "0301",
+  "version": "au-adrm-2021",
+  "name": "Universal ID type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7au ADRM-2021.1 sec 3.14 HD, HL7 Table 0301 - Universal ID type (p. 161). The ADRM adds AUSHICPR, AUSHIC, AUSDVA, AUSNATA and AUSLSPN, each marked with a dagger as an Australian extension, and prints L, M and N as separate rows.",
+  "entries": [
+    {
+      "code": "AUSHICPR",
+      "description": "Australian HIC Provider Number (AU extension, marked with a dagger in the ADRM)"
+    },
+    {
+      "code": "AUSHIC",
+      "description": "Medicare Australia (AU extension)"
+    },
+    {
+      "code": "AUSDVA",
+      "description": "Australia - Dept. of Veterans Affairs (AU extension)"
+    },
+    {
+      "code": "AUSNATA",
+      "description": "National Association of Testing Authorities, Australia (AU extension)"
+    },
+    {
+      "code": "AUSLSPN",
+      "description": "Australian location specific practice number for Diagnostic Imaging (AU extension)"
+    },
+    {
+      "code": "DNS",
+      "description": "An Internet dotted name. Either in ASCII or as integers"
+    },
+    {
+      "code": "GUID",
+      "description": "Same as UUID"
+    },
+    {
+      "code": "HCD",
+      "description": "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"
+    },
+    {
+      "code": "HL7",
+      "description": "Reserved for future HL7 registration schemes"
+    },
+    {
+      "code": "ISO",
+      "description": "An International Standards Organization Object Identifier"
+    },
+    {
+      "code": "L",
+      "description": "Reserved for locally defined coding scheme"
+    },
+    {
+      "code": "M",
+      "description": "Reserved for locally defined coding scheme"
+    },
+    {
+      "code": "N",
+      "description": "Reserved for locally defined coding scheme"
+    },
+    {
+      "code": "Random",
+      "description": "Usually a base64 encoded string of random bits. The uniqueness depends on the length of the bits."
+    },
+    {
+      "code": "URI",
+      "description": "Uniform Resource Identifier"
+    },
+    {
+      "code": "UUID",
+      "description": "The DCE Universal Unique Identifier"
+    },
+    {
+      "code": "x400",
+      "description": "An X.400 MHS format identifier"
+    },
+    {
+      "code": "x500",
+      "description": "An X.500 directory name"
+    }
+  ]
+}
