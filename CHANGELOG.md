@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.3] — 2026-09-21
+
+**Two fixes and a standing audit; no API change.** Every composite example the datatype chapters print is now checked against the component rules; doing so found `NA.1` wrongly required and `AHS` wrongly rejected.
+
 ### Added — M17: the spec's printed examples are a permanent audit
 
 - `scripts/audit-schemas.py --examples` runs every pipe-delimited composite

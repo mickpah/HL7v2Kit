@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (M17 merged, unreleased; `v3.6.2` tagged earlier) |
-| Current release | **`v3.6.2`** (2026-09-21) — HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
+| Last updated | 2026-09-21 (**`v3.6.3` tagged** — M17 closed) |
+| Current release | **`v3.6.3`** (2026-09-21) — the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
 | Next planned cycle | **Candidate: example sweep part 2** — the complete example messages of the domain chapters, validated end to end. Unreleased on `main`: M17. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.6.2`)
+## Where we are (`v3.6.3`)
 
 **Shipped and solid:**
 
@@ -250,7 +250,7 @@ Validator could not carry.*
 
 - **Outcome:** the HD rule all six versions print ("must either both be valued ... or both be not valued") is enforced; and testing every HD example the section prints caught a false error live since `v3.5.0` (`Random` in the table, `RANDOM` in the example).
 
-### M17 — The spec's printed examples as a standing audit **CLOSED (2026-09-21; merged, unreleased)**
+### M17 — The spec's printed examples as a standing audit **CLOSED (2026-09-21; released in `v3.6.3`)**
 
 - **Outcome:** `audit-schemas.py --examples` checks all 352 composite examples of the six datatype chapters against the component rules, with three cited exceptions. Two more spec self-contradictions fixed (`NA.1`, Table 0528 `AHS`).
 
