@@ -1942,6 +1942,9 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "XON", description: "Extended Composite Name And Number For Organizations"),
             HL7Table.Entry(code: "XPN", description: "Extended Person Name"),
             HL7Table.Entry(code: "XTN", description: "Extended Telecommunications Number"),
+            HL7Table.Entry(code: "CD", description: "Channel definition (Chapter 7 waveform: CHN category)"),
+            HL7Table.Entry(code: "MA", description: "Multiplexed array (Chapter 7 waveform: WAV category)"),
+            HL7Table.Entry(code: "NA", description: "Numeric array (Chapter 7 waveform: WAV category)"),
         ] as [HL7Table.Entry]
     )
 

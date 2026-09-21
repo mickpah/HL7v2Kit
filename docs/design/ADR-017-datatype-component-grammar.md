@@ -86,6 +86,12 @@ Checking a rule against an example the spec prints had found a false error every
 
 **Limit of the audit, stated:** it re-implements the two component rules in Python over the extracted data, which is where every misfire so far has originated; it does not drive the Swift Validator. The Swift tests cover the rule logic; this covers the data.
 
+## Addendum 2026-09-21 — M18: example messages, and where examples stop being evidence
+
+M18 ran the 616 complete example messages of the domain chapters through the Swift Validator. It found one real defect: Table 0125 omits `NA`, `MA` and `CD` on v2.3 to v2.6 although Chapter 7's normative text directs them into OBX-2 (v2.8.2 corrects the table).
+
+It also marked the limit of "the spec's examples are must-pass". That held for the datatype chapters, where an example illustrates the datatype being defined and the surrounding prose is normative. It does not hold for printed messages: half declare a version other than the chapter printing them, many are truncated or misaligned, and they omit required fields by the hundred. **The rule adopted: normative text (tables and prose) decides; an example can overturn a table only when normative prose agrees with it** (`NA.1`), or when the rule's data is plainly a spelling or extraction artefact (`RANDOM`, `AHS`). `MSH-9.3` is the test case: the MSG table prints `R`, the MSH-9 prose is silent, 35 of 68 v2.5.1 examples omit it — the table stands.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

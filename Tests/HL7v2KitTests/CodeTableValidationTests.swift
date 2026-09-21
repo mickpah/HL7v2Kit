@@ -114,4 +114,21 @@ struct CodeTableValidationTests {
         }
         #expect(try issues(oru("QQ"), .auLocalisation).count == 1, "the widening is a union, not a free pass")
     }
+
+    @Test("Waveform value types the spec's Chapter 7 directs into OBX-2 are valid: NA, MA, CD")
+    func waveformValueTypes() throws {
+        // v2.5.1 sec 7.x: "The data type of the WAV category result segment can be NA (Numeric
+        // Array) or MA (Multiplexed Array)"; "for the CHN category, OBX-2 should be valued to CD".
+        // Table 0125 omitted all three until v2.8.2 printed them.
+        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"] {
+            for type in ["NA", "MA", "CD"] {
+                let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|\(version)\r"
+                    + "PID|1||123^^^AUTH^MR||DOE^JOHN\rOBR|1|||93000^EKG^C4\r"
+                    + "OBX|1|\(type)|5&WAV^^99SVL|1|0^1^2||||||F\r"
+                let issues = Validator().validate(try Parser().parse(wire)).issues
+                    .filter { if case .valueNotInTable(let t) = $0.code { return t == "0125" } else { return false } }
+                #expect(issues.isEmpty, "OBX-2 = \(type) on v\(version)")
+            }
+        }
+    }
 }
