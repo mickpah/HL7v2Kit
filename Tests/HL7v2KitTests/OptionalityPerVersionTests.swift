@@ -1,0 +1,38 @@
+import Testing
+@testable import HL7v2Kit
+
+/// M19 — a field's optionality is its OWN version's, never a later version's.
+@Suite("Field optionality follows each version's attribute table")
+struct OptionalityPerVersionTests {
+    private func issues(_ wire: String) throws -> [ValidationIssue] {
+        Validator().validate(try Parser().parse(wire)).issues
+    }
+
+    @Test("MSH-7 Date/Time of Message is O in v2.3 and v2.3.1, R from v2.4")
+    func msh7() throws {
+        for (version, required) in [("2.3", false), ("2.3.1", false), ("2.4", true), ("2.5.1", true)] {
+            let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|\(version)\rPID|1||123^^^AUTH^MR||DOE^JOHN\r"
+            let missing = try issues(wire).contains { $0.code == .requiredFieldMissing && $0.location.pathDescription == "MSH[1]-7" }
+            #expect(missing == required, "v\(version)")
+        }
+    }
+
+    @Test("PID-2 is an ordinary optional field in v2.3: no deprecation warning until a version deprecates it")
+    func pid2() throws {
+        func warned(_ version: String) throws -> Bool {
+            let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101||ADT^A01^ADT_A01|MSG00001|P|\(version)\rPID|1|EXT99|123^^^AUTH^MR||DOE^JOHN\r"
+            return try issues(wire).contains { $0.code == .fieldNotSupported && $0.location.pathDescription == "PID[1]-2" }
+        }
+        #expect(try !warned("2.3"), "v2.3 prints PID-2 as O")
+        #expect(try warned("2.5.1"), "v2.5.1 prints PID-2 as B")
+        #expect(SegmentGrammarTable.v2_3["PID"]?.field(2)?.name == "Patient ID", "and carries no '(deprecated)' suffix there")
+    }
+
+    @Test("v2.6 prints DG1-3 Diagnosis Code as R and MSA-5 as W")
+    func v26() throws {
+        #expect(SegmentGrammarTable.v2_6["DG1"]?.field(3)?.optionality == .required)
+        #expect(SegmentGrammarTable.v2_5_1["DG1"]?.field(3)?.optionality == .optional)
+        #expect(SegmentGrammarTable.v2_6["MSA"]?.field(5)?.optionality == .withdrawn)
+        #expect(SegmentGrammarTable.v2_6["OBR"]?.field(33)?.optionality == .backwardCompat)
+    }
+}

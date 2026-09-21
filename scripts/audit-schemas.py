@@ -103,6 +103,9 @@ SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", 
 #                 (candidates include `*`, `NA or`, truncated `varie`);
 #                 the schema's `varies` is hand-verified (M6-D5).
 DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
+# M19 optionality predicate. v2.3 and v2.3.1 print DG1-2 as "(B) R": both codes in one
+# cell. The schema keeps R; the extractor reads the cell as B.
+OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -261,7 +264,7 @@ def extracted_depths(version):
     schema value is a finding only when it matches NO extracted candidate.
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
-    best, dts, tbls = {}, {}, {}
+    best, dts, tbls, opts = {}, {}, {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -284,7 +287,10 @@ def extracted_depths(version):
                     tbl = (f.get("tbl") or "").strip()
                     if tbl:
                         tbls.setdefault((seg, f["index"]), set()).add(tbl)
-    return best, dts, tbls
+                    opt = (f.get("optionality") or "").strip()
+                    if opt:
+                        opts.setdefault((seg, f["index"]), set()).add(opt)
+    return best, dts, tbls, opts
 
 
 def depth(write=False):
@@ -293,15 +299,15 @@ def depth(write=False):
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], []
+        return [], [], 0, [], {}, [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
-    datatype_findings, table_findings = [], []
+    datatype_findings, table_findings, optionality_findings = [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -355,6 +361,20 @@ def depth(write=False):
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
+            # M19: the OPT column had no predicate either. A schema's optionality must be one
+            # the version's own attribute table prints for that slot (union across chapters:
+            # OBR is printed in chapters 4 and 7). An R the spec prints as O is a false
+            # "required field missing"; a B it prints as O is a false deprecation warning.
+            # Anything involving C is left to the conditional-completeness register, which
+            # governs when a printed C is modelled as C-with-predicate, bare C, or O.
+            for f in schema_fields:
+                printed = spec_opts.get((seg, f["index"]))
+                have = (f.get("optionality") or "").strip()
+                if not printed or have in printed or have == "C" or "C" in printed:
+                    continue
+                if (version, seg, f["index"]) in OPTIONALITY_WHITELIST:
+                    continue
+                optionality_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M9-A: the schema's `tables` must equal the version's own TBL#
             # column, both directions (a stale binding is as wrong as a
             # missing one).
@@ -373,7 +393,7 @@ def depth(write=False):
                 if f["index"] in wanted and sorted(f.get("tables", [])) != wanted[f["index"]]:
                     table_findings.append((version, seg, f["index"],
                                            f"schema {f.get('tables', [])}, spec {wanted[f['index']]}"))
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings
 
 
 def extracted_tables(version):
@@ -752,7 +772,7 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings = depth(
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings = depth(
             write=args.write_tables)
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
@@ -776,7 +796,10 @@ def main():
             print(f"   TABLES   {v} {seg}-{idx}: {why}")
         if len(tbl_findings) > 60:
             print(f"   ... and {len(tbl_findings) - 60} more")
-        if gaps or suspects or presence or dt_findings or tbl_findings:
+        print(f"\n== optionality (M19): {len(opt_findings)} findings")
+        for v, seg, idx, got, want in opt_findings[:60]:
+            print(f"   OPT      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings:
             rc = 1
 
     if args.tables:
