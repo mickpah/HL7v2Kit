@@ -164,9 +164,9 @@
     {
       "index": 20,
       "swiftName": "driversLicenseNumberPatient",
-      "name": "Driver's License Number - Patient (deprecated)",
+      "name": "Driver's License Number - Patient",
       "dataType": "DLN",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "1"
     },
     {

@@ -71,9 +71,9 @@
     {
       "index": 9,
       "swiftName": "patientAlias",
-      "name": "Patient Alias (deprecated)",
+      "name": "Patient Alias",
       "dataType": "XPN",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "*"
     },
     {
@@ -164,9 +164,9 @@
     {
       "index": 20,
       "swiftName": "driversLicenseNumberPatient",
-      "name": "Driver's License Number - Patient (deprecated)",
+      "name": "Driver's License Number - Patient",
       "dataType": "DLN",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -232,9 +232,9 @@
     {
       "index": 28,
       "swiftName": "nationality",
-      "name": "Nationality (deprecated)",
+      "name": "Nationality",
       "dataType": "CE",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "1",
       "tables": ["0212"]
     },

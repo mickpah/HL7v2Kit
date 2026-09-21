@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - DG1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "diagnosisCodingMethod", "name": "Diagnosis Coding Method", "dataType": "ID", "optionality": "W", "repeatability": "1" },
-    { "index": 3, "swiftName": "diagnosisCode", "name": "Diagnosis Code - DG1", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0051"] },
+    { "index": 3, "swiftName": "diagnosisCode", "name": "Diagnosis Code - DG1", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0051"] },
     { "index": 4, "swiftName": "diagnosisDescription", "name": "Diagnosis Description", "dataType": "ST", "optionality": "W", "repeatability": "1" },
     { "index": 5, "swiftName": "diagnosisDateTime", "name": "Diagnosis Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "diagnosisType", "name": "Diagnosis Type", "dataType": "IS", "table": "0052", "optionality": "R", "repeatability": "1", "tables": ["0052"] },

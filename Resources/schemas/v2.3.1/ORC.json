@@ -59,9 +59,9 @@
     {
       "index": 7,
       "swiftName": "quantityTiming",
-      "name": "Quantity/Timing (deprecated)",
+      "name": "Quantity/Timing",
       "dataType": "TQ",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "*"
     },
     {

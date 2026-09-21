@@ -7,7 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M19: 30 fields carried another version's optionality
+
+- The depth audit checked field count, presence, datatype and table bindings
+  against each version's attribute table, but never the OPT column. A new
+  `optionality` predicate does. First run: 30 disagreements across ~13,000
+  fields, all values copied from a later version:
+  - **False errors:** `MSH-7` was `R` on v2.3 and v2.3.1, which print it `O`
+    (it becomes `R` in v2.4). A v2.3 message without a message timestamp was
+    rejected.
+  - **False deprecation warnings:** 21 fields marked `B` on v2.3 / v2.3.1 /
+    v2.4 that those versions print as ordinary `O` (`PID-2`, `PID-4`, `PID-9`,
+    `PID-19`, `PID-20`, `PID-28`, `AL1-6`, `ORC-7`, `OBR-15`, `OBR-27`), each
+    also named "... (deprecated)"; optionality and name corrected.
+  - **Missing checks on v2.6:** `DG1-3` is `R` (was `O`); `MSA-5` is `W` (was
+    `B`); `OBR-33` / `OBR-34` / `OBR-35`, `PD1-12` / `PD1-13` are `B` (were `O`).
+- Anything involving `C` is left to the conditional-completeness register.
+  v2.3 / v2.3.1 `DG1-2` is printed "(B) R" and is whitelisted with that note.
+- Found while triaging the spec's example messages (M18): `MSH-7` was the
+  most frequent "missing required field" on v2.3-era examples.
 
 ## [3.6.4] — 2026-09-21
 

@@ -123,9 +123,9 @@
     {
       "index": 15,
       "swiftName": "specimenSource",
-      "name": "Specimen Source (deprecated)",
+      "name": "Specimen Source",
       "dataType": "SPS",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "1",
       "tables": ["0070"]
     },
@@ -223,9 +223,9 @@
     {
       "index": 27,
       "swiftName": "quantityTiming",
-      "name": "Quantity/Timing (deprecated)",
+      "name": "Quantity/Timing",
       "dataType": "TQ",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "*"
     },
     {

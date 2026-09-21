@@ -48,9 +48,9 @@
     {
       "index": 6,
       "swiftName": "identificationDate",
-      "name": "Identification Date (deprecated)",
+      "name": "Identification Date",
       "dataType": "DT",
-      "optionality": "B",
+      "optionality": "O",
       "repeatability": "1"
     }
   ]

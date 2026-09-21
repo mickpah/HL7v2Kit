@@ -60,7 +60,7 @@
       "swiftName": "dateTimeOfMessage",
       "name": "Date/Time Of Message",
       "dataType": "TS",
-      "optionality": "R",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
