@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.0] — 2026-09-21
+
+**Read this first if you validate v2.5.1 or later messages: `MSH-9` now needs all three components (`ADT^A01^ADT_A01`), because the spec prints them as required from v2.5.** In the other direction, eight false "required component" errors are gone (an address with no street line, a name with no family name). v2.3 to v2.4 messages are unaffected. No API change.
+
 ### Fixed — M14: eight "required component" rules contradicted the spec they cited
 
 - The Validator took required components from hand-written per-type lists,
