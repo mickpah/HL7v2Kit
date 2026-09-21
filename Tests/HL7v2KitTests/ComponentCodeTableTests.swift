@@ -85,4 +85,40 @@ struct ComponentCodeTableTests {
         let bad = wire().replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^QQQ|FAC|")
         #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
     }
+
+    @Test("A component that is itself composite is descended into: CX.4 is an HD, so CX.4.3 is checked")
+    func nestedSubcomponent() throws {
+        let issues = try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&QQQ^MR"))
+        #expect(issues.count == 1)
+        let issue = try #require(issues.first)
+        #expect(issue.code == .valueNotInTable(table: "0301"))
+        #expect(issue.location.componentIndex == 4)
+        #expect(issue.location.subcomponentIndex == 3)
+        #expect(issue.location.pathDescription == "PID[1]-3.4.3")
+        #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&ISO^MR")).isEmpty)
+        #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3^MR")).isEmpty, "absent subcomponent")
+        #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&\"\"^MR")).isEmpty, "HL7 null")
+    }
+
+    @Test("Both levels report independently on one field")
+    func bothLevels() throws {
+        let issues = try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&QQQ^ZZZZ"))
+        #expect(Set(issues.map(\.location.pathDescription)) == ["PID[1]-3.4.3", "PID[1]-3.5"])
+    }
+
+    @Test("OBX-5 is checked under the datatype OBX-2 declares")
+    func obx5UnderObx2() throws {
+        func oru(_ obx2: String, _ obx5: String) -> String {
+            "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|2.5.1\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+                + "OBR|1|||GLU^Glucose^L\r"
+                + "OBX|1|\(obx2)|GLU^Glucose^L||\(obx5)||||||F\r"
+        }
+        // XTN.2 Telecommunication Use Code is ID / 0201 (closed).
+        let bad = try tableIssues(oru("XTN", "^QQQ^PH"))
+        #expect(bad.map(\.location.pathDescription) == ["OBX[1]-5.2"])
+        #expect(try tableIssues(oru("XTN", "^PRN^PH")).isEmpty)
+        #expect(try tableIssues(oru("ST", "QQQ")).isEmpty, "a primitive OBX-2 has no component grammar")
+        #expect(try tableIssues(oru("", "^QQQ^PH")).isEmpty, "no OBX-2, no datatype, no check")
+    }
 }

@@ -35,6 +35,16 @@ Option 2 for the three versions that print tables. Option 3 is registered as def
 - **Deferred, registered:** component grammar for v2.3, v2.3.1 and v2.4 (prose only); descent into nested composites (the HD inside `CX.4`, so `HD.3` is enforced only where HD is the field's own datatype); OBX-5, whose datatype varies with OBX-2; fields or components whose TBL# cell names several tables; component optionality and length, which the grammar records and nothing enforces yet.
 - The hand-written composite views are unchanged. They remain the typed accessors; the grammar is the per-version metadata beside them.
 
+## Addendum 2026-09-21 — M11: nested composites and OBX-5
+
+Two items from the deferred list shipped, both as extensions of the rule above rather than new machinery:
+
+- **Nested composites.** When a component is not itself an enforceable `ID` but its datatype has a grammar on the message's version, its subcomponents are checked against that grammar. HL7 v2 has no level below the subcomponent, so one descent is the whole depth. The HD in `CX.4` makes `CX.4.3` a checked universal ID type (0301); `IssueLocation` gained `subcomponentIndex`, and the path reads `PID[1]-3.4.3`. 46 nested sites on v2.5.1, 28 on v2.6, 27 on v2.8.2; `HD.3` accounts for most.
+- **OBX-5.** The datatype OBX-2 declares is resolved once (`effectiveDataType`, shared with the AU composite overrides) and the component check runs under it. A primitive or absent OBX-2 has no grammar and nothing fires.
+- **A defect this exposed in v3.4.0:** Table 0301 prints the three local-scheme codes in one row, `L,M,N`. As a single code the closed table rejected a valid `HD.3` of `L`, `M` or `N`. Split by cited override; the audit now treats a comma in a code as suspect.
+
+**Still deferred:** component grammar for v2.3 to v2.4 (prose only); TBL# cells naming several tables; component optionality and length, recorded and not enforced.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

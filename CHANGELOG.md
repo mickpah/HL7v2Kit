@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M11: nested composites and OBX-5 in the component check
+
+- A component that is itself a composite is descended into once: the HD in
+  `CX.4` makes `CX.4.3` a checked universal ID type (0301). 46 nested sites
+  on v2.5.1, 28 on v2.6, 27 on v2.8.2.
+- `IssueLocation.subcomponentIndex` (additive); the path reads
+  `PID[1]-3.4.3`.
+- OBX-5 is checked under the datatype OBX-2 declares; the resolution is now
+  one shared helper with the AU composite overrides.
+- No fixture fallout. ADR-017 addendum; limitations register and DocC updated.
+
 ### Fixed — a false error in v3.4.0: HD.3 of `L`, `M` or `N` was rejected
 
 - HL7 Table 0301 (Universal ID type) prints the three local-scheme codes in

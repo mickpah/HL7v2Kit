@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (**`v3.4.0` tagged** — M10 closed: datatype component grammar, ADR-017) |
+| Last updated | 2026-09-21 (M11 merged, unreleased: nested composites and OBX-5; hotfix to `v3.4.0`) |
 | Current release | **`v3.4.0`** (2026-09-21) — the component-table release: `DataTypeGrammarTable` for v2.5.1 / v2.6 / v2.8.2 and the code-table check on ID components, on top of `v3.3.0`'s per-version code-table registry (2,570 table files, `valueNotInTable` on 1,073 closed-table ID fields, the AU locale table axis); additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered). The public push has not happened. |
-| Next planned cycle | **None scheduled.** Candidates: the ADR-017 deferred list (nested composites, OBX-5, v2.3 to v2.4 prose), the VMR implementation table and OBX-4 sub-ID tree. |
+| Next planned cycle | **None scheduled.** Unreleased on `main`: the Table 0301 hotfix and M11. Candidates: the VMR implementation table and OBX-4 sub-ID tree; v2.3 to v2.4 component definitions from prose. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -221,7 +221,7 @@ Validator could not carry.*
 
 - **Outcome:** `Resources/datatypes/` (227 datatype files, 1,323 components) from the Chapter 2A component tables of v2.5.1 / v2.6 / v2.8.2; `DataTypeGrammarTable` generated from it; `valueNotInTable` on populated `ID` components over closed tables, located at the component. About 50 components per version.
 - **Honesty points (req #3/#4):** Table 0354 opened on every version after measuring 15 to 25 chapter-used structures its table omits; four v3.3.0 registry defects found and fixed while vetting; `RE` kept as the printed optionality code instead of being mapped lossily.
-- **Deferred, registered:** v2.3 to v2.4 (prose-only component definitions), nested composites, OBX-5, multi-table cells.
+- **M11 (2026-09-21, unreleased):** nested composites (`CX.4.3`, `IssueLocation.subcomponentIndex`) and OBX-5 under its OBX-2 datatype. **Still deferred:** v2.3 to v2.4 (prose-only component definitions) and multi-table cells.
 
 ### R — Over-engineering remediation **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 
