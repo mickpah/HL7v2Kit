@@ -66,6 +66,11 @@ struct Profile: Sendable, Equatable, Hashable {
     /// value for `\<lead>...\` occurrences.
     let escapeProhibitions: [EscapeProhibition]
 
+    /// OBX-4 sub-ID tree rules (M12). A header OBX declares a dotted-decimal
+    /// root; every observation of the same group under that root must
+    /// instantiate a row of the rule's element table.
+    let subIDTrees: [SubIDTreeRule]
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
@@ -73,7 +78,8 @@ struct Profile: Sendable, Equatable, Hashable {
         compositeOverrides: [CompositeOverride] = [],
         cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:],
         uniquenessRules: [FieldUniquenessRule] = [],
-        escapeProhibitions: [EscapeProhibition] = []
+        escapeProhibitions: [EscapeProhibition] = [],
+        subIDTrees: [SubIDTreeRule] = []
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -82,6 +88,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.cardinalityExtensions = cardinalityExtensions
         self.uniquenessRules = uniquenessRules
         self.escapeProhibitions = escapeProhibitions
+        self.subIDTrees = subIDTrees
     }
 
     /// Look up the profile for a given locale.
@@ -486,6 +493,39 @@ struct EscapeProhibition: Sendable, Equatable, Hashable {
         self.applicableWhen = applicableWhen
         self.specCitation = specCitation
     }
+}
+
+/// An OBX-4 sub-ID tree (M12): a template methodology in which a header
+/// OBX declares a dotted-decimal root and every element of the template is an
+/// OBX whose sub-ID is a path under that root. AU ADRM-2021 Appendix 9
+/// (Normative) defines one, the HL7v2 Virtual Medical Record.
+///
+/// Scope is the observation group: the OBX segments that follow one OBR up
+/// to the next. A group without the header is not the rule's business, so a
+/// structured pathology report that happens to use `1.x` sub-IDs is never
+/// touched. The element table is rooted at `tableRoot`; the header's actual
+/// root is substituted before matching, because the appendix allows another
+/// number ("In the example below this is 1 but may be another number").
+///
+/// Deliberately NOT enforced, each for a stated reason: the table's OBX-2 and
+/// OBX-3 columns (the appendix's own example contradicts both) and its
+/// OCCURRENCES column (HL7 lets several OBX share one sub-ID, and the
+/// appendix never says which the VMR forbids).
+struct SubIDTreeRule: Sendable, Equatable, Hashable {
+    /// OBX-3.1 of the header OBX that puts the template in use.
+    let headerObservationID: String
+    /// The root the element table is written against.
+    let tableRoot: String
+    let elements: [VMRElement]
+    /// Kind value marking rows that are purely virtual and must not be written.
+    let virtualKind: String
+    /// Optional v0.7-DSL message-context gate; `nil` → always applies.
+    let applicableWhen: String?
+    /// Citations: an unknown path under the root, a virtual row written as an
+    /// OBX, and a header whose own sub-ID is not dotted decimal.
+    let unknownPathCitation: String
+    let virtualRowCitation: String
+    let headerShapeCitation: String
 }
 
 /// A per-repetition value-correspondence rule: "when `keyComponent`

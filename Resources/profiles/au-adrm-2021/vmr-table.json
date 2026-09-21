@@ -1,0 +1,719 @@
+{
+  "profile": "au-adrm-2021",
+  "citation": "HL7au ADRM-2021.1 Appendix 9 (Normative), table A9.T.1 HL7v2 VMR OBX implementation table, pp. 492-515",
+  "root": "1",
+  "elements": [
+    {
+      "path": "1",
+      "name": "Report template ID",
+      "obx2": "RP",
+      "min": 1,
+      "max": 1,
+      "kind": "ENTRY"
+    },
+    {
+      "path": "1.1",
+      "name": "History of Presenting Complaint",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.1.1",
+      "name": "Chief Complaint",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.1.2",
+      "name": "Date of Onset",
+      "obx2": "TS",
+      "min": 0,
+      "max": 1,
+      "kind": "DATETIME"
+    },
+    {
+      "path": "1.1.3",
+      "name": "Notes",
+      "obx2": "FT",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.2",
+      "name": "History of Past Illness",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.2.1.*",
+      "name": "Past Illness",
+      "obx2": "",
+      "min": 0,
+      "max": null,
+      "kind": "STRUCTURAL"
+    },
+    {
+      "path": "1.2.1.*.1",
+      "name": "Past Illness",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.2.1.*.2",
+      "name": "Temporal Context",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.2.1.*.3",
+      "name": "Illness Dates",
+      "obx2": "DR",
+      "min": 0,
+      "max": 1,
+      "kind": "DATERANGE"
+    },
+    {
+      "path": "1.2.1.*.4",
+      "name": "Notes on Illness",
+      "obx2": "FT",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.3",
+      "name": "Procedures",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.3.1.*",
+      "name": "Procedure",
+      "obx2": "",
+      "min": 0,
+      "max": null,
+      "kind": "STRUCTURAL"
+    },
+    {
+      "path": "1.3.1.*.1",
+      "name": "Procedure Performed",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.3.1.*.2",
+      "name": "Notes on Procedure",
+      "obx2": "FT",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4",
+      "name": "Family History",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.4.1",
+      "name": "Patients Family Tree ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.2",
+      "name": "Natural Father ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.3",
+      "name": "Natural Mother ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.4",
+      "name": "Relatives",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.4.4.1.*",
+      "name": "Relative",
+      "obx2": "",
+      "min": 0,
+      "max": null,
+      "kind": "STRUCTURAL"
+    },
+    {
+      "path": "1.4.4.1.*.1",
+      "name": "Relative Name",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.4.1.*.2",
+      "name": "Relationship",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.4.4.1.*.3",
+      "name": "Relative ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.4.1.*.4",
+      "name": "Natural Father ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.4.1.*.5",
+      "name": "Natural Mother ID",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.4.1.*.6",
+      "name": "deceasedEstimated Age",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "REAL"
+    },
+    {
+      "path": "1.4.4.1.*.7",
+      "name": "LivingEstimatedAge",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "REAL"
+    },
+    {
+      "path": "1.4.4.1.*.8.*",
+      "name": "Clinical Genomic Choice",
+      "obx2": "CWE",
+      "min": 0,
+      "max": null,
+      "kind": "COLLECTION"
+    },
+    {
+      "path": "1.4.4.1.*.8.*.1",
+      "name": "Clinical Observation",
+      "obx2": "CWE",
+      "min": 1,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.4.4.1.*.8.*.2",
+      "name": "Negation Indicator",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "BOOLEAN"
+    },
+    {
+      "path": "1.4.4.1.*.8.*.3",
+      "name": "Cause of Death",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "BOOLEAN"
+    },
+    {
+      "path": "1.4.4.1.*.8.*.4",
+      "name": "DataEstimatedAge",
+      "obx2": "ST",
+      "min": 0,
+      "max": 1,
+      "kind": "REAL"
+    },
+    {
+      "path": "1.4.4.1.*.8.*.5.*",
+      "name": "Genetic Loci",
+      "obx2": "ST",
+      "min": 0,
+      "max": null,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.4.5",
+      "name": "Genetic Risks",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.4.5.1.*",
+      "name": "Pedigree Analysis Results",
+      "obx2": "",
+      "min": 0,
+      "max": null,
+      "kind": "STRUCTURAL"
+    },
+    {
+      "path": "1.4.5.1.*.1",
+      "name": "Genetic Disease Assessed",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.4.5.1.*.2",
+      "name": "Input Parameters",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.4.5.1.*.2.1",
+      "name": "Genetic Algorithm Used",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.4.5.1.*.2.2",
+      "name": "Sensitivity",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.4.5.1.*.3.*",
+      "name": "Probability of Disease",
+      "obx2": "ST",
+      "min": 0,
+      "max": null,
+      "kind": "REAL"
+    },
+    {
+      "path": "1.5",
+      "name": "Pregnancy History",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.5.1",
+      "name": "Gravida",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.5.2",
+      "name": "Parity",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.5.3",
+      "name": "Miscarriages",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.5.4",
+      "name": "Terminations",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.6",
+      "name": "Social History",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.6.1",
+      "name": "Social Situation",
+      "obx2": "FT",
+      "min": 0,
+      "max": 1,
+      "kind": "STRING"
+    },
+    {
+      "path": "1.7",
+      "name": "Substance Use",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.7.1",
+      "name": "Smoking History",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.7.1.1",
+      "name": "Tobacco use and exposure",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.7.1.2",
+      "name": "Tobacco smoking consumption",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.7.1.3",
+      "name": "Lifetime Intake",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.7.1.4",
+      "name": "Date Ceased",
+      "obx2": "DT",
+      "min": 0,
+      "max": 1,
+      "kind": "DATETIME"
+    },
+    {
+      "path": "1.7.2",
+      "name": "Alcohol Intake",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.7.2.1",
+      "name": "Alcohol Intake",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.7.2.2",
+      "name": "Last Drank Alcohol",
+      "obx2": "DT",
+      "min": 0,
+      "max": 1,
+      "kind": "DATETIME"
+    },
+    {
+      "path": "1.7.2.3",
+      "name": "30 day quantity and frequency",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.7.2.3.1",
+      "name": "Number of days alcohol consumed",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.7.2.3.2",
+      "name": "Standard drinks per day on a drinking day in last 30 days",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "INTEGER"
+    },
+    {
+      "path": "1.7.2.4",
+      "name": "Average Daily Alcohol Intake",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.7.2.5",
+      "name": "Maximum Daily Standard Drinks",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.7.2.6",
+      "name": "Years Alcohol Consumed",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.7.2.7",
+      "name": "Alcohol abuse or dependence (e.g. DSM IV)",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "BOOLEAN"
+    },
+    {
+      "path": "1.7.3",
+      "name": "Other substance Use",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.7.3.1.*",
+      "name": "Drug misuse details",
+      "obx2": "CWE",
+      "min": 0,
+      "max": null,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.8",
+      "name": "Exercise History",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.8.1",
+      "name": "Currently Exercising",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.8.2",
+      "name": "Exercise Type",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.8.3",
+      "name": "Time Spent Exercising",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9",
+      "name": "Vitals",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.9.1.*",
+      "name": "Blood Pressure",
+      "obx2": "CWE",
+      "min": 0,
+      "max": null,
+      "kind": "COLLECTION"
+    },
+    {
+      "path": "1.9.1.*.1",
+      "name": "Systolic Pressure",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.1.*.2",
+      "name": "Diastolic Pressure",
+      "obx2": "NM",
+      "min": 0,
+      "max": 1,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.1.*.3",
+      "name": "Patient Position",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.9.2.*",
+      "name": "Pulse rate",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.3.*",
+      "name": "Weight",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.4.*",
+      "name": "BMI",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.5.*",
+      "name": "Oxygen Saturation",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.6.*",
+      "name": "Height",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.7.*",
+      "name": "Temperature",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.9.8.*",
+      "name": "Respiratory rate",
+      "obx2": "NM",
+      "min": 0,
+      "max": null,
+      "kind": "PHYSICALQUANTITY"
+    },
+    {
+      "path": "1.10",
+      "name": "Alerts",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "SECTION"
+    },
+    {
+      "path": "1.10.1.*",
+      "name": "Alert",
+      "obx2": "",
+      "min": 0,
+      "max": null,
+      "kind": "STRUCTURAL"
+    },
+    {
+      "path": "1.10.1.*.1",
+      "name": "Alert Type",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.10.1.*.2",
+      "name": "Active",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "BOOLEAN"
+    },
+    {
+      "path": "1.10.1.*.3",
+      "name": "Specific Alert",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.10.1.*.4",
+      "name": "Reported by",
+      "obx2": "CWE",
+      "min": 0,
+      "max": 1,
+      "kind": "CODEDVALUE"
+    },
+    {
+      "path": "1.10.1.*.5",
+      "name": "Recorded date",
+      "obx2": "DT",
+      "min": 0,
+      "max": 1,
+      "kind": "DATETIME"
+    }
+  ]
+}

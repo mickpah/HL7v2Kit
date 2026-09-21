@@ -562,6 +562,55 @@ def datatypes(depth=False):
     return files, findings
 
 
+VMR_TABLE = os.path.join(REPO, "Resources/profiles/au-adrm-2021/vmr-table.json")
+VMR_KINDS = {"ENTRY", "SECTION", "STRUCTURAL", "COLLECTION", "CODEDVALUE", "STRING", "DATETIME", "DATERANGE",
+             "REAL", "BOOLEAN", "PHYSICALQUANTITY", "INTEGER"}
+
+
+def vmr(depth=False):
+    """M12-A — audit the extracted AU ADRM-2021 VMR implementation table.
+
+    Shape: a dotted path of integers and `*` repeat markers rooted at the declared root;
+    unique paths; a name; an OBX-2 code unless the row is STRUCTURAL (which prints "-");
+    min <= max; a known VMR datatype; and every `*` row unbounded or every unbounded row a
+    `*` row (the appendix's own rule: an upper bound above 1 is written RepeatOf[]). With
+    `depth`, the table is re-extracted from the PDF and must match."""
+    findings = []
+    if not os.path.exists(VMR_TABLE):
+        return 0, [("Resources/profiles/au-adrm-2021/vmr-table.json", "missing")]
+    doc = json.load(open(VMR_TABLE))
+    rel, rows, seen = os.path.relpath(VMR_TABLE, REPO), doc.get("elements", []), set()
+    for e in rows:
+        path = e.get("path", "")
+        if not re.fullmatch(r"\d+(\.(\d+|\*))*", path) or not (path == doc.get("root") or path.startswith(doc.get("root", "") + ".")):
+            findings.append((rel, f"malformed or unrooted path {path!r}"))
+        if path in seen:
+            findings.append((rel, f"duplicate path {path!r}"))
+        seen.add(path)
+        if not e.get("name") or len(e["name"]) > 60:
+            findings.append((rel, f"{path}: empty or over-long name — prose bleed?"))
+        if e.get("kind") not in VMR_KINDS:
+            findings.append((rel, f"{path}: unknown VMR datatype {e.get('kind')!r}"))
+        if (e.get("kind") == "STRUCTURAL") != (e.get("obx2") == ""):
+            findings.append((rel, f"{path}: OBX-2 {e.get('obx2')!r} does not fit a {e.get('kind')} row"))
+        if e.get("obx2") and not re.fullmatch(r"[A-Z]{2,3}", e["obx2"]):
+            findings.append((rel, f"{path}: implausible OBX-2 {e['obx2']!r}"))
+        if e.get("max") is not None and e.get("min", 0) > e["max"]:
+            findings.append((rel, f"{path}: min {e.get('min')} > max {e['max']}"))
+        if (e.get("max") is None) != path.endswith("*"):
+            findings.append((rel, f"{path}: an unbounded row must end in a repeat marker, and only such a row may"))
+    if depth:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("vmrx", os.path.join(REPO, "scripts/extract-vmr-table.py"))
+        vmrx = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(vmrx)
+        if not os.path.exists(vmrx.PDF):
+            findings.append((rel, "cannot re-extract (missing PDF)"))
+        elif vmrx.extract() != rows:
+            findings.append((rel, "DRIFT against a fresh extraction"))
+    return len(rows), findings
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", action="store_true", help="also diff depth against the spec PDFs")
@@ -569,6 +618,8 @@ def main():
                     help="also audit the M6-O6 code-table registry (add --depth to re-extract)")
     ap.add_argument("--datatypes", action="store_true",
                     help="also audit the M10 datatype component tables (add --depth to re-extract)")
+    ap.add_argument("--vmr", action="store_true",
+                    help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
     ap.add_argument("--write-tables", action="store_true",
                     help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
     args = ap.parse_args()
@@ -623,6 +674,14 @@ def main():
         for rel, why in dfindings[:40]:
             print(f"   {rel}: {why}")
         if dfindings:
+            rc = 1
+
+    if args.vmr:
+        vrows, vfindings = vmr(depth=args.depth)
+        print(f"\n== VMR table (M12-A): {vrows} rows, {len(vfindings)} findings")
+        for rel, why in vfindings[:40]:
+            print(f"   {rel}: {why}")
+        if vfindings:
             rc = 1
 
     print("\nclean" if rc == 0 else "\nfindings above")

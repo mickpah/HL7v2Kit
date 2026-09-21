@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M12: the AU HL7v2 VMR sub-ID tree (ADRM-2021 Appendix 9, Normative)
+
+- New profile model track `SubIDTreeRule` and three AU rules, reported as
+  `profileConstraintViolation` at the offending `OBX[n]-4`:
+  **ADRM-prose:P-8** an observation whose sub-ID shares the VMR header's
+  root must instantiate a row of the implementation table (p. 515);
+  **P-9** a STRUCTURAL row, purely virtual, must not be written as an OBX;
+  **P-10** the header's own sub-ID must be dotted decimal (p. 490).
+- Scope is the observation group (the OBX run after one OBR). A group with
+  no VMR header is never touched, so a structured pathology report using
+  `1.x` sub-IDs is unaffected. The root is read from the header, not assumed
+  to be 1. AU locale and REF messages only, the same gate as P-6.
+- Proven not to fire on the appendix's own worked examples (pp. 363, 516),
+  which are the must-pass test.
+- Registered, not shipped: the table's OBX-2 / OBX-3 columns (the appendix's
+  example contradicts both) and its OCCURRENCES column.
+- Codegen emits the table as internal Swift
+  (`Locale/Generated/VMRImplementationTable+au_adrm_2021.swift`); the
+  regenerate script and CI drift check cover it.
+
+### Added — M12-A: the AU VMR implementation table extracted (2026-09-21)
+
+- `Resources/profiles/au-adrm-2021/vmr-table.json` — the 89 rows of ADRM-2021
+  Appendix 9 table A9.T.1 (pp. 492-515): element name, OBX-2, the OBX-4
+  sub-ID path (`RepeatOf[...]` becomes `*`), occurrences, VMR datatype.
+  Written only by `scripts/extract-vmr-table.py`.
+- OBX-3 and the suggested OBX-5 values are deliberately NOT extracted: the
+  appendix's own worked example (p. 516) contradicts the table on OBX-2 (CE
+  for CWE) and OBX-3 (70949-3 for 73983-9), so neither can back a rule.
+- `scripts/audit-schemas.py --vmr` (shape, unique rooted paths, and the
+  appendix's own invariant that a row is unbounded exactly when its path ends
+  in a repeat marker; re-extraction drift with `--depth`).
+
 ### Added — M11: nested composites and OBX-5 in the component check
 
 - A component that is itself a composite is descended into once: the HD in
