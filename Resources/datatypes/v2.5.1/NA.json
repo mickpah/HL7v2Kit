@@ -7,7 +7,7 @@
       "index": 1,
       "name": "Value1",
       "dataType": "NM",
-      "optionality": "R"
+      "optionality": "O"
     },
     {
       "index": 2,

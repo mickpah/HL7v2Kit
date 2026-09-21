@@ -86,4 +86,22 @@ struct EitherOrComponentAuditTests {
             #expect(try issues("LAB1^^ISO", version) == ["MSH[1]-4"], "v\(version): a type without its universal ID")
         }
     }
+
+    @Test("NA: 'arrays that have one or more values not present may be transmitted', first value included")
+    func naSparseArray() throws {
+        // The spec's example (v2.5.1 sec 2.A.47 NA): |^2^3^4~5^^^8~9^10~~17^18^19^20|. The table
+        // prints NA.1 as R; v2.8.2 corrects it to O.
+        for version in [Version.v2_5_1, .v2_6, .v2_8_2] {
+            let na = try #require(DataTypeGrammarTable.grammar("NA", version: version))
+            #expect(na.component(1)?.optionalityCode == "O", "\(version)")
+        }
+    }
+
+    @Test("RPT: the spec's own example uses AHS, which Table 0528 does not print")
+    func rptExampleEvent() throws {
+        for version in [Version.v2_5_1, .v2_6, .v2_8_2] {
+            let t = try #require(HL7TableRegistry.table("0528", version: version))
+            #expect(t.contains("AHS") && t.contains("HS") && t.isClosed, "\(version)")
+        }
+    }
 }

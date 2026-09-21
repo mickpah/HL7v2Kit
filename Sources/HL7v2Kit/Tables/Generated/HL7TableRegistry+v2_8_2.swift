@@ -9096,6 +9096,7 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "ICM", description: "between breakfast and lunch"),
             HL7Table.Entry(code: "ICD", description: "between lunch and dinner"),
             HL7Table.Entry(code: "ICV", description: "between dinner and the hour of sleep"),
+            HL7Table.Entry(code: "AHS", description: "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"),
         ] as [HL7Table.Entry]
     )
 
