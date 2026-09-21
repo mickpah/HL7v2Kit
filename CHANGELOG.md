@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.2] — 2026-09-21
+
+**One fix, one spec-stated check; no API change.** The spec's own HD example using `RANDOM` is no longer rejected (a false error since `v3.5.0`), and an `HD` with a universal ID now needs its type.
+
 ### Fixed — a false error on the spec's own HD example (since v3.5.0)
 
 - HL7 Table 0301 prints the code `Random`; the HD section's own example is

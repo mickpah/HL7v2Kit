@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (M16 merged, unreleased; `v3.6.1` tagged earlier) |
-| Current release | **`v3.6.1`** (2026-09-21) — three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
+| Last updated | 2026-09-21 (**`v3.6.2` tagged** — M16 closed) |
+| Current release | **`v3.6.2`** (2026-09-21) — HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
 | Next planned cycle | **Candidate: the spec-example sweep** — every example the datatype chapters print, as must-pass validation cases. Unreleased on `main`: M16. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.6.1`)
+## Where we are (`v3.6.2`)
 
 **Shipped and solid:**
 
@@ -246,7 +246,7 @@ Validator could not carry.*
 
 - **Outcome:** `XTN`, `PL` and `CWE` rules removed — each rejected an example the spec prints; `EIP` removed as vacuous; `HD` kept, supported by the prose. The spec's examples are now must-pass tests.
 
-### M16 — HD both-or-neither; the spec's HD examples as tests **CLOSED (2026-09-21; merged, unreleased)**
+### M16 — HD both-or-neither; the spec's HD examples as tests **CLOSED (2026-09-21; released in `v3.6.2`)**
 
 - **Outcome:** the HD rule all six versions print ("must either both be valued ... or both be not valued") is enforced; and testing every HD example the section prints caught a false error live since `v3.5.0` (`Random` in the table, `RANDOM` in the example).
 
