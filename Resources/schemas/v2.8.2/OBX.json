@@ -30,7 +30,7 @@
     { "index": 25, "swiftName": "performingOrganizationMedicalDirector", "name": "Performing Organization Medical Director", "dataType": "XCN", "optionality": "B", "repeatability": "1" },
     { "index": 26, "swiftName": "patientResultsReleaseCategory", "name": "Patient Results Release Category", "dataType": "ID", "table": "0909", "optionality": "O", "repeatability": "1", "tables": ["0909"] },
     { "index": 27, "swiftName": "rootCause", "name": "Root Cause", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0914"] },
-    { "index": 28, "swiftName": "localProcessControl", "name": "Local Process Control", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0915"] },
+    { "index": 28, "swiftName": "localProcessControl", "name": "Local Process Control", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0915"] },
     { "index": 29, "swiftName": "observationType", "name": "Observation Type", "dataType": "ID", "table": "0936", "optionality": "O", "repeatability": "1", "tables": ["0936"] },
     { "index": 30, "swiftName": "observationSubType", "name": "Observation Sub-Type", "dataType": "ID", "table": "0937", "optionality": "O", "repeatability": "1", "tables": ["0937"] }
   ]

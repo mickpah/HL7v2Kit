@@ -2413,7 +2413,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 35, name: "Species Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "PID-36 populated OR PID-38 populated", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 36, name: "Breed Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "PID-37 populated", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 37, name: "Strain", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            FieldGrammar(index: 38, name: "Production Class Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
+            FieldGrammar(index: 38, name: "Production Class Code", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 39, name: "Tribal Citizenship", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
         ]
     )

@@ -62,7 +62,7 @@
       "name": "Quantity/Timing",
       "dataType": "TQ",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 8,

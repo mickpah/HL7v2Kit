@@ -43,7 +43,7 @@
       "name": "Allergy Reaction",
       "dataType": "ST",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 6,

@@ -1412,7 +1412,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 4, name: "Placer Group Number", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 5, name: "Order Status", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0038"),
             FieldGrammar(index: 6, name: "Response Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0121"),
-            FieldGrammar(index: 7, name: "Quantity/Timing", dataType: "TQ", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
+            FieldGrammar(index: 7, name: "Quantity/Timing", dataType: "TQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Parent", dataType: "EIP", optionality: .conditional, repeatability: .single, condition: "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 9, name: "Date/Time of Transaction", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 10, name: "Entered By", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
