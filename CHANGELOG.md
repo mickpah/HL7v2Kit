@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M21: `ValidationOptions.requiredComponentSeverity`
+
+- The severity of every ``requiredComponentMissing`` finding is now the
+  consumer's choice: `.error` (default, unchanged) or `.warning`, which keeps
+  the findings and leaves the report valid. Covers the printed-`R` rule and
+  the `HD` either-or rule; nothing else. `checkComponentGrammar = false`
+  still suppresses the findings entirely.
+- Resolves the `MSH-9.3` question raised in M18: v2.5+ prints the message
+  structure as required and the base rule stays faithful to that, while a
+  consumer of feeds that omit it (as half the spec's own v2.5.1 examples do)
+  has a documented switch that does not special-case one field. Additive
+  API (minor).
+
 ### Fixed — M20: 185 field names and one missing field, found by a NAME predicate
 
 - The depth audit now compares every field's name with the ELEMENT NAME the

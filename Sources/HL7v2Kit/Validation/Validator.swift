@@ -1604,7 +1604,7 @@ public struct Validator: Sendable {
                         componentIndex: spec.index
                     )
                     issues.append(ValidationIssue(
-                        severity: .error,
+                        severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
                         location: location,
                         message: "Required component \(location.pathDescription) ('\(spec.name)') in \(grammar.dataType) field '\(grammar.name)' is missing"
@@ -1621,7 +1621,7 @@ public struct Validator: Sendable {
                         fieldIndex: fieldIndex
                     )
                     issues.append(ValidationIssue(
-                        severity: .error,
+                        severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
                         location: location,
                         message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): expected \(set.description) populated"

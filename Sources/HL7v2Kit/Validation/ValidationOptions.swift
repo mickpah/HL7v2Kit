@@ -53,6 +53,18 @@ public struct ValidationOptions: Sendable {
     /// parameter: set it by mutation. M6-O6.
     public var checkCodeTables: Bool = true
 
+    /// Severity of ``IssueCode/requiredComponentMissing`` findings: `.error`
+    /// (default) or `.warning`. The finding itself is unchanged; only its
+    /// severity, and so ``ValidationReport/isValid``, moves. Use `.warning`
+    /// when a feed omits a component the spec prints as required but whose
+    /// value carries no information the message lacks — the usual case is
+    /// `MSH-9.3`, the message structure, which v2.5+ prints as `R` and which
+    /// is derivable from the message code and trigger event through HL7
+    /// Table 0354. Half of the specification's own v2.5.1 example messages
+    /// omit it. The default stays faithful to the printed table. Not an
+    /// init parameter: set it by mutation. M21.
+    public var requiredComponentSeverity: IssueSeverity = .error
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
