@@ -1581,6 +1581,55 @@ public struct Validator: Sendable {
     ///
     /// Composite types HL7v2Kit doesn't have typed metadata for skip
     /// silently in both dispatches.
+    /// Conditional components (M26, ADR-017): for every populated repetition of a field
+    /// whose datatype has a component grammar, a component carrying a `condition` must be
+    /// populated when that predicate holds over its sibling components. One level of
+    /// nesting is descended, as for the code-table check (the CNN inside NDL). Reported at
+    /// the component with ``IssueCode/conditionalComponentMissing`` at
+    /// ``ValidationOptions/requiredComponentSeverity``.
+    private func checkConditionalComponents(
+        _ grammar: FieldGrammar,
+        field: Field,
+        fieldIndex: Int,
+        segmentID: String,
+        segmentIndex: Int,
+        version: Version,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
+        func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
+                   component: Int?, subcomponent: (Int) -> Int?) {
+            func populated(_ i: Int) -> Bool {
+                guard i >= 1, i <= values.count, let v = values[i - 1] else { return false }
+                return !v.isEmpty && v != "\"\""
+            }
+            for entry in entries {
+                guard let condition = entry.condition, !populated(entry.index),
+                      ComponentCondition.holds(condition, populated: populated) else { continue }
+                let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
+                                             componentIndex: component ?? entry.index,
+                                             subcomponentIndex: subcomponent(entry.index))
+                issues.append(ValidationIssue(
+                    severity: options.requiredComponentSeverity,
+                    code: .conditionalComponentMissing,
+                    location: location,
+                    message: "Conditional component \(location.pathDescription) ('\(entry.name)') in \(typeName) is empty while its condition holds: \(condition)."
+                ))
+            }
+        }
+        for repetition in field.repetitions where isRepetitionPopulated(repetition) {
+            let values = repetition.components.map(\.stringValue)
+            check(dataType.components, values: values, typeName: grammar.dataType, component: nil, subcomponent: { _ in nil })
+            for entry in dataType.components where repetition.components.count >= entry.index {
+                guard let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version),
+                      nested.components.contains(where: { $0.condition != nil }) else { continue }
+                let subs = repetition.components[entry.index - 1].subcomponents.map { Optional($0.value) }
+                check(nested.components, values: subs, typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
+                      component: entry.index, subcomponent: { $0 })
+            }
+        }
+    }
+
     private func checkComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -1590,6 +1639,8 @@ public struct Validator: Sendable {
         version: Version,
         issues: inout [ValidationIssue]
     ) {
+        checkConditionalComponents(grammar, field: field, fieldIndex: fieldIndex, segmentID: segmentID,
+                                   segmentIndex: segmentIndex, version: version, issues: &issues)
         let required = requiredComponents(forCompositeCode: grammar.dataType, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }

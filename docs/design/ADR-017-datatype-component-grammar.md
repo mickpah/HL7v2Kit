@@ -92,6 +92,15 @@ M18 ran the 616 complete example messages of the domain chapters through the Swi
 
 It also marked the limit of "the spec's examples are must-pass". That held for the datatype chapters, where an example illustrates the datatype being defined and the surrounding prose is normative. It does not hold for printed messages: half declare a version other than the chapter printing them, many are truncated or misaligned, and they omit required fields by the hundred. **The rule adopted: normative text (tables and prose) decides; an example can overturn a table only when normative prose agrees with it** (`NA.1`), or when the rule's data is plainly a spelling or extraction artefact (`RANDOM`, `AHS`). `MSH-9.3` is the test case: the MSG table prints `R`, the MSH-9 prose is silent, 35 of 68 v2.5.1 examples omit it — the table stands.
 
+## Addendum 2026-09-22 — M26: conditional components
+
+The last registered gap. The component tables print `C` with no predicate; the prose sometimes states one. Every `C` component's definition on v2.5.1, v2.6 and v2.8.2 was read (118 slots). The conditions fall into four groups, and each was measured against the spec's own example messages before anything shipped.
+
+- **Sibling-presence conditions the examples honour** (36 rules): modelled on `ComponentGrammar.condition` in a five-token predicate language, cited sentence by sentence in `Resources/datatypes/conditions.json`. Zero violations across every version-consistent printed message and every datatype-chapter example.
+- **The "as of v2.7" family** (32 rules, same shape): violated by 62 to 100 percent of the specification's own v2.7+ example values. This is the case the M18 rule did not anticipate: normative prose against not one stray example but the corpus. **Decision: authored, cited and registered, not applied.** Shipping them would make the Validator reject the standard's own messages, which fails requirement #4 in spirit even though each sentence is normative. An advisory severity tier would be the way to ship them; that is a modelling decision for a later cycle.
+- **Conditions the model cannot express:** on the coding system in use (CWE.7 and kin), on the repetition count (XAD.7), and CNE.20, whose sentence contradicts its own summary.
+- **`C` with no stated condition:** left as printed.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

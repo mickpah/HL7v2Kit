@@ -122,7 +122,8 @@
       "name": "Value Set Version ID",
       "dataType": "DTM",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "15 populated"
     },
     {
       "index": 17,
@@ -143,7 +144,8 @@
       "name": "Alternate Value Set Version ID",
       "dataType": "DTM",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "18 populated"
     },
     {
       "index": 20,
@@ -164,7 +166,8 @@
       "name": "Second Alternate Value Set Version ID",
       "dataType": "DTM",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "21 populated"
     }
   ]
 }

@@ -47,7 +47,8 @@
       "index": 6,
       "name": "Period Units",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "condition": "5 populated"
     },
     {
       "index": 7,
@@ -80,7 +81,8 @@
       "index": 10,
       "name": "Event Offset Units",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "condition": "9 populated"
     },
     {
       "index": 11,

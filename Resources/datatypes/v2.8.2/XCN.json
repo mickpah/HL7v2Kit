@@ -8,13 +8,15 @@
       "name": "Person Identifier",
       "dataType": "ST",
       "optionality": "C",
-      "length": "15="
+      "length": "15=",
+      "condition": "2 empty"
     },
     {
       "index": 2,
       "name": "Family Name",
       "dataType": "FN",
-      "optionality": "C"
+      "optionality": "C",
+      "condition": "1 empty"
     },
     {
       "index": 3,

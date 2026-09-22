@@ -711,9 +711,9 @@ def datatypes(depth=False):
                 continue
             fresh = dtx.extract(version[1:])
             for code in sorted(set(fresh) | set(committed)):
-                got = [(c["index"], c["name"], c["dataType"], c["optionality"], c["len"], dtx.table_numbers(c["tbl"]))
+                got = [(c["index"], c["name"], c["dataType"], c["optionality"], c["len"], c.get("condition", ""), dtx.table_numbers(c["tbl"]))
                        for c in fresh.get(code, {}).get("components", [])]
-                have = [(c["index"], c["name"], c.get("dataType", ""), c["optionality"], c.get("length", ""), c.get("tables", []))
+                have = [(c["index"], c["name"], c.get("dataType", ""), c["optionality"], c.get("length", ""), c.get("condition", ""), c.get("tables", []))
                         for c in committed.get(code, {}).get("components", [])]
                 if got != have:
                     findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh extraction"))
@@ -795,6 +795,37 @@ EXPECTED_EXAMPLE_REJECTIONS = {
 _EXAMPLE_FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|\.{6,}")
 
 
+def _condition_holds(expr, populated):
+    """The ComponentGrammar.condition predicate language, mirrored from Swift
+    (ComponentCondition.holds): "N populated", "N empty", AND, OR, parentheses;
+    anything unparseable is False."""
+    toks = expr.replace("(", " ( ").replace(")", " ) ").upper().split()
+    pos = [0]
+    def peek(): return toks[pos[0]] if pos[0] < len(toks) else None
+    def atom():
+        t = peek()
+        if t == "(":
+            pos[0] += 1; v = orx()
+            if peek() != ")": raise ValueError
+            pos[0] += 1; return v
+        n = int(t); st = toks[pos[0] + 1]; pos[0] += 2
+        if st == "POPULATED": return populated(n)
+        if st == "EMPTY": return not populated(n)
+        raise ValueError
+    def andx():
+        v = atom()
+        while peek() == "AND": pos[0] += 1; v = atom() and v
+        return v
+    def orx():
+        v = andx()
+        while peek() == "OR": pos[0] += 1; v = andx() or v
+        return v
+    try:
+        v = orx(); return v if pos[0] == len(toks) else False
+    except Exception:
+        return False
+
+
 def _closed_codes(version, number):
     path = f"{TABLES}/{version}/{number}.json"
     if not os.path.exists(path):
@@ -838,11 +869,15 @@ def spec_examples():
                 for repetition in example.split("~"):
                     checked += 1
                     comps, problems = repetition.split("^"), []
+                    populated = lambda n: n - 1 < len(comps) and comps[n - 1].strip() not in ("", '""')
                     for c in grammar[current]["components"]:
                         value = comps[c["index"] - 1].strip() if len(comps) >= c["index"] else ""
                         where = f"{current}.{c['index']}"
                         if c.get("optionality") == "R" and not value:
                             problems.append((where, where, "printed R but empty in the example"))
+                        # M26: a conditional component whose condition holds must be valued.
+                        if c.get("condition") and not value and _condition_holds(c["condition"], populated):
+                            problems.append((where, where, f"conditional ({c['condition']}) but empty in the example"))
                         if not value or value == '""':
                             continue
                         bound = c.get("tables", [])

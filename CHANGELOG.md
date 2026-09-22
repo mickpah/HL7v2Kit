@@ -7,7 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M26: conditional components, where the spec states the condition
+
+- `ComponentGrammar.condition` (additive, defaulted) carries, for a
+  component the table prints `C`, the condition its prose states, in a small
+  predicate language over sibling components (`"5 populated"`,
+  `"1 populated AND 9 empty AND (10 empty OR 11 empty)"`). New
+  `IssueCode.conditionalComponentMissing`, reported at the component when
+  the predicate holds and the component is empty, at
+  `requiredComponentSeverity`; `checkComponentGrammar = false` suppresses it.
+- **36 rules modelled**, each hand-authored from its sentence and cited in
+  `Resources/datatypes/conditions.json`: RPT.6 / RPT.10 (units required when
+  the quantity is populated), CSU.2 / CSU.3 (identifier or description),
+  CNN.8 / .10 / .11, CP.5, XCN.1 / XCN.2 (v2.8.2), and the value-set-version
+  rules of CWE / CNE / CF / CSU. One level of nesting is descended (the CNN
+  inside NDL). Every rule was checked against the spec's own printed
+  examples first, and the datatype-example audit now evaluates them.
+- **32 rules registered, not modelled, with the measurement:** the "as of
+  v2.7" family (a coding system when a code is valued, an assigning
+  authority when an identifier is valued, a name type, an identifier type,
+  one of XTN.4 / .7 / .12). Against the spec's own 78 v2.7+ example
+  messages, CWE.3 / .14 are violated by 529 of 549 values, XCN.9 / .13 /
+  .22 / .23 by 43 of 43, XTN.4 / .7 / .12 by 117 of 118, CX.4 / .9 / .10 by
+  115 of 185. Enforcing them would reject the standard's own messages; they
+  wait for an advisory tier.
+- Also registered: coding-system-aware conditions (CWE.7 and kin), XAD.7 (a
+  repetition-count condition), CNE.20 (self-contradictory text), and the
+  `C` components whose prose states no condition.
 
 ## [3.8.0] — 2026-09-22
 

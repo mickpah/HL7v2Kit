@@ -14,14 +14,16 @@
       "name": "Unit of Measure Identifier",
       "dataType": "ST",
       "optionality": "C",
-      "length": "20="
+      "length": "20=",
+      "condition": "3 empty"
     },
     {
       "index": 3,
       "name": "Unit of Measure Description",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199#"
+      "length": "199#",
+      "condition": "2 empty"
     },
     {
       "index": 4,
@@ -128,7 +130,8 @@
       "name": "Unit of Measure Value Set Version ID",
       "dataType": "DTM",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "16 populated"
     },
     {
       "index": 18,
@@ -149,7 +152,8 @@
       "name": "Alternate Unit of Measure Value Set Version ID",
       "dataType": "DTM",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "19 populated"
     },
     {
       "index": 21,
@@ -170,7 +174,8 @@
       "name": "Alternate Unit of Measure Value Set Version ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "8="
+      "length": "8=",
+      "condition": "22 populated"
     }
   ]
 }

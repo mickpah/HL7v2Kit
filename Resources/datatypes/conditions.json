@@ -1,0 +1,342 @@
+{
+  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', AND, OR, parentheses. When it holds and the component is empty the Validator reports conditionalComponentMissing. Applied by scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.7 / CWE.7 / CF.7 / CSU.8 (condition on the coding system in use: needs code-system awareness); XAD.7 (a repetition-count condition); CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated).",
+  "rules": {
+    "2.5.1": {
+      "RPT": {
+        "6": {
+          "condition": "5 populated",
+          "citation": "HL7 v2.5.1 Chapter 2A, RPT.6 Period Units: 'Condition Rule: This component is required if RPT-5 (Period Quantity) is populated.'"
+        },
+        "10": {
+          "condition": "9 populated",
+          "citation": "HL7 v2.5.1 Chapter 2A, RPT.10 Event Offset Units: 'Condition Rule: This component is required if RPT-9 (Event Offset Quantity) is populated.'"
+        }
+      },
+      "CSU": {
+        "2": {
+          "condition": "3 empty",
+          "citation": "HL7 v2.5.1 Chapter 2A, CSU.2 Unit of Measure Identifier: 'This field is required if the unit of measure description is not present.'"
+        },
+        "3": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.5.1 Chapter 2A, CSU.3 Unit of Measure Description: 'This field is required if the unit of measure identifier is not present.'"
+        }
+      },
+      "CNN": {
+        "8": {
+          "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
+          "citation": "HL7 v2.5.1 Chapter 2A, CNN.8 Source Table: 'If component 1 is valued, either component 8, or 9, or both 10 and 11, must be valued.' Reported at CNN.8 when none of the alternatives holds."
+        },
+        "10": {
+          "condition": "11 populated",
+          "citation": "HL7 v2.5.1 Chapter 2A, CNN.10: 'If CNN.11 is valued, this component must be valued.'"
+        },
+        "11": {
+          "condition": "10 populated",
+          "citation": "HL7 v2.5.1 Chapter 2A, CNN.11: 'If CNN.10 is valued, this component must be valued.'"
+        }
+      }
+    },
+    "2.6": {
+      "RPT": {
+        "6": {
+          "condition": "5 populated",
+          "citation": "HL7 v2.6 Chapter 2A, RPT.6 Period Units: 'Condition Rule: This component is required if RPT-5 (Period Quantity) is populated.'"
+        },
+        "10": {
+          "condition": "9 populated",
+          "citation": "HL7 v2.6 Chapter 2A, RPT.10 Event Offset Units: 'Condition Rule: This component is required if RPT-9 (Event Offset Quantity) is populated.'"
+        }
+      },
+      "CSU": {
+        "2": {
+          "condition": "3 empty",
+          "citation": "HL7 v2.6 Chapter 2A, CSU.2 Unit of Measure Identifier: 'This field is required if the unit of measure description is not present.'"
+        },
+        "3": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.6 Chapter 2A, CSU.3 Unit of Measure Description: 'This field is required if the unit of measure identifier is not present.'"
+        }
+      },
+      "CNN": {
+        "8": {
+          "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
+          "citation": "HL7 v2.6 Chapter 2A, CNN.8 Source Table: 'If component 1 is valued, either component 8, or 9, or both 10 and 11, must be valued.' Reported at CNN.8 when none of the alternatives holds."
+        },
+        "10": {
+          "condition": "11 populated",
+          "citation": "HL7 v2.6 Chapter 2A, CNN.10: 'If CNN.11 is valued, this component must be valued.'"
+        },
+        "11": {
+          "condition": "10 populated",
+          "citation": "HL7 v2.6 Chapter 2A, CNN.11: 'If CNN.10 is valued, this component must be valued.'"
+        }
+      }
+    },
+    "2.8.2": {
+      "RPT": {
+        "6": {
+          "condition": "5 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, RPT.6 Period Units: 'Condition Rule: This component is required if RPT-5 (Period Quantity) is populated.'"
+        },
+        "10": {
+          "condition": "9 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, RPT.10 Event Offset Units: 'Condition Rule: This component is required if RPT-9 (Event Offset Quantity) is populated.'"
+        }
+      },
+      "CSU": {
+        "2": {
+          "condition": "3 empty",
+          "citation": "HL7 v2.8.2 Chapter 2A, CSU.2 Unit of Measure Identifier: 'This field is required if the unit of measure description is not present.'"
+        },
+        "3": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.8.2 Chapter 2A, CSU.3 Unit of Measure Description: 'This field is required if the unit of measure identifier is not present.'"
+        },
+        "17": {
+          "condition": "16 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CSU.17: 'Value set version ID is required if CSU.16 is populated.'"
+        },
+        "20": {
+          "condition": "19 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CSU.20: 'Value set version ID is required if CSU.19 is populated.'"
+        },
+        "23": {
+          "condition": "22 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CSU.23: 'Value set version ID is required if CSU.22 is populated.'"
+        }
+      },
+      "CNN": {
+        "8": {
+          "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNN.8 Source Table: 'If component 1 is valued, either component 8, or 9, or both 10 and 11, must be valued.' Reported at CNN.8 when none of the alternatives holds."
+        },
+        "10": {
+          "condition": "11 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNN.10: 'If CNN.11 is valued, this component must be valued.'"
+        },
+        "11": {
+          "condition": "10 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNN.11: 'If CNN.10 is valued, this component must be valued.'"
+        }
+      },
+      "CF": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CF.16: 'Value set version ID is required if CF.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CF.19: 'Value set version ID is required if CF.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CF.22: 'Value set version ID is required if CF.21 is populated.'"
+        }
+      },
+      "CNE": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNE.16: 'Value set version ID is required if CNE.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNE.19: 'Value set version ID is required if CNE.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CNE.22: 'Value set version ID is required if CNE.21 is populated.'"
+        }
+      },
+      "CWE": {
+        "16": {
+          "condition": "15 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CWE.16: 'Value set version ID is required if CWE.15 is populated.'"
+        },
+        "19": {
+          "condition": "18 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CWE.19: 'Value set version ID is required if CWE.18 is populated.'"
+        },
+        "22": {
+          "condition": "21 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CWE.22: 'Value set version ID is required if CWE.21 is populated.'"
+        }
+      },
+      "CP": {
+        "5": {
+          "condition": "3 populated OR 4 populated",
+          "citation": "HL7 v2.8.2 Chapter 2A, CP.5 Range Units: 'This component is required if CP.3 From Value and/or CP.4 To Value are present.'"
+        }
+      },
+      "XCN": {
+        "1": {
+          "condition": "2 empty",
+          "citation": "HL7 v2.8.2 Chapter 2A, XCN.1: 'XCN.1 is required if XCN.2 is not populated.'"
+        },
+        "2": {
+          "condition": "1 empty",
+          "citation": "HL7 v2.8.2 Chapter 2A, XCN.2: 'XCN.2 is required if XCN.1 is not populated.'"
+        }
+      }
+    }
+  },
+  "notModelledAsOfV27": {
+    "reason": "The 'as of v2.7' conformance sentences: a coding system name or OID when a code is valued (CWE / CNE / CF .3 .6 .12 .14 .17 .20, CSU .4 .7 .15 .18 .21), an assigning authority or jurisdiction when an identifier is valued (CX .4 .9 .10, XCN .9 .22 .23, PPN.9), a name type when a family name is valued (XCN.10), an identifier type when an identifier is valued (XCN.13), and one of address / local number / unformatted number in XTN (.4 .7 .12). Measured against the specification's own v2.7+ example messages (78 messages, version-consistent): CWE.3 / CWE.14 violated by 529 of 549 values, CNE.14 30 of 30, XCN.9 / .13 / .22 / .23 43 of 43, XTN.4 / .7 / .12 117 of 118, CX.4 / .9 / .10 115 of 185, XCN.10 37 of 43. Enforcing them as errors would reject the standard's own messages and, in practice, nearly all v2.7+ traffic. Kept here, authored and cited, for a future advisory tier; not applied by the extractor. Files CF / CSU families unobserved in the examples are grouped with their identical-text CWE counterparts.",
+    "rules": {
+      "2.5.1": {
+        "CSU": {
+          "4": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.5.1 Chapter 2A, CSU.4 Unit of Measure Coding System: 'This field is required if the unit of measure identifier is present.'"
+          }
+        }
+      },
+      "2.6": {
+        "CSU": {
+          "4": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.6 Chapter 2A, CSU.4 Unit of Measure Coding System: 'This field is required if the unit of measure identifier is present.'"
+          }
+        }
+      },
+      "2.8.2": {
+        "CSU": {
+          "4": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.4 Unit of Measure Coding System: 'This field is required if the unit of measure identifier is present.'"
+          },
+          "7": {
+            "condition": "5 populated",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.7: 'This field is required if the CSU.5 Alternate Unit of Measure Identifier is present.'"
+          },
+          "15": {
+            "condition": "2 populated AND 4 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.15: 'This component is required when CSU.2 is populated and CSU.4 is not populated.'"
+          },
+          "18": {
+            "condition": "5 populated AND 7 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.18: 'This component is required when CSU.5 is populated and CSU.7 is not populated.'"
+          },
+          "21": {
+            "condition": "11 populated AND 13 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CSU.21: 'This component is required when CSU.11 is populated and CSU.13 is not populated.'"
+          }
+        },
+        "CF": {
+          "3": {
+            "condition": "1 populated AND 14 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.3: 'As of v2.7 this component is required when CF.1 is populated and CF.14 is not populated.'"
+          },
+          "6": {
+            "condition": "4 populated AND 17 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.6: 'required when CF.4 is populated and CF.17 is not populated.'"
+          },
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.14: 'This component is required when CF.1 is populated and CF.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.17: 'This component is required when CF.4 is populated and CF.6 is not populated.'"
+          },
+          "20": {
+            "condition": "10 populated AND 12 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CF.20: 'This component is required when CF.10 is populated and CF.12 is not populated.'"
+          }
+        },
+        "CNE": {
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CNE.14: 'This component is required when CNE.1 is populated and CNE.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CNE.17: 'This component is required when CNE.4 is populated and CNE.6 is not populated.'"
+          }
+        },
+        "CWE": {
+          "3": {
+            "condition": "1 populated AND 14 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.3: 'As of v2.7 this component is required when CWE.1 is populated and CWE.14 is not populated.'"
+          },
+          "6": {
+            "condition": "4 populated AND 17 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.6: 'required when CWE.4 is populated and CWE.17 is not populated.'"
+          },
+          "12": {
+            "condition": "10 populated AND 20 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.12: 'required when CWE.10 is populated and CWE.20 is not populated.'"
+          },
+          "14": {
+            "condition": "1 populated AND 3 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.14: 'This component is required when CWE.1 is populated and CWE.3 is not populated.'"
+          },
+          "17": {
+            "condition": "4 populated AND 6 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.17: 'This component is required when CWE.4 is populated and CWE.6 is not populated.'"
+          },
+          "20": {
+            "condition": "10 populated AND 12 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CWE.20: 'This component is required when CWE.10 is populated and CWE.12 is not populated.'"
+          }
+        },
+        "CX": {
+          "4": {
+            "condition": "9 empty AND 10 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CX.4: 'As of v2.7, CX.4 Assigning Authority is required if neither CX.9 nor CX.10 are populated.'"
+          },
+          "9": {
+            "condition": "4 empty AND 10 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CX.9: 'As of v2.7, Assigning Jurisdiction is required if neither CX.4 nor CX.10 are populated.'"
+          },
+          "10": {
+            "condition": "4 empty AND 9 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, CX.10: 'As of v2.7, Assigning Agency or Department is required if neither CX.4 nor CX.9 are populated.'"
+          }
+        },
+        "PPN": {
+          "9": {
+            "condition": "1 populated AND 23 empty AND 24 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, PPN.9: 'It is required if PPN.1 is populated and neither PPN.23 nor PPN.24 are populated.'"
+          }
+        },
+        "XCN": {
+          "9": {
+            "condition": "1 populated AND 22 empty AND 23 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XCN.9: 'It is required if XCN.1 is populated and neither XCN.22 nor XCN.23 are populated.'"
+          },
+          "10": {
+            "condition": "2 populated",
+            "citation": "HL7 v2.8.2 Chapter 2A, XCN.10 Name Type Code: 'It is required if XCN.2 is populated.'"
+          },
+          "13": {
+            "condition": "1 populated",
+            "citation": "HL7 v2.8.2 Chapter 2A, XCN.13 Identifier Type Code: 'It is required if XCN.1 is populated.'"
+          },
+          "22": {
+            "condition": "1 populated AND 9 empty AND 23 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XCN.22: 'It is required if XCN.1 is populated and neither XCN.9 nor XCN.23 are populated.'"
+          },
+          "23": {
+            "condition": "1 populated AND 9 empty AND 22 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XCN.23: 'It is required if XCN.1 is populated and neither XCN.9 nor XCN.22 are populated.'"
+          }
+        },
+        "XTN": {
+          "4": {
+            "condition": "7 empty AND 12 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XTN.4: 'This component is required if, and only allowed if, XTN.7 or XTN.12 are not populated.' Read with XTN.7 and XTN.12, which each say 'and': one of the three must carry the address. The prohibition half ('only allowed if') is not modelled."
+          },
+          "7": {
+            "condition": "4 empty AND 12 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XTN.7: 'The Local Number is required when, and allowed only if, XTN.4 and XTN.12 are not populated.' Prohibition half not modelled."
+          },
+          "12": {
+            "condition": "4 empty AND 7 empty",
+            "citation": "HL7 v2.8.2 Chapter 2A, XTN.12: 'The Unformatted Telephone number is required when, and allowed only if, XTN.4 and XTN.7 are not populated.' Prohibition half not modelled."
+          }
+        }
+      }
+    }
+  }
+}

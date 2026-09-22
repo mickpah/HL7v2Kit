@@ -25,15 +25,26 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// The LEN cell the component table prints, verbatim, or `nil` (the prose
     /// definitions of v2.3 to v2.4 print none). Recorded, never enforced (M25).
     public let length: String?
+    /// For a component the table prints `C`: the condition under which it is
+    /// required, as the spec's prose states it, in a small predicate language
+    /// over the sibling components of the same repetition: `"5 populated"`,
+    /// `"2 empty"`, joined by `AND` / `OR` with parentheses. `nil` for every
+    /// other component, and for a `C` component whose prose states no
+    /// condition the model can carry (`Resources/datatypes/conditions.json`
+    /// lists those with their reasons). When the predicate holds and the
+    /// component is empty, ``IssueCode/conditionalComponentMissing`` is
+    /// reported. M26.
+    public let condition: String?
 
     /// Creates a component grammar entry.
-    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = [], length: String? = nil) {
+    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = [], length: String? = nil, condition: String? = nil) {
         self.index = index
         self.name = name
         self.dataType = dataType
         self.optionalityCode = optionalityCode
         self.tables = tables
         self.length = length
+        self.condition = condition
     }
 }
 
@@ -85,6 +96,60 @@ public enum DataTypeGrammarTable {
         case .v2_6:   return v2_6
         case .v2_8_2: return v2_8_2
         default:      return [:]
+        }
+    }
+}
+
+/// The predicate language of ``ComponentGrammar/condition``: `<n> populated`,
+/// `<n> empty`, `AND`, `OR`, parentheses. Fail-safe: an unparseable
+/// expression evaluates `false`, so a malformed rule can never fire (req #4).
+enum ComponentCondition {
+    static func holds(_ expression: String, populated: (Int) -> Bool) -> Bool {
+        var tokens = tokenize(expression)[...]
+        guard let value = parseOr(&tokens, populated), tokens.isEmpty else { return false }
+        return value
+    }
+
+    private static func tokenize(_ s: String) -> [String] {
+        s.replacingOccurrences(of: "(", with: " ( ").replacingOccurrences(of: ")", with: " ) ")
+            .split(separator: " ").map { String($0).uppercased() }
+    }
+
+    private static func parseOr(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
+        guard var value = parseAnd(&t, p) else { return nil }
+        while t.first == "OR" {
+            t.removeFirst()
+            guard let rhs = parseAnd(&t, p) else { return nil }
+            value = value || rhs
+        }
+        return value
+    }
+
+    private static func parseAnd(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
+        guard var value = parseAtom(&t, p) else { return nil }
+        while t.first == "AND" {
+            t.removeFirst()
+            guard let rhs = parseAtom(&t, p) else { return nil }
+            value = value && rhs
+        }
+        return value
+    }
+
+    private static func parseAtom(_ t: inout ArraySlice<String>, _ p: (Int) -> Bool) -> Bool? {
+        guard let first = t.first else { return nil }
+        if first == "(" {
+            t.removeFirst()
+            guard let inner = parseOr(&t, p), t.first == ")" else { return nil }
+            t.removeFirst()
+            return inner
+        }
+        guard let index = Int(first), index >= 1, t.count >= 2 else { return nil }
+        let state = t[t.startIndex + 1]
+        t.removeFirst(2)
+        switch state {
+        case "POPULATED": return p(index)
+        case "EMPTY":     return !p(index)
+        default:          return nil
         }
     }
 }
