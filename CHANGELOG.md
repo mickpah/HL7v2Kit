@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.8.0] — 2026-09-22
+
+**Additive API: `FieldGrammar.length` and `ComponentGrammar.length` carry each version's printed LEN verbatim, never enforced.** Every attribute-table column is now recorded and audited against its own version's print.
+
 ### Added — M25: printed lengths recorded on every field and component
 
 - `FieldGrammar.length` and `ComponentGrammar.length` (additive, defaulted)
