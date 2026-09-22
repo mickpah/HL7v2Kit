@@ -8,6 +8,7 @@
       "name": "Version ID",
       "dataType": "ID",
       "optionality": "R",
+      "length": "3..5",
       "tables": [
         "0104"
       ]

@@ -8,6 +8,7 @@
       "name": "Policy Type",
       "dataType": "IS",
       "optionality": "R",
+      "length": "5",
       "tables": [
         "0147"
       ]
@@ -17,6 +18,7 @@
       "name": "Amount Class",
       "dataType": "IS",
       "optionality": "O",
+      "length": "9",
       "tables": [
         "0193"
       ]
@@ -25,13 +27,15 @@
       "index": 3,
       "name": "Money or Percentage Quantity",
       "dataType": "NM",
-      "optionality": "B"
+      "optionality": "B",
+      "length": "16"
     },
     {
       "index": 4,
       "name": "Money or Percentage",
       "dataType": "MOP",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "23"
     }
   ]
 }

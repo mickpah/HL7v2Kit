@@ -3,8 +3,8 @@
   "version": "2.4",
   "description": "Clinical Trial Identification",
   "fields": [
-    { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "optionality": "C", "repeatability": "1", "condition": "CTI-3 populated" },
-    { "index": 3, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "condition": "CTI-3 populated" },
+    { "index": 3, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" }
   ]
 }

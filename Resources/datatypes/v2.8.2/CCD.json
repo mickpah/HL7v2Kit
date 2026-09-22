@@ -8,6 +8,7 @@
       "name": "Invocation Event",
       "dataType": "ID",
       "optionality": "R",
+      "length": "1..1",
       "tables": [
         "0100"
       ]

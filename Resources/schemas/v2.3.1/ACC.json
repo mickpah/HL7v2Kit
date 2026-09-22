@@ -3,11 +3,11 @@
   "version": "2.3.1",
   "description": "Accident",
   "fields": [
-    { "index": 1, "swiftName": "accidentDateTime", "name": "Accident Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "accidentCode", "name": "Accident Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0050"] },
-    { "index": 3, "swiftName": "accidentLocation", "name": "Accident Location", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "autoAccidentState", "name": "Auto Accident State", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0347"] },
-    { "index": 5, "swiftName": "accidentJobRelatedIndicator", "name": "Accident Job Related Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 6, "swiftName": "accidentDeathIndicator", "name": "Accident Death Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 1, "swiftName": "accidentDateTime", "name": "Accident Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "accidentCode", "name": "Accident Code", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0050"] },
+    { "index": 3, "swiftName": "accidentLocation", "name": "Accident Location", "dataType": "ST", "length": "25", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "autoAccidentState", "name": "Auto Accident State", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0347"] },
+    { "index": 5, "swiftName": "accidentJobRelatedIndicator", "name": "Accident Job Related Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 6, "swiftName": "accidentDeathIndicator", "name": "Accident Death Indicator", "dataType": "ID", "length": "12", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

@@ -10,6 +10,6 @@
     { "index": 5, "swiftName": "iprDateTime", "name": "IPR Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 6, "swiftName": "adjudicatedPaidAmount", "name": "Adjudicated/Paid Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "expectedPaymentDateTime", "name": "Expected Payment Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "iprChecksum", "name": "IPR Checksum", "dataType": "ST", "optionality": "R", "repeatability": "1" }
+    { "index": 8, "swiftName": "iprChecksum", "name": "IPR Checksum", "dataType": "ST", "length": "10=", "optionality": "R", "repeatability": "1" }
   ]
 }

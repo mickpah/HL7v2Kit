@@ -3,13 +3,13 @@
   "version": "2.6",
   "description": "DB1",
   "fields": [
-    { "index": 1, "swiftName": "setIdDb1", "name": "Set ID - DB1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "disabledPersonCode", "name": "Disabled Person Code", "dataType": "IS", "table": "0334", "optionality": "O", "repeatability": "1", "tables": ["0334"] },
-    { "index": 3, "swiftName": "disabledPersonIdentifier", "name": "Disabled Person Identifier", "dataType": "CX", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "disabilityIndicator", "name": "Disability Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 5, "swiftName": "disabilityStartDate", "name": "Disability Start Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "disabilityEndDate", "name": "Disability End Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "disabilityReturnToWorkDate", "name": "Disability Return to Work Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "disabilityUnableToWorkDate", "name": "Disability Unable to Work Date", "dataType": "DT", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "setIdDb1", "name": "Set ID - DB1", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "disabledPersonCode", "name": "Disabled Person Code", "dataType": "IS", "length": "2", "table": "0334", "optionality": "O", "repeatability": "1", "tables": ["0334"] },
+    { "index": 3, "swiftName": "disabledPersonIdentifier", "name": "Disabled Person Identifier", "dataType": "CX", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "disabilityIndicator", "name": "Disability Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 5, "swiftName": "disabilityStartDate", "name": "Disability Start Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "disabilityEndDate", "name": "Disability End Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "disabilityReturnToWorkDate", "name": "Disability Return to Work Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "disabilityUnableToWorkDate", "name": "Disability Unable to Work Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" }
   ]
 }

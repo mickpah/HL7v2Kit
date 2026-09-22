@@ -3,12 +3,12 @@
   "version": "2.4",
   "description": "RCP",
   "fields": [
-    { "index": 1, "swiftName": "queryPriority", "name": "Query Priority", "dataType": "ID", "table": "0091", "optionality": "O", "repeatability": "1", "tables": ["0091"] },
-    { "index": 2, "swiftName": "quantityLimitedRequest", "name": "Quantity Limited Request", "dataType": "CQ", "optionality": "O", "repeatability": "1", "tables": ["0126"] },
-    { "index": 3, "swiftName": "responseModality", "name": "Response Modality", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0394"] },
-    { "index": 4, "swiftName": "executionAndDeliveryTime", "name": "Execution and Delivery Time", "dataType": "TS", "optionality": "C", "repeatability": "1" },
-    { "index": 5, "swiftName": "modifyIndicator", "name": "Modify Indicator", "dataType": "ID", "table": "0395", "optionality": "O", "repeatability": "1", "tables": ["0395"] },
-    { "index": 6, "swiftName": "sortByField", "name": "Sort-by Field", "dataType": "SRT", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "segmentGroupInclusion", "name": "Segment group inclusion", "dataType": "ID", "optionality": "", "repeatability": "*" }
+    { "index": 1, "swiftName": "queryPriority", "name": "Query Priority", "dataType": "ID", "length": "1", "table": "0091", "optionality": "O", "repeatability": "1", "tables": ["0091"] },
+    { "index": 2, "swiftName": "quantityLimitedRequest", "name": "Quantity Limited Request", "dataType": "CQ", "length": "10", "optionality": "O", "repeatability": "1", "tables": ["0126"] },
+    { "index": 3, "swiftName": "responseModality", "name": "Response Modality", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0394"] },
+    { "index": 4, "swiftName": "executionAndDeliveryTime", "name": "Execution and Delivery Time", "dataType": "TS", "length": "26", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "modifyIndicator", "name": "Modify Indicator", "dataType": "ID", "length": "1", "table": "0395", "optionality": "O", "repeatability": "1", "tables": ["0395"] },
+    { "index": 6, "swiftName": "sortByField", "name": "Sort-by Field", "dataType": "SRT", "length": "512", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "segmentGroupInclusion", "name": "Segment group inclusion", "dataType": "ID", "length": "256", "optionality": "", "repeatability": "*" }
   ]
 }

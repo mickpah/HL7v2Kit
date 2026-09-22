@@ -3,6 +3,6 @@
   "version": "2.6",
   "description": "System Clock",
   "fields": [
-    { "index": 1, "swiftName": "systemDateTime", "name": "System Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" }
+    { "index": 1, "swiftName": "systemDateTime", "name": "System Date/Time", "dataType": "DTM", "length": "24", "optionality": "R", "repeatability": "1" }
   ]
 }

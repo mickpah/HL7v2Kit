@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "File Trailer",
   "fields": [
-    { "index": 1, "swiftName": "fileBatchCount", "name": "File Batch Count", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "fileTrailerComment", "name": "File Trailer Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "fileBatchCount", "name": "File Batch Count", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "fileTrailerComment", "name": "File Trailer Comment", "dataType": "ST", "length": "80", "optionality": "O", "repeatability": "1" }
   ]
 }

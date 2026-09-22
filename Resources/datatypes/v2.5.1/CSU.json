@@ -7,25 +7,29 @@
       "index": 1,
       "name": "Channel Sensitivity",
       "dataType": "NM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "60"
     },
     {
       "index": 2,
       "name": "Unit of Measure Identifier",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "20"
     },
     {
       "index": 3,
       "name": "Unit of Measure Description",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "199"
     },
     {
       "index": 4,
       "name": "Unit of Measure Coding System",
       "dataType": "ID",
       "optionality": "C",
+      "length": "20",
       "tables": [
         "0396"
       ]
@@ -34,19 +38,22 @@
       "index": 5,
       "name": "Alternate Unit of Measure Identifier",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 6,
       "name": "Alternate Unit of Measure Description",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 7,
       "name": "Alternate Unit of Measure Coding System",
       "dataType": "ID",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0396"
       ]

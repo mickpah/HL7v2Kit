@@ -4,7 +4,7 @@
   "description": "Grouping/Reimbursement - Procedure Line Item",
   "fields": [
     { "index": 1, "swiftName": "revenueCode", "name": "Revenue Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0456"] },
-    { "index": 2, "swiftName": "numberOfServiceUnits", "name": "Number of Service Units", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "numberOfServiceUnits", "name": "Number of Service Units", "dataType": "NM", "length": "7#", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "charge", "name": "Charge", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "reimbursementActionCode", "name": "Reimbursement Action Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0459"] },
     { "index": 5, "swiftName": "denialOrRejectionCode", "name": "Denial or Rejection Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0460"] },
@@ -16,6 +16,6 @@
     { "index": 11, "swiftName": "expectedCmsPaymentAmount", "name": "Expected CMS Payment Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "reimbursementTypeCode", "name": "Reimbursement Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0470"] },
     { "index": 13, "swiftName": "coPayAmount", "name": "Co-Pay Amount", "dataType": "CP", "optionality": "O", "repeatability": "1" },
-    { "index": 14, "swiftName": "payRatePerServiceUnit", "name": "Pay Rate per Service Unit", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+    { "index": 14, "swiftName": "payRatePerServiceUnit", "name": "Pay Rate per Service Unit", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -82,6 +82,12 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// `ID`-typed field whose table ``HL7Table/isClosed`` is enforced;
     /// `IS` fields and open tables are informational (req #4). M6-O6.
     public let table: String?
+    /// The LEN cell the version's attribute table prints, verbatim, or `nil`
+    /// when the table prints none. Before v2.7 it is a stated maximum the
+    /// spec itself calls "not of conceptual importance"; from v2.7 it is a
+    /// normative range with truncation semantics (`"2..2"`, `"32="`, `"250#"`).
+    /// Recorded for reference and never enforced (M25).
+    public let length: String?
 
     public init(
         index: Int,
@@ -92,7 +98,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         condition: String? = nil,
         prohibitedWhen: String? = nil,
         variableColumns: Bool = false,
-        table: String? = nil
+        table: String? = nil,
+        length: String? = nil
     ) {
         self.index = index
         self.name = name
@@ -103,6 +110,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.prohibitedWhen = prohibitedWhen
         self.variableColumns = variableColumns
         self.table = table
+        self.length = length
     }
 }
 

@@ -4,10 +4,10 @@
   "description": "Anti-Microbial Cycle Data",
   "fields": [
     { "index": 1, "swiftName": "cycleStartTime", "name": "Cycle Start Time", "dataType": "TM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "cycleCount", "name": "Cycle Count", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "cycleCount", "name": "Cycle Count", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "tempMax", "name": "Temp Max", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "tempMin", "name": "Temp Min", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "loadNumber", "name": "Load Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "loadNumber", "name": "Load Number", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "conditionTime", "name": "Condition Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "sterilizeTime", "name": "Sterilize Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "exhaustTime", "name": "Exhaust Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },

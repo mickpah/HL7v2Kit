@@ -8,6 +8,7 @@
       "name": "Occurrence Code",
       "dataType": "CNE",
       "optionality": "R",
+      "length": "705",
       "tables": [
         "0350"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Occurrence Date",
       "dataType": "DT",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "8"
     }
   ]
 }

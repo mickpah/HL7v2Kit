@@ -17,6 +17,7 @@
       "name": "Calendar Alignment",
       "dataType": "ID",
       "optionality": "O",
+      "length": "2..2",
       "tables": [
         "0527"
       ]
@@ -25,19 +26,22 @@
       "index": 3,
       "name": "Phase Range Begin Value",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "10="
     },
     {
       "index": 4,
       "name": "Phase Range End Value",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "10="
     },
     {
       "index": 5,
       "name": "Period Quantity",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "10="
     },
     {
       "index": 6,
@@ -50,6 +54,7 @@
       "name": "Institution Specified Time",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0136"
       ]
@@ -59,6 +64,7 @@
       "name": "Event",
       "dataType": "ID",
       "optionality": "O",
+      "length": "2..3",
       "tables": [
         "0528"
       ]
@@ -67,7 +73,8 @@
       "index": 9,
       "name": "Event Offset Quantity",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "10="
     },
     {
       "index": 10,

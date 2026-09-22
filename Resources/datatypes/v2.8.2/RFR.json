@@ -34,13 +34,15 @@
       "index": 5,
       "name": "Species",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20="
     },
     {
       "index": 6,
       "name": "Race/subspecies",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20="
     },
     {
       "index": 7,

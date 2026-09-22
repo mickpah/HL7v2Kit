@@ -7,43 +7,50 @@
       "index": 1,
       "name": "ID Number",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "15"
     },
     {
       "index": 2,
       "name": "Family Name",
       "dataType": "FN",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "194"
     },
     {
       "index": 3,
       "name": "Given Name",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30"
     },
     {
       "index": 4,
       "name": "Second and Further Given Names or Initials Thereof",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30"
     },
     {
       "index": 5,
       "name": "Suffix (e.g., JR or III)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 6,
       "name": "Prefix (e.g., DR)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 7,
       "name": "Degree (e.g., MD)",
       "dataType": "IS",
       "optionality": "B",
+      "length": "5",
       "tables": [
         "0360"
       ]
@@ -53,6 +60,7 @@
       "name": "Source Table",
       "dataType": "IS",
       "optionality": "C",
+      "length": "4",
       "tables": [
         "0297"
       ]
@@ -62,6 +70,7 @@
       "name": "Assigning Authority",
       "dataType": "HD",
       "optionality": "O",
+      "length": "227",
       "tables": [
         "0363"
       ]
@@ -71,6 +80,7 @@
       "name": "Name Type Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0200"
       ]
@@ -79,13 +89,15 @@
       "index": 11,
       "name": "Identifier Check Digit",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "1"
     },
     {
       "index": 12,
       "name": "Check Digit Scheme",
       "dataType": "ID",
       "optionality": "C",
+      "length": "3",
       "tables": [
         "0061"
       ]
@@ -95,6 +107,7 @@
       "name": "Identifier Type Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "5",
       "tables": [
         "0203"
       ]
@@ -103,19 +116,22 @@
       "index": 14,
       "name": "Assigning Facility",
       "dataType": "HD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "227"
     },
     {
       "index": 15,
       "name": "Date/Time Action Performed",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 16,
       "name": "Name Representation Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0465"
       ]
@@ -125,6 +141,7 @@
       "name": "Name Context",
       "dataType": "CE",
       "optionality": "O",
+      "length": "483",
       "tables": [
         "0448"
       ]
@@ -133,13 +150,15 @@
       "index": 18,
       "name": "Name Validity Range",
       "dataType": "DR",
-      "optionality": "B"
+      "optionality": "B",
+      "length": "17"
     },
     {
       "index": 19,
       "name": "Name Assembly Order",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0444"
       ]
@@ -148,31 +167,36 @@
       "index": 20,
       "name": "Effective Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 21,
       "name": "Expiration Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 22,
       "name": "Professional Suffix",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 23,
       "name": "Assigning Jurisdiction",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     },
     {
       "index": 24,
       "name": "Assigning Agency or Department",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     }
   ]
 }

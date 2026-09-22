@@ -13,7 +13,8 @@
       "index": 2,
       "name": "Numeric Threshold",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4#"
     },
     {
       "index": 3,
@@ -28,7 +29,8 @@
       "index": 4,
       "name": "Days Retained",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4#"
     }
   ]
 }

@@ -3,10 +3,10 @@
   "version": "2.4",
   "description": "RXR",
   "fields": [
-    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0162"] },
-    { "index": 2, "swiftName": "administrationSite", "name": "Administration Site", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0163"] },
-    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0164"] },
-    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0165"] },
-    { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "route", "name": "Route", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0162"] },
+    { "index": 2, "swiftName": "administrationSite", "name": "Administration Site", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0163"] },
+    { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0164"] },
+    { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0165"] },
+    { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -8,6 +8,7 @@
       "name": "Version ID",
       "dataType": "ID",
       "optionality": "O",
+      "length": "5",
       "tables": [
         "0104"
       ]
@@ -17,6 +18,7 @@
       "name": "Internationalization Code",
       "dataType": "CE",
       "optionality": "O",
+      "length": "483",
       "tables": [
         "0399"
       ]
@@ -25,7 +27,8 @@
       "index": 3,
       "name": "International Version ID",
       "dataType": "CE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "483"
     }
   ]
 }

@@ -7,37 +7,43 @@
       "index": 1,
       "name": "Channel Identifier",
       "dataType": "WVI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "22"
     },
     {
       "index": 2,
       "name": "Waveform Source",
       "dataType": "WVS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "17"
     },
     {
       "index": 3,
       "name": "Channel Sensitivity and Units",
       "dataType": "CSU",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "478"
     },
     {
       "index": 4,
       "name": "Channel Calibration Parameters",
       "dataType": "CCP",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 5,
       "name": "Channel Sampling Frequency",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     },
     {
       "index": 6,
       "name": "Minimum and Maximum Data Values",
       "dataType": "NR",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "33"
     }
   ]
 }

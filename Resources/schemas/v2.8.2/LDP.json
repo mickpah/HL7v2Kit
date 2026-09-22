@@ -5,13 +5,13 @@
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLdp", "name": "Primary Key Value - LDP", "dataType": "PL", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0264"] },
-    { "index": 3, "swiftName": "locationService", "name": "Location Service", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0069"] },
+    { "index": 3, "swiftName": "locationService", "name": "Location Service", "dataType": "CWE", "length": "3=", "optionality": "O", "repeatability": "*", "tables": ["0069"] },
     { "index": 4, "swiftName": "specialtyType", "name": "Specialty Type", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0265"] },
-    { "index": 5, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
-    { "index": 6, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
+    { "index": 5, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "CWE", "length": "1=", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
+    { "index": 6, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "length": "1..1", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
     { "index": 7, "swiftName": "activationDateLdp", "name": "Activation Date - LDP", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "inactivationDateLdp", "name": "Inactivation Date - LDP", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "inactivatedReason", "name": "Inactivated Reason", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "inactivatedReason", "name": "Inactivated Reason", "dataType": "ST", "length": "80=", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "visitingHours", "name": "Visiting Hours", "dataType": "VH", "optionality": "O", "repeatability": "*", "tables": ["0267"] },
     { "index": 11, "swiftName": "contactPhone", "name": "Contact Phone", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "locationCostCenter", "name": "Location Cost Center", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0462"] }

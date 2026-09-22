@@ -38,6 +38,8 @@ struct FieldSchema: Decodable {
     /// column, e.g. `"0074"`), or `nil` for uncoded fields. See
     /// `FieldGrammar.table`. M6-O6.
     let table: String?
+    /// The printed LEN cell, verbatim ("250"; v2.7+ "2..2", "32=", "250#"). M25.
+    let length: String?
 }
 
 struct SegmentSchema: Decodable {
@@ -220,7 +222,8 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
             let variableColumns = field.variableColumns != nil ? "true" : "false"
             let table = field.table.map { escapeStringLiteral($0) } ?? "nil"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table)),"
+            let length = field.length.map { escapeStringLiteral($0) } ?? "nil"
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a
@@ -262,6 +265,7 @@ struct ComponentSchema: Decodable {
     let name: String
     let dataType: String?
     let optionality: String
+    let length: String?
     let tables: [String]?
 }
 
@@ -280,7 +284,8 @@ func renderDataTypeTable(versionSwiftName: String, sourceDir: String, types: [Da
     let constants = sorted.map { t -> String in
         let components = t.components.sorted { $0.index < $1.index }.map { c -> String in
             let tables = (c.tables ?? []).map { escapeStringLiteral($0) }.joined(separator: ", ")
-            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)]),"
+            let length = c.length.map { escapeStringLiteral($0) } ?? "nil"
+            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length)),"
         }.joined(separator: "\n")
         return """
             private static let \(versionSwiftName)_\(t.dataType): DataTypeGrammar = DataTypeGrammar(

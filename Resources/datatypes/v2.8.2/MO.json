@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Quantity",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "="
     },
     {
       "index": 2,
       "name": "Denomination",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3..3",
       "tables": [
         "0913"
       ]

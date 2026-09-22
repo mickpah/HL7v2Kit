@@ -4,15 +4,15 @@
   "description": "Facility",
   "fields": [
     { "index": 1, "swiftName": "facilityIdFac", "name": "Facility ID-FAC", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "facilityType", "name": "Facility Type", "dataType": "ID", "table": "0331", "optionality": "O", "repeatability": "1", "tables": ["0331"] },
+    { "index": 2, "swiftName": "facilityType", "name": "Facility Type", "dataType": "ID", "length": "1..1", "table": "0331", "optionality": "O", "repeatability": "1", "tables": ["0331"] },
     { "index": 3, "swiftName": "facilityAddress", "name": "Facility Address", "dataType": "XAD", "optionality": "R", "repeatability": "*" },
     { "index": 4, "swiftName": "facilityTelecommunication", "name": "Facility Telecommunication", "dataType": "XTN", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "contactPerson", "name": "Contact Person", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "contactTitle", "name": "Contact Title", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "contactTitle", "name": "Contact Title", "dataType": "ST", "length": "60=", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "contactAddress", "name": "Contact Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 8, "swiftName": "contactTelecommunication", "name": "Contact Telecommunication", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
     { "index": 9, "swiftName": "signatureAuthority", "name": "Signature Authority", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
-    { "index": 10, "swiftName": "signatureAuthorityTitle", "name": "Signature Authority Title", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "signatureAuthorityTitle", "name": "Signature Authority Title", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "signatureAuthorityAddress", "name": "Signature Authority Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 12, "swiftName": "signatureAuthorityTelecommunication", "name": "Signature Authority Telecommunication", "dataType": "XTN", "optionality": "O", "repeatability": "1" }
   ]

@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "softwareVendorOrganization",
       "name": "Software Vendor Organization",
-      "dataType": "XON",
+      "dataType": "XON", "length": "567",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "softwareCertifiedVersionOrReleaseNumber",
       "name": "Software Certified Version or Release Number",
-      "dataType": "ST",
+      "dataType": "ST", "length": "15",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -23,7 +23,7 @@
       "index": 3,
       "swiftName": "softwareProductName",
       "name": "Software Product Name",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -31,7 +31,7 @@
       "index": 4,
       "swiftName": "softwareBinaryID",
       "name": "Software Binary ID",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -39,7 +39,7 @@
       "index": 5,
       "swiftName": "softwareProductInformation",
       "name": "Software Product Information",
-      "dataType": "TX",
+      "dataType": "TX", "length": "1024",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -47,7 +47,7 @@
       "index": 6,
       "swiftName": "softwareInstallDate",
       "name": "Software Install Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     }

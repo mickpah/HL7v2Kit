@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "Clinical Relationship",
   "fields": [
-    { "index": 1, "swiftName": "setIdRel", "name": "Set ID –REL", "dataType": "SI", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "setIdRel", "name": "Set ID –REL", "dataType": "SI", "length": "1..4", "optionality": "C", "repeatability": "1" },
     { "index": 2, "swiftName": "relationshipType", "name": "Relationship Type", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "thisRelationshipInstanceIdentifier", "name": "This Relationship Instance Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "sourceInformationInstanceIdentifier", "name": "Source Information Instance Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
@@ -14,10 +14,10 @@
     { "index": 9, "swiftName": "assertorAddress", "name": "Assertor Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "assertorContact", "name": "Assertor Contact", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "assertionDateRange", "name": "Assertion Date Range", "dataType": "DR", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "negationIndicator", "name": "Negation Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 12, "swiftName": "negationIndicator", "name": "Negation Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 13, "swiftName": "certaintyOfRelationship", "name": "Certainty of Relationship", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 14, "swiftName": "priorityNo", "name": "Priority No", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 15, "swiftName": "prioritySequenceNoRelPreferenceForConsideration", "name": "Priority Sequence No (rel preference for consideration)", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 16, "swiftName": "separabilityIndicator", "name": "Separability Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 14, "swiftName": "priorityNo", "name": "Priority No", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
+    { "index": 15, "swiftName": "prioritySequenceNoRelPreferenceForConsideration", "name": "Priority Sequence No (rel preference for consideration)", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
+    { "index": 16, "swiftName": "separabilityIndicator", "name": "Separability Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

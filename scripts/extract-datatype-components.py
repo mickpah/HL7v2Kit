@@ -140,9 +140,9 @@ def main():
         for code, t in sorted(types.items()):
             doc = {"dataType": code, "version": version, "name": t["name"], "components": [
                 {k: v for k, v in (("index", c["index"]), ("name", c["name"]), ("dataType", c["dataType"]),
-                                   ("optionality", c["optionality"]),
+                                   ("optionality", c["optionality"]), ("length", c["len"]),
                                    ("tables", table_numbers(c["tbl"])))
-                 if not (k == "tables" and not v)} for c in t["components"]]}
+                 if not (k in ("tables", "length") and not v)} for c in t["components"]]}
             with open(os.path.join(out, f"{code}.json"), "w", encoding="utf-8") as f:
                 json.dump(doc, f, indent=2, ensure_ascii=False)
                 f.write("\n")

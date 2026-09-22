@@ -8,6 +8,7 @@
       "name": "Message Code",
       "dataType": "ID",
       "optionality": "R",
+      "length": "3..3",
       "tables": [
         "0076"
       ]
@@ -17,6 +18,7 @@
       "name": "Trigger Event",
       "dataType": "ID",
       "optionality": "R",
+      "length": "3..3",
       "tables": [
         "0003"
       ]
@@ -26,6 +28,7 @@
       "name": "Message Structure",
       "dataType": "ID",
       "optionality": "R",
+      "length": "3,7",
       "tables": [
         "0354"
       ]

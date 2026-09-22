@@ -7,37 +7,43 @@
       "index": 1,
       "name": "Sample 1 From Channel 1",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 2,
       "name": "Sample 1 From Channel 2",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 3,
       "name": "Sample 1 From Channel N",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 4,
       "name": "Sample 2 From Channel 1",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 5,
       "name": "Sample 2 From Channel N",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 6,
       "name": "Sample N From Channel N",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     }
   ]
 }

@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Specialty Name",
       "dataType": "ST",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "50="
     },
     {
       "index": 2,
       "name": "Governing Board",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "50="
     },
     {
       "index": 3,
       "name": "Eligible or Certified",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0337"
       ]

@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Channel Number",
       "dataType": "NM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "4"
     },
     {
       "index": 2,
       "name": "Channel Name",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "17"
     }
   ]
 }

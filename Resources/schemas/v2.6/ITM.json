@@ -3,11 +3,11 @@
   "version": "2.6",
   "description": "Material Item",
   "fields": [
-    { "index": 1, "swiftName": "itemIdentifier", "name": "Item Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "itemDescription", "name": "Item Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "itemStatus", "name": "Item Status", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0776"] },
-    { "index": 4, "swiftName": "itemType", "name": "Item Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0778"] },
-    { "index": 5, "swiftName": "itemCategory", "name": "Item Category", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "subjectToExpirationIndicator", "name": "Subject to Expiration Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] }
+    { "index": 1, "swiftName": "itemIdentifier", "name": "Item Identifier", "dataType": "EI", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "itemDescription", "name": "Item Description", "dataType": "ST", "length": "999", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "itemStatus", "name": "Item Status", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0776"] },
+    { "index": 4, "swiftName": "itemType", "name": "Item Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0778"] },
+    { "index": 5, "swiftName": "itemCategory", "name": "Item Category", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "subjectToExpirationIndicator", "name": "Subject to Expiration Indicator", "dataType": "CNE", "length": "4", "optionality": "O", "repeatability": "1", "tables": ["0532"] }
   ]
 }

@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "livingDependency",
       "name": "Living Dependency",
-      "dataType": "IS", "table": "0223",
+      "dataType": "IS", "length": "2", "table": "0223",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0223"]
@@ -16,7 +16,7 @@
       "index": 2,
       "swiftName": "livingArrangement",
       "name": "Living Arrangement",
-      "dataType": "IS", "table": "0220",
+      "dataType": "IS", "length": "2", "table": "0220",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0220"]
@@ -25,7 +25,7 @@
       "index": 3,
       "swiftName": "patientPrimaryFacility",
       "name": "Patient Primary Facility",
-      "dataType": "XON",
+      "dataType": "XON", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -33,7 +33,7 @@
       "index": 4,
       "swiftName": "patientPrimaryCareProviderNameAndIDNo",
       "name": "Patient Primary Care Provider Name & ID No.",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "B",
       "repeatability": "*"
     },
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "studentIndicator",
       "name": "Student Indicator",
-      "dataType": "IS", "table": "0231",
+      "dataType": "IS", "length": "2", "table": "0231",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0231"]
@@ -50,7 +50,7 @@
       "index": 6,
       "swiftName": "handicap",
       "name": "Handicap",
-      "dataType": "IS", "table": "0295",
+      "dataType": "IS", "length": "2", "table": "0295",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0295"]
@@ -59,7 +59,7 @@
       "index": 7,
       "swiftName": "livingWillCode",
       "name": "Living Will Code",
-      "dataType": "IS", "table": "0315",
+      "dataType": "IS", "length": "2", "table": "0315",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0315"]
@@ -68,7 +68,7 @@
       "index": 8,
       "swiftName": "organDonorCode",
       "name": "Organ Donor Code",
-      "dataType": "IS", "table": "0316",
+      "dataType": "IS", "length": "2", "table": "0316",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0316"]
@@ -77,7 +77,7 @@
       "index": 9,
       "swiftName": "separateBill",
       "name": "Separate Bill",
-      "dataType": "ID", "table": "0136",
+      "dataType": "ID", "length": "1", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -86,7 +86,7 @@
       "index": 10,
       "swiftName": "duplicatePatient",
       "name": "Duplicate Patient",
-      "dataType": "CX",
+      "dataType": "CX", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -94,7 +94,7 @@
       "index": 11,
       "swiftName": "publicityCode",
       "name": "Publicity Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0215"]
@@ -103,7 +103,7 @@
       "index": 12,
       "swiftName": "protectionIndicator",
       "name": "Protection Indicator",
-      "dataType": "ID", "table": "0136",
+      "dataType": "ID", "length": "1", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -112,7 +112,7 @@
       "index": 13,
       "swiftName": "protectionIndicatorEffectiveDate",
       "name": "Protection Indicator Effective Date",
-      "dataType": "DT",
+      "dataType": "DT", "length": "8",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -120,7 +120,7 @@
       "index": 14,
       "swiftName": "placeOfWorship",
       "name": "Place of Worship",
-      "dataType": "XON",
+      "dataType": "XON", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -128,7 +128,7 @@
       "index": 15,
       "swiftName": "advanceDirectiveCode",
       "name": "Advance Directive Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0435"]
@@ -137,7 +137,7 @@
       "index": 16,
       "swiftName": "immunizationRegistryStatus",
       "name": "Immunization Registry Status",
-      "dataType": "IS", "table": "0441",
+      "dataType": "IS", "length": "1", "table": "0441",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0441"]
@@ -146,7 +146,7 @@
       "index": 17,
       "swiftName": "immunizationRegistryStatusEffectiveDate",
       "name": "Immunization Registry Status Effective Date",
-      "dataType": "DT",
+      "dataType": "DT", "length": "8",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -154,7 +154,7 @@
       "index": 18,
       "swiftName": "publicityCodeEffectiveDate",
       "name": "Publicity Code Effective Date",
-      "dataType": "DT",
+      "dataType": "DT", "length": "8",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -162,7 +162,7 @@
       "index": 19,
       "swiftName": "militaryBranch",
       "name": "Military Branch",
-      "dataType": "IS", "table": "0140",
+      "dataType": "IS", "length": "5", "table": "0140",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0140"]
@@ -171,7 +171,7 @@
       "index": 20,
       "swiftName": "militaryRankGrade",
       "name": "Military Rank/Grade",
-      "dataType": "IS", "table": "0141",
+      "dataType": "IS", "length": "2", "table": "0141",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0141"]
@@ -180,7 +180,7 @@
       "index": 21,
       "swiftName": "militaryStatus",
       "name": "Military Status",
-      "dataType": "IS", "table": "0142",
+      "dataType": "IS", "length": "3", "table": "0142",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0142"]

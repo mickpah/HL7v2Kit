@@ -16,7 +16,8 @@
       "index": 2,
       "name": "Occurrence Date",
       "dataType": "DT",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "8="
     }
   ]
 }

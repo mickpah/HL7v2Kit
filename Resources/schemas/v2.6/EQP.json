@@ -3,10 +3,10 @@
   "version": "2.6",
   "description": "EQP",
   "fields": [
-    { "index": 1, "swiftName": "eventType", "name": "Event type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0450"] },
-    { "index": 2, "swiftName": "fileName", "name": "File Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "endDateTime", "name": "End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "transactionData", "name": "Transaction Data", "dataType": "FT", "optionality": "R", "repeatability": "1" }
+    { "index": 1, "swiftName": "eventType", "name": "Event type", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["0450"] },
+    { "index": 2, "swiftName": "fileName", "name": "File Name", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "startDateTime", "name": "Start Date/Time", "dataType": "DTM", "length": "24", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "endDateTime", "name": "End Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "transactionData", "name": "Transaction Data", "dataType": "FT", "length": "65536", "optionality": "R", "repeatability": "1" }
   ]
 }

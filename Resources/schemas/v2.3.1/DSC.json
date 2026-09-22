@@ -3,6 +3,6 @@
   "version": "2.3.1",
   "description": "Continuation Pointer",
   "fields": [
-    { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "length": "180", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -3,15 +3,15 @@
   "version": "2.5.1",
   "description": "Original-Style Query Filter",
   "fields": [
-    { "index": 1, "swiftName": "whereSubjectFilter", "name": "Where Subject Filter", "dataType": "ST", "optionality": "R", "repeatability": "*" },
-    { "index": 2, "swiftName": "whenDataStartDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "optionality": "B", "repeatability": "1" },
-    { "index": 3, "swiftName": "whenDataEndDateTime", "name": "When Data End Date/Time", "dataType": "TS", "optionality": "B", "repeatability": "1" },
-    { "index": 4, "swiftName": "whatUserQualifier", "name": "What User Qualifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "otherQrySubjectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "whichDateTimeQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
-    { "index": 7, "swiftName": "whichDateTimeStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
-    { "index": 8, "swiftName": "dateTimeSelectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
-    { "index": 9, "swiftName": "whenQuantityTimingQualifier", "name": "When Quantity/Timing Qualifier", "dataType": "TQ", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "searchConfidenceThreshold", "name": "Search Confidence Threshold", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "whereSubjectFilter", "name": "Where Subject Filter", "dataType": "ST", "length": "20", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "whenDataStartDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "length": "26", "optionality": "B", "repeatability": "1" },
+    { "index": 3, "swiftName": "whenDataEndDateTime", "name": "When Data End Date/Time", "dataType": "TS", "length": "26", "optionality": "B", "repeatability": "1" },
+    { "index": 4, "swiftName": "whatUserQualifier", "name": "What User Qualifier", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "otherQrySubjectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "whichDateTimeQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "length": "12", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
+    { "index": 7, "swiftName": "whichDateTimeStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "length": "12", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
+    { "index": 8, "swiftName": "dateTimeSelectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "length": "12", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
+    { "index": 9, "swiftName": "whenQuantityTimingQualifier", "name": "When Quantity/Timing Qualifier", "dataType": "TQ", "length": "60", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "searchConfidenceThreshold", "name": "Search Confidence Threshold", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" }
   ]
 }

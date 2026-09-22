@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "Blood Unit information",
   "fields": [
-    { "index": 1, "swiftName": "setIdBui", "name": "Set ID – BUI", "dataType": "SI", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "setIdBui", "name": "Set ID – BUI", "dataType": "SI", "length": "1..4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "bloodUnitIdentifier", "name": "Blood Unit Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "bloodUnitType", "name": "Blood Unit Type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0566"] },
     { "index": 4, "swiftName": "bloodUnitWeight", "name": "Blood Unit Weight", "dataType": "NM", "optionality": "R", "repeatability": "1" },

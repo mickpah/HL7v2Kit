@@ -17,6 +17,7 @@
       "name": "Certification Required",
       "dataType": "ID",
       "optionality": "R",
+      "length": "1..1",
       "tables": [
         "0136"
       ]

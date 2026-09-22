@@ -3,11 +3,11 @@
   "version": "2.5.1",
   "description": "Pathway",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
-    { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "pathwayInstanceId", "name": "Pathway Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "pathwayEstablishedDateTime", "name": "Pathway Established Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "pathwayLifeCycleStatus", "name": "Pathway Life Cycle Status", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "changePathwayLifeCycleStatusDateTime", "name": "Change Pathway Life Cycle Status Date/Time", "dataType": "TS", "optionality": "C", "repeatability": "1" }
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "pathwayInstanceId", "name": "Pathway Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "pathwayEstablishedDateTime", "name": "Pathway Established Date/Time", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "pathwayLifeCycleStatus", "name": "Pathway Life Cycle Status", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "changePathwayLifeCycleStatusDateTime", "name": "Change Pathway Life Cycle Status Date/Time", "dataType": "TS", "length": "26", "optionality": "C", "repeatability": "1" }
   ]
 }

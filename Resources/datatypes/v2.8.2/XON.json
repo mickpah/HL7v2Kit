@@ -7,7 +7,8 @@
       "index": 1,
       "name": "Organization Name",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "50#"
     },
     {
       "index": 2,
@@ -50,6 +51,7 @@
       "name": "Identifier Type Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "2..5",
       "tables": [
         "0203"
       ]
@@ -65,6 +67,7 @@
       "name": "Name Representation Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0465"
       ]

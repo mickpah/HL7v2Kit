@@ -14,6 +14,7 @@
       "name": "Telecommunication Use Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3",
       "tables": [
         "0201"
       ]
@@ -23,6 +24,7 @@
       "name": "Telecommunication Equipment Type",
       "dataType": "ID",
       "optionality": "O",
+      "length": "8",
       "tables": [
         "0202"
       ]
@@ -31,73 +33,85 @@
       "index": 4,
       "name": "Communication Address",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 5,
       "name": "Country Code",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "3"
     },
     {
       "index": 6,
       "name": "Area/City Code",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "5"
     },
     {
       "index": 7,
       "name": "Local Number",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "9"
     },
     {
       "index": 8,
       "name": "Extension",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "5"
     },
     {
       "index": 9,
       "name": "Any Text",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 10,
       "name": "Extension Prefix",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4"
     },
     {
       "index": 11,
       "name": "Speed Dial Code",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     },
     {
       "index": 12,
       "name": "Unformatted Telephone number",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "199"
     },
     {
       "index": 13,
       "name": "Effective Start Date",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 14,
       "name": "Expiration Date",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 15,
       "name": "Expiration Reason",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0868"
       ]
@@ -107,6 +121,7 @@
       "name": "Protection Code",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0618"
       ]
@@ -115,13 +130,15 @@
       "index": 17,
       "name": "Shared Telecommunication Identifier",
       "dataType": "EI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "427"
     },
     {
       "index": 18,
       "name": "Preference Order",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "2"
     }
   ]
 }

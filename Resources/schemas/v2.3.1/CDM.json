@@ -3,18 +3,18 @@
   "version": "2.3.1",
   "description": "CDM",
   "fields": [
-    { "index": 1, "swiftName": "primaryKeyValueCdm", "name": "Primary Key Value - CDM", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0132"] },
-    { "index": 2, "swiftName": "chargeCodeAlias", "name": "Charge Code Alias", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 3, "swiftName": "chargeDescriptionShort", "name": "Charge Description Short", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "chargeDescriptionLong", "name": "Charge Description Long", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "descriptionOverrideIndicator", "name": "Description Override Indicator", "dataType": "IS", "table": "0268", "optionality": "O", "repeatability": "1", "tables": ["0268"] },
-    { "index": 6, "swiftName": "explodingCharges", "name": "Exploding Charges", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0088"] },
-    { "index": 8, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
-    { "index": 9, "swiftName": "inventoryNumber", "name": "Inventory Number", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 10, "swiftName": "resourceLoad", "name": "Resource Load", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "contractNumber", "name": "Contract Number", "dataType": "CK", "optionality": "O", "repeatability": "*" },
-    { "index": 12, "swiftName": "contractOrganization", "name": "Contract Organization", "dataType": "XON", "optionality": "O", "repeatability": "*" },
-    { "index": 13, "swiftName": "roomFeeIndicator", "name": "Room Fee Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 1, "swiftName": "primaryKeyValueCdm", "name": "Primary Key Value - CDM", "dataType": "CE", "length": "200", "optionality": "R", "repeatability": "1", "tables": ["0132"] },
+    { "index": 2, "swiftName": "chargeCodeAlias", "name": "Charge Code Alias", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "chargeDescriptionShort", "name": "Charge Description Short", "dataType": "ST", "length": "20", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "chargeDescriptionLong", "name": "Charge Description Long", "dataType": "ST", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "descriptionOverrideIndicator", "name": "Description Override Indicator", "dataType": "IS", "length": "1", "table": "0268", "optionality": "O", "repeatability": "1", "tables": ["0268"] },
+    { "index": 6, "swiftName": "explodingCharges", "name": "Exploding Charges", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CE", "length": "80", "optionality": "O", "repeatability": "*", "tables": ["0088"] },
+    { "index": 8, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "length": "1", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
+    { "index": 9, "swiftName": "inventoryNumber", "name": "Inventory Number", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "resourceLoad", "name": "Resource Load", "dataType": "NM", "length": "12", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "contractNumber", "name": "Contract Number", "dataType": "CK", "length": "200", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "contractOrganization", "name": "Contract Organization", "dataType": "XON", "length": "200", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "roomFeeIndicator", "name": "Room Fee Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

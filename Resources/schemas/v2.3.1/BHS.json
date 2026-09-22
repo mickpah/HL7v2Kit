@@ -3,17 +3,17 @@
   "version": "2.3.1",
   "description": "Batch Header",
   "fields": [
-    { "index": 1, "swiftName": "batchFieldSeparator", "name": "Batch Field Separator", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "batchEncodingCharacters", "name": "Batch Encoding Characters", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "batchSendingApplication", "name": "Batch Sending Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "batchSendingFacility", "name": "Batch Sending Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "batchReceivingApplication", "name": "Batch Receiving Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "batchReceivingFacility", "name": "Batch Receiving Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "batchCreationDateTime", "name": "Batch Creation Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "batchSecurity", "name": "Batch Security", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "batchNameIdType", "name": "Batch Name/ID/Type", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "batchComment", "name": "Batch Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "batchControlId", "name": "Batch Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "referenceBatchControlId", "name": "Reference Batch Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "batchFieldSeparator", "name": "Batch Field Separator", "dataType": "ST", "length": "1", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "batchEncodingCharacters", "name": "Batch Encoding Characters", "dataType": "ST", "length": "3", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "batchSendingApplication", "name": "Batch Sending Application", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "batchSendingFacility", "name": "Batch Sending Facility", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "batchReceivingApplication", "name": "Batch Receiving Application", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "batchReceivingFacility", "name": "Batch Receiving Facility", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "batchCreationDateTime", "name": "Batch Creation Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "batchSecurity", "name": "Batch Security", "dataType": "ST", "length": "40", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "batchNameIdType", "name": "Batch Name/ID/Type", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "batchComment", "name": "Batch Comment", "dataType": "ST", "length": "80", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "batchControlId", "name": "Batch Control ID", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "referenceBatchControlId", "name": "Reference Batch Control ID", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" }
   ]
 }

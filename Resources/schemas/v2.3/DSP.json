@@ -3,10 +3,10 @@
   "version": "2.3",
   "description": "Display Data",
   "fields": [
-    { "index": 1, "swiftName": "setIdDsp", "name": "Set ID - DSP", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "displayLevel", "name": "Display Level", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "dataLine", "name": "Data Line", "dataType": "TX", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "logicalBreakPoint", "name": "Logical Break Point", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "resultId", "name": "Result ID", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "setIdDsp", "name": "Set ID - DSP", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "displayLevel", "name": "Display Level", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "dataLine", "name": "Data Line", "dataType": "TX", "length": "300", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "logicalBreakPoint", "name": "Logical Break Point", "dataType": "ST", "length": "2", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "resultId", "name": "Result ID", "dataType": "TX", "length": "20", "optionality": "O", "repeatability": "1" }
   ]
 }

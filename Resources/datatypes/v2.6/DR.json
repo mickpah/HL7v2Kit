@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Range Start Date/Time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 2,
       "name": "Range End Date/Time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     }
   ]
 }

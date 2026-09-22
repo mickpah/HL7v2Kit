@@ -3,10 +3,10 @@
   "version": "2.6",
   "description": "EQU",
   "fields": [
-    { "index": 1, "swiftName": "equipmentInstanceIdentifier", "name": "Equipment Instance Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "eventDateTime", "name": "Event Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "equipmentState", "name": "Equipment State", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0365"] },
-    { "index": 4, "swiftName": "localRemoteControlState", "name": "Local/Remote Control State", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0366"] },
-    { "index": 5, "swiftName": "alertLevel", "name": "Alert Level", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0367"] }
+    { "index": 1, "swiftName": "equipmentInstanceIdentifier", "name": "Equipment Instance Identifier", "dataType": "EI", "length": "427", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "eventDateTime", "name": "Event Date/Time", "dataType": "DTM", "length": "24", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "equipmentState", "name": "Equipment State", "dataType": "CWE", "length": "705", "optionality": "C", "repeatability": "1", "tables": ["0365"] },
+    { "index": 4, "swiftName": "localRemoteControlState", "name": "Local/Remote Control State", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0366"] },
+    { "index": 5, "swiftName": "alertLevel", "name": "Alert Level", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0367"] }
   ]
 }

@@ -7,37 +7,43 @@
       "index": 1,
       "name": "Street Address",
       "dataType": "SAD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "184"
     },
     {
       "index": 2,
       "name": "Other Designation",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "120"
     },
     {
       "index": 3,
       "name": "City",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "50"
     },
     {
       "index": 4,
       "name": "State or Province",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "50"
     },
     {
       "index": 5,
       "name": "Zip or Postal Code",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "12"
     },
     {
       "index": 6,
       "name": "Country",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3",
       "tables": [
         "0399"
       ]
@@ -47,6 +53,7 @@
       "name": "Address Type",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3",
       "tables": [
         "0190"
       ]
@@ -55,13 +62,15 @@
       "index": 8,
       "name": "Other Geographic Designation",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "50"
     },
     {
       "index": 9,
       "name": "County/Parish Code",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0289"
       ]
@@ -71,6 +80,7 @@
       "name": "Census Tract",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0288"
       ]
@@ -80,6 +90,7 @@
       "name": "Address Representation Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0465"
       ]
@@ -88,19 +99,22 @@
       "index": 12,
       "name": "Address Validity Range",
       "dataType": "DR",
-      "optionality": "B"
+      "optionality": "B",
+      "length": "53"
     },
     {
       "index": 13,
       "name": "Effective Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 14,
       "name": "Expiration Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     }
   ]
 }

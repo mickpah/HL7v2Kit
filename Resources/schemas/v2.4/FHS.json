@@ -3,17 +3,17 @@
   "version": "2.4",
   "description": "File Header",
   "fields": [
-    { "index": 1, "swiftName": "fileFieldSeparator", "name": "File Field Separator", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "fileEncodingCharacters", "name": "File Encoding Characters", "dataType": "ST", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "fileSendingApplication", "name": "File Sending Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "fileSendingFacility", "name": "File Sending Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "fileReceivingApplication", "name": "File Receiving Application", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "fileReceivingFacility", "name": "File Receiving Facility", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "fileCreationDateTime", "name": "File Creation Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "fileSecurity", "name": "File Security", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "fileNameId", "name": "File Name/ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "fileHeaderComment", "name": "File Header Comment", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "fileControlId", "name": "File Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "referenceFileControlId", "name": "Reference File Control ID", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "fileFieldSeparator", "name": "File Field Separator", "dataType": "ST", "length": "1", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "fileEncodingCharacters", "name": "File Encoding Characters", "dataType": "ST", "length": "4", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "fileSendingApplication", "name": "File Sending Application", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "fileSendingFacility", "name": "File Sending Facility", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "fileReceivingApplication", "name": "File Receiving Application", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "fileReceivingFacility", "name": "File Receiving Facility", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "fileCreationDateTime", "name": "File Creation Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "fileSecurity", "name": "File Security", "dataType": "ST", "length": "40", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "fileNameId", "name": "File Name/ID", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "fileHeaderComment", "name": "File Header Comment", "dataType": "ST", "length": "80", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "fileControlId", "name": "File Control ID", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "referenceFileControlId", "name": "Reference File Control ID", "dataType": "ST", "length": "20", "optionality": "O", "repeatability": "1" }
   ]
 }

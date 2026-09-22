@@ -3,9 +3,9 @@
   "version": "2.3",
   "description": "Dietary Orders",
   "fields": [
-    { "index": 1, "swiftName": "type", "name": "Type", "dataType": "ID", "table": "0159", "optionality": "R", "repeatability": "1", "tables": ["0159"] },
-    { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 3, "swiftName": "dietSupplementOrPreferenceCode", "name": "Diet, Supplement, or Preference Code", "dataType": "CE", "optionality": "R", "repeatability": "*" },
-    { "index": 4, "swiftName": "textInstruction", "name": "Text Instruction", "dataType": "ST", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "type", "name": "Type", "dataType": "ID", "length": "1", "table": "0159", "optionality": "R", "repeatability": "1", "tables": ["0159"] },
+    { "index": 2, "swiftName": "servicePeriod", "name": "Service Period", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "dietSupplementOrPreferenceCode", "name": "Diet, Supplement, or Preference Code", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "*" },
+    { "index": 4, "swiftName": "textInstruction", "name": "Text Instruction", "dataType": "ST", "length": "80", "optionality": "O", "repeatability": "*" }
   ]
 }

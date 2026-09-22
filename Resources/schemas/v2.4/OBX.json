@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - OBX",
-      "dataType": "SI",
+      "dataType": "SI", "length": "4",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "valueType",
       "name": "Value Type",
-      "dataType": "ID", "table": "0125",
+      "dataType": "ID", "length": "2", "table": "0125",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0125"],
@@ -25,7 +25,7 @@
       "index": 3,
       "swiftName": "observationIdentifier",
       "name": "Observation Identifier",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -33,7 +33,7 @@
       "index": 4,
       "swiftName": "observationSubID",
       "name": "Observation Sub-ID",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "observationValue",
       "name": "Observation Value",
-      "dataType": "*",
+      "dataType": "*", "length": "*",
       "optionality": "C",
       "repeatability": "*"
     },
@@ -49,7 +49,7 @@
       "index": 6,
       "swiftName": "units",
       "name": "Units",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -57,7 +57,7 @@
       "index": 7,
       "swiftName": "referencesRange",
       "name": "References Range",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -65,7 +65,7 @@
       "index": 8,
       "swiftName": "abnormalFlags",
       "name": "Abnormal Flags",
-      "dataType": "IS", "table": "0078",
+      "dataType": "IS", "length": "5", "table": "0078",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0078"]
@@ -74,7 +74,7 @@
       "index": 9,
       "swiftName": "probability",
       "name": "Probability",
-      "dataType": "NM",
+      "dataType": "NM", "length": "5",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -82,7 +82,7 @@
       "index": 10,
       "swiftName": "natureOfAbnormalTest",
       "name": "Nature of Abnormal Test",
-      "dataType": "ID", "table": "0080",
+      "dataType": "ID", "length": "2", "table": "0080",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0080"]
@@ -91,7 +91,7 @@
       "index": 11,
       "swiftName": "observationResultStatus",
       "name": "Observation Result Status",
-      "dataType": "ID", "table": "0085",
+      "dataType": "ID", "length": "1", "table": "0085",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0085"]
@@ -100,7 +100,7 @@
       "index": 12,
       "swiftName": "dateLastObservationNormalValue",
       "name": "Date Last Observation Normal Value",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -108,7 +108,7 @@
       "index": 13,
       "swiftName": "userDefinedAccessChecks",
       "name": "User Defined Access Checks",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -116,7 +116,7 @@
       "index": 14,
       "swiftName": "dateTimeOfTheObservation",
       "name": "Date/Time of the Observation",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -124,7 +124,7 @@
       "index": 15,
       "swiftName": "producersID",
       "name": "Producer's ID",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -132,7 +132,7 @@
       "index": 16,
       "swiftName": "responsibleObserver",
       "name": "Responsible Observer",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -140,7 +140,7 @@
       "index": 17,
       "swiftName": "observationMethod",
       "name": "Observation Method",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -148,7 +148,7 @@
       "index": 18,
       "swiftName": "equipmentInstanceIdentifier",
       "name": "Equipment Instance Identifier",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -156,7 +156,7 @@
       "index": 19,
       "swiftName": "dateTimeOfTheAnalysis",
       "name": "Date/Time of the Analysis",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     }

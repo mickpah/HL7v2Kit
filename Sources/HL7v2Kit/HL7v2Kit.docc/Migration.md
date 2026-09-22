@@ -100,6 +100,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.4.0 | Datatype component grammar (ADR-017): `DataTypeGrammarTable`, `DataTypeGrammar`, `ComponentGrammar`. Additive API; the code-table check now also covers `ID` components on v2.5.1 / v2.6 / v2.8.2 messages. |
 | v3.5.0 | `IssueLocation.subcomponentIndex` (additive; a defaulted initialiser parameter). The component code-table check descends into nested composites, covers OBX-5 under its OBX-2 datatype, and now runs on v2.3, v2.3.1 and v2.4 too. AU rules ADRM-prose P-8 to P-10 (the VMR sub-ID tree). AU locale renderings of Tables 0125 and 0301. Fix: Table 0301 `L,M,N` split into three codes. |
 | v3.7.0 | `ValidationOptions.requiredComponentSeverity` (additive, defaulted `.error`). |
+| *Unreleased* | `FieldGrammar.length`, `ComponentGrammar.length` (additive, defaulted): the printed LEN, verbatim, never enforced. |
 
 ## The code-table check is on by default (ADR-016)
 

@@ -13,25 +13,29 @@
       "index": 2,
       "name": "Given Name",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30#"
     },
     {
       "index": 3,
       "name": "Second and Further Given Names or Initials Thereof",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30#"
     },
     {
       "index": 4,
       "name": "Suffix (e.g., JR or III)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20#"
     },
     {
       "index": 5,
       "name": "Prefix (e.g., DR)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20#"
     },
     {
       "index": 6,
@@ -44,6 +48,7 @@
       "name": "Name Type Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..5",
       "tables": [
         "0200"
       ]
@@ -53,6 +58,7 @@
       "name": "Name Representation Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0465"
       ]
@@ -77,6 +83,7 @@
       "name": "Name Assembly Order",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0444"
       ]
@@ -97,13 +104,15 @@
       "index": 14,
       "name": "Professional Suffix",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199#"
     },
     {
       "index": 15,
       "name": "Called By",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30#"
     }
   ]
 }

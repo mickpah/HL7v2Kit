@@ -8,6 +8,7 @@
       "name": "Privilege",
       "dataType": "CWE",
       "optionality": "R",
+      "length": "705",
       "tables": [
         "0525"
       ]
@@ -17,6 +18,7 @@
       "name": "Privilege Class",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0526"
       ]
@@ -25,19 +27,22 @@
       "index": 3,
       "name": "Expiration Date",
       "dataType": "DT",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "8"
     },
     {
       "index": 4,
       "name": "Activation Date",
       "dataType": "DT",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "8"
     },
     {
       "index": 5,
       "name": "Facility",
       "dataType": "EI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "427"
     }
   ]
 }

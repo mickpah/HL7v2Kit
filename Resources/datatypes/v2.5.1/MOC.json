@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Monetary Amount",
       "dataType": "MO",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 2,
       "name": "Charge Code",
       "dataType": "CE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "483"
     }
   ]
 }

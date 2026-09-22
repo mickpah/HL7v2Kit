@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Identifier",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 2,
       "name": "Text",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 3,
       "name": "Name of Coding System",
       "dataType": "ID",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0396"
       ]
@@ -28,19 +31,22 @@
       "index": 4,
       "name": "Alternate Identifier",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 5,
       "name": "Alternate Text",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 6,
       "name": "Name of Alternate Coding System",
       "dataType": "ID",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0396"
       ]

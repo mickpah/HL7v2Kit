@@ -3,13 +3,13 @@
   "version": "2.6",
   "description": "Sterilizer Configuration",
   "fields": [
-    { "index": 1, "swiftName": "numberOfDecontaminationSterilizationDevices", "name": "Number Of Decontamination/Sterilization Devices", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "laborCalculationType", "name": "Labor Calculation Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0651"] },
-    { "index": 3, "swiftName": "dateFormat", "name": "Date Format", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0653"] },
-    { "index": 4, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "deviceModelName", "name": "Device Model Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "deviceType", "name": "Device Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0657"] },
-    { "index": 8, "swiftName": "lotControl", "name": "Lot Control", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0659"] }
+    { "index": 1, "swiftName": "numberOfDecontaminationSterilizationDevices", "name": "Number Of Decontamination/Sterilization Devices", "dataType": "NM", "length": "2", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "laborCalculationType", "name": "Labor Calculation Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0651"] },
+    { "index": 3, "swiftName": "dateFormat", "name": "Date Format", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0653"] },
+    { "index": 4, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "length": "999", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "deviceModelName", "name": "Device Model Name", "dataType": "ST", "length": "2", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "deviceType", "name": "Device Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0657"] },
+    { "index": 8, "swiftName": "lotControl", "name": "Lot Control", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0659"] }
   ]
 }

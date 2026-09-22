@@ -8,6 +8,7 @@
       "name": "Start Day Range",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3",
       "tables": [
         "0267"
       ]
@@ -17,6 +18,7 @@
       "name": "End Day Range",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3",
       "tables": [
         "0267"
       ]
@@ -25,13 +27,15 @@
       "index": 3,
       "name": "Start Hour Range",
       "dataType": "TM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 4,
       "name": "End Hour Range",
       "dataType": "TM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     }
   ]
 }

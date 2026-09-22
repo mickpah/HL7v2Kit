@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Normal Range",
       "dataType": "NR",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "33"
     },
     {
       "index": 2,
       "name": "Numeric Threshold",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4"
     },
     {
       "index": 3,
       "name": "Change Computation",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0523"
       ]
@@ -28,7 +31,8 @@
       "index": 4,
       "name": "Days Retained",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4"
     }
   ]
 }

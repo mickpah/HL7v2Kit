@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setIdPac",
       "name": "Set Id – PAC",
-      "dataType": "SI",
+      "dataType": "SI", "length": "1..4",
       "optionality": "R",
       "repeatability": "1"
     },

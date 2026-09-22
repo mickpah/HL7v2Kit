@@ -25,13 +25,15 @@
       "index": 3,
       "name": "Expiration Date",
       "dataType": "DT",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "8="
     },
     {
       "index": 4,
       "name": "Activation Date",
       "dataType": "DT",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "8="
     },
     {
       "index": 5,

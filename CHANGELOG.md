@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M25: printed lengths recorded on every field and component
+
+- `FieldGrammar.length` and `ComponentGrammar.length` (additive, defaulted)
+  carry the LEN cell each version's attribute or component table prints,
+  verbatim: `"250"` before v2.7; from v2.7 the normative forms `"2..2"`,
+  `"32="` (truncation allowed) and `"250#"` (not allowed). 9,892 field
+  lengths and every printed component length; `nil` where the table prints
+  none (v2.8.2 prints only a conformance length for most composite fields;
+  the v2.3 to v2.4 prose prints none).
+- **Never enforced.** Before v2.7 the spec calls the maximum length "not of
+  conceptual importance"; from v2.7 enforcement would need the truncation
+  and conformance-length semantics of Chapter 2.5.5, which nothing models
+  yet. Recorded for the integrator reading the grammar as a reference.
+- Schema key `length` (verbatim string) and `audit-schemas.py --depth`
+  predicate `length`, with `--write-lengths`; the datatype extractor emits
+  `length` and the datatypes audit checks it for drift. **Every column of
+  the attribute tables is now recorded and audited against each version's
+  own print.**
 
 ## [3.7.3] — 2026-09-22
 

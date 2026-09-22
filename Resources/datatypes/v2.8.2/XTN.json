@@ -14,6 +14,7 @@
       "name": "Telecommunication Use Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3..3",
       "tables": [
         "0201"
       ]
@@ -23,6 +24,7 @@
       "name": "Telecommunication Equipment Type",
       "dataType": "ID",
       "optionality": "R",
+      "length": "2..8",
       "tables": [
         "0202"
       ]
@@ -31,55 +33,64 @@
       "index": 4,
       "name": "Communication Address",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "199="
     },
     {
       "index": 5,
       "name": "Country Code",
       "dataType": "SNM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "3="
     },
     {
       "index": 6,
       "name": "Area/City Code",
       "dataType": "SNM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "3="
     },
     {
       "index": 7,
       "name": "Local Number",
       "dataType": "SNM",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "9="
     },
     {
       "index": 8,
       "name": "Extension",
       "dataType": "SNM",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "5="
     },
     {
       "index": 9,
       "name": "Any Text",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199#"
     },
     {
       "index": 10,
       "name": "Extension Prefix",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4="
     },
     {
       "index": 11,
       "name": "Speed Dial Code",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6="
     },
     {
       "index": 12,
       "name": "Unformatted Telephone number",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "199#"
     },
     {
       "index": 13,
@@ -121,7 +132,8 @@
       "index": 18,
       "name": "Preference Order",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "2="
     }
   ]
 }

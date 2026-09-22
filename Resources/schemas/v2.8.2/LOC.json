@@ -4,13 +4,13 @@
   "description": "LOC",
   "fields": [
     { "index": 1, "swiftName": "primaryKeyValueLoc", "name": "Primary Key Value - LOC", "dataType": "PL", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "locationDescription", "name": "Location Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "locationTypeLoc", "name": "Location Type - LOC", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0260"] },
+    { "index": 2, "swiftName": "locationDescription", "name": "Location Description", "dataType": "ST", "length": "48#", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "locationTypeLoc", "name": "Location Type - LOC", "dataType": "CWE", "length": "1=", "optionality": "R", "repeatability": "*", "tables": ["0260"] },
     { "index": 4, "swiftName": "organizationNameLoc", "name": "Organization Name - LOC", "dataType": "XON", "optionality": "O", "repeatability": "*" },
     { "index": 5, "swiftName": "locationAddress", "name": "Location Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "locationPhone", "name": "Location Phone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "licenseNumber", "name": "License Number", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0461"] },
-    { "index": 8, "swiftName": "locationEquipment", "name": "Location Equipment", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0261"] },
-    { "index": 9, "swiftName": "locationServiceCode", "name": "Location Service Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0442"] }
+    { "index": 8, "swiftName": "locationEquipment", "name": "Location Equipment", "dataType": "CWE", "length": "3=", "optionality": "O", "repeatability": "*", "tables": ["0261"] },
+    { "index": 9, "swiftName": "locationServiceCode", "name": "Location Service Code", "dataType": "CWE", "length": "1=", "optionality": "O", "repeatability": "1", "tables": ["0442"] }
   ]
 }

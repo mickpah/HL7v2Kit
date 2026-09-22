@@ -3,11 +3,11 @@
   "version": "2.6",
   "description": "ARV",
   "fields": [
-    { "index": 1, "swiftName": "setId", "name": "Set ID", "dataType": "SI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "accessRestrictionActionCode", "name": "Access Restriction Action Code", "dataType": "CNE", "optionality": "R", "repeatability": "1", "tables": ["0206"] },
-    { "index": 3, "swiftName": "accessRestrictionValue", "name": "Access Restriction Value", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0717"] },
-    { "index": 4, "swiftName": "accessRestrictionReason", "name": "Access Restriction Reason", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0719"] },
-    { "index": 5, "swiftName": "specialAccessRestrictionInstructions", "name": "Special Access Restriction Instructions", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "accessRestrictionDateRange", "name": "Access Restriction Date Range", "dataType": "DR", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "setId", "name": "Set ID", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "accessRestrictionActionCode", "name": "Access Restriction Action Code", "dataType": "CNE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["0206"] },
+    { "index": 3, "swiftName": "accessRestrictionValue", "name": "Access Restriction Value", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["0717"] },
+    { "index": 4, "swiftName": "accessRestrictionReason", "name": "Access Restriction Reason", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0719"] },
+    { "index": 5, "swiftName": "specialAccessRestrictionInstructions", "name": "Special Access Restriction Instructions", "dataType": "ST", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "accessRestrictionDateRange", "name": "Access Restriction Date Range", "dataType": "DR", "length": "49", "optionality": "O", "repeatability": "1" }
   ]
 }

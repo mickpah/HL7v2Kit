@@ -12,10 +12,10 @@
     { "index": 7, "swiftName": "abstractCompletionDateTime", "name": "Abstract Completion Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "abstractedBy", "name": "Abstracted By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "caseCategoryCode", "name": "Case Category Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0423"] },
-    { "index": 10, "swiftName": "caesarianSectionIndicator", "name": "Caesarian Section Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 10, "swiftName": "caesarianSectionIndicator", "name": "Caesarian Section Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 11, "swiftName": "gestationCategoryCode", "name": "Gestation Category Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0424"] },
-    { "index": 12, "swiftName": "gestationPeriodWeeks", "name": "Gestation Period - Weeks", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "gestationPeriodWeeks", "name": "Gestation Period - Weeks", "dataType": "NM", "length": "3=", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "newbornCode", "name": "Newborn Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0425"] },
-    { "index": 14, "swiftName": "stillbornIndicator", "name": "Stillborn Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 14, "swiftName": "stillbornIndicator", "name": "Stillborn Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

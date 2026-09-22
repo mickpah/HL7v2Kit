@@ -8,6 +8,7 @@
       "name": "Financial Class Code",
       "dataType": "IS",
       "optionality": "R",
+      "length": "20",
       "tables": [
         "0064"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Effective Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     }
   ]
 }

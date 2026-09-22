@@ -3,8 +3,8 @@
   "version": "2.8.2",
   "description": "Clear Notification",
   "fields": [
-    { "index": 1, "swiftName": "startingNotificationReferenceNumber", "name": "Starting Notification Reference Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "endingNotificationReferenceNumber", "name": "Ending Notification Reference Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "startingNotificationReferenceNumber", "name": "Starting Notification Reference Number", "dataType": "NM", "length": "10=", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "endingNotificationReferenceNumber", "name": "Ending Notification Reference Number", "dataType": "NM", "length": "10=", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "startingNotificationDateTime", "name": "Starting Notification Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "endingNotificationDateTime", "name": "Ending Notification Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "startingNotificationCode", "name": "Starting Notification Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },

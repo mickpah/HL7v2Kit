@@ -22,14 +22,18 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// The HL7 table numbers the component's TBL# cell binds. `9999` is the
     /// spec's "no table assigned" sentinel (v2.7+), not a table.
     public let tables: [String]
+    /// The LEN cell the component table prints, verbatim, or `nil` (the prose
+    /// definitions of v2.3 to v2.4 print none). Recorded, never enforced (M25).
+    public let length: String?
 
     /// Creates a component grammar entry.
-    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = []) {
+    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = [], length: String? = nil) {
         self.index = index
         self.name = name
         self.dataType = dataType
         self.optionalityCode = optionalityCode
         self.tables = tables
+        self.length = length
     }
 }
 

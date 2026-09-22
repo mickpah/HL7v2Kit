@@ -8,6 +8,7 @@
       "name": "Job Code",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0327"
       ]
@@ -17,6 +18,7 @@
       "name": "Job Class",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0328"
       ]
@@ -25,7 +27,8 @@
       "index": 3,
       "name": "Job Description Text",
       "dataType": "TX",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "250"
     }
   ]
 }

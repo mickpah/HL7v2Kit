@@ -3,10 +3,10 @@
   "version": "2.6",
   "description": "Sterilization Lot",
   "fields": [
-    { "index": 1, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "lotNumber", "name": "Lot Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "itemIdentifier", "name": "Item Identifier", "dataType": "EI", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "barCode", "name": "Bar Code", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "deviceNumber", "name": "Device Number", "dataType": "EI", "length": "8", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "deviceName", "name": "Device Name", "dataType": "ST", "length": "999", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "lotNumber", "name": "Lot Number", "dataType": "EI", "length": "11", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "itemIdentifier", "name": "Item Identifier", "dataType": "EI", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "barCode", "name": "Bar Code", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" }
   ]
 }

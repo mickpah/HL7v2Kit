@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Delay Days",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "3"
     },
     {
       "index": 2,
       "name": "Monetary Amount",
       "dataType": "MO",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "16"
     },
     {
       "index": 3,
       "name": "Number of Days",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4"
     }
   ]
 }

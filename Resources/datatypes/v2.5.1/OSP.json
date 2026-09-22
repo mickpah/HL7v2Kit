@@ -8,6 +8,7 @@
       "name": "Occurrence Span Code",
       "dataType": "CNE",
       "optionality": "R",
+      "length": "705",
       "tables": [
         "0351"
       ]
@@ -16,13 +17,15 @@
       "index": 2,
       "name": "Occurrence Span Start Date",
       "dataType": "DT",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "8"
     },
     {
       "index": 3,
       "name": "Occurrence Span Stop Date",
       "dataType": "DT",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "8"
     }
   ]
 }

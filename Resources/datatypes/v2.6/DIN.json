@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Date",
       "dataType": "DTM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "24"
     },
     {
       "index": 2,
       "name": "Institution Name",
       "dataType": "CWE",
       "optionality": "R",
+      "length": "705",
       "tables": [
         "0531"
       ]

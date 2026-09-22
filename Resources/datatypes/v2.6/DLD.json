@@ -8,6 +8,7 @@
       "name": "Discharge to Location",
       "dataType": "CWE",
       "optionality": "R",
+      "length": "705",
       "tables": [
         "0113"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Effective Date",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     }
   ]
 }

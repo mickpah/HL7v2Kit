@@ -3,19 +3,19 @@
   "version": "2.6",
   "description": "TCC",
   "fields": [
-    { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
-    { "index": 2, "swiftName": "equipmentTestApplicationIdentifier", "name": "Equipment Test Application Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "specimenSource", "name": "Specimen Source", "dataType": "SPS", "optionality": "B", "repeatability": "1" },
-    { "index": 4, "swiftName": "autoDilutionFactorDefault", "name": "Auto-Dilution Factor Default", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "rerunDilutionFactorDefault", "name": "Rerun Dilution Factor Default", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "preDilutionFactorDefault", "name": "Pre-Dilution Factor Default", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "endogenousContentOfPreDilutionDiluent", "name": "Endogenous Content of Pre-Dilution Diluent", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "inventoryLimitsWarningLevel", "name": "Inventory Limits Warning Level", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "automaticRerunAllowed", "name": "Automatic Rerun Allowed", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 10, "swiftName": "automaticRepeatAllowed", "name": "Automatic Repeat Allowed", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 11, "swiftName": "automaticReflexAllowed", "name": "Automatic Reflex Allowed", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 12, "swiftName": "equipmentDynamicRange", "name": "Equipment Dynamic Range", "dataType": "SN", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "units", "name": "Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 14, "swiftName": "processingType", "name": "Processing Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0388"] }
+    { "index": 1, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
+    { "index": 2, "swiftName": "equipmentTestApplicationIdentifier", "name": "Equipment Test Application Identifier", "dataType": "EI", "length": "427", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "specimenSource", "name": "Specimen Source", "dataType": "SPS", "length": "300", "optionality": "B", "repeatability": "1" },
+    { "index": 4, "swiftName": "autoDilutionFactorDefault", "name": "Auto-Dilution Factor Default", "dataType": "SN", "length": "36", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "rerunDilutionFactorDefault", "name": "Rerun Dilution Factor Default", "dataType": "SN", "length": "36", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "preDilutionFactorDefault", "name": "Pre-Dilution Factor Default", "dataType": "SN", "length": "36", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "endogenousContentOfPreDilutionDiluent", "name": "Endogenous Content of Pre-Dilution Diluent", "dataType": "SN", "length": "36", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "inventoryLimitsWarningLevel", "name": "Inventory Limits Warning Level", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "automaticRerunAllowed", "name": "Automatic Rerun Allowed", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 10, "swiftName": "automaticRepeatAllowed", "name": "Automatic Repeat Allowed", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 11, "swiftName": "automaticReflexAllowed", "name": "Automatic Reflex Allowed", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 12, "swiftName": "equipmentDynamicRange", "name": "Equipment Dynamic Range", "dataType": "SN", "length": "36", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "units", "name": "Units", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 14, "swiftName": "processingType", "name": "Processing Type", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0388"] }
   ]
 }

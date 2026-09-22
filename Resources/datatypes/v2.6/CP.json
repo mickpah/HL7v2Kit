@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Price",
       "dataType": "MO",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "20"
     },
     {
       "index": 2,
       "name": "Price Type",
       "dataType": "ID",
       "optionality": "O",
+      "length": "2",
       "tables": [
         "0205"
       ]
@@ -22,25 +24,29 @@
       "index": 3,
       "name": "From Value",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 4,
       "name": "To Value",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 5,
       "name": "Range Units",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     },
     {
       "index": 6,
       "name": "Range Type",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0298"
       ]

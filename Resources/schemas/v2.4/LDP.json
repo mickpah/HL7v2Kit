@@ -3,17 +3,17 @@
   "version": "2.4",
   "description": "LDP",
   "fields": [
-    { "index": 1, "swiftName": "primaryKeyValueLdp", "name": "Primary Key Value - LDP", "dataType": "PL", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0264"] },
-    { "index": 3, "swiftName": "locationService", "name": "Location Service", "dataType": "IS", "table": "0069", "optionality": "O", "repeatability": "*", "tables": ["0069"] },
-    { "index": 4, "swiftName": "specialtyType", "name": "Specialty Type", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0265"] },
-    { "index": 5, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "table": "0004", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
-    { "index": 6, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
-    { "index": 7, "swiftName": "activationDateLdp", "name": "Activation Date LDP", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "inactivationDateLdp", "name": "Inactivation Date - LDP", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "inactivatedReason", "name": "Inactivated Reason", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "visitingHours", "name": "Visiting Hours", "dataType": "VH", "optionality": "O", "repeatability": "*", "tables": ["0267"] },
-    { "index": 11, "swiftName": "contactPhone", "name": "Contact Phone", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "locationCostCenter", "name": "Location Cost Center", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0462"] }
+    { "index": 1, "swiftName": "primaryKeyValueLdp", "name": "Primary Key Value - LDP", "dataType": "PL", "length": "200", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "locationDepartment", "name": "Location Department", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0264"] },
+    { "index": 3, "swiftName": "locationService", "name": "Location Service", "dataType": "IS", "length": "3", "table": "0069", "optionality": "O", "repeatability": "*", "tables": ["0069"] },
+    { "index": 4, "swiftName": "specialtyType", "name": "Specialty Type", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0265"] },
+    { "index": 5, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "length": "1", "table": "0004", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
+    { "index": 6, "swiftName": "activeInactiveFlag", "name": "Active/Inactive Flag", "dataType": "ID", "length": "1", "table": "0183", "optionality": "O", "repeatability": "1", "tables": ["0183"] },
+    { "index": 7, "swiftName": "activationDateLdp", "name": "Activation Date LDP", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "inactivationDateLdp", "name": "Inactivation Date - LDP", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "inactivatedReason", "name": "Inactivated Reason", "dataType": "ST", "length": "80", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "visitingHours", "name": "Visiting Hours", "dataType": "VH", "length": "80", "optionality": "O", "repeatability": "*", "tables": ["0267"] },
+    { "index": 11, "swiftName": "contactPhone", "name": "Contact Phone", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "locationCostCenter", "name": "Location Cost Center", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0462"] }
   ]
 }

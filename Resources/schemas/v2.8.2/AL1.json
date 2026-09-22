@@ -3,11 +3,11 @@
   "version": "2.8.2",
   "description": "Patient Allergy Information",
   "fields": [
-    { "index": 1, "swiftName": "setID", "name": "Set ID - AL1", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "setID", "name": "Set ID - AL1", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "allergenTypeCode", "name": "Allergen Type Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0127"] },
     { "index": 3, "swiftName": "allergenCodeMnemonicDescription", "name": "Allergen Code/Mnemonic/Description", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "allergySeverityCode", "name": "Allergy Severity Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0128"] },
-    { "index": 5, "swiftName": "allergyReactionCode", "name": "Allergy Reaction Code", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "allergyReactionCode", "name": "Allergy Reaction Code", "dataType": "ST", "length": "15=", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "identificationDate", "name": "Identification Date", "dataType": "DT", "optionality": "W", "repeatability": "1" }
   ]
 }

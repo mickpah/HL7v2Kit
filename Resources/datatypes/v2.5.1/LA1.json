@@ -8,6 +8,7 @@
       "name": "Point of Care",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0302"
       ]
@@ -17,6 +18,7 @@
       "name": "Room",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0303"
       ]
@@ -26,6 +28,7 @@
       "name": "Bed",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0304"
       ]
@@ -34,13 +37,15 @@
       "index": 4,
       "name": "Facility",
       "dataType": "HD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "227"
     },
     {
       "index": 5,
       "name": "Location Status",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0306"
       ]
@@ -50,6 +55,7 @@
       "name": "Patient Location Type",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0305"
       ]
@@ -59,6 +65,7 @@
       "name": "Building",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0307"
       ]
@@ -68,6 +75,7 @@
       "name": "Floor",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0308"
       ]
@@ -76,7 +84,8 @@
       "index": 9,
       "name": "Address",
       "dataType": "AD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "415"
     }
   ]
 }

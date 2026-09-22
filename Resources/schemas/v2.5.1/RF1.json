@@ -3,16 +3,16 @@
   "version": "2.5.1",
   "description": "Referral Information",
   "fields": [
-    { "index": 1, "swiftName": "referralStatus", "name": "Referral Status", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0283"] },
-    { "index": 2, "swiftName": "referralPriority", "name": "Referral Priority", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0280"] },
-    { "index": 3, "swiftName": "referralType", "name": "Referral Type", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0281"] },
-    { "index": 4, "swiftName": "referralDisposition", "name": "Referral Disposition", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0282"] },
-    { "index": 5, "swiftName": "referralCategory", "name": "Referral Category", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0284"] },
-    { "index": 6, "swiftName": "originatingReferralIdentifier", "name": "Originating Referral Identifier", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 7, "swiftName": "effectiveDate", "name": "Effective Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "expirationDate", "name": "Expiration Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "processDate", "name": "Process Date", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "referralReason", "name": "Referral Reason", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0336"] },
-    { "index": 11, "swiftName": "externalReferralIdentifier", "name": "External Referral Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "referralStatus", "name": "Referral Status", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0283"] },
+    { "index": 2, "swiftName": "referralPriority", "name": "Referral Priority", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0280"] },
+    { "index": 3, "swiftName": "referralType", "name": "Referral Type", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0281"] },
+    { "index": 4, "swiftName": "referralDisposition", "name": "Referral Disposition", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0282"] },
+    { "index": 5, "swiftName": "referralCategory", "name": "Referral Category", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0284"] },
+    { "index": 6, "swiftName": "originatingReferralIdentifier", "name": "Originating Referral Identifier", "dataType": "EI", "length": "30", "optionality": "R", "repeatability": "1" },
+    { "index": 7, "swiftName": "effectiveDate", "name": "Effective Date", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "expirationDate", "name": "Expiration Date", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "processDate", "name": "Process Date", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "referralReason", "name": "Referral Reason", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0336"] },
+    { "index": 11, "swiftName": "externalReferralIdentifier", "name": "External Referral Identifier", "dataType": "EI", "length": "30", "optionality": "O", "repeatability": "*" }
   ]
 }

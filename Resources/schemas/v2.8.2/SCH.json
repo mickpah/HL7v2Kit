@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
     { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 3, "swiftName": "occurrenceNumber", "name": "Occurrence Number", "dataType": "NM", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "occurrenceNumber", "name": "Occurrence Number", "dataType": "NM", "length": "5=", "optionality": "C", "repeatability": "1" },
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EIP", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "scheduleId", "name": "Schedule ID", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "eventReason", "name": "Event Reason", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
