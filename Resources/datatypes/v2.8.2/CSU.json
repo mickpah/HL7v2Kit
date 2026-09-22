@@ -31,6 +31,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "1..12",
+      "conformanceCondition": "2 populated",
       "tables": [
         "0396"
       ]
@@ -55,6 +56,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "1..12",
+      "conformanceCondition": "5 populated",
       "tables": [
         "0396"
       ]
@@ -116,7 +118,8 @@
       "name": "Unit of Measure Coding System OID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "2 populated AND 4 empty"
     },
     {
       "index": 16,
@@ -138,7 +141,8 @@
       "name": "Alternate Unit of Measure Coding System OID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "5 populated AND 7 empty"
     },
     {
       "index": 19,
@@ -160,7 +164,8 @@
       "name": "Alternate Unit of Measure Coding System OID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "11 populated AND 13 empty"
     },
     {
       "index": 22,

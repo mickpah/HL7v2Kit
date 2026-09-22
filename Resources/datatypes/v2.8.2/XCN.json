@@ -66,6 +66,7 @@
       "name": "Assigning Authority",
       "dataType": "HD",
       "optionality": "C",
+      "conformanceCondition": "1 populated AND 22 empty AND 23 empty",
       "tables": [
         "0363"
       ]
@@ -76,6 +77,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "1..5",
+      "conformanceCondition": "2 populated",
       "tables": [
         "0200"
       ]
@@ -103,6 +105,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "2..5",
+      "conformanceCondition": "1 populated",
       "tables": [
         "0203"
       ]
@@ -173,13 +176,15 @@
       "index": 22,
       "name": "Assigning Jurisdiction",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "conformanceCondition": "1 populated AND 9 empty AND 23 empty"
     },
     {
       "index": 23,
       "name": "Assigning Agency or Department",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "conformanceCondition": "1 populated AND 9 empty AND 22 empty"
     },
     {
       "index": 24,

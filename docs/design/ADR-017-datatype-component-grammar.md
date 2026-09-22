@@ -101,6 +101,10 @@ The last registered gap. The component tables print `C` with no predicate; the p
 - **Conditions the model cannot express:** on the coding system in use (CWE.7 and kin), on the repetition count (XAD.7), and CNE.20, whose sentence contradicts its own summary.
 - **`C` with no stated condition:** left as printed.
 
+## Addendum 2026-09-22 — M27: the v2.7 rules as an opt-in tier
+
+The 32 rules M26 registered now ship on `ComponentGrammar.conformanceCondition`, evaluated only when `ValidationOptions.conformanceConditionSeverity` is set. The default stays silent for the reason M26 gave: the specification's own v2.7+ examples violate them in 62 to 100 percent of values. The predicates are correct renderings of normative sentences, so an integrator checking strict v2.7+ conformance can ask for them; nobody gets them unasked. No further registered gap remains on the component grammar except the conditions the model cannot express (coding system in use, repetition count, CNE.20).
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).

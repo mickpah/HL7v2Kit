@@ -63,6 +63,25 @@ struct ConditionalComponentTests {
         #expect(try self.issues("TQ1|1||Q1H^^^^1", options: off).isEmpty)
     }
 
+    @Test("M27: the v2.7 conformance rules are advisory, off by default, reported at conformanceConditionSeverity")
+    func conformanceTier() throws {
+        let cx4 = DataTypeGrammarTable.grammar("CX", version: .v2_8_2)?.component(4)
+        #expect(cx4?.condition == nil && cx4?.conformanceCondition == "9 empty AND 10 empty")
+        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_5_1)?.component(4)?.conformanceCondition == nil)
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.8.2\rPID|1||123^^^^MR||DOE^JOHN\r"
+        let message = try Parser().parse(wire)
+        #expect(!Validator().validate(message).issues.contains { $0.code == .conformanceConditionMissing })
+        var advisory = ValidationOptions(); advisory.conformanceConditionSeverity = .info
+        let issues = Validator(options: advisory).validate(message).issues.filter { $0.code == .conformanceConditionMissing }
+        // Three sentences, one per component: each of CX.4 / .9 / .10 is required when the other two are empty.
+        #expect(issues.map { $0.location.componentIndex } == [4, 9, 10] && issues.allSatisfy { $0.severity == .info })
+        // Populating CX.4 satisfies all three CX rules.
+        let satisfied = try Parser().parse(wire.replacingOccurrences(of: "123^^^^MR", with: "123^^^AUTH^MR"))
+        #expect(!Validator(options: advisory).validate(satisfied).issues.contains { $0.code == .conformanceConditionMissing })
+        var off = ValidationOptions(); off.conformanceConditionSeverity = .info; off.checkComponentGrammar = false
+        #expect(!Validator(options: off).validate(message).issues.contains { $0.code == .conformanceConditionMissing })
+    }
+
     @Test("Components printed C with no stated condition carry none")
     func unstatedStayNil() {
         #expect(DataTypeGrammarTable.grammar("XCN", version: .v2_5_1)?.component(8)?.condition == nil)

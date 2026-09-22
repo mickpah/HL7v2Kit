@@ -98,6 +98,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Located at the component; severity follows
     /// ``ValidationOptions/requiredComponentSeverity``. M26.
     case conditionalComponentMissing
+    /// A component whose ``ComponentGrammar/conformanceCondition`` holds is
+    /// empty. Reported only when
+    /// ``ValidationOptions/conformanceConditionSeverity`` is set. M27.
+    case conformanceConditionMissing
     /// A group-scope cardinality rule matched fewer segments than its
     /// declared minimum. `segmentID` is the ID being counted (e.g.
     /// `"OBX"` for HL7au:000008 which requires ≥1 AUSPDI display OBX

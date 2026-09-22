@@ -32,6 +32,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "20",
+      "conformanceCondition": "2 populated",
       "tables": [
         "0396"
       ]

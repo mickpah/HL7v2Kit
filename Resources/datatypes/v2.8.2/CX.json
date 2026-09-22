@@ -32,6 +32,7 @@
       "name": "Assigning Authority",
       "dataType": "HD",
       "optionality": "C",
+      "conformanceCondition": "9 empty AND 10 empty",
       "tables": [
         "0363"
       ]
@@ -68,13 +69,15 @@
       "index": 9,
       "name": "Assigning Jurisdiction",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "conformanceCondition": "4 empty AND 10 empty"
     },
     {
       "index": 10,
       "name": "Assigning Agency or Department",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "conformanceCondition": "4 empty AND 9 empty"
     },
     {
       "index": 11,

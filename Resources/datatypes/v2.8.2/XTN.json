@@ -34,7 +34,8 @@
       "name": "Communication Address",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "7 empty AND 12 empty"
     },
     {
       "index": 5,
@@ -55,7 +56,8 @@
       "name": "Local Number",
       "dataType": "SNM",
       "optionality": "C",
-      "length": "9="
+      "length": "9=",
+      "conformanceCondition": "4 empty AND 12 empty"
     },
     {
       "index": 8,
@@ -90,7 +92,8 @@
       "name": "Unformatted Telephone number",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199#"
+      "length": "199#",
+      "conformanceCondition": "4 empty AND 7 empty"
     },
     {
       "index": 13,

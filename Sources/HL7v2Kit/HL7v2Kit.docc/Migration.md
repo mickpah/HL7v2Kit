@@ -102,6 +102,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.7.0 | `ValidationOptions.requiredComponentSeverity` (additive, defaulted `.error`). |
 | v3.8.0 | `FieldGrammar.length`, `ComponentGrammar.length` (additive, defaulted): the printed LEN, verbatim, never enforced. |
 | v3.9.0 | `ComponentGrammar.condition`, `IssueCode.conditionalComponentMissing` (additive; open enum). 36 conditional-component rules now checked at `requiredComponentSeverity`. |
+| *Unreleased* | `ComponentGrammar.conformanceCondition`, `ValidationOptions.conformanceConditionSeverity` (default `nil`), `IssueCode.conformanceConditionMissing` (additive; open enum). Default output unchanged. |
 
 ## The code-table check is on by default (ADR-016)
 
