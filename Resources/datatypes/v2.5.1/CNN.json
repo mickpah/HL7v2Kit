@@ -61,6 +61,7 @@
       "dataType": "IS",
       "optionality": "C",
       "length": "4",
+      "condition": "1 populated AND 9 empty AND (10 empty OR 11 empty)",
       "tables": [
         "0297"
       ]
@@ -80,7 +81,8 @@
       "name": "Assigning Authority - Universal ID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199"
+      "length": "199",
+      "condition": "11 populated"
     },
     {
       "index": 11,
@@ -88,6 +90,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "6",
+      "condition": "10 populated",
       "tables": [
         "0301"
       ]

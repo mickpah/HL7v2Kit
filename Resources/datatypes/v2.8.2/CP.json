@@ -37,7 +37,8 @@
       "index": 5,
       "name": "Range Units",
       "dataType": "CWE",
-      "optionality": "C"
+      "optionality": "C",
+      "condition": "3 populated OR 4 populated"
     },
     {
       "index": 6,

@@ -266,6 +266,8 @@ struct ComponentSchema: Decodable {
     let dataType: String?
     let optionality: String
     let length: String?
+    /// M26: a cited predicate over sibling components, on components printed C.
+    let condition: String?
     let tables: [String]?
 }
 
@@ -285,7 +287,8 @@ func renderDataTypeTable(versionSwiftName: String, sourceDir: String, types: [Da
         let components = t.components.sorted { $0.index < $1.index }.map { c -> String in
             let tables = (c.tables ?? []).map { escapeStringLiteral($0) }.joined(separator: ", ")
             let length = c.length.map { escapeStringLiteral($0) } ?? "nil"
-            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length)),"
+            let condition = c.condition.map { escapeStringLiteral($0) } ?? "nil"
+            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition)),"
         }.joined(separator: "\n")
         return """
             private static let \(versionSwiftName)_\(t.dataType): DataTypeGrammar = DataTypeGrammar(

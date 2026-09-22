@@ -89,14 +89,14 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Address",
         components: [
-            ComponentGrammar(index: 1, name: "Street Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 2, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 3, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 4, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 5, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
-            ComponentGrammar(index: 6, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3"),
-            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3"),
-            ComponentGrammar(index: 8, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
+            ComponentGrammar(index: 1, name: "Street Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 2, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 3, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 4, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 5, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 6, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3", condition: nil),
+            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3", condition: nil),
+            ComponentGrammar(index: 8, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
         ]
     )
 
@@ -105,9 +105,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Authorization Information",
         components: [
-            ComponentGrammar(index: 1, name: "Authorization Number", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 2, name: "Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
-            ComponentGrammar(index: 3, name: "Source", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Authorization Number", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 2, name: "Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 3, name: "Source", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -116,8 +116,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Charge Code and Date",
         components: [
-            ComponentGrammar(index: 1, name: "Invocation Event", dataType: "ID", optionalityCode: "R", tables: ["0100"], length: "1"),
-            ComponentGrammar(index: 2, name: "Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
+            ComponentGrammar(index: 1, name: "Invocation Event", dataType: "ID", optionalityCode: "R", tables: ["0100"], length: "1", condition: nil),
+            ComponentGrammar(index: 2, name: "Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
         ]
     )
 
@@ -126,9 +126,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Channel Calibration Parameters",
         components: [
-            ComponentGrammar(index: 1, name: "Channel Calibration Sensitivity Correction Factor", dataType: "NM", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 2, name: "Channel Calibration Baseline", dataType: "NM", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 3, name: "Channel Calibration Time Skew", dataType: "NM", optionalityCode: "O", tables: [], length: "6"),
+            ComponentGrammar(index: 1, name: "Channel Calibration Sensitivity Correction Factor", dataType: "NM", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 2, name: "Channel Calibration Baseline", dataType: "NM", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 3, name: "Channel Calibration Time Skew", dataType: "NM", optionalityCode: "O", tables: [], length: "6", condition: nil),
         ]
     )
 
@@ -137,12 +137,12 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Channel Definition",
         components: [
-            ComponentGrammar(index: 1, name: "Channel Identifier", dataType: "WVI", optionalityCode: "O", tables: [], length: "22"),
-            ComponentGrammar(index: 2, name: "Waveform Source", dataType: "WVS", optionalityCode: "O", tables: [], length: "17"),
-            ComponentGrammar(index: 3, name: "Channel Sensitivity and Units", dataType: "CSU", optionalityCode: "O", tables: [], length: "478"),
-            ComponentGrammar(index: 4, name: "Channel Calibration Parameters", dataType: "CCP", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Channel Sampling Frequency", dataType: "NM", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 6, name: "Minimum and Maximum Data Values", dataType: "NR", optionalityCode: "O", tables: [], length: "33"),
+            ComponentGrammar(index: 1, name: "Channel Identifier", dataType: "WVI", optionalityCode: "O", tables: [], length: "22", condition: nil),
+            ComponentGrammar(index: 2, name: "Waveform Source", dataType: "WVS", optionalityCode: "O", tables: [], length: "17", condition: nil),
+            ComponentGrammar(index: 3, name: "Channel Sensitivity and Units", dataType: "CSU", optionalityCode: "O", tables: [], length: "478", condition: nil),
+            ComponentGrammar(index: 4, name: "Channel Calibration Parameters", dataType: "CCP", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Channel Sampling Frequency", dataType: "NM", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 6, name: "Minimum and Maximum Data Values", dataType: "NR", optionalityCode: "O", tables: [], length: "33", condition: nil),
         ]
     )
 
@@ -151,12 +151,12 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Coded Element",
         components: [
-            ComponentGrammar(index: 1, name: "Identifier", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 2, name: "Text", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "", optionalityCode: "W", tables: [], length: nil),
+            ComponentGrammar(index: 1, name: "Identifier", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 2, name: "Text", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
         ]
     )
 
@@ -165,12 +165,12 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Coded Element with Formatted Values",
         components: [
-            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Formatted Text", dataType: "FT", optionalityCode: "O", tables: [], length: "6553"),
-            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Alternate Formatted Text", dataType: "FT", optionalityCode: "O", tables: [], length: "6553"),
-            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
+            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Formatted Text", dataType: "FT", optionalityCode: "O", tables: [], length: "6553", condition: nil),
+            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Alternate Formatted Text", dataType: "FT", optionalityCode: "O", tables: [], length: "6553", condition: nil),
+            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
         ]
     )
 
@@ -179,15 +179,15 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Coded with No Exceptions",
         components: [
-            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10"),
-            ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -196,17 +196,17 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Composite ID Number and Name Simplified",
         components: [
-            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15"),
-            ComponentGrammar(index: 2, name: "Family Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 7, name: "Degree (e.g., MD", dataType: "IS", optionalityCode: "O", tables: ["0360"], length: "5"),
-            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4"),
-            ComponentGrammar(index: 9, name: "Assigning Authority - Namespace ID", dataType: "IS", optionalityCode: "C", tables: ["0363"], length: "20"),
-            ComponentGrammar(index: 10, name: "Assigning Authority - Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "199"),
-            ComponentGrammar(index: 11, name: "Assigning Authority - Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6"),
+            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 2, name: "Family Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Degree (e.g., MD", dataType: "IS", optionalityCode: "O", tables: ["0360"], length: "5", condition: nil),
+            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4", condition: "1 populated AND 9 empty AND (10 empty OR 11 empty)"),
+            ComponentGrammar(index: 9, name: "Assigning Authority - Namespace ID", dataType: "IS", optionalityCode: "C", tables: ["0363"], length: "20", condition: nil),
+            ComponentGrammar(index: 10, name: "Assigning Authority - Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "199", condition: "11 populated"),
+            ComponentGrammar(index: 11, name: "Assigning Authority - Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6", condition: "10 populated"),
         ]
     )
 
@@ -215,12 +215,12 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Composite Price",
         components: [
-            ComponentGrammar(index: 1, name: "Price", dataType: "MO", optionalityCode: "R", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Price Type", dataType: "ID", optionalityCode: "O", tables: ["0205"], length: "2"),
-            ComponentGrammar(index: 3, name: "From Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "To Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 5, name: "Range Units", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 6, name: "Range Type", dataType: "ID", optionalityCode: "O", tables: ["0298"], length: "1"),
+            ComponentGrammar(index: 1, name: "Price", dataType: "MO", optionalityCode: "R", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Price Type", dataType: "ID", optionalityCode: "O", tables: ["0205"], length: "2", condition: nil),
+            ComponentGrammar(index: 3, name: "From Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "To Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 5, name: "Range Units", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 6, name: "Range Type", dataType: "ID", optionalityCode: "O", tables: ["0298"], length: "1", condition: nil),
         ]
     )
 
@@ -229,8 +229,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Composite Quantity with Units",
         components: [
-            ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 2, name: "Units", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
+            ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 2, name: "Units", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
         ]
     )
 
@@ -239,13 +239,13 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Channel Sensitivity and Units",
         components: [
-            ComponentGrammar(index: 1, name: "Channel Sensitivity", dataType: "NM", optionalityCode: "R", tables: [], length: "60"),
-            ComponentGrammar(index: 2, name: "Unit of Measure Identifier", dataType: "ST", optionalityCode: "C", tables: [], length: "20"),
-            ComponentGrammar(index: 3, name: "Unit of Measure Description", dataType: "ST", optionalityCode: "C", tables: [], length: "199"),
-            ComponentGrammar(index: 4, name: "Unit of Measure Coding System", dataType: "ID", optionalityCode: "C", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 5, name: "Alternate Unit of Measure Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Alternate Unit of Measure Description", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 7, name: "Alternate Unit of Measure Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
+            ComponentGrammar(index: 1, name: "Channel Sensitivity", dataType: "NM", optionalityCode: "R", tables: [], length: "60", condition: nil),
+            ComponentGrammar(index: 2, name: "Unit of Measure Identifier", dataType: "ST", optionalityCode: "C", tables: [], length: "20", condition: "3 empty"),
+            ComponentGrammar(index: 3, name: "Unit of Measure Description", dataType: "ST", optionalityCode: "C", tables: [], length: "199", condition: "2 empty"),
+            ComponentGrammar(index: 4, name: "Unit of Measure Coding System", dataType: "ID", optionalityCode: "C", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Alternate Unit of Measure Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Alternate Unit of Measure Description", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 7, name: "Alternate Unit of Measure Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
         ]
     )
 
@@ -254,15 +254,15 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Coded with Exceptions",
         components: [
-            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20"),
-            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10"),
-            ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 3, name: "Name of Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Alternate Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Alternate Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 6, name: "Name of Alternate Coding System", dataType: "ID", optionalityCode: "O", tables: ["0396"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Coding System Version ID", dataType: "ST", optionalityCode: "C", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 8, name: "Alternate Coding System Version ID", dataType: "ST", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 9, name: "Original Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -271,16 +271,16 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Composite ID with Check Digit",
         components: [
-            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "R", tables: [], length: "15"),
-            ComponentGrammar(index: 2, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 3, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "O", tables: ["0061"], length: "3"),
-            ComponentGrammar(index: 4, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227"),
-            ComponentGrammar(index: 5, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5"),
-            ComponentGrammar(index: 6, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 7, name: "Effective Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
-            ComponentGrammar(index: 8, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
-            ComponentGrammar(index: 9, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 10, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
+            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "R", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 2, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 3, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "O", tables: ["0061"], length: "3", condition: nil),
+            ComponentGrammar(index: 4, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227", condition: nil),
+            ComponentGrammar(index: 5, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5", condition: nil),
+            ComponentGrammar(index: 6, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 7, name: "Effective Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 8, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 9, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 10, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
         ]
     )
 
@@ -289,9 +289,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Daily Deductible Information",
         components: [
-            ComponentGrammar(index: 1, name: "Delay Days", dataType: "NM", optionalityCode: "O", tables: [], length: "3"),
-            ComponentGrammar(index: 2, name: "Monetary Amount", dataType: "MO", optionalityCode: "R", tables: [], length: "16"),
-            ComponentGrammar(index: 3, name: "Number of Days", dataType: "NM", optionalityCode: "O", tables: [], length: "4"),
+            ComponentGrammar(index: 1, name: "Delay Days", dataType: "NM", optionalityCode: "O", tables: [], length: "3", condition: nil),
+            ComponentGrammar(index: 2, name: "Monetary Amount", dataType: "MO", optionalityCode: "R", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 3, name: "Number of Days", dataType: "NM", optionalityCode: "O", tables: [], length: "4", condition: nil),
         ]
     )
 
@@ -300,8 +300,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Date and Institution Name",
         components: [
-            ComponentGrammar(index: 1, name: "Date", dataType: "DTM", optionalityCode: "R", tables: [], length: "24"),
-            ComponentGrammar(index: 2, name: "Institution Name", dataType: "CWE", optionalityCode: "R", tables: ["0531"], length: "705"),
+            ComponentGrammar(index: 1, name: "Date", dataType: "DTM", optionalityCode: "R", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 2, name: "Institution Name", dataType: "CWE", optionalityCode: "R", tables: ["0531"], length: "705", condition: nil),
         ]
     )
 
@@ -310,8 +310,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Discharge to Location and Date",
         components: [
-            ComponentGrammar(index: 1, name: "Discharge to Location", dataType: "CWE", optionalityCode: "R", tables: ["0113"], length: "705"),
-            ComponentGrammar(index: 2, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
+            ComponentGrammar(index: 1, name: "Discharge to Location", dataType: "CWE", optionalityCode: "R", tables: ["0113"], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
         ]
     )
 
@@ -320,9 +320,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Driver’s License Number",
         components: [
-            ComponentGrammar(index: 1, name: "License Number", dataType: "ST", optionalityCode: "R", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Issuing State, Province, Country", dataType: "IS", optionalityCode: "O", tables: ["0333"], length: "20"),
-            ComponentGrammar(index: 3, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "License Number", dataType: "ST", optionalityCode: "R", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Issuing State, Province, Country", dataType: "IS", optionalityCode: "O", tables: ["0333"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -331,10 +331,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Delta",
         components: [
-            ComponentGrammar(index: 1, name: "Normal Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33"),
-            ComponentGrammar(index: 2, name: "Numeric Threshold", dataType: "NM", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 3, name: "Change Computation", dataType: "ID", optionalityCode: "O", tables: ["0523"], length: "1"),
-            ComponentGrammar(index: 4, name: "Days Retained", dataType: "NM", optionalityCode: "O", tables: [], length: "4"),
+            ComponentGrammar(index: 1, name: "Normal Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33", condition: nil),
+            ComponentGrammar(index: 2, name: "Numeric Threshold", dataType: "NM", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 3, name: "Change Computation", dataType: "ID", optionalityCode: "O", tables: ["0523"], length: "1", condition: nil),
+            ComponentGrammar(index: 4, name: "Days Retained", dataType: "NM", optionalityCode: "O", tables: [], length: "4", condition: nil),
         ]
     )
 
@@ -343,8 +343,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Date/Time Range",
         components: [
-            ComponentGrammar(index: 1, name: "Range Start Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 2, name: "Range End Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
+            ComponentGrammar(index: 1, name: "Range Start Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 2, name: "Range End Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
         ]
     )
 
@@ -353,8 +353,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Day Type and Number",
         components: [
-            ComponentGrammar(index: 1, name: "Day Type", dataType: "IS", optionalityCode: "R", tables: ["0149"], length: "2"),
-            ComponentGrammar(index: 2, name: "Number of Days", dataType: "NM", optionalityCode: "R", tables: [], length: "3"),
+            ComponentGrammar(index: 1, name: "Day Type", dataType: "IS", optionalityCode: "R", tables: ["0149"], length: "2", condition: nil),
+            ComponentGrammar(index: 2, name: "Number of Days", dataType: "NM", optionalityCode: "R", tables: [], length: "3", condition: nil),
         ]
     )
 
@@ -363,11 +363,11 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Encapsulated Data",
         components: [
-            ComponentGrammar(index: 1, name: "Source Application", dataType: "HD", optionalityCode: "O", tables: [], length: "1027"),
-            ComponentGrammar(index: 2, name: "Type of Data", dataType: "ID", optionalityCode: "R", tables: ["0834"], length: "11"),
-            ComponentGrammar(index: 3, name: "Data Subtype", dataType: "ID", optionalityCode: "O", tables: ["0291"], length: "32"),
-            ComponentGrammar(index: 4, name: "Encoding", dataType: "ID", optionalityCode: "R", tables: ["0299"], length: "6"),
-            ComponentGrammar(index: 5, name: "Data", dataType: "TX", optionalityCode: "R", tables: [], length: "6553"),
+            ComponentGrammar(index: 1, name: "Source Application", dataType: "HD", optionalityCode: "O", tables: [], length: "1027", condition: nil),
+            ComponentGrammar(index: 2, name: "Type of Data", dataType: "ID", optionalityCode: "R", tables: ["0834"], length: "11", condition: nil),
+            ComponentGrammar(index: 3, name: "Data Subtype", dataType: "ID", optionalityCode: "O", tables: ["0291"], length: "32", condition: nil),
+            ComponentGrammar(index: 4, name: "Encoding", dataType: "ID", optionalityCode: "R", tables: ["0299"], length: "6", condition: nil),
+            ComponentGrammar(index: 5, name: "Data", dataType: "TX", optionalityCode: "R", tables: [], length: "6553", condition: nil),
         ]
     )
 
@@ -376,10 +376,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Entity Identifier",
         components: [
-            ComponentGrammar(index: 1, name: "Entity Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 2, name: "Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "20"),
-            ComponentGrammar(index: 3, name: "Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "199"),
-            ComponentGrammar(index: 4, name: "Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6"),
+            ComponentGrammar(index: 1, name: "Entity Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 2, name: "Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 4, name: "Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6", condition: nil),
         ]
     )
 
@@ -388,8 +388,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Entity Identifier Pair",
         components: [
-            ComponentGrammar(index: 1, name: "Placer Assigned Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
-            ComponentGrammar(index: 2, name: "Filler Assigned Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
+            ComponentGrammar(index: 1, name: "Placer Assigned Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
+            ComponentGrammar(index: 2, name: "Filler Assigned Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
         ]
     )
 
@@ -398,10 +398,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Error Location and Description",
         components: [
-            ComponentGrammar(index: 1, name: "Segment ID", dataType: "ST", optionalityCode: "O", tables: [], length: "3"),
-            ComponentGrammar(index: 2, name: "Segment Sequence", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 3, name: "Field Position", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 4, name: "Code Identifying Error", dataType: "CWE", optionalityCode: "O", tables: ["0357"], length: "705"),
+            ComponentGrammar(index: 1, name: "Segment ID", dataType: "ST", optionalityCode: "O", tables: [], length: "3", condition: nil),
+            ComponentGrammar(index: 2, name: "Segment Sequence", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 3, name: "Field Position", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 4, name: "Code Identifying Error", dataType: "CWE", optionalityCode: "O", tables: ["0357"], length: "705", condition: nil),
         ]
     )
 
@@ -410,12 +410,12 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Error Location",
         components: [
-            ComponentGrammar(index: 1, name: "Segment ID", dataType: "ST", optionalityCode: "R", tables: [], length: "3"),
-            ComponentGrammar(index: 2, name: "Segment Sequence", dataType: "NM", optionalityCode: "R", tables: [], length: "2"),
-            ComponentGrammar(index: 3, name: "Field Position", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 4, name: "Field Repetition", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 5, name: "Component Number", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 6, name: "Sub-Component Number", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
+            ComponentGrammar(index: 1, name: "Segment ID", dataType: "ST", optionalityCode: "R", tables: [], length: "3", condition: nil),
+            ComponentGrammar(index: 2, name: "Segment Sequence", dataType: "NM", optionalityCode: "R", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 3, name: "Field Position", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 4, name: "Field Repetition", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 5, name: "Component Number", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 6, name: "Sub-Component Number", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
         ]
     )
 
@@ -424,8 +424,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Financial Class",
         components: [
-            ComponentGrammar(index: 1, name: "Financial Class Code", dataType: "IS", optionalityCode: "R", tables: ["0064"], length: "20"),
-            ComponentGrammar(index: 2, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
+            ComponentGrammar(index: 1, name: "Financial Class Code", dataType: "IS", optionalityCode: "R", tables: ["0064"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
         ]
     )
 
@@ -434,11 +434,11 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Family Name",
         components: [
-            ComponentGrammar(index: 1, name: "Surname", dataType: "ST", optionalityCode: "R", tables: [], length: "50"),
-            ComponentGrammar(index: 2, name: "Own Surname Prefix", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 3, name: "Own Surname", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 4, name: "Surname Prefix from Partner/Spouse", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Surname from Partner/Spouse", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
+            ComponentGrammar(index: 1, name: "Surname", dataType: "ST", optionalityCode: "R", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 2, name: "Own Surname Prefix", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Own Surname", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 4, name: "Surname Prefix from Partner/Spouse", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Surname from Partner/Spouse", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
         ]
     )
 
@@ -447,9 +447,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Hierarchic Designator",
         components: [
-            ComponentGrammar(index: 1, name: "Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0300"], length: "20"),
-            ComponentGrammar(index: 2, name: "Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "999"),
-            ComponentGrammar(index: 3, name: "Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6"),
+            ComponentGrammar(index: 1, name: "Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0300"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Universal ID", dataType: "ST", optionalityCode: "C", tables: [], length: "999", condition: nil),
+            ComponentGrammar(index: 3, name: "Universal ID Type", dataType: "ID", optionalityCode: "C", tables: ["0301"], length: "6", condition: nil),
         ]
     )
 
@@ -458,9 +458,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Insurance Certification Definition",
         components: [
-            ComponentGrammar(index: 1, name: "Certification Patient Type", dataType: "IS", optionalityCode: "O", tables: ["0150"], length: "11"),
-            ComponentGrammar(index: 2, name: "Certification Required", dataType: "ID", optionalityCode: "R", tables: ["0136"], length: "1"),
-            ComponentGrammar(index: 3, name: "Date/Time Certification Required", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
+            ComponentGrammar(index: 1, name: "Certification Patient Type", dataType: "IS", optionalityCode: "O", tables: ["0150"], length: "11", condition: nil),
+            ComponentGrammar(index: 2, name: "Certification Required", dataType: "ID", optionalityCode: "R", tables: ["0136"], length: "1", condition: nil),
+            ComponentGrammar(index: 3, name: "Date/Time Certification Required", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
         ]
     )
 
@@ -469,9 +469,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Job Code/Class",
         components: [
-            ComponentGrammar(index: 1, name: "Job Code", dataType: "IS", optionalityCode: "O", tables: ["0327"], length: "20"),
-            ComponentGrammar(index: 2, name: "Job Class", dataType: "IS", optionalityCode: "O", tables: ["0328"], length: "20"),
-            ComponentGrammar(index: 3, name: "Job Description Text", dataType: "TX", optionalityCode: "O", tables: [], length: "250"),
+            ComponentGrammar(index: 1, name: "Job Code", dataType: "IS", optionalityCode: "O", tables: ["0327"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Job Class", dataType: "IS", optionalityCode: "O", tables: ["0328"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Job Description Text", dataType: "TX", optionalityCode: "O", tables: [], length: "250", condition: nil),
         ]
     )
 
@@ -480,15 +480,15 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Location with Address Variation 1",
         components: [
-            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20"),
-            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20"),
-            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20"),
-            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20"),
-            ComponentGrammar(index: 6, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20"),
-            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20"),
-            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20"),
-            ComponentGrammar(index: 9, name: "Address", dataType: "AD", optionalityCode: "O", tables: [], length: "415"),
+            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20", condition: nil),
+            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20", condition: nil),
+            ComponentGrammar(index: 9, name: "Address", dataType: "AD", optionalityCode: "O", tables: [], length: "415", condition: nil),
         ]
     )
 
@@ -497,22 +497,22 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Location with Address Variation 2",
         components: [
-            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20"),
-            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20"),
-            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20"),
-            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20"),
-            ComponentGrammar(index: 6, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20"),
-            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20"),
-            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20"),
-            ComponentGrammar(index: 9, name: "Street Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 10, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 11, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 12, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 13, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
-            ComponentGrammar(index: 14, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3"),
-            ComponentGrammar(index: 15, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3"),
-            ComponentGrammar(index: 16, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
+            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20", condition: nil),
+            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20", condition: nil),
+            ComponentGrammar(index: 9, name: "Street Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 10, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 11, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 12, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 13, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 14, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3", condition: nil),
+            ComponentGrammar(index: 15, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3", condition: nil),
+            ComponentGrammar(index: 16, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
         ]
     )
 
@@ -521,10 +521,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Multiplexed Array",
         components: [
-            ComponentGrammar(index: 1, name: "Sample Y From Channel 1", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 2, name: "Sample Y From Channel 2", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 3, name: "Sample Y From Channel 3", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "Sample Y From Channel 4", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
+            ComponentGrammar(index: 1, name: "Sample Y From Channel 1", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 2, name: "Sample Y From Channel 2", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 3, name: "Sample Y From Channel 3", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "Sample Y From Channel 4", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
         ]
     )
 
@@ -533,8 +533,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Money",
         components: [
-            ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 2, name: "Denomination", dataType: "ID", optionalityCode: "O", tables: [], length: "3"),
+            ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 2, name: "Denomination", dataType: "ID", optionalityCode: "O", tables: [], length: "3", condition: nil),
         ]
     )
 
@@ -543,8 +543,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Money and Code",
         components: [
-            ComponentGrammar(index: 1, name: "Monetary Amount", dataType: "MO", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Charge Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
+            ComponentGrammar(index: 1, name: "Monetary Amount", dataType: "MO", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Charge Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
         ]
     )
 
@@ -553,9 +553,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Money or Percentage",
         components: [
-            ComponentGrammar(index: 1, name: "Money or Percentage Indicator", dataType: "ID", optionalityCode: "R", tables: ["0148"], length: "2"),
-            ComponentGrammar(index: 2, name: "Money or Percentage Quantity", dataType: "NM", optionalityCode: "R", tables: [], length: "16"),
-            ComponentGrammar(index: 3, name: "Currency Denomination", dataType: "ID", optionalityCode: "O", tables: [], length: "3"),
+            ComponentGrammar(index: 1, name: "Money or Percentage Indicator", dataType: "ID", optionalityCode: "R", tables: ["0148"], length: "2", condition: nil),
+            ComponentGrammar(index: 2, name: "Money or Percentage Quantity", dataType: "NM", optionalityCode: "R", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 3, name: "Currency Denomination", dataType: "ID", optionalityCode: "O", tables: [], length: "3", condition: nil),
         ]
     )
 
@@ -564,9 +564,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Message Type",
         components: [
-            ComponentGrammar(index: 1, name: "Message Code", dataType: "ID", optionalityCode: "R", tables: ["0076"], length: "3"),
-            ComponentGrammar(index: 2, name: "Trigger Event", dataType: "ID", optionalityCode: "R", tables: ["0003"], length: "3"),
-            ComponentGrammar(index: 3, name: "Message Structure", dataType: "ID", optionalityCode: "R", tables: ["0354"], length: "7"),
+            ComponentGrammar(index: 1, name: "Message Code", dataType: "ID", optionalityCode: "R", tables: ["0076"], length: "3", condition: nil),
+            ComponentGrammar(index: 2, name: "Trigger Event", dataType: "ID", optionalityCode: "R", tables: ["0003"], length: "3", condition: nil),
+            ComponentGrammar(index: 3, name: "Message Structure", dataType: "ID", optionalityCode: "R", tables: ["0354"], length: "7", condition: nil),
         ]
     )
 
@@ -575,10 +575,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Numeric Array",
         components: [
-            ComponentGrammar(index: 1, name: "Value1", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 2, name: "Value2", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 3, name: "Value3", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "Value4", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
+            ComponentGrammar(index: 1, name: "Value1", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 2, name: "Value2", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 3, name: "Value3", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "Value4", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
         ]
     )
 
@@ -587,17 +587,17 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Name with Date and Location",
         components: [
-            ComponentGrammar(index: 1, name: "Name", dataType: "CNN", optionalityCode: "O", tables: [], length: "406"),
-            ComponentGrammar(index: 2, name: "Start Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 3, name: "End Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 4, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20"),
-            ComponentGrammar(index: 5, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20"),
-            ComponentGrammar(index: 6, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20"),
-            ComponentGrammar(index: 7, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 8, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20"),
-            ComponentGrammar(index: 9, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20"),
-            ComponentGrammar(index: 10, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20"),
-            ComponentGrammar(index: 11, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20"),
+            ComponentGrammar(index: 1, name: "Name", dataType: "CNN", optionalityCode: "O", tables: [], length: "406", condition: nil),
+            ComponentGrammar(index: 2, name: "Start Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 3, name: "End Date/time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 4, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 8, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20", condition: nil),
+            ComponentGrammar(index: 9, name: "Patient Location Type", dataType: "IS", optionalityCode: "O", tables: ["0305"], length: "20", condition: nil),
+            ComponentGrammar(index: 10, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20", condition: nil),
+            ComponentGrammar(index: 11, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20", condition: nil),
         ]
     )
 
@@ -606,8 +606,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Numeric Range",
         components: [
-            ComponentGrammar(index: 1, name: "Low Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 2, name: "High Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16"),
+            ComponentGrammar(index: 1, name: "Low Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 2, name: "High Value", dataType: "NM", optionalityCode: "O", tables: [], length: "16", condition: nil),
         ]
     )
 
@@ -616,8 +616,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Occurrence Code and Date",
         components: [
-            ComponentGrammar(index: 1, name: "Occurrence Code", dataType: "CNE", optionalityCode: "R", tables: ["0350"], length: "705"),
-            ComponentGrammar(index: 2, name: "Occurrence Date", dataType: "DT", optionalityCode: "R", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "Occurrence Code", dataType: "CNE", optionalityCode: "R", tables: ["0350"], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Occurrence Date", dataType: "DT", optionalityCode: "R", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -626,17 +626,17 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Order Sequence Definition",
         components: [
-            ComponentGrammar(index: 1, name: "Sequence/Results Flag", dataType: "ID", optionalityCode: "R", tables: ["0524"], length: "1"),
-            ComponentGrammar(index: 2, name: "Placer Order Number: Entity Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "15"),
-            ComponentGrammar(index: 3, name: "Placer Order Number: Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "6"),
-            ComponentGrammar(index: 4, name: "Filler Order Number: Entity Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "15"),
-            ComponentGrammar(index: 5, name: "Filler Order Number: Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "6"),
-            ComponentGrammar(index: 6, name: "Sequence Condition Value", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
-            ComponentGrammar(index: 7, name: "Maximum Number of Repeats", dataType: "NM", optionalityCode: "O", tables: [], length: "3"),
-            ComponentGrammar(index: 8, name: "Placer Order Number: Universal ID", dataType: "ST", optionalityCode: "R", tables: [], length: "15"),
-            ComponentGrammar(index: 9, name: "Placer Order Number: Universal ID Type", dataType: "ID", optionalityCode: "O", tables: ["0301"], length: "6"),
-            ComponentGrammar(index: 10, name: "Filler Order Number: Universal ID", dataType: "ST", optionalityCode: "R", tables: [], length: "15"),
-            ComponentGrammar(index: 11, name: "Filler Order Number: Universal ID Type", dataType: "ID", optionalityCode: "O", tables: ["0301"], length: "6"),
+            ComponentGrammar(index: 1, name: "Sequence/Results Flag", dataType: "ID", optionalityCode: "R", tables: ["0524"], length: "1", condition: nil),
+            ComponentGrammar(index: 2, name: "Placer Order Number: Entity Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 3, name: "Placer Order Number: Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "6", condition: nil),
+            ComponentGrammar(index: 4, name: "Filler Order Number: Entity Identifier", dataType: "ST", optionalityCode: "R", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 5, name: "Filler Order Number: Namespace ID", dataType: "IS", optionalityCode: "O", tables: ["0363"], length: "6", condition: nil),
+            ComponentGrammar(index: 6, name: "Sequence Condition Value", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 7, name: "Maximum Number of Repeats", dataType: "NM", optionalityCode: "O", tables: [], length: "3", condition: nil),
+            ComponentGrammar(index: 8, name: "Placer Order Number: Universal ID", dataType: "ST", optionalityCode: "R", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 9, name: "Placer Order Number: Universal ID Type", dataType: "ID", optionalityCode: "O", tables: ["0301"], length: "6", condition: nil),
+            ComponentGrammar(index: 10, name: "Filler Order Number: Universal ID", dataType: "ST", optionalityCode: "R", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 11, name: "Filler Order Number: Universal ID Type", dataType: "ID", optionalityCode: "O", tables: ["0301"], length: "6", condition: nil),
         ]
     )
 
@@ -645,9 +645,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Occurrence Span Code and Date",
         components: [
-            ComponentGrammar(index: 1, name: "Occurrence Span Code", dataType: "CNE", optionalityCode: "R", tables: ["0351"], length: "705"),
-            ComponentGrammar(index: 2, name: "Occurrence Span Start Date", dataType: "DT", optionalityCode: "C", tables: [], length: "8"),
-            ComponentGrammar(index: 3, name: "Occurrence Span Stop Date", dataType: "DT", optionalityCode: "C", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "Occurrence Span Code", dataType: "CNE", optionalityCode: "R", tables: ["0351"], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Occurrence Span Start Date", dataType: "DT", optionalityCode: "C", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 3, name: "Occurrence Span Stop Date", dataType: "DT", optionalityCode: "C", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -656,11 +656,11 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Practitioner Institutional Privileges",
         components: [
-            ComponentGrammar(index: 1, name: "Privilege", dataType: "CWE", optionalityCode: "R", tables: ["0525"], length: "705"),
-            ComponentGrammar(index: 2, name: "Privilege Class", dataType: "CWE", optionalityCode: "O", tables: ["0526"], length: "705"),
-            ComponentGrammar(index: 3, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
-            ComponentGrammar(index: 4, name: "Activation Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
-            ComponentGrammar(index: 5, name: "Facility", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
+            ComponentGrammar(index: 1, name: "Privilege", dataType: "CWE", optionalityCode: "R", tables: ["0525"], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Privilege Class", dataType: "CWE", optionalityCode: "O", tables: ["0526"], length: "705", condition: nil),
+            ComponentGrammar(index: 3, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 4, name: "Activation Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 5, name: "Facility", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
         ]
     )
 
@@ -669,17 +669,17 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Person Location",
         components: [
-            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20"),
-            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20"),
-            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20"),
-            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20"),
-            ComponentGrammar(index: 6, name: "Person Location Type", dataType: "IS", optionalityCode: "C", tables: ["0305"], length: "20"),
-            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20"),
-            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20"),
-            ComponentGrammar(index: 9, name: "Location Description", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 10, name: "Comprehensive Location Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
-            ComponentGrammar(index: 11, name: "Assigning Authority for Location", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
+            ComponentGrammar(index: 1, name: "Point of Care", dataType: "IS", optionalityCode: "O", tables: ["0302"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "O", tables: ["0303"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "O", tables: ["0304"], length: "20", condition: nil),
+            ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 5, name: "Location Status", dataType: "IS", optionalityCode: "O", tables: ["0306"], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Person Location Type", dataType: "IS", optionalityCode: "C", tables: ["0305"], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "O", tables: ["0307"], length: "20", condition: nil),
+            ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "O", tables: ["0308"], length: "20", condition: nil),
+            ComponentGrammar(index: 9, name: "Location Description", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 10, name: "Comprehensive Location Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
+            ComponentGrammar(index: 11, name: "Assigning Authority for Location", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
         ]
     )
 
@@ -688,10 +688,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Practitioner License or Other ID Number",
         components: [
-            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "R", tables: [], length: "20"),
-            ComponentGrammar(index: 2, name: "Type of ID Number", dataType: "IS", optionalityCode: "R", tables: ["0338"], length: "8"),
-            ComponentGrammar(index: 3, name: "State/other Qualifying Information", dataType: "ST", optionalityCode: "O", tables: [], length: "62"),
-            ComponentGrammar(index: 4, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "R", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Type of ID Number", dataType: "IS", optionalityCode: "R", tables: ["0338"], length: "8", condition: nil),
+            ComponentGrammar(index: 3, name: "State/other Qualifying Information", dataType: "ST", optionalityCode: "O", tables: [], length: "62", condition: nil),
+            ComponentGrammar(index: 4, name: "Expiration Date", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -700,30 +700,30 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Performing Person Time Stamp",
         components: [
-            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15"),
-            ComponentGrammar(index: 2, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194"),
-            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 7, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "5"),
-            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4"),
-            ComponentGrammar(index: 9, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227"),
-            ComponentGrammar(index: 10, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1"),
-            ComponentGrammar(index: 11, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 12, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "C", tables: ["0061"], length: "3"),
-            ComponentGrammar(index: 13, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5"),
-            ComponentGrammar(index: 14, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 15, name: "Date/Time Action Performed", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 16, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1"),
-            ComponentGrammar(index: 17, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705"),
-            ComponentGrammar(index: 18, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "17"),
-            ComponentGrammar(index: 19, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1"),
-            ComponentGrammar(index: 20, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 21, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 22, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 23, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 24, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
+            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 2, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194", condition: nil),
+            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "5", condition: nil),
+            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4", condition: nil),
+            ComponentGrammar(index: 9, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227", condition: nil),
+            ComponentGrammar(index: 10, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1", condition: nil),
+            ComponentGrammar(index: 11, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 12, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "C", tables: ["0061"], length: "3", condition: nil),
+            ComponentGrammar(index: 13, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5", condition: nil),
+            ComponentGrammar(index: 14, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 15, name: "Date/Time Action Performed", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 16, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil),
+            ComponentGrammar(index: 17, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705", condition: nil),
+            ComponentGrammar(index: 18, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "17", condition: nil),
+            ComponentGrammar(index: 19, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1", condition: nil),
+            ComponentGrammar(index: 20, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 21, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 22, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 23, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 24, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
         ]
     )
 
@@ -732,9 +732,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Parent Result Link",
         components: [
-            ComponentGrammar(index: 1, name: "Parent Observation Identifier", dataType: "CWE", optionalityCode: "R", tables: [], length: "705"),
-            ComponentGrammar(index: 2, name: "Parent Observation Sub-identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 3, name: "Parent Observation Value Descriptor", dataType: "TX", optionalityCode: "O", tables: [], length: "250"),
+            ComponentGrammar(index: 1, name: "Parent Observation Identifier", dataType: "CWE", optionalityCode: "R", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Parent Observation Sub-identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Parent Observation Value Descriptor", dataType: "TX", optionalityCode: "O", tables: [], length: "250", condition: nil),
         ]
     )
 
@@ -743,8 +743,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Processing Type",
         components: [
-            ComponentGrammar(index: 1, name: "Processing ID", dataType: "ID", optionalityCode: "O", tables: ["0103"], length: "1"),
-            ComponentGrammar(index: 2, name: "Processing Mode", dataType: "ID", optionalityCode: "O", tables: ["0207"], length: "1"),
+            ComponentGrammar(index: 1, name: "Processing ID", dataType: "ID", optionalityCode: "O", tables: ["0103"], length: "1", condition: nil),
+            ComponentGrammar(index: 2, name: "Processing Mode", dataType: "ID", optionalityCode: "O", tables: ["0207"], length: "1", condition: nil),
         ]
     )
 
@@ -753,10 +753,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Policy Type and Amount",
         components: [
-            ComponentGrammar(index: 1, name: "Policy Type", dataType: "IS", optionalityCode: "R", tables: ["0147"], length: "5"),
-            ComponentGrammar(index: 2, name: "Amount Class", dataType: "IS", optionalityCode: "O", tables: ["0193"], length: "9"),
-            ComponentGrammar(index: 3, name: "Money or Percentage Quantity", dataType: "NM", optionalityCode: "B", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "Money or Percentage", dataType: "MOP", optionalityCode: "R", tables: [], length: "23"),
+            ComponentGrammar(index: 1, name: "Policy Type", dataType: "IS", optionalityCode: "R", tables: ["0147"], length: "5", condition: nil),
+            ComponentGrammar(index: 2, name: "Amount Class", dataType: "IS", optionalityCode: "O", tables: ["0193"], length: "9", condition: nil),
+            ComponentGrammar(index: 3, name: "Money or Percentage Quantity", dataType: "NM", optionalityCode: "B", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "Money or Percentage", dataType: "MOP", optionalityCode: "R", tables: [], length: "23", condition: nil),
         ]
     )
 
@@ -765,8 +765,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Query Input Parameter List",
         components: [
-            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "R", tables: [], length: "12"),
-            ComponentGrammar(index: 2, name: "Values", dataType: "ST", optionalityCode: "R", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "R", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 2, name: "Values", dataType: "ST", optionalityCode: "R", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -775,10 +775,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Query Selection Criteria",
         components: [
-            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "R", tables: [], length: "12"),
-            ComponentGrammar(index: 2, name: "Relational Operator", dataType: "ID", optionalityCode: "O", tables: ["0209"], length: "2"),
-            ComponentGrammar(index: 3, name: "Value", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 4, name: "Relational Conjunction", dataType: "ID", optionalityCode: "O", tables: ["0210"], length: "3"),
+            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "R", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 2, name: "Relational Operator", dataType: "ID", optionalityCode: "O", tables: ["0209"], length: "2", condition: nil),
+            ComponentGrammar(index: 3, name: "Value", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 4, name: "Relational Conjunction", dataType: "ID", optionalityCode: "O", tables: ["0210"], length: "3", condition: nil),
         ]
     )
 
@@ -787,9 +787,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Row Column Definition",
         components: [
-            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
-            ComponentGrammar(index: 2, name: "HL7 Data Type", dataType: "ID", optionalityCode: "O", tables: ["0440"], length: "3"),
-            ComponentGrammar(index: 3, name: "Maximum Column Width", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
+            ComponentGrammar(index: 1, name: "Segment Field Name", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 2, name: "HL7 Data Type", dataType: "ID", optionalityCode: "O", tables: ["0440"], length: "3", condition: nil),
+            ComponentGrammar(index: 3, name: "Maximum Column Width", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
         ]
     )
 
@@ -798,13 +798,13 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Reference Range",
         components: [
-            ComponentGrammar(index: 1, name: "Numeric Range", dataType: "NR", optionalityCode: "R", tables: [], length: "33"),
-            ComponentGrammar(index: 2, name: "Administrative Sex", dataType: "IS", optionalityCode: "O", tables: ["0001"], length: "8"),
-            ComponentGrammar(index: 3, name: "Age Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33"),
-            ComponentGrammar(index: 4, name: "Gestational Age Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33"),
-            ComponentGrammar(index: 5, name: "Species", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Race/subspecies", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 7, name: "Conditions", dataType: "TX", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Numeric Range", dataType: "NR", optionalityCode: "R", tables: [], length: "33", condition: nil),
+            ComponentGrammar(index: 2, name: "Administrative Sex", dataType: "IS", optionalityCode: "O", tables: ["0001"], length: "8", condition: nil),
+            ComponentGrammar(index: 3, name: "Age Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33", condition: nil),
+            ComponentGrammar(index: 4, name: "Gestational Age Range", dataType: "NR", optionalityCode: "O", tables: [], length: "33", condition: nil),
+            ComponentGrammar(index: 5, name: "Species", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Race/subspecies", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Conditions", dataType: "TX", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -813,8 +813,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Repeat Interval",
         components: [
-            ComponentGrammar(index: 1, name: "Repeat Pattern", dataType: "IS", optionalityCode: "O", tables: ["0335"], length: "6"),
-            ComponentGrammar(index: 2, name: "Explicit Time Interval", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Repeat Pattern", dataType: "IS", optionalityCode: "O", tables: ["0335"], length: "6", condition: nil),
+            ComponentGrammar(index: 2, name: "Explicit Time Interval", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -823,10 +823,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Room Coverage",
         components: [
-            ComponentGrammar(index: 1, name: "Room Type", dataType: "IS", optionalityCode: "R", tables: ["0145"], length: "20"),
-            ComponentGrammar(index: 2, name: "Amount Type", dataType: "IS", optionalityCode: "O", tables: ["0146"], length: "20"),
-            ComponentGrammar(index: 3, name: "Coverage Amount", dataType: "NM", optionalityCode: "B", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "Money or Percentage", dataType: "MOP", optionalityCode: "R", tables: [], length: "23"),
+            ComponentGrammar(index: 1, name: "Room Type", dataType: "IS", optionalityCode: "R", tables: ["0145"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Amount Type", dataType: "IS", optionalityCode: "O", tables: ["0146"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "Coverage Amount", dataType: "NM", optionalityCode: "B", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "Money or Percentage", dataType: "MOP", optionalityCode: "R", tables: [], length: "23", condition: nil),
         ]
     )
 
@@ -835,10 +835,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Reference Pointer",
         components: [
-            ComponentGrammar(index: 1, name: "Pointer", dataType: "ST", optionalityCode: "O", tables: [], length: "999"),
-            ComponentGrammar(index: 2, name: "Application ID", dataType: "HD", optionalityCode: "O", tables: [], length: "1027"),
-            ComponentGrammar(index: 3, name: "Type of Data", dataType: "ID", optionalityCode: "O", tables: ["0834"], length: "11"),
-            ComponentGrammar(index: 4, name: "Subtype", dataType: "ID", optionalityCode: "O", tables: ["0291"], length: "32"),
+            ComponentGrammar(index: 1, name: "Pointer", dataType: "ST", optionalityCode: "O", tables: [], length: "999", condition: nil),
+            ComponentGrammar(index: 2, name: "Application ID", dataType: "HD", optionalityCode: "O", tables: [], length: "1027", condition: nil),
+            ComponentGrammar(index: 3, name: "Type of Data", dataType: "ID", optionalityCode: "O", tables: ["0834"], length: "11", condition: nil),
+            ComponentGrammar(index: 4, name: "Subtype", dataType: "ID", optionalityCode: "O", tables: ["0291"], length: "32", condition: nil),
         ]
     )
 
@@ -847,17 +847,17 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Repeat Pattern",
         components: [
-            ComponentGrammar(index: 1, name: "Repeat Pattern Code", dataType: "CWE", optionalityCode: "R", tables: ["0335"], length: "705"),
-            ComponentGrammar(index: 2, name: "Calendar Alignment", dataType: "ID", optionalityCode: "O", tables: ["0527"], length: "2"),
-            ComponentGrammar(index: 3, name: "Phase Range Begin Value", dataType: "NM", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 4, name: "Phase Range End Value", dataType: "NM", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 5, name: "Period Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 6, name: "Period Units", dataType: "IS", optionalityCode: "C", tables: [], length: "10"),
-            ComponentGrammar(index: 7, name: "Institution Specified Time", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1"),
-            ComponentGrammar(index: 8, name: "Event", dataType: "ID", optionalityCode: "O", tables: ["0528"], length: "6"),
-            ComponentGrammar(index: 9, name: "Event Offset Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "10"),
-            ComponentGrammar(index: 10, name: "Event Offset Units", dataType: "IS", optionalityCode: "C", tables: [], length: "10"),
-            ComponentGrammar(index: 11, name: "General Timing Specification", dataType: "GTS", optionalityCode: "O", tables: [], length: "200"),
+            ComponentGrammar(index: 1, name: "Repeat Pattern Code", dataType: "CWE", optionalityCode: "R", tables: ["0335"], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Calendar Alignment", dataType: "ID", optionalityCode: "O", tables: ["0527"], length: "2", condition: nil),
+            ComponentGrammar(index: 3, name: "Phase Range Begin Value", dataType: "NM", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 4, name: "Phase Range End Value", dataType: "NM", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 5, name: "Period Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 6, name: "Period Units", dataType: "IS", optionalityCode: "C", tables: [], length: "10", condition: "5 populated"),
+            ComponentGrammar(index: 7, name: "Institution Specified Time", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1", condition: nil),
+            ComponentGrammar(index: 8, name: "Event", dataType: "ID", optionalityCode: "O", tables: ["0528"], length: "6", condition: nil),
+            ComponentGrammar(index: 9, name: "Event Offset Quantity", dataType: "NM", optionalityCode: "O", tables: [], length: "10", condition: nil),
+            ComponentGrammar(index: 10, name: "Event Offset Units", dataType: "IS", optionalityCode: "C", tables: [], length: "10", condition: "9 populated"),
+            ComponentGrammar(index: 11, name: "General Timing Specification", dataType: "GTS", optionalityCode: "O", tables: [], length: "200", condition: nil),
         ]
     )
 
@@ -866,9 +866,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Street Address",
         components: [
-            ComponentGrammar(index: 1, name: "Street or Mailing Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 2, name: "Street Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 3, name: "Dwelling Number", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
+            ComponentGrammar(index: 1, name: "Street or Mailing Address", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 2, name: "Street Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 3, name: "Dwelling Number", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
         ]
     )
 
@@ -877,8 +877,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Scheduling Class Value Pair",
         components: [
-            ComponentGrammar(index: 1, name: "Parameter Class", dataType: "CWE", optionalityCode: "O", tables: ["0294"], length: "20"),
-            ComponentGrammar(index: 2, name: "Parameter Value", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
+            ComponentGrammar(index: 1, name: "Parameter Class", dataType: "CWE", optionalityCode: "O", tables: ["0294"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Parameter Value", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
         ]
     )
 
@@ -887,10 +887,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Structured Numeric",
         components: [
-            ComponentGrammar(index: 1, name: "Comparator", dataType: "ST", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 2, name: "Num1", dataType: "NM", optionalityCode: "O", tables: [], length: "15"),
-            ComponentGrammar(index: 3, name: "Separator/Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "1"),
-            ComponentGrammar(index: 4, name: "Num2", dataType: "NM", optionalityCode: "O", tables: [], length: "15"),
+            ComponentGrammar(index: 1, name: "Comparator", dataType: "ST", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 2, name: "Num1", dataType: "NM", optionalityCode: "O", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 3, name: "Separator/Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "1", condition: nil),
+            ComponentGrammar(index: 4, name: "Num2", dataType: "NM", optionalityCode: "O", tables: [], length: "15", condition: nil),
         ]
     )
 
@@ -899,10 +899,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Specialty Description",
         components: [
-            ComponentGrammar(index: 1, name: "Specialty Name", dataType: "ST", optionalityCode: "R", tables: [], length: "50"),
-            ComponentGrammar(index: 2, name: "Governing Board", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 3, name: "Eligible or Certified", dataType: "ID", optionalityCode: "O", tables: ["0337"], length: "1"),
-            ComponentGrammar(index: 4, name: "Date of Certification", dataType: "DT", optionalityCode: "O", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "Specialty Name", dataType: "ST", optionalityCode: "R", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 2, name: "Governing Board", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 3, name: "Eligible or Certified", dataType: "ID", optionalityCode: "O", tables: ["0337"], length: "1", condition: nil),
+            ComponentGrammar(index: 4, name: "Date of Certification", dataType: "DT", optionalityCode: "O", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -911,13 +911,13 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Specimen Source",
         components: [
-            ComponentGrammar(index: 1, name: "Specimen Source Name or Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 2, name: "Additives", dataType: "CWE", optionalityCode: "O", tables: ["0371"], length: "705"),
-            ComponentGrammar(index: 3, name: "Specimen Collection Method", dataType: "TX", optionalityCode: "O", tables: [], length: "200"),
-            ComponentGrammar(index: 4, name: "Body Site", dataType: "CWE", optionalityCode: "O", tables: ["0163"], length: "705"),
-            ComponentGrammar(index: 5, name: "Site Modifier", dataType: "CWE", optionalityCode: "O", tables: ["0495"], length: "705"),
-            ComponentGrammar(index: 6, name: "Collection Method Modifier Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 7, name: "Specimen Role", dataType: "CWE", optionalityCode: "O", tables: ["0369"], length: "705"),
+            ComponentGrammar(index: 1, name: "Specimen Source Name or Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 2, name: "Additives", dataType: "CWE", optionalityCode: "O", tables: ["0371"], length: "705", condition: nil),
+            ComponentGrammar(index: 3, name: "Specimen Collection Method", dataType: "TX", optionalityCode: "O", tables: [], length: "200", condition: nil),
+            ComponentGrammar(index: 4, name: "Body Site", dataType: "CWE", optionalityCode: "O", tables: ["0163"], length: "705", condition: nil),
+            ComponentGrammar(index: 5, name: "Site Modifier", dataType: "CWE", optionalityCode: "O", tables: ["0495"], length: "705", condition: nil),
+            ComponentGrammar(index: 6, name: "Collection Method Modifier Code", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 7, name: "Specimen Role", dataType: "CWE", optionalityCode: "O", tables: ["0369"], length: "705", condition: nil),
         ]
     )
 
@@ -926,8 +926,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Sort Order",
         components: [
-            ComponentGrammar(index: 1, name: "Sort-by Field", dataType: "ST", optionalityCode: "R", tables: [], length: "12"),
-            ComponentGrammar(index: 2, name: "Sequencing", dataType: "ID", optionalityCode: "O", tables: ["0397"], length: "2"),
+            ComponentGrammar(index: 1, name: "Sort-by Field", dataType: "ST", optionalityCode: "R", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 2, name: "Sequencing", dataType: "ID", optionalityCode: "O", tables: ["0397"], length: "2", condition: nil),
         ]
     )
 
@@ -936,18 +936,18 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Timing Quantity",
         components: [
-            ComponentGrammar(index: 1, name: "Quantity", dataType: "CQ", optionalityCode: "O", tables: [], length: "267"),
-            ComponentGrammar(index: 2, name: "Interval", dataType: "RI", optionalityCode: "O", tables: [], length: "206"),
-            ComponentGrammar(index: 3, name: "Duration", dataType: "ST", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 4, name: "Start Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 5, name: "End Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 6, name: "Priority", dataType: "ST", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 7, name: "Condition", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 8, name: "Text", dataType: "TX", optionalityCode: "O", tables: [], length: "200"),
-            ComponentGrammar(index: 9, name: "Conjunction", dataType: "ID", optionalityCode: "O", tables: ["0472"], length: "1"),
-            ComponentGrammar(index: 10, name: "Order Sequencing", dataType: "OSD", optionalityCode: "O", tables: [], length: "110"),
-            ComponentGrammar(index: 11, name: "Occurrence Duration", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 12, name: "Total Occurrences", dataType: "NM", optionalityCode: "O", tables: [], length: "4"),
+            ComponentGrammar(index: 1, name: "Quantity", dataType: "CQ", optionalityCode: "O", tables: [], length: "267", condition: nil),
+            ComponentGrammar(index: 2, name: "Interval", dataType: "RI", optionalityCode: "O", tables: [], length: "206", condition: nil),
+            ComponentGrammar(index: 3, name: "Duration", dataType: "ST", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 4, name: "Start Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 5, name: "End Date/Time", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 6, name: "Priority", dataType: "ST", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 7, name: "Condition", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 8, name: "Text", dataType: "TX", optionalityCode: "O", tables: [], length: "200", condition: nil),
+            ComponentGrammar(index: 9, name: "Conjunction", dataType: "ID", optionalityCode: "O", tables: ["0472"], length: "1", condition: nil),
+            ComponentGrammar(index: 10, name: "Order Sequencing", dataType: "OSD", optionalityCode: "O", tables: [], length: "110", condition: nil),
+            ComponentGrammar(index: 11, name: "Occurrence Duration", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 12, name: "Total Occurrences", dataType: "NM", optionalityCode: "O", tables: [], length: "4", condition: nil),
         ]
     )
 
@@ -956,8 +956,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Time Stamp",
         components: [
-            ComponentGrammar(index: 1, name: "Time", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 2, name: "Degree of Precision", dataType: "", optionalityCode: "W", tables: [], length: nil),
+            ComponentGrammar(index: 1, name: "Time", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 2, name: "Degree of Precision", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
         ]
     )
 
@@ -966,8 +966,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "UB Value Code and Amount",
         components: [
-            ComponentGrammar(index: 1, name: "Value Code", dataType: "CNE", optionalityCode: "R", tables: ["0153"], length: "20"),
-            ComponentGrammar(index: 2, name: "Value Amount", dataType: "MO", optionalityCode: "O", tables: [], length: "20"),
+            ComponentGrammar(index: 1, name: "Value Code", dataType: "CNE", optionalityCode: "R", tables: ["0153"], length: "20", condition: nil),
+            ComponentGrammar(index: 2, name: "Value Amount", dataType: "MO", optionalityCode: "O", tables: [], length: "20", condition: nil),
         ]
     )
 
@@ -976,10 +976,10 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Visiting Hours",
         components: [
-            ComponentGrammar(index: 1, name: "Start Day Range", dataType: "ID", optionalityCode: "O", tables: ["0267"], length: "3"),
-            ComponentGrammar(index: 2, name: "End Day Range", dataType: "ID", optionalityCode: "O", tables: ["0267"], length: "3"),
-            ComponentGrammar(index: 3, name: "Start Hour Range", dataType: "TM", optionalityCode: "O", tables: [], length: "16"),
-            ComponentGrammar(index: 4, name: "End Hour Range", dataType: "TM", optionalityCode: "O", tables: [], length: "16"),
+            ComponentGrammar(index: 1, name: "Start Day Range", dataType: "ID", optionalityCode: "O", tables: ["0267"], length: "3", condition: nil),
+            ComponentGrammar(index: 2, name: "End Day Range", dataType: "ID", optionalityCode: "O", tables: ["0267"], length: "3", condition: nil),
+            ComponentGrammar(index: 3, name: "Start Hour Range", dataType: "TM", optionalityCode: "O", tables: [], length: "16", condition: nil),
+            ComponentGrammar(index: 4, name: "End Hour Range", dataType: "TM", optionalityCode: "O", tables: [], length: "16", condition: nil),
         ]
     )
 
@@ -988,9 +988,9 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Version Identifier",
         components: [
-            ComponentGrammar(index: 1, name: "Version ID", dataType: "ID", optionalityCode: "O", tables: ["0104"], length: "5"),
-            ComponentGrammar(index: 2, name: "Internationalization Code", dataType: "CWE", optionalityCode: "O", tables: ["0399"], length: "483"),
-            ComponentGrammar(index: 3, name: "International Version ID", dataType: "CWE", optionalityCode: "O", tables: [], length: "483"),
+            ComponentGrammar(index: 1, name: "Version ID", dataType: "ID", optionalityCode: "O", tables: ["0104"], length: "5", condition: nil),
+            ComponentGrammar(index: 2, name: "Internationalization Code", dataType: "CWE", optionalityCode: "O", tables: ["0399"], length: "483", condition: nil),
+            ComponentGrammar(index: 3, name: "International Version ID", dataType: "CWE", optionalityCode: "O", tables: [], length: "483", condition: nil),
         ]
     )
 
@@ -999,8 +999,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Value Range",
         components: [
-            ComponentGrammar(index: 1, name: "First Data Code Value", dataType: "ST", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 2, name: "Last Data Code Value", dataType: "ST", optionalityCode: "O", tables: [], length: "6"),
+            ComponentGrammar(index: 1, name: "First Data Code Value", dataType: "ST", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 2, name: "Last Data Code Value", dataType: "ST", optionalityCode: "O", tables: [], length: "6", condition: nil),
         ]
     )
 
@@ -1009,8 +1009,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Channel Identifier",
         components: [
-            ComponentGrammar(index: 1, name: "Channel Number", dataType: "NM", optionalityCode: "R", tables: [], length: "4"),
-            ComponentGrammar(index: 2, name: "Channel Name", dataType: "ST", optionalityCode: "O", tables: [], length: "17"),
+            ComponentGrammar(index: 1, name: "Channel Number", dataType: "NM", optionalityCode: "R", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 2, name: "Channel Name", dataType: "ST", optionalityCode: "O", tables: [], length: "17", condition: nil),
         ]
     )
 
@@ -1019,8 +1019,8 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Waveform Source",
         components: [
-            ComponentGrammar(index: 1, name: "Source One Name", dataType: "ST", optionalityCode: "R", tables: [], length: "8"),
-            ComponentGrammar(index: 2, name: "Source Two Name", dataType: "ST", optionalityCode: "O", tables: [], length: "8"),
+            ComponentGrammar(index: 1, name: "Source One Name", dataType: "ST", optionalityCode: "R", tables: [], length: "8", condition: nil),
+            ComponentGrammar(index: 2, name: "Source Two Name", dataType: "ST", optionalityCode: "O", tables: [], length: "8", condition: nil),
         ]
     )
 
@@ -1029,29 +1029,29 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Address",
         components: [
-            ComponentGrammar(index: 1, name: "Street Address", dataType: "SAD", optionalityCode: "O", tables: [], length: "184"),
-            ComponentGrammar(index: 2, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120"),
-            ComponentGrammar(index: 3, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 4, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 5, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12"),
-            ComponentGrammar(index: 6, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3"),
-            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3"),
-            ComponentGrammar(index: 8, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 9, name: "County/Parish Code", dataType: "IS", optionalityCode: "O", tables: ["0289"], length: "20"),
-            ComponentGrammar(index: 10, name: "Census Tract", dataType: "IS", optionalityCode: "O", tables: ["0288"], length: "20"),
-            ComponentGrammar(index: 11, name: "Address Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1"),
-            ComponentGrammar(index: 12, name: "Address Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49"),
-            ComponentGrammar(index: 13, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 14, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 15, name: "Expiration Reason", dataType: "CWE", optionalityCode: "O", tables: ["0616"], length: "705"),
-            ComponentGrammar(index: 16, name: "Temporary Indicator", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1"),
-            ComponentGrammar(index: 17, name: "Bad Address Indicator", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1"),
-            ComponentGrammar(index: 18, name: "Address Usage", dataType: "ID", optionalityCode: "O", tables: ["0617"], length: "44"),
-            ComponentGrammar(index: 19, name: "Addressee", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 20, name: "Comment", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 21, name: "Preference Order", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
-            ComponentGrammar(index: 22, name: "Protection Code", dataType: "CWE", optionalityCode: "O", tables: ["0618"], length: "705"),
-            ComponentGrammar(index: 23, name: "Address Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
+            ComponentGrammar(index: 1, name: "Street Address", dataType: "SAD", optionalityCode: "O", tables: [], length: "184", condition: nil),
+            ComponentGrammar(index: 2, name: "Other Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "120", condition: nil),
+            ComponentGrammar(index: 3, name: "City", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 4, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 5, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12", condition: nil),
+            ComponentGrammar(index: 6, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3", condition: nil),
+            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "O", tables: ["0190"], length: "3", condition: nil),
+            ComponentGrammar(index: 8, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 9, name: "County/Parish Code", dataType: "IS", optionalityCode: "O", tables: ["0289"], length: "20", condition: nil),
+            ComponentGrammar(index: 10, name: "Census Tract", dataType: "IS", optionalityCode: "O", tables: ["0288"], length: "20", condition: nil),
+            ComponentGrammar(index: 11, name: "Address Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil),
+            ComponentGrammar(index: 12, name: "Address Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49", condition: nil),
+            ComponentGrammar(index: 13, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 14, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 15, name: "Expiration Reason", dataType: "CWE", optionalityCode: "O", tables: ["0616"], length: "705", condition: nil),
+            ComponentGrammar(index: 16, name: "Temporary Indicator", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1", condition: nil),
+            ComponentGrammar(index: 17, name: "Bad Address Indicator", dataType: "ID", optionalityCode: "O", tables: ["0136"], length: "1", condition: nil),
+            ComponentGrammar(index: 18, name: "Address Usage", dataType: "ID", optionalityCode: "O", tables: ["0617"], length: "44", condition: nil),
+            ComponentGrammar(index: 19, name: "Addressee", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 20, name: "Comment", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 21, name: "Preference Order", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
+            ComponentGrammar(index: 22, name: "Protection Code", dataType: "CWE", optionalityCode: "O", tables: ["0618"], length: "705", condition: nil),
+            ComponentGrammar(index: 23, name: "Address Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
         ]
     )
 
@@ -1060,29 +1060,29 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Composite ID Number and Name for Persons",
         components: [
-            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15"),
-            ComponentGrammar(index: 2, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194"),
-            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 7, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "5"),
-            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4"),
-            ComponentGrammar(index: 9, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227"),
-            ComponentGrammar(index: 10, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1"),
-            ComponentGrammar(index: 11, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 12, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "C", tables: ["0061"], length: "3"),
-            ComponentGrammar(index: 13, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5"),
-            ComponentGrammar(index: 14, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 15, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1"),
-            ComponentGrammar(index: 16, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705"),
-            ComponentGrammar(index: 17, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49"),
-            ComponentGrammar(index: 18, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1"),
-            ComponentGrammar(index: 19, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 20, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 21, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 22, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
-            ComponentGrammar(index: 23, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705"),
+            ComponentGrammar(index: 1, name: "ID Number", dataType: "ST", optionalityCode: "O", tables: [], length: "15", condition: nil),
+            ComponentGrammar(index: 2, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194", condition: nil),
+            ComponentGrammar(index: 3, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 4, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 5, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 7, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "5", condition: nil),
+            ComponentGrammar(index: 8, name: "Source Table", dataType: "IS", optionalityCode: "C", tables: ["0297"], length: "4", condition: nil),
+            ComponentGrammar(index: 9, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227", condition: nil),
+            ComponentGrammar(index: 10, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1", condition: nil),
+            ComponentGrammar(index: 11, name: "Identifier Check Digit", dataType: "ST", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 12, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "C", tables: ["0061"], length: "3", condition: nil),
+            ComponentGrammar(index: 13, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5", condition: nil),
+            ComponentGrammar(index: 14, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 15, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil),
+            ComponentGrammar(index: 16, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705", condition: nil),
+            ComponentGrammar(index: 17, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49", condition: nil),
+            ComponentGrammar(index: 18, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1", condition: nil),
+            ComponentGrammar(index: 19, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 20, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 21, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 22, name: "Assigning Jurisdiction", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
+            ComponentGrammar(index: 23, name: "Assigning Agency or Department", dataType: "CWE", optionalityCode: "O", tables: [], length: "705", condition: nil),
         ]
     )
 
@@ -1091,16 +1091,16 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Composite Name and Identification Number for",
         components: [
-            ComponentGrammar(index: 1, name: "Organization Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50"),
-            ComponentGrammar(index: 2, name: "Organization Name Type Code", dataType: "IS", optionalityCode: "O", tables: ["0204"], length: "20"),
-            ComponentGrammar(index: 3, name: "ID Number", dataType: "NM", optionalityCode: "B", tables: [], length: "4"),
-            ComponentGrammar(index: 4, name: "Identifier Check Digit", dataType: "NM", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 5, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "O", tables: ["0061"], length: "3"),
-            ComponentGrammar(index: 6, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227"),
-            ComponentGrammar(index: 7, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5"),
-            ComponentGrammar(index: 8, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227"),
-            ComponentGrammar(index: 9, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1"),
-            ComponentGrammar(index: 10, name: "Organization Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
+            ComponentGrammar(index: 1, name: "Organization Name", dataType: "ST", optionalityCode: "O", tables: [], length: "50", condition: nil),
+            ComponentGrammar(index: 2, name: "Organization Name Type Code", dataType: "IS", optionalityCode: "O", tables: ["0204"], length: "20", condition: nil),
+            ComponentGrammar(index: 3, name: "ID Number", dataType: "NM", optionalityCode: "B", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 4, name: "Identifier Check Digit", dataType: "NM", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 5, name: "Check Digit Scheme", dataType: "ID", optionalityCode: "O", tables: ["0061"], length: "3", condition: nil),
+            ComponentGrammar(index: 6, name: "Assigning Authority", dataType: "HD", optionalityCode: "O", tables: ["0363"], length: "227", condition: nil),
+            ComponentGrammar(index: 7, name: "Identifier Type Code", dataType: "ID", optionalityCode: "O", tables: ["0203"], length: "5", condition: nil),
+            ComponentGrammar(index: 8, name: "Assigning Facility", dataType: "HD", optionalityCode: "O", tables: [], length: "227", condition: nil),
+            ComponentGrammar(index: 9, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil),
+            ComponentGrammar(index: 10, name: "Organization Identifier", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
         ]
     )
 
@@ -1109,20 +1109,20 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Person Name",
         components: [
-            ComponentGrammar(index: 1, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194"),
-            ComponentGrammar(index: 2, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 3, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30"),
-            ComponentGrammar(index: 4, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 5, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20"),
-            ComponentGrammar(index: 6, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "6"),
-            ComponentGrammar(index: 7, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1"),
-            ComponentGrammar(index: 8, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1"),
-            ComponentGrammar(index: 9, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705"),
-            ComponentGrammar(index: 10, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49"),
-            ComponentGrammar(index: 11, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1"),
-            ComponentGrammar(index: 12, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 13, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 14, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
+            ComponentGrammar(index: 1, name: "Family Name", dataType: "FN", optionalityCode: "O", tables: [], length: "194", condition: nil),
+            ComponentGrammar(index: 2, name: "Given Name", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 3, name: "Second and Further Given Names or Initials Thereof", dataType: "ST", optionalityCode: "O", tables: [], length: "30", condition: nil),
+            ComponentGrammar(index: 4, name: "Suffix (e.g., JR or III)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 5, name: "Prefix (e.g., DR)", dataType: "ST", optionalityCode: "O", tables: [], length: "20", condition: nil),
+            ComponentGrammar(index: 6, name: "Degree (e.g., MD)", dataType: "IS", optionalityCode: "B", tables: ["0360"], length: "6", condition: nil),
+            ComponentGrammar(index: 7, name: "Name Type Code", dataType: "ID", optionalityCode: "O", tables: ["0200"], length: "1", condition: nil),
+            ComponentGrammar(index: 8, name: "Name Representation Code", dataType: "ID", optionalityCode: "O", tables: ["0465"], length: "1", condition: nil),
+            ComponentGrammar(index: 9, name: "Name Context", dataType: "CWE", optionalityCode: "O", tables: ["0448"], length: "705", condition: nil),
+            ComponentGrammar(index: 10, name: "Name Validity Range", dataType: "DR", optionalityCode: "B", tables: [], length: "49", condition: nil),
+            ComponentGrammar(index: 11, name: "Name Assembly Order", dataType: "ID", optionalityCode: "O", tables: ["0444"], length: "1", condition: nil),
+            ComponentGrammar(index: 12, name: "Effective Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 13, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 14, name: "Professional Suffix", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
         ]
     )
 
@@ -1131,24 +1131,24 @@ extension DataTypeGrammarTable {
         version: "2.6",
         name: "Extended Telecommunication Number",
         components: [
-            ComponentGrammar(index: 1, name: "Telephone Number", dataType: "", optionalityCode: "W", tables: [], length: nil),
-            ComponentGrammar(index: 2, name: "Telecommunication Use Code", dataType: "ID", optionalityCode: "O", tables: ["0201"], length: "3"),
-            ComponentGrammar(index: 3, name: "Telecommunication Equipment Type", dataType: "ID", optionalityCode: "O", tables: ["0202"], length: "8"),
-            ComponentGrammar(index: 4, name: "Communication Address", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 5, name: "Country Code", dataType: "NM", optionalityCode: "O", tables: [], length: "3"),
-            ComponentGrammar(index: 6, name: "Area/City Code", dataType: "NM", optionalityCode: "O", tables: [], length: "5"),
-            ComponentGrammar(index: 7, name: "Local Number", dataType: "NM", optionalityCode: "O", tables: [], length: "9"),
-            ComponentGrammar(index: 8, name: "Extension", dataType: "NM", optionalityCode: "O", tables: [], length: "5"),
-            ComponentGrammar(index: 9, name: "Any Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199"),
-            ComponentGrammar(index: 10, name: "Extension Prefix", dataType: "ST", optionalityCode: "O", tables: [], length: "4"),
-            ComponentGrammar(index: 11, name: "Speed Dial Code", dataType: "ST", optionalityCode: "O", tables: [], length: "6"),
-            ComponentGrammar(index: 12, name: "Unformatted Telephone number", dataType: "ST", optionalityCode: "C", tables: [], length: "199"),
-            ComponentGrammar(index: 13, name: "Effective Start Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 14, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24"),
-            ComponentGrammar(index: 15, name: "Expiration Reason", dataType: "CWE", optionalityCode: "O", tables: ["0868"], length: "705"),
-            ComponentGrammar(index: 16, name: "Protection Code", dataType: "CWE", optionalityCode: "O", tables: ["0618"], length: "705"),
-            ComponentGrammar(index: 17, name: "Shared Telecommunication Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427"),
-            ComponentGrammar(index: 18, name: "Preference Order", dataType: "NM", optionalityCode: "O", tables: [], length: "2"),
+            ComponentGrammar(index: 1, name: "Telephone Number", dataType: "", optionalityCode: "W", tables: [], length: nil, condition: nil),
+            ComponentGrammar(index: 2, name: "Telecommunication Use Code", dataType: "ID", optionalityCode: "O", tables: ["0201"], length: "3", condition: nil),
+            ComponentGrammar(index: 3, name: "Telecommunication Equipment Type", dataType: "ID", optionalityCode: "O", tables: ["0202"], length: "8", condition: nil),
+            ComponentGrammar(index: 4, name: "Communication Address", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 5, name: "Country Code", dataType: "NM", optionalityCode: "O", tables: [], length: "3", condition: nil),
+            ComponentGrammar(index: 6, name: "Area/City Code", dataType: "NM", optionalityCode: "O", tables: [], length: "5", condition: nil),
+            ComponentGrammar(index: 7, name: "Local Number", dataType: "NM", optionalityCode: "O", tables: [], length: "9", condition: nil),
+            ComponentGrammar(index: 8, name: "Extension", dataType: "NM", optionalityCode: "O", tables: [], length: "5", condition: nil),
+            ComponentGrammar(index: 9, name: "Any Text", dataType: "ST", optionalityCode: "O", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 10, name: "Extension Prefix", dataType: "ST", optionalityCode: "O", tables: [], length: "4", condition: nil),
+            ComponentGrammar(index: 11, name: "Speed Dial Code", dataType: "ST", optionalityCode: "O", tables: [], length: "6", condition: nil),
+            ComponentGrammar(index: 12, name: "Unformatted Telephone number", dataType: "ST", optionalityCode: "C", tables: [], length: "199", condition: nil),
+            ComponentGrammar(index: 13, name: "Effective Start Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 14, name: "Expiration Date", dataType: "DTM", optionalityCode: "O", tables: [], length: "24", condition: nil),
+            ComponentGrammar(index: 15, name: "Expiration Reason", dataType: "CWE", optionalityCode: "O", tables: ["0868"], length: "705", condition: nil),
+            ComponentGrammar(index: 16, name: "Protection Code", dataType: "CWE", optionalityCode: "O", tables: ["0618"], length: "705", condition: nil),
+            ComponentGrammar(index: 17, name: "Shared Telecommunication Identifier", dataType: "EI", optionalityCode: "O", tables: [], length: "427", condition: nil),
+            ComponentGrammar(index: 18, name: "Preference Order", dataType: "NM", optionalityCode: "O", tables: [], length: "2", condition: nil),
         ]
     )
 }

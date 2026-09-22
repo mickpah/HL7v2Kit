@@ -93,6 +93,11 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// failure to the loaded locale. Scaffolded in v0.4-S5-A; fired
     /// once profile overrides ship in S5-B and later. See ADR-007.
     case profileConstraintViolation(localeRule: String)
+    /// A component the spec prints as conditional is empty while the condition
+    /// its prose states holds (v2.5.1 RPT.6 "required if RPT-5 is populated").
+    /// Located at the component; severity follows
+    /// ``ValidationOptions/requiredComponentSeverity``. M26.
+    case conditionalComponentMissing
     /// A group-scope cardinality rule matched fewer segments than its
     /// declared minimum. `segmentID` is the ID being counted (e.g.
     /// `"OBX"` for HL7au:000008 which requires ≥1 AUSPDI display OBX

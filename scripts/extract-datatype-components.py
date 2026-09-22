@@ -126,6 +126,16 @@ def extract(version):
             for c in types.get(code, {}).get("components", []):
                 if c["index"] == int(index):
                     c["optionality"] = change["optionality"]
+    # Resources/datatypes/conditions.json (M26): hand-authored, cited predicates for components
+    # printed C. Only a component printed C may carry one, so a rule on a component the table
+    # prints otherwise is a build-content error, not a silent no-op.
+    path = os.path.join(REPO, "Resources/datatypes/conditions.json")
+    rules = json.load(open(path))["rules"].get(version, {}) if os.path.exists(path) else {}
+    for code, comps in rules.items():
+        for index, rule in comps.items():
+            target = [c for c in types.get(code, {}).get("components", []) if c["index"] == int(index)]
+            assert target and target[0]["optionality"] == "C", f"v{version} {code}.{index}: condition on a component not printed C"
+            target[0]["condition"] = rule["condition"]
     return types
 
 
@@ -141,8 +151,9 @@ def main():
             doc = {"dataType": code, "version": version, "name": t["name"], "components": [
                 {k: v for k, v in (("index", c["index"]), ("name", c["name"]), ("dataType", c["dataType"]),
                                    ("optionality", c["optionality"]), ("length", c["len"]),
+                                   ("condition", c.get("condition", "")),
                                    ("tables", table_numbers(c["tbl"])))
-                 if not (k in ("tables", "length") and not v)} for c in t["components"]]}
+                 if not (k in ("tables", "length", "condition") and not v)} for c in t["components"]]}
             with open(os.path.join(out, f"{code}.json"), "w", encoding="utf-8") as f:
                 json.dump(doc, f, indent=2, ensure_ascii=False)
                 f.write("\n")
