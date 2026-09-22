@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "Application Control Level Statistics",
   "fields": [
-    { "index": 1, "swiftName": "statisticsAvailable", "name": "Statistics Available", "dataType": "ID", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
+    { "index": 1, "swiftName": "statisticsAvailable", "name": "Statistics Available", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
     { "index": 2, "swiftName": "sourceIdentifier", "name": "Source Identifier", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "sourceType", "name": "Source Type", "dataType": "ID", "table": "0332", "optionality": "O", "repeatability": "1", "tables": ["0332"] },
     { "index": 4, "swiftName": "statisticsStart", "name": "Statistics Start", "dataType": "DTM", "optionality": "O", "repeatability": "1" },

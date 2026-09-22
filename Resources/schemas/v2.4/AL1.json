@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - AL1",
-      "dataType": "SI",
+      "dataType": "SI", "length": "250",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "allergenTypeCode",
       "name": "Allergen Type Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0127"]
@@ -24,7 +24,7 @@
       "index": 3,
       "swiftName": "allergenCodeMnemonicDescription",
       "name": "Allergen Code/Mnemonic/Description",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "allergySeverityCode",
       "name": "Allergy Severity Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0128"]
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "allergyReactionCode",
       "name": "Allergy Reaction Code",
-      "dataType": "ST",
+      "dataType": "ST", "length": "15",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -49,7 +49,7 @@
       "index": 6,
       "swiftName": "identificationDate",
       "name": "Identification Date (deprecated)",
-      "dataType": "DT",
+      "dataType": "DT", "length": "8",
       "optionality": "B",
       "repeatability": "1"
     }

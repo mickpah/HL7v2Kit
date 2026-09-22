@@ -10,7 +10,7 @@
     { "index": 5, "swiftName": "shipmentStatusReason", "name": "Shipment Status Reason", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "shipmentPriority", "name": "Shipment Priority", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0906"] },
     { "index": 7, "swiftName": "shipmentConfidentiality", "name": "Shipment Confidentiality", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0907"] },
-    { "index": 8, "swiftName": "numberOfPackagesInShipment", "name": "Number of Packages in Shipment", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "numberOfPackagesInShipment", "name": "Number of Packages in Shipment", "dataType": "NM", "length": "4=", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "shipmentCondition", "name": "Shipment Condition", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0544"] },
     { "index": 10, "swiftName": "shipmentHandlingCode", "name": "Shipment Handling Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0376"] },
     { "index": 11, "swiftName": "shipmentRiskCode", "name": "Shipment Risk Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0489"] }

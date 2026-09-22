@@ -3,10 +3,10 @@
   "version": "2.3.1",
   "description": "MFE",
   "fields": [
-    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "table": "0180", "optionality": "R", "repeatability": "1", "tables": ["0180"] },
-    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "optionality": "C", "repeatability": "1" },
-    { "index": 3, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "primaryKeyValueMfe", "name": "Primary Key Value - MFE", "dataType": "Varies", "optionality": "R", "repeatability": "*" },
-    { "index": 5, "swiftName": "primaryKeyValueType", "name": "Primary Key Value Type", "dataType": "ID", "table": "0355", "optionality": "R", "repeatability": "*", "tables": ["0355"] }
+    { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "length": "3", "table": "0180", "optionality": "R", "repeatability": "1", "tables": ["0180"] },
+    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "length": "20", "optionality": "C", "repeatability": "1" },
+    { "index": 3, "swiftName": "effectiveDateTime", "name": "Effective Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "primaryKeyValueMfe", "name": "Primary Key Value - MFE", "dataType": "Varies", "length": "200", "optionality": "R", "repeatability": "*" },
+    { "index": 5, "swiftName": "primaryKeyValueType", "name": "Primary Key Value Type", "dataType": "ID", "length": "3", "table": "0355", "optionality": "R", "repeatability": "*", "tables": ["0355"] }
   ]
 }

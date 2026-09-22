@@ -8,6 +8,7 @@
       "name": "Parameter Class",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0294"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Parameter Value",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     }
   ]
 }

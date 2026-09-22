@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "errorCodeAndLocation",
       "name": "Error Code and Location",
-      "dataType": "CM",
+      "dataType": "CM", "length": "80",
       "optionality": "R",
       "repeatability": "*"
     }

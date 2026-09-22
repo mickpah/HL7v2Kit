@@ -3,7 +3,7 @@
   "version": "2.4",
   "description": "Bed Status Update",
   "fields": [
-    { "index": 1, "swiftName": "bedLocation", "name": "Bed Location", "dataType": "PL", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "bedStatus", "name": "Bed Status", "dataType": "IS", "table": "0116", "optionality": "O", "repeatability": "1", "tables": ["0116"] }
+    { "index": 1, "swiftName": "bedLocation", "name": "Bed Location", "dataType": "PL", "length": "80", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "bedStatus", "name": "Bed Status", "dataType": "IS", "length": "1", "table": "0116", "optionality": "O", "repeatability": "1", "tables": ["0116"] }
   ]
 }

@@ -8,6 +8,7 @@
       "name": "Invocation Event",
       "dataType": "ID",
       "optionality": "R",
+      "length": "1",
       "tables": [
         "0100"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Date/time",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     }
   ]
 }

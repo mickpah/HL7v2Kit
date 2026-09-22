@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Specimen Source Name or Code",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     },
     {
       "index": 2,
       "name": "Additives",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0371"
       ]
@@ -22,13 +24,15 @@
       "index": 3,
       "name": "Specimen Collection Method",
       "dataType": "TX",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "200"
     },
     {
       "index": 4,
       "name": "Body Site",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0163"
       ]
@@ -38,6 +42,7 @@
       "name": "Site Modifier",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0495"
       ]
@@ -46,13 +51,15 @@
       "index": 6,
       "name": "Collection Method Modifier Code",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     },
     {
       "index": 7,
       "name": "Specimen Role",
       "dataType": "CWE",
       "optionality": "O",
+      "length": "705",
       "tables": [
         "0369"
       ]

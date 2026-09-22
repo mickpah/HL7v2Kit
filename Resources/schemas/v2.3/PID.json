@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - Patient ID",
-      "dataType": "SI",
+      "dataType": "SI", "length": "4",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "patientID",
       "name": "Patient ID",
-      "dataType": "CX",
+      "dataType": "CX", "length": "20",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -23,7 +23,7 @@
       "index": 3,
       "swiftName": "patientIdentifierList",
       "name": "Patient ID (Internal ID)",
-      "dataType": "CX",
+      "dataType": "CX", "length": "20",
       "optionality": "R",
       "repeatability": "*"
     },
@@ -31,7 +31,7 @@
       "index": 4,
       "swiftName": "alternatePatientID",
       "name": "Alternate Patient ID",
-      "dataType": "CX",
+      "dataType": "CX", "length": "20",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -39,7 +39,7 @@
       "index": 5,
       "swiftName": "patientName",
       "name": "Patient Name",
-      "dataType": "XPN",
+      "dataType": "XPN", "length": "48",
       "optionality": "R",
       "repeatability": "*"
     },
@@ -47,7 +47,7 @@
       "index": 6,
       "swiftName": "mothersMaidenName",
       "name": "Mother's Maiden Name",
-      "dataType": "XPN",
+      "dataType": "XPN", "length": "48",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -55,7 +55,7 @@
       "index": 7,
       "swiftName": "dateTimeOfBirth",
       "name": "Date/Time of Birth",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -63,7 +63,7 @@
       "index": 8,
       "swiftName": "administrativeSex",
       "name": "Sex",
-      "dataType": "IS", "table": "0001",
+      "dataType": "IS", "length": "1", "table": "0001",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0001"]
@@ -72,7 +72,7 @@
       "index": 9,
       "swiftName": "patientAlias",
       "name": "Patient Alias",
-      "dataType": "XPN",
+      "dataType": "XPN", "length": "48",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -80,7 +80,7 @@
       "index": 10,
       "swiftName": "race",
       "name": "Race",
-      "dataType": "IS", "table": "0005",
+      "dataType": "IS", "length": "1", "table": "0005",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0005"]
@@ -89,7 +89,7 @@
       "index": 11,
       "swiftName": "patientAddress",
       "name": "Patient Address",
-      "dataType": "XAD",
+      "dataType": "XAD", "length": "106",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -97,7 +97,7 @@
       "index": 12,
       "swiftName": "countyCode",
       "name": "County Code (deprecated)",
-      "dataType": "IS",
+      "dataType": "IS", "length": "4",
       "optionality": "B",
       "repeatability": "1"
     },
@@ -105,7 +105,7 @@
       "index": 13,
       "swiftName": "phoneNumberHome",
       "name": "Phone Number - Home",
-      "dataType": "XTN",
+      "dataType": "XTN", "length": "40",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -113,7 +113,7 @@
       "index": 14,
       "swiftName": "phoneNumberBusiness",
       "name": "Phone Number - Business",
-      "dataType": "XTN",
+      "dataType": "XTN", "length": "40",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -121,7 +121,7 @@
       "index": 15,
       "swiftName": "primaryLanguage",
       "name": "Primary Language",
-      "dataType": "CE",
+      "dataType": "CE", "length": "60",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0296"]
@@ -130,7 +130,7 @@
       "index": 16,
       "swiftName": "maritalStatus",
       "name": "Marital Status",
-      "dataType": "IS", "table": "0002",
+      "dataType": "IS", "length": "1", "table": "0002",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0002"]
@@ -139,7 +139,7 @@
       "index": 17,
       "swiftName": "religion",
       "name": "Religion",
-      "dataType": "IS", "table": "0006",
+      "dataType": "IS", "length": "3", "table": "0006",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0006"]
@@ -148,7 +148,7 @@
       "index": 18,
       "swiftName": "patientAccountNumber",
       "name": "Patient Account Number",
-      "dataType": "CX",
+      "dataType": "CX", "length": "20",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -156,7 +156,7 @@
       "index": 19,
       "swiftName": "ssnNumberPatient",
       "name": "SSN Number - Patient",
-      "dataType": "ST",
+      "dataType": "ST", "length": "16",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -164,7 +164,7 @@
       "index": 20,
       "swiftName": "driversLicenseNumberPatient",
       "name": "Driver's License Number - Patient",
-      "dataType": "DLN",
+      "dataType": "DLN", "length": "25",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -172,7 +172,7 @@
       "index": 21,
       "swiftName": "mothersIdentifier",
       "name": "Mother's Identifier",
-      "dataType": "CX",
+      "dataType": "CX", "length": "20",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -180,7 +180,7 @@
       "index": 22,
       "swiftName": "ethnicGroup",
       "name": "Ethnic Group",
-      "dataType": "IS", "table": "0189",
+      "dataType": "IS", "length": "3", "table": "0189",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0189"]
@@ -189,7 +189,7 @@
       "index": 23,
       "swiftName": "birthPlace",
       "name": "Birth Place",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -197,7 +197,7 @@
       "index": 24,
       "swiftName": "multipleBirthIndicator",
       "name": "Multiple Birth Indicator",
-      "dataType": "ID", "table": "0136",
+      "dataType": "ID", "length": "2", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -206,7 +206,7 @@
       "index": 25,
       "swiftName": "birthOrder",
       "name": "Birth Order",
-      "dataType": "NM",
+      "dataType": "NM", "length": "2",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -214,7 +214,7 @@
       "index": 26,
       "swiftName": "citizenship",
       "name": "Citizenship",
-      "dataType": "IS", "table": "0171",
+      "dataType": "IS", "length": "4", "table": "0171",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0171"]
@@ -223,7 +223,7 @@
       "index": 27,
       "swiftName": "veteransMilitaryStatus",
       "name": "Veterans Military Status",
-      "dataType": "CE",
+      "dataType": "CE", "length": "60",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0172"]
@@ -232,7 +232,7 @@
       "index": 28,
       "swiftName": "nationality",
       "name": "Nationality",
-      "dataType": "CE",
+      "dataType": "CE", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -240,7 +240,7 @@
       "index": 29,
       "swiftName": "patientDeathDateAndTime",
       "name": "Patient Death Date and Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -248,7 +248,7 @@
       "index": 30,
       "swiftName": "patientDeathIndicator",
       "name": "Patient Death Indicator",
-      "dataType": "ID", "table": "0136",
+      "dataType": "ID", "length": "1", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]

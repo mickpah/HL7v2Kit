@@ -3,10 +3,10 @@
   "version": "2.5.1",
   "description": "Appointment Preferences",
   "fields": [
-    { "index": 1, "swiftName": "timeSelectionCriteria", "name": "Time Selection Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
-    { "index": 2, "swiftName": "resourceSelectionCriteria", "name": "Resource Selection Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
-    { "index": 3, "swiftName": "locationSelectionCriteria", "name": "Location Selection Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
-    { "index": 4, "swiftName": "slotSpacingCriteria", "name": "Slot Spacing Criteria", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "fillerOverrideCriteria", "name": "Filler Override Criteria", "dataType": "SCV", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "timeSelectionCriteria", "name": "Time Selection Criteria", "dataType": "SCV", "length": "80", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
+    { "index": 2, "swiftName": "resourceSelectionCriteria", "name": "Resource Selection Criteria", "dataType": "SCV", "length": "80", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
+    { "index": 3, "swiftName": "locationSelectionCriteria", "name": "Location Selection Criteria", "dataType": "SCV", "length": "80", "optionality": "O", "repeatability": "*", "tables": ["0294"] },
+    { "index": 4, "swiftName": "slotSpacingCriteria", "name": "Slot Spacing Criteria", "dataType": "NM", "length": "5", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "fillerOverrideCriteria", "name": "Filler Override Criteria", "dataType": "SCV", "length": "80", "optionality": "O", "repeatability": "*" }
   ]
 }

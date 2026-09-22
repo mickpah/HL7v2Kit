@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Observations that are Calculated from Other Observations",
   "fields": [
-    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "derivationRule", "name": "Derivation Rule", "dataType": "TX", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "derivationRule", "name": "Derivation Rule", "dataType": "TX", "length": "1024", "optionality": "O", "repeatability": "1" }
   ]
 }

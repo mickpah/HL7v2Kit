@@ -3,12 +3,12 @@
   "version": "2.6",
   "description": "PTH",
   "fields": [
-    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
-    { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "pathwayInstanceId", "name": "Pathway Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "pathwayEstablishedDateTime", "name": "Pathway Established Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "pathwayLifeCycleStatus", "name": "Pathway Life Cycle Status", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "changePathwayLifeCycleStatusDateTime", "name": "Change Pathway Life Cycle Status Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
-    { "index": 7, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "optionality": "C", "repeatability": "1", "tables": ["0725"] }
+    { "index": 1, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 2, "swiftName": "pathwayId", "name": "Pathway ID", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "pathwayInstanceId", "name": "Pathway Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "pathwayEstablishedDateTime", "name": "Pathway Established Date/Time", "dataType": "DTM", "length": "24", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "pathwayLifeCycleStatus", "name": "Pathway Life Cycle Status", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "changePathwayLifeCycleStatusDateTime", "name": "Change Pathway Life Cycle Status Date/Time", "dataType": "DTM", "length": "24", "optionality": "C", "repeatability": "1" },
+    { "index": 7, "swiftName": "moodCode", "name": "Mood Code", "dataType": "CNE", "length": "60", "optionality": "C", "repeatability": "1", "tables": ["0725"] }
   ]
 }

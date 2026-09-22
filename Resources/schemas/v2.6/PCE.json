@@ -3,9 +3,9 @@
   "version": "2.6",
   "description": "Patient Charge Cost Center Exception",
   "fields": [
-    { "index": 1, "swiftName": "setIdPce", "name": "Set ID – PCE", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "costCenterAccountNumber", "name": "Cost Center Account Number", "dataType": "IS", "table": "0319", "optionality": "O", "repeatability": "1", "tables": ["0319"] },
-    { "index": 3, "swiftName": "transactionCode", "name": "Transaction Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0132"] },
-    { "index": 4, "swiftName": "transactionAmountUnit", "name": "Transaction Amount - Unit", "dataType": "CP", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "setIdPce", "name": "Set ID – PCE", "dataType": "SI", "length": "2", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "costCenterAccountNumber", "name": "Cost Center Account Number", "dataType": "IS", "length": "30", "table": "0319", "optionality": "O", "repeatability": "1", "tables": ["0319"] },
+    { "index": 3, "swiftName": "transactionCode", "name": "Transaction Code", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0132"] },
+    { "index": 4, "swiftName": "transactionAmountUnit", "name": "Transaction Amount - Unit", "dataType": "CP", "length": "12", "optionality": "O", "repeatability": "1" }
   ]
 }

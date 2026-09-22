@@ -3,9 +3,9 @@
   "version": "2.5.1",
   "description": "Language Detail",
   "fields": [
-    { "index": 1, "swiftName": "setIdLan", "name": "Set ID – LAN", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "languageCode", "name": "Language Code", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0296"] },
-    { "index": 3, "swiftName": "languageAbilityCode", "name": "Language Ability Code", "dataType": "CE", "optionality": "O", "repeatability": "*", "tables": ["0403"] },
-    { "index": 4, "swiftName": "languageProficiencyCode", "name": "Language Proficiency Code", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0404"] }
+    { "index": 1, "swiftName": "setIdLan", "name": "Set ID – LAN", "dataType": "SI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "languageCode", "name": "Language Code", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0296"] },
+    { "index": 3, "swiftName": "languageAbilityCode", "name": "Language Ability Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0403"] },
+    { "index": 4, "swiftName": "languageProficiencyCode", "name": "Language Proficiency Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0404"] }
   ]
 }

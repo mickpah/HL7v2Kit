@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Placer Assigned Identifier",
       "dataType": "EI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "427"
     },
     {
       "index": 2,
       "name": "Filler Assigned Identifier",
       "dataType": "EI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "427"
     }
   ]
 }

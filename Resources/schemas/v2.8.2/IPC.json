@@ -11,6 +11,6 @@
     { "index": 6, "swiftName": "protocolCode", "name": "Protocol Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 7, "swiftName": "scheduledStationName", "name": "Scheduled Station Name", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "scheduledProcedureStepLocation", "name": "Scheduled Procedure Step Location", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
-    { "index": 9, "swiftName": "scheduledAETitle", "name": "Scheduled Station AE Title", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 9, "swiftName": "scheduledAETitle", "name": "Scheduled Station AE Title", "dataType": "ST", "length": "16=", "optionality": "O", "repeatability": "1" }
   ]
 }

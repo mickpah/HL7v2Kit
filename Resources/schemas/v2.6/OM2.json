@@ -3,15 +3,15 @@
   "version": "2.6",
   "description": "OM2",
   "fields": [
-    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "unitsOfMeasure", "name": "Units of Measure", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 3, "swiftName": "rangeOfDecimalPrecision", "name": "Range of Decimal Precision", "dataType": "NM", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "correspondingSiUnitsOfMeasure", "name": "Corresponding SI Units of Measure", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 5, "swiftName": "siConversionFactor", "name": "SI Conversion Factor", "dataType": "TX", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "referenceNormalRangeForOrdinalAndContinuousObservations", "name": "Reference (Normal) Range for Ordinal and Continuous Observations", "dataType": "RFR", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "criticalRangeForOrdinalAndContinuousObservations", "name": "Critical Range for Ordinal and Continuous Observations", "dataType": "RFR", "optionality": "O", "repeatability": "*" },
-    { "index": 8, "swiftName": "absoluteRangeForOrdinalAndContinuousObservations", "name": "Absolute Range for Ordinal and Continuous Observations", "dataType": "RFR", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "deltaCheckCriteria", "name": "Delta Check Criteria", "dataType": "DLT", "optionality": "O", "repeatability": "*" },
-    { "index": 10, "swiftName": "minimumMeaningfulIncrements", "name": "Minimum Meaningful Increments", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "sequenceNumberTestObservationMasterFile", "name": "Sequence Number - Test/Observation Master File", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "unitsOfMeasure", "name": "Units of Measure", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 3, "swiftName": "rangeOfDecimalPrecision", "name": "Range of Decimal Precision", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "correspondingSiUnitsOfMeasure", "name": "Corresponding SI Units of Measure", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 5, "swiftName": "siConversionFactor", "name": "SI Conversion Factor", "dataType": "TX", "length": "60", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "referenceNormalRangeForOrdinalAndContinuousObservations", "name": "Reference (Normal) Range for Ordinal and Continuous Observations", "dataType": "RFR", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "criticalRangeForOrdinalAndContinuousObservations", "name": "Critical Range for Ordinal and Continuous Observations", "dataType": "RFR", "length": "205", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "absoluteRangeForOrdinalAndContinuousObservations", "name": "Absolute Range for Ordinal and Continuous Observations", "dataType": "RFR", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "deltaCheckCriteria", "name": "Delta Check Criteria", "dataType": "DLT", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "minimumMeaningfulIncrements", "name": "Minimum Meaningful Increments", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" }
   ]
 }

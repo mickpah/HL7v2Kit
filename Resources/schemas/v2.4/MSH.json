@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "fieldSeparator",
       "name": "Field Separator",
-      "dataType": "ST",
+      "dataType": "ST", "length": "1",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "encodingCharacters",
       "name": "Encoding Characters",
-      "dataType": "ST",
+      "dataType": "ST", "length": "4",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -23,7 +23,7 @@
       "index": 3,
       "swiftName": "sendingApplication",
       "name": "Sending Application",
-      "dataType": "HD",
+      "dataType": "HD", "length": "180",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0361"]
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "sendingFacility",
       "name": "Sending Facility",
-      "dataType": "HD",
+      "dataType": "HD", "length": "180",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0362"]
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "receivingApplication",
       "name": "Receiving Application",
-      "dataType": "HD",
+      "dataType": "HD", "length": "180",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0361"]
@@ -50,7 +50,7 @@
       "index": 6,
       "swiftName": "receivingFacility",
       "name": "Receiving Facility",
-      "dataType": "HD",
+      "dataType": "HD", "length": "180",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0362"]
@@ -59,7 +59,7 @@
       "index": 7,
       "swiftName": "dateTimeOfMessage",
       "name": "Date/Time Of Message",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -67,7 +67,7 @@
       "index": 8,
       "swiftName": "security",
       "name": "Security",
-      "dataType": "ST",
+      "dataType": "ST", "length": "40",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -75,7 +75,7 @@
       "index": 9,
       "swiftName": "messageType",
       "name": "Message Type",
-      "dataType": "MSG",
+      "dataType": "MSG", "length": "13",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0003", "0076"]
@@ -84,7 +84,7 @@
       "index": 10,
       "swiftName": "messageControlID",
       "name": "Message Control ID",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -92,7 +92,7 @@
       "index": 11,
       "swiftName": "processingID",
       "name": "Processing ID",
-      "dataType": "PT",
+      "dataType": "PT", "length": "3",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -100,7 +100,7 @@
       "index": 12,
       "swiftName": "versionID",
       "name": "Version ID",
-      "dataType": "VID",
+      "dataType": "VID", "length": "60",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0104"]
@@ -109,7 +109,7 @@
       "index": 13,
       "swiftName": "sequenceNumber",
       "name": "Sequence Number",
-      "dataType": "NM",
+      "dataType": "NM", "length": "15",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -117,7 +117,7 @@
       "index": 14,
       "swiftName": "continuationPointer",
       "name": "Continuation Pointer",
-      "dataType": "ST",
+      "dataType": "ST", "length": "180",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -125,7 +125,7 @@
       "index": 15,
       "swiftName": "acceptAcknowledgmentType",
       "name": "Accept Acknowledgment Type",
-      "dataType": "ID", "table": "0155",
+      "dataType": "ID", "length": "2", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -134,7 +134,7 @@
       "index": 16,
       "swiftName": "applicationAcknowledgmentType",
       "name": "Application Acknowledgment Type",
-      "dataType": "ID", "table": "0155",
+      "dataType": "ID", "length": "2", "table": "0155",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0155"]
@@ -143,7 +143,7 @@
       "index": 17,
       "swiftName": "countryCode",
       "name": "Country Code",
-      "dataType": "ID", "table": "0399",
+      "dataType": "ID", "length": "3", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]
@@ -152,7 +152,7 @@
       "index": 18,
       "swiftName": "characterSet",
       "name": "Character Set",
-      "dataType": "ID", "table": "0211",
+      "dataType": "ID", "length": "16", "table": "0211",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0211"]
@@ -161,7 +161,7 @@
       "index": 19,
       "swiftName": "principalLanguageOfMessage",
       "name": "Principal Language Of Message",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -169,7 +169,7 @@
       "index": 20,
       "swiftName": "alternateCharacterSetHandlingScheme",
       "name": "Alternate Character Set Handling Scheme",
-      "dataType": "ID", "table": "0356",
+      "dataType": "ID", "length": "20", "table": "0356",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0356"]
@@ -178,7 +178,7 @@
       "index": 21,
       "swiftName": "conformanceStatementId",
       "name": "Conformance Statement ID",
-      "dataType": "ID", "table": "0449",
+      "dataType": "ID", "length": "10", "table": "0449",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0449"]

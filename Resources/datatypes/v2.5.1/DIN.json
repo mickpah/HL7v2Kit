@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Date",
       "dataType": "TS",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "26"
     },
     {
       "index": 2,
       "name": "Institution Name",
       "dataType": "CE",
       "optionality": "R",
+      "length": "483",
       "tables": [
         "0531"
       ]

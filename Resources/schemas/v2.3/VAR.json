@@ -3,11 +3,11 @@
   "version": "2.3",
   "description": "VAR",
   "fields": [
-    { "index": 1, "swiftName": "varianceInstanceId", "name": "Variance Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "documentedDateTime", "name": "Documented Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "statedVarianceDateTime", "name": "Stated Variance Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "varianceOriginator", "name": "Variance Originator", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "varianceClassification", "name": "Variance Classification", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "varianceDescription", "name": "Variance Description", "dataType": "ST", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "varianceInstanceId", "name": "Variance Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "documentedDateTime", "name": "Documented Date/Time", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "statedVarianceDateTime", "name": "Stated Variance Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "varianceOriginator", "name": "Variance Originator", "dataType": "XCN", "length": "80", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "varianceClassification", "name": "Variance Classification", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "varianceDescription", "name": "Variance Description", "dataType": "ST", "length": "512", "optionality": "O", "repeatability": "*" }
   ]
 }

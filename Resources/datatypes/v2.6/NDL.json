@@ -7,25 +7,29 @@
       "index": 1,
       "name": "Name",
       "dataType": "CNN",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "406"
     },
     {
       "index": 2,
       "name": "Start Date/time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 3,
       "name": "End Date/time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 4,
       "name": "Point of Care",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0302"
       ]
@@ -35,6 +39,7 @@
       "name": "Room",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0303"
       ]
@@ -44,6 +49,7 @@
       "name": "Bed",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0304"
       ]
@@ -52,13 +58,15 @@
       "index": 7,
       "name": "Facility",
       "dataType": "HD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "227"
     },
     {
       "index": 8,
       "name": "Location Status",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0306"
       ]
@@ -68,6 +76,7 @@
       "name": "Patient Location Type",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0305"
       ]
@@ -77,6 +86,7 @@
       "name": "Building",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0307"
       ]
@@ -86,6 +96,7 @@
       "name": "Floor",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0308"
       ]

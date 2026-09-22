@@ -8,6 +8,6 @@
     { "index": 3, "swiftName": "statedVarianceDateTime", "name": "Stated Variance Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "varianceOriginator", "name": "Variance Originator", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
     { "index": 5, "swiftName": "varianceClassification", "name": "Variance Classification", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "varianceDescription", "name": "Variance Description", "dataType": "ST", "optionality": "O", "repeatability": "*" }
+    { "index": 6, "swiftName": "varianceDescription", "name": "Variance Description", "dataType": "ST", "length": "512=", "optionality": "O", "repeatability": "*" }
   ]
 }

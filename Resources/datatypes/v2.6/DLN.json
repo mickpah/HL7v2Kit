@@ -7,13 +7,15 @@
       "index": 1,
       "name": "License Number",
       "dataType": "ST",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "20"
     },
     {
       "index": 2,
       "name": "Issuing State, Province, Country",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20",
       "tables": [
         "0333"
       ]
@@ -22,7 +24,8 @@
       "index": 3,
       "name": "Expiration Date",
       "dataType": "DT",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "8"
     }
   ]
 }

@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Parent Observation Identifier",
       "dataType": "CE",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "483"
     },
     {
       "index": 2,
       "name": "Parent Observation Sub-",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 3,
       "name": "Parent Observation Value",
       "dataType": "TX",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "250"
     }
   ]
 }

@@ -16,7 +16,8 @@
       "index": 2,
       "name": "Parameter Value",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20="
     }
   ]
 }

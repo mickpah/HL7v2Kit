@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Parameter Class",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 2,
       "name": "Parameter Value",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     }
   ]
 }

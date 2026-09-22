@@ -3,14 +3,14 @@
   "version": "2.5.1",
   "description": "Pharmacy/Treatment Component Order",
   "fields": [
-    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "table": "0166", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
-    { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "supplementaryCode", "name": "Supplementary Code", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 8, "swiftName": "componentDrugStrengthVolume", "name": "Component Drug Strength Volume", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "componentDrugStrengthVolumeUnits", "name": "Component Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "length": "1", "table": "0166", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
+    { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "length": "20", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "supplementaryCode", "name": "Supplementary Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 8, "swiftName": "componentDrugStrengthVolume", "name": "Component Drug Strength Volume", "dataType": "NM", "length": "5", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "componentDrugStrengthVolumeUnits", "name": "Component Drug Strength Volume Units", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1" }
   ]
 }

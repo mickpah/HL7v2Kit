@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "acknowledgmentCode",
       "name": "Acknowledgment Code",
-      "dataType": "ID", "table": "0008",
+      "dataType": "ID", "length": "2", "table": "0008",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0008"]
@@ -16,7 +16,7 @@
       "index": 2,
       "swiftName": "messageControlID",
       "name": "Message Control ID",
-      "dataType": "ST",
+      "dataType": "ST", "length": "20",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -24,7 +24,7 @@
       "index": 3,
       "swiftName": "textMessage",
       "name": "Text Message",
-      "dataType": "ST",
+      "dataType": "ST", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "expectedSequenceNumber",
       "name": "Expected Sequence Number",
-      "dataType": "NM",
+      "dataType": "NM", "length": "15",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -40,7 +40,7 @@
       "index": 5,
       "swiftName": "delayedAcknowledgmentType",
       "name": "Delayed Acknowledgment Type",
-      "dataType": "ID", "table": "0102",
+      "dataType": "ID", "length": "1", "table": "0102",
       "optionality": "B",
       "repeatability": "1",
       "tables": ["0102"]
@@ -49,7 +49,7 @@
       "index": 6,
       "swiftName": "errorCondition",
       "name": "Error Condition",
-      "dataType": "CE",
+      "dataType": "CE", "length": "100",
       "optionality": "O",
       "repeatability": "1"
     }

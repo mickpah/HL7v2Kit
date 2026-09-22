@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "participationInstanceId",
       "name": "Participation Instance ID",
-      "dataType": "EI",
+      "dataType": "EI", "length": "1..4",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "actionCode",
       "name": "Action Code",
-      "dataType": "ID", "table": "0287",
+      "dataType": "ID", "length": "2..2", "table": "0287",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0287"]

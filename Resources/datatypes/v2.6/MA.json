@@ -7,25 +7,29 @@
       "index": 1,
       "name": "Sample Y From Channel 1",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 2,
       "name": "Sample Y From Channel 2",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 3,
       "name": "Sample Y From Channel 3",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 4,
       "name": "Sample Y From Channel 4",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     }
   ]
 }

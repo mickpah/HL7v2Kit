@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "businessRuleOverrideType",
       "name": "Business Rule Override Type",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "705",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0518"]
@@ -16,7 +16,7 @@
       "index": 2,
       "swiftName": "businessRuleOverrideCode",
       "name": "Business Rule Override Code",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "705",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0521"]
@@ -25,7 +25,7 @@
       "index": 3,
       "swiftName": "overrideComments",
       "name": "Override Comments",
-      "dataType": "TX",
+      "dataType": "TX", "length": "200",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -33,7 +33,7 @@
       "index": 4,
       "swiftName": "overrideEnteredBy",
       "name": "Override Entered By",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "overrideAuthorizedBy",
       "name": "Override Authorized By",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     }

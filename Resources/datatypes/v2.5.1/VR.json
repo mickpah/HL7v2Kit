@@ -7,13 +7,15 @@
       "index": 1,
       "name": "First Data Code Value",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     },
     {
       "index": 2,
       "name": "Last Data Code Value",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     }
   ]
 }

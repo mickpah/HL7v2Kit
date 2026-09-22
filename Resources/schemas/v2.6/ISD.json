@@ -3,8 +3,8 @@
   "version": "2.6",
   "description": "Interaction Status Detail",
   "fields": [
-    { "index": 1, "swiftName": "referenceInteractionNumberUniqueIdentifier", "name": "Reference Interaction Number", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "interactionTypeIdentifier", "name": "Interaction Type Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0368"] },
-    { "index": 3, "swiftName": "interactionActiveState", "name": "Interaction Active State", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0387"] }
+    { "index": 1, "swiftName": "referenceInteractionNumberUniqueIdentifier", "name": "Reference Interaction Number", "dataType": "NM", "length": "20", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "interactionTypeIdentifier", "name": "Interaction Type Identifier", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0368"] },
+    { "index": 3, "swiftName": "interactionActiveState", "name": "Interaction Active State", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["0387"] }
   ]
 }

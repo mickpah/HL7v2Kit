@@ -7,19 +7,22 @@
       "index": 1,
       "name": "Pointer",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "15"
     },
     {
       "index": 2,
       "name": "Application ID",
       "dataType": "HD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "227"
     },
     {
       "index": 3,
       "name": "Type of Data",
       "dataType": "ID",
       "optionality": "O",
+      "length": "9",
       "tables": [
         "0191"
       ]
@@ -29,6 +32,7 @@
       "name": "Subtype",
       "dataType": "ID",
       "optionality": "O",
+      "length": "19",
       "tables": [
         "0291"
       ]

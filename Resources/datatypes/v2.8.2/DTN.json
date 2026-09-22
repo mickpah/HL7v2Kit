@@ -16,7 +16,8 @@
       "index": 2,
       "name": "Number of Days",
       "dataType": "NM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "3#"
     }
   ]
 }

@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Segment Field Name",
       "dataType": "ST",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "6..12"
     },
     {
       "index": 2,
       "name": "Values",
       "dataType": "ST",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "199#"
     }
   ]
 }

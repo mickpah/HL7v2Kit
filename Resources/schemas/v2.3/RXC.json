@@ -3,11 +3,11 @@
   "version": "2.3",
   "description": "RXC",
   "fields": [
-    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "table": "0166", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
-    { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "rxComponentType", "name": "RX Component Type", "dataType": "ID", "length": "1", "table": "0166", "optionality": "R", "repeatability": "1", "tables": ["0166"] },
+    { "index": 2, "swiftName": "componentCode", "name": "Component Code", "dataType": "CE", "length": "100", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "length": "20", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" }
   ]
 }

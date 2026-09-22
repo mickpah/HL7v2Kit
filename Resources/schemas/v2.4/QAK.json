@@ -3,11 +3,11 @@
   "version": "2.4",
   "description": "QAK",
   "fields": [
-    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "table": "0208", "optionality": "O", "repeatability": "1", "tables": ["0208"] },
-    { "index": 3, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "hitCount", "name": "Hit Count", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "thisPayload", "name": "This payload", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "hitsRemaining", "name": "Hits remaining", "dataType": "NM", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryResponseStatus", "name": "Query Response Status", "dataType": "ID", "length": "2", "table": "0208", "optionality": "O", "repeatability": "1", "tables": ["0208"] },
+    { "index": 3, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "hitCount", "name": "Hit Count", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "thisPayload", "name": "This payload", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "hitsRemaining", "name": "Hits remaining", "dataType": "NM", "length": "10", "optionality": "O", "repeatability": "1" }
   ]
 }

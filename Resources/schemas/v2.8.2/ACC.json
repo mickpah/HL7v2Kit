@@ -5,16 +5,16 @@
   "fields": [
     { "index": 1, "swiftName": "accidentDateTime", "name": "Accident Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "accidentCode", "name": "Accident Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0050"] },
-    { "index": 3, "swiftName": "accidentLocation", "name": "Accident Location", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "accidentLocation", "name": "Accident Location", "dataType": "ST", "length": "25#", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "autoAccidentState", "name": "Auto Accident State", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["0347"] },
-    { "index": 5, "swiftName": "accidentJobRelatedIndicator", "name": "Accident Job Related Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 6, "swiftName": "accidentDeathIndicator", "name": "Accident Death Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 5, "swiftName": "accidentJobRelatedIndicator", "name": "Accident Job Related Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 6, "swiftName": "accidentDeathIndicator", "name": "Accident Death Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 7, "swiftName": "enteredBy", "name": "Entered By", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "accidentDescription", "name": "Accident Description", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "broughtInBy", "name": "Brought In By", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "policeNotifiedIndicator", "name": "Police Notified Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 8, "swiftName": "accidentDescription", "name": "Accident Description", "dataType": "ST", "length": "25=", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "broughtInBy", "name": "Brought In By", "dataType": "ST", "length": "80=", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "policeNotifiedIndicator", "name": "Police Notified Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
     { "index": 11, "swiftName": "accidentAddress", "name": "Accident Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
-    { "index": 12, "swiftName": "degreeOfPatientLiability", "name": "Degree of patient liability", "dataType": "NM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "degreeOfPatientLiability", "name": "Degree of patient liability", "dataType": "NM", "length": "3#", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "accidentIdentifier", "name": "Accident Identifier", "dataType": "EI", "optionality": "O", "repeatability": "*" }
   ]
 }

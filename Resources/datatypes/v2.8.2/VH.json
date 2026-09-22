@@ -8,6 +8,7 @@
       "name": "Start Day Range",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3..3",
       "tables": [
         "0267"
       ]
@@ -17,6 +18,7 @@
       "name": "End Day Range",
       "dataType": "ID",
       "optionality": "O",
+      "length": "3..3",
       "tables": [
         "0267"
       ]

@@ -3,10 +3,10 @@
   "version": "2.6",
   "description": "Grouping/Reimbursement - Visit",
   "fields": [
-    { "index": 1, "swiftName": "typeOfBillCode", "name": "Type of Bill Code", "dataType": "IS", "table": "0455", "optionality": "R", "repeatability": "1", "tables": ["0455"] },
-    { "index": 2, "swiftName": "revenueCode", "name": "Revenue Code", "dataType": "IS", "table": "0456", "optionality": "O", "repeatability": "*", "tables": ["0456"] },
-    { "index": 3, "swiftName": "overallClaimDispositionCode", "name": "Overall Claim Disposition Code", "dataType": "IS", "table": "0457", "optionality": "O", "repeatability": "1", "tables": ["0457"] },
-    { "index": 4, "swiftName": "oceEditsPerVisitCode", "name": "OCE Edits per Visit Code", "dataType": "IS", "table": "0458", "optionality": "O", "repeatability": "*", "tables": ["0458"] },
-    { "index": 5, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "typeOfBillCode", "name": "Type of Bill Code", "dataType": "IS", "length": "3", "table": "0455", "optionality": "R", "repeatability": "1", "tables": ["0455"] },
+    { "index": 2, "swiftName": "revenueCode", "name": "Revenue Code", "dataType": "IS", "length": "3", "table": "0456", "optionality": "O", "repeatability": "*", "tables": ["0456"] },
+    { "index": 3, "swiftName": "overallClaimDispositionCode", "name": "Overall Claim Disposition Code", "dataType": "IS", "length": "1", "table": "0457", "optionality": "O", "repeatability": "1", "tables": ["0457"] },
+    { "index": 4, "swiftName": "oceEditsPerVisitCode", "name": "OCE Edits per Visit Code", "dataType": "IS", "length": "2", "table": "0458", "optionality": "O", "repeatability": "*", "tables": ["0458"] },
+    { "index": 5, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "length": "12", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -3,8 +3,8 @@
   "version": "2.4",
   "description": "Event Replay Query",
   "fields": [
-    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "eventIdentifier", "name": "Event Identifier", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "eventIdentifier", "name": "Event Identifier", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "length": "256", "optionality": "O", "repeatability": "*" }
   ]
 }

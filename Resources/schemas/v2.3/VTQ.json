@@ -3,10 +3,10 @@
   "version": "2.3",
   "description": "Virtual Table Query Request",
   "fields": [
-    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },
-    { "index": 3, "swiftName": "vtQueryName", "name": "VT Query Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "virtualTableName", "name": "Virtual Table Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 5, "swiftName": "selectionCriteria", "name": "Selection Criteria", "dataType": "QSC", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "length": "1", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },
+    { "index": 3, "swiftName": "vtQueryName", "name": "VT Query Name", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "virtualTableName", "name": "Virtual Table Name", "dataType": "CE", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 5, "swiftName": "selectionCriteria", "name": "Selection Criteria", "dataType": "QSC", "length": "256", "optionality": "O", "repeatability": "*" }
   ]
 }

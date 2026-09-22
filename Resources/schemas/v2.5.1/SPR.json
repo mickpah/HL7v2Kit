@@ -3,9 +3,9 @@
   "version": "2.5.1",
   "description": "Stored Procedure Request Definition",
   "fields": [
-    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },
-    { "index": 3, "swiftName": "storedProcedureName", "name": "Stored Procedure Name", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "optionality": "O", "repeatability": "*" }
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "queryResponseFormatCode", "name": "Query/Response Format Code", "dataType": "ID", "length": "1", "table": "0106", "optionality": "R", "repeatability": "1", "tables": ["0106"] },
+    { "index": 3, "swiftName": "storedProcedureName", "name": "Stored Procedure Name", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "inputParameterList", "name": "Input Parameter List", "dataType": "QIP", "length": "256", "optionality": "O", "repeatability": "*" }
   ]
 }

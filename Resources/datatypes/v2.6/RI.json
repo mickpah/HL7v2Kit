@@ -8,6 +8,7 @@
       "name": "Repeat Pattern",
       "dataType": "IS",
       "optionality": "O",
+      "length": "6",
       "tables": [
         "0335"
       ]
@@ -16,7 +17,8 @@
       "index": 2,
       "name": "Explicit Time Interval",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     }
   ]
 }

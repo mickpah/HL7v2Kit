@@ -7,37 +7,43 @@
       "index": 1,
       "name": "Family Name",
       "dataType": "FN",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "194"
     },
     {
       "index": 2,
       "name": "Given Name",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30"
     },
     {
       "index": 3,
       "name": "Second and Further Given Names or Initials Thereof",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "30"
     },
     {
       "index": 4,
       "name": "Suffix (e.g., JR or III)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 5,
       "name": "Prefix (e.g., DR)",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "20"
     },
     {
       "index": 6,
       "name": "Degree (e.g., MD)",
       "dataType": "IS",
       "optionality": "B",
+      "length": "6",
       "tables": [
         "0360"
       ]
@@ -47,6 +53,7 @@
       "name": "Name Type Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0200"
       ]
@@ -56,6 +63,7 @@
       "name": "Name Representation Code",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0465"
       ]
@@ -65,6 +73,7 @@
       "name": "Name Context",
       "dataType": "CE",
       "optionality": "O",
+      "length": "483",
       "tables": [
         "0448"
       ]
@@ -73,13 +82,15 @@
       "index": 10,
       "name": "Name Validity Range",
       "dataType": "DR",
-      "optionality": "B"
+      "optionality": "B",
+      "length": "53"
     },
     {
       "index": 11,
       "name": "Name Assembly Order",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0444"
       ]
@@ -88,19 +99,22 @@
       "index": 12,
       "name": "Effective Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 13,
       "name": "Expiration Date",
       "dataType": "TS",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "26"
     },
     {
       "index": 14,
       "name": "Professional Suffix",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     }
   ]
 }

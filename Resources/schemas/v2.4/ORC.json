@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "orderControl",
       "name": "Order Control",
-      "dataType": "ID", "table": "0119",
+      "dataType": "ID", "length": "2", "table": "0119",
       "optionality": "R",
       "repeatability": "1",
       "tables": ["0119"]
@@ -16,7 +16,7 @@
       "index": 2,
       "swiftName": "placerOrderNumber",
       "name": "Placer Order Number",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
       "condition": "OBR-2 empty"
@@ -25,7 +25,7 @@
       "index": 3,
       "swiftName": "fillerOrderNumber",
       "name": "Filler Order Number",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
       "condition": "OBR-3 empty"
@@ -34,7 +34,7 @@
       "index": 4,
       "swiftName": "placerGroupNumber",
       "name": "Placer Group Number",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -42,7 +42,7 @@
       "index": 5,
       "swiftName": "orderStatus",
       "name": "Order Status",
-      "dataType": "ID", "table": "0038",
+      "dataType": "ID", "length": "2", "table": "0038",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0038"]
@@ -51,7 +51,7 @@
       "index": 6,
       "swiftName": "responseFlag",
       "name": "Response Flag",
-      "dataType": "ID", "table": "0121",
+      "dataType": "ID", "length": "1", "table": "0121",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0121"]
@@ -60,7 +60,7 @@
       "index": 7,
       "swiftName": "quantityTiming",
       "name": "Quantity/Timing",
-      "dataType": "TQ",
+      "dataType": "TQ", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -68,7 +68,7 @@
       "index": 8,
       "swiftName": "parent",
       "name": "Parent",
-      "dataType": "EIP",
+      "dataType": "EIP", "length": "200",
       "optionality": "C",
       "repeatability": "1",
       "condition": "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty"
@@ -77,7 +77,7 @@
       "index": 9,
       "swiftName": "dateTimeOfTransaction",
       "name": "Date/Time of Transaction",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -85,7 +85,7 @@
       "index": 10,
       "swiftName": "enteredBy",
       "name": "Entered By",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -93,7 +93,7 @@
       "index": 11,
       "swiftName": "verifiedBy",
       "name": "Verified By",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -101,7 +101,7 @@
       "index": 12,
       "swiftName": "orderingProvider",
       "name": "Ordering Provider",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -109,7 +109,7 @@
       "index": 13,
       "swiftName": "enterersLocation",
       "name": "Enterer's Location",
-      "dataType": "PL",
+      "dataType": "PL", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -117,7 +117,7 @@
       "index": 14,
       "swiftName": "callBackPhoneNumber",
       "name": "Call Back Phone Number",
-      "dataType": "XTN",
+      "dataType": "XTN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -125,7 +125,7 @@
       "index": 15,
       "swiftName": "orderEffectiveDateTime",
       "name": "Order Effective Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -133,7 +133,7 @@
       "index": 16,
       "swiftName": "orderControlCodeReason",
       "name": "Order Control Code Reason",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -141,7 +141,7 @@
       "index": 17,
       "swiftName": "enteringOrganization",
       "name": "Entering Organization",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -149,7 +149,7 @@
       "index": 18,
       "swiftName": "enteringDevice",
       "name": "Entering Device",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -157,7 +157,7 @@
       "index": 19,
       "swiftName": "actionBy",
       "name": "Action By",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -165,7 +165,7 @@
       "index": 20,
       "swiftName": "advancedBeneficiaryNoticeCode",
       "name": "Advanced Beneficiary Notice Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0339"]
@@ -174,7 +174,7 @@
       "index": 21,
       "swiftName": "orderingFacilityName",
       "name": "Ordering Facility Name",
-      "dataType": "XON",
+      "dataType": "XON", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -182,7 +182,7 @@
       "index": 22,
       "swiftName": "orderingFacilityAddress",
       "name": "Ordering Facility Address",
-      "dataType": "XAD",
+      "dataType": "XAD", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -190,7 +190,7 @@
       "index": 23,
       "swiftName": "orderingFacilityPhoneNumber",
       "name": "Ordering Facility Phone Number",
-      "dataType": "XTN",
+      "dataType": "XTN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -198,7 +198,7 @@
       "index": 24,
       "swiftName": "orderingProviderAddress",
       "name": "Ordering Provider Address",
-      "dataType": "XAD",
+      "dataType": "XAD", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -206,7 +206,7 @@
       "index": 25,
       "swiftName": "orderStatusModifier",
       "name": "Order Status Modifier",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     }

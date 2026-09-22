@@ -3,9 +3,9 @@
   "version": "2.6",
   "description": "Sterilization Parameter",
   "fields": [
-    { "index": 1, "swiftName": "sterilizationType", "name": "Sterilization Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0806"] },
-    { "index": 2, "swiftName": "sterilizationCycle", "name": "Sterilization Cycle", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "maintenanceCycle", "name": "Maintenance Cycle", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0809"] },
-    { "index": 4, "swiftName": "maintenanceType", "name": "Maintenance Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0811"] }
+    { "index": 1, "swiftName": "sterilizationType", "name": "Sterilization Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0806"] },
+    { "index": 2, "swiftName": "sterilizationCycle", "name": "Sterilization Cycle", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "maintenanceCycle", "name": "Maintenance Cycle", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0809"] },
+    { "index": 4, "swiftName": "maintenanceType", "name": "Maintenance Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0811"] }
   ]
 }

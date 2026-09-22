@@ -3,9 +3,9 @@
   "version": "2.5.1",
   "description": "Notification Detail",
   "fields": [
-    { "index": 1, "swiftName": "notificationReferenceNumber", "name": "Notification Reference Number", "dataType": "NM", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "notificationDateTime", "name": "Notification Date/Time", "dataType": "TS", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "notificationAlertSeverity", "name": "Notification Alert Severity", "dataType": "CE", "optionality": "R", "repeatability": "1", "tables": ["0367"] },
-    { "index": 4, "swiftName": "notificationCode", "name": "Notification Code", "dataType": "CE", "optionality": "R", "repeatability": "1" }
+    { "index": 1, "swiftName": "notificationReferenceNumber", "name": "Notification Reference Number", "dataType": "NM", "length": "20", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "notificationDateTime", "name": "Notification Date/Time", "dataType": "TS", "length": "26", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "notificationAlertSeverity", "name": "Notification Alert Severity", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0367"] },
+    { "index": 4, "swiftName": "notificationCode", "name": "Notification Code", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" }
   ]
 }

@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - NTE",
-      "dataType": "SI",
+      "dataType": "SI", "length": "4",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "sourceOfComment",
       "name": "Source of Comment",
-      "dataType": "ID", "table": "0105",
+      "dataType": "ID", "length": "8", "table": "0105",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0105"]
@@ -24,7 +24,7 @@
       "index": 3,
       "swiftName": "comment",
       "name": "Comment",
-      "dataType": "FT",
+      "dataType": "FT", "length": "64k",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -32,7 +32,7 @@
       "index": 4,
       "swiftName": "commentType",
       "name": "Comment Type",
-      "dataType": "CE",
+      "dataType": "CE", "length": "60",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0364"]

@@ -7,55 +7,64 @@
       "index": 1,
       "name": "Quantity",
       "dataType": "CQ",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "267"
     },
     {
       "index": 2,
       "name": "Interval",
       "dataType": "RI",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "206"
     },
     {
       "index": 3,
       "name": "Duration",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     },
     {
       "index": 4,
       "name": "Start Date/Time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 5,
       "name": "End Date/Time",
       "dataType": "DTM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "24"
     },
     {
       "index": 6,
       "name": "Priority",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6"
     },
     {
       "index": 7,
       "name": "Condition",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199"
     },
     {
       "index": 8,
       "name": "Text",
       "dataType": "TX",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "200"
     },
     {
       "index": 9,
       "name": "Conjunction",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1",
       "tables": [
         "0472"
       ]
@@ -64,19 +73,22 @@
       "index": 10,
       "name": "Order Sequencing",
       "dataType": "OSD",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "110"
     },
     {
       "index": 11,
       "name": "Occurrence Duration",
       "dataType": "CWE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "705"
     },
     {
       "index": 12,
       "name": "Total Occurrences",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "4"
     }
   ]
 }

@@ -54,4 +54,16 @@ struct DataTypeGrammarTests {
             }
         }
     }
+
+    @Test("Printed lengths are recorded verbatim on fields and components, never enforced")
+    func lengthsRecorded() throws {
+        #expect(SegmentGrammarTable.v2_5_1["PID"]?.field(5)?.length == "250")
+        #expect(SegmentGrammarTable.v2_8_2["MSH"]?.field(10)?.length == "1..199", "v2.7+ prints a normative range")
+        #expect(SegmentGrammarTable.v2_8_2["PID"]?.field(5)?.length == nil, "v2.8.2 prints only a conformance length for XPN fields")
+        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_5_1)?.component(1)?.length == "15")
+        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_4)?.component(1)?.length == nil, "prose prints none")
+        // Never enforced: a 300-character name in a LEN 250 field validates.
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\rPID|1||123^^^HOSP^MR||\(String(repeating: "X", count: 300))^JOHN\r"
+        #expect(Validator().validate(try Parser().parse(wire)).isValid)
+    }
 }

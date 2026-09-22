@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "Payee Information",
   "fields": [
-    { "index": 1, "swiftName": "setIdPye", "name": "Set ID – PYE", "dataType": "SI", "optionality": "R", "repeatability": "1" },
+    { "index": 1, "swiftName": "setIdPye", "name": "Set ID – PYE", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "payeeType", "name": "Payee Type", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0557"] },
     { "index": 3, "swiftName": "payeeRelationshipToInvoicePatient", "name": "Payee Relationship to Invoice (Patient)", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0558"], "condition": "PYE-2 in (PERS, PPER)" },
     { "index": 4, "swiftName": "payeeIdentificationList", "name": "Payee Identification List", "dataType": "XON", "optionality": "C", "repeatability": "*", "condition": "PYE-2 in (PPER, ORG)" },

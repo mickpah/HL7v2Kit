@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Quantity",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "16"
     },
     {
       "index": 2,
       "name": "Units",
       "dataType": "CE",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "483"
     }
   ]
 }

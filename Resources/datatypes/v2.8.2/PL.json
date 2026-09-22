@@ -41,6 +41,7 @@
       "name": "Location Status",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20=",
       "tables": [
         "0306"
       ]
@@ -50,6 +51,7 @@
       "name": "Person Location Type",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20=",
       "tables": [
         "0305"
       ]
@@ -76,7 +78,8 @@
       "index": 9,
       "name": "Location Description",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199#"
     },
     {
       "index": 10,

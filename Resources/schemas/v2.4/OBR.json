@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - OBR",
-      "dataType": "SI",
+      "dataType": "SI", "length": "4",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "placerOrderNumber",
       "name": "Placer Order Number",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
       "condition": "ORC-2 empty"
@@ -24,7 +24,7 @@
       "index": 3,
       "swiftName": "fillerOrderNumber",
       "name": "Filler Order Number",
-      "dataType": "EI",
+      "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
       "condition": "ORC-3 empty"
@@ -33,7 +33,7 @@
       "index": 4,
       "swiftName": "universalServiceIdentifier",
       "name": "Universal Service Identifier",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -41,7 +41,7 @@
       "index": 5,
       "swiftName": "priority",
       "name": "Priority (deprecated)",
-      "dataType": "ID",
+      "dataType": "ID", "length": "2",
       "optionality": "B",
       "repeatability": "1"
     },
@@ -49,7 +49,7 @@
       "index": 6,
       "swiftName": "requestedDateTime",
       "name": "Requested Date/Time (deprecated)",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "B",
       "repeatability": "1"
     },
@@ -57,7 +57,7 @@
       "index": 7,
       "swiftName": "observationDateTime",
       "name": "Observation Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
       "condition": "messageCode = ORU OR OBR-15 populated"
@@ -66,7 +66,7 @@
       "index": 8,
       "swiftName": "observationEndDateTime",
       "name": "Observation End Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -74,7 +74,7 @@
       "index": 9,
       "swiftName": "collectionVolume",
       "name": "Collection Volume",
-      "dataType": "CQ",
+      "dataType": "CQ", "length": "20",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -82,7 +82,7 @@
       "index": 10,
       "swiftName": "collectorIdentifier",
       "name": "Collector Identifier",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "C",
       "repeatability": "*"
     },
@@ -90,7 +90,7 @@
       "index": 11,
       "swiftName": "specimenActionCode",
       "name": "Specimen Action Code",
-      "dataType": "ID", "table": "0065",
+      "dataType": "ID", "length": "1", "table": "0065",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0065"]
@@ -99,7 +99,7 @@
       "index": 12,
       "swiftName": "dangerCode",
       "name": "Danger Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -107,7 +107,7 @@
       "index": 13,
       "swiftName": "relevantClinicalInformation",
       "name": "Relevant Clinical Information",
-      "dataType": "ST",
+      "dataType": "ST", "length": "300",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -115,7 +115,7 @@
       "index": 14,
       "swiftName": "specimenReceivedDateTime",
       "name": "Specimen Received Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
       "condition": "OBR-15 populated"
@@ -124,7 +124,7 @@
       "index": 15,
       "swiftName": "specimenSource",
       "name": "Specimen Source",
-      "dataType": "SPS",
+      "dataType": "SPS", "length": "300",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0070", "0163", "0369"]
@@ -133,7 +133,7 @@
       "index": 16,
       "swiftName": "orderingProvider",
       "name": "Ordering Provider",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -141,7 +141,7 @@
       "index": 17,
       "swiftName": "orderCallbackPhoneNumber",
       "name": "Order Callback Phone Number",
-      "dataType": "XTN",
+      "dataType": "XTN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -149,7 +149,7 @@
       "index": 18,
       "swiftName": "placerField1",
       "name": "Placer Field 1",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -157,7 +157,7 @@
       "index": 19,
       "swiftName": "placerField2",
       "name": "Placer Field 2",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -165,7 +165,7 @@
       "index": 20,
       "swiftName": "fillerField1",
       "name": "Filler Field 1",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -173,7 +173,7 @@
       "index": 21,
       "swiftName": "fillerField2",
       "name": "Filler Field 2",
-      "dataType": "ST",
+      "dataType": "ST", "length": "60",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -181,7 +181,7 @@
       "index": 22,
       "swiftName": "resultsReportStatusChangeDateTime",
       "name": "Results Rpt/Status Chng - Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -189,7 +189,7 @@
       "index": 23,
       "swiftName": "chargeToPractice",
       "name": "Charge to Practice",
-      "dataType": "MOC",
+      "dataType": "MOC", "length": "40",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -197,7 +197,7 @@
       "index": 24,
       "swiftName": "diagnosticServSectID",
       "name": "Diagnostic Serv Sect ID",
-      "dataType": "ID", "table": "0074",
+      "dataType": "ID", "length": "10", "table": "0074",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0074"]
@@ -206,7 +206,7 @@
       "index": 25,
       "swiftName": "resultStatus",
       "name": "Result Status",
-      "dataType": "ID", "table": "0123",
+      "dataType": "ID", "length": "1", "table": "0123",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0123"],
@@ -216,7 +216,7 @@
       "index": 26,
       "swiftName": "parentResult",
       "name": "Parent Result",
-      "dataType": "PRL",
+      "dataType": "PRL", "length": "400",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -224,7 +224,7 @@
       "index": 27,
       "swiftName": "quantityTiming",
       "name": "Quantity/Timing",
-      "dataType": "TQ",
+      "dataType": "TQ", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -232,7 +232,7 @@
       "index": 28,
       "swiftName": "resultCopiesTo",
       "name": "Result Copies To",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -240,7 +240,7 @@
       "index": 29,
       "swiftName": "parent",
       "name": "Parent",
-      "dataType": "EIP",
+      "dataType": "EIP", "length": "200",
       "optionality": "C",
       "repeatability": "1",
       "condition": "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty"
@@ -249,7 +249,7 @@
       "index": 30,
       "swiftName": "transportationMode",
       "name": "Transportation Mode",
-      "dataType": "ID", "table": "0124",
+      "dataType": "ID", "length": "20", "table": "0124",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0124"]
@@ -258,7 +258,7 @@
       "index": 31,
       "swiftName": "reasonForStudy",
       "name": "Reason for Study",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -266,7 +266,7 @@
       "index": 32,
       "swiftName": "principalResultInterpreter",
       "name": "Principal Result Interpreter",
-      "dataType": "NDL",
+      "dataType": "NDL", "length": "200",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -274,7 +274,7 @@
       "index": 33,
       "swiftName": "assistantResultInterpreter",
       "name": "Assistant Result Interpreter",
-      "dataType": "NDL",
+      "dataType": "NDL", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -282,7 +282,7 @@
       "index": 34,
       "swiftName": "technician",
       "name": "Technician",
-      "dataType": "NDL",
+      "dataType": "NDL", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -290,7 +290,7 @@
       "index": 35,
       "swiftName": "transcriptionist",
       "name": "Transcriptionist",
-      "dataType": "NDL",
+      "dataType": "NDL", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -298,7 +298,7 @@
       "index": 36,
       "swiftName": "scheduledDateTime",
       "name": "Scheduled Date/Time",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -306,7 +306,7 @@
       "index": 37,
       "swiftName": "numberOfSampleContainers",
       "name": "Number of Sample Containers",
-      "dataType": "NM",
+      "dataType": "NM", "length": "4",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -314,7 +314,7 @@
       "index": 38,
       "swiftName": "transportLogisticsOfCollectedSample",
       "name": "Transport Logistics of Collected Sample",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -322,7 +322,7 @@
       "index": 39,
       "swiftName": "collectorsComment",
       "name": "Collector's Comment",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -330,7 +330,7 @@
       "index": 40,
       "swiftName": "transportArrangementResponsibility",
       "name": "Transport Arrangement Responsibility",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -338,7 +338,7 @@
       "index": 41,
       "swiftName": "transportArranged",
       "name": "Transport Arranged",
-      "dataType": "ID", "table": "0224",
+      "dataType": "ID", "length": "30", "table": "0224",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0224"]
@@ -347,7 +347,7 @@
       "index": 42,
       "swiftName": "escortRequired",
       "name": "Escort Required",
-      "dataType": "ID", "table": "0225",
+      "dataType": "ID", "length": "1", "table": "0225",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0225"]
@@ -356,7 +356,7 @@
       "index": 43,
       "swiftName": "plannedPatientTransportComment",
       "name": "Planned Patient Transport Comment",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -364,7 +364,7 @@
       "index": 44,
       "swiftName": "procedureCode",
       "name": "Procedure Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0088"]
@@ -373,7 +373,7 @@
       "index": 45,
       "swiftName": "procedureCodeModifier",
       "name": "Procedure Code Modifier",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0340"]
@@ -382,7 +382,7 @@
       "index": 46,
       "swiftName": "placerSupplementalServiceInformation",
       "name": "Placer Supplemental Service Information",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0411"]
@@ -391,7 +391,7 @@
       "index": 47,
       "swiftName": "fillerSupplementalServiceInformation",
       "name": "Filler Supplemental Service Information",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0411"]

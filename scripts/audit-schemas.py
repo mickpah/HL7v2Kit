@@ -137,6 +137,7 @@ def name_agrees(schema_name, printed):
 # cell. The schema keeps R; the extractor reads the cell as B.
 OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
 REPEATABILITY_WHITELIST = set()
+LENGTH_WHITELIST = set()
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -295,7 +296,7 @@ def extracted_depths(version):
     schema value is a finding only when it matches NO extracted candidate.
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
-    best, dts, tbls, opts, names, reps = {}, {}, {}, {}, {}, {}
+    best, dts, tbls, opts, names, reps, lens = {}, {}, {}, {}, {}, {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -327,7 +328,10 @@ def extracted_depths(version):
                     rp = (f.get("repeatability") or "").strip()
                     if rp:
                         reps.setdefault((seg, f["index"]), set()).add(rp)
-    return best, dts, tbls, opts, names, reps
+                    ln = (f.get("len") or "").strip()
+                    if ln:
+                        lens.setdefault((seg, f["index"]), set()).add(ln)
+    return best, dts, tbls, opts, names, reps, lens
 
 
 def write_names(path, wanted):
@@ -343,22 +347,36 @@ def write_names(path, wanted):
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
-def depth(write=False, correct_names=False):
+def write_lengths(path, wanted):
+    """Insert or replace each listed field's `length` right after its `dataType`, textually."""
+    text = open(path, encoding="utf-8").read()
+    text = re.sub(r',\s*"length"\s*:\s*"[^"]*"', "", text)
+    out, pos, index = [], 0, None
+    for m in re.finditer(r'"index"\s*:\s*(\d+)|"dataType"\s*:\s*"[^"]*"', text):
+        if m.group(1):
+            index = int(m.group(1))
+        elif index in wanted:
+            out.append(text[pos:m.end()] + f', "length": {json.dumps(wanted.pop(index))}')
+            pos = m.end()
+    open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
+
+
+def depth(write=False, correct_names=False, record_lengths=False):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], [], [], [], []
+        return [], [], 0, [], {}, [], [], [], [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
-    datatype_findings, table_findings, optionality_findings, name_findings, rp_findings = [], [], [], [], []
+    datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings = [], [], [], [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
-    wanted_names = {}
+    wanted_names, wanted_lengths = {}, {}
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -412,6 +430,20 @@ def depth(write=False, correct_names=False):
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
+            # M25: the LEN column, recorded VERBATIM and never enforced. Before v2.7 the spec
+            # calls the maximum length "not of conceptual importance"; from v2.7 it prints a
+            # normative range ("2..2", "32=" truncation-allowed, "250#" truncation-not-allowed)
+            # and a separate conformance length. A schema's `length` must be one its own
+            # version prints for that slot (the chapters can disagree: OBR in 4 and 7).
+            for f in schema_fields:
+                printed = spec_lens.get((seg, f["index"]))
+                have = (f.get("length") or "").strip()
+                if not printed or have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
+                    continue
+                if record_lengths:
+                    wanted_lengths.setdefault(path, {})[f["index"]] = sorted(printed, key=lambda x: (len(x), x))[0]
+                    continue
+                len_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
             # printed Y, or a bounded count such as "2" or "Y/3", as "*" and a blank as "1";
             # the schema model has only those two values, so a bounded repeat is "*".
@@ -473,7 +505,11 @@ def depth(write=False, correct_names=False):
     for path, wanted in wanted_names.items():
         write_names(path, dict(wanted))
         print(f"  names corrected in {os.path.relpath(path, REPO)}: {sorted(wanted)}", file=sys.stderr)
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings
+    for path, wanted in wanted_lengths.items():
+        write_lengths(path, dict(wanted))
+    if wanted_lengths:
+        print(f"  lengths written in {len(wanted_lengths)} schemas", file=sys.stderr)
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings
 
 
 def extracted_tables(version):
@@ -675,9 +711,9 @@ def datatypes(depth=False):
                 continue
             fresh = dtx.extract(version[1:])
             for code in sorted(set(fresh) | set(committed)):
-                got = [(c["index"], c["name"], c["dataType"], c["optionality"], dtx.table_numbers(c["tbl"]))
+                got = [(c["index"], c["name"], c["dataType"], c["optionality"], c["len"], dtx.table_numbers(c["tbl"]))
                        for c in fresh.get(code, {}).get("components", [])]
-                have = [(c["index"], c["name"], c.get("dataType", ""), c["optionality"], c.get("tables", []))
+                have = [(c["index"], c["name"], c.get("dataType", ""), c["optionality"], c.get("length", ""), c.get("tables", []))
                         for c in committed.get(code, {}).get("components", [])]
                 if got != have:
                     findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh extraction"))
@@ -840,6 +876,8 @@ def main():
                     help="also run every example the datatype chapters print through the component rules (M17)")
     ap.add_argument("--vmr", action="store_true",
                     help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
+    ap.add_argument("--write-lengths", action="store_true",
+                    help="with --depth: write the printed LEN into the schemas as `length` (M25 sweep)")
     ap.add_argument("--write-names", action="store_true",
                     help="with --depth: replace names the NAME predicate rejects with the shortest printed one (M20)")
     ap.add_argument("--write-tables", action="store_true",
@@ -854,8 +892,8 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings = depth(
-            write=args.write_tables, correct_names=args.write_names)
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings = depth(
+            write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths)
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -887,7 +925,10 @@ def main():
         print(f"\n== repeatability (M22): {len(rp_findings)} findings")
         for v, seg, idx, got, want in rp_findings[:60]:
             print(f"   RP       {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
-        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings:
+        print(f"\n== length (M25): {len(len_findings)} findings")
+        for v, seg, idx, got, want in len_findings[:60]:
+            print(f"   LEN      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings:
             rc = 1
 
     if args.tables:

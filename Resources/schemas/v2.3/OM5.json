@@ -3,8 +3,8 @@
   "version": "2.3",
   "description": "OM5",
   "fields": [
-    { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "testObservationsIncludedWAnOrderedTestBattery", "name": "Test/Observations Included w/an Ordered Test Battery", "dataType": "CE", "optionality": "O", "repeatability": "*" },
-    { "index": 3, "swiftName": "observationIdSuffixes", "name": "Observation ID Suffixes", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "sequenceNumber", "name": "Sequence Number", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "testObservationsIncludedWAnOrderedTestBattery", "name": "Test/Observations Included w/an Ordered Test Battery", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "observationIdSuffixes", "name": "Observation ID Suffixes", "dataType": "ST", "length": "200", "optionality": "O", "repeatability": "1" }
   ]
 }

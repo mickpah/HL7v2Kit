@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Time",
       "dataType": "DTM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "24"
     },
     {
       "index": 2,
       "name": "Degree of Precision",
       "dataType": "ID",
       "optionality": "B",
+      "length": "1",
       "tables": [
         "0529"
       ]

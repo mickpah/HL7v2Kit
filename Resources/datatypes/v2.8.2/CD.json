@@ -31,7 +31,8 @@
       "index": 5,
       "name": "Channel Sampling Frequency",
       "dataType": "NM",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "6#"
     },
     {
       "index": 6,

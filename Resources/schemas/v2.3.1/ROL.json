@@ -3,13 +3,13 @@
   "version": "2.3.1",
   "description": "ROL",
   "fields": [
-    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
-    { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CE", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
-    { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "roleEndDateTime", "name": "Role End Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "roleDuration", "name": "Role Duration", "dataType": "CE", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "roleActionReason", "name": "Role Action Reason", "dataType": "CE", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
+    { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CE", "length": "80", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "length": "80", "optionality": "R", "repeatability": "*" },
+    { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "roleEndDateTime", "name": "Role End Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "roleDuration", "name": "Role Duration", "dataType": "CE", "length": "80", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "roleActionReason", "name": "Role Action Reason", "dataType": "CE", "length": "80", "optionality": "O", "repeatability": "1" }
   ]
 }

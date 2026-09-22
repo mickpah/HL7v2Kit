@@ -3,7 +3,7 @@
   "version": "2.8.2",
   "description": "Segment Group Header",
   "fields": [
-    { "index": 1, "swiftName": "setIdSgh", "name": "Set ID – SGH", "dataType": "SI", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "segmentGroupName", "name": "Segment Group Name", "dataType": "ST", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "setIdSgh", "name": "Set ID – SGH", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "segmentGroupName", "name": "Segment Group Name", "dataType": "ST", "length": "60#", "optionality": "O", "repeatability": "1" }
   ]
 }

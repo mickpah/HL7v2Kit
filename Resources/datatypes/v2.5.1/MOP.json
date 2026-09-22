@@ -8,6 +8,7 @@
       "name": "Money or Percentage Indicator",
       "dataType": "ID",
       "optionality": "R",
+      "length": "2",
       "tables": [
         "0148"
       ]
@@ -16,13 +17,15 @@
       "index": 2,
       "name": "Money or Percentage Quantity",
       "dataType": "NM",
-      "optionality": "R"
+      "optionality": "R",
+      "length": "16"
     },
     {
       "index": 3,
       "name": "Currency Denomination",
       "dataType": "ID",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "3"
     }
   ]
 }

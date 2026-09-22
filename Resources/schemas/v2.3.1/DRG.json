@@ -3,15 +3,15 @@
   "version": "2.3.1",
   "description": "Diagnosis Related Group",
   "fields": [
-    { "index": 1, "swiftName": "diagnosticRelatedGroup", "name": "Diagnostic Related Group", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0055"] },
-    { "index": 2, "swiftName": "drgAssignedDateTime", "name": "DRG Assigned Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "drgApprovalIndicator", "name": "DRG Approval Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
-    { "index": 4, "swiftName": "drgGrouperReviewCode", "name": "DRG Grouper Review Code", "dataType": "IS", "table": "0056", "optionality": "O", "repeatability": "1", "tables": ["0056"] },
-    { "index": 5, "swiftName": "outlierType", "name": "Outlier Type", "dataType": "CE", "optionality": "O", "repeatability": "1", "tables": ["0083"] },
-    { "index": 6, "swiftName": "outlierDays", "name": "Outlier Days", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "optionality": "O", "repeatability": "1" },
-    { "index": 8, "swiftName": "drgPayor", "name": "DRG Payor", "dataType": "IS", "table": "0229", "optionality": "O", "repeatability": "1", "tables": ["0229"] },
-    { "index": 9, "swiftName": "outlierReimbursement", "name": "Outlier Reimbursement", "dataType": "CP", "optionality": "O", "repeatability": "1" },
-    { "index": 10, "swiftName": "confidentialIndicator", "name": "Confidential Indicator", "dataType": "ID", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
+    { "index": 1, "swiftName": "diagnosticRelatedGroup", "name": "Diagnostic Related Group", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0055"] },
+    { "index": 2, "swiftName": "drgAssignedDateTime", "name": "DRG Assigned Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "drgApprovalIndicator", "name": "DRG Approval Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 4, "swiftName": "drgGrouperReviewCode", "name": "DRG Grouper Review Code", "dataType": "IS", "length": "2", "table": "0056", "optionality": "O", "repeatability": "1", "tables": ["0056"] },
+    { "index": 5, "swiftName": "outlierType", "name": "Outlier Type", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0083"] },
+    { "index": 6, "swiftName": "outlierDays", "name": "Outlier Days", "dataType": "NM", "length": "3", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "length": "12", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "drgPayor", "name": "DRG Payor", "dataType": "IS", "length": "1", "table": "0229", "optionality": "O", "repeatability": "1", "tables": ["0229"] },
+    { "index": 9, "swiftName": "outlierReimbursement", "name": "Outlier Reimbursement", "dataType": "CP", "length": "9", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "confidentialIndicator", "name": "Confidential Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] }
   ]
 }

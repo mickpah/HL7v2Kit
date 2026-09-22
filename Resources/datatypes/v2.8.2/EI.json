@@ -7,13 +7,15 @@
       "index": 1,
       "name": "Entity Identifier",
       "dataType": "ST",
-      "optionality": "O"
+      "optionality": "O",
+      "length": "199="
     },
     {
       "index": 2,
       "name": "Namespace ID",
       "dataType": "IS",
       "optionality": "O",
+      "length": "20=",
       "tables": [
         "0363"
       ]
@@ -22,13 +24,15 @@
       "index": 3,
       "name": "Universal ID",
       "dataType": "ST",
-      "optionality": "C"
+      "optionality": "C",
+      "length": "199="
     },
     {
       "index": 4,
       "name": "Universal ID Type",
       "dataType": "ID",
       "optionality": "C",
+      "length": "1..6",
       "tables": [
         "0301"
       ]

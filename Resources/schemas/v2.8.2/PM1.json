@@ -9,7 +9,7 @@
     { "index": 4, "swiftName": "insuranceCompanyAddress", "name": "Insurance Company Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 5, "swiftName": "insuranceCoContactPerson", "name": "Insurance Co Contact Person", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "insuranceCoPhoneNumber", "name": "Insurance Co Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "groupNumber", "name": "Group Number", "dataType": "ST", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "groupNumber", "name": "Group Number", "dataType": "ST", "length": "12=", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "groupName", "name": "Group Name", "dataType": "XON", "optionality": "O", "repeatability": "*" },
     { "index": 9, "swiftName": "planEffectiveDate", "name": "Plan Effective Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "planExpirationDate", "name": "Plan Expiration Date", "dataType": "DT", "optionality": "O", "repeatability": "1" },

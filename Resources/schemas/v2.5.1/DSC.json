@@ -3,7 +3,7 @@
   "version": "2.5.1",
   "description": "Continuation Pointer",
   "fields": [
-    { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "optionality": "O", "repeatability": "1" },
-    { "index": 2, "swiftName": "continuationStyle", "name": "Continuation Style", "dataType": "ID", "table": "0398", "optionality": "O", "repeatability": "1", "tables": ["0398"] }
+    { "index": 1, "swiftName": "continuationPointer", "name": "Continuation Pointer", "dataType": "ST", "length": "180", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "continuationStyle", "name": "Continuation Style", "dataType": "ID", "length": "1", "table": "0398", "optionality": "O", "repeatability": "1", "tables": ["0398"] }
   ]
 }

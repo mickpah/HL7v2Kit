@@ -3,19 +3,19 @@
   "version": "2.6",
   "description": "PRD",
   "fields": [
-    { "index": 1, "swiftName": "providerRole", "name": "Provider Role", "dataType": "CWE", "optionality": "R", "repeatability": "*", "tables": ["0286"] },
-    { "index": 2, "swiftName": "providerName", "name": "Provider Name", "dataType": "XPN", "optionality": "O", "repeatability": "*" },
-    { "index": 3, "swiftName": "providerAddress", "name": "Provider Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
-    { "index": 4, "swiftName": "providerLocation", "name": "Provider Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "providerCommunicationInformation", "name": "Provider Communication Information", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
-    { "index": 7, "swiftName": "providerIdentifiers", "name": "Provider Identifiers", "dataType": "PLN", "optionality": "O", "repeatability": "*", "tables": ["0338"] },
-    { "index": 8, "swiftName": "effectiveStartDateOfProviderRole", "name": "Effective Start Date of Provider Role", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "effectiveEndDateOfProviderRole", "name": "Effective End Date of Provider Role", "dataType": "DTM", "optionality": "O", "repeatability": "*" },
-    { "index": 10, "swiftName": "providerOrganizationNameAndIdentifier", "name": "Provider Organization Name and Identifier", "dataType": "XON", "optionality": "O", "repeatability": "1" },
-    { "index": 11, "swiftName": "providerOrganizationAddress", "name": "Provider Organization Address", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
-    { "index": 12, "swiftName": "providerOrganizationLocationInformation", "name": "Provider Organization Location Information", "dataType": "PL", "optionality": "O", "repeatability": "*" },
-    { "index": 13, "swiftName": "providerOrganizationCommunicationInformation", "name": "Provider Organization Communication Information", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 14, "swiftName": "providerOrganizationMethodOfContact", "name": "Provider Organization Method of Contact", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0185"] }
+    { "index": 1, "swiftName": "providerRole", "name": "Provider Role", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "*", "tables": ["0286"] },
+    { "index": 2, "swiftName": "providerName", "name": "Provider Name", "dataType": "XPN", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "providerAddress", "name": "Provider Address", "dataType": "XAD", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 4, "swiftName": "providerLocation", "name": "Provider Location", "dataType": "PL", "length": "60", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "providerCommunicationInformation", "name": "Provider Communication Information", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
+    { "index": 7, "swiftName": "providerIdentifiers", "name": "Provider Identifiers", "dataType": "PLN", "length": "100", "optionality": "O", "repeatability": "*", "tables": ["0338"] },
+    { "index": 8, "swiftName": "effectiveStartDateOfProviderRole", "name": "Effective Start Date of Provider Role", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "effectiveEndDateOfProviderRole", "name": "Effective End Date of Provider Role", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "*" },
+    { "index": 10, "swiftName": "providerOrganizationNameAndIdentifier", "name": "Provider Organization Name and Identifier", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "providerOrganizationAddress", "name": "Provider Organization Address", "dataType": "XAD", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "providerOrganizationLocationInformation", "name": "Provider Organization Location Information", "dataType": "PL", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 13, "swiftName": "providerOrganizationCommunicationInformation", "name": "Provider Organization Communication Information", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "providerOrganizationMethodOfContact", "name": "Provider Organization Method of Contact", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0185"] }
   ]
 }

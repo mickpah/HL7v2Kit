@@ -8,6 +8,7 @@
       "name": "Processing ID",
       "dataType": "ID",
       "optionality": "R",
+      "length": "1..1",
       "tables": [
         "0103"
       ]
@@ -17,6 +18,7 @@
       "name": "Processing Mode",
       "dataType": "ID",
       "optionality": "O",
+      "length": "1..1",
       "tables": [
         "0207"
       ]

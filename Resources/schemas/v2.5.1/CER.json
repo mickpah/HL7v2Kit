@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID – CER",
-      "dataType": "SI",
+      "dataType": "SI", "length": "4",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "serialNumber",
       "name": "Serial Number",
-      "dataType": "ST",
+      "dataType": "ST", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -23,7 +23,7 @@
       "index": 3,
       "swiftName": "version",
       "name": "Version",
-      "dataType": "ST",
+      "dataType": "ST", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -31,7 +31,7 @@
       "index": 4,
       "swiftName": "grantingAuthority",
       "name": "Granting Authority",
-      "dataType": "XON",
+      "dataType": "XON", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -39,7 +39,7 @@
       "index": 5,
       "swiftName": "issuingAuthority",
       "name": "Issuing Authority",
-      "dataType": "XCN",
+      "dataType": "XCN", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -47,7 +47,7 @@
       "index": 6,
       "swiftName": "signatureOfIssuingAuthority",
       "name": "Signature of Issuing Authority",
-      "dataType": "ED",
+      "dataType": "ED", "length": "6553",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -55,7 +55,7 @@
       "index": 7,
       "swiftName": "grantingCountry",
       "name": "Granting Country",
-      "dataType": "ID", "table": "0399",
+      "dataType": "ID", "length": "3", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]
@@ -64,7 +64,7 @@
       "index": 8,
       "swiftName": "grantingStateProvince",
       "name": "Granting State/Province",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0347"]
@@ -73,7 +73,7 @@
       "index": 9,
       "swiftName": "grantingCountyParish",
       "name": "Granting County/Parish",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0289"]
@@ -82,7 +82,7 @@
       "index": 10,
       "swiftName": "certificateType",
       "name": "Certificate Type",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -90,7 +90,7 @@
       "index": 11,
       "swiftName": "certificateDomain",
       "name": "Certificate Domain",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -98,7 +98,7 @@
       "index": 12,
       "swiftName": "subjectID",
       "name": "Subject ID",
-      "dataType": "ID",
+      "dataType": "ID", "length": "250",
       "optionality": "C",
       "repeatability": "1"
     },
@@ -106,7 +106,7 @@
       "index": 13,
       "swiftName": "subjectName",
       "name": "Subject Name",
-      "dataType": "ST",
+      "dataType": "ST", "length": "250",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -114,7 +114,7 @@
       "index": 14,
       "swiftName": "subjectDirectoryAttributeExtension",
       "name": "Subject Directory Attribute Extension (Health Professional Data)",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -122,7 +122,7 @@
       "index": 15,
       "swiftName": "subjectPublicKeyInfo",
       "name": "Subject Public Key Info",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -130,7 +130,7 @@
       "index": 16,
       "swiftName": "authorityKeyIdentifier",
       "name": "Authority Key Identifier",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -138,7 +138,7 @@
       "index": 17,
       "swiftName": "basicConstraint",
       "name": "Basic Constraint",
-      "dataType": "ID", "table": "0136",
+      "dataType": "ID", "length": "250", "table": "0136",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0136"]
@@ -147,7 +147,7 @@
       "index": 18,
       "swiftName": "crlDistributionPoint",
       "name": "CRL Distribution Point",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -155,7 +155,7 @@
       "index": 19,
       "swiftName": "jurisdictionCountry",
       "name": "Jurisdiction Country",
-      "dataType": "ID", "table": "0399",
+      "dataType": "ID", "length": "3", "table": "0399",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0399"]
@@ -164,7 +164,7 @@
       "index": 20,
       "swiftName": "jurisdictionStateProvince",
       "name": "Jurisdiction State/Province",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0347"]
@@ -173,7 +173,7 @@
       "index": 21,
       "swiftName": "jurisdictionCountyParish",
       "name": "Jurisdiction County/Parish",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0289"]
@@ -182,7 +182,7 @@
       "index": 22,
       "swiftName": "jurisdictionBreadth",
       "name": "Jurisdiction Breadth",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "*",
       "tables": ["0547"]
@@ -191,7 +191,7 @@
       "index": 23,
       "swiftName": "grantingDate",
       "name": "Granting Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -199,7 +199,7 @@
       "index": 24,
       "swiftName": "issuingDate",
       "name": "Issuing Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -207,7 +207,7 @@
       "index": 25,
       "swiftName": "activationDate",
       "name": "Activation Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -215,7 +215,7 @@
       "index": 26,
       "swiftName": "inactivationDate",
       "name": "Inactivation Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -223,7 +223,7 @@
       "index": 27,
       "swiftName": "expirationDate",
       "name": "Expiration Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -231,7 +231,7 @@
       "index": 28,
       "swiftName": "renewalDate",
       "name": "Renewal Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -239,7 +239,7 @@
       "index": 29,
       "swiftName": "revocationDate",
       "name": "Revocation Date",
-      "dataType": "TS",
+      "dataType": "TS", "length": "26",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -247,7 +247,7 @@
       "index": 30,
       "swiftName": "revocationReasonCode",
       "name": "Revocation Reason Code",
-      "dataType": "CE",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -255,7 +255,7 @@
       "index": 31,
       "swiftName": "certificateStatus",
       "name": "Certificate Status",
-      "dataType": "CWE",
+      "dataType": "CWE", "length": "250",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0536"]
