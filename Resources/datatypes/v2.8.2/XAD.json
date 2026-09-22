@@ -53,6 +53,7 @@
       "dataType": "ID",
       "optionality": "C",
       "length": "1..3",
+      "condition": "repeated",
       "tables": [
         "0190"
       ]

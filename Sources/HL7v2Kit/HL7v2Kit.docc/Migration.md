@@ -103,6 +103,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.8.0 | `FieldGrammar.length`, `ComponentGrammar.length` (additive, defaulted): the printed LEN, verbatim, never enforced. |
 | v3.9.0 | `ComponentGrammar.condition`, `IssueCode.conditionalComponentMissing` (additive; open enum). 36 conditional-component rules now checked at `requiredComponentSeverity`. |
 | v3.10.0 | `ComponentGrammar.conformanceCondition`, `ValidationOptions.conformanceConditionSeverity` (default `nil`), `IssueCode.conformanceConditionMissing` (additive; open enum). Default output unchanged. |
+| *Unreleased* | `repeated` token in the condition language (internal evaluator; no API change). v2.8.2 XAD.7 now reported as `conditionalComponentMissing` when the field repeats without a type. |
 
 ## The code-table check is on by default (ADR-016)
 

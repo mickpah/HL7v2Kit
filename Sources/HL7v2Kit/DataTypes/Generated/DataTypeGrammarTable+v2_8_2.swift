@@ -973,7 +973,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 4, name: "State or Province", dataType: "ST", optionalityCode: "O", tables: [], length: "50#", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Zip or Postal Code", dataType: "ST", optionalityCode: "O", tables: [], length: "12=", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 6, name: "Country", dataType: "ID", optionalityCode: "O", tables: ["0399"], length: "3..3", condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "C", tables: ["0190"], length: "1..3", condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 7, name: "Address Type", dataType: "ID", optionalityCode: "C", tables: ["0190"], length: "1..3", condition: "repeated", conformanceCondition: nil),
             ComponentGrammar(index: 8, name: "Other Geographic Designation", dataType: "ST", optionalityCode: "O", tables: [], length: "50#", condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 9, name: "County/Parish Code", dataType: "CWE", optionalityCode: "O", tables: ["0289"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 10, name: "Census Tract", dataType: "CWE", optionalityCode: "O", tables: ["0288"], length: nil, condition: nil, conformanceCondition: nil),

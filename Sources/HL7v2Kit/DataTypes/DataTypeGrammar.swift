@@ -110,12 +110,15 @@ public enum DataTypeGrammarTable {
 }
 
 /// The predicate language of ``ComponentGrammar/condition``: `<n> populated`,
-/// `<n> empty`, `AND`, `OR`, parentheses. Fail-safe: an unparseable
+/// `<n> empty`, `repeated` (the field has more than one populated
+/// repetition; XAD.7), `AND`, `OR`, parentheses. Fail-safe: an unparseable
 /// expression evaluates `false`, so a malformed rule can never fire (req #4).
 enum ComponentCondition {
-    static func holds(_ expression: String, populated: (Int) -> Bool) -> Bool {
+    static func holds(_ expression: String, populated: (Int) -> Bool, repeated: Bool = false) -> Bool {
         var tokens = tokenize(expression)[...]
-        guard let value = parseOr(&tokens, populated), tokens.isEmpty else { return false }
+        // Index 0 is not a component; parseAtom asks for it on the `repeated` token.
+        let p: (Int) -> Bool = { $0 == 0 ? repeated : populated($0) }
+        guard let value = parseOr(&tokens, p), tokens.isEmpty else { return false }
         return value
     }
 
@@ -151,6 +154,10 @@ enum ComponentCondition {
             guard let inner = parseOr(&t, p), t.first == ")" else { return nil }
             t.removeFirst()
             return inner
+        }
+        if first == "REPEATED" {
+            t.removeFirst()
+            return p(0)
         }
         guard let index = Int(first), index >= 1, t.count >= 2 else { return nil }
         let state = t[t.startIndex + 1]

@@ -105,6 +105,10 @@ The last registered gap. The component tables print `C` with no predicate; the p
 
 The 32 rules M26 registered now ship on `ComponentGrammar.conformanceCondition`, evaluated only when `ValidationOptions.conformanceConditionSeverity` is set. The default stays silent for the reason M26 gave: the specification's own v2.7+ examples violate them in 62 to 100 percent of values. The predicates are correct renderings of normative sentences, so an integrator checking strict v2.7+ conformance can ask for them; nobody gets them unasked. No further registered gap remains on the component grammar except the conditions the model cannot express (coding system in use, repetition count, CNE.20).
 
+## Addendum 2026-09-22 — M28: `repeated`
+
+XAD.7's sentence ("required if there are multiple occurrences of XAD in a field") was registered by M26 as a repetition-count condition the language could not carry. One token carries it: `repeated`, true when the field has more than one populated repetition, evaluated by the Swift and Python evaluators alike. The single v2.7+ example with two address repetitions is mis-delimited and does not count against the sentence; the judgement is recorded in the rule's citation. What the model still cannot express: a condition on the coding system in use (CWE.7 and kin, which needs terminology awareness), and CNE.20, whose sentence contradicts its own summary.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).
