@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-22 (**`v3.7.1` tagged** — M22 closed) |
+| Last updated | 2026-09-22 (M23 merged, unreleased, docs only; `v3.7.1` tagged earlier) |
 | Current release | **`v3.7.1`** (2026-09-22) — repeatability audited per version (M22), on top of `v3.7.0`: `requiredComponentSeverity` and the name audit (M20, M21), on top of `v3.6.5`: optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
-| Next planned cycle | **None scheduled.** Every validation-driving schema column is audited. |
+| Next planned cycle | **None scheduled.** The example-message report is fully triaged; remaining gaps are `C` components, 39 unbound prose table mentions, and LEN. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -273,6 +273,10 @@ Validator could not carry.*
 ### M22 — Repeatability audited per version **CLOSED (2026-09-22; released in `v3.7.1`)**
 
 - **Outcome:** an RP predicate in the depth audit; 19 fields corrected (14 false cardinality errors removed, five checks added); the extractor reads a Y under the TBL# header as the RP cell.
+
+### M23 — Example-message required-field triage **CLOSED (2026-09-22; docs only)**
+
+- **Outcome:** all 106 required-field findings on version-consistent example messages traced to example damage; the report is fully triaged and the triage tool records the conclusion.
 
 ### R — Over-engineering remediation **(CLOSED 2026-08-28 — R1–R10 all landed; register closed at the `v2.0.0` tag)**
 

@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Docs — M23: required-field errors on the spec's example messages triaged
+
+- The 106 `requiredFieldMissing` errors the Validator reports on
+  version-consistent example messages were read against the print and the
+  examples. All are the example's fault: a value printed one field over
+  (`SCH-7` carrying the reason `SCH-6` requires, `PID-6` carrying the name
+  `PID-5` requires) or simply omitted (`MSH-7` in 60 printed messages,
+  `OBX-11`, `DG1-6`). Each field is printed `R` in its own version, which the
+  optionality audit (M19) already proved. No rule changed; the triage tool
+  now ranks this class too and records the conclusion.
 
 ## [3.7.1] — 2026-09-22
 
