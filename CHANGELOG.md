@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.7.3] — 2026-09-22
+
+**Fixes only; no API change.** Four v2.3 tables printed only in its chapters are now in the registry, so a bad universal ID type is checked on v2.3 messages too.
+
 ### Fixed — M24: four v2.3 tables the registry lacked; the 39 unbound prose mentions read
 
 - v2.3 prints Tables 0298, 0299, 0301 and 0336, with their rows, in the
