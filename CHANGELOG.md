@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.7.0] — 2026-09-22
+
+**Additive API: `ValidationOptions.requiredComponentSeverity` lets a consumer report missing required components (such as `MSH-9.3`) as warnings instead of errors.** Also 185 field names corrected, 22 nameless fields named, and v2.8.2 `ITM-33` added (M20).
+
 ### Added — M21: `ValidationOptions.requiredComponentSeverity`
 
 - The severity of every ``requiredComponentMissing`` finding is now the
