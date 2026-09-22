@@ -16,7 +16,7 @@ public struct QPD: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// QPD-2: Query Tag User Parameters (in successive fields). HL7 data type `ST`.
+    /// QPD-2: Query Tag. HL7 data type `ST`.
     public var queryTagUserParametersInSuccessiveFields: String? {
         field(2)?.stringValue
     }

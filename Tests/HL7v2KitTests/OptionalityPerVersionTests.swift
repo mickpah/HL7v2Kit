@@ -35,4 +35,19 @@ struct OptionalityPerVersionTests {
         #expect(SegmentGrammarTable.v2_6["MSA"]?.field(5)?.optionality == .withdrawn)
         #expect(SegmentGrammarTable.v2_6["OBR"]?.field(33)?.optionality == .backwardCompat)
     }
+
+    @Test("No field name is cut at its left edge: 110 pharmacy names shipped that way before M20")
+    func noTruncatedNames() {
+        for (version, table) in [("2.3", SegmentGrammarTable.v2_3), ("2.3.1", SegmentGrammarTable.v2_3_1), ("2.4", SegmentGrammarTable.v2_4),
+                                 ("2.5.1", SegmentGrammarTable.v2_5_1), ("2.6", SegmentGrammarTable.v2_6), ("2.8.2", SegmentGrammarTable.v2_8_2)] {
+            for grammar in table.values {
+                for field in grammar.fields {
+                    #expect(field.name.first?.isUppercase == true || field.name.first?.isNumber == true,
+                            "v\(version) \(grammar.segmentID)-\(field.index): \(field.name)")
+                }
+            }
+        }
+        #expect(SegmentGrammarTable.v2_8_2["RXA"]?.field(2)?.name == "Administration Sub-ID Counter")
+        #expect(SegmentGrammarTable.v2_8_2["ITM"]?.field(33)?.name == "United Nations Standard Products and Services Code (UNSPSC)")
+    }
 }

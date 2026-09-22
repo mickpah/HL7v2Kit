@@ -32,7 +32,7 @@
     {
       "index": 4,
       "swiftName": "universalServiceIdentifier",
-      "name": "Universal Service Identifier",
+      "name": "Universal Service ID",
       "dataType": "CE",
       "optionality": "R",
       "repeatability": "1"
@@ -106,7 +106,7 @@
     {
       "index": 13,
       "swiftName": "relevantClinicalInformation",
-      "name": "Relevant Clinical Information",
+      "name": "Relevant Clinical Info.",
       "dataType": "ST",
       "optionality": "O",
       "repeatability": "1"

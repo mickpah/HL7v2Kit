@@ -7,7 +7,7 @@
     { "index": 2, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-2 empty" },
     { "index": 3, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-3 empty" },
     { "index": 4, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
-    { "index": 5, "swiftName": "priority", "name": "Priority - OBR", "dataType": "ID", "optionality": "W", "repeatability": "1" },
+    { "index": 5, "swiftName": "priority", "name": "Priority", "dataType": "ID", "optionality": "W", "repeatability": "1" },
     { "index": 6, "swiftName": "requestedDateTime", "name": "Requested Date/Time", "dataType": "DTM", "optionality": "W", "repeatability": "1" },
     { "index": 7, "swiftName": "observationDateTime", "name": "Observation Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "messageCode = ORU OR SPM present" },
     { "index": 8, "swiftName": "observationEndDateTime", "name": "Observation End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },

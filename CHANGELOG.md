@@ -7,7 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M20: 185 field names and one missing field, found by a NAME predicate
+
+- The depth audit now compares every field's name with the ELEMENT NAME the
+  version's own attribute table prints (normalised; a printed name may run
+  on into glued prose; spaces are ignored for equality). First run: 159
+  findings plus 22 fields with NO name at all.
+  - **110 names cut at their left edge** ("nistration Sub-ID Counter",
+    "lls Remaining") on the pharmacy segments of v2.3.1, v2.4 and v2.8.2 and
+    v2.4 LOC / v2.3 QRF; **22 pharmacy fields nameless**; these reached the
+    generated `FieldGrammar` names and every validation message that quotes
+    a field name.
+  - **v2.3 / v2.3.1 names copied from v2.5.1** where the older version
+    prints another name (`PID-3` "Patient ID (Internal ID)", `PID-8` "Sex",
+    `AL1-2` "Allergy Type", `OBR-4` "Universal Service ID").
+  - **v2.8.2 `ITM-33` was missing.** The chapter prints its SEQ on the line
+    below the row, so the extractor glued row 33 onto row 32 and the depth
+    audit counted the same 32 fields as the schema. The extractor now
+    recognises a SEQ printed below its row; ITM gains its 33rd field.
+- Extractor fixes: a wrapped name continuation is cut at the row's own name
+  column, not where the header centred "ELEMENT NAME" (v2.3.1 RXE-21 read
+  "Dispensing Instructions" as "tructions"); a range SEQ row ("3-n") is no
+  longer glued onto the previous field's name (QPD-2).
+- `audit-schemas.py --depth --write-names` corrects names from the print,
+  preferring the candidate the other chapters agree on. Typed accessor
+  names (`swiftName`) are unchanged; no API change.
 
 ## [3.6.5] — 2026-09-22
 

@@ -241,6 +241,15 @@ func normalizeOptionality(_ raw: String) -> String {
 func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Column]) {
     guard !rows.isEmpty else { return }
     let line = raw.replacingOccurrences(of: "\t", with: "    ")
+    // A row whose SEQ is a range ("3-n" for QPD's user parameters, "1-n" for RDT / ADD) is
+    // not parsed as a row, but it is not a continuation of the previous one either: its
+    // text was being glued onto the previous field's name (v2.5.1 QPD-2 "Query Tag 01435
+    // User Parameters (in successive fields)"). The 1-n class is modelled by hand.
+    let seqStart = columns.first { $0.key == "SEQ" }?.start ?? 0
+    if let first = runs(in: line).first, first.start <= seqStart + 6,
+       first.text.range(of: #"^[0-9]+-[0-9n]+$"#, options: .regularExpression) != nil {
+        return
+    }
     let chars = Array(line)
     let nameStart = columns.first { $0.key == "NAME" }?.start ?? Int.max
     // A continuation carrying only a TBL# fragment ("0328" under "0327/") is SHORTER than
@@ -253,7 +262,13 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
         && rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/") {
         rows[rows.count-1].tbl += r.text
     }
-    let cont = elementName(from: line, nameStart: nameStart)
+    // A wrapped name starts where the row's own name started, not where the header centred
+    // "ELEMENT NAME" (v2.3.1 RXE-21: header at column 93, names at 77 — the continuation
+    // "Dispensing Instructions" was read as "tructions"). The row's name start is the first
+    // run at or after the ITEM# column; the continuation is cut there instead.
+    let itemStart = columns.first { $0.key == "ITEM" }?.start ?? nameStart
+    let contStart = runs(in: line).map(\.start).filter { $0 >= itemStart - 2 }.min() ?? nameStart
+    let cont = elementName(from: line, nameStart: min(nameStart, contStart))
     if isNameContinuation(cont, currentName: rows[rows.count-1].name) {
         rows[rows.count-1].name += (rows[rows.count-1].name.isEmpty ? "" : " ") + cont
     }
@@ -376,6 +391,21 @@ func extractTables(from text: String) -> [Table] {
             if let row = parseRow(line, columns: columns) {
                 if row.seq == 1 && expected > 2 { break loop } // a new segment restarted at 1
                 rows.append(row); expected = row.seq + 1
+            } else if let seqCol = columns.first(where: { $0.key == "SEQ" })?.start,
+                      line.count > seqCol + 2, line.prefix(seqCol + 2).allSatisfy({ $0 == " " }),
+                      // Write the expected SEQ into the blank SEQ column so every other column
+                      // keeps its position, then parse as a normal row.
+                      let row = parseRow(String(repeating: " ", count: seqCol) + String(expected)
+                                         + String(line.dropFirst(seqCol + String(expected).count)), columns: columns),
+                      j + 1 < lines.count,
+                      lines[j + 1].trimmingCharacters(in: .whitespaces) == String(expected),
+                      !row.dt.isEmpty, !row.item.isEmpty {
+                // v2.8.2 CH17 prints ITM-33's SEQ on its own line BELOW the row. A line with
+                // no SEQ but a datatype and an item number, followed by a line that is exactly
+                // the next expected SEQ, is that row; without this it was glued onto ITM-32's
+                // name and the depth audit counted 32 fields against the spec's 33.
+                rows.append(row); expected = row.seq + 1
+                j += 1   // consume the lone SEQ line
             } else {
                 appendContinuation(line, to: &rows, columns: columns)
             }

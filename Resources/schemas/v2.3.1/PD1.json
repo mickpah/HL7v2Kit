@@ -93,7 +93,7 @@
     {
       "index": 11,
       "swiftName": "publicityCode",
-      "name": "Publicity Indicator",
+      "name": "Publicity Code",
       "dataType": "CE",
       "optionality": "O",
       "repeatability": "1",

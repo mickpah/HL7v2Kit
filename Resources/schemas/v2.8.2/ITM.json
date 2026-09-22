@@ -34,6 +34,7 @@
     { "index": 29, "swiftName": "specialHandlingCode", "name": "Special Handling Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0376"] },
     { "index": 30, "swiftName": "hazardousIndicator", "name": "Hazardous Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
     { "index": 31, "swiftName": "sterileIndicator", "name": "Sterile Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
-    { "index": 32, "swiftName": "materialDataSafetySheetNumberUnitedNationsStandardProductsAndServicesCodeUnspsc", "name": "Material Data Safety Sheet Number United Nations Standard Products and Services Code (UNSPSC)", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+    { "index": 32, "swiftName": "materialDataSafetySheetNumber", "name": "Material Data Safety Sheet Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
+    { "index": 33, "swiftName": "unitedNationsStandardProductsAndServicesCode", "name": "United Nations Standard Products and Services Code (UNSPSC)", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0396"] }
   ]
 }
