@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.11.0] — 2026-09-22
+
 ### Added — M28: XAD.7 Address Type when the field repeats
 
 - The predicate language of `ComponentGrammar.condition` gains one token,
