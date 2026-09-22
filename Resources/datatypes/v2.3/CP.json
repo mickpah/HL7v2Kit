@@ -41,7 +41,10 @@
       "index": 6,
       "name": "Range type",
       "dataType": "ID",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0298"
+      ]
     }
   ]
 }

@@ -51,6 +51,122 @@
           "Numeric array (Chapter 7 waveform: WAV category)"
         ]
       ]
+    },
+    "0298": {
+      "createName": "CP range type",
+      "kind": "HL7",
+      "citation": "HL7 v2.3 Chapter 2 sec 2.8.8 CP - composite price, HL7 Table 0298 - CP range type",
+      "note": "v2.3 prints this table, with its rows, in the chapter that defines the datatype, and omits it from Appendix A, the only v2.3 PDF the extractor reads. Rows transcribed from the chapter.",
+      "addEntries": [
+        [
+          "P",
+          "Pro-rate. Apply this price to this interval, pro-rated by whatever portion of the interval is used."
+        ],
+        [
+          "F",
+          "Flat-rate. Apply the entire price to this interval, do not pro-rate the price if the full interval is not used."
+        ]
+      ]
+    },
+    "0299": {
+      "createName": "Encoding",
+      "kind": "HL7",
+      "citation": "HL7 v2.3 Chapter 2 sec 2.8.13 ED - encapsulated data, HL7 Table 0299 - Encoding",
+      "note": "v2.3 prints this table, with its rows, in the chapter that defines the datatype, and omits it from Appendix A, the only v2.3 PDF the extractor reads. Rows transcribed from the chapter.",
+      "addEntries": [
+        [
+          "A",
+          "no encoding - data are displayable ASCII characters."
+        ],
+        [
+          "Hex",
+          "hexadecimal encoding - consecutive pairs of hexadecimal digits represent consecutive single octets."
+        ],
+        [
+          "Base64",
+          "encoding as defined by MIME (Multipurpose Internet Mail Extensions)"
+        ]
+      ]
+    },
+    "0301": {
+      "createName": "Universal ID type",
+      "kind": "HL7",
+      "citation": "HL7 v2.3 Chapter 2 sec 2.8.18 HD - hierarchic designator, HL7 Table 0301 - Universal ID type",
+      "note": "v2.3 prints this table, with its rows, in the chapter that defines the datatype, and omits it from Appendix A, the only v2.3 PDF the extractor reads. Rows transcribed from the chapter.",
+      "addEntries": [
+        [
+          "DNS",
+          "An Internet dotted name. Either in ASCII or as integers"
+        ],
+        [
+          "GUID",
+          "Same as UUID."
+        ],
+        [
+          "HCD",
+          "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"
+        ],
+        [
+          "HL7",
+          "Reserved for future HL7 registration schemes"
+        ],
+        [
+          "ISO",
+          "An International Standards Organization Object Identifier"
+        ],
+        [
+          "L",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "M",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "N",
+          "These are reserved for locally defined coding schemes."
+        ],
+        [
+          "Random",
+          "Usually a base64 encoded string of random bits."
+        ],
+        [
+          "UUID",
+          "The DCE Universal Unique Identifier"
+        ],
+        [
+          "x400",
+          "An X.400 MHS format identifier"
+        ],
+        [
+          "x500",
+          "An X.500 directory name"
+        ]
+      ]
+    },
+    "0336": {
+      "createName": "Referral reason",
+      "kind": "User",
+      "citation": "HL7 v2.3 Chapter 11 sec 11.5.1.10 RF1-10 Referral reason, User-defined Table 0336 - Referral reason",
+      "note": "v2.3 prints this table in the chapter and omits it from Appendix A. Rows transcribed from the chapter.",
+      "addEntries": [
+        [
+          "S",
+          "Second Opinion"
+        ],
+        [
+          "P",
+          "Patient Preference"
+        ],
+        [
+          "O",
+          "Provider Ordered"
+        ],
+        [
+          "W",
+          "Work Load"
+        ]
+      ]
     }
   },
   "2.3.1": {

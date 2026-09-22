@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M24: four v2.3 tables the registry lacked; the 39 unbound prose mentions read
+
+- v2.3 prints Tables 0298, 0299, 0301 and 0336, with their rows, in the
+  chapters that define the datatypes and omits them from Appendix A, the
+  only v2.3 PDF the table extractor reads. Measured across all v2.3 chapters:
+  those four are the only tables printed with rows and absent from the
+  registry (v2.3.1 and v2.4 have none). A cited override can now CREATE a
+  table (`createName`); the four are transcribed from the chapters.
+- With them, three more v2.3 prose bindings meet the evidence rule: `HD.3`
+  and `EI.4` to 0301 (so a bad universal ID type is now checked on v2.3
+  messages too) and `CP.6` to 0298.
+- The remaining 36 rejected mentions were all read. They are: the HD-typed
+  components whose "0300 / 0363" belongs to the HD's own first subcomponent
+  (never enforced: IS, user-defined); user-defined tables v2.3 names but
+  never prints (0300, 0302 to 0308, 0333, 0335, 0297); and real misprints
+  (v2.3 `QSC.4` "0102", `XCN.8` / `PPN.8` "0207", `JCC.2` "0329", `XCN.12` /
+  `PPN.12` "0060", v2.3.1 `DLN.2` "0333"). None can be bound; all stay
+  unbound, which is an absent check and not a false error.
 
 ## [3.7.2] — 2026-09-22
 

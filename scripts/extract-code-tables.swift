@@ -126,6 +126,11 @@ struct Override {
     /// (v2.5.1 Appendix A prints 0210 with AND only; Chapter 2A sec 2.A.60.4
     /// prints AND and OR). `[code, description]` pairs, appended in order.
     var addEntries: [[String]] = []
+    /// The table's printed name when the override CREATES a table the source PDF
+    /// omits: v2.3 prints 0298, 0299, 0301 and 0336 with their rows in the chapters
+    /// and not in Appendix A, the only PDF this extractor reads for v2.3. Needs `kind`
+    /// and `addEntries` (the transcribed rows) and a `citation` naming the chapter.
+    var createName: String?
 }
 
 // MARK: - shared line classification
@@ -778,7 +783,8 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
             citation: d["citation"] as? String,
             dropCodes: (d["dropCodes"] as? [String]) ?? [],
             renameCodes: (d["renameCodes"] as? [String: String]) ?? [:],
-            addEntries: (d["addEntries"] as? [[String]]) ?? []
+            addEntries: (d["addEntries"] as? [[String]]) ?? [],
+            createName: d["createName"] as? String
         )
     }
     return out
@@ -811,11 +817,16 @@ guard !text.isEmpty else {
     exit(2)
 }
 
-let (tables, extractionNotes) = appendix ? extractAppendixA(text, report: report) : extract282(text, report: report)
+var (tables, extractionNotes) = appendix ? extractAppendixA(text, report: report) : extract282(text, report: report)
 var notes = extractionNotes
 
 let overridesPath = (outDir as NSString).deletingLastPathComponent + "/overrides.json"
 let overrides = loadOverrides(overridesPath, version: version)
+for (number, o) in overrides where tables[number] == nil {
+    guard let name = o.createName, let kind = o.kind, !o.addEntries.isEmpty else { continue }
+    tables[number] = Table(number: number, name: name, kind: kind)   // rows come from addEntries in render()
+    notes.append("\(number): created from overrides.json (printed in a chapter, absent from the appendix)")
+}
 
 let fm = FileManager.default
 try? fm.createDirectory(atPath: outDir, withIntermediateDirectories: true)
