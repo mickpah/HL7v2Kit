@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.7.1] — 2026-09-22
+
+**Fixes only; no API change.** 19 fields carried another version's repeatability: 14 false cardinality errors removed, five checks added.
+
 ### Fixed — M22: 19 fields carried another version's repeatability
 
 - The depth audit now compares every field's repeatability with the RP/#
