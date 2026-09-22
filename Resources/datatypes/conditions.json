@@ -1,5 +1,5 @@
 {
-  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', AND, OR, parentheses. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). Applied by scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.7 / CWE.7 / CF.7 / CSU.8 (condition on the coding system in use: needs code-system awareness); XAD.7 (a repetition-count condition); CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated).",
+  "_about": "Hand-authored, cited conditions for components the component tables print as C (M26, ADR-017). Predicate over sibling components of the same repetition: '<n> populated', '<n> empty', 'repeated' (the field has more than one populated repetition), AND, OR, parentheses. When it holds and the component is empty the Validator reports conditionalComponentMissing. 'conformanceRules' carries the 'as of v2.7' family in the same language, applied as conformanceCondition and checked only on opt-in (M27). Applied by scripts/extract-datatype-components.py. NOT modelled, each with its reason: CNE.7 / CWE.7 / CF.7 / CSU.8 (condition on the coding system in use: needs code-system awareness); CNE.20 (the v2.8.2 sentence contradicts its own summary: '6 or 14 or 17'); HD.2 / HD.3 (the HD either-or rule already carries them); PL.6, XTN.8, CNN.9, EI.3 / EI.4, PPN.8 / XCN.8 / PPN.12 / XCN.12 (printed C with no condition stated).",
   "rules": {
     "2.5.1": {
       "RPT": {
@@ -176,6 +176,12 @@
         "2": {
           "condition": "1 empty",
           "citation": "HL7 v2.8.2 Chapter 2A, XCN.2: 'XCN.2 is required if XCN.1 is not populated.'"
+        }
+      },
+      "XAD": {
+        "7": {
+          "condition": "repeated",
+          "citation": "HL7 v2.8.2 Chapter 2A, 2.A.87.7 Address Type: 'XAD.7 is required if there are multiple occurrences of XAD in a field.' Not stated on v2.5.1 or v2.6. The corpus holds one v2.7+ field with two XAD repetitions (STF-11, chapter 15); its second repetition is mis-delimited (city and state in one component, six components, the type code in XAD.6), so it is not a counter-example to the sentence. M28."
         }
       }
     }

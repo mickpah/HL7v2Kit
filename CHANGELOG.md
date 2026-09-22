@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M28: XAD.7 Address Type when the field repeats
+
+- The predicate language of `ComponentGrammar.condition` gains one token,
+  `repeated`: the field has more than one populated repetition.
+- v2.8.2 XAD.7 is now checked: "XAD.7 is required if there are multiple
+  occurrences of XAD in a field" (2.A.87.7), reported as
+  `conditionalComponentMissing` at the empty repetition. v2.5.1 and v2.6 do
+  not state it and are unchanged. The spec's one v2.7+ example with two
+  address repetitions (STF-11, chapter 15) is mis-delimited (the type code
+  sits in XAD.6) and is recorded as such in `conditions.json`, not treated
+  as a counter-example.
+- The register of conditions the model cannot express is now: the coding
+  system in use (CWE.7 and kin) and CNE.20's self-contradictory sentence.
 
 ## [3.10.0] — 2026-09-22
 

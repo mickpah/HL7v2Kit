@@ -82,10 +82,28 @@ struct ConditionalComponentTests {
         #expect(!Validator(options: off).validate(message).issues.contains { $0.code == .conformanceConditionMissing })
     }
 
+    @Test("M28: XAD.7 Address Type is required when the field repeats (v2.8.2 sec 2.A.87.7)")
+    func xadAddressTypeWhenRepeated() throws {
+        #expect(DataTypeGrammarTable.grammar("XAD", version: .v2_8_2)?.component(7)?.condition == "repeated")
+        #expect(DataTypeGrammarTable.grammar("XAD", version: .v2_6)?.component(7)?.condition == nil)
+        #expect(ComponentCondition.holds("repeated", populated: { _ in false }, repeated: true))
+        #expect(!ComponentCondition.holds("repeated", populated: { _ in true }))
+        func pid(_ addresses: String, _ version: String) throws -> [ValidationIssue] {
+            let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|\(version)\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN||||||\(addresses)\r"
+            return Validator().validate(try Parser().parse(wire)).issues.filter { $0.code == .conditionalComponentMissing }
+        }
+        #expect(try pid("1 MAIN ST^^TOWN^ST^1000", "2.8.2").isEmpty)
+        let two = try pid("1 MAIN ST^^TOWN^ST^1000~PO BOX 1^^TOWN^ST^1000^^M", "2.8.2")
+        #expect(two.count == 1 && two.first?.location.componentIndex == 7 && two.first?.location.fieldIndex == 11)
+        #expect(try pid("1 MAIN ST^^TOWN^ST^1000^^H~PO BOX 1^^TOWN^ST^1000^^M", "2.8.2").isEmpty)
+        #expect(try pid("1 MAIN ST^^TOWN^ST^1000~PO BOX 1^^TOWN^ST^1000", "2.6").isEmpty)
+    }
+
     @Test("Components printed C with no stated condition carry none")
     func unstatedStayNil() {
         #expect(DataTypeGrammarTable.grammar("XCN", version: .v2_5_1)?.component(8)?.condition == nil)
-        #expect(DataTypeGrammarTable.grammar("XAD", version: .v2_8_2)?.component(7)?.condition == nil, "a repetition-count condition")
+        #expect(DataTypeGrammarTable.grammar("CNN", version: .v2_8_2)?.component(9)?.condition == nil, "printed C, no condition stated")
         #expect(DataTypeGrammarTable.grammar("CWE", version: .v2_8_2)?.component(7)?.condition == nil, "coding-system aware")
         #expect(DataTypeGrammarTable.grammar("XCN", version: .v2_8_2)?.component(1)?.condition == "2 empty", "'XCN.1 is required if XCN.2 is not populated'")
     }

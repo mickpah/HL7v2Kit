@@ -1597,6 +1597,7 @@ public struct Validator: Sendable {
         issues: inout [ValidationIssue]
     ) {
         guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
+        let repeated = field.repetitions.filter(isRepetitionPopulated).count > 1
         func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
                    component: Int?, subcomponent: (Int) -> Int?) {
             func populated(_ i: Int) -> Bool {
@@ -1609,7 +1610,7 @@ public struct Validator: Sendable {
                     (entry.conformanceCondition, options.conformanceConditionSeverity, IssueCode.conformanceConditionMissing),
                 ] {
                     guard let condition, let severity, !populated(entry.index),
-                          ComponentCondition.holds(condition, populated: populated) else { continue }
+                          ComponentCondition.holds(condition, populated: populated, repeated: repeated) else { continue }
                     let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
                                                  componentIndex: component ?? entry.index,
                                                  subcomponentIndex: subcomponent(entry.index))

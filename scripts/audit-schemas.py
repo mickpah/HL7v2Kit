@@ -795,10 +795,10 @@ EXPECTED_EXAMPLE_REJECTIONS = {
 _EXAMPLE_FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|\.{6,}")
 
 
-def _condition_holds(expr, populated):
+def _condition_holds(expr, populated, repeated=False):
     """The ComponentGrammar.condition predicate language, mirrored from Swift
-    (ComponentCondition.holds): "N populated", "N empty", AND, OR, parentheses;
-    anything unparseable is False."""
+    (ComponentCondition.holds): "N populated", "N empty", "repeated", AND, OR,
+    parentheses; anything unparseable is False."""
     toks = expr.replace("(", " ( ").replace(")", " ) ").upper().split()
     pos = [0]
     def peek(): return toks[pos[0]] if pos[0] < len(toks) else None
@@ -808,6 +808,8 @@ def _condition_holds(expr, populated):
             pos[0] += 1; v = orx()
             if peek() != ")": raise ValueError
             pos[0] += 1; return v
+        if t == "REPEATED":
+            pos[0] += 1; return repeated
         n = int(t); st = toks[pos[0] + 1]; pos[0] += 2
         if st == "POPULATED": return populated(n)
         if st == "EMPTY": return not populated(n)
@@ -866,6 +868,7 @@ def spec_examples():
                 if not (3 <= len(example) <= 200) or example.startswith("^~") or (current, example) in seen:
                     continue
                 seen.add((current, example))
+                repeated = len(example.split("~")) > 1
                 for repetition in example.split("~"):
                     checked += 1
                     comps, problems = repetition.split("^"), []
@@ -876,7 +879,7 @@ def spec_examples():
                         if c.get("optionality") == "R" and not value:
                             problems.append((where, where, "printed R but empty in the example"))
                         # M26: a conditional component whose condition holds must be valued.
-                        if c.get("condition") and not value and _condition_holds(c["condition"], populated):
+                        if c.get("condition") and not value and _condition_holds(c["condition"], populated, repeated):
                             problems.append((where, where, f"conditional ({c['condition']}) but empty in the example"))
                         if not value or value == '""':
                             continue
