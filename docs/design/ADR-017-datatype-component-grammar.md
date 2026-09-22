@@ -107,7 +107,7 @@ The 32 rules M26 registered now ship on `ComponentGrammar.conformanceCondition`,
 
 ## Addendum 2026-09-22 — M28: `repeated`
 
-XAD.7's sentence ("required if there are multiple occurrences of XAD in a field") was registered by M26 as a repetition-count condition the language could not carry. One token carries it: `repeated`, true when the field has more than one populated repetition, evaluated by the Swift and Python evaluators alike. The single v2.7+ example with two address repetitions is mis-delimited and does not count against the sentence; the judgement is recorded in the rule's citation. What the model still cannot express: a condition on the coding system in use (CWE.7 and kin, which needs terminology awareness), and CNE.20, whose sentence contradicts its own summary.
+XAD.7's sentence ("required if there are multiple occurrences of XAD in a field") was registered by M26 as a repetition-count condition the language could not carry. One token carries it: `repeated`, true when the field has more than one populated repetition, evaluated by the Swift and Python evaluators alike. The single v2.7+ example with two address repetitions is mis-delimited and does not count against the sentence; the judgement is recorded in the rule's citation. What the model still cannot express: CWE.7 and kin (a version ID when .3 names anything but an HL7-type `HL7nnnn` table: a value-pattern term plus a table-type lookup, and the spec's own v2.7+ examples supply .7 in 1 of the 13 values that would require it, so it could only ever join the opt-in tier; measured 2026-09-22 and left registered), and CNE.20, whose sentence contradicts its own summary.
 
 ## References
 
