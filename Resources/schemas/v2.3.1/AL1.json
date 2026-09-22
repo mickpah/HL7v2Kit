@@ -14,7 +14,7 @@
     {
       "index": 2,
       "swiftName": "allergenTypeCode",
-      "name": "Allergen Type Code",
+      "name": "Allergy Type",
       "dataType": "IS", "table": "0127",
       "optionality": "O",
       "repeatability": "1",
@@ -23,7 +23,7 @@
     {
       "index": 3,
       "swiftName": "allergenCodeMnemonicDescription",
-      "name": "Allergen Code/Mnemonic/Description",
+      "name": "Allergy Code/Mnemonic/Description",
       "dataType": "CE",
       "optionality": "R",
       "repeatability": "1"
@@ -31,7 +31,7 @@
     {
       "index": 4,
       "swiftName": "allergySeverityCode",
-      "name": "Allergy Severity Code",
+      "name": "Allergy Severity",
       "dataType": "IS", "table": "0128",
       "optionality": "O",
       "repeatability": "1",
@@ -40,7 +40,7 @@
     {
       "index": 5,
       "swiftName": "allergyReactionCode",
-      "name": "Allergy Reaction Code",
+      "name": "Allergy Reaction",
       "dataType": "ST",
       "optionality": "O",
       "repeatability": "*"

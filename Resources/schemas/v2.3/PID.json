@@ -6,7 +6,7 @@
     {
       "index": 1,
       "swiftName": "setID",
-      "name": "Set ID - PID",
+      "name": "Set ID - Patient ID",
       "dataType": "SI",
       "optionality": "O",
       "repeatability": "1"
@@ -22,7 +22,7 @@
     {
       "index": 3,
       "swiftName": "patientIdentifierList",
-      "name": "Patient Identifier List",
+      "name": "Patient ID (Internal ID)",
       "dataType": "CX",
       "optionality": "R",
       "repeatability": "*"
@@ -62,7 +62,7 @@
     {
       "index": 8,
       "swiftName": "administrativeSex",
-      "name": "Administrative Sex",
+      "name": "Sex",
       "dataType": "IS", "table": "0001",
       "optionality": "O",
       "repeatability": "1",

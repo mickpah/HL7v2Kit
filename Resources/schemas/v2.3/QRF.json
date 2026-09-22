@@ -3,14 +3,14 @@
   "version": "2.3",
   "description": "QRF",
   "fields": [
-    { "index": 1, "swiftName": "filter", "name": "Filter", "dataType": "ST", "optionality": "R", "repeatability": "*" },
-    { "index": 2, "swiftName": "rtDateTime", "name": "rt Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "dateTime", "name": "Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "lifier", "name": "lifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "jectFilter", "name": "ject Filter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "meQualifier", "name": "me Qualifier", "dataType": "ID", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
-    { "index": 7, "swiftName": "meStatusQualifier", "name": "me Status Qualifier", "dataType": "ID", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
-    { "index": 8, "swiftName": "ectionQualifier", "name": "ection Qualifier", "dataType": "ID", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
-    { "index": 9, "swiftName": "timingQualifier", "name": "/Timing Qualifier", "dataType": "TQ", "optionality": "O", "repeatability": "1" }
+    { "index": 1, "swiftName": "filter", "name": "Where Subject Filter", "dataType": "ST", "optionality": "R", "repeatability": "*" },
+    { "index": 2, "swiftName": "rtDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTime", "name": "When Data End Date/Time", "dataType": "TS", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "lifier", "name": "What User Qualifier", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "jectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "meQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
+    { "index": 7, "swiftName": "meStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
+    { "index": 8, "swiftName": "ectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
+    { "index": 9, "swiftName": "timingQualifier", "name": "When Quantity/Timing Qualifier", "dataType": "TQ", "optionality": "O", "repeatability": "1" }
   ]
 }

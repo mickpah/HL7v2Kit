@@ -2505,7 +2505,7 @@ extension SegmentGrammarTable {
         version: "2.5.1",
         fields: [
             FieldGrammar(index: 1, name: "Message Query Name", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            FieldGrammar(index: 2, name: "Query Tag User Parameters (in successive fields)", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
+            FieldGrammar(index: 2, name: "Query Tag", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
         ]
     )
 

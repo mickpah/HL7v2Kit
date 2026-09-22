@@ -62,7 +62,7 @@
     {
       "index": 8,
       "swiftName": "administrativeSex",
-      "name": "Administrative Sex",
+      "name": "Sex",
       "dataType": "IS", "table": "0001",
       "optionality": "O",
       "repeatability": "1",

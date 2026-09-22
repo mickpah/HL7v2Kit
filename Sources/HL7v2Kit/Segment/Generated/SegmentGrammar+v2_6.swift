@@ -1885,7 +1885,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-2 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 4, name: "Universal Service Identifier", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            FieldGrammar(index: 5, name: "Priority - OBR", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
+            FieldGrammar(index: 5, name: "Priority", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 6, name: "Requested Date/Time (deprecated)", dataType: "DTM", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 7, name: "Observation Date/Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: "messageCode = ORU OR SPM present OR OBR-15 populated", prohibitedWhen: nil, variableColumns: false, table: nil),
             FieldGrammar(index: 8, name: "Observation End Date/Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
@@ -2852,7 +2852,7 @@ extension SegmentGrammarTable {
         version: "2.6",
         fields: [
             FieldGrammar(index: 1, name: "Message Query Name", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
-            FieldGrammar(index: 2, name: "Query Tag User Parameters (in successive fields)", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
+            FieldGrammar(index: 2, name: "Query Tag", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil),
         ]
     )
 

@@ -103,6 +103,36 @@ SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", 
 #                 (candidates include `*`, `NA or`, truncated `varie`);
 #                 the schema's `varies` is hand-verified (M6-D5).
 DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
+# M20 name predicate. A schema name must equal, after normalisation, an element name the
+# version's own attribute table prints for that slot. Extraction can still glue prose onto a
+# name (ORC-31 "...all orders (i.e., requested"), so a printed candidate whose normalised
+# form STARTS WITH the schema's is accepted; a schema name that is a proper SUFFIX of the
+# printed one is a finding, because that is the shape of a name cut at its left edge — 110
+# pharmacy-segment names shipped that way ("nistration Sub-ID Counter"). Names on the
+# whitelisted segments come from the canonical version and are not compared.
+NAME_WHITELIST = set()   # nothing yet: every disagreement was a schema or extractor defect
+
+
+def normalised_name(name):
+    name = name.lower().replace("\u2019", "'").replace("\u2013", "-").replace("\u2014", "-")
+    name = re.sub(r"\s*\((deprecated|withdrawn)\)\s*$", "", name)
+    return re.sub(r"[^a-z0-9 ]", "", re.sub(r"[\s\-_/]+", " ", name)).strip()
+
+
+def name_agrees(schema_name, printed):
+    """Equal after normalisation, or the printed name starts with the schema's (prose glued
+    on). Spaces are dropped for the equality test: v2.4 EDU-4 prints "ParticipationDate" in
+    the table and "Participation Date" in its definition heading, and the schema follows
+    the heading. A prefix match keeps its space so a name is never accepted as a prefix of
+    a longer word."""
+    have = normalised_name(schema_name)
+    for c in printed:
+        want = normalised_name(c)
+        if have.replace(" ", "") == want.replace(" ", "") or want.startswith(have + " "):
+            return True
+    return False
+
+
 # M19 optionality predicate. v2.3 and v2.3.1 print DG1-2 as "(B) R": both codes in one
 # cell. The schema keeps R; the extractor reads the cell as B.
 OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
@@ -264,7 +294,7 @@ def extracted_depths(version):
     schema value is a finding only when it matches NO extracted candidate.
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
-    best, dts, tbls, opts = {}, {}, {}, {}
+    best, dts, tbls, opts, names = {}, {}, {}, {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -290,24 +320,41 @@ def extracted_depths(version):
                     opt = (f.get("optionality") or "").strip()
                     if opt:
                         opts.setdefault((seg, f["index"]), set()).add(opt)
-    return best, dts, tbls, opts
+                    name = (f.get("name") or "").strip()
+                    if name:
+                        names.setdefault((seg, f["index"]), set()).add(name)
+    return best, dts, tbls, opts, names
 
 
-def depth(write=False):
+def write_names(path, wanted):
+    """Replace each listed field's `name` value in place, textually."""
+    text = open(path, encoding="utf-8").read()
+    out, pos, index = [], 0, None
+    for m in re.finditer(r'"index"\s*:\s*(\d+)|"name"\s*:\s*"((?:[^"\\]|\\.)*)"', text):
+        if m.group(1):
+            index = int(m.group(1))
+        elif index in wanted:
+            out.append(text[pos:m.start()] + '"name": ' + json.dumps(wanted.pop(index), ensure_ascii=False))
+            pos = m.end()
+    open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
+
+
+def depth(write=False, correct_names=False):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], [], []
+        return [], [], 0, [], {}, [], [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
-    datatype_findings, table_findings, optionality_findings = [], [], []
+    datatype_findings, table_findings, optionality_findings, name_findings = [], [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
+    wanted_names = {}
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls, spec_opts = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts, spec_names = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -361,6 +408,23 @@ def depth(write=False):
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
+            # M20: the NAME column. See NAME_WHITELIST for the shape rule.
+            for f in schema_fields:
+                printed = spec_names.get((seg, f["index"]))
+                have = (f.get("name") or "").strip()
+                # An EMPTY schema name is a finding too: 22 pharmacy fields shipped nameless.
+                if not printed or (have and name_agrees(have, printed)):
+                    continue
+                if (version, seg, f["index"]) in NAME_WHITELIST:
+                    continue
+                if correct_names:
+                    # Prefer a printed candidate that the OTHER chapters agree on (a name
+                    # cut at a page edge appears in one chapter only); among those, the
+                    # shortest, since prose glued on makes a name longer, never shorter.
+                    ranked = sorted(printed, key=lambda c: (-sum(1 for o in printed if normalised_name(o).startswith(normalised_name(c))), len(c)))
+                    wanted_names.setdefault(path, {})[f["index"]] = ranked[0]
+                    continue
+                name_findings.append((version, seg, f["index"], have, sorted(printed)[:2]))
             # M19: the OPT column had no predicate either. A schema's optionality must be one
             # the version's own attribute table prints for that slot (union across chapters:
             # OBR is printed in chapters 4 and 7). An R the spec prints as O is a false
@@ -393,7 +457,10 @@ def depth(write=False):
                 if f["index"] in wanted and sorted(f.get("tables", [])) != wanted[f["index"]]:
                     table_findings.append((version, seg, f["index"],
                                            f"schema {f.get('tables', [])}, spec {wanted[f['index']]}"))
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings
+    for path, wanted in wanted_names.items():
+        write_names(path, dict(wanted))
+        print(f"  names corrected in {os.path.relpath(path, REPO)}: {sorted(wanted)}", file=sys.stderr)
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings
 
 
 def extracted_tables(version):
@@ -760,6 +827,8 @@ def main():
                     help="also run every example the datatype chapters print through the component rules (M17)")
     ap.add_argument("--vmr", action="store_true",
                     help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
+    ap.add_argument("--write-names", action="store_true",
+                    help="with --depth: replace names the NAME predicate rejects with the shortest printed one (M20)")
     ap.add_argument("--write-tables", action="store_true",
                     help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
     args = ap.parse_args()
@@ -772,8 +841,8 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings = depth(
-            write=args.write_tables)
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings = depth(
+            write=args.write_tables, correct_names=args.write_names)
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -799,7 +868,10 @@ def main():
         print(f"\n== optionality (M19): {len(opt_findings)} findings")
         for v, seg, idx, got, want in opt_findings[:60]:
             print(f"   OPT      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
-        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings:
+        print(f"\n== name (M20): {len(name_findings)} findings")
+        for v, seg, idx, got, want in name_findings[:80]:
+            print(f"   NAME     {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings:
             rc = 1
 
     if args.tables:
