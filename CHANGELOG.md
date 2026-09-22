@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.6.5] — 2026-09-22
+
+**Fixes only; no API change.** 30 fields carried another version's optionality: one false error (`MSH-7` on v2.3 / v2.3.1), 21 false deprecation warnings, seven too-lenient v2.6 fields.
+
 ### Fixed — M19: 30 fields carried another version's optionality
 
 - The depth audit checked field count, presence, datatype and table bindings

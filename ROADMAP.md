@@ -16,15 +16,15 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-21 (M19 merged, unreleased; `v3.6.4` tagged earlier) |
-| Current release | **`v3.6.4`** (2026-09-21) — OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
+| Last updated | 2026-09-22 (**`v3.6.5` tagged** — M19 closed) |
+| Current release | **`v3.6.5`** (2026-09-22) — optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
 | Next planned cycle | **Candidate: NAME and RP predicates for the depth audit.** Unreleased on `main`: M19. Owner decision pending on `MSH-9.3`. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
 ---
 
-## Where we are (`v3.6.4`)
+## Where we are (`v3.6.5`)
 
 **Shipped and solid:**
 
@@ -258,7 +258,7 @@ Validator could not carry.*
 
 - **Outcome:** 616 printed messages validated end to end (gated suite, spec text kept out of the repository); Table 0125's missing waveform value types `NA` / `MA` / `CD` restored on v2.3 to v2.6; the rule for when an example may overturn a table written into ADR-017.
 
-### M19 — Optionality audited per version **CLOSED (2026-09-21; merged, unreleased)**
+### M19 — Optionality audited per version **CLOSED (2026-09-21; released in `v3.6.5`)**
 
 - **Outcome:** an `optionality` predicate in the depth audit; 30 of ~13,000 fields carried a later version's OPT (a false error on v2.3 `MSH-7`, 21 false deprecation warnings, seven too-lenient v2.6 fields), all corrected from their own version's table.
 
