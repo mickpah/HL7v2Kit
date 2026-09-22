@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Fixed — M22: 19 fields carried another version's repeatability
+
+- The depth audit now compares every field's repeatability with the RP/#
+  column its own version prints (a printed Y or a bounded count such as
+  "2" is `*`; blank is `1`). First run: 19 disagreements.
+  - **False `cardinalityExceeded` removed** on v2.3 (`PID-6`, `PID-10`,
+    `PID-22`, `AL1-5`, `EVN-5`, `ORC-7`, `ORC-10..12`), v2.3.1 (`ORC-7`) and
+    v2.8.2 (`ERR-1`, `PD1-4`, `PID-4`, `PID-9`): these print no repeat.
+  - **Missing checks added:** v2.3 `LCC-3` / `LCC-4`, v2.6 `PID-38`
+    (printed "2"), v2.8.2 `LRL-5` and `OBX-28` repeat.
+- Extractor: a `Y` printed under the TBL# header is the RP cell, not a table
+  number (v2.6 ERR-9 / 11 / 12 had lost their repeatability in extraction).
+- With OPT (M19), NAME (M20) and RP (M22), every attribute-table column that
+  drives validation is now audited against each version's own print.
 
 ## [3.7.0] — 2026-09-22
 

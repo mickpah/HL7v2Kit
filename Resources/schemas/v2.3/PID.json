@@ -49,7 +49,7 @@
       "name": "Mother's Maiden Name",
       "dataType": "XPN",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 7,
@@ -82,7 +82,7 @@
       "name": "Race",
       "dataType": "IS", "table": "0005",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "1",
       "tables": ["0005"]
     },
     {
@@ -182,7 +182,7 @@
       "name": "Ethnic Group",
       "dataType": "IS", "table": "0189",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "1",
       "tables": ["0189"]
     },
     {

@@ -136,6 +136,7 @@ def name_agrees(schema_name, printed):
 # M19 optionality predicate. v2.3 and v2.3.1 print DG1-2 as "(B) R": both codes in one
 # cell. The schema keeps R; the extractor reads the cell as B.
 OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
+REPEATABILITY_WHITELIST = set()
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -294,7 +295,7 @@ def extracted_depths(version):
     schema value is a finding only when it matches NO extracted candidate.
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
-    best, dts, tbls, opts, names = {}, {}, {}, {}, {}
+    best, dts, tbls, opts, names, reps = {}, {}, {}, {}, {}, {}
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
         pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
@@ -323,7 +324,10 @@ def extracted_depths(version):
                     name = (f.get("name") or "").strip()
                     if name:
                         names.setdefault((seg, f["index"]), set()).add(name)
-    return best, dts, tbls, opts, names
+                    rp = (f.get("repeatability") or "").strip()
+                    if rp:
+                        reps.setdefault((seg, f["index"]), set()).add(rp)
+    return best, dts, tbls, opts, names, reps
 
 
 def write_names(path, wanted):
@@ -345,16 +349,16 @@ def depth(write=False, correct_names=False):
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], [], [], []
+        return [], [], 0, [], {}, [], [], [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
-    datatype_findings, table_findings, optionality_findings, name_findings = [], [], [], []
+    datatype_findings, table_findings, optionality_findings, name_findings, rp_findings = [], [], [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
     wanted_names = {}
     for version in CHAPTER_GLOBS:
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls, spec_opts, spec_names = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -408,6 +412,15 @@ def depth(write=False, correct_names=False):
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
+            # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
+            # printed Y, or a bounded count such as "2" or "Y/3", as "*" and a blank as "1";
+            # the schema model has only those two values, so a bounded repeat is "*".
+            for f in schema_fields:
+                printed = spec_reps.get((seg, f["index"]))
+                have = (f.get("repeatability") or "").strip()
+                if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
+                    continue
+                rp_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M20: the NAME column. See NAME_WHITELIST for the shape rule.
             for f in schema_fields:
                 printed = spec_names.get((seg, f["index"]))
@@ -460,7 +473,7 @@ def depth(write=False, correct_names=False):
     for path, wanted in wanted_names.items():
         write_names(path, dict(wanted))
         print(f"  names corrected in {os.path.relpath(path, REPO)}: {sorted(wanted)}", file=sys.stderr)
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings
 
 
 def extracted_tables(version):
@@ -841,7 +854,7 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings = depth(
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings = depth(
             write=args.write_tables, correct_names=args.write_names)
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
@@ -871,7 +884,10 @@ def main():
         print(f"\n== name (M20): {len(name_findings)} findings")
         for v, seg, idx, got, want in name_findings[:80]:
             print(f"   NAME     {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
-        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings:
+        print(f"\n== repeatability (M22): {len(rp_findings)} findings")
+        for v, seg, idx, got, want in rp_findings[:60]:
+            print(f"   RP       {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings:
             rc = 1
 
     if args.tables:

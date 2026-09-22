@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "livingDependency", "name": "Living Dependency", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0223"] },
     { "index": 2, "swiftName": "livingArrangement", "name": "Living Arrangement", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0220"] },
     { "index": 3, "swiftName": "patientPrimaryFacility", "name": "Patient Primary Facility", "dataType": "XON", "optionality": "O", "repeatability": "*", "tables": ["0204"] },
-    { "index": 4, "swiftName": "patientPrimaryCareProviderNameAndIDNo", "name": "Patient Primary Care Provider Name & ID No.", "dataType": "XCN", "optionality": "W", "repeatability": "*" },
+    { "index": 4, "swiftName": "patientPrimaryCareProviderNameAndIDNo", "name": "Patient Primary Care Provider Name & ID No.", "dataType": "XCN", "optionality": "W", "repeatability": "1" },
     { "index": 5, "swiftName": "studentIndicator", "name": "Student Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0231"] },
     { "index": 6, "swiftName": "handicap", "name": "Handicap", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0295"] },
     { "index": 7, "swiftName": "livingWillCode", "name": "Living Will Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0315"] },

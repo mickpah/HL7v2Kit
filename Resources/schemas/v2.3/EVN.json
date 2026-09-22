@@ -43,7 +43,7 @@
       "name": "Operator ID",
       "dataType": "XCN",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "1",
       "tables": ["0188"]
     },
     {

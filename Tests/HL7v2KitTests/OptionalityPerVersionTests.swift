@@ -50,4 +50,20 @@ struct OptionalityPerVersionTests {
         #expect(SegmentGrammarTable.v2_8_2["RXA"]?.field(2)?.name == "Administration Sub-ID Counter")
         #expect(SegmentGrammarTable.v2_8_2["ITM"]?.field(33)?.name == "United Nations Standard Products and Services Code (UNSPSC)")
     }
+
+    @Test("Repeatability follows each version's RP column: v2.3 PID-6 is single, v2.6 PID-38 repeats")
+    func repeatabilityPerVersion() throws {
+        #expect(SegmentGrammarTable.v2_3["PID"]?.field(6)?.repeatability == .single, "v2.3 prints no RP for Mother's Maiden Name")
+        #expect(SegmentGrammarTable.v2_5_1["PID"]?.field(6)?.repeatability == .multiple)
+        #expect(SegmentGrammarTable.v2_6["PID"]?.field(38)?.repeatability == .multiple, "v2.6 prints '2': a bounded repeat")
+        #expect(SegmentGrammarTable.v2_8_2["OBX"]?.field(28)?.repeatability == .multiple)
+        #expect(SegmentGrammarTable.v2_6["ERR"]?.field(9)?.repeatability == .multiple, "Y printed under the TBL# header")
+        // v2.3 rejects a second mother's-maiden-name repetition; v2.5.1 allows it.
+        func cardinality(_ version: String) throws -> Bool {
+            let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|\(version)\rPID|1||123^^^HOSP^MR||DOE^JOHN|SMITH^MARY~JONES^ANN\r"
+            return Validator().validate(try Parser().parse(wire)).issues.contains { $0.code == .cardinalityExceeded && $0.location.fieldIndex == 6 }
+        }
+        #expect(try cardinality("2.3"))
+        #expect(try !cardinality("2.5.1"))
+    }
 }

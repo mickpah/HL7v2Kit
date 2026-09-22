@@ -62,7 +62,7 @@
       "name": "Quantity/Timing",
       "dataType": "TQ",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 8,
@@ -87,7 +87,7 @@
       "name": "Entered By",
       "dataType": "XCN",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 11,
@@ -95,7 +95,7 @@
       "name": "Verified By",
       "dataType": "XCN",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 12,
@@ -103,7 +103,7 @@
       "name": "Ordering Provider",
       "dataType": "XCN",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "1"
     },
     {
       "index": 13,

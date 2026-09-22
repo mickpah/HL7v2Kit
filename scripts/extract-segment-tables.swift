@@ -190,7 +190,12 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         case "DT": row.dt = r.text
         case "OPT": row.opt = r.text
         case "RP": row.rp = r.text
-        case "TBL": row.tbl = r.text
+        case "TBL":
+            // A Y (or Y/n) printed under the TBL# header is the RP cell of a row whose
+            // columns sit right of the header (v2.6 ERR: Y under TBL#, the Y was read as a
+            // table number and ERR-9/11/12 lost their repeatability). A table number is digits.
+            if r.text.range(of: #"^Y(/[0-9]+)?$"#, options: .regularExpression) != nil { row.rp = r.text }
+            else { row.tbl = r.text }
         case "ITEM": row.item = r.text
         default: break
         }
