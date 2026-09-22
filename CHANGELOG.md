@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.10.0] — 2026-09-22
+
 ### Added — M27: the v2.7 conformance rules as an opt-in advisory tier
 
 - `ComponentGrammar.conformanceCondition` (additive, defaulted) carries the
