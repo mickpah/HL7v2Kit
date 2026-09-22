@@ -26,7 +26,10 @@
       "index": 4,
       "name": "Universal ID type",
       "dataType": "ID",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0301"
+      ]
     }
   ]
 }

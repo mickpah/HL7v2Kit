@@ -1,0 +1,18 @@
+{
+  "table": "0298",
+  "version": "2.3",
+  "name": "CP range type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Chapter 2 sec 2.8.8 CP - composite price, HL7 Table 0298 - CP range type",
+  "entries": [
+    {
+      "code": "P",
+      "description": "Pro-rate. Apply this price to this interval, pro-rated by whatever portion of the interval is used."
+    },
+    {
+      "code": "F",
+      "description": "Flat-rate. Apply the entire price to this interval, do not pro-rate the price if the full interval is not used."
+    }
+  ]
+}

@@ -250,6 +250,9 @@ extension HL7TableRegistry {
         "0294": t0294_v2_3,
         "0295": t0295_v2_3,
         "0296": t0296_v2_3,
+        "0298": t0298_v2_3,
+        "0299": t0299_v2_3,
+        "0301": t0301_v2_3,
         "0309": t0309_v2_3,
         "0310": t0310_v2_3,
         "0311": t0311_v2_3,
@@ -275,6 +278,7 @@ extension HL7TableRegistry {
         "0331": t0331_v2_3,
         "0332": t0332_v2_3,
         "0334": t0334_v2_3,
+        "0336": t0336_v2_3,
         "0337": t0337_v2_3,
         "0338": t0338_v2_3,
     ]
@@ -4090,6 +4094,50 @@ extension HL7TableRegistry {
         ] as [HL7Table.Entry]
     )
 
+    static let t0298_v2_3 = HL7Table(
+        number: "0298",
+        name: "CP range type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "P", description: "Pro-rate. Apply this price to this interval, pro-rated by whatever portion of the interval is used."),
+            HL7Table.Entry(code: "F", description: "Flat-rate. Apply the entire price to this interval, do not pro-rate the price if the full interval is not used."),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0299_v2_3 = HL7Table(
+        number: "0299",
+        name: "Encoding",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "A", description: "no encoding - data are displayable ASCII characters."),
+            HL7Table.Entry(code: "Hex", description: "hexadecimal encoding - consecutive pairs of hexadecimal digits represent consecutive single octets."),
+            HL7Table.Entry(code: "Base64", description: "encoding as defined by MIME (Multipurpose Internet Mail Extensions)"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0301_v2_3 = HL7Table(
+        number: "0301",
+        name: "Universal ID type",
+        kind: .hl7,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "DNS", description: "An Internet dotted name. Either in ASCII or as integers"),
+            HL7Table.Entry(code: "GUID", description: "Same as UUID."),
+            HL7Table.Entry(code: "HCD", description: "The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)"),
+            HL7Table.Entry(code: "HL7", description: "Reserved for future HL7 registration schemes"),
+            HL7Table.Entry(code: "ISO", description: "An International Standards Organization Object Identifier"),
+            HL7Table.Entry(code: "L", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "M", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "N", description: "These are reserved for locally defined coding schemes."),
+            HL7Table.Entry(code: "Random", description: "Usually a base64 encoded string of random bits."),
+            HL7Table.Entry(code: "UUID", description: "The DCE Universal Unique Identifier"),
+            HL7Table.Entry(code: "x400", description: "An X.400 MHS format identifier"),
+            HL7Table.Entry(code: "x500", description: "An X.500 directory name"),
+        ] as [HL7Table.Entry]
+    )
+
     static let t0309_v2_3 = HL7Table(
         number: "0309",
         name: "Coverage Type",
@@ -4389,6 +4437,19 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "GT", description: "Guarantor"),
             HL7Table.Entry(code: "IN", description: "Insured"),
             HL7Table.Entry(code: "AP", description: "Associated Party"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0336_v2_3 = HL7Table(
+        number: "0336",
+        name: "Referral reason",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+            HL7Table.Entry(code: "S", description: "Second Opinion"),
+            HL7Table.Entry(code: "P", description: "Patient Preference"),
+            HL7Table.Entry(code: "O", description: "Provider Ordered"),
+            HL7Table.Entry(code: "W", description: "Work Load"),
         ] as [HL7Table.Entry]
     )
 

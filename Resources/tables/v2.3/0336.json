@@ -1,0 +1,26 @@
+{
+  "table": "0336",
+  "version": "2.3",
+  "name": "Referral reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.3 Chapter 11 sec 11.5.1.10 RF1-10 Referral reason, User-defined Table 0336 - Referral reason",
+  "entries": [
+    {
+      "code": "S",
+      "description": "Second Opinion"
+    },
+    {
+      "code": "P",
+      "description": "Patient Preference"
+    },
+    {
+      "code": "O",
+      "description": "Provider Ordered"
+    },
+    {
+      "code": "W",
+      "description": "Work Load"
+    }
+  ]
+}

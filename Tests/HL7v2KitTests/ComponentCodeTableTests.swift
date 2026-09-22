@@ -147,4 +147,17 @@ struct ComponentCodeTableTests {
         let t = try #require(HL7TableRegistry.table("0301", locale: .auLocalisation))
         for code in ["AUSHICPR", "AUSHIC", "AUSDVA", "AUSNATA", "AUSLSPN", "L", "M", "N", "ISO"] { #expect(t.contains(code)) }
     }
+
+    @Test("v2.3 tables printed only in the chapters are in the registry: HD.3 is checked on v2.3 too")
+    func v23ChapterTables() throws {
+        for number in ["0298", "0299", "0301", "0336"] {
+            #expect(HL7TableRegistry.table(number, version: .v2_3) != nil, "v2.3 Appendix A omits \(number)")
+        }
+        let t = try #require(HL7TableRegistry.table("0301", version: .v2_3))
+        #expect(t.contains("L") && t.contains("ISO") && t.isClosed)
+        #expect(DataTypeGrammarTable.grammar("HD", version: .v2_3)?.component(3)?.tables == ["0301"])
+        let bad = wire(version: "2.3").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^QQQ|FAC|")
+        #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
+        #expect(try tableIssues(wire(version: "2.3").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^ISO|FAC|")).isEmpty)
+    }
 }

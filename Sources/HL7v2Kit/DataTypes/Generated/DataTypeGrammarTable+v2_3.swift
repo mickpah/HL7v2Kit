@@ -104,7 +104,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 3, name: "From value", dataType: "NM", optionalityCode: "", tables: []),
             ComponentGrammar(index: 4, name: "To value", dataType: "NM", optionalityCode: "", tables: []),
             ComponentGrammar(index: 5, name: "Range units", dataType: "CE", optionalityCode: "", tables: []),
-            ComponentGrammar(index: 6, name: "Range type", dataType: "ID", optionalityCode: "", tables: []),
+            ComponentGrammar(index: 6, name: "Range type", dataType: "ID", optionalityCode: "", tables: ["0298"]),
         ]
     )
 
@@ -174,7 +174,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 1, name: "Entity identifier", dataType: "ST", optionalityCode: "", tables: []),
             ComponentGrammar(index: 2, name: "Namespace ID", dataType: "IS", optionalityCode: "", tables: []),
             ComponentGrammar(index: 3, name: "Universal ID", dataType: "ST", optionalityCode: "", tables: []),
-            ComponentGrammar(index: 4, name: "Universal ID type", dataType: "ID", optionalityCode: "", tables: []),
+            ComponentGrammar(index: 4, name: "Universal ID type", dataType: "ID", optionalityCode: "", tables: ["0301"]),
         ]
     )
 
@@ -195,7 +195,7 @@ extension DataTypeGrammarTable {
         components: [
             ComponentGrammar(index: 1, name: "Namespace ID", dataType: "IS", optionalityCode: "", tables: []),
             ComponentGrammar(index: 2, name: "Universal ID", dataType: "ST", optionalityCode: "", tables: []),
-            ComponentGrammar(index: 3, name: "Universal ID type", dataType: "ID", optionalityCode: "", tables: []),
+            ComponentGrammar(index: 3, name: "Universal ID type", dataType: "ID", optionalityCode: "", tables: ["0301"]),
         ]
     )
 
