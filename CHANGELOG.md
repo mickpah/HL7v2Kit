@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.7.2] — 2026-09-22
+
+**Documentation and tooling only; no behaviour change.** The spec's example messages are fully triaged.
+
 ### Docs — M23: required-field errors on the spec's example messages triaged
 
 - The 106 `requiredFieldMissing` errors the Validator reports on
