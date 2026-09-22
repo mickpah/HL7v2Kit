@@ -75,18 +75,32 @@ def triage(examples_path, report_path):
         declared[(e["source"], e["index"])] = fields[11].strip() if len(fields) > 11 else ""
     consistent = sum(1 for (src, _), v in declared.items() if "v" + v == src.split("/")[0])
     print(f"{consistent} of {len(declared)} examples declare the version of the chapter that prints them")
-    ranked = collections.Counter()
+    ranked, required = collections.Counter(), collections.Counter()
     for line in open(report_path):
         f = line.rstrip("\n").split("\t")
-        if len(f) < 6 or "valueNotInTable" not in f[3]:
+        if len(f) < 6:
             continue
         chapter = f[1].split("/")[0]
         if "v" + declared.get((f[1], int(f[2])), "") != chapter:
             continue
+        where = re.sub(r"\[\d+\]", "", f[4])
+        if "requiredFieldMissing" in f[3]:
+            required[(chapter, where)] += 1
         m = re.search(r'value "(.*?)" is not in HL7 Table (\d+)', f[5])
-        if m and re.fullmatch(r"[A-Za-z0-9_/-]{1,10}", m.group(1)) and not re.fullmatch(r"\d{6,}", m.group(1)):
-            ranked[(chapter, re.sub(r"\[\d+\]", "", f[4]), m.group(2), m.group(1))] += 1
+        if "valueNotInTable" in f[3] and m and re.fullmatch(r"[A-Za-z0-9_/-]{1,10}", m.group(1)) \
+                and not re.fullmatch(r"\d{6,}", m.group(1)):
+            ranked[(chapter, where, m.group(2), m.group(1))] += 1
+    print("-- table rejections worth a look (code-shaped values only):")
     for key, n in ranked.most_common(30):
+        print(f"{n:4} {key}")
+    # Triaged 2026-09-22 (M23): every frequent class was read against the print and the
+    # example. All were the example's fault — a value one field over (SCH-7 holding the
+    # reason SCH-6 requires; PID-6 holding the name PID-5 requires), or simply omitted
+    # (MSH-7 in 60 printed messages; OBX-11 in v2.3 CH12; DG1-6). The optionality audit
+    # (M19) had already proved each of those fields R in its own version. Re-triage only
+    # when a NEW location appears here.
+    print("-- required-field misses (all triaged as example damage as of M23):")
+    for key, n in required.most_common(30):
         print(f"{n:4} {key}")
 
 
