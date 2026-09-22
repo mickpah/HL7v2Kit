@@ -1604,17 +1604,22 @@ public struct Validator: Sendable {
                 return !v.isEmpty && v != "\"\""
             }
             for entry in entries {
-                guard let condition = entry.condition, !populated(entry.index),
-                      ComponentCondition.holds(condition, populated: populated) else { continue }
-                let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
-                                             componentIndex: component ?? entry.index,
-                                             subcomponentIndex: subcomponent(entry.index))
-                issues.append(ValidationIssue(
-                    severity: options.requiredComponentSeverity,
-                    code: .conditionalComponentMissing,
-                    location: location,
-                    message: "Conditional component \(location.pathDescription) ('\(entry.name)') in \(typeName) is empty while its condition holds: \(condition)."
-                ))
+                for (condition, severity, code) in [
+                    (entry.condition, Optional(options.requiredComponentSeverity), IssueCode.conditionalComponentMissing),
+                    (entry.conformanceCondition, options.conformanceConditionSeverity, IssueCode.conformanceConditionMissing),
+                ] {
+                    guard let condition, let severity, !populated(entry.index),
+                          ComponentCondition.holds(condition, populated: populated) else { continue }
+                    let location = IssueLocation(segmentID: segmentID, segmentIndex: segmentIndex, fieldIndex: fieldIndex,
+                                                 componentIndex: component ?? entry.index,
+                                                 subcomponentIndex: subcomponent(entry.index))
+                    issues.append(ValidationIssue(
+                        severity: severity,
+                        code: code,
+                        location: location,
+                        message: "Conditional component \(location.pathDescription) ('\(entry.name)') in \(typeName) is empty while its condition holds: \(condition)."
+                    ))
+                }
             }
         }
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
@@ -1622,7 +1627,7 @@ public struct Validator: Sendable {
             check(dataType.components, values: values, typeName: grammar.dataType, component: nil, subcomponent: { _ in nil })
             for entry in dataType.components where repetition.components.count >= entry.index {
                 guard let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version),
-                      nested.components.contains(where: { $0.condition != nil }) else { continue }
+                      nested.components.contains(where: { $0.condition != nil || $0.conformanceCondition != nil }) else { continue }
                 let subs = repetition.components[entry.index - 1].subcomponents.map { Optional($0.value) }
                 check(nested.components, values: subs, typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
                       component: entry.index, subcomponent: { $0 })

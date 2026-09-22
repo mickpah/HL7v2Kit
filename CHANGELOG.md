@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M27: the v2.7 conformance rules as an opt-in advisory tier
+
+- `ComponentGrammar.conformanceCondition` (additive, defaulted) carries the
+  32 "as of v2.7" rules M26 registered, in the same predicate language:
+  CWE / CNE / CF / CSU coding system when a code is valued, CX / XCN / PPN
+  assigning authority or jurisdiction when an identifier is valued, XCN.10
+  name type, XCN.13 identifier type, one of XTN.4 / .7 / .12. v2.8.2, plus
+  CSU.4 on v2.5.1 and v2.6.
+- `ValidationOptions.conformanceConditionSeverity: IssueSeverity?`, default
+  `nil`: nothing is reported unless it is set. Set it and each holding rule
+  on an empty component is reported as the new
+  `IssueCode.conformanceConditionMissing` at that severity; where the spec
+  states one sentence per component (CX.4 / .9 / .10), one issue per
+  component. `checkComponentGrammar = false` suppresses it.
+- `Resources/datatypes/conditions.json`: the `notModelledAsOfV27` block is
+  now `conformanceRules` and is applied by the extractor. Default validation
+  output is unchanged.
 
 ## [3.9.0] — 2026-09-22
 

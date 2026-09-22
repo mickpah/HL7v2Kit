@@ -268,6 +268,8 @@ struct ComponentSchema: Decodable {
     let length: String?
     /// M26: a cited predicate over sibling components, on components printed C.
     let condition: String?
+    /// M27: the same, for the "as of v2.7" rules checked only on opt-in.
+    let conformanceCondition: String?
     let tables: [String]?
 }
 
@@ -288,7 +290,8 @@ func renderDataTypeTable(versionSwiftName: String, sourceDir: String, types: [Da
             let tables = (c.tables ?? []).map { escapeStringLiteral($0) }.joined(separator: ", ")
             let length = c.length.map { escapeStringLiteral($0) } ?? "nil"
             let condition = c.condition.map { escapeStringLiteral($0) } ?? "nil"
-            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition)),"
+            let conformance = c.conformanceCondition.map { escapeStringLiteral($0) } ?? "nil"
+            return "            ComponentGrammar(index: \(c.index), name: \(escapeStringLiteral(c.name)), dataType: \(escapeStringLiteral(c.dataType ?? "")), optionalityCode: \(escapeStringLiteral(c.optionality)), tables: [\(tables)], length: \(length), condition: \(condition), conformanceCondition: \(conformance)),"
         }.joined(separator: "\n")
         return """
             private static let \(versionSwiftName)_\(t.dataType): DataTypeGrammar = DataTypeGrammar(

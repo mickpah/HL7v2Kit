@@ -35,9 +35,17 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// component is empty, ``IssueCode/conditionalComponentMissing`` is
     /// reported. M26.
     public let condition: String?
+    /// A stated condition of the same language that the specification's own
+    /// example messages violate: the "as of v2.7" conformance sentences (a
+    /// coding system whenever a code is valued, an assigning authority
+    /// whenever an identifier is valued, and kin). Never checked by default;
+    /// ``ValidationOptions/conformanceConditionSeverity`` opts in, reporting
+    /// ``IssueCode/conformanceConditionMissing``. The measurements are in
+    /// `Resources/datatypes/conditions.json`. M27.
+    public let conformanceCondition: String?
 
     /// Creates a component grammar entry.
-    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = [], length: String? = nil, condition: String? = nil) {
+    public init(index: Int, name: String, dataType: String, optionalityCode: String, tables: [String] = [], length: String? = nil, condition: String? = nil, conformanceCondition: String? = nil) {
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -45,6 +53,7 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
         self.tables = tables
         self.length = length
         self.condition = condition
+        self.conformanceCondition = conformanceCondition
     }
 }
 

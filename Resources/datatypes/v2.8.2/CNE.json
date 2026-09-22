@@ -108,7 +108,8 @@
       "name": "Coding System OID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "1 populated AND 3 empty"
     },
     {
       "index": 15,
@@ -130,7 +131,8 @@
       "name": "Alternate Coding System OID",
       "dataType": "ST",
       "optionality": "C",
-      "length": "199="
+      "length": "199=",
+      "conformanceCondition": "4 populated AND 6 empty"
     },
     {
       "index": 18,

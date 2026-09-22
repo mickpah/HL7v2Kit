@@ -65,6 +65,13 @@ public struct ValidationOptions: Sendable {
     /// init parameter: set it by mutation. M21.
     public var requiredComponentSeverity: IssueSeverity = .error
 
+    /// Severity for ``IssueCode/conformanceConditionMissing``, the "as of
+    /// v2.7" conditional-component rules (``ComponentGrammar/conformanceCondition``).
+    /// `nil`, the default, leaves them unchecked: the specification's own
+    /// v2.7+ example messages violate them in 62 to 100 percent of values.
+    /// Set it to report them as advisories. Not an init parameter. M27.
+    public var conformanceConditionSeverity: IssueSeverity? = nil
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
