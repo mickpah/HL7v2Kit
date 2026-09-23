@@ -1016,6 +1016,49 @@ extension Profile {
                     ),
                 ]
             ),
+            // M33 — the EI twins of what M32 shipped for HD, under the same
+            // NASH assertion. The ADRM's grouper reads "(HL7au:00044.3) EI
+            // datatype conformance points" with no field list, so the rules
+            // are datatype-wide; on the AU profile that reaches ORC-2/-3/-4
+            // and OBR-2/-3, the five EI fields HL7au:000006 / 000007 already
+            // require complete.
+            //
+            //   .3.4 — "the EI Universal ID component must contain the HPI-O
+            //          formatted as "1.2.36.1.2001.1003.0." concatenated
+            //          with the HPI-O". The sentence constrains the SHAPE,
+            //          not whose HPI-O it is: an identifier echoed from
+            //          another organisation carries that organisation's
+            //          HPI-O and satisfies it unchanged.
+            //   .3.3 — "the EI Universal ID Type component must be ISO".
+            //
+            // `allowEmpty` on the pattern because the completeness rules
+            // above already report a missing EI-3; without it one defect
+            // would be reported twice. The value-set track is populated-only
+            // already. HL7au:00044.3.2 (the HPOS/HI registered organisation
+            // name) still needs the directory and stays out.
+            CompositeOverride(
+                dataType: "EI",
+                // The 00044.3 series is scoped "Orders, Results, Referrals".
+                condition: "messageCode in (ORM, ORU, REF)",
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 4,
+                        allowedValues: ["ISO"],
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.3.3 (r2) — when using SMD with NASH certificates the EI Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
+                    ),
+                ],
+                componentPatterns: [
+                    ComponentPattern(
+                        component: 3,
+                        prefix: "1.2.36.1.2001.1003.0.",
+                        digitsAfterPrefix: 16,
+                        condition: "auNASHTransport populated",
+                        allowEmpty: true,
+                        specCitation: "HL7au:00044.3.4 (r2) — when using SMD with NASH certificates the EI Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
+                    ),
+                ]
+            ),
             CompositeOverride(
                 dataType: "CE",
                 // M6-D4: HL7au:00044.4 series is scoped to

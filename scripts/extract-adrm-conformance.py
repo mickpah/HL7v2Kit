@@ -84,11 +84,18 @@ def parse_appendix5(path):
 # plus the four pair-rules `ceCwePairRules` interpolates per composite.
 # M29/M30/M32 — points whose ADRM gate is a fact the wire does not carry, so
 # the caller asserts it through ValidationOptions. Shipped, but off by default.
+# Value is (text marker or None, note). The marker disambiguates a repeated
+# identifier: the ADRM numbers TWO rows `HL7au:00044.3.4` — the EI Universal ID
+# rule (r2) and a vendor-certificate rule — and only the first one ships.
 CALLER_ASSERTED = {
-    'HL7au:00050.1.5': 'shipped caller-asserted (M29): `ValidationOptions.auPathologySender`',
-    'HL7au:00044.4.3': 'shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended`',
-    'HL7au:00044.2.2': 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints',
-    'HL7au:00044.2.3': 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`',
+    'HL7au:00050.1.5': (None, 'shipped caller-asserted (M29): `ValidationOptions.auPathologySender`'),
+    'HL7au:00044.4.3': (None, 'shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended`'),
+    'HL7au:00044.2.2': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints'),
+    'HL7au:00044.2.3': (None, 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`'),
+    'HL7au:00044.3.4': ('Universal ID component',
+                        'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI; '
+                        'the sentence constrains the shape, not whose HPI-O it is'),
+    'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
 }
 
 SHIPPED = {
@@ -290,11 +297,9 @@ OUT_OF_SCOPE = [
     ('HL7au:00044.2.4',  'vendor X.509 certificate + provider-directory agreement'),
     ('HL7au:00044.2',    'transport addressing / NASH PKI'),
     ('HL7au:00044.3.2',  'EI twin of 00044.2.1 — needs the HI directory'),
-    ('HL7au:00044.3.3',  'EI twin of 00044.2.3, wire-decidable under `auNASHTransport`, but '
-                         'registered pending an EI scope pass: EI carries identifiers echoed '
-                         'from other organisations, whose HPI-O is not the sender\'s (M32)'),
-    ('HL7au:00044.3.4',  'EI twin of 00044.2.2 (first row) and of 00044.2.4 (second, duplicate '
-                         'number in the ADRM); same EI scope pass (M32)'),
+    ('HL7au:00044.3.4',  'the ADRM\'s SECOND row with this number: vendor X.509 certificate + '
+                         'provider-directory agreement (the first, the EI Universal ID rule, '
+                         'ships caller-asserted — M33)'),
     ('HL7au:00044.11.1.5.', 'URL construction from RP components (payload)'),
     ('HL7au:00045',      'secure-messaging agent behaviour'),
     ('HL7au:00110',      'provider-directory agreement'),
@@ -344,7 +349,9 @@ def classify(row):
     if i in PARTIAL:
         return ('PARTIAL', PARTIAL[i])
     if i in CALLER_ASSERTED:
-        return ('SHIPPED', CALLER_ASSERTED[i])
+        marker, note = CALLER_ASSERTED[i]
+        if marker is None or marker in row['text']:
+            return ('SHIPPED', note)
     if i in SHIPPED:
         return ('SHIPPED', '')
     if i in BASE:

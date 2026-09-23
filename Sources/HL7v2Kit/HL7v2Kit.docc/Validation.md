@@ -68,7 +68,7 @@ Three further switches are set by mutation, not the initialiser: ``ValidationOpt
 | --- | --- | --- |
 | `auPathologySender` | HL7au:00050.1.5 — OBX-6.3 must be `UCUM` on Results | the sender's discipline |
 | `auDisplayIntended` | HL7au:00044.4.3 — CE `<text>` must be valued | whether the location displays to a user |
-| `auNASHTransport` | HL7au:00044.2.2 / .2.3 — MSH-4 and MSH-6 Universal ID must be `1.2.36.1.2001.1003.0.` + a 16-digit HPI-O, type `ISO` | whether SMD with NASH certificates is in use |
+| `auNASHTransport` | HL7au:00044.2.2 / .2.3 on MSH-4 and MSH-6, and HL7au:00044.3.4 / .3.3 on every EI: the Universal ID must be `1.2.36.1.2001.1003.0.` + a 16-digit HPI-O, its type `ISO` | whether SMD with NASH certificates is in use |
 
 Each defaults to `false` and applies only under ``HL7Locale/auLocalisation``.
 

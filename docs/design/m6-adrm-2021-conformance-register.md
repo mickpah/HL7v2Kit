@@ -15,17 +15,17 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 70 | enforced by the `.auLocalisation` overlay today |
+| SHIPPED | 72 | enforced by the `.auLocalisation` overlay today |
 | PARTIAL | 14 | partly enforced — see each row's note for what is not |
 | BASE | 15 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
-| OUT | 79 | out of scope by nature (transport, payload, cross-message) |
+| OUT | 77 | out of scope by nature (transport, payload, cross-message) |
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (70)
+## SHIPPED (72)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -59,6 +59,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.1.3` |  | Senders | Orders, Results, Referrals | CX <identifier type code (ID)> component must be valued with a valid value from HL7 Table 0203 - Identifier type (see page 301). |  |
 | `HL7au:00044.2.2` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as "1.2.36.1.2001.1003.0." concatenated with the HPI-O. | shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints |
 | `HL7au:00044.2.3` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the HD Universal ID Type component must be "ISO". | shipped caller-asserted (M32): `ValidationOptions.auNASHTransport` |
+| `HL7au:00044.3.4` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID component must contain the HPI-O formatted as "1.2.36.1.2001.1003.0." concatenated with the HPI-O. | shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI; the sentence constrains the shape, not whose HPI-O it is |
+| `HL7au:00044.3.3` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID Type component must be "ISO". | shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI |
 | `HL7au:00044.4.1` |  | Senders | Orders, Results, Referrals | When an <identifier (ST)> component is specified, the <name of the coding system> must also be specified. |  |
 | `HL7au:00044.4.2` |  | Senders | Orders, Results, Referrals | If no <identifier (ST)> component is specified then no <name of coding system> (primary coding system) must be specified |  |
 | `HL7au:00044.4.3` |  | Senders | Orders, Results, Referrals | <text (ST)> component must be valued as what is intended for display to the user. (In some locations user display is not intended and the text may be blank.) | shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended` |
@@ -239,7 +241,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00101.8` |  | Receivers | Results, Referrals(L2) | Receiver systems must restrict access to attachments of trusted MIME types (the trusted MIME types may be configurable according to an organisation policy). | receiver behaviour — observed at runtime |
 | `HL7au:00104.2.2` |  | Receivers Senders | Referrals Referrals | The receiving system must present the referral message to intended recipient indicated by PRD-1 value of "IR". PRD-7 must have at least 1 repeat (for providers | receiver behaviour — observed at runtime |
 
-## OUT (79)
+## OUT (77)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -287,9 +289,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.2.1` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the HD Namespace ID component must contain the registered organisation name as registered by in the Medicare Australia HPOS/HI service. | the organisation name "as registered in the Medicare Australia HPOS/HI service" — needs the HI directory |
 | `HL7au:00044.2.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | vendor X.509 certificate + provider-directory agreement |
 | `HL7au:00044.3.2` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Namespace ID component must contain the registered organisation name as registered by in the Medicare Australia HPOS/HI service. | EI twin of 00044.2.1 — needs the HI directory |
-| `HL7au:00044.3.4` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID component must contain the HPI-O formatted as "1.2.36.1.2001.1003.0." concatenated with the HPI-O. | EI twin of 00044.2.2 (first row) and of 00044.2.4 (second, duplicate number in the ADRM); same EI scope pass (M32) |
-| `HL7au:00044.3.3` | r2 | Senders | Orders, Results, Referrals | When using SMD with NASH certificates the EI Universal ID Type component must be "ISO". | EI twin of 00044.2.3, wire-decidable under `auNASHTransport`, but registered pending an EI scope pass: EI carries identifiers echoed from other organisations, whose HPI-O is not the sender's (M32) |
-| `HL7au:00044.3.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | EI twin of 00044.2.2 (first row) and of 00044.2.4 (second, duplicate number in the ADRM); same EI scope pass (M32) |
+| `HL7au:00044.3.4` |  | Senders | Orders, Results, Referrals | When SMD is used with vendor based certificates and identifiers, then the components of the HD must match with content of the receiver as valued in the provider directory and also as identified in the organisation's X... | the ADRM's SECOND row with this number: vendor X.509 certificate + provider-directory agreement (the first, the EI Universal ID rule, ships caller-asserted — M33) |
 | `HL7au:00044.7.6` |  | Senders | Orders, Results, Referrals | XCN <given name (ST)> should be valued. | advisory ("should") |
 | `HL7au:00044.11.1.5.1` |  | Senders | Results, Referrals | When "URI" is specified in RP <application ID (HD)> component - <universal id type (ID)> sub- component value: the URL must be specified by the concatenation of the RP <application ID (HD)> component, <universal id (S... | URL construction from RP components (payload) |
 | `HL7au:00044.11.1.5.2` |  | Senders | Results, Referrals | When "URI" is specified in RP <application ID (HD)> component - <universal id type (ID)> sub- component value: the RP <application ID (HD)> component-<namespace id (IS)> sub-component must not be valued. | URL construction from RP components (payload) |
