@@ -62,7 +62,15 @@ let options = ValidationOptions(
 )
 ```
 
-Three further switches are set by mutation, not the initialiser: ``ValidationOptions/requiredComponentSeverity``, ``ValidationOptions/conformanceConditionSeverity`` (the opt-in v2.7 component rules), ``ValidationOptions/auPathologySender`` and ``ValidationOptions/auDisplayIntended``. The last two are caller assertions of facts no message carries: ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 must be `UCUM`) to pathology senders on Results, and exempts HL7au:00044.4.3 (CE `<text>` valued) where display is not intended. Set either to `true` under ``HL7Locale/auLocalisation`` and its rule applies; left `false` it is never reported.
+Three further switches are set by mutation, not the initialiser: ``ValidationOptions/requiredComponentSeverity``, ``ValidationOptions/conformanceConditionSeverity`` (the opt-in v2.7 component rules), ``ValidationOptions/auPathologySender``, ``ValidationOptions/auDisplayIntended`` and ``ValidationOptions/auNASHTransport``. The last three are caller assertions of facts no message carries, each gating an ADRM rule that is scoped on one:
+
+| Option | Rule it applies | The fact the wire lacks |
+| --- | --- | --- |
+| `auPathologySender` | HL7au:00050.1.5 — OBX-6.3 must be `UCUM` on Results | the sender's discipline |
+| `auDisplayIntended` | HL7au:00044.4.3 — CE `<text>` must be valued | whether the location displays to a user |
+| `auNASHTransport` | HL7au:00044.2.2 / .2.3 — MSH-4 and MSH-6 Universal ID must be `1.2.36.1.2001.1003.0.` + a 16-digit HPI-O, type `ISO` | whether SMD with NASH certificates is in use |
+
+Each defaults to `false` and applies only under ``HL7Locale/auLocalisation``.
 
 ## Filtering issues
 

@@ -1244,7 +1244,8 @@ public struct Validator: Sendable {
         guard let override = profile.fieldOverrides.first(where: {
             $0.segmentID == segmentID && $0.fieldIndex == fieldGrammar.index
         }) else { return }
-        guard !override.requiredComponents.isEmpty || !override.componentValueSets.isEmpty else { return }
+        guard !override.requiredComponents.isEmpty || !override.componentValueSets.isEmpty
+                || !override.componentPatterns.isEmpty else { return }
         // M6-D3: `requiredComponents` shares the override-level gate with
         // `profileUsage`. `componentValueSets` are gated individually
         // below — they can be scoped more narrowly than their field.
@@ -1318,6 +1319,38 @@ public struct Validator: Sendable {
                     citation: citation,
                     location: location,
                     message: "AU profile value-set rule violated at \(location.pathDescription)\(pathSuffix): expected one of [\(allowedList)] but got \"\(actual)\" (\(citation))",
+                    into: &issues
+                )
+            }
+            // Track 2b (M32): literal-shape restrictions. An EMPTY
+            // component fails, unlike the composite value-set track: a
+            // pattern states a shape the spec requires, and the rules that
+            // use one (HL7au:00044.2.2 under a NASH assertion, where
+            // HL7au:000043.1 spells MSH-4 out as
+            // "name^1.2.36.1.2001.1003.0.<hpio>^ISO") are violated by a
+            // missing identifier exactly as by a malformed one. Scope with
+            // `condition`, not with emptiness. Matches the FieldOverride
+            // value-set track, which does not skip empty either.
+            for pattern in override.componentPatterns {
+                if let gate = pattern.condition, !gate.isEmpty,
+                   !conditionTriggers(gate, in: segment, segmentIndex: segmentArrayIndex,
+                                      message: message, currentSegmentID: segmentID) {
+                    continue
+                }
+                let actual = valueSetScalarValue(in: repetition, component: pattern.component, subcomponent: nil)
+                guard let failure = pattern.failure(for: actual) else { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: occurrence,
+                    fieldIndex: fieldIndex,
+                    componentIndex: pattern.component
+                )
+                let citation = pattern.specCitation
+                    ?? "\(profile.locale.rawValue):\(segmentID)-\(fieldGrammar.index).\(pattern.component)"
+                appendProfileIssue(
+                    citation: citation,
+                    location: location,
+                    message: "AU profile shape rule violated at \(location.pathDescription): \(failure) (\(citation))",
                     into: &issues
                 )
             }
@@ -2114,6 +2147,9 @@ public struct Validator: Sendable {
         case "auDisplayIntended":
             // M30 — likewise.
             return ResolvedReferent(raw: options.auDisplayIntended ? "true" : "", isPopulated: options.auDisplayIntended)
+        case "auNASHTransport":
+            // M32 — likewise ("when using SMD with NASH certificates").
+            return ResolvedReferent(raw: options.auNASHTransport ? "true" : "", isPopulated: options.auNASHTransport)
         default:
             break
         }

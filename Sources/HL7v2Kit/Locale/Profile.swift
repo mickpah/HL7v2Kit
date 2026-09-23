@@ -370,6 +370,9 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// narrowings on any component". v0.5-S5-C.
     let componentValueSets: [ComponentValueSet]
 
+    /// Literal-shape restrictions on components of this field. M32.
+    let componentPatterns: [ComponentPattern]
+
     /// Per-repetition key⇒value correspondences (M6-B-8). Used for the
     /// PRD-7 authority⇒qualifier pairs (HL7au:00104.7.1.4) — PRD-7
     /// repeats, so each repetition pairs its own key and value.
@@ -391,6 +394,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         condition: String? = nil,
         requiredComponents: [Int] = [],
         componentValueSets: [ComponentValueSet] = [],
+        componentPatterns: [ComponentPattern] = [],
         componentCorrespondences: [ComponentCorrespondence] = [],
         specCitation: String? = nil
     ) {
@@ -400,6 +404,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.condition = condition
         self.requiredComponents = requiredComponents
         self.componentValueSets = componentValueSets
+        self.componentPatterns = componentPatterns
         self.componentCorrespondences = componentCorrespondences
         self.specCitation = specCitation
     }
@@ -452,6 +457,69 @@ struct ComponentValueSet: Sendable, Equatable, Hashable {
         self.allowedValues = allowedValues
         self.condition = condition
         self.specCitation = specCitation
+    }
+}
+
+/// A literal-shape restriction on a component of a populated field:
+/// "the value must begin with `prefix`, and what follows must be
+/// exactly `digitsAfterPrefix` digits." Both parameters come from the
+/// spec text — nothing is inferred, and a nil parameter is not checked.
+///
+/// Expresses HL7au:00044.2.2, whose sentence is a concatenation rather
+/// than a value set: the HD Universal ID "must contain the HPI-O
+/// formatted as `1.2.36.1.2001.1003.0.` concatenated with the HPI-O",
+/// with the HPI-O's own width given by HL7au:000043.1 ("a 16-digit
+/// number"). Deliberately not a regular expression: a cited prefix and
+/// a cited digit count are the whole of what the ADRM states, and a
+/// pattern language would invite rules the spec does not support. M32.
+struct ComponentPattern: Sendable, Equatable, Hashable {
+    /// The 1-based component index this restriction applies to.
+    let component: Int
+
+    /// Literal prefix the value must carry, verbatim from the spec.
+    let prefix: String?
+
+    /// Exact number of digits that must follow `prefix` (or, when
+    /// `prefix` is nil, make up the whole value).
+    let digitsAfterPrefix: Int?
+
+    /// Optional v0.7-DSL gate (ADR-008/009), as on ``ComponentValueSet``.
+    let condition: String?
+
+    /// Spec citation for this rule. Surfaced in
+    /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
+    let specCitation: String?
+
+    init(
+        component: Int,
+        prefix: String? = nil,
+        digitsAfterPrefix: Int? = nil,
+        condition: String? = nil,
+        specCitation: String? = nil
+    ) {
+        self.component = component
+        self.prefix = prefix
+        self.digitsAfterPrefix = digitsAfterPrefix
+        self.condition = condition
+        self.specCitation = specCitation
+    }
+
+    /// Why `value` fails this rule, or `nil` when it satisfies it. An
+    /// empty value fails: a pattern states a required shape, so scope it
+    /// with `condition` rather than relying on emptiness to skip.
+    /// Pure, so the Validator and its tests read the same logic.
+    func failure(for value: String) -> String? {
+        var rest = Substring(value)
+        if let prefix, !prefix.isEmpty {
+            guard rest.hasPrefix(prefix) else { return "expected it to begin with \"\(prefix)\"" }
+            rest = rest.dropFirst(prefix.count)
+        }
+        if let digitsAfterPrefix {
+            guard rest.count == digitsAfterPrefix, rest.allSatisfy(\.isNumber) else {
+                return "expected \(digitsAfterPrefix) digits after \"\(prefix ?? "")\", found \"\(rest)\""
+            }
+        }
+        return nil
     }
 }
 

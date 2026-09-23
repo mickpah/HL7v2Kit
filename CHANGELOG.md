@@ -7,7 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M32: AU NASH transport assertion
+
+- `ValidationOptions.auNASHTransport: Bool` (default `false`; set by
+  mutation). ADRM-2021 gates its HD addressing points on "when using SMD
+  with NASH certificates", which no message states. Asserted under
+  `HL7Locale.auLocalisation`, MSH-4 and MSH-6 are checked against
+  **HL7au:00044.2.2** (Universal ID = `"1.2.36.1.2001.1003.0."` followed by
+  the HPI-O, whose 16-digit width comes from **HL7au:000043.1**) and
+  **HL7au:00044.2.3** (Universal ID Type = `"ISO"`). The ADRM's own grouper
+  scopes the family to exactly those two fields. All 8 HPI-O OID values the
+  ADRM prints satisfy the rule; the 3 remaining mentions are prose quotes of
+  the root.
+- `ComponentPattern` (internal): a literal prefix plus a digit count on a
+  component, both taken verbatim from spec text. Deliberately not a regular
+  expression — a cited prefix and a cited width are all the ADRM states. An
+  empty component fails, because the rules that use one state a required
+  shape; scope with `condition`, not with emptiness.
+- The profile condition language gains the noun `auNASHTransport`.
+
+### Changed
+
+- `scripts/extract-adrm-conformance.py` now carries the caller-asserted
+  verdicts, so `docs/design/m6-adrm-2021-conformance-register.md` is once
+  again purely generated: the M29 and M30 rows had been hand-edited into a
+  file whose header forbids it. Counts move to 70 shipped / 14 partial /
+  15 base / 8 registered / 79 out, and the remaining NASH rows carry their
+  specific reason instead of a shared "transport addressing / NASH PKI" —
+  including `HL7au:00043.2`, which the ADRM marks as applying only to SMD
+  Agent implementers.
 
 ## [3.12.0] — 2026-09-23
 
