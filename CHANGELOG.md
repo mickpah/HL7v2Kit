@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M29: AU pathology-sender assertion
+
+- `ValidationOptions.auPathologySender: Bool` (default `false`; set by
+  mutation). ADRM-2021 scopes HL7au:00050.1.5 (the OBX-6 Units coding
+  system must be `UCUM`, Results) to "Senders (Pathology only)", a fact the
+  wire does not carry. Asserted under `HL7Locale.auLocalisation`, an ORU
+  OBX-6 whose third component is anything but `UCUM` reports
+  `profileConstraintViolation` at OBX-6.3; units with no coding system
+  count (they are not UCUM); an OBX with no units at all is silent.
+  Unasserted, nothing changes. Same pattern as the M27 opt-in tier: a rule
+  the wire cannot decide fires on a fact the caller supplies.
+- The profile condition language gains the message-context noun
+  `auPathologySender`.
 
 ## [3.11.0] — 2026-09-22
 

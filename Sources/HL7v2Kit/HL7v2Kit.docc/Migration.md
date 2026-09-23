@@ -104,6 +104,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.9.0 | `ComponentGrammar.condition`, `IssueCode.conditionalComponentMissing` (additive; open enum). 36 conditional-component rules now checked at `requiredComponentSeverity`. |
 | v3.10.0 | `ComponentGrammar.conformanceCondition`, `ValidationOptions.conformanceConditionSeverity` (default `nil`), `IssueCode.conformanceConditionMissing` (additive; open enum). Default output unchanged. |
 | v3.11.0 | `repeated` token in the condition language (internal evaluator; no API change). v2.8.2 XAD.7 now reported as `conditionalComponentMissing` when the field repeats without a type. |
+| *Unreleased* | `ValidationOptions.auPathologySender` (additive, default `false`): HL7au:00050.1.5 applied on the caller's assertion. Default output unchanged. |
 
 ## The code-table check is on by default (ADR-016)
 
