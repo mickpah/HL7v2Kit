@@ -763,6 +763,32 @@ public struct Validator: Sendable {
                     into: &issues
                 )
             }
+            // Track 4b (M33): literal-shape restrictions, the composite twin
+            // of the FieldOverride track M32 added. Emptiness policy is the
+            // rule's own (`ComponentPattern.allowEmpty`).
+            for pattern in composite.componentPatterns {
+                if let gate = pattern.condition, !gate.isEmpty,
+                   !conditionTriggers(gate, in: segment, segmentIndex: segmentArrayIndex,
+                                      message: message, currentSegmentID: segmentID) {
+                    continue
+                }
+                let actual = valueSetScalarValue(in: repetition, component: pattern.component, subcomponent: nil)
+                guard let failure = pattern.failure(for: actual) else { continue }
+                let location = IssueLocation(
+                    segmentID: segmentID,
+                    segmentIndex: segmentIndex,
+                    fieldIndex: fieldIndex,
+                    componentIndex: pattern.component
+                )
+                let citation = pattern.specCitation
+                    ?? "\(profile.locale.rawValue):\(effectiveDataType).\(pattern.component)"
+                appendProfileIssue(
+                    citation: citation,
+                    location: location,
+                    message: "AU profile shape rule violated at \(location.pathDescription): \(failure) (\(citation))",
+                    into: &issues
+                )
+            }
             // Track 5: component value sets (allow lists) — M6-B-5.
             // POPULATED-ONLY: an empty (sub)component does not fire;
             // presence is track 1's job, and firing here too would

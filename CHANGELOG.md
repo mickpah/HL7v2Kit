@@ -7,7 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-*(nothing yet)*
+### Added — M33: the EI half of the NASH transport assertion
+
+- Under the same `ValidationOptions.auNASHTransport`, **HL7au:00044.3.4**
+  (the EI Universal ID must be `"1.2.36.1.2001.1003.0."` + the 16-digit
+  HPI-O) and **HL7au:00044.3.3** (its type must be `"ISO"`) now apply
+  datatype-wide on EI, as the ADRM's "EI datatype conformance points"
+  grouper states — reaching ORC-2/-3/-4 and OBR-2/-3 on the AU profile.
+- The scope objection recorded by M32 was wrong and is retracted: the
+  sentence constrains the *shape* of the universal ID, not whose HPI-O it
+  is ("must contain the HPI-O", not "the sender's"), so an identifier
+  echoed from another organisation carries that organisation's HPI-O and
+  satisfies the rule unchanged. The 1 distinct EI universal ID the ADRM
+  prints satisfies it.
+- `ComponentPattern.allowEmpty` (internal, default `false`): the EI rules
+  set it, because HL7au:000006 / 000007 already require all four EI
+  components on all five AU EI fields, so firing on an empty universal ID
+  would report one defect twice. MSH-4 / MSH-6 keep `false` — HL7au:000043.1
+  states a whole required form there and no completeness rule covers it.
+- `CompositeOverride.componentPatterns` (internal): the composite twin of
+  the field-level collection M32 added.
+
+### Changed
+
+- `scripts/extract-adrm-conformance.py` can now discriminate a repeated
+  conformance identifier by its text. The ADRM numbers **two** rows
+  `HL7au:00044.3.4` — the EI Universal ID rule and a vendor-certificate
+  rule — and only the first ships. Counts move to 72 shipped / 14 partial /
+  15 base / 8 registered / 77 out.
 
 ## [3.13.0] — 2026-09-23
 

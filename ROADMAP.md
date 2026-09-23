@@ -16,9 +16,9 @@ This file is intentionally higher-altitude than NEXT_STEPS. It records *directio
 
 | | |
 |---|---|
-| Last updated | 2026-09-23 (`v3.13.0` released) |
+| Last updated | 2026-09-23 (M33 merged, unreleased; `v3.13.0` tagged) |
 | Current release | **`v3.13.0`** (2026-09-23) — AU NASH transport assertion for 00044.2.2 / .2.3 (M32), on top of `v3.12.0`: AU caller assertions for 00050.1.5 and 00044.4.3 (M29, M30), on top of `v3.11.0`: v2.8.2 XAD.7 checked when the field repeats (M28), on top of `v3.10.0`: the 32 v2.7 conditional rules as an opt-in tier (M27), on top of `v3.9.0`: conditional components checked where the spec states the condition, 36 rules; the "as of v2.7" family registered with measurements (M26), on top of `v3.8.0`: printed lengths recorded (M25), on top of `v3.7.3`: four v2.3 chapter-only tables added (M24), on top of `v3.7.2`: docs only (M23), on top of `v3.7.1`: repeatability audited per version (M22), on top of `v3.7.0`: `requiredComponentSeverity` and the name audit (M20, M21), on top of `v3.6.5`: optionality audited per version, 30 fields corrected (M19), on top of `v3.6.4`: OBX-2 waveform value types fixed and the spec's example messages run through the Validator (M18), on top of `v3.6.3`: the spec's printed datatype examples as a standing audit, `NA.1` and Table 0528 `AHS` fixed (M17), on top of `v3.6.2`: HD's universal ID and type valued together and the spec's `RANDOM` example fixed (M16), on top of `v3.6.1`: three either-or component rules that rejected the spec's own examples removed (M15), on top of `v3.6.0`: required components now follow each version's printed component table (M14), on top of `v3.5.0`: code-table checks at field, component and subcomponent level on all six versions (the registry of `v3.3.0`, the component grammar of `v3.4.0`, extended to nested composites, OBX-5 and the prose-defined v2.3 to v2.4); the AU VMR sub-ID tree; AU locale renderings of Tables 0074 / 0125 / 0200 / 0203 / 0211 / 0301 / 0363. Additive under ADR-014. **188 typed segments, 853 schemas, six versions**; AU profile 104/104 accounted (66 shipped / 13 partial / 15 base / 10 registered), plus ADRM-prose rules P-1 to P-10. The public push has not happened. |
-| Next planned cycle | **None scheduled.** Gap closure plan delivered M29, M30 and M32; M31 withdrawn. Open owner decision: the EI scope pass (HL7au:00044.3.3 / .3.4). |
+| Next planned cycle | **None scheduled.** Gap closure plan delivered M29, M30, M32 and M33; M31 withdrawn. No open decisions. |
 | Stability clock | The 1.x additive-only contract (ADR-014) **closed at R10** — the first exercise of the "waits for 2.0" lane — and **`v2.0.0` shipped it (2026-08-28)**. Additive-only is **in force again for the 2.x line** (see the ADR-014 addendum + `Migration.md` → "The 2.0 boundary"). |
 | Guiding requirements | the working notes project requirements #1–#4 (feature-complete over AU-specific; integrator primary-reference tool; honesty over completeness; no known-incorrect predicate ships). **Sequencing** is AU-first as of 2026-08-23 (M5); **completeness** is unchanged — see `docs/design/deferred-coverage-backlog.md`. |
 
@@ -293,6 +293,10 @@ Validator could not carry.*
 ### M27 — v2.7 conformance rules as an opt-in tier **CLOSED (2026-09-22; released in `v3.10.0`)**
 
 - **Outcome:** the 32 rules M26 registered ship on `ComponentGrammar.conformanceCondition`, reported as `conformanceConditionMissing` only when `conformanceConditionSeverity` is set. Default output unchanged.
+
+### M33 — the EI half of the NASH assertion **CLOSED (2026-09-23; merged, unreleased)**
+
+- **Outcome:** HL7au:00044.3.4 / .3.3 ship datatype-wide on EI under `auNASHTransport`. The scope objection M32 recorded was retracted on the spec text: the sentence constrains the universal ID's shape, not whose HPI-O it is. `ComponentPattern.allowEmpty` prevents double-reporting what HL7au:000006 / 000007 already require.
 
 ### M32 — AU NASH transport assertion **CLOSED (2026-09-23; released in `v3.13.0`)**
 

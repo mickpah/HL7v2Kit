@@ -170,6 +170,9 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
     /// component as both "must be populated" and "not in the table".
     let componentValueSets: [ComponentValueSet]
 
+    /// Literal-shape restrictions on components of this composite. M33.
+    let componentPatterns: [ComponentPattern]
+
     /// Per-repetition key⇒value correspondences (M6-B-8). Used for the
     /// ED/RP subtype⇒type points (HL7au:00044.10.1.5/.6, .11.1.5/.6).
     let componentCorrespondences: [ComponentCorrespondence]
@@ -191,6 +194,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         componentInequalities: [ComponentInequality] = [],
         valueConditionals: [ComponentValueConditional] = [],
         componentValueSets: [ComponentValueSet] = [],
+        componentPatterns: [ComponentPattern] = [],
         componentCorrespondences: [ComponentCorrespondence] = [],
         timezoneRequiredCitation: String? = nil
     ) {
@@ -201,6 +205,7 @@ struct CompositeOverride: Sendable, Equatable, Hashable {
         self.componentInequalities = componentInequalities
         self.valueConditionals = valueConditionals
         self.componentValueSets = componentValueSets
+        self.componentPatterns = componentPatterns
         self.componentCorrespondences = componentCorrespondences
         self.timezoneRequiredCitation = timezoneRequiredCitation
     }
@@ -486,6 +491,17 @@ struct ComponentPattern: Sendable, Equatable, Hashable {
     /// Optional v0.7-DSL gate (ADR-008/009), as on ``ComponentValueSet``.
     let condition: String?
 
+    /// Whether an empty component satisfies the rule. `false` (the default)
+    /// is for a spec sentence that states a whole required form, so a
+    /// missing value violates it: HL7au:000043.1 spells MSH-4 out as
+    /// `"name^1.2.36.1.2001.1003.0.<hpio>^ISO"`, and MSH-4 carries no
+    /// separate completeness rule. `true` is for a sentence that constrains
+    /// only the shape of a value that some other rule requires to be
+    /// present: the EI twins (HL7au:00044.3.4) sit on fields where
+    /// HL7au:000006 / 000007 already require all four components, so
+    /// firing on empty would report one defect twice. M33.
+    let allowEmpty: Bool
+
     /// Spec citation for this rule. Surfaced in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
@@ -495,20 +511,23 @@ struct ComponentPattern: Sendable, Equatable, Hashable {
         prefix: String? = nil,
         digitsAfterPrefix: Int? = nil,
         condition: String? = nil,
+        allowEmpty: Bool = false,
         specCitation: String? = nil
     ) {
         self.component = component
         self.prefix = prefix
         self.digitsAfterPrefix = digitsAfterPrefix
         self.condition = condition
+        self.allowEmpty = allowEmpty
         self.specCitation = specCitation
     }
 
     /// Why `value` fails this rule, or `nil` when it satisfies it. An
-    /// empty value fails: a pattern states a required shape, so scope it
-    /// with `condition` rather than relying on emptiness to skip.
+    /// empty value fails unless ``allowEmpty``; scope *when* the rule
+    /// applies with `condition`.
     /// Pure, so the Validator and its tests read the same logic.
     func failure(for value: String) -> String? {
+        if value.isEmpty { return allowEmpty ? nil : "expected a value" }
         var rest = Substring(value)
         if let prefix, !prefix.isEmpty {
             guard rest.hasPrefix(prefix) else { return "expected it to begin with \"\(prefix)\"" }
