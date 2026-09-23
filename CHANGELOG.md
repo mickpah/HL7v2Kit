@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+*(nothing yet)*
+
+## [3.12.0] — 2026-09-23
+
 ### Added — M29: AU pathology-sender assertion
 
 - `ValidationOptions.auPathologySender: Bool` (default `false`; set by
