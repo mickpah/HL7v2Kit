@@ -82,6 +82,15 @@ def parse_appendix5(path):
 
 # Points the `.auLocalisation` profile enforces today. Literal citations
 # plus the four pair-rules `ceCwePairRules` interpolates per composite.
+# M29/M30/M32 — points whose ADRM gate is a fact the wire does not carry, so
+# the caller asserts it through ValidationOptions. Shipped, but off by default.
+CALLER_ASSERTED = {
+    'HL7au:00050.1.5': 'shipped caller-asserted (M29): `ValidationOptions.auPathologySender`',
+    'HL7au:00044.4.3': 'shipped caller-asserted (M30): `ValidationOptions.auDisplayIntended`',
+    'HL7au:00044.2.2': 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`; prefix + the 16-digit HPI-O of HL7au:000043.1, honoured by all 8 OID values the ADRM prints',
+    'HL7au:00044.2.3': 'shipped caller-asserted (M32): `ValidationOptions.auNASHTransport`',
+}
+
 SHIPPED = {
     'HL7au:000003', 'HL7au:000004.1', 'HL7au:000005', 'HL7au:000006',
     'HL7au:000007', 'HL7au:000008', 'HL7au:000008.1',
@@ -135,6 +144,9 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
+    'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
+                      '(`auNASHTransport`); the "registered organisation name in HI service" half '
+                      'needs the HPOS/HI directory and stays out',
     'HL7au:000024.2': 'enforced on Orders/Results as part of the MSH-2 '
                       'literal pin; unenforced on Referrals, where .3/.4/.5 '
                       'do not apply and pinning the whole literal would '
@@ -236,8 +248,7 @@ BASE = {
 # 000022.1 / 000022.3 — MOVED OUT at M8-C (2026-09-17): BatchValidator
 #   shipped; .3 is SHIPPED, .1 is PARTIAL (see their entries above).
 REGISTERED = {'HL7au:000001', 'HL7au:00044.2', 'HL7au:00104.7.2.1',
-              'HL7au:00044.4.3', 'HL7au:00044.4.7', 'HL7au:00044.5.7',
-              'HL7au:00050.1.5',
+              'HL7au:00044.4.7', 'HL7au:00044.5.7',
               'HL7au:00100.1', 'HL7au:000008.1.5', 'HL7au:000034.3',
               'HL7au:00044.6.7'}
 
@@ -269,12 +280,21 @@ OUT_OF_SCOPE = [
     ('HL7au:000008.2.4', 'rendered-payload content (PDF/RTF/FT)'),
     ('HL7au:000008.2',   'semantic agreement between rendered and atomic data'),
     ('HL7au:000001',     'transport addressing / SMD directory'),
+    ('HL7au:00043.2',    'anti-spoofing against the SMD certificate; the ADRM marks it '
+                         '"applies only to SMD Agent implementers ... before handing off '
+                         'a the message to the receiving system"'),
     ('HL7au:000043',     'transport addressing / NASH PKI'),
     ('HL7au:00043',      'transport addressing / SMD directory'),
+    ('HL7au:00044.2.1',  'the organisation name "as registered in the Medicare Australia '
+                         'HPOS/HI service" — needs the HI directory'),
+    ('HL7au:00044.2.4',  'vendor X.509 certificate + provider-directory agreement'),
     ('HL7au:00044.2',    'transport addressing / NASH PKI'),
-    ('HL7au:00044.3.2',  'transport addressing / NASH PKI'),
-    ('HL7au:00044.3.3',  'transport addressing / NASH PKI'),
-    ('HL7au:00044.3.4',  'transport addressing / NASH PKI'),
+    ('HL7au:00044.3.2',  'EI twin of 00044.2.1 — needs the HI directory'),
+    ('HL7au:00044.3.3',  'EI twin of 00044.2.3, wire-decidable under `auNASHTransport`, but '
+                         'registered pending an EI scope pass: EI carries identifiers echoed '
+                         'from other organisations, whose HPI-O is not the sender\'s (M32)'),
+    ('HL7au:00044.3.4',  'EI twin of 00044.2.2 (first row) and of 00044.2.4 (second, duplicate '
+                         'number in the ADRM); same EI scope pass (M32)'),
     ('HL7au:00044.11.1.5.', 'URL construction from RP components (payload)'),
     ('HL7au:00045',      'secure-messaging agent behaviour'),
     ('HL7au:00110',      'provider-directory agreement'),
@@ -323,6 +343,8 @@ def classify(row):
                 if row['grouper'] else 'empty row')
     if i in PARTIAL:
         return ('PARTIAL', PARTIAL[i])
+    if i in CALLER_ASSERTED:
+        return ('SHIPPED', CALLER_ASSERTED[i])
     if i in SHIPPED:
         return ('SHIPPED', '')
     if i in BASE:

@@ -67,6 +67,75 @@ extension Profile {
             //   universal40 = "messageCode in (ORM, ORU, REF, RRI, ACK)"
             //   orders     = "messageCode in (ORM, ORU)"
             //   referrals  = "messageCode in (REF, RRI)"
+            // M32 — the wire-decidable half of the NASH/SMD addressing
+            // family, on the two fields the ADRM's own grouper names:
+            // "(HL7au:00044.2) HD Datatype conformance points for MSH-4,
+            // and MSH-6". Every point in the family is gated "when using
+            // SMD with NASH certificates", a transport fact absent from
+            // the wire, so ValidationOptions.auNASHTransport carries it.
+            //
+            //   .2.2 — "the HD Universal ID component must contain the
+            //          HPI-O formatted as "1.2.36.1.2001.1003.0."
+            //          concatenated with the HPI-O". The HPI-O's width
+            //          comes from HL7au:000043.1, which spells MSH-4 out
+            //          in full: "...^1.2.36.1.2001.1003.0.<hpio>^ISO"
+            //          where <hpio> is a 16-digit number.
+            //   .2.3 — "the HD Universal ID Type component must be ISO".
+            //
+            // Siblings deliberately NOT shipped: .2.1 and 00044.3.2 name
+            // the organisation name "as registered in the Medicare
+            // Australia HPOS/HI service" (needs the directory); .2.4 and
+            // the second .3.4 compare against a vendor X.509 certificate;
+            // 00043.2 is an anti-spoofing check the ADRM marks "applies
+            // only to SMD Agent implementers ... before handing off a the
+            // message to the receiving system". The EI twins (00044.3.3 /
+            // .3.4) are registered pending a scope pass: EI carries
+            // identifiers echoed from other organisations, whose HPI-O is
+            // not the sender's, so a datatype-wide rule would over-fire.
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 4,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["ISO"],
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
+                    ),
+                ],
+                componentPatterns: [
+                    ComponentPattern(
+                        component: 2,
+                        prefix: "1.2.36.1.2001.1003.0.",
+                        digitsAfterPrefix: 16,
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
+                    ),
+                ],
+                specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
+            ),
+            FieldOverride(
+                segmentID: "MSH",
+                fieldIndex: 6,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["ISO"],
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.3 (r2) — when using SMD with NASH certificates the HD Universal ID Type component must be \"ISO\". Applied on the caller's NASH-transport assertion."
+                    ),
+                ],
+                componentPatterns: [
+                    ComponentPattern(
+                        component: 2,
+                        prefix: "1.2.36.1.2001.1003.0.",
+                        digitsAfterPrefix: 16,
+                        condition: "auNASHTransport populated",
+                        specCitation: "HL7au:00044.2.2 (r2) — when using SMD with NASH certificates the HD Universal ID component must contain the HPI-O formatted as \"1.2.36.1.2001.1003.0.\" concatenated with the HPI-O; the HPI-O is a 16-digit number (HL7au:000043.1). Applied on the caller's NASH-transport assertion."
+                    ),
+                ],
+                specCitation: "HL7au:00044.2 — HD datatype conformance points for MSH-4 and MSH-6 (caller-asserted NASH transport)"
+            ),
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 12,

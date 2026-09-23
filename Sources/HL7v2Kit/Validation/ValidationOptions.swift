@@ -89,6 +89,19 @@ public struct ValidationOptions: Sendable {
     /// it under ``HL7Locale/auLocalisation``. Not an init parameter. M30.
     public var auDisplayIntended: Bool = false
 
+    /// The caller asserts that the message travels by Secure Message
+    /// Delivery secured with NASH certificates. ADRM-2021 gates its HD
+    /// addressing points on exactly that — HL7au:00044.2.2 (the MSH-4 /
+    /// MSH-6 Universal ID must be `"1.2.36.1.2001.1003.0."` followed by
+    /// the 16-digit HPI-O, per HL7au:000043.1) and HL7au:00044.2.3 (the
+    /// Universal ID Type must be `"ISO"`) — and the transport is not on
+    /// the wire. `false`, the default, leaves them unchecked; `true`
+    /// applies them under ``HL7Locale/auLocalisation``. The sibling
+    /// points that name the HPOS/HI registered organisation name, or a
+    /// vendor X.509 certificate, need a directory and stay out of scope.
+    /// Not an init parameter. M32.
+    public var auNASHTransport: Bool = false
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
