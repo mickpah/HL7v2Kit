@@ -80,6 +80,15 @@ public struct ValidationOptions: Sendable {
     /// parameter. M29.
     public var auPathologySender: Bool = false
 
+    /// The caller asserts that the message's coded elements are intended
+    /// for display to a user. ADRM-2021 HL7au:00044.4.3 requires the CE
+    /// `<text>` component to be valued "as what is intended for display",
+    /// with the carve-out that "in some locations user display is not
+    /// intended and the text may be blank"; the locations are not on the
+    /// wire. `false`, the default, leaves the rule unchecked; `true` applies
+    /// it under ``HL7Locale/auLocalisation``. Not an init parameter. M30.
+    public var auDisplayIntended: Bool = false
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,

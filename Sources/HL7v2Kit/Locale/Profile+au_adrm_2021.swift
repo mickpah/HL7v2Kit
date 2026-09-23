@@ -952,7 +952,21 @@ extension Profile {
                 // M6-D4: HL7au:00044.4 series is scoped to
                 // "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
-                requiredComponents: [],
+                requiredComponents: [
+                    // M30 — HL7au:00044.4.3: CE-2 <text> "must be valued as
+                    // what is intended for display to the user. (In some
+                    // locations user display is not intended and the text
+                    // may be blank.)" The locations are not on the wire;
+                    // the caller asserts display is intended through
+                    // ValidationOptions.auDisplayIntended. Unlike the CNE
+                    // and CWE text rules (44.5.3, 44.6.3), which carry no
+                    // carve-out and ship unconditionally.
+                    ComponentRequirement(
+                        component: 2,
+                        specCitation: "HL7au:00044.4.3 — CE <text> component must be valued as what is intended for display to the user; applied on the caller's display-intended assertion (the ADRM exempts locations where display is not intended)",
+                        condition: "auDisplayIntended populated"
+                    ),
+                ],
                 pairRules: ceCwePairRules(citePrefix: "HL7au:00044.4"),
                 componentInequalities: [
                     ComponentInequality(

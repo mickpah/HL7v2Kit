@@ -21,6 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The profile condition language gains the message-context noun
   `auPathologySender`.
 
+### Added — M30: AU display-intended assertion
+
+- `ValidationOptions.auDisplayIntended: Bool` (default `false`; set by
+  mutation). HL7au:00044.4.3 requires the CE `<text>` component "valued as
+  what is intended for display to the user", exempting locations where
+  display is not intended; the locations are not on the wire. Asserted
+  under `HL7Locale.auLocalisation`, a populated CE with no text reports
+  `profileConstraintViolation` at CE-2 on Orders, Results and Referrals.
+  The CNE and CWE text rules (44.5.3, 44.6.3) carry no carve-out and were
+  already unconditional.
+- `ComponentRequirement.condition` (internal): a DSL gate on one required
+  component inside a composite override. Message-context noun
+  `auDisplayIntended`.
+
 ## [3.11.0] — 2026-09-22
 
 ### Added — M28: XAD.7 Address Type when the field repeats
