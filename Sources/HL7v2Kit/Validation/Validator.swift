@@ -656,6 +656,11 @@ public struct Validator: Sendable {
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
             // Track 1: required-components (v0.5-S5-B-3).
             for requirement in composite.requiredComponents {
+                if let gate = requirement.condition, !gate.isEmpty,
+                   !conditionTriggers(gate, in: segment, segmentIndex: segmentArrayIndex,
+                                      message: message, currentSegmentID: segmentID) {
+                    continue
+                }
                 if isComponentPopulated(repetition,
                                         componentIndex: requirement.component,
                                         subcomponentIndex: requirement.subcomponent) {
@@ -2106,6 +2111,9 @@ public struct Validator: Sendable {
         case "auPathologySender":
             // M29 — a caller assertion, not a wire property (see ValidationOptions).
             return ResolvedReferent(raw: options.auPathologySender ? "true" : "", isPopulated: options.auPathologySender)
+        case "auDisplayIntended":
+            // M30 — likewise.
+            return ResolvedReferent(raw: options.auDisplayIntended ? "true" : "", isPopulated: options.auDisplayIntended)
         default:
             break
         }

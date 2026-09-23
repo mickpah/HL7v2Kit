@@ -260,10 +260,17 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`.
     let specCitation: String?
 
-    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil) {
+    /// Optional gate in the conditional-field DSL, evaluated against the
+    /// segment carrying the field; the rule is skipped when it does not
+    /// hold. Lets one requirement inside a composite's rule set carry a
+    /// scope the others do not (HL7au:00044.4.3's caller assertion). M30.
+    let condition: String?
+
+    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil) {
         self.component = component
         self.subcomponent = subcomponent
         self.specCitation = specCitation
+        self.condition = condition
     }
 }
 
