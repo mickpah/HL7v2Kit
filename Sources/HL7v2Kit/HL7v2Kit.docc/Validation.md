@@ -62,6 +62,8 @@ let options = ValidationOptions(
 )
 ```
 
+Three further switches are set by mutation, not the initialiser: ``ValidationOptions/requiredComponentSeverity``, ``ValidationOptions/conformanceConditionSeverity`` (the opt-in v2.7 component rules) and ``ValidationOptions/auPathologySender``. The last is a caller assertion: ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 must be `UCUM`) to pathology senders on Results, a fact no message carries. Set it to `true` under ``HL7Locale/auLocalisation`` and the rule applies; left `false` it is never reported.
+
 ## Filtering issues
 
 ```swift

@@ -2103,6 +2103,9 @@ public struct Validator: Sendable {
         case "triggerEvent":
             let v = message.triggerEvent ?? ""
             return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
+        case "auPathologySender":
+            // M29 — a caller assertion, not a wire property (see ValidationOptions).
+            return ResolvedReferent(raw: options.auPathologySender ? "true" : "", isPopulated: options.auPathologySender)
         default:
             break
         }

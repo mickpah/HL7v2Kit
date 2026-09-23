@@ -652,6 +652,26 @@ extension Profile {
             // (p. 247): RTF/HTML/PDF => ED, TXT/PIT => FT. Five gated
             // value sets — OBX-3 does not repeat, so the gate reads a
             // stable value. Scoped Results per Appendix 5.
+            // M29 — HL7au:00050.1.5: OBX-6.3 (Units coding system) must be
+            // UCUM, scoped "Senders (Pathology only)", Results (Appendix 5
+            // p. 465). The sender's discipline is not on the wire; the
+            // caller asserts it through ValidationOptions.auPathologySender,
+            // and the gate reads that assertion as a message-context noun.
+            // Populated-only, like every component value set: an OBX with
+            // no units, or units with no coding system, is presence's job.
+            FieldOverride(
+                segmentID: "OBX",
+                fieldIndex: 6,
+                componentValueSets: [
+                    ComponentValueSet(
+                        component: 3,
+                        allowedValues: ["UCUM"],
+                        condition: "messageCode = ORU AND auPathologySender populated",
+                        specCitation: "HL7au:00050.1.5 — the OBX-6 (Units) name of coding system component must be UCUM; Senders (Pathology only), Results; AU ADRM-2021 Appendix 5 p. 465. Applied on the caller's pathology-sender assertion."
+                    ),
+                ],
+                specCitation: "HL7au:00050.1.5 — OBX-6 units coding system on pathology Results (caller-asserted)"
+            ),
             FieldOverride(
                 segmentID: "OBX",
                 fieldIndex: 2,

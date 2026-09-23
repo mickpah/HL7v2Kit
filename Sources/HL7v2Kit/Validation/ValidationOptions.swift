@@ -72,6 +72,14 @@ public struct ValidationOptions: Sendable {
     /// Set it to report them as advisories. Not an init parameter. M27.
     public var conformanceConditionSeverity: IssueSeverity? = nil
 
+    /// The caller asserts that the message comes from a pathology sender.
+    /// ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 Units coding system must
+    /// be `UCUM` on Results) to "Senders (Pathology only)", a fact the wire
+    /// does not carry. `false`, the default, leaves the rule unchecked;
+    /// `true` applies it under ``HL7Locale/auLocalisation``. Not an init
+    /// parameter. M29.
+    public var auPathologySender: Bool = false
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
