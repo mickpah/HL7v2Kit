@@ -53,7 +53,7 @@ public struct Validator: Sendable {
         // group only fires once per distinct group.
         var firedCardinalityKeys: Set<String> = []
 
-        let grammar = grammarTable(for: message.version)
+        let grammar = Self.grammarTable(for: message.version)
         // v0.4-S5-A / v0.5-S5-B: load the profile once per `validate(_:)`
         // call. nil for `.international`; for `.auLocalisation` returns
         // the AU ADRM-2021 profile with field-override narrowings layered
@@ -385,7 +385,11 @@ public struct Validator: Sendable {
         }
     }
 
-    private func grammarTable(for version: Version) -> [String: SegmentGrammar] {
+    /// The segment grammar table for `version` (ADR-018 substitution for
+    /// `v2_8`). Internal, not private, so tests can derive a per-version
+    /// table list from `Version.allCases` instead of hand-maintaining one
+    /// (P4-15, folded from the P4-25 review).
+    static func grammarTable(for version: Version) -> [String: SegmentGrammar] {
         switch version {
         case .v2_3:   return SegmentGrammarTable.v2_3
         case .v2_3_1: return SegmentGrammarTable.v2_3_1

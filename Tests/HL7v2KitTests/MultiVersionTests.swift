@@ -1064,16 +1064,11 @@ struct MultiVersionTests {
             "DON-1", "DON-2", "PRT-1",
             "RXV-20", "RXV-21",
         ]
-        var actual = Set<String>()
-        for (seg, grammar) in table {
-            // A field whose conditionality is modelled by EITHER axis
-            // (required-when `condition` or the M8-D `prohibitedWhen`
-            // prohibition) is not bare.
-            for f in grammar.fields
-            where f.optionality == .conditional && f.condition == nil && f.prohibitedWhen == nil {
-                actual.insert("\(seg)-\(f.index)")
-            }
-        }
+        // A field whose conditionality is modelled by EITHER axis
+        // (required-when `condition` or the M8-D `prohibitedWhen`
+        // prohibition) is not bare. Shared with BareConditionalGuardTests
+        // (TestSupport.swift bareConditionals) so the two guards cannot drift.
+        let actual = bareConditionals(table)
         #expect(actual == expected,
                 "v2.8.2 C-without-condition set drifted from the audit register; got \(actual.sorted())")
     }

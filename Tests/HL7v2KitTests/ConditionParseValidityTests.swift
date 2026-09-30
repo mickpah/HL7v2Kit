@@ -12,11 +12,12 @@ import Foundation
 @Suite("Condition parse validity (P4-25)")
 struct ConditionParseValidityTests {
 
-    private static let segmentTables: [(String, [String: SegmentGrammar])] = [
-        ("2.3", SegmentGrammarTable.v2_3), ("2.3.1", SegmentGrammarTable.v2_3_1),
-        ("2.4", SegmentGrammarTable.v2_4), ("2.5.1", SegmentGrammarTable.v2_5_1),
-        ("2.6", SegmentGrammarTable.v2_6), ("2.8.2", SegmentGrammarTable.v2_8_2),
-    ]
+    // Derived from `Version.allCases`, not hand-listed, so a version P10
+    // adds is picked up automatically (P4-15, folded from the P4-25 review).
+    // `v2_8` aliases `v2_8_2`'s table (ADR-018); checking it twice is
+    // harmless.
+    private static let segmentTables: [(String, [String: SegmentGrammar])] =
+        Version.allCases.map { ($0.rawValue, Validator.grammarTable(for: $0)) }
 
     /// Every non-empty condition in a field grammar, labelled for the failure message.
     private static func conditions(of field: FieldGrammar, label: String) -> [(String, String)] {
@@ -131,6 +132,17 @@ struct ConditionParseValidityTests {
         "PID-3 populated AND ",
         "SPM-12 > many",
         "messageCode in ()",
+        "PID-3 in (A, ,B)",
+        // P4-25 minor 1 / P4-15: a misspelt connector (lower-case "and"/"or")
+        // is not split as a clause separator, so without this check the
+        // whole remainder reads as one `=`/`!=`/`startsWith` literal and
+        // silently never fires against a real field value (requirement 4).
+        "PID-3 = A and PID-4 populated",
+        "PID-3 != A or PID-4 populated",
+        "PID-3 = A B",
+        "PID-3 != A B",
+        "messageStructure startsWith A B",
+        "messageCode not startsWith A B",
     ])
     func malformedConditionsReportErrors(condition: String) {
         #expect(!Validator.conditionParseErrors(condition).isEmpty)

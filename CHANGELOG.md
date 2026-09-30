@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-15: bare-C register completion and condition-DSL guards
+
+- Bare-C guard tests (`BareConditionalGuardTests`) pin the remaining v2.3,
+  v2.3.1, v2.4, v2.5.1 and v2.6 sets of `C` fields with no `condition` and no
+  `prohibitedWhen`, sharing one `bareConditionals(_:)` helper with the
+  existing v2.8.2 guard in `MultiVersionTests` (no more per-guard copy).
+  `docs/design/conditional-completeness-audit.md` gained the RXA-11 /
+  RXD-13 / RXE-8 "default, not a trigger" positions, RXO-14 / RXE-13
+  Ordering Provider's DEA Number, TXA-21 and SAC-6 (findings V23-C10,
+  V24-C09).
+- `ConditionLanguage`'s `=` / `!=` / `startsWith` / `not startsWith`
+  predicates now reject a literal containing whitespace. Before this, a
+  misspelt lower-case connector (`PID-3 = A and PID-4 populated`, meant as
+  two `AND`-joined atoms) parsed as one atom whose literal swallowed the
+  rest of the string and silently never matched a real field value. No
+  shipped condition carried a whitespace literal.
+- `ConditionParseValidityTests`'s per-version segment-table list is now
+  derived from `Version.allCases` / `Validator.grammarTable(for:)` instead
+  of hand-listed, so a future version is checked automatically.
+
+### Changed — P4-15: `noRepeat(...)` fails safe on an unreadable predicate
+
+- On malformed input only, a `noRepeat(...)` atom with an unreadable
+  predicate now fails safe (never holds) instead of holding. Moved here from
+  the P4-25 entry below, where a behaviour change had been recorded under
+  "Added".
+
 ### Added — P4-26: base OBX-11 = O dynamic-specification null rule
 
 - OBX-2 and OBX-5 must not carry a value other than the HL7 null `""` while
@@ -71,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added — P4-25: every condition string is proven to parse
 
 - A test now walks every segment grammar in all six versions, every datatype component condition and every AU-profile condition, and fails on any condition string the evaluator cannot read. Before this, a misspelt condition passed codegen and the audit and then silently never fired. No shipped condition failed; none changed.
-- The condition parse is shared: `ConditionLanguage` classifies clauses, atoms, referents and predicates, and both the evaluator and the internal `Validator.conditionParseErrors(_:)` read conditions through it (ADR-010, P4-25 amendment). Internal only; no public API change. On malformed input only, a `noRepeat(...)` atom with an unreadable predicate now fails safe instead of holding.
+- The condition parse is shared: `ConditionLanguage` classifies clauses, atoms, referents and predicates, and both the evaluator and the internal `Validator.conditionParseErrors(_:)` read conditions through it (ADR-010, P4-25 amendment). Internal only; no public API change. See "Changed — P4-15" above for the resulting `noRepeat(...)` behaviour change.
 
 ### Added — P4-24: HL7au:00060.4 route B, explicit AU prohibitions
 

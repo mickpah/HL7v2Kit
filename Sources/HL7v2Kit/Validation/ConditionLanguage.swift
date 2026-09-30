@@ -120,8 +120,23 @@ enum ConditionLanguage {
     static func parsePredicate(_ predicate: String) -> Result<ConditionPredicate, ConditionParseError> {
         if predicate == "populated" { return .success(.populated) }
         if predicate == "empty" { return .success(.empty) }
-        if predicate.hasPrefix("= ") { return .success(.equals(String(predicate.dropFirst(2)))) }
-        if predicate.hasPrefix("!= ") { return .success(.notEquals(String(predicate.dropFirst(3)))) }
+        // `=` / `!=` / `startsWith` literals are single tokens (ADR-010): a
+        // literal containing whitespace is rejected rather than accepted as
+        // one wide value. Without this, a misspelt lower-case connector
+        // (`PID-3 = A and PID-4 populated`, meant as two AND-joined atoms)
+        // reads as one atom whose `= ` literal swallows the rest of the
+        // string, which silently never matches a real field value
+        // (requirement 4; P4-15, folded from the P4-25 review).
+        if predicate.hasPrefix("= ") {
+            let literal = String(predicate.dropFirst(2))
+            guard !literal.contains(where: \.isWhitespace) else { return .failure(.malformedPredicate(predicate)) }
+            return .success(.equals(literal))
+        }
+        if predicate.hasPrefix("!= ") {
+            let literal = String(predicate.dropFirst(3))
+            guard !literal.contains(where: \.isWhitespace) else { return .failure(.malformedPredicate(predicate)) }
+            return .success(.notEquals(literal))
+        }
         if predicate.hasPrefix("> ") {
             guard let threshold = Double(predicate.dropFirst(2)) else { return .failure(.malformedPredicate(predicate)) }
             return .success(.greaterThan(threshold))
@@ -129,7 +144,7 @@ enum ConditionLanguage {
         for (op, make) in [("startsWith ", ConditionPredicate.startsWith), ("not startsWith ", ConditionPredicate.notStartsWith)]
         where predicate.hasPrefix(op) {
             let prefix = String(predicate.dropFirst(op.count))
-            guard !prefix.isEmpty else { return .failure(.malformedPredicate(predicate)) }
+            guard !prefix.isEmpty, !prefix.contains(where: \.isWhitespace) else { return .failure(.malformedPredicate(predicate)) }
             return .success(make(prefix))
         }
         for (op, make) in [("in (", ConditionPredicate.isIn), ("not in (", ConditionPredicate.notIn)]
