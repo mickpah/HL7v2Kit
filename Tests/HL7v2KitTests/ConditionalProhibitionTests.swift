@@ -222,6 +222,16 @@ struct ConditionalProhibitionTests {
                                            6: "L^Left^HL70495"]), "RXR", 6)
         #expect(bodySite.count == 1, "v\(version)")
         #expect(bodySite.first?.severity == .warning, "v\(version)")
+        // Table 0163 in the alternate triplet only (RXR-2.6): RXR-2 still employs it.
+        let alternate = try prohibited(rxr([1: "IM^Intramuscular^HL70162",
+                                            2: "LA^Left Arm^99LOCAL^LA^Left Arm^HL70163",
+                                            6: "L^Left^HL70495"]), "RXR", 6)
+        #expect(alternate.map(\.severity) == [.warning], "v\(version)")
+        // Both triplets name Table 0163: still one warning, not one per triplet.
+        let both = try prohibited(rxr([1: "IM^Intramuscular^HL70162",
+                                       2: "LA^Left Arm^HL70163^LA^Left Arm^HL70163",
+                                       6: "L^Left^HL70495"]), "RXR", 6)
+        #expect(both.map(\.severity) == [.warning], "v\(version)")
         // RXR-2 coded from Table 0550 - Body Parts: the 0495 modifier is the spec's pairing.
         let bodyPart = rxr([1: "IM^Intramuscular^HL70162", 2: "ARM^Arm^HL70550", 6: "L^Left^HL70495"])
         #expect(try prohibited(bodyPart, "RXR", 6).isEmpty, "v\(version)")
@@ -244,7 +254,7 @@ struct ConditionalProhibitionTests {
 
     @Test("Codegen emits the RXR-6 Table 0163 rule on v2.5.1 and v2.6 only")
     func rxr6GeneratedGrammar() {
-        let expected = [FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning)]
+        let expected = [FieldProhibition(condition: "RXR-2.3 = HL70163 OR RXR-2.6 = HL70163", severity: .warning)]
         for table in [SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6] {
             let rxr6 = table["RXR"]?.field(6)
             #expect(rxr6?.prohibitedWhen == "RXR-2 empty")

@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it only where set and fails on a malformed rule or a missing citation;
   `scripts/audit-schemas.py` checks the same shape.
 - v2.5.1 and v2.6 RXR-6 now warn when RXR-2 is coded from HL7 Table 0163
-  (`RXR-2.3 = HL70163`; "If RXR-2 employs HL7 Table 0163 – Body Site, then
+  (`RXR-2.3 = HL70163 OR RXR-2.6 = HL70163`, either CWE coding triplet; "If RXR-2 employs HL7 Table 0163 – Body Site, then
   RXR-6 should not be populated", CH04 §4.14.2.6), beside the existing
   `RXR-2 empty` error. v2.8.2 CH04A drops the sentence. Closes the
   "one prohibition per field" limitation (ADR-010 amendment, 2026-10-01).

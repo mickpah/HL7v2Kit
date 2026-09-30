@@ -72,7 +72,12 @@ func renderAdditionalProhibitions(_ rules: [ProhibitionSchema]?, context: String
     let items = rules.enumerated().map { offset, rule -> String in
         let label = "\(context) additionalProhibitions[\(offset)]"
         let when = rule.when ?? ""
-        precondition(when == when.trimmingCharacters(in: .whitespaces)
+        // Plain spaces only, none leading or trailing, at least two tokens. Same rule as
+        // `when_is_well_formed` in scripts/audit-schemas.py.
+        let otherWhitespace = when.unicodeScalars.contains {
+            $0 != " " && CharacterSet.whitespacesAndNewlines.contains($0)
+        }
+        precondition(!otherWhitespace && !when.hasPrefix(" ") && !when.hasSuffix(" ")
                         && when.split(separator: " ", omittingEmptySubsequences: true).count >= 2,
                      "\(label): when must be a condition '<referent> <predicate>', got '\(when)'")
         let severity = rule.severity ?? ""

@@ -98,7 +98,7 @@ def check_additional_prohibitions():
     # P4-21: `additionalProhibitions` is a non-empty list of {when, severity, citation}
     # rules; each needs a '<referent> <predicate>' condition, a known severity and a citation.
     cite = 'v2.5.1 Chapter 4 section 4.14.2.6 RXR-6: "... then RXR-6 should not be populated."'
-    rule = {"when": "RXR-2.3 = HL70163", "severity": "warning", "citation": cite}
+    rule = {"when": "RXR-2.3 = HL70163 OR RXR-2.6 = HL70163", "severity": "warning", "citation": cite}
     base = {"index": 6, "dataType": "CWE", "prohibitedWhen": "RXR-2 empty"}
     assert audit.additional_prohibition_findings(dict(base, additionalProhibitions=[rule])) == [], \
         "a well-formed rule is not a finding"
@@ -110,6 +110,9 @@ def check_additional_prohibitions():
         "blank citation": dict(base, additionalProhibitions=[dict(rule, citation="  ")]),
         "unknown severity": dict(base, additionalProhibitions=[dict(rule, severity="fatal")]),
         "one-token when": dict(base, additionalProhibitions=[dict(rule, when="RXR-2")]),
+        "tab in when": dict(base, additionalProhibitions=[dict(rule, when="RXR-2.3\t= HL70163")]),
+        "newline in when": dict(base, additionalProhibitions=[dict(rule, when="RXR-2.3 =\nHL70163")]),
+        "leading space": dict(base, additionalProhibitions=[dict(rule, when=" RXR-2.3 = HL70163")]),
         "unknown key": dict(base, additionalProhibitions=[dict(rule, note="x")]),
     }
     for name, field in cases.items():

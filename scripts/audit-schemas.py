@@ -293,6 +293,14 @@ def table_open_findings(f):
 PROHIBITION_KEYS = {"when", "severity", "citation"}
 
 
+def when_is_well_formed(when):
+    """A prohibition `when` is '<referent> <predicate>': plain spaces only (no tab, newline
+    or other whitespace), none leading or trailing, and at least two space-separated tokens.
+    Same rule as the codegen precondition in `renderAdditionalProhibitions`."""
+    return (isinstance(when, str) and not re.search(r"[^\S ]", when)
+            and when == when.strip(" ") and len([t for t in when.split(" ") if t]) >= 2)
+
+
 def additional_prohibition_findings(f):
     """P4-21 extra prohibitions. `additionalProhibitions` is a non-empty list of rules,
     each exactly {when, severity, citation}: `when` a '<referent> <predicate>' condition,
@@ -312,7 +320,7 @@ def additional_prohibition_findings(f):
         if extra:
             out.append(f"additionalProhibitions[{i}] has unknown keys {sorted(extra)}")
         when = rule.get("when")
-        if not (isinstance(when, str) and when == when.strip() and len(when.split()) >= 2):
+        if not when_is_well_formed(when):
             out.append(f"additionalProhibitions[{i}] when {when!r} is not '<referent> <predicate>'")
         if rule.get("severity") not in ("error", "warning", "info"):
             out.append(f"additionalProhibitions[{i}] severity {rule.get('severity')!r} is not error/warning/info")
