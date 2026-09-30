@@ -508,6 +508,29 @@ extension Profile {
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
             ),
+            // ADRM-prose:P-11 (P4-27) — ADRM-2021 §4.4.1.26, p. 228: "Not
+            // used in Australian messages. Use observation Sub-ID in OBX-4
+            // to link results." Unconditional, no Appendix 5 HL7au ID.
+            // OBR-26 carries no base condition (v2.4/OBR.json: optionality
+            // O, no `condition`), so unlike OBR-29 there is no conflicting
+            // requirement elsewhere in the spec that forces this field to
+            // be valued — see task-P4-27-report.md for the OBR-29 check.
+            // Scope: OBR appears in the ORM, ORU and REF structures alike
+            // (ADRM ch. 4 "Observation Reporting" is OBR's home chapter;
+            // ch. 5 "Observation Ordering" and ch. 7 "Patient Referral"
+            // both use the same OBR without redefining this field).
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 26,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        severity: .error,
+                        specCitation: "ADRM-prose:P-11 — OBR-26 (Parent Result) must not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.26 p. 228"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-11 — OBR-26 not used in Australia"
+            ),
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 2,
@@ -528,6 +551,29 @@ extension Profile {
                 profileUsage: nil,
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000007 (r2) — ORC-4 EI completeness"
+            ),
+            // ADRM-prose:P-12 (P4-27) — ADRM-2021 §7.3.11.24, p. 343:
+            // "This field should not be used. Use ORC-22 for the address
+            // of the prescriber's facility." Unconditional, no Appendix 5
+            // HL7au ID. Base v2.4 CH04 §4.5.1.24 has no such note (ADRM
+            // ch. 5 §5.4.1.24, the Observation Ordering/ORM leg, is
+            // likewise plain), so the prohibition is AU-specific and
+            // scoped to Referrals only — ch. 7 "Patient Referral" is
+            // where the sentence appears. No base condition exists on
+            // ORC-24 (v2.4/ORC.json: optionality O, no `condition`), so
+            // there is no conflicting requirement forcing it to be
+            // valued. Modal verb "should" — warning, not error.
+            FieldOverride(
+                segmentID: "ORC",
+                fieldIndex: 24,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode = REF",
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-12 — ORC-24 (Ordering Provider Address) should not be used in Referrals; use ORC-22 for the prescriber's facility address instead; AU ADRM-2021 §7.3.11.24 p. 343"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-12 — ORC-24 should not be used in Referrals"
             ),
             // HL7au:000008.1 (r2) — Display Segments (v0.11-S2, ADR-010).
             // OBX-3 display-format identifier value set, gated on

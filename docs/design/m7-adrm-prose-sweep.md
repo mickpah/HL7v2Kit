@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Started | 2026-09-16 (M7-P1) |
-| Status | **M7 COMPLETE (2026-09-16).** P1 body sweep + P2/P3 shipped six findings; P4 swept the normative appendices 8–10 (63 candidates, triage below) and shipped P-6 (the VMR header pins). All seven decidable prose findings are live as `ADRM-prose:P-n` rules; everything else is registered with its reason. |
+| Status | **M7 COMPLETE (2026-09-16).** P1 body sweep + P2/P3 shipped six findings; P4 swept the normative appendices 8–10 (63 candidates, triage below) and shipped P-6 (the VMR header pins). All seven decidable prose findings are live as `ADRM-prose:P-n` rules; everything else is registered with its reason. **P4-27 (2026-10-01)** found a gap: the M7 keyword list (`must` / `shall` / `is required to` / `not permitted` / `is mandatory`) never matched declarative "not used"/"should not be used" prose, so OBR-26, OBR-29 and ORC-24 were invisible to the original scan. Re-swept for that phrasing; shipped P-11, P-12; registered the rest below. |
 | Method | `scripts/sweep-adrm-prose.py` over `/tmp/adrm2021.txt` (pdftotext of the ADRM; re-extract per session) |
 | Predecessor | `m6-adrm-2021-localisation-audit.md` — the Appendix 5 register work. This sweep covers what Appendix 5 explicitly does not: narrowings stated only in chapter prose. |
 
@@ -43,6 +43,8 @@ page indexes (printed page ≈ index, off by at most a few).
 | P-5a | **ACK MSH-12.3.1 closed set** | "MSH-12-3 must be valued 'HL7AU-OO-ACK-READ-2020006'" (§8.4 user read acks) and "MSH-12-3 must be valued 'HL7AU-OO-ACK-201701'" (§8.5 general acks), both p. 372. The two sections partition ACK usage; the flavour is only distinguishable by this value. | ComponentValueSet on MSH-12.3.1 gated `messageCode = ACK`, closed over the pair. The bare "read-acks must carry READ-2020006" statement is **definitional** (the value IS the discriminator, like `000008.1.4`) — what ships is the derived closed set + presence. | **✅ SHIPPED M7-P2** |
 | P-5b | **Read-ack MSH-3.3 scheme** | "Valid formats for the user details in MSH-3 (Sending Application) are: Username^\<Medicare Australia provider number\>^AUSHICPR [or] Username^\<HPI-I\>@\<HPI-O\>^NPIO" (§8.4, p. 372) | MSH-3.3 ∈ {AUSHICPR, NPIO} gated `messageCode = ACK AND MSH-12.3.1 = HL7AU-OO-ACK-READ-2020006`. The ID formats themselves (provider-number shape, HPI-I@HPI-O) are content patterns — registered below. | **✅ SHIPPED M7-P2** (scheme component only) |
 | P-7 | **Single batch per file** | "In Australia only one Batch is supported but a batch can contain any number of messages." (§1, p. 19) | `BatchValidator` (M8-C): more than one BHS-headed batch group in a `BatchFile` fires. Batch-scope — outside the message-scoped Validator, which is why the finding waited for the component. | **✅ SHIPPED M8-C** |
+| P-11 | **OBR-26 not used in Australia** | "Not used in Australian messages. Use observation Sub-ID in OBX-4 to link results" (§4.4.1.26, p. 228) | `ProfileFieldProhibition` on OBR-26, gated `messageCode in (ORM, ORU, REF)`, error ("not used" reads as the strongest form the ADRM uses — stronger than "should not", on a par with the OBX-2/OBX-5 "must ... valued with null" P4-24 route-B rule). No base condition exists on OBR-26 (v2.4/OBR.json: optionality O, no `condition`), so nothing else requires it populated. | **✅ SHIPPED P4-27** |
+| P-12 | **ORC-24 not used in Referrals** | "This field should not be used. Use ORC-22 for the address of the prescriber's facility." (§7.3.11.24, p. 343) | `ProfileFieldProhibition` on ORC-24, gated `messageCode = REF`, warning (modal "should"). AU-specific — base v2.4 CH04 §4.5.1.24 and the ADRM's own Observation Ordering leg (§5.4.1.24) carry no such note; only the Patient Referral chapter states it. No base condition exists on ORC-24. | **✅ SHIPPED P4-27** |
 
 ## B. Register — prose narrowings that cannot ship faithfully
 
@@ -56,6 +58,12 @@ page indexes (printed page ≈ index, off by at most a few).
 | Rendering rules | pp. 250–256 and Appendix 2 (columns, highlighting, date format, age intervals) | Receiver display behaviour — not decidable from a message. |
 | MSH field-length variances | e.g. "field length of 250 characters is a variation to the HL7 International standard" (pp. 211, 329) | Field lengths are not modelled (documented model scope); lengths also do not constrain wire validity in this DSL. |
 | Read-ack user-ID formats | "Username^\<Medicare Australia provider number\>^AUSHICPR" / "Username^\<HPI-I\>@\<HPI-O\>^NPIO" (§8.4 p. 372) | The scheme component shipped (P-5b); the ID shapes themselves (provider-number pattern, `HPI-I@HPI-O` composition) need content-pattern matching the DSL does not have. Joins P-4's capability if a content-scan track lands. |
+| MSH-20 "not used" | "Alternative Character Sets are not used in Australia and this field is null." (§2.1.9.20, p. 56) | Descriptive consequence of AU practice (alt char sets go unused, so the handling-scheme field is incidentally always null), not itself phrased as a field-level prohibition the way OBR-26/OBR-29/ORC-24 are ("Not used…"/"should not be used…" as the sentence's own subject). Treating it the same way risks over-reading a cause-and-effect sentence as a rule (req #4). P4-27. |
+| PID-22 content restriction | "In the Australian context this field is not to be used for indigenous status or country of birth" (§2.2.1.22, p. 72) | A content-purpose restriction, not a presence prohibition — PID-22 may still legitimately carry genuine ancestry/ethnicity data. Distinguishing a misused value from a genuine one needs code-system knowledge the message does not declare; not wire-decidable. P4-27. |
+| PV1-7 attending-doctor conditional | "In the Australian context this field should not be used unless the system caters for registrars or residents." (§2.2.2.7, p. 78) | The condition ("unless the system caters for…") is a receiver/system capability fact, not message content — not wire-decidable. P4-27. |
+| IAM-7 allergy identifier conditional | "If a system maintains allergen codes as a unique identifier for a particular allergy, then this field should not be used." (§7.3.10.7, p. ~360) | Conditional on sender-system capability, not message content — not wire-decidable. P4-27. |
+| RP datatype namespace-ID sub-component | "The \<application ID (HD)\> component, \<namespace id (IS)\> sub-component must not be valued." (URL representation note, §4.15-area) | Genuinely unconditional and wire-decidable, but scoped to one sub-component of one datatype (RP) wherever it appears — `ProfileFieldProhibition` checks whole-field presence, not a specific sub-component of a specific datatype instance, and a field-level rule would misfire on any other populated RP sub-component. Needs a component-level prohibition shape (req #3 territory); registered, not shipped. P4-27. |
+| TS legacy degree-of-precision component | "This optional second component is retained only for purposes of backward compatibility and should not be used in Australia except by site agreement." (§3.26, p. ~213) | Datatype-component-level (TS's own second component, not a specific field) plus a "except by site agreement" carve-out that is not visible on the wire. Not wire-decidable; mechanism-limited the same way as the RP note above. P4-27. |
 
 ## C. Base-spec observations (not AU narrowings — recorded for base-model work)
 
@@ -80,6 +88,31 @@ page indexes (printed page ≈ index, off by at most a few).
   withdrawn (`W`) from v2.7; an error-level rule would over-read (req #4). The presence
   half ("if not present in the ORC, it must be present in the associated OBR") is
   message-shape-dependent (ORU needs no ORC) and stays unshipped.
+- **OBR-29 "not used" vs. the ORC-8/OBR-29 presence rule — NEEDS_CONTEXT (P4-27).**
+  ADRM §4.4.1.29, p. 229: "Not used in Australian messages. Use observation Sub-ID in
+  OBX-4 to link results" (the identical sentence, and the identical item 00261, as
+  OBR-26 — see P-11). But ADRM §5.4.1.8 (ORC-8, unchanged from base v2.4 §4.5.1.8)
+  says: "ORC-8-parent is the same as OBR-29-parent. If the parent is not present in the
+  ORC, it must be present in the associated OBR." This is not merely prose tension: the
+  schema encodes both halves as live base conditions — `v2.4/OBR.json` OBR-29 is `C`
+  with condition `ORC-1 = CH AND ORC-8 empty`, and `v2.4/ORC.json` ORC-8 is `C` with the
+  mirrored condition `ORC-1 = CH AND (OBR absent OR OBR-29 empty)` — and the equality
+  half of the same pair already ships as a base, locale-independent rule (M8-B2,
+  `IssueCode.pairedFieldMismatch`, above), which presumes OBR-29 can legitimately carry
+  a value. An AU-wide "OBR-29 must not be valued" prohibition would directly contradict
+  the base conditional-requiredness check: any v2.3–v2.6 child order (`ORC-1 = CH`)
+  sent without ORC-8 already requires OBR-29 under the base rule, and an AU prohibition
+  would simultaneously forbid it. **Not enforced.** No AU prohibition ships for OBR-29;
+  P-11 covers OBR-26 only. See `task-P4-27-report.md` for the full write-up.
+- **Base-spec fields deprecated independently of AU** (found while sweeping for "not
+  used" prose, P4-27): OBR-5/OBR-6 ("This field has been retained for backward
+  compatibility only. It is not used…", v2.4 CH04, reprinted verbatim in ADRM
+  §4.4.1.5/.6) and MSA-5 (same phrasing, CH02 §2.16.8.5/ADRM §2.1.8.5) are base v2.4
+  deprecations, not AU narrowings — `.international` is affected too. RXO-3 ("In a
+  non-varying dose order, this field is not used", CH04/ADRM identical) is conditional,
+  not unconditional. Out of this task's AU-specific scope; recorded for base-model work
+  if a base "deprecated (retained for compatibility only)" prohibition track is ever
+  opened.
 - **RXO-1/2/4 vs RXO-6 free-text conditional** (pp. 346–348): "The RXO-1, RXO-2 and
   RXO-4 are mandatory unless the prescription is transmitted as free text using RXO-6,
   then … the first subcomponent of RXO-6 must be blank." Compound conditional

@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-27: AU "not used" elements
+
+- Under `.auLocalisation`, OBR-26 (Parent Result) must not be valued on ORM,
+  ORU and REF. ADRM-2021 §4.4.1.26 (p. 228) reads "Not used in Australian
+  messages. Use observation Sub-ID in OBX-4 to link results." Reported as an
+  error `.profileConstraintViolation("ADRM-prose:P-11 ...")`. No base v2.4
+  condition makes OBR-26 required, so nothing conflicts.
+- Under `.auLocalisation`, ORC-24 (Ordering Provider Address) should not be
+  valued on Referrals. ADRM-2021 §7.3.11.24 (p. 343) reads "This field should
+  not be used. Use ORC-22 for the address of the prescriber's facility."
+  AU-specific (base v2.4 and the ADRM's own Observation Ordering chapter
+  carry no such note) and Referral-only. Reported as a warning
+  `.profileConstraintViolation("ADRM-prose:P-12 ...")`.
+- OBR-29 — the identical "Not used in Australian messages" sentence as
+  OBR-26 (ADRM §4.4.1.29, p. 229) — is deliberately **not** enforced. It
+  conflicts with ADRM §5.4.1.8's "ORC-8-parent is the same as OBR-29-parent.
+  If the parent is not present in the ORC, it must be present in the
+  associated OBR", which the schema already encodes as a live base condition
+  on both fields and which the already-shipped M8-B2 `pairedFieldMismatch`
+  rule presumes resolvable. Documented as a NEEDS_CONTEXT finding in
+  `docs/design/m7-adrm-prose-sweep.md` and the permanent-limitations
+  register's HL7au:00060.4 addendum.
+- A wider sweep for "not used"/"should not be used" AU-specific prose (the
+  M7 sweep's keyword list never matched this phrasing) turned up six further
+  narrative findings with no conformance-point ID and no safe, wire-decidable
+  enforcement: MSH-20, PID-22, PV1-7, IAM-7, the RP datatype's namespace-ID
+  sub-component, and TS's legacy degree-of-precision sub-component. Each is
+  recorded in `docs/design/m7-adrm-prose-sweep.md` §B with its reason
+  (descriptive rather than prohibitive wording, content-purpose restriction,
+  receiver/system-capability condition, or component-level scope the current
+  `FieldOverride.prohibitions` mechanism cannot express). No Appendix 5
+  conformance point changed, so the M6 register is unchanged.
+
 ### Added — P4-25: every condition string is proven to parse
 
 - A test now walks every segment grammar in all six versions, every datatype component condition and every AU-profile condition, and fails on any condition string the evaluator cannot read. Before this, a misspelt condition passed codegen and the audit and then silently never fired. No shipped condition failed; none changed.
