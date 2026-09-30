@@ -74,10 +74,11 @@ STANDARDS = _standards_dir()
 # exception").
 DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
 
-# Owner-deferred versions (2026-08-23 AU-first re-sequencing; docs/design/deferred-coverage-
-# backlog.md). A segment modelled elsewhere but absent here is reported as DEFERRED — visible,
-# counted, not a failure. Everywhere else the same absence is a PRESENCE defect.
-DEFERRED_VERSIONS = {"v2.6", "v2.8.2"}
+# Owner-deferred versions. The 2026-08-23 deferral of v2.6 / v2.8.2 closed with M5 on
+# 2026-09-16 (docs/design/deferred-coverage-backlog.md, closure header), so the set is empty:
+# on every version a segment modelled elsewhere but absent here is a PRESENCE defect.
+# Re-adding a version needs an owner decision recorded in that backlog.
+DEFERRED_VERSIONS = set()
 
 # M6-O5 dataType predicate knobs.
 #
@@ -91,18 +92,15 @@ DEFERRED_VERSIONS = {"v2.6", "v2.8.2"}
 # Codegen.swift.
 SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", "DTM"}
 
-# (version, segment, index) triples where the schema deliberately
-# diverges from the extracted attribute-table value:
-#   v2.4/AL1/1  — the v2.4 table AND heading print `CE` for Set ID -
-#                 AL1, a known spec typo (SI in v2.3 and v2.5+).
-#                 Following it verbatim would dispatch the AU CE
-#                 composite rules onto every plain set-ID (req #4
-#                 misfire), so the schema normalises to SI; registered
-#                 in segment-coverage-extraction.md.
-#   v2.5.1/OBX/5 — the variable-type row's prose defeats the extractor
-#                 (candidates include `*`, `NA or`, truncated `varie`);
-#                 the schema's `varies` is hand-verified (M6-D5).
-DATATYPE_WHITELIST = {("v2.4", "AL1", 1), ("v2.5.1", "OBX", 5)}
+# (version, segment, index) -> citation: slots where the schema deliberately diverges from
+# the extracted attribute-table value. Every entry names its source (check-audit-schemas.py
+# fails an entry without one).
+DATATYPE_WHITELIST = {
+    ("v2.4", "AL1", 1): "v2.4 CH3 AL1 attribute table and heading print CE for Set ID - AL1, a "
+                        "spec typo (SI in v2.3 and v2.5+); registered in segment-coverage-extraction.md",
+    ("v2.5.1", "OBX", 5): "v2.5.1 CH7 OBX-5 variable-type row defeats the extractor (candidates *, "
+                          "'NA or', 'varie'); schema `varies` hand-verified in M6-D5",
+}
 # M20 name predicate. A schema name must equal, after normalisation, an element name the
 # version's own attribute table prints for that slot. Extraction can still glue prose onto a
 # name (ORC-31 "...all orders (i.e., requested"), so a printed candidate whose normalised
@@ -133,11 +131,20 @@ def name_agrees(schema_name, printed):
     return False
 
 
-# M19 optionality predicate. v2.3 and v2.3.1 print DG1-2 as "(B) R": both codes in one
-# cell. The schema keeps R; the extractor reads the cell as B.
-OPTIONALITY_WHITELIST = {("v2.3", "DG1", 2), ("v2.3.1", "DG1", 2)}
-REPEATABILITY_WHITELIST = set()
-LENGTH_WHITELIST = set()
+# M19 optionality whitelist: (version, segment, index) -> citation. An entry is a divergence
+# from the printed OPT column that the spec text itself backs. Anything else is a finding.
+OPTIONALITY_WHITELIST = {
+    ("v2.3", "DG1", 2): "v2.3 CH6 DG1 attribute table prints '(B) R' in one OPT cell; the "
+                        "extractor reads B, the schema keeps R",
+    ("v2.3.1", "DG1", 2): "v2.3.1 CH6 DG1 attribute table prints '(B) R' in one OPT cell; the "
+                          "extractor reads B, the schema keeps R",
+    ("v2.6", "ORC", 8): "v2.6 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, it "
+                        "must be present in the associated OBR'; printed O, modelled C (V26-C13)",
+    ("v2.6", "OBR", 29): "v2.6 CH04 section 4.5.3.29: required when the order is a child; printed "
+                         "O, modelled C (V26-C13)",
+}
+REPEATABILITY_WHITELIST = {}
+LENGTH_WHITELIST = {}
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -287,6 +294,44 @@ def integrity():
     return findings
 
 
+def natural_key(path):
+    """Chapter order for a PDF glob: CH2 before CH10 (a plain sort puts CH10 first)."""
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", os.path.basename(path))]
+
+
+def defining_rows(tables_in_order):
+    """segment -> {index: extracted row} from the segment's DEFINING attribute table.
+
+    V23-C13: a slot's printed value used to be accepted if ANY chapter printed it, so the
+    v2.3 OBX lengths 4 and 80 from the CH7 "Observational Simple" variant and the CH9 table
+    passed against the normative CH7 Figure 7-5 (10 and 590). The defining table is the first
+    table, in chapter order, that reaches the segment's deepest extracted index: a variant
+    print is shallower, or comes after the home chapter's figure."""
+    deepest = {}
+    for seg, fields in tables_in_order:
+        deepest[seg] = max(deepest.get(seg, 0), max(f["index"] for f in fields))
+    out = {}
+    for seg, fields in tables_in_order:
+        if seg not in out and max(f["index"] for f in fields) == deepest[seg]:
+            out[seg] = {f["index"]: f for f in fields}
+    return out
+
+
+def printed_for(defining, union, seg, index, key):
+    """The printed values a schema attribute is compared against: the defining table's cell
+    when it has one, else the union across chapters (a blank defining cell is an extraction
+    gap, not a print)."""
+    cell = ((defining.get(seg, {}).get(index) or {}).get(key) or "").strip()
+    return {cell} if cell else union.get((seg, index), set())
+
+
+def optionality_finding(have, printed):
+    """M19. True when the schema's OPT is none of the printed codes. C is compared like every
+    other code (X-C10 / V26-C07): a printed C modelled O, or a printed O modelled C, is a
+    finding unless OPTIONALITY_WHITELIST names it with a citation."""
+    return bool(printed) and have not in printed
+
+
 def extracted_depths(version):
     """(segment -> deepest max-field-index, (segment, index) -> {dataTypes seen})
     across that version's chapter PDFs.
@@ -297,9 +342,10 @@ def extracted_depths(version):
     That bias under-reports and never false-positives — M6-O5's first
     measurement must not cry wolf on table-selection noise."""
     best, dts, tbls, opts, names, reps, lens = {}, {}, {}, {}, {}, {}, {}
+    ordered = []                        # (segment, fields) in chapter order, for defining_rows
     pdfs = []
     for pattern in CHAPTER_GLOBS[version]:
-        pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)))
+        pdfs += sorted(glob.glob(os.path.join(STANDARDS, pattern)), key=natural_key)
     for pdf in pdfs:
         try:
             out = subprocess.run([EXTRACTOR, pdf], capture_output=True, timeout=900).stdout
@@ -311,6 +357,7 @@ def extracted_depths(version):
             seg = (table.get("segmentHint") or "").strip().upper()
             fields = table.get("fields", [])
             if seg and fields:
+                ordered.append((seg, fields))
                 best[seg] = max(best.get(seg, 0), max(f["index"] for f in fields))
                 for f in fields:
                     dt = (f.get("dataType") or "").strip()
@@ -331,7 +378,7 @@ def extracted_depths(version):
                     ln = (f.get("len") or "").strip()
                     if ln:
                         lens.setdefault((seg, f["index"]), set()).add(ln)
-    return best, dts, tbls, opts, names, reps, lens
+    return best, dts, tbls, opts, names, reps, lens, defining_rows(ordered)
 
 
 def write_names(path, wanted):
@@ -361,7 +408,7 @@ def write_lengths(path, wanted):
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
-def depth(write=False, correct_names=False, record_lengths=False):
+def depth(write=False, correct_names=False, record_lengths=False, versions=None):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
@@ -374,9 +421,9 @@ def depth(write=False, correct_names=False, record_lengths=False):
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
     wanted_names, wanted_lengths = {}, {}
-    for version in CHAPTER_GLOBS:
+    for version in (versions or CHAPTER_GLOBS):
         print(f"  extracting {version} ...", file=sys.stderr)
-        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens = extracted_depths(version)
+        found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens, spec_def = extracted_depths(version)
         # Presence: the depth loop below only sees schemas that EXIST, so an absent segment
         # is invisible to it — that is how the v2.4 lab-automation gap survived three clean
         # audits. A segment the spec defines here that we model on another version is a
@@ -430,13 +477,14 @@ def depth(write=False, correct_names=False, record_lengths=False):
                     continue  # named refinement of the CM placeholder
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
-            # M25: the LEN column, recorded VERBATIM and never enforced. Before v2.7 the spec
-            # calls the maximum length "not of conceptual importance"; from v2.7 it prints a
-            # normative range ("2..2", "32=" truncation-allowed, "250#" truncation-not-allowed)
-            # and a separate conformance length. A schema's `length` must be one its own
-            # version prints for that slot (the chapters can disagree: OBR in 4 and 7).
+            # M25: the LEN column, recorded VERBATIM. Up to v2.6 the cell is a maximum length,
+            # and v2.6 section 2.5.3.2 states "The length of a field is normative"; from v2.7
+            # it prints a normative range ("2..2", "32=" truncation-allowed, "250#"
+            # truncation-not-allowed) and a separate conformance length. A schema's `length`
+            # must be what the version's DEFINING attribute table prints (V23-C13), not any
+            # chapter's variant print.
             for f in schema_fields:
-                printed = spec_lens.get((seg, f["index"]))
+                printed = printed_for(spec_def, spec_lens, seg, f["index"], "len")
                 have = (f.get("length") or "").strip()
                 if not printed or have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
                     continue
@@ -470,16 +518,17 @@ def depth(write=False, correct_names=False, record_lengths=False):
                     wanted_names.setdefault(path, {})[f["index"]] = ranked[0]
                     continue
                 name_findings.append((version, seg, f["index"], have, sorted(printed)[:2]))
-            # M19: the OPT column had no predicate either. A schema's optionality must be one
-            # the version's own attribute table prints for that slot (union across chapters:
-            # OBR is printed in chapters 4 and 7). An R the spec prints as O is a false
-            # "required field missing"; a B it prints as O is a false deprecation warning.
-            # Anything involving C is left to the conditional-completeness register, which
-            # governs when a printed C is modelled as C-with-predicate, bare C, or O.
+            # M19: the OPT column. A schema's optionality must be the code the version's
+            # DEFINING attribute table prints for that slot. An R the spec prints as O is a
+            # false "required field missing"; a B it prints as O is a false deprecation
+            # warning. C is compared like every other code (X-C10 / V26-C07): the
+            # conditional-completeness register decides how a printed C is modelled, but a
+            # C / non-C disagreement with the print stays a finding until
+            # OPTIONALITY_WHITELIST names it with its spec citation.
             for f in schema_fields:
-                printed = spec_opts.get((seg, f["index"]))
+                printed = printed_for(spec_def, spec_opts, seg, f["index"], "optionality")
                 have = (f.get("optionality") or "").strip()
-                if not printed or have in printed or have == "C" or "C" in printed:
+                if not optionality_finding(have, printed):
                     continue
                 if (version, seg, f["index"]) in OPTIONALITY_WHITELIST:
                     continue
@@ -930,6 +979,8 @@ def main():
                     help="with --depth: replace names the NAME predicate rejects with the shortest printed one (M20)")
     ap.add_argument("--write-tables", action="store_true",
                     help="with --depth: write the spec TBL# bindings into the schemas (M9-A sweep)")
+    ap.add_argument("--only-version", action="append", choices=sorted(CHAPTER_GLOBS),
+                    help="with --depth: audit only this version (repeatable); OPT and LEN findings print uncapped")
     args = ap.parse_args()
 
     bad = integrity()
@@ -941,7 +992,9 @@ def main():
     rc = 1 if bad else 0
     if args.depth:
         gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings = depth(
-            write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths)
+            write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths,
+            versions=args.only_version)
+        cap = None if args.only_version else 60
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")
         for v, seg, s, e in gaps:
@@ -965,7 +1018,7 @@ def main():
         if len(tbl_findings) > 60:
             print(f"   ... and {len(tbl_findings) - 60} more")
         print(f"\n== optionality (M19): {len(opt_findings)} findings")
-        for v, seg, idx, got, want in opt_findings[:60]:
+        for v, seg, idx, got, want in opt_findings[:cap]:
             print(f"   OPT      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
         print(f"\n== name (M20): {len(name_findings)} findings")
         for v, seg, idx, got, want in name_findings[:80]:
@@ -974,7 +1027,7 @@ def main():
         for v, seg, idx, got, want in rp_findings[:60]:
             print(f"   RP       {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
         print(f"\n== length (M25): {len(len_findings)} findings")
-        for v, seg, idx, got, want in len_findings[:60]:
+        for v, seg, idx, got, want in len_findings[:cap]:
             print(f"   LEN      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
         if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings:
             rc = 1

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P7-1: the schema audit compares `C` and the defining attribute table
+
+- `scripts/audit-schemas.py` M19 no longer skips a slot where the schema or the print is
+  `C`; a `C` / non-`C` disagreement is a finding unless the whitelist cites the spec text
+  behind it (v2.6 ORC-8 and OBR-29 are the first such entries).
+- M25 length and M19 optionality compare against each segment's defining attribute table
+  (the first full-depth print in chapter order), not any chapter's variant print.
+- Every audit whitelist entry now carries its citation; `DEFERRED_VERSIONS` is empty
+  since M5 closed.
+- New `--only-version` flag; new `scripts/check-audit-schemas.py` self-check, run in CI.
+
 ### Added — P2-13: caller-declared local extensions to HL7 tables
 
 - `ValidationOptions.localTableExtensions` (additive; new init parameter, last
