@@ -32,4 +32,18 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
         let trimmed = wireValue.trimmingCharacters(in: .whitespacesAndNewlines)
         self.init(rawValue: trimmed)
     }
+
+    /// The version whose segment grammar, code tables and datatype grammar
+    /// the ``Validator`` applies to a message declaring this version.
+    ///
+    /// Every case maps to itself except ``v2_8``: HL7v2Kit has no v2.8 text
+    /// and validates a `2.8` message against the v2.8.2 grammar, the nearest
+    /// modelled release, reporting the substitution as
+    /// ``IssueCode/versionGrammarSubstituted(declared:validatedAs:)`` (ADR-018).
+    public var grammarVersion: Version {
+        switch self {
+        case .v2_8: return .v2_8_2
+        default:    return self
+        }
+    }
 }

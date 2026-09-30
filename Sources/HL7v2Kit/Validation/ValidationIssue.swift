@@ -151,6 +151,13 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Z-segment policy governs site-defined `Z` segments only (ADR-003,
     /// ADR-018). Additive case; the enum is open per ADR-014.
     case segmentNotInVersionGrammar
+
+    /// The message declares `declared` in MSH-12, which HL7v2Kit validates
+    /// against the grammar of `validatedAs` (``Version/grammarVersion``).
+    /// Info severity: the differences between the two releases are not
+    /// verified, so a finding may reflect `validatedAs` only (ADR-018).
+    /// Additive case; the enum is open per ADR-014.
+    case versionGrammarSubstituted(declared: Version, validatedAs: Version)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

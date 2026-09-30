@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
+
+- Before, a `2.8` message had no grammar: default validation reported
+  `isValid == true` with nothing checked, and `.strict` rejected every
+  segment as a Z-segment (X-C02, V282-C03).
+- It is now validated against the v2.8.2 segment grammar, code tables and
+  datatype grammar, and every report carries one
+  `IssueCode.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)`
+  (info) at MSH-12. `Version.grammarVersion` exposes the mapping. The
+  public registries stay version-literal. Decision: ADR-018.
+
 ### Fixed — P3-2: standard segments are no longer reported as Z-segments
 
 - A segment whose ID does not begin with `Z` and that the message's version

@@ -61,10 +61,11 @@ struct CodeTableValidationTests {
         #expect(!ValidationOptions.lenient.checkCodeTables)
     }
 
-    @Test("A version with no table for the field is silent")
-    func versionWithoutTable() throws {
-        // v2.8 is grammar-less (ADR-013); nothing to look up.
-        #expect(try tableIssues(oru(obr24: "XX", version: "2.8")).isEmpty)
+    @Test("A 2.8 message is checked against the v2.8.2 tables (ADR-018)")
+    func v28UsesV282Tables() throws {
+        #expect(try tableIssues(oru(obr24: "XX", version: "2.8")).map(\.code)
+                == tableIssues(oru(obr24: "XX", version: "2.8.2")).map(\.code))
+        #expect(try tableIssues(oru(obr24: "XX", version: "2.8")).count == 1)
     }
 
     @Test("IS-typed fields are never enforced even when their table is linked")

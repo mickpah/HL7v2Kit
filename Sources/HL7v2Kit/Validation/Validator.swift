@@ -24,6 +24,12 @@ public struct Validator: Sendable {
     /// one check produced an issue.
     public func validate(_ message: Message) -> ValidationReport {
         var issues: [ValidationIssue] = []
+        // ADR-018: report how MSH-12 relates to the grammar applied, then
+        // validate a copy that declares the grammar version, so every
+        // version-keyed lookup below (segment grammar, tables, datatype
+        // grammar, version-gated ORC/OBR pairs) uses the same release.
+        appendVersionIssues(for: message, issues: &issues)
+        let message = message.declaring(message.version.grammarVersion)
         var segmentOccurrence: [String: Int] = [:]
         // v0.11-S3 (ADR-010 Extension 2): dedupe fired cardinality
         // violations by (scope, groupHeadIndex, rule identity) so a
@@ -372,8 +378,22 @@ public struct Validator: Sendable {
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
         case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
-        default:      return [:]   // grammar-less .v2_8 remains out of scope.
+        case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
         }
+    }
+
+    /// ADR-018: one MSH-12 issue describing how the declared version maps
+    /// to the grammar applied.
+    private func appendVersionIssues(for message: Message, issues: inout [ValidationIssue]) {
+        let declared = message.version
+        let applied = declared.grammarVersion
+        guard applied != declared else { return }
+        issues.append(ValidationIssue(
+            severity: .info,
+            code: .versionGrammarSubstituted(declared: declared, validatedAs: applied),
+            location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12),
+            message: "MSH-12 declares \(declared.rawValue); HL7v2Kit has no v\(declared.rawValue) grammar and validated this message against v\(applied.rawValue). Differences between the two releases are not verified (ADR-018)"
+        ))
     }
 
     private func appendZSegmentIssue(
@@ -951,8 +971,8 @@ public struct Validator: Sendable {
     ///   Result Observation Identifier) and pairs ORC-8 with OBR-54:
     ///   "Condition: Where the message has matching ORC/OBR pairs,
     ///   ORC-8 and OBR-54 Must carry the same value" (§4.5.1.8);
-    ///   "neither one is the same as OBR-29". The grammar-less `.v2_8`
-    ///   gets neither parent leg (ADR-013).
+    ///   "neither one is the same as OBR-29". A `.v2_8` message is
+    ///   validated as v2.8.2 (ADR-018), so it gets the ORC-8/OBR-54 leg.
     /// - ORC-7/OBR-27 (TQ) is deliberately ABSENT: the v2.4 prose says
     ///   the pair "should be valued exactly the same" — advisory, not
     ///   normative — and both fields are withdrawn (`W`) from v2.7.
@@ -1778,9 +1798,10 @@ public struct Validator: Sendable {
     /// error against the spec (req #4). The grammar also carries what a fixed list could
     /// not: CX.5, PT.1, VID.1 and XTN.3 become `R` in v2.8.2.
     ///
-    /// v2.3 to v2.4 define components in prose and print no optionality, and the
-    /// grammar-less v2.8 has no tables at all, so nothing is required of them here.
-    /// `RE` (required but may be empty) is, by its own definition, never a missing value.
+    /// v2.3 to v2.4 define components in prose and print no optionality, so nothing is
+    /// required of them here. `.v2_8` is validated as v2.8.2 (ADR-018), so it is checked
+    /// against that table like any other version. `RE` (required but may be empty) is,
+    /// by its own definition, never a missing value.
     private func requiredComponents(forCompositeCode code: String, version: Version) -> [RequiredComponent] {
         guard let grammar = DataTypeGrammarTable.grammar(code, version: version) else { return [] }
         return grammar.components
@@ -2466,5 +2487,20 @@ public struct Validator: Sendable {
     /// "present but empty" wire shape from genuinely absent fields.
     private func isFieldPopulated(_ field: Field) -> Bool {
         field.repetitions.contains(where: isRepetitionPopulated)
+    }
+}
+
+private extension Message {
+    /// A copy of this message declaring `version`. Used to validate under
+    /// ``Version/grammarVersion`` (ADR-018); segments are shared, not copied.
+    func declaring(_ version: Version) -> Message {
+        guard version != self.version else { return self }
+        return Message(
+            version: version,
+            encodingCharacters: encodingCharacters,
+            segments: segments,
+            characterEncoding: characterEncoding,
+            locale: locale
+        )
     }
 }

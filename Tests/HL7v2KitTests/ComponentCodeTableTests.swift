@@ -67,8 +67,9 @@ struct ComponentCodeTableTests {
         // XPN.7 Name type code is ID / 0200 on every version, v2.3 included (prose-derived grammar).
         #expect(try tableIssues(wire(version: "2.3", pid5: "DOE^JOHN^^^^^QQQ")).count == 1)
         #expect(try tableIssues(wire(version: "2.4", pid5: "DOE^JOHN^^^^^L")).isEmpty)
-        // The grammar-less v2.8 still has nothing to check against.
-        #expect(try tableIssues(wire(version: "2.8", pid3: "123^^^AUTH^ZZZZ")).isEmpty)
+        // A 2.8 message is checked against the v2.8.2 component grammar (ADR-018): XPN.7 is
+        // closed there too, same as v2.3 above (table 0203 is open, so it cannot demonstrate this).
+        #expect(try tableIssues(wire(version: "2.8", pid5: "DOE^JOHN^^^^^QQQ")).count == 1)
     }
 
     @Test("A prose misprint never becomes a rule: v2.3 QSC.4 names table 0102 for Relational conjunction")
