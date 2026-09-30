@@ -90,3 +90,7 @@ Each substage is its own commit at green tests. The `Version` case lands in S1 s
 - `docs/standards/HL7_V2.8.2_PDF/PDF/V282_*.pdf` — the author-local Final Standard source (IP-review-gated; keep out of any public tree).
 - `ROADMAP.md` M1 (version coverage) + M3 (API freeze) — the milestones this decision sits between.
 - the working notes req #1 (feature-complete over AU-specific) vs memory `project_au_baseline` (AU version priority) — v2.8.2 is the clearest req-#1-over-AU-baseline case yet.
+
+## Addendum (2026, ADR-018)
+
+The deferred `.v2_8` grammar question above is decided by ADR-018: a `2.8` message is validated against the v2.8.2 grammar, and the Validator reports the substitution (`IssueCode.versionGrammarSubstituted`, info). `.v2_8` keeps its public case and still owns no tables in the public registries.

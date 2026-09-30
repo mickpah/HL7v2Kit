@@ -79,10 +79,26 @@ On v2.3 through v2.6, the modelled OBR-2 condition (`ORC-2 empty`) and OBR-3 con
 
 **Known defect (req #4), blocks spec-completeness.** Fix tracked in P4-7, widened from the v2.8.2-only placer-or-filler note above (`docs/design/v2_8_2-spec-audit.md`) to also cover v2.3–v2.6.
 
+## F. Excluded HL7 v2.x versions (ADR-018)
+
+A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries
+`IssueCode.versionNotRecognised(wireValue:)` (warning) at MSH-12 naming that fallback.
+`ParserOptions.strict` rejects it with `ParseError.unsupportedVersion(found:)`.
+
+| MSH-12 | Why it is excluded | Freeze decision |
+|--------|--------------------|-----------------|
+| 2.1 | No v2.1 spec text in `docs/standards/`. | Excluded. Re-open with the text, an ADR-018 amendment and an ADR-015 cycle. |
+| 2.2 | No v2.2 spec text in `docs/standards/`. | Excluded, as 2.1. |
+| 2.5 | No v2.5 spec text; v2.5.1, which HL7 published as the successor release, is modelled. The fallback applies the v2.5.1 grammar, and the warning says so. | Excluded, as 2.1. |
+| 2.7 | Listed in v2.8.2 Table 0104; no v2.7 text on disk. Not mapped to v2.7.1: no `.v2_7` case exists, and adding one without its text would be an unverified substitution. | Excluded, as 2.1. |
+| 2.7.1 | Text on disk (zipped) but not yet extracted. | **Scheduled**: P3-6 scopes the ADR-015 cycle. Remove this row when it lands. |
+| 2.8.1 | Listed in v2.8.2 Table 0104; no v2.8.1 text on disk. See ADR-018 "Open question" on substituting v2.8.2. | Excluded, as 2.1. |
+| 2.9 | Published after v2.8.2; no text on disk. | Excluded, as 2.1. |
+
 ## What is NOT a limitation (recorded to prevent re-litigation)
 
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.
-- **`.v2_8` grammar-less case** — a deliberate scope decision (ADR-013), not an undocumented gap: `2.8` is rare and distinct from the fully-modelled `2.8.2`.
+- **`.v2_8` substitution** — a deliberate, announced decision (ADR-018): a `2.8` message is validated against the v2.8.2 grammar, and every report carries `versionGrammarSubstituted` (info) at MSH-12. The v2.8 text is not on disk, so the v2.8 to v2.8.2 differences are unverified; the info issue says so.
 - **Curated NK1 / PV1 / IN1 depth** — a req-#1 feature-completeness *backlog* item (extend the field sets), not a conformance limitation of the modelled fields.
 - **Blank printed OPT** (v2.4 / v2.5.1 RCP-7) is kept verbatim as `""` in the schema and generated as `.optional` (`optionalityCase` default branch): the spec prints no optionality, and the permissive reading can never raise a false error.
 
