@@ -68,6 +68,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The permanent-limitations register, section F, no longer records the
   subcomponent and empty-VID.1 shapes as a limitation. ADR-018's version
   table gains rows for them and for a whitespace-only MSH-12.
+- The `versionGrammarSubstituted` message no longer says "MSH-12 declares
+  2.8" when the `.v2_8` version came from `ParserOptions.versionOverride`
+  (or a directly built `Message`) and MSH-12 says otherwise.
+- Findings closed by workstream P3: X-C01 (partial; P10 completes it),
+  X-C02, X-C03, X-C11, V282-C03, V282-C09.
 
 ### Fixed — P3-5: unrecognised MSH-12 versions are reported
 

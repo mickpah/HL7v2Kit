@@ -279,6 +279,11 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// require MSG.1, v2.4 types MSH-9 as CM with no component optionality
     /// (HL7 v2.4 Chapter 2, 2.16.9.9). P3-4.
     ///
+    /// On a version where it yields, the finding is the base
+    /// `requiredComponentMissing` (at `ValidationOptions.requiredComponentSeverity`),
+    /// not this rule's `profileConstraintViolation` (always `.error`), so the
+    /// same defect's code and severity can differ between versions.
+    ///
     /// The deferral check looks up the base composite by the field's
     /// **statically-declared** datatype (`FieldGrammar.dataType`), the same
     /// type `Validator.checkComponents` — the base check this defers to —

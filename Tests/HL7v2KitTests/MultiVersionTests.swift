@@ -37,7 +37,7 @@ struct MultiVersionTests {
         (v23Wire, .v2_3),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.6\r", .v2_6),
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r", .v2_8_2),
-        // The legacy grammar-less case must still resolve for a bare "2.8" wire.
+        // A bare "2.8" wire still resolves to .v2_8 (validated as v2.8.2, ADR-018).
         ("MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240301120000||ADT^A01|MSG00001|P|2.8\r", .v2_8),
     ]
 

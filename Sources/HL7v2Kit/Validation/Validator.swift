@@ -405,9 +405,10 @@ public struct Validator: Sendable {
         // A populated MSH-12 from which no version resolves is reported here
         // (an empty one is the required-field check's business).
         let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
-        if case .unresolved(let vid1) = Version.reading(
+        let reading = Version.reading(
             msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator
-        ) {
+        )
+        if case .unresolved(let vid1) = reading {
             let what = vid1.isEmpty
                 ? "MSH-12 is populated but its version ID (VID.1) is empty"
                 : "MSH-12 version '\(vid1)' is not a version HL7v2Kit models"
@@ -421,11 +422,16 @@ public struct Validator: Sendable {
         }
         let declared = message.version
         guard applied != declared else { return }
+        // Message.version may not come from the wire (ParserOptions.versionOverride,
+        // or a Message built directly); say so, so the note never misquotes MSH-12.
+        let source = reading == .recognised(declared)
+            ? "MSH-12 declares \(declared.rawValue)"
+            : "Message.version is \(declared.rawValue), which MSH-12 does not declare (for example, set by ParserOptions.versionOverride)"
         issues.append(ValidationIssue(
             severity: .info,
             code: .versionGrammarSubstituted(declared: declared, validatedAs: applied),
             location: location,
-            message: "MSH-12 declares \(declared.rawValue); HL7v2Kit has no v\(declared.rawValue) grammar and validated this message against v\(applied.rawValue). Differences between the two releases are not verified (ADR-018)"
+            message: "\(source); HL7v2Kit has no v\(declared.rawValue) grammar and validated this message against v\(applied.rawValue). Differences between the two releases are not verified (ADR-018)"
         ))
     }
 

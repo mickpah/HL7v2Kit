@@ -29,7 +29,7 @@ struct DataTypeGrammarTests {
         #expect(cx24.component(5)?.tables == ["0203"])
         #expect(cx24.component(5)?.optionalityCode == "", "prose gives no optionality")
         #expect(cx24.components.count == 8, "v2.4 CX has eight components; v2.5.1 added two")
-        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_8) == nil, "grammar-less v2.8 (ADR-013)")
+        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_8) == nil, "the registry stays version-literal: .v2_8 owns no grammar; the Validator substitutes v2.8.2 (ADR-018)")
     }
 
     @Test("The printed optionality code is kept verbatim, including RE and W")

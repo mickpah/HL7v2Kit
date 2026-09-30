@@ -289,6 +289,24 @@ struct VersionHandlingTests {
         #expect(hits.count == 1)
     }
 
+    @Test("Under a .v2_8 version override the substitution note names the override, not MSH-12")
+    func substitutionUnderOverrideNamesItsSource() throws {
+        let message = try Parser(options: ParserOptions(versionOverride: .v2_8)).parse(adt(version: "2.5.1"))
+        let hit = try #require(Validator().validate(message).issues.first {
+            $0.code == .versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)
+        })
+        #expect(!hit.message.contains("MSH-12 declares"))
+        #expect(hit.message.contains("versionOverride"))
+    }
+
+    @Test("A 2.8 wire's substitution note still says MSH-12 declares 2.8")
+    func substitutionFromWireNamesMSH12() throws {
+        let hit = try #require(Validator().validate(try Parser().parse(adt(version: "2.8"))).issues.first {
+            $0.code == .versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)
+        })
+        #expect(hit.message.contains("MSH-12 declares 2.8"))
+    }
+
     // MARK: - P3 fix wave: the MSH-12 version matrix (ADR-018)
     //
     // Every MSH-12 shape either resolves to a version, is reported, or (under
