@@ -116,6 +116,8 @@ These rules depend on message-type or sibling-segment presence (SPM, OBX). They 
 
 **P1-1 correction:** OBR-7 is `messageCode = ORU` (the `SPM present OR OBR-15 populated` legs misfired on orders and were removed); OBR-14 is `B` with no condition, as printed in CH04 and CH07 (§4.5.3.14, SPM-18 favoured).
 
+**P1-2:** "report message" is `messageCode in (ORU, ORF, OUL)`: CH07 §7.3.1-§7.3.9 (ORU R01/R30-R32, QRY/ORF, OUL R21-R24).
+
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)
 
 From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):

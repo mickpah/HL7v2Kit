@@ -135,4 +135,67 @@ struct OBRPredicateTests {
         }
         #expect(obr.field(14)?.optionality == expected, "v\(version) OBR-14 optionality")
     }
+
+    // MARK: - P1-2: report-message set (X-C07)
+
+    struct MessageCase: Sendable, CustomTestStringConvertible {
+        let version: String
+        let messageType: String
+        var testDescription: String { "v\(version) \(messageType)" }
+    }
+
+    /// Report messages per version (plan table in P1-2). Each must require
+    /// OBR-7 and OBR-25.
+    static let reportCases: [MessageCase] = [
+        .init(version: "2.3", messageType: "ORU^R01"), .init(version: "2.3", messageType: "ORF^R04"),
+        .init(version: "2.3.1", messageType: "ORU^R01"), .init(version: "2.3.1", messageType: "ORF^R04"),
+        .init(version: "2.4", messageType: "ORU^R01^ORU_R01"), .init(version: "2.4", messageType: "ORF^R04^ORF_R04"),
+        .init(version: "2.4", messageType: "OUL^R21^OUL_R21"),
+        .init(version: "2.5.1", messageType: "ORU^R01^ORU_R01"), .init(version: "2.5.1", messageType: "ORU^R30^ORU_R30"),
+        .init(version: "2.5.1", messageType: "ORF^R04^ORF_R04"), .init(version: "2.5.1", messageType: "OUL^R21^OUL_R21"),
+        .init(version: "2.5.1", messageType: "OUL^R22^OUL_R22"), .init(version: "2.5.1", messageType: "OUL^R23^OUL_R23"),
+        .init(version: "2.5.1", messageType: "OUL^R24^OUL_R24"),
+        .init(version: "2.6", messageType: "ORU^R01^ORU_R01"), .init(version: "2.6", messageType: "ORU^R30^ORU_R30"),
+        .init(version: "2.6", messageType: "ORF^R04^ORF_R04"), .init(version: "2.6", messageType: "OUL^R21^OUL_R21"),
+        .init(version: "2.6", messageType: "OUL^R22^OUL_R22"), .init(version: "2.6", messageType: "OUL^R23^OUL_R23"),
+        .init(version: "2.6", messageType: "OUL^R24^OUL_R24"), .init(version: "2.6", messageType: "OPU^R25^OPU_R25"),
+        .init(version: "2.8.2", messageType: "ORU^R01^ORU_R01"), .init(version: "2.8.2", messageType: "ORU^R30^ORU_R30"),
+        .init(version: "2.8.2", messageType: "ORU^R40^ORU_R01"), .init(version: "2.8.2", messageType: "OUL^R21^OUL_R21"),
+        .init(version: "2.8.2", messageType: "OUL^R22^OUL_R22"), .init(version: "2.8.2", messageType: "OUL^R23^OUL_R23"),
+        .init(version: "2.8.2", messageType: "OUL^R24^OUL_R24"), .init(version: "2.8.2", messageType: "OPU^R25^OPU_R25"),
+    ]
+
+    /// Orders, plus ORF on v2.8.2 (withdrawn as of v2.7, CH07 §7.3.3):
+    /// OBR-7 and OBR-25 must stay silent.
+    static let nonReportCases: [MessageCase] = [
+        .init(version: "2.3", messageType: "ORM^O01"), .init(version: "2.3.1", messageType: "ORM^O01"),
+        .init(version: "2.4", messageType: "ORM^O01^ORM_O01"), .init(version: "2.5.1", messageType: "OML^O21^OML_O21"),
+        .init(version: "2.6", messageType: "OML^O21^OML_O21"), .init(version: "2.8.2", messageType: "OML^O21^OML_O21"),
+        .init(version: "2.8.2", messageType: "ORF^R04^ORF_R04"),
+    ]
+
+    /// One order group with OBR-7 and OBR-25 empty; order numbers valued
+    /// on both sides so no XOR rule is in play.
+    static func obrWithoutResultFields(_ c: MessageCase, orderControl: String) -> String {
+        wire([
+            msh(c.messageType, c.version), pid,
+            segment("ORC", [1: orderControl, 2: "ORD001", 3: "FIL001"]),
+            segment("OBR", [1: "1", 2: "ORD001", 3: "FIL001", 4: "GLUC^Glucose^L"]),
+            segment("OBX", [1: "1", 2: "NM", 3: "GLU^Glucose^L", 5: "5.2", 11: "F"]),
+        ])
+    }
+
+    @Test("X-C07: every report message requires OBR-7 and OBR-25", arguments: reportCases)
+    func reportMessagesRequireResultFields(_ c: MessageCase) throws {
+        let wire = Self.obrWithoutResultFields(c, orderControl: "RE")
+        #expect(try conditionalHits(wire, field: 7).count == 1, "\(c.testDescription) OBR-7")
+        #expect(try conditionalHits(wire, field: 25).count == 1, "\(c.testDescription) OBR-25")
+    }
+
+    @Test("X-C07: orders (and withdrawn ORF on v2.8.2) do not require OBR-7 or OBR-25", arguments: nonReportCases)
+    func nonReportMessagesDoNotRequireResultFields(_ c: MessageCase) throws {
+        let wire = Self.obrWithoutResultFields(c, orderControl: "NW")
+        #expect(try conditionalHits(wire, field: 7).isEmpty, "\(c.testDescription) OBR-7")
+        #expect(try conditionalHits(wire, field: 25).isEmpty, "\(c.testDescription) OBR-25")
+    }
 }

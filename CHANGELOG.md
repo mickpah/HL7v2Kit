@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P1-2: OBR-7 / OBR-25 apply to every report message
+
+- "Required in a report message" was modelled as ORU only. It now covers
+  each version's report structures: ORU and ORF (v2.3, v2.3.1), plus OUL
+  (v2.4, v2.5.1), plus OPU (v2.6); ORU, OUL and OPU on v2.8.2, where ORF
+  is withdrawn.
+
 ### Fixed — P1-1: OBR-7 / OBR-14 no longer fire on new orders
 
 - OBR-7 and OBR-14 fired `conditionalFieldMissing` on conformant new orders

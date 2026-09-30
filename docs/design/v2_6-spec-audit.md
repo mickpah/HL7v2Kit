@@ -55,6 +55,8 @@ The cross-segment / message-context / specimen / XOR conditions were carried int
 
 **P1-1 correction:** OBR-7 is now `messageCode = ORU` and OBR-14 is `B` with no condition (CH04 row 14, §4.5.3.14). The carried `SPM present` / `OBR-15 populated` legs misfired on conformant orders (V26-C01, X-C05).
 
+**P1-2:** "report message" is `messageCode in (ORU, ORF, OUL, OPU)`: CH07 §7.3.1-§7.3.10 (adds OPU R25).
+
 ### Known limitation (documented, not shipped — req #3/#4)
 
 - **OBX-22 Mood Code** is marked conditional (`C`) in the v2.6 OBX attribute table, but the field-definition prose does not state an extractable predicate. It is recorded as a conditional-without-condition (the same honest state as any `C` field with no `condition` — it falls through as effectively optional and never fires) rather than inventing a predicate that could misfire.

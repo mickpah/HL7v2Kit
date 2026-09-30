@@ -169,7 +169,7 @@ struct MultiVersionTests {
         #expect(codes.contains { $0.0 == "ORC" && $0.1 == 2 })
         // OBR-2 XOR fires (symmetric).
         #expect(codes.contains { $0.0 == "OBR" && $0.1 == 2 })
-        // OBR-25 fires (messageCode = ORU).
+        // OBR-25 fires (messageCode in (ORU, ORF, OUL)).
         #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
     }
 
@@ -605,10 +605,10 @@ struct MultiVersionTests {
         #expect(obr?.field(49)?.dataType == "IS")   // Result Handling
         #expect(obr?.field(50)?.name == "Parent Universal Service Identifier")
         // Carried conditions (specimen / report-message / XOR).
-        #expect(obr?.field(7)?.condition == "messageCode = ORU")
+        #expect(obr?.field(7)?.condition == "messageCode in (ORU, ORF, OUL, OPU)")
         #expect(obr?.field(14)?.optionality == .backwardCompat)
         #expect(obr?.field(14)?.condition == nil)
-        #expect(obr?.field(25)?.condition == "messageCode = ORU")
+        #expect(obr?.field(25)?.condition == "messageCode in (ORU, ORF, OUL, OPU)")
         #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
     }
 
@@ -846,7 +846,7 @@ struct MultiVersionTests {
         }
         #expect(table["OBR"]?.field(48)?.optionality == .conditional)
         #expect(table["OBR"]?.field(54)?.name == "Parent Order")
-        #expect(table["OBR"]?.field(25)?.condition == "messageCode = ORU")
+        #expect(table["OBR"]?.field(25)?.condition == "messageCode in (ORU, OUL, OPU)")
 
         // OBX: 4 ST→OG; 8 IS→CWE + renamed "Interpretation Codes";
         // 15/16/18/23/24/25→B; +26..30 new; OBX-2 condition carried.

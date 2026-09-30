@@ -60,7 +60,7 @@
       "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "messageCode = ORU"
+      "condition": "messageCode in (ORU, ORF, OUL)"
     },
     {
       "index": 8,
@@ -209,7 +209,7 @@
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0123"],
-      "condition": "messageCode = ORU"
+      "condition": "messageCode in (ORU, ORF, OUL)"
     },
     {
       "index": 26,
