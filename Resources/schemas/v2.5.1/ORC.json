@@ -216,7 +216,8 @@
       "swiftName": "advancedBeneficiaryNoticeOverrideReason",
       "name": "Advanced Beneficiary Notice Override Reason",
       "dataType": "CWE", "length": "60",
-      "optionality": "O",
+      "optionality": "C",
+      "condition": "ORC-20 in (3, 4)",
       "repeatability": "1",
       "tables": ["0552"]
     },

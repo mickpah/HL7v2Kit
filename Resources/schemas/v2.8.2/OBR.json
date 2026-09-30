@@ -24,7 +24,7 @@
     { "index": 19, "swiftName": "placerField2", "name": "Placer Field 2", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "fillerField1", "name": "Filler Field 1", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
     { "index": 21, "swiftName": "fillerField2", "name": "Filler Field 2", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
-    { "index": 22, "swiftName": "resultsReportStatusChangeDateTime", "name": "Results Rpt/Status Chng - Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1" },
+    { "index": 22, "swiftName": "resultsReportStatusChangeDateTime", "name": "Results Rpt/Status Chng - Date/Time", "dataType": "DTM", "optionality": "C", "repeatability": "1", "condition": "OBR-25 populated" },
     { "index": 23, "swiftName": "chargeToPractice", "name": "Charge to Practice", "dataType": "MOC", "optionality": "O", "repeatability": "1" },
     { "index": 24, "swiftName": "diagnosticServSectID", "name": "Diagnostic Serv Sect ID", "dataType": "ID", "length": "2..3", "table": "0074", "optionality": "O", "repeatability": "1", "tables": ["0074"] },
     { "index": 25, "swiftName": "resultStatus", "name": "Result Status", "dataType": "ID", "length": "1..1", "table": "0123", "optionality": "C", "repeatability": "1", "tables": ["0123"], "condition": "messageCode in (ORU, OUL, OPU)" },

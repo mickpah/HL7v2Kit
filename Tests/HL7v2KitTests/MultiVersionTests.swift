@@ -891,13 +891,14 @@ struct MultiVersionTests {
     }
 
     // S5 conditional pass: a well-formed v2.8.2 ORU^R01. Every ORU-required
-    // conditional (OBR-7, OBR-25, OBX-2) is satisfied; the v2.6 XOR/parent
-    // conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer apply, and no
-    // carried condition (ORC-2/3, OBR-2/3) misfires.
+    // conditional (OBR-7, OBR-22, OBR-25, OBX-2) is satisfied; the v2.6
+    // XOR/parent conditions that v2.8.2 dropped (ORC-8, OBR-29) no longer
+    // apply, and no carried condition (ORC-2/3, OBR-2/3) misfires.
     @Test("v2.8.2 well-formed ORU validates with no spurious errors (S5 conditional pass)")
     func v282CleanORUHasNoErrors() throws {
         let obr = "OBR|1|PON123|FON456|GLU^Glucose^L|||20240301100000"
-            + String(repeating: "|", count: 18) + "F"   // Result Status → OBR-25
+            + String(repeating: "|", count: 15) + "20240301110000"   // OBR-22, required when OBR-25 is valued (§4.5.3.22)
+            + String(repeating: "|", count: 3) + "F"                  // Result Status → OBR-25
         let obx = "OBX|1|NM|GLU^Glucose^L||5.5|mmol/L|||||F"   // OBX-11 (status) → F
         let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|20240301120000||ORU^R01^ORU_R01|MSG1|P|2.8.2\r"
             + "PID|1||X^^^F^MR||Doe^Jane||19800101|F\r"
@@ -975,11 +976,11 @@ struct MultiVersionTests {
         let table = SegmentGrammarTable.v2_8_2
         // Every remaining C-without-condition (seg, index) in v2.8.2.
         let expected: Set<String> = [
-            "OBR-22", "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
-            // v1.2: PV2 added — Prior Pending Location (1), Advance Directive
-            // Code (45), Expected LOA Return Date/Time (47) are conditional in the
-            // spec with no field-machine-expressible trigger (documented limitation).
-            "PV2-1", "PV2-45", "PV2-47",
+            "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
+            // v1.2: PV2 added — Prior Pending Location (1) and Expected LOA
+            // Return Date/Time (47); Advance Directive Code (45) carries
+            // PV2-50 populated since P4-6.
+            "PV2-1", "PV2-47",
             // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
             // dispense fields and TQ1/TQ2 timing fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate

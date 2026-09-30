@@ -10,8 +10,8 @@
 
 | Position | Name | Versions | Verdict |
 |----------|------|----------|---------|
-| PD1-15 | Advance Directive Code | v2.8.2 | **SHIP** — `PD1-22 populated` |
-| ORC-26 | Advanced Beneficiary Notice Override Reason | v2.8.2 | **SHIP (partial)** — `ORC-20 in (3, 4)` |
+| PD1-15 | Advance Directive Code | v2.6, v2.8.2 | **SHIP** — `PD1-22 populated` (v2.6 in P4-6) |
+| ORC-26 | Advanced Beneficiary Notice Override Reason | v2.5.1, v2.6, v2.8.2 | **SHIP (partial)** — `ORC-20 in (3, 4)` (v2.5.1, v2.6 in P4-6) |
 | OBR-1 | Set ID - OBR | v2.3 | Permanent limitation (v2.3.1–v2.6 print O; corrected in P1-5) |
 | OBR-8 | Observation End Date/Time | none | Not conditional: printed O on v2.3–v2.6 (corrected in P1-5; was C from the v2.5.1 baseline) |
 | OBR-9 | Collection Volume | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
@@ -20,16 +20,16 @@
 | OBR-14 | Specimen Received Date/Time | v2.3–v2.4 | Permanent limitation (P1-1): required "when the order is accompanied by a specimen, or when the observation required a specimen and the message is a report" (v2.3 §4.5.1.14, v2.4 §4.5.3.14). Neither is on the wire: OBR-15 names where a specimen *should be* obtained (§4.5.1.15 / §4.5.3.15), OBR-11 states an intended action (Table 0065), and OBR-15 may name a service site rather than a specimen. The former `OBR-15 populated` predicate misfired on new orders and was removed. v2.5.1 and v2.6 print OBR-14 `B` (SPM-18 favoured); v2.8.2 withdrew it. |
 | OBR-20 | Filler Field 1 | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
 | OBR-21 | Filler Field 2 | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
-| OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation |
+| OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation on v2.3–v2.6 (no condition printed); **SHIP (P4-6)** on v2.8.2 — `OBR-25 populated` |
 | OBR-26 | Parent Result | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
 | OBR-32 | Principal Result Interpreter | none | Not conditional: printed O on v2.3–v2.5.1, B on v2.6 (P1-5) |
 | OBR-48 | Medically Necessary Duplicate Procedure Reason | v2.5.1, v2.6, v2.8.2 | Permanent limitation |
 | OBX-4 | Observation Sub-ID | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-22 | Mood Code | v2.6, v2.8.2 | Permanent limitation |
-| DG1-22 | Parent Diagnosis | v2.8.2 | Permanent limitation |
+| DG1-22 | Parent Diagnosis | v2.6, v2.8.2 | Permanent limitation |
 | PV2-1 | Prior Pending Location | v2.3–v2.8.2 | Permanent limitation (v1.2) |
-| PV2-45 | Advance Directive Code | v2.6, v2.8.2 | Permanent limitation (v1.2) |
+| PV2-45 | Advance Directive Code | v2.6, v2.8.2 | **SHIP (P4-6)** — `PV2-50 populated` |
 | PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | Permanent limitation (v1.2) |
 | RXO/RXE/RXD/RXG/RXC/TQ1/TQ2 (31 fields) | order/pharmacy/timing conditionals | v2.3–v2.8.2 | Permanent limitation (v1.2, grouped below) |
 | SCH/RGS/ARQ/AIS/AIG/AIL/AIP/BPX/BTX/SPM/ROL/RXA (55 fields) | scheduling/blood-product/specimen/role conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
@@ -45,13 +45,13 @@
 
 > v2.8.2 §3.3.11.15: "*… When PD1-22 - Advanced Directive Last Verified Date is valued, this field is required.*"
 
-A clean, closed, wire-detectable same-segment MUST. Shipped as `PD1-15 condition = "PD1-22 populated"` on the v2.8.2 PD1 schema (the field is `O` in earlier versions — v2.8.2-specific conditional). Fires `.conditionalFieldMissing` when PD1-22 is populated and PD1-15 is empty.
+A clean, closed, wire-detectable same-segment MUST. Shipped as `PD1-15 condition = "PD1-22 populated"` on the v2.8.2 PD1 schema (v2.6 §3.4.10.15 prints C and the same sentence; shipped there in P4-6. The field is `O` in v2.4 and v2.5.1). Fires `.conditionalFieldMissing` when PD1-22 is populated and PD1-15 is empty.
 
 ### ORC-26 Advanced Beneficiary Notice Override Reason — `ORC-20 in (3, 4)` (partial)
 
 > v2.8.2 §4.5.1.26: "*Condition: This field is required if the value of ORC-20 Advanced Beneficiary Notice Code indicates that the notice was not signed. For example, … if ORC-20 was populated with the values "3" or "4" in User-defined Table 0339 … or similar values in related external code tables.*"
 
-Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` — the HL7-standard User-defined Table 0339 "not signed" codes. **Partial** (same honesty pattern as HL7au:00044.4.4, v0.13): the spec's "*or similar values in related external code tables*" caveat means sites using a non-HL7 code system for ORC-20 could encode "not signed" with other values that this predicate won't catch. The rule is a sound **necessary condition** for the HL7-standard table — it fires only when ORC-20 is exactly `3`/`4`, which per Table 0339 genuinely means not-signed, so it cannot misfire on standard-conformant traffic (req #4). External-code-system completeness is out of the portable-core boundary.
+Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` on v2.8.2, and on v2.5.1 and v2.6 in P4-6 (both print the same Condition sentence, §4.5.1.26) — the HL7-standard User-defined Table 0339 "not signed" codes. **Partial** (same honesty pattern as HL7au:00044.4.4, v0.13): the spec's "*or similar values in related external code tables*" caveat means sites using a non-HL7 code system for ORC-20 could encode "not signed" with other values that this predicate won't catch. The rule is a sound **necessary condition** for the HL7-standard table — it fires only when ORC-20 is exactly `3`/`4`, which per Table 0339 genuinely means not-signed, so it cannot misfire on standard-conformant traffic (req #4). External-code-system completeness is out of the portable-core boundary.
 
 ## Shipped in P4 (expressible-conditions remediation, 2026-09)
 
@@ -71,6 +71,11 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | PYE-4 | v2.6, v2.8.2 | prohibitedWhen | `PYE-2 not in (PPER, ORG)` | error | v2.6/v2.8.2 CH16 §16.4.3.4 | exact; same empty-PYE-2 rule |
 | PRT-7 | v2.8.2 | prohibitedWhen | `PRT-5 empty` (was `PRT-8 empty`) | error | v2.8.2 CH07 §7.4.4.7: "This field may only be valued if PRT-5 Participation Person is valued" | exact; corrects an M8-D misfire on person participations with no organisation |
 | PRT-14 | v2.8.2 | condition | `PRT-4 = POMD` | error | v2.8.2 CH07 §7.4.4.14: "The address must be present if the Participation is Performing Organization Medical Director" | partial: a POMD carried only in the alternate triplet is not checked |
+| PD1-15 | v2.6 | condition | `PD1-22 populated` (optionality O to C) | error | v2.6 CH03 §3.4.10.15: "When PD1-22 ... is valued, this field is required"; attribute table prints C | exact |
+| ORC-26 | v2.5.1, v2.6 | condition | `ORC-20 in (3, 4)` (optionality O to C) | error | v2.5.1 CH04 §4.5.1.26, v2.6 CH04 §4.5.1.26: same Condition sentence as v2.8.2; attribute table prints C | partial, as on v2.8.2 (external code tables) |
+| PV2-45 | v2.6, v2.8.2 | condition | `PV2-50 populated` | error | v2.6 CH03 §3.4.4.45: "This field is required if PV2-50 - Advance Directive Last Verified Date is valued" | exact |
+| OBR-22 | v2.8.2 | condition | `OBR-25 populated` | error | v2.8.2 CH04 §4.5.3.22: "This conditional field is required whenever the OBR-25 is valued" | exact |
+| OBR-48, DG1-22 | v2.6 | optionality O to C (bare) | none | n/a | v2.6 CH04 OBR row 48 and CH06 DG1 row 22 print C | print alignment; still bare, see the permanent bullets |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -80,10 +85,10 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 
 **Discourse-level / message-intent (not a same-segment or peer predicate):**
 - **OBR-1 Set ID** (v2.3 only) — required only when more than one OBR occurs; an ordinal/cardinality property of the message, not a field predicate.
-- **OBR-22 Results Rpt/Status Chng** — tied to a result-status *change* event; the "changed" state is not on the wire.
+- **OBR-22 Results Rpt/Status Chng** (v2.3–v2.6) — these versions' definitions describe the field and print no condition sentence (v2.5.1 and v2.6 §4.5.3.22 checked in P4-6). v2.8.2 §4.5.3.22 adds "This conditional field is required whenever the OBR-25 is valued", which ships there as `OBR-25 populated`. The earlier rationale ("the 'changed' state is not on the wire") was wrong for v2.8.2.
 - **OBR-26 Parent Result** — parent/child observation linkage; discourse-level (the v2.5.1 audit reached the same conclusion pre-ADR-010). (P1-5: no longer C; see inventory)
 - **OBR-32 Principal Result Interpreter** — "identifies the physician … responsible for the report content"; no stated required-when (an earlier audit mis-grouped this as a `messageCode = ORU` rule — the v2.8.2 prose confirms there is none). (P1-5: no longer C; see inventory)
-- **DG1-22 Parent Diagnosis** (v2.8.2) — links a "*" manifestation diagnosis to its "+" parent etiological diagnosis; structural, no MUST.
+- **DG1-22 Parent Diagnosis** (v2.6, v2.8.2) — links a "*" manifestation diagnosis to its "+" parent etiological diagnosis; structural, no MUST.
 
 **Data-nature dependent (undecidable from peer fields):**
 - **OBR-8 Observation End Date/Time** — "*null for observations made at a point in time*"; whether the observation is timed/duration-based is not wire-encoded. (P1-5: no longer C; see inventory)
@@ -97,7 +102,7 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 
 **PV2 (added v1.2 when PV2 was modelled — CH03):**
 - **PV2-1 Prior Pending Location** (v2.3–v2.8.2) — "*required for cancel pending transfer*"-type trigger keyed on the ADT event code, which lives in the EVN/MSH trigger, not a same-segment peer; the conditionality is message-type dependent and not expressed as a wire predicate here.
-- **PV2-45 Advance Directive Code** (v2.6, v2.8.2) — mirrors PD1-15's conditionality but PV2 carries no PV2-side "last verified date" peer to gate on; descriptive, no same-segment MUST.
+- **PV2-45 Advance Directive Code** (v2.6, v2.8.2) — shipped in P4-6 as `PV2-50 populated`. The earlier rationale ("PV2 carries no PV2-side 'last verified date' peer") was wrong: PV2-50 Advance Directive Last Verified Date exists on both versions and both PV2-45 and PV2-50 state the rule.
 - **PV2-47 Expected LOA Return Date/Time** (v2.4–v2.8.2) — required only for a leave-of-absence visit; the LOA nature is not encoded in a same-segment peer field.
 
 **Order/pharmacy & timing family (added v1.2 when TQ1/TQ2/RXO/RXE/RXD/RXG/RXC were modelled — CH04/CH04A):**

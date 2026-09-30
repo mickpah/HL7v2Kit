@@ -28,7 +28,7 @@
     { "index": 23, "swiftName": "orderingFacilityPhoneNumber", "name": "Ordering Facility Phone Number", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 24, "swiftName": "orderingProviderAddress", "name": "Ordering Provider Address", "dataType": "XAD", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 25, "swiftName": "orderStatusModifier", "name": "Order Status Modifier", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"], "prohibitedWhen": "ORC-5 empty" },
-    { "index": 26, "swiftName": "advancedBeneficiaryNoticeOverrideReason", "name": "Advanced Beneficiary Notice Override Reason", "dataType": "CWE", "length": "60", "optionality": "O", "repeatability": "1", "tables": ["0552"] },
+    { "index": 26, "swiftName": "advancedBeneficiaryNoticeOverrideReason", "name": "Advanced Beneficiary Notice Override Reason", "dataType": "CWE", "length": "60", "optionality": "C", "repeatability": "1", "tables": ["0552"], "condition": "ORC-20 in (3, 4)" },
     { "index": 27, "swiftName": "fillersExpectedAvailabilityDateTime", "name": "Filler's Expected Availability Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
     { "index": 28, "swiftName": "confidentialityCode", "name": "Confidentiality Code", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0177"] },
     { "index": 29, "swiftName": "orderType", "name": "Order Type", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0482"] },

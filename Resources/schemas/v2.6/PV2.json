@@ -47,7 +47,7 @@
     { "index": 42, "swiftName": "patientConditionCode", "name": "Patient Condition Code", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0434"] },
     { "index": 43, "swiftName": "livingWillCode", "name": "Living Will Code", "dataType": "IS", "length": "2", "table": "0315", "optionality": "O", "repeatability": "1", "tables": ["0315"] },
     { "index": 44, "swiftName": "organDonorCode", "name": "Organ Donor Code", "dataType": "IS", "length": "2", "table": "0316", "optionality": "O", "repeatability": "1", "tables": ["0316"] },
-    { "index": 45, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "length": "705", "optionality": "C", "repeatability": "*", "tables": ["0435"] },
+    { "index": 45, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "length": "705", "optionality": "C", "repeatability": "*", "tables": ["0435"], "condition": "PV2-50 populated" },
     { "index": 46, "swiftName": "patientStatusEffectiveDate", "name": "Patient Status Effective Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
     { "index": 47, "swiftName": "expectedLoaReturnDateTime", "name": "Expected LOA Return Date/Time", "dataType": "DTM", "length": "24", "optionality": "C", "repeatability": "1" },
     { "index": 48, "swiftName": "expectedPreAdmissionTestingDateTime", "name": "Expected Pre-admission Testing Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },

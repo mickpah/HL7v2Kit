@@ -17,7 +17,7 @@
     { "index": 12, "swiftName": "protectionIndicator", "name": "Protection Indicator", "dataType": "ID", "length": "1", "table": "0136", "optionality": "B", "repeatability": "1", "tables": ["0136"] },
     { "index": 13, "swiftName": "protectionIndicatorEffectiveDate", "name": "Protection Indicator Effective Date", "dataType": "DT", "length": "8", "optionality": "B", "repeatability": "1" },
     { "index": 14, "swiftName": "placeOfWorship", "name": "Place of Worship", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "*" },
-    { "index": 15, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0435"] },
+    { "index": 15, "swiftName": "advanceDirectiveCode", "name": "Advance Directive Code", "dataType": "CWE", "length": "705", "optionality": "C", "repeatability": "*", "tables": ["0435"], "condition": "PD1-22 populated" },
     { "index": 16, "swiftName": "immunizationRegistryStatus", "name": "Immunization Registry Status", "dataType": "IS", "length": "1", "table": "0441", "optionality": "O", "repeatability": "1", "tables": ["0441"] },
     { "index": 17, "swiftName": "immunizationRegistryStatusEffectiveDate", "name": "Immunization Registry Status Effective Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
     { "index": 18, "swiftName": "publicityCodeEffectiveDate", "name": "Publicity Code Effective Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },

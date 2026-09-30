@@ -24,7 +24,7 @@
     { "index": 19, "swiftName": "attestationDateTime", "name": "Attestation Date/Time", "dataType": "DTM", "length": "24", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "diagnosisIdentifier", "name": "Diagnosis Identifier", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1", "condition": "triggerEvent = P12" },
     { "index": 21, "swiftName": "diagnosisActionCode", "name": "Diagnosis Action Code", "dataType": "ID", "length": "1", "table": "0206", "optionality": "C", "repeatability": "1", "tables": ["0206"], "condition": "triggerEvent = P12" },
-    { "index": 22, "swiftName": "parentDiagnosis", "name": "Parent Diagnosis", "dataType": "EI", "length": "427", "optionality": "O", "repeatability": "1" },
+    { "index": 22, "swiftName": "parentDiagnosis", "name": "Parent Diagnosis", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1" },
     { "index": 23, "swiftName": "drgCCLValueCode", "name": "DRG CCL Value Code", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0728"] },
     { "index": 24, "swiftName": "drgGroupingUsage", "name": "DRG Grouping Usage", "dataType": "ID", "length": "20", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"], "tableOpen": true, "tableOpenCitation": "v2.6 Chapter 6 section 6.5.2.24 DG1-24: \"Refer to HL7-defined Table 0136 – Yes/No Indicator for suggested values.\"" },
     { "index": 25, "swiftName": "drgDiagnosisDeterminationStatus", "name": "DRG Diagnosis Determination Status", "dataType": "IS", "length": "20", "table": "0731", "optionality": "O", "repeatability": "1", "tables": ["0731"] },
