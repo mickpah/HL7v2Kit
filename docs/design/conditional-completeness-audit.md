@@ -69,6 +69,8 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | SPM-13 | v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `SPM-11 empty OR noRepeat(SPM-11) = G` | warning | v2.5.1/v2.6/v2.8.2 CH07 §7.4.3.13: "This field would only be valued if the specimen role attribute has the value 'G'" | exact — fires when no SPM-11 repetition is `G`, including when SPM-11 is wholly empty (full universal negation; `noRepeat(...)` alone fails safe on an empty field, so the `SPM-11 empty OR` clause is needed — see the ADR-010 P4-2 amendment). "would" is descriptive, so warning |
 | PYE-3, PYE-5, PYE-6 | v2.6, v2.8.2 | prohibitedWhen | `PYE-2 not in (PERS, PPER)` | error | v2.6/v2.8.2 CH16 §16.4.3.3, .5, .6: "if Payee Type in list (...), then Required, else Not Permitted" | exact; an empty PYE-2 (itself `R`) prohibits nothing |
 | PYE-4 | v2.6, v2.8.2 | prohibitedWhen | `PYE-2 not in (PPER, ORG)` | error | v2.6/v2.8.2 CH16 §16.4.3.4 | exact; same empty-PYE-2 rule |
+| PRT-7 | v2.8.2 | prohibitedWhen | `PRT-5 empty` (was `PRT-8 empty`) | error | v2.8.2 CH07 §7.4.4.7: "This field may only be valued if PRT-5 Participation Person is valued" | exact; corrects an M8-D misfire on person participations with no organisation |
+| PRT-14 | v2.8.2 | condition | `PRT-4 = POMD` | error | v2.8.2 CH07 §7.4.4.14: "The address must be present if the Participation is Performing Organization Medical Director" | partial: a POMD carried only in the alternate triplet is not checked |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -170,14 +172,17 @@ limitations, all fail-safe:
   operator (numeric, fail-safe false on non-numeric or empty referents) and PAC-2 carries
   `condition: "SHP-8 > 1"`.
 - **PRT-1** — "required when known": sender-knowledge, not wire-decidable.
-- **PRT-6, PRT-7** — "may only be valued if PRT-5 [PRT-8] is valued": **not-permitted-unless**,
+- **PRT-6, PRT-7** — "may only be valued if PRT-5 is valued": **not-permitted-unless**,
   a *prohibition* — encoding it as a required-when condition would wrongly demand the field
   whenever its subject is present. ✅ **SHIPPED M8-D (2026-09-17):** `FieldGrammar` gained a
   `prohibitedWhen` axis (populated while the predicate holds fires the new
   `IssueCode.conditionalFieldProhibited`); PRT-6 carries `prohibitedWhen: "PRT-5 empty"`,
-  PRT-7 `prohibitedWhen: "PRT-8 empty"`. The bare-C guard now treats either axis as
-  modelled conditionality.
-- **PRT-14, RXV-20, RXV-21** — definitions state what the fields hold and no trigger.
+  PRT-7 `prohibitedWhen: "PRT-5 empty"` (corrected in P4-5: §7.4.4.7 prints PRT-5 for both
+  fields; the earlier PRT-8 reading fired on spec-permitted person participations and never
+  checked the printed subject). The bare-C guard now treats either axis as modelled
+  conditionality.
+- **RXV-20, RXV-21** — definitions state what the fields hold and no trigger. (PRT-14 left
+  this bullet in P4-5: its definition does state a trigger, shipped as `PRT-4 = POMD`.)
 
 **v3 cycle 1 (2026-09-16) — the v2.5-only quartet (CER/IPC/OVR/SFT):**
 - **CER-12 Subject ID** (01867) — §15.4.2.12: "*If the certificate is expressed as a X.509 document this field is required.*" The certificate's document format is not wire-decidable: no CER field states it (CER-10 Certificate Type carries no table and its prose names no format values), so the trigger lives in the payload encoding, not in any field the DSL can address. Fail-safe (treated as optional); the only `C` in the quartet — IPC, OVR and SFT carry none. Identical prose on v2.6 and v2.8.2 (verified at v3-C3 when their deferred instances were authored; the field retypes `ID` → `EI` at v2.8.2 but the condition text is unchanged), so CER-12 is now in the v2.8.2 guard set as a bare `C`.

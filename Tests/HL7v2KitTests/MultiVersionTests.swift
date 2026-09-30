@@ -1054,11 +1054,10 @@ struct MultiVersionTests {
             // this set. The rest have no field-expressible trigger:
             // financial/DRG context (ADJ-7, IVC-23, PSL-10/12..16,
             // DMI-2..5, REL-1), usage-pattern exceptions (DON-1/2),
-            // required-when-known (PRT-1), no stated trigger (PRT-14,
-            // RXV-20/21).
+            // required-when-known (PRT-1), no stated trigger (RXV-20/21).
             "ADJ-7", "IVC-23", "PSL-10", "PSL-12", "PSL-13", "PSL-14",
             "PSL-15", "PSL-16", "DMI-2", "DMI-3", "DMI-4", "DMI-5", "REL-1",
-            "DON-1", "DON-2", "PRT-1", "PRT-14",
+            "DON-1", "DON-2", "PRT-1",
             "RXV-20", "RXV-21",
         ]
         var actual = Set<String>()

@@ -63,7 +63,7 @@
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0406"],
-      "prohibitedWhen": "PRT-8 empty"
+      "prohibitedWhen": "PRT-5 empty"
     },
     {
       "index": 8,
@@ -122,7 +122,8 @@
       "name": "Participation Address",
       "dataType": "XAD",
       "optionality": "C",
-      "repeatability": "*"
+      "repeatability": "*",
+      "condition": "PRT-4 = POMD"
     },
     {
       "index": 15,

@@ -325,7 +325,7 @@ struct ValidationTests {
         #expect(ok.isEmpty)
         // PRT-6 empty: nothing to prohibit.
         #expect(try report("PRT|1|AD||AP").isEmpty)
-        // PRT-7 populated with PRT-8 empty: prohibited at PRT-7.
+        // PRT-7 populated with PRT-5 empty: prohibited at PRT-7 (§7.4.4.7).
         let prt7 = try report("PRT|1|AD||AP|||WARD^Ward Unit")
         #expect(prt7.count == 1)
         #expect(prt7.first?.location.pathDescription == "PRT[1]-7")

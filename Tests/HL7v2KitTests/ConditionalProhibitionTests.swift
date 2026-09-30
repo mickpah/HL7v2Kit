@@ -134,4 +134,33 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(person, "PYE", 4).count == 1, "v\(version) PYE-4 on PERS")
         #expect(try prohibited(person, "PYE", 3).isEmpty, "v\(version) PYE-3 permitted on PERS")
     }
+
+    // MARK: - v2.8.2 PRT (V282-C06, V282-C07)
+
+    @Test("PRT-7 may only be valued if PRT-5 is valued (v2.8.2 §7.4.4.7)")
+    func prt7FollowsPrintedSubject() throws {
+        func prt(_ fields: [Int: String]) -> String {
+            TestWires.wire("ORU^R01^ORU_R01", "2.8.2", TestWires.segment("PRT", fields))
+        }
+        // PRT-5 valued, PRT-8 empty, PRT-7 valued: spec-permitted, must stay silent.
+        let person = prt([1: "1", 2: "AD", 4: "AP", 5: "1234^SMITH^JOHN", 7: "WARD^Ward Unit"])
+        #expect(try prohibited(person, "PRT", 7).isEmpty)
+        // PRT-5 empty, PRT-8 valued, PRT-7 valued: the printed subject is missing.
+        let organisation = prt([1: "1", 2: "AD", 4: "AP", 7: "WARD^Ward Unit", 8: "Acme Lab"])
+        #expect(try prohibited(organisation, "PRT", 7).count == 1)
+    }
+
+    @Test("PRT-14 is required when PRT-4 is POMD (v2.8.2 §7.4.4.14, partial)")
+    func prt14() throws {
+        func missing(_ participation: String) throws -> [ValidationIssue] {
+            let wire = TestWires.wire("ORU^R01^ORU_R01", "2.8.2",
+                TestWires.segment("PRT", [1: "1", 2: "AD", 4: participation, 5: "1234^SMITH^JOHN"]))
+            return Validator().validate(try Parser().parse(wire)).errors.filter {
+                $0.code == .conditionalFieldMissing
+                    && $0.location.segmentID == "PRT" && $0.location.fieldIndex == 14
+            }
+        }
+        #expect(try missing("POMD^Performing Organization Medical Director^HL70912").count == 1)
+        #expect(try missing("OP^Ordering Provider^HL70912").isEmpty)
+    }
 }
