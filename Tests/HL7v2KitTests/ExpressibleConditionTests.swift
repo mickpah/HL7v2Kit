@@ -155,10 +155,15 @@ struct ExpressibleConditionTests {
     /// the prior-result ORC follows the OBR that carries the numbers.
     @Test("OPL O37: a prior-result ORC after its OBR stays silent", arguments: ["2.6", "2.8.2"])
     func oplPriorResultORC(version: String) throws {
+        // Two prior results: the first is a CH child whose parent is in
+        // OBR-29 (ORC-8 empty, per the XOR); the second OBR would pair
+        // with the first ORC in the ORC-delimited group.
         let wire = TestWires.wire("OPL^O37^OPL_O37", version,
-                                  obr([2: "PON1", 3: "FON1"]), "ORC|CH")
+                                  obr([2: "PON1", 3: "FON1", 29: "PAR1&PL"]), "ORC|CH",
+                                  obr([1: "2", 2: "PON2", 3: "FON2"]), "ORC|RE")
         #expect(try idHits(wire).isEmpty, "v\(version)")
         #expect(try missing(wire, "ORC", 8).isEmpty, "v\(version) ORC-8")
+        #expect(try missing(wire, "OBR", 29).isEmpty, "v\(version) OBR-29")
     }
 
     /// Two OUL R22 orders: order 1's numbers are only in its OBR, order 2's
@@ -168,10 +173,11 @@ struct ExpressibleConditionTests {
           arguments: ["2.5.1", "2.6", "2.8.2"])
     func oulR22TwoOrders(version: String) throws {
         let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
-                                  obr([2: "PON1", 3: "FON1"]), "ORC|CH",
+                                  obr([2: "PON1", 3: "FON1", 29: "PAR1&PL"]), "ORC|CH",
                                   obr([1: "2"]), "ORC|SC|PON2|FON2")
         #expect(try idHits(wire).isEmpty, "v\(version)")
         #expect(try missing(wire, "ORC", 8).isEmpty, "v\(version) ORC-8")
+        #expect(try missing(wire, "OBR", 29).isEmpty, "v\(version) OBR-29")
     }
 
     @Test("v2.8.2: a Send Number ORC with no OBR is exempt")

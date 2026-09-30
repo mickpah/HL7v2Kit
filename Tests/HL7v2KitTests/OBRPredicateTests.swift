@@ -288,7 +288,10 @@ struct OBRPredicateTests {
     @Test("V24-C11: OBR-29 metadata is the satisfiable child-order rule",
           arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"])
     func obr29Condition(version: String) {
-        #expect(Self.table(version)["OBR"]?.field(29)?.condition == "ORC-1 = CH AND ORC-8 empty", "v\(version)")
+        // P4-7: gated off the OBR-before-ORC structures on v2.5.1 (OUL) and
+        // v2.6 (OUL, OPU, OPL) until P8 group ranges.
+        let gate = ["2.5.1": " AND messageCode not in (OUL)", "2.6": " AND messageCode not in (OUL, OPU, OPL)"][version] ?? ""
+        #expect(Self.table(version)["OBR"]?.field(29)?.condition == "ORC-1 = CH AND ORC-8 empty" + gate, "v\(version)")
     }
 
     @Test("OBR-29 still fires on a child order with no parent anywhere",

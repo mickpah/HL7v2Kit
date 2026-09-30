@@ -31,7 +31,7 @@
     { "index": 26, "swiftName": "parentResult", "name": "Parent Result", "dataType": "PRL", "length": "977", "optionality": "O", "repeatability": "1" },
     { "index": 27, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "TQ", "length": "705", "optionality": "B", "repeatability": "*" },
     { "index": 28, "swiftName": "resultCopiesTo", "name": "Result Copies To", "dataType": "XCN", "length": "3220", "optionality": "O", "repeatability": "*" },
-    { "index": 29, "swiftName": "parent", "name": "Parent", "dataType": "EIP", "length": "855", "optionality": "C", "repeatability": "1", "condition": "ORC-1 = CH AND ORC-8 empty" },
+    { "index": 29, "swiftName": "parent", "name": "Parent", "dataType": "EIP", "length": "855", "optionality": "C", "repeatability": "1", "condition": "ORC-1 = CH AND ORC-8 empty AND messageCode not in (OUL, OPU, OPL)" },
     { "index": 30, "swiftName": "transportationMode", "name": "Transportation Mode", "dataType": "ID", "length": "20", "table": "0124", "optionality": "O", "repeatability": "1", "tables": ["0124"] },
     { "index": 31, "swiftName": "reasonForStudy", "name": "Reason for Study", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 32, "swiftName": "principalResultInterpreter", "name": "Principal Result Interpreter", "dataType": "NDL", "length": "831", "optionality": "B", "repeatability": "1" },
