@@ -4,7 +4,7 @@
 // if a parameter is added to, removed from or reordered in that exact signature.
 
 import Testing
-@testable import HL7v2Kit
+import HL7v2Kit
 
 @Suite("Public initialiser signatures (ADR-014)")
 struct SignatureCompatibilityTests {

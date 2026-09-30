@@ -744,11 +744,15 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
                                              rename: override?.renameCodes ?? [:])
     var rowPairs = allPairs.filter { $0.0 != "..." }
     var addedNotes: [String] = []
+    let fixDescriptions = override?.fixDescriptions ?? [:]
     for (i, pair) in rowPairs.enumerated() {
-        if let fixed = override?.fixDescriptions[pair.0] {
+        if let fixed = fixDescriptions[pair.0] {
             rowPairs[i].1 = fixed
             addedNotes.append("\(t.number): description of \(pair.0) corrected by overrides.json")
         }
+    }
+    for code in fixDescriptions.keys.sorted() where !rowPairs.contains(where: { $0.0 == code }) {
+        addedNotes.append("\(t.number): fixDescriptions \(code) declared in overrides.json but not printed")
     }
     for pair in override?.addEntries ?? [] where pair.count == 2 && !rowPairs.contains(where: { $0.0 == pair[0] }) {
         rowPairs.append((pair[0], pair[1]))

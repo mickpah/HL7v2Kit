@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P2-14 fix-wave minors
+
+- `SignatureCompatibilityTests.swift` now uses a plain `import HL7v2Kit`, not
+  `@testable`, so the ADR-014 pinning tests actually exercise public visibility.
+- `scripts/extract-code-tables.swift` records a note when an overrides.json
+  `fixDescriptions` key names a code the PDF does not print, matching the
+  existing `patterns` behaviour.
+- `Resources/tables/overrides.json` gives the v2.3.1 0355 and v2.4 0290
+  entries a `citation` key (the text was already in their `note`).
+- `permanent-limitations-register.md` section C's "Freeze decision (B + C)"
+  paragraph now excludes the mixed-tables row, which blocks spec-completeness
+  (requirement 3) as the row itself already said.
+- STATUS.md's Build row now states the P7-1 audit's real optionality (M19,
+  12 findings) and length (M25, 15 findings) counts, owned by the P4 and P6
+  intake, instead of the stale "0 findings"; test count corrected to 787.
+
 ### Fixed — P2-14: remaining locally extensible tables
 
 - Applied the ADR-016 open-table criterion to the four tables the P2 fix wave flagged

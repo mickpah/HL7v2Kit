@@ -4,7 +4,7 @@
   "name": "MIME base64 encoding characters",
   "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0290 - MIME base64 encoding characters",
+  "citation": "HL7 v2.4 Chapter 2 sec 2.9.16.4 ED Encoding, HL7 Table 0290 - MIME base64 encoding characters",
   "entries": [
     {
       "code": "(pad)",
