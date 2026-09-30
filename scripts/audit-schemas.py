@@ -142,6 +142,26 @@ OPTIONALITY_WHITELIST = {
                         "must be present in the associated OBR'; printed O, modelled C (V26-C13)",
     ("v2.6", "OBR", 29): "v2.6 CH04 section 4.5.3.29: required when the order is a child; printed "
                          "O, modelled C (V26-C13)",
+    ("v2.3", "ORC", 8): "v2.3 CH04 section 4.3.1.1.1 'i) PA, CH': 'Whenever a child order is "
+                       "transmitted in a message the ORC segment's ORC-8-parent is valued with "
+                       "the parent's filler order number ... and with the parent's placer order "
+                       "number'; printed O, modelled C (P4-18)",
+    ("v2.3", "OBR", 29): "v2.3 CH04 section 4.5.1.29: 'It is required when the order is a child.'; "
+                        "printed O, modelled C (P4-18)",
+    ("v2.3.1", "ORC", 8): "v2.3.1 CH04 section 4.3.1.1.1 'i) PA, CH': 'Whenever a child order is "
+                         "transmitted in a message the ORC segment's ORC-8-parent is valued with "
+                         "the parent's filler order number ... and with the parent's placer order "
+                         "number'; printed O, modelled C (P4-18)",
+    ("v2.3.1", "OBR", 29): "v2.3.1 CH04 section 4.5.1.29: 'It is required when the order is a "
+                          "child.'; printed O, modelled C (P4-18)",
+    ("v2.4", "ORC", 8): "v2.4 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, it "
+                       "must be present in the associated OBR'; printed O, modelled C (P4-18)",
+    ("v2.4", "OBR", 29): "v2.4 CH04 section 4.5.3.29: 'It is required when the order is a child.'; "
+                        "printed O, modelled C (P4-18)",
+    ("v2.5.1", "ORC", 8): "v2.5.1 CH04 section 4.5.1.8: 'If the parent is not present in the ORC, "
+                         "it must be present in the associated OBR'; printed O, modelled C (P4-18)",
+    ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
+                          "child.'; printed O, modelled C (P4-18)",
 }
 REPEATABILITY_WHITELIST = {}
 LENGTH_WHITELIST = {}

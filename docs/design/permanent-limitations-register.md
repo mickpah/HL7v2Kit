@@ -11,6 +11,31 @@ Fully audited in v0.16 — see **`docs/design/conditional-completeness-audit.md`
 
 **Freeze decision:** acceptable to freeze. Each is discourse-level, data-nature-dependent, peer-comparison, or descriptive-without-cited-MUST; none is wire-decidable. A guard test keeps the set honest across future edits.
 
+### Addendum to §A — prose-backed `C` over printed `O`, OBR-29/ORC-8 on v2.3 to v2.5.1 (P4-18)
+
+On v2.3, v2.3.1, v2.4 and v2.5.1, ORC-8 and OBR-29 print `O` in the CH04 attribute table, but
+the schemas model them `C` with the child-order predicate (P1-4/P4-7; v2.6 shipped the same
+deviation in P4-6, `docs/design/conditional-completeness-audit.md` "Prose-backed `C` over a
+printed `O` (P1-5)"). Each field's own definition text states the condition: v2.3/v2.3.1 OBR-29
+§4.5.1.29 and v2.4/v2.5.1 OBR-29 §4.5.3.29, "It is required when the order is a child"; v2.4/
+v2.5.1 ORC-8 §4.5.1.8, "If the parent is not present in the ORC, it must be present in the
+associated OBR"; v2.3/v2.3.1 ORC-8's own definition (§4.3.1.8) carries no condition sentence,
+so the same rule is cited from §4.3.1.1.1 "i) PA, CH": "Whenever a child order is transmitted
+in a message the ORC segment's ORC-8-parent is valued with the parent's filler order number...
+and with the parent's placer order number." `scripts/audit-schemas.py` whitelists all eight
+positions with these citations (`OPTIONALITY_WHITELIST`) so the audit does not re-flag them.
+
+**Why `C` and not the printed `O`:** the Validator only evaluates a `condition` on a field
+modelled `optionality: C` (the `.conditional` branch of the condition check); a `C` field with
+no condition, or an `O` field, never evaluates one. Printing `O` here would silently drop the
+parent/child rule these four versions' own prose requires. The alternative — letting a condition
+fire on a printed-`O` field — would need a model extension (the next free ADR number, ADR-021,
+per `global-constraints.md`); out of scope for this task.
+
+**Known limitation (req #3), not currently blocking:** the deviation is deliberate and cited,
+matching the v2.6 precedent already shipped; it is recorded here so the modelled optionality is
+never mistaken for a transcription error against the printed table.
+
 ## B. AU-localisation (ADRM 2021) narrowings
 
 The machine-checkable HL7au:00044.* CE/CNE/CWE narrowings shipped in v0.13 (ADR-011). The following AU rules are **not** machine-checkable from the wire:
