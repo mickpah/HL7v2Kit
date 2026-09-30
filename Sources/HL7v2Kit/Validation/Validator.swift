@@ -2051,6 +2051,7 @@ public struct Validator: Sendable {
     /// HL7au:000008.1). `populated` / `empty` still evaluate the
     /// whole field; slot-specific presence checks should use `= v` /
     /// `!= v` against the expected scalar.
+    /// P4 adds the lookahead referent `nextSegmentID(<ID>|...)` (next segment ID after skipping the listed IDs; "" at the end of the message).
     ///
     /// Internal (not private) access so the v0.7 production unit tests
     /// can call the evaluator directly via `@testable import`. Not
@@ -2300,6 +2301,24 @@ public struct Validator: Sendable {
             return ResolvedReferent(raw: options.auNASHTransport ? "true" : "", isPopulated: options.auNASHTransport)
         default:
             break
+        }
+
+        // P4 lookahead referent: `nextSegmentID(<ID>|<ID>...)` resolves
+        // to the ID of the first segment after the current one whose ID
+        // is not in the skip list, or "" at the end of the message.
+        // TQ1-12 "If the TQ1 segment is repeated ... indicating the
+        // sequencing of the following TQ1 segment" encodes as
+        // `nextSegmentID(TQ2) = TQ1`: the timing group is
+        // {TQ1 [{TQ2}]}, so only TQ2 may sit between chained TQ1s.
+        if referent.hasPrefix("nextSegmentID("), referent.hasSuffix(")") {
+            let skip = Set(referent.dropFirst("nextSegmentID(".count).dropLast()
+                .split(separator: "|").map(String.init))
+            var next = segmentIndex + 1
+            while next < message.segments.count, skip.contains(message.segments[next].segmentID) {
+                next += 1
+            }
+            let id = next < message.segments.count ? message.segments[next].segmentID : ""
+            return ResolvedReferent(raw: id, isPopulated: !id.isEmpty)
         }
 
         // 2. Position atoms — `previousSegment(ID).<fieldref>` and

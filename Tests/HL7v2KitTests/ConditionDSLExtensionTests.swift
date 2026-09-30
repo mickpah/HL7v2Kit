@@ -49,4 +49,26 @@ struct ConditionDSLExtensionTests {
     func noRepeatMalformed() throws {
         #expect(!(try evaluate("noRepeat(SPM-x) = G", on: "SPM", in: spm("P^Patient^HL70369"))))
     }
+
+    // MARK: - nextSegmentID
+
+    private let chainedTiming = TestWires.wire("OMG^O19^OMG_O19", "2.5.1",
+        "ORC|NW|PL1", "TQ1|1", "TQ2|1|S|PL2^SYS", "TQ1|2", "OBR|1|PL1")
+
+    @Test("nextSegmentID(TQ2) = TQ1 holds on a TQ1 that another TQ1 follows across its TQ2s")
+    func nextSegmentHolds() throws {
+        #expect(try evaluate("nextSegmentID(TQ2) = TQ1", on: "TQ1", occurrence: 1, in: chainedTiming))
+    }
+
+    @Test("nextSegmentID(TQ2) = TQ1 fails on the last TQ1 of the chain")
+    func nextSegmentFailsOnLast() throws {
+        #expect(!(try evaluate("nextSegmentID(TQ2) = TQ1", on: "TQ1", occurrence: 2, in: chainedTiming)))
+    }
+
+    @Test("nextSegmentID() reads the immediate next segment; the end of the message is empty")
+    func nextSegmentImmediateAndEnd() throws {
+        let wire = TestWires.wire("OMG^O19^OMG_O19", "2.5.1", "ORC|NW|PL1", "TQ1|1")
+        #expect(try evaluate("nextSegmentID() = TQ1", on: "ORC", in: wire))
+        #expect(try evaluate("nextSegmentID() empty", on: "TQ1", in: wire))
+    }
 }
