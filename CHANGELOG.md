@@ -46,6 +46,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - v2.4 Table 0203's `kind` is corrected from `User` to `HL7`, matching
   CH02 sec 2.9.12.5's own heading (Appendix A had indexed it as User).
 
+### Fixed — P2: code-table false errors and bindings
+
+- **P2-1:** v2.5.1 Table 0125 restored to admit every data type CH07 sec
+  7.4.2.2 allows; OBX-2 = `CWE`, `CNE`, `DTM`, `IS`, `DR`, `EI` and the
+  other composites no longer raise `valueNotInTable(0125)` (V251-C01).
+- **P2-2:** Table 0125 widened the same way on v2.3, v2.3.1, v2.4 and v2.6,
+  citing each version's own Chapter 7 OBX-2 prose (V251-C01, cross-version).
+- **P2-3:** v2.3.1 Table 0356 gains the `2.3` row Chapter 2 sec 2.24.1.20
+  prints and Appendix A omits; MSH-20 = `2.3` no longer raises
+  `valueNotInTable(0356)` on v2.3.1 (V231-C01).
+- **P2-4:** v2.4 Table 0119 restored as the HL7 table CH04 sec 4.20.1
+  prints, `kind` corrected from `User` to `HL7`; ORC-1 is checked again on
+  v2.4 (V24-C03).
+- **P2-5:** v2.3 chapter-printed tables 0254, 0255, 0256 and 0290 (and the
+  matching v2.3.1 0290 rows) added from Chapters 8 and 2 (V23-C09).
+- **P2-8:** v2.5.1 print-versus-prose table bindings corrected: TQ1-12
+  binds Table 0472, CON-18 binds 0545, SID-4 keeps 0385; each misprint is
+  recorded in `table-repairs.json` with a citation (V251-C06).
+- **P2-9:** prose-only table bindings added: RCP-7 (v2.4, v2.5.1) binds
+  0391, SAC-28 binds 0372; Table 0391 is opened, citing the printed "no
+  values defined by HL7" note (V251-C07).
+- **P2-10:** the TBL# extractor now joins a four-digit continuation-line
+  number to a closed cell, so v2.3.1 MSH-9 binds both `0003` and `0076` as
+  Figure 2-8 prints (V231-C04).
+- **P2-11:** the datatype-prose extractor rejoins a table reference
+  hyphenated across a line break; v2.3.1 and v2.4 PT.2 now bind 0207 and
+  v2.3.1 PL.6 binds 0305 (V231-C08).
+
 ### Fixed — P1 fix wave: whole-workstream review remediation
 
 - v2.6 OBR-48 (Medically Necessary Duplicate Procedure Reason) was `O`; CH04

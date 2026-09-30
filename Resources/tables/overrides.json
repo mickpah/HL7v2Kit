@@ -36,7 +36,7 @@
       "citation": "HL7 v2.3 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3 CH2 Figure 2-2 'HL7 data types' (v2.3 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
+      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3 Chapter 7 sec. 7.3.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3 CH2 Figure 2-2 'HL7 data types' (v2.3 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -1264,7 +1264,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3.1 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3.1 CH2 Figure 2-2 'HL7 data types' (v2.3.1 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3.1 Chapter 7 sec. 7.3.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3.1 CH2 Figure 2-2 'HL7 data types' (v2.3.1 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -1710,7 +1710,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.4 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.4 Appendix A HL7 Table 0440 - Data types.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.4 Chapter 7 sec. 7.4.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.4 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",
@@ -2534,7 +2534,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.6 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.6 Appendix A HL7 Table 0440 - Data types.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.6 Chapter 7 sec. 7.4.2.2 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.6 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",

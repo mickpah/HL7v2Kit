@@ -57,7 +57,7 @@ Conditions carried verbatim where the v2.8.2 OPT column still shows `C` and the 
 
 **P1-1:** OBR-7 is now `messageCode = ORU` (widened in P1-2 below) (the `SPM present` leg misfired on orders; SPM may describe a virtual specimen, CH07 SPM intro). X-C06 checked: OBR-14 and OBR-15 are `W` (CH04 §4.5.3.14, §4.5.3.15) and no v2.8.2 condition references OBR-15.
 
-**P1-2:** "report message" is `messageCode in (ORU, OUL, OPU)`: CH07 §7.3.1-§7.3.12. ORF is excluded (withdrawn as of v2.7, §7.3.3); ORA R33 (§7.3.7) is an acknowledgement. The set is the CH07 results structures (ORU, ORF, OUL, plus OPU from v2.6); CSU^C09-C12 (clinical-trials results, §7.7.2) is out of scope for now, which can only under-fire.
+**P1-2:** "report message" is `messageCode in (ORU, OUL, OPU)`: CH07 §7.3.1-§7.3.12. ORF is excluded (withdrawn as of v2.7, §7.3.3); ORA R33 (§7.3.7) is an acknowledgement. The set is the CH07 results structures (ORU, OUL, OPU); CSU^C09-C12 (clinical-trials results, §7.7.2) is out of scope for now, which can only under-fire.
 
 ### Known limitations (documented, not shipped — req #3/#4)
 

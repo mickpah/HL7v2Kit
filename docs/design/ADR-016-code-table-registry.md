@@ -37,7 +37,8 @@ Option 3. It is the only one defensible against the spec text alone, and it reus
 - `valueNotInTable` is live on 1,073 `ID` fields across six versions. A message that carried an out-of-table value in such a field used to pass and now reports an error; `ValidationOptions.checkCodeTables = false` (and the `lenient` preset) suppress it.
 - Generated Swift must keep each expression small. A version's grammar emitted as one dictionary literal took 16 minutes to type-check once fields carried a string for the optional `table`; codegen now emits one constant per segment.
 - **Deferred (registered, not shipped):** table links on composite components (`CX.5` 0203, `XCN.13`, `CE.3` 0396 and the like) — `tables` records only field-level bindings, and component tables are printed in the datatype chapter, which the extractor does not read yet. Multi-table field bindings are recorded in `tables` but not enforced. The VMR implementation table and OBX-4 sub-ID tree validation are the first planned consumers beyond field membership.
-- 16 advisory `KINDMISMATCH` findings remain by design: the spec itself binds some `ID` fields to user-defined tables; they are never enforced.
+- 14 advisory `KINDMISMATCH` findings remain by design: the spec itself binds some `ID` fields to user-defined tables; they are never enforced.
+- Print-versus-prose binding conflicts are resolved in `scripts/table-repairs.json` with a citation (TQ1-12, CON-18, SID-4, RCP-7, SAC-28; P2-8, P2-9).
 
 ## References
 
