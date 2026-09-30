@@ -999,14 +999,11 @@ struct MultiVersionTests {
             "RXA-7", "RXA-12",
             // v1.3: scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/ARQ) — filler/placer
             // and resource fields conditional on the appointment message intent;
-            // blood-product (BPX/BTX) dispense/transfusion-status conditionals;
             // ROL-1 role-instance (SPM-13 carries a prohibition since P4-4). All
             // fail-safe, grouped in conditional-completeness-audit.md.
             "SCH-3", "SCH-24", "SCH-26",
             "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
             "AIS-2", "AIS-5", "AIG-2", "AIL-2", "AIP-2",
-            "BPX-5", "BPX-6", "BPX-8", "BPX-9", "BPX-10",
-            "BTX-2", "BTX-3", "BTX-4", "BTX-5", "BTX-6", "BTX-7",
             "ROL-1",
             // v1.3 (master-files / referral batch): master-file entry/ack keys and
             // OM7 / AUT fields conditional on the master-file event or auth context.

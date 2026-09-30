@@ -58,4 +58,66 @@ struct OrderConditionTests {
         let single = TestWires.wire("OMG^O19^OMG_O19", version, "ORC|NW|PL1", "TQ1|1", "OBR|1|PL1")
         #expect(try missing(single, "TQ1", 12).isEmpty, "v\(version)")
     }
+
+    // MARK: - Blood product (V251-C13)
+
+    private func bpx(_ version: String, _ fields: [Int: String]) -> String {
+        TestWires.wire("BPS^O29^BPS_O29", version,
+                       TestWires.segment("BPX", fields.merging([1: "1"]) { current, _ in current }))
+    }
+
+    private func btx(_ version: String, _ fields: [Int: String]) -> String {
+        TestWires.wire("BTS^O31^BTS_O31", version,
+                       TestWires.segment("BTX", fields.merging([1: "1"]) { current, _ in current }))
+    }
+
+    private func notApplicable(_ wire: String, _ seg: String) throws -> [ValidationIssue] {
+        Validator().validate(try Parser().parse(wire)).issues.filter {
+            $0.code == .conditionalFieldProhibited && $0.location.segmentID == seg
+        }
+    }
+
+    @Test("BPX component fields pair up; commercial-product fields pair up", arguments: orderVersions)
+    func bpxRequired(version: String) throws {
+        let componentOnly = bpx(version, [6: "E0791V00^RBC^ISBT128"])
+        #expect(try missing(componentOnly, "BPX", 5).count == 1, "v\(version)")
+        let component = bpx(version, [5: "W0000 26 123456", 6: "E0791V00^RBC^ISBT128"])
+        for idx in [5, 6, 8, 9, 10] {
+            #expect(try missing(component, "BPX", idx).isEmpty, "v\(version) BPX-\(idx)")
+        }
+        let lotOnly = bpx(version, [10: "LOT1"])
+        #expect(try missing(lotOnly, "BPX", 8).count == 1, "v\(version)")
+        #expect(try missing(lotOnly, "BPX", 9).count == 1, "v\(version)")
+        let product = bpx(version, [8: "RHIG^Rh immune globulin", 9: "Maker Inc", 10: "LOT1"])
+        for idx in [5, 6, 8, 9, 10] {
+            #expect(try missing(product, "BPX", idx).isEmpty, "v\(version) BPX-\(idx)")
+        }
+    }
+
+    @Test("BPX component and commercial fields are not applicable to each other (warning)", arguments: orderVersions)
+    func bpxNotApplicable(version: String) throws {
+        let mixed = bpx(version, [5: "W0000 26 123456", 6: "E0791V00", 8: "RHIG", 9: "Maker Inc", 10: "LOT1"])
+        let hits = try notApplicable(mixed, "BPX")
+        #expect(Set(hits.compactMap(\.location.fieldIndex)) == [5, 6, 8, 9, 10], "v\(version)")
+        #expect(hits.allSatisfy { $0.severity == .warning }, "v\(version)")
+        let component = bpx(version, [5: "W0000 26 123456", 6: "E0791V00"])
+        #expect(try notApplicable(component, "BPX").isEmpty, "v\(version)")
+    }
+
+    @Test("BTX component, blood-group and commercial-product fields", arguments: orderVersions)
+    func btxRules(version: String) throws {
+        let componentOnly = btx(version, [3: "E0791V00"])
+        #expect(try missing(componentOnly, "BTX", 2).count == 1, "v\(version)")
+        #expect(try missing(componentOnly, "BTX", 4).count == 1, "v\(version)")
+        let component = btx(version, [2: "W0000 26 123456", 3: "E0791V00", 4: "5100^O Pos^ISBT128"])
+        for idx in [2, 3, 4, 5, 6, 7] {
+            #expect(try missing(component, "BTX", idx).isEmpty, "v\(version) BTX-\(idx)")
+        }
+        #expect(try notApplicable(component, "BTX").isEmpty, "v\(version)")
+        let productPartial = btx(version, [5: "RHIG"])
+        #expect(try missing(productPartial, "BTX", 6).count == 1, "v\(version)")
+        #expect(try missing(productPartial, "BTX", 7).count == 1, "v\(version)")
+        let mixed = btx(version, [2: "W0000 26 123456", 3: "E0791V00", 4: "5100", 5: "RHIG", 6: "Maker Inc", 7: "LOT1"])
+        #expect(Set(try notApplicable(mixed, "BTX").compactMap(\.location.fieldIndex)) == [2, 3, 5, 6, 7], "v\(version)")
+    }
 }
