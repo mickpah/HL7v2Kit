@@ -50,7 +50,7 @@
     { "index": 45, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CNE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0340"] },
     { "index": 46, "swiftName": "placerSupplementalServiceInformation", "name": "Placer Supplemental Service Information", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0411"] },
     { "index": 47, "swiftName": "fillerSupplementalServiceInformation", "name": "Filler Supplemental Service Information", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "*", "tables": ["0411"] },
-    { "index": 48, "swiftName": "medicallyNecessaryDuplicateProcedureReason", "name": "Medically Necessary Duplicate Procedure Reason", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1", "tables": ["0476"] },
+    { "index": 48, "swiftName": "medicallyNecessaryDuplicateProcedureReason", "name": "Medically Necessary Duplicate Procedure Reason", "dataType": "CWE", "length": "705", "optionality": "C", "repeatability": "1", "tables": ["0476"] },
     { "index": 49, "swiftName": "resultHandling", "name": "Result Handling", "dataType": "IS", "length": "2", "table": "0507", "optionality": "O", "repeatability": "1", "tables": ["0507"] },
     { "index": 50, "swiftName": "parentUniversalServiceIdentifier", "name": "Parent Universal Service Identifier", "dataType": "CWE", "length": "705", "optionality": "O", "repeatability": "1" }
   ]

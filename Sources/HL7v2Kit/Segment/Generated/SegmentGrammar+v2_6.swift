@@ -1928,7 +1928,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 45, name: "Procedure Code Modifier", dataType: "CNE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 46, name: "Placer Supplemental Service Information", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 47, name: "Filler Supplemental Service Information", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
-            FieldGrammar(index: 48, name: "Medically Necessary Duplicate Procedure Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
+            FieldGrammar(index: 48, name: "Medically Necessary Duplicate Procedure Reason", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 49, name: "Result Handling", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0507", length: "2"),
             FieldGrammar(index: 50, name: "Parent Universal Service Identifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
         ]

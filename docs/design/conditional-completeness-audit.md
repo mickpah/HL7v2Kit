@@ -23,7 +23,7 @@
 | OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBR-26 | Parent Result | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
 | OBR-32 | Principal Result Interpreter | none | Not conditional: printed O on v2.3–v2.5.1, B on v2.6 (P1-5) |
-| OBR-48 | Medically Necessary Duplicate Procedure Reason | v2.8.2 | Permanent limitation |
+| OBR-48 | Medically Necessary Duplicate Procedure Reason | v2.5.1, v2.6, v2.8.2 | Permanent limitation |
 | OBX-4 | Observation Sub-ID | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-22 | Mood Code | v2.6, v2.8.2 | Permanent limitation |
@@ -66,7 +66,7 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 
 **Data-nature dependent (undecidable from peer fields):**
 - **OBR-8 Observation End Date/Time** — "*null for observations made at a point in time*"; whether the observation is timed/duration-based is not wire-encoded. (P1-5: no longer C; see inventory)
-- **OBR-48 Medically Necessary Duplicate Procedure Reason** (v2.8.2) — required only when OBR-44 is a *duplicate* of a prior order/charge; duplicate-detection needs patient history, not the current message.
+- **OBR-48 Medically Necessary Duplicate Procedure Reason** (v2.5.1, v2.6, v2.8.2) — required only when OBR-44 is a *duplicate* of a prior order/charge; duplicate-detection needs patient history, not the current message.
 - **OBX-5 Observation Value** — the spec states "*It is not a required field*"; conditionality is on OBX-2 value-type semantics, no hard MUST.
 - **OBX-22 Mood Code** (v2.6, v2.8.2) — "*When this field is not valued … the Value is assumed to be 'EVN'*"; a default-on-absence field with no required-when, and "*no documented use cases … in the context messages*".
 - **OBR-7 request leg** (all versions; P1-1) — OBR-7 keeps its report-message predicate, but the request leg ("If it is transmitted as part of a request and a sample has been sent along", v2.3 §4.5.1.7, v2.4+ §4.5.3.7) is not wire-decidable: OBR-15 names where a specimen should be obtained, and SPM may describe a "virtual" specimen (v2.5.1 CH07 §7.4.3). The former `OBR-15 populated` / `SPM present` legs misfired on new orders and were removed.

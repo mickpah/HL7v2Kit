@@ -91,6 +91,8 @@ struct OptionalityPerVersionTests {
             #expect(table["OBR"]?.field(32)?.optionality == .optional, "v\(version) OBR-32")
         }
         #expect(SegmentGrammarTable.v2_6["OBR"]?.field(32)?.optionality == .backwardCompat)
+        // OBR-48: v2.6 CH04 sec 4.5.3.48 prints C (bare, no condition text given).
+        #expect(SegmentGrammarTable.v2_6["OBR"]?.field(48)?.optionality == .conditional, "v2.6 OBR-48")
     }
 
     @Test("A populated OBR-32 warns as deprecated on v2.6 only")
