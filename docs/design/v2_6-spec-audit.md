@@ -53,6 +53,8 @@ The v2.6 IN1 schema mirrors the **25-field curation** established for the v2.5.1
 
 The cross-segment / message-context / specimen / XOR conditions were carried into v2.6 verbatim from v2.5.1: ORC-2 (`OBR-2 empty`), ORC-3 (`OBR-3 empty`), ORC-8 (`ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty`); OBR-2 (`ORC-2 empty`), OBR-3 (`ORC-3 empty`), OBR-7 (`messageCode = ORU OR SPM present OR OBR-15 populated`), OBR-14 (`SPM present OR OBR-15 populated`), OBR-25 (`messageCode = ORU`), OBR-29 (`ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty`); OBX-2 (`OBX-11 != X`); PID-35 (`PID-36 populated OR PID-38 populated`), PID-36 (`PID-37 populated`); DG1-20/21 (`triggerEvent = P12`). The v2.6 spec text for these **structural** conditions is unchanged from v2.5.1 (they concern message structure, not the datatype/field-count divergences above), so carrying them verbatim is spec-faithful. A `v26CleanORUHasNoErrors` regression pins that a well-formed v2.6 ORU^R01 — every ORU-required conditional satisfied, no XOR/specimen misfire — validates with zero errors.
 
+**P1-1 correction:** OBR-7 is now `messageCode = ORU` and OBR-14 is `B` with no condition (CH04 row 14, §4.5.3.14). The carried `SPM present` / `OBR-15 populated` legs misfired on conformant orders (V26-C01, X-C05).
+
 ### Known limitation (documented, not shipped — req #3/#4)
 
 - **OBX-22 Mood Code** is marked conditional (`C`) in the v2.6 OBX attribute table, but the field-definition prose does not state an extractable predicate. It is recorded as a conditional-without-condition (the same honest state as any `C` field with no `condition` — it falls through as effectively optional and never fires) rather than inventing a predicate that could misfire.

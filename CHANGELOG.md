@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P1-1: OBR-7 / OBR-14 no longer fire on new orders
+
+- OBR-7 and OBR-14 fired `conditionalFieldMissing` on conformant new orders
+  because OBR-15 (where a specimen *should be* obtained) or an SPM segment
+  was read as "a specimen was sent along". Those legs are removed on every
+  version. OBR-7 keeps its report-message rule. OBR-14 is a bare `C` on
+  v2.3 to v2.4, and `B` on v2.5.1 and v2.6 as printed (SPM-18 favoured).
+
 ### Added — M33: the EI half of the NASH transport assertion
 
 - Under the same `ValidationOptions.auNASHTransport`, **HL7au:00044.3.4**

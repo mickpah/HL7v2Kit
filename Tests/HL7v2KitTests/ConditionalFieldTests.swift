@@ -555,25 +555,25 @@ struct ConditionalFieldTests {
         }
     }
 
-    // OBR-15 populated (specimen source indicated) but OBR-14 empty.
-    // v2.4 §4.5.3.14 "This field must contain a value when the order is
-    // accompanied by a specimen..." → fires. Field positions counted
-    // via pipe-split index: OBR-7 at index 7 (20240401080000), OBR-15
-    // at index 15 (BLOOD^Blood^HL70070).
+    // X-C05 / V24-C02: OBR-15 is where the specimen *should be* obtained
+    // (v2.4 §4.5.3.15). A placer NW order the lab still has to collect
+    // (OBR-11 = L, Table 0065) values OBR-15 with no specimen accompanying
+    // it, so OBR-14 (§4.5.3.14) must stay silent. Pipe-split positions:
+    // f7=20240401080000, f11=L, f15=BLOOD^Blood^HL70070.
     private let ormWithSpecimenSourceMissingReceivedDT = """
     MSH|^~\\&|SENDER|FAC|LAB|FAC|||ORM^O01|MSG|P|2.4\r\
     PID|1||X^^^F^MR\r\
     ORC|NW|ORD001||GROUP|CM\r\
-    OBR|1|ORD001|FIL|GLUC|||20240401080000||||||||BLOOD^Blood^HL70070\r
+    OBR|1|ORD001|FIL|GLUC|||20240401080000||||L||||BLOOD^Blood^HL70070\r
     """
 
-    @Test("v0.11-S4: OBR-14 fires when OBR-15 populated but OBR-14 empty (v2.4)")
-    func obr14FiresWhenOBR15PopulatedAndOBR14Empty_v24() throws {
+    @Test("X-C05: OBR-14 silent on a v2.4 NW order that only names the specimen source")
+    func obr14SilentWhenOnlyOBR15Populated_v24() throws {
         let message = try Parser().parse(ormWithSpecimenSourceMissingReceivedDT)
+        #expect(message["OBR-11"] == "L")
         let report = Validator().validate(message)
         let hits = obrConditionalHits(report, fieldIndex: 14)
-        #expect(hits.count == 1,
-                "Expected exactly one OBR-14 violation; got \(hits.count): \(hits.map(\.message))")
+        #expect(hits.isEmpty, "OBR-15 alone must not require OBR-14; got \(hits.map(\.message))")
     }
 
     // OBR-14 populated + OBR-15 populated → guard bypasses (field populated),
@@ -595,9 +595,8 @@ struct ConditionalFieldTests {
                 "OBR-14 populated → conditional guard bypasses; got \(hits.map(\.message))")
     }
 
-    // Neither SPM nor OBR-15 populated → predicate false, no fire even
-    // when OBR-14 empty. Represents an ORM without a specimen (e.g.
-    // imaging order request).
+    // No specimen indicator at all → no fire even when OBR-14 empty.
+    // Represents an ORM without a specimen (e.g. imaging order request).
     private let ormWithoutSpecimen = """
     MSH|^~\\&|SENDER|FAC|RAD|FAC|||ORM^O01|MSG|P|2.4\r\
     PID|1||X^^^F^MR\r\
@@ -614,9 +613,9 @@ struct ConditionalFieldTests {
                 "No specimen indicator → OBR-14 must not fire; got \(hits.map(\.message))")
     }
 
-    // v2.5.1: SPM segment present, OBR-15 empty, OBR-14 empty.
-    // Predicate `SPM present OR OBR-15 populated` → true via SPM →
-    // OBR-14 fires.
+    // V26-C01: v2.5.1 prints OBR-14 as B and favours SPM-18 when SPM is
+    // present (§4.5.3.14). SPM present with OBR-14 empty is the preferred
+    // shape, so no conditional error.
     private let oruWithSPMSegmentMissingReceivedDT = """
     MSH|^~\\&|SENDER|FAC|LAB|FAC|||ORU^R01|MSG|P|2.5.1\r\
     PID|1||X^^^F^MR\r\
@@ -626,22 +625,18 @@ struct ConditionalFieldTests {
     OBX|1|NM|1234-5^Glucose^LN||5.2|mmol/L||||||F\r
     """
 
-    @Test("v0.11-S4: OBR-14 fires when SPM segment present (v2.5.1 detector)")
-    func obr14FiresWhenSPMPresent_v251() throws {
+    @Test("V26-C01: OBR-14 silent when SPM present on v2.5.1 (OBR-14 is B)")
+    func obr14SilentWhenSPMPresent_v251() throws {
         let message = try Parser().parse(oruWithSPMSegmentMissingReceivedDT)
         let report = Validator().validate(message)
         let hits = obrConditionalHits(report, fieldIndex: 14)
-        #expect(hits.count == 1,
-                "SPM present → OBR-14 must fire; got \(hits.count): \(hits.map(\.message))")
+        #expect(hits.isEmpty, "SPM present must not require OBR-14; got \(hits.map(\.message))")
     }
 
-    // OBR-7 second trigger: non-ORU message with OBR-15 populated but
-    // OBR-7 empty. v0.10 shipped `messageCode = ORU` alone; S4 extends
-    // to also fire on `OBR-15 populated`. Message type ORM (order),
-    // specimen indicated via OBR-15 → OBR-7 must fire. Pipe-split
-    // positions: f7=empty, f14=20240401075000, f15=BLOOD^Blood^HL70070.
-    // (OBR-14 is also populated so its rule doesn't ALSO fire, keeping
-    // this test focused on OBR-7.)
+    // X-C05: an order with OBR-15 populated but no specimen sent along
+    // does not require OBR-7 (§4.5.3.7 requires it on a request only when
+    // "a sample has been sent along"). Pipe-split positions: f7=empty,
+    // f14=20240401075000, f15=BLOOD^Blood^HL70070.
     private let ormWithSpecimenMissingObservationDT = """
     MSH|^~\\&|SENDER|FAC|LAB|FAC|||ORM^O01|MSG|P|2.4\r\
     PID|1||X^^^F^MR\r\
@@ -649,34 +644,33 @@ struct ConditionalFieldTests {
     OBR|1|ORD001|FIL|GLUC||||||||||20240401075000|BLOOD^Blood^HL70070\r
     """
 
-    @Test("v0.11-S4: OBR-7 fires on ORM with OBR-15 populated (specimen-sent trigger)")
-    func obr7FiresUnderSecondTrigger() throws {
+    @Test("X-C05: OBR-7 silent on an ORM whose only specimen indicator is OBR-15")
+    func obr7SilentWhenOnlyOBR15Populated() throws {
         let message = try Parser().parse(ormWithSpecimenMissingObservationDT)
         let report = Validator().validate(message)
         let hits = obrConditionalHits(report, fieldIndex: 7)
-        #expect(hits.count == 1,
-                "ORM with OBR-15 populated → OBR-7 must fire via v0.11-S4 trigger; got \(hits.count): \(hits.map(\.message))")
+        #expect(hits.isEmpty, "OBR-15 alone must not require OBR-7; got \(hits.map(\.message))")
     }
 
     // MARK: - v0.11-S4b (ADR-010): v2.3 / v2.3.1 per-version mirror
 
-    // v2.3 wire (MSH-12 = 2.3). OBR-15 populated, OBR-14 empty →
-    // OBR-14 condition "OBR-15 populated" fires. Mirrors the v2.4 pin;
-    // v2.3 §4.5.1.14 verbatim-identical to v2.4 §4.5.3.14.
+    // V23-C01: v2.3 NW order, lab to collect (OBR-11 = L), OBR-15 names
+    // the site (§4.5.1.15 "should be obtained"). OBR-14 (§4.5.1.14) is
+    // not required. Pipe-split positions: f11=L, f15=BLDV.
     private let ormV23SpecimenSourceMissingReceivedDT = """
     MSH|^~\\&|SENDER|FAC|LAB|FAC|||ORM^O01|MSG|P|2.3\r\
     PID|1||X^^^F^MR\r\
     ORC|NW|ORD001||GROUP|CM\r\
-    OBR|1|ORD001|FIL|GLUC|||20240401080000||||||||BLOOD^Blood^HL70070\r
+    OBR|1|ORD001|FIL|GLUC|||20240401080000||||L||||BLDV\r
     """
 
-    @Test("v0.11-S4b: OBR-14 fires on v2.3 when OBR-15 populated")
-    func obr14FiresOnV23() throws {
+    @Test("V23-C01: OBR-14 silent on a v2.3 NW order that only names the specimen source")
+    func obr14SilentOnV23() throws {
         let message = try Parser().parse(ormV23SpecimenSourceMissingReceivedDT)
+        #expect(message["OBR-11"] == "L")
         let report = Validator().validate(message)
         let hits = obrConditionalHits(report, fieldIndex: 14)
-        #expect(hits.count == 1,
-                "v2.3 OBR-14 must fire when OBR-15 populated; got \(hits.count): \(hits.map(\.message))")
+        #expect(hits.isEmpty, "v2.3 OBR-14 must not fire on OBR-15 alone; got \(hits.map(\.message))")
     }
 
     // v2.3.1 child-order wire: ORC-1 = CH, both ORC-8 and OBR-29 empty

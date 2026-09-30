@@ -17,6 +17,7 @@
 | OBR-9 | Collection Volume | v2.3–v2.6 | Permanent limitation |
 | OBR-10 | Collector Identifier | v2.3–v2.6 | Permanent limitation |
 | OBR-11 | Specimen Action Code | v2.3–v2.6 | Permanent limitation |
+| OBR-14 | Specimen Received Date/Time | v2.3–v2.4 | Permanent limitation (P1-1): required "when the order is accompanied by a specimen, or when the observation required a specimen and the message is a report" (v2.3 §4.5.1.14, v2.4 §4.5.3.14). Neither is on the wire: OBR-15 names where a specimen *should be* obtained (§4.5.1.15 / §4.5.3.15), OBR-11 states an intended action (Table 0065), and OBR-15 may name a service site rather than a specimen. The former `OBR-15 populated` predicate misfired on new orders and was removed. v2.5.1 and v2.6 print OBR-14 `B` (SPM-18 favoured); v2.8.2 withdrew it. |
 | OBR-20 | Filler Field 1 | v2.3–v2.6 | Permanent limitation |
 | OBR-21 | Filler Field 2 | v2.3–v2.6 | Permanent limitation |
 | OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation |
@@ -66,6 +67,7 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 - **OBR-48 Medically Necessary Duplicate Procedure Reason** (v2.8.2) — required only when OBR-44 is a *duplicate* of a prior order/charge; duplicate-detection needs patient history, not the current message.
 - **OBX-5 Observation Value** — the spec states "*It is not a required field*"; conditionality is on OBX-2 value-type semantics, no hard MUST.
 - **OBX-22 Mood Code** (v2.6, v2.8.2) — "*When this field is not valued … the Value is assumed to be 'EVN'*"; a default-on-absence field with no required-when, and "*no documented use cases … in the context messages*".
+- **OBR-7 request leg** (all versions; P1-1) — OBR-7 keeps its report-message predicate, but the request leg ("If it is transmitted as part of a request and a sample has been sent along", v2.3 §4.5.1.7, v2.4+ §4.5.3.7) is not wire-decidable: OBR-15 names where a specimen should be obtained, and SPM may describe a "virtual" specimen (v2.5.1 CH07 §7.4.3). The former `OBR-15 populated` / `SPM present` legs misfired on new orders and were removed.
 
 **Peer-comparison / grouping (beyond same-segment scope):**
 - **OBX-4 Observation Sub-ID** — required to disambiguate multiple OBX sharing an OBX-3; a cross-OBX grouping rule, not a same-segment predicate.

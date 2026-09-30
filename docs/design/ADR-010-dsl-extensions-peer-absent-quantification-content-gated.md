@@ -106,6 +106,8 @@ Reading: ORC-8 is required only when this is a child order AND the associated OB
 
 `SPM present` is v2.5.1+ (SPM introduced in v2.5). For v2.4 (no SPM), the atom falls back to `OBR-15 populated` alone. Per-version schema variance is expected.
 
+> **Correction (P1-1, review remediation)** — the OBR specimen-presence cluster above was wrong for OBR-7 and OBR-14. OBR-15 is where a specimen *should be* obtained (v2.4 §4.5.3.15), so it is valued on new orders before collection, and SPM may describe a "virtual" specimen (v2.5.1 CH07 §7.4.3). Both legs raised false `conditionalFieldMissing` errors on conformant orders and were removed on every version. OBR-7 keeps its report-message leg; OBR-14 is a bare `C` on v2.3–v2.4 (registered in `conditional-completeness-audit.md`), `B` on v2.5.1 and v2.6 as printed, and `W` on v2.8.2. The `SPM present` / `<SEG> absent` atoms this ADR introduced are unaffected. The OBR-9/10/11 leg of this cluster was never shipped in any schema — as the S4 clarification below already records, those three fields carry a bare `C` with no condition, so they are unaffected by this correction.
+
 **HL7au:000008 Display Segments (AU ADRM-2021):**
 - Parent (000008): a new `SegmentCardinalityRule` on the OBR/OBX group grammar:
   ```

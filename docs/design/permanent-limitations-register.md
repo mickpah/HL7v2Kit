@@ -7,7 +7,7 @@
 
 ## A. Base-spec conditional-without-condition set
 
-Fully audited in v0.16 — see **`docs/design/conditional-completeness-audit.md`** for the per-field rationale and the guard test. 17 positions: 2 shipped (PD1-15, ORC-26), 15 permanent limitations (OBR-1/8/9/10/11/20/21/22/26/32, OBR-48, OBX-4/5/22, DG1-22). Not repeated here.
+Fully audited in v0.16 — see **`docs/design/conditional-completeness-audit.md`** for the per-field rationale and the guard test. 17 positions at v0.16: 2 shipped (PD1-15, ORC-26), 15 permanent limitations (OBR-1/8/9/10/11/20/21/22/26/32, OBR-48, OBX-4/5/22, DG1-22); P1-1 added OBR-14 on v2.3–v2.4 and the OBR-7 request leg. Not repeated here.
 
 **Freeze decision:** acceptable to freeze. Each is discourse-level, data-nature-dependent, peer-comparison, or descriptive-without-cited-MUST; none is wire-decidable. A guard test keeps the set honest across future edits.
 

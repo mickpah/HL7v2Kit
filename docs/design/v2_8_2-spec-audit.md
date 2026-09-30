@@ -53,6 +53,8 @@ Segments held at v2.6 counts (no new fields in the modelled range): MSH (25, byt
 
 Conditions carried verbatim where the v2.8.2 OPT column still shows `C` and the spec text matches: ORC-2 (`OBR-2 empty`), ORC-3 (`OBR-3 empty`); OBR-2 (`ORC-2 empty`), OBR-3 (`ORC-3 empty`), OBR-25 (`messageCode = ORU` — "required whenever OBR in a report message"); OBX-2 (`OBX-11 != X`); DG1-20/21 (`triggerEvent = P12`). **OBR-7** finalised as `messageCode = ORU OR SPM present` — the v2.6 "OBR-15 populated" clause is moot because OBR-15 is withdrawn in v2.8.2. The v2.6 XOR/parent conditions (ORC-8, OBR-29) are **dropped** because those fields are now plain `O`. `v282CleanORUHasNoErrors` pins that a well-formed v2.8.2 ORU^R01 validates with zero errors.
 
+**P1-1:** OBR-7 is now `messageCode = ORU` (the `SPM present` leg misfired on orders; SPM may describe a virtual specimen, CH07 SPM intro). X-C06 checked: OBR-14 and OBR-15 are `W` (CH04 §4.5.3.14, §4.5.3.15) and no v2.8.2 condition references OBR-15.
+
 ### Known limitations (documented, not shipped — req #3/#4)
 
 - **PD1-15, ORC-26, OBR-48, DG1-22, OBX-22** — `C` in the v2.8.2 tables with no extractable predicate; recorded conditional-without-condition (never fire).

@@ -114,6 +114,8 @@ These rules depend on message-type or sibling-segment presence (SPM, OBX). They 
 
 > **v0.11 RESOLVED (ADR-010).** OBR-25 shipped in v0.7-S4 (`messageCode = ORU`). **OBR-7** second trigger and **OBR-14** shipped in v0.11-S4 (commit `cca9aa8`) using the ADR-010 segment-presence atom: OBR-7 = `"messageCode = ORU OR SPM present OR OBR-15 populated"`, OBR-14 = `"SPM present OR OBR-15 populated"`. The "sample sent along" / "accompanied by a specimen" triggers map to SPM-segment presence (v2.5.1) or OBR-15 population. OBR-9 / .10 / .11 remain NOT shipped — descriptive text without a cited MUST trigger (req #4).
 
+**P1-1 correction:** OBR-7 is `messageCode = ORU` (the `SPM present OR OBR-15 populated` legs misfired on orders and were removed); OBR-14 is `B` with no condition, as printed in CH04 and CH07 (§4.5.3.14, SPM-18 favoured).
+
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)
 
 From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):

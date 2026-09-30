@@ -605,7 +605,9 @@ struct MultiVersionTests {
         #expect(obr?.field(49)?.dataType == "IS")   // Result Handling
         #expect(obr?.field(50)?.name == "Parent Universal Service Identifier")
         // Carried conditions (specimen / report-message / XOR).
-        #expect(obr?.field(7)?.condition == "messageCode = ORU OR SPM present OR OBR-15 populated")
+        #expect(obr?.field(7)?.condition == "messageCode = ORU")
+        #expect(obr?.field(14)?.optionality == .backwardCompat)
+        #expect(obr?.field(14)?.condition == nil)
         #expect(obr?.field(25)?.condition == "messageCode = ORU")
         #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
     }

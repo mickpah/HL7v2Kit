@@ -60,7 +60,7 @@
       "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "messageCode = ORU OR SPM present OR OBR-15 populated"
+      "condition": "messageCode = ORU"
     },
     {
       "index": 8,
@@ -116,9 +116,8 @@
       "swiftName": "specimenReceivedDateTime",
       "name": "Specimen Received Date/Time",
       "dataType": "TS", "length": "26",
-      "optionality": "C",
-      "repeatability": "1",
-      "condition": "SPM present OR OBR-15 populated"
+      "optionality": "B",
+      "repeatability": "1"
     },
     {
       "index": 15,

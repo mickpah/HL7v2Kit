@@ -60,7 +60,7 @@
       "dataType": "TS", "length": "26",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "messageCode = ORU OR OBR-15 populated"
+      "condition": "messageCode = ORU"
     },
     {
       "index": 8,
@@ -117,8 +117,7 @@
       "name": "Specimen Received Date/Time",
       "dataType": "TS", "length": "26",
       "optionality": "C",
-      "repeatability": "1",
-      "condition": "OBR-15 populated"
+      "repeatability": "1"
     },
     {
       "index": 15,
