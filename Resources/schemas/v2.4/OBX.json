@@ -45,6 +45,7 @@
       "dataType": "*", "length": "*",
       "optionality": "C",
       "repeatability": "*",
+      "condition": "OBX-11 = O",
       "additionalProhibitions": [{ "when": "OBX-11 = O", "severity": "error", "permitsNull": true, "citation": "v2.4 Chapter 7 section 7.4.2.11 OBX-11 Observation result status: \"The status of O shall be used to indicate that the OBX segment is used for a dynamic specification of the required result. An OBX used for a dynamic specification must contain the detailed examination code, units, etc., with OBX-11 valued with O, and OBX-2 and OBX-5 valued with null.\" HL7 Table 0085 value O is \"Order detail description only (no result)\". The null is the HL7 null \"\" (Chapter 2 section 2.7 Fields), so OBX-5 valued with \"\" is conformant and any other value is not" }]
     },
     {

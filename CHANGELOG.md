@@ -17,14 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   status and no rule. Reported as an error `.conditionalFieldProhibited` on
   every locale and message type. A value in any OBX-5 repetition fires; a lone
   `""` does not.
-- The base OBX-2 condition `OBX-11 != X` is unchanged. `""` counts as
-  populated for it, so an empty OBX-2 with OBX-11 = O still raises
-  `.conditionalFieldMissing`, and the only conformant OBX-2 is `""`. A test
-  pins that.
-- New public `FieldProhibition.permitsNull` and the overload
-  `FieldProhibition.init(condition:severity:permitsNull:)` (additive; the
-  released two-parameter initialiser keeps its signature and leaves it
-  `false`). The schema key is `permitsNull` on an `additionalProhibitions`
+- The base OBX-2 condition `OBX-11 != X` is unchanged, and OBX-5 gains the
+  condition `OBX-11 = O` on the same five versions. `""` counts as populated
+  for both, so an empty OBX-2 or OBX-5 with OBX-11 = O raises
+  `.conditionalFieldMissing`, and the only conformant wire is `""` in both.
+  Tests pin that.
+- New public `FieldProhibition.permitsNull`. `FieldProhibition` (new in P4-21,
+  not yet released) has a single initialiser,
+  `init(condition:severity:permitsNull:)`, with `permitsNull` defaulting to
+  `false`. The schema key is `permitsNull` on an `additionalProhibitions`
   entry. Every other shipped prohibition still treats `""` as a value.
 - The AU-profile duplicate from P4-24 is removed, so AU traffic reports the
   rule once, as the base issue. The P4-24 tests now expect the base issue.

@@ -559,7 +559,7 @@ public struct Validator: Sendable {
                 segmentIndex: segmentIndex,
                 message: message,
                 isPopulated: isPopulated,
-                hasNonNullValue: field.map { carriesNonNullValue($0) } ?? false,
+                field: field,
                 location: location,
                 issues: &issues
             )
@@ -1984,26 +1984,29 @@ public struct Validator: Sendable {
     /// Each of `grammar.additionalProhibitions` is evaluated the same
     /// way at its own severity, and each rule that holds reports its
     /// own issue (P4-21). A rule with `permitsNull` skips a field that
-    /// holds only the HL7 null (`hasNonNullValue` false); every other
-    /// rule treats `""` as a value (P4-26). `hasNonNullValue` defaults
-    /// to `isPopulated`. Internal so tests can drive it with a
-    /// hand-built grammar.
+    /// holds only the HL7 null; every other rule treats `""` as a
+    /// value (P4-26). `field` is required (not defaulted) so a caller
+    /// cannot drop the exemption by omission; the null walk over it
+    /// runs only when some rule has `permitsNull`, and a `nil` field
+    /// carries no non-null value. Internal so tests can drive it with
+    /// a hand-built grammar.
     func checkProhibition(
         _ grammar: FieldGrammar,
         segment: Segment,
         segmentIndex: Int,
         message: Message,
         isPopulated: Bool,
-        hasNonNullValue: Bool? = nil,
+        field: Field?,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
         guard isPopulated else { return }
-        let hasNonNullValue = hasNonNullValue ?? isPopulated
         var rules = grammar.additionalProhibitions
         if let prohibition = grammar.prohibitedWhen {
             rules.insert(FieldProhibition(condition: prohibition, severity: grammar.prohibitedSeverity), at: 0)
         }
+        let hasNonNullValue = !rules.contains(where: \.permitsNull)
+            || field.map { carriesNonNullValue($0) } ?? false
         for rule in rules where !rule.condition.isEmpty
             && (hasNonNullValue || !rule.permitsNull)
             && conditionTriggers(

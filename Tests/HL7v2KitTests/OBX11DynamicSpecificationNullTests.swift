@@ -86,6 +86,30 @@ struct OBX11DynamicSpecificationNullTests {
                 "got \(issues.map(\.message))")
     }
 
+    @Test("An empty OBX-5 under OBX-11 = O misses the OBX-5 condition", arguments: printingVersions)
+    func emptyObx5IsMissing(version: String) throws {
+        let issues = try Self.issues(version, obx: "OBX|1|\"\"|GLU-30^Glucose -30 min^L|||mmol/L|||||O")
+        #expect(issues.contains { $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 5 },
+                "got \(issues.map(\.message))")
+    }
+
+    @Test("An empty OBX-5 under OBX-11 = F is not required by the rule", arguments: printingVersions)
+    func emptyObx5UnderFinalIsSilent(version: String) throws {
+        let issues = try Self.issues(version, obx: "OBX|1|NM|GLU^Glucose^L|||mmol/L|||||F")
+        #expect(!issues.contains { $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 5 },
+                "got \(issues.map(\.message))")
+    }
+
+    @Test("The rule is not scoped by message type: it fires on ADT^A01 and OML^O21", arguments: ["ADT^A01", "OML^O21"])
+    func firesOutsideOrdersAndResults(messageType: String) throws {
+        let wire = TestWires.msh(messageType, "2.5.1")
+            + "PID|1||123^^^HOSP^MR||DOE^JOHN\r"
+            + "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O\r"
+        let issues = try Validator().validate(Parser().parse(wire)).issues
+        #expect(Self.prohibited(issues, field: 2).count == 1, "got \(issues.map(\.message))")
+        #expect(Self.prohibited(issues, field: 5).count == 1, "got \(issues.map(\.message))")
+    }
+
     @Test("v2.3 prints no O status and no dynamic-specification rule, so it stays silent")
     func v23IsSilent() throws {
         let issues = try Self.issues("2.3", obx: "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O")
@@ -105,7 +129,7 @@ struct OBX11DynamicSpecificationNullTests {
                                    ])
         var issues: [ValidationIssue] = []
         Validator().checkProhibition(grammar, segment: message.segments[index], segmentIndex: index,
-                                     message: message, isPopulated: true, hasNonNullValue: false,
+                                     message: message, isPopulated: true, field: message.segments[index].field(5),
                                      location: IssueLocation(segmentID: "OBX", segmentIndex: index, fieldIndex: 5),
                                      issues: &issues)
         #expect(issues.map(\.severity) == [.warning])

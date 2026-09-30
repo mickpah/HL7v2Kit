@@ -988,7 +988,9 @@ struct MultiVersionTests {
         let table = SegmentGrammarTable.v2_8_2
         // Every remaining C-without-condition (seg, index) in v2.8.2.
         let expected: Set<String> = [
-            "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
+            "OBR-48", "OBX-4", "OBX-22", "DG1-22",
+            // OBX-5 left this set in P4-26: it carries `OBX-11 = O` (the
+            // dynamic-specification "valued with null" rule, CH07 §7.4.2.11).
             // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
             // dispense fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate

@@ -197,7 +197,7 @@ struct ConditionalProhibitionTests {
                                    ])
         var issues: [ValidationIssue] = []
         Validator().checkProhibition(grammar, segment: message.segments[index], segmentIndex: index,
-                                     message: message, isPopulated: true,
+                                     message: message, isPopulated: true, field: message.segments[index].field(6),
                                      location: IssueLocation(segmentID: "RXR", segmentIndex: index, fieldIndex: 6),
                                      issues: &issues)
         #expect(issues.map(\.severity) == [.error, .warning, .info])
@@ -205,7 +205,7 @@ struct ConditionalProhibitionTests {
         // An empty field is never prohibited, whatever its rules say.
         var none: [ValidationIssue] = []
         Validator().checkProhibition(grammar, segment: message.segments[index], segmentIndex: index,
-                                     message: message, isPopulated: false,
+                                     message: message, isPopulated: false, field: nil,
                                      location: IssueLocation(segmentID: "RXR", segmentIndex: index, fieldIndex: 6),
                                      issues: &none)
         #expect(none.isEmpty)

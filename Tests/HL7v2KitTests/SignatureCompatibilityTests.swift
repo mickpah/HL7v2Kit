@@ -51,10 +51,9 @@ struct SignatureCompatibilityTests {
         #expect(advisory.additionalProhibitions.isEmpty)
     }
 
-    @Test("FieldGrammar.init additionalProhibitions: is a separate overload; FieldProhibition.init keeps two parameters")
+    @Test("FieldGrammar.init additionalProhibitions: is a separate overload")
     func fieldGrammarAdditionalProhibitionsInit() {
-        let makeRule: (String, IssueSeverity) -> FieldProhibition = FieldProhibition.init(condition:severity:)
-        let rule = makeRule("RXR-2.3 = HL70163", .warning)
+        let rule = FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning)
         #expect(rule.condition == "RXR-2.3 = HL70163" && rule.severity == .warning)
 
         let make: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?, Bool, IssueSeverity, [FieldProhibition]) -> FieldGrammar =
@@ -63,13 +62,15 @@ struct SignatureCompatibilityTests {
         #expect(rxr6.additionalProhibitions == [rule] && rxr6.prohibitedSeverity == .error && !rxr6.tableOpen)
     }
 
-    @Test("FieldProhibition.init permitsNull: is a separate overload; the two-parameter init leaves it false")
-    func fieldProhibitionPermitsNullInit() {
-        let plain: (String, IssueSeverity) -> FieldProhibition = FieldProhibition.init(condition:severity:)
-        #expect(!plain("OBX-11 = O", .error).permitsNull)
+    // Deliberate pin of new, unreleased API (P4-21 / P4-26): FieldProhibition has one
+    // public initialiser, with `permitsNull` defaulted to false.
+    @Test("FieldProhibition has one init(condition:severity:permitsNull:), permitsNull defaulting to false")
+    func fieldProhibitionInit() {
         let make: (String, IssueSeverity, Bool) -> FieldProhibition = FieldProhibition.init(condition:severity:permitsNull:)
         let rule = make("OBX-11 = O", .error, true)
         #expect(rule.condition == "OBX-11 = O" && rule.severity == .error && rule.permitsNull)
-        #expect(rule != plain("OBX-11 = O", .error))
+        let plain = FieldProhibition(condition: "OBX-11 = O", severity: .error)
+        #expect(!plain.permitsNull)
+        #expect(rule != plain)
     }
 }
