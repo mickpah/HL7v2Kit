@@ -416,6 +416,13 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     /// repeats, so each repetition pairs its own key and value.
     let componentCorrespondences: [ComponentCorrespondence]
 
+    /// Explicit, cited prohibitions on valuing this field (P4-24,
+    /// HL7au:00060.4 route B). Each fires when the field carries a value
+    /// other than the HL7 null (`""`) while its own `condition` holds.
+    /// Not gated by `condition` above; each rule carries its own
+    /// message-type scope.
+    let prohibitions: [ProfileFieldProhibition]
+
     /// Spec citation for this override. Surfaced verbatim in
     /// `ValidationIssue.code.profileConstraintViolation(localeRule:)`
     /// so consumers can attribute the failure to the specific
@@ -434,6 +441,7 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         componentValueSets: [ComponentValueSet] = [],
         componentPatterns: [ComponentPattern] = [],
         componentCorrespondences: [ComponentCorrespondence] = [],
+        prohibitions: [ProfileFieldProhibition] = [],
         specCitation: String? = nil
     ) {
         self.segmentID = segmentID
@@ -444,8 +452,30 @@ struct FieldOverride: Sendable, Equatable, Hashable {
         self.componentValueSets = componentValueSets
         self.componentPatterns = componentPatterns
         self.componentCorrespondences = componentCorrespondences
+        self.prohibitions = prohibitions
         self.specCitation = specCitation
     }
+}
+
+/// A profile-authored "must not be valued" rule on one field (P4-24).
+/// Only rules whose spec text states the prohibition in so many words
+/// are modelled; a base "required when" condition is never negated
+/// (see the HL7au:00060.4 limitation row, P4-20).
+struct ProfileFieldProhibition: Sendable, Equatable, Hashable {
+    /// Predicate under which the field must not be valued, in the
+    /// shared condition grammar (ADR-009), including the message-type
+    /// scope, e.g. `"messageCode in (ORM, ORU, REF) AND OBX-11 = O"`.
+    /// Evaluated by `Validator.conditionTriggers`; an unresolvable
+    /// predicate fails safe and never fires.
+    let condition: String
+
+    /// `.error` for must or shall not, `.warning` for should not or not
+    /// applicable.
+    let severity: IssueSeverity
+
+    /// Citation surfaced as the `localeRule` of the reported
+    /// `.profileConstraintViolation`.
+    let specCitation: String
 }
 
 /// A value-set narrowing on a specific component of a populated

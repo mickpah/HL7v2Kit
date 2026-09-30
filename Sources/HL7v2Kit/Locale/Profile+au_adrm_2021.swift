@@ -639,6 +639,19 @@ extension Profile {
                         specCitation: "HL7au:000034.1 — when both public and local terminology are transmitted in a coded Observation Value, the public code must be primary; AU ADRM-2021 Appendix 5 p. 441"
                     ),
                 ],
+                // P4-24 — HL7au:00060.4 route B. OBX-5 is C (v2.4 and the
+                // ADRM OBX attribute table, p. 235). HL7 v2.4 §7.4.2.11: "An
+                // OBX used for a dynamic specification must contain the
+                // detailed examination code, units, etc., with OBX-11 valued
+                // with O, and OBX-2 and OBX-5 valued with null." The HL7 null
+                // ("") is therefore permitted; any other value is not.
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF) AND OBX-11 = O",
+                        severity: .error,
+                        specCitation: "HL7au:00060.4 — OBX-5 (C) must not be valued when OBX-11 = O (dynamic specification: \"OBX-2 and OBX-5 valued with null\"); HL7 v2.4 §7.4.2.11, AU ADRM-2021 Appendix 5 p. 466"
+                    ),
+                ],
                 specCitation: "HL7au:000034.1 — public-before-local coding-system precedence on coded OBX-5 values"
             ),
             // M6-B-1 — HL7au:00104.7.0 (r3): "PRD-7 must have at least
@@ -787,6 +800,19 @@ extension Profile {
                         allowedValues: ["RP"],
                         condition: "messageCode = REF AND OBX-3.1 = 74028-2",
                         specCitation: "ADRM-prose:P-6 — the VMR header OBX (OBX-3.1 = 74028-2) must have OBX-2 = RP; AU ADRM-2021 Appendix 9 p. 490"
+                    ),
+                ],
+                // P4-24 — HL7au:00060.4 route B. OBX-2 is C (v2.4 and the
+                // ADRM OBX attribute table, p. 235). HL7 v2.4 §7.4.2.11: "An
+                // OBX used for a dynamic specification must contain the
+                // detailed examination code, units, etc., with OBX-11 valued
+                // with O, and OBX-2 and OBX-5 valued with null." The HL7 null
+                // ("") is therefore permitted; any other value is not.
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF) AND OBX-11 = O",
+                        severity: .error,
+                        specCitation: "HL7au:00060.4 — OBX-2 (C) must not be valued when OBX-11 = O (dynamic specification: \"OBX-2 and OBX-5 valued with null\"); HL7 v2.4 §7.4.2.11, AU ADRM-2021 Appendix 5 p. 466"
                     ),
                 ],
                 specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"

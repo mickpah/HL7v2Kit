@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-24: HL7au:00060.4 route B, explicit AU prohibitions
+
+- Under `.auLocalisation`, OBX-2 and OBX-5 must not be valued when OBX-11 = O
+  on ORM, ORU and REF. HL7 v2.4 §7.4.2.11 reads "An OBX used for a dynamic
+  specification must contain the detailed examination code, units, etc., with
+  OBX-11 valued with O, and OBX-2 and OBX-5 valued with null." Reported as an
+  error `.profileConstraintViolation("HL7au:00060.4 ...")`; the HL7 null `""`
+  is accepted. Silent under `.international` and on other message types.
+- New internal `ProfileFieldProhibition` and `FieldOverride.prohibitions`
+  (additive, defaulted). The rules use the shared condition evaluator, and
+  base validation is unchanged.
+- Every other C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments
+  (including the AU REF additions) was read against the base chapter and the
+  ADRM clause. None states a prohibition that route B can model. HL7au:00060.4
+  stays PARTIAL; the limitation addendum and the conformance register name
+  what route B shipped and what route C still has to close.
+
 ### Added — P4-23: scheduling filler-status prohibitions in request transactions
 
 - AIS-10, AIG-14, AIL-12 and AIP-12 (Filler Status Code) now carry

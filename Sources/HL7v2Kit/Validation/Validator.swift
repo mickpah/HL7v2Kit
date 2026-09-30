@@ -633,6 +633,16 @@ public struct Validator: Sendable {
                 segmentIndex: occurrence,
                 issues: &issues
             )
+            // P4-24: explicit, cited "must not be valued" rules.
+            checkProfileFieldProhibitions(
+                profile: profile,
+                field: field,
+                segment: segment,
+                segmentArrayIndex: segmentIndex,
+                message: message,
+                location: location,
+                issues: &issues
+            )
         }
         // v0.5-S5-D-2 (post-S5-D substage): profile usage dispatch.
         // Fires when the override declares `profileUsage = .required`
