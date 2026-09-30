@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-26: base OBX-11 = O dynamic-specification null rule
+
+- OBX-2 and OBX-5 must not carry a value other than the HL7 null `""` while
+  OBX-11 = O, on every version that prints the rule: v2.3.1 §7.3.2.11 and
+  §7.4.2.11 in v2.4, v2.5.1, v2.6 and v2.8.2 ("An OBX used for a dynamic
+  specification must contain the detailed examination code, units, etc., with
+  OBX-11 valued with O, and OBX-2 and OBX-5 valued with null"). v2.3 has no O
+  status and no rule. Reported as an error `.conditionalFieldProhibited` on
+  every locale and message type. A value in any OBX-5 repetition fires; a lone
+  `""` does not.
+- The base OBX-2 condition `OBX-11 != X` is unchanged. `""` counts as
+  populated for it, so an empty OBX-2 with OBX-11 = O still raises
+  `.conditionalFieldMissing`, and the only conformant OBX-2 is `""`. A test
+  pins that.
+- New public `FieldProhibition.permitsNull` and the overload
+  `FieldProhibition.init(condition:severity:permitsNull:)` (additive; the
+  released two-parameter initialiser keeps its signature and leaves it
+  `false`). The schema key is `permitsNull` on an `additionalProhibitions`
+  entry. Every other shipped prohibition still treats `""` as a value.
+- The AU-profile duplicate from P4-24 is removed, so AU traffic reports the
+  rule once, as the base issue. The P4-24 tests now expect the base issue.
+
 ### Added — P4-27: AU "not used" elements
 
 - Under `.auLocalisation`, OBR-26 (Parent Result) must not be valued on ORM,

@@ -1,5 +1,6 @@
 // Validator+ProfileProhibitions.swift
-// P4-24 — profile-authored field prohibitions (HL7au:00060.4 route B).
+// P4-24 — profile-authored field prohibitions (HL7au:00060.4 route B), and
+// the HL7 null test that base `permitsNull` prohibitions share (P4-26).
 
 extension Validator {
     /// Report every `ProfileFieldProhibition` on the matching field
@@ -38,8 +39,10 @@ extension Validator {
     }
 
     /// True when some repetition holds content other than a lone HL7
-    /// null (`""`).
-    private func carriesNonNullValue(_ field: Field) -> Bool {
+    /// null (`""`). Shared by the profile prohibitions above and by the
+    /// base `FieldProhibition.permitsNull` rules (P4-26), so both treat
+    /// the null the same way.
+    func carriesNonNullValue(_ field: Field) -> Bool {
         field.repetitions.contains { repetition in
             if repetition.stringValue == "\"\"" { return false }
             return repetition.components.contains { component in

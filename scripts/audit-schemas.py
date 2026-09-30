@@ -290,7 +290,7 @@ def table_open_findings(f):
     return out
 
 
-PROHIBITION_KEYS = {"when", "severity", "citation"}
+PROHIBITION_KEYS = {"when", "severity", "citation", "permitsNull"}
 
 
 def when_is_well_formed(when):
@@ -303,9 +303,10 @@ def when_is_well_formed(when):
 
 def additional_prohibition_findings(f):
     """P4-21 extra prohibitions. `additionalProhibitions` is a non-empty list of rules,
-    each exactly {when, severity, citation}: `when` a '<referent> <predicate>' condition,
-    `severity` error/warning/info, `citation` the quoted spec text. Mirrors the codegen
-    preconditions so the audit reports what codegen would refuse."""
+    each {when, severity, citation} plus an optional boolean `permitsNull` (P4-26):
+    `when` a '<referent> <predicate>' condition, `severity` error/warning/info,
+    `citation` the quoted spec text. Mirrors the codegen preconditions so the audit
+    reports what codegen would refuse."""
     if "additionalProhibitions" not in f:
         return []
     rules = f["additionalProhibitions"]
@@ -327,6 +328,8 @@ def additional_prohibition_findings(f):
         cite = rule.get("citation")
         if not (isinstance(cite, str) and cite.strip()):
             out.append(f"additionalProhibitions[{i}] has no citation")
+        if "permitsNull" in rule and not isinstance(rule["permitsNull"], bool):
+            out.append(f"additionalProhibitions[{i}] permitsNull {rule['permitsNull']!r} is not a boolean")
     return out
 
 

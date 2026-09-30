@@ -559,6 +559,7 @@ public struct Validator: Sendable {
                 segmentIndex: segmentIndex,
                 message: message,
                 isPopulated: isPopulated,
+                hasNonNullValue: field.map { carriesNonNullValue($0) } ?? false,
                 location: location,
                 issues: &issues
             )
@@ -1982,7 +1983,10 @@ public struct Validator: Sendable {
     /// fail-safe semantics: an unresolvable predicate never fires.
     /// Each of `grammar.additionalProhibitions` is evaluated the same
     /// way at its own severity, and each rule that holds reports its
-    /// own issue (P4-21). Internal so tests can drive it with a
+    /// own issue (P4-21). A rule with `permitsNull` skips a field that
+    /// holds only the HL7 null (`hasNonNullValue` false); every other
+    /// rule treats `""` as a value (P4-26). `hasNonNullValue` defaults
+    /// to `isPopulated`. Internal so tests can drive it with a
     /// hand-built grammar.
     func checkProhibition(
         _ grammar: FieldGrammar,
@@ -1990,15 +1994,18 @@ public struct Validator: Sendable {
         segmentIndex: Int,
         message: Message,
         isPopulated: Bool,
+        hasNonNullValue: Bool? = nil,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
         guard isPopulated else { return }
+        let hasNonNullValue = hasNonNullValue ?? isPopulated
         var rules = grammar.additionalProhibitions
         if let prohibition = grammar.prohibitedWhen {
             rules.insert(FieldProhibition(condition: prohibition, severity: grammar.prohibitedSeverity), at: 0)
         }
         for rule in rules where !rule.condition.isEmpty
+            && (hasNonNullValue || !rule.permitsNull)
             && conditionTriggers(
                 rule.condition,
                 in: segment,

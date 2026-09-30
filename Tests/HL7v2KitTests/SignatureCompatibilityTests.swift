@@ -62,4 +62,14 @@ struct SignatureCompatibilityTests {
         let rxr6 = make(6, "n", "CWE", .optional, .single, nil, "RXR-2 empty", false, nil, nil, false, .error, [rule])
         #expect(rxr6.additionalProhibitions == [rule] && rxr6.prohibitedSeverity == .error && !rxr6.tableOpen)
     }
+
+    @Test("FieldProhibition.init permitsNull: is a separate overload; the two-parameter init leaves it false")
+    func fieldProhibitionPermitsNullInit() {
+        let plain: (String, IssueSeverity) -> FieldProhibition = FieldProhibition.init(condition:severity:)
+        #expect(!plain("OBX-11 = O", .error).permitsNull)
+        let make: (String, IssueSeverity, Bool) -> FieldProhibition = FieldProhibition.init(condition:severity:permitsNull:)
+        let rule = make("OBX-11 = O", .error, true)
+        #expect(rule.condition == "OBX-11 = O" && rule.severity == .error && rule.permitsNull)
+        #expect(rule != plain("OBX-11 = O", .error))
+    }
 }

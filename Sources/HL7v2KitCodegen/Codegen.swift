@@ -56,11 +56,13 @@ struct FieldSchema: Decodable {
 
 /// One entry of a field's `additionalProhibitions` array. `when` uses the condition
 /// grammar; `severity` is `error`, `warning` or `info`; `citation` quotes the spec text
-/// (read by the schema audit and required here, not emitted). P4-21.
+/// (read by the schema audit and required here, not emitted). P4-21. `permitsNull: true`
+/// exempts the HL7 null `""` (see `FieldProhibition.permitsNull`). P4-26.
 struct ProhibitionSchema: Decodable {
     let when: String?
     let severity: String?
     let citation: String?
+    let permitsNull: Bool?
 }
 
 /// Render a field's `additionalProhibitions` as the trailing initialiser argument, or `""`
@@ -85,7 +87,8 @@ func renderAdditionalProhibitions(_ rules: [ProhibitionSchema]?, context: String
                      "\(label): severity must be error, warning or info, got '\(severity)'")
         precondition(!(rule.citation ?? "").trimmingCharacters(in: .whitespaces).isEmpty,
                      "\(label): citation is missing")
-        return "FieldProhibition(condition: \(escapeStringLiteral(when)), severity: .\(severity))"
+        let permitsNull = rule.permitsNull == true ? ", permitsNull: true" : ""
+        return "FieldProhibition(condition: \(escapeStringLiteral(when)), severity: .\(severity)\(permitsNull))"
     }
     return ", additionalProhibitions: [\(items.joined(separator: ", "))]"
 }

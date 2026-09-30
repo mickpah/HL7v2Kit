@@ -218,11 +218,24 @@ public struct FieldProhibition: Sendable, Equatable, Hashable {
     /// Severity of the issue raised when the rule fires: `.error` for normative text,
     /// `.warning` for SHOULD-level text (req #4).
     public let severity: IssueSeverity
+    /// When `true`, the HL7 null (`""`) does not count as a value for this rule: a field
+    /// whose every non-empty repetition is a lone `""` never fires it. Used where the spec
+    /// asks for the field to be "valued with null" while the condition holds, such as
+    /// OBX-2 and OBX-5 under OBX-11 = O (dynamic specification). `false` for every rule
+    /// built with ``init(condition:severity:)``. P4-26.
+    public let permitsNull: Bool
 
     /// Creates a prohibition from its predicate and the severity it reports at.
     public init(condition: String, severity: IssueSeverity) {
+        self.init(condition: condition, severity: severity, permitsNull: false)
+    }
+
+    /// Creates a prohibition that may also exempt the HL7 null (see ``permitsNull``). A
+    /// separate overload so the released initialiser keeps its signature (ADR-014). P4-26.
+    public init(condition: String, severity: IssueSeverity, permitsNull: Bool) {
         self.condition = condition
         self.severity = severity
+        self.permitsNull = permitsNull
     }
 }
 

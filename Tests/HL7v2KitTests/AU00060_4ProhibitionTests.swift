@@ -1,5 +1,7 @@
 // AU00060_4ProhibitionTests.swift
-// P4-24 — HL7au:00060.4 route B: explicit, cited AU-profile prohibitions.
+// P4-24 — HL7au:00060.4 route B: OBX-2 / OBX-5 under OBX-11 = O. P4-26 moved
+// the rule into the base grammar, so AU traffic now gets the base
+// `.conditionalFieldProhibited` issue and no AU duplicate.
 //
 // HL7 v2.4 §7.4.2.11 (OBX-11): "The status of O shall be used to indicate
 // that the OBX segment is used for a dynamic specification of the required
@@ -16,7 +18,7 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-@Suite("AU HL7au:00060.4 route B: OBX-2 / OBX-5 null under OBX-11 = O (P4-24)")
+@Suite("AU HL7au:00060.4 route B: OBX-2 / OBX-5 null under OBX-11 = O (P4-24, base since P4-26)")
 struct AU00060_4ProhibitionTests {
 
     private static func wire(_ messageType: String, obx: String) -> String {
@@ -27,18 +29,26 @@ struct AU00060_4ProhibitionTests {
             + obx + "\r"
     }
 
-    private static func prohibitions(
+    private static func issues(
         _ wire: String,
         locale: HL7Locale = .auLocalisation
     ) throws -> [ValidationIssue] {
         let message = try Parser(locale: locale).parse(wire)
-        return Validator(locale: locale).validate(message).issues.filter { issue in
-            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
-            return rule.contains("00060.4")
+        return Validator(locale: locale).validate(message).issues
+    }
+
+    /// The base dynamic-specification prohibitions on OBX-2 and OBX-5.
+    private static func prohibitions(
+        _ wire: String,
+        locale: HL7Locale = .auLocalisation
+    ) throws -> [ValidationIssue] {
+        try issues(wire, locale: locale).filter { issue in
+            issue.code == .conditionalFieldProhibited && issue.location.segmentID == "OBX"
+                && [2, 5].contains(issue.location.fieldIndex)
         }
     }
 
-    @Test("OBX-2 valued while OBX-11 = O raises HL7au:00060.4 as an error", arguments: ["ORM^O01", "ORU^R01", "REF^I12"])
+    @Test("OBX-2 valued while OBX-11 = O raises the base prohibition as an error", arguments: ["ORM^O01", "ORU^R01", "REF^I12"])
     func obx2ValuedUnderDynamicSpecificationFires(messageType: String) throws {
         let issues = try Self.prohibitions(Self.wire(messageType, obx: "OBX|1|NM|GLU-30^Glucose -30 min^L|||mmol/L|||||O"))
         let hit = try #require(issues.first { $0.location.segmentID == "OBX" && $0.location.fieldIndex == 2 })
@@ -46,7 +56,7 @@ struct AU00060_4ProhibitionTests {
         #expect(!issues.contains { $0.location.fieldIndex == 5 })
     }
 
-    @Test("OBX-5 valued while OBX-11 = O raises HL7au:00060.4 as an error")
+    @Test("OBX-5 valued while OBX-11 = O raises the base prohibition as an error")
     func obx5ValuedUnderDynamicSpecificationFires() throws {
         let issues = try Self.prohibitions(Self.wire("ORM^O01", obx: "OBX|1|\"\"|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O"))
         let hit = try #require(issues.first { $0.location.segmentID == "OBX" && $0.location.fieldIndex == 5 })
@@ -66,22 +76,21 @@ struct AU00060_4ProhibitionTests {
         #expect(issues.isEmpty, "got \(issues.map(\.message))")
     }
 
-    @Test("The same wire under .international raises no HL7au:00060.4")
-    func internationalIsSilent() throws {
-        let issues = try Self.prohibitions(
-            Self.wire("ORM^O01", obx: "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O"),
-            locale: .international)
-        #expect(issues.isEmpty, "got \(issues.map(\.message))")
+    @Test("The same wire under .international raises the same base prohibition")
+    func internationalFiresTheSameBaseIssue() throws {
+        let wire = Self.wire("ORM^O01", obx: "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O")
+        let au = try Self.prohibitions(wire)
+        let international = try Self.prohibitions(wire, locale: .international)
+        #expect(international.map(\.location.fieldIndex) == [2, 5])
+        #expect(au.map(\.location.fieldIndex) == international.map(\.location.fieldIndex))
     }
 
-    @Test("A message type outside Orders, Results and Referrals stays silent")
-    func outOfScopeMessageTypeIsSilent() throws {
-        let wire = TestWires.msh("ADT^A01", "2.4")
-            + "EVN|A01|20260930120000\r"
-            + "PID|1||123^^^HOSP^MR||DOE^JOHN\r"
-            + "PV1|1|I\r"
-            + "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O\r"
-        let issues = try Self.prohibitions(wire)
-        #expect(issues.isEmpty, "got \(issues.map(\.message))")
+    @Test("AU reports the rule once: no HL7au:00060.4 profile duplicate beside the base issue")
+    func auDoesNotDoubleReport() throws {
+        let issues = try Self.issues(Self.wire("ORU^R01", obx: "OBX|1|NM|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O"))
+        #expect(!issues.contains { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            return rule.contains("00060.4")
+        }, "got \(issues.map(\.message))")
     }
 }
