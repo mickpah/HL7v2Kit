@@ -159,11 +159,16 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case; the enum is open per ADR-014.
     case versionGrammarSubstituted(declared: Version, validatedAs: Version)
 
-    /// MSH-12 carries a version ID (VID.1) that no ``Version`` case models,
-    /// so the message was validated against a fallback grammar (v2.5.1, or
-    /// the caller's `ParserOptions.versionOverride`), named in the message.
-    /// Warning severity: the findings may not reflect the declared release.
-    /// The payload is VID.1 as sent. Excluded versions are listed in the
+    /// MSH-12 is populated but no ``Version`` case resolves from its version
+    /// ID (VID.1): an unmodelled version, or a VID.1 that is empty,
+    /// whitespace only or subdivided. The message was validated against a
+    /// fallback grammar (v2.5.1, or the caller's
+    /// `ParserOptions.versionOverride`), named in the message. Warning
+    /// severity: the findings may not reflect the declared release. The
+    /// payload is VID.1 as rendered, trimmed, with subcomponents joined by
+    /// the message's subcomponent separator; it is empty when VID.1 is
+    /// empty. An empty MSH-12 is not reported here: MSH-12 is required, so
+    /// the required-field check reports it. Excluded versions are listed in the
     /// permanent-limitations register, section F (ADR-018). Additive case;
     /// the enum is open per ADR-014.
     case versionNotRecognised(wireValue: String)

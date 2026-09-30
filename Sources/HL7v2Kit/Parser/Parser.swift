@@ -158,25 +158,25 @@ public struct Parser: Sendable {
         let version: Version
         if let override = options.versionOverride {
             version = override
-        } else if let mshSegment = segments.first,
-                  let v12 = Version.versionID(inMSH12: mshSegment.field(12)) {
-            if let parsed = Version(wireValue: v12) {
-                version = parsed
-            } else if options.rejectUnknownVersion {
-                // v0.2-P3: strict mode rejects non-empty MSH-12 values
-                // that don't map to a known Version. Default + lenient
-                // keep the silent v2.5.1 fallback below for backward
-                // compatibility with older fixtures.
-                throw ParseError.unsupportedVersion(found: v12)
-            } else {
+        } else {
+            let msh12 = segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
+            switch Version.reading(msh12: msh12, subcomponentSeparator: encoding.subcomponentSeparator) {
+            case .recognised(let declared):
+                version = declared
+            case .unresolved(let vid1):
+                // MSH-12 is populated but names no modelled version. Strict
+                // parsing rejects it; otherwise parse against v2.5.1 and let
+                // the Validator report `versionNotRecognised` (ADR-018).
+                if options.rejectUnknownVersion {
+                    throw ParseError.unsupportedVersion(found: vid1)
+                }
+                version = .v2_5_1
+            case .empty:
+                // No MSH or an empty MSH-12: fall back to v2.5.1 in every
+                // mode. MSH-12 is required, so the Validator's required-field
+                // check reports it; this is not a parser concern.
                 version = .v2_5_1
             }
-        } else {
-            // No MSH, no MSH-12, or an empty VID.1 — fall back to v2.5.1
-            // (the most common AU dialect) rather than throwing. Empty
-            // MSH-12 is a Validator concern (MSH-12 is required), not a
-            // parser concern, so strict mode falls back too.
-            version = .v2_5_1
         }
 
         return Message(

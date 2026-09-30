@@ -50,6 +50,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     behavioural change in the current validator; only 0105 (a scalar `ID` field)
     changes what the Validator reports.
 
+### Fixed — P3 fix wave: no silent version fallback
+
+- Four MSH-12 shapes used to fall back to v2.5.1 with no issue in any mode:
+  a whitespace-only MSH-12, an empty VID.1 with VID.2 valued
+  (`^AUS&Australia&ISO3166_1`, legal on v2.5.1, where VID.1 is optional),
+  and a VID.1 with a subcomponent (`2.4&X`, `&2.4`). Each now gets the
+  same treatment as an unmodelled version. The Validator reports
+  `versionNotRecognised(wireValue:)` (warning) naming the v2.5.1 fallback,
+  with VID.1 as rendered (empty when VID.1 is empty).
+  `ParserOptions.rejectUnknownVersion`, which `.strict` sets, throws
+  `ParseError.unsupportedVersion(found:)` with the same value. An empty
+  MSH-12 still falls back without a version issue in every mode, because the
+  required-field check reports it.
+- `VersionHandlingTests.versionMatrix` pins 17 MSH-12 shapes under the
+  default, `.strict` and `rejectUnknownVersion` parser options.
+- The permanent-limitations register, section F, no longer records the
+  subcomponent and empty-VID.1 shapes as a limitation. ADR-018's version
+  table gains rows for them and for a whitespace-only MSH-12.
+
 ### Fixed — P3-5: unrecognised MSH-12 versions are reported
 
 - A message whose MSH-12 version ID has no `Version` case (2.1, 2.2, 2.5,
@@ -96,10 +115,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The register moves all three from BASE to PARTIAL: the presence half is
   enforced, while identifier-scheme validity (00044.1.1, 00044.7.1) and
   cross-message uniqueness (00044.3.1) are not checked. This absorbs P4-19.
-- VID.1 is trimmed before the emptiness check, so a whitespace-only MSH-12
-  now falls back to v2.5.1 under `ParserOptions.strict` like an empty one,
-  rather than throwing `unsupportedVersion`, and the `found:` value of
-  `ParseError.unsupportedVersion` carries the trimmed VID.1.
+- VID.1 is trimmed, and the `found:` value of
+  `ParseError.unsupportedVersion` carries the trimmed VID.1. (P3-4 briefly
+  let a whitespace-only MSH-12 fall back silently under `.strict`; the P3
+  fix wave below reports it and `.strict` throws for it again.)
 
 ### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
 

@@ -402,14 +402,20 @@ public struct Validator: Sendable {
     private func appendVersionIssues(for message: Message, issues: inout [ValidationIssue]) {
         let location = IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12)
         let applied = message.version.grammarVersion
-        if let msh = message.segments.first, msh.segmentID == "MSH",
-           let wireValue = Version.versionID(inMSH12: msh.field(12)),
-           Version(wireValue: wireValue) == nil {
+        // A populated MSH-12 from which no version resolves is reported here
+        // (an empty one is the required-field check's business).
+        let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
+        if case .unresolved(let vid1) = Version.reading(
+            msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator
+        ) {
+            let what = vid1.isEmpty
+                ? "MSH-12 is populated but its version ID (VID.1) is empty"
+                : "MSH-12 version '\(vid1)' is not a version HL7v2Kit models"
             issues.append(ValidationIssue(
                 severity: .warning,
-                code: .versionNotRecognised(wireValue: wireValue),
+                code: .versionNotRecognised(wireValue: vid1),
                 location: location,
-                message: "MSH-12 version '\(wireValue)' is not a version HL7v2Kit models; validated against the v\(applied.rawValue) grammar instead (ADR-018)"
+                message: "\(what); validated against the v\(applied.rawValue) grammar instead (ADR-018)"
             ))
             return
         }

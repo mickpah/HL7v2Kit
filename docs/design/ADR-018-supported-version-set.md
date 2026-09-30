@@ -49,7 +49,12 @@ A version is **modelled** when it has a `Version` case, a segment grammar (`Reso
 | 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
 | 2.7.1 | Scheduled as plan P10; excluded until it lands | v2.5.1 fallback | `versionNotRecognised` (warning) |
 | 2.1, 2.2, 2.5, 2.7, 2.8.1, 2.9, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
+| whitespace only | Populated, no version | v2.5.1 fallback | `versionNotRecognised` (warning), payload `""` |
+| empty VID.1 with VID.2 valued (`^AUS...`) | Populated, no version | v2.5.1 fallback | `versionNotRecognised` (warning), payload `""` |
+| VID.1 with a subcomponent (`2.4&X`, `&2.4`) | Populated, no version | v2.5.1 fallback | `versionNotRecognised` (warning), payload VID.1 as rendered |
 | empty | Not a version | v2.5.1 fallback | MSH-12 required-field error (existing) |
+
+Every row that raises `versionNotRecognised` throws `ParseError.unsupportedVersion(found:)` instead under `ParserOptions.rejectUnknownVersion` (set by `.strict`), with the same VID.1 value. The empty row never throws. `VersionHandlingTests.versionMatrix` pins the table (P3 fix wave).
 
 ## Consequences
 

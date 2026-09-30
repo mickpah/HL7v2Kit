@@ -27,13 +27,8 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
 
     /// Parse a wire-format MSH-12 string into a `Version`, if recognised.
     public init?(wireValue: String) {
-        // HL7 sometimes ships variants like "2.5.1\\" or trailing whitespace;
-        // be lenient on input but strict on the canonical form. Character-level
-        // trim keeps this file Foundation-free (ADR-006).
-        var trimmed = Substring(wireValue)
-        while trimmed.first?.isWhitespace == true { trimmed.removeFirst() }
-        while trimmed.last?.isWhitespace == true { trimmed.removeLast() }
-        self.init(rawValue: String(trimmed))
+        // Lenient on surrounding whitespace, strict on the canonical form.
+        self.init(rawValue: Version.trimmingWhitespace(wireValue))
     }
 
     /// The version whose segment grammar, code tables and datatype grammar
@@ -52,16 +47,43 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
 }
 
 extension Version {
-    /// The version ID (VID.1) carried by an MSH-12 field, trimmed, or `nil`
-    /// when MSH-12 is absent or its first component is empty. MSH-12 is a
-    /// VID composite (`2.4^AUS&Australia&ISO3166_1^...`); only VID.1 names
-    /// the version (HL7 v2.8.2 Chapter 2A, VID; ADR-018).
-    static func versionID(inMSH12 field: Field?) -> String? {
-        guard let raw = field?.first?.components.first?.stringValue else { return nil }
-        // Character-level trim keeps this file Foundation-free (ADR-006).
-        var trimmed = Substring(raw)
+    /// How an MSH-12 field names the message's version (ADR-018).
+    enum MSH12Reading: Equatable {
+        /// MSH-12 is absent or carries no content at all. MSH-12 is
+        /// required, so the Validator's required-field check reports it.
+        case empty
+        /// VID.1 names a modelled version.
+        case recognised(Version)
+        /// MSH-12 carries content but no modelled version resolves from
+        /// VID.1. The payload is VID.1 as rendered (subcomponents joined by
+        /// the message's subcomponent separator, trimmed); it is empty when
+        /// VID.1 is empty or whitespace only.
+        case unresolved(vid1: String)
+    }
+
+    /// Read the version from an MSH-12 field. MSH-12 is a VID composite
+    /// (`2.4^AUS&Australia&ISO3166_1^...`); only VID.1 of the first
+    /// repetition names the version (HL7 v2.8.2 Chapter 2A, VID; ADR-018).
+    static func reading(msh12 field: Field?, subcomponentSeparator: Character) -> MSH12Reading {
+        let populated = field?.repetitions.contains { repetition in
+            repetition.components.contains { component in
+                component.subcomponents.contains { !$0.value.isEmpty }
+            }
+        } ?? false
+        guard let field, populated else { return .empty }
+        let vid1 = field.first?.components.first?.subcomponents.map(\.value) ?? []
+        let rendered = trimmingWhitespace(vid1.joined(separator: String(subcomponentSeparator)))
+        if vid1.count == 1, let version = Version(rawValue: rendered) {
+            return .recognised(version)
+        }
+        return .unresolved(vid1: rendered)
+    }
+
+    /// Character-level whitespace trim; keeps this file Foundation-free (ADR-006).
+    private static func trimmingWhitespace(_ value: String) -> String {
+        var trimmed = Substring(value)
         while trimmed.first?.isWhitespace == true { trimmed.removeFirst() }
         while trimmed.last?.isWhitespace == true { trimmed.removeLast() }
-        return trimmed.isEmpty ? nil : String(trimmed)
+        return String(trimmed)
     }
 }
