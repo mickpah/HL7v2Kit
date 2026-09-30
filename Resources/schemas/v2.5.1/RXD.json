@@ -13,7 +13,7 @@
     { "index": 8, "swiftName": "numberOfRefillsRemaining", "name": "Number of Refills Remaining", "dataType": "NM", "length": "20", "optionality": "C", "repeatability": "1" },
     { "index": 9, "swiftName": "dispenseNotes", "name": "Dispense Notes", "dataType": "ST", "length": "200", "optionality": "O", "repeatability": "*" },
     { "index": 10, "swiftName": "dispensingProvider", "name": "Dispensing Provider", "dataType": "XCN", "length": "200", "optionality": "O", "repeatability": "*" },
-    { "index": 11, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "length": "1", "table": "0167", "optionality": "O", "repeatability": "1", "tables": ["0167"] },
+    { "index": 11, "swiftName": "substitutionStatus", "name": "Substitution Status", "dataType": "ID", "length": "1", "table": "0167", "optionality": "O", "repeatability": "1", "tables": ["0167"], "tableOpen": true, "tableOpenCitation": "v2.5.1 Chapter 4 section 4.14.5.11 RXD-11: \"Refer to HL7 Table 0167 - Substitution Status for suggested values.\"" },
     { "index": 12, "swiftName": "totalDailyDose", "name": "Total Daily Dose", "dataType": "CQ", "length": "10", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "dispenseToLocation", "name": "Dispense-to Location", "dataType": "LA2", "length": "200", "optionality": "C", "repeatability": "1" },
     { "index": 14, "swiftName": "needsHumanReview", "name": "Needs Human Review", "dataType": "ID", "length": "1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },

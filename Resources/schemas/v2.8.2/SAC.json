@@ -29,7 +29,7 @@
     { "index": 24, "swiftName": "volumeUnits", "name": "Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 25, "swiftName": "separatorType", "name": "Separator Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0380"] },
     { "index": 26, "swiftName": "capType", "name": "Cap Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0381"] },
-    { "index": 27, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0371"] },
+    { "index": 27, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0371"], "tableOpen": true, "tableOpenCitation": "v2.8.2 Chapter 13 section 13.4.3.27 SAC-27: \"Refer to HL7 Table 0371 – Additive/Preservative for valid values. ... The value set can be extended with user specific values.\"" },
     { "index": 28, "swiftName": "specimenComponent", "name": "Specimen Component", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0372"] },
     { "index": 29, "swiftName": "dilutionFactor", "name": "Dilution Factor", "dataType": "SN", "optionality": "O", "repeatability": "1" },
     { "index": 30, "swiftName": "treatment", "name": "Treatment", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0373"] },

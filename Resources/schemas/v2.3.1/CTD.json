@@ -8,7 +8,7 @@
     { "index": 3, "swiftName": "contactAddress", "name": "Contact Address", "dataType": "XAD", "length": "200", "optionality": "O", "repeatability": "*" },
     { "index": 4, "swiftName": "contactLocation", "name": "Contact Location", "dataType": "PL", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "contactCommunicationInformation", "name": "Contact Communication Information", "dataType": "XTN", "length": "100", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0185"] },
+    { "index": 6, "swiftName": "preferredMethodOfContact", "name": "Preferred Method of Contact", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "1", "tables": ["0185"], "tableOpen": true, "tableOpenCitation": "v2.3.1 Chapter 11 section 11.5.4.6 CTD-6: \"Refer to user-defined table 0185 - Preferred method of contact for suggested values.\"" },
     { "index": 7, "swiftName": "contactIdentifiers", "name": "Contact Identifiers", "dataType": "CM", "length": "100", "optionality": "O", "repeatability": "*" }
   ]
 }

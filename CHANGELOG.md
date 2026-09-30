@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P2-15: per-field table openness
+
+- Some HL7 tables are cited "for suggested values" (or "User-defined", or
+  "can be extended") by one field and "for valid values" by another. Openness
+  was set per table, so those fields reported false `valueNotInTable` errors.
+  A schema field entry can now carry `"tableOpen": true` with a quoted
+  `tableOpenCitation`; codegen emits it as the new `FieldGrammar.tableOpen`
+  (default `false`), and the field-level closed-table check skips that field
+  only. The released `FieldGrammar.init` keeps its signature; `tableOpen:` is
+  a separate overload (ADR-014), both pinned in `SignatureCompatibilityTests`.
+- 49 fields are marked, each against its own prose: Table 0136 (v2.4 PID-31;
+  v2.6 and v2.8.2 DG1-24, RFI-3, IVC-13, PSG-4, PSL-47), 0167 (RXD-11, every
+  version), 0185 (PRD-6 and CTD-6 on every version, PRD-14 on v2.6 and
+  v2.8.2), 0206 (v2.6 and v2.8.2 IAM-6, ARV-2), 0239 (v2.3 PCR-2, -9, -11,
+  -13), 0323 (v2.4 and v2.5.1 IAM-6), 0371 (v2.5.1, v2.6, v2.8.2 OM4-7,
+  SAC-27) and 0532 (v2.6 and v2.8.2 PSL-21). v2.6 PSG-4 was missing from the
+  register's list; its prose also says "for suggested values".
+- Validator output changes on the 19 scalar `ID` fields among them (0136,
+  RXD-11, PSL-21): an out-of-table value there is no longer an error. The
+  other 30 are `IS` or composite fields, never enforced, so the mark corrects
+  the metadata only. Fields citing the same tables "for valid values" (PID-24,
+  RXE-9 and the rest) are still checked.
+- `scripts/audit-schemas.py` fails a `tableOpen` that is not a boolean, has no
+  citation, or sits on a field with no table binding, and a citation without
+  `tableOpen`.
+- The permanent-limitations register, section C, now records the mixed
+  tables as modelled rather than as a blocking limitation; ADR-016 gains the
+  per-field decision.
+
 ### Fixed — P2-14 fix-wave minors
 
 - `SignatureCompatibilityTests.swift` now uses a plain `import HL7v2Kit`, not
@@ -117,13 +146,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     ORC-3, ORC-4, OBR-2 and OBR-3 an empty EI-1 is reported under both
     HL7au:00044.3.1 and the field's own EI-completeness point (HL7au:000003
     to 000007), since both are violated.
+    Likewise on v2.8.2, an XCN with XCN.1 and XCN.2 both empty is reported
+    under HL7au:00044.7.1 and as the base `conditionalComponentMissing` for
+    XCN.1 (v2.8.2 XCN.1 "is required if XCN.2 is not populated"), by design,
+    since both are violated.
   The register moves all three from BASE to PARTIAL: the presence half is
   enforced, while identifier-scheme validity (00044.1.1, 00044.7.1) and
   cross-message uniqueness (00044.3.1) are not checked. This absorbs P4-19.
 - VID.1 is trimmed, and the `found:` value of
   `ParseError.unsupportedVersion` carries the trimmed VID.1. (P3-4 briefly
   let a whitespace-only MSH-12 fall back silently under `.strict`; the P3
-  fix wave below reports it and `.strict` throws for it again.)
+  fix wave above reports it and `.strict` throws for it again.)
 
 ### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
 

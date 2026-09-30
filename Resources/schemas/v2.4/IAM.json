@@ -8,7 +8,7 @@
     { "index": 3, "swiftName": "allergenCodeMnemonicDescription", "name": "Allergen Code/Mnemonic/Description", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "allergySeverityCode", "name": "Allergy Severity Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0128"] },
     { "index": 5, "swiftName": "allergyReactionCode", "name": "Allergy Reaction Code", "dataType": "ST", "length": "15", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "allergyActionCode", "name": "Allergy Action Code", "dataType": "CNE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0323"] },
+    { "index": 6, "swiftName": "allergyActionCode", "name": "Allergy Action Code", "dataType": "CNE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0323"], "tableOpen": true, "tableOpenCitation": "v2.4 Chapter 3 section 3.4.7.6 IAM-6: \"Refer to HL7 Table 0323 - Action code for suggested values.\"" },
     { "index": 7, "swiftName": "allergyUniqueIdentifier", "name": "Allergy Unique Identifier", "dataType": "EI", "length": "80", "optionality": "R", "repeatability": "1" },
     { "index": 8, "swiftName": "actionReason", "name": "Action Reason", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "sensitivityToCausativeAgentCode", "name": "Sensitivity to Causative Agent Code", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0436"] },
