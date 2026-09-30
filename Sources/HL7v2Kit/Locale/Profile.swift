@@ -280,13 +280,21 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// (HL7 v2.4 Chapter 2, 2.16.9.9). P3-4.
     ///
     /// The deferral check looks up the base composite by the field's
-    /// **effective** datatype (`effectiveDataType`, e.g. OBX-5's runtime
-    /// type from OBX-2), not the field's statically-declared datatype, so
-    /// a composite override on a variable-type field defers correctly. It
-    /// also only defers when `ValidationOptions.checkComponentGrammar` is
-    /// true, because that flag gates whether the base check runs at all —
-    /// under `.lenient` it doesn't, so yielding here would drop the
-    /// finding rather than move it (P3-5).
+    /// **statically-declared** datatype (`FieldGrammar.dataType`), the same
+    /// type `Validator.checkComponents` — the base check this defers to —
+    /// keys on, not the field's runtime-resolved `effectiveDataType`
+    /// (e.g. OBX-5's runtime type from OBX-2). This override applies by
+    /// effective datatype (so it reaches OBX-5 at all), but the deferral
+    /// must match what the base check actually looks up, or a composite
+    /// override on a variable-type field could defer to a base check that
+    /// never runs — on OBX-5 the static type is always the "varies"
+    /// placeholder, which has no component grammar, so `checkComponents`
+    /// never fires there regardless of the effective type (P3-5 fix
+    /// round 1). The deferral also only fires when
+    /// `ValidationOptions.checkComponentGrammar` is true, because that flag
+    /// gates whether the base check runs at all — under `.lenient` it
+    /// doesn't, so yielding here would drop the finding rather than move
+    /// it (P3-5).
     let yieldsToBase: Bool
 
     init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil,

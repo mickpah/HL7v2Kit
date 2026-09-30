@@ -15,9 +15,24 @@ public struct Validator: Sendable {
     /// `validate(_:)`. See ADR-007.
     public let locale: HL7Locale
 
+    /// Test-only seam (not public API, no `@testable` consumer outside this
+    /// package): when set, `validate(_:)` uses this profile instead of
+    /// resolving one from `locale` via `Profile.load(for:)`. Lets a test
+    /// exercise profile-composite-override edge cases (e.g. `yieldsToBase`
+    /// interacting with `effectiveDataType`) without adding synthetic
+    /// fixtures to the shipped AU profile data. P3-5 fix round 1.
+    let testProfileOverride: Profile?
+
     public init(options: ValidationOptions = .default, locale: HL7Locale = .international) {
         self.options = options
         self.locale = locale
+        self.testProfileOverride = nil
+    }
+
+    init(options: ValidationOptions = .default, locale: HL7Locale = .international, testProfileOverride: Profile) {
+        self.options = options
+        self.locale = locale
+        self.testProfileOverride = testProfileOverride
     }
 
     /// Validate a message. Returns a non-empty report only when at least
@@ -43,7 +58,7 @@ public struct Validator: Sendable {
         // call. nil for `.international`; for `.auLocalisation` returns
         // the AU ADRM-2021 profile with field-override narrowings layered
         // on top of base v2.4 / v2.5.1 grammar. See ADR-007.
-        let profile = Profile.load(for: locale)
+        let profile = testProfileOverride ?? Profile.load(for: locale)
 
         // v0.7-S1 (ADR-008): iterate with the 0-based segment index so
         // cross-segment / message-context predicates can resolve peers
@@ -707,8 +722,18 @@ public struct Validator: Sendable {
                 // (`options.checkComponentGrammar`, gating `checkComponents`
                 // above): under `.lenient` it doesn't, so yielding here
                 // would silently drop the finding altogether (P3-5).
+                //
+                // The lookup must key on `fieldGrammar.dataType` — the
+                // field's STATIC declared datatype — not `effectiveDataType`:
+                // `checkComponents` (the base check this defers to) keys on
+                // that same static type. On OBX-5 the static type is always
+                // the "varies" placeholder, which has no component grammar,
+                // so the base check never fires there regardless of the
+                // effective type; deferring on `effectiveDataType` would
+                // silently suppress a future OBX-5-eligible `yieldsToBase`
+                // requirement (P3-5 fix round 1).
                 if options.checkComponentGrammar, requirement.yieldsToBase, requirement.subcomponent == nil,
-                   requiredComponents(forCompositeCode: effectiveDataType, version: message.version)
+                   requiredComponents(forCompositeCode: fieldGrammar.dataType, version: message.version)
                        .contains(where: { $0.index == requirement.component }) {
                     continue
                 }

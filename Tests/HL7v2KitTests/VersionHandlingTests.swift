@@ -253,4 +253,43 @@ struct VersionHandlingTests {
         // empty MSH-9.1 would go entirely unreported (P3-5 carry-in 5).
         #expect(msh91Violations(report).count == 1)
     }
+
+    // MARK: - P3-5 fix round 1: yieldsToBase keys on the static datatype
+
+    @Test("yieldsToBase does not defer on OBX-5, where the static datatype (which the base check keys on) never matches the effective one")
+    func yieldsToBaseDoesNotDeferOnEffectiveTypeAlone() throws {
+        // OBX-5's grammar-declared (static) datatype is always the "varies"
+        // placeholder; only its EFFECTIVE datatype (read from OBX-2) is
+        // "MSG" here. `Validator.checkComponents` — the base check a
+        // `yieldsToBase` requirement defers to — keys on the field's
+        // static declared datatype, so `requiredComponents(forCompositeCode:
+        // "varies", ...)` is always empty and that base check never fires
+        // on OBX-5. A `yieldsToBase` requirement here must not defer to a
+        // base check that never runs, or the finding vanishes entirely.
+        let testProfile = Profile(
+            locale: .auLocalisation,
+            compositeOverrides: [
+                CompositeOverride(
+                    dataType: "MSG",
+                    requiredComponents: [
+                        ComponentRequirement(component: 1, specCitation: "test-only:yieldsToBase", yieldsToBase: true)
+                    ]
+                )
+            ]
+        )
+        // OBX-5 = "^R01^ORU_R01": component 1 (Message Code) is empty. MSG.1
+        // is "R" in the real v2.5.1 grammar, so the OLD (buggy) lookup keyed
+        // on the effective type "MSG" would find it required and wrongly
+        // defer; the fix keys on the static type "varies", which has no
+        // grammar, so it must not defer and the AU rule must fire itself.
+        let message = try Parser(locale: .auLocalisation).parse(
+            adt(version: "2.5.1", extra: ["OBX|1|MSG|TEST^Test||^R01^ORU_R01"])
+        )
+        let report = Validator(locale: .auLocalisation, testProfileOverride: testProfile).validate(message)
+        let hits = report.issues.filter {
+            if case .profileConstraintViolation(let rule) = $0.code { return rule.hasPrefix("test-only:yieldsToBase") }
+            return false
+        }
+        #expect(hits.count == 1)
+    }
 }
