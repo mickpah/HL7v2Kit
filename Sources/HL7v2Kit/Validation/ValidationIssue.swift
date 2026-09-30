@@ -144,6 +144,13 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// payload is the four-digit table number. Additive case introduced
     /// in M6-O6; the enum is open per ADR-014, so this is a minor bump.
     case valueNotInTable(table: String)
+
+    /// A segment whose ID does not begin with `Z` has no entry in the
+    /// grammar of the version being applied, so none of its fields was
+    /// validated. Raised as a warning under every `zSegmentPolicy`: the
+    /// Z-segment policy governs site-defined `Z` segments only (ADR-003,
+    /// ADR-018). Additive case; the enum is open per ADR-014.
+    case segmentNotInVersionGrammar
 }
 
 /// One observation from validation. Always non-fatal: collected into a

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P3-2: standard segments are no longer reported as Z-segments
+
+- A segment whose ID does not begin with `Z` and that the message's version
+  does not define (for example PRT on a v2.3 message) is now reported as
+  `IssueCode.segmentNotInVersionGrammar` (warning). Before, it went to the
+  Z-segment policy, so `.strict` rejected it as "Z-segment 'PRT' rejected"
+  (V282-C03, ADR-018).
+
 ### Fixed — P2 fix wave: whole-workstream review remediation
 
 - Table 0355 (Primary key value type, MFE-5) is opened on v2.4, v2.5.1, v2.6 and

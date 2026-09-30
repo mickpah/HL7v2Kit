@@ -106,7 +106,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | v3.11.0 | `repeated` token in the condition language (internal evaluator; no API change). v2.8.2 XAD.7 now reported as `conditionalComponentMissing` when the field repeats without a type. |
 | v3.12.0 | `ValidationOptions.auPathologySender` and `ValidationOptions.auDisplayIntended` (additive, default `false`): HL7au:00050.1.5 and HL7au:00044.4.3 applied on the caller's assertion. Default output unchanged. |
 | v3.13.0 | `ValidationOptions.auNASHTransport` (additive, default `false`): HL7au:00044.2.2 / .2.3 applied on the caller's assertion. Default output unchanged. |
-| *Unreleased* | `ValidationOptions.localTableExtensions` (additive, default `[:]`, not an init parameter), `HL7Table.patterns` and `HL7Table.CodePattern` (additive), and an `HL7Table.init` overload that also takes `patterns:`; the released initialisers are unchanged. `auNASHTransport` now also applies HL7au:00044.3.4 / .3.3 to every EI (ORC-2/-3/-4, OBR-2/-3 on the AU profile). Default output unchanged. |
+| *Unreleased* | `ValidationOptions.localTableExtensions` (additive, default `[:]`, not an init parameter), `HL7Table.patterns` and `HL7Table.CodePattern` (additive), and an `HL7Table.init` overload that also takes `patterns:`; the released initialisers are unchanged. `auNASHTransport` now also applies HL7au:00044.3.4 / .3.3 to every EI (ORC-2/-3/-4, OBR-2/-3 on the AU profile). Default output unchanged. `IssueCode.segmentNotInVersionGrammar` (additive; open enum): a non-Z segment the version does not define is a warning, no longer a Z-segment under `.strict` (ADR-018). |
 
 ## The code-table check is on by default (ADR-016)
 

@@ -51,12 +51,19 @@ public struct Validator: Sendable {
             segmentOccurrence[id] = occurrence
 
             guard let baseGrammar = grammar[id] else {
-                // No grammar entry — treat as a Z-segment / unknown.
-                appendZSegmentIssue(
-                    id: id,
-                    occurrence: occurrence,
-                    issues: &issues
-                )
+                // No grammar entry. Only a `Z` ID is a Z-segment (ADR-003);
+                // any other ID is a segment this version does not define
+                // (ADR-018), reported whatever the Z-segment policy.
+                if id.hasPrefix("Z") {
+                    appendZSegmentIssue(id: id, occurrence: occurrence, issues: &issues)
+                } else {
+                    issues.append(ValidationIssue(
+                        severity: .warning,
+                        code: .segmentNotInVersionGrammar,
+                        location: IssueLocation(segmentID: id, segmentIndex: occurrence),
+                        message: "Segment '\(id)' is not defined by the HL7 v\(message.version.rawValue) grammar; its fields were not validated"
+                    ))
+                }
                 continue
             }
 
