@@ -1004,10 +1004,7 @@ struct MultiVersionTests {
             // fail-safe, grouped in conditional-completeness-audit.md.
             "SCH-3", "SCH-24", "SCH-26",
             "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
-            "AIS-2", "AIS-4", "AIS-5", "AIS-6", "AIS-9", "AIS-10",
-            "AIG-2", "AIG-3", "AIG-8", "AIG-9", "AIG-10", "AIG-13", "AIG-14",
-            "AIL-2", "AIL-3", "AIL-4", "AIL-6", "AIL-7", "AIL-8", "AIL-11", "AIL-12",
-            "AIP-2", "AIP-3", "AIP-4", "AIP-6", "AIP-7", "AIP-8", "AIP-11", "AIP-12",
+            "AIS-2", "AIS-5", "AIG-2", "AIL-2", "AIP-2",
             "BPX-5", "BPX-6", "BPX-8", "BPX-9", "BPX-10",
             "BTX-2", "BTX-3", "BTX-4", "BTX-5", "BTX-6", "BTX-7",
             "ROL-1",
