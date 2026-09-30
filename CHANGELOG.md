@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P3-4: the version is read from VID.1 of MSH-12
+
+- MSH-12 is a VID composite. The Parser read it as a scalar, so any MSH-12
+  with a second component (the AU form `2.4^AUS&Australia&ISO3166_1`) was
+  treated as absent and validated against v2.5.1 without a word. The
+  version is now taken from VID.1: such messages validate against their
+  declared version, and `ParserOptions.strict` rejects an unknown VID.1
+  (ADR-018).
+- Visible effect on AU v2.4 traffic: the v2.5.1 MSG component checks no
+  longer apply. v2.4 types MSH-9 as CM with no component optionality, and
+  its second component "is not required on response or acknowledgment
+  messages" (HL7 v2.4 Chapter 2, 2.16.9.9), so `requiredComponentMissing`
+  on MSH-9.3 (and on MSH-9.2 for ACK) is no longer reported. The AU
+  profile rule HL7au:00049.2/.3 still requires both on ORM, ORU and REF.
+
 ### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
 
 - Before, a `2.8` message had no grammar: default validation reported

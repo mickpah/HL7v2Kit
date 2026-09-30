@@ -47,3 +47,18 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
         }
     }
 }
+
+extension Version {
+    /// The version ID (VID.1) carried by an MSH-12 field, trimmed, or `nil`
+    /// when MSH-12 is absent or its first component is empty. MSH-12 is a
+    /// VID composite (`2.4^AUS&Australia&ISO3166_1^...`); only VID.1 names
+    /// the version (HL7 v2.8.2 Chapter 2A, VID; ADR-018).
+    static func versionID(inMSH12 field: Field?) -> String? {
+        guard let raw = field?.first?.components.first?.stringValue else { return nil }
+        // Character-level trim keeps this file Foundation-free (ADR-006).
+        var trimmed = Substring(raw)
+        while trimmed.first?.isWhitespace == true { trimmed.removeFirst() }
+        while trimmed.last?.isWhitespace == true { trimmed.removeLast() }
+        return trimmed.isEmpty ? nil : String(trimmed)
+    }
+}

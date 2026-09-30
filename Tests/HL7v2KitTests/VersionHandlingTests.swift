@@ -90,4 +90,65 @@ struct VersionHandlingTests {
         #expect(!report.issues.contains { $0.code == .zSegmentPresent })
         #expect(report.issues.filter { $0.code == Self.substitution }.count == 1)
     }
+
+    // MARK: - P3-4: MSH-12 is a VID; the version is VID.1
+
+    @Test("MSH-12 in VID form takes the version from VID.1", arguments: [
+        (wire: "2.4^AUS&Australia&ISO3166_1", expected: Version.v2_4),
+        (wire: "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L", expected: Version.v2_4),
+        (wire: "2.3.1^AUS", expected: Version.v2_3_1),
+        (wire: "2.8.2^^HL7AU", expected: Version.v2_8_2),
+        (wire: " 2.6 ^AUS", expected: Version.v2_6),
+    ])
+    func vidFormResolvesVersion(_ testCase: (wire: String, expected: Version)) throws {
+        #expect(try Parser().parse(adt(version: testCase.wire)).version == testCase.expected)
+    }
+
+    @Test("Strict parsing rejects an unknown VID.1 and names VID.1 only")
+    func strictRejectsUnknownVID1() {
+        #expect(throws: ParseError.unsupportedVersion(found: "9.9.9")) {
+            try Parser(options: .strict).parse(adt(version: "9.9.9^AUS"))
+        }
+    }
+
+    @Test("An empty VID.1 still falls back to v2.5.1")
+    func emptyVID1FallsBack() throws {
+        #expect(try Parser().parse(adt(version: "^AUS")).version == .v2_5_1)
+    }
+
+    // AU v2.4 traffic now meets the v2.4 grammar, not v2.5.1. v2.4 types
+    // MSH-9 as CM with no component optionality, and "the second component
+    // is not required on response or acknowledgment messages" (HL7 v2.4
+    // Chapter 2, 2.16.9.9). v2.5.1 types it as MSG with MSG.2 and MSG.3
+    // required. The AU profile's own MSG.2/MSG.3 rule (HL7au:00049.2/.3,
+    // ORM/ORU/REF only) must still fire.
+    static let auMSH12 = "2.4^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L"
+
+    func baseMSH9ComponentIssues(_ report: ValidationReport) -> [ValidationIssue] {
+        report.issues.filter {
+            $0.code == .requiredComponentMissing
+                && $0.location.segmentID == "MSH" && $0.location.fieldIndex == 9
+        }
+    }
+
+    @Test("AU ORU at 2.4^AUS... applies v2.4 MSH-9 grammar and keeps HL7au:00049.2/.3")
+    func auORUUsesV24Grammar() throws {
+        let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||ORU^R01|MSG1|P|\(Self.auMSH12)\r"
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        #expect(message.version == .v2_4)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        #expect(baseMSH9ComponentIssues(report).isEmpty)
+        #expect(report.issues.contains {
+            if case .profileConstraintViolation(let rule) = $0.code { return rule.hasPrefix("HL7au:00049.2/.3") }
+            return false
+        })
+    }
+
+    @Test("AU ACK at 2.4^AUS... is not required to value MSH-9.2 or MSH-9.3 under v2.4")
+    func auACKUsesV24Grammar() throws {
+        let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||ACK|MSG1|P|\(Self.auMSH12)\rMSA|AA|MSG0\r"
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        #expect(message.version == .v2_4)
+        #expect(baseMSH9ComponentIssues(Validator(locale: .auLocalisation).validate(message)).isEmpty)
+    }
 }

@@ -159,8 +159,7 @@ public struct Parser: Sendable {
         if let override = options.versionOverride {
             version = override
         } else if let mshSegment = segments.first,
-                  let v12 = mshSegment.field(12)?.stringValue,
-                  !v12.isEmpty {
+                  let v12 = Version.versionID(inMSH12: mshSegment.field(12)) {
             if let parsed = Version(wireValue: v12) {
                 version = parsed
             } else if options.rejectUnknownVersion {
@@ -173,7 +172,7 @@ public struct Parser: Sendable {
                 version = .v2_5_1
             }
         } else {
-            // No MSH, no MSH-12, or empty MSH-12 — fall back to v2.5.1
+            // No MSH, no MSH-12, or an empty VID.1 — fall back to v2.5.1
             // (the most common AU dialect) rather than throwing. Empty
             // MSH-12 is a Validator concern (MSH-12 is required), not a
             // parser concern, so strict mode falls back too.
