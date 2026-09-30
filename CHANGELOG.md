@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   agrees: v2.8.2 Table 0920 (OM4-16) is opened, and v2.8.2 Table 0617 (XAD.18) becomes
   `User`, so neither raises `valueNotInTable` any more. Tables whose governing fields
   disagree (0136, 0167, 0185, 0206, v2.3 0239, 0323, 0532) are unchanged and registered.
+- ADR-014 signature compatibility: `ValidationOptions.init` and `HL7Table.init` keep
+  their released signatures. `localTableExtensions` is no longer an init parameter (set
+  it by mutation), and `patterns:` moves to a separate `HL7Table.init` overload.
 
 ### Changed — P7-1: the schema audit compares `C` and the defining attribute table
 
@@ -35,8 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P2-13: caller-declared local extensions to HL7 tables
 
-- `ValidationOptions.localTableExtensions` (additive; new init parameter, last
-  position, defaulted to `[:]`, so existing call sites compile unchanged). Every
+- `ValidationOptions.localTableExtensions` (additive stored property, default
+  `[:]`, set by mutation; not an init parameter, so `ValidationOptions.init` keeps
+  its released signature). Every
   supported version permits an HL7 table to be extended locally (v2.3 and v2.3.1
   CH2 sec 2.6.6, "Additions may be included on a site-specific basis"; v2.4 CH02
   sec 2.7.6; v2.5.1 and v2.6 CH02 sec 2.5.3.6; v2.8.2 CH02C 2.C.1.2); a table
@@ -48,9 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P2-6: pattern rows in the code-table registry
 
-- `HL7Table.CodePattern` and `HL7Table.patterns` (additive); the `patterns:`
-  initialiser parameter is additive and defaulted, so existing call sites
-  are unaffected.
+- `HL7Table.CodePattern` and `HL7Table.patterns` (additive). The released
+  five-parameter `HL7Table.init(number:name:kind:permitsLocalExtensions:entries:)`
+  is unchanged; a separate overload also takes `patterns:`, and codegen emits it
+  only for a table that has pattern rows.
 - `HL7Table.contains(_:)` now accepts a full match against a pattern row,
   in addition to an exact printed-code match. `CodePattern.matches` enforces
   the full match itself (wrapping the supplied regex in `\A(?:...)\z`), so

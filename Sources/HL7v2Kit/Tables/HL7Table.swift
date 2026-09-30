@@ -79,14 +79,27 @@ public struct HL7Table: Sendable, Equatable, Hashable {
     /// Printed rows that name a family of codes. Empty for almost every table.
     public let patterns: [CodePattern]
 
-    /// Create a code table.
+    /// Create a code table with no pattern rows.
+    public init(
+        number: String,
+        name: String,
+        kind: Kind,
+        permitsLocalExtensions: Bool = false,
+        entries: [Entry]
+    ) {
+        self.init(number: number, name: name, kind: kind,
+                  permitsLocalExtensions: permitsLocalExtensions, entries: entries, patterns: [])
+    }
+
+    /// Create a code table that also has pattern rows (printed rows that name a
+    /// family of codes, such as Table 0203 `NNxxx`).
     public init(
         number: String,
         name: String,
         kind: Kind,
         permitsLocalExtensions: Bool = false,
         entries: [Entry],
-        patterns: [CodePattern] = []
+        patterns: [CodePattern]
     ) {
         self.number = number
         self.name = name

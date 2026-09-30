@@ -116,6 +116,7 @@ public struct ValidationOptions: Sendable {
     /// Keys are four-digit table numbers (`"0074"`), matched against the table number the
     /// field or component is bound to; any other key (`"74"`, `"HL70074"`) is ignored.
     /// Matching of values is exact and case-sensitive, as ``HL7Table/contains(_:)`` is.
+    /// Not an init parameter. P2-13.
     public var localTableExtensions: [String: Set<String>] = [:]
 
     public init(
@@ -124,8 +125,7 @@ public struct ValidationOptions: Sendable {
         checkConditionalFields: Bool = true,
         checkComponentGrammar: Bool = true,
         checkCardinality: Bool = true,
-        warnDeprecatedFields: Bool = true,
-        localTableExtensions: [String: Set<String>] = [:]
+        warnDeprecatedFields: Bool = true
     ) {
         self.zSegmentPolicy = zSegmentPolicy
         self.checkRequiredFields = checkRequiredFields
@@ -133,7 +133,6 @@ public struct ValidationOptions: Sendable {
         self.checkComponentGrammar = checkComponentGrammar
         self.checkCardinality = checkCardinality
         self.warnDeprecatedFields = warnDeprecatedFields
-        self.localTableExtensions = localTableExtensions
     }
 
     /// Grammar checks on; Z-segments silently tolerated. Suitable for
