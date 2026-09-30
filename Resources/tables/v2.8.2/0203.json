@@ -3,8 +3,8 @@
   "version": "2.8.2",
   "name": "Identifier Type",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0203 - Identifier Type",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.8.2 CH02C sec 2.C.2.140 Table 0203 - Identifier Type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "ACSN",

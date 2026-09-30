@@ -3,8 +3,8 @@
   "version": "2.5.1",
   "name": "Identifier type",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.5.1 Appendix A, HL7 Table 0203 - Identifier type",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.5.1 Table 0203 - Identifier type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier type for suggested values', repeated at XCN.13, PPN.13 and XON.7, so the printed rows are not a closed set",
   "entries": [
     {
       "code": "AM",

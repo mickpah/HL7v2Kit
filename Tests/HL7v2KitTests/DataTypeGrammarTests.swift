@@ -25,7 +25,7 @@ struct DataTypeGrammarTests {
         let cx24 = try #require(DataTypeGrammarTable.grammar("CX", version: .v2_4))
         #expect(cx23.component(5)?.dataType == "IS" && cx24.component(5)?.dataType == "ID")
         #expect(DataTypeGrammarTable.grammar("CX", version: .v2_3_1)?.component(5)?.dataType == "IS")
-        #expect(HL7TableRegistry.table("0203", version: .v2_4)?.isClosed == false, "user-defined until v2.5")
+        #expect(HL7TableRegistry.table("0203", version: .v2_4)?.isClosed == false, "never closed: user-defined until v2.5, then cited for suggested values")
         #expect(cx24.component(5)?.tables == ["0203"])
         #expect(cx24.component(5)?.optionalityCode == "", "prose gives no optionality")
         #expect(cx24.components.count == 8, "v2.4 CX has eight components; v2.5.1 added two")

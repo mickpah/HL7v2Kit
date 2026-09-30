@@ -14,14 +14,24 @@ struct ComponentCodeTableTests {
             .filter { if case .valueNotInTable = $0.code { return true } else { return false } }
     }
 
-    @Test("CX.5 outside HL7 Table 0203 is an error located at the component")
+    @Test("CX.5 outside the printed Table 0203 is silent: CX.5 cites the table 'for suggested values'")
     func cx5OutsideTable() throws {
-        let issues = try tableIssues(wire(pid3: "123^^^AUTH^ZZZZ"))
+        for (wireVersion, version) in [("2.4", Version.v2_4), ("2.5.1", .v2_5_1), ("2.6", .v2_6), ("2.8.2", .v2_8_2)] {
+            #expect(try tableIssues(wire(version: wireVersion, pid3: "123^^^AUTH^ZZZZ")).isEmpty, "v\(wireVersion)")
+            let t = try #require(HL7TableRegistry.table("0203", version: version))
+            #expect(t.kind == .hl7 && t.permitsLocalExtensions && !t.isClosed, "v\(wireVersion)")
+        }
+    }
+
+    @Test("An ID component outside a closed table is an error located at the component")
+    func componentOutsideClosedTable() throws {
+        // XPN.7 Name Type Code is ID / closed HL7 Table 0200.
+        let issues = try tableIssues(wire(pid5: "DOE^JOHN^^^^^QQQ"))
         #expect(issues.count == 1)
         let issue = try #require(issues.first)
-        #expect(issue.code == .valueNotInTable(table: "0203"))
+        #expect(issue.code == .valueNotInTable(table: "0200"))
         #expect(issue.severity == .error)
-        #expect(issue.location.pathDescription == "PID[1]-3.5")
+        #expect(issue.location.pathDescription == "PID[1]-5.7")
     }
 
     @Test("A printed code, an empty component and the HL7 null are all silent")
@@ -33,7 +43,7 @@ struct ComponentCodeTableTests {
 
     @Test("Each repetition is checked independently")
     func repetitions() throws {
-        let issues = try tableIssues(wire(pid3: "1^^^A^MR~2^^^A^QQQ~3^^^A^WWW"))
+        let issues = try tableIssues(wire(pid5: "DOE^JOHN^^^^^QQQ~DOE^J^^^^^L~ROE^R^^^^^WWW"))
         #expect(issues.count == 2)
     }
 
@@ -49,13 +59,10 @@ struct ComponentCodeTableTests {
 
     @Test("Every version is checked under ITS OWN component grammar")
     func perVersionGrammar() throws {
-        // Table 0203 Identifier type is USER-DEFINED until v2.5 (and CX.5 is IS in v2.3 and
-        // v2.3.1), so an unknown identifier type is never an error on the three older versions.
-        for version in ["2.3", "2.3.1", "2.4"] {
+        // Table 0203 Identifier type is never a closed set: user-defined until v2.5 (CX.5 is IS in
+        // v2.3 and v2.3.1), and an HL7 table cited "for suggested values" from v2.4 on (P2-7).
+        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"] {
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^ZZZZ")).isEmpty, "v\(version)")
-        }
-        for version in ["2.5.1", "2.6", "2.8.2"] {
-            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^ZZZZ")).count == 1, "v\(version)")
         }
         // XPN.7 Name type code is ID / 0200 on every version, v2.3 included (prose-derived grammar).
         #expect(try tableIssues(wire(version: "2.3", pid5: "DOE^JOHN^^^^^QQQ")).count == 1)
@@ -75,15 +82,17 @@ struct ComponentCodeTableTests {
     func optionOff() throws {
         var options = ValidationOptions()
         options.checkCodeTables = false
-        #expect(try tableIssues(wire(pid3: "123^^^AUTH^ZZZZ"), options: options).isEmpty)
-        #expect(try tableIssues(wire(pid3: "123^^^AUTH^ZZZZ"), options: .lenient).isEmpty)
+        #expect(try tableIssues(wire(pid5: "DOE^JOHN^^^^^QQQ")).count == 1, "the default options do flag it")
+        #expect(try tableIssues(wire(pid5: "DOE^JOHN^^^^^QQQ"), options: options).isEmpty)
+        #expect(try tableIssues(wire(pid5: "DOE^JOHN^^^^^QQQ"), options: .lenient).isEmpty)
     }
 
     @Test("A locale's rendering of the table widens the component check too")
     func localeWidens() throws {
-        // NOI is printed by AU ADRM-2021 Table 0203 (NOI**) and by no base version before v2.9.
-        #expect(try tableIssues(wire(pid3: "123^^^AUTH^NOI")).count == 1)
-        #expect(try tableIssues(wire(pid3: "123^^^AUTH^NOI"), locale: .auLocalisation).isEmpty)
+        // AUSNATA is printed by AU ADRM-2021 Table 0301 (p. 161) and by no base version.
+        let w = wire().replacingOccurrences(of: "|HIS|FAC|", with: "|HIS|QML^2184^AUSNATA|")
+        #expect(try tableIssues(w).count == 1)
+        #expect(try tableIssues(w, locale: .auLocalisation).isEmpty)
     }
 
     @Test("Table 0301 prints L,M,N in one row: they are three codes, and each is valid in HD.3")
@@ -115,10 +124,10 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&\"\"^MR")).isEmpty, "HL7 null")
     }
 
-    @Test("Both levels report independently on one field")
+    @Test("Component and subcomponent levels report independently")
     func bothLevels() throws {
-        let issues = try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&QQQ^ZZZZ"))
-        #expect(Set(issues.map(\.location.pathDescription)) == ["PID[1]-3.4.3", "PID[1]-3.5"])
+        let issues = try tableIssues(wire(pid3: "123^^^AUTH&1.2.3&QQQ^MR", pid5: "DOE^JOHN^^^^^QQQ"))
+        #expect(Set(issues.map(\.location.pathDescription)) == ["PID[1]-3.4.3", "PID[1]-5.7"])
     }
 
     @Test("OBX-5 is checked under the datatype OBX-2 declares")
@@ -166,7 +175,7 @@ struct ComponentCodeTableTests {
         for version in ["2.5.1", "2.6", "2.8.2"] {
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAUS")).isEmpty, "v\(version) NNAUS")
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNCAN")).isEmpty, "v\(version) NNCAN")
-            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAU1")).count == 1, "v\(version) NNAU1")
+            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAU1")).isEmpty, "v\(version): 0203 is open (P2-7)")
         }
         for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0203", version: version))

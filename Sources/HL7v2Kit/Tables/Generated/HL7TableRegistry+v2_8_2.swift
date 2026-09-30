@@ -3287,7 +3287,7 @@ extension HL7TableRegistry {
         number: "0203",
         name: "Identifier Type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ACSN", description: "Accession ID"),
             HL7Table.Entry(code: "AM", description: "American Express"),

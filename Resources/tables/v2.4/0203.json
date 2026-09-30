@@ -2,9 +2,9 @@
   "table": "0203",
   "version": "2.4",
   "name": "Identifier type",
-  "kind": "User",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, User-defined Table 0203 - Identifier type",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.4 Table 0203 - Identifier type; CH02 sec 2.9.12.5 prints it as 'HL7 Table 0203' (Appendix A indexes it as User) and says 'Refer to HL7 Table 0203 - Identifier type for suggested values', so the printed rows are not a closed set",
   "entries": [
     {
       "code": "AM",

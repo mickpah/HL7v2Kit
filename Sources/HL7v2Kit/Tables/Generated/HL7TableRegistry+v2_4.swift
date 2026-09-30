@@ -3350,8 +3350,8 @@ extension HL7TableRegistry {
     static let t0203_v2_4 = HL7Table(
         number: "0203",
         name: "Identifier type",
-        kind: .userDefined,
-        permitsLocalExtensions: false,
+        kind: .hl7,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "AM", description: "American Express"),
             HL7Table.Entry(code: "AN", description: "Account number"),

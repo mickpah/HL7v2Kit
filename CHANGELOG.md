@@ -24,6 +24,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   membership of those three letters; see the permanent-limitations register
   §C.
 
+### Changed — P2-7: Table 0203 is not a closed set
+
+- Table 0203 (Identifier type) is opened on v2.4 to v2.8.2:
+  `permitsLocalExtensions` is set and `HL7Table.isClosed` is now `false` on
+  every version, because every CX.5 / XCN.13 / PPN.13 / XON.7 definition
+  cites the table "for suggested values" rather than as a closed set
+  (V282-C02, owner gate G5). CX.5 values outside the printed rows no
+  longer raise `valueNotInTable` on v2.4 to v2.8.2.
+- v2.4 Table 0203's `kind` is corrected from `User` to `HL7`, matching
+  CH02 sec 2.9.12.5's own heading (Appendix A had indexed it as User).
+
 ### Fixed — P1 fix wave: whole-workstream review remediation
 
 - v2.6 OBR-48 (Medically Necessary Duplicate Procedure Reason) was `O`; CH04
