@@ -77,11 +77,11 @@ struct CodeTableOpennessTests {
         }
     }
 
-    @Test("A candidate the prose leaves mixed stays closed: v2.5.1 PID-24 = X under Table 0136")
+    @Test("A candidate the prose leaves mixed stays closed: v2.4 PID-24 = X under Table 0136 (PID-31 cites it for suggested values, PID-24 for valid values)")
     func mixedCandidateStaysClosed() throws {
-        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.5.1\r"
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.4\r"
             + "PID|1||123^^^AUTH^MR||DOE^JOHN" + String(repeating: "|", count: 19) + "X\r"
         #expect(try issues(wire, table: "0136").count == 1)
-        #expect(try #require(HL7TableRegistry.table("0136", version: .v2_5_1)).isClosed)
+        #expect(try #require(HL7TableRegistry.table("0136", version: .v2_4)).isClosed)
     }
 }
