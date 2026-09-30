@@ -3,8 +3,8 @@
   "version": "2.3.1",
   "name": "Source of comment",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.3.1 Appendix A, HL7 Table 0105 - Source of comment",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.3.1 Chapter 2 sec 2.24.15.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
   "entries": [
     {
       "code": "L",

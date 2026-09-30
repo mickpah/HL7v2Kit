@@ -59,6 +59,37 @@ struct CodeTableOpennessTests {
         Change(table: "0617", versions: [.v2_8_2], becomesUser: true,
                wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r"
                 + "PID|1||123^^^AUTH^MR||DOE^JOHN||||||1 MAIN ST" + String(repeating: "^", count: 17) + "Z\r"),
+        // P2-14: NTE-2, the table's only governing field on every version, reads "This table
+        // may be extended locally during implementation" unchanged from v2.3 to v2.8.2.
+        Change(table: "0105", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2], becomesUser: false,
+               wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.4\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+                + "NTE|1|Z\r"),
+        // P2-14: QRD-9 ("...may be extended locally during implementation") and URD-4 ("...may
+        // be extended by local agreement during implementation") both say so on every version
+        // that carries them (v2.3 to v2.6; QRD/URD are dropped from v2.8.2). QRD-9 and URD-4 are
+        // CE, whose identifier component is ST, not ID (ADR-016: "tables ... recorded ... but not
+        // enforced"), so the field-level and component-level checks never reach this table either
+        // way; the wire assertion documents the (unchanged) absence of a false error.
+        Change(table: "0048", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6], becomesUser: false,
+               wire: "MSH|^~\\&|HIS|FAC|LAB|FAC|||QRY^A19^QRY_A19|MSG00001|P|2.4\r"
+                + "QRD|20260101000000|R|I|Q001|||10|DOE^JOHN|Z\r"),
+        // P2-14: MFI-1, the table's only governing field on every version, reads "This table may
+        // be extended by local agreement during implementation to cover site-specific master
+        // files (z-master files)" unchanged from v2.3 to v2.8.2. MFI-1 is CE (see the 0048 note
+        // above for why the check never fires either way).
+        Change(table: "0175", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2], becomesUser: false,
+               wire: "MSH|^~\\&|HIS|FAC|LAB|FAC|||MFN^M01|MSG00001|P|2.4\r"
+                + "MFI|ZZZ^Bogus^HL70175||UPD|||NE\r"),
+        // P2-14: OM4-7 and SAC-27, the only two fields citing the table on v2.4 (SPM does not
+        // exist until v2.5.1), both read "...The value set can be extended with user specific
+        // values." On v2.5.1, v2.6 and v2.8.2 a third field, SPM-6, also cites the table but only
+        // "for valid values" with no extension clause: mixed, stays closed there (register row).
+        // OM4-7/SAC-27 are CE/CWE (see the 0048 note above for why the check never fires either way).
+        Change(table: "0371", versions: [.v2_4], becomesUser: false,
+               wire: "MSH|^~\\&|HIS|FAC|LAB|FAC|||MFN^M08^MFN_M08|MSG00001|P|2.4\r"
+                + "MFI|OMA^Numeric^HL70175||UPD|||NE\r"
+                + "OM4|1" + String(repeating: "|", count: 6) + "Z\r"),
     ]
 
     @Test("A table the governing field prose opens or calls User-defined is open or User on exactly those versions",
@@ -83,5 +114,15 @@ struct CodeTableOpennessTests {
             + "PID|1||123^^^AUTH^MR||DOE^JOHN" + String(repeating: "|", count: 19) + "X\r"
         #expect(try issues(wire, table: "0136").count == 1)
         #expect(try #require(HL7TableRegistry.table("0136", version: .v2_4)).isClosed)
+    }
+
+    @Test("Table 0371 stays closed on v2.5.1, v2.6 and v2.8.2: SPM-6 cites it only 'for valid values' while OM4-7/SAC-27 say it may be extended",
+          arguments: [("2.5.1", Version.v2_5_1), ("2.6", .v2_6), ("2.8.2", .v2_8_2)])
+    func mixedTable0371StaysClosed(wireVersion: String, version: Version) throws {
+        let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||MFN^M08^MFN_M08|MSG00001|P|\(wireVersion)\r"
+            + "MFI|OMA^Numeric^HL70175||UPD|||NE\r"
+            + "OM4|1" + String(repeating: "|", count: 6) + "Z\r"
+        #expect(try issues(wire, table: "0371").isEmpty, "v\(wireVersion)")
+        #expect(try #require(HL7TableRegistry.table("0371", version: version)).isClosed, "v\(wireVersion)")
     }
 }

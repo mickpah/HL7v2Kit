@@ -1204,6 +1204,21 @@
           "="
         ]
       ]
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.15.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation.\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 2 sec 2.24.4.9 QRD-9 What subject filter and sec 2.24.6.4 R/U what subject definition (URD-4), HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3 Chapter 8 sec 8.4.1.1 Master file identifier (MFI-1), HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.3.1": {
@@ -1646,6 +1661,21 @@
     "0355": {
       "permitsLocalExtensions": false,
       "note": "P2-fix 1: stays closed. v2.3.1 Chapter 8 sec 8.4.2.5 (MFE-5) reads 'The valid values for the data type of a primary key are listed in HL7 table 0355' and prints no local-extension note; the note that opens the table first appears in v2.4."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 2 sec 2.24.15.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation.\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 2 sec 2.24.4.9 QRD-9 What subject filter and sec 2.24.6.4 R/U what subject definition (URD-4), HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.3.1 Chapter 8 sec 8.4.1.1 Master file identifier (MFI-1), HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.4": {
@@ -2063,6 +2093,26 @@
         "63": "/"
       },
       "note": "P2-fix 6(d): v2.4 Chapter 2 sec 2.9.16.4 (ED Encoding), HL7 Table 0290 - MIME base64 encoding characters (pp. 2-42 to 2-43), and Appendix A both print the fourth Value/Code column with the value repeated in the Code cell for rows 51 to 63 (\"51 51 z\", \"52 52 0\" ... \"63 63 /\"), so the extractor read the descriptions as \"51 z\" and so on. The Code column of every other row is the single base64 character, as v2.3 and v2.3.1 (transcribed from Chapter 2) have it; the descriptions are corrected to that character."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 2 sec 2.16.10.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 5 sec 5.10.5.3.9 QRD-9 What subject filter and sec 5.10.5.6.4 URD-4 R/U what subject definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 Table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.5.1.1 MFI-1 Master file identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0371": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.8.6.7 OM4-7 Additive and Chapter 13 sec 13.4.3.27 SAC-27 Additive, HL7 Table 0371 - Additive",
+      "note": "P2-14: OM4-7 and SAC-27, the only two fields citing the table on v2.4 (SPM does not exist until v2.5.1), both read \"Refer to HL7 table 0371 - Additive for valid values. The table's values are taken from NCCLS AUTO4. The value set can be extended with user specific values.\" so the printed rows are not a closed set. On v2.5.1, v2.6 and v2.8.2 a third field, SPM-6 Specimen Additives, also cites the table but only \"for valid values\" with no extension clause: the table is mixed there and stays closed (permanent-limitations-register.md section C)."
     }
   },
   "2.5.1": {
@@ -2438,6 +2488,21 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
       "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 2 sec 2.15.10.2 NTE-2 Source of comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 5 sec 5.10.5.3.10 QRD-9 What Subject Filter and sec 5.10.5.6.4 URD-4 R/U What Subject Definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.6": {
@@ -2845,6 +2910,21 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.6 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
       "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment, HL7 Table 0105 - Source of comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of comment for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0048": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 5 sec 5.10.4.1.9 QRD-9 What Subject Filter and sec 5.10.4.3.4 URD-4 R/U What Subject Definition, HL7 Table 0048 - What subject filter",
+      "note": "P2-14: both governing fields say the table may be extended locally. QRD-9: \"Valid values define the type of transaction inquiry and may be extended locally during implementation.\" URD-4: \"Refer to HL7 Table 0048 - What subject filter for valid values. This table may be extended by local agreement during implementation.\" Not present in the v2.8.2 registry (QRD/URD dropped)."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master file identifier code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   },
   "2.8.2": {
@@ -2973,6 +3053,16 @@
       "kind": "User",
       "citation": "HL7 v2.8.2 Chapter 2A sec 2.A.87.18 XAD.18 Address Usage, User-defined Table 0617 - Address Usage (CH02C 2.C.2.481 prints the caption HL7 Table 0617 and names XAD.18 as its only use)",
       "note": "P2-fix 2: XAD.18, the only governing field, reads \"Refer to User-defined Table 0617 - Address Usage for valid values\". Under the ADR-016 criterion the chapter prose wins, so the kind is User (P2-4 0119 precedent, in reverse). v2.6 sec 2.A.85.18 prints \"HL7 Table 0617\" inline and stays HL7."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment, HL7 Table 0105 - Source of Comment",
+      "note": "P2-14: NTE-2, the table's only governing field, reads \"This field is used when source of comment must be identified. This table may be extended locally during implementation. Refer to HL7 Table 0105 - Source of Comment in Chapter 2C, Code Tables, for valid values.\" (unchanged extension wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master File Identifier Code",
+      "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
   }
 }

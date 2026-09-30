@@ -3,8 +3,8 @@
   "version": "2.6",
   "name": "Master file identifier code",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.6 Appendix A, HL7 Table 0175 - Master file identifier code",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.6 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master file identifier code",
   "entries": [
     {
       "code": "CDM",

@@ -2014,7 +2014,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of Comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "P", description: "Orderer (placer) is source of comment"),
@@ -2978,7 +2978,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master File Identifier Code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CMA", description: "Clinical study with phases and scheduled master file"),

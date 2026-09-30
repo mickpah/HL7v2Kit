@@ -742,7 +742,7 @@ extension HL7TableRegistry {
         number: "0048",
         name: "What Subject Filter",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "ADV", description: "Advice/diagnosis"),
             HL7Table.Entry(code: "ANU", description: "Nursing unit lookup (returns patients in beds, excluding empty beds)"),
@@ -1476,7 +1476,7 @@ extension HL7TableRegistry {
         number: "0105",
         name: "Source of Comment",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "L", description: "Ancillary (filler) department is source of comment"),
             HL7Table.Entry(code: "P", description: "Orderer (placer) is source of comment"),
@@ -2471,7 +2471,7 @@ extension HL7TableRegistry {
         number: "0175",
         name: "Master File Identifier Code",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CDM", description: "Charge description master file"),
             HL7Table.Entry(code: "CM0", description: "Clinical study master"),

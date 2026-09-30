@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P2-14: remaining locally extensible tables
+
+- Applied the ADR-016 open-table criterion to the four tables the P2 fix wave flagged
+  as an unfinished requirement-4 follow-up:
+  - Table 0105 (Source of comment, NTE-2) opens on every supported version (v2.3 to
+    v2.8.2): NTE-2, its only governing field, reads "This table may be extended
+    locally during implementation" unchanged across all six. An out-of-table NTE-2
+    value no longer raises `valueNotInTable`.
+  - Table 0048 (What subject filter, QRD-9 / URD-4) opens on v2.3 to v2.6 (QRD/URD
+    are dropped from v2.8.2): both governing fields say the table may be extended
+    locally or by local agreement.
+  - Table 0175 (Master file identifier code, MFI-1) opens on every supported
+    version: MFI-1, its only governing field, reads "This table may be extended by
+    local agreement during implementation to cover site-specific master files
+    (z-master files)" unchanged across all six.
+  - Table 0371 (Additive, OM4-7 / SAC-27 / SPM-6) opens on v2.4, the only version
+    where OM4-7 and SAC-27 are the sole citing fields ("The value set can be
+    extended with user specific values"). On v2.5.1, v2.6 and v2.8.2 a third field,
+    SPM-6, also cites the table but only "for valid values" with no extension
+    clause: mixed, stays closed there and is registered in
+    `permanent-limitations-register.md` section C.
+  - 0048, 0175 and 0371's governing fields are all CE/CWE, whose identifier
+    component is `ST`, not `ID` (ADR-016: composite `tables` bindings are recorded
+    but not enforced), so opening them corrects the registry's metadata without a
+    behavioural change in the current validator; only 0105 (a scalar `ID` field)
+    changes what the Validator reports.
+
 ### Fixed — P3-5: unrecognised MSH-12 versions are reported
 
 - A message whose MSH-12 version ID has no `Version` case (2.1, 2.2, 2.5,

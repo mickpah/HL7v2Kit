@@ -3,8 +3,8 @@
   "version": "2.4",
   "name": "Additive",
   "kind": "HL7",
-  "permitsLocalExtensions": false,
-  "citation": "HL7 v2.4 Appendix A, HL7 Table 0371 - Additive",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.4 Chapter 8 sec 8.8.6.7 OM4-7 Additive and Chapter 13 sec 13.4.3.27 SAC-27 Additive, HL7 Table 0371 - Additive",
   "entries": [
     {
       "code": "BOR",
