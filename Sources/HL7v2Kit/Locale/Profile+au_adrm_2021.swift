@@ -912,12 +912,14 @@ extension Profile {
             // v2.3-v2.4), so the profile states it outright. Its "valid
             // according to the identifier scheme" half needs
             // identifier-scheme recognition and is not checked. P3 fix
-            // wave (absorbs P4-19). On v2.8.2, an XCN with XCN.1 and XCN.2
-            // both empty is reported twice: here under HL7au:00044.7.1,
-            // and by the base conditional-component check for XCN.1
-            // (conditionalComponentMissing; XCN.1 "is required if XCN.2 is
-            // not populated", conditions.json "2 empty"). Both are
-            // violated, so both are reported by design, as for EI-1 below.
+            // wave (absorbs P4-19). On v2.8.2, with XCN.1 and XCN.2 both
+            // empty, XCN.1's absence is reported twice: here under
+            // HL7au:00044.7.1, and by the base condition for XCN.1
+            // (conditionalComponentMissing; "XCN.1 is required if XCN.2 is
+            // not populated", conditions.json "2 empty"). The empty family
+            // name is reported separately, by XCN.2's own base condition
+            // ("1 empty") and by HL7au:00044.7.5. Every one is violated, so
+            // all are reported by design, as for EI-1 below.
             // .7.6 (<given name> "should" be valued) is advisory, not a
             // "must", so it is not enforced.
             //

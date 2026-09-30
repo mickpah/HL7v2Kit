@@ -251,6 +251,25 @@ SUSPECT_ALLOW = {
 MOJIBAKE = re.compile("[\u00c2\u00e2\u00c3]")
 
 
+def table_open_findings(f):
+    """P2-15 per-field openness. `tableOpen` is a boolean, only on a field with a table
+    binding, and always carries the cited prose that opens the table; a
+    `tableOpenCitation` needs `tableOpen: true`. Returns the finding messages for one field."""
+    out = []
+    if "tableOpen" not in f and "tableOpenCitation" not in f:
+        return out
+    flag, cite = f.get("tableOpen"), f.get("tableOpenCitation")
+    if "tableOpen" in f and not isinstance(flag, bool):
+        out.append(f"tableOpen {flag!r} is not a boolean")
+    elif flag and not f.get("tables"):
+        out.append("tableOpen on a field with no table binding")
+    if flag is True and not (isinstance(cite, str) and cite.strip()):
+        out.append("tableOpen without a tableOpenCitation")
+    if cite is not None and flag is not True:
+        out.append("tableOpenCitation without tableOpen: true")
+    return out
+
+
 def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
@@ -278,18 +297,7 @@ def integrity():
             if table is not None and table not in f.get("tables", []):
                 findings.append((rel, f["index"],
                                  f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
-            # P2-15: per-field openness. `tableOpen` is a boolean, only on a field with a
-            # table binding, and always carries the cited prose that opens the table.
-            if "tableOpen" in f or "tableOpenCitation" in f:
-                flag, cite = f.get("tableOpen"), f.get("tableOpenCitation")
-                if "tableOpen" in f and not isinstance(flag, bool):
-                    findings.append((rel, f["index"], f"tableOpen {flag!r} is not a boolean"))
-                elif flag and not f.get("tables"):
-                    findings.append((rel, f["index"], "tableOpen on a field with no table binding"))
-                if flag is True and not (isinstance(cite, str) and cite.strip()):
-                    findings.append((rel, f["index"], "tableOpen without a tableOpenCitation"))
-                if cite is not None and flag is not True:
-                    findings.append((rel, f["index"], "tableOpenCitation without tableOpen: true"))
+            findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))

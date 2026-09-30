@@ -75,8 +75,28 @@ def check_natural_chapter_order():
     assert got == ["CH2.pdf", "CH7.pdf", "CH10.pdf"], got
 
 
+def check_table_open():
+    # P2-15: a per-field `tableOpen` must be a boolean on a field with a table binding, and
+    # must carry the cited prose that opens the table; a citation needs the flag.
+    base = {"index": 31, "dataType": "ID", "table": "0136", "tables": ["0136"]}
+    cite = 'v2.4 Chapter 3 section 3.4.2.31 PID-31: "... for suggested values."'
+    good = dict(base, tableOpen=True, tableOpenCitation=cite)
+    assert audit.table_open_findings(good) == [], "a well-formed entry is not a finding"
+    assert audit.table_open_findings(dict(base)) == [], "an unmarked field is not a finding"
+    cases = {
+        "missing citation": dict(base, tableOpen=True),
+        "blank citation": dict(base, tableOpen=True, tableOpenCitation="  "),
+        "non-bool flag": dict(base, tableOpen="yes", tableOpenCitation=cite),
+        "flag without tables": {"index": 1, "dataType": "ST", "tableOpen": True, "tableOpenCitation": cite},
+        "citation without flag": dict(base, tableOpenCitation=cite),
+    }
+    for name, field in cases.items():
+        assert audit.table_open_findings(field), f"{name} must be a finding"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
-          check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order]
+          check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
+          check_table_open]
 
 
 def main():

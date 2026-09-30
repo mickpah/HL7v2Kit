@@ -110,6 +110,37 @@ struct AUIdentifierComponentTests {
         #expect(hits(report, "HL7au:00044.7.1").isEmpty)
     }
 
+    @Test("v2.8.2: an XCN with XCN.1 and XCN.2 both empty reports each missing component under both of its rules")
+    func xcn1AndXcn2EmptyOnV282() throws {
+        // XCN.1's absence is reported twice: HL7au:00044.7.1 and the base v2.8.2 condition
+        // "XCN.1 is required if XCN.2 is not populated". The empty family name is reported
+        // separately, by XCN.2's own condition ("required if XCN.1 is not populated") and by
+        // HL7au:00044.7.5. All four are violated, so all four are reported by design.
+        let report = try oru(msh12: "2.8.2^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L",
+                             pid3: Self.goodCX, obr3: Self.goodEI,
+                             obr16: "^^Jane^^^^^^AUSHICPR^L^^^UPIN")
+        let atXCN = report.issues.filter { $0.location.segmentID == "OBR" && $0.location.fieldIndex == 16 }
+        let found = Set(atXCN.map { issue -> String in
+            let rule: String
+            if case .profileConstraintViolation(let r) = issue.code {
+                rule = String(r.prefix { $0 != " " })
+            } else {
+                rule = "\(issue.code)"
+            }
+            return "\(rule)@\(issue.location.componentIndex ?? 0).\(issue.location.subcomponentIndex ?? 0)"
+        })
+        // The fifth issue is unrelated to the XCN: OBR-16 is B (deprecated) on v2.8.2, so a
+        // populated OBR-16 also carries the fieldNotSupported warning.
+        #expect(found == [
+            "HL7au:00044.7.1@1.0",
+            "conditionalComponentMissing@1.0",
+            "conditionalComponentMissing@2.0",
+            "HL7au:00044.7.5@2.0",
+            "fieldNotSupported@0.0",
+        ])
+        #expect(atXCN.count == 5)
+    }
+
     // MARK: - Scope gate
 
     @Test("The three points keep their Orders/Results/Referrals scope: silent on ADT")

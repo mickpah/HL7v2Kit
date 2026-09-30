@@ -79,6 +79,37 @@ struct FieldTableOpennessTests {
         #expect(try tableIssues(wire(field.version, field.segment, field.index, "Z"), table: field.table).isEmpty)
     }
 
+    /// A segment carrying "Z" at every index in `values`, the rest empty.
+    private func wire(_ version: String, _ segment: String, values: [Int]) -> String {
+        let fields = (1...(values.max() ?? 1)).map { values.contains($0) ? "Z" : "" }
+        return "MSH|^~\\&|HIS|FAC|LAB|FAC|||ADT^A01|MSG00001|P|\(version)\r"
+            + segment + "|" + fields.joined(separator: "|") + "\r"
+    }
+
+    @Test("On the same wire, an unmarked sibling ID field on a closed table still raises",
+          arguments: [("2.6", "DG1", 24, 18, "0136"), ("2.8.2", "DG1", 24, 18, "0136"),
+                      ("2.4", "RXD", 11, 14, "0136"), ("2.8.2", "RXD", 11, 14, "0136")])
+    func siblingStillChecked(version: String, segment: String, marked: Int, sibling: Int, table: String) throws {
+        // DG1-18 Confidential Indicator and RXD-14 Needs Human Review cite Table 0136 "for valid values".
+        let report = Validator().validate(try Parser().parse(wire(version, segment, values: [marked, sibling])))
+        let hits = report.issues.filter { if case .valueNotInTable = $0.code { return true } else { return false } }
+        #expect(hits.map(\.location.fieldIndex) == [sibling])
+        #expect(hits.first?.code == .valueNotInTable(table: table))
+    }
+
+    @Test("RFI, IVC, PSG and PSL carry no other closed-table ID field; the same wire still validates the segment",
+          arguments: [("2.6", "RFI", 3), ("2.6", "IVC", 13), ("2.6", "PSG", 4), ("2.6", "PSL", 47),
+                      ("2.8.2", "RFI", 3), ("2.8.2", "IVC", 13), ("2.8.2", "PSG", 4), ("2.8.2", "PSL", 21)])
+    func segmentStillValidated(version: String, segment: String, marked: Int) throws {
+        // No unmarked closed-table ID sibling exists on these segments, so the control is the
+        // segment's required fields (index 1 is R on all four), reported on the same wire.
+        let report = Validator().validate(try Parser().parse(wire(version, segment, values: [marked])))
+        #expect(report.issues.contains {
+            $0.code == .requiredFieldMissing && $0.location.segmentID == segment && $0.location.fieldIndex == 1
+        })
+        #expect(!report.issues.contains { if case .valueNotInTable = $0.code { return true } else { return false } })
+    }
+
     /// Marked fields the scalar check never enforces: `IS` fields and composite (CE / CWE /
     /// CNE) fields, whose table binding is recorded but not wire-checked (ADR-016). The mark
     /// keeps the metadata faithful to each field's own prose.
@@ -156,8 +187,12 @@ struct FieldTableOpennessTests {
             .appendingPathComponent("Resources/schemas")
         var marked = 0
         for version in Version.allCases {
+            // `.v2_8` is validated against the v2.8.2 grammar and has no schema directory of its own.
+            guard version.grammarVersion == version else { continue }
             let dir = root.appendingPathComponent("v\(version.rawValue)")
-            guard let files = try? FileManager.default.contentsOfDirectory(atPath: dir.path) else { continue }
+            let files = try? FileManager.default.contentsOfDirectory(atPath: dir.path)
+            #expect(files != nil, "no schema directory for v\(version.rawValue)")
+            guard let files else { continue }
             for file in files where file.hasSuffix(".json") {
                 let schema = try JSONDecoder().decode(Schema.self, from: Data(contentsOf: dir.appendingPathComponent(file)))
                 for field in schema.fields {

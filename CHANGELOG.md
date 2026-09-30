@@ -146,10 +146,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     ORC-3, ORC-4, OBR-2 and OBR-3 an empty EI-1 is reported under both
     HL7au:00044.3.1 and the field's own EI-completeness point (HL7au:000003
     to 000007), since both are violated.
-    Likewise on v2.8.2, an XCN with XCN.1 and XCN.2 both empty is reported
-    under HL7au:00044.7.1 and as the base `conditionalComponentMissing` for
-    XCN.1 (v2.8.2 XCN.1 "is required if XCN.2 is not populated"), by design,
-    since both are violated.
+    Likewise on v2.8.2, when XCN.1 and XCN.2 are both empty, XCN.1's absence
+    is reported twice: under HL7au:00044.7.1 and as the base
+    `conditionalComponentMissing` for XCN.1 (v2.8.2 XCN.1 "is required if
+    XCN.2 is not populated"). The empty family name is reported separately,
+    by XCN.2's own base condition (required if XCN.1 is not populated) and by
+    HL7au:00044.7.5. All are violated, so all are reported by design.
   The register moves all three from BASE to PARTIAL: the presence half is
   enforced, while identifier-scheme validity (00044.1.1, 00044.7.1) and
   cross-message uniqueness (00044.3.1) are not checked. This absorbs P4-19.
