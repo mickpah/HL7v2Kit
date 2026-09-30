@@ -78,7 +78,7 @@
       "dataType": "MSG", "length": "7",
       "optionality": "R",
       "repeatability": "1",
-      "tables": ["0076"]
+      "tables": ["0003", "0076"]
     },
     {
       "index": 10,

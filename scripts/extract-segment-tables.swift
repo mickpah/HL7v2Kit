@@ -263,9 +263,20 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     let preName = String(chars[0..<min(nameStart, chars.count)])
     // Only a cell left open by a trailing "/" continues: an unconditional append also
     // swallowed wrapped LEN digits (v2.5.1 OM1-32 "6553" + "6") into the TBL# cell.
+    let wasOpen = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/")
     for r in runs(in: preName) where r.text.allSatisfy({ $0.isNumber || $0 == "/" })
         && rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces).hasSuffix("/") {
         rows[rows.count-1].tbl += r.text
+    }
+    // A second table number can also sit under a CLOSED cell: v2.3.1 MSH-9 prints 0076 over
+    // 0003 with no "/" (Figure 2-8, p. 2-93). Accept exactly four digits lying in the TBL#
+    // column itself; a wrapped LEN digit lies under LEN, and an ITEM# has five digits.
+    let cell = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces)
+    if !wasOpen && !cell.isEmpty {
+        for r in runs(in: preName) where r.text.range(of: #"^[0-9]{4}$"#, options: .regularExpression) != nil
+            && columnKey(forStart: r.start, columns: columns) == "TBL" {
+            rows[rows.count-1].tbl = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces) + "/" + r.text
+        }
     }
     // A wrapped name starts where the row's own name started, not where the header centred
     // "ELEMENT NAME" (v2.3.1 RXE-21: header at column 93, names at 77 — the continuation

@@ -52,4 +52,12 @@ struct SchemaTableBindingTests {
         // A blank printed OPT is kept verbatim and generated as optional.
         #expect(SegmentGrammarTable.v2_5_1["RCP"]?.field(7)?.optionality == .optional)
     }
+
+    @Test("A TBL# cell continued on the next line binds both tables, with or without a trailing slash")
+    func continuedTableCells() throws {
+        // v2.3.1 Figure 2-8 prints 0076 over 0003 with no "/"; v2.4 prints "0076/" over 0003.
+        #expect(try tables("2.3.1", "MSH", 9) == ["0003", "0076"])
+        #expect(try tables("2.4", "MSH", 9) == ["0003", "0076"])
+        #expect(try tables("2.3.1", "NK1", 11) == ["0327", "0328"])
+    }
 }
