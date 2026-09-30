@@ -4,8 +4,11 @@
 
 import Foundation
 
-/// What the validator should do when it encounters a Z-segment (or any
-/// segment outside the loaded grammar).
+/// What the validator should do when it encounters a Z-segment: a segment
+/// whose ID begins with `Z` and has no entry in the loaded grammar. Any
+/// other ID outside the loaded grammar is not a Z-segment (ADR-018) and is
+/// unaffected by this policy — it always produces
+/// ``IssueCode/segmentNotInVersionGrammar``.
 public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
     /// Pass silently. No issue is recorded.
     case ignore
@@ -18,7 +21,10 @@ public enum ZSegmentPolicy: Sendable, Equatable, Hashable {
 
 /// Tunable validator behaviour.
 public struct ValidationOptions: Sendable {
-    /// What to do when a segment isn't in the loaded grammar.
+    /// What to do when a `Z`-prefixed segment isn't in the loaded grammar.
+    /// A non-Z segment ID outside the loaded grammar always produces
+    /// ``IssueCode/segmentNotInVersionGrammar`` instead, whatever this is
+    /// set to (ADR-018).
     public var zSegmentPolicy: ZSegmentPolicy
 
     /// If true (default), check that fields with optionality `R` are populated.

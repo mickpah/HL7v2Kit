@@ -43,7 +43,8 @@ let report = Validator(options: options).validate(message)
 
 For each segment whose ID is **not** in the loaded grammar table:
 
-- **Z-segment policy.** ``ZSegmentPolicy/ignore`` produces no issue. ``ZSegmentPolicy/warnPresence`` produces a `.info`-severity ``IssueCode/zSegmentPresent`` issue per occurrence. ``ZSegmentPolicy/reject`` produces a `.error`-severity issue per occurrence (making the report invalid).
+- **Z-segment policy.** Applies only when the ID begins with `Z` (ADR-018). ``ZSegmentPolicy/ignore`` produces no issue. ``ZSegmentPolicy/warnPresence`` produces a `.info`-severity ``IssueCode/zSegmentPresent`` issue per occurrence. ``ZSegmentPolicy/reject`` produces a `.error`-severity issue per occurrence (making the report invalid).
+- **Segment not in version grammar.** Any other ID — one that does not begin with `Z` — always produces a `.warning`-severity ``IssueCode/segmentNotInVersionGrammar`` issue per occurrence, whatever ``ValidationOptions/zSegmentPolicy`` is set to: it is a standard segment the message's version does not define, not a Z-segment.
 
 ## Presets
 
