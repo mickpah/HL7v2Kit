@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-23: scheduling filler-status prohibitions in request transactions
+
+- AIS-10, AIG-14, AIL-12 and AIP-12 (Filler Status Code) now carry
+  `prohibitedWhen: messageCode = SRM` at `prohibitedSeverity: warning` in all
+  six versions. The definitions in all four segments read "It is recommended
+  that this field be left unvalued in transactions originating from
+  applications other than the filler application"; AIP-12 additionally reads
+  "It should not be valued in any request transactions from the placer
+  application to the filler application" (identical text in v2.3 through
+  v2.8.2). Fires as a warning on the SRM request; silent on the
+  filler-originated SIU, SRR and SQR wires, and on the SQM query (which the
+  text calls out separately as merely optional).
+- Test coverage: the warning fires on a valued SRM and is silent when the
+  same field is empty, on SIU/SRR, and on the SQM query for both allow
+  substitution and filler status (P4-12 minor 5). Added a silent case for
+  start date/time, offset and units populated together.
+- Register: v2.8.2 Chapter 11 (§11.7.1, §11.7.2) carries AIP in the
+  appointment-history group of CCM, CCR, CCU, CQU and CCI without restating
+  anything about filler status, so both the P4-12 condition and this
+  prohibition correctly stay silent there. v2.6 Chapter 11 carries no
+  scheduling segment at all — Collaborative Care is a v2.8.2 addition.
+
 ### Added — P4-21: more than one prohibition per field
 
 - `FieldGrammar.additionalProhibitions: [FieldProhibition]` holds further

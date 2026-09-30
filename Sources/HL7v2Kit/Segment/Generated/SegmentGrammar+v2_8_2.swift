@@ -278,7 +278,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Duration", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 12, name: "Duration Units", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 13, name: "Allow Substitution Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode = SRM", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 14, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 14, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: "messageCode = SRM", variableColumns: false, table: nil, length: nil, prohibitedSeverity: .warning),
         ]
     )
 
@@ -297,7 +297,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Duration", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 10, name: "Duration Units", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 11, name: "Allow Substitution Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode = SRM", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: "messageCode = SRM", variableColumns: false, table: nil, length: nil, prohibitedSeverity: .warning),
         ]
     )
 
@@ -316,7 +316,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Duration", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 10, name: "Duration Units", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 11, name: "Allow Substitution Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode = SRM", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 12, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: "messageCode = SRM", variableColumns: false, table: nil, length: nil, prohibitedSeverity: .warning),
         ]
     )
 
@@ -333,7 +333,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 7, name: "Duration", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 8, name: "Duration Units", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 9, name: "Allow Substitution Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode = SRM", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 10, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 10, name: "Filler Status Code", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "messageCode in (SIU, SRR)", prohibitedWhen: "messageCode = SRM", variableColumns: false, table: nil, length: nil, prohibitedSeverity: .warning),
             FieldGrammar(index: 11, name: "Placer Supplemental Service Information", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 12, name: "Filler Supplemental Service Information", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
         ]

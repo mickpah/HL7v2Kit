@@ -16,6 +16,6 @@
     { "index": 11, "swiftName": "duration", "name": "Duration", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" },
     { "index": 12, "swiftName": "durationUnits", "name": "Duration Units", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
     { "index": 13, "swiftName": "allowSubstitutionCode", "name": "Allow Substitution Code", "dataType": "IS", "length": "10", "table": "0279", "optionality": "C", "repeatability": "1", "tables": ["0279"], "condition": "messageCode = SRM" },
-    { "index": 14, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["0278"], "condition": "messageCode in (SIU, SRR, SQR)" }
+    { "index": 14, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["0278"], "condition": "messageCode in (SIU, SRR, SQR)", "prohibitedWhen": "messageCode = SRM", "prohibitedSeverity": "warning" }
   ]
 }

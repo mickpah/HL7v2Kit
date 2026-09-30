@@ -118,6 +118,59 @@ struct SchedulingConditionTests {
         #expect(try missing(query, slots.id, slots.substitution).isEmpty, "\(slots.id) v\(version)")
     }
 
+    // P4-12 minor 5: the SQM query side of the S25 pair ("This field is optional
+    // for all transactions originating from placer, querying and auxiliary
+    // applications"; substitution: "optional ... for all query messages").
+    // Only defined alongside SQR, v2.3 to v2.6 (withdrawn as of v2.7).
+    @Test("Allow substitution and filler status stay silent on the SQM query",
+          arguments: resourceSegments, sqrVersions)
+    func substitutionAndFillerStatusSilentOnQuery(slots: ResourceSlots, version: String) throws {
+        let query = resource(version, "SQM^S25", slots, [:])
+        #expect(try missing(query, slots.id, slots.substitution).isEmpty, "\(slots.id) v\(version)")
+        #expect(try missing(query, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
+    }
+
+    // P4-12 minor 5: a wire that values start, offset and units together stays
+    // silent on all three (each rule is satisfied, not merely inapplicable).
+    @Test("Start date/time, offset and units populated together: silent on all three",
+          arguments: resourceSegments, schedulingVersions)
+    func startOffsetUnitsPopulatedTogether(slots: ResourceSlots, version: String) throws {
+        let wire = resource(version, "SIU^S12", slots,
+                             [slots.start: "20260101090000", slots.offset: "30", slots.units: "min"])
+        #expect(try missing(wire, slots.id, slots.start).isEmpty, "\(slots.id) v\(version)")
+        #expect(try missing(wire, slots.id, slots.offset).isEmpty, "\(slots.id) v\(version)")
+        #expect(try missing(wire, slots.id, slots.units).isEmpty, "\(slots.id) v\(version)")
+    }
+
+    private func prohibited(_ wire: String, _ seg: String, _ idx: Int) throws -> [ValidationIssue] {
+        Validator().validate(try Parser().parse(wire)).issues.filter {
+            $0.code == .conditionalFieldProhibited
+                && $0.location.segmentID == seg && $0.location.fieldIndex == idx
+        }
+    }
+
+    // Findings closed: AIS/AIG/AIL/AIP filler status "It is recommended that this
+    // field be left unvalued in transactions originating from applications other
+    // than the filler application"; AIP-12 additionally "It should not be valued
+    // in any request transactions from the placer application to the filler
+    // application" (identical text in all six versions). Ships as a warning on the
+    // request message type (SRM); the P4-12 condition axis already covers the
+    // filler-originated required half.
+    @Test("Filler status code should not be valued on a request (warning)",
+          arguments: resourceSegments, schedulingVersions)
+    func fillerStatusProhibitedOnRequest(slots: ResourceSlots, version: String) throws {
+        let requestValued = resource(version, "SRM^S01", slots, [slots.fillerStatus: "Booked"])
+        let fires = try prohibited(requestValued, slots.id, slots.fillerStatus)
+        #expect(fires.count == 1, "\(slots.id) v\(version)")
+        #expect(fires.first?.severity == .warning, "\(slots.id) v\(version)")
+        let requestEmpty = resource(version, "SRM^S01", slots, [:])
+        #expect(try prohibited(requestEmpty, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
+        let notification = resource(version, "SIU^S12", slots, [slots.fillerStatus: "Booked"])
+        #expect(try prohibited(notification, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
+        let response = resource(version, "SRR^S01", slots, [slots.fillerStatus: "Booked"])
+        #expect(try prohibited(response, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
+    }
+
     // Folded intake (P4 hand-off): "This field is required for all unsolicited
     // transactions from the filler application" (AIG-3 / AIL-3 / AIP-3, all six
     // versions). The new-request clause depends on what the placer asks for.
