@@ -88,15 +88,18 @@ struct HL7TableRegistryTests {
         #expect(t.entries.isEmpty)
     }
 
-    @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has no CWE")
+    @Test("Extraction sanity: v2.5.1 0003 has 286 rows, 0155 has 4, 0125 has 90")
     func extractionSanity() throws {
         #expect(HL7TableRegistry.table("0003", version: .v2_5_1)?.entries.count == 286)
         #expect(HL7TableRegistry.table("0155", version: .v2_5_1)?.entries.count == 4)
         let t0125 = try #require(HL7TableRegistry.table("0125", version: .v2_5_1))
-        // 25 printed rows, plus CD / MA / NA restored from Chapter 7's waveform text (M18).
-        #expect(t0125.entries.count == 28)
+        // 25 printed rows, CD / MA / NA restored from Chapter 7's waveform text (M18), and the
+        // 62 further Table 0440 data types sec 7.4.2.2 admits: "All HL7 data types are valid,
+        // and are included in Table 0125 except CM, CQ, SI, and ID" (V251-C01).
+        #expect(t0125.entries.count == 90)
         #expect(t0125.contains("NA") && t0125.contains("MA") && t0125.contains("CD"))
-        #expect(!t0125.contains("CWE"), "CWE is a v2.6 addition")
+        #expect(t0125.contains("CWE") && t0125.contains("DTM"))
+        #expect(!t0125.contains("CM") && !t0125.contains("CQ") && !t0125.contains("SI") && !t0125.contains("ID"))
     }
 
     @Test("A printed \"...\" row is never a code, and leaves an HL7 table open unless the row means null")

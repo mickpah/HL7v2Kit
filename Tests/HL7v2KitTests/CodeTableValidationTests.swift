@@ -131,4 +131,31 @@ struct CodeTableValidationTests {
             }
         }
     }
+
+    private func obx2Issues(_ obx2: String, version: String) throws -> [ValidationIssue] {
+        let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|\(version)\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+            + "OBR|1|||GLU^Glucose^L\r"
+            + "OBX|1|\(obx2)|GLU^Glucose^L||x||||||F\r"
+        return try tableIssues(wire).filter { $0.code == .valueNotInTable(table: "0125") }
+    }
+
+    @Test("v2.5.1 OBX-2: every HL7 data type except CM, CQ, SI and ID is valid (sec 7.4.2.2)")
+    func obx2AllDataTypesV251() throws {
+        for type in ["CWE", "CNE", "DTM", "IS", "DR", "EI", "HD", "PL", "TQ", "XAD", "CE"] {
+            #expect(try obx2Issues(type, version: "2.5.1").isEmpty, "OBX-2 = \(type)")
+        }
+        for type in ["CM", "CQ", "SI", "ID", "QQ"] {
+            #expect(try obx2Issues(type, version: "2.5.1").count == 1, "OBX-2 = \(type)")
+        }
+    }
+
+    @Test("v2.5.1 sec 2.A.13 CWE example: OBX-2 = CWE raises no Table 0125 error")
+    func cweExampleV251() throws {
+        let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|2.5.1\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+            + "OBR|1|||883-9^ABO Group^LN\r"
+            + "OBX|1|CWE|883-9^ABO Group^LN|1|F-D1250^Type O^SNM3||||||F\r"
+        #expect(try tableIssues(wire).filter { $0.code == .valueNotInTable(table: "0125") }.isEmpty)
+    }
 }
