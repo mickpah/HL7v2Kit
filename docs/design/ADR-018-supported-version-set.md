@@ -59,6 +59,8 @@ Every row that raises `versionNotRecognised` throws `ParseError.unsupportedVersi
 ## Consequences
 
 - Default output changes for three kinds of message, each a fix under requirements 2 and 4: `2.8` messages now carry findings plus one info issue; messages carrying a non-Z segment their version does not define now carry a warning, and under `.strict` no longer carry a Z-segment error for it; messages whose MSH-12 is a VID with components (the AU form) are now validated against their declared version instead of v2.5.1.
+- An MSH-12 that is populated but names no modelled version now carries `versionNotRecognised` (warning) naming the v2.5.1 fallback (P3-5). The P3 fix wave extends this to every populated MSH-12 from which no version resolves: whitespace only, an empty VID.1 with VID.2 valued, and a VID.1 with a subcomponent. `ParserOptions.rejectUnknownVersion` throws `unsupportedVersion` for the same shapes. Only an empty MSH-12 falls back without a version issue, because the required-field check reports it; no MSH-12 shape falls back silently.
+- AU v2.4 traffic meets the v2.4 grammar, which carries no component optionality. AU conformance points that had relied on a v2.5.1 base component requirement are stated by the AU profile itself: HL7au:00049.1 (MSG-1) and 00044.1.1 (CX-1) defer to the base check where the grammar version has one (`ComponentRequirement.yieldsToBase`), and 00044.3.1 (EI-1) and 00044.7.1 (XCN-1), which no version's base model requires, fire on every version.
 - Three additive `IssueCode` cases (ADR-014 minor).
 - Re-opening an excluded version needs its spec text under `docs/standards/`, an amendment to this ADR, and an ADR-015 cycle. A new `Version` case is additive.
 
