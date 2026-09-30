@@ -223,4 +223,13 @@ struct HL7TableRegistryTests {
         #expect(t.codes == ["MR"])
         #expect(t.isClosed)
     }
+
+    @Test("CodePattern.matches enforces a full match even when the supplied regex is unanchored")
+    func patternMatchIsFullMatch() {
+        let p = HL7Table.CodePattern(code: "x", description: "d", regex: "NN[A-Z]{3}")
+        #expect(p.matches("NNAUS"))
+        #expect(!p.matches("XNNAUSY"))
+        #expect(!p.matches("NNAUSY"))
+        #expect(!p.matches("XNNAUS"))
+    }
 }

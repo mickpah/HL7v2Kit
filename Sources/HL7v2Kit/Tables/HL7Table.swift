@@ -52,9 +52,14 @@ public struct HL7Table: Sendable, Equatable, Hashable {
             self.regex = regex
         }
 
-        /// `true` when `value` belongs to the family the row names.
+        /// `true` when `value` belongs to the family the row names: the whole
+        /// value matches ``regex``, not merely a substring of it. `regex` is
+        /// wrapped in `\A(?:...)\z` so this holds even when the caller-supplied
+        /// pattern itself omits `^`/`$` anchors.
         public func matches(_ value: String) -> Bool {
-            value.range(of: regex, options: .regularExpression) != nil
+            guard let full = try? NSRegularExpression(pattern: "\\A(?:\(regex))\\z") else { return false }
+            let range = NSRange(value.startIndex..<value.endIndex, in: value)
+            return full.firstMatch(in: value, range: range) != nil
         }
     }
 

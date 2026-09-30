@@ -418,6 +418,11 @@ func renderTableRegistry(versionSwiftName: String, sourceDir: String, tables: [T
         }.joined(separator: "\n")
         for p in t.patterns ?? [] {
             _ = try NSRegularExpression(pattern: p.regex)   // fail the codegen on a malformed pattern
+            guard p.regex.hasPrefix("^"), p.regex.hasSuffix("$") else {
+                FileHandle.standardError.write(Data(
+                    "HL7v2KitCodegen: table \(t.table) (v\(t.version)): pattern \"\(p.code)\" regex \"\(p.regex)\" is not anchored — expected \"^...$\"\n".utf8))
+                throw ExitCode.failure
+            }
         }
         let patternLines = (t.patterns ?? []).map {
             "            HL7Table.CodePattern(code: \(escapeStringLiteral($0.code)), description: \(escapeStringLiteral($0.description)), regex: \(escapeStringLiteral($0.regex))),"

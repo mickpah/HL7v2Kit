@@ -13,11 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   initialiser parameter is additive and defaulted, so existing call sites
   are unaffected.
 - `HL7Table.contains(_:)` now accepts a full match against a pattern row,
-  in addition to an exact printed-code match.
+  in addition to an exact printed-code match. `CodePattern.matches` enforces
+  the full match itself (wrapping the supplied regex in `\A(?:...)\z`), so
+  a pattern's own regex need not be anchored for matching to be exact.
 - Table 0203 `NNxxx` ("National Person Identifier where the xxx is the ISO
   table 3166 3-character (alphabetic) country code") is modelled as the
   pattern `^NN[A-Z]{3}$` on v2.3.1 to v2.8.2: CX.5 values such as `NNAUS`
-  or `NNCAN` no longer raise `valueNotInTable` (V282-C01).
+  or `NNCAN` no longer raise `valueNotInTable` (V282-C01). The pattern
+  checks only the shape — `NN` plus three uppercase letters — not ISO 3166
+  membership of those three letters; see the permanent-limitations register
+  §C.
 
 ### Fixed — P1 fix wave: whole-workstream review remediation
 
