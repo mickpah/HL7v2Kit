@@ -122,6 +122,13 @@ enum ComponentCondition {
         return value
     }
 
+    /// Whether `expression` parses: the same parse ``holds(_:populated:repeated:)``
+    /// runs, with every atom false. An unparseable condition would never fire (P4-25).
+    static func parses(_ expression: String) -> Bool {
+        var tokens = tokenize(expression)[...]
+        return parseOr(&tokens, { _ in false }) != nil && tokens.isEmpty
+    }
+
     private static func tokenize(_ s: String) -> [String] {
         s.replacingOccurrences(of: "(", with: " ( ").replacingOccurrences(of: ")", with: " ) ")
             .split(separator: " ").map { String($0).uppercased() }

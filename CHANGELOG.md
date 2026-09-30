@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-25: every condition string is proven to parse
+
+- A test now walks every segment grammar in all six versions, every datatype component condition and every AU-profile condition, and fails on any condition string the evaluator cannot read. Before this, a misspelt condition passed codegen and the audit and then silently never fired. No shipped condition failed; none changed.
+- The condition parse is shared: `ConditionLanguage` classifies clauses, atoms, referents and predicates, and both the evaluator and the internal `Validator.conditionParseErrors(_:)` read conditions through it (ADR-010, P4-25 amendment). Internal only; no public API change. On malformed input only, a `noRepeat(...)` atom with an unreadable predicate now fails safe instead of holding.
+
 ### Added — P4-24: HL7au:00060.4 route B, explicit AU prohibitions
 
 - Under `.auLocalisation`, OBX-2 and OBX-5 must not be valued when OBX-11 = O

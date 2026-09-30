@@ -2091,8 +2091,8 @@ public struct Validator: Sendable {
         )
     }
 
-    /// Top-level OR: split on `" OR "` at the topmost level. Any clause
-    /// evaluating true short-circuits to true.
+    /// OR of AND clauses (``ConditionLanguage/clauses(_:)``): true iff
+    /// every atom of some clause holds. Short-circuits like the DNF it is.
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
@@ -2100,40 +2100,17 @@ public struct Validator: Sendable {
         message: Message,
         currentSegmentID: String
     ) -> Bool {
-        for clause in expression.components(separatedBy: " OR ") {
-            if evaluateAndExpression(
-                clause,
-                in: segment,
-                segmentIndex: segmentIndex,
-                message: message,
-                currentSegmentID: currentSegmentID
-            ) {
-                return true
+        ConditionLanguage.clauses(expression).contains { atoms in
+            atoms.allSatisfy { atom in
+                evaluateAtom(
+                    atom,
+                    in: segment,
+                    segmentIndex: segmentIndex,
+                    message: message,
+                    currentSegmentID: currentSegmentID
+                )
             }
         }
-        return false
-    }
-
-    /// AND: every conjunct must evaluate true.
-    private func evaluateAndExpression(
-        _ expression: String,
-        in segment: Segment,
-        segmentIndex: Int,
-        message: Message,
-        currentSegmentID: String
-    ) -> Bool {
-        for atom in expression.components(separatedBy: " AND ") {
-            if !evaluateAtom(
-                atom,
-                in: segment,
-                segmentIndex: segmentIndex,
-                message: message,
-                currentSegmentID: currentSegmentID
-            ) {
-                return false
-            }
-        }
-        return true
     }
 
     /// A referent resolved to a scalar string value plus a "is this
@@ -2146,7 +2123,9 @@ public struct Validator: Sendable {
         let isPopulated: Bool
     }
 
-    /// Single atomic predicate. Today (v0.7-S2) the referent forms are:
+    /// Single atomic predicate, classified by
+    /// ``ConditionLanguage/parseAtom(_:)`` (the same parse
+    /// `Validator.conditionParseErrors(_:)` checks, P4-25). The forms:
     ///
     /// 1. **Same-segment field ref** — `<currentSegmentID>-<index>`.
     /// 2. **Cross-segment field ref** — `<otherSegmentID>-<index>`,
@@ -2164,11 +2143,12 @@ public struct Validator: Sendable {
     ///    universal negation of `anyRepeat`: true iff the field has a
     ///    populated repetition and no repetition satisfies the
     ///    predicate (P4; SPM-13's "SPM-11 has no G repetition").
+    /// 7. **Segment-presence atom** — `<segmentID> present` / `absent`
+    ///    (ADR-010).
     ///
-    /// All forms are evaluated against the same predicate set
-    /// (`populated` / `empty` / `= v` / `!= v` / `in (...)` /
-    /// `not in (...)`). Any unresolvable referent fails safe — the
-    /// atom returns `false` without firing the conditional.
+    /// An atom that does not parse, or whose referent cannot be
+    /// resolved, fails safe — it returns `false` without firing the
+    /// conditional (v0.2-V1).
     private func evaluateAtom(
         _ atom: String,
         in segment: Segment,
@@ -2176,166 +2156,94 @@ public struct Validator: Sendable {
         message: Message,
         currentSegmentID: String
     ) -> Bool {
-        let trimmed = atom.trimmingCharacters(in: .whitespaces)
+        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return false }
+        switch parsed {
+        case .segmentPresence(let id, let present):
+            // True iff a segment of that ID exists in the current
+            // segment's ORC/OBR group. Distinct from `<fieldref>
+            // populated` / `empty`, which fail safe when the peer is
+            // missing and so conflate "peer absent" with "peer field empty".
+            return message.segmentExists(id, inGroupOf: segmentIndex) == present
 
-        // ADR-010 segment-presence atom (`<segmentID> present` /
-        // `<segmentID> absent`) — recognised before the general
-        // referent/predicate dispatch. Falls through when the shape
-        // doesn't match, so field refs / position atoms / message-
-        // context nouns continue to parse via `resolveReferent`.
-        if let presence = evaluateSegmentPresenceAtom(
-            trimmed,
-            segmentIndex: segmentIndex,
-            message: message
-        ) {
-            return presence
-        }
-
-        let parts = trimmed.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
-                            .map(String.init)
-        guard parts.count == 2 else { return false }
-        let referent = parts[0]
-        let predicate = parts[1]
-
-        // M6-B-1 any-repetition atom: `anyRepeat(<fieldref>) <predicate>`.
-        // The scalar field-ref convention reads the FIRST repetition
-        // only, so `PRD-1 = AP` misses a spec-compliant `RP~AP`.
-        // `anyRepeat` applies the predicate to EVERY repetition's slot
-        // with ∃-semantics: true iff any repetition satisfies it.
-        // Fail-safe: a malformed inner ref or unresolvable peer
-        // evaluates false (v0.2-V1).
-        if referent.hasPrefix("anyRepeat("), referent.hasSuffix(")") {
-            let inner = String(referent.dropFirst("anyRepeat(".count).dropLast())
+        case .anyRepeat(let path, let predicate):
+            // M6-B-1: the scalar field-ref convention reads the FIRST
+            // repetition only, so `PRD-1 = AP` misses a spec-compliant
+            // `RP~AP`. ∃-semantics over every repetition's slot.
             guard let slots = resolveRepetitionSlots(
-                inner,
+                path,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
             ) else { return false }
             return slots.contains { applyPredicate(predicate, to: $0) }
-        }
 
-        // P4 universal-negation atom: `noRepeat(<fieldref>) <predicate>`.
-        // True iff the field has at least one populated repetition slot
-        // and NO slot satisfies the predicate. SPM-13 "would only be
-        // valued if the specimen role attribute has the value G" needs
-        // "no repetition of SPM-11 is G", which `anyRepeat(...) != G`
-        // cannot state (it is true for `P~G`). An absent or all-empty
-        // field is false: there is no definite value to negate
-        // (v0.2-V1 fail-safe).
-        if referent.hasPrefix("noRepeat("), referent.hasSuffix(")") {
-            let inner = String(referent.dropFirst("noRepeat(".count).dropLast())
+        case .noRepeat(let path, let predicate):
+            // P4 universal negation: true iff the field has at least one
+            // populated repetition slot and NO slot satisfies the
+            // predicate. SPM-13 "would only be valued if the specimen
+            // role attribute has the value G" needs "no repetition of
+            // SPM-11 is G", which `anyRepeat(...) != G` cannot state (it
+            // is true for `P~G`). An absent or all-empty field is false:
+            // there is no definite value to negate (v0.2-V1 fail-safe).
             guard let slots = resolveRepetitionSlots(
-                inner,
+                path,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
             ), slots.contains(where: { $0.isPopulated }) else { return false }
             return !slots.contains { applyPredicate(predicate, to: $0) }
-        }
 
-        guard let resolved = resolveReferent(
-            referent,
-            in: segment,
-            segmentIndex: segmentIndex,
-            message: message,
-            currentSegmentID: currentSegmentID
-        ) else { return false }
-
-        return applyPredicate(predicate, to: resolved)
-    }
-
-    /// Recognise the ADR-010 segment-presence atom shape
-    /// `<segmentID> present` / `<segmentID> absent`, where `<segmentID>`
-    /// is a bare 3-letter uppercase HL7 segment ID (no dash, no dot,
-    /// no parenthesis). Returns `nil` for any other shape so the
-    /// dispatcher falls through to the field-ref / position-atom /
-    /// message-context productions.
-    ///
-    /// Semantics: `present` is true iff a segment of that ID exists in
-    /// the current segment's ORC/OBR group (per
-    /// `Message.segmentExists(_:inGroupOf:)`); `absent` is the logical
-    /// NOT. Distinct from `<fieldref> populated` / `empty` — the field
-    /// productions fail safe to `false` when the peer segment is
-    /// missing, conflating "peer absent" with "peer field empty". The
-    /// segment-presence atom disentangles them.
-    private func evaluateSegmentPresenceAtom(
-        _ atom: String,
-        segmentIndex: Int,
-        message: Message
-    ) -> Bool? {
-        let parts = atom.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
-        guard parts.count == 2 else { return nil }
-        let id = parts[0]
-        let op = parts[1]
-        // HL7 segment IDs are 3 characters, ASCII uppercase alphanumeric
-        // (e.g. MSH, ORC, OBR, DG1, IN1, PV1). This filter rejects
-        // field refs (`OBR-29` — contains a dash), position atoms
-        // (`previousSegment(ORC)` — contains parens / digits after
-        // paren), and message-context nouns (`messageCode` — lowercase).
-        guard id.count == 3,
-              id.allSatisfy({ $0.isASCII && ($0.isUppercase || $0.isNumber) })
-        else { return nil }
-        switch op {
-        case "present":
-            return message.segmentExists(id, inGroupOf: segmentIndex)
-        case "absent":
-            return !message.segmentExists(id, inGroupOf: segmentIndex)
-        default:
-            return nil
+        case .value(let referent, let predicate):
+            guard let resolved = resolveReferent(
+                referent,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ) else { return false }
+            return applyPredicate(predicate, to: resolved)
         }
     }
 
-    /// Dispatch the referent to the production that recognises it.
-    /// Returns `nil` when no production matches — the atom then fails
-    /// safe per the v0.2-V1 invariant.
+    /// Resolve a classified referent. Returns `nil` when the target
+    /// cannot be located — the atom then fails safe per the v0.2-V1
+    /// invariant.
     private func resolveReferent(
-        _ referent: String,
+        _ referent: ConditionReferent,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> ResolvedReferent? {
-        // 1. Message-context atoms (literal nouns, no dash).
-        switch referent {
-        case "messageCode":
-            let v = message.messageCode ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "messageStructure":
-            let v = message.messageStructure ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "triggerEvent":
-            let v = message.triggerEvent ?? ""
-            return ResolvedReferent(raw: v, isPopulated: !v.isEmpty)
-        case "auPathologySender":
-            // M29 — a caller assertion, not a wire property (see ValidationOptions).
-            return ResolvedReferent(raw: options.auPathologySender ? "true" : "", isPopulated: options.auPathologySender)
-        case "auDisplayIntended":
-            // M30 — likewise.
-            return ResolvedReferent(raw: options.auDisplayIntended ? "true" : "", isPopulated: options.auDisplayIntended)
-        case "auNASHTransport":
-            // M32 — likewise ("when using SMD with NASH certificates").
-            return ResolvedReferent(raw: options.auNASHTransport ? "true" : "", isPopulated: options.auNASHTransport)
-        default:
-            break
+        func scalar(_ v: String?) -> ResolvedReferent {
+            ResolvedReferent(raw: v ?? "", isPopulated: !(v ?? "").isEmpty)
         }
+        func flag(_ on: Bool) -> ResolvedReferent {
+            ResolvedReferent(raw: on ? "true" : "", isPopulated: on)
+        }
+        switch referent {
+        case .messageCode: return scalar(message.messageCode)
+        case .messageStructure: return scalar(message.messageStructure)
+        case .triggerEvent: return scalar(message.triggerEvent)
+        // M29 / M30 / M32 — caller assertions, not wire properties (see
+        // ValidationOptions). M32 is "when using SMD with NASH certificates".
+        case .auPathologySender: return flag(options.auPathologySender)
+        case .auDisplayIntended: return flag(options.auDisplayIntended)
+        case .auNASHTransport: return flag(options.auNASHTransport)
 
-        // P4 lookahead referent: `nextSegmentID(<ID>|<ID>...)` resolves
-        // to the ID of the first segment after the current one whose ID
-        // is not in the skip list and does not start with "Z", or "" at
-        // the end of the message. Z-segments are always skipped: they are
-        // site extensions outside the standard structure (ADR-003) and
-        // may appear anywhere, so one between chained TQ1s must not stop
-        // the lookahead short.
-        // TQ1-12 "If the TQ1 segment is repeated ... indicating the
-        // sequencing of the following TQ1 segment" encodes as
-        // `nextSegmentID(TQ2) = TQ1`: the timing group is
-        // {TQ1 [{TQ2}]}, so only TQ2 may sit between chained TQ1s.
-        if referent.hasPrefix("nextSegmentID("), referent.hasSuffix(")") {
-            let skip = Set(referent.dropFirst("nextSegmentID(".count).dropLast()
-                .split(separator: "|").map(String.init))
+        case .nextSegmentID(let skip):
+            // P4 lookahead: the ID of the first segment after the current
+            // one whose ID is not in the skip list and does not start with
+            // "Z", or "" at the end of the message. Z-segments are always
+            // skipped: they are site extensions outside the standard
+            // structure (ADR-003) and may appear anywhere, so one between
+            // chained TQ1s must not stop the lookahead short. TQ1-12 "If
+            // the TQ1 segment is repeated ... indicating the sequencing of
+            // the following TQ1 segment" encodes as `nextSegmentID(TQ2) =
+            // TQ1`: the timing group is {TQ1 [{TQ2}]}, so only TQ2 may sit
+            // between chained TQ1s.
             var next = segmentIndex + 1
             while next < message.segments.count,
                   skip.contains(message.segments[next].segmentID)
@@ -2343,90 +2251,66 @@ public struct Validator: Sendable {
                 next += 1
             }
             let id = next < message.segments.count ? message.segments[next].segmentID : ""
-            return ResolvedReferent(raw: id, isPopulated: !id.isEmpty)
-        }
+            return scalar(id)
 
-        // 2. Position atoms — `previousSegment(ID).<fieldref>` and
-        //    `associatedSegment(ID).<fieldref>`.
-        if let resolved = resolvePositionReferent(
-            referent,
-            segmentIndex: segmentIndex,
-            message: message
-        ) {
-            return resolved
-        }
+        // Position atoms (ADR-008): a missing preceding / associated
+        // segment of that ID fails safe. The ref's own segment-ID part is
+        // not re-checked against the target, which was resolved positionally.
+        case .previousSegment(let id, let path):
+            guard let target = message.previousSegment(id, beforeIndex: segmentIndex) else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
+        case .associatedSegment(let id, let path):
+            guard let target = message.associatedSegment(id, fromIndex: segmentIndex) else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
 
-        // 3. Field ref — `<segmentID>-<int>`. Same-segment uses the
-        //    current segment; cross-segment uses associatedSegment.
-        return resolveFieldRef(
-            referent,
-            in: segment,
-            segmentIndex: segmentIndex,
-            message: message,
-            currentSegmentID: currentSegmentID
-        )
+        case .field(let path):
+            // Same-segment reads directly; cross-segment resolves the peer
+            // via `Message.associatedSegment`, and an unlocatable peer
+            // fails safe (ADR-008) rather than reading as "empty".
+            guard let target = targetSegment(path, in: segment, segmentIndex: segmentIndex,
+                                             message: message, currentSegmentID: currentSegmentID)
+            else { return nil }
+            return readField(target, fieldIndex: path.field,
+                             componentIndex: path.component, subcomponentIndex: path.subcomponent)
+        }
     }
 
-    /// `<segmentID>-<int>`. When segmentID matches the current
-    /// segment, reads directly; otherwise resolves the peer via
-    /// `Message.associatedSegment`.
-    ///
-    /// Fail-safe semantic per ADR-008: when a cross-segment peer
-    /// cannot be located, the atom returns `nil` so the predicate
-    /// evaluates to `false` instead of treating the absent peer as
-    /// an "empty" value. Same-segment refs always have a segment in
-    /// hand and never trip this branch.
-    private func resolveFieldRef(
-        _ referent: String,
+    /// The segment a field-ref reads: the current segment when the IDs
+    /// match, otherwise the associated peer (`nil` when there is none).
+    private func targetSegment(
+        _ path: Path,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> ResolvedReferent? {
-        guard let path = parseDSLFieldRef(referent) else { return nil }
-        let targetSegment: Segment
-        if path.segmentID == currentSegmentID {
-            targetSegment = segment
-        } else {
-            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
-            else { return nil }
-            targetSegment = peer
-        }
-        return readField(
-            targetSegment,
-            fieldIndex: path.field,
-            componentIndex: path.component,
-            subcomponentIndex: path.subcomponent
-        )
+    ) -> Segment? {
+        path.segmentID == currentSegmentID
+            ? segment
+            : message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
     }
 
     /// Resolve every repetition of a field-ref to its own
     /// `(raw, isPopulated)` pair at the ref's component/subcomponent
-    /// slot, for the `anyRepeat(...)` atom (M6-B-1). Same
-    /// same-segment / cross-segment resolution as `resolveFieldRef`;
-    /// `isPopulated` here is per-repetition-slot (the slot value is
+    /// slot, for the `anyRepeat(...)` / `noRepeat(...)` atoms (M6-B-1).
+    /// Same same-segment / cross-segment resolution as a plain field
+    /// ref; `isPopulated` here is per-repetition-slot (the slot value is
     /// non-empty), unlike the whole-field convention of `readField` —
     /// under ∃-semantics a field-scope answer would be meaningless.
-    /// Returns `nil` on a malformed ref or unresolvable peer
-    /// (fail-safe); an absent field resolves to `[]`, which no
-    /// predicate matches.
+    /// Returns `nil` on an unresolvable peer (fail-safe); an absent
+    /// field resolves to `[]`, which no predicate matches.
     private func resolveRepetitionSlots(
-        _ fieldRef: String,
+        _ path: Path,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
     ) -> [ResolvedReferent]? {
-        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
-        let targetSegment: Segment
-        if path.segmentID == currentSegmentID {
-            targetSegment = segment
-        } else {
-            guard let peer = message.associatedSegment(path.segmentID, fromIndex: segmentIndex)
-            else { return nil }
-            targetSegment = peer
-        }
-        guard let field = targetSegment.field(path.field) else { return [] }
+        guard let target = targetSegment(path, in: segment, segmentIndex: segmentIndex,
+                                         message: message, currentSegmentID: currentSegmentID)
+        else { return nil }
+        guard let field = target.field(path.field) else { return [] }
         let comp = (path.component ?? 1) - 1
         let sub = (path.subcomponent ?? 1) - 1
         return field.repetitions.map { rep in
@@ -2438,78 +2322,6 @@ public struct Validator: Sendable {
             }()
             return ResolvedReferent(raw: raw, isPopulated: !raw.isEmpty)
         }
-    }
-
-    /// Parse a DSL field-ref (`SEG-f`, `SEG-f.c`, `SEG-f.c.s`) via the
-    /// shared ``Path`` parser, then reject the Path-only axes the
-    /// condition DSL grammar excludes: segment-index (`SEG[N]-f`) and
-    /// repetition (`SEG-f~r`) forms return `nil` so the predicate
-    /// evaluates fail-safe false (v0.2-V1 invariant; pinned by the
-    /// CrossSegmentDSLTests R4-C1 rows). ADR-010 Extension 3.
-    private func parseDSLFieldRef(_ referent: String) -> Path? {
-        guard let path = try? Path(referent),
-              path.segmentIndex == nil,
-              path.repetition == nil
-        else { return nil }
-        return path
-    }
-
-    /// Recognise `previousSegment(<ID>).<fieldref>` and
-    /// `associatedSegment(<ID>).<fieldref>`. Returns `nil` for any
-    /// other shape so the dispatcher falls through to the next
-    /// production.
-    ///
-    /// Fail-safe semantic per ADR-008: a position lookup returning
-    /// `nil` (no preceding / associated segment of that ID) makes the
-    /// atom return `nil` so the predicate evaluates to `false`.
-    private func resolvePositionReferent(
-        _ referent: String,
-        segmentIndex: Int,
-        message: Message
-    ) -> ResolvedReferent? {
-        if let (id, fieldRef) = parsePositionForm(referent, function: "previousSegment") {
-            guard let target = message.previousSegment(id, beforeIndex: segmentIndex)
-            else { return nil }
-            return readFieldRef(fieldRef, in: target)
-        }
-        if let (id, fieldRef) = parsePositionForm(referent, function: "associatedSegment") {
-            guard let target = message.associatedSegment(id, fromIndex: segmentIndex)
-            else { return nil }
-            return readFieldRef(fieldRef, in: target)
-        }
-        return nil
-    }
-
-    /// Parse `<function>(<ID>).<fieldref>` into `(<ID>, <fieldref>)`.
-    /// Returns `nil` if the shape doesn't match.
-    private func parsePositionForm(
-        _ referent: String,
-        function: String
-    ) -> (id: String, fieldRef: String)? {
-        let prefix = "\(function)("
-        guard referent.hasPrefix(prefix) else { return nil }
-        let afterPrefix = referent.dropFirst(prefix.count)
-        guard let closeIdx = afterPrefix.firstIndex(of: ")") else { return nil }
-        let id = String(afterPrefix[..<closeIdx])
-        let after = afterPrefix[afterPrefix.index(after: closeIdx)...]
-        guard after.hasPrefix(".") else { return nil }
-        let fieldRef = String(after.dropFirst())
-        return (id, fieldRef)
-    }
-
-    /// Parse `<segmentID>-<int>[.<int>[.<int>]]` and read the named
-    /// field / component / subcomponent from `segment`. The ref's own
-    /// segment-ID part is not re-checked against `segment` — the caller
-    /// already resolved the target positionally. Returns `nil` if the
-    /// field-ref shape is malformed. Callers guarantee a non-nil segment.
-    private func readFieldRef(_ fieldRef: String, in segment: Segment) -> ResolvedReferent? {
-        guard let path = parseDSLFieldRef(fieldRef) else { return nil }
-        return readField(
-            segment,
-            fieldIndex: path.field,
-            componentIndex: path.component,
-            subcomponentIndex: path.subcomponent
-        )
     }
 
     /// Project a `Segment` + 1-based field index (and optional
@@ -2549,68 +2361,35 @@ public struct Validator: Sendable {
         return ResolvedReferent(raw: raw, isPopulated: isPopulated)
     }
 
-    /// Apply the predicate clause (`populated` / `empty` / `= v` /
-    /// `!= v` / `in (…)` / `not in (…)` / `startsWith v` /
-    /// `not startsWith v`) to a resolved referent.
-    private func applyPredicate(_ predicate: String, to resolved: ResolvedReferent) -> Bool {
-        if predicate == "populated" { return resolved.isPopulated }
-        if predicate == "empty"     { return !resolved.isPopulated }
-        if predicate.hasPrefix("= ") {
-            return resolved.raw == String(predicate.dropFirst(2))
-        }
-        if predicate.hasPrefix("!= ") {
-            return resolved.raw != String(predicate.dropFirst(3))
-        }
-        // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning
-        // `Z` (HL7au:000020 message/trigger codes, 000023.1 segments),
-        // which no equality or value-set clause can state. `startsWith`
-        // on an empty referent is false (an absent value begins with
-        // nothing); `not startsWith` mirrors `not in` — it asserts only
-        // on populated referents, per the fail-safe rule.
-        // M8-D: numeric ordering comparison — `> <number>`. Needed for
-        // conditions like PAC-2's "If SHP-8 Number of Packages in
-        // Shipment is greater than 1", which no equality or value-set
-        // clause can state. Both sides must parse as numbers; a
-        // non-numeric or empty referent fails safe to false (v0.2-V1).
-        if predicate.hasPrefix("> ") {
-            guard let threshold = Double(predicate.dropFirst(2)),
-                  let value = Double(resolved.raw)
-            else { return false }
+    /// Apply a classified predicate to a resolved referent.
+    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent) -> Bool {
+        switch predicate {
+        case .populated: return resolved.isPopulated
+        case .empty: return !resolved.isPopulated
+        case .equals(let v): return resolved.raw == v
+        case .notEquals(let v): return resolved.raw != v
+        case .greaterThan(let threshold):
+            // M8-D: PAC-2's "If SHP-8 Number of Packages in Shipment is
+            // greater than 1". A non-numeric or empty referent fails safe.
+            guard let value = Double(resolved.raw) else { return false }
             return value > threshold
-        }
-        if predicate.hasPrefix("startsWith ") {
-            let prefix = String(predicate.dropFirst("startsWith ".count))
-            return !prefix.isEmpty && resolved.raw.hasPrefix(prefix)
-        }
-        if predicate.hasPrefix("not startsWith ") {
-            let prefix = String(predicate.dropFirst("not startsWith ".count))
-            guard resolved.isPopulated, !prefix.isEmpty else { return false }
+        // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning `Z`
+        // (HL7au:000020 message/trigger codes, 000023.1 segments).
+        // `startsWith` on an empty referent is false (an absent value
+        // begins with nothing); `not startsWith` mirrors `not in` — it
+        // asserts only on populated referents, per the fail-safe rule.
+        case .startsWith(let prefix): return resolved.raw.hasPrefix(prefix)
+        case .notStartsWith(let prefix):
+            guard resolved.isPopulated else { return false }
             return !resolved.raw.hasPrefix(prefix)
-        }
-        if predicate.hasPrefix("in (") && predicate.hasSuffix(")") {
-            let values = Self.parseValueList(predicate.dropFirst(4).dropLast())
-            return values.contains(resolved.raw)
-        }
-        if predicate.hasPrefix("not in (") && predicate.hasSuffix(")") {
-            let values = Self.parseValueList(predicate.dropFirst(8).dropLast())
+        case .isIn(let values): return values.contains(resolved.raw)
+        case .notIn(let values):
             // not-in fires only if the referent is actually populated —
-            // an empty referent isn't a member of any set but it's also
-            // not a meaningful "non-member" assertion. Treat empty as
-            // "not in" being false (no trigger) per the fail-safe rule:
-            // the conditional check should only require the dependent
-            // field when the referent carries a definite value the
-            // predicate excludes.
+            // an empty referent is not a meaningful "non-member"
+            // assertion, so the conditional only requires the dependent
+            // field when the referent carries a definite excluded value.
             guard resolved.isPopulated else { return false }
             return !values.contains(resolved.raw)
-        }
-        return false
-    }
-
-    /// Parse `"NW, CA, CR, DC"` (or `"NW,CA,CR"`) into the value list
-    /// `["NW", "CA", "CR", "DC"]`. Whitespace around commas is trimmed.
-    private static func parseValueList<S: StringProtocol>(_ raw: S) -> [String] {
-        raw.split(separator: ",").map {
-            $0.trimmingCharacters(in: .whitespaces)
         }
     }
 
