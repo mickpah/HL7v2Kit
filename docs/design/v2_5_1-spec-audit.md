@@ -118,6 +118,10 @@ These rules depend on message-type or sibling-segment presence (SPM, OBX). They 
 
 **P1-2:** "report message" is `messageCode in (ORU, ORF, OUL)`: CH07 §7.3.1-§7.3.9 (ORU R01/R30-R32, QRY/ORF, OUL R21-R24).
 
+**P1-3:** OBR-2 / OBR-3 add `OR ORC absent AND messageCode in (ORU, ORF)` (§4.3.1.2-3 on v2.3/v2.3.1; §4.5.1.2-3 and §4.5.3.2-3 on v2.4+: "an ORC is not required, and the identifying placer order number must be present in the OBR segments"). The leg is gated to ORU / ORF because OUL R22-R24 and OPU R25 print OBR before [ORC], which the ORC-delimited group model cannot attach. A later OBR group with no ORC of its own still reads the previous group's ORC (under-fire only; closed by message-structure grammar, X-C04 / P8).
+
+V251-C05's "Suspected for OBR-2" is resolved: §4.5.3.2 carries the ORU placer sentence.
+
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)
 
 From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):

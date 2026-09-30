@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P1-3: OBR-2 / OBR-3 required when an ORU or ORF has no ORC
+
+- With no ORC, `ORC-2 empty` failed safe and never fired, so a result with
+  no order number anywhere passed. OBR-2 and OBR-3 now also fire when the
+  ORC is absent in an ORU or ORF (v2.3 to v2.6).
+
 ### Fixed — P1-2: OBR-7 / OBR-25 apply to every report message
 
 - "Required in a report message" was modelled as ORU only. It now covers

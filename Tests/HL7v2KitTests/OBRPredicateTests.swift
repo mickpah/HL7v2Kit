@@ -198,4 +198,47 @@ struct OBRPredicateTests {
         #expect(try conditionalHits(wire, field: 7).isEmpty, "\(c.testDescription) OBR-7")
         #expect(try conditionalHits(wire, field: 25).isEmpty, "\(c.testDescription) OBR-25")
     }
+
+    // MARK: - P1-3: order numbers without ORC (X-C08)
+
+    /// ORU / ORF with no ORC: the placer (OBR-2) and filler (OBR-3) order
+    /// numbers must be in OBR (v2.3 §4.3.1.2-3; v2.4+ §4.5.1.2-3, §4.5.3.2-3).
+    static func resultWithoutORC(_ messageType: String, _ version: String, placer: String?, filler: String?) -> String {
+        var obr: [Int: String] = [1: "1", 4: "GLUC^Glucose^L", 7: "20240401080000", 25: "F"]
+        if let placer { obr[2] = placer }
+        if let filler { obr[3] = filler }
+        return wire([
+            msh(messageType, version), pid,
+            segment("OBR", obr),
+            segment("OBX", [1: "1", 2: "NM", 3: "GLU^Glucose^L", 5: "5.2", 11: "F"]),
+        ])
+    }
+
+    @Test("X-C08: ORU / ORF without ORC require OBR-2 and OBR-3",
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"], ["ORU^R01", "ORF^R04"])
+    func orderNumbersRequiredWithoutORC(version: String, messageType: String) throws {
+        let noPlacer = Self.resultWithoutORC(messageType, version, placer: nil, filler: "FIL001")
+        #expect(try Parser().parse(noPlacer)["OBR-25"] == "F", "Wire mis-counted")
+        #expect(try conditionalHits(noPlacer, field: 2).count == 1, "v\(version) \(messageType) OBR-2")
+        let noFiller = Self.resultWithoutORC(messageType, version, placer: "ORD001", filler: nil)
+        #expect(try conditionalHits(noFiller, field: 3).count == 1, "v\(version) \(messageType) OBR-3")
+        let both = Self.resultWithoutORC(messageType, version, placer: "ORD001", filler: "FIL001")
+        #expect(try conditionalHits(both, field: 2).isEmpty, "v\(version) \(messageType) OBR-2 valued")
+        #expect(try conditionalHits(both, field: 3).isEmpty, "v\(version) \(messageType) OBR-3 valued")
+    }
+
+    /// OUL R24 prints OBR before [ORC] (v2.5.1 CH07 §7.3.9). The trailing
+    /// ORC carries the numbers; the ORU/ORF gate keeps the ORC-absent leg
+    /// from misfiring here.
+    @Test("X-C08 guard: OUL R24 with a trailing ORC stays silent", arguments: ["2.5.1", "2.6"])
+    func trailingORCDoesNotMisfire(version: String) throws {
+        let wire = Self.wire([
+            Self.msh("OUL^R24^OUL_R24", version), Self.pid,
+            Self.segment("OBR", [1: "1", 4: "GLUC^Glucose^L", 7: "20240401080000", 25: "F"]),
+            Self.segment("ORC", [1: "RE", 2: "ORD001", 3: "FIL001"]),
+            Self.segment("OBX", [1: "1", 2: "NM", 3: "GLU^Glucose^L", 5: "5.2", 11: "F"]),
+        ])
+        #expect(try conditionalHits(wire, field: 2).isEmpty, "v\(version) OBR-2")
+        #expect(try conditionalHits(wire, field: 3).isEmpty, "v\(version) OBR-3")
+    }
 }

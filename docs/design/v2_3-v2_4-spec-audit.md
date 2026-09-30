@@ -68,6 +68,8 @@ The v2.5.1 audit (S4 substage C) added three conditional predicates citable to s
 
 **P1-2:** "report message" (OBR-7 §4.5.1.7 / §4.5.3.7, OBR-25 §4.5.1.25 / §4.5.3.25) is `messageCode in (ORU, ORF)` on v2.3 and v2.3.1 (CH7 §7.2.1, §7.2.2) and adds OUL on v2.4 (CH07 §7.3.2).
 
+**P1-3:** OBR-2 / OBR-3 add `OR ORC absent AND messageCode in (ORU, ORF)` (§4.3.1.2-3 on v2.3/v2.3.1; §4.5.1.2-3 and §4.5.3.2-3 on v2.4+: "an ORC is not required, and the identifying placer order number must be present in the OBR segments"). The leg is gated to ORU / ORF because OUL R22-R24 and OPU R25 print OBR before [ORC], which the ORC-delimited group model cannot attach. A later OBR group with no ORC of its own still reads the previous group's ORC (under-fire only; closed by message-structure grammar, X-C04 / P8).
+
 ## Known limitations (explicit)
 
 Per the working notes's "honesty over completeness" requirement, these are the per-version checks deferred to a future cycle when the corresponding PDFs become available:

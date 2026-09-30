@@ -4,8 +4,8 @@
   "description": "Observation Request",
   "fields": [
     { "index": 1, "swiftName": "setID", "name": "Set ID - OBR", "dataType": "SI", "length": "4", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1", "condition": "ORC-2 empty" },
-    { "index": 3, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1", "condition": "ORC-3 empty" },
+    { "index": 2, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1", "condition": "ORC-2 empty OR ORC absent AND messageCode in (ORU, ORF)" },
+    { "index": 3, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "427", "optionality": "C", "repeatability": "1", "condition": "ORC-3 empty OR ORC absent AND messageCode in (ORU, ORF)" },
     { "index": 4, "swiftName": "universalServiceIdentifier", "name": "Universal Service Identifier", "dataType": "CWE", "length": "705", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 5, "swiftName": "priority", "name": "Priority", "dataType": "ID", "length": "2", "optionality": "B", "repeatability": "1" },
     { "index": 6, "swiftName": "requestedDateTime", "name": "Requested Date/Time (deprecated)", "dataType": "DTM", "length": "24", "optionality": "B", "repeatability": "1" },

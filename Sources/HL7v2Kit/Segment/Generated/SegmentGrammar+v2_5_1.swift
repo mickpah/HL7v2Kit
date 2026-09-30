@@ -1686,8 +1686,8 @@ extension SegmentGrammarTable {
         version: "2.5.1",
         fields: [
             FieldGrammar(index: 1, name: "Set ID - OBR", dataType: "SI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "4"),
-            FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-2 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: "22"),
-            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: "22"),
+            FieldGrammar(index: 2, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-2 empty OR ORC absent AND messageCode in (ORU, ORF)", prohibitedWhen: nil, variableColumns: false, table: nil, length: "22"),
+            FieldGrammar(index: 3, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "ORC-3 empty OR ORC absent AND messageCode in (ORU, ORF)", prohibitedWhen: nil, variableColumns: false, table: nil, length: "22"),
             FieldGrammar(index: 4, name: "Universal Service Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 5, name: "Priority (deprecated)", dataType: "ID", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "2"),
             FieldGrammar(index: 6, name: "Requested Date/Time (deprecated)", dataType: "TS", optionality: .backwardCompat, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
