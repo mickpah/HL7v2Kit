@@ -96,7 +96,7 @@ struct CodeTableValidationTests {
         // accepts only ASCII, 8859/1 and UNICODE UTF-8 as declared character sets.)
     }
 
-    @Test("AU v2.4: OBX-2 of CWE or DR is valid under the AU locale, as ADRM-2021 Table 0125 prints")
+    @Test("v2.4 OBX-2 of CWE, DR, CNE or EI is valid on the base spec (sec 7.4.2.2 prose) and under the AU locale")
     func auValueTypes() throws {
         func oru(_ obx2: String) -> String {
             "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01|MSG1|P|2.4\r"
@@ -110,9 +110,30 @@ struct CodeTableValidationTests {
         }
         for type in ["CWE", "DR", "CNE", "EI"] {
             #expect(try issues(oru(type), .auLocalisation).isEmpty, "OBX-2 = \(type) under the AU locale")
-            #expect(try issues(oru(type), .international).count == 1, "base v2.4 Table 0125 has no \(type)")
+            #expect(try issues(oru(type), .international).isEmpty, "base v2.4 sec 7.4.2.2 admits \(type)")
         }
         #expect(try issues(oru("QQ"), .auLocalisation).count == 1, "the widening is a union, not a free pass")
+        #expect(try issues(oru("QQ"), .international).count == 1)
+    }
+
+    @Test("OBX-2 admits every data type but CM, CQ, SI and ID on v2.3, v2.3.1, v2.4 and v2.6 too")
+    func obx2AllDataTypesOtherVersions() throws {
+        let admitted: [(version: String, types: [String])] = [
+            ("2.3", ["IS", "HD", "EI", "PL", "DR", "TQ"]),
+            ("2.3.1", ["CWE", "CNE", "IS", "HD", "EI", "DR", "VID"]),
+            ("2.4", ["CWE", "CNE", "IS", "HD", "EI", "DR", "SRT"]),
+            ("2.6", ["CNE", "CE", "TS", "IS", "HD", "EI", "DR", "MSG"]),
+        ]
+        for (version, types) in admitted {
+            for type in types {
+                #expect(try obx2Issues(type, version: version).isEmpty, "v\(version) OBX-2 = \(type)")
+            }
+            // v2.3 Appendix A prints ID in Table 0125 (a spec-internal conflict with the prose);
+            // it is left as printed, so ID is only asserted rejected from v2.3.1 on.
+            for type in ["CM", "CQ", "SI", "QQ"] + (version == "2.3" ? [] : ["ID"]) {
+                #expect(try obx2Issues(type, version: version).count == 1, "v\(version) OBX-2 = \(type)")
+            }
+        }
     }
 
     @Test("Waveform value types the spec's Chapter 7 directs into OBX-2 are valid: NA, MA, CD")

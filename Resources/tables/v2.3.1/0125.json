@@ -117,6 +117,86 @@
     {
       "code": "NA",
       "description": "Numeric array (Chapter 7 waveform: WAV category)"
+    },
+    {
+      "code": "CNE",
+      "description": "Coded with no exceptions"
+    },
+    {
+      "code": "CWE",
+      "description": "Coded with exceptions"
+    },
+    {
+      "code": "DLN",
+      "description": "Driver's license number"
+    },
+    {
+      "code": "DR",
+      "description": "Date/time range"
+    },
+    {
+      "code": "EI",
+      "description": "Entity identifier"
+    },
+    {
+      "code": "FC",
+      "description": "Financial class"
+    },
+    {
+      "code": "HD",
+      "description": "Hierarchic designator"
+    },
+    {
+      "code": "IS",
+      "description": "Coded value for user-defined tables"
+    },
+    {
+      "code": "JCC",
+      "description": "Job code/class"
+    },
+    {
+      "code": "PL",
+      "description": "Person location"
+    },
+    {
+      "code": "PPN",
+      "description": "Performing person time stamp"
+    },
+    {
+      "code": "PT",
+      "description": "Processing type"
+    },
+    {
+      "code": "QIP",
+      "description": "Query input parameter list"
+    },
+    {
+      "code": "QSC",
+      "description": "Query selection criteria"
+    },
+    {
+      "code": "RCD",
+      "description": "Row column definition"
+    },
+    {
+      "code": "RI",
+      "description": "Repeat interval"
+    },
+    {
+      "code": "SCV",
+      "description": "Scheduling class value pair"
+    },
+    {
+      "code": "TQ",
+      "description": "Timing/quantity"
+    },
+    {
+      "code": "VH",
+      "description": "Visiting hours"
+    },
+    {
+      "code": "VID",
+      "description": "Version identifier"
     }
   ]
 }

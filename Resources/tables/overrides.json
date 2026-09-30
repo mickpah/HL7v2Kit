@@ -36,7 +36,7 @@
       "citation": "HL7 v2.3 Table 0354 - Message structure. The printed rows are NOT an exhaustive set: the chapters are normative for message structures and the table lags them. Not measured on this version; opened on the evidence of v2.5.1, v2.6 and v2.8.2. Enforcing it would reject messages the specification itself defines (req #4)."
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages.",
+      "note": "Value type omits the three waveform datatypes Chapter 7 directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)', and the waveform category table pairs 'Channel Definition / CHN' with data type CD; the chapter's examples use all three. v2.8.2 corrects the table. Restored from the chapter so the closed table does not reject spec-directed waveform messages. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3 CH2 Figure 2-2 'HL7 data types' (v2.3 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -49,6 +49,74 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
         ]
       ]
     },
@@ -227,7 +295,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.3.1 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.3.1 CH2 Figure 2-2 'HL7 data types' (v2.3.1 prints no Table 0440); descriptions as v2.4 Table 0440 prints them.",
       "addEntries": [
         [
           "CD",
@@ -240,6 +308,86 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CWE",
+          "Coded with exceptions"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
         ]
       ]
     }
@@ -310,7 +458,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.4 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.4 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",
@@ -323,6 +471,98 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CWE",
+          "Coded with exceptions"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "FN",
+          "Family name"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "SAD",
+          "Street Address"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "SRT",
+          "Sort order"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
         ]
       ]
     }
@@ -808,7 +1048,7 @@
       ]
     },
     "0125": {
-      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter.",
+      "note": "Value type omits the three waveform datatypes that Chapter 7's own normative text directs into OBX-2: 'The data type of the WAV category result segment can be NA (Numeric Array) or MA (Multiplexed Array)' and 'When using the OBX for the CHN category, OBX-2 should be valued to CD'; the chapter's waveform examples use all three. v2.8.2 corrects the table by printing CD, MA and NA. As a closed table without them it rejected spec-directed waveform messages, so the three are restored from the chapter. V251-C01 (cross-version): the OBX-2 Value Type definition in v2.6 Chapter 7 states 'All HL7 data types are valid, and are included in Table 0125 except CM, CQ, SI, and ID'. Every further data type is restored from v2.6 Appendix A HL7 Table 0440 - Data types.",
       "addEntries": [
         [
           "CD",
@@ -821,6 +1061,254 @@
         [
           "NA",
           "Numeric array (Chapter 7 waveform: WAV category)"
+        ],
+        [
+          "AUI",
+          "Authorization information"
+        ],
+        [
+          "CCD",
+          "Charge code and date"
+        ],
+        [
+          "CCP",
+          "Channel calibration parameters"
+        ],
+        [
+          "CE",
+          "Coded element"
+        ],
+        [
+          "CNE",
+          "Coded with no exceptions"
+        ],
+        [
+          "CNS",
+          "Composite ID number and name simplified"
+        ],
+        [
+          "CSU",
+          "Channel sensitivity"
+        ],
+        [
+          "DDI",
+          "Daily deductible information"
+        ],
+        [
+          "DIN",
+          "Date and institution name"
+        ],
+        [
+          "DLD",
+          "Discharge to location and date"
+        ],
+        [
+          "DLN",
+          "Driver's license number"
+        ],
+        [
+          "DLT",
+          "Delta"
+        ],
+        [
+          "DR",
+          "Date/time range"
+        ],
+        [
+          "DTN",
+          "Day type and number"
+        ],
+        [
+          "EI",
+          "Entity identifier"
+        ],
+        [
+          "EIP",
+          "Entity identifier pair"
+        ],
+        [
+          "ERL",
+          "Error location"
+        ],
+        [
+          "FC",
+          "Financial class"
+        ],
+        [
+          "FN",
+          "Family name"
+        ],
+        [
+          "GTS",
+          "General timing specification"
+        ],
+        [
+          "HD",
+          "Hierarchic designator"
+        ],
+        [
+          "ICD",
+          "Insurance certification definition"
+        ],
+        [
+          "IS",
+          "Coded value for user-defined tables"
+        ],
+        [
+          "JCC",
+          "Job code/class"
+        ],
+        [
+          "LA1",
+          "Location with address variation 1"
+        ],
+        [
+          "LA2",
+          "Location with address variation 2"
+        ],
+        [
+          "LD",
+          "Error location and description"
+        ],
+        [
+          "MOC",
+          "Money and charge code"
+        ],
+        [
+          "MOP",
+          "Money or percentage"
+        ],
+        [
+          "MSG",
+          "Message type"
+        ],
+        [
+          "NDL",
+          "Name with location and date"
+        ],
+        [
+          "NR",
+          "Numeric range"
+        ],
+        [
+          "OCD",
+          "Occurrence code and date"
+        ],
+        [
+          "OSD",
+          "Order sequence definition"
+        ],
+        [
+          "OSP",
+          "Occurrence span code and date"
+        ],
+        [
+          "PIP",
+          "Practitioner institutional privileges"
+        ],
+        [
+          "PL",
+          "Person location"
+        ],
+        [
+          "PLN",
+          "Practitioner license or other ID number"
+        ],
+        [
+          "PPN",
+          "Performing person time stamp"
+        ],
+        [
+          "PRL",
+          "Parent result link"
+        ],
+        [
+          "PT",
+          "Processing type"
+        ],
+        [
+          "PTA",
+          "Policy type and amount"
+        ],
+        [
+          "QIP",
+          "Query input parameter list"
+        ],
+        [
+          "QSC",
+          "Query selection criteria"
+        ],
+        [
+          "RCD",
+          "Row column definition"
+        ],
+        [
+          "RFR",
+          "Reference range"
+        ],
+        [
+          "RI",
+          "Repeat interval"
+        ],
+        [
+          "RMC",
+          "Room coverage"
+        ],
+        [
+          "RPT",
+          "Repeat pattern"
+        ],
+        [
+          "SAD",
+          "Street Address"
+        ],
+        [
+          "SCV",
+          "Scheduling class value pair"
+        ],
+        [
+          "SPD",
+          "Specialty description"
+        ],
+        [
+          "SPS",
+          "Specimen source"
+        ],
+        [
+          "SRT",
+          "Sort order"
+        ],
+        [
+          "TQ",
+          "Timing/quantity"
+        ],
+        [
+          "TS",
+          "Time stamp"
+        ],
+        [
+          "UVC",
+          "UB value code and amount"
+        ],
+        [
+          "VH",
+          "Visiting hours"
+        ],
+        [
+          "VID",
+          "Version identifier"
+        ],
+        [
+          "VR",
+          "Value range"
+        ],
+        [
+          "WVI",
+          "Channel Identifier"
+        ],
+        [
+          "WVS",
+          "Waveform source"
         ]
       ]
     }
