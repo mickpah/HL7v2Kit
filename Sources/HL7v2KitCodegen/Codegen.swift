@@ -49,6 +49,40 @@ struct FieldSchema: Decodable {
     /// The spec citation that justifies `tableOpen`, quoting the field's prose. Read by
     /// the schema audit, not emitted. P2-15.
     let tableOpenCitation: String?
+    /// Further prohibitions beyond `prohibitedWhen`, each with its own severity and
+    /// spec citation. See `FieldGrammar.additionalProhibitions`. P4-21.
+    let additionalProhibitions: [ProhibitionSchema]?
+}
+
+/// One entry of a field's `additionalProhibitions` array. `when` uses the condition
+/// grammar; `severity` is `error`, `warning` or `info`; `citation` quotes the spec text
+/// (read by the schema audit and required here, not emitted). P4-21.
+struct ProhibitionSchema: Decodable {
+    let when: String?
+    let severity: String?
+    let citation: String?
+}
+
+/// Render a field's `additionalProhibitions` as the trailing initialiser argument, or `""`
+/// when the key is absent so the field keeps a released initialiser. Fails codegen on a
+/// malformed rule: a blank or one-token `when`, an unknown severity, a missing citation.
+func renderAdditionalProhibitions(_ rules: [ProhibitionSchema]?, context: String) -> String {
+    guard let rules else { return "" }
+    precondition(!rules.isEmpty, "\(context): additionalProhibitions is empty; omit the key instead")
+    let items = rules.enumerated().map { offset, rule -> String in
+        let label = "\(context) additionalProhibitions[\(offset)]"
+        let when = rule.when ?? ""
+        precondition(when == when.trimmingCharacters(in: .whitespaces)
+                        && when.split(separator: " ", omittingEmptySubsequences: true).count >= 2,
+                     "\(label): when must be a condition '<referent> <predicate>', got '\(when)'")
+        let severity = rule.severity ?? ""
+        precondition(["error", "warning", "info"].contains(severity),
+                     "\(label): severity must be error, warning or info, got '\(severity)'")
+        precondition(!(rule.citation ?? "").trimmingCharacters(in: .whitespaces).isEmpty,
+                     "\(label): citation is missing")
+        return "FieldProhibition(condition: \(escapeStringLiteral(when)), severity: .\(severity))"
+    }
+    return ", additionalProhibitions: [\(items.joined(separator: ", "))]"
 }
 
 struct SegmentSchema: Decodable {
@@ -251,7 +285,9 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
                              "\(schema.segmentID)-\(field.index): prohibitedSeverity must be error, warning or info, got \(raw)")
                 return ", prohibitedSeverity: .\(raw)"
             }()
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)),"
+            let additionalProhibitions = renderAdditionalProhibitions(
+                field.additionalProhibitions, context: "\(schema.segmentID)-\(field.index)")
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a

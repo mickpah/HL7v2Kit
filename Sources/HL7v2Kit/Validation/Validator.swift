@@ -1970,7 +1970,11 @@ public struct Validator: Sendable {
     /// `checkConditional`. "PRT-6 may only be valued if PRT-5 is
     /// valued" encodes as `prohibitedWhen: "PRT-5 empty"`. Same
     /// fail-safe semantics: an unresolvable predicate never fires.
-    private func checkProhibition(
+    /// Each of `grammar.additionalProhibitions` is evaluated the same
+    /// way at its own severity, and each rule that holds reports its
+    /// own issue (P4-21). Internal so tests can drive it with a
+    /// hand-built grammar.
+    func checkProhibition(
         _ grammar: FieldGrammar,
         segment: Segment,
         segmentIndex: Int,
@@ -1979,23 +1983,26 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard isPopulated,
-              let prohibition = grammar.prohibitedWhen,
-              !prohibition.isEmpty,
-              conditionTriggers(
-                prohibition,
+        guard isPopulated else { return }
+        var rules = grammar.additionalProhibitions
+        if let prohibition = grammar.prohibitedWhen {
+            rules.insert(FieldProhibition(condition: prohibition, severity: grammar.prohibitedSeverity), at: 0)
+        }
+        for rule in rules where !rule.condition.isEmpty
+            && conditionTriggers(
+                rule.condition,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: location.segmentID
-              )
-        else { return }
-        issues.append(ValidationIssue(
-            severity: grammar.prohibitedSeverity,
-            code: .conditionalFieldProhibited,
-            location: location,
-            message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(prohibition)' holds"
-        ))
+            ) {
+            issues.append(ValidationIssue(
+                severity: rule.severity,
+                code: .conditionalFieldProhibited,
+                location: location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(rule.condition)' holds"
+            ))
+        }
     }
 
     /// Evaluate a condition predicate against a single segment.

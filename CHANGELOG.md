@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-21: more than one prohibition per field
+
+- `FieldGrammar.additionalProhibitions: [FieldProhibition]` holds further
+  prohibitions beside `prohibitedWhen`, each with its own severity. Empty by
+  default; set only through a new `FieldGrammar.init` overload ending
+  `additionalProhibitions:`. The released initialisers keep their signatures
+  (ADR-014) and are pinned in `SignatureCompatibilityTests`.
+- `FieldProhibition` (`Sendable`, `Hashable`): a `condition` in the condition
+  grammar and the `severity` it reports at.
+- The Validator raises one `conditionalFieldProhibited` per rule that holds on a
+  populated field, so two triggered rules give two issues.
+- Schema key `additionalProhibitions: [{when, severity, citation}]`. Codegen emits
+  it only where set and fails on a malformed rule or a missing citation;
+  `scripts/audit-schemas.py` checks the same shape.
+- v2.5.1 and v2.6 RXR-6 now warn when RXR-2 is coded from HL7 Table 0163
+  (`RXR-2.3 = HL70163`; "If RXR-2 employs HL7 Table 0163 – Body Site, then
+  RXR-6 should not be populated", CH04 §4.14.2.6), beside the existing
+  `RXR-2 empty` error. v2.8.2 CH04A drops the sentence. Closes the
+  "one prohibition per field" limitation (ADR-010 amendment, 2026-10-01).
+
 ### Documented — P4-20: HL7au:00060.4 recorded as PARTIAL
 
 - HL7au:00060.4 (C elements must not be valued when the predicate is false) is now PARTIAL in the ADRM register, enforced only through explicit `prohibitedWhen` fields. General enforcement is a BLOCKING limitation (`permanent-limitations-register.md` §D addendum; routes P4-24 and ADR-021 candidate).

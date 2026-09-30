@@ -3287,7 +3287,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 3, name: "Administration Device", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 4, name: "Administration Method", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 5, name: "Routing Instruction", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 6, name: "Administration Site Modifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: "RXR-2 empty", variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 6, name: "Administration Site Modifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: "RXR-2 empty", variableColumns: false, table: nil, length: "250", additionalProhibitions: [FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning)]),
         ]
     )
 

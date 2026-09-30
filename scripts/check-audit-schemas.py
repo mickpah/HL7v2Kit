@@ -94,9 +94,31 @@ def check_table_open():
         assert audit.table_open_findings(field), f"{name} must be a finding"
 
 
+def check_additional_prohibitions():
+    # P4-21: `additionalProhibitions` is a non-empty list of {when, severity, citation}
+    # rules; each needs a '<referent> <predicate>' condition, a known severity and a citation.
+    cite = 'v2.5.1 Chapter 4 section 4.14.2.6 RXR-6: "... then RXR-6 should not be populated."'
+    rule = {"when": "RXR-2.3 = HL70163", "severity": "warning", "citation": cite}
+    base = {"index": 6, "dataType": "CWE", "prohibitedWhen": "RXR-2 empty"}
+    assert audit.additional_prohibition_findings(dict(base, additionalProhibitions=[rule])) == [], \
+        "a well-formed rule is not a finding"
+    assert audit.additional_prohibition_findings(dict(base)) == [], "a field without the key is not a finding"
+    cases = {
+        "not a list": dict(base, additionalProhibitions=rule),
+        "empty list": dict(base, additionalProhibitions=[]),
+        "missing citation": dict(base, additionalProhibitions=[dict(rule, citation=None)]),
+        "blank citation": dict(base, additionalProhibitions=[dict(rule, citation="  ")]),
+        "unknown severity": dict(base, additionalProhibitions=[dict(rule, severity="fatal")]),
+        "one-token when": dict(base, additionalProhibitions=[dict(rule, when="RXR-2")]),
+        "unknown key": dict(base, additionalProhibitions=[dict(rule, note="x")]),
+    }
+    for name, field in cases.items():
+        assert audit.additional_prohibition_findings(field), f"{name} must be a finding"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
-          check_table_open]
+          check_table_open, check_additional_prohibitions]
 
 
 def main():

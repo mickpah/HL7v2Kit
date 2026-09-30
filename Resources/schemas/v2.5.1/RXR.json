@@ -8,6 +8,6 @@
     { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0164"] },
     { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0165"] },
     { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "administrationSiteModifier", "name": "Administration Site Modifier", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0495"], "prohibitedWhen": "RXR-2 empty" }
+    { "index": 6, "swiftName": "administrationSiteModifier", "name": "Administration Site Modifier", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0495"], "prohibitedWhen": "RXR-2 empty", "additionalProhibitions": [{ "when": "RXR-2.3 = HL70163", "severity": "warning", "citation": "v2.5.1 Chapter 4 section 4.14.2.6 RXR-6 Administration Site Modifier: \"If RXR-2 employs HL7 Table 0163 - Body Site, then RXR-6 should not be populated.\" RXR-2.3 is the CWE Name of Coding System, HL7nnnn for an HL7 table (Chapter 2A CWE.3)" }] }
   ]
 }

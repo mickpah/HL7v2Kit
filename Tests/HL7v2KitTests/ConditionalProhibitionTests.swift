@@ -163,4 +163,93 @@ struct ConditionalProhibitionTests {
         #expect(try missing("POMD^Performing Organization Medical Director^HL70912").count == 1)
         #expect(try missing("OP^Ordering Provider^HL70912").isEmpty)
     }
+
+    // MARK: - More than one prohibition per field (P4-21)
+
+    @Test("FieldGrammar.additionalProhibitions defaults to empty and carries each rule's own severity")
+    func additionalProhibitionsAxis() {
+        let single = FieldGrammar(index: 6, name: "Administration Site Modifier", dataType: "CWE",
+                                  optionality: .optional, repeatability: .single,
+                                  prohibitedWhen: "RXR-2 empty")
+        #expect(single.additionalProhibitions.isEmpty)
+        let site163 = FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning)
+        let paired = FieldGrammar(index: 6, name: "Administration Site Modifier", dataType: "CWE",
+                                  optionality: .optional, repeatability: .single,
+                                  prohibitedWhen: "RXR-2 empty", additionalProhibitions: [site163])
+        #expect(paired.prohibitedSeverity == .error)
+        #expect(paired.additionalProhibitions == [site163])
+        #expect(paired != single)
+    }
+
+    @Test("Each prohibition on a field reports independently: two triggered rules give two issues")
+    func independentProhibitions() throws {
+        let wire = TestWires.wire("RDE^O11^RDE_O11", "2.5.1",
+            TestWires.segment("RXR", [1: "IV^Intravenous^HL70162", 2: "LA^Left Arm^HL70163", 6: "L^Left^HL70495"]))
+        let message = try Parser().parse(wire)
+        let index = try #require(message.segments.firstIndex { $0.segmentID == "RXR" })
+        let grammar = FieldGrammar(index: 6, name: "Administration Site Modifier", dataType: "CWE",
+                                   optionality: .optional, repeatability: .single,
+                                   prohibitedWhen: "RXR-1 populated", prohibitedSeverity: .error,
+                                   additionalProhibitions: [
+                                       FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning),
+                                       FieldProhibition(condition: "RXR-2.3 = HL70550", severity: .info),
+                                       FieldProhibition(condition: "RXR-2 populated", severity: .info),
+                                   ])
+        var issues: [ValidationIssue] = []
+        Validator().checkProhibition(grammar, segment: message.segments[index], segmentIndex: index,
+                                     message: message, isPopulated: true,
+                                     location: IssueLocation(segmentID: "RXR", segmentIndex: index, fieldIndex: 6),
+                                     issues: &issues)
+        #expect(issues.map(\.severity) == [.error, .warning, .info])
+        #expect(issues.allSatisfy { $0.code == .conditionalFieldProhibited })
+        // An empty field is never prohibited, whatever its rules say.
+        var none: [ValidationIssue] = []
+        Validator().checkProhibition(grammar, segment: message.segments[index], segmentIndex: index,
+                                     message: message, isPopulated: false,
+                                     location: IssueLocation(segmentID: "RXR", segmentIndex: index, fieldIndex: 6),
+                                     issues: &none)
+        #expect(none.isEmpty)
+    }
+
+    @Test("RXR-6 should not be populated when RXR-2 is coded from Table 0163 (warning)",
+          arguments: ["2.5.1", "2.6"])
+    func rxr6BodySite(version: String) throws {
+        func rxr(_ fields: [Int: String]) -> String {
+            TestWires.wire("RDE^O11^RDE_O11", version, TestWires.segment("RXR", fields))
+        }
+        // RXR-2 coded from HL7 Table 0163 - Body Site, RXR-6 valued: one warning, no error.
+        let bodySite = try prohibited(rxr([1: "IM^Intramuscular^HL70162", 2: "LG^Left Gluteus Medius^HL70163",
+                                           6: "L^Left^HL70495"]), "RXR", 6)
+        #expect(bodySite.count == 1, "v\(version)")
+        #expect(bodySite.first?.severity == .warning, "v\(version)")
+        // RXR-2 coded from Table 0550 - Body Parts: the 0495 modifier is the spec's pairing.
+        let bodyPart = rxr([1: "IM^Intramuscular^HL70162", 2: "ARM^Arm^HL70550", 6: "L^Left^HL70495"])
+        #expect(try prohibited(bodyPart, "RXR", 6).isEmpty, "v\(version)")
+        // RXR-2 empty: the existing error only, not the Table 0163 warning as well.
+        let noSite = try prohibited(rxr([1: "IM^Intramuscular^HL70162", 6: "L^Left^HL70495"]), "RXR", 6)
+        #expect(noSite.map(\.severity) == [.error], "v\(version)")
+        // RXR-6 empty: nothing to prohibit.
+        let unmodified = rxr([1: "IM^Intramuscular^HL70162", 2: "LG^Left Gluteus Medius^HL70163"])
+        #expect(try prohibited(unmodified, "RXR", 6).isEmpty, "v\(version)")
+    }
+
+    @Test("v2.8.2 CH04A drops the Table 0163 sentence, so RXR-6 keeps its single rule")
+    func rxr6BodySiteNotOnV282() throws {
+        let wire = TestWires.wire("RDE^O11^RDE_O11", "2.8.2",
+            TestWires.segment("RXR", [1: "IM^Intramuscular^HL70162", 2: "LG^Left Gluteus Medius^HL70163",
+                                      6: "L^Left^HL70495"]))
+        #expect(try prohibited(wire, "RXR", 6).isEmpty)
+        #expect(SegmentGrammarTable.v2_8_2["RXR"]?.field(6)?.additionalProhibitions.isEmpty == true)
+    }
+
+    @Test("Codegen emits the RXR-6 Table 0163 rule on v2.5.1 and v2.6 only")
+    func rxr6GeneratedGrammar() {
+        let expected = [FieldProhibition(condition: "RXR-2.3 = HL70163", severity: .warning)]
+        for table in [SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6] {
+            let rxr6 = table["RXR"]?.field(6)
+            #expect(rxr6?.prohibitedWhen == "RXR-2 empty")
+            #expect(rxr6?.prohibitedSeverity == .error)
+            #expect(rxr6?.additionalProhibitions == expected)
+        }
+    }
 }

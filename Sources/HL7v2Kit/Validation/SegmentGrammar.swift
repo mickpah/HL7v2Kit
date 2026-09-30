@@ -103,6 +103,13 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// text, so advisory spec wording never produces an error (req #4).
     /// Ignored when `prohibitedWhen` is `nil`. P4.
     public let prohibitedSeverity: IssueSeverity
+    /// Further prohibitions on this field beyond ``prohibitedWhen``, each with its own
+    /// severity. The Validator evaluates every rule exactly as it does `prohibitedWhen` and
+    /// raises one `.conditionalFieldProhibited` per rule that holds, so a field the spec
+    /// restricts twice (v2.5.1 / v2.6 RXR-6: an error when RXR-2 is empty, a warning when
+    /// RXR-2 is coded from Table 0163) reports each rule on its own. Not set by the released
+    /// initialisers; empty by default. P4-21.
+    public let additionalProhibitions: [FieldProhibition]
 
     public init(
         index: Int,
@@ -160,6 +167,30 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         tableOpen: Bool = false,
         prohibitedSeverity: IssueSeverity
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: [])
+    }
+
+    /// Creates a field grammar that carries more than one prohibition (see
+    /// ``additionalProhibitions``). A separate overload so the released initialisers keep
+    /// their signatures (ADR-014). P4-21.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition]
+    ) {
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -172,6 +203,26 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.length = length
         self.tableOpen = tableOpen
         self.prohibitedSeverity = prohibitedSeverity
+        self.additionalProhibitions = additionalProhibitions
+    }
+}
+
+/// One prohibition on a field: when ``condition`` holds and the field is populated, the
+/// Validator raises `.conditionalFieldProhibited` at ``severity``. The condition uses the
+/// same predicate grammar as ``FieldGrammar/prohibitedWhen``, with the same fail-safe
+/// semantics (an unresolvable predicate never fires). See
+/// ``FieldGrammar/additionalProhibitions``. P4-21.
+public struct FieldProhibition: Sendable, Equatable, Hashable {
+    /// The predicate under which the field must not be populated, e.g. `"RXR-2.3 = HL70163"`.
+    public let condition: String
+    /// Severity of the issue raised when the rule fires: `.error` for normative text,
+    /// `.warning` for SHOULD-level text (req #4).
+    public let severity: IssueSeverity
+
+    /// Creates a prohibition from its predicate and the severity it reports at.
+    public init(condition: String, severity: IssueSeverity) {
+        self.condition = condition
+        self.severity = severity
     }
 }
 

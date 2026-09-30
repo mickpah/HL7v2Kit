@@ -118,7 +118,7 @@ Remaining gaps: lost coverage from the ORC-delimited group model, until P8's mes
 
 The equality clause ("if both ORC-2 and OBR-2 are valued then they must be valued the same") is enforced separately by the M8-B1/B2 ORC/OBR pair-equality check, not by these conditions.
 
-### Addendum to §D — one prohibition per field (P4-1 review finding, not an ADRM point)
+### Addendum to §D — one prohibition per field (P4-1 review finding, not an ADRM point; fixed in P4-21)
 
 Found during the P4-1 review (2026-09-30). Not an ADRM-2021 point; added here per the global-constraints rule that P4 rows go into the existing lettered sections.
 
@@ -126,7 +126,7 @@ Found during the P4-1 review (2026-09-30). Not an ADRM-2021 point; added here pe
 |---|---|---|---|
 | RXR-6 Administration Site Modifier | v2.5.1, v2.6 | v2.5.1 CH04 §4.14.2.6 (v2.6 identical): "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated." The v2.8.2 CH04A definition omits this sentence. | The predicate is expressible (`RXR-2.3 = HL70163`, warning). The model is not: `FieldGrammar` holds a single `prohibitedWhen` at a single `prohibitedSeverity`, and RXR-6 already carries the error-level Condition Rule `RXR-2 empty` (P4-1). Needs more than one prohibition per field, each with its own severity. |
 
-**Known limitation (req #3), blocks spec-completeness.** Fix tracked in P4-21.
+**Fixed in P4-21 (2026-10-01).** `FieldGrammar.additionalProhibitions` holds further prohibitions beside `prohibitedWhen`, each a `FieldProhibition` with its own condition and severity; the Validator reports each rule that holds as its own `conditionalFieldProhibited` issue. RXR-6 on v2.5.1 and v2.6 now carries both rules: `RXR-2 empty` (error) and `RXR-2.3 = HL70163` (warning). RXR-2.3 is the CWE Name of Coding System, which Chapter 2A defines as `HL7nnnn` for an HL7 table, so a Table 0163 site is coded `HL70163`. v2.8.2 keeps the single rule. The model limitation is closed.
 
 ### Addendum to §D — HL7au:00060.4, C elements not valued when the predicate is false (P4-20)
 

@@ -290,6 +290,38 @@ def table_open_findings(f):
     return out
 
 
+PROHIBITION_KEYS = {"when", "severity", "citation"}
+
+
+def additional_prohibition_findings(f):
+    """P4-21 extra prohibitions. `additionalProhibitions` is a non-empty list of rules,
+    each exactly {when, severity, citation}: `when` a '<referent> <predicate>' condition,
+    `severity` error/warning/info, `citation` the quoted spec text. Mirrors the codegen
+    preconditions so the audit reports what codegen would refuse."""
+    if "additionalProhibitions" not in f:
+        return []
+    rules = f["additionalProhibitions"]
+    if not isinstance(rules, list) or not rules:
+        return ["additionalProhibitions must be a non-empty list"]
+    out = []
+    for i, rule in enumerate(rules):
+        if not isinstance(rule, dict):
+            out.append(f"additionalProhibitions[{i}] is not an object")
+            continue
+        extra = set(rule) - PROHIBITION_KEYS
+        if extra:
+            out.append(f"additionalProhibitions[{i}] has unknown keys {sorted(extra)}")
+        when = rule.get("when")
+        if not (isinstance(when, str) and when == when.strip() and len(when.split()) >= 2):
+            out.append(f"additionalProhibitions[{i}] when {when!r} is not '<referent> <predicate>'")
+        if rule.get("severity") not in ("error", "warning", "info"):
+            out.append(f"additionalProhibitions[{i}] severity {rule.get('severity')!r} is not error/warning/info")
+        cite = rule.get("citation")
+        if not (isinstance(cite, str) and cite.strip()):
+            out.append(f"additionalProhibitions[{i}] has no citation")
+    return out
+
+
 def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
@@ -318,6 +350,7 @@ def integrity():
                 findings.append((rel, f["index"],
                                  f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
             findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
+            findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))

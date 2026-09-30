@@ -48,5 +48,18 @@ struct SignatureCompatibilityTests {
             FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:prohibitedSeverity:)
         let advisory = makeSeverity(7, "n", "ID", .conditional, .single, nil, "TQ2-2 != C", false, nil, nil, false, .warning)
         #expect(advisory.prohibitedSeverity == .warning && !advisory.tableOpen)
+        #expect(advisory.additionalProhibitions.isEmpty)
+    }
+
+    @Test("FieldGrammar.init additionalProhibitions: is a separate overload; FieldProhibition.init keeps two parameters")
+    func fieldGrammarAdditionalProhibitionsInit() {
+        let makeRule: (String, IssueSeverity) -> FieldProhibition = FieldProhibition.init(condition:severity:)
+        let rule = makeRule("RXR-2.3 = HL70163", .warning)
+        #expect(rule.condition == "RXR-2.3 = HL70163" && rule.severity == .warning)
+
+        let make: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?, Bool, IssueSeverity, [FieldProhibition]) -> FieldGrammar =
+            FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:prohibitedSeverity:additionalProhibitions:)
+        let rxr6 = make(6, "n", "CWE", .optional, .single, nil, "RXR-2 empty", false, nil, nil, false, .error, [rule])
+        #expect(rxr6.additionalProhibitions == [rule] && rxr6.prohibitedSeverity == .error && !rxr6.tableOpen)
     }
 }
