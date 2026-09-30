@@ -158,6 +158,15 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// verified, so a finding may reflect `validatedAs` only (ADR-018).
     /// Additive case; the enum is open per ADR-014.
     case versionGrammarSubstituted(declared: Version, validatedAs: Version)
+
+    /// MSH-12 carries a version ID (VID.1) that no ``Version`` case models,
+    /// so the message was validated against a fallback grammar (v2.5.1, or
+    /// the caller's `ParserOptions.versionOverride`), named in the message.
+    /// Warning severity: the findings may not reflect the declared release.
+    /// The payload is VID.1 as sent. Excluded versions are listed in the
+    /// permanent-limitations register, section F (ADR-018). Additive case;
+    /// the enum is open per ADR-014.
+    case versionNotRecognised(wireValue: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

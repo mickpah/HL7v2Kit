@@ -192,4 +192,50 @@ struct VersionHandlingTests {
         #expect(msh91Violations(report).isEmpty)
         #expect(baseMSH9ComponentIssues(report).map(\.location.componentIndex) == [1])
     }
+
+    // MARK: - P3-5: unrecognised versions
+
+    static func isVersionNotRecognised(_ issue: ValidationIssue) -> Bool {
+        if case .versionNotRecognised = issue.code { return true } else { return false }
+    }
+
+    @Test("An MSH-12 version HL7v2Kit does not model yields one warning naming the fallback",
+          arguments: ["2.1", "2.2", "2.5", "2.7", "2.7.1", "2.8.1", "2.9"])
+    func unrecognisedVersionWarns(_ wireVersion: String) throws {
+        let message = try Parser().parse(adt(version: wireVersion))
+        #expect(message.version == .v2_5_1)
+        let hits = Validator().validate(message).issues.filter(Self.isVersionNotRecognised)
+        #expect(hits.count == 1)
+        let hit = try #require(hits.first)
+        #expect(hit.code == .versionNotRecognised(wireValue: wireVersion))
+        #expect(hit.severity == .warning)
+        #expect(hit.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12))
+        #expect(hit.message.contains("2.5.1"))
+    }
+
+    @Test("The warning names VID.1, not the whole VID")
+    func unrecognisedVID1Only() throws {
+        let report = Validator().validate(try Parser().parse(adt(version: "2.8.1^AUS")))
+        #expect(report.issues.filter(Self.isVersionNotRecognised).map(\.code)
+                == [.versionNotRecognised(wireValue: "2.8.1")])
+    }
+
+    @Test("A recognised version never raises versionNotRecognised", arguments: Version.allCases)
+    func recognisedVersionQuiet(_ version: Version) throws {
+        let report = Validator().validate(try Parser().parse(adt(version: version.rawValue)))
+        #expect(report.issues.filter(Self.isVersionNotRecognised).isEmpty)
+    }
+
+    @Test("With a version override the warning names the grammar actually applied")
+    func overrideNamedInWarning() throws {
+        let message = try Parser(options: ParserOptions(versionOverride: .v2_6)).parse(adt(version: "2.7.1"))
+        let hit = try #require(Validator().validate(message).issues.first(where: Self.isVersionNotRecognised))
+        #expect(hit.message.contains("v2.6"))
+    }
+
+    @Test("An empty MSH-12 is the required-field check's business, not this warning")
+    func emptyMSH12NotReportedHere() throws {
+        let report = Validator().validate(try Parser().parse(adt(version: "")))
+        #expect(report.issues.filter(Self.isVersionNotRecognised).isEmpty)
+    }
 }

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P3-5: unrecognised MSH-12 versions are reported
+
+- A message whose MSH-12 version ID has no `Version` case (2.1, 2.2, 2.5,
+  2.7, 2.7.1, 2.8.1, 2.9, anything else) still parses and falls back to the
+  v2.5.1 grammar, but every report now carries one
+  `IssueCode.versionNotRecognised(wireValue:)` (warning) at MSH-12 naming
+  the grammar applied (V282-C09). The supported set and each exclusion are
+  recorded in ADR-018 and the permanent-limitations register, section F.
+
 ### Fixed — P3-4: the version is read from VID.1 of MSH-12
 
 - MSH-12 is a VID composite. The Parser read it as a scalar, so any MSH-12

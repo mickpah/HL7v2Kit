@@ -382,16 +382,28 @@ public struct Validator: Sendable {
         }
     }
 
-    /// ADR-018: one MSH-12 issue describing how the declared version maps
-    /// to the grammar applied.
+    /// ADR-018: at most one MSH-12 issue describing how the declared
+    /// version maps to the grammar applied.
     private func appendVersionIssues(for message: Message, issues: inout [ValidationIssue]) {
+        let location = IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12)
+        let applied = message.version.grammarVersion
+        if let msh = message.segments.first, msh.segmentID == "MSH",
+           let wireValue = Version.versionID(inMSH12: msh.field(12)),
+           Version(wireValue: wireValue) == nil {
+            issues.append(ValidationIssue(
+                severity: .warning,
+                code: .versionNotRecognised(wireValue: wireValue),
+                location: location,
+                message: "MSH-12 version '\(wireValue)' is not a version HL7v2Kit models; validated against the v\(applied.rawValue) grammar instead (ADR-018)"
+            ))
+            return
+        }
         let declared = message.version
-        let applied = declared.grammarVersion
         guard applied != declared else { return }
         issues.append(ValidationIssue(
             severity: .info,
             code: .versionGrammarSubstituted(declared: declared, validatedAs: applied),
-            location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12),
+            location: location,
             message: "MSH-12 declares \(declared.rawValue); HL7v2Kit has no v\(declared.rawValue) grammar and validated this message against v\(applied.rawValue). Differences between the two releases are not verified (ADR-018)"
         ))
     }
