@@ -2011,12 +2011,13 @@ public struct Validator: Sendable {
     /// <predicate>    := <or-expr>
     /// <or-expr>      := <and-expr> (" OR " <and-expr>)*
     /// <and-expr>     := <atom> (" AND " <atom>)*
-    /// <atom>         := <field-atom> | <segment-atom>
+    /// <atom>         := <field-atom> | <segment-atom> | <repeat-atom>
     /// <field-atom>   := <fieldref> " " <op>
     /// <fieldref>     := <segmentID> "-" <int> <subcomp-tail>?   // ADR-010
     /// <subcomp-tail> := "." <int> | "." <int> "." <int>
     /// <segment-atom> := <segmentID> " " <segment-op>            // ADR-010
     /// <segment-op>   := "present" | "absent"
+    /// <repeat-atom>  := ("anyRepeat(" | "noRepeat(") <fieldref> ") " <op>   // M6-B-1, P4
     /// <op>           := "populated"
     ///                 | "empty"
     ///                 | "= <value>"
@@ -2139,6 +2140,10 @@ public struct Validator: Sendable {
     ///    predicate to every repetition of the field with ∃-semantics
     ///    (M6-B-1; repeating fields like PRD-1 need more than the
     ///    first-repetition scalar convention).
+    /// 6. **No-repetition atom** — `noRepeat(<fieldref>)` is the
+    ///    universal negation of `anyRepeat`: true iff the field has a
+    ///    populated repetition and no repetition satisfies the
+    ///    predicate (P4; SPM-13's "SPM-11 has no G repetition").
     ///
     /// All forms are evaluated against the same predicate set
     /// (`populated` / `empty` / `= v` / `!= v` / `in (...)` /
@@ -2189,6 +2194,26 @@ public struct Validator: Sendable {
                 currentSegmentID: currentSegmentID
             ) else { return false }
             return slots.contains { applyPredicate(predicate, to: $0) }
+        }
+
+        // P4 universal-negation atom: `noRepeat(<fieldref>) <predicate>`.
+        // True iff the field has at least one populated repetition slot
+        // and NO slot satisfies the predicate. SPM-13 "would only be
+        // valued if the specimen role attribute has the value G" needs
+        // "no repetition of SPM-11 is G", which `anyRepeat(...) != G`
+        // cannot state (it is true for `P~G`). An absent or all-empty
+        // field is false: there is no definite value to negate
+        // (v0.2-V1 fail-safe).
+        if referent.hasPrefix("noRepeat("), referent.hasSuffix(")") {
+            let inner = String(referent.dropFirst("noRepeat(".count).dropLast())
+            guard let slots = resolveRepetitionSlots(
+                inner,
+                in: segment,
+                segmentIndex: segmentIndex,
+                message: message,
+                currentSegmentID: currentSegmentID
+            ), slots.contains(where: { $0.isPopulated }) else { return false }
+            return !slots.contains { applyPredicate(predicate, to: $0) }
         }
 
         guard let resolved = resolveReferent(

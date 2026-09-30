@@ -207,3 +207,7 @@ field-ref suffix parsing now routes through the shared `Path` parser** (R4/F14) 
 `segmentIndex == nil && repetition == nil` guards — the DSL grammar is unchanged and the
 rejection of `[N]`/`~N` forms is pinned by the CrossSegmentDSLTests R4-C1 characterization
 rows; the previous duplicate suffix parser is deleted.
+
+## Amendment (P4, 2026-10): `noRepeat(...)`
+
+`noRepeat(<fieldref>) <op>` is the universal negation of the M6-B-1 `anyRepeat(...)` atom: true iff the field has at least one populated repetition slot and no slot satisfies `<op>`. It exists because a prohibition keyed to "no repetition carries value X" (v2.5.1 to v2.8.2 SPM-13: "would only be valued if the specimen role attribute has the value 'G'") cannot be written with `anyRepeat(...) != X`, which is true for `P~G`. An absent or all-empty field evaluates `false` (no definite value to negate), and a malformed ref evaluates `false`, preserving the v0.2-V1 fail-safe invariant. Pinned by `Tests/HL7v2KitTests/ConditionDSLExtensionTests.swift`.
