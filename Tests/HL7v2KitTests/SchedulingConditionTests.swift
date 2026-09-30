@@ -169,6 +169,11 @@ struct SchedulingConditionTests {
         #expect(try prohibited(notification, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
         let response = resource(version, "SRR^S01", slots, [slots.fillerStatus: "Booked"])
         #expect(try prohibited(response, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version)")
+        // SQR (query) is not SRM: the request-only prohibition must stay
+        // silent there even though `requestAndFiller` requires the field on
+        // SQR for the versions that model it (P4-23 minor).
+        let query = resource(version, "SQR^S25", slots, [slots.fillerStatus: "Booked"])
+        #expect(try prohibited(query, slots.id, slots.fillerStatus).isEmpty, "\(slots.id) v\(version) SQR")
     }
 
     // Folded intake (P4 hand-off): "This field is required for all unsolicited

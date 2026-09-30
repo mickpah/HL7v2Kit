@@ -36,6 +36,19 @@ struct OrderConditionTests {
         for idx in [3, 4, 5] {
             #expect(try missing(placer, "TQ2", idx).isEmpty, "v\(version) TQ2-\(idx)")
         }
+        // Two of three populated (filler + group, placer empty): TQ2-3's
+        // condition `TQ2-4 empty AND TQ2-5 empty` is false because TQ2-4 is
+        // populated, so TQ2-3 stays silent even though it is itself empty
+        // (P4-10 minor: the two-of-three case).
+        let fillerAndGroup = tq2(version, [4: "FL2^SYS", 5: "GRP2^SYS", 6: "ES"])
+        #expect(try missing(fillerAndGroup, "TQ2", 3).isEmpty, "v\(version) TQ2-3 two-of-three")
+        // One populated (filler alone): both other conditions' AND
+        // short-circuits false on the same populated peer, so both TQ2-3
+        // and TQ2-5 stay silent, not just the one field that is itself
+        // valued (P4-10 minor: the both-silenced case).
+        let fillerOnly = tq2(version, [4: "FL2^SYS", 6: "ES"])
+        #expect(try missing(fillerOnly, "TQ2", 3).isEmpty, "v\(version) TQ2-3 silenced by TQ2-4")
+        #expect(try missing(fillerOnly, "TQ2", 5).isEmpty, "v\(version) TQ2-5 silenced by TQ2-4")
     }
 
     @Test("TQ2-6 / TQ2-10: either must be present", arguments: orderVersions)
@@ -46,6 +59,11 @@ struct OrderConditionTests {
         let sequence = tq2(version, [3: "PL2^SYS", 6: "ES"])
         #expect(try missing(sequence, "TQ2", 6).isEmpty, "v\(version)")
         #expect(try missing(sequence, "TQ2", 10).isEmpty, "v\(version)")
+        // Both populated: each rule is satisfied, not merely inapplicable
+        // because the peer happens to be populated (P4-10 minor).
+        let both = tq2(version, [3: "PL2^SYS", 6: "ES", 10: "RR2^SYS"])
+        #expect(try missing(both, "TQ2", 6).isEmpty, "v\(version) both populated")
+        #expect(try missing(both, "TQ2", 10).isEmpty, "v\(version) both populated")
     }
 
     @Test("TQ1-12 must be valued on a TQ1 that another TQ1 follows", arguments: orderVersions)
@@ -58,6 +76,13 @@ struct OrderConditionTests {
         #expect(hits.first?.location.pathDescription == "TQ1[1]-12", "v\(version)")
         let single = TestWires.wire("OMG^O19^OMG_O19", version, "ORC|NW|PL1", "TQ1|1", "OBR|1|PL1")
         #expect(try missing(single, "TQ1", 12).isEmpty, "v\(version)")
+        // The last TQ1 of the chain, with its own TQ2 before the OBR:
+        // `nextSegmentID(TQ2)` must skip past the TQ2 and land on OBR, not
+        // read it as "another TQ1 follows" (P4-10 minor).
+        let lastWithTQ2 = TestWires.wire("OMG^O19^OMG_O19", version, "ORC|NW|PL1", "TQ1|1",
+                                         TestWires.segment("TQ2", [1: "1", 2: "S", 3: "PL2^SYS", 10: "S"]),
+                                         "OBR|1|PL1")
+        #expect(try missing(lastWithTQ2, "TQ1", 12).isEmpty, "v\(version) last TQ1 with TQ2 then OBR")
     }
 
     // MARK: - Blood product (V251-C13)
@@ -115,6 +140,8 @@ struct OrderConditionTests {
             #expect(try missing(component, "BTX", idx).isEmpty, "v\(version) BTX-\(idx)")
         }
         #expect(try notApplicable(component, "BTX").isEmpty, "v\(version)")
+        let commercial = btx(version, [5: "RHIG", 6: "Maker Inc", 7: "LOT1"])
+        #expect(try notApplicable(commercial, "BTX").isEmpty, "v\(version) pure commercial-product")
         let productPartial = btx(version, [5: "RHIG"])
         #expect(try missing(productPartial, "BTX", 6).count == 1, "v\(version)")
         #expect(try missing(productPartial, "BTX", 7).count == 1, "v\(version)")

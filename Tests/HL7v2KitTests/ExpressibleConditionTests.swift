@@ -69,8 +69,7 @@ struct ExpressibleConditionTests {
 
     // MARK: - Placer-or-filler order identifier (X-C12, P4-7)
 
-    /// The six versions carry OBR-2/3 and ORC-2/3 as C.
-    static let orderVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+    /// The six versions carry OBR-2/3 and ORC-2/3 as C (`allSixVersions`).
 
     /// An order message for `version` (ORM is withdrawn on v2.8.2).
     private func orderType(_ version: String) -> String {
@@ -96,7 +95,7 @@ struct ExpressibleConditionTests {
     }
 
     @Test("A placer id alone or a filler id alone satisfies the order-number rule",
-          arguments: orderVersions)
+          arguments: allSixVersions)
     func oneOrderIDIsSilent(version: String) throws {
         // Placer NW: the filler has not assigned its number yet (ORC-3 is
         // assigned by the filler; v2.4 CH04 §4.5.1.3).
@@ -111,20 +110,20 @@ struct ExpressibleConditionTests {
         #expect(try idHits(snNullPlacer).isEmpty, "v\(version) SN, null ORC-2")
     }
 
-    @Test("No placer and no filler id fires all four positions", arguments: orderVersions)
+    @Test("No placer and no filler id fires all four positions", arguments: allSixVersions)
     func noOrderIDFires(version: String) throws {
         let wire = TestWires.wire("ORU^R01^ORU_R01", version, "ORC|RE", obr([:]))
         #expect(try idHits(wire) == ["OBR-2", "OBR-3", "ORC-2", "ORC-3"], "v\(version)")
     }
 
-    @Test("Send Number with no id: exempt on v2.8.2 only", arguments: orderVersions)
+    @Test("Send Number with no id: exempt on v2.8.2 only", arguments: allSixVersions)
     func sendNumberWithNoID(version: String) throws {
         let wire = TestWires.wire(orderType(version), version, "ORC|SN", obr([:]))
         let expected: [String] = version == "2.8.2" ? [] : ["OBR-2", "OBR-3", "ORC-2", "ORC-3"]
         #expect(try idHits(wire) == expected, "v\(version)")
     }
 
-    @Test("An ORC with no OBR needs one of its own order numbers", arguments: orderVersions)
+    @Test("An ORC with no OBR needs one of its own order numbers", arguments: allSixVersions)
     func orcWithoutOBR(version: String) throws {
         let none = TestWires.wire("RDE^O11", version, "ORC|NW")
         #expect(try idHits(none) == ["ORC-2", "ORC-3"], "v\(version)")
@@ -132,7 +131,7 @@ struct ExpressibleConditionTests {
         #expect(try idHits(filler).isEmpty, "v\(version)")
     }
 
-    @Test("ORU without ORC: per-version order-number rules", arguments: orderVersions)
+    @Test("ORU without ORC: per-version order-number rules", arguments: allSixVersions)
     func resultWithoutORC(version: String) throws {
         let oru = { (ids: [Int: String]) in TestWires.wire("ORU^R01^ORU_R01", version, self.obr(ids)) }
         // Placer may be blank when the filler initiates the order: v2.3 and
@@ -211,6 +210,10 @@ struct ExpressibleConditionTests {
         let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
         #expect(try missing(TestWires.wire("ADT^A26^ADT_A21", version, pv2), "PV2", 1).count == 1, "v\(version)")
         #expect(try missing(TestWires.wire("ADT^A01^ADT_A01", version, pv2), "PV2", 1).isEmpty, "v\(version)")
+        // A27 (cancel pending admit) is the confusable sibling named in the
+        // printed sentence alongside A26, but the shipped trigger is A26
+        // alone; A27 must stay silent (P4-8 minor).
+        #expect(try missing(TestWires.wire("ADT^A27^ADT_A21", version, pv2), "PV2", 1).isEmpty, "v\(version) A27")
     }
 
     @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
@@ -255,6 +258,9 @@ struct ExpressibleConditionTests {
     func txa7(version: String) throws {
         #expect(try missing(txa(version, "MDM^T01", [17: "AU"]), "TXA", 7).count == 1, "v\(version)")
         #expect(try missing(txa(version, "MDM^T01", [17: "DI"]), "TXA", 7).isEmpty, "v\(version)")
+        // An empty TXA-17 prohibits nothing: `TXA-17 not in (DI)` fails safe
+        // on an unpopulated referent (P4-9 minor).
+        #expect(try missing(txa(version, "MDM^T01", [17: ""]), "TXA", 7).isEmpty, "v\(version) empty TXA-17")
     }
 
     @Test("TXA-13 is always required on T05, T06, T09 and T10", arguments: allSixVersions)
@@ -263,12 +269,25 @@ struct ExpressibleConditionTests {
             #expect(try missing(txa(version, "MDM^\(event)", [:]), "TXA", 13).count == 1, "v\(version) \(event)")
         }
         #expect(try missing(txa(version, "MDM^T01", [:]), "TXA", 13).isEmpty, "v\(version)")
+        // T07 is silent: it is not among the four triggering events, and its
+        // adjacency to the T05/T06/T09/T10 block makes it worth pinning
+        // explicitly (P4-9 minor).
+        #expect(try missing(txa(version, "MDM^T07", [:]), "TXA", 13).isEmpty, "v\(version) T07")
     }
 
     @Test("TXA-22 is required when TXA-17 is AU or LA", arguments: ["2.3", "2.3.1", "2.4", "2.5.1"])
     func txa22(version: String) throws {
         #expect(try missing(txa(version, "MDM^T01", [17: "LA"]), "TXA", 22).count == 1, "v\(version)")
         #expect(try missing(txa(version, "MDM^T01", [17: "IP"]), "TXA", 22).isEmpty, "v\(version)")
+        // AU (autoauthenticated), the other triggering value, fires too (P4-9 minor).
+        #expect(try missing(txa(version, "MDM^T01", [17: "AU"]), "TXA", 22).count == 1, "v\(version) AU")
+    }
+
+    @Test("v2.6 TXA-22 stays bare: no AU/LA condition sentence is printed")
+    func txa22BareOnV26() {
+        let table = SegmentGrammarTable.v2_6
+        #expect(table["TXA"]?.field(22)?.optionality == .conditional)
+        #expect(table["TXA"]?.field(22)?.condition == nil)
     }
 
     // MARK: - PID (v2.4 species/breed carry-over, P4-17)

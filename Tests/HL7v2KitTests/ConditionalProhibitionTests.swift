@@ -99,6 +99,17 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(obx("3.5-7.8"), "OBX", 12).isEmpty, "v\(version)")
     }
 
+    @Test("v2.4 OBX-12 (Date Last Observation Normal Value) carries no prohibition: negative scope")
+    func obx12NegativeScopeOnV24() throws {
+        // v2.4's OBX-12 is a different field ("Date Last Observation Normal
+        // Value") from v2.5.1+'s "Effective Date of Reference Range Values",
+        // which alone carries the OBX-7-dependent prohibition (P4-4 minor).
+        let wire = TestWires.wire("ORU^R01^ORU_R01", "2.4",
+            TestWires.segment("OBX", [1: "1", 2: "NM", 3: "GLU^Glucose^LN", 5: "5.5",
+                                      11: "F", 12: "20260101"]))
+        #expect(try prohibited(wire, "OBX", 12).isEmpty)
+    }
+
     @Test("SPM-13 would only be valued if a SPM-11 role is G (warning)", arguments: ["2.5.1", "2.6", "2.8.2"])
     func spm13(version: String) throws {
         func spm(_ role: String) -> String {
@@ -133,6 +144,19 @@ struct ConditionalProhibitionTests {
         let person = pye("PERS")
         #expect(try prohibited(person, "PYE", 4).count == 1, "v\(version) PYE-4 on PERS")
         #expect(try prohibited(person, "PYE", 3).isEmpty, "v\(version) PYE-3 permitted on PERS")
+        // PPER is in both the PERS-group list (PYE-3/5/6) and the ORG-group
+        // list (PYE-4), so none of PYE-3..6 is prohibited for it (P4-4 minor).
+        let personOfOrg = pye("PPER")
+        for idx in [3, 4, 5, 6] {
+            #expect(try prohibited(personOfOrg, "PYE", idx).isEmpty, "v\(version) PYE-\(idx) permitted on PPER")
+        }
+        // An empty PYE-2 prohibits nothing: `PYE-2 not in (...)` fails safe on
+        // an unpopulated referent (P4-4 minor).
+        let noType = TestWires.wire("EHC^E01^EHC_E01", version,
+            TestWires.segment("PYE", [1: "1", 3: "PT", 4: "Acme Clinic", 5: "Doe^Jane", 6: "1 Main St^^Town"]))
+        for idx in [3, 4, 5, 6] {
+            #expect(try prohibited(noType, "PYE", idx).isEmpty, "v\(version) PYE-\(idx) empty PYE-2")
+        }
     }
 
     // MARK: - v2.8.2 PRT (V282-C06, V282-C07)
@@ -152,9 +176,10 @@ struct ConditionalProhibitionTests {
 
     @Test("PRT-14 is required when PRT-4 is POMD (v2.8.2 §7.4.4.14, partial)")
     func prt14() throws {
-        func missing(_ participation: String) throws -> [ValidationIssue] {
-            let wire = TestWires.wire("ORU^R01^ORU_R01", "2.8.2",
-                TestWires.segment("PRT", [1: "1", 2: "AD", 4: participation, 5: "1234^SMITH^JOHN"]))
+        func missing(_ participation: String, prt14: String? = nil) throws -> [ValidationIssue] {
+            var fields: [Int: String] = [1: "1", 2: "AD", 4: participation, 5: "1234^SMITH^JOHN"]
+            if let prt14 { fields[14] = prt14 }
+            let wire = TestWires.wire("ORU^R01^ORU_R01", "2.8.2", TestWires.segment("PRT", fields))
             return Validator().validate(try Parser().parse(wire)).errors.filter {
                 $0.code == .conditionalFieldMissing
                     && $0.location.segmentID == "PRT" && $0.location.fieldIndex == 14
@@ -162,6 +187,10 @@ struct ConditionalProhibitionTests {
         }
         #expect(try missing("POMD^Performing Organization Medical Director^HL70912").count == 1)
         #expect(try missing("OP^Ordering Provider^HL70912").isEmpty)
+        // PRT-14 populated under POMD is silent: the rule is satisfied, not
+        // merely inapplicable (P4-5 minor).
+        #expect(try missing("POMD^Performing Organization Medical Director^HL70912",
+                             prt14: "ORG^Acme^HL70448").isEmpty)
     }
 
     // MARK: - More than one prohibition per field (P4-21)
