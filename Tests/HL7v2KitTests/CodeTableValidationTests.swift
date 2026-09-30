@@ -179,4 +179,17 @@ struct CodeTableValidationTests {
             + "OBX|1|CWE|883-9^ABO Group^LN|1|F-D1250^Type O^SNM3||||||F\r"
         #expect(try tableIssues(wire).filter { $0.code == .valueNotInTable(table: "0125") }.isEmpty)
     }
+
+    @Test("v2.3.1 MSH-20 = 2.3 is in Table 0356: Chapter 2 prints the row Appendix A omits")
+    func msh20HL723Scheme() throws {
+        func wire(_ msh20: String) -> String {
+            "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|2.3.1||||||||\(msh20)\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+        }
+        #expect(try tableIssues(wire("2.3")).isEmpty)
+        #expect(try tableIssues(wire("ISO 2022-1994")).isEmpty)
+        #expect(try tableIssues(wire("2.4")).map(\.code) == [.valueNotInTable(table: "0356")])
+        let t = try #require(HL7TableRegistry.table("0356", version: .v2_3_1))
+        #expect(t.codes.contains("2.3") && t.isClosed)
+    }
 }

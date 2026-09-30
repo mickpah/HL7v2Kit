@@ -5427,6 +5427,7 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "ISO 2022-1994", description: "This standard is titled \"Information Technology - Character Code Structure and Extension Technique\". This standard specifies an escape sequence from basic one byte character set to specified other character set, and vice versa. The escape sequence expl"),
             HL7Table.Entry(code: "<null>", description: "This is the default, indicating that there is no character set switching occurring in this message."),
+            HL7Table.Entry(code: "2.3", description: "The character set switching mode specified in HL7 2.3, sections 2.8.28.6.1, and 2.9.2"),
         ] as [HL7Table.Entry]
     )
 

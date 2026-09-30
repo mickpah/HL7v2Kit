@@ -390,6 +390,15 @@
           "Version identifier"
         ]
       ]
+    },
+    "0356": {
+      "note": "V231-C01: v2.3.1 Chapter 2 sec 2.24.1.20 (p. 2-109) prints Table 0356 with three rows, ISO 2022-1994, 2.3 and <null>; Appendix A (the extraction source) omits the 2.3 row. MSH-20 is ID, so without it MSH-20 = 2.3 was a false valueNotInTable error. v2.4 and v2.5.1 print the row.",
+      "addEntries": [
+        [
+          "2.3",
+          "The character set switching mode specified in HL7 2.3, sections 2.8.28.6.1, and 2.9.2"
+        ]
+      ]
     }
   },
   "2.4": {
