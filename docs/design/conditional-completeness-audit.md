@@ -88,7 +88,7 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | TQ2-3, TQ2-4, TQ2-5 | v2.5.1, v2.6, v2.8.2 | condition | the other two `empty AND empty` | error | v2.5.1 CH04 §4.5.5.3 to §4.5.5.5: "At least one of TQ2-3, TQ2-4, TQ2-5 must contain a value" | exact (one-of-three rotation, RQD pattern) |
 | TQ2-6, TQ2-10 | v2.5.1, v2.6, v2.8.2 | condition | the other `empty` | error | v2.5.1 CH04 §4.5.5.6 / §4.5.5.10: "Either this field or TQ2-10 must be present" | exact |
 | TQ1-12 | v2.5.1, v2.6, v2.8.2 | condition | `nextSegmentID(TQ2) = TQ1` | error | v2.5.1 CH04 §4.5.4.12: "If the TQ1 segment is repeated in the message, this field must be populated with the appropriate Conjunction code indicating the sequencing of the following TQ1 segment" | partial: the last TQ1 of a chain (no following TQ1 to sequence) is not required (ADR-010 P4 amendment) |
-| SCH-1, SCH-2 | v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 | condition | the other `empty` | error | v2.5.1 CH10 §10.6.2.1: "If the placer appointment ID is not present, the filler appointment ID must be present and vice versa" | exact |
+| SCH-1, SCH-2 | v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 | condition | the other `empty` | error | v2.5.1 CH10 §10.6.2.1: "If a schedule request originates from a placer it MUST have a placer appointment ID. ... If the placer appointment ID is not present, the filler appointment ID must be present and vice versa" | partial: the "originates from a placer" clause depends on message intent and exchange history, which the wire cannot decide; only the "vice versa" either-or fallback ships, and it is fail-safe |
 | SCH-27 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `SCH-26 populated` | error | v2.5.1 CH10 §10.6.2.26: "if a Placer order number is present, then a Filler order number ... must also be present" | exact |
 | ARQ-25 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `ARQ-24 populated` | error | v2.5.1 CH10 §10.6.1.25: "conditionally mandatory depending on the presence of the Placer order number" | exact |
 | AIS-4, AIG-8, AIL-6, AIP-6 | all six | condition | `<offset> empty` (AIS-5, AIG-9, AIL-7, AIP-7) | error | v2.5.1 CH10 §10.6.4.4: "If a value for AIS-5-Start date/time offset is not provided, then a value is required for this field" | exact |
@@ -98,6 +98,11 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | AIS-10, AIG-14, AIL-12, AIP-12 | all six | condition | `messageCode in (SIU, SRR, SQR)` on v2.3 to v2.6, `messageCode in (SIU, SRR)` on v2.8.2 | error | v2.5.1 CH10 §10.6.4.10: "all unsolicited transactions originating from a filler application, as well as all response messages originating from a filler application" | partial: a response from a non-filler application with the same message code is indistinguishable |
 | AIG-3, AIL-3, AIP-3 | all six | condition | `messageCode = SIU` | error | v2.5.1 CH10 §10.6.5.3: "This field is required for all unsolicited transactions from the filler application" | partial: the new-request clause ("it is required if the request asks that a specific resource be scheduled") turns on what the placer asks for and is not modelled |
 | AIL-4, AIP-4 | v2.5.1, v2.6, v2.8.2 | condition | `AIL-3 empty` / `AIP-3 empty` | error | v2.5.1 CH10 §10.6.6.4: "For all messages, this field is conditionally required if a specific location is not identified in AIL-3-Location resource ID" | exact |
+| MFE-2, MFA-2 | all six | condition | `MFI-6 not in (NE)` | error | v2.5.1 CH08 §8.5.2.2 / §8.5.3.2: "required if the MFI response level code requires responses at the record level (any value other than NE)" | exact |
+| LRL-5 | all six | condition | `LRL-4 in (RX, RX2, LAB, LB2, DTY)` | error | v2.5.1 CH08 §8.9.4.5: "When LRL-4 ... contains 'RX' ..., 'RX2' ..., 'LAB' ..., 'LB2' ..., or 'DTY' ..., this field holds that organization's extended name" | partial: site-local table 0325 codes do not fire |
+| LRL-6 | all six | condition | `LRL-4 in (ALI, PAR)` | error | v2.5.1 CH08 §8.9.4.6: "When LRL-4 ... contains 'ALI' ... or 'PAR' ... this field holds the value of the associated patient location" | partial, as LRL-5 |
+| OM7-16 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `OM7-15 populated` | error | v2.5.1 CH08 §8.8.14.16 | exact |
+| OM7-18 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `OM7-17 populated` | error | v2.5.1 CH08 §8.8.14.18 | exact |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -153,8 +158,8 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **RXA-7/12** (Administered Amount fragments) — data-nature conditionals paralleling the RXO/RXE set above.
 
 **Master-files / referral family (added v1.3 — CH08/CH11):**
-- **MFE-2** (Master File Entry — MFN Control ID) and **MFA-2** (Master File Ack — Control ID) — required only for update/replace master-file events (the MFI-3 event code), not a same-segment peer.
-- **OM7-16 / OM7-18** (Additional Basic Attributes) — conditional on the observation's orderability/category, not wire-encoded in a peer field.
+- **MFE-2 / MFA-2** — shipped in P4-13 as `MFI-6 not in (NE)`. The earlier rationale (keyed on the MFI-3 event code) misread the sentence, which keys on the MFI-6 response level.
+- **OM7-16 / OM7-18** — shipped in P4-13 (unit required when its quantity is valued). The earlier rationale ("orderability/category") did not match the printed text.
 - **AUT-6** (Authorization — Reimbursement Limit) — conditional on the authorization decision context.
 
 **Query / lab-automation family (added v1.4 — CH05/CH13):**
@@ -162,7 +167,7 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **EQU-3** (Equipment State) and **SAC-3 / SAC-4** (Specimen Container / Carrier identifiers) — conditional on the lab-automation event (container vs. carrier context).
 
 **Master-file locations / patient-care / med-records family (added v1.4b — CH08/CH12/CH09):**
-- **LRL-5 / LRL-6** (Location Relationship — org/location targets) and **PRC-5** (Pricing) — conditional on the master-file location/charge event.
+- **PRC-5** (Pricing) — conditional on the master-file charge event; not in the P4 findings, left for the P7 re-audit. LRL-5 / LRL-6 ship in P4-13 keyed to the LRL-4 relationship code.
 - **GOL-22 / PRB-28** (Goal/Problem — action-code-gated fields) and **PTH-6 / PTH-7** (Pathway status) — conditional on the care-record action (add/update/delete).
 - **TXA-11** (Transcriptionist Code/Name, all versions) — "This is a conditional value; it is required on all transcribed documents" (v2.5.1 §9.6.1.11). Whether a document was transcribed is not stated by any field the sentence names, so the field stays bare. **TXA-22** on v2.6 and v2.8.2 — these versions print no AU/LA condition sentence, so it stays bare there. TXA-3, 5, 7, 13 (all versions) and TXA-22 (v2.3 to v2.5.1) ship in P4-9; the earlier rationale ("conditional on the document-completion event") was wrong for them.
 

@@ -1010,7 +1010,7 @@ struct MultiVersionTests {
             "ROL-1",
             // v1.3 (master-files / referral batch): master-file entry/ack keys and
             // OM7 / AUT fields conditional on the master-file event or auth context.
-            "MFE-2", "MFA-2", "OM7-16", "OM7-18", "AUT-6",
+            "AUT-6",
             // v1.4 (query / lab-automation batch): query-tag/response and specimen-
             // container / equipment fields conditional on the query or lab-automation
             // event context (fail-safe; documented in the register).
@@ -1018,7 +1018,7 @@ struct MultiVersionTests {
             // v1.4 (master-file locations / patient-care / med-records batch):
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.
-            "LRL-5", "LRL-6", "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
+            "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
             "TXA-11", "TXA-22",
             // v1.7 (CH13 lab-automation completion): the whole SID segment is
             // conditional — §13.4.11 defines all four fields with no condition text at
