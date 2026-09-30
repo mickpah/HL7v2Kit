@@ -242,6 +242,16 @@ struct OBRPredicateTests {
         #expect(try conditionalHits(wire, field: 3).isEmpty, "v\(version) OBR-3")
     }
 
+    /// P1 fix wave: pins the ORC-absent leg's scope. OUL is not ORU/ORF, so
+    /// a v2.4 OUL^R21 with no ORC and empty OBR-2/OBR-3 must stay silent
+    /// (the ORC-absent leg is scoped to ORU/ORF by design, X-C08).
+    @Test("X-C08 scope pin: v2.4 OUL R21 without ORC and empty OBR-2/OBR-3 stays silent")
+    func oulR21WithoutORCDoesNotMisfire() throws {
+        let wire = Self.resultWithoutORC("OUL^R21^OUL_R21", "2.4", placer: nil, filler: nil)
+        #expect(try conditionalHits(wire, field: 2).isEmpty, "v2.4 OUL^R21 OBR-2")
+        #expect(try conditionalHits(wire, field: 3).isEmpty, "v2.4 OUL^R21 OBR-3")
+    }
+
     // MARK: - P1-4: OBR-29 child-order rule (V24-C11, V251-C05b, V26-C13)
 
     private func triggers(_ condition: String, onOBRof wire: String) throws -> Bool {
