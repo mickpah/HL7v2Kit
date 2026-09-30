@@ -989,10 +989,6 @@ struct MultiVersionTests {
         // Every remaining C-without-condition (seg, index) in v2.8.2.
         let expected: Set<String> = [
             "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
-            // v1.2: PV2 added — Prior Pending Location (1) and Expected LOA
-            // Return Date/Time (47); Advance Directive Code (45) carries
-            // PV2-50 populated since P4-6.
-            "PV2-1", "PV2-47",
             // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
             // dispense fields and TQ1/TQ2 timing fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate

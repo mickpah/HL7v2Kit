@@ -201,4 +201,28 @@ struct ExpressibleConditionTests {
                                         TestWires.segment("ORC", [1: "CH", 2: "PON2", 3: "FON2", 8: "PON1&PL"]))
         #expect(try missing(withParent, "ORC", 8).isEmpty, "v\(version) ORM CH with parent")
     }
+
+    // MARK: - PV2 trigger events (V231-C11, V251-C03)
+
+    @Test("PV2-1 is required for cancel pending transfer (A26)", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    func pv21(version: String) throws {
+        let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
+        #expect(try missing(TestWires.wire("ADT^A26^ADT_A21", version, pv2), "PV2", 1).count == 1, "v\(version)")
+        #expect(try missing(TestWires.wire("ADT^A01^ADT_A01", version, pv2), "PV2", 1).isEmpty, "v\(version)")
+    }
+
+    @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    func pv247(version: String) throws {
+        let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
+        #expect(try missing(TestWires.wire("ADT^A21^ADT_A21", version, pv2), "PV2", 47).count == 1, "v\(version)")
+        #expect(try missing(TestWires.wire("ADT^A22^ADT_A21", version, pv2), "PV2", 47).isEmpty, "v\(version)")
+    }
+
+    @Test("v2.3 / v2.3.1 PV2-1 stays bare: the printed trigger names two events")
+    func pv21ConflictRegistered() {
+        for table in [SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1] {
+            #expect(table["PV2"]?.field(1)?.optionality == .conditional)
+            #expect(table["PV2"]?.field(1)?.condition == nil)
+        }
+    }
 }

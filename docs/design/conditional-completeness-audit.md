@@ -28,9 +28,9 @@
 | OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-22 | Mood Code | v2.6, v2.8.2 | Permanent limitation |
 | DG1-22 | Parent Diagnosis | v2.6, v2.8.2 | Permanent limitation |
-| PV2-1 | Prior Pending Location | v2.3–v2.8.2 | Permanent limitation (v1.2) |
+| PV2-1 | Prior Pending Location | v2.3–v2.8.2 | v2.4–v2.8.2 **SHIP (P4-8)** — `triggerEvent = A26`; v2.3/v2.3.1 permanent (spec-internal conflict) |
 | PV2-45 | Advance Directive Code | v2.6, v2.8.2 | **SHIP (P4-6)** — `PV2-50 populated` |
-| PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | Permanent limitation (v1.2) |
+| PV2-47 | Expected LOA Return Date/Time | v2.4–v2.8.2 | **SHIP (P4-8)** — `triggerEvent = A21` |
 | RXO/RXE/RXD/RXG/RXC/TQ1/TQ2 (31 fields) | order/pharmacy/timing conditionals | v2.3–v2.8.2 | Permanent limitation (v1.2, grouped below) |
 | SCH/RGS/ARQ/AIS/AIG/AIL/AIP/BPX/BTX/SPM/ROL/RXA (55 fields) | scheduling/blood-product/specimen/role conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
 | MFE/MFA/OM7/AUT (5 fields) | master-files/referral conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
@@ -78,6 +78,8 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | OBR-2, OBR-3, ORC-2, ORC-3 | v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 | condition | placer-or-filler over the ORC/OBR pair; v2.8.2 adds `ORC-1 != SN`; ORC-absent legs gated `messageCode in (ORU, ORF)`; new ORC `OBR absent` legs; every ORC/OBR-peer leg gated `messageCode not in (OUL)` on v2.5.1 and `not in (OUL, OPU, OPL)` on v2.6 and v2.8.2 (see P4-7 and the permanent-limitations register, Addendum to §D) | error | v2.8.2 CH04 §4.5.1.2 / §4.5.1.3: "each message must have either a placer or a filler id with an exception for the case of a 'Send Number' control code"; v2.3 to v2.6 ORC-1 SN table notes (null ORC-2 or ORC-3) and ORC-3 "assigned by the order filler"; ORC `OBR absent` leg: v2.3 / v2.3.1 CH04 §4.3.1.2, v2.4 to v2.6 CH04 §4.5.1.2: "If the placer order number is not present in the ORC, it must be present in the associated OBR and vice versa" | partial: OUL R21 to R24 (v2.5.1 to v2.8.2), OPU R25 and OPL O37 (v2.6, v2.8.2; OBR before ORC) lose these checks until P8 group ranges; OBR without ORC is checked only on ORU/ORF; equality is the separate M8-B1/B2 check |
 | ORC-8, OBR-29 | v2.5.1, v2.6 | condition | every leg gated `messageCode not in (OUL)` on v2.5.1 and `not in (OUL, OPU, OPL)` on v2.6 (owner decision G2-6, 2026-09-30; OPL and the OBR-29 mirror added in P4-7 fix rounds) | error | v2.5.1 / v2.6 CH07 OUL R22 to R24, v2.6 CH07 OPU R25 and v2.6 CH04 OPL O37 ORDER_PRIOR print OBR before ORC, outside the ORC-delimited group; v2.5.1 has no OPU | partial: these structures (and OUL R21) lose the child-order check until P8 group ranges |
 | OBR-48, DG1-22 | v2.6 | optionality O to C (bare) | none | n/a | v2.6 CH04 OBR row 48 and CH06 DG1 row 22 print C | print alignment; still bare, see the permanent bullets |
+| PV2-1 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `triggerEvent = A26` | error | v2.5.1 CH03 §3.4.4.1: "This field is required for cancel pending transfer (A26) messages. In all other events it is optional" | exact |
+| PV2-47 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `triggerEvent = A21` | error | v2.5.1 CH03 §3.4.4.47: "This field is conditionally required for A21 - Patient goes on LOA. It may be populated in A22" | exact (A22 is permissive only) |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -103,9 +105,9 @@ Each below is `C` in its HL7 attribute table, but the field-definition prose giv
 - **OBX-4 Observation Sub-ID** — required to disambiguate multiple OBX sharing an OBX-3; a cross-OBX grouping rule, not a same-segment predicate.
 
 **PV2 (added v1.2 when PV2 was modelled — CH03):**
-- **PV2-1 Prior Pending Location** (v2.3–v2.8.2) — "*required for cancel pending transfer*"-type trigger keyed on the ADT event code, which lives in the EVN/MSH trigger, not a same-segment peer; the conditionality is message-type dependent and not expressed as a wire predicate here.
+- **PV2-1 Prior Pending Location** (v2.3, v2.3.1 only) — spec-internal conflict. Both versions print "This field is required for cancel pending transfer (A27 (cancel pending admit)) messages" (v2.3.1 §3.3.4.1), naming A26's meaning and A27's code. Any single-event predicate misfires under the other reading and a union requires the field where the sentence may not (req #4), so the field stays bare here. v2.4 to v2.8.2 print "(A26)" alone and ship `triggerEvent = A26` (P4-8). The earlier rationale ("keyed on the ADT event code, which lives in the EVN/MSH trigger") was wrong: `triggerEvent` has been a DSL atom since ADR-008.
 - **PV2-45 Advance Directive Code** (v2.6, v2.8.2) — shipped in P4-6 as `PV2-50 populated`. The earlier rationale ("PV2 carries no PV2-side 'last verified date' peer") was wrong: PV2-50 Advance Directive Last Verified Date exists on both versions and both PV2-45 and PV2-50 state the rule.
-- **PV2-47 Expected LOA Return Date/Time** (v2.4–v2.8.2) — required only for a leave-of-absence visit; the LOA nature is not encoded in a same-segment peer field.
+- **PV2-47 Expected LOA Return Date/Time** — shipped in P4-8 as `triggerEvent = A21` on v2.4 to v2.8.2 ("conditionally required for A21 - Patient goes on LOA"). The earlier rationale ("the LOA nature is not encoded in a same-segment peer field") missed that the trigger event is on the wire.
 
 **Order/pharmacy & timing family (added v1.2 when TQ1/TQ2/RXO/RXE/RXD/RXG/RXC were modelled — CH04/CH04A):**
 

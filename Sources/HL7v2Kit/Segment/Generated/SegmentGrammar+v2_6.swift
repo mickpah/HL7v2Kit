@@ -2758,7 +2758,7 @@ extension SegmentGrammarTable {
         segmentID: "PV2",
         version: "2.6",
         fields: [
-            FieldGrammar(index: 1, name: "Prior Pending Location", dataType: "PL", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "80"),
+            FieldGrammar(index: 1, name: "Prior Pending Location", dataType: "PL", optionality: .conditional, repeatability: .single, condition: "triggerEvent = A26", prohibitedWhen: nil, variableColumns: false, table: nil, length: "80"),
             FieldGrammar(index: 2, name: "Accommodation Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 3, name: "Admit Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 4, name: "Transfer Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
@@ -2804,7 +2804,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 44, name: "Organ Donor Code", dataType: "IS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0316", length: "2"),
             FieldGrammar(index: 45, name: "Advance Directive Code", dataType: "CWE", optionality: .conditional, repeatability: .multiple, condition: "PV2-50 populated", prohibitedWhen: nil, variableColumns: false, table: nil, length: "705"),
             FieldGrammar(index: 46, name: "Patient Status Effective Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "8"),
-            FieldGrammar(index: 47, name: "Expected LOA Return Date/Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "24"),
+            FieldGrammar(index: 47, name: "Expected LOA Return Date/Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: "triggerEvent = A21", prohibitedWhen: nil, variableColumns: false, table: nil, length: "24"),
             FieldGrammar(index: 48, name: "Expected Pre-admission Testing Date/Time", dataType: "DTM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "24"),
             FieldGrammar(index: 49, name: "Notify Clergy Code", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0534", length: "20"),
             FieldGrammar(index: 50, name: "Advance Directive Last Verified Date", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "8"),
