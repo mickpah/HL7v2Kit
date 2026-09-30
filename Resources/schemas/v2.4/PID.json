@@ -297,7 +297,8 @@
       "dataType": "CE", "length": "250",
       "optionality": "C",
       "repeatability": "1",
-      "tables": ["0446"]
+      "tables": ["0446"],
+      "condition": "PID-36 populated OR PID-38 populated"
     },
     {
       "index": 36,
@@ -306,7 +307,8 @@
       "dataType": "CE", "length": "250",
       "optionality": "C",
       "repeatability": "1",
-      "tables": ["0447"]
+      "tables": ["0447"],
+      "condition": "PID-37 populated"
     },
     {
       "index": 37,

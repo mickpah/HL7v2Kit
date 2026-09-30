@@ -270,4 +270,39 @@ struct ExpressibleConditionTests {
         #expect(try missing(txa(version, "MDM^T01", [17: "LA"]), "TXA", 22).count == 1, "v\(version)")
         #expect(try missing(txa(version, "MDM^T01", [17: "IP"]), "TXA", 22).isEmpty, "v\(version)")
     }
+
+    // MARK: - PID (v2.4 species/breed carry-over, P4-17)
+
+    private func pid(_ fields: [Int: String]) -> String {
+        var values: [Int: String] = [3: "X^^^F^MR", 5: "Doe^Jane"]
+        values.merge(fields) { _, new in new }
+        return TestWires.wire("ADT^A01^ADT_A01", "2.4", TestWires.segment("PID", values))
+    }
+
+    @Test("v2.4 PID-35 is required when PID-36 or PID-38 is valued")
+    func pid35OnV24() throws {
+        #expect(try missing(pid([36: "CANINE^Dog^L"]), "PID", 35).count == 1)
+        #expect(try missing(pid([38: "BEEF^Beef^L"]), "PID", 35).count == 1)
+        #expect(try missing(pid([:]), "PID", 35).isEmpty)
+    }
+
+    @Test("v2.4 PID-36 is required when PID-37 is valued")
+    func pid36OnV24() throws {
+        #expect(try missing(pid([37: "Weimaraner"]), "PID", 36).count == 1)
+        #expect(try missing(pid([:]), "PID", 36).isEmpty)
+    }
+
+    // MARK: - PRC (Chapter 8 pricing, P4-17)
+
+    @Test("PRC-5 stays bare: the price/CDM-override rule is site billing policy, not on the wire")
+    func prc5Registered() {
+        let tables: [[String: SegmentGrammar]] = [
+            SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4,
+            SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6, SegmentGrammarTable.v2_8_2,
+        ]
+        for table in tables {
+            #expect(table["PRC"]?.field(5)?.optionality == .conditional)
+            #expect(table["PRC"]?.field(5)?.condition == nil)
+        }
+    }
 }

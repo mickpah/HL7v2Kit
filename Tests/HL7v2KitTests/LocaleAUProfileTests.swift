@@ -1195,11 +1195,15 @@ struct LocaleAUProfileTests {
                 "Issue message should carry the AU-extended condition string")
     }
 
-    @Test("v2.4 wire + .international locale: PID-35..38 grammar gap means no conditional fires")
-    func v24PIDSpeciesConditionSilentUnderInternational() throws {
-        // Under .international + v2.4, the base grammar has no
-        // PID-35..38 entries; the conditional rule cannot fire. This
-        // pins the v2.4 base-spec behaviour against regression.
+    @Test("v2.4 wire + .international locale: PID-35 fires from the base grammar (P4-17)")
+    func v24PIDSpeciesConditionFiresUnderInternational() throws {
+        // P4-17 added the printed Conditionality Rule (v2.4 CH03
+        // §3.4.2.35: "This field must be valued if PID-36 - Breed
+        // Code or PID-38 - Production Class Code is valued") directly
+        // to the base v2.4 PID.json — the field was already present
+        // there (bare C), the S5-D AU grammar extension above was not
+        // filling a genuine base-spec gap. The predicate now fires
+        // under .international too, without the AU locale layer.
         let message = try Parser(locale: .international).parse(v24PIDBreedWithoutSpecies)
         let report = Validator(locale: .international).validate(message)
         let pid35Issues = report.errors.filter {
@@ -1207,8 +1211,8 @@ struct LocaleAUProfileTests {
             && $0.location.segmentID == "PID"
             && $0.location.fieldIndex == 35
         }
-        #expect(pid35Issues.isEmpty,
-                "Base v2.4 grammar has no PID-35; no conditional should fire under .international")
+        #expect(pid35Issues.count == 1,
+                "Base v2.4 grammar now carries the PID-35 condition; it should fire under .international")
     }
 
     // PID-35 + PID-36 both populated under v2.4 + AU — no conditional

@@ -7,6 +7,7 @@ import Foundation
 @testable import HL7v2Kit
 
 private let orderVersions = ["2.5.1", "2.6", "2.8.2"]
+private let pharmacyVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
 
 @Suite("Order conditions (P4)")
 struct OrderConditionTests {
@@ -119,5 +120,69 @@ struct OrderConditionTests {
         #expect(try missing(productPartial, "BTX", 7).count == 1, "v\(version)")
         let mixed = btx(version, [2: "W0000 26 123456", 3: "E0791V00", 4: "5100", 5: "RHIG", 6: "Maker Inc", 7: "LOT1"])
         #expect(Set(try notApplicable(mixed, "BTX").compactMap(\.location.fieldIndex)) == [2, 3, 5, 6, 7], "v\(version)")
+    }
+
+    // MARK: - Pharmacy give/dispense positions (P4-17)
+    //
+    // Every RXO/RXE/RXD/RXG/RXC field whose prose mentions give or
+    // dispense amount, units or strength was read against its own
+    // version's field-definition text. None is wire-decidable:
+    // - RXO-1/2/4's free-text exception keys on RXO-6's first
+    //   COMPONENT being blank while the field overall carries text —
+    //   the DSL's `populated`/`empty` ops read the whole field
+    //   regardless of a `.<component>` tail (Validator.readField), so
+    //   the component-specific blank cannot be expressed without
+    //   misfiring on an RXO-6 used only for coded instructions.
+    // - RXO-17 / RXE-22 / RXG-14's "administered continuously at a
+    //   prescribed rate" (RXG-14: "when relevant") is a clinical
+    //   judgement, not a peer-field value.
+    // - RXE-11 / RXD-5 / RXG-33 / RXC-11's "required if the units are
+    //   not implied by the actual dispense code" needs a terminology
+    //   service (req #3/#4, docs/design/permanent-limitations-register.md §C).
+    // - RXE-10 / RXE-19 / RXG-32 / RXC-10 state no conditionality
+    //   clause at all.
+    // See docs/design/conditional-completeness-audit.md, "Order/pharmacy
+    // & timing family", for the quoted citations.
+
+    private func expectBareC(_ seg: String, _ idx: Int, versions: [String]) {
+        let tables: [String: [String: SegmentGrammar]] = [
+            "2.3": SegmentGrammarTable.v2_3, "2.3.1": SegmentGrammarTable.v2_3_1,
+            "2.4": SegmentGrammarTable.v2_4, "2.5.1": SegmentGrammarTable.v2_5_1,
+            "2.6": SegmentGrammarTable.v2_6, "2.8.2": SegmentGrammarTable.v2_8_2,
+        ]
+        for version in versions {
+            #expect(tables[version]?[seg]?.field(idx)?.optionality == .conditional, "\(seg)-\(idx) v\(version)")
+            #expect(tables[version]?[seg]?.field(idx)?.condition == nil, "\(seg)-\(idx) v\(version)")
+        }
+    }
+
+    @Test("RXO-1/2/4 stay bare: the free-text exception keys on RXO-6's component, not its whole-field presence")
+    func rxo124StillBare() {
+        for idx in [1, 2, 4] {
+            expectBareC("RXO", idx, versions: ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+        }
+    }
+
+    @Test("RXO-17 / RXE-22 / RXG-14 stay bare: continuous administration at a prescribed rate is not wire-decidable")
+    func continuousRateStillBare() {
+        expectBareC("RXO", 17, versions: pharmacyVersions)
+        expectBareC("RXE", 22, versions: pharmacyVersions)
+        expectBareC("RXG", 14, versions: pharmacyVersions)
+    }
+
+    @Test("RXE-11 / RXD-5 / RXG-33 / RXC-11 stay bare: units implied by the dispense code needs a terminology service")
+    func dispenseUnitsImpliedStillBare() {
+        expectBareC("RXE", 11, versions: pharmacyVersions)
+        expectBareC("RXD", 5, versions: pharmacyVersions)
+        expectBareC("RXG", 33, versions: ["2.8.2"])
+        expectBareC("RXC", 11, versions: ["2.8.2"])
+    }
+
+    @Test("RXE-10 / RXE-19 / RXG-32 / RXC-10 print C with no stated conditionality clause")
+    func dispenseAmountBareC() {
+        expectBareC("RXE", 10, versions: pharmacyVersions)
+        expectBareC("RXE", 19, versions: pharmacyVersions)
+        expectBareC("RXG", 32, versions: ["2.8.2"])
+        expectBareC("RXC", 10, versions: ["2.8.2"])
     }
 }

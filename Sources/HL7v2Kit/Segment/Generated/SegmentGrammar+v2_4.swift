@@ -1949,8 +1949,8 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 32, name: "Identity Reliability Code", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0445", length: "20"),
             FieldGrammar(index: 33, name: "Last Update Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
             FieldGrammar(index: 34, name: "Last Update Facility", dataType: "HD", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "40"),
-            FieldGrammar(index: 35, name: "Species Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 36, name: "Breed Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 35, name: "Species Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "PID-36 populated OR PID-38 populated", prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 36, name: "Breed Code", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "PID-37 populated", prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 37, name: "Strain", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "80"),
             FieldGrammar(index: 38, name: "Production Class Code", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
         ]
