@@ -65,7 +65,7 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | PRA-1 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode != MFN` | warning | v2.5.1 CH15 §15.4.6.1: "For all other messages, this field should not be used" | exact (SHOULD) |
 | PRA-12 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode = MFN` | warning | v2.5.1 CH15 §15.4.6.12: "For the ... Master File Notification message, this field should not be used" | exact (SHOULD) |
 
-The RXR-6 row models the Condition Rule sentence only. The same definition adds a code-system-aware SHOULD-NOT ("If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated"), which depends on the coding system RXR-2 carries rather than on its presence; it is not modelled by this row.
+The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
 ## Permanent limitations (documented, not shippable — req #3/#4)
 

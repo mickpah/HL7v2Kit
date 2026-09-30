@@ -80,6 +80,16 @@ On v2.3 through v2.6, the modelled OBR-2 condition (`ORC-2 empty`) and OBR-3 con
 
 **Known defect (req #4), blocks spec-completeness.** Fix tracked in P4-7, widened from the v2.8.2-only placer-or-filler note above (`docs/design/v2_8_2-spec-audit.md`) to also cover v2.3–v2.6.
 
+### Addendum to §D — one prohibition per field (P4-1 review finding, not an ADRM point)
+
+Found during the P4-1 review (2026-09-30). Not an ADRM-2021 point; added here per the global-constraints rule that P4 rows go into the existing lettered sections.
+
+| Position | Versions | Spec text | What it needs |
+|---|---|---|---|
+| RXR-6 Administration Site Modifier | v2.5.1, v2.6 | v2.5.1 CH04 §4.14.2.6 (v2.6 identical): "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated." The v2.8.2 CH04A definition omits this sentence. | The predicate is expressible (`RXR-2.3 = HL70163`, warning). The model is not: `FieldGrammar` holds a single `prohibitedWhen` at a single `prohibitedSeverity`, and RXR-6 already carries the error-level Condition Rule `RXR-2 empty` (P4-1). Needs more than one prohibition per field, each with its own severity. |
+
+**Known limitation (req #3), blocks spec-completeness.** Fix tracked in P4-21.
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries

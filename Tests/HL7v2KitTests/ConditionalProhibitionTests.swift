@@ -55,6 +55,11 @@ struct ConditionalProhibitionTests {
         let cyclic = TestWires.wire("OMG^O19^OMG_O19", version,
             TestWires.segment("TQ2", [1: "1", 2: "C", 3: "PL1^SYS", 6: "SS", 7: "*"]))
         #expect(try prohibited(cyclic, "TQ2", 7).isEmpty, "v\(version)")
+        // An empty TQ2-2 is "not equal to a 'C'" under the literal reading, so
+        // the SHOULD-NOT fires; the warning severity keeps it advisory.
+        let unflagged = TestWires.wire("OMG^O19^OMG_O19", version,
+            TestWires.segment("TQ2", [1: "1", 3: "PL1^SYS", 6: "SS", 7: "*"]))
+        #expect(try prohibited(unflagged, "TQ2", 7).map(\.severity) == [.warning], "v\(version)")
     }
 
     @Test("STF-1 / PRA-1 should not be used outside MFN; PRA-12 not on MFN (warnings)",

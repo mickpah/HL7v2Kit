@@ -245,6 +245,8 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let tableOpen = field.tableOpen == true ? ", tableOpen: true" : ""
             let prohibitedSeverity: String = {
                 guard let raw = field.prohibitedSeverity else { return "" }
+                precondition(field.prohibitedWhen != nil,
+                             "\(schema.segmentID)-\(field.index): prohibitedSeverity is set without prohibitedWhen")
                 precondition(["error", "warning", "info"].contains(raw),
                              "\(schema.segmentID)-\(field.index): prohibitedSeverity must be error, warning or info, got \(raw)")
                 return ", prohibitedSeverity: .\(raw)"
