@@ -102,7 +102,8 @@
       "name": "Effective Date of Reference Range Values",
       "dataType": "TS", "length": "26",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "prohibitedWhen": "OBX-7 empty"
     },
     {
       "index": 13,

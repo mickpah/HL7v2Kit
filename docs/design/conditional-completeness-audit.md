@@ -53,7 +53,7 @@ A clean, closed, wire-detectable same-segment MUST. Shipped as `PD1-15 condition
 
 Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` — the HL7-standard User-defined Table 0339 "not signed" codes. **Partial** (same honesty pattern as HL7au:00044.4.4, v0.13): the spec's "*or similar values in related external code tables*" caveat means sites using a non-HL7 code system for ORC-20 could encode "not signed" with other values that this predicate won't catch. The rule is a sound **necessary condition** for the HL7-standard table — it fires only when ORC-20 is exactly `3`/`4`, which per Table 0339 genuinely means not-signed, so it cannot misfire on standard-conformant traffic (req #4). External-code-system completeness is out of the portable-core boundary.
 
-## Shipped in P4 (expressible-conditions remediation, 2026-10)
+## Shipped in P4 (expressible-conditions remediation, 2026-09)
 
 The 2026-09 review (planning/reviews, finding X-C09) found positions this register called permanent although the condition DSL already states them, prohibitions it did not model, and one shipped prohibition that misfired. Each row cites the printed sentence. "Partial" means the predicate fires only where the wire decides the rule and stays silent elsewhere (fail-safe, v0.2-V1). Axis `condition` fires `conditionalFieldMissing`; axis `prohibitedWhen` fires `conditionalFieldProhibited` at the stated severity.
 
@@ -64,6 +64,11 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | STF-1 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode != MFN` | warning | v2.5.1 CH15 §15.4.8.1: "For all other messages, this field should not be used" | exact (SHOULD) |
 | PRA-1 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode != MFN` | warning | v2.5.1 CH15 §15.4.6.1: "For all other messages, this field should not be used" | exact (SHOULD) |
 | PRA-12 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode = MFN` | warning | v2.5.1 CH15 §15.4.6.12: "For the ... Master File Notification message, this field should not be used" | exact (SHOULD) |
+| ORC-25 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `ORC-5 empty` | error | v2.4/v2.5.1/v2.6/v2.8.2 CH04 §4.5.1.25: "This field may only be populated if the ORC-5-Order Status field is valued" | exact |
+| OBX-12 | v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `OBX-7 empty` | error | v2.5.1/v2.6/v2.8.2 CH07 §7.4.2.12: "This field can be valued only if OBX-7-reference range is populated" | exact |
+| SPM-13 | v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `SPM-11 empty OR noRepeat(SPM-11) = G` | warning | v2.5.1/v2.6/v2.8.2 CH07 §7.4.3.13: "This field would only be valued if the specimen role attribute has the value 'G'" | exact — fires when no SPM-11 repetition is `G`, including when SPM-11 is wholly empty (full universal negation; `noRepeat(...)` alone fails safe on an empty field, so the `SPM-11 empty OR` clause is needed — see the ADR-010 P4-2 amendment). "would" is descriptive, so warning |
+| PYE-3, PYE-5, PYE-6 | v2.6, v2.8.2 | prohibitedWhen | `PYE-2 not in (PERS, PPER)` | error | v2.6/v2.8.2 CH16 §16.4.3.3, .5, .6: "if Payee Type in list (...), then Required, else Not Permitted" | exact; an empty PYE-2 (itself `R`) prohibits nothing |
+| PYE-4 | v2.6, v2.8.2 | prohibitedWhen | `PYE-2 not in (PPER, ORG)` | error | v2.6/v2.8.2 CH16 §16.4.3.4 | exact; same empty-PYE-2 rule |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -111,7 +116,7 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 - **SCH** (Schedule Activity) — 1/2/3/24/26/27; **RGS** (Resource Group) — 2; **ARQ** (Appointment Request) — 2/3/24/25 — placer/filler IDs and status fields conditional on request-vs-response intent.
 - **AIS/AIG/AIL/AIP** (Appointment Information — Service/General/Location/Personnel) — set-ID, start-datetime, duration and filler-status fields (indices 2–14) conditional on the appointment action being scheduled/modified vs. queried.
 - **BPX** (Blood Product Dispense Status) — 5/6/8/9/10; **BTX** (Blood Product Transfusion) — 2/3/4/5/6/7 — dispense/transfusion-status fields conditional on the status event.
-- **SPM-13** (Specimen Risk Code) and **ROL-1** (Role Instance ID) — conditional on specimen-hazard presence / role-action context.
+- **ROL-1** (Role Instance ID) — conditional on role-action context; no field-expressible trigger. (SPM-13 was listed here as "Specimen Risk Code" with a specimen-hazard rationale. SPM-13 is Grouped Specimen Count, and its prose states a prohibition, which ships in P4-4; see "Shipped in P4".)
 - **RXA-7/12** (Administered Amount fragments) — data-nature conditionals paralleling the RXO/RXE set above.
 
 **Master-files / referral family (added v1.3 — CH08/CH11):**

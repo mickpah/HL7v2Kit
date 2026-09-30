@@ -1740,7 +1740,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Ordering Facility Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 23, name: "Ordering Facility Phone Number", dataType: "XTN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 24, name: "Ordering Provider Address", dataType: "XAD", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 25, name: "Order Status Modifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 25, name: "Order Status Modifier", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: "ORC-5 empty", variableColumns: false, table: nil, length: "250"),
         ]
     )
 

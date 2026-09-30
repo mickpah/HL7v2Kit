@@ -75,4 +75,63 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(mfn, "PRA", 1).isEmpty, "v\(version)")
         #expect(try prohibited(mfn, "PRA", 12).map(\.severity) == [.warning], "v\(version)")
     }
+
+    // MARK: - v2.6 family (V26-C08, V26-C09)
+
+    @Test("ORC-25 may only be populated if ORC-5 is valued", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    func orc25(version: String) throws {
+        let noStatus = TestWires.wire("OMG^O19^OMG_O19", version,
+            TestWires.segment("ORC", [1: "NW", 2: "PL1", 25: "HOLD^On hold"]))
+        #expect(try prohibited(noStatus, "ORC", 25).map(\.severity) == [.error], "v\(version)")
+        let withStatus = TestWires.wire("OMG^O19^OMG_O19", version,
+            TestWires.segment("ORC", [1: "NW", 2: "PL1", 5: "IP", 25: "HOLD^On hold"]))
+        #expect(try prohibited(withStatus, "ORC", 25).isEmpty, "v\(version)")
+    }
+
+    @Test("OBX-12 can be valued only if OBX-7 is populated", arguments: ["2.5.1", "2.6", "2.8.2"])
+    func obx12(version: String) throws {
+        func obx(_ range: String) -> String {
+            TestWires.wire("ORU^R01^ORU_R01", version,
+                TestWires.segment("OBX", [1: "1", 2: "NM", 3: "GLU^Glucose^LN", 5: "5.5",
+                                          7: range, 11: "F", 12: "20260101"]))
+        }
+        #expect(try prohibited(obx(""), "OBX", 12).map(\.severity) == [.error], "v\(version)")
+        #expect(try prohibited(obx("3.5-7.8"), "OBX", 12).isEmpty, "v\(version)")
+    }
+
+    @Test("SPM-13 would only be valued if a SPM-11 role is G (warning)", arguments: ["2.5.1", "2.6", "2.8.2"])
+    func spm13(version: String) throws {
+        func spm(_ role: String) -> String {
+            TestWires.wire("OML^O33^OML_O33", version,
+                TestWires.segment("SPM", [1: "1", 4: "BLD^Blood^HL70487", 11: role, 13: "3"]))
+        }
+        // Single-occurrence SPM-11 (no repetition marker): a matching role
+        // silences the prohibition, a non-matching one fires it.
+        #expect(try prohibited(spm("P^Patient^HL70369"), "SPM", 13).map(\.severity) == [.warning], "v\(version)")
+        #expect(try prohibited(spm("G^Group^HL70369"), "SPM", 13).isEmpty, "v\(version)")
+        // A wholly empty SPM-11 (no role stated at all) is not "the value G"
+        // either, so the composition `SPM-11 empty OR noRepeat(SPM-11) = G`
+        // fires here too — see the ADR-010 P4-2 amendment on full universal
+        // negation.
+        let noRole = TestWires.wire("OML^O33^OML_O33", version,
+            TestWires.segment("SPM", [1: "1", 4: "BLD^Blood^HL70487", 13: "3"]))
+        #expect(try prohibited(noRole, "SPM", 13).map(\.severity) == [.warning], "v\(version) empty SPM-11")
+    }
+
+    @Test("PYE-3..6 are not permitted outside their payee types", arguments: ["2.6", "2.8.2"])
+    func pyeNotPermitted(version: String) throws {
+        func pye(_ payeeType: String) -> String {
+            TestWires.wire("EHC^E01^EHC_E01", version,
+                TestWires.segment("PYE", [1: "1", 2: payeeType, 3: "PT", 4: "Acme Clinic",
+                                          5: "Doe^Jane", 6: "1 Main St^^Town"]))
+        }
+        let org = pye("ORG")
+        #expect(try prohibited(org, "PYE", 3).count == 1, "v\(version) PYE-3 on ORG")
+        #expect(try prohibited(org, "PYE", 5).count == 1, "v\(version) PYE-5 on ORG")
+        #expect(try prohibited(org, "PYE", 6).count == 1, "v\(version) PYE-6 on ORG")
+        #expect(try prohibited(org, "PYE", 4).isEmpty, "v\(version) PYE-4 permitted on ORG")
+        let person = pye("PERS")
+        #expect(try prohibited(person, "PYE", 4).count == 1, "v\(version) PYE-4 on PERS")
+        #expect(try prohibited(person, "PYE", 3).isEmpty, "v\(version) PYE-3 permitted on PERS")
+    }
 }

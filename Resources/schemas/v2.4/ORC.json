@@ -208,7 +208,8 @@
       "name": "Order Status Modifier",
       "dataType": "CWE", "length": "250",
       "optionality": "O",
-      "repeatability": "1"
+      "repeatability": "1",
+      "prohibitedWhen": "ORC-5 empty"
     }
   ]
 }

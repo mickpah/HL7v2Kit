@@ -50,6 +50,31 @@ struct ConditionDSLExtensionTests {
         #expect(!(try evaluate("noRepeat(SPM-x) = G", on: "SPM", in: spm("P^Patient^HL70369"))))
     }
 
+    @Test("noRepeat(SPM-11) = G holds for a single non-G occurrence (no repetition marker)")
+    func noRepeatHoldsSingleOccurrence() throws {
+        #expect(try evaluate("noRepeat(SPM-11) = G", on: "SPM",
+                             in: spm("P^Patient^HL70369")))
+    }
+
+    @Test("noRepeat(SPM-11) = G fails for a single G occurrence (no repetition marker)")
+    func noRepeatFailsSingleOccurrence() throws {
+        #expect(!(try evaluate("noRepeat(SPM-11) = G", on: "SPM",
+                               in: spm("G^Group^HL70369"))))
+    }
+
+    // MARK: - noRepeat composition (full universal negation, P4-4)
+
+    @Test("SPM-11 empty OR noRepeat(SPM-11) = G fires on a wholly empty SPM-11")
+    func noRepeatCompositionCoversEmpty() throws {
+        #expect(try evaluate("SPM-11 empty OR noRepeat(SPM-11) = G", on: "SPM", in: spm("")))
+    }
+
+    @Test("SPM-11 empty OR noRepeat(SPM-11) = G does not fire when a repetition is G")
+    func noRepeatCompositionRespectsMatch() throws {
+        #expect(!(try evaluate("SPM-11 empty OR noRepeat(SPM-11) = G", on: "SPM",
+                               in: spm("G^Group^HL70369"))))
+    }
+
     // MARK: - nextSegmentID
 
     private let chainedTiming = TestWires.wire("OMG^O19^OMG_O19", "2.5.1",

@@ -208,9 +208,9 @@ field-ref suffix parsing now routes through the shared `Path` parser** (R4/F14) 
 rejection of `[N]`/`~N` forms is pinned by the CrossSegmentDSLTests R4-C1 characterization
 rows; the previous duplicate suffix parser is deleted.
 
-## Amendment (P4, 2026-10): `noRepeat(...)`
+## Amendment (P4, 2026-09): `noRepeat(...)`
 
-`noRepeat(<fieldref>) <op>` is the universal negation of the M6-B-1 `anyRepeat(...)` atom: true iff the field has at least one populated repetition slot and no slot satisfies `<op>`. It exists because a prohibition keyed to "no repetition carries value X" (v2.5.1 to v2.8.2 SPM-13: "would only be valued if the specimen role attribute has the value 'G'") cannot be written with `anyRepeat(...) != X`, which is true for `P~G`. An absent or all-empty field evaluates `false` (no definite value to negate), and a malformed ref evaluates `false`, preserving the v0.2-V1 fail-safe invariant. Pinned by `Tests/HL7v2KitTests/ConditionDSLExtensionTests.swift`.
+`noRepeat(<fieldref>) <op>` is the universal negation of the M6-B-1 `anyRepeat(...)` atom: true iff the field has at least one populated repetition slot and no slot satisfies `<op>`. It exists because a prohibition keyed to "no repetition carries value X" (v2.5.1 to v2.8.2 SPM-13: "would only be valued if the specimen role attribute has the value 'G'") cannot be written with `anyRepeat(...) != X`, which is true for `P~G`. An absent or all-empty field evaluates `false` (no definite value to negate), and a malformed ref evaluates `false`, preserving the v0.2-V1 fail-safe invariant. `noRepeat(...)` alone therefore does not cover the wholly-absent-field case; a rule needing full universal negation — "prohibited unless some repetition carries value X, including when the field is entirely absent" — must compose it as `<field> empty OR noRepeat(<field>) = <value>` (P4-4; SPM-13's prohibition uses this composition). Pinned by `Tests/HL7v2KitTests/ConditionDSLExtensionTests.swift`.
 
 ## Amendment (P4, 2026-09): `nextSegmentID(...)`
 

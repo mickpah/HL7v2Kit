@@ -14,7 +14,7 @@
     { "index": 9, "swiftName": "probability", "name": "Probability", "dataType": "NM", "length": "5#", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "natureOfAbnormalTest", "name": "Nature of Abnormal Test", "dataType": "ID", "length": "1..2", "table": "0080", "optionality": "O", "repeatability": "*", "tables": ["0080"] },
     { "index": 11, "swiftName": "observationResultStatus", "name": "Observation Result Status", "dataType": "ID", "length": "1..1", "table": "0085", "optionality": "R", "repeatability": "1", "tables": ["0085"] },
-    { "index": 12, "swiftName": "effectiveDateOfReferenceRange", "name": "Effective Date of Reference Range", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "effectiveDateOfReferenceRange", "name": "Effective Date of Reference Range", "dataType": "DTM", "optionality": "O", "repeatability": "1", "prohibitedWhen": "OBX-7 empty" },
     { "index": 13, "swiftName": "userDefinedAccessChecks", "name": "User Defined Access Checks", "dataType": "ST", "length": "20=", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "dateTimeOfTheObservation", "name": "Date/Time of the Observation", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 15, "swiftName": "producersID", "name": "Producer's ID", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["9999"] },
