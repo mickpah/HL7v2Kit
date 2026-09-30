@@ -126,13 +126,15 @@ struct OrderConditionTests {
     //
     // Every RXO/RXE/RXD/RXG/RXC field whose prose mentions give or
     // dispense amount, units or strength was read against its own
-    // version's field-definition text. None is wire-decidable:
-    // - RXO-1/2/4's free-text exception keys on RXO-6's first
-    //   COMPONENT being blank while the field overall carries text —
-    //   the DSL's `populated`/`empty` ops read the whole field
-    //   regardless of a `.<component>` tail (Validator.readField), so
-    //   the component-specific blank cannot be expressed without
-    //   misfiring on an RXO-6 used only for coded instructions.
+    // version's field-definition text.
+    // - RXO-1/2/4's free-text exception ships (fix round 1): the
+    //   `noRepeat(<fieldref>) <predicate>` atom reads a PER-REPETITION
+    //   component slot (Validator.resolveRepetitionSlots), unlike the
+    //   plain field-atom's whole-field `populated`/`empty`
+    //   (Validator.readField). `RXO-6 empty OR noRepeat(RXO-6.1) empty`
+    //   states "RXO-6 not used at all, or used but never as free text
+    //   (no repetition has its first component blank)" — see
+    //   `rxo124FreeTextCarveOut` below.
     // - RXO-17 / RXE-22 / RXG-14's "administered continuously at a
     //   prescribed rate" (RXG-14: "when relevant") is a clinical
     //   judgement, not a peer-field value.
@@ -156,10 +158,35 @@ struct OrderConditionTests {
         }
     }
 
-    @Test("RXO-1/2/4 stay bare: the free-text exception keys on RXO-6's component, not its whole-field presence")
-    func rxo124StillBare() {
+    // RXO-1/2/4 are `R` on v2.3 (no rule to ship there); `C` from
+    // v2.3.1 with the same "mandatory unless free text" sentence
+    // through v2.8.2.
+    private static let rxo124Versions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+
+    private func rxo(_ version: String, _ rxo6: String?) -> String {
+        var fields: [Int: String] = [:]
+        if let rxo6 { fields[6] = rxo6 }
+        return TestWires.wire("RDE^O11^RDE_O11", version, TestWires.segment("RXO", fields))
+    }
+
+    @Test("RXO-1/2/4 required unless RXO-6 carries the order as free text", arguments: rxo124Versions)
+    func rxo124FreeTextCarveOut(version: String) throws {
+        // RXO-6 absent entirely: required (no free text used at all).
         for idx in [1, 2, 4] {
-            expectBareC("RXO", idx, versions: ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+            #expect(try missing(rxo(version, nil), "RXO", idx).count == 1, "v\(version) RXO-\(idx) RXO-6 absent")
+        }
+        // RXO-6 carries a coded value (component 1 populated): required.
+        for idx in [1, 2, 4] {
+            #expect(try missing(rxo(version, "CODE^text"), "RXO", idx).count == 1, "v\(version) RXO-\(idx) coded")
+        }
+        // RXO-6 is free text (component 1 blank, text in component 2): silent.
+        for idx in [1, 2, 4] {
+            #expect(try missing(rxo(version, "^free text"), "RXO", idx).isEmpty, "v\(version) RXO-\(idx) free text")
+        }
+        // RXO-6 repeats, one repetition free text: silent (noRepeat fails
+        // on the populated repetition).
+        for idx in [1, 2, 4] {
+            #expect(try missing(rxo(version, "CODE^x~^free"), "RXO", idx).isEmpty, "v\(version) RXO-\(idx) mixed repetitions")
         }
     }
 

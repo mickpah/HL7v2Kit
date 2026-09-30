@@ -3,10 +3,10 @@
   "version": "2.3.1",
   "description": "RXO",
   "fields": [
-    { "index": 1, "swiftName": "requestedGiveCode", "name": "Requested Give Code", "dataType": "CE", "length": "100", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "requestedGiveAmountMinimum", "name": "Requested Give Amount - Minimum", "dataType": "NM", "length": "20", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "requestedGiveCode", "name": "Requested Give Code", "dataType": "CE", "length": "100", "optionality": "C", "repeatability": "1", "condition": "RXO-6 empty OR noRepeat(RXO-6.1) empty" },
+    { "index": 2, "swiftName": "requestedGiveAmountMinimum", "name": "Requested Give Amount - Minimum", "dataType": "NM", "length": "20", "optionality": "C", "repeatability": "1", "condition": "RXO-6 empty OR noRepeat(RXO-6.1) empty" },
     { "index": 3, "swiftName": "requestedGiveAmountMaximum", "name": "Requested Give Amount - Maximum", "dataType": "NM", "length": "20", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "requestedGiveUnits", "name": "Requested Give Units", "dataType": "CE", "length": "60", "optionality": "C", "repeatability": "1" },
+    { "index": 4, "swiftName": "requestedGiveUnits", "name": "Requested Give Units", "dataType": "CE", "length": "60", "optionality": "C", "repeatability": "1", "condition": "RXO-6 empty OR noRepeat(RXO-6.1) empty" },
     { "index": 5, "swiftName": "requestedDosageForm", "name": "Requested Dosage Form", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "providerSPharmacyTreatmentInstructions", "name": "Provider's Pharmacy/Treatment Instructions", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "providerSAdministrationInstructions", "name": "Provider's Administration Instructions", "dataType": "CE", "length": "200", "optionality": "O", "repeatability": "*" },

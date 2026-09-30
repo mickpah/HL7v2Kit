@@ -294,15 +294,24 @@ struct ExpressibleConditionTests {
 
     // MARK: - PRC (Chapter 8 pricing, P4-17)
 
-    @Test("PRC-5 stays bare: the price/CDM-override rule is site billing policy, not on the wire")
-    func prc5Registered() {
-        let tables: [[String: SegmentGrammar]] = [
-            SegmentGrammarTable.v2_3, SegmentGrammarTable.v2_3_1, SegmentGrammarTable.v2_4,
-            SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6, SegmentGrammarTable.v2_8_2,
-        ]
-        for table in tables {
-            #expect(table["PRC"]?.field(5)?.optionality == .conditional)
-            #expect(table["PRC"]?.field(5)?.condition == nil)
+    private func prc(_ version: String, _ fields: [Int: String]) -> String {
+        TestWires.wire("MFN^M05", version, TestWires.segment("PRC", fields))
+    }
+
+    @Test("PRC-5 is required when PRC-13 forbids overriding the price (partial: X only)", arguments: allSixVersions)
+    func prc5(version: String) throws {
+        // PRC-13 = X (Override not allowed, table 0268): the CDM price
+        // will never be overridden at posting, so PRC-5 is required.
+        #expect(try missing(prc(version, [13: "X"]), "PRC", 5).count == 1, "v\(version) PRC-13=X")
+        // A (allowed) and R (required) don't decide it either way — an
+        // "allowed" override may or may not happen per charge, and a
+        // "required" override implies the CDM price is routinely
+        // replaced, not the X case's "never". Empty is equally silent
+        // (fail-safe: no signal at all).
+        for code in ["A", "R", ""] {
+            var fields: [Int: String] = [:]
+            if !code.isEmpty { fields[13] = code }
+            #expect(try missing(prc(version, fields), "PRC", 5).isEmpty, "v\(version) PRC-13=\(code.isEmpty ? "<empty>" : code)")
         }
     }
 }

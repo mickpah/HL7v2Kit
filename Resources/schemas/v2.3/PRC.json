@@ -7,7 +7,7 @@
     { "index": 2, "swiftName": "facilityId", "name": "Facility ID", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "department", "name": "Department", "dataType": "CE", "length": "30", "optionality": "O", "repeatability": "*" },
     { "index": 4, "swiftName": "validPatientClasses", "name": "Valid Patient Classes", "dataType": "IS", "length": "1", "table": "0004", "optionality": "O", "repeatability": "*", "tables": ["0004"] },
-    { "index": 5, "swiftName": "price", "name": "Price", "dataType": "CP", "length": "12", "optionality": "C", "repeatability": "*" },
+    { "index": 5, "swiftName": "price", "name": "Price", "dataType": "CP", "length": "12", "optionality": "C", "repeatability": "*", "condition": "PRC-13 = X" },
     { "index": 6, "swiftName": "formula", "name": "Formula", "dataType": "ST", "length": "200", "optionality": "O", "repeatability": "*" },
     { "index": 7, "swiftName": "minimumQuantity", "name": "Minimum Quantity", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "maximumQuantity", "name": "Maximum Quantity", "dataType": "NM", "length": "4", "optionality": "O", "repeatability": "1" },

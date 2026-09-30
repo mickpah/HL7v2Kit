@@ -993,7 +993,7 @@ struct MultiVersionTests {
             // dispense fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate
             // (bulk-documented in conditional-completeness-audit.md).
-            "RXO-1", "RXO-2", "RXO-4", "RXO-5", "RXO-15", "RXO-17", "RXO-31",
+            "RXO-5", "RXO-15", "RXO-17", "RXO-31",
             "RXE-10", "RXE-11", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
             "RXD-5", "RXD-8", "RXG-14", "RXG-32", "RXG-33", "RXC-10", "RXC-11",
             "RXA-7", "RXA-12",
@@ -1015,7 +1015,7 @@ struct MultiVersionTests {
             // v1.4 (master-file locations / patient-care / med-records batch):
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.
-            "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
+            "GOL-22", "PRB-28", "PTH-6", "PTH-7",
             "TXA-11", "TXA-22",
             // v1.7 (CH13 lab-automation completion): the whole SID segment is
             // conditional — §13.4.11 defines all four fields with no condition text at

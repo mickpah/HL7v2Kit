@@ -1609,7 +1609,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 2, name: "Facility ID", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 3, name: "Department", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "30"),
             FieldGrammar(index: 4, name: "Valid Patient Classes", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0004", length: "1"),
-            FieldGrammar(index: 5, name: "Price", dataType: "CP", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "12"),
+            FieldGrammar(index: 5, name: "Price", dataType: "CP", optionality: .conditional, repeatability: .multiple, condition: "PRC-13 = X", prohibitedWhen: nil, variableColumns: false, table: nil, length: "12"),
             FieldGrammar(index: 6, name: "Formula", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "200"),
             FieldGrammar(index: 7, name: "Minimum Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "4"),
             FieldGrammar(index: 8, name: "Maximum Quantity", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "4"),
