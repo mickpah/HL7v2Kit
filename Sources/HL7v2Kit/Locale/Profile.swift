@@ -271,11 +271,22 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// scope the others do not (HL7au:00044.4.3's caller assertion). M30.
     let condition: String?
 
-    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil) {
+    /// When `true`, the requirement restates a base rule that only some
+    /// versions carry, and is skipped wherever the base composite for the
+    /// message's grammar version already requires this component, so the
+    /// finding is reported once (by the base check). Needed for a conformance
+    /// point like HL7au:00049.1 (MSG-1 must be valued): v2.5.1 and later
+    /// require MSG.1, v2.4 types MSH-9 as CM with no component optionality
+    /// (HL7 v2.4 Chapter 2, 2.16.9.9). P3-4.
+    let yieldsToBase: Bool
+
+    init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil,
+         yieldsToBase: Bool = false) {
         self.component = component
         self.subcomponent = subcomponent
         self.specCitation = specCitation
         self.condition = condition
+        self.yieldsToBase = yieldsToBase
     }
 }
 

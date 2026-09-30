@@ -21,6 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   messages" (HL7 v2.4 Chapter 2, 2.16.9.9), so `requiredComponentMissing`
   on MSH-9.3 (and on MSH-9.2 for ACK) is no longer reported. The AU
   profile rule HL7au:00049.2/.3 still requires both on ORM, ORU and REF.
+- HL7au:00049.1 (MSH-9 message type, MSG-1, must be valued) is now enforced
+  by the AU profile itself. It had relied on the base MSG-1 requirement,
+  which exists only from v2.5.1, so it went unenforced once AU traffic
+  resolved to v2.4. The profile rule defers to the base check where the
+  grammar version already requires MSG-1, so v2.5.1 and later report the
+  finding once, not twice. The conformance register moves 00049.1 from
+  BASE to SHIPPED.
+- VID.1 is trimmed before the emptiness check, so a whitespace-only MSH-12
+  now falls back to v2.5.1 under `ParserOptions.strict` like an empty one,
+  rather than throwing `unsupportedVersion`, and the `found:` value of
+  `ParseError.unsupportedVersion` carries the trimmed VID.1.
 
 ### Changed — P3-3: `2.8` messages are validated against the v2.8.2 grammar
 

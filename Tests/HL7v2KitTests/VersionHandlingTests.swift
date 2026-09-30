@@ -151,4 +151,45 @@ struct VersionHandlingTests {
         #expect(message.version == .v2_4)
         #expect(baseMSH9ComponentIssues(Validator(locale: .auLocalisation).validate(message)).isEmpty)
     }
+
+    // MARK: - P3-4 fix round 1: strict whitespace MSH-12, HL7au:00049.1
+
+    @Test("Strict parsing treats a whitespace-only MSH-12 as empty and falls back to v2.5.1")
+    func strictWhitespaceMSH12FallsBack() throws {
+        #expect(try Parser(options: .strict).parse(adt(version: "  ")).version == .v2_5_1)
+    }
+
+    func msh91Violations(_ report: ValidationReport) -> [ValidationIssue] {
+        report.issues.filter {
+            if case .profileConstraintViolation(let rule) = $0.code { return rule.hasPrefix("HL7au:00049.1") }
+            return false
+        }
+    }
+
+    func auORU(msh9: String, msh12: String) throws -> ValidationReport {
+        let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||\(msh9)|MSG1|P|\(msh12)\r"
+        return Validator(locale: .auLocalisation).validate(try Parser(locale: .auLocalisation).parse(wire))
+    }
+
+    @Test("HL7au:00049.1 fires at MSH-9.1 on AU v2.4 traffic with no message code")
+    func au000491FiresOnV24() throws {
+        let report = try auORU(msh9: "^R01^ORU_R01", msh12: Self.auMSH12)
+        let hits = msh91Violations(report)
+        #expect(hits.count == 1)
+        #expect(hits.first?.location.segmentID == "MSH")
+        #expect(hits.first?.location.fieldIndex == 9)
+        #expect(hits.first?.location.componentIndex == 1)
+    }
+
+    @Test("HL7au:00049.1 is silent when MSH-9.1 is valued")
+    func au000491SilentWhenValued() throws {
+        #expect(msh91Violations(try auORU(msh9: "ORU^R01^ORU_R01", msh12: Self.auMSH12)).isEmpty)
+    }
+
+    @Test("HL7au:00049.1 yields to the v2.5.1 base MSG.1 check: one finding, not two")
+    func au000491DoesNotDoubleFireOnV251() throws {
+        let report = try auORU(msh9: "^R01^ORU_R01", msh12: "2.5.1^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L")
+        #expect(msh91Violations(report).isEmpty)
+        #expect(baseMSH9ComponentIssues(report).map(\.location.componentIndex) == [1])
+    }
 }

@@ -86,7 +86,7 @@ DEFERRED_VERSIONS = set()
 # ("composite, defined in the field definition"); the schemas carry the
 # v2.5-era NAME of the identical component structure (v2.3 MSH-9's
 # components are MSG's) because grammar-level composite dispatch keys on
-# it — e.g. HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed MSG.
+# it — e.g. the HL7au:00049.1 overlay rule reaches v2.4 MSH-9 only because it is typed MSG.
 # A spec `CM` therefore accepts any named COMPOSITE; a scalar against a
 # spec `CM` still flags. Scalar set mirrors `scalarDataTypes` in
 # Codegen.swift.

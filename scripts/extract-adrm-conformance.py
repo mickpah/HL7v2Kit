@@ -118,6 +118,8 @@ SHIPPED = {
     'HL7au:00044.7.2', 'HL7au:00044.7.5',
     # M6-A stage 3 — prohibitions via SegmentCardinalityRule.maxCount.
     'HL7au:000023',
+    # P3-4 — MSG-1 restated: v2.4 has no base MSG grammar (2026-09-30).
+    'HL7au:00049.1',
     # M6-B-1 — exactly-one PRD rules (maxCount + the anyRepeat atom;
     # PRD-1 repeats) and the repaired 00104.7.0 (PRD-7 required on the
     # IR PRD via FieldOverride.condition).
@@ -225,7 +227,6 @@ BASE = {
     'HL7au:00046.1.3': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.4': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.5': 'escaping is `Serializer` behaviour, already correct',
-    'HL7au:00049.1': 'MSG-1 is already `MSG.requiredComponents`',
     'HL7au:00044.3.1': 'EI-1 is already `EI.requiredComponents`; the '
                        'uniqueness half is cross-message and out of scope',
     'HL7au:00044.7.1': 'XCN-1 is already `XCN.requiredComponents`',

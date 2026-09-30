@@ -15,9 +15,9 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 72 | enforced by the `.auLocalisation` overlay today |
+| SHIPPED | 73 | enforced by the `.auLocalisation` overlay today |
 | PARTIAL | 14 | partly enforced — see each row's note for what is not |
-| BASE | 15 | already enforced by the base model; overlay deliberately silent |
+| BASE | 14 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
@@ -25,7 +25,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (72)
+## SHIPPED (73)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -93,6 +93,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00047.1` |  | Senders | Orders, Results, Referrals | MSH-15 Accept acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00047.2` |  | Senders | Orders, Results, Referrals | MSH-16 Application acknowledgement type (ID) must be valued AL |  |
 | `HL7au:00048.3.1` | r3 | Senders | Orders, Results, Referrals | MSH-18 must only contain one of the following values "", "ASCII" or by site agreement "UNICODE UTF-8", "8859/1" may be used. |  |
+| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. |  |
 | `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
 | `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | shipped caller-asserted (M29): `ValidationOptions.auPathologySender` |
@@ -121,7 +122,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
-## BASE (15)
+## BASE (14)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -136,7 +137,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00046.1.4` |  | Senders | Orders, Results, Referrals | Senders must escape '~' characters as '\R\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.5` | r2 | Senders | Orders, Results, Referrals | Senders must escape '\' characters as '\E\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.3` |  | Senders | Orders, Results, Referrals | All fields required by HL7 segments table must be validly valued. | R-optionality enforcement is the Validator core |
-| `HL7au:00049.1` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message type (ID)> component must be valued. | MSG-1 is already `MSG.requiredComponents` |
 | `HL7au:00060.1` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of R (required) must be valued. | R-optionality enforcement is the Validator core |
 | `HL7au:00060.3` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must be valued when the associated predicate is satisfied. | conditional predicates are the same-segment DSL |
 | `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | conditional predicates are the same-segment DSL |

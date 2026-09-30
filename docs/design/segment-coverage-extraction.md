@@ -466,7 +466,7 @@ Two carve-outs, both enumerated in `audit-schemas.py`:
 - **`CM` accepts any named composite.** Pre-v2.5 tables type most composites as the
   placeholder `CM` ("composite, see the field definition"); the schemas carry the v2.5-era
   NAME of the identical component structure because grammar-level composite dispatch keys
-  on it (HL7au:00049.1 is BASE only because v2.4 MSH-9 is typed `MSG`). A **scalar** against
+  on it (the HL7au:00049.1 overlay rule reaches v2.4 MSH-9 only because it is typed `MSG`). A **scalar** against
   a spec `CM` still flags.
 - **`DATATYPE_WHITELIST`** — `v2.4/AL1-1`: the v2.4 table *and* heading print `CE` for
   `Set ID - AL1` (SI in v2.3 and v2.5+), a spec typo; following it verbatim would dispatch

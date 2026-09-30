@@ -359,8 +359,9 @@ extension Profile {
             ),
             // HL7au:00049.2 / .3 — MSH-9 trigger event and message
             // structure must both be valued. 00049.1 (message code) is
-            // not restated: MSG-1 is already `MSG.requiredComponents`
-            // in the base model, so the base check fires first.
+            // the `MSG` CompositeOverride below: the base model requires
+            // MSG-1 only from v2.5.1, and v2.4 (the AU version) types
+            // MSH-9 as CM with no component optionality.
             FieldOverride(
                 segmentID: "MSH",
                 fieldIndex: 9,
@@ -834,6 +835,24 @@ extension Profile {
             ],
         ],
         compositeOverrides: [
+            // MSG datatype (MSH-9 only) — HL7au:00049.1: "MSH-9 Message
+            // type <message type (ID)> component must be valued."
+            // Ungated: the ADRM scope (Orders, Results, Referrals) is
+            // read from MSH-9.1 itself, so a `messageCode in (...)` gate
+            // could never fire on the very message it targets.
+            // `yieldsToBase`: v2.5.1 and later already require MSG.1 in
+            // the base model; this restatement fires only where the
+            // grammar version does not (v2.3, v2.3.1, v2.4). P3-4.
+            CompositeOverride(
+                dataType: "MSG",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00049.1 — MSH-9 message type (MSG-1) must be valued (ADRM 2021 Appendix 5)",
+                        yieldsToBase: true
+                    )
+                ]
+            ),
             // CX datatype — HL7au:00044.1 series. Skip 44.1.1 (CX-1
             // must be specified) since the base spec already requires
             // CX-1 (CX.requiredComponents = [(1, "ID Number")]);
