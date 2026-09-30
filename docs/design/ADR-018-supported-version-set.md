@@ -20,7 +20,7 @@ A version is **modelled** when it has a `Version` case, a segment grammar (`Reso
 
 - Modelled: 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.8.2.
 - Substituted: 2.8 validated against v2.8.2, with an info issue `IssueCode.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)` at MSH-12 on every report.
-- Scheduled: 2.7.1 through ADR-015 (scope in `planning/remediation/P3-version-handling.md` Task P3-6), after which it is modelled.
+- Scheduled: 2.7.1 as plan P10 (ADR-015 extraction pipeline); Task P3-6 scopes P10, after which 2.7.1 is modelled.
 - Excluded, each with a permanent-limitations-register row: 2.1, 2.2, 2.5, 2.7, 2.8.1, 2.9.
 - Pro: `2.8` gets real checking, and the nearest published grammar is the best available evidence. The substitution is announced, so no report claims more than was done. `.v2_8` keeps its source-compatible public case.
 - Con: the v2.8 text is not on disk, so the v2.8 to v2.8.2 differences are unverified. A v2.8 message may draw a finding that only v2.8.2 requires. The info issue states this.
@@ -47,7 +47,7 @@ A version is **modelled** when it has a `Version` case, a segment grammar (`Reso
 |---|---|---|---|
 | 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.8.2 | Modelled | Its own | none |
 | 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
-| 2.7.1 | Scheduled (P3-6); excluded until it lands | v2.5.1 fallback | `versionNotRecognised` (warning) |
+| 2.7.1 | Scheduled as plan P10; excluded until it lands | v2.5.1 fallback | `versionNotRecognised` (warning) |
 | 2.1, 2.2, 2.5, 2.7, 2.8.1, 2.9, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
 | empty | Not a version | v2.5.1 fallback | MSH-12 required-field error (existing) |
 
