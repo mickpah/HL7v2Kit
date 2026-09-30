@@ -194,6 +194,20 @@ PARTIAL = {
                       'not name skip fail-safe',
     'HL7au:000034.2': 'same machinery on OBX-5 coded values; same '
                       'named-public-systems scope as 000034.1',
+    # P3 fix wave — the BASE rows these replace cited CX/EI/XCN base
+    # requirements that the v2.4 grammar (the AU base) does not carry.
+    'HL7au:00044.1.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (CX-1 valued; yields to the base CX.1 '
+                       'check from v2.5.1); "valid according to the '
+                       'identifier scheme" needs identifier-scheme '
+                       'recognition and is not checked',
+    'HL7au:00044.3.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (EI-1 valued); the uniqueness half is '
+                       'cross-message and out of scope',
+    'HL7au:00044.7.1': 'the presence half is enforced on Orders/Results/'
+                       'Referrals (XCN-1 valued); "valid according to the '
+                       'identifier scheme" needs identifier-scheme '
+                       'recognition and is not checked',
     'HL7au:00044.8.1': 'the offset-PRESENCE half is enforced: a TS with '
                        'hour-or-greater precision and no +/-ZZZZ suffix '
                        'fires on Orders/Results/Referrals; the "offset '
@@ -213,7 +227,6 @@ PARTIAL = {
 # Enforced by the base spec model before the overlay runs, so the overlay
 # deliberately does not restate them.
 BASE = {
-    'HL7au:00044.1.1': 'CX-1 is already `CX.requiredComponents`',
     'HL7au:000008.1.4': 'OBX-3.3 = AUSPDI is the discriminator the '
                         'HL7au:000008.1 overlay gates on, not an assertion',
     'HL7au:000008.1.2': 'definitional — states how a display segment is '
@@ -227,9 +240,6 @@ BASE = {
     'HL7au:00046.1.3': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.4': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.5': 'escaping is `Serializer` behaviour, already correct',
-    'HL7au:00044.3.1': 'EI-1 is already `EI.requiredComponents`; the '
-                       'uniqueness half is cross-message and out of scope',
-    'HL7au:00044.7.1': 'XCN-1 is already `XCN.requiredComponents`',
 }
 
 # Registered as permanent / documented limitations.
@@ -313,7 +323,6 @@ OUT_OF_SCOPE = [
     ('HL7au:000031',     'display provenance (receiver rendering)'),
     ('HL7au:000033',     'advisory ("should"), terminology content'),
     ('HL7au:00044.0.1',  'user-defined datatypes are not detectable on the wire'),
-    ('HL7au:00044.7.1',  'identifier-scheme validity, not presence'),
     ('HL7au:00044.7.6',  'advisory ("should")'),
     ('HL7au:00048',      'byte-level character-encoding check'),
     ('HL7au:00050',      'APUTS terminology content (external code system)'),

@@ -856,13 +856,15 @@ extension Profile {
                     )
                 ]
             ),
-            // CX datatype — HL7au:00044.1 series. Skip 44.1.1 (CX-1
-            // must be specified) since the base spec already requires
-            // CX-1 (CX.requiredComponents = [(1, "ID Number")]);
-            // adding it again would be redundant. The genuinely new
-            // AU narrowings are 44.1.2 (CX-4 assigning authority
-            // required when CX is populated) and 44.1.3 (CX-5
-            // identifier type code required when CX is populated).
+            // CX datatype — HL7au:00044.1 series: 44.1.1 (CX-1 must be
+            // specified), 44.1.2 (CX-4 assigning authority) and 44.1.3
+            // (CX-5 identifier type code), each required when CX is
+            // populated. 44.1.1 is `yieldsToBase`: CX.1 is R in the base
+            // model from v2.5.1, but v2.4 CX (the AU base) carries no
+            // component optionality, so the profile must state it for
+            // v2.3/v2.3.1/v2.4 traffic (P3 fix wave). Its "valid according
+            // to the identifier scheme" half needs identifier-scheme
+            // recognition and is not checked.
             // The "must conform to sub points of HL7au:00044.2"
             // clause on 44.1.2 references NASH/PKI rules that are
             // runtime-dependent and out of scope for parser/validator.
@@ -873,6 +875,11 @@ extension Profile {
                 // "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.1.1 — CX-1 ID number must be specified",
+                        yieldsToBase: true
+                    ),
                     ComponentRequirement(
                         component: 4,
                         specCitation: "HL7au:00044.1.2 (r2) — CX-4 assigning authority must be valued"
@@ -900,8 +907,12 @@ extension Profile {
             // Referrals". Component indices from the v2.4 XCN
             // definition (CH02 §2.9.52).
             //
-            // .7.1 is NOT restated: XCN-1 is already
-            // `XCN.requiredComponents` in the base model.
+            // .7.1 (XCN-1 must be specified): no modelled version requires
+            // XCN.1 (O on v2.5.1/v2.6, C on v2.8.2, no optionality on
+            // v2.3-v2.4), so the profile states it outright. Its "valid
+            // according to the identifier scheme" half needs
+            // identifier-scheme recognition and is not checked. P3 fix
+            // wave (absorbs P4-19).
             // .7.6 (<given name> "should" be valued) is advisory, not a
             // "must", so it is not enforced.
             //
@@ -917,6 +928,10 @@ extension Profile {
                 // "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
                 requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.7.1 — XCN-1 ID number must be specified"
+                    ),
                     ComponentRequirement(
                         component: 2,
                         subcomponent: 1,
@@ -1058,10 +1073,25 @@ extension Profile {
             // would be reported twice. The value-set track is populated-only
             // already. HL7au:00044.3.2 (the HPOS/HI registered organisation
             // name) still needs the directory and stays out.
+            //
+            //   .3.1 — "the EI Entity identifier component must be valued".
+            //          No modelled version requires EI.1 (O on v2.5.1+, no
+            //          optionality on v2.3-v2.4), so the profile states it
+            //          outright; on the five fields above it coincides with
+            //          the field-level completeness point, and both are
+            //          reported because both are violated. The "unique within
+            //          the sender facility namespace" half is cross-message
+            //          and not checked. P3 fix wave (absorbs P4-19).
             CompositeOverride(
                 dataType: "EI",
                 // The 00044.3 series is scoped "Orders, Results, Referrals".
                 condition: "messageCode in (ORM, ORU, REF)",
+                requiredComponents: [
+                    ComponentRequirement(
+                        component: 1,
+                        specCitation: "HL7au:00044.3.1 (r2) — EI-1 entity identifier must be valued"
+                    ),
+                ],
                 componentValueSets: [
                     ComponentValueSet(
                         component: 4,

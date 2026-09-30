@@ -16,8 +16,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
 | SHIPPED | 73 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 14 | partly enforced — see each row's note for what is not |
-| BASE | 14 | already enforced by the base model; overlay deliberately silent |
+| PARTIAL | 17 | partly enforced — see each row's note for what is not |
+| BASE | 11 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
 | RECEIVER | 74 | receiver behaviour — not decidable from a message |
@@ -103,7 +103,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (14)
+## PARTIAL (17)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -115,6 +115,9 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:000034.1` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment in either OBX-3 (Observation Identifier) or as an Observation Value, if the system transmits both the public (e.g. LOINC) and local terminology, then the public (e.... | enforced for the public systems the ADRM names (LN, SCT, UCUM): a named public system relegated to the CE/CWE alternate triplet behind a non-public primary fires; systems the ADRM does not name skip fail-safe |
 | `HL7au:000034.2` |  | Senders | Results, Referrals | When using CE, CWE, CNE data types in an OBX segment, in OBX-3 (Observation Identifier), if the system transmits both a public (e.g. LOINC) and a local terminology, then the local terminology must be transmitted in th... | same machinery on OBX-5 coded values; same named-public-systems scope as 000034.1 |
 | `HL7au:000043.1` |  | Senders | Orders, Results, Referrals | MSH-4 – Sending Facility must be filled in with the sending facility HPI-O when sending a message via Secure Message Delivery (SMD) and secured by NASH Certificates. The format must be "registered organisation name in... | M32: the format's OID and "ISO" halves ship caller-asserted on MSH-4 (`auNASHTransport`); the "registered organisation name in HI service" half needs the HPOS/HI directory and stays out |
+| `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (CX-1 valued; yields to the base CX.1 check from v2.5.1); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
+| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | the presence half is enforced on Orders/Results/Referrals (EI-1 valued); the uniqueness half is cross-message and out of scope |
+| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | the presence half is enforced on Orders/Results/Referrals (XCN-1 valued); "valid according to the identifier scheme" needs identifier-scheme recognition and is not checked |
 | `HL7au:00044.8.1` |  | Senders | Orders, Results, Referrals | Correct timezone must be specified | the offset-PRESENCE half is enforced: a TS with hour-or-greater precision and no +/-ZZZZ suffix fires on Orders/Results/Referrals; the "offset is CORRECT for the stated local time" half needs a timezone database and is out of scope |
 | `HL7au:00044.10.1.5` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | ED subtype => type enforced for spec-stated pairs (ADRM §3.20.5 + example annotations); arbitrary IANA subtypes skip, fail-safe |
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype => type enforced for the 0291 subtypes whose 0191 main type §3.20.5 states; unstated ones skip |
@@ -122,15 +125,12 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
-## BASE (14)
+## BASE (11)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
 | `HL7au:000008.1.2` |  | Senders and Receivers | Results | An OBX display segment is identified using OBX-3 Identifier (CE-1) and Name of Coding System (CE-3) components. The text component of the CE may be blank and only CE1 and CE-3 components need to match. | definitional — states how a display segment is identified; implemented as the overlay gate |
 | `HL7au:000008.1.4` |  | Senders and Receivers | Results | In an OBX display segment, the OBX-3 <name of coding system (IS)> must be valued "AUSPDI". | OBX-3.3 = AUSPDI is the discriminator the HL7au:000008.1 overlay gates on, not an assertion |
-| `HL7au:00044.1.1` |  | Senders | Orders, Results, Referrals | CX <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | CX-1 is already `CX.requiredComponents` |
-| `HL7au:00044.3.1` | r2 | Senders | Orders, Results, Referrals | The EI Entity identifier component must be valued and for each document/report must be unique within the sender facility namespace (HD). | EI-1 is already `EI.requiredComponents`; the uniqueness half is cross-message and out of scope |
-| `HL7au:00044.7.1` |  | Senders | Orders, Results, Referrals | XCN <ID (ST)> component must be specified and valid according to the identifier scheme of selected by the Identifier type code and Assigning Authority components. | XCN-1 is already `XCN.requiredComponents` |
 | `HL7au:00046.1.1` |  | Senders | Orders, Results, Referrals | Senders must escape \| characters as '\F\' in all fields, components, subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.2` |  | Senders | Orders, Results, Referrals | Senders must escape '^' characters as '\S\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |
 | `HL7au:00046.1.3` |  | Senders | Orders, Results, Referrals | Senders must escape '&' characters as '\T\' in all HL7 fields, components and subcomponents | escaping is `Serializer` behaviour, already correct |

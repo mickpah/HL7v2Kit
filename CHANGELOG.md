@@ -80,6 +80,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   grammar version already requires MSG-1, so v2.5.1 and later report the
   finding once, not twice. The conformance register moves 00049.1 from
   BASE to SHIPPED.
+- The same gap applied to three identifier points on Orders, Results and
+  Referrals, which the conformance register had filed as BASE against base
+  requirements the v2.4 grammar does not carry. The AU profile now states
+  each one:
+  - HL7au:00044.1.1 (CX-1 must be specified). CX.1 is required in the base
+    model only from v2.5.1, so this rule defers to the base check there and
+    the finding is still reported once.
+  - HL7au:00044.3.1 (EI-1 must be valued) and HL7au:00044.7.1 (XCN-1 must
+    be specified). No modelled version requires EI.1 or XCN.1, so these were
+    never enforced on any version; they now fire on every version. On ORC-2,
+    ORC-3, ORC-4, OBR-2 and OBR-3 an empty EI-1 is reported under both
+    HL7au:00044.3.1 and the field's own EI-completeness point (HL7au:000003
+    to 000007), since both are violated.
+  The register moves all three from BASE to PARTIAL: the presence half is
+  enforced, while identifier-scheme validity (00044.1.1, 00044.7.1) and
+  cross-message uniqueness (00044.3.1) are not checked. This absorbs P4-19.
 - VID.1 is trimmed before the emptiness check, so a whitespace-only MSH-12
   now falls back to v2.5.1 under `ParserOptions.strict` like an empty one,
   rather than throwing `unsupportedVersion`, and the `found:` value of
