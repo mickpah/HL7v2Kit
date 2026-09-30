@@ -574,6 +574,205 @@
           "Version identifier"
         ]
       ]
+    },
+    "0119": {
+      "kind": "HL7",
+      "citation": "HL7 v2.4 Chapter 4 sec 4.20.1, HL7 Table 0119 - Order control codes (pp. 4-139 to 4-145); referenced by ORC-1 (sec 4.5.1.1, 'Refer to HL7 Table 0119')",
+      "note": "V24-C03: v2.4 Appendix A indexes 0119 as 'User 119 Order Control codes' and never enumerates it, so the extractor emitted kind User with no rows and ORC-1 (ID) was never checked. Chapter 4 prints it as an HL7 table with 48 distinct codes (Event/Message Type, Originator and Field Note columns omitted; a code printed against several message types is one row). v2.3.1 prints 47 of them (no PR); v2.5.1 adds OP and PY.",
+      "addEntries": [
+        [
+          "NW",
+          "New order/service"
+        ],
+        [
+          "OK",
+          "Order/service accepted & OK"
+        ],
+        [
+          "UA",
+          "Unable to accept order/service"
+        ],
+        [
+          "PR",
+          "Previous Results with new order/service"
+        ],
+        [
+          "CA",
+          "Cancel order/service request"
+        ],
+        [
+          "OC",
+          "Order/service canceled"
+        ],
+        [
+          "CR",
+          "Canceled as requested"
+        ],
+        [
+          "UC",
+          "Unable to cancel"
+        ],
+        [
+          "DC",
+          "Discontinue order/service request"
+        ],
+        [
+          "OD",
+          "Order/service discontinued"
+        ],
+        [
+          "DR",
+          "Discontinued as requested"
+        ],
+        [
+          "UD",
+          "Unable to discontinue"
+        ],
+        [
+          "HD",
+          "Hold order request"
+        ],
+        [
+          "OH",
+          "Order/service held"
+        ],
+        [
+          "UH",
+          "Unable to put on hold"
+        ],
+        [
+          "HR",
+          "On hold as requested"
+        ],
+        [
+          "RL",
+          "Release previous hold"
+        ],
+        [
+          "OE",
+          "Order/service released"
+        ],
+        [
+          "OR",
+          "Released as requested"
+        ],
+        [
+          "UR",
+          "Unable to release"
+        ],
+        [
+          "RP",
+          "Order/service replace request"
+        ],
+        [
+          "RU",
+          "Replaced unsolicited"
+        ],
+        [
+          "RO",
+          "Replacement order"
+        ],
+        [
+          "RQ",
+          "Replaced as requested"
+        ],
+        [
+          "UM",
+          "Unable to replace"
+        ],
+        [
+          "PA",
+          "Parent order/service"
+        ],
+        [
+          "CH",
+          "Child order/service"
+        ],
+        [
+          "XO",
+          "Change order/service request"
+        ],
+        [
+          "XX",
+          "Order/service changed, unsol."
+        ],
+        [
+          "UX",
+          "Unable to change"
+        ],
+        [
+          "XR",
+          "Changed as requested"
+        ],
+        [
+          "DE",
+          "Data errors"
+        ],
+        [
+          "RE",
+          "Observations/Performed Service to follow"
+        ],
+        [
+          "RR",
+          "Request received"
+        ],
+        [
+          "SR",
+          "Response to send order/service status request"
+        ],
+        [
+          "SS",
+          "Send order/service status request"
+        ],
+        [
+          "SC",
+          "Status changed"
+        ],
+        [
+          "SN",
+          "Send order/service number"
+        ],
+        [
+          "NA",
+          "Number assigned"
+        ],
+        [
+          "CN",
+          "Combined result"
+        ],
+        [
+          "RF",
+          "Refill order/service request"
+        ],
+        [
+          "AF",
+          "Order/service refill request approval"
+        ],
+        [
+          "DF",
+          "Order/service refill request denied"
+        ],
+        [
+          "FU",
+          "Order/service refilled, unsolicited"
+        ],
+        [
+          "OF",
+          "Order/service refilled as requested"
+        ],
+        [
+          "UF",
+          "Unable to refill"
+        ],
+        [
+          "LI",
+          "Link order/service to patient care problem or goal"
+        ],
+        [
+          "UN",
+          "Unlink order/service from patient care problem or goal"
+        ]
+      ]
     }
   },
   "2.5.1": {

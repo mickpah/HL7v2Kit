@@ -192,4 +192,19 @@ struct CodeTableValidationTests {
         let t = try #require(HL7TableRegistry.table("0356", version: .v2_3_1))
         #expect(t.codes.contains("2.3") && t.isClosed)
     }
+
+    @Test("v2.4 ORC-1 is checked against HL7 Table 0119 as CH04 sec 4.20.1 prints it")
+    func orc1V24() throws {
+        func wire(_ orc1: String) -> String {
+            "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01|MSG00001|P|2.4\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+                + "ORC|\(orc1)|1\r"
+        }
+        #expect(try tableIssues(wire("NW")).isEmpty)
+        #expect(try tableIssues(wire("PR")).isEmpty, "PR is printed from v2.4 on")
+        #expect(try tableIssues(wire("ZZ")).map(\.code) == [.valueNotInTable(table: "0119")])
+        let t = try #require(HL7TableRegistry.table("0119", version: .v2_4))
+        #expect(t.kind == .hl7 && t.isClosed && t.entries.count == 48)
+        #expect(!t.contains("OP") && !t.contains("PY"), "OP and PY are v2.5 additions")
+    }
 }
