@@ -265,4 +265,35 @@ struct CodeTableValidationTests {
         options.localTableExtensions = ["0074": ["ZZ"]]
         #expect(try tableIssues(pid5NameType("Z"), options: options).map(\.code) == [.valueNotInTable(table: "0200")])
     }
+
+    @Test("Under the AU localisation a declared extension widens the table check and leaves AU profile rules alone")
+    func localExtensionUnderAULocalisation() throws {
+        // EI.4 Universal ID Type binds Table 0301; HL7au:00044.3.3 requires "ISO" under the NASH assertion.
+        let ei = "12123-1^Good Hospital^1.2.36.1.2001.1003.0.8003629900024197^ZZ"
+        let wire = "MSH|^~\\&|LAB|FAC|APP|FAC|20240101120000||ORU^R01^ORU_R01|MSG00001|P|2.5.1\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN\r" + "ORC|RE|\(ei)\r"
+        func issues(_ extensions: [String: Set<String>]) throws -> [ValidationIssue] {
+            var options = ValidationOptions()
+            options.auNASHTransport = true
+            options.localTableExtensions = extensions
+            let message = try Parser(locale: .auLocalisation).parse(wire)
+            return Validator(options: options, locale: .auLocalisation).validate(message).issues
+        }
+        let before = try issues([:])
+        #expect(before.contains { $0.code == .valueNotInTable(table: "0301") })
+        #expect(before.contains { $0.message.contains("00044.3.3") })
+        let after = try issues(["0301": ["ZZ"]])
+        #expect(!after.contains { $0.code == .valueNotInTable(table: "0301") })
+        #expect(after.contains { $0.message.contains("00044.3.3") }, "the AU profile rule is not affected")
+    }
+
+    @Test("With checkCodeTables = false a declared extension changes nothing: no table issue either way")
+    func localExtensionWithCodeTablesOff() throws {
+        var options = ValidationOptions()
+        options.checkCodeTables = false
+        #expect(try tableIssues(oru(obr24: "ZZ"), options: options).isEmpty)
+        options.localTableExtensions = ["0074": ["ZZ"]]
+        #expect(try tableIssues(oru(obr24: "ZZ"), options: options).isEmpty)
+        #expect(try tableIssues(oru(obr24: "QQ"), options: options).isEmpty)
+    }
 }

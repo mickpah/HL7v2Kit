@@ -37,8 +37,9 @@ Option 3. It is the only one defensible against the spec text alone, and it reus
 
 - `valueNotInTable` is live on 1,073 `ID` fields across six versions. A message that carried an out-of-table value in such a field used to pass and now reports an error; `ValidationOptions.checkCodeTables = false` (and the `lenient` preset) suppress it.
 - Generated Swift must keep each expression small. A version's grammar emitted as one dictionary literal took 16 minutes to type-check once fields carried a string for the optional `table`; codegen now emits one constant per segment.
-- **Deferred (registered, not shipped):** table links on composite components (`CX.5` 0203, `XCN.13`, `CE.3` 0396 and the like) — `tables` records only field-level bindings, and component tables are printed in the datatype chapter, which the extractor does not read yet. Multi-table field bindings are recorded in `tables` but not enforced. The VMR implementation table and OBX-4 sub-ID tree validation are the first planned consumers beyond field membership.
+- ~~**Deferred (registered, not shipped):** table links on composite components (`CX.5` 0203, `XCN.13`, `CE.3` 0396 and the like).~~ Shipped by ADR-017 on all six versions. Multi-table field bindings are recorded in `tables` but not enforced. The VMR implementation table and OBX-4 sub-ID tree validation are the first planned consumers beyond field membership.
 - 14 advisory `KINDMISMATCH` findings remain by design: the spec itself binds some `ID` fields to user-defined tables; they are never enforced.
+- Table 0391 stays closed on v2.6 and v2.8.2: RCP-7 (sec 5.5.6.7) cites it "for values", which is neither "suggested values" nor a local-extension clause, and the table there itemises the segment group names with no "Etc" row or note. v2.4 and v2.5.1 stay open on their printed "Etc" row and note ("currently includes no values defined by HL7").
 - Print-versus-prose binding conflicts are resolved in `scripts/table-repairs.json` with a citation (TQ1-12, CON-18, SID-4, RCP-7, SAC-28; P2-8, P2-9).
 
 ## References

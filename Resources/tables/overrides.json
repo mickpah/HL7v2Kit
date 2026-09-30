@@ -2045,6 +2045,24 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.4 Chapter 8 sec 8.5.2.5 MFE-5 Primary key value type, HL7 Table 0355 - Primary key value type",
       "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0290": {
+      "fixDescriptions": {
+        "51": "z",
+        "52": "0",
+        "53": "1",
+        "54": "2",
+        "55": "3",
+        "56": "4",
+        "57": "5",
+        "58": "6",
+        "59": "7",
+        "60": "8",
+        "61": "9",
+        "62": "+",
+        "63": "/"
+      },
+      "note": "P2-fix 6(d): v2.4 Chapter 2 sec 2.9.16.4 (ED Encoding), HL7 Table 0290 - MIME base64 encoding characters (pp. 2-42 to 2-43), and Appendix A both print the fourth Value/Code column with the value repeated in the Code cell for rows 51 to 63 (\"51 51 z\", \"52 52 0\" ... \"63 63 /\"), so the extractor read the descriptions as \"51 z\" and so on. The Code column of every other row is the single base64 character, as v2.3 and v2.3.1 (transcribed from Chapter 2) have it; the descriptions are corrected to that character."
     }
   },
   "2.5.1": {

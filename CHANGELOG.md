@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ADR-014 signature compatibility: `ValidationOptions.init` and `HL7Table.init` keep
   their released signatures. `localTableExtensions` is no longer an init parameter (set
   it by mutation), and `patterns:` moves to a separate `HL7Table.init` overload.
+- v2.4 Table 0290 (MIME base64 encoding characters) rows 51 to 63 carried the value
+  reprinted in the description ("51 z"); the descriptions are now the single character
+  CH02 sec 2.9.16.4 means ("z"), matching v2.3.1. Corrected through a new
+  `fixDescriptions` key in `Resources/tables/overrides.json`.
+- ADR-016 no longer lists composite-component table links as deferred (shipped by
+  ADR-017) and records why Table 0391 stays closed on v2.6 and v2.8.2.
 
 ### Changed — P7-1: the schema audit compares `C` and the defining attribute table
 
@@ -62,8 +68,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a pattern's own regex need not be anchored for matching to be exact.
 - Table 0203 `NNxxx` ("National Person Identifier where the xxx is the ISO
   table 3166 3-character (alphabetic) country code") is modelled as the
-  pattern `^NN[A-Z]{3}$` on v2.3.1 to v2.8.2: CX.5 values such as `NNAUS`
-  or `NNCAN` no longer raise `valueNotInTable` (V282-C01). The pattern
+  pattern `^NN[A-Z]{3}$` on v2.3.1 to v2.8.2 (V282-C01): values such as
+  `NNAUS` or `NNCAN` are now members under `HL7Table.contains(_:)` and in the
+  schema audit's spec-example code check (`scripts/audit-schemas.py
+  --examples`). CX.5 validation outcomes do not change, because Table 0203 is
+  open on v2.4 to v2.8.2 (P2-7) and user-defined on v2.3.1. The pattern
   checks only the shape — `NN` plus three uppercase letters — not ISO 3166
   membership of those three letters; see the permanent-limitations register
   §C.

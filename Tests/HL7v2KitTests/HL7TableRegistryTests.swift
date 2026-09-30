@@ -210,6 +210,16 @@ struct HL7TableRegistryTests {
         #expect(t0290.entries.first { $0.code == "63" }?.description == "/")
     }
 
+    @Test("v2.4 Table 0290 rows 51 to 63 carry the base64 character, not the value reprinted before it")
+    func table0290V24Descriptions() throws {
+        let v24 = try #require(HL7TableRegistry.table("0290", version: .v2_4))
+        #expect(v24.entries.first { $0.code == "51" }?.description == "z")
+        #expect(v24.entries.first { $0.code == "63" }?.description == "/")
+        #expect(v24.entries.allSatisfy { $0.description.count == 1 })
+        let v231 = try #require(HL7TableRegistry.table("0290", version: .v2_3_1))
+        #expect(v24.entries.sorted { $0.code < $1.code } == v231.entries.sorted { $0.code < $1.code })
+    }
+
     @Test("A pattern row matches the family of codes it names, and is not itself a code")
     func patternRow() {
         let t = HL7Table(

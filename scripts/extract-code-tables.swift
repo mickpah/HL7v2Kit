@@ -44,7 +44,7 @@
 //
 // Resources/tables/overrides.json is a hand-kept overlay, keyed by version and
 // then by table number (kind / permitsLocalExtensions / citation / dropCodes /
-// renameCodes / addEntries / createName / patterns, plus a note documenting
+// renameCodes / fixDescriptions / addEntries / createName / patterns, plus a note documenting
 // what was verified). Every entry is version-scoped:
 // an artifact of one version's printing must never be able to silently alter
 // another version's table. The file lives at the root of Resources/tables,
@@ -123,6 +123,10 @@ struct Override {
     /// Hand-verified corrections of a value the source PDF misprints exactly
     /// once, so the separator-variant rule below has no sibling to learn from.
     var renameCodes: [String: String] = [:]
+    /// Hand-verified corrections of a printed description, keyed by code, where the
+    /// source misprints the description column (v2.4 Table 0290 prints the value again
+    /// before the character for rows 51 to 63: "51 z"). The row keeps its place.
+    var fixDescriptions: [String: String] = [:]
     /// Rows the source PDF omits but the version's DEFINING chapter prints
     /// (v2.5.1 Appendix A prints 0210 with AND only; Chapter 2A sec 2.A.60.4
     /// prints AND and OR). `[code, description]` pairs, appended in order.
@@ -740,6 +744,12 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
                                              rename: override?.renameCodes ?? [:])
     var rowPairs = allPairs.filter { $0.0 != "..." }
     var addedNotes: [String] = []
+    for (i, pair) in rowPairs.enumerated() {
+        if let fixed = override?.fixDescriptions[pair.0] {
+            rowPairs[i].1 = fixed
+            addedNotes.append("\(t.number): description of \(pair.0) corrected by overrides.json")
+        }
+    }
     for pair in override?.addEntries ?? [] where pair.count == 2 && !rowPairs.contains(where: { $0.0 == pair[0] }) {
         rowPairs.append((pair[0], pair[1]))
         addedNotes.append("\(t.number): added by overrides.json: \(pair[0])")
@@ -809,6 +819,7 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
             citation: d["citation"] as? String,
             dropCodes: (d["dropCodes"] as? [String]) ?? [],
             renameCodes: (d["renameCodes"] as? [String: String]) ?? [:],
+            fixDescriptions: (d["fixDescriptions"] as? [String: String]) ?? [:],
             addEntries: (d["addEntries"] as? [[String]]) ?? [],
             createName: d["createName"] as? String,
             patterns: (d["patterns"] as? [[String: String]]) ?? []
