@@ -31,15 +31,22 @@ struct SignatureCompatibilityTests {
         #expect(makeWithPatterns("0203", "n", .hl7, false, entries, [pattern]).contains("NNAUS"))
     }
 
-    @Test("FieldGrammar.init keeps its ten-parameter signature; tableOpen: is a separate overload")
+    @Test("FieldGrammar.init keeps its ten-parameter signature; tableOpen: and prohibitedSeverity: are separate overloads")
     func fieldGrammarInit() {
         let make: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?) -> FieldGrammar =
             FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:)
         let plain = make(1, "n", "ID", .optional, .single, nil, nil, false, "0136", nil)
         #expect(!plain.tableOpen)
+        #expect(plain.prohibitedSeverity == .error)
 
         let makeOpen: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?, Bool) -> FieldGrammar =
             FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:)
         #expect(makeOpen(1, "n", "ID", .optional, .single, nil, nil, false, "0136", nil, true).tableOpen)
+        #expect(makeOpen(1, "n", "ID", .optional, .single, nil, "X empty", false, nil, nil, false).prohibitedSeverity == .error)
+
+        let makeSeverity: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?, Bool, IssueSeverity) -> FieldGrammar =
+            FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:prohibitedSeverity:)
+        let advisory = makeSeverity(7, "n", "ID", .conditional, .single, nil, "TQ2-2 != C", false, nil, nil, false, .warning)
+        #expect(advisory.prohibitedSeverity == .warning && !advisory.tableOpen)
     }
 }

@@ -1991,7 +1991,7 @@ public struct Validator: Sendable {
               )
         else { return }
         issues.append(ValidationIssue(
-            severity: .error,
+            severity: grammar.prohibitedSeverity,
             code: .conditionalFieldProhibited,
             location: location,
             message: "Field \(location.pathDescription) ('\(grammar.name)') is populated but prohibited while '\(prohibition)' holds"

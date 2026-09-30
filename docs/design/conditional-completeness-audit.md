@@ -53,6 +53,20 @@ A clean, closed, wire-detectable same-segment MUST. Shipped as `PD1-15 condition
 
 Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` — the HL7-standard User-defined Table 0339 "not signed" codes. **Partial** (same honesty pattern as HL7au:00044.4.4, v0.13): the spec's "*or similar values in related external code tables*" caveat means sites using a non-HL7 code system for ORC-20 could encode "not signed" with other values that this predicate won't catch. The rule is a sound **necessary condition** for the HL7-standard table — it fires only when ORC-20 is exactly `3`/`4`, which per Table 0339 genuinely means not-signed, so it cannot misfire on standard-conformant traffic (req #4). External-code-system completeness is out of the portable-core boundary.
 
+## Shipped in P4 (expressible-conditions remediation, 2026-10)
+
+The 2026-09 review (planning/reviews, finding X-C09) found positions this register called permanent although the condition DSL already states them, prohibitions it did not model, and one shipped prohibition that misfired. Each row cites the printed sentence. "Partial" means the predicate fires only where the wire decides the rule and stays silent elsewhere (fail-safe, v0.2-V1). Axis `condition` fires `conditionalFieldMissing`; axis `prohibitedWhen` fires `conditionalFieldProhibited` at the stated severity.
+
+| Position | Versions | Axis | Predicate | Severity | Citation | Exactness |
+|---|---|---|---|---|---|---|
+| RXR-6 | v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `RXR-2 empty` | error | v2.5.1 CH04 §4.14.2.6: "may only be populated if RXR-2 Administration Site is populated" | exact |
+| TQ2-7 | v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `TQ2-2 != C` | warning | v2.5.1 CH04 §4.5.5.7: "Should not be populated when TQ2-2 ... is not equal to a 'C'" | exact (SHOULD) |
+| STF-1 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode != MFN` | warning | v2.5.1 CH15 §15.4.8.1: "For all other messages, this field should not be used" | exact (SHOULD) |
+| PRA-1 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode != MFN` | warning | v2.5.1 CH15 §15.4.6.1: "For all other messages, this field should not be used" | exact (SHOULD) |
+| PRA-12 | v2.4, v2.5.1, v2.6, v2.8.2 | prohibitedWhen | `messageCode = MFN` | warning | v2.5.1 CH15 §15.4.6.12: "For the ... Master File Notification message, this field should not be used" | exact (SHOULD) |
+
+The RXR-6 row models the Condition Rule sentence only. The same definition adds a code-system-aware SHOULD-NOT ("If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated"), which depends on the coding system RXR-2 carries rather than on its presence; it is not modelled by this row.
+
 ## Permanent limitations (documented, not shippable — req #3/#4)
 
 Each below is `C` in its HL7 attribute table, but the field-definition prose gives **no wire-detectable, DSL-expressible required-when trigger**. Under the fail-safe DSL the field is treated as optional — the correct behaviour when the trigger is undecidable — and never misfires. Grouped by why:
@@ -171,7 +185,7 @@ limitations, all fail-safe:
 
 - **STF-1 / PRA-1** (00671 / 00685) → `messageCode = MFN` — "For MFN Master File Notification,
   this field is required ... For all other messages, this field should not be used" (v2.4 +
-  v2.5.1 CH15, identical prose; the field is `R` in v2.3 and absent-of-condition there).
+  v2.5.1 CH15, identical prose; the field is `R` in v2.3 and absent-of-condition there). P4 added the stated should-not halves (STF-1 / PRA-1 outside MFN, PRA-12 on MFN) as warning-level prohibitions; see "Shipped in P4".
 - **PRA-12** (01616) → `messageCode != MFN` — the stated inverse ("for all messages except the
   Staff/Practitioner Master File Notification").
 - **RQ1-2 / RQ1-3** (00286 / 00287) → `RQ1-4 empty OR RQ1-5 empty`, **RQ1-4 / RQ1-5**

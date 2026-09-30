@@ -30,6 +30,9 @@ struct FieldSchema: Decodable {
     /// (populated while the predicate is true fires). See
     /// `FieldGrammar.prohibitedWhen`. M8-D.
     let prohibitedWhen: String?
+    /// Severity for the prohibition (`"error"`, `"warning"`, `"info"`);
+    /// absent means error. See `FieldGrammar.prohibitedSeverity`. P4.
+    let prohibitedSeverity: String?
     /// Track B: presence means the spec's SEQ cell is `1-n` (the field
     /// position recurs across every `|`-separated column). The value is
     /// the plural accessor name emitted alongside the primary accessor.
@@ -240,7 +243,13 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let length = field.length.map { escapeStringLiteral($0) } ?? "nil"
             // Emitted only when set, so unmarked fields keep the released initialiser.
             let tableOpen = field.tableOpen == true ? ", tableOpen: true" : ""
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)),"
+            let prohibitedSeverity: String = {
+                guard let raw = field.prohibitedSeverity else { return "" }
+                precondition(["error", "warning", "info"].contains(raw),
+                             "\(schema.segmentID)-\(field.index): prohibitedSeverity must be error, warning or info, got \(raw)")
+                return ", prohibitedSeverity: .\(raw)"
+            }()
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a

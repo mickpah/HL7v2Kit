@@ -8,6 +8,6 @@
     { "index": 3, "swiftName": "administrationDevice", "name": "Administration Device", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0164"] },
     { "index": 4, "swiftName": "administrationMethod", "name": "Administration Method", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0165"] },
     { "index": 5, "swiftName": "routingInstruction", "name": "Routing Instruction", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 6, "swiftName": "administrationSiteModifier", "name": "Administration Site Modifier", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0495"] }
+    { "index": 6, "swiftName": "administrationSiteModifier", "name": "Administration Site Modifier", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0495"], "prohibitedWhen": "RXR-2 empty" }
   ]
 }

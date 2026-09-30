@@ -1985,7 +1985,7 @@ extension SegmentGrammarTable {
         segmentID: "PRA",
         version: "2.4",
         fields: [
-            FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN", prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 1, name: "Primary Key Value - PRA", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN", prohibitedWhen: "messageCode != MFN", variableColumns: false, table: nil, length: "250", prohibitedSeverity: .warning),
             FieldGrammar(index: 2, name: "Practitioner Group", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 3, name: "Practitioner Category", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0186", length: "3"),
             FieldGrammar(index: 4, name: "Provider Billing", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0187", length: "1"),
@@ -1996,7 +1996,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Institution", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 10, name: "Date Left Practice", dataType: "DT", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "8"),
             FieldGrammar(index: 11, name: "Government Reimbursement Billing Eligibility", dataType: "CE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 12, name: "Set ID - PRA", dataType: "SI", optionality: .conditional, repeatability: .single, condition: "messageCode != MFN", prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
+            FieldGrammar(index: 12, name: "Set ID - PRA", dataType: "SI", optionality: .conditional, repeatability: .single, condition: "messageCode != MFN", prohibitedWhen: "messageCode = MFN", variableColumns: false, table: nil, length: "60", prohibitedSeverity: .warning),
         ]
     )
 
@@ -2714,7 +2714,7 @@ extension SegmentGrammarTable {
         segmentID: "STF",
         version: "2.4",
         fields: [
-            FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN", prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 1, name: "Primary Key Value - STF", dataType: "CE", optionality: .conditional, repeatability: .single, condition: "messageCode = MFN", prohibitedWhen: "messageCode != MFN", variableColumns: false, table: nil, length: "250", prohibitedSeverity: .warning),
             FieldGrammar(index: 2, name: "Staff ID Code", dataType: "CX", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 3, name: "Staff Name", dataType: "XPN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 4, name: "Staff Type", dataType: "IS", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0182", length: "2"),

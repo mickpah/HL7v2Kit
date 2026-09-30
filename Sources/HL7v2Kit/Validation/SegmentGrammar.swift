@@ -96,6 +96,13 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// a field with `tableOpen` set; other fields bound to the same table are unaffected.
     /// The schema entry carries the citation (`tableOpenCitation`). `false` by default. P2-15.
     public let tableOpen: Bool
+    /// Severity of the `.conditionalFieldProhibited` issue raised when
+    /// this field is populated while `prohibitedWhen` holds. `.error`
+    /// (the default) for normative text ("may only be", "not
+    /// permitted"); `.warning` for SHOULD-level or "not applicable"
+    /// text, so advisory spec wording never produces an error (req #4).
+    /// Ignored when `prohibitedWhen` is `nil`. P4.
+    public let prohibitedSeverity: IssueSeverity
 
     public init(
         index: Int,
@@ -130,6 +137,29 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         length: String? = nil,
         tableOpen: Bool
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: .error)
+    }
+
+    /// Creates a field grammar that also states the severity of its prohibition (see
+    /// ``prohibitedSeverity``). A separate overload so the released initialisers keep
+    /// their signatures (ADR-014). P4.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity
+    ) {
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -141,6 +171,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.table = table
         self.length = length
         self.tableOpen = tableOpen
+        self.prohibitedSeverity = prohibitedSeverity
     }
 }
 

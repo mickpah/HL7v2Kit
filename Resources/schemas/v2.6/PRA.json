@@ -3,7 +3,7 @@
   "version": "2.6",
   "description": "Practitioner Detail",
   "fields": [
-    { "index": 1, "swiftName": "primaryKeyValuePra", "name": "Primary Key Value - PRA", "dataType": "CWE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "messageCode = MFN" },
+    { "index": 1, "swiftName": "primaryKeyValuePra", "name": "Primary Key Value - PRA", "dataType": "CWE", "length": "250", "optionality": "C", "repeatability": "1", "tables": ["9999"], "condition": "messageCode = MFN", "prohibitedWhen": "messageCode != MFN", "prohibitedSeverity": "warning" },
     { "index": 2, "swiftName": "practitionerGroup", "name": "Practitioner Group", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0358"] },
     { "index": 3, "swiftName": "practitionerCategory", "name": "Practitioner Category", "dataType": "IS", "length": "3", "table": "0186", "optionality": "O", "repeatability": "*", "tables": ["0186"] },
     { "index": 4, "swiftName": "providerBilling", "name": "Provider Billing", "dataType": "ID", "length": "1", "table": "0187", "optionality": "O", "repeatability": "1", "tables": ["0187"] },
@@ -14,6 +14,6 @@
     { "index": 9, "swiftName": "institution", "name": "Institution", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0537"] },
     { "index": 10, "swiftName": "dateLeftPractice", "name": "Date Left Practice", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "governmentReimbursementBillingEligibility", "name": "Government Reimbursement Billing Eligibility", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0401"] },
-    { "index": 12, "swiftName": "setIdPra", "name": "Set ID - PRA", "dataType": "SI", "length": "60", "optionality": "C", "repeatability": "1", "condition": "messageCode != MFN" }
+    { "index": 12, "swiftName": "setIdPra", "name": "Set ID - PRA", "dataType": "SI", "length": "60", "optionality": "C", "repeatability": "1", "condition": "messageCode != MFN", "prohibitedWhen": "messageCode = MFN", "prohibitedSeverity": "warning" }
   ]
 }
