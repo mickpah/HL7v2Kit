@@ -128,6 +128,24 @@ Found during the P4-1 review (2026-09-30). Not an ADRM-2021 point; added here pe
 
 **Known limitation (req #3), blocks spec-completeness.** Fix tracked in P4-21.
 
+### Addendum to §D — HL7au:00060.4, C elements not valued when the predicate is false (P4-20)
+
+Recorded 2026-10-01. ADRM-2021 Appendix 5 (p. 466): "HL7au:00060.4 | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied." ADRM §1 (p. 11) gives C the Conformance Implementation Manual meaning: "If the predicate is NOT satisfied: A conformant sending application must NOT send the element." The ADRM attribute tables use the base `OPT` column, so the elements in scope are the base v2.4 C fields.
+
+**Status: PARTIAL, BLOCKING spec-completeness.** The point is enforced only where the base schema carries an explicit `prohibitedWhen` on a C field (`.conditionalFieldProhibited`): PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 (v2.8.2). No AU-profile rule fires `HL7au:00060.4`. The general rule ("report a valued C field whose `condition` is false") cannot ship, for two reasons:
+
+1. **Stored conditions are "required when" triggers, not full predicates.** `FieldGrammar.condition` records when the field becomes required; it does not record when the field must be absent. Negating it contradicts the spec text:
+   - OBR-2 / OBR-3 / ORC-2 / ORC-3: ADRM §4.4.1.2 says "If both fields, ORC-2-placer order number and OBR-2-placer order number, are valued, they must contain the same value", so both may be valued. Negation would prohibit OBR-2 whenever ORC-2 or OBR-3 is valued, which is nearly every AU ORU and ORM.
+   - OBR-7 (`messageCode in (ORU, ORF, OUL)`): ADRM §4.4.1.7 says that in a request, "if ... a sample has been sent along as part of the request, this field must be filled in". Negation would prohibit it in ORM.
+   - PID-35 (v2.4): may be valued without PID-36 breed, so negation misfires.
+2. **The evaluator maps "undecidable" to false.** `Validator.conditionTriggers` fails safe: a missing peer segment, a malformed atom or `noRepeat` over an empty field all evaluate `false`. That is safe for "required when true" checks. Under "prohibited when false" it makes every unresolvable predicate fire. For example, an ORU with no ORC makes `ORC-2 empty` unresolvable.
+
+**Routes to close:**
+- **B (tracked as P4-24):** explicit, cited per-field AU prohibitions wherever the v2.4 or ADRM text says the element "must not be valued", added as `prohibitedWhen` (or an AU-profile equivalent) rather than by negating `condition`.
+- **C (owner decision, possibly ADR-021):** mark in the schema which conditions are full predicates, add a three-state (true / false / unknown) evaluator core, and have 00060.4 negate only marked conditions that evaluate definitely false.
+
+A test pins the current behaviour (`LocaleAUProfileTests`, P4-20): an AU v2.4 ORU with OBR-2 valued while its condition is false (ORC-2 and OBR-3 also valued) raises no `HL7au:00060.4` issue. Do not "fix" that test by negating `condition`. Close the gap through route B or C.
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries

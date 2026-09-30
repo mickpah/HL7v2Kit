@@ -2381,3 +2381,49 @@ struct LocaleAUProfileTests {
                 "REF^Z99 under the L2 profile must fire 000020's L2 leg; got \(report.errors.map(\.message))")
     }
 }
+
+// P4-20 — HL7au:00060.4 ("C elements must not be valued when the
+// associated predicate is not satisfied") is deliberately NOT enforced
+// by negating `FieldGrammar.condition`. This pins that behaviour.
+//
+// DELIBERATE: see docs/design/permanent-limitations-register.md, §D
+// addendum "HL7au:00060.4 ... (P4-20)", BLOCKING spec-completeness.
+// Stored conditions are "required when" triggers, not full predicates,
+// and the evaluator maps "undecidable" to false. Negating them would
+// prohibit OBR-2 here, although ADRM §4.4.1.2 says ORC-2 and OBR-2 may
+// both be valued. Do not make this test fail by adding a naive
+// negation. Close the gap through route B (P4-24, explicit cited
+// prohibitions) or route C (full-predicate marking plus a three-state
+// evaluator).
+@Suite("AU HL7au:00060.4 is PARTIAL: no C-false prohibition by negation (P4-20)")
+struct AU00060_4PartialTests {
+
+    private let wire = TestWires.msh("ORU^R01", "2.4")
+        + "PID|1||123^^^HOSP^MR||DOE^JOHN\r"
+        + "ORC|RE|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO\r"
+        + "OBR|1|PLACER123^HOSP^1.2.36.1.2001.1003.0.ABC^ISO|FILLER456^LAB^1.2.36.1.2001.1003.0.DEF^ISO|GLU^Glucose^L\r"
+
+    @Test("AU ORU with C field OBR-2 valued while its condition is false raises no HL7au:00060.4")
+    func cFieldValuedWithFalseConditionIsNotReported() throws {
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let obrIndex = try #require(message.segments.firstIndex { $0.segmentID == "OBR" })
+
+        // Precondition: OBR-2 is C with a stored condition, and that
+        // condition is false on this wire (ORC-2 and OBR-3 are valued).
+        let grammar = try #require(SegmentGrammarTable.v2_4["OBR"]?.field(2))
+        #expect(grammar.optionality == .conditional)
+        let condition = try #require(grammar.condition)
+        let validator = Validator(locale: .auLocalisation)
+        #expect(!validator.conditionTriggers(
+            condition, in: message.segments[obrIndex], segmentIndex: obrIndex,
+            message: message, currentSegmentID: "OBR"))
+
+        let report = validator.validate(message)
+        let fired = report.issues.contains { issue in
+            guard case .profileConstraintViolation(let rule) = issue.code else { return false }
+            return rule.contains("00060.4")
+        }
+        #expect(!fired, "HL7au:00060.4 must not fire by negating a required-when condition; got \(report.issues.map(\.message))")
+        #expect(!report.issues.contains { $0.code == .conditionalFieldProhibited && $0.location.segmentID == "OBR" })
+    }
+}

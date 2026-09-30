@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documented — P4-20: HL7au:00060.4 recorded as PARTIAL
+
+- HL7au:00060.4 (C elements must not be valued when the predicate is false) is now PARTIAL in the ADRM register, enforced only through explicit `prohibitedWhen` fields. General enforcement is a BLOCKING limitation (`permanent-limitations-register.md` §D addendum; routes P4-24 and ADR-021 candidate).
+
 ### Fixed — P2-15: per-field table openness
 
 - Some HL7 tables are cited "for suggested values" (or "User-defined", or

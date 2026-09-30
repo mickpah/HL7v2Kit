@@ -153,6 +153,14 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
+    # P4-20: see permanent-limitations-register (00060.4 row, BLOCKING).
+    'HL7au:00060.4': 'enforced only where the base schema carries an explicit '
+                     '`prohibitedWhen` on a C field (`.conditionalFieldProhibited`): '
+                     'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
+                     'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
+                     '(v2.8.2). General enforcement is BLOCKING: stored conditions '
+                     'are "required when" triggers, not full predicates, and the '
+                     'evaluator maps undecidable to false',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
@@ -234,7 +242,6 @@ BASE = {
     'HL7au:00046.3': 'R-optionality enforcement is the Validator core',
     'HL7au:00060.1': 'R-optionality enforcement is the Validator core',
     'HL7au:00060.3': 'conditional predicates are the same-segment DSL',
-    'HL7au:00060.4': 'conditional predicates are the same-segment DSL',
     'HL7au:00046.1.1': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.2': 'escaping is `Serializer` behaviour, already correct',
     'HL7au:00046.1.3': 'escaping is `Serializer` behaviour, already correct',
