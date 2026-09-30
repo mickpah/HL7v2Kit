@@ -61,6 +61,14 @@ is empty; nothing awaits a model extension. *(Historical note, M6-B-6: the "MSH-
 profile-ID addressing" root cause named here earlier was a misidentification — the ADRM
 declares the adhered profile in MSH-12.3, which the DSL addresses.)*
 
+### Addendum to §D — base-spec new-order / Send Number OBR-2/3 misfire (P1 review finding, not an ADRM point)
+
+Found during the P1 OBR-predicates whole-workstream review (2026-09-30). Not an ADRM-2021 point — landed here per the global-constraints rule that P4/P6 rows add to the existing lettered sections rather than opening a new one.
+
+On v2.3 through v2.6, the modelled OBR-2 condition (`ORC-2 empty`) and OBR-3 condition (`ORC-3 empty`) fire whenever the ORC counterpart is empty, with no allowance for a legitimately-unassigned filler number. A placer NW order has no filler order number yet by design; the ORC-1 Send Number (SN) table notes (v2.4 §4.5.1.3 family) print a *null* ORC-3 as the correct value when the filler application is requesting a centralised filler order number from another application — the empty ORC-3 there is the wire signal that a number has not yet been assigned, not an omission that OBR-3 must carry instead. The modelled predicate cannot tell "ORC-3 empty because unassigned (legitimate)" from "ORC-3 empty and should have been carried in OBR-3 (spec violation)", so it fires `conditionalFieldMissing` on OBR-3 for a conformant NW/SN order where both ORC-3 and OBR-3 are, correctly, empty. The same shape applies to OBR-2/ORC-2 on the placer side.
+
+**Known defect (req #4), blocks spec-completeness.** Fix tracked in P4-7, widened from the v2.8.2-only placer-or-filler note above (`docs/design/v2_8_2-spec-audit.md`) to also cover v2.3–v2.6.
+
 ## What is NOT a limitation (recorded to prevent re-litigation)
 
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.

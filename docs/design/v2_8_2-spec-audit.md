@@ -28,7 +28,7 @@ Fields still present but demoted to backward-compat: PID-13/14; PD1-12/13; PV1-9
 ### 4. Conditionals restructured
 
 - **`C → O` (condition dropped):** the v2.6 veterinary species/breed conditionals are gone — **PID-35** (renamed "Taxonomic Classification Code") is a self-contained `O`, **PID-36** is `B`. The parent-order XOR conditionals also dropped: **ORC-8** and **OBR-29** are now plain `O`. Several v2.6 `C` order fields relaxed to `O` (OBR-1/8/9/11).
-- **`O → C` (new conditionals, no extractable predicate):** PD1-15 (Advance Directive Code), ORC-26 (ABN Override Reason), OBR-48 (Medically Necessary Duplicate Procedure Reason), DG1-22 (Parent Diagnosis). All recorded `C` **without** a `condition` — they fall through as optional and never fire, the same honest convention as OBX-22 Mood Code (which stays `C`). Documented rather than inventing a predicate (req #4).
+- **`O → C` (new conditionals, no extractable predicate):** PD1-15 (Advance Directive Code), ORC-26 (ABN Override Reason), DG1-22 (Parent Diagnosis). All recorded `C` **without** a `condition` — they fall through as optional and never fire, the same honest convention as OBX-22 Mood Code (which stays `C`). Documented rather than inventing a predicate (req #4). (OBR-48 Medically Necessary Duplicate Procedure Reason is **not** new here: v2.5.1 and v2.6 CH04 already print `C` for it — corrected in the P1 fix wave.)
 
 ### 5. Datatype / naming changes beyond IS→CWE
 
@@ -53,9 +53,11 @@ Segments held at v2.6 counts (no new fields in the modelled range): MSH (25, byt
 
 Conditions carried verbatim where the v2.8.2 OPT column still shows `C` and the spec text matches: ORC-2 (`OBR-2 empty`), ORC-3 (`OBR-3 empty`); OBR-2 (`ORC-2 empty`), OBR-3 (`ORC-3 empty`), OBR-25 (`messageCode = ORU` — "required whenever OBR in a report message"); OBX-2 (`OBX-11 != X`); DG1-20/21 (`triggerEvent = P12`). **OBR-7** finalised as `messageCode = ORU OR SPM present` — the v2.6 "OBR-15 populated" clause is moot because OBR-15 is withdrawn in v2.8.2. The v2.6 XOR/parent conditions (ORC-8, OBR-29) are **dropped** because those fields are now plain `O`. `v282CleanORUHasNoErrors` pins that a well-formed v2.8.2 ORU^R01 validates with zero errors.
 
-**P1-1:** OBR-7 is now `messageCode = ORU` (the `SPM present` leg misfired on orders; SPM may describe a virtual specimen, CH07 SPM intro). X-C06 checked: OBR-14 and OBR-15 are `W` (CH04 §4.5.3.14, §4.5.3.15) and no v2.8.2 condition references OBR-15.
+**P1 note (confirmed misfire, req #4):** the "carried verbatim" OBR-2/OBR-3 conditions are a known defect, not a clean carry-forward. v2.8.2 sec 4.5.3.2 (via 4.5.1.2) states "each message must have either a placer or a filler id" — a placer-or-filler OR, not two independent single-field musts. The modelled `ORC-2 empty` predicate on OBR-2 (and `ORC-3 empty` on OBR-3) therefore misfires on a conformant message that carries only a filler id: OBR-2 is flagged missing even though ORC-3/OBR-3 satisfies the placer-or-filler requirement. Fix tracked in P4-7 (widen to an OR across the two id pairs).
 
-**P1-2:** "report message" is `messageCode in (ORU, OUL, OPU)`: CH07 §7.3.1-§7.3.12. ORF is excluded (withdrawn as of v2.7, §7.3.3); ORA R33 (§7.3.7) is an acknowledgement.
+**P1-1:** OBR-7 is now `messageCode = ORU` (widened in P1-2 below) (the `SPM present` leg misfired on orders; SPM may describe a virtual specimen, CH07 SPM intro). X-C06 checked: OBR-14 and OBR-15 are `W` (CH04 §4.5.3.14, §4.5.3.15) and no v2.8.2 condition references OBR-15.
+
+**P1-2:** "report message" is `messageCode in (ORU, OUL, OPU)`: CH07 §7.3.1-§7.3.12. ORF is excluded (withdrawn as of v2.7, §7.3.3); ORA R33 (§7.3.7) is an acknowledgement. The set is the CH07 results structures (ORU, ORF, OUL, plus OPU from v2.6); CSU^C09-C12 (clinical-trials results, §7.7.2) is out of scope for now, which can only under-fire.
 
 ### Known limitations (documented, not shipped — req #3/#4)
 

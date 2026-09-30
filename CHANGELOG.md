@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P1 fix wave: whole-workstream review remediation
+
+- v2.6 OBR-48 (Medically Necessary Duplicate Procedure Reason) was `O`; CH04
+  §4.5.3.48 prints `C` (bare, no condition text). It now matches v2.5.1 and
+  v2.8.2, which already printed `C`.
+- Documented the v2.8.2 OBR-2/OBR-3 `ORC-2 empty` / `ORC-3 empty` conditions
+  as a confirmed misfire, not a possible one: §4.5.3.2 needs only a placer
+  *or* a filler id, so a conformant message carrying just a filler id trips
+  OBR-2. Fix tracked as P4-7.
+- Registered a second, wider instance of the same shape on v2.3 to v2.6:
+  a placer NW order legitimately has no filler number yet (the ORC-1 Send
+  Number table notes print a null ORC-3), so OBR-3/ORC-3 misfires there
+  too. Known defect (req #4), blocks spec-completeness; also tracked as
+  P4-7 (`docs/design/permanent-limitations-register.md` §D addendum).
+- Documentation-only: clarified the P1-2 report-message scope excludes
+  CSU^C09-C12 (clinical-trials results, CH07 §7.7.2) for now, which can
+  only under-fire; marked the superseded P1-1 "OBR-7 is now `messageCode
+  = ORU`" notes as widened by P1-2; pinned OBR-2/OBR-3 ORC-absent scope to
+  ORU/ORF with a regression test (v2.4 OUL^R21, no ORC, empty OBR-2/OBR-3
+  raises nothing).
+
 ### Fixed — P1-5: OBR optionality follows each version's print
 
 - OBR-1, 8, 9, 10, 11, 20, 21, 26 and 32 were `C` on v2.3 to v2.6, a value
