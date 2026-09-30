@@ -151,8 +151,10 @@ struct MultiVersionTests {
 
     // v0.7-S4: the v2.4 ORC/OBR grammar carries the same four cross-
     // segment / message-context conditions as v2.5.1. Wire shape is a
-    // minimal v2.4 ORU^R01 with both placer orders empty — the XOR
-    // and OBR-25 conditionals should both fire.
+    // minimal v2.4 ORU^R01 with both placer orders empty and a filler id
+    // in OBR-3. Since P4-7 the order-number rule is placer-or-filler, so
+    // the filler id satisfies it (v2.4 CH04 §4.5.1.1 SN table notes print
+    // a null ORC-2 beside a valued filler number); OBR-25 still fires.
     private let v24ORUBothPlacersEmpty = """
     MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01|MSG|P|2.4\r\
     PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
@@ -160,15 +162,14 @@ struct MultiVersionTests {
     OBR|1||FIL|GLUC^Glucose\r
     """
 
-    @Test("v2.4 ORC-2 / OBR-2 XOR + OBR-25 conditionals fire under v2.4 grammar")
+    @Test("v2.4 filler id satisfies ORC-2 / OBR-2; OBR-25 fires under v2.4 grammar")
     func v24CrossSegmentConditionalsFire() throws {
         let message = try Parser().parse(v24ORUBothPlacersEmpty)
         let report = Validator().validate(message)
         let codes = report.errors.map { ($0.location.segmentID, $0.location.fieldIndex) }
-        // ORC-2 XOR fires.
-        #expect(codes.contains { $0.0 == "ORC" && $0.1 == 2 })
-        // OBR-2 XOR fires (symmetric).
-        #expect(codes.contains { $0.0 == "OBR" && $0.1 == 2 })
+        // Placer-or-filler: OBR-3 carries the filler id, so neither placer field fires.
+        #expect(!codes.contains { $0.0 == "ORC" && $0.1 == 2 })
+        #expect(!codes.contains { $0.0 == "OBR" && $0.1 == 2 })
         // OBR-25 fires (messageCode in (ORU, ORF, OUL)).
         #expect(codes.contains { $0.0 == "OBR" && $0.1 == 25 })
     }
@@ -580,8 +581,11 @@ struct MultiVersionTests {
         }
         #expect(orc?.field(30)?.dataType == "CNE")
         // Cross-segment conditions carried over verbatim from v2.5.1.
-        #expect(orc?.field(2)?.condition == "OBR-2 empty")
-        #expect(orc?.field(8)?.condition == "ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty")
+        // P4-7: placer-or-filler, and the ORC-8 OBR-absent leg gated off OUL / OPU (G2-6).
+        #expect(orc?.field(2)?.condition
+            == "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU)")
+        #expect(orc?.field(8)?.condition
+            == "ORC-1 = CH AND OBR absent AND messageCode not in (OUL, OPU) OR ORC-1 = CH AND OBR-29 empty")
     }
 
     @Test("v2.6 SegmentGrammarTable carries OBR (S3b) — 50 fields, CE→CNE on 44/45, conditions")
@@ -830,8 +834,15 @@ struct MultiVersionTests {
             #expect(table["ORC"]?.field(i)?.optionality == .backwardCompat, "ORC-\(i) should be B in v2.8.2")
         }
         #expect(table["ORC"]?.field(26)?.optionality == .conditional)
-        #expect(table["ORC"]?.field(2)?.condition == "OBR-2 empty")
-        #expect(table["ORC"]?.field(3)?.condition == "OBR-3 empty")
+        // P4-7 (X-C12): placer-or-filler over both segments, Send Number exempt.
+        #expect(table["ORC"]?.field(2)?.condition
+            == "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)")
+        #expect(table["ORC"]?.field(3)?.condition
+            == "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)")
+        #expect(table["OBR"]?.field(2)?.condition
+            == "OBR-3 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)")
+        #expect(table["OBR"]?.field(3)?.condition
+            == "OBR-2 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-2 empty AND ORC absent AND messageCode in (ORU, ORF)")
 
         // OBR: 5/6/14/15/27→W; 13 ST→CWE; 49 IS→CWE; 29 C→O (XOR dropped);
         // 10/16/28/32/33/34/35/50→B; 48 O→C; carried 2/3/7/25 conditions.

@@ -214,12 +214,16 @@ struct OBRPredicateTests {
         ])
     }
 
-    @Test("X-C08: ORU / ORF without ORC require OBR-2 and OBR-3",
+    @Test("X-C08: ORU / ORF without ORC require OBR-3, and OBR-2 where the version says so",
           arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"], ["ORU^R01", "ORF^R04"])
     func orderNumbersRequiredWithoutORC(version: String, messageType: String) throws {
         let noPlacer = Self.resultWithoutORC(messageType, version, placer: nil, filler: "FIL001")
         #expect(try Parser().parse(noPlacer)["OBR-25"] == "F", "Wire mis-counted")
-        #expect(try conditionalHits(noPlacer, field: 2).count == 1, "v\(version) \(messageType) OBR-2")
+        // P4-7: v2.3 / v2.3.1 CH07 §7.3.1.0 and v2.4 CH07 §7.4.1.0 let the placer
+        // number be blank when the filler initiates the order; v2.5.1 drops that.
+        let placerMayBeBlank = ["2.3", "2.3.1", "2.4"].contains(version)
+        #expect(try conditionalHits(noPlacer, field: 2).count == (placerMayBeBlank ? 0 : 1),
+                "v\(version) \(messageType) OBR-2")
         let noFiller = Self.resultWithoutORC(messageType, version, placer: "ORD001", filler: nil)
         #expect(try conditionalHits(noFiller, field: 3).count == 1, "v\(version) \(messageType) OBR-3")
         let both = Self.resultWithoutORC(messageType, version, placer: "ORD001", filler: "FIL001")

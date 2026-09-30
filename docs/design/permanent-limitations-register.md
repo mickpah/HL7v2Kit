@@ -72,13 +72,25 @@ is empty; nothing awaits a model extension. *(Historical note, M6-B-6: the "MSH-
 profile-ID addressing" root cause named here earlier was a misidentification — the ADRM
 declares the adhered profile in MSH-12.3, which the DSL addresses.)*
 
-### Addendum to §D — base-spec new-order / Send Number OBR-2/3 misfire (P1 review finding, not an ADRM point)
+### Addendum to §D — base-spec new-order / Send Number OBR-2/3 misfire (P1 review finding, not an ADRM point; fixed in P4-7)
 
 Found during the P1 OBR-predicates whole-workstream review (2026-09-30). Not an ADRM-2021 point — landed here per the global-constraints rule that P4/P6 rows add to the existing lettered sections rather than opening a new one.
 
 On v2.3 through v2.6, the modelled OBR-2 condition (`ORC-2 empty`) and OBR-3 condition (`ORC-3 empty`) fire whenever the ORC counterpart is empty, with no allowance for a legitimately-unassigned filler number. A placer NW order has no filler order number yet by design; the ORC-1 Send Number (SN) table notes (v2.4 §4.5.1.3 family) print a *null* ORC-3 as the correct value when the filler application is requesting a centralised filler order number from another application — the empty ORC-3 there is the wire signal that a number has not yet been assigned, not an omission that OBR-3 must carry instead. The modelled predicate cannot tell "ORC-3 empty because unassigned (legitimate)" from "ORC-3 empty and should have been carried in OBR-3 (spec violation)", so it fires `conditionalFieldMissing` on OBR-3 for a conformant NW/SN order where both ORC-3 and OBR-3 are, correctly, empty. The same shape applies to OBR-2/ORC-2 on the placer side.
 
-**Known defect (req #4), blocks spec-completeness.** Fix tracked in P4-7, widened from the v2.8.2-only placer-or-filler note above (`docs/design/v2_8_2-spec-audit.md`) to also cover v2.3–v2.6.
+**Fixed in P4-7 (2026-09-30), all six versions.** OBR-2/3 and ORC-2/3 now fire only when neither a placer id nor a filler id exists across the ORC/OBR pair, so a placer NW order (no filler number yet; ORC-3 "is assigned by the order filler", v2.4 CH04 §4.5.1.3) and both Send Number shapes (the ORC-1 SN table notes, v2.4 CH04 §4.5.1.1, print one null number beside a valued one) are silent. Per version:
+
+- **v2.8.2:** placer-or-filler with the SN exemption the text prints (CH04 §4.5.1.2 / §4.5.1.3 / §4.5.3.2 / §4.5.3.3: "each message must have either a placer or a filler id with an exception for the case of a 'Send Number' control code").
+- **v2.3 to v2.6:** placer-or-filler with no SN exemption. These versions print no exemption, and every SN shape they print still carries one number, so the rule is silent on them; an SN with neither number fires.
+- **ORC absent (ORU / ORF only, all versions):** OBR-3 is required on v2.3 to v2.6 ("the identifying filler order number must be present in the OBR segments", §4.5.1.3). OBR-2 is required on v2.5.1 and v2.6 (§4.5.1.2 says the same of the placer number), but only when OBR-3 is empty on v2.3, v2.3.1 and v2.4, whose CH07 OBR introduction (§7.3.1.0 / §7.4.1.0) adds "when the filler initiates the order ... the placer order number may be blank". v2.5.1 drops that sentence. On v2.8.2 either number satisfies the rule.
+- **OBR absent (new ORC leg, all versions):** an ORC with no OBR in its group (pharmacy, diet, supply orders) needs one of its own two numbers.
+
+Remaining gaps, all from the ORC-delimited group model (fail-safe: they lose checks, they do not misfire):
+
+- The ORC-absent legs on OBR-2/3 stay gated to `messageCode in (ORU, ORF)` (P1-3), also on v2.8.2 although its text says "each message". Other structures where OBR stands without ORC are not checked. The gate exists because OUL R22 to R24 and OPU print OBR before ORC, outside the ORC-delimited group.
+- For the same reason the new ORC-2/3 `OBR absent` legs are gated with `messageCode not in (OUL, OPU)` on v2.5.1, v2.6 and v2.8.2 (v2.3 to v2.4 carry no such structure). An ORC with neither number and no OBR in an OUL or OPU message is not checked.
+- ORC-8 (owner decision G2-6, 2026-09-30): on v2.5.1 and v2.6 the `ORC-1 = CH AND OBR absent` leg is gated with `messageCode not in (OUL, OPU)`, because in OUL R22 to R24 and OPU the OBR precedes the ORC and falls outside its group. The leg is also lost on OUL_R21, whose ORC precedes the OBR. The `OBR-29 empty` leg still fires wherever the OBR sits in the ORC's group. P8's message-structure group ranges (ADR-019) replace all three gates.
+The equality clause ("if both ORC-2 and OBR-2 are valued then they must be valued the same") is enforced separately by the M8-B1/B2 ORC/OBR pair-equality check, not by these conditions.
 
 ### Addendum to §D — one prohibition per field (P4-1 review finding, not an ADRM point)
 

@@ -19,7 +19,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "OBR-2 empty"
+      "condition": "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent"
     },
     {
       "index": 3,
@@ -28,7 +28,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "OBR-3 empty"
+      "condition": "ORC-2 empty AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND OBR absent"
     },
     {
       "index": 4,

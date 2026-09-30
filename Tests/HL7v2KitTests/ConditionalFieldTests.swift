@@ -185,8 +185,9 @@ struct ConditionalFieldTests {
 
     // MARK: - v0.7-S3: schema-driven cross-segment / message-context conditions
 
-    // ORC + OBR with both placer-order fields empty triggers the XOR
-    // rule on both sides (ADR-008 §"Three rules expressed in the new DSL").
+    // ORC + OBR with both placer-order fields empty and a filler id in
+    // OBR-3 (ADR-008 §"Three rules expressed in the new DSL"; placer-or-
+    // filler since P4-7).
     private let oruBothPlacersEmpty = """
     MSH|^~\\&|HIS|FAC|LAB|FAC|20260619120000||ORU^R01^ORU_R01|MSG|P|2.5.1\r\
     PID|1||X^^^F^MR||Doe^Jane||19800101|F\r\
@@ -194,16 +195,19 @@ struct ConditionalFieldTests {
     OBR|1||FIL001|GLUC^Glucose|||||||||||||||||||||F\r
     """
 
-    @Test("ORC-2 / OBR-2 XOR fires on both sides when both placer fields empty")
-    func placerOrderXORFiresOnBothSides() throws {
+    // P4-7 (X-C12): the rule is placer-or-filler across ORC and OBR, so
+    // the filler id in OBR-3 satisfies it and neither placer field fires
+    // (v2.8.2 CH04 §4.5.1.2; the ORC-1 SN table notes in v2.5.1 §4.5.1.1
+    // print a null ORC-2 beside a valued filler number).
+    @Test("ORC-2 / OBR-2 stay silent when both placer fields are empty but a filler id is present")
+    func placerOrderSilentWithFillerID() throws {
         let message = try Parser().parse(oruBothPlacersEmpty)
         let report = Validator().validate(message)
-        let xorIssues = report.errors.filter {
+        let placerIssues = report.errors.filter {
             $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 2
         }
-        // Expect one issue per side: ORC-2 and OBR-2.
-        #expect(xorIssues.contains { $0.location.segmentID == "ORC" })
-        #expect(xorIssues.contains { $0.location.segmentID == "OBR" })
+        #expect(!placerIssues.contains { $0.location.segmentID == "ORC" })
+        #expect(!placerIssues.contains { $0.location.segmentID == "OBR" })
     }
 
     private let oruORCCarriesPlacer = """
@@ -406,15 +410,18 @@ struct ConditionalFieldTests {
         #expect(dg1Issues.isEmpty)
     }
 
-    @Test("ORC-3 / OBR-3 XOR fires on both sides when both filler orders empty")
-    func fillerOrderXORFiresOnBothSides() throws {
+    // P4-7 (X-C12): the placer id satisfies the placer-or-filler rule; a
+    // placer order legitimately has no filler number yet (ORC-3 is
+    // assigned by the filler, v2.5.1 CH04 §4.5.1.3).
+    @Test("ORC-3 / OBR-3 stay silent when both filler fields are empty but a placer id is present")
+    func fillerOrderSilentWithPlacerID() throws {
         let message = try Parser().parse(oruBothFillersEmpty)
         let report = Validator().validate(message)
-        let xorIssues = report.errors.filter {
+        let fillerIssues = report.errors.filter {
             $0.code == .conditionalFieldMissing && $0.location.fieldIndex == 3
         }
-        #expect(xorIssues.contains { $0.location.segmentID == "ORC" })
-        #expect(xorIssues.contains { $0.location.segmentID == "OBR" })
+        #expect(!fillerIssues.contains { $0.location.segmentID == "ORC" })
+        #expect(!fillerIssues.contains { $0.location.segmentID == "OBR" })
     }
 
     private let oruOBRCarriesFiller = """

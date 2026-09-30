@@ -64,4 +64,106 @@ struct ExpressibleConditionTests {
         #expect(table["DG1"]?.field(22)?.optionality == .conditional)
         #expect(table["DG1"]?.field(22)?.condition == nil)
     }
+
+    // MARK: - Placer-or-filler order identifier (X-C12, P4-7)
+
+    /// The six versions carry OBR-2/3 and ORC-2/3 as C.
+    static let orderVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+
+    /// An order message for `version` (ORM is withdrawn on v2.8.2).
+    private func orderType(_ version: String) -> String {
+        version == "2.8.2" ? "OML^O21^OML_O21" : "ORM^O01"
+    }
+
+    /// OBR with the report fields X-C07 and P4-6 require, plus `ids`.
+    private func obr(_ ids: [Int: String]) -> String {
+        var fields: [Int: String] = [1: "1", 4: "GLU^Glucose^L", 7: "20260101100000",
+                                     22: "20260101110000", 25: "F"]
+        fields.merge(ids) { _, new in new }
+        return TestWires.segment("OBR", fields)
+    }
+
+    /// The order-number positions reported missing, as `SEG-n`, sorted.
+    private func idHits(_ wire: String) throws -> [String] {
+        Validator().validate(try Parser().parse(wire)).errors.compactMap { issue in
+            guard issue.code == .conditionalFieldMissing,
+                  ["ORC", "OBR"].contains(issue.location.segmentID),
+                  let field = issue.location.fieldIndex, field == 2 || field == 3 else { return nil }
+            return "\(issue.location.segmentID)-\(field)"
+        }.sorted()
+    }
+
+    @Test("A placer id alone or a filler id alone satisfies the order-number rule",
+          arguments: orderVersions)
+    func oneOrderIDIsSilent(version: String) throws {
+        // Placer NW: the filler has not assigned its number yet (ORC-3 is
+        // assigned by the filler; v2.4 CH04 §4.5.1.3).
+        let placerNW = TestWires.wire(orderType(version), version, "ORC|NW|PON1", obr([:]))
+        #expect(try idHits(placerNW).isEmpty, "v\(version) placer NW")
+        let fillerOnly = TestWires.wire("ORU^R01^ORU_R01", version, "ORC|RE", obr([3: "FON1"]))
+        #expect(try idHits(fillerOnly).isEmpty, "v\(version) filler only")
+        // Both Send Number shapes the ORC-1 table notes print (v2.4 CH04 §4.5.1.1).
+        let snNullFiller = TestWires.wire(orderType(version), version, "ORC|SN|PON1^FILL", obr([:]))
+        #expect(try idHits(snNullFiller).isEmpty, "v\(version) SN, null ORC-3")
+        let snNullPlacer = TestWires.wire(orderType(version), version, "ORC|SN||FON1^FILL", obr([:]))
+        #expect(try idHits(snNullPlacer).isEmpty, "v\(version) SN, null ORC-2")
+    }
+
+    @Test("No placer and no filler id fires all four positions", arguments: orderVersions)
+    func noOrderIDFires(version: String) throws {
+        let wire = TestWires.wire("ORU^R01^ORU_R01", version, "ORC|RE", obr([:]))
+        #expect(try idHits(wire) == ["OBR-2", "OBR-3", "ORC-2", "ORC-3"], "v\(version)")
+    }
+
+    @Test("Send Number with no id: exempt on v2.8.2 only", arguments: orderVersions)
+    func sendNumberWithNoID(version: String) throws {
+        let wire = TestWires.wire(orderType(version), version, "ORC|SN", obr([:]))
+        let expected: [String] = version == "2.8.2" ? [] : ["OBR-2", "OBR-3", "ORC-2", "ORC-3"]
+        #expect(try idHits(wire) == expected, "v\(version)")
+    }
+
+    @Test("An ORC with no OBR needs one of its own order numbers", arguments: orderVersions)
+    func orcWithoutOBR(version: String) throws {
+        let none = TestWires.wire("RDE^O11", version, "ORC|NW")
+        #expect(try idHits(none) == ["ORC-2", "ORC-3"], "v\(version)")
+        let filler = TestWires.wire("RDE^O11", version, "ORC|NW||FON1")
+        #expect(try idHits(filler).isEmpty, "v\(version)")
+    }
+
+    @Test("ORU without ORC: per-version order-number rules", arguments: orderVersions)
+    func resultWithoutORC(version: String) throws {
+        let oru = { (ids: [Int: String]) in TestWires.wire("ORU^R01^ORU_R01", version, self.obr(ids)) }
+        // Placer may be blank when the filler initiates the order: v2.3 and
+        // v2.3.1 CH07 §7.3.1.0, v2.4 CH07 §7.4.1.0 (dropped from v2.5.1).
+        let placerOptional = ["2.3", "2.3.1", "2.4", "2.8.2"].contains(version)
+        #expect(try idHits(oru([3: "FON1"])) == (placerOptional ? [] : ["OBR-2"]), "v\(version) filler only")
+        // v2.3 to v2.6: "the identifying filler order number must be present
+        // in the OBR segments"; v2.8.2: either id suffices.
+        #expect(try idHits(oru([2: "PON1"])) == (version == "2.8.2" ? [] : ["OBR-3"]), "v\(version) placer only")
+        #expect(try idHits(oru([:])) == ["OBR-2", "OBR-3"], "v\(version) no id")
+    }
+
+    @Test("OUL R22: an ORC after its OBR is not read as an ORC with no OBR",
+          arguments: ["2.5.1", "2.6", "2.8.2"])
+    func oulR22TrailingORC(version: String) throws {
+        let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
+                                  obr([2: "PON1", 3: "FON1"]), "ORC|SC")
+        #expect(try idHits(wire).isEmpty, "v\(version)")
+    }
+
+    // MARK: - ORC-8 child-order gate (owner decision G2-6, 2026-09-30)
+
+    @Test("ORC-8: the OBR-absent leg is gated off OUL and OPU", arguments: ["2.5.1", "2.6"])
+    func orc8Gate(version: String) throws {
+        // OUL R22: the OBR precedes the ORC, outside its group.
+        let oul = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
+                                 obr([2: "PON1", 3: "FON1"]), "ORC|CH|PON1|FON1")
+        #expect(try missing(oul, "ORC", 8).isEmpty, "v\(version) OUL R22")
+        // ORM child order with no OBR keeps the leg.
+        let child = TestWires.wire("ORM^O01", version, "ORC|CH|PON2|FON2")
+        #expect(try missing(child, "ORC", 8).count == 1, "v\(version) ORM CH")
+        let withParent = TestWires.wire("ORM^O01", version,
+                                        TestWires.segment("ORC", [1: "CH", 2: "PON2", 3: "FON2", 8: "PON1&PL"]))
+        #expect(try missing(withParent, "ORC", 8).isEmpty, "v\(version) ORM CH with parent")
+    }
 }
