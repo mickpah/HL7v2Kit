@@ -104,16 +104,18 @@ public struct ValidationOptions: Sendable {
 
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
     ///
-    /// HL7 v2.5.1 and later allow an HL7 table to be extended with locally defined values
-    /// (CH02 2.5.3.6; v2.8.2 CH02C 2.C.1.2). A value listed here for a table is accepted
-    /// wherever that table is checked, at field or component level; every other value
-    /// outside the table is still reported. Empty by default, so HL7 tables stay closed.
+    /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
+    /// CH2 sec 2.6.6 ("Additions may be included on a site-specific basis"), v2.4 CH02
+    /// sec 2.7.6, v2.5.1 and v2.6 CH02 sec 2.5.3.6 ("the table itself may be extended to
+    /// accommodate locally defined values") and v2.8.2 CH02C 2.C.1.2. A value listed here
+    /// for a table is accepted wherever the base-spec code-table check reads that table,
+    /// at field or component level; every other value outside the table is still reported.
+    /// AU profile value-set rules are not affected: a value a profile rule rejects is
+    /// still rejected. Empty by default, so HL7 tables stay closed.
     ///
-    /// The check applies on every supported version, not only v2.5.1 and later: the spec
-    /// clause that permits local extension is a v2.5.1+ rule, but declaring an extension
-    /// here is opt-in and caller-asserted, so a declaration against an older version is
-    /// read as a site agreement rather than an appeal to that clause. Matching is exact
-    /// and case-sensitive, as ``HL7Table/contains(_:)`` is.
+    /// Keys are four-digit table numbers (`"0074"`), matched against the table number the
+    /// field or component is bound to; any other key (`"74"`, `"HL70074"`) is ignored.
+    /// Matching of values is exact and case-sensitive, as ``HL7Table/contains(_:)`` is.
     public var localTableExtensions: [String: Set<String>] = [:]
 
     public init(

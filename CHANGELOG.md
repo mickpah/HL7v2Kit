@@ -36,9 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added — P2-13: caller-declared local extensions to HL7 tables
 
 - `ValidationOptions.localTableExtensions` (additive; new init parameter, last
-  position, defaulted to `[:]`, so existing call sites compile unchanged). HL7
-  v2.5.1+ permits a table to be extended with locally defined values (CH02
-  2.5.3.6; v2.8.2 CH02C 2.C.1.2); a table still stays closed by default, but a
+  position, defaulted to `[:]`, so existing call sites compile unchanged). Every
+  supported version permits an HL7 table to be extended locally (v2.3 and v2.3.1
+  CH2 sec 2.6.6, "Additions may be included on a site-specific basis"; v2.4 CH02
+  sec 2.7.6; v2.5.1 and v2.6 CH02 sec 2.5.3.6; v2.8.2 CH02C 2.C.1.2); a table
+  still stays closed by default, but a
   caller can now declare the codes it has locally added to a named table, keyed
   by four-digit table number. A declared code is accepted wherever that table
   is checked, at field or component level; every other out-of-table code is

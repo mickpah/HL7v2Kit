@@ -1619,8 +1619,9 @@ public struct Validator: Sendable {
             // narrowing is the profile's job, not this rule's.
             if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
             // A caller-declared local extension (ValidationOptions.localTableExtensions) also
-            // widens the check, same as a locale rendering: HL7 v2.5.1+ CH02 2.5.3.6 allows a
-            // table to be extended with locally defined values.
+            // widens the check, same as a locale rendering: every supported version allows an
+            // HL7 table to be extended locally (v2.3 / v2.3.1 CH2 sec 2.6.6, v2.4 CH02 sec 2.7.6,
+            // v2.5.1 / v2.6 CH02 sec 2.5.3.6, v2.8.2 CH02C 2.C.1.2).
             if options.localTableExtensions[tableNumber]?.contains(value) == true { continue }
             issues.append(ValidationIssue(
                 severity: .error,
