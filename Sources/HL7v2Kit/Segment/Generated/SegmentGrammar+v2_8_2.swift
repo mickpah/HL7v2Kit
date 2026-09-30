@@ -4011,7 +4011,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Priority", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 10, name: "Condition text", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250="),
             FieldGrammar(index: 11, name: "Text instruction", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250="),
-            FieldGrammar(index: 12, name: "Conjunction", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0472", length: "1..1"),
+            FieldGrammar(index: 12, name: "Conjunction", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "nextSegmentID(TQ2) = TQ1", prohibitedWhen: nil, variableColumns: false, table: "0472", length: "1..1"),
             FieldGrammar(index: 13, name: "Occurrence duration", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 14, name: "Total occurrences", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10="),
         ]
@@ -4023,14 +4023,14 @@ extension SegmentGrammarTable {
         fields: [
             FieldGrammar(index: 1, name: "Set ID - TQ2", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "1..4"),
             FieldGrammar(index: 2, name: "Sequence/Results Flag", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0503", length: "1..1"),
-            FieldGrammar(index: 3, name: "Related Placer Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 4, name: "Related Filler Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 5, name: "Related Placer Group Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 6, name: "Sequence Condition Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0504", length: "2.."),
+            FieldGrammar(index: 3, name: "Related Placer Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: "TQ2-4 empty AND TQ2-5 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 4, name: "Related Filler Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: "TQ2-3 empty AND TQ2-5 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 5, name: "Related Placer Group Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: "TQ2-3 empty AND TQ2-4 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 6, name: "Sequence Condition Code", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "TQ2-10 empty", prohibitedWhen: nil, variableColumns: false, table: "0504", length: "2.."),
             FieldGrammar(index: 7, name: "Cyclic Entry/Exit Indicator", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: "TQ2-2 != C", variableColumns: false, table: "0505", length: "1..1", prohibitedSeverity: .warning),
             FieldGrammar(index: 8, name: "Sequence Condition Time Interval", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 9, name: "Cyclic Group Maximum Number of Repeats", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10="),
-            FieldGrammar(index: 10, name: "Special Service Request Relationship", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0506", length: "1..1"),
+            FieldGrammar(index: 10, name: "Special Service Request Relationship", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "TQ2-6 empty", prohibitedWhen: nil, variableColumns: false, table: "0506", length: "1..1"),
         ]
     )
 

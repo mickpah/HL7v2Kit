@@ -85,6 +85,9 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | TXA-7 | all six | condition | `TXA-17 not in (DI)` | error | v2.5.1 CH09 §9.6.1.7: "conditional based upon the presence of a value in TXA-17 ... of anything except 'dictated'" | exact |
 | TXA-13 | all six | condition | `triggerEvent in (T05, T06, T09, T10)` | error | v2.5.1 CH09 §9.6.1.13: "always required on T05 ..., T06 ..., T09 ..., and T10 ... events" | exact |
 | TXA-22 | v2.3, v2.3.1, v2.4, v2.5.1 | condition | `TXA-17 in (AU, LA)` | error | v2.5.1 CH09 §9.6.1.22: "When the status of TXA-17 ... is equal to AU (authenticated) or LA (legally authenticated), all components are required" | exact at field level; per-component completeness is not modelled |
+| TQ2-3, TQ2-4, TQ2-5 | v2.5.1, v2.6, v2.8.2 | condition | the other two `empty AND empty` | error | v2.5.1 CH04 §4.5.5.3 to §4.5.5.5: "At least one of TQ2-3, TQ2-4, TQ2-5 must contain a value" | exact (one-of-three rotation, RQD pattern) |
+| TQ2-6, TQ2-10 | v2.5.1, v2.6, v2.8.2 | condition | the other `empty` | error | v2.5.1 CH04 §4.5.5.6 / §4.5.5.10: "Either this field or TQ2-10 must be present" | exact |
+| TQ1-12 | v2.5.1, v2.6, v2.8.2 | condition | `nextSegmentID(TQ2) = TQ1` | error | v2.5.1 CH04 §4.5.4.12: "If the TQ1 segment is repeated in the message, this field must be populated with the appropriate Conjunction code indicating the sequencing of the following TQ1 segment" | partial: the last TQ1 of a chain (no following TQ1 to sequence) is not required (ADR-010 P4 amendment) |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -121,7 +124,7 @@ These segments are the most conditional-heavy in HL7. Every `C` field below is c
 - **RXO** (Pharmacy/Treatment Order) — 1 Requested Give Code, 2/4/5 give-amount/units, 15/17 dispense/give-per, 31 — conditional on the give-vs-dispense encoding split with RXE.
 - **RXE** (Encoded Order) — 10/11/15/16/17/18/19/22 — give-amount/timing/provider fields required per the encoded-order completion rules.
 - **RXD** (Dispense) — 5/8; **RXG** (Give) — 14/32/33; **RXC** (Component) — 10/11 — dispense/give/component-level conditionals.
-- **TQ1** (Timing/Quantity) — 12; **TQ2** (Timing/Quantity Relationship) — 3/4/5/6/7/10 — sequencing/relationship fields conditional on the presence of a related timing segment.
+- **TQ1 / TQ2** — none left bare. TQ1-12 and TQ2-3/4/5/6/10 ship in P4-10 and TQ2-7 in P4-1. The earlier rationale ("conditional on the presence of a related timing segment") contradicted the printed text, which states each rule in terms of fields of the same segment or the following TQ1.
 
 **Model-extension watch (req #3):** several of these have real triggers that a *cross-segment* predicate could express (the RXO↔RXE pairing especially). Modelling them is a candidate for a future DSL/analysis cycle; until then they remain fail-safe (never misfire) and are recorded here, not shipped as unconditional rules (req #4).
 

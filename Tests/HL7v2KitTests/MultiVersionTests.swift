@@ -990,10 +990,9 @@ struct MultiVersionTests {
         let expected: Set<String> = [
             "OBR-48", "OBX-4", "OBX-5", "OBX-22", "DG1-22",
             // v1.2: order/pharmacy family — RXO/RXE/RXD/RXG/RXC give-amount &
-            // dispense fields and TQ1/TQ2 timing fields are conditional on
+            // dispense fields are conditional on
             // data-nature / cross-segment context, not a same-segment predicate
             // (bulk-documented in conditional-completeness-audit.md).
-            "TQ1-12", "TQ2-3", "TQ2-4", "TQ2-5", "TQ2-6", "TQ2-10",
             "RXO-1", "RXO-2", "RXO-4", "RXO-5", "RXO-15", "RXO-17", "RXO-31",
             "RXE-10", "RXE-11", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
             "RXD-5", "RXD-8", "RXG-14", "RXG-32", "RXG-33", "RXC-10", "RXC-11",
