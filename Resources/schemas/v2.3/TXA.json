@@ -5,17 +5,17 @@
   "fields": [
     { "index": 1, "swiftName": "setIdTxa", "name": "Set ID- TXA", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "documentType", "name": "Document Type", "dataType": "IS", "length": "30", "table": "0270", "optionality": "R", "repeatability": "1", "tables": ["0270"] },
-    { "index": 3, "swiftName": "documentContentPresentation", "name": "Document Content Presentation", "dataType": "ID", "length": "2", "table": "0191", "optionality": "C", "repeatability": "1", "tables": ["0191"] },
+    { "index": 3, "swiftName": "documentContentPresentation", "name": "Document Content Presentation", "dataType": "ID", "length": "2", "table": "0191", "optionality": "C", "repeatability": "1", "tables": ["0191"], "condition": "OBX present" },
     { "index": 4, "swiftName": "activityDateTime", "name": "Activity Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "primaryActivityProviderCodeName", "name": "Primary Activity Provider Code/Name", "dataType": "XCN", "length": "60", "optionality": "C", "repeatability": "1" },
+    { "index": 5, "swiftName": "primaryActivityProviderCodeName", "name": "Primary Activity Provider Code/Name", "dataType": "XCN", "length": "60", "optionality": "C", "repeatability": "1", "condition": "TXA-4 populated" },
     { "index": 6, "swiftName": "originationDateTime", "name": "Origination Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
-    { "index": 7, "swiftName": "transcriptionDateTime", "name": "Transcription Date/Time", "dataType": "TS", "length": "26", "optionality": "C", "repeatability": "1" },
+    { "index": 7, "swiftName": "transcriptionDateTime", "name": "Transcription Date/Time", "dataType": "TS", "length": "26", "optionality": "C", "repeatability": "1", "condition": "TXA-17 not in (DI)" },
     { "index": 8, "swiftName": "editDateTime", "name": "Edit Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "*" },
     { "index": 9, "swiftName": "originatorCodeName", "name": "Originator Code/Name", "dataType": "XCN", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "assignedDocumentAuthenticator", "name": "Assigned Document Authenticator", "dataType": "XCN", "length": "60", "optionality": "O", "repeatability": "*" },
     { "index": 11, "swiftName": "transcriptionistCodeName", "name": "Transcriptionist Code/Name", "dataType": "XCN", "length": "48", "optionality": "C", "repeatability": "1" },
     { "index": 12, "swiftName": "uniqueDocumentNumber", "name": "Unique Document Number", "dataType": "EI", "length": "30", "optionality": "R", "repeatability": "1" },
-    { "index": 13, "swiftName": "parentDocumentNumber", "name": "Parent Document Number", "dataType": "EI", "length": "30", "optionality": "C", "repeatability": "1" },
+    { "index": 13, "swiftName": "parentDocumentNumber", "name": "Parent Document Number", "dataType": "EI", "length": "30", "optionality": "C", "repeatability": "1", "condition": "triggerEvent in (T05, T06, T09, T10)" },
     { "index": 14, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "length": "22", "optionality": "O", "repeatability": "*" },
     { "index": 15, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "length": "22", "optionality": "O", "repeatability": "1" },
     { "index": 16, "swiftName": "uniqueDocumentFileName", "name": "Unique Document File Name", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "1" },
@@ -24,7 +24,7 @@
     { "index": 19, "swiftName": "documentAvailabilityStatus", "name": "Document Availability Status", "dataType": "ID", "length": "2", "table": "0273", "optionality": "O", "repeatability": "1", "tables": ["0273"] },
     { "index": 20, "swiftName": "documentStorageStatus", "name": "Document Storage Status", "dataType": "ID", "length": "2", "table": "0275", "optionality": "O", "repeatability": "1", "tables": ["0275"] },
     { "index": 21, "swiftName": "documentChangeReason", "name": "Document Change Reason", "dataType": "ST", "length": "30", "optionality": "C", "repeatability": "1" },
-    { "index": 22, "swiftName": "authenticationPersonTimeStamp", "name": "Authentication Person, Time Stamp", "dataType": "PTS", "length": "60", "optionality": "C", "repeatability": "*" },
+    { "index": 22, "swiftName": "authenticationPersonTimeStamp", "name": "Authentication Person, Time Stamp", "dataType": "PTS", "length": "60", "optionality": "C", "repeatability": "*", "condition": "TXA-17 in (AU, LA)" },
     { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipients", "name": "Distributed Copies (Code and Name of Recipients)", "dataType": "XCN", "length": "60", "optionality": "O", "repeatability": "*" }
   ]
 }

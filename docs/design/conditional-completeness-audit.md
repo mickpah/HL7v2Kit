@@ -80,6 +80,11 @@ The 2026-09 review (planning/reviews, finding X-C09) found positions this regist
 | OBR-48, DG1-22 | v2.6 | optionality O to C (bare) | none | n/a | v2.6 CH04 OBR row 48 and CH06 DG1 row 22 print C | print alignment; still bare, see the permanent bullets |
 | PV2-1 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `triggerEvent = A26` | error | v2.5.1 CH03 §3.4.4.1: "This field is required for cancel pending transfer (A26) messages. In all other events it is optional" | exact |
 | PV2-47 | v2.4, v2.5.1, v2.6, v2.8.2 | condition | `triggerEvent = A21` | error | v2.5.1 CH03 §3.4.4.47: "This field is conditionally required for A21 - Patient goes on LOA. It may be populated in A22" | exact (A22 is permissive only) |
+| TXA-3 | all six | condition | `OBX present` | error | v2.5.1 CH09 §9.6.1.3: "required whenever the message contains content as presented in one or more OBX segments" | exact |
+| TXA-5 | all six | condition | `TXA-4 populated` | error | v2.5.1 CH09 §9.6.1.5: "conditional based upon the presence of a value in TXA-4-Activity Date/Time" | exact |
+| TXA-7 | all six | condition | `TXA-17 not in (DI)` | error | v2.5.1 CH09 §9.6.1.7: "conditional based upon the presence of a value in TXA-17 ... of anything except 'dictated'" | exact |
+| TXA-13 | all six | condition | `triggerEvent in (T05, T06, T09, T10)` | error | v2.5.1 CH09 §9.6.1.13: "always required on T05 ..., T06 ..., T09 ..., and T10 ... events" | exact |
+| TXA-22 | v2.3, v2.3.1, v2.4, v2.5.1 | condition | `TXA-17 in (AU, LA)` | error | v2.5.1 CH09 §9.6.1.22: "When the status of TXA-17 ... is equal to AU (authenticated) or LA (legally authenticated), all components are required" | exact at field level; per-component completeness is not modelled |
 
 The RXR-6 row models the Condition Rule sentence only. On v2.5.1 and v2.6 the same definition adds a SHOULD-NOT: "If RXR-2 employs HL7 Table 0163 – Body Site, then RXR-6 should not be populated" (v2.5.1 CH04 §4.14.2.6; v2.8.2 CH04A omits the sentence). The DSL can state it (`RXR-2.3 = HL70163`), but a `FieldGrammar` carries one `prohibitedWhen` at one `prohibitedSeverity`, and RXR-6 needs the error rule and this warning rule at once. It is registered as a known limitation that blocks spec-completeness in `permanent-limitations-register.md` (addendum to §D), fix tracked in P4-21.
 
@@ -142,7 +147,7 @@ Another conditional-heavy cluster. Every `C` below is conditional on the **messa
 **Master-file locations / patient-care / med-records family (added v1.4b — CH08/CH12/CH09):**
 - **LRL-5 / LRL-6** (Location Relationship — org/location targets) and **PRC-5** (Pricing) — conditional on the master-file location/charge event.
 - **GOL-22 / PRB-28** (Goal/Problem — action-code-gated fields) and **PTH-6 / PTH-7** (Pathway status) — conditional on the care-record action (add/update/delete).
-- **TXA-3/5/7/11/13/22** (Transcription Document Header) — document-status / activity-datetime fields conditional on the document-completion event.
+- **TXA-11** (Transcriptionist Code/Name, all versions) — "This is a conditional value; it is required on all transcribed documents" (v2.5.1 §9.6.1.11). Whether a document was transcribed is not stated by any field the sentence names, so the field stays bare. **TXA-22** on v2.6 and v2.8.2 — these versions print no AU/LA condition sentence, so it stays bare there. TXA-3, 5, 7, 13 (all versions) and TXA-22 (v2.3 to v2.5.1) ship in P4-9; the earlier rationale ("conditional on the document-completion event") was wrong for them.
 
 **v1.8 (CH07 product-experience + clinical-trials completion) — one bare `C`:**
 - **CSP-4 Study Phase Evaluability** — §7.8.2.4 describes the disposition of the patient's data for the phase interval and states **no trigger**. The other eight segments in the batch either carry no `C` fields or got a shipped predicate (below).

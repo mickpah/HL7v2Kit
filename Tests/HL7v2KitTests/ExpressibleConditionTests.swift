@@ -7,6 +7,8 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
+private let allSixVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+
 @Suite("Expressible conditions (P4)")
 struct ExpressibleConditionTests {
 
@@ -224,5 +226,48 @@ struct ExpressibleConditionTests {
             #expect(table["PV2"]?.field(1)?.optionality == .conditional)
             #expect(table["PV2"]?.field(1)?.condition == nil)
         }
+    }
+
+    // MARK: - TXA (V231-C11, V251-C03)
+
+    private func txa(_ version: String, _ messageType: String, _ fields: [Int: String],
+                     obx: Bool = false) -> String {
+        var values: [Int: String] = [1: "1", 2: "CN^Consultation", 12: "DOC1", 17: "IP"]
+        values.merge(fields) { _, new in new }
+        var segments = [TestWires.segment("TXA", values)]
+        if obx { segments.append("OBX|1|TX|NOTE^Note||Text") }
+        return TestWires.msh(messageType, version) + segments.map { $0 + "\r" }.joined()
+    }
+
+    @Test("TXA-3 is required whenever the message carries OBX content", arguments: allSixVersions)
+    func txa3(version: String) throws {
+        #expect(try missing(txa(version, "MDM^T02", [:], obx: true), "TXA", 3).count == 1, "v\(version)")
+        #expect(try missing(txa(version, "MDM^T01", [:]), "TXA", 3).isEmpty, "v\(version)")
+    }
+
+    @Test("TXA-5 is required when TXA-4 is valued", arguments: allSixVersions)
+    func txa5(version: String) throws {
+        #expect(try missing(txa(version, "MDM^T01", [4: "20260101"]), "TXA", 5).count == 1, "v\(version)")
+        #expect(try missing(txa(version, "MDM^T01", [:]), "TXA", 5).isEmpty, "v\(version)")
+    }
+
+    @Test("TXA-7 is required when TXA-17 is anything except dictated", arguments: allSixVersions)
+    func txa7(version: String) throws {
+        #expect(try missing(txa(version, "MDM^T01", [17: "AU"]), "TXA", 7).count == 1, "v\(version)")
+        #expect(try missing(txa(version, "MDM^T01", [17: "DI"]), "TXA", 7).isEmpty, "v\(version)")
+    }
+
+    @Test("TXA-13 is always required on T05, T06, T09 and T10", arguments: allSixVersions)
+    func txa13(version: String) throws {
+        for event in ["T05", "T06", "T09", "T10"] {
+            #expect(try missing(txa(version, "MDM^\(event)", [:]), "TXA", 13).count == 1, "v\(version) \(event)")
+        }
+        #expect(try missing(txa(version, "MDM^T01", [:]), "TXA", 13).isEmpty, "v\(version)")
+    }
+
+    @Test("TXA-22 is required when TXA-17 is AU or LA", arguments: ["2.3", "2.3.1", "2.4", "2.5.1"])
+    func txa22(version: String) throws {
+        #expect(try missing(txa(version, "MDM^T01", [17: "LA"]), "TXA", 22).count == 1, "v\(version)")
+        #expect(try missing(txa(version, "MDM^T01", [17: "IP"]), "TXA", 22).isEmpty, "v\(version)")
     }
 }

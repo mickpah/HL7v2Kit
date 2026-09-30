@@ -1023,7 +1023,7 @@ struct MultiVersionTests {
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.
             "LRL-5", "LRL-6", "PRC-5", "GOL-22", "PRB-28", "PTH-6", "PTH-7",
-            "TXA-3", "TXA-5", "TXA-7", "TXA-11", "TXA-13", "TXA-22",
+            "TXA-11", "TXA-22",
             // v1.7 (CH13 lab-automation completion): the whole SID segment is
             // conditional — §13.4.11 defines all four fields with no condition text at
             // all, so which of them is required depends on what the substance/container
