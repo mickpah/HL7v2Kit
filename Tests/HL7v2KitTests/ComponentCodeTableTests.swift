@@ -160,4 +160,21 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(bad).first?.location.pathDescription == "MSH[1]-3.3")
         #expect(try tableIssues(wire(version: "2.3").replacingOccurrences(of: "|HIS|FAC|", with: "|HIS^1.2.3^ISO|FAC|")).isEmpty)
     }
+
+    @Test("Table 0203 NNxxx is a pattern: NN plus an ISO 3166 alpha-3 country code")
+    func nationalPersonIdentifierPattern() throws {
+        for version in ["2.5.1", "2.6", "2.8.2"] {
+            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAUS")).isEmpty, "v\(version) NNAUS")
+            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNCAN")).isEmpty, "v\(version) NNCAN")
+            #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAU1")).count == 1, "v\(version) NNAU1")
+        }
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+            let t = try #require(HL7TableRegistry.table("0203", version: version))
+            #expect(t.patterns.map(\.code) == ["NNxxx"], "\(version)")
+            #expect(t.contains("NNAUS"), "\(version)")
+            #expect(!t.contains("NNAU1") && !t.contains("NNaus") && !t.contains("NNAUST"), "\(version)")
+            #expect(!t.codes.contains("NNxxx"), "\(version): the printed placeholder is not a code")
+        }
+        #expect(HL7TableRegistry.table("0203", version: .v2_3)?.patterns.isEmpty == true, "v2.3 prints no NNxxx row")
+    }
 }

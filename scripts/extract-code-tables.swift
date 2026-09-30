@@ -43,8 +43,9 @@
 // rather than silently omitting the table.
 //
 // Resources/tables/overrides.json is a hand-kept overlay, keyed by version and
-// then by table number (kind / permitsLocalExtensions / citation / dropCodes,
-// plus a `note` documenting what was verified). Every entry is version-scoped:
+// then by table number (kind / permitsLocalExtensions / citation / dropCodes /
+// renameCodes / addEntries / createName / patterns, plus a note documenting
+// what was verified). Every entry is version-scoped:
 // an artifact of one version's printing must never be able to silently alter
 // another version's table. The file lives at the root of Resources/tables,
 // which the codegen's tables pass ignores because it only enumerates `v*`
@@ -131,6 +132,11 @@ struct Override {
     /// and not in Appendix A, the only PDF this extractor reads for v2.3. Needs `kind`
     /// and `addEntries` (the transcribed rows) and a `citation` naming the chapter.
     var createName: String?
+    /// Printed rows that name a FAMILY of codes rather than one code (v2.3.1 to v2.8.2
+    /// Table 0203 "NNxxx": "National Person Identifier where the xxx is the ISO table 3166
+    /// 3-character (alphabetic) country code"). `[{"code": <printed value>, "regex":
+    /// <anchored regex>}]`; the matching row moves from `entries` to `patterns`.
+    var patterns: [[String: String]] = []
 }
 
 // MARK: - shared line classification
@@ -738,6 +744,17 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
         rowPairs.append((pair[0], pair[1]))
         addedNotes.append("\(t.number): added by overrides.json: \(pair[0])")
     }
+    var patternRows: [(code: String, description: String, regex: String)] = []
+    for p in override?.patterns ?? [] {
+        guard let code = p["code"], let regex = p["regex"],
+              let i = rowPairs.firstIndex(where: { $0.0 == code }) else {
+            addedNotes.append("\(t.number): pattern \(p["code"] ?? "?") declared in overrides.json but not printed")
+            continue
+        }
+        patternRows.append((code, rowPairs[i].1, regex))
+        rowPairs.remove(at: i)
+        addedNotes.append("\(t.number): \(code) is a pattern row (\(regex))")
+    }
     let notes = allNotes + addedNotes + (hasEllipsis ? ["\(t.number): dropped the bare \"...\" row"
         + (rowPairs.isEmpty ? "" : "; table left open unless overridden")] : [])
     let permits = override?.permitsLocalExtensions
@@ -758,6 +775,15 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     } else {
         lines.append("  \"entries\": [")
         lines.append(rows.joined(separator: ",\n"))
+        lines.append("  ]")
+    }
+    if !patternRows.isEmpty {
+        lines[lines.count - 1] += ","
+        let items = patternRows.map {
+            "    {\n      \"code\": \(jsonString($0.code)),\n      \"description\": \(jsonString($0.description)),\n      \"regex\": \(jsonString($0.regex))\n    }"
+        }
+        lines.append("  \"patterns\": [")
+        lines.append(items.joined(separator: ",\n"))
         lines.append("  ]")
     }
     lines.append("}")
@@ -784,7 +810,8 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
             dropCodes: (d["dropCodes"] as? [String]) ?? [],
             renameCodes: (d["renameCodes"] as? [String: String]) ?? [:],
             addEntries: (d["addEntries"] as? [[String]]) ?? [],
-            createName: d["createName"] as? String
+            createName: d["createName"] as? String,
+            patterns: (d["patterns"] as? [[String: String]]) ?? []
         )
     }
     return out

@@ -3668,7 +3668,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "NI", description: "National unique individual identifier"),
             HL7Table.Entry(code: "NII", description: "National Insurance Organization Identifier"),
             HL7Table.Entry(code: "NIIP", description: "National Insurance Payor Identifier (Payor)"),
-            HL7Table.Entry(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"),
             HL7Table.Entry(code: "NP", description: "Nurse practitioner number"),
             HL7Table.Entry(code: "NPI", description: "National provider identifier"),
             HL7Table.Entry(code: "OD", description: "Optometrist license number"),
@@ -3702,7 +3701,10 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "WC", description: "WIC identifier"),
             HL7Table.Entry(code: "WCN", description: "Workers' Comp Number"),
             HL7Table.Entry(code: "XX", description: "Organization identifier"),
-        ] as [HL7Table.Entry]
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code", regex: "^NN[A-Z]{3}$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0204_v2_5_1 = HL7Table(

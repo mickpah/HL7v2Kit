@@ -1633,6 +1633,15 @@
           "="
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.3.1 Appendix A User-defined Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
     }
   },
   "2.4": {
@@ -2007,6 +2016,15 @@
           "Unlink order/service from patient care problem or goal"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.4 Appendix A Table 0203 and CH02 sec 2.9.12.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
     }
   },
   "2.5.1": {
@@ -2362,6 +2380,15 @@
           "Waveform source"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.5.1 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
     }
   },
   "2.6": {
@@ -2753,6 +2780,15 @@
           "Waveform source"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.6 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
     }
   },
   "2.8.2": {
@@ -2855,6 +2891,15 @@
           "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
         ]
       ]
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "note": "V282-C01: v2.8.2 CH02C sec 2.C.2.140 HL7 Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
     }
   }
 }

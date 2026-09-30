@@ -828,13 +828,23 @@ def _condition_holds(expr, populated, repeated=False):
         return False
 
 
+class _ClosedTable:
+    """Membership in a closed table: a printed code, or a full match of a pattern row."""
+    def __init__(self, doc):
+        self.codes = {e["code"] for e in doc["entries"]}
+        self.patterns = [re.compile(p["regex"]) for p in doc.get("patterns", [])]
+
+    def __contains__(self, value):
+        return value in self.codes or any(p.fullmatch(value) for p in self.patterns)
+
+
 def _closed_codes(version, number):
     path = f"{TABLES}/{version}/{number}.json"
     if not os.path.exists(path):
         return None
     doc = json.load(open(path))
     if doc["kind"] == "HL7" and not doc["permitsLocalExtensions"] and doc["entries"]:
-        return {e["code"] for e in doc["entries"]}
+        return _ClosedTable(doc)
     return None
 
 

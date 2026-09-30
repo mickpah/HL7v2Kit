@@ -65,6 +65,15 @@ struct TableSchema: Decodable {
     let permitsLocalExtensions: Bool?
     let citation: String?
     let entries: [TableEntrySchema]
+    let patterns: [TablePatternSchema]?
+}
+
+/// One pattern row of a table (`"patterns"` in the table JSON): a printed
+/// row that names a family of codes, e.g. 0203 `NNxxx`.
+struct TablePatternSchema: Decodable {
+    let code: String
+    let description: String
+    let regex: String
 }
 
 /// HL7 data type codes whose values are scalar enough that the typed
@@ -407,6 +416,14 @@ func renderTableRegistry(versionSwiftName: String, sourceDir: String, tables: [T
         let entries = t.entries.map {
             "            HL7Table.Entry(code: \(escapeStringLiteral($0.code)), description: \(escapeStringLiteral($0.description))),"
         }.joined(separator: "\n")
+        for p in t.patterns ?? [] {
+            _ = try NSRegularExpression(pattern: p.regex)   // fail the codegen on a malformed pattern
+        }
+        let patternLines = (t.patterns ?? []).map {
+            "            HL7Table.CodePattern(code: \(escapeStringLiteral($0.code)), description: \(escapeStringLiteral($0.description)), regex: \(escapeStringLiteral($0.regex))),"
+        }
+        let patternsArgument = patternLines.isEmpty ? "" :
+            ",\n        patterns: [\n" + patternLines.joined(separator: "\n") + "\n        ] as [HL7Table.CodePattern]"
         return """
             static let t\(t.table)_\(versionSwiftName) = HL7Table(
                 number: "\(t.table)",
@@ -415,7 +432,7 @@ func renderTableRegistry(versionSwiftName: String, sourceDir: String, tables: [T
                 permitsLocalExtensions: \(t.permitsLocalExtensions ?? false),
                 entries: [
         \(entries)
-                ] as [HL7Table.Entry]
+                ] as [HL7Table.Entry]\(patternsArgument)
             )
         """
     }.joined(separator: "\n\n")

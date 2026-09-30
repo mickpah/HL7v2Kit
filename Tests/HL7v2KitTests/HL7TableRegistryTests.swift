@@ -209,4 +209,18 @@ struct HL7TableRegistryTests {
         #expect(t0290.entries.count == 65)
         #expect(t0290.entries.first { $0.code == "63" }?.description == "/")
     }
+
+    @Test("A pattern row matches the family of codes it names, and is not itself a code")
+    func patternRow() {
+        let t = HL7Table(
+            number: "9999", name: "Test", kind: .hl7,
+            entries: [HL7Table.Entry(code: "MR", description: "Medical record number")],
+            patterns: [HL7Table.CodePattern(code: "NNxxx", description: "National Person Identifier", regex: "^NN[A-Z]{3}$")]
+        )
+        #expect(t.contains("MR") && t.contains("NNAUS") && t.contains("NNCAN"))
+        #expect(!t.contains("NNAU") && !t.contains("NNAUST") && !t.contains("XNNAUS") && !t.contains("NNaus"))
+        #expect(!t.contains("NNxxx"))
+        #expect(t.codes == ["MR"])
+        #expect(t.isClosed)
+    }
 }

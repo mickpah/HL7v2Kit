@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P2-6: pattern rows in the code-table registry
+
+- `HL7Table.CodePattern` and `HL7Table.patterns` (additive); the `patterns:`
+  initialiser parameter is additive and defaulted, so existing call sites
+  are unaffected.
+- `HL7Table.contains(_:)` now accepts a full match against a pattern row,
+  in addition to an exact printed-code match.
+- Table 0203 `NNxxx` ("National Person Identifier where the xxx is the ISO
+  table 3166 3-character (alphabetic) country code") is modelled as the
+  pattern `^NN[A-Z]{3}$` on v2.3.1 to v2.8.2: CX.5 values such as `NNAUS`
+  or `NNCAN` no longer raise `valueNotInTable` (V282-C01).
+
 ### Fixed — P1 fix wave: whole-workstream review remediation
 
 - v2.6 OBR-48 (Medically Necessary Duplicate Procedure Reason) was `O`; CH04

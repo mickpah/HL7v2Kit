@@ -267,10 +267,6 @@
       "description": "National Insurance Payor Identifier (Payor)"
     },
     {
-      "code": "NNxxx",
-      "description": "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code"
-    },
-    {
       "code": "NP",
       "description": "Nurse practitioner number"
     },
@@ -437,6 +433,13 @@
     {
       "code": "XX",
       "description": "Organization identifier"
+    }
+  ],
+  "patterns": [
+    {
+      "code": "NNxxx",
+      "description": "National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code",
+      "regex": "^NN[A-Z]{3}$"
     }
   ]
 }
