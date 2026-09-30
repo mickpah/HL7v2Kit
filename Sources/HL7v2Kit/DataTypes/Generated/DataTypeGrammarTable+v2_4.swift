@@ -341,7 +341,7 @@ extension DataTypeGrammarTable {
         name: "processing type",
         components: [
             ComponentGrammar(index: 1, name: "Processing ID", dataType: "ID", optionalityCode: "", tables: ["0103"], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 2, name: "Processing mode", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Processing mode", dataType: "ID", optionalityCode: "", tables: ["0207"], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

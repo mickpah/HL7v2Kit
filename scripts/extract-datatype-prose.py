@@ -36,6 +36,14 @@ TABLE = re.compile(r"(?:HL7\s+(?:[Tt]able\s+)?|[Uu]ser-\s*defined\s+[Tt]able\s+)
 STOP = {"for", "valid", "values", "suggested", "is", "used", "as", "the", "of", "a", "an", "and", "or", "to", "in", "code", "codes", "id", "type"}
 
 
+def dehyphenate(text):
+    """Rejoin 'table' hyphenated across a line break. v2.3.1 sec 2.8.31.2 prints 'Refer to HL7
+    ta-' / 'ble 0207', and sec 2.8.28.6 'User-defined ta-' / 'ble 0305'; the joined component text
+    reads 'ta- ble', which TABLE cannot match. Only this word is rejoined: 'user- defined' is
+    already handled by TABLE's own '-\\s*'."""
+    return re.sub(r"\b([Tt]a)-\s+(ble)\b", r"\1\2", text)
+
+
 def words(text):
     return {w for w in re.findall(r"[a-z]+", (text or "").lower()) if w not in STOP}
 
@@ -116,7 +124,7 @@ def extract(version):
         if not comps:
             continue                                   # a primitive: no component subsections
         for c in comps:
-            c["tables"], c["rejected"] = judge(version, TABLE.findall(c.pop("text")))
+            c["tables"], c["rejected"] = judge(version, TABLE.findall(dehyphenate(c.pop("text"))))
         out[code] = {"dataType": code, "version": version, "name": t["name"], "components": comps}
     return out
 

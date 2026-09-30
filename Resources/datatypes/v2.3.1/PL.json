@@ -53,7 +53,10 @@
       "index": 6,
       "name": "Person location type",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0305"
+      ]
     },
     {
       "index": 7,

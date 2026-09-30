@@ -265,7 +265,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 3, name: "Bed", dataType: "IS", optionalityCode: "", tables: ["0304"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "Facility", dataType: "HD", optionalityCode: "", tables: ["0300"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Location status", dataType: "IS", optionalityCode: "", tables: ["0306"], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 6, name: "Person location type", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Person location type", dataType: "IS", optionalityCode: "", tables: ["0305"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 7, name: "Building", dataType: "IS", optionalityCode: "", tables: ["0307"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 8, name: "Floor", dataType: "IS", optionalityCode: "", tables: ["0308"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 9, name: "Location description", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -316,7 +316,7 @@ extension DataTypeGrammarTable {
         name: "processing type                                                                     2-42",
         components: [
             ComponentGrammar(index: 1, name: "Processing ID", dataType: "ID", optionalityCode: "", tables: ["0103"], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 2, name: "Processing mode", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Processing mode", dataType: "ID", optionalityCode: "", tables: ["0207"], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

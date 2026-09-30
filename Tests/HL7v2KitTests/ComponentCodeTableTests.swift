@@ -186,4 +186,15 @@ struct ComponentCodeTableTests {
         }
         #expect(HL7TableRegistry.table("0203", version: .v2_3)?.patterns.isEmpty == true, "v2.3 prints no NNxxx row")
     }
+
+    @Test("A table reference hyphenated across a line break still binds: PT.2 0207, PL.6 0305")
+    func hyphenatedTableReference() throws {
+        #expect(DataTypeGrammarTable.grammar("PT", version: .v2_3_1)?.component(2)?.tables == ["0207"])
+        #expect(DataTypeGrammarTable.grammar("PT", version: .v2_4)?.component(2)?.tables == ["0207"])
+        #expect(DataTypeGrammarTable.grammar("PL", version: .v2_3_1)?.component(6)?.tables == ["0305"])
+        let bad = wire(version: "2.3.1").replacingOccurrences(of: "|P|2.3.1", with: "|P^X|2.3.1")
+        #expect(try tableIssues(bad).map(\.location.pathDescription) == ["MSH[1]-11.2"])
+        let good = wire(version: "2.3.1").replacingOccurrences(of: "|P|2.3.1", with: "|P^T|2.3.1")
+        #expect(try tableIssues(good).isEmpty)
+    }
 }
