@@ -207,4 +207,17 @@ struct CodeTableValidationTests {
         #expect(t.kind == .hl7 && t.isClosed && t.entries.count == 48)
         #expect(!t.contains("OP") && !t.contains("PY"), "OP and PY are v2.5 additions")
     }
+
+    @Test("v2.5.1 TQ1-12 is checked against HL7 Table 0472, as sec 4.5.4.12 prints it")
+    func tq1ConjunctionV251() throws {
+        func wire(_ conjunction: String) -> String {
+            "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG00001|P|2.5.1\r"
+                + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
+                + "ORC|NW|1\r"
+                + "TQ1|1" + String(repeating: "|", count: 11) + conjunction + "\r"
+        }
+        #expect(try tableIssues(wire("S")).isEmpty)
+        #expect(try tableIssues(wire("A")).isEmpty)
+        #expect(try tableIssues(wire("X")).map(\.code) == [.valueNotInTable(table: "0472")])
+    }
 }

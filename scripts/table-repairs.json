@@ -133,5 +133,24 @@
       "0334"
     ],
     "cite": "v2.3 CH3 sec 3.3.10 DB1 attribute table prints TBL# 0033 for Disabled person code: a digit transposition. The field definition (3.3.10.2) says 'Refer to user-defined table 0334 - Disabled person' and prints that table beneath it; Appendix A lists 0334 Disabled Person with the same four values and has no 0033; v2.3.1, v2.4 and v2.5.1 all print 0334. Registered spec typo, normalised (precedent: v2.4 AL1-1)."
+  },
+  "v2.5.1/TQ1-12": {
+    "tables": [
+      "0472"
+    ],
+    "cite": "v2.5.1 CH04 TQ1 attribute table prints TBL# 0427 (Risk Management Incident Code) for Conjunction; sec 4.5.4.12 says 'Refer To HL7 Table 0472 - TQ Conjunction ID' and prints that table (A, C, S) beneath it; v2.6 and v2.8.2 print 0472. Registered spec misprint, normalised (V251-C06)."
+  },
+  "v2.5.1/CON-18": {
+    "tables": [
+      "0296",
+      "0545"
+    ],
+    "cite": "v2.5.1 CH09 CON attribute table prints TBL# 0296 (Primary Language); sec 9.9.4.18 says 'Refer to User-Defined Table 0545 - Language Translated To' and prints that table. Both recorded; 0545, the field's own table, is the enforced link (V251-C06)."
+  },
+  "v2.5.1/SID-4": {
+    "tables": [
+      "0385"
+    ],
+    "cite": "v2.5.1 CH13 SID attribute table prints TBL# 0385; the SID-4 definition says 'Refer to User-defined Table 0451 - Manufacturer identifier'. The stated name is 0385's (0451 is Substance identifier), so the prose number is the misprint and 0385 stands (V251-C06)."
   }
 }

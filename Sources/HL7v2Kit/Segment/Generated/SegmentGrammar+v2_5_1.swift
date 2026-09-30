@@ -623,7 +623,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "Consent End Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
             FieldGrammar(index: 16, name: "Subject Competence Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1"),
             FieldGrammar(index: 17, name: "Translator Assistance Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1"),
-            FieldGrammar(index: 18, name: "Language Translated To", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0296", length: "1"),
+            FieldGrammar(index: 18, name: "Language Translated To", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0545", length: "1"),
             FieldGrammar(index: 19, name: "Informational Material Supplied Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1"),
             FieldGrammar(index: 20, name: "Consent Bypass Reason", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 21, name: "Consent Disclosure Level", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0500", length: "1"),
@@ -3147,7 +3147,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 9, name: "Priority", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 10, name: "Condition text", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 11, name: "Text instruction", dataType: "TX", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 12, name: "Conjunction", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0427", length: "10"),
+            FieldGrammar(index: 12, name: "Conjunction", dataType: "ID", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0472", length: "10"),
             FieldGrammar(index: 13, name: "Occurrence duration", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
             FieldGrammar(index: 14, name: "Total occurrence's", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10"),
         ]
