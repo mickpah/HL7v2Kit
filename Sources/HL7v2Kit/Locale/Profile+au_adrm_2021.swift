@@ -508,9 +508,16 @@ extension Profile {
                 requiredComponents: [1, 2, 3, 4],
                 specCitation: "HL7au:000004.1 (r3) — OBR-3 EI completeness"
             ),
-            // ADRM-prose:P-11 (P4-27) — ADRM-2021 §4.4.1.26, p. 228: "Not
-            // used in Australian messages. Use observation Sub-ID in OBX-4
-            // to link results." Unconditional, no Appendix 5 HL7au ID.
+            // ADRM-prose:P-11 (P4-27, fix round 1) — ADRM-2021 §4.4.1.26,
+            // p. 228: "Not used in Australian messages. Use observation
+            // Sub-ID in OBX-4 to link results." Unconditional, no Appendix
+            // 5 HL7au ID. No modal verb ("must"/"should") — and the
+            // ADRM's own OBR-26 attribute-table entry (p. 226/227, item
+            // 00259) gives usage O (optional), not X (not used). Per the
+            // documented severity convention (SegmentGrammar.swift
+            // `prohibitedSeverity` DocC — `.error` for normative "may
+            // only be"/"not permitted" text, `.warning` for SHOULD-level
+            // or advisory text), this reads as `.warning`, not `.error`.
             // OBR-26 carries no base condition (v2.4/OBR.json: optionality
             // O, no `condition`), so unlike OBR-29 there is no conflicting
             // requirement elsewhere in the spec that forces this field to
@@ -525,8 +532,8 @@ extension Profile {
                 prohibitions: [
                     ProfileFieldProhibition(
                         condition: "messageCode in (ORM, ORU, REF)",
-                        severity: .error,
-                        specCitation: "ADRM-prose:P-11 — OBR-26 (Parent Result) must not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.26 p. 228"
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-11 — OBR-26 (Parent Result) should not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.26 p. 228"
                     ),
                 ],
                 specCitation: "ADRM-prose:P-11 — OBR-26 not used in Australia"

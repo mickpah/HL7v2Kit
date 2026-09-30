@@ -31,11 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P4-27: AU "not used" elements
 
-- Under `.auLocalisation`, OBR-26 (Parent Result) must not be valued on ORM,
-  ORU and REF. ADRM-2021 §4.4.1.26 (p. 228) reads "Not used in Australian
-  messages. Use observation Sub-ID in OBX-4 to link results." Reported as an
-  error `.profileConstraintViolation("ADRM-prose:P-11 ...")`. No base v2.4
-  condition makes OBR-26 required, so nothing conflicts.
+- Under `.auLocalisation`, OBR-26 (Parent Result) should not be valued on
+  ORM, ORU and REF. ADRM-2021 §4.4.1.26 (p. 228) reads "Not used in
+  Australian messages. Use observation Sub-ID in OBX-4 to link results."
+  No modal verb, and the ADRM's own attribute-table entry gives usage O
+  (not X), so per the documented severity convention this is a warning.
+  Reported as `.profileConstraintViolation("ADRM-prose:P-11 ...")`. No base
+  v2.4 condition makes OBR-26 required, so nothing conflicts. (Fix round 1:
+  corrected from error to warning.)
 - Under `.auLocalisation`, ORC-24 (Ordering Provider Address) should not be
   valued on Referrals. ADRM-2021 §7.3.11.24 (p. 343) reads "This field should
   not be used. Use ORC-22 for the address of the prescriber's facility."
@@ -52,12 +55,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docs/design/m7-adrm-prose-sweep.md` and the permanent-limitations
   register's HL7au:00060.4 addendum.
 - A wider sweep for "not used"/"should not be used" AU-specific prose (the
-  M7 sweep's keyword list never matched this phrasing) turned up six further
-  narrative findings with no conformance-point ID and no safe, wire-decidable
-  enforcement: MSH-20, PID-22, PV1-7, IAM-7, the RP datatype's namespace-ID
-  sub-component, and TS's legacy degree-of-precision sub-component. Each is
-  recorded in `docs/design/m7-adrm-prose-sweep.md` §B with its reason
-  (descriptive rather than prohibitive wording, content-purpose restriction,
+  M7 sweep's keyword list never matched this phrasing) turned up eight
+  further narrative findings with no conformance-point ID and no safe,
+  wire-decidable enforcement: MSH-20, PID-22, PV1-7, IAM-7, the RP
+  datatype's namespace-ID sub-component, TS's legacy degree-of-precision
+  sub-component and (fix round 1) the Appendix 2 TM-datatype row and the
+  microbiology worked example's OBX-17 note. Each is recorded in
+  `docs/design/m7-adrm-prose-sweep.md` §B with its reason (descriptive
+  rather than prohibitive wording, content-purpose restriction,
   receiver/system-capability condition, or component-level scope the current
   `FieldOverride.prohibitions` mechanism cannot express). No Appendix 5
   conformance point changed, so the M6 register is unchanged.

@@ -6,6 +6,9 @@
 // Unconditional; no base v2.4 condition exists on OBR-26 (optionality O),
 // so nothing else in the spec requires it to be valued. Scope: OBR is
 // shared by ORM, ORU and REF, all defined against the same ch. 4 table.
+// No modal verb, and the ADRM's own attribute-table entry gives usage O
+// (not X), so per the documented severity convention this is a warning,
+// not an error (fix round 1).
 //
 // AU ADRM-2021 §7.3.11.24, p. 343 (ORC-24 Ordering Provider Address):
 // "This field should not be used. Use ORC-22 for the address of the
@@ -47,11 +50,11 @@ struct AUP11OBR26ProhibitionTests {
         }
     }
 
-    @Test("OBR-26 valued raises ADRM-prose:P-11 as an error", arguments: ["ORM^O01", "ORU^R01", "REF^I12"])
+    @Test("OBR-26 valued raises ADRM-prose:P-11 as a warning", arguments: ["ORM^O01", "ORU^R01", "REF^I12"])
     func obr26ValuedFires(messageType: String) throws {
         let issues = try Self.prohibitions(Self.wire(messageType, obr26: "1234^GLU-PARENT^HOSP"))
         let hit = try #require(issues.first { $0.location.segmentID == "OBR" && $0.location.fieldIndex == 26 })
-        #expect(hit.severity == .error)
+        #expect(hit.severity == .warning)
     }
 
     @Test("OBR-26 empty stays silent")
