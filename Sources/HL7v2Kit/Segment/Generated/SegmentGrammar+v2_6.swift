@@ -380,7 +380,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Parent Placer Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
             FieldGrammar(index: 23, name: "Parent Filler Appointment ID", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
             FieldGrammar(index: 24, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
-            FieldGrammar(index: 25, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
+            FieldGrammar(index: 25, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: "ARQ-24 populated", prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
         ]
     )
 
@@ -3390,8 +3390,8 @@ extension SegmentGrammarTable {
         segmentID: "SCH",
         version: "2.6",
         fields: [
-            FieldGrammar(index: 1, name: "Placer Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
-            FieldGrammar(index: 2, name: "Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
+            FieldGrammar(index: 1, name: "Placer Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "SCH-2 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
+            FieldGrammar(index: 2, name: "Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "SCH-1 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
             FieldGrammar(index: 3, name: "Occurrence Number", dataType: "NM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "5"),
             FieldGrammar(index: 4, name: "Placer Group Number", dataType: "EI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "22"),
             FieldGrammar(index: 5, name: "Schedule ID", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
@@ -3416,7 +3416,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 24, name: "Parent Filler Appointment ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "75"),
             FieldGrammar(index: 25, name: "Filler Status Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 26, name: "Placer Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
-            FieldGrammar(index: 27, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
+            FieldGrammar(index: 27, name: "Filler Order Number", dataType: "EI", optionality: .conditional, repeatability: .multiple, condition: "SCH-26 populated", prohibitedWhen: nil, variableColumns: false, table: nil, length: "427"),
         ]
     )
 

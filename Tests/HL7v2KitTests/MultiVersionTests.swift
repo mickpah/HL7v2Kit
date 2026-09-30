@@ -1002,8 +1002,8 @@ struct MultiVersionTests {
             // blood-product (BPX/BTX) dispense/transfusion-status conditionals;
             // ROL-1 role-instance (SPM-13 carries a prohibition since P4-4). All
             // fail-safe, grouped in conditional-completeness-audit.md.
-            "SCH-1", "SCH-2", "SCH-3", "SCH-24", "SCH-26", "SCH-27",
-            "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24", "ARQ-25",
+            "SCH-3", "SCH-24", "SCH-26",
+            "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
             "AIS-2", "AIS-4", "AIS-5", "AIS-6", "AIS-9", "AIS-10",
             "AIG-2", "AIG-3", "AIG-8", "AIG-9", "AIG-10", "AIG-13", "AIG-14",
             "AIL-2", "AIL-3", "AIL-4", "AIL-6", "AIL-7", "AIL-8", "AIL-11", "AIL-12",
