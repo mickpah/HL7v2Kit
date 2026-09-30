@@ -5938,7 +5938,7 @@ extension HL7TableRegistry {
         number: "0355",
         name: "Primary key value type",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "CE", description: "Coded element"),
             HL7Table.Entry(code: "PL", description: "Person location"),

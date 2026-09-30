@@ -1642,6 +1642,10 @@
         }
       ],
       "note": "V282-C01: v2.3.1 Appendix A User-defined Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row."
+    },
+    "0355": {
+      "permitsLocalExtensions": false,
+      "note": "P2-fix 1: stays closed. v2.3.1 Chapter 8 sec 8.4.2.5 (MFE-5) reads 'The valid values for the data type of a primary key are listed in HL7 table 0355' and prints no local-extension note; the note that opens the table first appears in v2.4."
     }
   },
   "2.4": {
@@ -2036,6 +2040,11 @@
       ],
       "citation": "HL7 v2.4 Table 0391 - Segment group; CH05 sec 5.5.5.7 prints the same 'Etc' row and note ('currently includes no values defined by HL7'), so the printed rows are not a closed set",
       "note": "Appendix A carries the printed 'etc' row as a code; it is the continuation marker, not a value."
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.4 Chapter 8 sec 8.5.2.5 MFE-5 Primary key value type, HL7 Table 0355 - Primary key value type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
     }
   },
   "2.5.1": {
@@ -2406,6 +2415,11 @@
     "0391": {
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Table 0391 - Segment group; CH05 sec 5.5.6.7 prints it ending 'Etc' with the note 'HL7 Table 0391 - Segment group currently includes no values defined by HL7', and a group's definition is 'given only in the conformance statement of the query', so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
     }
   },
   "2.6": {
@@ -2808,6 +2822,11 @@
       "note": "V282-C01: v2.6 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.6 Table 0203 - Identifier type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier type for suggested values', repeated at XCN.13, PPN.13 and XON.7, so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.6 Chapter 8 sec 8.5.2.5 MFE-5 Primary Key Value Type, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table (MFE-5, the data type of MFE-4) reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
     }
   },
   "2.8.2": {
@@ -2921,6 +2940,11 @@
       "note": "V282-C01: v2.8.2 CH02C sec 2.C.2.140 HL7 Table 0203 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.8.2 CH02C sec 2.C.2.140 Table 0203 - Identifier Type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.280, HL7 Table 0355 - Primary Key Value Type",
+      "note": "P2-fix 1: the Note under the table reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
     }
   }
 }

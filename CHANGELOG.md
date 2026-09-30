@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P2 fix wave: whole-workstream review remediation
+
+- Table 0355 (Primary key value type, MFE-5) is opened on v2.4, v2.5.1, v2.6 and
+  v2.8.2: the note under the table reads "For locally defined master files, this table
+  can be locally extended with other HL7 data types". An MFE-5 data type outside the
+  printed rows no longer raises `valueNotInTable` there. v2.3.1 cites the table "for
+  valid values" with no such note, so it stays closed.
+
 ### Changed — P7-1: the schema audit compares `C` and the defining attribute table
 
 - `scripts/audit-schemas.py` M19 no longer skips a slot where the schema or the print is
