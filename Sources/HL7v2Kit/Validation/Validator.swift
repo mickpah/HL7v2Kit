@@ -1570,7 +1570,8 @@ public struct Validator: Sendable {
         }
         func report(_ value: String?, table: HL7Table, name: String, component: Int, subcomponent: Int?, repetition: Int) {
             guard let value, !value.isEmpty, value != "\"\"", !table.contains(value),
-                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true else { return }
+                  HL7TableRegistry.table(table.number, locale: locale)?.contains(value) != true,
+                  options.localTableExtensions[table.number]?.contains(value) != true else { return }
             let where_ = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
                                        fieldIndex: location.fieldIndex, componentIndex: component,
                                        subcomponentIndex: subcomponent)
@@ -1617,6 +1618,10 @@ public struct Validator: Sendable {
             // version's rows, so it can never reject what the message's own version prints;
             // narrowing is the profile's job, not this rule's.
             if HL7TableRegistry.table(tableNumber, locale: locale)?.contains(value) == true { continue }
+            // A caller-declared local extension (ValidationOptions.localTableExtensions) also
+            // widens the check, same as a locale rendering: HL7 v2.5.1+ CH02 2.5.3.6 allows a
+            // table to be extended with locally defined values.
+            if options.localTableExtensions[tableNumber]?.contains(value) == true { continue }
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),

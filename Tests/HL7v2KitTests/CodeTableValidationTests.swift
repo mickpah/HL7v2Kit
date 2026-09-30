@@ -233,4 +233,36 @@ struct CodeTableValidationTests {
             #expect(t.contains("PIDG") && !t.codes.contains("etc"), "v\(wireVersion)")
         }
     }
+
+    // MARK: - P2-13: caller-declared local table extensions (owner gate G5)
+
+    private func pid5NameType(_ nameTypeCode: String, version: String = "2.5.1") -> String {
+        "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01|MSG00001|P|\(version)\r"
+            + "PID|1||123^^^AUTH^MR||DOE^JOHN^^^^^\(nameTypeCode)\r"
+    }
+
+    @Test("A declared local extension silences the field-level check: v2.5.1 OBR-24 = ZZ under Table 0074")
+    func localExtensionSilencesFieldLevelCheck() throws {
+        #expect(try tableIssues(oru(obr24: "ZZ")).map(\.code) == [.valueNotInTable(table: "0074")])
+        var options = ValidationOptions()
+        options.localTableExtensions = ["0074": ["ZZ"]]
+        #expect(try tableIssues(oru(obr24: "ZZ"), options: options).isEmpty)
+        #expect(try tableIssues(oru(obr24: "QQ"), options: options).map(\.code) == [.valueNotInTable(table: "0074")],
+                "a code outside the declared extension is still an error")
+    }
+
+    @Test("A declared local extension silences the component-level check: v2.5.1 PID-5.7 (XPN.7, Table 0200)")
+    func localExtensionSilencesComponentLevelCheck() throws {
+        #expect(try tableIssues(pid5NameType("Z")).map(\.code) == [.valueNotInTable(table: "0200")])
+        var options = ValidationOptions()
+        options.localTableExtensions = ["0200": ["Z"]]
+        #expect(try tableIssues(pid5NameType("Z"), options: options).isEmpty)
+    }
+
+    @Test("A declared local extension does not widen any other table")
+    func localExtensionDoesNotAffectOtherTables() throws {
+        var options = ValidationOptions()
+        options.localTableExtensions = ["0074": ["ZZ"]]
+        #expect(try tableIssues(pid5NameType("Z"), options: options).map(\.code) == [.valueNotInTable(table: "0200")])
+    }
 }

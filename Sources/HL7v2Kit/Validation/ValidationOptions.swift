@@ -102,13 +102,28 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 
+    /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
+    ///
+    /// HL7 v2.5.1 and later allow an HL7 table to be extended with locally defined values
+    /// (CH02 2.5.3.6; v2.8.2 CH02C 2.C.1.2). A value listed here for a table is accepted
+    /// wherever that table is checked, at field or component level; every other value
+    /// outside the table is still reported. Empty by default, so HL7 tables stay closed.
+    ///
+    /// The check applies on every supported version, not only v2.5.1 and later: the spec
+    /// clause that permits local extension is a v2.5.1+ rule, but declaring an extension
+    /// here is opt-in and caller-asserted, so a declaration against an older version is
+    /// read as a site agreement rather than an appeal to that clause. Matching is exact
+    /// and case-sensitive, as ``HL7Table/contains(_:)`` is.
+    public var localTableExtensions: [String: Set<String>] = [:]
+
     public init(
         zSegmentPolicy: ZSegmentPolicy = .ignore,
         checkRequiredFields: Bool = true,
         checkConditionalFields: Bool = true,
         checkComponentGrammar: Bool = true,
         checkCardinality: Bool = true,
-        warnDeprecatedFields: Bool = true
+        warnDeprecatedFields: Bool = true,
+        localTableExtensions: [String: Set<String>] = [:]
     ) {
         self.zSegmentPolicy = zSegmentPolicy
         self.checkRequiredFields = checkRequiredFields
@@ -116,6 +131,7 @@ public struct ValidationOptions: Sendable {
         self.checkComponentGrammar = checkComponentGrammar
         self.checkCardinality = checkCardinality
         self.warnDeprecatedFields = warnDeprecatedFields
+        self.localTableExtensions = localTableExtensions
     }
 
     /// Grammar checks on; Z-segments silently tolerated. Suitable for

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P2-13: caller-declared local extensions to HL7 tables
+
+- `ValidationOptions.localTableExtensions` (additive; new init parameter, last
+  position, defaulted to `[:]`, so existing call sites compile unchanged). HL7
+  v2.5.1+ permits a table to be extended with locally defined values (CH02
+  2.5.3.6; v2.8.2 CH02C 2.C.1.2); a table still stays closed by default, but a
+  caller can now declare the codes it has locally added to a named table, keyed
+  by four-digit table number. A declared code is accepted wherever that table
+  is checked, at field or component level; every other out-of-table code is
+  still `valueNotInTable` (owner gate G5).
+
 ### Added — P2-6: pattern rows in the code-table registry
 
 - `HL7Table.CodePattern` and `HL7Table.patterns` (additive); the `patterns:`
