@@ -163,7 +163,7 @@ struct MultiVersionTests {
     """
 
     @Test("v2.4 filler id satisfies ORC-2 / OBR-2; OBR-25 fires under v2.4 grammar")
-    func v24CrossSegmentConditionalsFire() throws {
+    func v24FillerIDSatisfiesPlacerAndOBR25Fires() throws {
         let message = try Parser().parse(v24ORUBothPlacersEmpty)
         let report = Validator().validate(message)
         let codes = report.errors.map { ($0.location.segmentID, $0.location.fieldIndex) }
@@ -581,11 +581,12 @@ struct MultiVersionTests {
         }
         #expect(orc?.field(30)?.dataType == "CNE")
         // Cross-segment conditions carried over verbatim from v2.5.1.
-        // P4-7: placer-or-filler, and the ORC-8 OBR-absent leg gated off OUL / OPU (G2-6).
+        // P4-7: placer-or-filler; every ORC/OBR-peer leg gated off the OBR-before-ORC
+        // structures (OUL, OPU, OPL) until P8 group ranges (G2-6 and fix round 1).
         #expect(orc?.field(2)?.condition
-            == "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU)")
+            == "ORC-3 empty AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU, OPL)")
         #expect(orc?.field(8)?.condition
-            == "ORC-1 = CH AND OBR absent AND messageCode not in (OUL, OPU) OR ORC-1 = CH AND OBR-29 empty")
+            == "ORC-1 = CH AND OBR absent AND messageCode not in (OUL, OPU, OPL) OR ORC-1 = CH AND OBR-29 empty AND messageCode not in (OUL, OPU, OPL)")
     }
 
     @Test("v2.6 SegmentGrammarTable carries OBR (S3b) — 50 fields, CE→CNE on 44/45, conditions")
@@ -836,13 +837,13 @@ struct MultiVersionTests {
         #expect(table["ORC"]?.field(26)?.optionality == .conditional)
         // P4-7 (X-C12): placer-or-filler over both segments, Send Number exempt.
         #expect(table["ORC"]?.field(2)?.condition
-            == "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)")
+            == "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-3 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU, OPL)")
         #expect(table["ORC"]?.field(3)?.condition
-            == "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)")
+            == "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-2 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU, OPL)")
         #expect(table["OBR"]?.field(2)?.condition
-            == "OBR-3 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)")
+            == "OBR-3 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN AND messageCode not in (OUL, OPU, OPL) OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)")
         #expect(table["OBR"]?.field(3)?.condition
-            == "OBR-2 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN OR OBR-2 empty AND ORC absent AND messageCode in (ORU, ORF)")
+            == "OBR-2 empty AND ORC-2 empty AND ORC-3 empty AND ORC-1 != SN AND messageCode not in (OUL, OPU, OPL) OR OBR-2 empty AND ORC absent AND messageCode in (ORU, ORF)")
 
         // OBR: 5/6/14/15/27→W; 13 ST→CWE; 49 IS→CWE; 29 C→O (XOR dropped);
         // 10/16/28/32/33/34/35/50→B; 48 O→C; carried 2/3/7/25 conditions.

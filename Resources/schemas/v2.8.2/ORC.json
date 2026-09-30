@@ -4,8 +4,8 @@
   "description": "Common Order",
   "fields": [
     { "index": 1, "swiftName": "orderControl", "name": "Order Control", "dataType": "ID", "length": "2..2", "table": "0119", "optionality": "R", "repeatability": "1", "tables": ["0119"] },
-    { "index": 2, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)" },
-    { "index": 3, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU)" },
+    { "index": 2, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-3 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-3 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU, OPL)" },
+    { "index": 3, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "ORC-2 empty AND ORC-1 != SN AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-2 empty AND ORC-1 != SN AND OBR absent AND messageCode not in (OUL, OPU, OPL)" },
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EIP", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "orderStatus", "name": "Order Status", "dataType": "ID", "length": "1..2", "table": "0038", "optionality": "O", "repeatability": "1", "tables": ["0038"] },
     { "index": 6, "swiftName": "responseFlag", "name": "Response Flag", "dataType": "ID", "length": "1..1", "table": "0121", "optionality": "O", "repeatability": "1", "tables": ["0121"] },

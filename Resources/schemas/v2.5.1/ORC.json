@@ -19,7 +19,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-3 empty AND OBR-2 empty AND OBR-3 empty OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU)"
+      "condition": "ORC-3 empty AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU) OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU)"
     },
     {
       "index": 3,
@@ -28,7 +28,7 @@
       "dataType": "EI", "length": "22",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-2 empty AND OBR-2 empty AND OBR-3 empty OR ORC-2 empty AND OBR absent AND messageCode not in (OUL, OPU)"
+      "condition": "ORC-2 empty AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU) OR ORC-2 empty AND OBR absent AND messageCode not in (OUL, OPU)"
     },
     {
       "index": 4,
@@ -71,7 +71,7 @@
       "dataType": "EIP", "length": "200",
       "optionality": "C",
       "repeatability": "1",
-      "condition": "ORC-1 = CH AND OBR absent AND messageCode not in (OUL, OPU) OR ORC-1 = CH AND OBR-29 empty"
+      "condition": "ORC-1 = CH AND OBR absent AND messageCode not in (OUL, OPU) OR ORC-1 = CH AND OBR-29 empty AND messageCode not in (OUL, OPU)"
     },
     {
       "index": 9,
