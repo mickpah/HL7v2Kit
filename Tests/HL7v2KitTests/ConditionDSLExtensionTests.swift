@@ -71,4 +71,14 @@ struct ConditionDSLExtensionTests {
         #expect(try evaluate("nextSegmentID() = TQ1", on: "ORC", in: wire))
         #expect(try evaluate("nextSegmentID() empty", on: "TQ1", in: wire))
     }
+
+    @Test("nextSegmentID skips Z-segments between chained TQ1s (ADR-003 site extensions)")
+    func nextSegmentSkipsZSegments() throws {
+        let direct = TestWires.wire("OMG^O19^OMG_O19", "2.5.1",
+            "ORC|NW|PL1", "TQ1|1", "ZXX|1", "TQ1|2", "OBR|1|PL1")
+        #expect(try evaluate("nextSegmentID(TQ2) = TQ1", on: "TQ1", occurrence: 1, in: direct))
+        let afterTQ2 = TestWires.wire("OMG^O19^OMG_O19", "2.5.1",
+            "ORC|NW|PL1", "TQ1|1", "TQ2|1|S|PL2^SYS", "ZXX|1", "TQ1|2", "OBR|1|PL1")
+        #expect(try evaluate("nextSegmentID(TQ2) = TQ1", on: "TQ1", occurrence: 1, in: afterTQ2))
+    }
 }
