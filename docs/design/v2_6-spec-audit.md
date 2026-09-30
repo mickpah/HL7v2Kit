@@ -61,6 +61,8 @@ The cross-segment / message-context / specimen / XOR conditions were carried int
 
 **P1-4:** OBR-29 is `ORC-1 = CH AND ORC-8 empty` ("required when the order is a child", §4.5.1.29 on v2.3/v2.3.1, §4.5.3.29 on v2.4+). The removed leg `ORC-1 = CH AND ORC absent` could never be true: ORC-1 resolves through the OBR's own group, which that leg asserts has no ORC (pinned by `obr29FirstLegIsUnsatisfiable`).
 
+**P1-5:** OBR-1/8/9/10/11/20/21/26/32 now carry the printed optionality (O; v2.3 OBR-1 stays C as printed; v2.6 OBR-32 is B). ORC-8 and OBR-29 stay C from the child-order prose (see conditional-completeness-audit.md).
+
 ### Known limitation (documented, not shipped — req #3/#4)
 
 - **OBX-22 Mood Code** is marked conditional (`C`) in the v2.6 OBX attribute table, but the field-definition prose does not state an extractable predicate. It is recorded as a conditional-without-condition (the same honest state as any `C` field with no `condition` — it falls through as effectively optional and never fires) rather than inventing a predicate that could misfire.

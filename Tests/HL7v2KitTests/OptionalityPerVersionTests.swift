@@ -66,4 +66,46 @@ struct OptionalityPerVersionTests {
         #expect(try cardinality("2.3"))
         #expect(try !cardinality("2.5.1"))
     }
+
+    @Test("OBR optionality follows the printed tables (V231-C13, V24-C04, V26-C05)")
+    func obrPrintedOptionality() {
+        let tables: [(String, [String: SegmentGrammar])] = [
+            ("2.3", SegmentGrammarTable.v2_3), ("2.3.1", SegmentGrammarTable.v2_3_1), ("2.4", SegmentGrammarTable.v2_4),
+            ("2.5.1", SegmentGrammarTable.v2_5_1), ("2.6", SegmentGrammarTable.v2_6),
+        ]
+        for (version, table) in tables {
+            for index in [8, 9, 10, 11, 20, 21, 26] {
+                #expect(table["OBR"]?.field(index)?.optionality == .optional, "v\(version) OBR-\(index) is printed O")
+            }
+            // Printed O, modelled C from the child-order prose (§4.5.1.29 / §4.5.3.29; ORC §4.3.1.8 / §4.5.1.8).
+            #expect(table["OBR"]?.field(29)?.optionality == .conditional, "v\(version) OBR-29")
+            #expect(table["ORC"]?.field(8)?.optionality == .conditional, "v\(version) ORC-8")
+        }
+        // OBR-1: printed C in v2.3 (CH4 and CH7), O from v2.3.1.
+        #expect(SegmentGrammarTable.v2_3["OBR"]?.field(1)?.optionality == .conditional)
+        for (version, table) in tables.dropFirst() {
+            #expect(table["OBR"]?.field(1)?.optionality == .optional, "v\(version) OBR-1")
+        }
+        // OBR-32: O through v2.5.1, B in v2.6.
+        for (version, table) in tables.dropLast() {
+            #expect(table["OBR"]?.field(32)?.optionality == .optional, "v\(version) OBR-32")
+        }
+        #expect(SegmentGrammarTable.v2_6["OBR"]?.field(32)?.optionality == .backwardCompat)
+    }
+
+    @Test("A populated OBR-32 warns as deprecated on v2.6 only")
+    func obr32DeprecatedOnV26() throws {
+        func warned(_ version: String) throws -> Bool {
+            let obr = "OBR|1|ORD001|FIL001|GLUC^Glucose^L|||20240401080000"
+                + String(repeating: "|", count: 18) + "F"
+                + String(repeating: "|", count: 7) + "1234&Smith&John"
+            let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|20240401090000||ORU^R01^ORU_R01|MSG00001|P|\(version)\rPID|1||123^^^AUTH^MR||DOE^JOHN\r\(obr)\r"
+            let message = try Parser().parse(wire)
+            #expect(message["OBR-25"] == "F", "Wire mis-counted")
+            #expect(message["OBR-32.1.1"] == "1234", "Wire mis-counted")
+            return try issues(wire).contains { $0.code == .fieldNotSupported && $0.location.pathDescription == "OBR[1]-32" }
+        }
+        #expect(try warned("2.6"), "v2.6 prints OBR-32 as B")
+        #expect(try !warned("2.5.1"), "v2.5.1 prints OBR-32 as O")
+    }
 }

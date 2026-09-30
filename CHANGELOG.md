@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P1-5: OBR optionality follows each version's print
+
+- OBR-1, 8, 9, 10, 11, 20, 21, 26 and 32 were `C` on v2.3 to v2.6, a value
+  carried from an earlier baseline. They are now `O` as printed (v2.3
+  keeps OBR-1 `C`; v2.6 OBR-32 is `B`, so a populated one warns).
+- ORC-8 and OBR-29 stay `C` from the child-order prose; the deviation from
+  the printed `O` is documented.
+
 ### Changed — P1-4: OBR-29 child-order predicate simplified
 
 - The OBR-29 condition's first leg (`ORC-1 = CH AND ORC absent`) could

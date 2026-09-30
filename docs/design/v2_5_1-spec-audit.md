@@ -122,6 +122,8 @@ These rules depend on message-type or sibling-segment presence (SPM, OBX). They 
 
 **P1-4:** OBR-29 is `ORC-1 = CH AND ORC-8 empty` ("required when the order is a child", §4.5.1.29 on v2.3/v2.3.1, §4.5.3.29 on v2.4+). The removed leg `ORC-1 = CH AND ORC absent` could never be true: ORC-1 resolves through the OBR's own group, which that leg asserts has no ORC (pinned by `obr29FirstLegIsUnsatisfiable`).
 
+**P1-5:** OBR-1/8/9/10/11/20/21/26/32 now carry the printed optionality (O; v2.3 OBR-1 stays C as printed; v2.6 OBR-32 is B). ORC-8 and OBR-29 stay C from the child-order prose (see conditional-completeness-audit.md). V24-C04 said these fields are printed C on v2.5.1; CH04 and CH07 print O, so v2.5.1 was corrected with the others.
+
 V251-C05's "Suspected for OBR-2" is resolved: §4.5.3.2 carries the ORU placer sentence.
 
 ### ORC-8 / OBR-29 parent-child structural rule (Gap 2, out of scope)

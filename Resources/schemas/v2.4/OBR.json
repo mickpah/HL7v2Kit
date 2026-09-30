@@ -8,7 +8,7 @@
       "swiftName": "setID",
       "name": "Set ID - OBR",
       "dataType": "SI", "length": "4",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -67,7 +67,7 @@
       "swiftName": "observationEndDateTime",
       "name": "Observation End Date/Time",
       "dataType": "TS", "length": "26",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -75,7 +75,7 @@
       "swiftName": "collectionVolume",
       "name": "Collection Volume",
       "dataType": "CQ", "length": "20",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -83,7 +83,7 @@
       "swiftName": "collectorIdentifier",
       "name": "Collector Identifier",
       "dataType": "XCN", "length": "250",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "*"
     },
     {
@@ -91,7 +91,7 @@
       "swiftName": "specimenActionCode",
       "name": "Specimen Action Code",
       "dataType": "ID", "length": "1", "table": "0065",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1",
       "tables": ["0065"]
     },
@@ -165,7 +165,7 @@
       "swiftName": "fillerField1",
       "name": "Filler Field 1",
       "dataType": "ST", "length": "60",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -173,7 +173,7 @@
       "swiftName": "fillerField2",
       "name": "Filler Field 2",
       "dataType": "ST", "length": "60",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -216,7 +216,7 @@
       "swiftName": "parentResult",
       "name": "Parent Result",
       "dataType": "PRL", "length": "400",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {
@@ -266,7 +266,7 @@
       "swiftName": "principalResultInterpreter",
       "name": "Principal Result Interpreter",
       "dataType": "NDL", "length": "200",
-      "optionality": "C",
+      "optionality": "O",
       "repeatability": "1"
     },
     {

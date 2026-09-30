@@ -12,17 +12,17 @@
 |----------|------|----------|---------|
 | PD1-15 | Advance Directive Code | v2.8.2 | **SHIP** — `PD1-22 populated` |
 | ORC-26 | Advanced Beneficiary Notice Override Reason | v2.8.2 | **SHIP (partial)** — `ORC-20 in (3, 4)` |
-| OBR-1 | Set ID - OBR | v2.3–v2.6 | Permanent limitation |
-| OBR-8 | Observation End Date/Time | v2.3–v2.6 | Permanent limitation |
-| OBR-9 | Collection Volume | v2.3–v2.6 | Permanent limitation |
-| OBR-10 | Collector Identifier | v2.3–v2.6 | Permanent limitation |
-| OBR-11 | Specimen Action Code | v2.3–v2.6 | Permanent limitation |
+| OBR-1 | Set ID - OBR | v2.3 | Permanent limitation (v2.3.1–v2.6 print O; corrected in P1-5) |
+| OBR-8 | Observation End Date/Time | none | Not conditional: printed O on v2.3–v2.6 (corrected in P1-5; was C from the v2.5.1 baseline) |
+| OBR-9 | Collection Volume | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
+| OBR-10 | Collector Identifier | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
+| OBR-11 | Specimen Action Code | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
 | OBR-14 | Specimen Received Date/Time | v2.3–v2.4 | Permanent limitation (P1-1): required "when the order is accompanied by a specimen, or when the observation required a specimen and the message is a report" (v2.3 §4.5.1.14, v2.4 §4.5.3.14). Neither is on the wire: OBR-15 names where a specimen *should be* obtained (§4.5.1.15 / §4.5.3.15), OBR-11 states an intended action (Table 0065), and OBR-15 may name a service site rather than a specimen. The former `OBR-15 populated` predicate misfired on new orders and was removed. v2.5.1 and v2.6 print OBR-14 `B` (SPM-18 favoured); v2.8.2 withdrew it. |
-| OBR-20 | Filler Field 1 | v2.3–v2.6 | Permanent limitation |
-| OBR-21 | Filler Field 2 | v2.3–v2.6 | Permanent limitation |
+| OBR-20 | Filler Field 1 | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
+| OBR-21 | Filler Field 2 | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
 | OBR-22 | Results Rpt/Status Chng - Date/Time | v2.3–v2.6, v2.8.2 | Permanent limitation |
-| OBR-26 | Parent Result | v2.3–v2.6 | Permanent limitation |
-| OBR-32 | Principal Result Interpreter | v2.3–v2.6 | Permanent limitation |
+| OBR-26 | Parent Result | none | Not conditional: printed O on v2.3–v2.6 (P1-5) |
+| OBR-32 | Principal Result Interpreter | none | Not conditional: printed O on v2.3–v2.5.1, B on v2.6 (P1-5) |
 | OBR-48 | Medically Necessary Duplicate Procedure Reason | v2.8.2 | Permanent limitation |
 | OBX-4 | Observation Sub-ID | v2.3–v2.6, v2.8.2 | Permanent limitation |
 | OBX-5 | Observation Value | v2.3–v2.6, v2.8.2 | Permanent limitation |
@@ -36,6 +36,8 @@
 | MFE/MFA/OM7/AUT (5 fields) | master-files/referral conditionals | v2.3–v2.8.2 | Permanent limitation (v1.3, grouped below) |
 | QPD/QAK/RCP/EQU/SAC (6 fields) | query/lab-automation conditionals | v2.3–v2.8.2 | Permanent limitation (v1.4, grouped below) |
 | LRL/PRC/GOL/PRB/PTH/TXA (13 fields) | master-file-location/care/document conditionals | v2.3–v2.8.2 | Permanent limitation (v1.4b, grouped below) |
+
+**Prose-backed `C` over a printed `O` (P1-5):** ORC-8 and OBR-29 are printed `O` on v2.3–v2.6 but modelled `C` with `ORC-1 = CH AND ...` predicates, because the prose makes them required for a child order (v2.3 / v2.3.1 §4.3.1.8 and §4.5.1.29; v2.4+ §4.5.1.8 and §4.5.3.29). This is a deliberate, cited deviation from the attribute table, not a data error.
 
 ## Shipped in v0.16 (S2)
 
@@ -56,14 +58,14 @@ Shipped as `ORC-26 condition = "ORC-20 in (3, 4)"` — the HL7-standard User-def
 Each below is `C` in its HL7 attribute table, but the field-definition prose gives **no wire-detectable, DSL-expressible required-when trigger**. Under the fail-safe DSL the field is treated as optional — the correct behaviour when the trigger is undecidable — and never misfires. Grouped by why:
 
 **Discourse-level / message-intent (not a same-segment or peer predicate):**
-- **OBR-1 Set ID** — required only when more than one OBR occurs; an ordinal/cardinality property of the message, not a field predicate.
+- **OBR-1 Set ID** (v2.3 only) — required only when more than one OBR occurs; an ordinal/cardinality property of the message, not a field predicate.
 - **OBR-22 Results Rpt/Status Chng** — tied to a result-status *change* event; the "changed" state is not on the wire.
-- **OBR-26 Parent Result** — parent/child observation linkage; discourse-level (the v2.5.1 audit reached the same conclusion pre-ADR-010).
-- **OBR-32 Principal Result Interpreter** — "identifies the physician … responsible for the report content"; no stated required-when (an earlier audit mis-grouped this as a `messageCode = ORU` rule — the v2.8.2 prose confirms there is none).
+- **OBR-26 Parent Result** — parent/child observation linkage; discourse-level (the v2.5.1 audit reached the same conclusion pre-ADR-010). (P1-5: no longer C; see inventory)
+- **OBR-32 Principal Result Interpreter** — "identifies the physician … responsible for the report content"; no stated required-when (an earlier audit mis-grouped this as a `messageCode = ORU` rule — the v2.8.2 prose confirms there is none). (P1-5: no longer C; see inventory)
 - **DG1-22 Parent Diagnosis** (v2.8.2) — links a "*" manifestation diagnosis to its "+" parent etiological diagnosis; structural, no MUST.
 
 **Data-nature dependent (undecidable from peer fields):**
-- **OBR-8 Observation End Date/Time** — "*null for observations made at a point in time*"; whether the observation is timed/duration-based is not wire-encoded.
+- **OBR-8 Observation End Date/Time** — "*null for observations made at a point in time*"; whether the observation is timed/duration-based is not wire-encoded. (P1-5: no longer C; see inventory)
 - **OBR-48 Medically Necessary Duplicate Procedure Reason** (v2.8.2) — required only when OBR-44 is a *duplicate* of a prior order/charge; duplicate-detection needs patient history, not the current message.
 - **OBX-5 Observation Value** — the spec states "*It is not a required field*"; conditionality is on OBX-2 value-type semantics, no hard MUST.
 - **OBX-22 Mood Code** (v2.6, v2.8.2) — "*When this field is not valued … the Value is assumed to be 'EVN'*"; a default-on-absence field with no required-when, and "*no documented use cases … in the context messages*".
@@ -162,8 +164,8 @@ limitations, all fail-safe:
 - **CER-12 Subject ID** (01867) — §15.4.2.12: "*If the certificate is expressed as a X.509 document this field is required.*" The certificate's document format is not wire-decidable: no CER field states it (CER-10 Certificate Type carries no table and its prose names no format values), so the trigger lives in the payload encoding, not in any field the DSL can address. Fail-safe (treated as optional); the only `C` in the quartet — IPC, OVR and SFT carry none. Identical prose on v2.6 and v2.8.2 (verified at v3-C3 when their deferred instances were authored; the field retypes `ID` → `EI` at v2.8.2 but the condition text is unchanged), so CER-12 is now in the v2.8.2 guard set as a bare `C`.
 
 **Descriptive, no cited MUST (req #4 — already recorded in `v2_5_1-spec-audit.md`):**
-- **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.)
-- **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition.
+- **OBR-9 Collection Volume**, **OBR-10 Collector Identifier**, **OBR-11 Specimen Action Code** — specimen-associated but with descriptive text and no cited MUST trigger. (Re-audit only if a spec revision adds MUST language.) (P1-5: no longer C; see inventory)
+- **OBR-20 Filler Field 1**, **OBR-21 Filler Field 2** — filler-discretion fields; no HL7-stated firing condition. (P1-5: no longer C; see inventory)
 
 **Sprint 0 close-out (2026-09-03) — the 36-segment §3 sweep's conditional surface: 10 shipped, 1 documented:**
 
