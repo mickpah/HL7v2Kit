@@ -5,5 +5,182 @@
   "kind": "HL7",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.3 Appendix A, HL7 Table 0256 - Time Delay Post Challenge",
-  "entries": []
+  "entries": [
+    {
+      "code": "BS",
+      "description": "Baseline (time just before the challenge)"
+    },
+    {
+      "code": "PEAK",
+      "description": "The time post drug dose at which the highest drug level is reached (differs by drug)"
+    },
+    {
+      "code": "TROUGH",
+      "description": "The time post drug dose at which the lowest drug level is reached (varies with drug)"
+    },
+    {
+      "code": "RANDOM",
+      "description": "Time from the challenge, or dose not specified. (random)"
+    },
+    {
+      "code": "1M",
+      "description": "1 minute post challenge"
+    },
+    {
+      "code": "2M",
+      "description": "2 minutes post challenge"
+    },
+    {
+      "code": "3M",
+      "description": "3 minutes post challenge"
+    },
+    {
+      "code": "4M",
+      "description": "4 minutes post challenge"
+    },
+    {
+      "code": "5M",
+      "description": "5 minutes post challenge"
+    },
+    {
+      "code": "6M",
+      "description": "6 minutes post challenge"
+    },
+    {
+      "code": "7M",
+      "description": "7 minutes post challenge"
+    },
+    {
+      "code": "8M",
+      "description": "8 minutes post challenge"
+    },
+    {
+      "code": "9M",
+      "description": "9 minutes post challenge"
+    },
+    {
+      "code": "10M",
+      "description": "10 minutes post challenge"
+    },
+    {
+      "code": "15M",
+      "description": "15 minutes post challenge"
+    },
+    {
+      "code": "20M",
+      "description": "20 minutes post challenge"
+    },
+    {
+      "code": "25M",
+      "description": "25 minutes post challenge"
+    },
+    {
+      "code": "30M",
+      "description": "30 minutes post challenge"
+    },
+    {
+      "code": "1H",
+      "description": "1 hour post challenge"
+    },
+    {
+      "code": "2H",
+      "description": "2 hours post challenge"
+    },
+    {
+      "code": "2.5H",
+      "description": "2 1/2 hours post challenge"
+    },
+    {
+      "code": "3H",
+      "description": "3 hours post challenge"
+    },
+    {
+      "code": "4H",
+      "description": "4 hours post challenge"
+    },
+    {
+      "code": "5H",
+      "description": "5 hours post challenge"
+    },
+    {
+      "code": "6H",
+      "description": "6 hours post challenge"
+    },
+    {
+      "code": "7H",
+      "description": "7 hours post challenge"
+    },
+    {
+      "code": "8H",
+      "description": "8 hours post challenge"
+    },
+    {
+      "code": "8H SHIFT",
+      "description": "8 hours aligned on nursing shifts"
+    },
+    {
+      "code": "12H",
+      "description": "12 hours post challenge"
+    },
+    {
+      "code": "24H",
+      "description": "24 hours post challenge"
+    },
+    {
+      "code": "2D",
+      "description": "2 days"
+    },
+    {
+      "code": "3D",
+      "description": "3 days"
+    },
+    {
+      "code": "4D",
+      "description": "4 days"
+    },
+    {
+      "code": "5D",
+      "description": "5 days"
+    },
+    {
+      "code": "6D",
+      "description": "6 days"
+    },
+    {
+      "code": "7D",
+      "description": "7 days"
+    },
+    {
+      "code": "1W",
+      "description": "1 week"
+    },
+    {
+      "code": "10D",
+      "description": "10 days"
+    },
+    {
+      "code": "2W",
+      "description": "2 weeks"
+    },
+    {
+      "code": "3W",
+      "description": "3 weeks"
+    },
+    {
+      "code": "4W",
+      "description": "4 weeks"
+    },
+    {
+      "code": "1L",
+      "description": "1 month (30 days) post challenge"
+    },
+    {
+      "code": "2L",
+      "description": "2 months (60 days) post challenge"
+    },
+    {
+      "code": "3L",
+      "description": "3 months (90 days) post challenge"
+    }
+  ]
 }

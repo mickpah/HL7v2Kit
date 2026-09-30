@@ -195,4 +195,18 @@ struct HL7TableRegistryTests {
         #expect(parts.contains("CHEST") && parts.contains("KIDN"))
         #expect(parts.codes.allSatisfy { !$0.isEmpty && $0.unicodeScalars.allSatisfy { $0.value < 128 } })
     }
+
+    @Test("v2.3 tables printed only in the chapters carry their rows: 0254, 0255, 0256, 0290")
+    func v23ChapterPrintedRows() throws {
+        for (number, count) in [("0254", 102), ("0255", 26), ("0256", 44), ("0290", 65)] {
+            let t = try #require(HL7TableRegistry.table(number, version: .v2_3))
+            #expect(t.entries.count == count, "v2.3 \(number)")
+        }
+        #expect(HL7TableRegistry.table("0255", version: .v2_3)?.kind == .userDefined, "CH8 prints User-defined Table 0255")
+        let t0256 = try #require(HL7TableRegistry.table("0256", version: .v2_3))
+        #expect(t0256.contains("30M") && t0256.contains("8H SHIFT"))
+        let t0290 = try #require(HL7TableRegistry.table("0290", version: .v2_3_1))
+        #expect(t0290.entries.count == 65)
+        #expect(t0290.entries.first { $0.code == "63" }?.description == "/")
+    }
 }
