@@ -837,9 +837,12 @@ extension Profile {
         compositeOverrides: [
             // MSG datatype (MSH-9 only) — HL7au:00049.1: "MSH-9 Message
             // type <message type (ID)> component must be valued."
-            // Ungated: the ADRM scope (Orders, Results, Referrals) is
-            // read from MSH-9.1 itself, so a `messageCode in (...)` gate
-            // could never fire on the very message it targets.
+            // Ungated: a `messageStructure`/`triggerEvent` scope (Orders,
+            // Results, Referrals) was expressible but not chosen — ACK
+            // reuses trigger events across message families, so it would
+            // not distinguish an in-scope ACK from an out-of-scope one,
+            // and the rule only ever catches a non-conformant message
+            // (MSH-9.1 empty) regardless, so a narrower gate buys nothing.
             // `yieldsToBase`: v2.5.1 and later already require MSG.1 in
             // the base model; this restatement fires only where the
             // grammar version does not (v2.3, v2.3.1, v2.4). P3-4.

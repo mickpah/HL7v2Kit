@@ -261,6 +261,10 @@ below partition the 31 exactly; **cluster 1 shipped on 2026-09-04**, leaving
   **Shipped 2026-09-04**: nine enforced outright, `00049.1` reclassified BASE
   (MSG-1 is already a base required component), `000024.2` PARTIAL. Two
   findings came out of shipping it — see M6-O3 and M6-O4.
+  **2026-09-30: superseded by P3-4** (`00049.1` now SHIPPED — enforced by the
+  AU profile itself, yielding to the base MSG.1 check on v2.5.1 and later,
+  since v2.4 AU traffic resolves to the v2.4 grammar and no longer inherits
+  the base requirement; see `docs/design/m6-adrm-2021-conformance-register.md`).
 - **Composite required components** (`00044.7.2`–`.7.5` XCN, `00044.10.1.1`–`.1.4`
   ED, `00044.11.1.1`–`.1.4` RP, `00044.3.1` EI-1) — thirteen points, all
   `RequiredComponentSet`.

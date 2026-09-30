@@ -104,7 +104,7 @@ public enum DataTypeGrammarTable {
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
         case .v2_8_2: return v2_8_2
-        default:      return [:]
+        case .v2_8:   return [:]
         }
     }
 }

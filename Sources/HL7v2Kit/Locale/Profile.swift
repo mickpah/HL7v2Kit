@@ -278,6 +278,15 @@ struct ComponentRequirement: Sendable, Equatable, Hashable {
     /// point like HL7au:00049.1 (MSG-1 must be valued): v2.5.1 and later
     /// require MSG.1, v2.4 types MSH-9 as CM with no component optionality
     /// (HL7 v2.4 Chapter 2, 2.16.9.9). P3-4.
+    ///
+    /// The deferral check looks up the base composite by the field's
+    /// **effective** datatype (`effectiveDataType`, e.g. OBX-5's runtime
+    /// type from OBX-2), not the field's statically-declared datatype, so
+    /// a composite override on a variable-type field defers correctly. It
+    /// also only defers when `ValidationOptions.checkComponentGrammar` is
+    /// true, because that flag gates whether the base check runs at all —
+    /// under `.lenient` it doesn't, so yielding here would drop the
+    /// finding rather than move it (P3-5).
     let yieldsToBase: Bool
 
     init(component: Int, subcomponent: Int? = nil, specCitation: String? = nil, condition: String? = nil,

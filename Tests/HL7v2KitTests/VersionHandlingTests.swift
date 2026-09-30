@@ -72,7 +72,7 @@ struct VersionHandlingTests {
     @Test("2.8 and 2.8.2 draw the same findings apart from the substitution note")
     func sameFindingsAsV282() throws {
         // OBR-24 "XX" is outside closed Table 0074 (Diagnostic Service Section ID; table
-        // 0203 is open per ADR-018 gate G5, so it cannot demonstrate this), so the grammar
+        // 0203 is open since P2-7 (gate G5), so it cannot demonstrate this), so the grammar
         // demonstrably runs.
         let obr = "OBR|1|A|B|C^D||||||||||||||||||||XX"
         let wire282 = adt(version: "2.8.2", extra: [obr])
@@ -237,5 +237,20 @@ struct VersionHandlingTests {
     func emptyMSH12NotReportedHere() throws {
         let report = Validator().validate(try Parser().parse(adt(version: "")))
         #expect(report.issues.filter(Self.isVersionNotRecognised).isEmpty)
+    }
+
+    // MARK: - P3-5 carry-in: yieldsToBase only defers when the base check runs
+
+    @Test("Under .lenient, HL7au:00049.1 still fires on v2.5.1 because checkComponentGrammar is off")
+    func au000491FiresUnderLenientWhenBaseCheckIsOff() throws {
+        let wire = "MSH|^~\\&|LAB|FAC|GP|FAC|||^R01^ORU_R01|MSG1|P|2.5.1^AUS&Australia&ISO3166_1^HL7AU-OO-201701&&L\r"
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(options: .lenient, locale: .auLocalisation).validate(message)
+        // v2.5.1 already requires MSG.1, but that base check is `checkComponentGrammar`-gated
+        // and `.lenient` turns it off, so it never runs here.
+        #expect(baseMSH9ComponentIssues(report).isEmpty)
+        // The AU profile rule must not yield to a base check that isn't running, or the
+        // empty MSH-9.1 would go entirely unreported (P3-5 carry-in 5).
+        #expect(msh91Violations(report).count == 1)
     }
 }

@@ -69,7 +69,9 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(wire(version: "2.4", pid5: "DOE^JOHN^^^^^L")).isEmpty)
         // A 2.8 message is checked against the v2.8.2 component grammar (ADR-018): XPN.7 is
         // closed there too, same as v2.3 above (table 0203 is open, so it cannot demonstrate this).
-        #expect(try tableIssues(wire(version: "2.8", pid5: "DOE^JOHN^^^^^QQQ")).count == 1)
+        let v28Issues = try tableIssues(wire(version: "2.8", pid5: "DOE^JOHN^^^^^QQQ"))
+        #expect(v28Issues.map(\.code) == [.valueNotInTable(table: "0200")])
+        #expect(v28Issues == (try tableIssues(wire(version: "2.8.2", pid5: "DOE^JOHN^^^^^QQQ"))))
     }
 
     @Test("A prose misprint never becomes a rule: v2.3 QSC.4 names table 0102 for Relational conjunction")

@@ -28,9 +28,12 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     /// Parse a wire-format MSH-12 string into a `Version`, if recognised.
     public init?(wireValue: String) {
         // HL7 sometimes ships variants like "2.5.1\\" or trailing whitespace;
-        // be lenient on input but strict on the canonical form.
-        let trimmed = wireValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        self.init(rawValue: trimmed)
+        // be lenient on input but strict on the canonical form. Character-level
+        // trim keeps this file Foundation-free (ADR-006).
+        var trimmed = Substring(wireValue)
+        while trimmed.first?.isWhitespace == true { trimmed.removeFirst() }
+        while trimmed.last?.isWhitespace == true { trimmed.removeLast() }
+        self.init(rawValue: String(trimmed))
     }
 
     /// The version whose segment grammar, code tables and datatype grammar

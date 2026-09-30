@@ -95,6 +95,8 @@ A message declaring one of these parses, falls back to the v2.5.1 grammar, and c
 | 2.8.1 | Listed in v2.8.2 Table 0104; no v2.8.1 text on disk. See ADR-018 "Open question" on substituting v2.8.2. | Excluded, as 2.1. |
 | 2.9 | Published after v2.8.2; no text on disk. | Excluded, as 2.1. |
 
+**Known limitation — two malformed VID.1 forms fall back silently, even under `.strict`.** `Version.versionID(inMSH12:)` reads VID.1 through `Component.stringValue`, which returns `nil` when the component carries more than one subcomponent. A VID.1 with a subcomponent (`2.4&x^AUS`) and an empty VID.1 with VID.2 valued (`^AUS`) both therefore read as "no VID.1 present" and fall back to v2.5.1 without comment — the same path an absent MSH-12 takes — even under `ParserOptions.strict`, which only rejects a VID.1 that resolves to a value but not a known `Version`; it never sees these two shapes as a value at all. Neither form is documented HL7 traffic (VID.1 does not repeat or subdivide in the spec), but a `.strict` caller relying on it to reject anything it cannot confidently version should know these two shapes are not rejected (P3-4 review Minor 3). **Freeze decision:** acceptable to leave as documented; revisit only if a spec-conformant sender is observed sending either form.
+
 ## What is NOT a limitation (recorded to prevent re-litigation)
 
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.

@@ -703,7 +703,11 @@ public struct Validator: Sendable {
                 // P3-4: a restated base rule defers to the base check where
                 // the grammar version's composite already requires it.
                 // `message` is the grammar-version copy made in `validate`.
-                if requirement.yieldsToBase, requirement.subcomponent == nil,
+                // Only defer when that base check actually runs
+                // (`options.checkComponentGrammar`, gating `checkComponents`
+                // above): under `.lenient` it doesn't, so yielding here
+                // would silently drop the finding altogether (P3-5).
+                if options.checkComponentGrammar, requirement.yieldsToBase, requirement.subcomponent == nil,
                    requiredComponents(forCompositeCode: effectiveDataType, version: message.version)
                        .contains(where: { $0.index == requirement.component }) {
                     continue
