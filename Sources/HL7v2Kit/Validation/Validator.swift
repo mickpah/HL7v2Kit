@@ -1696,7 +1696,9 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard grammar.dataType == "ID",
+        // A field whose own prose leaves the table open (P2-15) is never checked, even
+        // when other fields cite the same table "for valid values".
+        guard grammar.dataType == "ID", !grammar.tableOpen,
               let table = HL7TableRegistry.table(tableNumber, version: version),
               table.isClosed else { return }
         for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {

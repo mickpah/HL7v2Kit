@@ -278,6 +278,18 @@ def integrity():
             if table is not None and table not in f.get("tables", []):
                 findings.append((rel, f["index"],
                                  f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
+            # P2-15: per-field openness. `tableOpen` is a boolean, only on a field with a
+            # table binding, and always carries the cited prose that opens the table.
+            if "tableOpen" in f or "tableOpenCitation" in f:
+                flag, cite = f.get("tableOpen"), f.get("tableOpenCitation")
+                if "tableOpen" in f and not isinstance(flag, bool):
+                    findings.append((rel, f["index"], f"tableOpen {flag!r} is not a boolean"))
+                elif flag and not f.get("tables"):
+                    findings.append((rel, f["index"], "tableOpen on a field with no table binding"))
+                if flag is True and not (isinstance(cite, str) and cite.strip()):
+                    findings.append((rel, f["index"], "tableOpen without a tableOpenCitation"))
+                if cite is not None and flag is not True:
+                    findings.append((rel, f["index"], "tableOpenCitation without tableOpen: true"))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))

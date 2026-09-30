@@ -40,6 +40,12 @@ struct FieldSchema: Decodable {
     let table: String?
     /// The printed LEN cell, verbatim ("250"; v2.7+ "2..2", "32=", "250#"). M25.
     let length: String?
+    /// `true` when the field's own prose leaves its bound table open ("for suggested
+    /// values", User-defined, or extensible). See `FieldGrammar.tableOpen`. P2-15.
+    let tableOpen: Bool?
+    /// The spec citation that justifies `tableOpen`, quoting the field's prose. Read by
+    /// the schema audit, not emitted. P2-15.
+    let tableOpenCitation: String?
 }
 
 struct SegmentSchema: Decodable {
@@ -232,7 +238,9 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             let variableColumns = field.variableColumns != nil ? "true" : "false"
             let table = field.table.map { escapeStringLiteral($0) } ?? "nil"
             let length = field.length.map { escapeStringLiteral($0) } ?? "nil"
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)),"
+            // Emitted only when set, so unmarked fields keep the released initialiser.
+            let tableOpen = field.tableOpen == true ? ", tableOpen: true" : ""
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a

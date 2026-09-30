@@ -88,6 +88,14 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// normative range with truncation semantics (`"2..2"`, `"32="`, `"250#"`).
     /// Recorded for reference and never enforced (M25).
     public let length: String?
+    /// `true` when this field's own prose leaves its bound ``table`` open, whatever the
+    /// table's own kind: it cites the table "for suggested values", calls it User-defined,
+    /// or says the value set can be extended. Some HL7 tables are cited that way by one field
+    /// and "for valid values" by another (v2.4 PID-31 against PID-24 for Table 0136), so
+    /// openness is per field as well as per table. The Validator's closed-table check skips
+    /// a field with `tableOpen` set; other fields bound to the same table are unaffected.
+    /// The schema entry carries the citation (`tableOpenCitation`). `false` by default. P2-15.
+    public let tableOpen: Bool
 
     public init(
         index: Int,
@@ -101,6 +109,27 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         table: String? = nil,
         length: String? = nil
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: false)
+    }
+
+    /// Creates a field grammar that also states whether the field's own prose leaves its
+    /// bound table open (see ``tableOpen``). A separate overload so the released
+    /// initialiser keeps its signature (ADR-014). P2-15.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool
+    ) {
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -111,6 +140,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.variableColumns = variableColumns
         self.table = table
         self.length = length
+        self.tableOpen = tableOpen
     }
 }
 
