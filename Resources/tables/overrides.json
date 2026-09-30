@@ -2028,6 +2028,14 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.4 Table 0203 - Identifier type; CH02 sec 2.9.12.5 prints it as 'HL7 Table 0203' (Appendix A indexes it as User) and says 'Refer to HL7 Table 0203 - Identifier type for suggested values', so the printed rows are not a closed set",
       "kind": "HL7"
+    },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "etc"
+      ],
+      "citation": "HL7 v2.4 Table 0391 - Segment group; CH05 sec 5.5.5.7 prints the same 'Etc' row and note ('currently includes no values defined by HL7'), so the printed rows are not a closed set",
+      "note": "Appendix A carries the printed 'etc' row as a code; it is the continuation marker, not a value."
     }
   },
   "2.5.1": {
@@ -2394,6 +2402,10 @@
       "note": "V282-C01: v2.5.1 Appendix A HL7 Table 0203 and CH02A sec 2.A.14.5 prints the row NNxxx, 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code'. It names a family of codes (NNAUS, NNCAN, ...), not the literal NNxxx, so it is modelled as a pattern row. V282-C02 (owner gate G5): opened; out-of-table identifier types are spec-compliant under 'suggested values'.",
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.5.1 Table 0203 - Identifier type; CH02A sec 2.A.14.5 (CX.5) 'Refer to HL7 Table 0203 - Identifier type for suggested values', repeated at XCN.13, PPN.13 and XON.7, so the printed rows are not a closed set"
+    },
+    "0391": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.5.1 Table 0391 - Segment group; CH05 sec 5.5.6.7 prints it ending 'Etc' with the note 'HL7 Table 0391 - Segment group currently includes no values defined by HL7', and a group's definition is 'given only in the conformance statement of the query', so the printed rows are not a closed set"
     }
   },
   "2.6": {

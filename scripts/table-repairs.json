@@ -152,5 +152,23 @@
       "0385"
     ],
     "cite": "v2.5.1 CH13 SID attribute table prints TBL# 0385; the SID-4 definition says 'Refer to User-defined Table 0451 - Manufacturer identifier'. The stated name is 0385's (0451 is Substance identifier), so the prose number is the misprint and 0385 stands (V251-C06)."
+  },
+  "v2.5.1/RCP-7": {
+    "tables": [
+      "0391"
+    ],
+    "cite": "v2.5.1 CH05 RCP attribute table prints TBL# (and OPT) blank for Segment group inclusion; sec 5.5.6.7 says 'Refer to HL7 Table 0391-Segment group' and prints it (V251-C07)."
+  },
+  "v2.4/RCP-7": {
+    "tables": [
+      "0391"
+    ],
+    "cite": "v2.4 CH05 RCP attribute table prints TBL# (and OPT) blank for Segment group inclusion; sec 5.5.5.7 refers to HL7 Table 0391 and prints it (same defect as v2.5.1, V251-C07)."
+  },
+  "v2.5.1/SAC-28": {
+    "tables": [
+      "0372"
+    ],
+    "cite": "v2.5.1 CH13 SAC attribute table prints TBL# blank for Specimen Component; sec 13.4.3.28 says 'Refer to User-defined Table 0372 - Specimen component' and prints it (V251-C07)."
   }
 }

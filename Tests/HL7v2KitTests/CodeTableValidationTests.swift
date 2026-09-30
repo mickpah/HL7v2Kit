@@ -220,4 +220,17 @@ struct CodeTableValidationTests {
         #expect(try tableIssues(wire("A")).isEmpty)
         #expect(try tableIssues(wire("X")).map(\.code) == [.valueNotInTable(table: "0472")])
     }
+
+    @Test("RCP-7 links Table 0391, which the spec leaves open: a conformance-defined group is never an error")
+    func rcp7SegmentGroups() throws {
+        for (wireVersion, version) in [("2.4", Version.v2_4), ("2.5.1", .v2_5_1)] {
+            let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||QBP^Q11^QBP_Q11|MSG00001|P|\(wireVersion)\r"
+                + "QPD|Q1^Query^HL70471|T1\r"
+                + "RCP|I||||||PIDG~ZZZG\r"
+            #expect(try tableIssues(wire).isEmpty, "v\(wireVersion)")
+            let t = try #require(HL7TableRegistry.table("0391", version: version))
+            #expect(t.permitsLocalExtensions && !t.isClosed, "v\(wireVersion)")
+            #expect(t.contains("PIDG") && !t.codes.contains("etc"), "v\(wireVersion)")
+        }
+    }
 }

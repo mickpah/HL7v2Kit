@@ -38,4 +38,18 @@ struct SchemaTableBindingTests {
         // SID-4: the prose number 0451 is the misprint; its stated name is 0385's.
         #expect(try tables("2.5.1", "SID", 4) == ["0385"])
     }
+
+    @Test("Fields with a blank TBL# whose prose names a table are bound to it")
+    func proseOnlyBindings() throws {
+        #expect(try tables("2.5.1", "RCP", 7) == ["0391"])
+        #expect(try tables("2.4", "RCP", 7) == ["0391"])
+        #expect(SegmentGrammarTable.v2_5_1["RCP"]?.field(7)?.table == "0391")
+        #expect(SegmentGrammarTable.v2_4["RCP"]?.field(7)?.table == "0391")
+        #expect(try tables("2.5.1", "SAC", 28) == ["0372"])
+        // Sec 7.12.3.13 is headed "PCR-16" but defines ITEM 01110, attribute row 13.
+        #expect(try tables("2.5.1", "PCR", 13) == ["0246"])
+        #expect(try tables("2.5.1", "PCR", 16) == [])
+        // A blank printed OPT is kept verbatim and generated as optional.
+        #expect(SegmentGrammarTable.v2_5_1["RCP"]?.field(7)?.optionality == .optional)
+    }
 }

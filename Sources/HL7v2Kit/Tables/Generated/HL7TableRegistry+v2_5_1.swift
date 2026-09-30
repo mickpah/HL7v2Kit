@@ -6752,7 +6752,7 @@ extension HL7TableRegistry {
         number: "0391",
         name: "Segment group",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "OBRG", description: "OBR group"),
             HL7Table.Entry(code: "ORCG", description: "ORC group"),

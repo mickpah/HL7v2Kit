@@ -30,7 +30,7 @@
     { "index": 25, "swiftName": "separatorType", "name": "Separator Type", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0380"] },
     { "index": 26, "swiftName": "capType", "name": "Cap Type", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0381"] },
     { "index": 27, "swiftName": "additive", "name": "Additive", "dataType": "CWE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0371"] },
-    { "index": 28, "swiftName": "specimenComponent", "name": "Specimen Component", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" },
+    { "index": 28, "swiftName": "specimenComponent", "name": "Specimen Component", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0372"] },
     { "index": 29, "swiftName": "dilutionFactor", "name": "Dilution Factor", "dataType": "SN", "length": "20", "optionality": "O", "repeatability": "1" },
     { "index": 30, "swiftName": "treatment", "name": "Treatment", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["0373"] },
     { "index": 31, "swiftName": "temperature", "name": "Temperature", "dataType": "SN", "length": "20", "optionality": "O", "repeatability": "1" },

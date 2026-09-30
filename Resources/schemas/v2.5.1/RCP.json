@@ -9,6 +9,6 @@
     { "index": 4, "swiftName": "executionAndDeliveryTime", "name": "Execution and Delivery Time", "dataType": "TS", "length": "26", "optionality": "C", "repeatability": "1" },
     { "index": 5, "swiftName": "modifyIndicator", "name": "Modify Indicator", "dataType": "ID", "length": "1", "table": "0395", "optionality": "O", "repeatability": "1", "tables": ["0395"] },
     { "index": 6, "swiftName": "sortByField", "name": "Sort-by Field", "dataType": "SRT", "length": "512", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "segmentGroupInclusion", "name": "Segment group inclusion", "dataType": "ID", "length": "256", "optionality": "", "repeatability": "*" }
+    { "index": 7, "swiftName": "segmentGroupInclusion", "name": "Segment group inclusion", "dataType": "ID", "length": "256", "table": "0391", "optionality": "", "repeatability": "*", "tables": ["0391"] }
   ]
 }

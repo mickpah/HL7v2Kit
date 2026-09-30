@@ -75,6 +75,7 @@ On v2.3 through v2.6, the modelled OBR-2 condition (`ORC-2 empty`) and OBR-3 con
 - **NUL / BOM handling** — embedded NUL is *rejected* at parse (v0.2-P2); BOM is stripped. These are design decisions with no carve-out, not limitations.
 - **`.v2_8` grammar-less case** — a deliberate scope decision (ADR-013), not an undocumented gap: `2.8` is rare and distinct from the fully-modelled `2.8.2`.
 - **Curated NK1 / PV1 / IN1 depth** — a req-#1 feature-completeness *backlog* item (extend the field sets), not a conformance limitation of the modelled fields.
+- **Blank printed OPT** (v2.4 / v2.5.1 RCP-7) is kept verbatim as `""` in the schema and generated as `.optional` (`optionalityCase` default branch): the spec prints no optionality, and the permissive reading can never raise a false error.
 
 ## Outcome — M2 closed
 

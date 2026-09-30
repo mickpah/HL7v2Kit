@@ -2565,7 +2565,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 4, name: "Execution and Delivery Time", dataType: "TS", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
             FieldGrammar(index: 5, name: "Modify Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0395", length: "1"),
             FieldGrammar(index: 6, name: "Sort-by Field", dataType: "SRT", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "512"),
-            FieldGrammar(index: 7, name: "Segment group inclusion", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "256"),
+            FieldGrammar(index: 7, name: "Segment group inclusion", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0391", length: "256"),
         ]
     )
 
