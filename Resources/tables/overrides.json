@@ -2945,6 +2945,16 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.280, HL7 Table 0355 - Primary Key Value Type",
       "note": "P2-fix 1: the Note under the table reads 'For locally defined master files, this table can be locally extended with other HL7 data types as defined in section 2.6.6', so the printed rows are not a closed set."
+    },
+    "0920": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.544, HL7 Table 0920 - Preferred Specimen/Attribute Status; its only governing field, OM4-16 (CH08 sec 8.8.12.16), reads \"Refer to HL7 Table 0920 - Preferred Specimen/Attribute Status in Chapter 2C, Code Tables, for suggested values\", so the printed rows are not a closed set",
+      "note": "P2-fix 2: open under the ADR-016 criterion (governing field prose cites the table for suggested values)."
+    },
+    "0617": {
+      "kind": "User",
+      "citation": "HL7 v2.8.2 Chapter 2A sec 2.A.87.18 XAD.18 Address Usage, User-defined Table 0617 - Address Usage (CH02C 2.C.2.481 prints the caption HL7 Table 0617 and names XAD.18 as its only use)",
+      "note": "P2-fix 2: XAD.18, the only governing field, reads \"Refer to User-defined Table 0617 - Address Usage for valid values\". Under the ADR-016 criterion the chapter prose wins, so the kind is User (P2-4 0119 precedent, in reverse). v2.6 sec 2.A.85.18 prints \"HL7 Table 0617\" inline and stays HL7."
     }
   }
 }

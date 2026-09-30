@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   can be locally extended with other HL7 data types". An MFE-5 data type outside the
   printed rows no longer raises `valueNotInTable` there. v2.3.1 cites the table "for
   valid values" with no such note, so it stays closed.
+- One criterion for open HL7 tables, recorded in ADR-016: a table is open when its
+  governing field prose cites it "for suggested values" or says it may be extended
+  locally, and closed on "valid values" or silence; field prose that calls an HL7-kind
+  table "User-defined" sets its kind to `User`. Applied where every governing field
+  agrees: v2.8.2 Table 0920 (OM4-16) is opened, and v2.8.2 Table 0617 (XAD.18) becomes
+  `User`, so neither raises `valueNotInTable` any more. Tables whose governing fields
+  disagree (0136, 0167, 0185, 0206, v2.3 0239, 0323, 0532) are unchanged and registered.
 
 ### Changed — P7-1: the schema audit compares `C` and the defining attribute table
 

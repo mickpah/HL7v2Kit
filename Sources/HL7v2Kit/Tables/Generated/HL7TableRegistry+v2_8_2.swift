@@ -10105,7 +10105,7 @@ extension HL7TableRegistry {
     static let t0617_v2_8_2 = HL7Table(
         number: "0617",
         name: "Address Usage",
-        kind: .hl7,
+        kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
             HL7Table.Entry(code: "M", description: "Mailing"),
@@ -10980,7 +10980,7 @@ extension HL7TableRegistry {
         number: "0920",
         name: "Preferred Specimen/Attribute Status",
         kind: .hl7,
-        permitsLocalExtensions: false,
+        permitsLocalExtensions: true,
         entries: [
             HL7Table.Entry(code: "P", description: "Preferred"),
             HL7Table.Entry(code: "A", description: "Alternate"),

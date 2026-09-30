@@ -2,9 +2,9 @@
   "table": "0617",
   "version": "2.8.2",
   "name": "Address Usage",
-  "kind": "HL7",
+  "kind": "User",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.8.2 Chapter 2C, HL7 Table 0617 - Address Usage",
+  "citation": "HL7 v2.8.2 Chapter 2A sec 2.A.87.18 XAD.18 Address Usage, User-defined Table 0617 - Address Usage (CH02C 2.C.2.481 prints the caption HL7 Table 0617 and names XAD.18 as its only use)",
   "entries": [
     {
       "code": "M",
