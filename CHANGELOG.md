@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P1-4: OBR-29 child-order predicate simplified
+
+- The OBR-29 condition's first leg (`ORC-1 = CH AND ORC absent`) could
+  never be true and is removed on v2.3 to v2.6. Behaviour is unchanged.
+
 ### Fixed — P1-3: OBR-2 / OBR-3 required when an ORU or ORF has no ORC
 
 - With no ORC, `ORC-2 empty` failed safe and never fired, so a result with

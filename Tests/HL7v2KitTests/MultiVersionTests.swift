@@ -609,7 +609,7 @@ struct MultiVersionTests {
         #expect(obr?.field(14)?.optionality == .backwardCompat)
         #expect(obr?.field(14)?.condition == nil)
         #expect(obr?.field(25)?.condition == "messageCode in (ORU, ORF, OUL, OPU)")
-        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC absent OR ORC-1 = CH AND ORC-8 empty")
+        #expect(obr?.field(29)?.condition == "ORC-1 = CH AND ORC-8 empty")
     }
 
     @Test("v2.6 SegmentGrammarTable carries OBX (S3b) — 25 fields, +18..25")

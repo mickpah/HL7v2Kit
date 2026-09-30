@@ -59,6 +59,8 @@ The cross-segment / message-context / specimen / XOR conditions were carried int
 
 **P1-3:** OBR-2 / OBR-3 add `OR ORC absent AND messageCode in (ORU, ORF)` (§4.3.1.2-3 on v2.3/v2.3.1; §4.5.1.2-3 and §4.5.3.2-3 on v2.4+: "an ORC is not required, and the identifying placer order number must be present in the OBR segments"). The leg is gated to ORU / ORF because OUL R22-R24 and OPU R25 print OBR before [ORC], which the ORC-delimited group model cannot attach. A later OBR group with no ORC of its own still reads the previous group's ORC (under-fire only; closed by message-structure grammar, X-C04 / P8).
 
+**P1-4:** OBR-29 is `ORC-1 = CH AND ORC-8 empty` ("required when the order is a child", §4.5.1.29 on v2.3/v2.3.1, §4.5.3.29 on v2.4+). The removed leg `ORC-1 = CH AND ORC absent` could never be true: ORC-1 resolves through the OBR's own group, which that leg asserts has no ORC (pinned by `obr29FirstLegIsUnsatisfiable`).
+
 ### Known limitation (documented, not shipped — req #3/#4)
 
 - **OBX-22 Mood Code** is marked conditional (`C`) in the v2.6 OBX attribute table, but the field-definition prose does not state an extractable predicate. It is recorded as a conditional-without-condition (the same honest state as any `C` field with no `condition` — it falls through as effectively optional and never fires) rather than inventing a predicate that could misfire.

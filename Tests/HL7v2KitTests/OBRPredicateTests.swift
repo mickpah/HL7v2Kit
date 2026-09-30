@@ -241,4 +241,50 @@ struct OBRPredicateTests {
         #expect(try conditionalHits(wire, field: 2).isEmpty, "v\(version) OBR-2")
         #expect(try conditionalHits(wire, field: 3).isEmpty, "v\(version) OBR-3")
     }
+
+    // MARK: - P1-4: OBR-29 child-order rule (V24-C11, V251-C05b, V26-C13)
+
+    private func triggers(_ condition: String, onOBRof wire: String) throws -> Bool {
+        let message = try Parser().parse(wire)
+        let index = try #require(message.segments.firstIndex { $0.segmentID == "OBR" })
+        return Validator().conditionTriggers(
+            condition, in: message.segments[index], segmentIndex: index,
+            message: message, currentSegmentID: "OBR"
+        )
+    }
+
+    /// `ORC-1 = CH` on OBR resolves through the OBR's own group, while
+    /// `ORC absent` asserts that group has no ORC. They cannot both hold.
+    @Test("V24-C11: the OBR-29 leg `ORC-1 = CH AND ORC absent` is never true")
+    func obr29FirstLegIsUnsatisfiable() throws {
+        let leg = "ORC-1 = CH AND ORC absent"
+        let noORC = Self.wire([Self.msh("ORU^R01", "2.4"), Self.pid,
+                               Self.segment("OBR", [1: "1", 2: "ORD002", 3: "FIL002", 4: "GLUC^Glucose^L"])])
+        let childORC = Self.wire([Self.msh("ORM^O01", "2.4"), Self.pid,
+                                  Self.segment("ORC", [1: "CH", 2: "ORD002"]),
+                                  Self.segment("OBR", [1: "1", 2: "ORD002", 4: "GLUC^Glucose^L"])])
+        let trailingChildORC = Self.wire([Self.msh("OUL^R24^OUL_R24", "2.5.1"), Self.pid,
+                                          Self.segment("OBR", [1: "1", 2: "ORD002", 4: "GLUC^Glucose^L"]),
+                                          Self.segment("ORC", [1: "CH", 2: "ORD002"])])
+        for wire in [noORC, childORC, trailingChildORC] {
+            #expect(try !triggers(leg, onOBRof: wire))
+        }
+    }
+
+    @Test("V24-C11: OBR-29 metadata is the satisfiable child-order rule",
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"])
+    func obr29Condition(version: String) {
+        #expect(Self.table(version)["OBR"]?.field(29)?.condition == "ORC-1 = CH AND ORC-8 empty", "v\(version)")
+    }
+
+    @Test("OBR-29 still fires on a child order with no parent anywhere",
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6"])
+    func obr29FiresOnChildWithoutParent(version: String) throws {
+        let wire = Self.wire([
+            Self.msh(version == "2.3" || version == "2.3.1" ? "ORM^O01" : "ORM^O01^ORM_O01", version), Self.pid,
+            Self.segment("ORC", [1: "CH", 2: "ORD002"]),
+            Self.segment("OBR", [1: "1", 2: "ORD002", 4: "GLUC^Glucose^L"]),
+        ])
+        #expect(try conditionalHits(wire, field: 29).count == 1, "v\(version)")
+    }
 }
