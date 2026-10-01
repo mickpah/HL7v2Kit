@@ -105,6 +105,7 @@ enum ConditionLanguage {
         if referent.hasPrefix("nextSegmentID("), referent.hasSuffix(")") {
             let skip = referent.dropFirst("nextSegmentID(".count).dropLast()
                 .split(separator: "|").map(String.init)
+            guard skip.allSatisfy(isSegmentIDShape) else { return nil }
             return .nextSegmentID(skipping: Set(skip))
         }
         if let (id, path) = positionForm(referent, function: "previousSegment") {
@@ -151,7 +152,14 @@ enum ConditionLanguage {
         where predicate.hasPrefix(op) && predicate.hasSuffix(")") {
             let values = predicate.dropFirst(op.count).dropLast().split(separator: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
-            guard !values.isEmpty, !values.contains(where: \.isEmpty) else {
+            // Each comma-separated item is a single token (ADR-010, matching the
+            // `=`/`!=`/`startsWith` literal guard above): an item that still
+            // contains whitespace after trimming is rejected rather than
+            // accepted as one wide value, so a misspelt separator cannot
+            // silently merge two intended items into one that never matches.
+            guard !values.isEmpty, !values.contains(where: \.isEmpty),
+                  !values.contains(where: { $0.contains(where: \.isWhitespace) })
+            else {
                 return .failure(.malformedPredicate(predicate))
             }
             return .success(make(values))
@@ -169,6 +177,15 @@ enum ConditionLanguage {
         return path
     }
 
+    /// A bare HL7 segment ID: 2 to 4 letters/digits, the same shape `Path`
+    /// accepts for the segment half of a field reference (P4 final-review
+    /// fix). Used to reject a `nextSegmentID(...)` / `previousSegment(...)` /
+    /// `associatedSegment(...)` argument that is not a plausible segment ID.
+    private static func isSegmentIDShape(_ id: String) -> Bool {
+        !id.isEmpty && id.count >= 2 && id.count <= 4
+            && id.allSatisfy { $0.isLetter || $0.isNumber }
+    }
+
     /// `<function>(<ID>).<fieldref>`, or `nil` when the shape does not match.
     private static func positionForm(_ referent: String, function: String) -> (String, Path)? {
         let prefix = "\(function)("
@@ -177,7 +194,7 @@ enum ConditionLanguage {
         guard let closeIdx = afterPrefix.firstIndex(of: ")") else { return nil }
         let id = String(afterPrefix[..<closeIdx])
         let after = afterPrefix[afterPrefix.index(after: closeIdx)...]
-        guard !id.isEmpty, after.hasPrefix("."), let path = fieldRef(String(after.dropFirst()))
+        guard isSegmentIDShape(id), after.hasPrefix("."), let path = fieldRef(String(after.dropFirst()))
         else { return nil }
         return (id, path)
     }

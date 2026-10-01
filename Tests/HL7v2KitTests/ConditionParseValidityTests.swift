@@ -143,6 +143,18 @@ struct ConditionParseValidityTests {
         "PID-3 != A B",
         "messageStructure startsWith A B",
         "messageCode not startsWith A B",
+        // P4 final-review fix: an `in (...)` / `not in (...)` item is a single
+        // token too, matching the guard above — an item with internal
+        // whitespace after trimming is rejected rather than read as one wide
+        // value that never matches a real field value.
+        "messageCode in (A B, C)",
+        "triggerEvent not in (A01, A0 4)",
+        // P4 final-review fix (optional half): the `<ID>` argument to
+        // `nextSegmentID(...)` / `previousSegment(...)` / `associatedSegment(...)`
+        // must have the segment-ID shape (2-4 letters/digits) `Path` requires.
+        "nextSegmentID(TOOLONG) = TQ1",
+        "previousSegment(X).OBR-4 populated",
+        "associatedSegment(12345).ORC-1 = NW",
     ])
     func malformedConditionsReportErrors(condition: String) {
         #expect(!Validator.conditionParseErrors(condition).isEmpty)

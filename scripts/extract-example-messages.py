@@ -908,6 +908,15 @@ def main():
               f"{len(KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS)} swapped-header extracted sources, "
               f"{len(extracted_mismatches)} mismatched")
         sys.exit(1 if (mismatches or swapped_mismatches or extracted_mismatches) else 0)
+    # Validate arguments before any extraction (final-review fix): anything other than
+    # exactly one positional output path not starting with "-" -- an unknown flag, "--help",
+    # a malformed --triage / --check-registry invocation, or no arguments at all -- prints
+    # usage and exits non-zero. Without this, an unrecognised argv[1] fell through to
+    # `open(sys.argv[1], "w")` below and was happily used as the output path (the "--help"
+    # bug), after first burning time scanning the real spec PDFs.
+    if len(sys.argv) != 2 or sys.argv[1].startswith("-"):
+        print(__doc__, file=sys.stderr)
+        sys.exit(2)
     out = []
     for version, pattern in CHAPTERS.items():
         n = 0

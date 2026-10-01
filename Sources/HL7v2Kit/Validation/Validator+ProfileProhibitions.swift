@@ -5,10 +5,13 @@
 extension Validator {
     /// Report every `ProfileFieldProhibition` on the matching field
     /// overrides whose condition holds while the field carries a value
-    /// other than the HL7 null (`""`). The null is what "valued with
-    /// null" asks for, so it never fires. Conditions go through the shared
-    /// `conditionTriggers` evaluator, so an unresolvable predicate stays
-    /// silent. Base validation is untouched.
+    /// other than the HL7 null (`""`). The null is always exempt here,
+    /// unconditionally — unlike the base `FieldProhibition`, which only
+    /// exempts it when `permitsNull` is set — because every profile
+    /// prohibition is a "not used" rule and the null is a delete
+    /// instruction, not a value (see `ProfileFieldProhibition`'s DocC).
+    /// Conditions go through the shared `conditionTriggers` evaluator, so
+    /// an unresolvable predicate stays silent. Base validation is untouched.
     func checkProfileFieldProhibitions(
         profile: Profile,
         field: Field,

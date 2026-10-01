@@ -156,6 +156,7 @@ PARTIAL = {
     # P4-20 / P4-24 / P4-26: see permanent-limitations-register (00060.4 row, BLOCKING).
     'HL7au:00060.4': 'enforced only where the base schema carries an explicit '
                      '`prohibitedWhen` on a C field (`.conditionalFieldProhibited`): '
+                     'AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); '
                      'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
                      'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
                      '(v2.8.2); OBX-2 and OBX-5 must not be valued other than '

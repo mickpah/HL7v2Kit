@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P4: expressible conditions
 
-- `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. Additive: a trailing defaulted `init` parameter.
+- `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. A separate `init` overload; the released initialisers are unchanged (ADR-014).
 - Condition DSL: `noRepeat(<fieldref>) <op>` (no repetition satisfies the predicate) and `nextSegmentID(<ID>|...)` (next segment ID after skipped IDs). ADR-010 amendment.
 - Predicates moved out of the permanent-limitations register, each with a spec citation in `docs/design/conditional-completeness-audit.md` ("Shipped in P4"): PV2-1, PV2-45, PV2-47; TXA-3, 5, 7, 13, 22; TQ1-12, TQ2-3/4/5/6/10; SCH-1/2/27, ARQ-25; AIS/AIG/AIL/AIP start, offset units, allow substitution and filler status; MFE-2, MFA-2, LRL-5/6, OM7-16/18; BPX-5/6/8/9/10, BTX-2..7; v2.8.2 OBR-22 and PRT-14; v2.6 PD1-15 and ORC-26.
 - Conditional prohibitions: RXR-6, ORC-25, OBX-12, PYE-3..6 (errors); TQ2-7, STF-1, PRA-1, PRA-12, SPM-13, BPX/BTX "not applicable" (warnings).
@@ -17,11 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed — P4: expressible conditions
 
 - v2.8.2 PRT-7 prohibition keyed to PRT-5 as printed (§7.4.4.7); it fired on person participations without an organisation.
-- v2.8.2 OBR-2/3 and ORC-2/3 accept a filler id alone ("either a placer or a filler id"), with the Send Number exception.
+- OBR-2/3 and ORC-2/3 accept a filler id alone ("either a placer or a filler id"), with the Send Number exception, on all six versions.
 
 ### Changed — P4: expressible conditions
 
-- Validation is stricter wherever a predicate above now fires: messages that omit a field the cited sentence requires gain an error or warning. v2.6 PD1-15, ORC-26, OBR-48 and DG1-22 move from `O` to the printed `C`.
+- Validation is stricter wherever a predicate above now fires: messages that omit a field the cited sentence requires gain an error or warning. v2.6 PD1-15, DG1-22 and ORC-26, plus v2.5.1 ORC-26 (`ORC-20 in (3, 4)`), move from `O` to the printed `C`; v2.6 OBR-48 was already `C` and is untouched by P4.
 - `docs/design/permanent-limitations-register.md` section A and the conditional-completeness audit are rewritten: the bare-C set is now frozen position by position, with guard tests on all six versions (`BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1, v2.6; `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2).
 
 ### Fixed — P4-16: AU profile PID-35..38 grammar extension removed as redundant

@@ -10,7 +10,9 @@ can run it in the fixture-safety job, the same way check-audit-schemas.py does.
 import importlib.util
 import os
 import re
+import subprocess
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 _spec = importlib.util.spec_from_file_location(
@@ -432,6 +434,26 @@ def check_swapped_header_extracted_registry_and_mismatches():
         extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.update(saved)
 
 
+def check_main_rejects_bad_arguments():
+    # Final-review fix: `--help` used to fall through to the output-path branch and write a
+    # file literally named "--help". main() must validate its arguments before any
+    # extraction: exactly one positional output path, or --triage / --check-registry with
+    # their own arguments; anything else -- a bare `--help`, an unknown flag, or no arguments
+    # at all -- prints usage (the module docstring) to stderr and exits non-zero, before
+    # touching any PDF. Run through subprocess against the real script (not a direct call
+    # into its functions) so a regression in main()'s own argv handling -- the thing the bug
+    # was actually in -- is what gets caught. Runs in a temp cwd and checks no file landed.
+    script = os.path.join(HERE, "extract-example-messages.py")
+    with tempfile.TemporaryDirectory() as cwd:
+        for args in (["--help"], []):
+            result = subprocess.run(
+                [sys.executable, script, *args],
+                cwd=cwd, capture_output=True, text=True, timeout=10)
+            assert result.returncode != 0, (args, result.returncode, result.stdout, result.stderr)
+            assert result.stderr.strip(), (args, "expected usage on stderr")
+            assert os.listdir(cwd) == [], (args, os.listdir(cwd))
+
+
 CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_segment,
           check_elided_msh12_keeps_message_but_drops_version,
           check_elision_metadata_marks_truncated_segments_and_msh_version,
@@ -449,7 +471,8 @@ CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_se
           check_known_spec_example_errors_cite,
           check_registry_matches_a_synthetic_report,
           check_swapped_header_registry_and_mismatches,
-          check_swapped_header_extracted_registry_and_mismatches]
+          check_swapped_header_extracted_registry_and_mismatches,
+          check_main_rejects_bad_arguments]
 
 
 def main():

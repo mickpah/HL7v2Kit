@@ -857,7 +857,7 @@ extension Profile {
         // Breed Code, Strain, Production Class Code) on v2.4 wires here,
         // believing the base v2.4 PID grammar stopped at field 32. It
         // didn't: base v2.4 PID.json has carried all four fields (bare C
-        // on 35/36, O on 37/38) since v0.3-G2. P4-17 (2026-10) added the
+        // on 35/36, O on 37/38) since v0.3-G2. P4-17 (2026-10-01) added the
         // two missing Conditionality Rule strings straight to that base
         // schema (v2.4 CH03 §3.4.2.35/.36, the same sentence v2.5.1/v2.6
         // print), which made this override fully redundant for 35/36 and
