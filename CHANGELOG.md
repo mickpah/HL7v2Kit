@@ -47,6 +47,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   footnote marker `2`, which the extractor reads as a bound. Whitelisted in
   M22 with the citation.
 
+### Fixed — P6-5: PCR repeatability (v2.3.1)
+
+- v2.3.1 PCR-9, 11, 13, 15, 17, 19 and 20 are single-cardinality, as printed
+  (Figure 7-22, p. 7-96). The TBL# numbers that the column shift put in the
+  RP column had been read as repeats. PCR-12/21/22/23 carry their printed
+  bounds (3/6/6/3). `table-repairs.json` entries now take an optional
+  `repeatability`, which M22 compares against. (V231-C05)
+
 ### Added — P6-3: ADD on v2.6 and v2.8.2
 
 - The ADD (Addendum) segment is modelled on v2.6 and v2.8.2 (CH02 §2.14.1,

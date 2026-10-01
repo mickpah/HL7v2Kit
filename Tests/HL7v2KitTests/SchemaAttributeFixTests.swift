@@ -103,4 +103,26 @@ struct SchemaAttributeFixTests {
         #expect(SegmentGrammarTable.v2_6["ADD"]?.field(1)?.length == "65536")
         #expect(SegmentGrammarTable.v2_8_2["ADD"]?.field(1)?.length == nil, "v2.8.2 prints neither LEN nor C.LEN")
     }
+
+    // V231-C05: v2.3.1 §7.11.3 Figure 7-22. RP/# is blank for PCR-5..11 and 13..20; the
+    // p. 7-96 column shift put the TBL# number where the extractor read RP.
+    @Test("v2.3.1 PCR repeatability follows the printed rows")
+    func pcrRepeatability() {
+        let pcr = SegmentGrammarTable.v2_3_1["PCR"]
+        for index in [9, 11, 13, 15, 17, 19, 20] {
+            #expect(pcr?.field(index)?.repeatability == .single, "PCR-\(index)")
+        }
+        #expect(pcr?.field(12)?.maxRepetitions == 3)
+        #expect(pcr?.field(21)?.maxRepetitions == 6)
+        #expect(pcr?.field(22)?.maxRepetitions == 6)
+        #expect(pcr?.field(23)?.maxRepetitions == 3)
+    }
+
+    @Test("v2.3.1 PCR-9 with two repetitions raises cardinalityExceeded")
+    func pcr9Repeated() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||PEX^P07|M1|P|2.3.1\r"
+            + line("PCR", [1: "D1^Device", 9: "Y~N"])
+        let issues = try Validator().validate(Parser().parse(wire)).issues
+        #expect(issues.contains { $0.code == .cardinalityExceeded && $0.location.segmentID == "PCR" && $0.location.fieldIndex == 9 })
+    }
 }

@@ -227,6 +227,10 @@ LENGTH_WHITELIST = {
 TABLE_REPAIRS_PATH = os.path.join(REPO, "scripts/table-repairs.json")
 TABLE_REPAIRS = ({k: v["tables"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()}
                  if os.path.exists(TABLE_REPAIRS_PATH) else {})
+# P6-5: an entry's optional "repeatability" pins the printed RP/# cell where the same column
+# shift defeats the extractor (v2.3.1 PCR, p. 7-96). M22 compares against it instead.
+REPEATABILITY_REPAIRS = ({k: v["repeatability"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()
+                          if "repeatability" in v} if os.path.exists(TABLE_REPAIRS_PATH) else {})
 
 
 def expected_tables(version, seg, index, raw_cells):
@@ -814,7 +818,9 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             # table's cell (as M19/M21 do), not the union of every chapter's print: a
             # constrained copy that misreads a cell no longer hides a bound (P6-4 fix 1).
             for f in schema_fields:
-                printed = printed_for(spec_def, spec_reps, seg, f["index"], "repeatability")
+                key = f"{version}/{seg}-{f['index']}"
+                printed = ({REPEATABILITY_REPAIRS[key]} if key in REPEATABILITY_REPAIRS
+                           else printed_for(spec_def, spec_reps, seg, f["index"], "repeatability"))
                 have = (f.get("repeatability") or "").strip()
                 if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
                     continue
