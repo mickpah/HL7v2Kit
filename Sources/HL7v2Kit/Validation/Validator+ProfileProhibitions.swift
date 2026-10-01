@@ -1,6 +1,7 @@
 // Validator+ProfileProhibitions.swift
 // P4-24 — profile-authored field prohibitions (HL7au:00060.4 route B), and
 // the HL7 null test that base `permitsNull` prohibitions share (P4-26).
+// P4-31 — the full-predicate rule (HL7au:00060.4 route C, ADR-021).
 
 extension Validator {
     /// Report every `ProfileFieldProhibition` on the matching field
@@ -46,6 +47,50 @@ extension Validator {
                 message: "AU profile rule violated at \(location.pathDescription): field must not be valued while '\(rule.condition)' holds (\(rule.specCitation))"
             ))
         }
+    }
+
+    /// Report a populated C field, other than the HL7 null, whose stored
+    /// condition is marked as the spec's full predicate (ADR-021) and is
+    /// definitely false while the profile rule's scope is true. Unknown
+    /// never fires. A field that a base prohibition (`prohibitedWhen`,
+    /// `additionalProhibitions`) or a profile prohibition already
+    /// reports here is not reported again. P4-31.
+    func checkFullPredicateConditional(
+        profile: Profile,
+        fieldGrammar: FieldGrammar,
+        grammarVersion: String,
+        field: Field,
+        segment: Segment,
+        segmentArrayIndex: Int,
+        message: Message,
+        location: IssueLocation,
+        issues: inout [ValidationIssue]
+    ) {
+        guard let rule = profile.fullPredicateRule,
+              fieldGrammar.optionality == .conditional,
+              let condition = fieldGrammar.condition, !condition.isEmpty,
+              rule.marked.contains(FullPredicateConditions.key(
+                version: grammarVersion, segmentID: location.segmentID, fieldIndex: fieldGrammar.index)),
+              carriesNonNullValue(field)
+        else { return }
+        func truth(_ c: String) -> ConditionTruth {
+            conditionTruth(c, in: segment, segmentIndex: segmentArrayIndex,
+                           message: message, currentSegmentID: location.segmentID)
+        }
+        guard truth(rule.scope) == .true, truth(condition) == .false else { return }
+        let baseProhibitions = [fieldGrammar.prohibitedWhen].compactMap { $0 }
+            + fieldGrammar.additionalProhibitions.map(\.condition)
+        let profileProhibitions = profile.fieldOverrides
+            .filter { $0.segmentID == location.segmentID && $0.fieldIndex == location.fieldIndex }
+            .flatMap(\.prohibitions).map(\.condition)
+        guard !(baseProhibitions + profileProhibitions).contains(where: { !$0.isEmpty && truth($0) == .true })
+        else { return }
+        issues.append(ValidationIssue(
+            severity: rule.severity,
+            code: .profileConstraintViolation(localeRule: rule.specCitation),
+            location: location,
+            message: "AU profile rule violated at \(location.pathDescription): conditional field '\(fieldGrammar.name)' must not be valued while its predicate '\(condition)' is not satisfied (\(rule.specCitation))"
+        ))
     }
 
     /// True when some repetition holds content other than a lone HL7

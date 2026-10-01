@@ -270,6 +270,52 @@ limitations, all fail-safe:
   not message content — no message-expressible predicate exists (req #3: the DSL cannot and
   should not model site capability).
 
+## HL7au:00060.4 route C classification (P4-31, 2026-10-01)
+
+ADRM-2021 Appendix 5 (p. 466), HL7au:00060.4: "HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied." ADRM §1 (p. 11): "If the predicate is NOT satisfied: A conformant sending application must NOT send the element." ADR-021 decides how that is enforced: only on fields whose stored `condition` is marked `conditionIsPredicate` (the spec's full C predicate), and only when the condition is definitely false.
+
+Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carry, with the ADRM REF_I12 additions (ADRM §7.2.1) and the ADRM-only C on OBR-1; the P4-24 table was the starting point. Quotes are v2.4 unless marked ADRM. Classes: **(a)** full predicate, marked; **(b)** trigger only, the text lets the field be valued while the trigger is false; **(c)** not determinable from the text; **(n)** predicate not decidable from the message (bare C, §A).
+
+| Field | Class | Quote | Shipped |
+|---|---|---|---|
+| PID-36 | a | §3.4.2.36: "Conditionality Rule: This field must be valued if PID-37 - Strain is valued." No other use stated (ADRM §2.2.1.36 repeats it) | marked; AU error |
+| CTI-2 | a | §7.8.4.3: "CTI-2-study phase identifier must be valued if CTI-3-study scheduled time point is valued." §7.8.4.2 is a plain definition | marked; AU error |
+| OBX-2 | a | §7.4.2.2: "It must be valued if OBX-11-Observ result status is not valued with an 'X'." ADRM §4.4.2.2 (p. 236) the same | marked; AU error (under O the base null rule reports instead) |
+| PID-35 | b | §3.4.2.35: "If this field is not valued, a human is assumed." Species is sent for any non-human subject | none |
+| PV2-1 | b | §3.4.4.1: "This field is required for cancel pending transfer (A26) messages. In all other events it is optional." | none |
+| PV2-47 | b | §3.4.4.47: "It may be populated in A22 - Patient returns from LOA as well as in the A53 ... and the A54 ... triggers." | none |
+| ORC-2 | b | §4.5.1.2: "If both fields, ORC-2-placer order number and OBR-2-placer order number are valued, they must contain the same value." | none |
+| ORC-3 | b | §4.5.1.3: "(This rule is the same for other identical fields in the ORC and OBR ...)"; "the filler order number and placer order number transmitted by the common database application" | none |
+| ORC-8 | b | §4.5.1.8: "ORC-8-parent is the same as OBR-29-parent"; §4.5.1.2: "These rules apply to the few other fields that are present in both ORC and OBR ... (e.g., ... parent numbers ...)". ADRM prints O | none |
+| OBR-1 (ADRM C) | b | ADRM §4.4.1.1: "For the first order transmitted, the sequence number shall be 1 ... This field is required if more than one OBR segment is sent with the order." The first OBR carries 1 whether or not others follow | none |
+| OBR-2 | b | §4.5.3.2: "See ORC-2-placer order number ... for information on when this field must be valued" (the both-valued rule) | none (P4-20 pin) |
+| OBR-3 | b | as ORC-3 | none |
+| OBR-7 | b | §4.5.3.7: "If it is transmitted as part of a request and a sample has been sent along as part of the request, this field must be filled in" (valued outside ORU/ORF/OUL) | none |
+| OBR-22 | b | §4.5.3.22: "... or that a status, as defined in ORC-5 order status, is entered or changed." Status changes travel in ORM | none |
+| OBR-25 | b | §4.5.3.25: "It is not required as part of an initial order." "This field would typically be used in a response to an order status query" | none |
+| OBR-29 | b | §4.5.3.29: "This field is identical to ORC-8-parent." (the both-valued rule). ADRM prints O | none |
+| RQD-2/3/4 | b | §4.11.1.2-4: "at least one of the three fields ... must be valued" | none |
+| RXO-1/2/4 | b | §4.14.1.1: "... then RXO-1, RXO-2, and RXO-4 may be blank" | none |
+| RXO-5 | b | §4.14.1.5: "Required when both RXO-1 ... and RXO-10 ... do not specify the drug/treatment form. Optionally included otherwise." | none |
+| OBX-4 | b | §7.4.2.4: "Use a null or 1 when there is no need for multiples." | none |
+| OBX-5 | b | §7.4.2.5: "It is not a required field because some systems will report only the normalcy/abnormalcy (OBX-8)"; valued in every ordinary result while its `OBX-11 = O` condition is false | none |
+| AUT-6 | b | §11.6.2.6: "It is not required when authorization information is being requested." | none |
+| RXE-8, RXD-13, RXA-11 | b | §4.14.4.8 / §4.14.5.13 / §4.14.7.11: "The default (null) value is the current census location for the patient." No predicate; valued for any other location | none |
+| RXE-15 | b | §4.14.4.15: "This is a required field in RXE when used in pharmacy/treatment messages, but it is not required when used in product experience messages" | none |
+| RXD-5 | b | §4.14.5.5: "If present, it overrides units implied by the actual dispense code." | none |
+| ROL-1 | b | §12.4.3.1: "The field is optional when used in ADT and Finance messages." | none |
+| RQ1-2/3/4/5 | c | §4.11.2.2-5: "either RQ1-2-manufacturer ID and RQ1-3-manufacturer's catalog or RQ1-4-vendor ID and RQ1-5-vendor catalog must be valued." Inclusive or exclusive "either ... or" is not stated | none (NEEDS_CONTEXT) |
+| RXE-10, RXE-18, RXE-19 | c | §4.14.4.10 / .18 / .19: plain definitions ("This field contains the amount dispensed ..."), no predicate printed | none (NEEDS_CONTEXT) |
+| PTH-6 | c | §12.4.4.6: "(Marked as conditional - must be filled in if trigger event is update or terminate pathway)". Chapter 12 defines no "terminate" event, and the field is a status date also meaningful in a referral | none (NEEDS_CONTEXT) |
+| OBR-14 | n | §4.5.3.14: "This field must contain a value when the order is accompanied by a specimen, or when the observation required a specimen and the message is a report." | none |
+| RXO-14, RXE-13 | n | §4.14.1.14: "required when the substance being requested is a controlled substance (e.g., a narcotic)" | none |
+| RXO-15 | n | §4.14.1.15: "Use if required by the pharmacy or treatment application or site on orders (or some subgroup of orders), in addition to ORC-11-verified by." | none |
+| RXO-17, RXE-22, RXA-12 | n | §4.14.1.17 / §4.14.4.22: "required when the ordered substance is to be administered continuously at a prescribed rate"; §4.14.7.12: "required when a treatment is administered continuously at a prescribed rate" | none |
+| RXE-11, RXA-7 | n | §4.14.4.11: "required if the units are not implied by the actual dispense code"; §4.14.7.7 "if the administered amount code does not imply units" | none |
+| RXE-16, RXE-17, RXD-8 | n | §4.14.4.16: "required when a prescription is dispensed to an outpatient. It is not relevant to inpatient treatment orders." | none |
+
+Counts: (a) 3, (b) 29, (c) 8, (n) 12; 52 in all. HL7au:00060.4 stays PARTIAL until the (c) and (n) rows are ruled on (permanent-limitations register, §D addendum "HL7au:00060.4").
+
 ## Outcome
 
 - **18 predicates shipped** (PD1-15 exact, ORC-26 partial; v1.8 added CSR-9/10/14/15/16 + CTI-2; Sprint 0 close-out added STF-1, PRA-1, PRA-12, RQ1-2..5, RQD-2..4) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.

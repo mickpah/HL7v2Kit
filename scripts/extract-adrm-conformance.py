@@ -153,19 +153,23 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
-    # P4-20 / P4-24 / P4-26: see permanent-limitations-register (00060.4 row, BLOCKING).
-    'HL7au:00060.4': 'enforced only where the base schema carries an explicit '
+    # P4-20 / P4-24 / P4-26 / P4-31: see permanent-limitations-register (00060.4 row).
+    'HL7au:00060.4': 'enforced where the base schema carries an explicit '
                      '`prohibitedWhen` on a C field (`.conditionalFieldProhibited`): '
                      'AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); '
                      'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
                      'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
                      '(v2.8.2); OBX-2 and OBX-5 must not be valued other than '
                      'with the HL7 null when OBX-11 = O (v2.4 7.4.2.11; route B, '
-                     'P4-24, moved to the base grammar in P4-26); every other '
-                     'in-scope C field states '
-                     'only when it is required. General enforcement is BLOCKING: stored conditions '
-                     'are "required when" triggers, not full predicates, and the '
-                     'evaluator maps undecidable to false',
+                     'P4-24, moved to the base grammar in P4-26); and, route C '
+                     '(P4-31, ADR-021), on the v2.4 C fields whose stored condition '
+                     'is marked as the full predicate (PID-36, CTI-2, OBX-2), '
+                     'reported when the condition is definitely false. Of 52 '
+                     'candidates, 29 are trigger-only and imply no prohibition; '
+                     'the remainder blocks: 8 whose predicate the text does not '
+                     'settle (RQ1-2/3/4/5, RXE-10/18/19, PTH-6) and 12 whose '
+                     'predicate is not decidable from the message (OBR-14, '
+                     'RXO-14/15/17, RXE-11/13/16/17/22, RXD-8, RXA-7/12)',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',

@@ -34,6 +34,7 @@ Reading order for a cold start: `STATUS.md` → `NEXT_STEPS.md` → this index �
 | 016 — code-table registry | per-version generated HL7 tables, closed-set enforcement for ID fields, locale axis | In force |
 | 017 — datatype component grammar | per-version component tables (v2.5.1 / v2.6 / v2.8.2), code-table check on ID components | In force |
 | 018 — supported version set | Six modelled versions; `2.8` validated as v2.8.2 (info); VID.1 names the version; any populated MSH-12 with no resolvable version warns (throws under `rejectUnknownVersion`); excluded versions in the permanent-limitations register §F | In force (P3) |
+| 021 — full-predicate conditions | Three-state condition evaluator (Kleene AND/OR; two-state = "true"); per-field `conditionIsPredicate` marking; AU HL7au:00060.4 route C on definitely-false marked conditions | In force (P4-31); 00060.4 stays PARTIAL on the class (c) / (n) remainder |
 
 ## Conformance registers (point-in-time; guard-tested where noted)
 

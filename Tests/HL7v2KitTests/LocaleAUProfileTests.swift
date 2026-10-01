@@ -2419,9 +2419,10 @@ struct LocaleAUProfileTests {
 // and the evaluator maps "undecidable" to false. Negating them would
 // prohibit OBR-2 here, although ADRM §4.4.1.2 says ORC-2 and OBR-2 may
 // both be valued. Do not make this test fail by adding a naive
-// negation. Close the gap through route B (P4-24, explicit cited
-// prohibitions) or route C (full-predicate marking plus a three-state
-// evaluator).
+// negation. Route B (P4-24, explicit cited prohibitions) and route C
+// (P4-31, ADR-021: full-predicate marking plus a three-state evaluator)
+// have landed; OBR-2 is classed trigger-only (class b) and stays
+// unmarked, so this pin stays green. See AUFullPredicateTests.
 @Suite("AU HL7au:00060.4 is PARTIAL: no C-false prohibition by negation (P4-20)")
 struct AU00060_4PartialTests {
 

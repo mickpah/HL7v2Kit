@@ -293,6 +293,30 @@ def table_open_findings(f):
     return out
 
 
+def condition_predicate_findings(f):
+    """P4-31 (ADR-021). `conditionIsPredicate: true` marks the stored `condition` as the
+    spec's complete C predicate (must not be sent when false). It is a boolean `true`, only
+    on a field printed C with a non-empty `condition`, and always carries a
+    `predicateCitation` of at least 20 characters; a `predicateCitation` needs the marker.
+    Returns the finding messages for one field (the `optionalityCitation` pattern, P4-30)."""
+    out = []
+    if "conditionIsPredicate" not in f and "predicateCitation" not in f:
+        return out
+    flag, cite = f.get("conditionIsPredicate"), f.get("predicateCitation")
+    if "conditionIsPredicate" in f and flag is not True:
+        out.append(f"conditionIsPredicate {flag!r} is not true (omit the key instead)")
+    if flag is True:
+        if not (isinstance(cite, str) and len(cite.strip()) >= 20):
+            out.append("conditionIsPredicate without a predicateCitation")
+        if f.get("optionality") != "C":
+            out.append("conditionIsPredicate on a field not printed C")
+        if not (f.get("condition") or "").strip():
+            out.append("conditionIsPredicate on a field with no condition")
+    if cite is not None and flag is not True:
+        out.append("predicateCitation without conditionIsPredicate: true")
+    return out
+
+
 PROHIBITION_KEYS = {"when", "severity", "citation", "permitsNull"}
 
 
@@ -365,6 +389,7 @@ def integrity():
                                  f"table {table!r} is not among the spec bindings {f.get('tables', [])}"))
             findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
             findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
+            findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))

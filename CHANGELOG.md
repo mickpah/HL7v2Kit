@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The condition evaluator's core now answers true, false or unknown (a peer that does not resolve, an atom that does not parse, a quantifier over an empty domain, a predicate that cannot judge its referent), combining atoms with Kleene AND and OR. Internal; no public API change.
 - No behaviour change: `conditionTriggers` is exactly "the condition is true". The full suite, a digest of every issue on the extracted spec examples and the test fixtures under both locales, and the spec-example registry check (138 entries, 0 mismatched) are unchanged.
 
+### Added — P4-31: HL7au:00060.4 route C, full-predicate enforcement (ADR-021)
+
+- Schema keys `conditionIsPredicate` and `predicateCitation`: a field may mark its stored condition as the spec's complete C predicate (required when true, must not be sent when false). Codegen emits the marked set into an internal lookup; `FieldGrammar` and the public API are unchanged. `scripts/audit-schemas.py` requires the citation, a printed C and a condition, with a self-check case.
+- AU profile: in ORM, ORU and REF, a marked C field valued (other than with the HL7 null) while its condition is definitely false reports `.profileConstraintViolation("HL7au:00060.4 ...")`, error. Unknown never fires; a field a base or AU prohibition already reports is not reported twice. Marked on v2.4: PID-36 (PID-37 empty), CTI-2 (CTI-3 empty), OBX-2 (OBX-11 = X).
+- Every C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments classified with quotes (`docs/design/conditional-completeness-audit.md`): 3 full predicates, 29 trigger-only, 8 not determinable from the text, 12 not decidable from the message. HL7au:00060.4 stays PARTIAL on the last two groups.
+
 ### Added — P4: expressible conditions
 
 - `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. A separate `init` overload; the released initialisers are unchanged (ADR-014).

@@ -1566,7 +1566,22 @@ extension Profile {
                 virtualRowCitation: "ADRM-prose:P-9 — rows marked STRUCTURAL \"must not be written to OBX segments\"; AU ADRM-2021 Appendix 9 A9.2.3.4 p. 515",
                 headerShapeCitation: "ADRM-prose:P-10 — the VMR header must \"specify an OBX-4 sub-ID which must be a dotted decimal value\"; AU ADRM-2021 Appendix 9 A9.2.1 p. 490"
             ),
-        ]
+        ],
+        // HL7au:00060.4 route C (P4-31, ADR-021). ADRM-2021 Appendix 5
+        // (p. 466): "HL7 message elements with a usage of C (conditional)
+        // must not be valued when the associated predicate is not
+        // satisfied" (Senders; Orders, Results, Referrals). ADRM §1 (p. 11):
+        // "If the predicate is NOT satisfied: A conformant sending
+        // application must NOT send the element." Applies only to the C
+        // fields whose schema marks the stored condition as the full
+        // predicate (v2.4 PID-36, CTI-2, OBX-2); every other stored
+        // condition is a "required when" trigger whose false branch the
+        // spec leaves open. Must not: error.
+        fullPredicateRule: FullPredicateRule(
+            scope: "messageCode in (ORM, ORU, REF)",
+            severity: .error,
+            specCitation: "HL7au:00060.4 — a C (conditional) element must not be valued when its predicate is not satisfied; AU ADRM-2021 Appendix 5 p. 466, §1 p. 11"
+        )
     )
 
     /// Shared pair-rule set for CE / CNE / CWE. All three composites

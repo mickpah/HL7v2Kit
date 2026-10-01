@@ -136,9 +136,33 @@ def check_optionality_citation():
         "P4-30 slots cite through optionalityCitation, not the whitelist"
 
 
+def check_condition_predicate():
+    # P4-31 (ADR-021): `conditionIsPredicate` marks a stored condition as the full C
+    # predicate. It needs a cited `predicateCitation`, a C field and a condition; a
+    # citation without the marker is stale.
+    cite = "v2.4 Chapter 7 section 7.4.2.2: 'It must be valued if OBX-11 is not valued with an X.'"
+    base = {"index": 2, "optionality": "C", "condition": "OBX-11 != X"}
+    f = audit.condition_predicate_findings
+    assert f(base) == [], "an unmarked field is clean"
+    assert f(dict(base, conditionIsPredicate=True, predicateCitation=cite)) == [], "a cited marker is clean"
+    cases = {
+        "uncited": dict(base, conditionIsPredicate=True),
+        "blank citation": dict(base, conditionIsPredicate=True, predicateCitation="   "),
+        "short citation": dict(base, conditionIsPredicate=True, predicateCitation="see spec"),
+        "not C": dict(base, optionality="O", conditionIsPredicate=True, predicateCitation=cite),
+        "no condition": dict({"index": 2, "optionality": "C"}, conditionIsPredicate=True, predicateCitation=cite),
+        "false marker": dict(base, conditionIsPredicate=False, predicateCitation=cite),
+        "string marker": dict(base, conditionIsPredicate="true", predicateCitation=cite),
+        "citation alone": dict(base, predicateCitation=cite),
+    }
+    for name, field in cases.items():
+        assert f(field), f"{name} must be a finding"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
-          check_table_open, check_additional_prohibitions, check_optionality_citation]
+          check_table_open, check_additional_prohibitions, check_optionality_citation,
+          check_condition_predicate]
 
 
 def main():

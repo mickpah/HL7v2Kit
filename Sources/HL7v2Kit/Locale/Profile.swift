@@ -76,6 +76,12 @@ struct Profile: Sendable, Equatable, Hashable {
     /// instantiate a row of the rule's element table.
     let subIDTrees: [SubIDTreeRule]
 
+    /// The "C must not be valued when its predicate is false" rule
+    /// (HL7au:00060.4 route C, ADR-021), or `nil` when the profile has
+    /// none. Applies only to fields whose stored condition is marked as
+    /// a full predicate. P4-31.
+    let fullPredicateRule: FullPredicateRule?
+
     init(
         locale: HL7Locale,
         fieldOverrides: [FieldOverride] = [],
@@ -84,7 +90,8 @@ struct Profile: Sendable, Equatable, Hashable {
         cardinalityExtensions: [String: [SegmentCardinalityRule]] = [:],
         uniquenessRules: [FieldUniquenessRule] = [],
         escapeProhibitions: [EscapeProhibition] = [],
-        subIDTrees: [SubIDTreeRule] = []
+        subIDTrees: [SubIDTreeRule] = [],
+        fullPredicateRule: FullPredicateRule? = nil
     ) {
         self.locale = locale
         self.fieldOverrides = fieldOverrides
@@ -94,6 +101,7 @@ struct Profile: Sendable, Equatable, Hashable {
         self.uniquenessRules = uniquenessRules
         self.escapeProhibitions = escapeProhibitions
         self.subIDTrees = subIDTrees
+        self.fullPredicateRule = fullPredicateRule
     }
 
     /// Look up the profile for a given locale.
@@ -476,6 +484,37 @@ struct FieldOverride: Sendable, Equatable, Hashable {
 /// sense the prohibition means — so there is no profile rule, unlike
 /// some base rules' mixed phrasing, where the null itself is the thing
 /// the prose forbids.
+/// A profile's "a C element must not be valued when its predicate is not
+/// satisfied" rule (P4-31, ADR-021). It reports a populated field, other
+/// than the HL7 null, whose stored condition is marked as the spec's full
+/// predicate and evaluates definitely false, while `scope` evaluates
+/// true. An unknown condition never fires, and a field that a base or
+/// profile prohibition already reports is not reported again.
+struct FullPredicateRule: Sendable, Equatable, Hashable {
+    /// Message-context predicate the rule applies under, in the shared
+    /// condition grammar, e.g. `"messageCode in (ORM, ORU, REF)"`.
+    let scope: String
+
+    /// `.error` for "must not".
+    let severity: IssueSeverity
+
+    /// Citation surfaced as the `localeRule` of the reported
+    /// `.profileConstraintViolation`.
+    let specCitation: String
+
+    /// The `version|SEG-n` keys of the marked fields. Defaults to the
+    /// schema marking; tests may widen it.
+    let marked: Set<String>
+
+    init(scope: String, severity: IssueSeverity, specCitation: String,
+         marked: Set<String> = FullPredicateConditions.generated) {
+        self.scope = scope
+        self.severity = severity
+        self.specCitation = specCitation
+        self.marked = marked
+    }
+}
+
 struct ProfileFieldProhibition: Sendable, Equatable, Hashable {
     /// Predicate under which the field must not be valued, in the
     /// shared condition grammar (ADR-009), including the message-type

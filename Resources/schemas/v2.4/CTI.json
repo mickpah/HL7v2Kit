@@ -4,7 +4,7 @@
   "description": "Clinical Trial Identification",
   "fields": [
     { "index": 1, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "condition": "CTI-3 populated" },
+    { "index": 2, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CE", "length": "250", "optionality": "C", "repeatability": "1", "condition": "CTI-3 populated", "conditionIsPredicate": true, "predicateCitation": "v2.4 Chapter 7 section 7.8.4.3 CTI-3: 'CTI-2-study phase identifier must be valued if CTI-3-study scheduled time point is valued.' This is the only conditionality text for CTI-2 (section 7.8.4.2 gives a plain definition), and nothing lets it be sent otherwise (P4-31)." },
     { "index": 3, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1" }
   ]
 }
