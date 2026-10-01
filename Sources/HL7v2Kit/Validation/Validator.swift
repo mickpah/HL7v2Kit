@@ -2089,6 +2089,10 @@ public struct Validator: Sendable {
     /// Internal (not private) access so the v0.7 production unit tests
     /// can call the evaluator directly via `@testable import`. Not
     /// part of the public API.
+    ///
+    /// P4-31 (ADR-021): this is exactly `conditionTruth(...) == .true`.
+    /// An unknown condition does not trigger, which is the v0.2-V1
+    /// fail-safe every "required when" caller relies on.
     func conditionTriggers(
         _ condition: String,
         in segment: Segment,
@@ -2096,6 +2100,27 @@ public struct Validator: Sendable {
         message: Message,
         currentSegmentID: String
     ) -> Bool {
+        conditionTruth(
+            condition,
+            in: segment,
+            segmentIndex: segmentIndex,
+            message: message,
+            currentSegmentID: currentSegmentID
+        ) == .true
+    }
+
+    /// The three-state core (P4-31, ADR-021): `.true`, `.false`, or
+    /// `.unknown` when the message cannot decide the condition. Only a
+    /// caller that acts on a definitely false condition (the AU
+    /// HL7au:00060.4 full-predicate check) needs more than
+    /// ``conditionTriggers(_:in:segmentIndex:message:currentSegmentID:)``.
+    func conditionTruth(
+        _ condition: String,
+        in segment: Segment,
+        segmentIndex: Int,
+        message: Message,
+        currentSegmentID: String
+    ) -> ConditionTruth {
         evaluateOrExpression(
             condition,
             in: segment,
@@ -2105,26 +2130,33 @@ public struct Validator: Sendable {
         )
     }
 
-    /// OR of AND clauses (``ConditionLanguage/clauses(_:)``): true iff
-    /// every atom of some clause holds. Short-circuits like the DNF it is.
+    /// OR of AND clauses (``ConditionLanguage/clauses(_:)``), combined by
+    /// Kleene's connectives. Short-circuits like the DNF it is: a clause
+    /// stops at its first false atom, the whole at its first true clause.
     private func evaluateOrExpression(
         _ expression: String,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> Bool {
-        ConditionLanguage.clauses(expression).contains { atoms in
-            atoms.allSatisfy { atom in
-                evaluateAtom(
+    ) -> ConditionTruth {
+        var result = ConditionTruth.false
+        for atoms in ConditionLanguage.clauses(expression) {
+            var clause = ConditionTruth.true
+            for atom in atoms {
+                clause = .and(clause, evaluateAtom(
                     atom,
                     in: segment,
                     segmentIndex: segmentIndex,
                     message: message,
                     currentSegmentID: currentSegmentID
-                )
+                ))
+                if clause == .false { break }
             }
+            result = .or(result, clause)
+            if result == .true { break }
         }
+        return result
     }
 
     /// A referent resolved to a scalar string value plus a "is this
@@ -2161,36 +2193,43 @@ public struct Validator: Sendable {
     ///    (ADR-010).
     ///
     /// An atom that does not parse, or whose referent cannot be
-    /// resolved, fails safe — it returns `false` without firing the
-    /// conditional (v0.2-V1).
+    /// resolved, is `.unknown` (P4-31, ADR-021). The two-state
+    /// `conditionTriggers` reads that as "does not fire", the v0.2-V1
+    /// fail-safe.
     private func evaluateAtom(
         _ atom: String,
         in segment: Segment,
         segmentIndex: Int,
         message: Message,
         currentSegmentID: String
-    ) -> Bool {
-        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return false }
+    ) -> ConditionTruth {
+        guard case .success(let parsed) = ConditionLanguage.parseAtom(atom) else { return .unknown }
         switch parsed {
         case .segmentPresence(let id, let present):
             // True iff a segment of that ID exists in the current
             // segment's ORC/OBR group. Distinct from `<fieldref>
             // populated` / `empty`, which fail safe when the peer is
             // missing and so conflate "peer absent" with "peer field empty".
-            return message.segmentExists(id, inGroupOf: segmentIndex) == present
+            return ConditionTruth(message.segmentExists(id, inGroupOf: segmentIndex) == present)
 
         case .anyRepeat(let path, let predicate):
             // M6-B-1: the scalar field-ref convention reads the FIRST
             // repetition only, so `PRD-1 = AP` misses a spec-compliant
-            // `RP~AP`. ∃-semantics over every repetition's slot.
+            // `RP~AP`. ∃-semantics over every repetition's slot. An
+            // unresolvable peer is unknown, and so is a field with no
+            // populated slot (an empty domain, as for `noRepeat` below)
+            // unless an empty slot itself satisfies the predicate
+            // (`anyRepeat(X) empty`). P4-31.
             guard let slots = resolveRepetitionSlots(
                 path,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
-            ) else { return false }
-            return slots.contains { applyPredicate(predicate, to: $0) }
+            ) else { return .unknown }
+            let found = ConditionTruth.any(slots.map { applyPredicate(predicate, to: $0) })
+            guard found == .true || slots.contains(where: { $0.isPopulated }) else { return .unknown }
+            return found
 
         case .noRepeat(let path, let predicate):
             // P4 universal negation: true iff the field has at least one
@@ -2198,16 +2237,18 @@ public struct Validator: Sendable {
             // predicate. SPM-13 "would only be valued if the specimen
             // role attribute has the value G" needs "no repetition of
             // SPM-11 is G", which `anyRepeat(...) != G` cannot state (it
-            // is true for `P~G`). An absent or all-empty field is false:
-            // there is no definite value to negate (v0.2-V1 fail-safe).
+            // is true for `P~G`). An absent or all-empty field is unknown:
+            // there is no definite value to negate (P4-31; the v0.2-V1
+            // fail-safe). Over a populated domain a slot the predicate
+            // cannot judge counts as not matching, as it always has.
             guard let slots = resolveRepetitionSlots(
                 path,
                 in: segment,
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
-            ), slots.contains(where: { $0.isPopulated }) else { return false }
-            return !slots.contains { applyPredicate(predicate, to: $0) }
+            ), slots.contains(where: { $0.isPopulated }) else { return .unknown }
+            return ConditionTruth(!slots.contains { applyPredicate(predicate, to: $0) == .true })
 
         case .value(let referent, let predicate):
             guard let resolved = resolveReferent(
@@ -2216,7 +2257,7 @@ public struct Validator: Sendable {
                 segmentIndex: segmentIndex,
                 message: message,
                 currentSegmentID: currentSegmentID
-            ) else { return false }
+            ) else { return .unknown }
             return applyPredicate(predicate, to: resolved)
         }
     }
@@ -2312,8 +2353,8 @@ public struct Validator: Sendable {
     /// ref; `isPopulated` here is per-repetition-slot (the slot value is
     /// non-empty), unlike the whole-field convention of `readField` —
     /// under ∃-semantics a field-scope answer would be meaningless.
-    /// Returns `nil` on an unresolvable peer (fail-safe); an absent
-    /// field resolves to `[]`, which no predicate matches.
+    /// Returns `nil` on an unresolvable peer; an absent field resolves
+    /// to `[]`. Both make the quantifier `.unknown` (P4-31).
     private func resolveRepetitionSlots(
         _ path: Path,
         in segment: Segment,
@@ -2375,35 +2416,37 @@ public struct Validator: Sendable {
         return ResolvedReferent(raw: raw, isPopulated: isPopulated)
     }
 
-    /// Apply a classified predicate to a resolved referent.
-    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent) -> Bool {
+    /// Apply a classified predicate to a resolved referent. A predicate
+    /// that cannot judge the referent (the fail-safe cases below) is
+    /// `.unknown` (P4-31, ADR-021).
+    private func applyPredicate(_ predicate: ConditionPredicate, to resolved: ResolvedReferent) -> ConditionTruth {
         switch predicate {
-        case .populated: return resolved.isPopulated
-        case .empty: return !resolved.isPopulated
-        case .equals(let v): return resolved.raw == v
-        case .notEquals(let v): return resolved.raw != v
+        case .populated: return ConditionTruth(resolved.isPopulated)
+        case .empty: return ConditionTruth(!resolved.isPopulated)
+        case .equals(let v): return ConditionTruth(resolved.raw == v)
+        case .notEquals(let v): return ConditionTruth(resolved.raw != v)
         case .greaterThan(let threshold):
             // M8-D: PAC-2's "If SHP-8 Number of Packages in Shipment is
             // greater than 1". A non-numeric or empty referent fails safe.
-            guard let value = Double(resolved.raw) else { return false }
-            return value > threshold
+            guard let value = Double(resolved.raw) else { return .unknown }
+            return ConditionTruth(value > threshold)
         // M6-B-2 prefix ops: ADRM-2021 reserves everything beginning `Z`
         // (HL7au:000020 message/trigger codes, 000023.1 segments).
         // `startsWith` on an empty referent is false (an absent value
         // begins with nothing); `not startsWith` mirrors `not in` — it
         // asserts only on populated referents, per the fail-safe rule.
-        case .startsWith(let prefix): return resolved.raw.hasPrefix(prefix)
+        case .startsWith(let prefix): return ConditionTruth(resolved.raw.hasPrefix(prefix))
         case .notStartsWith(let prefix):
-            guard resolved.isPopulated else { return false }
-            return !resolved.raw.hasPrefix(prefix)
-        case .isIn(let values): return values.contains(resolved.raw)
+            guard resolved.isPopulated else { return .unknown }
+            return ConditionTruth(!resolved.raw.hasPrefix(prefix))
+        case .isIn(let values): return ConditionTruth(values.contains(resolved.raw))
         case .notIn(let values):
             // not-in fires only if the referent is actually populated —
             // an empty referent is not a meaningful "non-member"
             // assertion, so the conditional only requires the dependent
             // field when the referent carries a definite excluded value.
-            guard resolved.isPopulated else { return false }
-            return !values.contains(resolved.raw)
+            guard resolved.isPopulated else { return .unknown }
+            return ConditionTruth(!values.contains(resolved.raw))
         }
     }
 

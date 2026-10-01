@@ -49,6 +49,47 @@ enum ConditionAtom: Equatable, Sendable {
     case value(ConditionReferent, ConditionPredicate)
 }
 
+/// The three-state answer of a condition (ADR-021): the referents
+/// resolved and the condition holds, they resolved and it does not hold,
+/// or the message cannot decide it (a referenced segment or field that
+/// does not resolve in scope, an atom that does not parse, a quantifier
+/// over an empty domain, or a predicate applied to a referent it cannot
+/// judge). AND and OR are Kleene's strong connectives, so a definite
+/// atom can still settle a compound condition that contains an unknown
+/// one. The released two-state evaluator is `== .true`.
+enum ConditionTruth: Equatable, Hashable, Sendable {
+    case `true`, `false`, unknown
+
+    /// `true` or `false` from a definite Boolean.
+    init(_ value: Bool) {
+        self = value ? .true : .false
+    }
+
+    /// Kleene AND: false dominates, then unknown.
+    static func and(_ a: ConditionTruth, _ b: ConditionTruth) -> ConditionTruth {
+        if a == .false || b == .false { return .false }
+        if a == .unknown || b == .unknown { return .unknown }
+        return .true
+    }
+
+    /// Kleene OR: true dominates, then unknown.
+    static func or(_ a: ConditionTruth, _ b: ConditionTruth) -> ConditionTruth {
+        if a == .true || b == .true { return .true }
+        if a == .unknown || b == .unknown { return .unknown }
+        return .false
+    }
+
+    /// Kleene AND over a sequence (true when empty).
+    static func all(_ values: [ConditionTruth]) -> ConditionTruth {
+        values.reduce(.true, and)
+    }
+
+    /// Kleene OR over a sequence (false when empty).
+    static func any(_ values: [ConditionTruth]) -> ConditionTruth {
+        values.reduce(.false, or)
+    }
+}
+
 enum ConditionLanguage {
     /// Split a condition into its OR clauses, each a list of AND atoms. The
     /// language is paren-free DNF: AND binds tighter than OR.

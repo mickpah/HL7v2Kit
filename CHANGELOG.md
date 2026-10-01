@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P4-31: three-state condition evaluator (ADR-021)
+
+- The condition evaluator's core now answers true, false or unknown (a peer that does not resolve, an atom that does not parse, a quantifier over an empty domain, a predicate that cannot judge its referent), combining atoms with Kleene AND and OR. Internal; no public API change.
+- No behaviour change: `conditionTriggers` is exactly "the condition is true". The full suite, a digest of every issue on the extracted spec examples and the test fixtures under both locales, and the spec-example registry check (138 entries, 0 mismatched) are unchanged.
+
 ### Added — P4: expressible conditions
 
 - `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. A separate `init` overload; the released initialisers are unchanged (ADR-014).
