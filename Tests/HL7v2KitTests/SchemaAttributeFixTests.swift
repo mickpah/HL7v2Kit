@@ -125,4 +125,20 @@ struct SchemaAttributeFixTests {
         let issues = try Validator().validate(Parser().parse(wire)).issues
         #expect(issues.contains { $0.code == .cardinalityExceeded && $0.location.segmentID == "PCR" && $0.location.fieldIndex == 9 })
     }
+
+    // P6-12: lengths the extractor now reads where a right-aligned LEN cell sat nearer the DT
+    // header (v2.6 STF, GOL), a "C_LEN" header (v2.8.2 DG1), or where the M25 sweep had
+    // recorded a wrong value (v2.6 OBX-5 "24", v2.5.1 OBX-6 "6", v2.8.2 OBX-2 "2..2", and
+    // v2.6 UAC-1 "7 05", the 705 that pdftotext splits).
+    @Test("P6-12 lengths follow the printed LEN and C.LEN cells")
+    func p612PrintedLengths() {
+        #expect(SegmentGrammarTable.v2_6["STF"]?.field(4)?.length == "2")
+        #expect(SegmentGrammarTable.v2_6["STF"]?.field(31)?.length == "8")
+        #expect(SegmentGrammarTable.v2_6["GOL"]?.field(1)?.length == "2")
+        #expect(SegmentGrammarTable.v2_6["UAC"]?.field(1)?.length == "705")
+        #expect(SegmentGrammarTable.v2_6["OBX"]?.field(5)?.length == "*")
+        #expect(SegmentGrammarTable.v2_5_1["OBX"]?.field(6)?.length == "250")
+        #expect(SegmentGrammarTable.v2_8_2["OBX"]?.field(2)?.length == "2..3")
+        #expect(SegmentGrammarTable.v2_8_2["DG1"]?.field(15)?.length == "2=")
+    }
 }

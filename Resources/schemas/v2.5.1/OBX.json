@@ -52,7 +52,7 @@
       "index": 6,
       "swiftName": "units",
       "name": "Units",
-      "dataType": "CE", "length": "6",
+      "dataType": "CE", "length": "250",
       "optionality": "O",
       "repeatability": "1"
     },

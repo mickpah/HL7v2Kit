@@ -56,7 +56,7 @@ def check_blank_defining_cell_falls_back():
 
 def check_whitelists_cite():
     for name in ("OPTIONALITY_WHITELIST", "REPEATABILITY_WHITELIST",
-                 "LENGTH_WHITELIST", "DATATYPE_WHITELIST"):
+                 "LENGTH_WHITELIST", "DATATYPE_WHITELIST", "UNREADABLE_WHITELIST"):
         wl = getattr(audit, name)
         assert isinstance(wl, dict), f"{name} must map each entry to its spec citation"
         for key, why in wl.items():
@@ -259,11 +259,71 @@ def check_repeatability_token_rule():
         assert not ok.fullmatch(bad), bad
 
 
+def check_unreadable_is_reported():
+    # P6-12: M19 / M22 / M25 used to `continue` silently when printed_for() came back empty
+    # (152 M19 slots, 2088 M25 slots), and M22 counted any extracted token as a print.
+    rows = audit.defining_rows([("NST", [{"index": 1, "optionality": "R", "len": "1",
+                                          "repeatability": "1"},
+                                         {"index": 2, "optionality": "", "len": "30",
+                                          "repeatability": "?0244"},
+                                         {"index": 3, "optionality": "60", "len": "7 05",
+                                          "repeatability": "1"},
+                                         {"index": 4, "optionality": "W", "len": "",
+                                          "repeatability": "1"}])])
+    read = lambda i, a, v="v2.4": audit.read_slot(rows, {}, "NST", i, a, v)
+    assert read(1, "M19") == ({"R"}, None)
+    assert read(2, "M19") == (set(), "blank cell"), "a blank OPT cell is not a print"
+    assert read(9, "M19") == (set(), "no extracted row")
+    assert read(3, "M19")[1].startswith("malformed"), "a number under OPT is a misread"
+    assert read(3, "M25")[1].startswith("malformed"), "'7 05' is not a length"
+    assert read(2, "M22")[1].startswith("malformed"), "a TBL# bleed must never match '*'"
+    assert read(4, "M25") == ({""}, None), "a withdrawn field prints no length"
+    assert read(2, "M25", "v2.8.2") == ({"30"}, None)
+    blank = audit.defining_rows([("EVN", [{"index": 2, "optionality": "R", "len": ""}])])
+    assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.8.2") == ({""}, None), \
+        "v2.8.2 prints LEN and C.LEN only if applicable (2.5.3.2)"
+    assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.6")[1] == "blank cell"
+    assert audit.unreadable_whitelisted("M19", "v2.6", "SCD", 37)
+    assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 38)
+    assert not audit.unreadable_whitelisted("M25", "v2.6", "SCD", 1)
+
+
+def check_length_token():
+    ok = audit.LENGTH_TOKEN
+    for good in ("4", "65536", "99999", "64K", "10k", "1..4", "0..1", "250#", "20="):
+        assert ok.fullmatch(good), good
+    for bad in ("", "0", "655362", "7 05", "2..", "=", "4..", "MRN", "1..4#"):
+        assert not ok.fullmatch(bad), bad
+
+
+def check_write_lengths():
+    # P6-12: write_lengths used to strip every `length` in the file before writing the listed
+    # ones, so a partial sweep dropped the rest.
+    import tempfile
+    one = ('{ "fields": [\n    { "index": 1, "dataType": "SI", "length": "4", "optionality": "R" },\n'
+           '    { "index": 2, "dataType": "ST", "length": "6", "optionality": "O" },\n'
+           '    { "index": 3, "dataType": "CWE", "length": "9", "optionality": "O" }\n] }\n')
+    multi = ('{ "fields": [\n    {\n      "index": 1,\n      "dataType": "CE", "length": "6",\n'
+             '      "optionality": "O"\n    },\n    {\n      "index": 2,\n      "dataType": "ST",\n'
+             '      "optionality": "O"\n    }\n] }\n')
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "x.json")
+        open(path, "w").write(one)
+        audit.write_lengths(path, {2: "250", 3: ""})
+        got = {f["index"]: f.get("length") for f in audit.json.load(open(path))["fields"]}
+        assert got == {1: "4", 2: "250", 3: None}, got
+        open(path, "w").write(multi)
+        audit.write_lengths(path, {1: "250", 2: "60"})
+        got = {f["index"]: f.get("length") for f in audit.json.load(open(path))["fields"]}
+        assert got == {1: "250", 2: "60"}, got
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
           check_condition_predicate, check_swift_name, check_swift_name_uniqueness,
-          check_element_name, check_repeatability_defining_table, check_repeatability_token_rule]
+          check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
+          check_unreadable_is_reported, check_length_token, check_write_lengths]
 
 
 def main():

@@ -206,17 +206,94 @@ REPEATABILITY_WHITELIST = {
 # field's own footnote overrides it: v2.3 CH7 (p. 7-30) footnote 2 and v2.3.1 CH7 (p. 7-35)
 # footnote 3 both read "The length of the observation value field is variable, depending
 # upon value type. See OBX-2-value type." The schema keeps the variable-length placeholder
-# `*`, matching the DT column's own printed `*` (P6-2 / pre-flight ruling d4).
+# `*`, matching the DT column's own printed `*` (P6-2 / pre-flight ruling d4). v2.4 to v2.6 print
+# the same footnote over 65536 / 99999 (P6-12). v2.3's "655362" fails LENGTH_TOKEN, so its entry
+# lives in UNREADABLE_WHITELIST.
 LENGTH_WHITELIST = {
-    ("v2.3", "OBX", 5): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
-                       "observation value field is variable, depending upon value type. "
-                       "See OBX-2-value type.' LEN cell prints 65536 (OCR-glued to its "
-                       "footnote marker as 655362); schema keeps the variable-length `*`",
     ("v2.3.1", "OBX", 5): "v2.3.1 Figure 7-5 (p. 7-35) footnote 3: 'The length of the "
                          "observation value field is variable, depending upon value type. "
                          "See OBX-2-value type.' LEN cell prints 65536 (footnote marker "
                          "glued on); schema keeps the variable-length `*`",
+    ("v2.4", "OBX", 5): "v2.4 CH07 section 7.4.2 OBX attribute table footnote 1: 'The length of "
+                       "the observation field is variable, depending upon value type. See OBX-2 "
+                       "value type.' LEN cell prints 65536; schema keeps the variable-length `*` "
+                       "(P6-12)",
+    ("v2.5.1", "OBX", 5): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) footnote 1: 'The "
+                         "length of the observation field is variable, depending upon value type. "
+                         "See OBX-2 value type.' LEN cell prints 99999 (wrapped as 9999 / 9), the "
+                         "section 2.5.3.2 symbol for a variable length; schema keeps `*` (P6-12)",
+    ("v2.6", "OBX", 5): "v2.6 CH07 section 7.4.2 OBX attribute table footnote 1: 'The length of the "
+                       "observation field is variable, depending upon value type. See OBX-2 value "
+                       "type.' LEN cell prints 99999, the section 2.5.3.2 c) symbol for a variable "
+                       "length; schema keeps `*` (P6-12; the M25 sweep had written 24)",
 }
+
+# P6-12: slots M19 / M22 / M25 cannot compare (see read_slot) are reported unless listed here,
+# keyed (audit, version, segment, first index, last index) -> the spec citation for why the
+# printed cell cannot be read. A blank cell that the spec prints is listed with what the
+# schema models instead.
+BLANK_OPT = "the spec defines no blank OPT code (v2.6 section 2.5.3.4); schema models O"
+UNREADABLE_WHITELIST = {
+    ("M19", "v2.3", "AIG", 2, 2): "v2.3 CH10 section 10.5.5 Figure 10-7 AIG attributes (p. 10-42) "
+                                 "prints the R/O/C cell of Segment Action Code blank; schema "
+                                 "keeps the blank",
+    ("M19", "v2.3.1", "NST", 2, 15): "v2.3.1 Appendix C section C.2.2 Figure C-2 NST attributes prints "
+                                    "OPT blank for every field after NST-1; %s",
+    ("M19", "v2.4", "EDU", 2, 2): "v2.4 CH15 section 15.4.2 EDU attribute table (p. 15-10) prints "
+                                 "OPT blank for Academic Degree; %s",
+    ("M19", "v2.4", "NSC", 2, 9): "v2.4 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints OPT "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.4", "NST", 2, 15): "v2.4 CH14 section 14.4.3 NST attribute table (p. 14-7) prints OPT "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.4", "RCP", 7, 7): "v2.4 CH05 section 5.5.5 RCP attribute table (p. 5-51) prints OPT "
+                                 "(and TBL#) blank for Segment group inclusion; schema keeps the "
+                                 "blank (see the v2.4/RCP-7 table repair)",
+    ("M19", "v2.5.1", "NSC", 2, 9): "v2.5.1 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints "
+                                   "OPT blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.5.1", "NST", 2, 15): "v2.5.1 CH14 section 14.4.3 NST attribute table (p. 14-7) prints "
+                                    "OPT blank for NST-2 to NST-15; %s",
+    ("M19", "v2.5.1", "OBX", 20, 22): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+                                     "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
+                                     "every column blank; schema models X with no data type",
+    ("M25", "v2.5.1", "OBX", 20, 22): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+                                     "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
+                                     "every column blank; schema carries no length",
+    ("M19", "v2.5.1", "RCP", 7, 7): "v2.5.1 CH05 section 5.5.6 RCP attribute table (p. 5-48) prints "
+                                   "OPT (and TBL#) blank for Segment group inclusion; schema keeps "
+                                   "the blank (see the v2.5.1/RCP-7 table repair)",
+    ("M19", "v2.6", "NSC", 2, 9): "v2.6 CH14 section 14.4.2 NSC attribute table (p. 14-4) prints OPT "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.6", "NST", 2, 15): "v2.6 CH14 section 14.4.3 NST attribute table (p. 14-6) prints OPT "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.6", "RCP", 7, 7): "v2.6 CH05 section 5.5.6 RCP attribute table prints OPT (and TBL#) "
+                                 "blank for Segment group inclusion; schema keeps the blank",
+    ("M19", "v2.6", "PKG", 4, 4): "v2.6 CH17 section 17.4.5 PKG attribute table (p. 17-17) prints OPT "
+                                 "blank for Package Quantity; %s",
+    ("M19", "v2.6", "STZ", 1, 4): "v2.6 CH17 section 17.4.3 STZ attribute table (p. 17-15) prints OPT "
+                                 "blank for every field; %s",
+    ("M19", "v2.6", "SCP", 1, 8): "v2.6 CH17 section 17.7.1 SCP attribute table (p. 17-30) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SLT", 1, 5): "v2.6 CH17 section 17.7.2 SLT attribute table (p. 17-32) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SDD", 1, 7): "v2.6 CH17 section 17.7.3 SDD attribute table (p. 17-33) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.6", "SCD", 1, 37): "v2.6 CH17 section 17.7.4 SCD attribute table (p. 17-34) prints "
+                                  "R/O/C blank for every field; %s",
+    ("M22", "v2.8.2", "BUI", 12, 12): "v2.8.2 CH04 section 4.17.2 BUI attribute table prints RP/# 'R' "
+                                     "for Transport Temperature Units (every other row prints N); R "
+                                     "is not an RP/# value (section 2.5.3.5) and 4.17.2.12 says "
+                                     "nothing of repetition; schema '1'",
+    ("M25", "v2.3", "OBX", 5, 5): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
+                                 "observation value field is variable, depending upon value type. "
+                                 "See OBX-2-value type.' LEN cell prints 65536, read as 655362 "
+                                 "with the footnote marker glued on; schema keeps the "
+                                 "variable-length `*`",
+    ("M25", "v2.8.2", "TQ2", 6, 6): "v2.8.2 CH04 section 4.5.5 TQ2 attribute table prints LEN '2..' "
+                                   "for Sequence Condition Code, a range with no maximum (section "
+                                   "2.5.5 prints min..max); schema keeps '2..' verbatim, and how it "
+                                   "validates is P6-6's to decide",
+}
+UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREADABLE_WHITELIST.items()}
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
@@ -231,6 +308,10 @@ TABLE_REPAIRS = ({k: v["tables"] for k, v in json.load(open(TABLE_REPAIRS_PATH))
 # shift defeats the extractor (v2.3.1 PCR, p. 7-96). M22 compares against it instead.
 REPEATABILITY_REPAIRS = ({k: v["repeatability"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()
                           if "repeatability" in v} if os.path.exists(TABLE_REPAIRS_PATH) else {})
+# P6-12: an entry's optional "length" pins the printed LEN cell where the print itself defeats
+# pdftotext (v2.6 UAC-1 "705" renders as "7 05"). M25 compares against it instead.
+LENGTH_REPAIRS = ({k: v["length"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()
+                   if "length" in v} if os.path.exists(TABLE_REPAIRS_PATH) else {})
 
 
 def expected_tables(version, seg, index, raw_cells):
@@ -611,6 +692,50 @@ def printed_for(defining, union, seg, index, key):
     return {cell} if cell else union.get((seg, index), set())
 
 
+# P6-12: the printed shapes each audited column may take. A defining-table cell that is not one
+# of these is a misread (a neighbouring column bled in, a footnote marker glued on), and must
+# never count as a match: the slot is reported as UNREADABLE instead. OPT: v2.6 section 2.5.3.4
+# (the extractor reduces "(B) R" and v2.7+ "C(a/b)" to B and C). LEN: a number (v2.6 section
+# 2.5.3.2), the "64K" abbreviation used before v2.4, or the v2.7+ range "m..n" and conformance
+# length "n=" / "n#" (v2.8.2 sections 2.5.5.1 to 2.5.5.3).
+OPTIONALITY_TOKEN = re.compile(r"[ROCXBW]")
+LENGTH_TOKEN = re.compile(r"[1-9]\d{0,4}|[1-9]\d?[kK]|\d+\.\.[1-9]\d*|[1-9]\d*[=#]")
+AUDIT_TOKENS = {"M19": ("optionality", OPTIONALITY_TOKEN), "M22": ("repeatability", None),
+                "M25": ("len", LENGTH_TOKEN)}
+
+
+def blank_length_is_print(version, row):
+    """M25. True where a blank LEN cell in a parsed row is itself the print. v2.8.2: LEN and
+    C.LEN are printed only "if applicable" (sections 2.5.3.2 and 2.5.3.3), and a field without
+    them takes its data type's (2.5.5.4); composite types carry none. Every version: a withdrawn
+    field (OPT W, v2.6 section 2.5.3.4) prints no length and no data type."""
+    return version == "v2.8.2" or (row.get("optionality") or "").strip() == "W"
+
+
+def read_slot(defining, union, seg, index, audit, version):
+    """P6-12. (printed, unreadable): the values a schema attribute is compared against, or the
+    reason the slot cannot be compared. Nothing is skipped silently: a slot with no defining
+    row, a blank defining cell that is not itself a print, or a print outside the column's
+    shape (AUDIT_TOKENS; REPEATABILITY_TOKEN for M22) comes back unreadable."""
+    key, token = AUDIT_TOKENS[audit]
+    token = token or REPEATABILITY_TOKEN
+    printed = printed_for(defining, union, seg, index, key)
+    if printed:
+        bad = sorted(p for p in printed if not token.fullmatch(p))
+        return (set(), f"malformed print {bad}") if bad else (printed, None)
+    row = defining.get(seg, {}).get(index)
+    if row is None:
+        return set(), "no extracted row"
+    if audit == "M25" and blank_length_is_print(version, row):
+        return {""}, None
+    return set(), "blank cell"
+
+
+def unreadable_whitelisted(audit, version, seg, index):
+    return any(a == audit and v == version and s == seg and lo <= index <= hi
+               for (a, v, s, lo, hi) in UNREADABLE_WHITELIST)
+
+
 def optionality_finding(have, printed):
     """M19. True when the schema's OPT is none of the printed codes. C is compared like every
     other code (X-C10 / V26-C07): a printed C modelled O, or a printed O modelled C, is a
@@ -695,16 +820,25 @@ def write_names(path, wanted):
 
 
 def write_lengths(path, wanted):
-    """Insert or replace each listed field's `length` right after its `dataType`, textually."""
+    """Set each listed field's `length` right after its `dataType`, textually; an empty wanted
+    value removes it (a blank print, P6-12). Fields not listed keep theirs: the old version
+    stripped every `length` in the file first, so a partial sweep dropped the rest. A field's
+    span runs from its `"index"` key to the next one, so one-line and multi-line schemas both
+    work."""
     text = open(path, encoding="utf-8").read()
-    text = re.sub(r',\s*"length"\s*:\s*"[^"]*"', "", text)
-    out, pos, index = [], 0, None
-    for m in re.finditer(r'"index"\s*:\s*(\d+)|"dataType"\s*:\s*"[^"]*"', text):
-        if m.group(1):
-            index = int(m.group(1))
-        elif index in wanted:
-            out.append(text[pos:m.end()] + f', "length": {json.dumps(wanted.pop(index))}')
-            pos = m.end()
+    starts = [m for m in re.finditer(r'"index"\s*:\s*(\d+)', text)]
+    out, pos = [], 0
+    for n, m in enumerate(starts):
+        if int(m.group(1)) not in wanted:
+            continue
+        end = starts[n + 1].start() if n + 1 < len(starts) else len(text)
+        span = re.sub(r',\s*"length"\s*:\s*"[^"]*"', "", text[m.start():end])
+        value = wanted.pop(int(m.group(1)))
+        if value:
+            span = re.sub(r'("dataType"\s*:\s*"[^"]*")',
+                          lambda d: d.group(1) + f', "length": {json.dumps(value)}', span, count=1)
+        out.append(text[pos:m.start()] + span)
+        pos = end
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
@@ -727,8 +861,9 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
     if not os.path.isdir(STANDARDS):
         print("docs/standards/ absent — skipping the depth pass (author-local PDFs).")
-        return [], [], 0, [], {}, [], [], [], [], [], [], []
+        return [], [], 0, [], {}, [], [], [], [], [], [], [], []
     gaps, suspects, exact, presence, backlog, deferred = [], [], 0, [], {}, []
+    unreadable = []   # P6-12: (audit, version, seg, index, schema value, why) for M19/M22/M25
     datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings = [], [], [], [], [], []
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
@@ -803,9 +938,17 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             # must be what the version's DEFINING attribute table prints (V23-C13), not any
             # chapter's variant print.
             for f in schema_fields:
-                printed = printed_for(spec_def, spec_lens, seg, f["index"], "len")
                 have = (f.get("length") or "").strip()
-                if not printed or have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
+                key = f"{version}/{seg}-{f['index']}"
+                if key in LENGTH_REPAIRS:
+                    printed, why = {LENGTH_REPAIRS[key]}, None
+                else:
+                    printed, why = read_slot(spec_def, spec_lens, seg, f["index"], "M25", version)
+                if why:
+                    if not unreadable_whitelisted("M25", version, seg, f["index"]):
+                        unreadable.append(("M25", version, seg, f["index"], have, why))
+                    continue
+                if have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
                     continue
                 if record_lengths:
                     wanted_lengths.setdefault(path, {})[f["index"]] = sorted(printed, key=lambda x: (len(x), x))[0]
@@ -819,10 +962,16 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             # constrained copy that misreads a cell no longer hides a bound (P6-4 fix 1).
             for f in schema_fields:
                 key = f"{version}/{seg}-{f['index']}"
-                printed = ({REPEATABILITY_REPAIRS[key]} if key in REPEATABILITY_REPAIRS
-                           else printed_for(spec_def, spec_reps, seg, f["index"], "repeatability"))
                 have = (f.get("repeatability") or "").strip()
-                if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
+                if key in REPEATABILITY_REPAIRS:
+                    printed, why = {REPEATABILITY_REPAIRS[key]}, None
+                else:
+                    printed, why = read_slot(spec_def, spec_reps, seg, f["index"], "M22", version)
+                if why:
+                    if not unreadable_whitelisted("M22", version, seg, f["index"]):
+                        unreadable.append(("M22", version, seg, f["index"], have, why))
+                    continue
+                if have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
                     continue
                 if record_repeatability and len(printed) == 1:
                     wanted_reps.setdefault(path, {})[f["index"]] = next(iter(printed))
@@ -854,8 +1003,12 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             # `optionalityCitation` or an OPTIONALITY_WHITELIST entry cites the spec; a
             # citation on a slot that matches the print is a finding too (P4-30).
             for f in schema_fields:
-                printed = printed_for(spec_def, spec_opts, seg, f["index"], "optionality")
                 have = (f.get("optionality") or "").strip()
+                printed, why = read_slot(spec_def, spec_opts, seg, f["index"], "M19", version)
+                if why:
+                    if not unreadable_whitelisted("M19", version, seg, f["index"]):
+                        unreadable.append(("M19", version, seg, f["index"], have, why))
+                    continue
                 problem = optionality_citation_finding(
                     have, printed, f.get("optionalityCitation"),
                     (version, seg, f["index"]) in OPTIONALITY_WHITELIST)
@@ -892,7 +1045,7 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
         write_repeatability(path, dict(wanted))
     if wanted_reps:
         print(f"  repeatability written in {len(wanted_reps)} schemas", file=sys.stderr)
-    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings
+    return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings, unreadable
 
 
 def extracted_tables(version):
@@ -1327,7 +1480,7 @@ def main():
 
     rc = 1 if bad else 0
     if args.depth:
-        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings = depth(
+        gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings, unreadable = depth(
             write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths,
             record_repeatability=args.write_repeatability, versions=args.only_version)
         cap = None if args.only_version else 60
@@ -1362,10 +1515,14 @@ def main():
         print(f"\n== repeatability (M22): {len(rp_findings)} findings")
         for v, seg, idx, got, want in rp_findings[:60]:
             print(f"   RP       {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
+        print(f"\n== unreadable prints (M19/M22/M25): {len(unreadable)} findings "
+              f"({len(UNREADABLE_WHITELIST)} cited regions)")
+        for audit_id, v, seg, idx, got, why in unreadable[:cap]:
+            print(f"   UNREAD   {audit_id} {v} {seg}-{idx}: schema {got!r}, {why}")
         print(f"\n== length (M25): {len(len_findings)} findings")
         for v, seg, idx, got, want in len_findings[:cap]:
             print(f"   LEN      {v} {seg}-{idx}: schema {got!r}, spec prints {want}")
-        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings:
+        if gaps or suspects or presence or dt_findings or tbl_findings or opt_findings or name_findings or rp_findings or len_findings or unreadable:
             rc = 1
 
     if args.tables:

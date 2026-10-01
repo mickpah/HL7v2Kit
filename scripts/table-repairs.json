@@ -189,5 +189,12 @@
       "0372"
     ],
     "cite": "v2.5.1 CH13 SAC attribute table prints TBL# blank for Specimen Component; sec 13.4.3.28 says 'Refer to User-defined Table 0372 - Specimen component' and prints it (V251-C07)."
+  },
+  "v2.6/UAC-1": {
+    "tables": [
+      "0615"
+    ],
+    "cite": "v2.6 CH02 sec 2.14.13 UAC attribute table (p. 71): the LEN cell for User Authentication Credential Type Code is 705 (the CWE maximum used throughout v2.6), but pdftotext -layout renders it '7 05' and -raw '7 0 5', the middle glyph set off its baseline. TBL# 0615 as printed (P6-12)",
+    "length": "705"
   }
 }

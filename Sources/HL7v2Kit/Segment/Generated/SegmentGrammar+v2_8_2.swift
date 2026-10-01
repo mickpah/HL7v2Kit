@@ -854,7 +854,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 12, name: "Outlier Days", dataType: "NM", optionality: .withdrawn, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 13, name: "Outlier Cost", dataType: "CP", optionality: .withdrawn, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 14, name: "Grouper Version And Type", dataType: "ST", optionality: .withdrawn, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 15, name: "Diagnosis Priority", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 15, name: "Diagnosis Priority", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "2="),
             FieldGrammar(index: 16, name: "Diagnosing Clinician", dataType: "XCN", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 17, name: "Diagnosis Classification", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 18, name: "Confidential Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1..1"),
@@ -2144,7 +2144,7 @@ extension SegmentGrammarTable {
         version: "2.8.2",
         fields: [
             FieldGrammar(index: 1, name: "Set ID - OBX", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "1..4"),
-            FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X", prohibitedWhen: nil, variableColumns: false, table: "0125", length: "2..2", additionalProhibitions: [FieldProhibition(condition: "OBX-11 = O", severity: .error, permitsNull: true)]),
+            FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X", prohibitedWhen: nil, variableColumns: false, table: "0125", length: "2..3", additionalProhibitions: [FieldProhibition(condition: "OBX-11 = O", severity: .error, permitsNull: true)]),
             FieldGrammar(index: 3, name: "Observation Identifier", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 4, name: "Observation Sub-ID", dataType: "OG", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "20="),
             FieldGrammar(index: 5, name: "Observation Value", dataType: "varies", optionality: .conditional, repeatability: .multiple, condition: "OBX-11 = O", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil, additionalProhibitions: [FieldProhibition(condition: "OBX-11 = O", severity: .error, permitsNull: true)]),

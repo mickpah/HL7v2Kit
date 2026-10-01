@@ -17,7 +17,7 @@
     { "index": 12, "swiftName": "outlierDays", "name": "Outlier Days", "dataType": "NM", "optionality": "W", "repeatability": "1" },
     { "index": 13, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "optionality": "W", "repeatability": "1" },
     { "index": 14, "swiftName": "grouperVersionAndType", "name": "Grouper Version And Type", "dataType": "ST", "optionality": "W", "repeatability": "1" },
-    { "index": 15, "swiftName": "diagnosisPriority", "name": "Diagnosis Priority", "dataType": "NM", "optionality": "O", "repeatability": "1", "tables": ["0359"] },
+    { "index": 15, "swiftName": "diagnosisPriority", "name": "Diagnosis Priority", "dataType": "NM", "length": "2=", "optionality": "O", "repeatability": "1", "tables": ["0359"] },
     { "index": 16, "swiftName": "diagnosingClinician", "name": "Diagnosing Clinician", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
     { "index": 17, "swiftName": "diagnosisClassification", "name": "Diagnosis Classification", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0228"] },
     { "index": 18, "swiftName": "confidentialIndicator", "name": "Confidential Indicator", "dataType": "ID", "length": "1..1", "table": "0136", "optionality": "O", "repeatability": "1", "tables": ["0136"] },

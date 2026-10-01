@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-12: audits report unreadable prints; printed lengths read
+
+- The schema audit's optionality (M19), repeatability (M22) and length (M25)
+  passes no longer skip a slot they cannot read. A slot with no extracted
+  row, a blank cell that is not itself a print, or a cell outside the
+  column's printed shapes is reported as unreadable, unless a cited
+  `UNREADABLE_WHITELIST` entry names it (23 regions: blank OPT cells in
+  NST, NSC, SCD, SCP, SDD, SLT, STZ and others, v2.5.1 OBX-20 to 22, v2.8.2
+  BUI-12 RP 'R', v2.8.2 TQ2-6 LEN '2..'). A TBL# number bled into RP/# is
+  now unreadable instead of `*`.
+- A blank LEN is compared as a print where the spec makes it one: v2.8.2
+  (LEN and C.LEN are printed "if applicable", sections 2.5.3.2 and 2.5.5.4)
+  and withdrawn fields. M25 now compares 2,048 v2.8.2 slots it used to
+  skip.
+- The segment-table extractor reads a right-aligned LEN cell that sat
+  nearer the DT header, the v2.8.2 `C_LEN` header, and a bare OPT code set
+  right of its header (v2.6 BLC). It emits C.LEN separately as `clen`.
+- Lengths corrected from the print: v2.6 STF-4, 5, 7, 21, 23 to 26, 29, 31,
+  32, 35 and GOL-1 (previously absent), v2.6 UAC-1 705 (was `7 05`), v2.6
+  OBX-5 `*` (was 24; footnote 1 makes it variable), v2.5.1 OBX-6 250 (was
+  6), v2.8.2 OBX-2 2..3 (was 2..2), v2.8.2 DG1-15 2= (previously absent).
+- `--write-lengths` now changes only the listed fields; it used to strip
+  every other field's length in the same schema.
+
 ### Added — P6-4: bounded repetition counts
 
 - `FieldGrammar.maxRepetitions: Int?` (additive, via a separate `init`

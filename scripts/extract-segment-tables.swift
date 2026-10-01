@@ -12,7 +12,8 @@
 //   swift extract-segment-tables.swift <chapter.pdf> [SEGID]
 //     SEGID (optional) filters to one segment's table (e.g. NK1).
 //
-// The RP/# column maps to repeatability: "Y" -> "*", a printed bound ("Y/3", "3") -> "3", blank -> "1".
+// The RP/# column maps to repeatability: "Y" -> "*", a printed bound ("Y/3", "3") -> "3", blank -> "1",
+// and a cell it cannot read -> "?" + the cell (P6-12). "len" is LEN, else C.LEN; "clen" is C.LEN.
 
 import Foundation
 
@@ -46,7 +47,7 @@ struct Column { let key: String; let start: Int }
 let headerKeys: [(key: String, patterns: [String])] = [
     ("SEQ",  ["SEQ"]),
     ("LEN",  ["LEN"]),
-    ("CLEN", ["C.LEN", "C.LEN."]),
+    ("CLEN", ["C.LEN", "C_LEN", "C. LEN"]),   // v2.8.2 CH06 DG1 prints "C_LEN" (P6-12)
     ("DT",   ["DT"]),
     ("OPT",  ["OPT", "R/O/C", "R/O"]),   // some legacy chapters (e.g. v2.3 CH10) label it "R/O/C"
     ("RP",   ["RP/#", "R P/#", "RP/ #", "RP/"]),   // v2.3 CH7 wraps the "#": header reads "RP/" — without it the RP column vanishes and its "Y" cells land in OPT (FAC-5..8)
@@ -83,7 +84,8 @@ func detectHeader(_ line: String) -> [Column]? {
 
 struct FieldRow {
     var seq: Int
-    var len: String = ""
+    var len: String = ""      // LEN, else C.LEN when LEN is blank (the schema convention)
+    var clen: String = ""     // C.LEN verbatim (v2.7+), empty before v2.7
     var dt: String = ""
     var opt: String = ""
     var rp: String = ""
@@ -186,7 +188,15 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         switch columnKey(forStart: r.start, columns: columns) {
         case "SEQ": break
         case "LEN": row.len = r.text
-        case "CLEN": row.len = row.len.isEmpty ? r.text : row.len
+        case "CLEN": row.clen = r.text
+        // P6-12: a right-aligned LEN or C.LEN value can sit nearer the DT (or RP/#) header
+        // than its own (v2.6 STF-4 "2", GOL-1 "2"; v2.8.2 OBX-4 "20="). A data type is never
+        // a number, so a length-shaped run binned under DT is a length; under RP/# only an
+        // unmistakable length shape (a range, "=" or "#") is moved, since a bare number there
+        // is a repetition bound.
+        case "DT" where isLengthShape(r.text, bareNumber: true),
+             "RP" where isLengthShape(r.text, bareNumber: false):
+            assignLength(r.text, to: &row)
         case "DT": row.dt = r.text
         case "OPT": row.opt = r.text
         case "RP": row.rp = r.text
@@ -200,6 +210,13 @@ func parseRow(_ raw: String, columns: [Column]) -> FieldRow? {
         default: break
         }
     }
+    // P6-12: a bare optionality code under RP/# with the OPT cell empty is the OPT cell set
+    // right of its header (v2.6 CH06 BLC-1/-2 print "O" between OPT and RP/#). RP/# never
+    // holds an optionality code.
+    if row.opt.isEmpty, ["R", "O", "C", "X", "B", "W"].contains(row.rp.uppercased()) {
+        row.opt = row.rp.uppercased(); row.rp = ""
+    }
+    if row.len.isEmpty { row.len = row.clen }
     row.opt = normalizeOptionality(row.opt)
     // No slack when anchoring on a metadata run's end — 2 columns of slack would pull the
     // tail of the item number into the name.
@@ -232,12 +249,33 @@ func normalizeName(_ s: String) -> String {
 // Normalise the OPT cell. HL7 attribute tables sometimes render a backward-compat
 // marker as "(B)" alone or compounded with the historical letter ("(B) R"); the
 // effective single-letter optionality of such a field is B. Otherwise keep the letter.
+// P6-12: only the printed shapes are read; anything else is returned verbatim so the audit's
+// OPTIONALITY_TOKEN check reports it as unreadable instead of it silently becoming a code
+// (the old rule kept the first R/O/C/X/W/B letter of any text, so a DT "CE" read as "C").
+// Printed shapes: a bare code; "(B) R" (v2.3-v2.5.1 DG1-2 / PR1-2, backward compatible);
+// "C(a/b)" (v2.7+ conditional with its true/false optionality, cut at a wrap as "C(R/O").
 func normalizeOptionality(_ raw: String) -> String {
-    let t = raw.trimmingCharacters(in: .whitespaces)
-    if t.contains("(B)") || t.uppercased() == "B" { return "B" }
-    // strip any stray parentheses, keep the first R/O/C/X/W/B token
-    let letters = t.uppercased().filter { "ROCXWB".contains($0) }
-    return letters.isEmpty ? t : String(letters.first!)
+    let t = raw.trimmingCharacters(in: .whitespaces).uppercased()
+    if ["R", "O", "C", "X", "B", "W"].contains(t) { return t }
+    if t.range(of: #"^\(B\)\s*[ROCX]?$"#, options: .regularExpression) != nil { return "B" }
+    if t.range(of: #"^C\([ROCXBW]/[ROCXBW]\)?$"#, options: .regularExpression) != nil { return "C" }
+    return raw.trimmingCharacters(in: .whitespaces)
+}
+
+// A LEN or C.LEN print: a number, a "64K"-style abbreviation (before v2.4), a v2.7+ range
+// ("1..4"), or a conformance length with its truncation flag ("250#", "20="). A bare number
+// counts only where the column cannot hold one (DT).
+func isLengthShape(_ text: String, bareNumber: Bool) -> Bool {
+    if text.range(of: #"^[0-9]+(\.\.[0-9]*|[=#])$"#, options: .regularExpression) != nil { return true }
+    return bareNumber && text.range(of: #"^[0-9]+[kK]?$"#, options: .regularExpression) != nil
+}
+
+// A displaced length goes to C.LEN when it carries a truncation flag, else to LEN; a slot
+// already read from its own column is never overwritten.
+func assignLength(_ text: String, to row: inout FieldRow) {
+    if text.hasSuffix("=") || text.hasSuffix("#") {
+        if row.clen.isEmpty { row.clen = text } else if row.len.isEmpty { row.len = text }
+    } else if row.len.isEmpty { row.len = text } else if row.clen.isEmpty { row.clen = text }
 }
 
 // Append a no-SEQ continuation line to the last row: numeric fragments left of the
@@ -343,9 +381,11 @@ func isNameContinuation(_ cont: String, currentName: String) -> Bool {
 //   - "Y" + one footnote digit ("Y3" v2.3 CH7, "Y4" v2.3.1, OBX-5) -> "*";
 //   - a LEN cell bled into the column ("20=", "2..2", "250#"; v2.8.2 CH07 OBX-4/-13) -> "1",
 //     since the RP cell itself was blank;
-//   - an OPT or DT code bled in ("R", "O", "CE") -> "1";
-//   - four or more digits is a TBL# number bled in (see scripts/table-repairs.json), kept as
-//     "*" exactly as before so M22 and the repairs keep seeing it.
+//   - anything else is UNREADABLE (P6-12): "?" + the cell, which the audit's
+//     REPEATABILITY_TOKEN rejects and reports, so a misread can never silently match. That
+//     covers four or more digits (a TBL# number bled in; the v2.3.1 PCR rows are pinned in
+//     scripts/table-repairs.json), a stray OPT or DT code ("R" in v2.8.2 BUI-12, "CE"), and
+//     any other shape. Before P6-12 these read as "*" or "1".
 func repeatability(_ rp: String) -> String {
     let t = rp.trimmingCharacters(in: .whitespaces).uppercased()
     if t.isEmpty || t == "N" { return "1" }
@@ -362,23 +402,58 @@ func repeatability(_ rp: String) -> String {
     }
     let tail = t.split(separator: "/").last.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
     if tail.count <= 3, let n = Int(tail) { return n > 1 ? String(n) : "1" }
-    if t.contains("Y") || t.first(where: { $0.isNumber }) != nil { return "*" }
-    return "1"
+    return "?" + t
 }
 
-// Self-check of the RP/# mapping (P6-4): `extract-segment-tables.swift --self-check-rp`.
+// Self-check of the RP/# mapping (P6-4) and, from P6-12, the OPT normaliser and the LEN /
+// C.LEN / OPT column binning: `extract-segment-tables.swift --self-check-rp`.
 func selfCheckRepeatability() -> Never {
     let cases: [(String, String)] = [
         ("", "1"), ("N", "1"), ("Y", "*"), ("Y/3", "3"), ("Y/23", "23"), ("2", "2"), ("1", "1"),
         ("0-5", "5"), ("0-20", "20"), ("0 - 4", "4"), ("Y3", "*"), ("20=", "1"), ("2..2", "1"),
-        ("250#", "1"), ("R", "1"), ("CE", "1"), ("0125", "*"),
+        ("250#", "1"), ("y", "*"), ("R", "?R"), ("CE", "?CE"), ("0125", "?0125"), ("Y/", "?Y/"),
     ]
     var failed = 0
     for (raw, want) in cases where repeatability(raw) != want {
         failed += 1
         print("FAIL rp \(raw.debugDescription): got \(repeatability(raw)), want \(want)")
     }
-    print("\(cases.count - failed) passed, \(failed) failed")
+    // P6-12: OPT cells are read only in their printed shapes; anything else stays verbatim.
+    let optCases: [(String, String)] = [
+        ("R", "R"), ("o", "O"), ("W", "W"), ("(B) R", "B"), ("(B)", "B"), ("C(R/O", "C"),
+        ("C(R/O)", "C"), ("", ""), ("60", "60"), ("CE", "CE"), ("RE", "RE"),
+    ]
+    for (raw, want) in optCases where normalizeOptionality(raw) != want {
+        failed += 1
+        print("FAIL opt \(raw.debugDescription): got \(normalizeOptionality(raw)), want \(want)")
+    }
+    // P6-12: rows from the prints, through the column binning (header, row, LEN, C.LEN, DT, OPT, RP).
+    let rowCases: [(String, String, [String])] = [
+        ("   SEQ     LEN      DT     OPT     RP/#     TBL#     ITEM#    ELEMENT NAME",      // v2.6 STF-4
+         "    4           2   IS      O       Y       0182      00674   Staff Type",
+         ["2", "", "IS", "O", "Y"]),
+        ("   SEQ        LEN     DT      OPT      RP/#       TBL#         ITEM#   ELEMENT NAME",  // v2.6 BLC-1
+         "     1        250    CWE           O               0426        01528   Blood Product Code",
+         ["250", "", "CWE", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",  // v2.8.2 PID
+         "23                 250#     ST        O                          00126   Birth Place",
+         ["250#", "250#", "ST", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",
+         "24        1..1              ID        O                 0136     00127   Multiple Birth Indicator",
+         ["1..1", "", "ID", "O", ""]),
+        ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",
+         " 3                         CX        R        Y                 00106    Patient Identifier List",
+         ["", "", "CX", "R", "Y"]),
+    ]
+    for (header, line, want) in rowCases {
+        guard let cols = detectHeader(header), let r = parseRow(line, columns: cols) else {
+            failed += 1; print("FAIL row \(line.debugDescription): not parsed"); continue
+        }
+        let got = [r.len, r.clen, r.dt, r.opt, r.rp]
+        if got != want { failed += 1; print("FAIL row \(line.debugDescription): got \(got), want \(want)") }
+    }
+    let total = cases.count + optCases.count + rowCases.count
+    print("\(total - failed) passed, \(failed) failed")
     exit(failed == 0 ? 0 : 1)
 }
 
@@ -492,7 +567,7 @@ func emit(_ tables: [Table], filter: String?) {
         var fieldLines: [String] = []
         for r in t.rows {
             let rep = repeatability(r.rp)
-            fieldLines.append("    { \"index\": \(r.seq), \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(rep)\", \"len\": \"\(jsonEscape(r.len))\", \"tbl\": \"\(jsonEscape(r.tbl))\", \"item\": \"\(jsonEscape(r.item))\" }")
+            fieldLines.append("    { \"index\": \(r.seq), \"name\": \"\(jsonEscape(r.name))\", \"dataType\": \"\(jsonEscape(r.dt))\", \"optionality\": \"\(jsonEscape(r.opt))\", \"repeatability\": \"\(jsonEscape(rep))\", \"len\": \"\(jsonEscape(r.len))\", \"clen\": \"\(jsonEscape(r.clen))\", \"tbl\": \"\(jsonEscape(r.tbl))\", \"item\": \"\(jsonEscape(r.item))\" }")
         }
         let block = "{\n  \"segmentHint\": \"\(t.segHint)\",\n  \"fieldCount\": \(t.rows.count),\n  \"fields\": [\n\(fieldLines.joined(separator: ",\n"))\n  ]\n}"
         blocks.append(block)
