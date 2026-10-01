@@ -5,8 +5,8 @@
   "fields": [
     { "index": 1, "swiftName": "giveSubIdCounter", "name": "Give Sub-ID Counter", "dataType": "NM", "length": "4=", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "administrationSubIdCounter", "name": "Administration Sub-ID Counter", "dataType": "NM", "length": "4=", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "timeStartOfAdministration", "name": "Date/Time Start of Administration", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
-    { "index": 4, "swiftName": "timeEndOfAdministration", "name": "Date/Time End of Administration", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTimeStartOfAdministration", "name": "Date/Time Start of Administration", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 4, "swiftName": "dateTimeEndOfAdministration", "name": "Date/Time End of Administration", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "administeredCode", "name": "Administered Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0292"] },
     { "index": 6, "swiftName": "administeredAmount", "name": "Administered Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 7, "swiftName": "administeredUnits", "name": "Administered Units", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"] },

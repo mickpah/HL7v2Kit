@@ -25,7 +25,7 @@
     { "index": 20, "swiftName": "documentStorageStatus", "name": "Document Storage Status", "dataType": "ID", "length": "2..2", "table": "0275", "optionality": "O", "repeatability": "1", "tables": ["0275"] },
     { "index": 21, "swiftName": "documentChangeReason", "name": "Document Change Reason", "dataType": "ST", "optionality": "O", "repeatability": "1" },
     { "index": 22, "swiftName": "authenticationPersonTimeStampSet", "name": "Authentication Person, Time Stamp (set)", "dataType": "PPN", "optionality": "C", "repeatability": "*" },
-    { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipientS", "name": "Distributed Copies (Code and Name of Recipient(s) )", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
+    { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipients", "name": "Distributed Copies (Code and Name of Recipient(s) )", "dataType": "XCN", "optionality": "O", "repeatability": "*" },
     { "index": 24, "swiftName": "folderAssignment", "name": "Folder Assignment", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
     { "index": 25, "swiftName": "documentTitle", "name": "Document Title", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 26, "swiftName": "agreedDueDateTime", "name": "Agreed Due Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" }

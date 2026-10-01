@@ -26,7 +26,7 @@
     { "index": 21, "swiftName": "substanceManufacturerName", "name": "Substance Manufacturer Name", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
     { "index": 22, "swiftName": "indication", "name": "Indication", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 23, "swiftName": "giveDrugStrengthVolume", "name": "Give Drug Strength Volume", "dataType": "NM", "length": "5#", "optionality": "O", "repeatability": "1" },
-    { "index": 24, "swiftName": "drugStrengthVolumeUnits", "name": "Give Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 24, "swiftName": "giveDrugStrengthVolumeUnits", "name": "Give Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 25, "swiftName": "giveBarcodeIdentifier", "name": "Give Barcode Identifier", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 26, "swiftName": "pharmacyOrderType", "name": "Pharmacy Order Type", "dataType": "ID", "length": "1..1", "table": "0480", "optionality": "O", "repeatability": "1", "tables": ["0480"] },
     { "index": 27, "swiftName": "dispenseToPharmacy", "name": "Dispense to Pharmacy", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["9999"] },

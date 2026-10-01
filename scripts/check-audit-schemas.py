@@ -199,12 +199,50 @@ def check_swift_name():
                           "duplicate": ["oldName", "oldName"], "not an identifier": ["old name"],
                           "not a string": [3]}.items():
         assert f(dict(base, deprecatedSwiftNames=aliases), None), f"alias {name} must be a finding"
+    # Fix 1: a non-canonical slot whose element matches the canonical element takes the
+    # canonical name. "minimum" passes the anchor rule alone (it starts a word of the name),
+    # so only the canonical-name rule catches the dropped leading words (v2.3.1 RXE-3).
+    rxe3 = {"swiftName": "minimum", "name": "Give Amount - Minimum"}
+    assert f(rxe3, "giveAmountMinimum", "Give Amount - Minimum"), "dropped leading words must be a finding"
+    assert f(dict(rxe3, swiftName="giveAmountMinimum"), "giveAmountMinimum", "Give Amount - Minimum") == [], \
+        "the canonical name is clean"
+    assert f({"swiftName": "totalOccurrenceS", "name": "Total Occurrences"},
+             "totalOccurrenceS", "Total Occurrence's") == [], "the canonical possessive S is kept"
+    assert f({"swiftName": "totalOccurrences", "name": "Total Occurrences"},
+             "totalOccurrenceS", "Total Occurrence's"), "dropping the canonical possessive S is a finding"
+    assert f({"swiftName": "networkChangeType", "name": "Network Change Type"},
+             "applicationChangeType", "Application Change Type") == [], \
+        "a renamed element may take its own derived name"
+
+
+def check_swift_name_uniqueness():
+    # Fix 1 (Minor 2): two fields, or a field and an alias, with one accessor name.
+    d = audit.duplicate_swift_names
+    assert d([{"swiftName": "giveCode"}, {"swiftName": "giveUnits"}]) == [], "distinct names are clean"
+    assert d([{"swiftName": "giveCode"}, {"swiftName": "giveCode"}]) == [("giveCode", 2)], \
+        "a repeated swiftName must be a finding"
+    assert d([{"swiftName": "queryTag"}, {"swiftName": "other", "deprecatedSwiftNames": ["queryTag"]}]), \
+        "an alias that repeats another field's name must be a finding"
+
+
+def check_element_name():
+    # Fix 1 (Important 2): an element name is a title, not definition prose.
+    e = audit.element_name_findings
+    for name in ["Date/Time Stamp for any change in Definition for the Observation",   # 10 words, run 4
+                 "Disability return to work date", "Generic resource type or category",
+                 "Factors that may Affect Affect the Observation", "Set ID - TQ2"]:
+        assert e(name) == [], f"{name!r} must be clean"
+    for name in ["Substitute Allowed e requisition unit of measure that is known to the",   # old RQ1-7
+                 "Approving Regulatory Agency I being CPT-4 modifiers, II CDT-2 and genuine HCPCS n "
+                 "Service (NTIS, www.ntis.gov) and NTIS"]:                                  # old ITM-16
+        assert e(name), f"{name[:40]!r} must be a finding"
 
 
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
-          check_condition_predicate, check_swift_name]
+          check_condition_predicate, check_swift_name, check_swift_name_uniqueness,
+          check_element_name]
 
 
 def main():

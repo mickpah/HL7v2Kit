@@ -23,6 +23,11 @@ Drop a file under `Resources/schemas/<version>/<SegmentID>.json`. Copy an existi
 
 - `index` — 1-based HL7 v2 field number.
 - `swiftName` — the generated Swift accessor name (lowerCamelCase, rendered from the printed element name, at most 70 characters; `scripts/audit-schemas.py` fails a name that breaks this).
+  - Naming convention for the non-canonical versions. A slot whose element name matches
+    the canonical v2.5.1 element at the same index takes the canonical swiftName,
+    possessive "S" included (`totalOccurrenceS`). Any other slot takes the extractor's
+    `deriveSwiftName` of its printed name. Canonical public names never change (ADR-014).
+    A correction keeps the released name under `deprecatedSwiftNames`.
 - `deprecatedSwiftNames` — optional. Names this accessor shipped under in a released version before `swiftName` corrected them. Codegen emits each as a deprecated alias that forwards to `swiftName` (ADR-014: deprecate rather than remove).
 - `name` — human-readable field name (used in DocC + validation messages).
 - `dataType` — the HL7 data-type code (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, ...).

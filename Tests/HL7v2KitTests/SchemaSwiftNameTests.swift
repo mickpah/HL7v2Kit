@@ -66,25 +66,58 @@ struct SchemaSwiftNameTests {
         }
     }
 
-    @Test("Every swiftName starts where its element name starts a word (no truncated head)")
+    /// An element name reduced for comparison: lower case, a trailing "(deprecated)" or
+    /// "(withdrawn)" dropped, alphanumerics only. Mirrors `normalised_name` in the audit.
+    private static func normalised(_ name: String) -> String {
+        let lower = name.lowercased()
+            .replacingOccurrences(of: "\\s*\\((deprecated|withdrawn)\\)\\s*$", with: "", options: .regularExpression)
+        return String(lower.unicodeScalars.filter { CharacterSet.alphanumerics.contains($0) }.map(Character.init))
+    }
+
+    @Test("Every swiftName follows the naming convention: canonical name where the element matches, else anchored to the element name")
     func anchoredToElementName() throws {
         let all = try schemas()
-        // Non-canonical versions inherit the canonical v2.5.1 name by index by design, even
-        // where the element was later renamed (v2.3 PID-8 "Sex" is `administrativeSex`).
-        var canonical: [String: String] = [:]
+        var canonical: [String: (swiftName: String, name: String)] = [:]
         for (version, schema) in all where version == "v2.5.1" {
-            for field in schema.fields { canonical["\(schema.segmentID)-\(field.index)"] = field.swiftName }
+            for field in schema.fields { canonical["\(schema.segmentID)-\(field.index)"] = (field.swiftName, field.name) }
         }
         for (version, schema) in all {
             for field in schema.fields {
-                if version != "v2.5.1", canonical["\(schema.segmentID)-\(field.index)"] == field.swiftName { continue }
+                let slot = "\(version) \(schema.segmentID)-\(field.index): \(field.swiftName) vs \(field.name)"
+                let base = version == "v2.5.1" ? nil : canonical["\(schema.segmentID)-\(field.index)"]
+                // The same element as the canonical slot takes the canonical name, possessive "S" included.
+                if let base, Self.normalised(base.name) == Self.normalised(field.name) {
+                    #expect(field.swiftName == base.swiftName, "\(slot): canonical is \(base.swiftName)")
+                }
+                // Non-canonical versions inherit the canonical v2.5.1 name by index by design, even
+                // where the element was later renamed (v2.3 PID-8 "Sex" is `administrativeSex`).
+                if base?.swiftName == field.swiftName { continue }
                 let words = field.name.lowercased()
                     .components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
                 var name = field.swiftName.lowercased()
                 if name.range(of: "^f[0-9]", options: .regularExpression) != nil { name.removeFirst() }
                 let head = String(name.prefix(4))
                 let anchored = words.indices.contains { words[$0...].joined().hasPrefix(head) }
-                #expect(anchored, "\(version) \(schema.segmentID)-\(field.index): \(field.swiftName) vs \(field.name)")
+                #expect(anchored, "\(slot)")
+            }
+        }
+    }
+
+    @Test("Every element name reads as a title, not definition prose")
+    func elementNamesAreTitles() throws {
+        // Mirrors ELEMENT_NAME_WORDS_MAX / ELEMENT_NAME_LOWER_RUN_MAX in scripts/audit-schemas.py:
+        // the corpus maximum is 10 words and a run of 4 lowercase-led words.
+        for (version, schema) in try schemas() {
+            for field in schema.fields {
+                let words = field.name.split(separator: " ")
+                var run = 0, longest = 0
+                for word in words {
+                    run = word.first?.isLowercase == true ? run + 1 : 0
+                    longest = max(longest, run)
+                }
+                let slot = "\(version) \(schema.segmentID)-\(field.index) \(field.name.prefix(60))"
+                #expect(words.count <= 11, "\(slot): \(words.count) words")
+                #expect(longest <= 5, "\(slot): \(longest) lowercase words in a row")
             }
         }
     }
@@ -110,6 +143,11 @@ struct SchemaSwiftNameTests {
             ("2.3.1", "RXE", 2, "giveCode"),
             ("2.4", "LOC", 6, "locationPhone"),
             ("2.3", "QRF", 2, "whenDataStartDateTime"),
+            ("2.3.1", "RXE", 3, "giveAmountMinimum"),
+            ("2.4", "LOC", 3, "locationTypeLoc"),
+            ("2.8.2", "RXA", 3, "dateTimeStartOfAdministration"),
+            ("2.6", "TQ1", 14, "totalOccurrenceS"),
+            ("2.8.2", "TXA", 23, "distributedCopiesCodeAndNameOfRecipients"),
         ]
         for (version, segment, index, name) in expected {
             #expect(try swiftName(version, segment, index) == name, "v\(version) \(segment)-\(index)")

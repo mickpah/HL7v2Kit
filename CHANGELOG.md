@@ -20,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (9) and RXO (18). v2.8.2 OM1-56 drops the stray possessive "S", as the
   extractor's current naming rule does. Non-canonical slots take the canonical
   v2.5.1 name where the element is unchanged, as the rest of each segment does.
+- Fix round: 31 more slots now carry the canonical name, which brings the sweep to
+  176. Of these, 27 were truncated heads that dropped whole leading words, so they
+  passed the anchor rule ("minimum" for v2.3.1 RXE-3 "Give Amount - Minimum"):
+  v2.3 QRF-1/3/9, v2.3.1 RXE-3/4/6/9/22/26, v2.4 LOC-3/4 and RXE-3/4/22/26/31,
+  and v2.8.2 RXA-3/4, RXD-29, RXE-14/17/18/34, RXG-24 and RXO-6/15/26. The other 4
+  were possessive-S variants of the canonical name: TQ1-14 and TXA-23 on v2.6 and
+  v2.8.2. The convention is now explicit (`AddingASegment.md`). A non-canonical slot
+  whose element name matches the canonical v2.5.1 element takes the canonical
+  swiftName, possessive "S" included. Any other slot takes the extractor's derived
+  name.
 - The typed accessors change on two segments: `TQ2.specialServiceRequestRelationship`
   and `QPD.queryTag` (see Deprecated). Only the v2.5.1 schemas (and the earliest
   definer of a segment v2.5.1 lacks) emit typed structs, so no other slot was
@@ -33,7 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New audit guard: `scripts/audit-schemas.py` now fails any swiftName that is not a
   lowerCamelCase identifier, is over 70 characters, does not start a word of its
   element name, carries three or more words absent from it, or repeats within a
-  segment. Self-check `check_swift_name` in `scripts/check-audit-schemas.py`.
+  segment, or that departs from the canonical name for the same element. It also
+  checks element names: at most 11 words, and no run of more than 5 lowercase
+  words (the corpus maximum is 10 and 4). Self-checks `check_swift_name`,
+  `check_swift_name_uniqueness` and `check_element_name` are in
+  `scripts/check-audit-schemas.py`.
 
 ### Deprecated — P6-9: two prose-bled accessor names
 

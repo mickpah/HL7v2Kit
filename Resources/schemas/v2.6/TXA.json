@@ -25,6 +25,6 @@
     { "index": 20, "swiftName": "documentStorageStatus", "name": "Document Storage Status", "dataType": "ID", "length": "2", "table": "0275", "optionality": "O", "repeatability": "1", "tables": ["0275"] },
     { "index": 21, "swiftName": "documentChangeReason", "name": "Document Change Reason", "dataType": "ST", "length": "30", "optionality": "C", "repeatability": "1" },
     { "index": 22, "swiftName": "authenticationPersonTimeStampSet", "name": "Authentication Person, Time Stamp (set)", "dataType": "PPN", "length": "250", "optionality": "C", "repeatability": "*" },
-    { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipientS", "name": "Distributed Copies (Code and Name of Recipient(s) )", "dataType": "XCN", "length": "250", "optionality": "O", "repeatability": "*" }
+    { "index": 23, "swiftName": "distributedCopiesCodeAndNameOfRecipients", "name": "Distributed Copies (Code and Name of Recipient(s) )", "dataType": "XCN", "length": "250", "optionality": "O", "repeatability": "*" }
   ]
 }

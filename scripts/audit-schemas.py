@@ -327,11 +327,15 @@ SWIFT_NAME_FOREIGN_MAX = 2
 SWIFT_IDENTIFIER = re.compile(r"[a-z][A-Za-z0-9]*")
 
 
-def swift_name_findings(f, canonical=None):
+def swift_name_findings(f, canonical=None, canonical_name=None):
     """P6-9. `swiftName` is a lowerCamelCase identifier of at most SWIFT_NAME_MAX characters,
-    rendered from the field's printed element name. Unless it is the canonical v2.5.1 name
-    for the same slot (`canonical`: non-canonical versions inherit that by index, by design,
-    even where the element was later renamed), its first four letters must start some run of
+    rendered from the field's printed element name. The naming convention (AddingASegment.md):
+    a non-canonical slot whose element name normalises equal to the canonical v2.5.1 element
+    at the same index (`canonical_name`) must carry the canonical swiftName (`canonical`),
+    possessive "S" included; any other slot takes `deriveSwiftName` of its printed name.
+    A slot whose name IS the canonical one is exempt from the next two rules (non-canonical
+    versions inherit it by index even where the element was later renamed). Otherwise its
+    first four letters must start some run of
     the element name's words (a truncated head such as "nistrationSubIdCounter" or a
     placeholder "field4" fails), and at most SWIFT_NAME_FOREIGN_MAX of its camel-case words may
     be absent from the element name (prose bleed). `deprecatedSwiftNames`, the released names
@@ -344,6 +348,10 @@ def swift_name_findings(f, canonical=None):
         out.append(f"swiftName {swift[:60]!r} is not a lowerCamelCase identifier")
     if len(swift) > SWIFT_NAME_MAX:
         out.append(f"swiftName {len(swift)} chars (bound {SWIFT_NAME_MAX}) — prose bleed?")
+    if (canonical and canonical_name is not None and swift != canonical
+            and normalised_name(element).replace(" ", "") == normalised_name(canonical_name).replace(" ", "")):
+        out.append(f"swiftName {swift[:60]!r} differs from the canonical {canonical!r} for the same element"
+                   " — dropped words?")
     if swift and swift != canonical:
         words = [w for w in re.split(r"[^a-z0-9]+", element.lower()) if w]
         head = swift.lower()
@@ -371,13 +379,52 @@ def swift_name_findings(f, canonical=None):
 
 
 def canonical_swift_names():
-    """`SEG-n` -> swiftName for every canonical (v2.5.1) schema field."""
+    """`SEG-n` -> (swiftName, element name) for every canonical (v2.5.1) schema field."""
     names = {}
     for path in glob.glob(f"{SCHEMAS}/v2.5.1/*.json"):
         doc = json.load(open(path))
         for f in doc["fields"]:
-            names[f"{doc['segmentID']}-{f['index']}"] = f.get("swiftName")
+            names[f"{doc['segmentID']}-{f['index']}"] = (f.get("swiftName"), f.get("name", ""))
     return names
+
+
+def duplicate_swift_names(fields):
+    """P6-9. The accessor names (aliases included) used more than once in one segment, as
+    (name, count) pairs. Codegen would emit two properties with the same name."""
+    counts = collections.Counter()
+    for f in fields:
+        counts.update([f.get("swiftName")] + list(f.get("deprecatedSwiftNames") or []))
+    return [(name, n) for name, n in counts.items() if n > 1]
+
+
+# P6-9 fix 1: element-name shape. Over the corrected corpus (11,999 fields) element names run
+# to 10 words at most (OM1-21 "Date/Time Stamp for any change in Definition for the
+# Observation") and the longest run of consecutive lowercase-led words is 4 (OM1-21 "for any
+# change in", v2.3 DB1-7/8 "return to work date", STF-39 "resource type or category"). The
+# prose bleeds found were 12 words with a 10-word lowercase run (v2.8.2 RQ1-7 "Substitute
+# Allowed e requisition unit of measure that is known to the") and 17 words (v2.8.2 ITM-16).
+# The bounds keep one step of headroom over the corpus maximum. Limit: a bleed of at most 11
+# words whose lowercase runs stay at 5 or fewer looks like a long element name and passes;
+# the M20 depth audit (`--depth`) is the check that compares names with the print.
+ELEMENT_NAME_WORDS_MAX = 11
+ELEMENT_NAME_LOWER_RUN_MAX = 5
+
+
+def element_name_findings(name):
+    """P6-9 fix 1. An element name is a title, not prose: at most ELEMENT_NAME_WORDS_MAX
+    words, and no run of more than ELEMENT_NAME_LOWER_RUN_MAX consecutive lowercase-led words.
+    Returns the finding messages for one name."""
+    out = []
+    words = (name or "").split()
+    if len(words) > ELEMENT_NAME_WORDS_MAX:
+        out.append(f"element name has {len(words)} words (bound {ELEMENT_NAME_WORDS_MAX}) — prose bleed?")
+    run = best = 0
+    for w in words:
+        run = run + 1 if re.match(r"[a-z]", w) else 0
+        best = max(best, run)
+    if best > ELEMENT_NAME_LOWER_RUN_MAX:
+        out.append(f"element name has a run of {best} lowercase words — prose bleed?")
+    return out
 
 
 PROHIBITION_KEYS = {"when", "severity", "citation", "permitsNull"}
@@ -432,10 +479,8 @@ def integrity():
         doc = json.load(open(path))
         is_canonical = os.path.basename(os.path.dirname(path)) == "v2.5.1"
         seen = collections.Counter()
-        identifiers = collections.Counter()   # P6-9: accessor names, aliases included
         for f in doc["fields"]:
             seen[f["index"]] += 1
-            identifiers.update([f.get("swiftName")] + list(f.get("deprecatedSwiftNames") or []))
             name, dt, opt = f.get("name", ""), f.get("dataType", ""), f.get("optionality", "")
             if not name and not dt:
                 findings.append((rel, f["index"], "phantom row (no name, no dataType)"))
@@ -457,14 +502,15 @@ def integrity():
             findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
             findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
             findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
-            inherited = None if is_canonical else canonical.get(f"{doc['segmentID']}-{f['index']}")
-            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(f, inherited))
+            inherited, inherited_name = (None, None) if is_canonical else \
+                canonical.get(f"{doc['segmentID']}-{f['index']}", (None, None))
+            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(f, inherited, inherited_name))
+            findings.extend((rel, f["index"], msg) for msg in element_name_findings(name))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))
-        for ident, n in identifiers.items():
-            if n > 1:
-                findings.append((rel, 0, f"swiftName {str(ident)[:60]!r} used {n}x in the segment"))
+        for ident, n in duplicate_swift_names(doc["fields"]):
+            findings.append((rel, 0, f"swiftName {str(ident)[:60]!r} used {n}x in the segment"))
         got = sorted(seen)
         if got and got != list(range(1, max(got) + 1)):
             missing = sorted(set(range(1, max(got) + 1)) - set(got))

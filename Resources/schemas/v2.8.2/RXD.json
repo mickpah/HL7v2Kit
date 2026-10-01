@@ -31,7 +31,7 @@
     { "index": 26, "swiftName": "initiatingLocation", "name": "Initiating Location", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 27, "swiftName": "packagingAssemblyLocation", "name": "Packaging/Assembly Location", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 28, "swiftName": "actualDrugStrengthVolume", "name": "Actual Drug Strength Volume", "dataType": "NM", "length": "5=", "optionality": "O", "repeatability": "1" },
-    { "index": 29, "swiftName": "drugStrengthVolumeUnits", "name": "Actual Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 29, "swiftName": "actualDrugStrengthVolumeUnits", "name": "Actual Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 30, "swiftName": "dispenseToPharmacy", "name": "Dispense to Pharmacy", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["9999"] },
     { "index": 31, "swiftName": "dispenseToPharmacyAddress", "name": "Dispense to Pharmacy Address", "dataType": "XAD", "optionality": "B", "repeatability": "1" },
     { "index": 32, "swiftName": "pharmacyOrderType", "name": "Pharmacy Order Type", "dataType": "ID", "length": "1..1", "table": "0480", "optionality": "O", "repeatability": "1", "tables": ["0480"] },
