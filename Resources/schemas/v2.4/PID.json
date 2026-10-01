@@ -324,7 +324,7 @@
       "name": "Production Class Code",
       "dataType": "CE", "length": "250",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "2",
       "tables": ["0429"]
     }
   ]

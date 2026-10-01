@@ -16,7 +16,7 @@
     { "index": 11, "swiftName": "verifiedBy", "name": "Verified By", "dataType": "XCN", "optionality": "B", "repeatability": "*" },
     { "index": 12, "swiftName": "orderingProvider", "name": "Ordering Provider", "dataType": "XCN", "optionality": "B", "repeatability": "*" },
     { "index": 13, "swiftName": "enterersLocation", "name": "Enterer's Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
-    { "index": 14, "swiftName": "callBackPhoneNumber", "name": "Call Back Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 14, "swiftName": "callBackPhoneNumber", "name": "Call Back Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "2" },
     { "index": 15, "swiftName": "orderEffectiveDateTime", "name": "Order Effective Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 16, "swiftName": "orderControlCodeReason", "name": "Order Control Code Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 17, "swiftName": "enteringOrganization", "name": "Entering Organization", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["9999"] },

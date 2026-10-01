@@ -1634,13 +1634,25 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
-        guard grammar.repeatability == .single else { return }
-        guard field.repetitions.count > 1 else { return }
+        let count = field.repetitions.count
+        guard count > 1 else { return }
+        let severity: IssueSeverity
+        let detail: String
+        switch grammar.repeatability {
+        case .single:
+            severity = .error
+            detail = "is single-cardinality but has \(count) repetitions"
+        case .multiple:
+            // P6-4: a printed RP/# bound. A new count check, so .warning (G4).
+            guard let bound = grammar.maxRepetitions, count > bound else { return }
+            severity = .warning
+            detail = "allows at most \(bound) repetitions but has \(count)"
+        }
         issues.append(ValidationIssue(
-            severity: .error,
+            severity: severity,
             code: .cardinalityExceeded,
             location: location,
-            message: "Field \(location.pathDescription) ('\(grammar.name)') is single-cardinality but has \(field.repetitions.count) repetitions"
+            message: "Field \(location.pathDescription) ('\(grammar.name)') \(detail)"
         ))
     }
 

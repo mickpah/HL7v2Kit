@@ -12,7 +12,7 @@
 //   swift extract-segment-tables.swift <chapter.pdf> [SEGID]
 //     SEGID (optional) filters to one segment's table (e.g. NK1).
 //
-// The RP/# column maps to repeatability: "Y" (or a max-count) -> "*", blank -> "1".
+// The RP/# column maps to repeatability: "Y" -> "*", a printed bound ("Y/3", "3") -> "3", blank -> "1".
 
 import Foundation
 
@@ -335,13 +335,17 @@ func isNameContinuation(_ cont: String, currentName: String) -> Bool {
     return true
 }
 
-// Map RP/# cell to repeatability token.
+// Map RP/# cell to repeatability token: blank or N -> "1", Y -> "*", a printed bound
+// ("Y/3" before v2.5, a bare "3" from v2.5; v2.5.1 §2.5.3.5) -> "3". A value of four or
+// more digits is a TBL# number bled into the RP column (see scripts/table-repairs.json),
+// kept as "*" exactly as before so M22 and the repairs keep seeing it.
 func repeatability(_ rp: String) -> String {
     let t = rp.trimmingCharacters(in: .whitespaces).uppercased()
-    if t.isEmpty || t == "N" { return "1" }        // blank or explicit "N" (no) -> single
-    if t == "Y" { return "*" }                      // "Y" (yes) -> repeats
-    if t.contains("Y") { return "*" }               // "Y/2" etc.
-    if t.first(where: { $0.isNumber }) != nil { return "*" } // max-count (e.g. "2", "3") -> repeats
+    if t.isEmpty || t == "N" { return "1" }
+    if t == "Y" { return "*" }
+    let tail = t.split(separator: "/").last.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
+    if tail.count <= 3, let n = Int(tail) { return n > 1 ? String(n) : "1" }
+    if t.contains("Y") || t.first(where: { $0.isNumber }) != nil { return "*" }
     return "1"
 }
 

@@ -21,6 +21,7 @@ struct FieldSchema: Decodable {
     let name: String
     let dataType: String
     let optionality: String
+    /// "1", "*", or a decimal bound >= 2 (P6-4).
     let repeatability: String
     /// Optional predicate string controlling when a `.conditional` field
     /// becomes required. See `FieldGrammar.condition` for the grammar.
@@ -361,7 +362,11 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
     let versionSwiftName = versionDirName(version)
     let entries = schemas.sorted(by: { $0.segmentID < $1.segmentID }).map { schema in
         let fields = schema.fields.sorted(by: { $0.index < $1.index }).map { field in
-            let repeatability = field.repeatability == "*" ? ".multiple" : ".single"
+            // P6-4: a decimal of 2 or more is a printed RP/# bound ("Y/3", "3").
+            let maxRepetitions = Int(field.repeatability).flatMap { $0 > 1 ? $0 : nil }
+            precondition(["1", "*"].contains(field.repeatability) || maxRepetitions != nil,
+                         "\(schema.segmentID)-\(field.index): repeatability must be 1, * or a bound of 2 or more, got \(field.repeatability)")
+            let repeatability = field.repeatability == "*" || maxRepetitions != nil ? ".multiple" : ".single"
             let condition = field.condition.map { escapeStringLiteral($0) } ?? "nil"
             let prohibitedWhen = field.prohibitedWhen.map { escapeStringLiteral($0) } ?? "nil"
             let variableColumns = field.variableColumns != nil ? "true" : "false"
@@ -379,7 +384,9 @@ func renderGrammarTable(version: String, schemas: [SegmentSchema]) -> String {
             }()
             let additionalProhibitions = renderAdditionalProhibitions(
                 field.additionalProhibitions, context: "\(schema.segmentID)-\(field.index)")
-            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)),"
+            // Last in the shared tail, so it is accepted after any of the arguments above (P6-4).
+            let bound = maxRepetitions.map { ", maxRepetitions: \($0)" } ?? ""
+            return "            FieldGrammar(index: \(field.index), name: \(escapeStringLiteral(field.name)), dataType: \(escapeStringLiteral(field.dataType)), optionality: .\(optionalityCase(field.optionality)), repeatability: \(repeatability), condition: \(condition), prohibitedWhen: \(prohibitedWhen), variableColumns: \(variableColumns), table: \(table), length: \(length)\(tableOpen)\(prohibitedSeverity)\(additionalProhibitions)\(bound)),"
         }.joined(separator: "\n")
         // One typed constant per segment. The whole version used to be a single dictionary
         // literal, which the type checker solves as ONE expression: once fields carried a

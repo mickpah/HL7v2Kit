@@ -19,7 +19,7 @@
     { "index": 14, "swiftName": "specimenReceivedDateTime", "name": "Specimen Received Date/Time", "dataType": "DTM", "optionality": "W", "repeatability": "1" },
     { "index": 15, "swiftName": "specimenSource", "name": "Specimen Source", "dataType": "SPS", "optionality": "W", "repeatability": "1" },
     { "index": 16, "swiftName": "orderingProvider", "name": "Ordering Provider", "dataType": "XCN", "optionality": "B", "repeatability": "*" },
-    { "index": 17, "swiftName": "orderCallbackPhoneNumber", "name": "Order Callback Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
+    { "index": 17, "swiftName": "orderCallbackPhoneNumber", "name": "Order Callback Phone Number", "dataType": "XTN", "optionality": "O", "repeatability": "2" },
     { "index": 18, "swiftName": "placerField1", "name": "Placer Field 1", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
     { "index": 19, "swiftName": "placerField2", "name": "Placer Field 2", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "fillerField1", "name": "Filler Field 1", "dataType": "ST", "length": "199=", "optionality": "O", "repeatability": "1" },

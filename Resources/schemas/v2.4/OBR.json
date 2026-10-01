@@ -142,7 +142,7 @@
       "name": "Order Callback Phone Number",
       "dataType": "XTN", "length": "250",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "2"
     },
     {
       "index": 18,
@@ -233,7 +233,7 @@
       "name": "Result Copies To",
       "dataType": "XCN", "length": "250",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "5"
     },
     {
       "index": 29,

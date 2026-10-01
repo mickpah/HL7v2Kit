@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P6-4: bounded repetition counts
+
+- `FieldGrammar.maxRepetitions: Int?` (additive, via a separate `init`
+  overload; the released initialisers are unchanged). It carries the RP/#
+  column's printed bound (`Y/3` before v2.5, `3` from v2.5; v2.3.1 §2.6.5,
+  v2.5.1 §2.5.3.5), and `cardinalityExceeded` now fires, as a warning, when a
+  field carries more repetitions than that bound. The single-cardinality
+  check keeps its error severity and message. (V23-C08, V24-C07)
+- Schema `"repeatability"` accepts a decimal bound (`"3"`) besides `"1"` and
+  `"*"`; `FieldRepeatability(wireValue:)` maps it to `.multiple`. The
+  extractor keeps the printed bound, and `audit-schemas.py --depth
+  --write-repeatability` writes it; M22 compares bounds, and `integrity()`
+  rejects any other token. Codegen emits `maxRepetitions:` only for a bounded
+  field, so every other generated line is unchanged.
+- 203 bounded fields across the six versions (v2.3 35, v2.3.1 31, v2.4 35,
+  v2.5.1 34, v2.6 34, v2.8.2 34), for example v2.3 MSH-18 `Y/3`, v2.4 OBR-17
+  `Y/2`, v2.6 PID-38 `2`, UB2-13 `Y/23`.
+- OBX-8 on v2.3, v2.3.1 and v2.4 is bounded at 5 by hand: the base OBX table
+  prints `Y/5` (v2.3 CH7, v2.4 CH07), and the constrained OBX copies that
+  print a blank RP/# are message profiles, not the segment definition.
+- ADJ-7 on v2.6 and v2.8.2 prints RP/# `1` and is now single-cardinality
+  (the old extractor read any digit as a repeat).
+- v2.6 OBX-5 stays unbounded: the CH07 table prints `Y` under a superscript
+  footnote marker `2`, which the extractor reads as a bound. Whitelisted in
+  M22 with the citation.
+
 ### Added — P6-3: ADD on v2.6 and v2.8.2
 
 - The ADD (Addendum) segment is modelled on v2.6 and v2.8.2 (CH02 §2.14.1,

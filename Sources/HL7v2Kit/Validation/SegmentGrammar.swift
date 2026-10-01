@@ -21,16 +21,21 @@ public enum FieldOptionality: String, Sendable, Equatable, Hashable {
     case withdrawn = "W"
 }
 
-/// Field repeatability. `single` for `1`, `multiple` for `*`.
+/// Field repeatability. `single` for `1`; `multiple` for `*` (unbounded) or a
+/// printed bound. The bound itself is ``FieldGrammar/maxRepetitions``.
 public enum FieldRepeatability: Sendable, Equatable, Hashable {
     case single
     case multiple
 
-    /// Parse the wire-form repeatability string (`"1"` → `.single`, `"*"` → `.multiple`).
+    /// Parse the schema repeatability token: `"1"` → `.single`; `"*"` or a
+    /// bound of 2 or more (`"3"`, the RP/# column's "(integer)") → `.multiple`.
     public init(wireValue raw: String) {
-        switch raw {
-        case "*": self = .multiple
-        default:  self = .single
+        if raw == "*" {
+            self = .multiple
+        } else if let bound = Int(raw), bound > 1 {
+            self = .multiple
+        } else {
+            self = .single
         }
     }
 }
@@ -110,6 +115,14 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// RXR-2 is coded from Table 0163) reports each rule on its own. Not set by the released
     /// initialisers; empty by default. P4-21.
     public let additionalProhibitions: [FieldProhibition]
+    /// The most `~`-repetitions the version's RP/# column allows: `Y/3` before
+    /// v2.5, a bare `3` from v2.5 ("the field may repeat up to the number of
+    /// times specified by the integer", v2.3.1 §2.6.5, v2.5.1 §2.5.3.5).
+    /// `nil` when the column prints `Y` (unbounded) or the field does not
+    /// repeat. Non-nil implies `repeatability == .multiple`. An overrun raises
+    /// `.cardinalityExceeded` at `.warning`. Not set by the released
+    /// initialisers; `nil` by default. P6-4.
+    public let maxRepetitions: Int?
 
     public init(
         index: Int,
@@ -191,6 +204,32 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         prohibitedSeverity: IssueSeverity = .error,
         additionalProhibitions: [FieldProhibition]
     ) {
+        self.init(index: index, name: name, dataType: dataType, optionality: optionality,
+                  repeatability: repeatability, condition: condition, prohibitedWhen: prohibitedWhen,
+                  variableColumns: variableColumns, table: table, length: length, tableOpen: tableOpen,
+                  prohibitedSeverity: prohibitedSeverity, additionalProhibitions: additionalProhibitions,
+                  maxRepetitions: nil)
+    }
+
+    /// Creates a field grammar that also carries the RP/# column's printed repetition
+    /// bound (see ``maxRepetitions``). A separate overload so the released initialisers
+    /// keep their signatures (ADR-014). P6-4.
+    public init(
+        index: Int,
+        name: String,
+        dataType: String,
+        optionality: FieldOptionality,
+        repeatability: FieldRepeatability,
+        condition: String? = nil,
+        prohibitedWhen: String? = nil,
+        variableColumns: Bool = false,
+        table: String? = nil,
+        length: String? = nil,
+        tableOpen: Bool = false,
+        prohibitedSeverity: IssueSeverity = .error,
+        additionalProhibitions: [FieldProhibition] = [],
+        maxRepetitions: Int?
+    ) {
         self.index = index
         self.name = name
         self.dataType = dataType
@@ -204,6 +243,7 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         self.tableOpen = tableOpen
         self.prohibitedSeverity = prohibitedSeverity
         self.additionalProhibitions = additionalProhibitions
+        self.maxRepetitions = maxRepetitions
     }
 }
 

@@ -9,7 +9,7 @@
     { "index": 4, "swiftName": "adjustmentCategory", "name": "Adjustment Category", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0564"] },
     { "index": 5, "swiftName": "adjustmentAmount", "name": "Adjustment Amount", "dataType": "CP", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "adjustmentQuantity", "name": "Adjustment Quantity", "dataType": "CQ", "optionality": "O", "repeatability": "1", "tables": ["0560"] },
-    { "index": 7, "swiftName": "adjustmentReasonPa", "name": "Adjustment Reason PA", "dataType": "CWE", "optionality": "C", "repeatability": "*", "tables": ["0565"] },
+    { "index": 7, "swiftName": "adjustmentReasonPa", "name": "Adjustment Reason PA", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0565"] },
     { "index": 8, "swiftName": "adjustmentDescription", "name": "Adjustment Description", "dataType": "ST", "length": "250#", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "originalValue", "name": "Original Value", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "substituteValue", "name": "Substitute Value", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "1" },

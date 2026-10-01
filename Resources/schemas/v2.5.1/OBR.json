@@ -141,7 +141,7 @@
       "name": "Order Callback Phone Number",
       "dataType": "XTN", "length": "250",
       "optionality": "O",
-      "repeatability": "*"
+      "repeatability": "2"
     },
     {
       "index": 18,

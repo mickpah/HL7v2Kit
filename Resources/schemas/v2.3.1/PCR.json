@@ -14,7 +14,7 @@
     { "index": 9, "swiftName": "singleUseDevice", "name": "Single Use Device", "dataType": "IS", "length": "8", "table": "0244", "optionality": "O", "repeatability": "*", "tables": ["0244"] },
     { "index": 10, "swiftName": "indicationForProductUse", "name": "Indication For Product Use", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "productProblem", "name": "Product Problem", "dataType": "IS", "length": "8", "table": "0245", "optionality": "O", "repeatability": "*", "tables": ["0245"] },
-    { "index": 12, "swiftName": "productSerialLotNumber", "name": "Product Serial/Lot Number", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "*" },
+    { "index": 12, "swiftName": "productSerialLotNumber", "name": "Product Serial/Lot Number", "dataType": "ST", "length": "30", "optionality": "O", "repeatability": "3" },
     { "index": 13, "swiftName": "productAvailableForInspection", "name": "Product Available For Inspection", "dataType": "IS", "length": "1", "table": "0246", "optionality": "O", "repeatability": "*", "tables": ["0246"] },
     { "index": 14, "swiftName": "productEvaluationPerformed", "name": "Product Evaluation Performed", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "1" },
     { "index": 15, "swiftName": "productEvaluationStatus", "name": "Product Evaluation Status", "dataType": "CE", "length": "60", "optionality": "O", "repeatability": "*", "tables": ["0247"] },

@@ -193,7 +193,12 @@ OPTIONALITY_WHITELIST = {
     ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
                           "child.'; printed O, modelled C (P4-18)",
 }
-REPEATABILITY_WHITELIST = {}
+REPEATABILITY_WHITELIST = {
+    ("v2.6", "OBX", 5): "v2.6 CH07 section 7.4.2 OBX attribute table prints RP/# 'Y' wrapped under a "
+                       "superscript footnote marker '2', which the extractor reads as a bound; the "
+                       "CH09 constrained OBX prints a blank. 7.4.2.5 'may repeat for multipart, single "
+                       "answer results'; schema '*' (P6-4)",
+}
 # v2.3/v2.3.1 OBX-5: the LEN cell prints a numeric cap (v2.3 Figure 7-5 "655362", v2.3.1
 # Figure 7-5 "65536" + footnote marker, both OCR-glued footnote digits onto 65536) but the
 # field's own footnote overrides it: v2.3 CH7 (p. 7-30) footnote 2 and v2.3.1 CH7 (p. 7-35)
@@ -529,6 +534,9 @@ def integrity():
             elif not dt and opt not in ("W", "X"):
                 # empty dataType is spec-CORRECT for withdrawn/reserved fields only
                 findings.append((rel, f["index"], f"empty dataType with optionality {opt!r}"))
+            rp = f.get("repeatability", "")
+            if not re.fullmatch(r"1|\*|[2-9]|[1-9]\d{1,2}", rp):
+                findings.append((rel, f["index"], f"repeatability {rp!r} is not 1, *, or a bound of 2 or more"))
             if len(name) > 120:
                 findings.append((rel, f["index"], f"element name {len(name)} chars — prose bleed?"))
             if re.search(r"[|^<]", name):
@@ -694,7 +702,20 @@ def write_lengths(path, wanted):
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
-def depth(write=False, correct_names=False, record_lengths=False, versions=None):
+def write_repeatability(path, wanted):
+    """Replace each listed field's `repeatability` value in place, textually (see write_tables)."""
+    text = open(path, encoding="utf-8").read()
+    out, pos, index = [], 0, None
+    for m in re.finditer(r'"index"\s*:\s*(\d+)|"repeatability"\s*:\s*"[^"]*"', text):
+        if m.group(1):
+            index = int(m.group(1))
+        elif index in wanted:
+            out.append(text[pos:m.start()] + f'"repeatability": {json.dumps(wanted.pop(index))}')
+            pos = m.end()
+    open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
+
+
+def depth(write=False, correct_names=False, record_lengths=False, record_repeatability=False, versions=None):
     if not os.path.exists(EXTRACTOR):
         sys.exit(f"depth pass needs a compiled extractor at {EXTRACTOR}\n"
                  "  xcrun swiftc -O scripts/extract-segment-tables.swift -o /tmp/extractbin")
@@ -706,7 +727,7 @@ def depth(write=False, correct_names=False, record_lengths=False, versions=None)
     authored = {v: {os.path.basename(p)[:-5].upper() for p in glob.glob(f"{SCHEMAS}/{v}/*.json")}
                 for v in CHAPTER_GLOBS}
     modelled_anywhere = set().union(*authored.values())
-    wanted_names, wanted_lengths = {}, {}
+    wanted_names, wanted_lengths, wanted_reps = {}, {}, {}
     for version in (versions or CHAPTER_GLOBS):
         print(f"  extracting {version} ...", file=sys.stderr)
         found, spec_dts, spec_tbls, spec_opts, spec_names, spec_reps, spec_lens, spec_def = extracted_depths(version)
@@ -785,12 +806,16 @@ def depth(write=False, correct_names=False, record_lengths=False, versions=None)
                     continue
                 len_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
-            # printed Y, or a bounded count such as "2" or "Y/3", as "*" and a blank as "1";
-            # the schema model has only those two values, so a bounded repeat is "*".
+            # printed Y as "*", a blank as "1", and a printed bound ("Y/3", "3") as the bound
+            # itself; the schema carries the same token (P6-4). A slot whose printed token is
+            # unambiguous is written by --write-repeatability.
             for f in schema_fields:
                 printed = spec_reps.get((seg, f["index"]))
                 have = (f.get("repeatability") or "").strip()
                 if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
+                    continue
+                if record_repeatability and len(printed) == 1:
+                    wanted_reps.setdefault(path, {})[f["index"]] = next(iter(printed))
                     continue
                 rp_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M20: the NAME column. See NAME_WHITELIST for the shape rule.
@@ -853,6 +878,10 @@ def depth(write=False, correct_names=False, record_lengths=False, versions=None)
         write_lengths(path, dict(wanted))
     if wanted_lengths:
         print(f"  lengths written in {len(wanted_lengths)} schemas", file=sys.stderr)
+    for path, wanted in wanted_reps.items():
+        write_repeatability(path, dict(wanted))
+    if wanted_reps:
+        print(f"  repeatability written in {len(wanted_reps)} schemas", file=sys.stderr)
     return gaps, suspects, exact, presence, backlog, deferred, datatype_findings, table_findings, optionality_findings, name_findings, rp_findings, len_findings
 
 
@@ -1270,6 +1299,8 @@ def main():
                     help="also audit the M12 AU VMR implementation table (add --depth to re-extract)")
     ap.add_argument("--write-lengths", action="store_true",
                     help="with --depth: write the printed LEN into the schemas as `length` (M25 sweep)")
+    ap.add_argument("--write-repeatability", action="store_true",
+                    help="with --depth: write the printed RP/# token (1, *, or a bound) into the schemas (P6-4)")
     ap.add_argument("--write-names", action="store_true",
                     help="with --depth: replace names the NAME predicate rejects with the shortest printed one (M20)")
     ap.add_argument("--write-tables", action="store_true",
@@ -1288,7 +1319,7 @@ def main():
     if args.depth:
         gaps, suspects, exact, presence, backlog, deferred, dt_findings, tbl_findings, opt_findings, name_findings, rp_findings, len_findings = depth(
             write=args.write_tables, correct_names=args.write_names, record_lengths=args.write_lengths,
-            versions=args.only_version)
+            record_repeatability=args.write_repeatability, versions=args.only_version)
         cap = None if args.only_version else 60
         print(f"\n== depth: {exact} exact, {len(gaps)} gaps, {len(suspects)} suspects"
               f"  (whitelisted: {', '.join(sorted(DEPTH_WHITELIST))})")

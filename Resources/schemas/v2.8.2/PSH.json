@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "quantityInUse", "name": "Quantity in Use", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 11, "swiftName": "quantityInUseMethod", "name": "Quantity in Use Method", "dataType": "ID", "length": "1..1", "table": "0329", "optionality": "O", "repeatability": "1", "tables": ["0329"] },
     { "index": 12, "swiftName": "quantityInUseComment", "name": "Quantity in Use Comment", "dataType": "FT", "length": "600=", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "numberOfProductExperienceReportsFiledByFacility", "name": "Number of Product Experience Reports Filed by Facility", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "*" },
-    { "index": 14, "swiftName": "numberOfProductExperienceReportsFiledByDistributor", "name": "Number of Product Experience Reports Filed by Distributor", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "*" }
+    { "index": 13, "swiftName": "numberOfProductExperienceReportsFiledByFacility", "name": "Number of Product Experience Reports Filed by Facility", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "8" },
+    { "index": 14, "swiftName": "numberOfProductExperienceReportsFiledByDistributor", "name": "Number of Product Experience Reports Filed by Distributor", "dataType": "NM", "length": "16=", "optionality": "O", "repeatability": "8" }
   ]
 }

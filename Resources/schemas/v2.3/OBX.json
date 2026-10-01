@@ -67,7 +67,7 @@
       "name": "Abnormal Flags",
       "dataType": "ID", "length": "5", "table": "0078",
       "optionality": "O",
-      "repeatability": "*",
+      "repeatability": "5",
       "tables": ["0078"]
     },
     {

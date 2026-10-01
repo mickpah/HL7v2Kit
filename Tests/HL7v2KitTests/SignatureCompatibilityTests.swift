@@ -60,6 +60,23 @@ struct SignatureCompatibilityTests {
             FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:prohibitedSeverity:additionalProhibitions:)
         let rxr6 = make(6, "n", "CWE", .optional, .single, nil, "RXR-2 empty", false, nil, nil, false, .error, [rule])
         #expect(rxr6.additionalProhibitions == [rule] && rxr6.prohibitedSeverity == .error && !rxr6.tableOpen)
+        #expect(rxr6.maxRepetitions == nil)
+    }
+
+    // Deliberate pin of new, unreleased API (P6-4): maxRepetitions: is its own overload,
+    // after the shared tail (tableOpen, prohibitedSeverity, additionalProhibitions).
+    @Test("FieldGrammar.init maxRepetitions: is a separate overload")
+    func fieldGrammarMaxRepetitionsInit() {
+        let make: (Int, String, String, FieldOptionality, FieldRepeatability, String?, String?, Bool, String?, String?, Bool, IssueSeverity, [FieldProhibition], Int?) -> FieldGrammar =
+            FieldGrammar.init(index:name:dataType:optionality:repeatability:condition:prohibitedWhen:variableColumns:table:length:tableOpen:prohibitedSeverity:additionalProhibitions:maxRepetitions:)
+        let obr17 = make(17, "n", "XTN", .optional, .multiple, nil, nil, false, nil, nil, false, .error, [], 2)
+        #expect(obr17.maxRepetitions == 2 && obr17.additionalProhibitions.isEmpty)
+
+        let bounded = FieldGrammar(index: 18, name: "n", dataType: "ID", optionality: .optional,
+                                   repeatability: .multiple, maxRepetitions: 3)
+        #expect(bounded.maxRepetitions == 3 && !bounded.tableOpen && bounded.prohibitedSeverity == .error)
+        let released = FieldGrammar(index: 3, name: "n", dataType: "CX", optionality: .required, repeatability: .multiple)
+        #expect(released.maxRepetitions == nil)
     }
 
     // Deliberate pin of new, unreleased API (P4-21 / P4-26): FieldProhibition has one

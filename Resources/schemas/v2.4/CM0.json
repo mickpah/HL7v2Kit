@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "setIdCm0", "name": "Set ID - CM0", "dataType": "SI", "length": "4", "optionality": "O", "repeatability": "1" },
     { "index": 2, "swiftName": "sponsorStudyId", "name": "Sponsor Study ID", "dataType": "EI", "length": "60", "optionality": "R", "repeatability": "1" },
-    { "index": 3, "swiftName": "alternateStudyId", "name": "Alternate Study ID", "dataType": "EI", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 3, "swiftName": "alternateStudyId", "name": "Alternate Study ID", "dataType": "EI", "length": "60", "optionality": "O", "repeatability": "3" },
     { "index": 4, "swiftName": "titleOfStudy", "name": "Title of Study", "dataType": "ST", "length": "300", "optionality": "R", "repeatability": "1" },
     { "index": 5, "swiftName": "chairmanOfStudy", "name": "Chairman of Study", "dataType": "XCN", "length": "250", "optionality": "O", "repeatability": "*" },
     { "index": 6, "swiftName": "lastIrbApprovalDate", "name": "Last IRB Approval Date", "dataType": "DT", "length": "8", "optionality": "O", "repeatability": "1" },

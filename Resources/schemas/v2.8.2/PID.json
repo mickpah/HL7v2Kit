@@ -40,7 +40,7 @@
     { "index": 35, "swiftName": "taxonomicClassificationCode", "name": "Taxonomic Classification Code", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
     { "index": 36, "swiftName": "breedCode", "name": "Breed Code", "dataType": "CWE", "optionality": "B", "repeatability": "1", "tables": ["0447"] },
     { "index": 37, "swiftName": "strain", "name": "Strain", "dataType": "ST", "length": "80=", "optionality": "O", "repeatability": "1" },
-    { "index": 38, "swiftName": "productionClassCode", "name": "Production Class Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0429"] },
+    { "index": 38, "swiftName": "productionClassCode", "name": "Production Class Code", "dataType": "CWE", "optionality": "O", "repeatability": "2", "tables": ["0429"] },
     { "index": 39, "swiftName": "tribalCitizenship", "name": "Tribal Citizenship", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0171"] },
     { "index": 40, "swiftName": "patientTelecommunicationInformation", "name": "Patient Telecommunication Information", "dataType": "XTN", "optionality": "O", "repeatability": "*" }
   ]

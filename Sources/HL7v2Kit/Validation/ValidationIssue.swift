@@ -81,8 +81,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case requiredComponentMissing
     /// A deprecated (`B`) or unsupported (`X`) field was populated.
     case fieldNotSupported
-    /// A field exceeded its declared cardinality (`1` but multiple
-    /// repetitions populated).
+    /// A field exceeded its declared cardinality: a `1` field carries more
+    /// than one repetition (`.error`), or a bounded field
+    /// (``FieldGrammar/maxRepetitions``) carries more than its printed bound
+    /// (`.warning`).
     case cardinalityExceeded
     /// A Z-segment (or any segment outside the loaded grammar) is present
     /// and the validator's Z-segment policy is `.warnPresence` or `.reject`.

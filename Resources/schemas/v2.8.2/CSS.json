@@ -5,6 +5,6 @@
   "fields": [
     { "index": 1, "swiftName": "studyScheduledTimePoint", "name": "Study Scheduled Time Point", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 2, "swiftName": "studyScheduledPatientTimePoint", "name": "Study Scheduled Patient Time Point", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
-    { "index": 3, "swiftName": "studyQualityControlCodes", "name": "Study Quality Control Codes", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] }
+    { "index": 3, "swiftName": "studyQualityControlCodes", "name": "Study Quality Control Codes", "dataType": "CWE", "optionality": "O", "repeatability": "3", "tables": ["9999"] }
   ]
 }

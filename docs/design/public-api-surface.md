@@ -28,7 +28,7 @@
 `HD`, `MSG`, `PT`, `VID`, `XPN`, `CX`, `XAD`, `CE`, `CWE`, `EI`, `XCN`, `XON`, `EIP`, `PL`, `CNE`, `XTN`.
 
 ### Validation
-`Validator`, `ValidationReport`, `ValidationIssue`, `ValidationOptions`, `IssueLocation`, `SegmentGrammar`, `FieldGrammar`, `SegmentGrammarTable` (enum namespace), `RequiredComponent`, `RequiredComponentSet` (+ nested `Semantics` enum), `ZSegmentPolicy` (enum).
+`Validator`, `ValidationReport`, `ValidationIssue`, `ValidationOptions`, `IssueLocation`, `SegmentGrammar`, `FieldGrammar` (P6-4 adds `maxRepetitions`), `SegmentGrammarTable` (enum namespace), `RequiredComponent`, `RequiredComponentSet` (+ nested `Semantics` enum), `ZSegmentPolicy` (enum).
 
 ### Transport
 `MLLP` (enum namespace), `MLLPUnframer`.
