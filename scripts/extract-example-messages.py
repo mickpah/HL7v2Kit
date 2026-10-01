@@ -6,10 +6,12 @@ run through the Swift Validator.
     SPEC_EXAMPLE_MESSAGES=/tmp/spec-examples.json SPEC_EXAMPLE_REPORT=/tmp/report.tsv \\
         DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --filter SpecExampleMessageTests
     python3 scripts/extract-example-messages.py --triage /tmp/spec-examples.json /tmp/report.tsv
+    python3 scripts/extract-example-messages.py --check-registry /tmp/report.tsv
 
 The output is specification text and, like the PDFs, stays OUT of the repository: write it
-to a scratch path. A message starts at "MSH|^~\\&" and runs while lines are segments; a
-segment ends at "<cr>" and may wrap over several printed lines.
+to a scratch path. A message starts at "MSH|^~\\&" (or at a recognised variant of that
+header — see _message_start) and runs while lines are segments; a segment ends at "<cr>" and
+may wrap over several printed lines.
 
 These examples are a TRIAGE source, not a must-pass oracle. Unlike the datatype examples
 (audit-schemas.py --examples), the printed messages are informative and frequently wrong in
@@ -27,10 +29,14 @@ CHAPTERS = {
 FURN = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|^\f")
 SEG = re.compile(r"^\s*([A-Z][A-Z0-9]{2})\|")
 _LITERAL_CR = re.compile(r"<cr>", re.IGNORECASE)
-# P4-22 fix round 1: a numbered section/subsection heading ("4.8  PHARMACY/TREATMENT
-# ORDERS", "2.11  LOCAL EXTENSION"), the marker that a segment whose own <cr> the PDF
-# dropped has run off the end of its figure and into ordinary prose.
-_SECTION_HEADING = re.compile(r"^\s*\d+(\.\d+){1,3}\s+[A-Z]")
+# P4-22 fix round 1 / P4-28 fix round 2: a numbered section/subsection heading ("4.8
+# PHARMACY/TREATMENT ORDERS", "2.11 CHAPTER FORMATS..."), the marker that a segment whose
+# own <cr> the PDF dropped has run off the end of its figure and into ordinary prose. Needs
+# heading SHAPE, not just a number followed by any capital letter — the original pattern
+# also matched an ordinary wrapped continuation that happens to start with a number and a
+# capitalised unit, e.g. "2.5 MG q4h...". A real heading's title is a capitalised WORD of
+# three or more letters (ruling out a two-letter unit like "MG").
+_SECTION_HEADING = re.compile(r"^\s*\d+(\.\d+){1,3}\s+[A-Z]{3,}")
 # No printed segment in this corpus, even wrapped over several lines, gets within an order
 # of magnitude of this; a real missing <cr> that runs a continuation into unrelated prose
 # (a swallowed worked example, a swallowed component table) reaches 100K+ characters.
@@ -38,11 +44,13 @@ _MAX_SEGMENT_LEN = 3000
 
 
 def _continuation_runs_into_prose(seg, line):
-    """P4-22 fix round 1: true when an open, un-terminated segment (the PDF dropped its
-    <cr>) has run off the end of its figure into ordinary document text — a numbered
-    section heading, or (heading or not) a segment that has grown far past any real
-    printed example's length."""
-    return bool(_SECTION_HEADING.match(line)) or len(seg) > _MAX_SEGMENT_LEN
+    """P4-22 fix round 1 / P4-28 fix round 2: true when an open, un-terminated segment (the
+    PDF dropped its <cr>) has run off the end of its figure into ordinary document text — a
+    numbered section heading (heading shape AND no "|" anywhere on the line — segment data
+    always has one, prose heading never does), or (heading or not) a segment that has grown
+    far past any real printed example's length."""
+    looks_like_heading = bool(_SECTION_HEADING.match(line)) and "|" not in line
+    return looks_like_heading or len(seg) > _MAX_SEGMENT_LEN
 
 
 def _split_literal_cr(line):
@@ -70,6 +78,60 @@ def _split_literal_cr(line):
     return out
 
 
+# P4-28: standard HL7 encoding characters (component ^, repetition ~, escape \, subcomponent
+# &) and the transposed order ~80 CH04/CH04A examples across v2.4-v2.8.2 print instead
+# (component ^, subcomponent &, repetition ~, escape \). Verified directly against the PDF
+# text: the body of every affected example consistently uses the characters in their
+# STANDARD roles, not the role the printed header's own position would declare — e.g. CH04's
+# FT1 composite price "125.43&USD" uses & as a subcomponent separator (amount & currency
+# code), and the PID-3 assigning authority "MPI&GenHosp&L" is the same HD subcomponent use —
+# so the printed header is a transposition of two characters, not a distinct,
+# self-consistent encoding, and is normalised to the standard order for parsing. Swapped
+# counts verified directly in the PDF text: v2.4 CH04.PDF 20, v2.5.1 V251_CH04.pdf 22, v2.6
+# V26_CH04_Orders.pdf 22, v2.8.2 V282_CH04_Orders.pdf 4, v2.8.2 V282_CH04A_Orders.pdf 12
+# (same QBP/RTB query example family as the others; it carries no FT1/PID evidence of its
+# own, but is treated the same way for consistency with its four siblings).
+_STD_ENC = "^~\\&"
+_SWAPPED_ENC = "^&~\\"
+# P4-28: the whole header — encoding characters and everything after them — replaced with
+# the elision marker. A message start under the default encoding characters.
+_BARE_MSH_HEADER = re.compile(r"^MSH\|\.\.\.(?:<cr>)?$")
+# P4-28: a segment consisting of only its three-character ID and the elision marker, e.g.
+# "PID|...". Recognising "MSH|..." as a message start (above) surfaces a common abbreviated-
+# example convention this corpus otherwise never exposed: a run of these shown back-to-back
+# with no literal "<cr>" between them at all ("MSH|...", "PID|...", "ORC|NW|...<cr>" —
+# confirmed directly in the PDF text, e.g. Hl7V231.pdf's "E-mail only version of the order"
+# example), which the ordinary wrapped-continuation rule would otherwise glue into one
+# unparseable blob. A bare-elided segment is complete by construction — nothing can follow
+# "SEG|..." — so it is always its own, immediately self-terminating segment, with or without
+# a printed "<cr>".
+_BARE_ELIDED_SEGMENT = re.compile(r"^[A-Z][A-Z0-9]{2}\|\.\.\.(?:<cr>)?$")
+
+
+def _message_start(line):
+    """P4-28: recognise every printed form of a message start this corpus uses, normalising
+    the text where the printed header and the body disagree, so the rest of the pipeline —
+    and the Swift Validator, which reads its own encoding characters from MSH-2 and cannot
+    parse a message at all without them — sees a message it can parse correctly.
+
+    Returns (normalised_line, swapped, bare) where swapped is True only for the transposed-
+    header case and bare is True only for the fully-elided "MSH|..." case (its encoding
+    characters are fabricated as the default "^~\\&" — the brief's "message start with
+    default encoding characters" — since the Validator cannot parse ANY field, not just the
+    version, without some value there), or None when the line is not a recognised message
+    start at all."""
+    if line.startswith("MSH|" + _STD_ENC):
+        return line, False, False
+    if line.startswith("MSH|" + _SWAPPED_ENC):
+        return "MSH|" + _STD_ENC + line[len("MSH|" + _SWAPPED_ENC):], True, False
+    if _BARE_MSH_HEADER.match(line):
+        # The Parser requires MSH-2 to be immediately followed by another field separator
+        # (it reads encoding characters as a fixed 4-character window, not a delimited
+        # field) — the trailing "|" is required, not merely cosmetic.
+        return "MSH|" + _STD_ENC + "|", False, True
+    return None
+
+
 def _drop_elision(seg):
     """P4-22 rules 2 and 3: a field whose whole content is the HL7 elision marker "..."
     means omitted content, not the literal value "...". Truncate the segment there: that
@@ -95,18 +157,21 @@ def _drop_elision(seg):
 
 def messages(pdf):
     text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", pdf, "-"], capture_output=True, text=True).stdout.split("\n")
-    out, cur, seg = [], None, None
+    out, out_swapped, out_bare = [], [], []
+    cur, seg, cur_swapped, cur_bare = None, None, False, False
     def close():
-        nonlocal cur, seg
+        nonlocal cur, seg, cur_swapped, cur_bare
         if cur is not None:
             if seg: cur.append(seg)
-            if len(cur) >= 2: out.append(cur)
-        cur, seg = None, None
+            if len(cur) >= 2:
+                out.append(cur); out_swapped.append(cur_swapped); out_bare.append(cur_bare)
+        cur, seg, cur_swapped, cur_bare = None, None, False, False
     for raw in text:
         if FURN.search(raw): continue
         for line in _split_literal_cr(raw.strip()):
-            if line.startswith("MSH|^~\\&"):
-                close(); cur, seg = [], line; continue
+            start = _message_start(line)
+            if start is not None:
+                close(); cur, seg, cur_swapped, cur_bare = [], start[0], start[1], start[2]; continue
             if cur is None: continue
             if not line:
                 if seg and seg.endswith("<cr>"): cur.append(seg); seg = None
@@ -127,16 +192,36 @@ def messages(pdf):
                 # triggering line itself (heading or otherwise) is not segment content and
                 # is dropped, same as page furniture.
                 cur.append(seg); seg = None
+            elif m and _BARE_ELIDED_SEGMENT.match(line):
+                # P4-28: the open segment lacks its own "<cr>" in the print, but this line is
+                # a complete, self-terminating bare-elided segment on its own — see
+                # _BARE_ELIDED_SEGMENT — so it closes the open one and is immediately closed
+                # itself, rather than being glued on as more "wrapped continuation" text.
+                cur.append(seg); cur.append(line); seg = None
             else:
                 seg += line          # a wrapped continuation of the open segment
     close()
     clean = []
-    for msg in out:
+    for msg, swapped, bare in zip(out, out_swapped, out_bare):
         segs = [re.sub(r"\s*<cr>\s*$", "", s) for s in msg]
         dropped = [_drop_elision(s) for s in segs]
         cleaned = [d[0] for d in dropped]
         if all(SEG.match(s) for s in cleaned):
-            clean.append(_elision_metadata(cleaned, dropped))
+            meta = _elision_metadata(cleaned, dropped)
+            meta["swappedHeader"] = swapped
+            if bare:
+                # P4-28: the fabricated default encoding characters leave no "..." for
+                # _drop_elision to see, so _elision_metadata never sets this on its own —
+                # but the whole header beyond those four characters is unknown, same as the
+                # elided-MSH-12 case P4-22 already falls back to the default grammar for.
+                # Likewise record it as a truncated segment from field 3 on (field 1 is the
+                # separator, field 2 the fabricated encoding characters — both "present"),
+                # the same convention _elision_metadata uses, so the report's existing ELIDED
+                # tagging (SpecExampleMessageTests.isElisionOnly) recognises every MSH field
+                # this fabricates a value for as elision, not a genuine finding.
+                meta["mshVersionElided"] = True
+                meta["truncatedSegments"].insert(0, {"segment": "MSH", "repetition": 1, "fromField": 3})
+            clean.append(meta)
     return clean
 
 
@@ -169,9 +254,11 @@ def _elision_metadata(cleaned_segs, dropped):
 # exact SpecExampleMessageTests issue code, and a regex against the location column (e.g.
 # "AIL[1]-6") — with the exact "count" of SPECEX lines that key must match, and a one-line
 # "reason" the EXAMPLE is at fault, not the rule. `check_registry()` below verifies every
-# count against a real report, via `--check-registry <report.tsv>` — that needs the
-# author-local PDFs to regenerate a report, so (like `audit-schemas.py --examples`) it
-# cannot run in CI and is interactive-only; CI instead runs only the synthetic-fixture
+# count against a real report, via `--check-registry <report.tsv>` (P4-28: that same flag
+# also verifies KNOWN_SWAPPED_HEADER_SOURCES, a separate per-source registry checked directly
+# against the PDF text rather than a report row — see check_swapped_header_counts) — that
+# needs the author-local PDFs to regenerate a report, so (like `audit-schemas.py --examples`)
+# it cannot run in CI and is interactive-only; CI instead runs only the synthetic-fixture
 # version of the same check, `check_registry_matches_a_synthetic_report` in
 # check-extract-example-messages.py (no PDFs needed). Same discipline as audit-schemas.py's
 # EXPECTED_EXAMPLE_REJECTIONS (M17, "registered exceptions"), adapted for this sweep (a
@@ -204,30 +291,12 @@ _RXO_FREE_TEXT_REASON = (
     "so RXO-6.1 is non-empty and the carve-out does not apply, even though Chapter 4 "
     "elsewhere states the convention is \"place a null in the first component and the text "
     "in the second\" (verified P4-17).")
-_RXO_INVISIBLE_REASON = (
-    "Fix round 1: v2.3.1 index 36 IS a splice (RQD|5's own <cr> is missing in the PDF, so "
-    "before the round-1 heading/length guard it absorbed ~2,300 lines of section 4.8 prose, "
-    "ending at the glued-on ORC/RXO text of this worked example, which the giant RQD-5 "
-    "string's own eventual <cr> terminator cut loose as its own, separate RXO segment, "
-    "eight lines into a message where it does not belong) — v2.3 CH4 index 1 is the same "
-    "worked example, same splice. The round-1 guard now correctly truncates RQD-5 and stops "
-    "before reaching the glued-on content at all, so this example is no longer extracted: "
-    "its own MSH is fully elided (\"MSH|...\", no encoding characters), which this "
-    "extractor's message-boundary detection (a literal \"MSH|^~\\&\" prefix) does not "
-    "recognise as a new message. Both things were true before the fix — it was a splice, "
-    "AND the RXO line it carried had the genuine free-text defect above — the fix removes "
-    "the line, not the underlying defect, which is simply no longer visible to this sweep.\n"
-    "Fix round 2 correction: the v2.4+ CH04/CH04A \"E-mail only\" and custom-IV examples the "
-    "original brief cited are invisible for a DIFFERENT reason, not the same \"MSH|...\" "
-    "elision as v2.3.1 — their printed MSH header transposes two encoding characters, "
-    "\"MSH|^&~\\|...\" instead of \"MSH|^~\\&...\" (confirmed directly in the PDF text: "
-    "v2.4 CH04.PDF 20 occurrences, v2.5.1 V251_CH04.pdf 22, v2.6 V26_CH04_Orders.pdf 22, "
-    "v2.8.2 V282_CH04_Orders.pdf 4, v2.8.2 V282_CH04A_Orders.pdf 12 — roughly 80 messages "
-    "total), so the literal \"MSH|^~\\&\" prefix check simply does not match and these "
-    "examples are never recognised as message starts at all. Both causes are named,"
-    " deliberate limitations of the message-boundary heuristic, not silently-dropped "
-    "findings; neither is fixed in this round — the controller scoped bringing the ~80 "
-    "swapped-header messages into the sweep as a separate task, P4-28.")
+# P4-28: formerly _RXO_INVISIBLE_REASON, documenting why the v2.3.1 index 36 / v2.3 CH4
+# index 1 "500 mg Polycillin" example and the v2.4+ CH04/CH04A swapped-header examples were
+# invisible to this sweep. This task fixes BOTH causes it named (Part 1(b) bare "MSH|..."
+# recognition, Part 1(a) swapped-header recognition), so every example it described as
+# invisible is now visible — see the active entries below, which replace the two
+# count-0 regression guards that used to stand in for them.
 _AI_SOURCES = ["v2.3/CH10.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH10.PDF",
                "v2.5.1/V251_CH10.pdf", "v2.6/V26_CH10_Scheduling.pdf", "v2.8.2/V282_CH10_Scheduling.pdf"]
 _AI_SHIFT_COUNTS = {"v2.3/CH10.pdf": 10, "v2.3.1/Hl7V231.pdf": 10, "v2.4/CH10.PDF": 10,
@@ -246,25 +315,104 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
        "location_pattern": r"^AI[LP]\[\d+\]-4$", "count": 10, "reason": _AI4_REASON}
       for src in _AI4_SOURCES],
-    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": 84, "code": "conditionalFieldMissing",
-     "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 2, "reason": _RXO_FREE_TEXT_REASON},
+    # P4-28: bringing bare-elided "MSH|..." headers into the sweep (Part 1(b)) makes three
+    # previously-invisible v2.3.1 messages visible (P4-22's "index 36" is one of these — the
+    # sequential index shifts every time an earlier message is added, so it is no longer
+    # literally 36 or even one single index; "all" aggregates all three), each the same
+    # "free text in RXO-6, no leading caret" defect: index 54 ("500 mg Polycillin...", RXO-1,
+    # 2 AND 4 blank), index 62 and 128 (a custom IV order, "D5W WITH 1/2 NS...", RXO-4
+    # populated with the unit "L" so only RXO-1/2 are blank). Confirmed directly in the
+    # extracted text.
+    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 6, "reason": _RXO_FREE_TEXT_REASON},
+    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^RXO\[\d+\]-4$", "count": 1, "reason": _RXO_FREE_TEXT_REASON},
+    # Same defect, same bare-"MSH|..." fix, in the standalone v2.3 CH4 PDF (index 16 is "500
+    # mg Polycillin...", RXO-1/2/4 blank; index 24 is the "D5W..." custom IV, RXO-1/2 only).
+    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 4, "reason": _RXO_FREE_TEXT_REASON},
+    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^RXO\[\d+\]-4$", "count": 1, "reason": _RXO_FREE_TEXT_REASON},
     *[{"source_glob": src, "index": 2, "code": "conditionalFieldMissing",
        "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 2, "reason": _RXO_FREE_TEXT_REASON}
       for src in _RXO_CH12_SOURCES],
-    # Documentation/regression-guard entries: these should match NOTHING (count 0). Fix
-    # round 2: keyed to "all" indices, not literally index 36 / index 1 — those specific
-    # indices can never match RXO again regardless of what the extractor does (the message
-    # is gone, not relocated), which made the original index-keyed guard pass trivially no
-    # matter what changed. Keying "all" instead means this runs against whatever RXO lines
-    # remain in the whole source after the real registered RXO entries above have already
-    # claimed theirs (entries are consumed in order, see check_registry), so if the E-mail
-    # example ever starts being extracted again — at index 36, or at any other index a
-    # future extractor change gives it — its RXO lines are what trips this to a mismatch.
-    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "*", "location_pattern": r"^RXO",
-     "count": 0, "reason": _RXO_INVISIBLE_REASON},
-    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "*", "location_pattern": r"^RXO",
-     "count": 0, "reason": _RXO_INVISIBLE_REASON},
+    # P4-28: the same "500 mg Polycillin" worked example also appears directly in the CH04/
+    # CH04A chapters themselves (not just the CH12 copy above) in every version whose swapped
+    # header Part 1(a) now recognises — confirmed index 19 (v2.4, v2.6), 20 (v2.5.1) and 2
+    # (v2.8.2 CH04A). v2.8.2 CH04 (not CH04A) is NOT among these: all four of its swapped
+    # headers belong to the "Query the accumulated list..." QBP/RTB family, which the
+    # separate, pre-existing no-"<cr>" segment-merge limitation (see the comment above
+    # KNOWN_SWAPPED_HEADER_SOURCES) still drops before a message is ever produced.
+    *[{"source_glob": src, "index": idx, "code": "conditionalFieldMissing",
+       "location_pattern": r"^RXO\[\d+\]-[124]$", "count": 3, "reason": _RXO_FREE_TEXT_REASON}
+      for src, idx in {"v2.4/CH04.PDF": 19, "v2.5.1/V251_CH04.pdf": 20,
+                        "v2.6/V26_CH04_Orders.pdf": 19, "v2.8.2/V282_CH04A_Orders.pdf": 2}.items()],
 ]
+
+# P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact
+# transposed four-character substring, not a downstream Validator finding — see _SWAPPED_ENC
+# above for the transposition and the PDF-text evidence it rests on). This is deliberately
+# NOT folded into KNOWN_SPEC_EXAMPLE_ERRORS / check_registry: that machinery matches SPECEX
+# report rows (Validator findings on a successfully-extracted, segment-split message), and
+# a good number of these occurrences belong to example families (e.g. the "Query the
+# accumulated list..." QBP^Z73/RTB^Z74 family, and several CH03/CH05 query/response pairs)
+# that the PDF prints with plain line-per-segment layout and no literal "<cr>" marker at
+# all — a separate, pre-existing limitation in messages()'s wrapped-continuation handling (an
+# open, unterminated segment unconditionally absorbs the next physical line as more of
+# itself, even when that line is itself a new segment), well outside this task's scope, that
+# still silently drops those messages (len(cur) < 2) even though their header is now
+# correctly recognised and normalised. Counting occurrences directly, independent of that
+# gap, is what "verified" means here and is checked on every --check-registry run regardless.
+#
+# The brief named "about 80 CH04/CH04A examples" — the count P4-22 found while investigating
+# a different (RXO) defect specifically in CH04. Confirming directly against the PDF text, as
+# this task's brief instructs, surfaced the same transposed header in CH03 and CH05 as well
+# (same defect, not confined to the chapters an earlier, narrower investigation happened to
+# be looking at — see project requirement 1, feature-complete over AU-specific scoping): 138
+# occurrences across nine sources, not ~80 across five.
+KNOWN_SWAPPED_HEADER_SOURCES = {
+    "v2.4/CH03.PDF": 10,
+    "v2.4/CH04.PDF": 20,
+    "v2.4/CH05.PDF": 36,
+    "v2.5.1/V251_CH03.pdf": 10,
+    "v2.5.1/V251_CH04.pdf": 22,
+    "v2.6/V26_CH04_Orders.pdf": 22,
+    "v2.8.2/V282_CH03_PatientAdmin.pdf": 2,
+    "v2.8.2/V282_CH04_Orders.pdf": 4,
+    "v2.8.2/V282_CH04A_Orders.pdf": 12,
+}
+
+
+def check_swapped_header_counts():
+    """P4-28: count every occurrence of the transposed header (see _SWAPPED_ENC) directly in
+    each source PDF's text, via the same pdftotext pass messages() uses. Returns {source:
+    count} for every source with at least one occurrence. Needs the author-local PDFs, so
+    (like check_registry) this is interactive-only, run via --check-registry."""
+    counts = {}
+    for version, pattern in CHAPTERS.items():
+        for pdf in sorted(glob.glob(os.path.join(REPO, "docs/standards", pattern))):
+            textout = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", pdf, "-"],
+                                      capture_output=True, text=True).stdout
+            n = textout.count("MSH|" + _SWAPPED_ENC)
+            if n:
+                counts[f"{version}/{os.path.basename(pdf)}"] = n
+    return counts
+
+
+def _swapped_header_mismatches(actual=None):
+    """P4-28: compare KNOWN_SWAPPED_HEADER_SOURCES against the real counts (or, for the
+    synthetic self-check, an `actual` dict passed in directly so this runs without PDFs).
+    Returns [(source, expected, got)] for every source where the two disagree, including a
+    source present in only one side (the other side's count is then 0)."""
+    if actual is None:
+        actual = check_swapped_header_counts()
+    mismatches = []
+    for source in sorted(set(KNOWN_SWAPPED_HEADER_SOURCES) | set(actual)):
+        expected = KNOWN_SWAPPED_HEADER_SOURCES.get(source, 0)
+        got = actual.get(source, 0)
+        if expected != got:
+            mismatches.append((source, expected, got))
+    return mismatches
 
 
 def check_registry(report_lines):
@@ -346,9 +494,16 @@ def main():
         for entry, actual in mismatches:
             print(f"MISMATCH {entry['source_glob']} index={entry['index']} {entry['code']} "
                   f"{entry['location_pattern']}: expected {entry['count']}, matched {actual}")
+        # P4-28: the swapped-header count is verified separately, directly against the PDF
+        # text (see KNOWN_SWAPPED_HEADER_SOURCES) rather than through a SPECEX report row.
+        swapped_mismatches = _swapped_header_mismatches()
+        for source, expected, got in swapped_mismatches:
+            print(f"MISMATCH swapped header {source}: expected {expected}, counted {got}")
         print(f"{len(KNOWN_SPEC_EXAMPLE_ERRORS)} registry entries, {len(mismatches)} mismatched, "
-              f"{len(unmatched)} SPECEX lines unclaimed by any entry")
-        sys.exit(1 if mismatches else 0)
+              f"{len(unmatched)} SPECEX lines unclaimed by any entry; "
+              f"{len(KNOWN_SWAPPED_HEADER_SOURCES)} swapped-header sources, "
+              f"{len(swapped_mismatches)} mismatched")
+        sys.exit(1 if (mismatches or swapped_mismatches) else 0)
     out = []
     for version, pattern in CHAPTERS.items():
         n = 0

@@ -114,6 +114,69 @@ def check_continuation_closes_before_running_into_prose():
     assert extract._continuation_runs_into_prose("X" * (extract._MAX_SEGMENT_LEN + 1), "more wrapped field text")
 
 
+def check_message_start_recognises_standard_swapped_and_bare_headers():
+    # P4-28 Part 1(a)/(b): _message_start returns (normalised_line, swapped, bare) for every
+    # recognised message-start shape, or None for a line that is not one.
+    std = "MSH|^~\\&|APP|FAC|APP2|FAC2|20200101||ADT^A01|MSG1|P|2.4|"
+    assert extract._message_start(std) == (std, False, False)
+    # the transposed header (component ^, subcomponent &, repetition ~, escape \) is
+    # normalised to the standard order (component ^, repetition ~, escape \, subcomponent
+    # &); nothing after the four-character encoding-characters field is touched.
+    swapped = "MSH|^&~\\|Pharm|GenHosp|CIS|GenHosp|1998052911150700||RDS^O13^RDS_O13|...<cr>"
+    normalised, was_swapped, was_bare = extract._message_start(swapped)
+    assert (was_swapped, was_bare) == (True, False)
+    assert normalised == "MSH|^~\\&|Pharm|GenHosp|CIS|GenHosp|1998052911150700||RDS^O13^RDS_O13|...<cr>", normalised
+    # a fully-elided header is a message start under FABRICATED default encoding characters
+    # -- the Validator cannot parse ANY field without some value in MSH-2, not just the
+    # version -- and is reported bare so the caller can force mshVersionElided itself (the
+    # fabricated text leaves no "..." for the ordinary elision machinery to see).
+    # the trailing "|" after the encoding characters is required, not cosmetic: the Parser
+    # reads MSH-2 as a fixed four-character window and requires a field separator right
+    # after it (Sources/HL7v2Kit/Parser/Parser.swift's "MSH-2 not followed by field
+    # separator" check).
+    assert extract._message_start("MSH|...") == ("MSH|^~\\&|", False, True)
+    assert extract._message_start("MSH|...<cr>") == ("MSH|^~\\&|", False, True)
+    # a line that is not any recognised message-start shape is not one.
+    assert extract._message_start("PID|1||123") is None
+    assert extract._message_start("MSH|APP|FAC") is None, \
+        "a header with real content but no encoding characters is not the bare-elision case"
+    assert extract._message_start("MSH|...stuff") is None, \
+        "a trailing '...' is only the bare-elision marker when nothing follows it"
+
+
+def check_heading_guard_needs_heading_shape():
+    # P4-28 Part 1(c): the section-heading splice guard needs heading SHAPE -- a section
+    # number followed by a capitalised TITLE WORD (three or more letters, ruling out a
+    # two-letter unit like "MG") and no "|" anywhere on the line (segment data always has
+    # one; prose heading never does).
+    short_seg = "RXO|1|500 mg Polycillin"
+    # a numbered dosage wrapped mid-segment must NOT be mistaken for a heading.
+    assert not extract._continuation_runs_into_prose(short_seg, "2.5 MG q4h for 10 days")
+    # a real heading, with the spacing the PDFs actually use (anywhere from one space to a
+    # wide tab-stop gap), is still recognised.
+    assert extract._continuation_runs_into_prose(short_seg, "4.8       PHARMACY/TREATMENT ORDERS")
+    assert extract._continuation_runs_into_prose(short_seg, "2.11 CHAPTER FORMATS FOR DEFINING HL7 MESSAGES")
+    # a line with heading shape but carrying a "|" is segment data, not prose, even if it
+    # happens to start with a number and a capitalised word.
+    assert not extract._continuation_runs_into_prose(short_seg, "4.8 REFERENCE|SOMETHING")
+
+
+def check_bare_elided_segment_is_self_terminating():
+    # P4-28: a segment that is only its three-character ID and the elision marker is
+    # complete by construction -- nothing can follow "SEG|..." -- so it is recognised
+    # whether or not the print gives it its own literal "<cr>", the shape that surfaces once
+    # "MSH|..." is recognised as a message start (brief Part 1(b)): e.g. Hl7V231.pdf's
+    # "E-mail only version of the order" example prints "MSH|...", "PID|..." and
+    # "ORC|NW|...<cr>" back-to-back with no "<cr>" at all before the ORC line.
+    assert extract._BARE_ELIDED_SEGMENT.match("PID|...")
+    assert extract._BARE_ELIDED_SEGMENT.match("MSH|...<cr>")
+    # a segment carrying real content after the elision marker is not this shape, even if it
+    # also happens to elide something later.
+    assert not extract._BARE_ELIDED_SEGMENT.match("ORC|NW|1000^OE||||E")
+    assert not extract._BARE_ELIDED_SEGMENT.match("RXO||||||500 mg Polycillin...")
+    assert not extract._BARE_ELIDED_SEGMENT.match("PID|...more")
+
+
 def check_known_spec_example_errors_cite():
     # P4-22 Part 3 / fix round 1 item 5: every registered exception is keyed by (source
     # glob, index, code, location pattern) with an exact expected count, and cites the spec
@@ -159,12 +222,43 @@ def check_registry_matches_a_synthetic_report():
         extract.KNOWN_SPEC_EXAMPLE_ERRORS[:] = saved
 
 
+def check_swapped_header_registry_and_mismatches():
+    # P4-28: KNOWN_SWAPPED_HEADER_SOURCES records, per source, how many times the printed
+    # header is transposed -- counted directly against the PDF text, independent of whether
+    # the message that follows survives extraction as a separate, correctly-split message
+    # (a good number belong to a plain line-per-segment example family a separate,
+    # pre-existing limitation still drops; see the comment above the registry). Confirming
+    # directly against the PDF text (as the brief instructs) surfaced the transposed header
+    # in CH03 and CH05 too, not just the CH04/CH04A the brief named -- nine sources, 138
+    # occurrences, not the ~80 across five an earlier, narrower investigation found.
+    assert len(extract.KNOWN_SWAPPED_HEADER_SOURCES) == 9
+    assert all(n > 0 for n in extract.KNOWN_SWAPPED_HEADER_SOURCES.values())
+    assert sum(extract.KNOWN_SWAPPED_HEADER_SOURCES.values()) == 138
+    # _swapped_header_mismatches takes an `actual` dict directly so this runs without PDFs;
+    # it reports every source where the two sides disagree, including one side missing a
+    # source the other has (the missing side's count is then 0).
+    saved = dict(extract.KNOWN_SWAPPED_HEADER_SOURCES)
+    try:
+        extract.KNOWN_SWAPPED_HEADER_SOURCES.clear()
+        extract.KNOWN_SWAPPED_HEADER_SOURCES.update({"v2.4/CH04.PDF": 3, "v2.5.1/V251_CH04.pdf": 22})
+        mismatches = extract._swapped_header_mismatches(
+            actual={"v2.4/CH04.PDF": 2, "v2.5.1/V251_CH04.pdf": 22, "v2.6/X.pdf": 1})
+        assert mismatches == [("v2.4/CH04.PDF", 3, 2), ("v2.6/X.pdf", 0, 1)], mismatches
+    finally:
+        extract.KNOWN_SWAPPED_HEADER_SOURCES.clear()
+        extract.KNOWN_SWAPPED_HEADER_SOURCES.update(saved)
+
+
 CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_segment,
           check_elided_msh12_keeps_message_but_drops_version,
           check_elision_metadata_marks_truncated_segments_and_msh_version,
           check_continuation_closes_before_running_into_prose,
+          check_message_start_recognises_standard_swapped_and_bare_headers,
+          check_heading_guard_needs_heading_shape,
+          check_bare_elided_segment_is_self_terminating,
           check_known_spec_example_errors_cite,
-          check_registry_matches_a_synthetic_report]
+          check_registry_matches_a_synthetic_report,
+          check_swapped_header_registry_and_mismatches]
 
 
 def main():
