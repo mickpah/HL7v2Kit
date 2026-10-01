@@ -20,7 +20,7 @@
     { "index": 15, "swiftName": "numberOfAuthorizedTreatmentsUnits", "name": "Number of Authorized Treatments/Units", "dataType": "CQ", "length": "721", "optionality": "O", "repeatability": "1" },
     { "index": 16, "swiftName": "numberOfUsedTreatmentsUnits", "name": "Number of Used Treatments/Units", "dataType": "CQ", "length": "721", "optionality": "O", "repeatability": "1" },
     { "index": 17, "swiftName": "numberOfScheduleTreatmentsUnits", "name": "Number of Schedule Treatments/Units", "dataType": "CQ", "length": "721", "optionality": "O", "repeatability": "1" },
-    { "index": 18, "swiftName": "remainingBenefitAmount", "name": "Remaining Benefit Amount", "dataType": "M0", "length": "20", "optionality": "O", "repeatability": "1" },
+    { "index": 18, "swiftName": "remainingBenefitAmount", "name": "Remaining Benefit Amount", "dataType": "MO", "length": "20", "optionality": "O", "repeatability": "1" },
     { "index": 19, "swiftName": "authorizedProvider", "name": "Authorized Provider", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "authorizedHealthProfessional", "name": "Authorized Health Professional", "dataType": "XCN", "length": "250", "optionality": "O", "repeatability": "1" },
     { "index": 21, "swiftName": "sourceText", "name": "Source Text", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "1" },

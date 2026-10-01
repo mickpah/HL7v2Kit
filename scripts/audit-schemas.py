@@ -95,11 +95,17 @@ SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", 
 # (version, segment, index) -> citation: slots where the schema deliberately diverges from
 # the extracted attribute-table value. Every entry names its source (check-audit-schemas.py
 # fails an entry without one).
+#   v2.8.2/RF1/18 — the CH11 attribute table prints `M0` (zero), a misprint:
+#                 the field heading (§11.8.1.18) and the same element at
+#                 AUT-22 (table row and §11.8.2.22) print `MO`. `M0` is no
+#                 datatype, so following it would skip the MO grammar.
 DATATYPE_WHITELIST = {
     ("v2.4", "AL1", 1): "v2.4 CH3 AL1 attribute table and heading print CE for Set ID - AL1, a "
                         "spec typo (SI in v2.3 and v2.5+); registered in segment-coverage-extraction.md",
     ("v2.5.1", "OBX", 5): "v2.5.1 CH7 OBX-5 variable-type row defeats the extractor (candidates *, "
                           "'NA or', 'varie'); schema `varies` hand-verified in M6-D5",
+    ("v2.8.2", "RF1", 18): "v2.8.2 CH11 RF1-18 attribute table prints `M0` (zero), a misprint; "
+                           "field heading §11.8.1.18 and AUT-22 (table row and §11.8.2.22) print `MO`",
 }
 # M20 name predicate. A schema name must equal, after normalisation, an element name the
 # version's own attribute table prints for that slot. Extraction can still glue prose onto a

@@ -360,6 +360,7 @@ itself. Each is normalised in the schema and listed here so `--verify` FAILs are
 | v2.3 | EQL-2 / SPR-2 / VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Line-wrap artifact after the slash; every other version and the field definitions read `Query/Response`. Names only. |
 | v2.4 | VTQ-2 name | `Query/ Response Format Code` | `Query/Response Format Code` | Same artifact; v2.4 EQL-2 / SPR-2 are spaced correctly. Names only. |
 | v2.3, v2.3.1, v2.4 | CM2-1 name | `Set ID- CM2` | `Set ID - CM2` | Missing space before the hyphen in all three legacy tables; v2.5.1 and the CM2-1 definition headings are spaced. Names only. |
+| v2.8.2 | RF1-18 DT | `M0` | `MO` | CH11 field heading §11.8.1.18 prints `(MO)`; the same element at AUT-22 prints `MO` in its table row and in §11.8.2.22. `DATATYPE_WHITELIST` carries it. |
 
 ### Blank OPT = optional, and the v2.3.1 Appendix C exception (§3F)
 
@@ -473,7 +474,7 @@ Two carve-outs, both enumerated in `audit-schemas.py`:
   the AU CE composite rules onto every plain set-ID (req #4 misfire), so the schema
   normalises to `SI`. `v2.5.1/OBX-5`: the variable-type row defeats the extractor
   (candidates include `*`, `NA or`, truncated `varie`); the schema's `varies` is
-  hand-verified (M6-D5).
+  hand-verified (M6-D5). `v2.8.2/RF1-18`: the `M0` misprint, normalised to `MO` (P6-1).
 
 First measurement (2026-09-16): **45 findings** → 30 were the CM-refinement class
 (documented above, not defects), 2 whitelisted, and **13 real verbatim-fidelity defects

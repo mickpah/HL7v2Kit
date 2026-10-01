@@ -49,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `check_swift_name_uniqueness` and `check_element_name` are in
   `scripts/check-audit-schemas.py`.
 
+### Fixed — P6-1: RF1-18 datatype (v2.8.2)
+
+- v2.8.2 RF1-18 Remaining Benefit Amount is typed `MO`, not the attribute-table
+  misprint `M0`, so the MO component grammar now applies. Registered in
+  `segment-coverage-extraction.md` and `DATATYPE_WHITELIST`. (V282-C11)
+
 ### Deprecated — P6-9: two prose-bled accessor names
 
 - `TQ2.specialServiceRequestRelationshipRequestsUsingTheParentChild...` (the
