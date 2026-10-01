@@ -59,6 +59,15 @@ def check_elision_field_drops_rest_of_segment():
     # P4-29: the print sometimes sets the marker as one ellipsis character (v2.5.1 CH05's
     # "OBX|\u2026"), which means the same.
     assert extract._drop_elision("OBX|\u2026") == ("OBX|", 1)
+    # P4-29 fix round 1: the marker fused onto the LAST printed field, with no separator
+    # before it (v2.3 CH7 "OBX||ST...", "ORC|RE..."), elides from the next field on; the
+    # printed value keeps its own text. A last field of dots only is whole-field elision.
+    assert extract._drop_elision("OBX||ST...") == ("OBX||ST", 3)
+    assert extract._drop_elision("ORC|RE...") == ("ORC|RE", 2)
+    assert extract._drop_elision("OBX||FT......") == ("OBX||FT", 3)
+    assert extract._drop_elision("PID|||4567^^^MPI^MR|....") == ("PID|||4567^^^MPI^MR", 4)
+    # a value that merely contains the marker before the last field is printed content.
+    assert extract._drop_elision("NTE|1||see notes... continued|X") == ("NTE|1||see notes... continued|X", None)
 
 
 def check_elided_msh12_keeps_message_but_drops_version():
@@ -244,6 +253,10 @@ def check_outdented_line_is_prose_not_continuation():
     # a continuation printed slightly left of its segment (up to three columns) is kept.
     got = _segments([msh, "                    PV1||I|6N^1234^A^GOOD HEALTH HOSPI-", "                 TAL||||0100"])
     assert got == [[_MSH, "PV1||I|6N^1234^A^GOOD HEALTH HOSPI-TAL||||0100"]], got
+    # fix round 1: a line led by a real segment ID is never prose, however far left it sits
+    # (after a page break the layout can shift: v2.5.1 CH05 QBP^Z75 QPD, v2.4 CH08 MFA).
+    got = _segments([msh, rcp, "          QPD|Q22^Find Candidates^HL7nnnn|111069"])
+    assert got == [[_MSH, "RCP|I|20^RD", "QPD|Q22^Find Candidates^HL7nnnn|111069"]], got
 
 
 def check_wrapped_line_led_by_a_non_segment_word_is_not_split():
@@ -298,8 +311,11 @@ def check_elision_only_line_does_not_glue_its_neighbours():
     assert extract._segment_break("    ...                       // Other parts of message might")
     # a continuation line that merely STARTS with the elision marker is real content.
     assert not extract._segment_break("... ^^^^198901130500^<cr>")
+    # fix round 1: the marker set as one ellipsis character is an elision-only line too.
+    assert extract._segment_break("    \u2026")
     got = _segments([_MSH, "OBX||ST...", "    ...", "ABC||FT...", "ORC|CH|A226677^OE|89-452^EKG<cr>"])
-    assert got == [[_MSH, "OBX||ST...", "ABC||FT...", "ORC|CH|A226677^OE|89-452^EKG"]], got
+    # (the "..." fused onto "ST"/"FT" is itself elision of the rest of those segments.)
+    assert got == [[_MSH, "OBX||ST", "ABC||FT", "ORC|CH|A226677^OE|89-452^EKG"]], got
     # but after an open segment that stops on a field separator, the same line is that
     # segment's own elided remainder (v2.5.1 CH04: "MSH|...||OMS^O05^OMS_O05|" / "...<cr>"),
     # so it stays a continuation and the elision is still recorded (MSH-12 elided).
@@ -309,6 +325,17 @@ def check_elision_only_line_does_not_glue_its_neighbours():
     got = extract.messages_from_lines([msh, "   ...<cr>", "PID|...<cr>", "ORC|NW|RQ101^ORSUPPLY<cr>"])
     assert got[0]["segments"] == [msh[:-1], "PID|", "ORC|NW|RQ101^ORSUPPLY"], got
     assert got[0]["mshVersionElided"] is True, got
+
+
+def check_segment_first_on_a_page_is_kept():
+    # P4-29 fix round 1: pdftotext starts each new page with a form feed. A page whose first
+    # printed line is a segment (four lines, all v2.8.2 CH04, e.g. "RDT|DTAG|NAT||||0|0|0|0|")
+    # used to be dropped as page furniture by FURN's "^\f" alternative.
+    got = _segments([_MSH, "RCP|I|20^RD", "\f                       RDT|DTAG|NAT||||0|0|0|0|"])
+    assert got == [[_MSH, "RCP|I|20^RD", "RDT|DTAG|NAT||||0|0|0|0|"]], got
+    # a form-feed line that is not a segment is still page furniture.
+    got = _segments([_MSH, "RCP|I|20^RD", "\fSome running header text", "QAK|1|OK"])
+    assert got == [[_MSH, "RCP|I|20^RD", "QAK|1|OK"]], got
 
 
 def check_known_spec_example_errors_cite():
@@ -415,6 +442,7 @@ CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_se
           check_bare_elided_segment_is_self_terminating,
           check_segment_id_line_starts_a_segment_without_cr,
           check_outdented_line_is_prose_not_continuation,
+          check_segment_first_on_a_page_is_kept,
           check_wrapped_line_led_by_a_non_segment_word_is_not_split,
           check_standalone_comment_line_closes_the_open_segment,
           check_elision_only_line_does_not_glue_its_neighbours,

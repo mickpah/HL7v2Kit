@@ -58,10 +58,12 @@ _SECTION_HEADING_ONE_DOT = re.compile(r"^\s*\d+\.\d+\s+[A-Z][A-Za-z0-9]{3,}")
 _MAX_SEGMENT_LEN = 3000
 # P4-29: the print indents every example message; pdftotext -layout keeps that indentation.
 # A genuine wrapped continuation line is never more than this many columns left of its
-# segment's first printed line (measured over the whole corpus: the furthest-left real
-# continuation is 3 columns left, "0<cr>" in v2.3 CH4, and no line further left than that
-# contains a single "|"), while the prose after a figure resumes at the body margin, 4 to 34
-# columns further left.
+# segment's first printed line, while the prose after a figure resumes at the body margin, 4
+# to 34 columns further left. Measured over the continuation lines only (lines NOT led by a
+# segment ID): the furthest-left real continuation is 3 columns left, "0<cr>" in v2.3 CH4,
+# and none further left contains a "|". A line led by a segment ID is exempt (fix round 1):
+# after a page break the layout can shift by more than this, and four real segments sit
+# further left than the segment before them.
 _MAX_OUTDENT = 3
 
 
@@ -188,6 +190,9 @@ def _message_start(line):
     return None
 
 
+_FUSED_ELISION = re.compile(r"(?:\.{3,}|\u2026)\s*$")
+
+
 def _drop_elision(seg):
     """P4-22 rules 2 and 3: a field whose whole content is the HL7 elision marker "..."
     means omitted content, not the literal value "...". Truncate the segment there: that
@@ -209,6 +214,18 @@ def _drop_elision(seg):
             if len(kept) == 1:
                 kept.append("")
             return "|".join(kept), i
+    # P4-29 fix round 1: the marker fused onto the LAST printed field with no separator before
+    # it ("OBX||ST...", "ORC|RE...", v2.3 CH7 / v2.3.1) elides everything from the next field
+    # on; the printed value keeps its own text. A last field of dots only ("....") is
+    # whole-field elision. Only the last field: "see notes... continued|X" is content.
+    last = len(fields) - 1
+    m = _FUSED_ELISION.search(fields[last]) if last > 0 else None
+    if m:
+        value = fields[last][:m.start()].rstrip()
+        if not value:
+            kept = fields[:last] + ([""] if last == 1 else [])
+            return "|".join(kept), last
+        return "|".join(fields[:last] + [value]), last + 1
     return seg, None
 
 
@@ -233,14 +250,19 @@ def _ends_mid_field(seg):
     component, repetition, subcomponent or escape character (a composite broken across two
     lines, e.g. CH05's "...^AND|@ORC.1^EQ^RE^" / "AND|@RXD.3...") or on a hyphenated word
     break ("GOOD HEALTH HOSPI-" / "TAL|..."). The next line then continues that field, even
-    if it happens to begin with a segment ID."""
+    if it happens to begin with a segment ID.
+
+    Justified only synthetically: in this corpus no line led by a segment ID follows a line
+    ending this way (the two examples above are led by non-segment words, which stay
+    continuations anyway), so the guard changes no extracted message today. It is kept as
+    the brief's "visibly mid-field" exception, pinned by the self-check."""
     return seg.rstrip().endswith(("^", "~", "&", "\\", "-"))
 
 
 # P4-29: a whole printed line that is only the elision marker ("...", "......") between
 # segments stands for omitted segments (v2.3 CH7's "OBX||ST...", "...", "OBX||FT..."). A
 # line that merely STARTS with it ("... ^^^^198901130500^<cr>") is real continuation text.
-_ELISION_ONLY_LINE = re.compile(r"^\.{3,}(?:<cr>)?$")
+_ELISION_ONLY_LINE = re.compile(r"^(?:\.{3,}|\u2026)(?:<cr>)?$")
 
 
 def _segment_break(raw, seg=None):
@@ -281,6 +303,10 @@ def messages_from_lines(text):
                 out.append(cur); out_swapped.append(cur_swapped); out_bare.append(cur_bare)
         cur, seg, cur_swapped, cur_bare = None, None, False, False
     for raw in text:
+        # P4-29 fix round 1: pdftotext opens each page with a form feed, which FURN treats as
+        # furniture -- but four pages (all v2.8.2 CH04) open with a printed segment.
+        if raw.startswith("\f") and SEG.match(raw[1:]):
+            raw = raw[1:]
         if FURN.search(raw): continue
         if _segment_break(raw, seg):
             if cur is not None and seg:
@@ -316,7 +342,12 @@ def messages_from_lines(text):
                     seg, seg_indent = line, indent
                 else:
                     seg = None; close()
-            elif _continuation_runs_into_prose(seg, line, seg_indent - indent):
+            elif _continuation_runs_into_prose(
+                    seg, line, 0 if (m and _is_segment_id(m.group(1))) else seg_indent - indent):
+                # (P4-29 fix round 1: a line led by a real segment ID is never treated as
+                # outdented prose -- page breaks shift the layout, and the guard dropped four
+                # real segments: v2.5.1 CH05 QBP^Z75 QPD, v2.4 CH08 MFK MFA, v2.4 CH05 RXD,
+                # v2.8.2 CH04 RTB RDT.)
                 # P4-22 fix round 1: the PDF dropped this segment's own <cr>, so the
                 # "wrapped continuation" branch below would otherwise keep absorbing raw
                 # lines past the end of the figure — into a section heading, or (if a
@@ -471,15 +502,16 @@ _RXA_CH12_SHIFT_REASON = (
     "RXA-3 (Date/Time Start of Administration, R, no condition) reads blank. (The RXA-4 line "
     "from the same shift is left unregistered for P4-30.)")
 _MF_KEY_TYPE_REASON = (
-    "The CH2/CH02 and CH8/CH08 MFN/MFK master-file examples (lab test dictionary, religion "
-    "table, practitioner file) end MFE after MFE-4 and MFA after MFA-5: MFE-5 / MFA-6 "
-    "(Primary Key Value Type) are never printed, though R in every version that defines them.")
+    "The CH2/CH02, CH8/CH08 and CH17 MFN/MFK master-file examples end MFE after MFE-4 and MFA "
+    "after MFA-5: MFE-5 / MFA-6 (Primary Key Value Type) are never printed, though R in every "
+    "version that defines them (v2.3.1 onwards). Registered only on messages whose declared "
+    "MSH-12 is such a version.")
 _MFI_SHIFT_REASON = (
     "The same master-file examples omit or misplace MFI fields: \"MFI|LABxxx^Lab Test "
     "Dictionary^L|UPD|||AL\" drops MFI-2, so the File-Level Event Code lands in MFI-2 and the "
     "Response Level Code in MFI-5; \"MFI|0006^RELIGION^HL7||UPD||AL\" and \"MFI|INV|MATERIALSYS|"
-    "UPD|200408121100|SU|\" print the Response Level Code one field early. MFI-3 and MFI-6 "
-    "are R in every version.")
+    "UPD|200408121100|SU|\" print the Response Level Code one field early. MFI-3 is R in every "
+    "version; MFI-6 is registered only on MFN messages, for which its definition requires it.")
 _DSP_SHIFT_REASON = (
     "v2.4/v2.5.1 CH05 display-response examples print the display text one field early, "
     "\"DSP||555444222111 Everyman,Adam ...\" (DSP-2 Display Level holds the line, DSP-3 Data "
@@ -501,19 +533,7 @@ _HD_PAIR_REASON = (
     "CH05 subscription examples carry \"PS^LAB\" in MSH-3/MSH-5: HD-2 valued without HD-3. "
     "HD (every version from v2.3): \"The second and third components must either both be "
     "valued (both non-null), or both be not valued (both null).\"")
-_FUSED_ELISION_REASON = (
-    "v2.3 CH7 / v2.3.1 chapter 7 EKG child-order and blood-culture examples print the elision "
-    "marker fused onto a coded value with no field separator before it (\"OBX||ST...\", "
-    "\"OBX||FT...\", \"ORC|RE...\"), so the marker is part of the value and the table lookup "
-    "rejects it. A field that is wholly \"...\" is elision (_drop_elision); a value merely "
-    "ending in it is printed content.")
 _P4_29_ENTRIES = [
-    *[{"source_glob": src, "index": idx, "code": 'valueNotInTable(table: "0125")',
-       "location_pattern": r"^OBX\[\d+\]-2$", "count": 9, "reason": _FUSED_ELISION_REASON}
-      for src, idx in {"v2.3/CH7.pdf": 9, "v2.3.1/Hl7V231.pdf": 97}.items()],
-    *[{"source_glob": src, "index": idx, "code": 'valueNotInTable(table: "0119")',
-       "location_pattern": r"^ORC\[\d+\]-1$", "count": 1, "reason": _FUSED_ELISION_REASON}
-      for src, idx in {"v2.3/CH7.pdf": 7, "v2.3.1/Hl7V231.pdf": 95}.items()],
     *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
        "location_pattern": r"^RXA\[\d+\]-5$", "count": 10, "reason": _RXA_SERIES_CODE_REASON}
       for src, idx in {"v2.3/CH4.pdf": 29, "v2.3.1/Hl7V231.pdf": 76}.items()],
@@ -532,21 +552,48 @@ _P4_29_ENTRIES = [
       for src, idx in {"v2.3.1/Hl7V231.pdf": 146, "v2.4/CH12.PDF": 2, "v2.5.1/V251_CH12.pdf": 2,
                         "v2.6/V26_CH12_PatientCare.pdf": 2,
                         "v2.8.2/V282_CH12_PatientCare.pdf": 2}.items()],
-    *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
+    # Fix round 1 (I-2): only messages whose declared MSH-12 defines MFE-5/MFA-6 (v2.3.1
+    # onwards). The 71 lines on "2.2"-declared copies of the same examples are validated
+    # under the default v2.5.1 grammar and stay in that already-accepted class, unregistered.
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
        "location_pattern": r"^(MFE\[\d+\]-5|MFA\[\d+\]-6)$", "count": n, "reason": _MF_KEY_TYPE_REASON}
-      for src, n in {"v2.3/CH2.pdf": 13, "v2.3/CH8.pdf": 14, "v2.3.1/Hl7V231.pdf": 20,
-                     "v2.4/CH02.PDF": 13, "v2.4/CH08.PDF": 20, "v2.5.1/V251_CH02.pdf": 8,
-                     "v2.5.1/V251_CH08.pdf": 16, "v2.6/V26_CH02_Control.pdf": 10,
-                     "v2.6/V26_CH08_MasterFiles.pdf": 4, "v2.6/V26_CH17_MatMngmt.pdf": 1,
-                     "v2.8.2/V282_CH02_Control.pdf": 8,
-                     "v2.8.2/V282_CH17_MaterialsMngmt.pdf": 1}.items()],
+      for src, by_index in {
+          "v2.3.1/Hl7V231.pdf": {112: 2, 114: 2, 116: 1, 117: 1, 118: 1},
+          "v2.4/CH08.PDF": {6: 2, 8: 2, 10: 1, 11: 1, 12: 1, 21: 3},
+          "v2.5.1/V251_CH02.pdf": {3: 2, 4: 2},
+          "v2.5.1/V251_CH08.pdf": {8: 1, 9: 1, 10: 1, 11: 2, 12: 2, 13: 2, 15: 2, 17: 2, 19: 3},
+          "v2.6/V26_CH02_Control.pdf": {0: 1, 1: 1, 8: 2, 9: 2},
+          "v2.6/V26_CH08_MasterFiles.pdf": {12: 2, 15: 2},
+          "v2.6/V26_CH17_MatMngmt.pdf": {0: 1},
+          "v2.8.2/V282_CH02_Control.pdf": {8: 2, 9: 2, 10: 2, 12: 2},
+          "v2.8.2/V282_CH17_MaterialsMngmt.pdf": {0: 1},
+      }.items() for idx, n in by_index.items()],
     *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
-       "location_pattern": r"^MFI\[\d+\]-[36]$", "count": n, "reason": _MFI_SHIFT_REASON}
-      for src, n in {"v2.3/CH2.pdf": 12, "v2.3/CH8.pdf": 18, "v2.3.1/Hl7V231.pdf": 14,
-                     "v2.4/CH02.PDF": 12, "v2.4/CH08.PDF": 14, "v2.5.1/V251_CH02.pdf": 8,
-                     "v2.5.1/V251_CH08.pdf": 12, "v2.6/V26_CH02_Control.pdf": 8,
-                     "v2.6/V26_CH17_MatMngmt.pdf": 1, "v2.8.2/V282_CH02_Control.pdf": 4,
-                     "v2.8.2/V282_CH17_MaterialsMngmt.pdf": 1}.items()],
+       "location_pattern": r"^MFI\[\d+\]-3$", "count": n, "reason": _MFI_SHIFT_REASON}
+      for src, n in {"v2.3/CH2.pdf": 6, "v2.3/CH8.pdf": 9, "v2.3.1/Hl7V231.pdf": 6,
+                     "v2.4/CH02.PDF": 6, "v2.4/CH08.PDF": 6, "v2.5.1/V251_CH02.pdf": 4,
+                     "v2.5.1/V251_CH08.pdf": 6, "v2.6/V26_CH02_Control.pdf": 4,
+                     "v2.8.2/V282_CH02_Control.pdf": 2}.items()],
+    # Fix round 1 (C-1): MFI-6 is registered on MFN messages only. Its definition reads
+    # "Required for MFN-Master File Notification message" (v2.3 CH8, v2.4 CH08, v2.5.1 CH08,
+    # v2.8.2 CH08), against an unconditional R in the segment table -- the same
+    # table-versus-definition conflict as RXA-4. The 27 MFI-6 lines on MFK/MFD messages are a
+    # Requirement-4 candidate pending P4-30 and are deliberately left unregistered.
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": r"^MFI\[\d+\]-6$", "count": 1, "reason": _MFI_SHIFT_REASON}
+      for src, indices in {
+          "v2.3.1/Hl7V231.pdf": [7, 9, 13],
+          "v2.3/CH2.pdf": [7, 9, 13],
+          "v2.3/CH8.pdf": [0, 2, 6, 10, 11, 12],
+          "v2.4/CH02.PDF": [3, 5, 9],
+          "v2.4/CH08.PDF": [13, 15, 19],
+          "v2.5.1/V251_CH02.pdf": [3, 5],
+          "v2.5.1/V251_CH08.pdf": [11, 13, 17],
+          "v2.6/V26_CH02_Control.pdf": [8, 10],
+          "v2.6/V26_CH17_MatMngmt.pdf": [0],
+          "v2.8.2/V282_CH02_Control.pdf": [8],
+          "v2.8.2/V282_CH17_MaterialsMngmt.pdf": [0],
+      }.items() for idx in indices],
     *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
        "location_pattern": r"^DSP\[\d+\]-3$", "count": 29, "reason": _DSP_SHIFT_REASON}
       for src in ["v2.4/CH05.PDF", "v2.5.1/V251_CH05.pdf"]],
