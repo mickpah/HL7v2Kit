@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P4-30: segment-table R against a restricting field definition
+
+Fields whose attribute table prints R while the field definition limits or relaxes them
+(Requirement 4). Each ruling cites the definition; the printed R stays visible in the schema's
+new `optionalityCitation` key and in the schema audit's optionality whitelist.
+
+- **MFI-6 Response Level Code** (all six versions): R to C, `messageCode = MFN`. The
+  definition reads "Required for MFN-Master File Notification message" (v2.3 CH8 sec 8.4.1.6;
+  v2.4 to v2.8.2 CH08 sec 8.5.1.6). An empty MFI-6 on MFK, MFD or another master-file message
+  no longer raises `requiredFieldMissing`; on MFN it raises `conditionalFieldMissing`.
+- **CSR-8 Study Authorizing Provider** (all six): R to C, `triggerEvent = C01`. The
+  definition reads "This field is required for the patient registration trigger event (C01)",
+  the sentence CSR-9 and CSR-10 already carry under a printed C.
+- **ROL-4 Role Person** (v2.6, v2.8.2): R to C, `STF absent`. CH15 sec 15.4.7.4: "If both STF
+  and ROL are present in the same message, populating this field is optional". v2.3 to v2.5.1
+  print no such sentence and keep R.
+- **RXA-4 Date/Time End of Administration** stays R (ruling, no schema change). "If null, the
+  date/time of RXA-3 ... is assumed" names the HL7 null `""`, which Chapter 2 distinguishes
+  from an omitted field; v2.8.2 Chapter 2B: "A required element can have a null value". So
+  `RXA-4 = ""` satisfies R and an empty RXA-4 still fires. The 41 spec-example lines that
+  leave RXA-4 empty are registered as genuine example errors.
+- Spec-example sweep: 4718 to 4688 lines (27 MFK/MFD MFI-6 lines and 3 off-C01 CSR-8 lines
+  gone); registry 126 to 138 entries, 0 mismatched.
+
 ### Added — P4-15: bare-C register completion and condition-DSL guards
 
 - Bare-C guard tests (`BareConditionalGuardTests`) pin the remaining v2.3,

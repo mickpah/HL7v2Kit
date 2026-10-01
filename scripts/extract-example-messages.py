@@ -479,8 +479,8 @@ _RXO_CH12_SOURCES = ["v2.4/CH12.PDF", "v2.5.1/V251_CH12.pdf", "v2.6/V26_CH12_Pat
 # dose-series cluster P4-28 deferred. Each was read against the print (the omission is in the
 # PDF text, not an extraction artefact) and against the field definition (no condition or
 # "if null" wording that would make the shipped rule a misfire). The RXA-4 lines in the same
-# messages are deliberately NOT registered: the RXA-4 segment-table "R" conflicts with its
-# own definition ("If null, the date/time of RXA-3 is assumed") and is P4-30's to resolve.
+# messages were left for P4-30, which ruled that the definition's "If null" is the HL7 null
+# `""`, so R stands and they are registered below (_RXA4_EMPTY_REASON).
 _RXA_SERIES_CODE_REASON = (
     "v2.3 CH4 / v2.3.1 chapter 4 RAS query-response worked example prints every dose of the "
     "repeat-administration series as \"RXA|1|1|199208120800|||250<cr>\": RXA-5 "
@@ -500,7 +500,21 @@ _RXA_CH12_SHIFT_REASON = (
     "CH12 PPP^PCB pathway example prints \"RXA|1|199505011200|||0047-0402-30^Ampicillin...\": "
     "RXA-2 (Administration Sub-ID Counter) is omitted, so the start time lands in RXA-2 and "
     "RXA-3 (Date/Time Start of Administration, R, no condition) reads blank. (The RXA-4 line "
-    "from the same shift is left unregistered for P4-30.)")
+    "of the same message is registered under _RXA4_EMPTY_REASON.)")
+_RXA4_EMPTY_REASON = (
+    "P4-30: the CH4/CH04/CH04A pharmacy and immunisation examples and the CH12 pathway example "
+    "leave RXA-4 (Date/Time End of Administration) empty, RXA-3 valued. RXA-4 is R in every "
+    "version's attribute table; its definition, \"If null, the date/time of RXA-3 ... is "
+    "assumed\" (v2.3 sec 4.8.14.4, v2.5.1 sec 4.14.7.4, v2.8.2 sec 4A.4.7.4), names the HL7 "
+    "null, which Chapter 2 defines as the two double quotes \"\" and distinguishes from an "
+    "omitted field (v2.3 sec 2.6; v2.6/v2.8.2 \"Null\" against \"Not populated\"; v2.8.2 "
+    "Chapter 2B: \"A required element can have a null value\"). A conformant print sends "
+    "RXA-4 as \"\" or repeats RXA-3.")
+_CSR_SHIFT_REASON = (
+    "v2.3 CH7 / v2.3.1 chapter 7 CRM^C01 example prints \"CSR|1|DM94-004^MDACC||MDACC|3||"
+    "19941013||342^^^^^^^PDMS|\": a leading \"1\" (CSR has no Set ID) shifts every field one "
+    "place right, so the registration date lands in CSR-7 and the authorising provider in "
+    "CSR-9, leaving CSR-6 (R) and CSR-8 (required on C01, P4-30) blank.")
 _MF_KEY_TYPE_REASON = (
     "The CH2/CH02, CH8/CH08 and CH17 MFN/MFK master-file examples end MFE after MFE-4 and MFA "
     "after MFA-5: MFE-5 / MFA-6 (Primary Key Value Type) are never printed, though R in every "
@@ -576,10 +590,10 @@ _P4_29_ENTRIES = [
                      "v2.8.2/V282_CH02_Control.pdf": 2}.items()],
     # Fix round 1 (C-1): MFI-6 is registered on MFN messages only. Its definition reads
     # "Required for MFN-Master File Notification message" (v2.3 CH8, v2.4 CH08, v2.5.1 CH08,
-    # v2.8.2 CH08), against an unconditional R in the segment table -- the same
-    # table-versus-definition conflict as RXA-4. The 27 MFI-6 lines on MFK/MFD messages are a
-    # Requirement-4 candidate pending P4-30 and are deliberately left unregistered.
-    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+    # v2.8.2 CH08), against an unconditional R in the segment table. P4-30 models MFI-6 as C
+    # with `messageCode = MFN`: the 27 lines on MFK/MFD messages are gone, and these MFN lines
+    # now read conditionalFieldMissing.
+    *[{"source_glob": src, "index": idx, "code": "conditionalFieldMissing",
        "location_pattern": r"^MFI\[\d+\]-6$", "count": 1, "reason": _MFI_SHIFT_REASON}
       for src, indices in {
           "v2.3.1/Hl7V231.pdf": [7, 9, 13],
@@ -610,6 +624,21 @@ _P4_29_ENTRIES = [
     *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
        "location_pattern": r"^MSH\[\d+\]-[35]$", "count": 3, "reason": _HD_PAIR_REASON}
       for src in ["v2.5.1/V251_CH05.pdf", "v2.6/V26_CH05_Queries.pdf", "v2.8.2/V282_CH05_Queries.pdf"]],
+]
+# P4-30: per-source totals over every message ("all"), so later renumbering cannot strand them.
+# v2.3 CH4 16 = 1 (RAS) + 10 (RAS query-response series) + 1 (RGR give series) + 4 (VXU);
+# v2.3.1 17 = the same 16 plus the CH12 pathway example.
+_P4_30_ENTRIES = [
+    *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
+       "location_pattern": r"^RXA\[\d+\]-4$", "count": n, "reason": _RXA4_EMPTY_REASON}
+      for src, n in {"v2.3/CH4.pdf": 16, "v2.3.1/Hl7V231.pdf": 17,
+                     "v2.4/CH04.PDF": 1, "v2.4/CH12.PDF": 1,
+                     "v2.5.1/V251_CH04.pdf": 1, "v2.5.1/V251_CH12.pdf": 1,
+                     "v2.6/V26_CH04_Orders.pdf": 1, "v2.6/V26_CH12_PatientCare.pdf": 1,
+                     "v2.8.2/V282_CH04A_Orders.pdf": 1, "v2.8.2/V282_CH12_PatientCare.pdf": 1}.items()],
+    *[{"source_glob": src, "index": idx, "code": "*",
+       "location_pattern": r"^CSR\[\d+\]-[68]$", "count": 2, "reason": _CSR_SHIFT_REASON}
+      for src, idx in {"v2.3/CH7.pdf": 11, "v2.3.1/Hl7V231.pdf": 99}.items()],
 ]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
@@ -655,6 +684,7 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
       for src, idx in {"v2.4/CH04.PDF": 23, "v2.5.1/V251_CH04.pdf": 26,
                         "v2.6/V26_CH04_Orders.pdf": 25, "v2.8.2/V282_CH04A_Orders.pdf": 4}.items()],
     *_P4_29_ENTRIES,
+    *_P4_30_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact

@@ -162,6 +162,23 @@ OPTIONALITY_WHITELIST = {
                          "it must be present in the associated OBR'; printed O, modelled C (P4-18)",
     ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
                           "child.'; printed O, modelled C (P4-18)",
+    # P4-30: a printed R whose own definition limits the field (Requirement 4). The schema
+    # field carries the same text as "optionalityCitation".
+    **{(v, "MFI", 6): f"{v} {sec}: 'Required for MFN-Master File Notification message'; "
+                      "printed R, modelled C as messageCode = MFN (P4-30)"
+       for v, sec in [("v2.3", "CH8 section 8.4.1.6"), ("v2.3.1", "chapter 8 section 8.4.1.6"),
+                      ("v2.4", "CH08 section 8.5.1.6"), ("v2.5.1", "CH08 section 8.5.1.6"),
+                      ("v2.6", "CH08 section 8.5.1.6"), ("v2.8.2", "CH08 section 8.5.1.6")]},
+    **{(v, "CSR", 8): f"{v} {sec}: 'This field is required for the patient registration "
+                      "trigger event (C01)', as CSR-9/CSR-10 (printed C); printed R, modelled C as "
+                      "triggerEvent = C01 (P4-30)"
+       for v, sec in [("v2.3", "CH7 section 7.7.1.8"), ("v2.3.1", "chapter 7 section 7.7.1.8"),
+                      ("v2.4", "CH07 section 7.8.1.8"), ("v2.5.1", "CH07 section 7.8.1.8"),
+                      ("v2.6", "CH07 section 7.8.1.8"), ("v2.8.2", "CH07 section 7.8.1.8")]},
+    **{(v, "ROL", 4): f"{v} CH15 section 15.4.7.4: 'If both STF and ROL are present in the same "
+                      "message, populating this field is optional'; printed R, modelled C as "
+                      "STF absent (P4-30)"
+       for v in ("v2.6", "v2.8.2")},
 }
 REPEATABILITY_WHITELIST = {}
 LENGTH_WHITELIST = {}

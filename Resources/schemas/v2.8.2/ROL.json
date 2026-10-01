@@ -6,7 +6,7 @@
     { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
     { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "length": "2..2", "table": "0287", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0443"] },
-    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
+    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "C", "repeatability": "*", "condition": "STF absent", "optionalityCitation": "v2.8.2 CH15 section 15.4.7.4: the attribute table prints R, but the definition reads 'If both STF and ROL are present in the same message, populating this field is optional'. Modelled C (P4-30); v2.3 to v2.5.1 print no such sentence and keep R." },
     { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "roleEndDateTime", "name": "Role End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "roleDuration", "name": "Role Duration", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
