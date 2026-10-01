@@ -35,8 +35,11 @@ extension Validator {
         guard let severity else { return }
         // P6-13: content after the first value of an ID / IS field is reported once, as
         // extraComponentsInPrimitiveField, and the length is that of the value a recipient
-        // reads. With that check off, the whole occurrence is measured as before.
-        let primitive = options.extraComponentsSeverity != nil && Self.primitiveCodeTypes.contains(dataType)
+        // reads, but only while that report is at least as severe as this length rule; a
+        // length rule the caller has made more binding is never hidden behind it. Otherwise,
+        // and with that check off, the whole occurrence is measured as before.
+        let primitive = Self.primitiveCodeTypes.contains(dataType)
+            && Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
         for (offset, whole) in field.repetitions.enumerated() {
             var repetition = whole
             if primitive, Self.hasExtraPrimitiveContent(whole) {
@@ -49,6 +52,16 @@ extension Validator {
                 location: location,
                 message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) has length \(length); the v\(version.grammarVersion.rawValue) attribute table prints LEN \(printed)"
             ))
+        }
+    }
+
+    /// Severity order for comparing two settings: error > warning > info > off (`nil`).
+    static func rank(_ severity: IssueSeverity?) -> Int {
+        switch severity {
+        case .error: return 3
+        case .warning: return 2
+        case .info: return 1
+        case nil: return 0
         }
     }
 

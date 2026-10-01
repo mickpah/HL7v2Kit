@@ -24,15 +24,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (section 2.6.1); an escaped separator is one value and stays silent.
   Severity follows the new `ValidationOptions.extraComponentsSeverity:
   IssueSeverity?` (default `.warning`, owner gate G4; `nil` in `.lenient`).
-- Length: while that check is on, an `ID` / `IS` field's length is the length
-  of its first value, so v2.8.2 ECD-3 `Y^YES` raises one extra-component
-  warning instead of a length warning for the same cause. With it off, the
-  whole occurrence is measured as before.
+- Length: while that check is at least as severe as the length severity that
+  applies (`normativeLengthSeverity` from v2.7, `fieldLengthSeverity` before;
+  error > warning > info), an `ID` / `IS` field's length is the length of its
+  first value, so with the defaults v2.8.2 ECD-3 `Y^YES` raises one
+  extra-component warning instead of a length warning for the same cause.
+  When the length rule is more binding (say `normativeLengthSeverity =
+  .error`), or the check is off, the whole occurrence is measured as before.
+- Under version substitution (an unrecognised MSH-12 such as 2.7, validated
+  against the v2.5.1 grammar, ADR-018) a value a later version allows, such as
+  a CWE in a field that is `IS` in v2.5.1, may raise the extra-component or
+  length warning. This is by design and pinned by a test.
 - Spec examples: 60 new `valueNotInTable` errors, all example defects, now
   registered (`_P6_13_ENTRIES`, 149 registry entries, 0 mismatched): 51
   AIL-2 / AIP-2 (the omitted Segment Action Code shift), 6 MSH-16 (a spaced
   `QPD |` segment ID), 1 MSA-5 (MSA and QAK printed on one line), 1 v2.3.1
-  OBR-30 (field shift) and 1 v2.8.2 TCC-9 (` Y^YES`). 164 new
+  OBR-30 (field shift) and 1 v2.8.2 TCC-9 (` Y^YES`). 165 new
   extra-component warnings, all code^text pairs or shifted fields in the
   prints.
 

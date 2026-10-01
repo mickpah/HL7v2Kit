@@ -136,10 +136,13 @@ public struct ValidationOptions: Sendable {
     /// whose data type a later version widened (an `IS` to a `CE`, v2.5.1 section
     /// 2.8.2) may legitimately arrive with them. Whatever the setting, the
     /// code-table check reads the first component as the primitive value. While
-    /// this is set, the length check measures that first component only, so the
-    /// extra components are reported once, here; `nil` turns this check off and
-    /// the length check measures the whole occurrence again. Not an init
-    /// parameter. P6-13.
+    /// this is at least as severe as the length severity that applies
+    /// (``normativeLengthSeverity`` for a v2.7+ normative length,
+    /// ``fieldLengthSeverity`` otherwise; error > warning > info), the length
+    /// check measures that first component only, so the extra components are
+    /// reported once, here. Below it, or `nil` (this check off), the length check
+    /// measures the whole occurrence, so a binding length rule is never hidden.
+    /// Not an init parameter. P6-13.
     public var extraComponentsSeverity: IssueSeverity? = .warning
 
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.

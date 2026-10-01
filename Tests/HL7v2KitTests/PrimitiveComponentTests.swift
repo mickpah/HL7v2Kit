@@ -135,4 +135,55 @@ struct PrimitiveComponentTests {
         let found = try issues(tq2("C^SYS"), at: "TQ2", 10, options: .lenient)
         #expect(!found.contains { $0.code == .extraComponentsInPrimitiveField })
     }
+
+    // P6-13 fix 1: the length is collapsed to the first value only when the extra-component
+    // severity is at least the applicable length severity, so a binding length rule is
+    // never hidden behind a lower-severity warning.
+
+    @Test("v2.8.2 ECD-3 Y^YES with a binding normative length gives a length error")
+    func normativeErrorNotHidden() throws {
+        var options = ValidationOptions()
+        options.normativeLengthSeverity = .error
+        let found = try issues(ecd("Y^YES"), at: "ECD", 3, options: options)
+        let length = try #require(found.first(where: isLength))
+        #expect(length.code == .fieldLengthOutOfRange(length: "1..1", actual: 5))
+        #expect(length.severity == .error)
+        #expect(found.contains { $0.code == .extraComponentsInPrimitiveField })
+    }
+
+    @Test("Pre-v2.7 TQ2-10 C^SYS with a binding maximum length gives a length error")
+    func maximumErrorNotHidden() throws {
+        var options = ValidationOptions()
+        options.fieldLengthSeverity = .error
+        let found = try issues(tq2("C^SYS"), at: "TQ2", 10, options: options)
+        let length = try #require(found.first(where: isLength))
+        #expect(length.code == .fieldLengthOutOfRange(length: "1", actual: 5))
+        #expect(length.severity == .error)
+    }
+
+    @Test("With default severities the pre-v2.7 case is one warning and no length issue")
+    func defaultsCollapse() throws {
+        let found = try issues(tq2("C^SYS"), at: "TQ2", 10)
+        #expect(found.map(\.code) == [.extraComponentsInPrimitiveField])
+    }
+
+    @Test("An extra-component error at least as high as the length error still collapses")
+    func equalSeverityCollapses() throws {
+        var options = ValidationOptions()
+        options.fieldLengthSeverity = .error
+        options.extraComponentsSeverity = .error
+        let found = try issues(tq2("C^SYS"), at: "TQ2", 10, options: options)
+        #expect(found.map(\.code) == [.extraComponentsInPrimitiveField])
+    }
+
+    @Test("Under version substitution (MSH-12 2.7, validated as v2.5.1) a later-version CWE value in an IS field warns")
+    func substitutionWarns() throws {
+        let wire = pv1("ABC^Text^HL70069").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|2.7\r")
+        let message = try Parser().parse(wire)
+        let all = Validator().validate(message).issues
+        #expect(all.contains { if case .versionNotRecognised = $0.code { return true } else { return false } })
+        let found = all.filter { $0.location.segmentID == "PV1" && $0.location.fieldIndex == 10 }
+        #expect(found.map(\.code) == [.extraComponentsInPrimitiveField])
+        #expect(found.first?.severity == .warning)
+    }
 }
