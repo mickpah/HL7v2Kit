@@ -108,6 +108,26 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. M32.
     public var auNASHTransport: Bool = false
 
+    /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
+    /// pre-v2.7 maximum length (v2.3 to v2.6, a plain-integer LEN cell), measured
+    /// per repetition with component and subcomponent separators counted (v2.3.1
+    /// section 2.6.2). `.warning` by default; `nil` leaves it unchecked. The spec
+    /// lets a site agreement change the length, "such as a conformance profile ...
+    /// it shall not render the implementation non-conformant" (v2.5.1 section
+    /// 2.5.3.2; v2.3.1 section 2.6.2 "often negotiated on a site-specific basis"),
+    /// and the agreement is not on the wire. `*` and `64K` cells are not checked.
+    /// Not an init parameter. P6-6.
+    public var fieldLengthSeverity: IssueSeverity? = .warning
+
+    /// Severity for ``IssueCode/fieldLengthOutOfRange(length:actual:)`` against a
+    /// v2.7+ normative length (`m..n`, `m..`, `x,y,z`) on a primitive-typed field:
+    /// "conformant messages SHALL have a length that lies within the boundaries
+    /// specified" (v2.8.2 section 2.5.5.0). `.warning` by default; `nil` turns it
+    /// off. Conformance lengths (`40=`, `250#`, a bare integer) bound what a
+    /// receiver stores, not what a message carries (section 2.5.5.3), and are
+    /// never checked. Not an init parameter. P6-6.
+    public var normativeLengthSeverity: IssueSeverity? = .warning
+
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
     ///
     /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
@@ -162,7 +182,8 @@ public struct ValidationOptions: Sendable {
     /// component-grammar enforcement. Useful when you just want a yes/no
     /// "would HL7v2Kit be happy parsing this round-trip?" answer. The
     /// code-table membership check (`checkCodeTables`) is a content rule,
-    /// not a structural one, so this preset turns it off too.
+    /// not a structural one, so this preset turns it off too, as it does the
+    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`).
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
@@ -173,6 +194,8 @@ public struct ValidationOptions: Sendable {
             warnDeprecatedFields: false
         )
         options.checkCodeTables = false
+        options.fieldLengthSeverity = nil
+        options.normativeLengthSeverity = nil
         return options
     }()
 }

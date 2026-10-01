@@ -90,8 +90,10 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// The LEN cell the version's attribute table prints, verbatim, or `nil`
     /// when the table prints none. Before v2.7 it is a stated maximum the
     /// spec itself calls "not of conceptual importance"; from v2.7 it is a
-    /// normative range with truncation semantics (`"2..2"`, `"32="`, `"250#"`).
-    /// Recorded for reference and never enforced (M25).
+    /// normative length (`"2..2"`, `"2,4"`) or, where LEN is blank, the printed
+    /// conformance length with its truncation marker (`"32="`, `"250#"`).
+    /// Enforced by the Validator per era: see ``ValidationOptions/fieldLengthSeverity``
+    /// and ``ValidationOptions/normativeLengthSeverity`` (P6-6).
     public let length: String?
     /// `true` when this field's own prose leaves its bound ``table`` open, whatever the
     /// table's own kind: it cites the table "for suggested values", calls it User-defined,

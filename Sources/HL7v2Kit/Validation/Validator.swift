@@ -598,6 +598,14 @@ public struct Validator: Sendable {
             )
         }
 
+        // P6-6: LEN, per era (FieldLengthRule).
+        if let field, isPopulated {
+            checkFieldLength(fieldGrammar, field: field, segmentID: grammar.segmentID,
+                             version: message.version,
+                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                             location: location, issues: &issues)
+        }
+
         if options.checkCodeTables, let field, isPopulated, let tableNumber = fieldGrammar.table {
             checkCodeTable(fieldGrammar, tableNumber: tableNumber, field: field,
                            version: message.version, location: location, issues: &issues)

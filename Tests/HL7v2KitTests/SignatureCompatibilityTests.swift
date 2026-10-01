@@ -17,6 +17,23 @@ struct SignatureCompatibilityTests {
         #expect(options.localTableExtensions.isEmpty, "set by mutation, not an init parameter")
     }
 
+    @Test("P6-6 length settings are mutable IssueSeverity? properties defaulting to .warning")
+    func lengthSeverities() {
+        let maximum: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.fieldLengthSeverity
+        let normative: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.normativeLengthSeverity
+        #expect(ValidationOptions.default[keyPath: maximum] == .warning)
+        #expect(ValidationOptions.default[keyPath: normative] == .warning)
+        #expect(ValidationOptions.strict[keyPath: normative] == .warning)
+        #expect(ValidationOptions.lenient[keyPath: maximum] == nil)
+        #expect(ValidationOptions.lenient[keyPath: normative] == nil)
+    }
+
+    @Test("IssueCode.fieldLengthOutOfRange keeps its (length:actual:) payload")
+    func fieldLengthIssueCode() {
+        let make: (String, Int) -> IssueCode = IssueCode.fieldLengthOutOfRange(length:actual:)
+        #expect(make("20", 21) == .fieldLengthOutOfRange(length: "20", actual: 21))
+    }
+
     @Test("HL7Table.init keeps its five-parameter signature; patterns: is a separate overload")
     func hl7TableInit() {
         let entries = [HL7Table.Entry(code: "A", description: "a")]

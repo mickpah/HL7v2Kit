@@ -174,6 +174,16 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// permanent-limitations register, section F (ADR-018). Additive case;
     /// the enum is open per ADR-014.
     case versionNotRecognised(wireValue: String)
+
+    /// A populated field repetition's length falls outside the LEN that its
+    /// version's attribute table prints. `length` is the printed cell (`"20"`,
+    /// `"1..4"`); `actual` is the measured length of that repetition, decoded,
+    /// with component and subcomponent separators counted and the repetition
+    /// separator not. Pre-v2.7 maximum lengths follow
+    /// ``ValidationOptions/fieldLengthSeverity``; v2.7+ normative lengths on
+    /// primitive fields follow ``ValidationOptions/normativeLengthSeverity``.
+    /// Additive case introduced in P6-6; the enum is open per ADR-014.
+    case fieldLengthOutOfRange(length: String, actual: Int)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

@@ -202,7 +202,7 @@ REPEATABILITY_WHITELIST = {
                        "answer results'; schema '*' (P6-4)",
 }
 # v2.3/v2.3.1 OBX-5: the LEN cell prints a numeric cap (v2.3 Figure 7-5 "655362", v2.3.1
-# Figure 7-5 "65536" + footnote marker, both OCR-glued footnote digits onto 65536) but the
+# Figure 7-5 "65536" + footnote marker, both extraction-glued footnote digits onto 65536) but the
 # field's own footnote overrides it: v2.3 CH7 (p. 7-30) footnote 2 and v2.3.1 CH7 (p. 7-35)
 # footnote 3 both read "The length of the observation value field is variable, depending
 # upon value type. See OBX-2-value type." The schema keeps the variable-length placeholder

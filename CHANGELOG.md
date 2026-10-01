@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P6-6: field length validation
+
+- `IssueCode.fieldLengthOutOfRange(length:actual:)` (additive; open enum per
+  ADR-014). `length` is the printed cell; `actual` is the repetition's
+  decoded length with component and subcomponent separators counted.
+- `ValidationOptions.fieldLengthSeverity: IssueSeverity?` (default
+  `.warning`; `nil` in `.lenient`): the pre-v2.7 maximum length (v2.3 to
+  v2.6), which the spec lets a site agreement change (v2.5.1 section
+  2.5.3.2). Not an init parameter.
+- `ValidationOptions.normativeLengthSeverity: IssueSeverity?` (default
+  `.warning`; `nil` in `.lenient`): v2.7+ normative lengths (`m..n`, `m..`,
+  `x,y,z`) on primitive-typed fields, which conformant messages SHALL meet
+  (v2.8.2 section 2.5.5.0). Not an init parameter. (V231-C15)
+- Internal `PrintedLength` reads every stored LEN / C.LEN shape (n, nK, `*`,
+  m..n, m.., x,y,z, n=, n#), mirroring the audit's `LENGTH_TOKEN`; a
+  schema-wide test pins every stored length as well formed for its era.
+  Conformance lengths (`n=`, `n#`, a bare v2.7+ integer) are never enforced
+  (section 2.5.5.3); a range printed on a composite field is not enforced
+  (section 2.5.5.0). Registered in the permanent-limitations register,
+  section C.
+
+### Changed — P6-6
+
+- Validation results change: an over-length field now produces a
+  `fieldLengthOutOfRange` warning on every version. Errors and `isValid` are
+  unchanged by default (owner gate G4, warning first). Set both severities to
+  `nil` for the previous behaviour, or `normativeLengthSeverity = .error` to
+  make v2.7+ normative lengths binding.
+- Test wire corrected: `OrderConditionTests` carried `RR2^SYS` in TQ2-10 (ID,
+  LEN 1; v2.8.2 `1..1`, Table 0506). It now carries `S`.
+- Wording: "OCR-glued" is now "extraction-glued" in `audit-schemas.py` and
+  the P6-2 entry below (the PDFs are vector text, not scanned).
+
 ### Changed — P6-12: blank OPT prints stored verbatim
 
 - 146 fields whose attribute table prints OPT blank now store `""`, not
@@ -117,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - v2.3 and v2.3.1 OBX-5 keeps its variable-length `*`: each version's own
   footnote on the field ("The length of the observation value field is
   variable, depending upon value type") overrides the LEN column's printed
-  numeric cap (65536, OCR-glued to its footnote marker). Recorded as a cited
+  numeric cap (65536, extraction-glued to its footnote marker). Recorded as a cited
   `LENGTH_WHITELIST` entry in `scripts/audit-schemas.py`.
 
 ### Fixed — P6-9: swiftName prose bleed and truncation

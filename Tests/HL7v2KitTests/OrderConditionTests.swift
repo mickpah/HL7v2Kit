@@ -66,7 +66,9 @@ struct OrderConditionTests {
         // fired (fix round 1: a conditionalFieldMissing-only filter can
         // never fail on a populated field, since that code only fires on an
         // unpopulated one).
-        let both = tq2(version, [3: "PL2^SYS", 6: "ES", 10: "RR2^SYS"])
+        // TQ2-10 is ID, LEN 1 (v2.8.2 1..1); "S" is a table 0506 code (P6-6
+        // corrected the earlier non-conformant "RR2^SYS").
+        let both = tq2(version, [3: "PL2^SYS", 6: "ES", 10: "S"])
         let tq2Issues = Validator().validate(try Parser().parse(both)).issues.filter {
             $0.location.segmentID == "TQ2"
         }
