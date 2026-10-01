@@ -229,66 +229,71 @@ LENGTH_WHITELIST = {
 }
 
 # P6-12: slots M19 / M22 / M25 cannot compare (see read_slot) are reported unless listed here,
-# keyed (audit, version, segment, first index, last index) -> the spec citation for why the
-# printed cell cannot be read. A blank cell that the spec prints is listed with what the
-# schema models instead.
-BLANK_OPT = "the spec defines no blank OPT code (v2.6 section 2.5.3.4); schema models O"
+# keyed (audit, version, segment, first index, last index, reason) -> the spec citation. The
+# reason is the read_slot reason the region is cited for ("blank cell" or "malformed print"),
+# so a region cited for blanks cannot hide a malformed print or a missing row. A cited blank is
+# a print: the slot is then compared against "" like any other value, so the schema must store
+# the blank verbatim (fix 1 ruling; a blank OPT is treated as optional, see the limitations
+# register, addendum to section A).
+BLANK_OPT = ("the spec defines no blank OPT code (v2.6 section 2.5.3.4); the schema stores the "
+             "blank verbatim")
 UNREADABLE_WHITELIST = {
-    ("M19", "v2.3", "AIG", 2, 2): "v2.3 CH10 section 10.5.5 Figure 10-7 AIG attributes (p. 10-42) "
-                                 "prints the R/O/C cell of Segment Action Code blank; schema "
-                                 "keeps the blank",
-    ("M19", "v2.3.1", "NST", 2, 15): "v2.3.1 Appendix C section C.2.2 Figure C-2 NST attributes prints "
+    ("M19", "v2.3", "AIG", 2, 2, "blank cell"): "v2.3 CH10 section 10.5.5 Figure 10-7 AIG attributes (p. 10-42) "
+                                 "prints the R/O/C cell of Segment Action Code blank; %s "
+                                 "(settles the P6-10 'no optionality value' intake row)",
+    ("M19", "v2.3.1", "NST", 2, 15, "blank cell"): "v2.3.1 Appendix C section C.2.2 Figure C-2 NST attributes prints "
                                     "OPT blank for every field after NST-1; %s",
-    ("M19", "v2.4", "EDU", 2, 2): "v2.4 CH15 section 15.4.2 EDU attribute table (p. 15-10) prints "
+    ("M19", "v2.4", "EDU", 2, 2, "blank cell"): "v2.4 CH15 section 15.4.2 EDU attribute table (p. 15-10) prints "
                                  "OPT blank for Academic Degree; %s",
-    ("M19", "v2.4", "NSC", 2, 9): "v2.4 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints OPT "
+    ("M19", "v2.4", "NSC", 2, 9, "blank cell"): "v2.4 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints OPT "
                                  "blank for NSC-2 to NSC-9; %s",
-    ("M19", "v2.4", "NST", 2, 15): "v2.4 CH14 section 14.4.3 NST attribute table (p. 14-7) prints OPT "
+    ("M19", "v2.4", "NST", 2, 15, "blank cell"): "v2.4 CH14 section 14.4.3 NST attribute table (p. 14-7) prints OPT "
                                   "blank for NST-2 to NST-15; %s",
-    ("M19", "v2.4", "RCP", 7, 7): "v2.4 CH05 section 5.5.5 RCP attribute table (p. 5-51) prints OPT "
-                                 "(and TBL#) blank for Segment group inclusion; schema keeps the "
-                                 "blank (see the v2.4/RCP-7 table repair)",
-    ("M19", "v2.5.1", "NSC", 2, 9): "v2.5.1 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints "
+    ("M19", "v2.4", "RCP", 7, 7, "blank cell"): "v2.4 CH05 section 5.5.5 RCP attribute table (p. 5-51) prints OPT "
+                                 "(and TBL#) blank for Segment group inclusion; %s"
+                                 " (see the v2.4/RCP-7 table repair)",
+    ("M19", "v2.5.1", "NSC", 2, 9, "blank cell"): "v2.5.1 CH14 section 14.4.2 NSC attribute table (p. 14-5) prints "
                                    "OPT blank for NSC-2 to NSC-9; %s",
-    ("M19", "v2.5.1", "NST", 2, 15): "v2.5.1 CH14 section 14.4.3 NST attribute table (p. 14-7) prints "
+    ("M19", "v2.5.1", "NST", 2, 15, "blank cell"): "v2.5.1 CH14 section 14.4.3 NST attribute table (p. 14-7) prints "
                                     "OPT blank for NST-2 to NST-15; %s",
-    ("M19", "v2.5.1", "OBX", 20, 22): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+    ("M19", "v2.5.1", "OBX", 20, 22, "blank cell"): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
                                      "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
-                                     "every column blank; schema models X with no data type",
-    ("M25", "v2.5.1", "OBX", 20, 22): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
+                                     "every column blank, and 7.4.2.20 to 7.4.2.22 print the "
+                                     "heading alone (no X anywhere); %s",
+    ("M25", "v2.5.1", "OBX", 20, 22, "blank cell"): "v2.5.1 CH07 section 7.4.2 OBX attribute table (p. 7-42) prints "
                                      "OBX-20 to OBX-22 'Reserved for harmonization with V2.6' with "
                                      "every column blank; schema carries no length",
-    ("M19", "v2.5.1", "RCP", 7, 7): "v2.5.1 CH05 section 5.5.6 RCP attribute table (p. 5-48) prints "
-                                   "OPT (and TBL#) blank for Segment group inclusion; schema keeps "
-                                   "the blank (see the v2.5.1/RCP-7 table repair)",
-    ("M19", "v2.6", "NSC", 2, 9): "v2.6 CH14 section 14.4.2 NSC attribute table (p. 14-4) prints OPT "
+    ("M19", "v2.5.1", "RCP", 7, 7, "blank cell"): "v2.5.1 CH05 section 5.5.6 RCP attribute table (p. 5-48) prints "
+                                   "OPT (and TBL#) blank for Segment group inclusion; %s"
+                                   " (see the v2.5.1/RCP-7 table repair)",
+    ("M19", "v2.6", "NSC", 2, 9, "blank cell"): "v2.6 CH14 section 14.4.2 NSC attribute table (p. 14-4) prints OPT "
                                  "blank for NSC-2 to NSC-9; %s",
-    ("M19", "v2.6", "NST", 2, 15): "v2.6 CH14 section 14.4.3 NST attribute table (p. 14-6) prints OPT "
+    ("M19", "v2.6", "NST", 2, 15, "blank cell"): "v2.6 CH14 section 14.4.3 NST attribute table (p. 14-6) prints OPT "
                                   "blank for NST-2 to NST-15; %s",
-    ("M19", "v2.6", "RCP", 7, 7): "v2.6 CH05 section 5.5.6 RCP attribute table prints OPT (and TBL#) "
-                                 "blank for Segment group inclusion; schema keeps the blank",
-    ("M19", "v2.6", "PKG", 4, 4): "v2.6 CH17 section 17.4.5 PKG attribute table (p. 17-17) prints OPT "
+    ("M19", "v2.6", "RCP", 7, 7, "blank cell"): "v2.6 CH05 section 5.5.6 RCP attribute table (p. 40) prints OPT "
+                                 "(and TBL#) blank for Segment group inclusion; %s",
+    ("M19", "v2.6", "PKG", 4, 4, "blank cell"): "v2.6 CH17 section 17.4.5 PKG attribute table (p. 17-17) prints OPT "
                                  "blank for Package Quantity; %s",
-    ("M19", "v2.6", "STZ", 1, 4): "v2.6 CH17 section 17.4.3 STZ attribute table (p. 17-15) prints OPT "
+    ("M19", "v2.6", "STZ", 1, 4, "blank cell"): "v2.6 CH17 section 17.4.3 STZ attribute table (p. 17-15) prints OPT "
                                  "blank for every field; %s",
-    ("M19", "v2.6", "SCP", 1, 8): "v2.6 CH17 section 17.7.1 SCP attribute table (p. 17-30) prints "
+    ("M19", "v2.6", "SCP", 1, 8, "blank cell"): "v2.6 CH17 section 17.7.1 SCP attribute table (p. 17-30) prints "
                                  "R/O/C blank for every field; %s",
-    ("M19", "v2.6", "SLT", 1, 5): "v2.6 CH17 section 17.7.2 SLT attribute table (p. 17-32) prints "
+    ("M19", "v2.6", "SLT", 1, 5, "blank cell"): "v2.6 CH17 section 17.7.2 SLT attribute table (p. 17-32) prints "
                                  "R/O/C blank for every field; %s",
-    ("M19", "v2.6", "SDD", 1, 7): "v2.6 CH17 section 17.7.3 SDD attribute table (p. 17-33) prints "
+    ("M19", "v2.6", "SDD", 1, 7, "blank cell"): "v2.6 CH17 section 17.7.3 SDD attribute table (p. 17-33) prints "
                                  "R/O/C blank for every field; %s",
-    ("M19", "v2.6", "SCD", 1, 37): "v2.6 CH17 section 17.7.4 SCD attribute table (p. 17-34) prints "
+    ("M19", "v2.6", "SCD", 1, 37, "blank cell"): "v2.6 CH17 section 17.7.4 SCD attribute table (p. 17-34) prints "
                                   "R/O/C blank for every field; %s",
-    ("M22", "v2.8.2", "BUI", 12, 12): "v2.8.2 CH04 section 4.17.2 BUI attribute table prints RP/# 'R' "
+    ("M22", "v2.8.2", "BUI", 12, 12, "malformed print"): "v2.8.2 CH04 section 4.17.2 BUI attribute table prints RP/# 'R' "
                                      "for Transport Temperature Units (every other row prints N); R "
                                      "is not an RP/# value (section 2.5.3.5) and 4.17.2.12 says "
                                      "nothing of repetition; schema '1'",
-    ("M25", "v2.3", "OBX", 5, 5): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
+    ("M25", "v2.3", "OBX", 5, 5, "malformed print"): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
                                  "observation value field is variable, depending upon value type. "
                                  "See OBX-2-value type.' LEN cell prints 65536, read as 655362 "
                                  "with the footnote marker glued on; schema keeps the "
                                  "variable-length `*`",
-    ("M25", "v2.8.2", "TQ2", 6, 6): "v2.8.2 CH04 section 4.5.5 TQ2 attribute table prints LEN '2..' "
+    ("M25", "v2.8.2", "TQ2", 6, 6, "malformed print"): "v2.8.2 CH04 section 4.5.5 TQ2 attribute table prints LEN '2..' "
                                    "for Sequence Condition Code, a range with no maximum (section "
                                    "2.5.5 prints min..max); schema keeps '2..' verbatim, and how it "
                                    "validates is P6-6's to decide",
@@ -301,17 +306,20 @@ UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREA
 # line wrap ("0327/") or a neighbouring column bleeding in ("01107") — and the
 # slot must carry a hand-verified entry in scripts/table-repairs.json, keyed
 # "<version>/<SEG>-<index>", with the citation it was verified against.
+#
+# Despite its name, the file carries hand-verified repairs for three columns: TBL# ("tables",
+# required), RP/# ("repeatability", P6-5) and LEN ("length", P6-12). Keys starting "_" (the
+# file's "_comment") are documentation, not slots.
 TABLE_REPAIRS_PATH = os.path.join(REPO, "scripts/table-repairs.json")
-TABLE_REPAIRS = ({k: v["tables"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()}
-                 if os.path.exists(TABLE_REPAIRS_PATH) else {})
+_REPAIR_ENTRIES = ({k: v for k, v in json.load(open(TABLE_REPAIRS_PATH)).items() if not k.startswith("_")}
+                   if os.path.exists(TABLE_REPAIRS_PATH) else {})
+TABLE_REPAIRS = {k: v["tables"] for k, v in _REPAIR_ENTRIES.items()}
 # P6-5: an entry's optional "repeatability" pins the printed RP/# cell where the same column
 # shift defeats the extractor (v2.3.1 PCR, p. 7-96). M22 compares against it instead.
-REPEATABILITY_REPAIRS = ({k: v["repeatability"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()
-                          if "repeatability" in v} if os.path.exists(TABLE_REPAIRS_PATH) else {})
+REPEATABILITY_REPAIRS = {k: v["repeatability"] for k, v in _REPAIR_ENTRIES.items() if "repeatability" in v}
 # P6-12: an entry's optional "length" pins the printed LEN cell where the print itself defeats
 # pdftotext (v2.6 UAC-1 "705" renders as "7 05"). M25 compares against it instead.
-LENGTH_REPAIRS = ({k: v["length"] for k, v in json.load(open(TABLE_REPAIRS_PATH)).items()
-                   if "length" in v} if os.path.exists(TABLE_REPAIRS_PATH) else {})
+LENGTH_REPAIRS = {k: v["length"] for k, v in _REPAIR_ENTRIES.items() if "length" in v}
 
 
 def expected_tables(version, seg, index, raw_cells):
@@ -618,8 +626,11 @@ def integrity():
             name, dt, opt = f.get("name", ""), f.get("dataType", ""), f.get("optionality", "")
             if not name and not dt:
                 findings.append((rel, f["index"], "phantom row (no name, no dataType)"))
-            elif not dt and opt not in ("W", "X"):
-                # empty dataType is spec-CORRECT for withdrawn/reserved fields only
+            elif not dt and opt not in ("W", "X") and not (
+                    opt == "" and unreadable_whitelisted(
+                        "M19", rel.split(os.sep)[-2], os.path.basename(rel)[:-5].upper(), f["index"], "blank cell")):
+                # empty dataType is spec-CORRECT for withdrawn/reserved fields only, and for a
+                # reserved row printed entirely blank (v2.5.1 OBX-20..22, a cited blank region)
                 findings.append((rel, f["index"], f"empty dataType with optionality {opt!r}"))
             rp = f.get("repeatability", "")
             if not REPEATABILITY_TOKEN.fullmatch(rp):
@@ -697,9 +708,10 @@ def printed_for(defining, union, seg, index, key):
 # never count as a match: the slot is reported as UNREADABLE instead. OPT: v2.6 section 2.5.3.4
 # (the extractor reduces "(B) R" and v2.7+ "C(a/b)" to B and C). LEN: a number (v2.6 section
 # 2.5.3.2), the "64K" abbreviation used before v2.4, or the v2.7+ range "m..n" and conformance
-# length "n=" / "n#" (v2.8.2 sections 2.5.5.1 to 2.5.5.3).
+# length "n=" / "n#" (v2.8.2 sections 2.5.5.1 to 2.5.5.3). Section 2.5.5.0 also allows a list of
+# lengths "x,y,z", and "The minimum length is always 1 or more", so a range from 0 is malformed.
 OPTIONALITY_TOKEN = re.compile(r"[ROCXBW]")
-LENGTH_TOKEN = re.compile(r"[1-9]\d{0,4}|[1-9]\d?[kK]|\d+\.\.[1-9]\d*|[1-9]\d*[=#]")
+LENGTH_TOKEN = re.compile(r"[1-9]\d{0,4}|[1-9]\d?[kK]|[1-9]\d*\.\.[1-9]\d*|[1-9]\d*[=#]|[1-9]\d*(?:,[1-9]\d*)+")
 AUDIT_TOKENS = {"M19": ("optionality", OPTIONALITY_TOKEN), "M22": ("repeatability", None),
                 "M25": ("len", LENGTH_TOKEN)}
 
@@ -731,9 +743,26 @@ def read_slot(defining, union, seg, index, audit, version):
     return set(), "blank cell"
 
 
-def unreadable_whitelisted(audit, version, seg, index):
-    return any(a == audit and v == version and s == seg and lo <= index <= hi
-               for (a, v, s, lo, hi) in UNREADABLE_WHITELIST)
+def length_to_write(printed):
+    """--write-lengths: the value to write for a disagreeing slot, or None to report it. A blank
+    read never removes a length (P6-12 fix 1): the disagreement is reported instead."""
+    values = sorted((p for p in printed if p), key=lambda x: (len(x), x))
+    return values[0] if values else None
+
+
+def unreadable_whitelisted(audit, version, seg, index, why):
+    """True when a cited region covers the slot FOR THIS REASON (see UNREADABLE_WHITELIST)."""
+    return any(a == audit and v == version and s == seg and lo <= index <= hi and why.startswith(r)
+               for (a, v, s, lo, hi, r) in UNREADABLE_WHITELIST)
+
+
+def resolve_unreadable(audit, version, seg, index, why, have, unreadable):
+    """P6-12. The printed set for an unreadable slot, or None to stop comparing it. A cited
+    blank becomes the print {""}; a cited malformed print is exempt; anything else is reported."""
+    if not unreadable_whitelisted(audit, version, seg, index, why):
+        unreadable.append((audit, version, seg, index, have, why))
+        return None
+    return {""} if why == "blank cell" else None
 
 
 def optionality_finding(have, printed):
@@ -945,13 +974,14 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                 else:
                     printed, why = read_slot(spec_def, spec_lens, seg, f["index"], "M25", version)
                 if why:
-                    if not unreadable_whitelisted("M25", version, seg, f["index"]):
-                        unreadable.append(("M25", version, seg, f["index"], have, why))
-                    continue
+                    printed = resolve_unreadable("M25", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
                 if have in printed or (version, seg, f["index"]) in LENGTH_WHITELIST:
                     continue
-                if record_lengths:
-                    wanted_lengths.setdefault(path, {})[f["index"]] = sorted(printed, key=lambda x: (len(x), x))[0]
+                value = length_to_write(printed) if record_lengths else None
+                if value is not None:
+                    wanted_lengths.setdefault(path, {})[f["index"]] = value
                     continue
                 len_findings.append((version, seg, f["index"], have, sorted(printed)))
             # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
@@ -968,9 +998,9 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                 else:
                     printed, why = read_slot(spec_def, spec_reps, seg, f["index"], "M22", version)
                 if why:
-                    if not unreadable_whitelisted("M22", version, seg, f["index"]):
-                        unreadable.append(("M22", version, seg, f["index"], have, why))
-                    continue
+                    printed = resolve_unreadable("M22", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
                 if have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
                     continue
                 if record_repeatability and len(printed) == 1:
@@ -1006,9 +1036,9 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                 have = (f.get("optionality") or "").strip()
                 printed, why = read_slot(spec_def, spec_opts, seg, f["index"], "M19", version)
                 if why:
-                    if not unreadable_whitelisted("M19", version, seg, f["index"]):
-                        unreadable.append(("M19", version, seg, f["index"], have, why))
-                    continue
+                    printed = resolve_unreadable("M19", version, seg, f["index"], why, have, unreadable)
+                    if printed is None:
+                        continue
                 problem = optionality_citation_finding(
                     have, printed, f.get("optionalityCitation"),
                     (version, seg, f["index"]) in OPTIONALITY_WHITELIST)

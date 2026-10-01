@@ -141,4 +141,14 @@ struct SchemaAttributeFixTests {
         #expect(SegmentGrammarTable.v2_8_2["OBX"]?.field(2)?.length == "2..3")
         #expect(SegmentGrammarTable.v2_8_2["DG1"]?.field(15)?.length == "2=")
     }
+
+    // P6-12 fix 1: a blank OPT print is stored verbatim and read as optional (limitations
+    // register B; v2.6 section 2.5.3.4 defines no blank code). Settles the P6-10 intake row
+    // for v2.3 AIG-2: Figure 10-7 prints the cell blank, and the blank is correct.
+    @Test("Blank OPT prints are read as optional (v2.3 AIG-2, v2.6 SCD, v2.4 NST)")
+    func blankOptionalityIsOptional() {
+        #expect(SegmentGrammarTable.v2_3["AIG"]?.field(2)?.optionality == .optional)
+        #expect(SegmentGrammarTable.v2_6["SCD"]?.field(1)?.optionality == .optional)
+        #expect(SegmentGrammarTable.v2_4["NST"]?.field(15)?.optionality == .optional)
+    }
 }

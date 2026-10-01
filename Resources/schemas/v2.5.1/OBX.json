@@ -169,7 +169,7 @@
       "swiftName": "reservedForHarmonization20",
       "name": "Reserved for harmonization with V2.6",
       "dataType": "",
-      "optionality": "X",
+      "optionality": "",
       "repeatability": "1"
     },
     {
@@ -177,7 +177,7 @@
       "swiftName": "reservedForHarmonization21",
       "name": "Reserved for harmonization with V2.6",
       "dataType": "",
-      "optionality": "X",
+      "optionality": "",
       "repeatability": "1"
     },
     {
@@ -185,7 +185,7 @@
       "swiftName": "reservedForHarmonization22",
       "name": "Reserved for harmonization with V2.6",
       "dataType": "",
-      "optionality": "X",
+      "optionality": "",
       "repeatability": "1"
     },
     {

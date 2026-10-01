@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P6-12: blank OPT prints stored verbatim
+
+- 146 fields whose attribute table prints OPT blank now store `""`, not
+  `O` (143) or `X` (v2.5.1 OBX-20 to 22, 3). The spec defines no blank
+  code (v2.6 section 2.5.3.4); the validator reads a blank as optional, as
+  it read `O`, so only v2.5.1 OBX-20 to 22 change behaviour: a populated
+  reserved field is no longer flagged as not supported. Recorded as a
+  known limitation (limitations register, addendum to section A).
+- This settles the P6-10 intake row for v2.3 AIG-2 ("no optionality
+  value"): Figure 10-7 prints the cell blank, and the blank is correct.
+- The audit compares each cited blank against the stored value, keys every
+  unreadable-region citation by its reason (a region cited for blanks no
+  longer hides a malformed print or a missing row), and `--write-lengths`
+  never removes a length on a blank read. LENGTH_TOKEN rejects a minimum
+  of 0 and accepts the section 2.5.5.0 list form `x,y,z`.
+
 ### Fixed — P6-12: audits report unreadable prints; printed lengths read
 
 - The schema audit's optionality (M19), repeatability (M22) and length (M25)

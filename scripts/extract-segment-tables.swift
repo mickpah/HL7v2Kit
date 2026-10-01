@@ -263,10 +263,11 @@ func normalizeOptionality(_ raw: String) -> String {
 }
 
 // A LEN or C.LEN print: a number, a "64K"-style abbreviation (before v2.4), a v2.7+ range
-// ("1..4"), or a conformance length with its truncation flag ("250#", "20="). A bare number
+// ("1..4") or list ("2,4"; v2.8.2 section 2.5.5.0), or a conformance length with its truncation
+// flag ("250#", "20="). A bare number
 // counts only where the column cannot hold one (DT).
 func isLengthShape(_ text: String, bareNumber: Bool) -> Bool {
-    if text.range(of: #"^[0-9]+(\.\.[0-9]*|[=#])$"#, options: .regularExpression) != nil { return true }
+    if text.range(of: #"^[0-9]+(\.\.[0-9]*|[=#]|(,[0-9]+)+)$"#, options: .regularExpression) != nil { return true }
     return bareNumber && text.range(of: #"^[0-9]+[kK]?$"#, options: .regularExpression) != nil
 }
 
@@ -444,6 +445,9 @@ func selfCheckRepeatability() -> Never {
         ("SEQ     LEN        C.LEN    DT      OPT      RP/#      TBL#      ITEM#   ELEMENT NAME",
          " 3                         CX        R        Y                 00106    Patient Identifier List",
          ["", "", "CX", "R", "Y"]),
+        ("SEQ     LEN     C.LEN   DT      OPT    RP/#     TBL#     ITEM#   ELEMENT NAME",      // a 2.5.5.0 list
+         " 9      2,4              ST      O                       00999   Synthetic List Length",
+         ["2,4", "", "ST", "O", ""]),
     ]
     for (header, line, want) in rowCases {
         guard let cols = detectHeader(header), let r = parseRow(line, columns: cols) else {

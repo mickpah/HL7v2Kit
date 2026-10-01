@@ -52,6 +52,23 @@ of different types (CX and XPN); the condition DSL compares a field with literal
 another segment's composite value, so the rule is not enforced. Closing it needs a model
 extension (cross-segment composite comparison).
 
+### Addendum to §A — blank OPT prints read as optional (P6-12)
+
+P6-12 (2026-10-02) found 150 attribute-table rows whose OPT cell the spec prints blank: NST and
+NSC (v2.3.1 Appendix C, v2.4 to v2.6 CH14), the v2.6 CH17 sterilisation segments (SCD, SCP, SDD,
+SLT, STZ) and PKG-4, v2.4 EDU-2, v2.3 AIG-2, RCP-7 (v2.4 to v2.6) and the v2.5.1 OBX-20 to 22
+rows "Reserved for harmonization with V2.6". The schemas store the blank verbatim (`""`), and
+each region is cited in `UNREADABLE_WHITELIST` in `scripts/audit-schemas.py`, which checks the
+stored blank against the print.
+
+**Known limitation (req #3), blocks spec-completeness:** the spec defines no blank code. v2.6
+§2.5.3.4 lists R, O, C, X, B and W only, and its Note says the optionality of fields "should be
+explicitly documented in the segment field definitions that follow each segment definition
+table"; these field definitions do not do so. The validator therefore treats a blank-OPT field
+as optional (the codegen maps an unknown code to `.optional`): it never reports one missing,
+and it does not flag a populated reserved OBX-20 to 22 in v2.5.1. That is a modelling choice,
+not a spec reading. Closing it needs the spec (or an HL7 errata) to give these rows a code.
+
 ## B. AU-localisation (ADRM 2021) narrowings
 
 The machine-checkable HL7au:00044.* CE/CNE/CWE narrowings shipped in v0.13 (ADR-011). The following AU rules are **not** machine-checkable from the wire:

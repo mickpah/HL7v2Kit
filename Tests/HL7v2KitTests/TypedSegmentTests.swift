@@ -1154,9 +1154,12 @@ struct TypedSegmentTests {
         #expect(table["OBR"]?.field(49)?.dataType == "IS")   // Result Handling (IS in v2.5.1)
         #expect(table["OBX"]?.field(18)?.dataType == "EI")   // Equipment Instance Identifier
         #expect(table["OBX"]?.field(24)?.dataType == "XAD")  // Performing Organization Address
-        // OBX-20/21/22 are "Reserved for harmonization with V2.6" in v2.5.1 (X).
-        #expect(table["OBX"]?.field(20)?.optionality == .notSupported)
-        #expect(table["OBX"]?.field(22)?.optionality == .notSupported)
+        // OBX-20/21/22 are "Reserved for harmonization with V2.6" in v2.5.1. The attribute
+        // table prints every column blank and 7.4.2.20-22 print the heading alone, so the OPT
+        // is stored blank and read as optional (P6-12 fix 1; it was modelled X, which the
+        // spec never prints).
+        #expect(table["OBX"]?.field(20)?.optionality == .optional)
+        #expect(table["OBX"]?.field(22)?.optionality == .optional)
     }
 
     @Test("v1.1: corrected optionality — backward-compat (B) and withdrawn (W) fields")

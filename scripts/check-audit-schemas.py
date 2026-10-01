@@ -283,17 +283,46 @@ def check_unreadable_is_reported():
     assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.8.2") == ({""}, None), \
         "v2.8.2 prints LEN and C.LEN only if applicable (2.5.3.2)"
     assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.6")[1] == "blank cell"
-    assert audit.unreadable_whitelisted("M19", "v2.6", "SCD", 37)
-    assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 38)
-    assert not audit.unreadable_whitelisted("M25", "v2.6", "SCD", 1)
+    assert audit.unreadable_whitelisted("M19", "v2.6", "SCD", 37, "blank cell")
+    assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 38, "blank cell")
+    assert not audit.unreadable_whitelisted("M25", "v2.6", "SCD", 1, "blank cell")
+    # Fix 1: the reason is part of the key. A region cited for blanks hides neither a
+    # malformed print nor a missing row, and one cited for a malformed print hides no blank.
+    assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 1, "malformed print ['60']")
+    assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 1, "no extracted row")
+    assert audit.unreadable_whitelisted("M22", "v2.8.2", "BUI", 12, "malformed print ['?R']")
+    assert not audit.unreadable_whitelisted("M22", "v2.8.2", "BUI", 12, "blank cell")
+    # A cited blank is compared as "" (the schema must store it verbatim); a cited malformed
+    # print is exempt; an uncited one is reported.
+    seen = []
+    assert audit.resolve_unreadable("M19", "v2.6", "SCD", 1, "blank cell", "", seen) == {""}
+    assert audit.resolve_unreadable("M22", "v2.8.2", "BUI", 12, "malformed print ['?R']", "1", seen) is None
+    assert not seen
+    assert audit.resolve_unreadable("M19", "v2.6", "SCD", 1, "no extracted row", "", seen) is None
+    assert seen == [("M19", "v2.6", "SCD", 1, "", "no extracted row")]
+    assert audit.optionality_finding("O", {""}), "a cited blank OPT modelled O is a finding"
 
 
 def check_length_token():
     ok = audit.LENGTH_TOKEN
-    for good in ("4", "65536", "99999", "64K", "10k", "1..4", "0..1", "250#", "20="):
+    for good in ("4", "65536", "99999", "64K", "10k", "1..4", "250#", "20=", "2,4", "1,3,5"):
         assert ok.fullmatch(good), good
-    for bad in ("", "0", "655362", "7 05", "2..", "=", "4..", "MRN", "1..4#"):
+    # v2.8.2 section 2.5.5.0: "The minimum length is always 1 or more".
+    for bad in ("", "0", "655362", "7 05", "2..", "=", "4..", "MRN", "1..4#", "0..1", "0,2", "2,"):
         assert not ok.fullmatch(bad), bad
+
+
+def check_blank_read_never_removes_a_length():
+    # Fix 1: --write-lengths used to write a blank read, removing the schema's length.
+    assert audit.length_to_write({""}) is None
+    assert audit.length_to_write(set()) is None
+    assert audit.length_to_write({"250", "60"}) == "60"
+
+
+def check_repairs_file_comment():
+    # Fix 1: table-repairs.json documents itself in "_comment"; no loader treats it as a slot.
+    assert not any(k.startswith("_") for k in audit.TABLE_REPAIRS)
+    assert audit.LENGTH_REPAIRS.get("v2.6/UAC-1") == "705"
 
 
 def check_write_lengths():
@@ -323,7 +352,8 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_table_open, check_additional_prohibitions, check_optionality_citation,
           check_condition_predicate, check_swift_name, check_swift_name_uniqueness,
           check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
-          check_unreadable_is_reported, check_length_token, check_write_lengths]
+          check_unreadable_is_reported, check_length_token, check_write_lengths,
+          check_blank_read_never_removes_a_length, check_repairs_file_comment]
 
 
 def main():
