@@ -541,10 +541,11 @@ extension Profile {
             // ADRM-prose:P-13 (P4-32, owner decision G7, 2026-10-01) —
             // ADRM-2021 §4.4.1.29, p. 229: "Not used in Australian
             // messages. Use observation Sub-ID in OBX-4 to link results."
-            // — the identical sentence and item (00261) as OBR-26
-            // (P-11). P4-27 investigated this field and withheld the
-            // prohibition (NEEDS_CONTEXT): the base v2.4 condition on
-            // OBR-29 (`ORC-1 = CH AND ORC-8 empty`, v2.4/OBR.json) makes
+            // — the identical sentence as OBR-26 (item 00261 here,
+            // item 00259 on OBR-26, P-11). P4-27 investigated this
+            // field and withheld the prohibition (NEEDS_CONTEXT): the
+            // base v2.4 condition on OBR-29 (`ORC-1 = CH AND ORC-8
+            // empty`, v2.4/OBR.json) makes
             // the field conditionally REQUIRED for a child order sent
             // without ORC-8, mirroring ADRM §5.4.1.8 (ORC-8, unchanged
             // from base v2.4 §4.5.1.8), p. 295: "ORC-8-parent is the

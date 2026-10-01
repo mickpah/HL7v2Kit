@@ -16,8 +16,8 @@
 // Observation Ordering chapter carry no such note) and scoped to
 // Referrals only, where the sentence appears. Modal "should" — warning.
 //
-// OBR-29 (ADRM §4.4.1.29, p. 229, same "Not used" sentence and item
-// 00261 as OBR-26) was deliberately NOT enforced by P4-27 — it conflicts
+// OBR-29 (ADRM §4.4.1.29, p. 229, item 00261, same "Not used" sentence
+// as OBR-26, item 00259) was deliberately NOT enforced by P4-27 — it conflicts
 // with the base v2.4 condition `ORC-1 = CH AND ORC-8 empty` that makes
 // OBR-29 conditionally required (v2.4/OBR.json), and with ORC-8's own
 // mirrored condition (v2.4/ORC.json; ADRM §5.4.1.8, p. 295, unchanged

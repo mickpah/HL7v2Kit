@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Under `.auLocalisation`, OBR-29 (Parent) should not be valued on ORM, ORU
   and REF. ADRM-2021 §4.4.1.29 (p. 229) reads "Not used in Australian
   messages. Use observation Sub-ID in OBX-4 to link results" — the
-  identical sentence and item (00261) as OBR-26. Reported as a warning
+  identical sentence as OBR-26 (item 00261 here, item 00259 on OBR-26).
+  Reported as a warning
   `.profileConstraintViolation("ADRM-prose:P-13 ...")`; the HL7 null `""`
   is exempt. Same mechanism and scope as P-11 (OBR-26, P4-27).
 - P4-27 withheld this rule (NEEDS_CONTEXT) because the base v2.4 condition

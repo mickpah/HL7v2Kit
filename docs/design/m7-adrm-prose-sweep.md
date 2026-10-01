@@ -93,8 +93,8 @@ page indexes (printed page ≈ index, off by at most a few).
 - **OBR-29 "not used" vs. the ORC-8/OBR-29 presence rule — NEEDS_CONTEXT (P4-27),
   resolved and SHIPPED as P-13 (P4-32, owner decision G7, 2026-10-01).**
   ADRM §4.4.1.29, p. 229: "Not used in Australian messages. Use observation Sub-ID in
-  OBX-4 to link results" (the identical sentence, and the identical item 00261, as
-  OBR-26 — see P-11). But ADRM §5.4.1.8, p. 295 (ORC-8, unchanged from base v2.4
+  OBX-4 to link results" (the identical sentence as OBR-26 — item 00261 here, item
+  00259 on OBR-26 — see P-11). But ADRM §5.4.1.8, p. 295 (ORC-8, unchanged from base v2.4
   §4.5.1.8) says: "ORC-8-parent is the same as OBR-29-parent. If the parent is not
   present in the ORC, it must be present in the associated OBR." This is not merely
   prose tension: the schema encodes both halves as live base conditions —
