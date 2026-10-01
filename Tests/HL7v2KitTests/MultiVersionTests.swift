@@ -1007,8 +1007,10 @@ struct MultiVersionTests {
             "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
             "AIS-2", "AIS-5", "AIG-2", "AIL-2", "AIP-2",
             "ROL-1",
-            // v1.3 (master-files / referral batch): master-file entry/ack keys and
-            // OM7 / AUT fields conditional on the master-file event or auth context.
+            // v1.3 (master-files / referral batch): AUT-6 Reimbursement Limit is
+            // conditional on the authorization decision context. Its former
+            // batch-mates MFE-2 / MFA-2 (MFI-6 response level) and OM7-16 / OM7-18
+            // (their paired quantity fields) shipped in P4-13 and left this set.
             "AUT-6",
             // v1.4 (query / lab-automation batch): query-tag/response and specimen-
             // container / equipment fields conditional on the query or lab-automation

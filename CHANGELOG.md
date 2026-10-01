@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4: expressible conditions
+
+- `FieldGrammar.prohibitedSeverity` (default `.error`) and the schema key `prohibitedSeverity`, so SHOULD-level and "not applicable" prohibitions surface as warnings. Additive: a trailing defaulted `init` parameter.
+- Condition DSL: `noRepeat(<fieldref>) <op>` (no repetition satisfies the predicate) and `nextSegmentID(<ID>|...)` (next segment ID after skipped IDs). ADR-010 amendment.
+- Predicates moved out of the permanent-limitations register, each with a spec citation in `docs/design/conditional-completeness-audit.md` ("Shipped in P4"): PV2-1, PV2-45, PV2-47; TXA-3, 5, 7, 13, 22; TQ1-12, TQ2-3/4/5/6/10; SCH-1/2/27, ARQ-25; AIS/AIG/AIL/AIP start, offset units, allow substitution and filler status; MFE-2, MFA-2, LRL-5/6, OM7-16/18; BPX-5/6/8/9/10, BTX-2..7; v2.8.2 OBR-22 and PRT-14; v2.6 PD1-15 and ORC-26.
+- Conditional prohibitions: RXR-6, ORC-25, OBX-12, PYE-3..6 (errors); TQ2-7, STF-1, PRA-1, PRA-12, SPM-13, BPX/BTX "not applicable" (warnings).
+
+### Fixed — P4: expressible conditions
+
+- v2.8.2 PRT-7 prohibition keyed to PRT-5 as printed (§7.4.4.7); it fired on person participations without an organisation.
+- v2.8.2 OBR-2/3 and ORC-2/3 accept a filler id alone ("either a placer or a filler id"), with the Send Number exception.
+
+### Changed — P4: expressible conditions
+
+- Validation is stricter wherever a predicate above now fires: messages that omit a field the cited sentence requires gain an error or warning. v2.6 PD1-15, ORC-26, OBR-48 and DG1-22 move from `O` to the printed `C`.
+- `docs/design/permanent-limitations-register.md` section A and the conditional-completeness audit are rewritten: the bare-C set is now frozen position by position, with guard tests on all six versions (`BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1, v2.6; `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2).
+
+### Fixed — P4-16: AU profile PID-35..38 grammar extension removed as redundant
+
+- The S5-D `Profile+au_adrm_2021.swift` `grammarExtensions["PID"]` override (fields 35..38) is gone. P4-17 confirmed base v2.4 `PID.json` has carried all four fields since before P4-17; the override duplicated 35/36/37 exactly, and its field-38 `repeatability: .single` had silently diverged from the base/v2.5.1/v2.6 `*` (RP 2) with no AU citation narrowing it. A two-repetition PID-38 under `.auLocalisation` wrongly raised `cardinalityExceeded`; it no longer does. `Profile.swift`'s `grammarExtensions` doc comment is corrected (the base v2.4 PID grammar never capped at 32).
+
 ### Fixed — P4-30: segment-table R against a restricting field definition
 
 Fields whose attribute table prints R while the field definition limits or relaxes them
@@ -113,7 +134,7 @@ STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations reg
   further narrative findings with no conformance-point ID and no safe,
   wire-decidable enforcement: MSH-20, PID-22, PV1-7, IAM-7, the RP
   datatype's namespace-ID sub-component, TS's legacy degree-of-precision
-  sub-component and (fix round 1) the Appendix 2 TM-datatype row and the
+  sub-component and (fix round 1) the section 3 Datatypes overview table, p.128, TM row and the
   microbiology worked example's OBX-17 note. Each is recorded in
   `docs/design/m7-adrm-prose-sweep.md` §B with its reason (descriptive
   rather than prohibitive wording, content-purpose restriction,

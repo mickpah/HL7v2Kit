@@ -7,9 +7,9 @@
 
 ## A. Base-spec conditional-without-condition set
 
-Fully audited in v0.16 — see **`docs/design/conditional-completeness-audit.md`** for the per-field rationale and the guard test. 17 positions at v0.16: 2 shipped (PD1-15, ORC-26); permanent limitations after P1: OBR-1 (v2.3 only), OBR-14 (v2.3–v2.4), OBR-22, OBR-48, OBX-4/5/22, DG1-22, and the OBR-7 request leg. P1-5 removed OBR-8/9/10/11/20/21/26/32, which the spec prints O (B for v2.6 OBR-32). Not repeated here.
+Fully audited in v0.16 and corrected by the P4 remediation (2026-10). See **`docs/design/conditional-completeness-audit.md`** for the per-field rationale, and its **Shipped in P4** table for every position that left this set. The v0.16 statement that none of the set is wire-decidable was wrong: the 2026-09 review (planning/reviews, X-C09) found predicates the DSL already expressed (for example OBR-22 on v2.8.2, PV2-45 on v2.6 and v2.8.2, the TXA, TQ2, SCH, AIx, MFE/MFA, LRL, OM7 and BPX/BTX families), prohibitions that were not modelled, and one shipped prohibition (PRT-7) keyed to the wrong field. P4 shipped those and added three model capabilities: `prohibitedSeverity` (warning-level prohibitions for SHOULD and "not applicable" text), the `noRepeat(...)` atom and the `nextSegmentID(...)` referent (ADR-010 amendment).
 
-**Freeze decision:** acceptable to freeze. Each is discourse-level, data-nature-dependent, peer-comparison, or descriptive-without-cited-MUST; none is wire-decidable. A guard test keeps the set honest across future edits.
+**Freeze decision:** position by position, not as a block. A `C` field stays bare only where the audit quotes that version's own text and the text names no wire-decidable trigger, or where the text contradicts itself (PV2-1 on v2.3 and v2.3.1). Guard tests pin the bare set on all six versions: `BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1 and v2.6 (P4-15), `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2 (v0.16). Any new DSL capability reopens the set for re-audit.
 
 ### Addendum to §A — prose-backed `C` over printed `O`, OBR-29/ORC-8 on v2.3 to v2.5.1 (P4-18)
 

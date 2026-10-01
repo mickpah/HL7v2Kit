@@ -40,10 +40,15 @@ struct Profile: Sendable, Equatable, Hashable {
 
     /// Per-segment grammar extensions. Each entry's `[FieldGrammar]`
     /// is appended to the base-spec grammar for that segment when the
-    /// profile is loaded. Used for AU pre-adoption of v2.5+ fields on
-    /// v2.4 wires (e.g. PID-35..38 species/breed/strain/production-
-    /// class), so the Validator sees them under `.auLocalisation`
-    /// even though the base v2.4 PID grammar caps at 32. v0.5-S5-D.
+    /// profile is loaded (merging over any base field of the same
+    /// index) — the mechanism for a locale to carry fields or
+    /// narrowings the base version grammar does not state. v0.5-S5-D
+    /// introduced it to pre-adopt v2.5+ PID-35..38 on v2.4 wires; P4-16
+    /// (2026-10) removed that use once P4-17 confirmed the base v2.4
+    /// PID grammar already carried those fields (see
+    /// `Profile+au_adrm_2021.swift` for the history). The AU profile's
+    /// own `grammarExtensions` is `[:]` today — currently unused, kept
+    /// for the next locale-specific grammar addition.
     let grammarExtensions: [String: [FieldGrammar]]
 
     /// Per-segment group-scope cardinality rules layered on top of the

@@ -215,5 +215,13 @@ struct SchedulingConditionTests {
                 #expect(table[id]?.field(2)?.condition == nil, "\(id)-2")
             }
         }
+        // v2.3 AIG-2 carries no optionality at all (a schema attribute gap,
+        // not a condition the register or this guard owns — see the
+        // conditional-completeness-audit.md AIS/AIG/AIL/AIP bullet; P6
+        // triages it). Check the other four segments on v2.3 the same way.
+        for id in ["AIS", "AIL", "AIP", "RGS"] {
+            #expect(SegmentGrammarTable.v2_3[id]?.field(2)?.optionality == .conditional, "v2.3 \(id)-2")
+            #expect(SegmentGrammarTable.v2_3[id]?.field(2)?.condition == nil, "v2.3 \(id)-2")
+        }
     }
 }

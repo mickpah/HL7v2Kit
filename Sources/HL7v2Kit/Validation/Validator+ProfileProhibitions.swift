@@ -18,6 +18,13 @@ extension Validator {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
+        // Collects from every matching override (`.filter` + `.flatMap`),
+        // not the `.first(where:)` the two base-grammar override lookups
+        // in Validator.swift use. Today the AU profile authors at most one
+        // `FieldOverride` per (segmentID, fieldIndex), so the two
+        // approaches agree; `.first(where:)` would silently drop a second
+        // override's prohibitions if a future profile ever split one
+        // field's rules across more than one `FieldOverride` entry (P4-16).
         let rules = profile.fieldOverrides
             .filter { $0.segmentID == location.segmentID && $0.fieldIndex == location.fieldIndex }
             .flatMap(\.prohibitions)

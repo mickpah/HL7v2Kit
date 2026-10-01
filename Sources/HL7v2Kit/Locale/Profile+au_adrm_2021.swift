@@ -853,48 +853,24 @@ extension Profile {
                 specCitation: "HL7au:000008.1.3 — OBX-2 must match the OBX-3.1 display format per the Display Format codes table; AU ADRM-2021 p. 247"
             ),
         ],
-        grammarExtensions: [
-            // AU pre-adopts v2.5+ PID fields 35..38 (Species Code,
-            // Breed Code, Strain, Production Class Code) on v2.4
-            // wires. Grammar definitions mirror the v2.5.1 PID
-            // schema, including the conditional predicates added in
-            // v0.4-S4-C. Under `.auLocalisation` the Validator merges
-            // these into the v2.4 PID grammar so they validate
-            // against the same rules they do on v2.5.1 wires. v0.5-
-            // S5-D.
-            "PID": [
-                FieldGrammar(
-                    index: 35,
-                    name: "Species Code",
-                    dataType: "CE",
-                    optionality: .conditional,
-                    repeatability: .single,
-                    condition: "PID-36 populated OR PID-38 populated"
-                ),
-                FieldGrammar(
-                    index: 36,
-                    name: "Breed Code",
-                    dataType: "CE",
-                    optionality: .conditional,
-                    repeatability: .single,
-                    condition: "PID-37 populated"
-                ),
-                FieldGrammar(
-                    index: 37,
-                    name: "Strain",
-                    dataType: "ST",
-                    optionality: .optional,
-                    repeatability: .single
-                ),
-                FieldGrammar(
-                    index: 38,
-                    name: "Production Class Code",
-                    dataType: "CE",
-                    optionality: .optional,
-                    repeatability: .single
-                ),
-            ],
-        ],
+        // v0.5-S5-D used to pre-adopt v2.5+ PID fields 35..38 (Species Code,
+        // Breed Code, Strain, Production Class Code) on v2.4 wires here,
+        // believing the base v2.4 PID grammar stopped at field 32. It
+        // didn't: base v2.4 PID.json has carried all four fields (bare C
+        // on 35/36, O on 37/38) since v0.3-G2. P4-17 (2026-10) added the
+        // two missing Conditionality Rule strings straight to that base
+        // schema (v2.4 CH03 §3.4.2.35/.36, the same sentence v2.5.1/v2.6
+        // print), which made this override fully redundant for 35/36 and
+        // exposed that its field-38 repeatability (`.single`) had silently
+        // diverged from the base/v2.5.1/v2.6 `*` (RP 2) with no AU citation
+        // narrowing it — a cardinality-check defect under `.auLocalisation`
+        // for a spec-compliant two-repetition PID-38, not an intentional AU
+        // narrowing (req #4). P4-16 removed the override entirely so every
+        // locale now reads PID-35..38 from the single base grammar; AU
+        // traffic validates identically to `.international` for these four
+        // fields. See `LocaleAUProfileTests.v24PID38RepeatsUnderAU` and
+        // `v24PIDSpeciesConditionFiresUnderInternational`.
+        grammarExtensions: [:],
         compositeOverrides: [
             // MSG datatype (MSH-9 only) — HL7au:00049.1: "MSH-9 Message
             // type <message type (ID)> component must be valued."

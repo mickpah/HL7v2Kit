@@ -136,6 +136,10 @@ From §4.5.3.29 (OBR-29 Parent, identical structurally to ORC-8):
 
 > **v0.11 RESOLVED (ADR-010).** ORC-8 / OBR-29 child-order trigger shipped in v0.9 (`"ORC-1 = CH"`); v0.11-S1 (commit `13e616a`) refined both to the §4.5.1.8 DNF XOR softening using the peer-absent atom, so neither field over-fires when its peer carries the parent. Predicates: ORC-8 = `"ORC-1 = CH AND OBR absent OR ORC-1 = CH AND OBR-29 empty"`, OBR-29 symmetric. Mirrored to v2.3 / v2.3.1 in v0.11-S4b (commit `2f4796c`).
 
+### DG1-20/21 and PR1-19/20 P12 predicates (partial rendering)
+
+DG1-20 / DG1-21 and PR1-19 / PR1-20 carry `triggerEvent = P12`. The spec scopes DG1-20 (CH06 §6.5.2.20) and PR1-19 (§6.5.4.19) to "all implementations employing Update Diagnosis/Procedures (P12) messages", which is broader than P12 messages: an implementation that uses P12 is expected to carry the identifiers on its other messages too. Whether the sending implementation uses P12 is a deployment property, not a message property, so the predicate fires only on P12 messages themselves. It is fail-safe (it never fires where the spec is satisfied) and is recorded here as a partial rendering, not a defect (req #3).
+
 ## What this audit does NOT validate
 
 - **v2.3 / v2.3.1 / v2.4 schemas** — v0.4-S2's scope. Audited as deltas against this v2.5.1 baseline.

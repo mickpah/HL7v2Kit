@@ -56,9 +56,13 @@ struct AU00060_4ProhibitionTests {
         #expect(!issues.contains { $0.location.fieldIndex == 5 })
     }
 
-    @Test("OBX-5 valued while OBX-11 = O raises the base prohibition as an error")
-    func obx5ValuedUnderDynamicSpecificationFires() throws {
-        let issues = try Self.prohibitions(Self.wire("ORM^O01", obx: "OBX|1|\"\"|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O"))
+    // P4-16: parameterised to match `obx2ValuedUnderDynamicSpecificationFires`
+    // above. The base rule (since P4-26) fires on every message type, not
+    // just these three, but the AU candidate set this suite exists to pin
+    // is ORM/ORU/REF (CH04/CH07/CH11), so the coverage stays scoped there.
+    @Test("OBX-5 valued while OBX-11 = O raises the base prohibition as an error", arguments: ["ORM^O01", "ORU^R01", "REF^I12"])
+    func obx5ValuedUnderDynamicSpecificationFires(messageType: String) throws {
+        let issues = try Self.prohibitions(Self.wire(messageType, obx: "OBX|1|\"\"|GLU-30^Glucose -30 min^L||5.2|mmol/L|||||O"))
         let hit = try #require(issues.first { $0.location.segmentID == "OBX" && $0.location.fieldIndex == 5 })
         #expect(hit.severity == .error)
         #expect(!issues.contains { $0.location.fieldIndex == 2 })

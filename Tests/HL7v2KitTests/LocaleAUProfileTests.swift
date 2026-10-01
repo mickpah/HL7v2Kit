@@ -1261,6 +1261,33 @@ struct LocaleAUProfileTests {
                 "v2.5.1 base grammar fires PID-35 conditional under .auLocalisation")
     }
 
+    // P4-16: the S5-D grammarExtensions["PID"] override (35..38) is gone —
+    // base v2.4 PID.json has carried all four fields since before P4-17
+    // (which only added the 35/36 condition strings). Its field-38
+    // repeatability was `.single`, diverging from the base schema's `*`
+    // (matches v2.5.1/v2.6, which also print `*`/RP 2) with no AU citation
+    // narrowing it — a latent cardinality-check defect (req #4), not an
+    // intentional AU narrowing. Removing the override lets the correct base
+    // `.multiple` through under AU too. Two PID-38 repetitions, mirrors the
+    // v24PIDBreedWithoutSpecies wire shape (28 pipes after M reach PID-35,
+    // then L2/B7 fill PID-36/37 is skipped — field 38 uses segment(_:_:)).
+    @Test("v2.4 wire + .auLocalisation: PID-38 may repeat (base repeatability, no AU single-cap)")
+    func v24PID38RepeatsUnderAU() throws {
+        let wire = TestWires.wire(
+            "ADT^A01", "2.4",
+            TestWires.segment("PID", [1: "1", 3: "999999^^^HOSP^MR", 38: "A1^^HL70429~A2^^HL70429"])
+        )
+        let message = try Parser(locale: .auLocalisation).parse(wire)
+        let report = Validator(locale: .auLocalisation).validate(message)
+        let cardinalityHits = report.issues.filter {
+            $0.code == .cardinalityExceeded
+            && $0.location.segmentID == "PID"
+            && $0.location.fieldIndex == 38
+        }
+        #expect(cardinalityHits.isEmpty,
+                "PID-38 is repeatable in the base v2.4/v2.5.1/v2.6 grammar; AU should not cap it at one, got \(cardinalityHits.map(\.message))")
+    }
+
     // MARK: - v0.11-S2 (ADR-010): HL7au:000008.1 — OBX-3 AUSPDI value set
 
     // Fully AU-conformant MSH-12 stack so unrelated 040 rules don't
