@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P4-32: AU OBR-29 "not used" (owner decision G7)
+
+- Under `.auLocalisation`, OBR-29 (Parent) should not be valued on ORM, ORU
+  and REF. ADRM-2021 §4.4.1.29 (p. 229) reads "Not used in Australian
+  messages. Use observation Sub-ID in OBX-4 to link results" — the
+  identical sentence and item (00261) as OBR-26. Reported as a warning
+  `.profileConstraintViolation("ADRM-prose:P-13 ...")`; the HL7 null `""`
+  is exempt. Same mechanism and scope as P-11 (OBR-26, P4-27).
+- P4-27 withheld this rule (NEEDS_CONTEXT) because the base v2.4 condition
+  on OBR-29 (`ORC-1 = CH AND ORC-8 empty`) makes the field conditionally
+  required for a child order sent without ORC-8, mirroring ADRM §5.4.1.8
+  (p. 295, unchanged from base v2.4 §4.5.1.8): "ORC-8-parent is the same
+  as OBR-29-parent. If the parent is not present in the ORC, it must be
+  present in the associated OBR." Owner decision G7 (2026-10-01) resolves
+  the conflict in favour of shipping anyway: on a v2.3–v2.6 child order
+  sent without ORC-8, the AU warning and the base conditionally-required
+  check now both fire on the same field — an accepted double-bind, not a
+  defect in either rule.
+- Not double-reported against HL7au:00060.4 (P4-31): the generated
+  full-predicate set marks only `2.4|OBX-2`, so `checkFullPredicateConditional`
+  never visits OBR-29.
+- No Appendix 5 HL7au conformance-point ID exists for OBR-29 (checked
+  directly against the Appendix 5 text region); `docs/design/
+  m7-adrm-prose-sweep.md` and the permanent-limitations register's
+  HL7au:00060.4 addendum are updated instead, `scripts/
+  extract-adrm-conformance.py` was not re-run because there is nothing
+  for it to pick up.
+
 ### Changed — P4-31: three-state condition evaluator (ADR-021)
 
 - The condition evaluator's core now answers true, false or unknown (a peer that does not resolve, an atom that does not parse, a quantifier over an empty domain, a predicate that cannot judge its referent), combining atoms with Kleene AND and OR. Internal; no public API change.
@@ -132,14 +160,15 @@ STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations reg
   carry no such note) and Referral-only. Reported as a warning
   `.profileConstraintViolation("ADRM-prose:P-12 ...")`.
 - OBR-29 — the identical "Not used in Australian messages" sentence as
-  OBR-26 (ADRM §4.4.1.29, p. 229) — is deliberately **not** enforced. It
-  conflicts with ADRM §5.4.1.8's "ORC-8-parent is the same as OBR-29-parent.
+  OBR-26 (ADRM §4.4.1.29, p. 229) — was deliberately **not** enforced here.
+  It conflicts with ADRM §5.4.1.8's "ORC-8-parent is the same as OBR-29-parent.
   If the parent is not present in the ORC, it must be present in the
   associated OBR", which the schema already encodes as a live base condition
   on both fields and which the already-shipped M8-B2 `pairedFieldMismatch`
   rule presumes resolvable. Documented as a NEEDS_CONTEXT finding in
   `docs/design/m7-adrm-prose-sweep.md` and the permanent-limitations
-  register's HL7au:00060.4 addendum.
+  register's HL7au:00060.4 addendum. **Superseded by P4-32** (owner decision
+  G7, 2026-10-01, above): OBR-29 ships anyway, as `ADRM-prose:P-13`.
 - A wider sweep for "not used"/"should not be used" AU-specific prose (the
   M7 sweep's keyword list never matched this phrasing) turned up eight
   further narrative findings with no conformance-point ID and no safe,

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Started | 2026-09-16 (M7-P1) |
-| Status | **M7 COMPLETE (2026-09-16).** P1 body sweep + P2/P3 shipped six findings; P4 swept the normative appendices 8–10 (63 candidates, triage below) and shipped P-6 (the VMR header pins). All seven decidable prose findings are live as `ADRM-prose:P-n` rules; everything else is registered with its reason. **P4-27 (2026-10-01)** found a gap: the M7 keyword list (`must` / `shall` / `is required to` / `not permitted` / `is mandatory`) never matched declarative "not used"/"should not be used" prose, so OBR-26, OBR-29 and ORC-24 were invisible to the original scan. Re-swept for that phrasing; shipped P-11, P-12; registered the rest below. **Fix round 1 (2026-10-01):** the re-sweep's first pass was itself incomplete — the TM-datatype overview-table row (§3) and the OBX-17 microbiology-example note (§4.14.3) were missed and are now added to §B; OBR-26's P-11 severity was corrected from error to warning (no modal verb; the ADRM's own attribute table gives it usage O, not X). |
+| Status | **M7 COMPLETE (2026-09-16).** P1 body sweep + P2/P3 shipped six findings; P4 swept the normative appendices 8–10 (63 candidates, triage below) and shipped P-6 (the VMR header pins). All seven decidable prose findings are live as `ADRM-prose:P-n` rules; everything else is registered with its reason. **P4-27 (2026-10-01)** found a gap: the M7 keyword list (`must` / `shall` / `is required to` / `not permitted` / `is mandatory`) never matched declarative "not used"/"should not be used" prose, so OBR-26, OBR-29 and ORC-24 were invisible to the original scan. Re-swept for that phrasing; shipped P-11, P-12; registered the rest below. **Fix round 1 (2026-10-01):** the re-sweep's first pass was itself incomplete — the TM-datatype overview-table row (§3) and the OBX-17 microbiology-example note (§4.14.3) were missed and are now added to §B; OBR-26's P-11 severity was corrected from error to warning (no modal verb; the ADRM's own attribute table gives it usage O, not X). **P4-32 (2026-10-01, owner decision G7):** OBR-29's NEEDS_CONTEXT conflict was resolved in favour of shipping — P-13, warning, same mechanism and scope as P-11. See the updated OBR-29 entry below. |
 | Method | `scripts/sweep-adrm-prose.py` over `/tmp/adrm2021.txt` (pdftotext of the ADRM; re-extract per session) |
 | Predecessor | `m6-adrm-2021-localisation-audit.md` — the Appendix 5 register work. This sweep covers what Appendix 5 explicitly does not: narrowings stated only in chapter prose. |
 
@@ -90,22 +90,29 @@ page indexes (printed page ≈ index, off by at most a few).
   withdrawn (`W`) from v2.7; an error-level rule would over-read (req #4). The presence
   half ("if not present in the ORC, it must be present in the associated OBR") is
   message-shape-dependent (ORU needs no ORC) and stays unshipped.
-- **OBR-29 "not used" vs. the ORC-8/OBR-29 presence rule — NEEDS_CONTEXT (P4-27).**
+- **OBR-29 "not used" vs. the ORC-8/OBR-29 presence rule — NEEDS_CONTEXT (P4-27),
+  resolved and SHIPPED as P-13 (P4-32, owner decision G7, 2026-10-01).**
   ADRM §4.4.1.29, p. 229: "Not used in Australian messages. Use observation Sub-ID in
   OBX-4 to link results" (the identical sentence, and the identical item 00261, as
-  OBR-26 — see P-11). But ADRM §5.4.1.8 (ORC-8, unchanged from base v2.4 §4.5.1.8)
-  says: "ORC-8-parent is the same as OBR-29-parent. If the parent is not present in the
-  ORC, it must be present in the associated OBR." This is not merely prose tension: the
-  schema encodes both halves as live base conditions — `v2.4/OBR.json` OBR-29 is `C`
-  with condition `ORC-1 = CH AND ORC-8 empty`, and `v2.4/ORC.json` ORC-8 is `C` with the
-  mirrored condition `ORC-1 = CH AND (OBR absent OR OBR-29 empty)` — and the equality
-  half of the same pair already ships as a base, locale-independent rule (M8-B2,
-  `IssueCode.pairedFieldMismatch`, above), which presumes OBR-29 can legitimately carry
-  a value. An AU-wide "OBR-29 must not be valued" prohibition would directly contradict
-  the base conditional-requiredness check: any v2.3–v2.6 child order (`ORC-1 = CH`)
-  sent without ORC-8 already requires OBR-29 under the base rule, and an AU prohibition
-  would simultaneously forbid it. **Not enforced.** No AU prohibition ships for OBR-29;
-  P-11 covers OBR-26 only. See `task-P4-27-report.md` for the full write-up.
+  OBR-26 — see P-11). But ADRM §5.4.1.8, p. 295 (ORC-8, unchanged from base v2.4
+  §4.5.1.8) says: "ORC-8-parent is the same as OBR-29-parent. If the parent is not
+  present in the ORC, it must be present in the associated OBR." This is not merely
+  prose tension: the schema encodes both halves as live base conditions —
+  `v2.4/OBR.json` OBR-29 is `C` with condition `ORC-1 = CH AND ORC-8 empty`, and
+  `v2.4/ORC.json` ORC-8 is `C` with the mirrored condition `ORC-1 = CH AND (OBR absent
+  OR OBR-29 empty)` — and the equality half of the same pair already ships as a base,
+  locale-independent rule (M8-B2, `IssueCode.pairedFieldMismatch`, above), which
+  presumes OBR-29 can legitimately carry a value. An AU-wide "OBR-29 must not be
+  valued" prohibition directly contradicts the base conditional-requiredness check: any
+  v2.3–v2.6 child order (`ORC-1 = CH`) sent without ORC-8 already requires OBR-29 under
+  the base rule, and the AU prohibition simultaneously forbids it. P4-27 shipped no AU
+  prohibition for this reason. **Owner decision G7 (2026-10-01, P4-32) overrides that
+  outcome:** the AU "not used" sentence ships anyway, as a warning, matching P-11's
+  mechanism and scope exactly — `messageCode in (ORM, ORU, REF)`, the HL7 null exempt.
+  The double-bind on a v2.3–v2.6 child order sent without ORC-8 is accepted, not
+  re-engineered away: both the AU warning and the base conditionally-required check
+  fire on that message. See `task-P4-32-report.md` for the full write-up and
+  `Sources/HL7v2Kit/Locale/Profile+au_adrm_2021.swift` (`ADRM-prose:P-13`).
 - **Base-spec fields deprecated independently of AU** (found while sweeping for "not
   used" prose, P4-27): OBR-5/OBR-6 ("This field has been retained for backward
   compatibility only. It is not used…", v2.4 CH04, reprinted verbatim in ADRM

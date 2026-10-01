@@ -538,6 +538,45 @@ extension Profile {
                 ],
                 specCitation: "ADRM-prose:P-11 — OBR-26 not used in Australia"
             ),
+            // ADRM-prose:P-13 (P4-32, owner decision G7, 2026-10-01) —
+            // ADRM-2021 §4.4.1.29, p. 229: "Not used in Australian
+            // messages. Use observation Sub-ID in OBX-4 to link results."
+            // — the identical sentence and item (00261) as OBR-26
+            // (P-11). P4-27 investigated this field and withheld the
+            // prohibition (NEEDS_CONTEXT): the base v2.4 condition on
+            // OBR-29 (`ORC-1 = CH AND ORC-8 empty`, v2.4/OBR.json) makes
+            // the field conditionally REQUIRED for a child order sent
+            // without ORC-8, mirroring ADRM §5.4.1.8 (ORC-8, unchanged
+            // from base v2.4 §4.5.1.8), p. 295: "ORC-8-parent is the
+            // same as OBR-29-parent. If the parent is not present in the
+            // ORC, it must be present in the associated OBR." Owner
+            // decision G7 resolves the conflict in favour of shipping
+            // the AU "not used" sentence anyway, as a warning, matching
+            // OBR-26's mechanism and scope exactly (unconditional on the
+            // base requiredness — never negating a base "required when"
+            // condition, per this file's general rule — so on a
+            // v2.3-v2.6 child order sent without ORC-8 this AU warning
+            // and the base conditionally-required check now both fire on
+            // the same field at once; that double-bind is accepted, not
+            // re-engineered away, per G7). See task-P4-32-report.md for
+            // the full weighing. Not double-reported against
+            // HL7au:00060.4 (P4-31): `FullPredicateConditions.generated`
+            // marks only `2.4|OBX-2`; OBR-29 carries no full-predicate
+            // marking, so `checkFullPredicateConditional` never visits
+            // it. Scope matches OBR-26: OBR is shared by ORM (ch. 5),
+            // ORU (ch. 4, its home chapter) and REF (ch. 7).
+            FieldOverride(
+                segmentID: "OBR",
+                fieldIndex: 29,
+                prohibitions: [
+                    ProfileFieldProhibition(
+                        condition: "messageCode in (ORM, ORU, REF)",
+                        severity: .warning,
+                        specCitation: "ADRM-prose:P-13 — OBR-29 (Parent) should not be valued in Australian messages; use the OBX-4 Sub-ID to link results instead; AU ADRM-2021 §4.4.1.29 p. 229"
+                    ),
+                ],
+                specCitation: "ADRM-prose:P-13 — OBR-29 not used in Australia (owner decision G7; conflicts with the base child-order requirement, accepted)"
+            ),
             FieldOverride(
                 segmentID: "ORC",
                 fieldIndex: 2,
