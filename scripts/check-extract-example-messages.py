@@ -56,6 +56,9 @@ def check_elision_field_drops_rest_of_segment():
     assert extract._drop_elision("PID|...") == ("PID|", 1)
     # a segment with no elision at all is returned unchanged.
     assert extract._drop_elision("PID|1||123") == ("PID|1||123", None)
+    # P4-29: the print sometimes sets the marker as one ellipsis character (v2.5.1 CH05's
+    # "OBX|\u2026"), which means the same.
+    assert extract._drop_elision("OBX|\u2026") == ("OBX|", 1)
 
 
 def check_elided_msh12_keeps_message_but_drops_version():
@@ -206,6 +209,108 @@ def check_bare_elided_segment_is_self_terminating():
     assert not extract._BARE_ELIDED_SEGMENT.match("PID|...more")
 
 
+def _segments(lines):
+    # The segment lists messages_from_lines() extracts from synthetic printed lines.
+    return [m["segments"] for m in extract.messages_from_lines(lines)]
+
+
+_MSH = "MSH|^~\\&|CLINREG|WESTCLIN|HOSPMPI|HOSP|199912121135||QBP^Q22^QBP_Q21|1|P|2.4"
+
+
+def check_segment_id_line_starts_a_segment_without_cr():
+    # P4-29: a line led by a segment ID and the field separator starts a new segment even
+    # when the line before it carries no "<cr>" -- the one-segment-per-printed-line layout of
+    # the QBP/RSP query examples (v2.4-v2.8.2 CH03/CH04/CH05), which the wrapped-continuation
+    # rule used to glue into one segment or drop.
+    got = _segments([_MSH, "QPD|Q22^Find Candidates^HL7nnnn|111069|@PID.5.1^Everyman", "RCP|I|20^RD"])
+    assert got == [[_MSH, "QPD|Q22^Find Candidates^HL7nnnn|111069|@PID.5.1^Everyman", "RCP|I|20^RD"]], got
+    # a locally defined Z-segment is a segment too (v2.3-v2.5.1 CH8 ZL7 religion examples).
+    got = _segments([_MSH, "MFE|MAD|199109051000|199110010000|U^Buddhist^HL7", "ZL7|U^Buddhist^HL7|3^^Sortkey"])
+    assert got[0][1:] == ["MFE|MAD|199109051000|199110010000|U^Buddhist^HL7", "ZL7|U^Buddhist^HL7|3^^Sortkey"], got
+
+
+def check_outdented_line_is_prose_not_continuation():
+    # P4-29: once a segment can end without a "<cr>", the last segment of a printed message
+    # must not swallow the explanatory prose after the figure ("Note that MSA-1 ...",
+    # "Requesting a Chip card", a numbered heading with four dots). The print indents every
+    # example; a wrapped continuation is never more than three columns left of its segment's
+    # first line (pdftotext jitter), while the prose resumes at the body margin. A line
+    # further left than that closes the segment and is not segment content.
+    msh = "                    " + _MSH
+    rcp = "                    RCP|I|20^RD"
+    prose = "          Note the explicit statement of the input field name in QPD-3."
+    got = _segments([msh, rcp, prose])
+    assert got == [[_MSH, "RCP|I|20^RD"]], got
+    # a continuation printed slightly left of its segment (up to three columns) is kept.
+    got = _segments([msh, "                    PV1||I|6N^1234^A^GOOD HEALTH HOSPI-", "                 TAL||||0100"])
+    assert got == [[_MSH, "PV1||I|6N^1234^A^GOOD HEALTH HOSPI-TAL||||0100"]], got
+
+
+def check_wrapped_line_led_by_a_non_segment_word_is_not_split():
+    # P4-29: the wrapped-continuation patterns this corpus actually prints, each of which
+    # begins its second printed line with three capitals and a "|" -- a field value broken at
+    # a space ("...~98223^^^SOUTH" / "LAB||Everyman"), at a hyphen ("GOOD HEALTH HOSPI-" /
+    # "TAL|..."), or straight after a field separator ("...||" / "SUR|||"). None of those
+    # words is a segment ID, so the line stays a continuation of the open segment.
+    pid = "PID|||112234^^^GOOD HEALTH HOSPITAL~98223^^^SOUTH"
+    assert _segments([_MSH, pid, "LAB||Everyman^Adam||19600614|M"]) == \
+        [[_MSH, pid + "LAB||Everyman^Adam||19600614|M"]]
+    pv1 = "PV1||I|6N^1234^A^GOOD HEALTH HOSPI-"
+    assert _segments([_MSH, pv1, "TAL||||0100^ANDERSON,CARL"]) == [[_MSH, pv1 + "TAL||||0100^ANDERSON,CARL"]]
+    pv1 = "PV1||I|6N^1234^A^GENHOS|0100^ANDERSON,CARL|0148^ADDISON,JAMES||"
+    assert _segments([_MSH, pv1, "SUR|||||||0148^ANDERSON,CARL"]) == [[_MSH, pv1 + "SUR|||||||0148^ANDERSON,CARL"]]
+    # a line led by a real segment ID is still a continuation when the line before it stops
+    # visibly mid-field: inside a composite (a trailing component, repetition or
+    # subcomponent separator) or on a hyphenated word break.
+    assert extract._ends_mid_field("QPD|Q1|@PID.3^EQ^555444222111^AND|@ORC.1^EQ^RE^")
+    assert extract._ends_mid_field("PV1||I|6N^1234^A^GOOD HEALTH HOSPI-")
+    assert extract._ends_mid_field("PID|||1~")
+    assert not extract._ends_mid_field("PID|||112234^^^SOUTH LAB|")
+    assert not extract._ends_mid_field("MFE|MAD|199109051000|199110010000|U^Buddhist^HL7")
+    qpd = "QPD|Q1|@PID.3^EQ^555444222111^AND|@ORC.1^EQ^RE^"
+    assert _segments([_MSH, qpd, "PID|x"]) == [[_MSH, qpd + "PID|x"]]
+
+
+def check_standalone_comment_line_closes_the_open_segment():
+    # P4-29 (P4-28 re-review carry-in): a "// comment" line on its own, after a segment the
+    # print leaves without a "<cr>", closes that segment -- v2.3/v2.3.1 CH4's "1ST/2ND/3RD
+    # child OBR" example, where the open OBR otherwise swallowed the next ORC (the OBR-8.2
+    # artefact at v2.3 CH4 index 4).
+    assert extract._segment_break("                                // 1ST child OBR")
+    assert not extract._segment_break("OBR|||89-551^EKG|...     // 1ST child OBR.")
+    obr = "OBR|||89-551^EKG|8601-7^EKG IMPRESSION^LN|..."
+    orc = "ORC|CH|A226677^PC|89-522^EKG|946281^PC|SC"
+    got = _segments([_MSH, obr, "        // 1ST child OBR", orc])
+    assert got == [[_MSH, "OBR|||89-551^EKG|8601-7^EKG IMPRESSION^LN", orc]], got
+    # the close does not depend on the next line being a known segment: a following line led
+    # by a non-segment word is not glued back onto the closed OBR.
+    got = _segments([_MSH, obr, "        // 1ST child OBR", "ABC|1"])
+    assert got == [[_MSH, "OBR|||89-551^EKG|8601-7^EKG IMPRESSION^LN", "ABC|1"]], got
+
+
+def check_elision_only_line_does_not_glue_its_neighbours():
+    # P4-29 (P4-28 re-review carry-in): a line of only "..." between two segments the print
+    # leaves without a "<cr>" (v2.3 CH7 index 9: "OBX||ST...", "...", "OBX||FT...") stands
+    # for omitted segments. It closes the open segment, keeps the message open, and is not
+    # itself segment content.
+    assert extract._segment_break("    ...")
+    assert extract._segment_break("......")
+    assert extract._segment_break("    ...                       // Other parts of message might")
+    # a continuation line that merely STARTS with the elision marker is real content.
+    assert not extract._segment_break("... ^^^^198901130500^<cr>")
+    got = _segments([_MSH, "OBX||ST...", "    ...", "ABC||FT...", "ORC|CH|A226677^OE|89-452^EKG<cr>"])
+    assert got == [[_MSH, "OBX||ST...", "ABC||FT...", "ORC|CH|A226677^OE|89-452^EKG"]], got
+    # but after an open segment that stops on a field separator, the same line is that
+    # segment's own elided remainder (v2.5.1 CH04: "MSH|...||OMS^O05^OMS_O05|" / "...<cr>"),
+    # so it stays a continuation and the elision is still recorded (MSH-12 elided).
+    msh = "MSH|^~\\&|ORSUPPLY|ORSYS|MMSUPPLY|MMSYS|19911105131523||OMS^O05^OMS_O05|"
+    assert not extract._segment_break("   ...<cr>", msh)
+    assert extract._segment_break("   ...<cr>", "OBX||ST...")
+    got = extract.messages_from_lines([msh, "   ...<cr>", "PID|...<cr>", "ORC|NW|RQ101^ORSUPPLY<cr>"])
+    assert got[0]["segments"] == [msh[:-1], "PID|", "ORC|NW|RQ101^ORSUPPLY"], got
+    assert got[0]["mshVersionElided"] is True, got
+
+
 def check_known_spec_example_errors_cite():
     # P4-22 Part 3 / fix round 1 item 5: every registered exception is keyed by (source
     # glob, index, code, location pattern) with an exact expected count, and cites the spec
@@ -283,11 +388,12 @@ def check_swapped_header_extracted_registry_and_mismatches():
     # EXTRACTOR -- it re-derives its own count independently via a raw PDF-text search, so it
     # would keep passing even if _message_start's swapped-header branch were deleted
     # outright. KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS instead records, per source, how many
-    # messages() actually flags swappedHeader=True -- only the four sources whose messages
-    # survive the separate no-"<cr>" segment-merge limitation have any.
-    assert len(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) == 4
-    assert all(n > 0 for n in extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values())
-    assert sum(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values()) == 58
+    # messages() actually flags swappedHeader=True. P4-29: since a segment no longer needs a
+    # printed "<cr>" to end, every printed swapped header forms a message, so the extracted
+    # registry now matches the PDF-text registry source for source (nine sources, 138).
+    assert extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS == extract.KNOWN_SWAPPED_HEADER_SOURCES
+    assert len(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) == 9
+    assert sum(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values()) == 138
     saved = dict(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS)
     try:
         extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.clear()
@@ -307,6 +413,11 @@ CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_se
           check_heading_guard_needs_heading_shape,
           check_strip_comment_ends_a_segment,
           check_bare_elided_segment_is_self_terminating,
+          check_segment_id_line_starts_a_segment_without_cr,
+          check_outdented_line_is_prose_not_continuation,
+          check_wrapped_line_led_by_a_non_segment_word_is_not_split,
+          check_standalone_comment_line_closes_the_open_segment,
+          check_elision_only_line_does_not_glue_its_neighbours,
           check_known_spec_example_errors_cite,
           check_registry_matches_a_synthetic_report,
           check_swapped_header_registry_and_mismatches,

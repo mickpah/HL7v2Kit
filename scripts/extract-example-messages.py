@@ -10,8 +10,10 @@ run through the Swift Validator.
 
 The output is specification text and, like the PDFs, stays OUT of the repository: write it
 to a scratch path. A message starts at "MSH|^~\\&" (or at a recognised variant of that
-header — see _message_start) and runs while lines are segments; a segment ends at "<cr>" and
-may wrap over several printed lines.
+header — see _message_start) and runs while lines are segments; a segment ends at "<cr>", at
+the next line led by a real segment ID (P4-29, see messages_from_lines), at a "// comment" or
+elision-only line, or where the print's indentation returns to the body text, and may wrap
+over several printed lines.
 
 These examples are a TRIAGE source, not a must-pass oracle. Unlike the datatype examples
 (audit-schemas.py --examples), the printed messages are informative and frequently wrong in
@@ -54,6 +56,13 @@ _SECTION_HEADING_ONE_DOT = re.compile(r"^\s*\d+\.\d+\s+[A-Z][A-Za-z0-9]{3,}")
 # of magnitude of this; a real missing <cr> that runs a continuation into unrelated prose
 # (a swallowed worked example, a swallowed component table) reaches 100K+ characters.
 _MAX_SEGMENT_LEN = 3000
+# P4-29: the print indents every example message; pdftotext -layout keeps that indentation.
+# A genuine wrapped continuation line is never more than this many columns left of its
+# segment's first printed line (measured over the whole corpus: the furthest-left real
+# continuation is 3 columns left, "0<cr>" in v2.3 CH4, and no line further left than that
+# contains a single "|"), while the prose after a figure resumes at the body margin, 4 to 34
+# columns further left.
+_MAX_OUTDENT = 3
 
 
 def _strip_comment(line):
@@ -78,16 +87,22 @@ def _strip_comment(line):
     return before + "<cr>" if before else ""
 
 
-def _continuation_runs_into_prose(seg, line):
+def _continuation_runs_into_prose(seg, line, outdent=0):
     """P4-22 fix round 1 / P4-28 fix round 2: true when an open, un-terminated segment (the
     PDF dropped its <cr>) has run off the end of its figure into ordinary document text — a
     numbered section heading (heading shape AND no "|" anywhere on the line — segment data
     always has one, prose heading never does), or (heading or not) a segment that has grown
     far past any real printed example's length. ("// comment" annotations are handled
-    earlier, by _strip_comment, before a line ever reaches this check.)"""
+    earlier, by _strip_comment, before a line ever reaches this check.)
+
+    P4-29: also true when the line sits more than _MAX_OUTDENT columns left of the open
+    segment's first printed line (`outdent`, in columns) -- the body text resuming after the
+    figure. Without a "<cr>" requirement for a segment to end, the last segment of every
+    message printed without one would otherwise run on into the explanation that follows it
+    ("Note that MSA-1 ...", "Requesting a Chip card", "5.9.2.1.1 Associated dispense ...")."""
     looks_like_heading = (bool(_SECTION_HEADING_MULTI_DOT.match(line))
                           or bool(_SECTION_HEADING_ONE_DOT.match(line))) and "|" not in line
-    return looks_like_heading or len(seg) > _MAX_SEGMENT_LEN
+    return looks_like_heading or len(seg) > _MAX_SEGMENT_LEN or outdent > _MAX_OUTDENT
 
 
 def _split_literal_cr(line):
@@ -188,7 +203,8 @@ def _drop_elision(seg):
     because of elision, not a genuine finding."""
     fields = seg.split("|")
     for i, f in enumerate(fields):
-        if i > 0 and f.strip() == "...":
+        # P4-29: "\u2026" is the same marker set as one ellipsis character (v2.5.1 CH05).
+        if i > 0 and f.strip() in ("...", "\u2026"):
             kept = fields[:i]
             if len(kept) == 1:
                 kept.append("")
@@ -196,10 +212,67 @@ def _drop_elision(seg):
     return seg, None
 
 
+# P4-29: every segment ID any supported version defines (the hand-curated schemas under
+# Resources/schemas/<version>/<ID>.json), plus the locally defined Z-segments HL7 reserves
+# the Z prefix for. Used by the one-segment-per-printed-line rule in messages_from_lines():
+# a wrapped continuation line in this corpus can itself begin with three capitals and a
+# "|" ("LAB||Everyman", "TAL|...", "SUR|||", "GAS||", "DAC|", "NES|", "AND|@RXD.3"), but
+# never with a real segment ID, so the vocabulary is what tells the two apart.
+_SEGMENT_IDS = frozenset(
+    os.path.splitext(os.path.basename(p))[0]
+    for p in glob.glob(os.path.join(REPO, "Resources/schemas/*/*.json"))
+    if re.fullmatch(r"[A-Z][A-Z0-9]{2}", os.path.splitext(os.path.basename(p))[0]))
+
+
+def _is_segment_id(seg_id):
+    return seg_id in _SEGMENT_IDS or seg_id.startswith("Z")
+
+
+def _ends_mid_field(seg):
+    """P4-29: true when an open segment's printed line stops visibly inside a field -- on a
+    component, repetition, subcomponent or escape character (a composite broken across two
+    lines, e.g. CH05's "...^AND|@ORC.1^EQ^RE^" / "AND|@RXD.3...") or on a hyphenated word
+    break ("GOOD HEALTH HOSPI-" / "TAL|..."). The next line then continues that field, even
+    if it happens to begin with a segment ID."""
+    return seg.rstrip().endswith(("^", "~", "&", "\\", "-"))
+
+
+# P4-29: a whole printed line that is only the elision marker ("...", "......") between
+# segments stands for omitted segments (v2.3 CH7's "OBX||ST...", "...", "OBX||FT..."). A
+# line that merely STARTS with it ("... ^^^^198901130500^<cr>") is real continuation text.
+_ELISION_ONLY_LINE = re.compile(r"^\.{3,}(?:<cr>)?$")
+
+
+def _segment_break(raw, seg=None):
+    """P4-29 (P4-28 re-review carry-ins): true for a printed line that is not segment content
+    but ends whatever segment is open -- a "// comment" alone on its line (v2.3/v2.3.1 CH4's
+    "// 1ST child OBR", printed after an OBR that has no "<cr>") or an elision-only line. The
+    message stays open: what follows may be more of it. An elision-only line carrying a
+    trailing comment ("...   // Other parts of message might") is an elision-only line.
+
+    `seg` is the open segment, if any. An elision-only line straight after an open segment
+    that stops on a field separator is NOT a break: it is that segment's own elided remainder
+    (v2.5.1 CH04's "MSH|...||OMS^O05^OMS_O05|" / "...<cr>"), so it stays a wrapped
+    continuation and _drop_elision still records the elision (there, MSH-12)."""
+    line = raw.strip()
+    if line.startswith("//"):
+        return True
+    if not _ELISION_ONLY_LINE.match(_strip_comment(line)):
+        return False
+    return not (seg and not seg.endswith("<cr>") and seg.endswith("|"))
+
+
 def messages(pdf):
     text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", pdf, "-"], capture_output=True, text=True).stdout.split("\n")
+    return messages_from_lines(text)
+
+
+def messages_from_lines(text):
+    """Extract the example messages from the printed lines of one source (pdftotext -layout
+    output, or synthetic lines in the self-check)."""
     out, out_swapped, out_bare = [], [], []
     cur, seg, cur_swapped, cur_bare = None, None, False, False
+    seg_indent = 0      # P4-29: printed indentation of the open segment's first line
     def close():
         nonlocal cur, seg, cur_swapped, cur_bare
         if cur is not None:
@@ -209,10 +282,16 @@ def messages(pdf):
         cur, seg, cur_swapped, cur_bare = None, None, False, False
     for raw in text:
         if FURN.search(raw): continue
+        if _segment_break(raw, seg):
+            if cur is not None and seg:
+                cur.append(seg); seg = None
+            continue
+        indent = len(raw) - len(raw.lstrip())
         for line in _split_literal_cr(_strip_comment(raw.strip())):
             start = _message_start(line)
             if start is not None:
-                close(); cur, seg, cur_swapped, cur_bare = [], start[0], start[1], start[2]; continue
+                close(); cur, seg, cur_swapped, cur_bare = [], start[0], start[1], start[2]
+                seg_indent = indent; continue
             if cur is None: continue
             if not line:
                 if seg and seg.endswith("<cr>"): cur.append(seg); seg = None
@@ -226,7 +305,7 @@ def messages(pdf):
                 if m and _BARE_ELIDED_SEGMENT.match(line):
                     cur.append(line)
                 elif m:
-                    seg = line
+                    seg, seg_indent = line, indent
                 else:
                     close()
             elif seg.endswith("<cr>"):
@@ -234,10 +313,10 @@ def messages(pdf):
                 if m and _BARE_ELIDED_SEGMENT.match(line):
                     cur.append(line); seg = None
                 elif m:
-                    seg = line
+                    seg, seg_indent = line, indent
                 else:
                     seg = None; close()
-            elif _continuation_runs_into_prose(seg, line):
+            elif _continuation_runs_into_prose(seg, line, seg_indent - indent):
                 # P4-22 fix round 1: the PDF dropped this segment's own <cr>, so the
                 # "wrapped continuation" branch below would otherwise keep absorbing raw
                 # lines past the end of the figure — into a section heading, or (if a
@@ -252,6 +331,11 @@ def messages(pdf):
                 # _BARE_ELIDED_SEGMENT — so it closes the open one and is immediately closed
                 # itself, rather than being glued on as more "wrapped continuation" text.
                 cur.append(seg); cur.append(line); seg = None
+            elif m and _is_segment_id(m.group(1)) and not _ends_mid_field(seg):
+                # P4-29: one segment per printed line with no "<cr>" at all (the QBP/RSP
+                # query family and others): a line led by a real segment ID starts a new
+                # segment unless the open one stops visibly mid-field (_ends_mid_field).
+                cur.append(seg); seg, seg_indent = line, indent
             else:
                 seg += line          # a wrapped continuation of the open segment
     close()
@@ -359,6 +443,127 @@ _AI_SHIFT_COUNTS = {"v2.3/CH10.pdf": 10, "v2.3.1/Hl7V231.pdf": 10, "v2.4/CH10.PD
 _AI4_SOURCES = ["v2.3/CH10.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH10.PDF"]
 _RXO_CH12_SOURCES = ["v2.4/CH12.PDF", "v2.5.1/V251_CH12.pdf", "v2.6/V26_CH12_PatientCare.pdf",
                      "v2.8.2/V282_CH12_PatientCare.pdf"]
+# P4-29: the classes of genuine example defect the segment-ID rule newly exposes (examples
+# printed one segment per line with no "<cr>", which used to be dropped), plus the RXA/RXG
+# dose-series cluster P4-28 deferred. Each was read against the print (the omission is in the
+# PDF text, not an extraction artefact) and against the field definition (no condition or
+# "if null" wording that would make the shipped rule a misfire). The RXA-4 lines in the same
+# messages are deliberately NOT registered: the RXA-4 segment-table "R" conflicts with its
+# own definition ("If null, the date/time of RXA-3 is assumed") and is P4-30's to resolve.
+_RXA_SERIES_CODE_REASON = (
+    "v2.3 CH4 / v2.3.1 chapter 4 RAS query-response worked example prints every dose of the "
+    "repeat-administration series as \"RXA|1|1|199208120800|||250<cr>\": RXA-5 "
+    "(Administered Code) is blank on every RXA, the code appearing only on the RXE. RXA-5 is "
+    "R in the segment table and its definition (v2.5.1 sec 4.14.7.5) carries no condition.")
+_RXG_SERIES_REASON = (
+    "v2.3 CH4 / v2.3.1 chapter 4 RGR give-series worked example prints \"RXG|1||199208120701||"
+    "250<cr>\": RXG-4 (Give Code) and RXG-7 (Give Units) are blank on every RXG. Both are R "
+    "and their definitions (v2.5.1 sec 4.14.6.4/.7) carry no condition.")
+_RXA_FOR_RXG_REASON = (
+    "The fourth line of the same RGR give series is printed as an RXA, not an RXG "
+    "(\"RXA|4||199208131912||250\" in v2.3/v2.3.1; \"RXA|4||^^^199208131912|10986^AMPICILLIN|"
+    "250\" in v2.4-v2.6), so RXG-shaped content sits in RXA positions: RXA-2 blank and RXA-6 "
+    "blank (v2.3/v2.3.1); RXA-2 blank, the TQ-shaped give time in RXA-3 (RXA-3.1 empty) and "
+    "the give code in RXA-4 (RXA-4.2 \"AMPICILLIN\" against Table 0529) in v2.4-v2.6.")
+_RXA_CH12_SHIFT_REASON = (
+    "CH12 PPP^PCB pathway example prints \"RXA|1|199505011200|||0047-0402-30^Ampicillin...\": "
+    "RXA-2 (Administration Sub-ID Counter) is omitted, so the start time lands in RXA-2 and "
+    "RXA-3 (Date/Time Start of Administration, R, no condition) reads blank. (The RXA-4 line "
+    "from the same shift is left unregistered for P4-30.)")
+_MF_KEY_TYPE_REASON = (
+    "The CH2/CH02 and CH8/CH08 MFN/MFK master-file examples (lab test dictionary, religion "
+    "table, practitioner file) end MFE after MFE-4 and MFA after MFA-5: MFE-5 / MFA-6 "
+    "(Primary Key Value Type) are never printed, though R in every version that defines them.")
+_MFI_SHIFT_REASON = (
+    "The same master-file examples omit or misplace MFI fields: \"MFI|LABxxx^Lab Test "
+    "Dictionary^L|UPD|||AL\" drops MFI-2, so the File-Level Event Code lands in MFI-2 and the "
+    "Response Level Code in MFI-5; \"MFI|0006^RELIGION^HL7||UPD||AL\" and \"MFI|INV|MATERIALSYS|"
+    "UPD|200408121100|SU|\" print the Response Level Code one field early. MFI-3 and MFI-6 "
+    "are R in every version.")
+_DSP_SHIFT_REASON = (
+    "v2.4/v2.5.1 CH05 display-response examples print the display text one field early, "
+    "\"DSP||555444222111 Everyman,Adam ...\" (DSP-2 Display Level holds the line, DSP-3 Data "
+    "Line, R, is blank). v2.6 and v2.8.2 correct the same examples to \"DSP|||...\".")
+_RDF_REASON = (
+    "CH05 tabular-response examples print \"RDF|PatientList^CX^20~PatientName^XPN^48~...\": "
+    "RDF-1 (Number of Columns per Row, NM, single) is omitted, so the repeating column "
+    "descriptions land in RDF-1 (cardinality exceeded) and RDF-2 (Column Description, R) "
+    "reads blank.")
+_PRA12_REASON = (
+    "CH15 PMU^B01 example prints PRA without PRA-12. v2.4 sec 15.4.5.12: \"For all messages "
+    "except the Staff/Practitioner Master File Notification, this field is required\"; this "
+    "is a PMU, not an MFN.")
+_TXA7_REASON = (
+    "v2.8.2 CH09 MDM^T01 example leaves TXA-7 (Transcription Date/Time) blank with TXA-17 "
+    "\"DO\". v2.8.2 sec 9.7.3.7: \"conditional based upon the presence of a value in "
+    "TXA-17-Document Completion Status of anything except 'dictated'\".")
+_HD_PAIR_REASON = (
+    "CH05 subscription examples carry \"PS^LAB\" in MSH-3/MSH-5: HD-2 valued without HD-3. "
+    "HD (every version from v2.3): \"The second and third components must either both be "
+    "valued (both non-null), or both be not valued (both null).\"")
+_FUSED_ELISION_REASON = (
+    "v2.3 CH7 / v2.3.1 chapter 7 EKG child-order and blood-culture examples print the elision "
+    "marker fused onto a coded value with no field separator before it (\"OBX||ST...\", "
+    "\"OBX||FT...\", \"ORC|RE...\"), so the marker is part of the value and the table lookup "
+    "rejects it. A field that is wholly \"...\" is elision (_drop_elision); a value merely "
+    "ending in it is printed content.")
+_P4_29_ENTRIES = [
+    *[{"source_glob": src, "index": idx, "code": 'valueNotInTable(table: "0125")',
+       "location_pattern": r"^OBX\[\d+\]-2$", "count": 9, "reason": _FUSED_ELISION_REASON}
+      for src, idx in {"v2.3/CH7.pdf": 9, "v2.3.1/Hl7V231.pdf": 97}.items()],
+    *[{"source_glob": src, "index": idx, "code": 'valueNotInTable(table: "0119")',
+       "location_pattern": r"^ORC\[\d+\]-1$", "count": 1, "reason": _FUSED_ELISION_REASON}
+      for src, idx in {"v2.3/CH7.pdf": 7, "v2.3.1/Hl7V231.pdf": 95}.items()],
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": r"^RXA\[\d+\]-5$", "count": 10, "reason": _RXA_SERIES_CODE_REASON}
+      for src, idx in {"v2.3/CH4.pdf": 29, "v2.3.1/Hl7V231.pdf": 76}.items()],
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": r"^RXG\[\d+\]-[47]$", "count": 18, "reason": _RXG_SERIES_REASON}
+      for src, idx in {"v2.3/CH4.pdf": 31, "v2.3.1/Hl7V231.pdf": 78}.items()],
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": r"^RXA\[\d+\]-[26]$", "count": 2, "reason": _RXA_FOR_RXG_REASON}
+      for src, idx in {"v2.3/CH4.pdf": 31, "v2.3.1/Hl7V231.pdf": 78}.items()],
+    *[{"source_glob": src, "index": idx, "code": "*",
+       "location_pattern": r"^RXA\[\d+\]-(2|3\.1|4\.2)$", "count": 3, "reason": _RXA_FOR_RXG_REASON}
+      for src, idx in {"v2.4/CH04.PDF": 37, "v2.5.1/V251_CH04.pdf": 40,
+                        "v2.6/V26_CH04_Orders.pdf": 39}.items()],
+    *[{"source_glob": src, "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": r"^RXA\[\d+\]-3$", "count": 1, "reason": _RXA_CH12_SHIFT_REASON}
+      for src, idx in {"v2.3.1/Hl7V231.pdf": 146, "v2.4/CH12.PDF": 2, "v2.5.1/V251_CH12.pdf": 2,
+                        "v2.6/V26_CH12_PatientCare.pdf": 2,
+                        "v2.8.2/V282_CH12_PatientCare.pdf": 2}.items()],
+    *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
+       "location_pattern": r"^(MFE\[\d+\]-5|MFA\[\d+\]-6)$", "count": n, "reason": _MF_KEY_TYPE_REASON}
+      for src, n in {"v2.3/CH2.pdf": 13, "v2.3/CH8.pdf": 14, "v2.3.1/Hl7V231.pdf": 20,
+                     "v2.4/CH02.PDF": 13, "v2.4/CH08.PDF": 20, "v2.5.1/V251_CH02.pdf": 8,
+                     "v2.5.1/V251_CH08.pdf": 16, "v2.6/V26_CH02_Control.pdf": 10,
+                     "v2.6/V26_CH08_MasterFiles.pdf": 4, "v2.6/V26_CH17_MatMngmt.pdf": 1,
+                     "v2.8.2/V282_CH02_Control.pdf": 8,
+                     "v2.8.2/V282_CH17_MaterialsMngmt.pdf": 1}.items()],
+    *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
+       "location_pattern": r"^MFI\[\d+\]-[36]$", "count": n, "reason": _MFI_SHIFT_REASON}
+      for src, n in {"v2.3/CH2.pdf": 12, "v2.3/CH8.pdf": 18, "v2.3.1/Hl7V231.pdf": 14,
+                     "v2.4/CH02.PDF": 12, "v2.4/CH08.PDF": 14, "v2.5.1/V251_CH02.pdf": 8,
+                     "v2.5.1/V251_CH08.pdf": 12, "v2.6/V26_CH02_Control.pdf": 8,
+                     "v2.6/V26_CH17_MatMngmt.pdf": 1, "v2.8.2/V282_CH02_Control.pdf": 4,
+                     "v2.8.2/V282_CH17_MaterialsMngmt.pdf": 1}.items()],
+    *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
+       "location_pattern": r"^DSP\[\d+\]-3$", "count": 29, "reason": _DSP_SHIFT_REASON}
+      for src in ["v2.4/CH05.PDF", "v2.5.1/V251_CH05.pdf"]],
+    *[{"source_glob": src, "index": "all", "code": "*",
+       "location_pattern": r"^RDF\[\d+\]-[12]$", "count": n, "reason": _RDF_REASON}
+      for src, n in {"v2.4/CH05.PDF": 16, "v2.5.1/V251_CH05.pdf": 16,
+                     "v2.6/V26_CH05_Queries.pdf": 16, "v2.8.2/V282_CH05_Queries.pdf": 12}.items()],
+    *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
+       "location_pattern": r"^PRA\[\d+\]-12$", "count": 1, "reason": _PRA12_REASON}
+      for src in ["v2.4/CH15.PDF", "v2.5.1/V251_CH15.pdf", "v2.6/V26_CH15_PersMngmt.pdf",
+                  "v2.8.2/V282_CH15_PersMngmt.pdf"]],
+    {"source_glob": "v2.8.2/V282_CH09_MedRecords.pdf", "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^TXA\[\d+\]-7$", "count": 1, "reason": _TXA7_REASON},
+    *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
+       "location_pattern": r"^MSH\[\d+\]-[35]$", "count": 3, "reason": _HD_PAIR_REASON}
+      for src in ["v2.5.1/V251_CH05.pdf", "v2.6/V26_CH05_Queries.pdf", "v2.8.2/V282_CH05_Queries.pdf"]],
+]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
        "location_pattern": r"^AI[LP]\[\d+\]-[67]$", "count": 20, "reason": _AI_START_OFFSET_REASON}
@@ -376,7 +581,8 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     # "free text in RXO-6, no leading caret" defect: index 54 ("500 mg Polycillin...", RXO-1,
     # 2 AND 4 blank), index 62 and 128 (a custom IV order, "D5W WITH 1/2 NS...", RXO-4
     # populated with the unit "L" so only RXO-1/2 are blank). Confirmed directly in the
-    # extracted text.
+    # extracted text. (P4-29: now indices 61, 69 and 146, renumbered by the messages it
+    # recovers; "all" is unaffected.)
     {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "conditionalFieldMissing",
      "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 6, "reason": _RXO_FREE_TEXT_REASON},
     {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "conditionalFieldMissing",
@@ -393,30 +599,29 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     # P4-28: the same "500 mg Polycillin" worked example also appears directly in the CH04/
     # CH04A chapters themselves (not just the CH12 copy above) in every version whose swapped
     # header Part 1(a) now recognises — confirmed index 19 (v2.4, v2.6), 20 (v2.5.1) and 2
-    # (v2.8.2 CH04A). v2.8.2 CH04 (not CH04A) is NOT among these: all four of its swapped
-    # headers belong to the "Query the accumulated list..." QBP/RTB family, which the
-    # separate, pre-existing no-"<cr>" segment-merge limitation (see the comment above
-    # KNOWN_SWAPPED_HEADER_SOURCES) still drops before a message is ever produced.
+    # (v2.8.2 CH04A); P4-29 renumbered them to 23 (v2.4), 26 (v2.5.1), 25 (v2.6) and 4 (v2.8.2
+    # CH04A), the earlier query examples it recovers coming first (same three lines each). v2.8.2 CH04 (not CH04A) is NOT among these: all four of its swapped
+    # headers belong to the "Query the accumulated list..." QBP/RTB family, which prints no
+    # RXO at all.
     *[{"source_glob": src, "index": idx, "code": "conditionalFieldMissing",
        "location_pattern": r"^RXO\[\d+\]-[124]$", "count": 3, "reason": _RXO_FREE_TEXT_REASON}
-      for src, idx in {"v2.4/CH04.PDF": 19, "v2.5.1/V251_CH04.pdf": 20,
-                        "v2.6/V26_CH04_Orders.pdf": 19, "v2.8.2/V282_CH04A_Orders.pdf": 2}.items()],
+      for src, idx in {"v2.4/CH04.PDF": 23, "v2.5.1/V251_CH04.pdf": 26,
+                        "v2.6/V26_CH04_Orders.pdf": 25, "v2.8.2/V282_CH04A_Orders.pdf": 4}.items()],
+    *_P4_29_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact
 # transposed four-character substring, not a downstream Validator finding — see _SWAPPED_ENC
 # above for the transposition and the PDF-text evidence it rests on). This is deliberately
 # NOT folded into KNOWN_SPEC_EXAMPLE_ERRORS / check_registry: that machinery matches SPECEX
-# report rows (Validator findings on a successfully-extracted, segment-split message), and
-# a good number of these occurrences belong to example families (e.g. the "Query the
-# accumulated list..." QBP^Z73/RTB^Z74 family, and several CH03/CH05 query/response pairs)
-# that the PDF prints with plain line-per-segment layout and no literal "<cr>" marker at
-# all — a separate, pre-existing limitation in messages()'s wrapped-continuation handling (an
-# open, unterminated segment unconditionally absorbs the next physical line as more of
-# itself, even when that line is itself a new segment), well outside this task's scope, that
-# still silently drops those messages (len(cur) < 2) even though their header is now
-# correctly recognised and normalised. Counting occurrences directly, independent of that
-# gap, is what "verified" means here and is checked on every --check-registry run regardless.
+# report rows (Validator findings on a successfully-extracted, segment-split message), so
+# it would not notice a header that never formed a message at all. Counting occurrences
+# directly, independent of the extractor, is what "verified" means here and is checked on
+# every --check-registry run. (P4-28 found 80 of the 138 in example families printed one
+# segment per line with no "<cr>" -- the "Query the accumulated list..." QBP^Z73/RTB^Z74
+# family and several CH03/CH05 query/response pairs -- which the wrapped-continuation rule
+# glued into a one-segment MSH and dropped. P4-29's segment-ID rule recovers all of them;
+# KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS below now equals this registry.)
 #
 # The brief named "about 80 CH04/CH04A examples" — the count P4-22 found while investigating
 # a different (RXO) defect specifically in CH04. Confirming directly against the PDF text, as
@@ -473,16 +678,25 @@ def _swapped_header_mismatches(actual=None):
 # EXTRACTOR — it re-derives its own count independently of messages()/_message_start, via a
 # raw pdftotext substring search, so it would keep passing unchanged even if
 # _message_start's swapped-header branch were deleted outright. This second registry counts
-# the messages that actually come out of messages() flagged swappedHeader=True — only the
-# four sources whose messages survive the separate, documented no-"<cr>" segment-merge
-# limitation have any (the other five sources' occurrences never form a complete message at
-# all, swapped-header handling or not). Verified: deleting the swapped-header `if` branch in
-# _message_start drops every one of these four counts to 0, which --check-registry catches.
+# the messages that actually come out of messages() flagged swappedHeader=True. Verified:
+# deleting the swapped-header `if` branch in _message_start drops every count to 0, which
+# --check-registry catches.
+#
+# P4-29: P4-28 extracted only 58 of the 138 (four sources), because the QBP/RSP/RTB
+# examples print one segment per line with no "<cr>" and the whole message glued into a
+# one-segment MSH that was then dropped. With the segment-ID rule in messages_from_lines()
+# every printed swapped header now forms a message, so each source's extracted count equals
+# its PDF-text count above; no source falls short.
 KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS = {
-    "v2.4/CH04.PDF": 16,
-    "v2.5.1/V251_CH04.pdf": 16,
-    "v2.6/V26_CH04_Orders.pdf": 16,
-    "v2.8.2/V282_CH04A_Orders.pdf": 10,
+    "v2.4/CH03.PDF": 10,
+    "v2.4/CH04.PDF": 20,
+    "v2.4/CH05.PDF": 36,
+    "v2.5.1/V251_CH03.pdf": 10,
+    "v2.5.1/V251_CH04.pdf": 22,
+    "v2.6/V26_CH04_Orders.pdf": 22,
+    "v2.8.2/V282_CH03_PatientAdmin.pdf": 2,
+    "v2.8.2/V282_CH04_Orders.pdf": 4,
+    "v2.8.2/V282_CH04A_Orders.pdf": 12,
 }
 
 
