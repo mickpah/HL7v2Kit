@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-13: table check covers multi-component values in primitive fields
+
+- The field-level code-table check skipped any `ID` field repetition with more
+  than one component or subcomponent (`Repetition.stringValue` is nil there),
+  so TQ2-10 `RR2^SYS` was never checked against Table 0506. It now reads the
+  first component, the value a recipient reads: a recipient ignores
+  components "present but ... not expected" (v2.5.1 and v2.8.2 section
+  2.6.2 a). A miss on that first component is located at component 1
+  (`TQ2[1]-10.1`). Local table extensions and locale renderings apply as
+  before; `IS` fields and open tables are still never enforced.
+- New `IssueCode.extraComponentsInPrimitiveField` (additive; open enum per
+  ADR-014) reports an `ID` or `IS` field repetition with content after its
+  first value. The component separator separates components "of data fields
+  where allowed" (section 2.5.4) and a sender escapes it in data as `\S\`
+  (section 2.6.1); an escaped separator is one value and stays silent.
+  Severity follows the new `ValidationOptions.extraComponentsSeverity:
+  IssueSeverity?` (default `.warning`, owner gate G4; `nil` in `.lenient`).
+- Length: while that check is on, an `ID` / `IS` field's length is the length
+  of its first value, so v2.8.2 ECD-3 `Y^YES` raises one extra-component
+  warning instead of a length warning for the same cause. With it off, the
+  whole occurrence is measured as before.
+- Spec examples: 60 new `valueNotInTable` errors, all example defects, now
+  registered (`_P6_13_ENTRIES`, 149 registry entries, 0 mismatched): 51
+  AIL-2 / AIP-2 (the omitted Segment Action Code shift), 6 MSH-16 (a spaced
+  `QPD |` segment ID), 1 MSA-5 (MSA and QAK printed on one line), 1 v2.3.1
+  OBR-30 (field shift) and 1 v2.8.2 TCC-9 (` Y^YES`). 164 new
+  extra-component warnings, all code^text pairs or shifted fields in the
+  prints.
+
 ### Fixed — P6-6 fix 1: G10 length corrections, escape measurement, very-large-number symbols
 
 - Owner ruling G10: 18 pre-v2.7 LEN cells shorter than values their own spec

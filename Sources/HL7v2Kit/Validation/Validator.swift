@@ -605,6 +605,10 @@ public struct Validator: Sendable {
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
                              location: location, issues: &issues)
+            // P6-13: content after the first value of an ID / IS field.
+            checkExtraPrimitiveComponents(fieldGrammar, field: field,
+                                          dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                          location: location, issues: &issues)
         }
 
         if options.checkCodeTables, let field, isPopulated, let tableNumber = fieldGrammar.table {
@@ -1750,7 +1754,11 @@ public struct Validator: Sendable {
               let table = HL7TableRegistry.table(tableNumber, version: version),
               table.isClosed else { return }
         for (offset, repetition) in field.repetitions.enumerated() where isRepetitionPopulated(repetition) {
-            guard let value = repetition.stringValue, value != "\"\"", !table.contains(value) else { continue }
+            // P6-13: a primitive field's value is its first component (a recipient ignores
+            // the rest, v2.5.1 / v2.8.2 section 2.6.2 a); the extras are reported apart.
+            guard let value = Self.primitiveValue(repetition), !value.isEmpty, value != "\"\"",
+                  !table.contains(value) else { continue }
+            let partial = Self.hasExtraPrimitiveContent(repetition)
             // A localisation may print its own rendering of the table (AU ADRM-2021 back-ports
             // UNICODE UTF-8 into v2.4 Table 0211). It WIDENS the check as a union with the base
             // version's rows, so it can never reject what the message's own version prints;
@@ -1764,8 +1772,9 @@ public struct Validator: Sendable {
             issues.append(ValidationIssue(
                 severity: .error,
                 code: .valueNotInTable(table: table.number),
-                location: location,
-                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
+                location: partial ? IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                                  fieldIndex: location.fieldIndex, componentIndex: 1) : location,
+                message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) \(partial ? "first component " : "")value \"\(value)\" is not in HL7 Table \(table.number) (\(table.name)) for v\(version.rawValue)"
             ))
         }
     }

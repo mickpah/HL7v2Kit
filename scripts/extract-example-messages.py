@@ -646,6 +646,40 @@ _P4_30_ENTRIES = [
        "location_pattern": r"^CSR\[\d+\]-[68]$", "count": 2, "reason": _CSR_SHIFT_REASON}
       for src, idx in {"v2.3/CH7.pdf": 11, "v2.3.1/Hl7V231.pdf": 99}.items()],
 ]
+# P6-13: the field-level table check now reads the first component of a multi-component
+# value in an ID field (a recipient ignores the rest, v2.5.1 / v2.8.2 section 2.6.2 a), so
+# these first components, silently skipped before, are now checked. Every line is the
+# example's own defect; per-source totals over every message ("all").
+_OBR30_V231_SHIFT_REASON = (
+    "The v2.3.1 ORF^R04 EKG example leaves out fields before OBR-30, so the person name "
+    "\"VIRANYI^AND...\" (an XCN-shaped interpreter value) lands in OBR-30 Transportation Mode, "
+    "an ID field bound to Table 0124.")
+_QPD_SPACED_ID_REASON = (
+    "The print gives the segment ID as \"QPD |\" (a space before the field separator, present "
+    "in the PDF text layer) and ends the MSH line with no <cr>, so the QPD fields continue "
+    "the MSH: the @OBX.3.4 / @OBR.22 query parameters land in MSH-16 (Table 0155).")
+_MSA_QAK_ONE_LINE_REASON = (
+    "The v2.4 CH04 RTB^X89 example prints \"MSA|AA|8858 QAK|Q010|OK|Z89^...\" on one line, "
+    "so the QAK fields continue the MSA and the query name lands in MSA-5 (Table 0102).")
+_TCC9_REASON = (
+    "TCC-9 Automatic Rerun Allowed is ID (Table 0136), but the example prints \" Y^YES\": a "
+    "leading space (present in the PDF text) and a CNE-shaped code^text pair.")
+_P6_13_ENTRIES = [
+    *[{"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0206")',
+       "location_pattern": r"^AI[LP]\[\d+\]-2\.1$", "count": n,
+       "reason": _AI_SHIFT_REASON}
+      for src, n in zip(_AI_SOURCES, [9, 9, 9, 8, 8, 8])],
+    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": 'valueNotInTable(table: "0124")',
+     "location_pattern": r"^OBR\[\d+\]-30\.1$", "count": 1, "reason": _OBR30_V231_SHIFT_REASON},
+    *[{"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0155")',
+       "location_pattern": r"^MSH\[\d+\]-16\.1$", "count": 3, "reason": _QPD_SPACED_ID_REASON}
+      for src in ["v2.4/CH05.PDF", "v2.5.1/V251_CH05.pdf"]],
+    {"source_glob": "v2.4/CH04.PDF", "index": "all", "code": 'valueNotInTable(table: "0102")',
+     "location_pattern": r"^MSA\[\d+\]-5\.1$", "count": 1, "reason": _MSA_QAK_ONE_LINE_REASON},
+    {"source_glob": "v2.8.2/V282_CH13_ClinicalLabAuto.pdf", "index": "all",
+     "code": 'valueNotInTable(table: "0136")',
+     "location_pattern": r"^TCC\[\d+\]-9\.1$", "count": 1, "reason": _TCC9_REASON},
+]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
        "location_pattern": r"^AI[LP]\[\d+\]-[67]$", "count": 20, "reason": _AI_START_OFFSET_REASON}
@@ -691,6 +725,7 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
                         "v2.6/V26_CH04_Orders.pdf": 25, "v2.8.2/V282_CH04A_Orders.pdf": 4}.items()],
     *_P4_29_ENTRIES,
     *_P4_30_ENTRIES,
+    *_P6_13_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact

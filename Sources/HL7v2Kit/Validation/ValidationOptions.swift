@@ -129,6 +129,19 @@ public struct ValidationOptions: Sendable {
     /// never checked. Not an init parameter. P6-6.
     public var normativeLengthSeverity: IssueSeverity? = .warning
 
+    /// Severity for ``IssueCode/extraComponentsInPrimitiveField``: an `ID` or `IS`
+    /// field repetition with content after its first component or subcomponent.
+    /// `.warning` by default (owner gate G4): the spec has the recipient ignore
+    /// the unexpected components (v2.5.1 and v2.8.2 section 2.6.2 a), and a field
+    /// whose data type a later version widened (an `IS` to a `CE`, v2.5.1 section
+    /// 2.8.2) may legitimately arrive with them. Whatever the setting, the
+    /// code-table check reads the first component as the primitive value. While
+    /// this is set, the length check measures that first component only, so the
+    /// extra components are reported once, here; `nil` turns this check off and
+    /// the length check measures the whole occurrence again. Not an init
+    /// parameter. P6-13.
+    public var extraComponentsSeverity: IssueSeverity? = .warning
+
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
     ///
     /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
@@ -186,7 +199,8 @@ public struct ValidationOptions: Sendable {
     /// "would HL7v2Kit be happy parsing this round-trip?" answer. The
     /// code-table membership check (`checkCodeTables`) is a content rule,
     /// not a structural one, so this preset turns it off too, as it does the
-    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`).
+    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`) and
+    /// the extra-component check (`extraComponentsSeverity`).
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
@@ -199,6 +213,7 @@ public struct ValidationOptions: Sendable {
         options.checkCodeTables = false
         options.fieldLengthSeverity = nil
         options.normativeLengthSeverity = nil
+        options.extraComponentsSeverity = nil
         return options
     }()
 }

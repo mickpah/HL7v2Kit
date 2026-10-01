@@ -34,6 +34,16 @@ struct SignatureCompatibilityTests {
         #expect(make("20", 21) == .fieldLengthOutOfRange(length: "20", actual: 21))
     }
 
+    @Test("P6-13 extra-component setting and issue code are additive")
+    func extraComponents() {
+        let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.extraComponentsSeverity
+        #expect(ValidationOptions.default[keyPath: severity] == .warning)
+        #expect(ValidationOptions.strict[keyPath: severity] == .warning)
+        #expect(ValidationOptions.lenient[keyPath: severity] == nil)
+        let code: IssueCode = .extraComponentsInPrimitiveField
+        #expect(code != .fieldNotSupported)
+    }
+
     @Test("HL7Table.init keeps its five-parameter signature; patterns: is a separate overload")
     func hl7TableInit() {
         let entries = [HL7Table.Entry(code: "A", description: "a")]
