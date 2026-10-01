@@ -74,14 +74,19 @@ enum FieldLengthRule: Equatable, Sendable {
     case oneOf([Int])
 
     /// The rule a printed cell asserts on `version`, or nil when it asserts none a
-    /// message can violate: a pre-v2.7 cell that is not a plain integer (`*`, `64K`,
-    /// registered in the permanent-limitations register), and every v2.7+ cell in
+    /// message can violate: a pre-v2.7 cell that is not a plain integer (`*`, `64K`),
+    /// or is the v2.4 to v2.6 symbol 65536 or 99999 (all registered in the
+    /// permanent-limitations register), and every v2.7+ cell in
     /// neither normative form. Those are conformance lengths (`32`, `40=`, `250#`),
     /// a storage minimum for receivers, not a limit on the message (v2.8.2 §2.5.5.3).
     static func parse(_ printed: String, version: Version) -> FieldLengthRule? {
         guard let cell = PrintedLength(printed.trimmingCharacters(in: .whitespaces)) else { return nil }
         switch (version.grammarVersion.printsMaximumLength, cell) {
-        case (true, .number(let n)): return .maximum(n)
+        case (true, .number(let n)):
+            // The very-large-number and variable-length symbols are not limits (v2.5.1
+            // section 2.5.3.2 b, c), like the `64K` they replace.
+            if version.grammarVersion.printsLengthSymbols, n == 65536 || n == 99999 { return nil }
+            return .maximum(n)
         case (false, .range(let lower, let upper)): return .range(min: lower, max: upper)
         case (false, .list(let values)): return .oneOf(values)
         default: return nil

@@ -226,6 +226,81 @@ LENGTH_WHITELIST = {
                        "observation field is variable, depending upon value type. See OBX-2 value "
                        "type.' LEN cell prints 99999, the section 2.5.3.2 c) symbol for a variable "
                        "length; schema keeps `*` (P6-12; the M25 sweep had written 24)",
+    ("v2.3", "MSH", 18): 'G10 (P6-6 fix 1): LEN cell prints 6, shorter than values the spec defines as valid; '
+                         'section 2.24.1.18 binds the field to HL7 Table 0211 - Alternate character sets, whose '
+                         "longest code is 'JIS X 0202' (10). Schema stores 10, the smallest length that admits "
+                         'them (limitations register, section C)',
+    ("v2.3", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2 (Figure 7-5), shorter than values the spec defines '
+                        'as valid; section 7.3.2.2 binds the field to HL7 Table 0125 - Value type, whose codes '
+                        'are three letters (XAD, CWE). Schema stores 3, the smallest length that admits them '
+                        '(limitations register, section C)',
+    ("v2.3", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.11.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.3.1", "MSH", 9): 'G10 (P6-6 fix 1): LEN cell prints 7, shorter than values the spec defines as valid; '
+                          'section 2.24.1.9 defines three components <message type (ID)> ^ <trigger event (ID)> ^ '
+                          '<message structure (ID)>; Tables 0076 and 0003 codes are 3 characters and Table 0354 '
+                          "codes at most 7 (e.g. ADT_A01); Table 0354 also prints 'SIIU_S12', a misprint of the "
+                          'SIU_S12 structure Chapter 10 defines, not counted, so ADT^A01^ADT_A01 is 15. Schema '
+                          'stores 15, the smallest length that admits them (limitations register, section C)',
+    ("v2.3.1", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                           'section 7.11.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                           "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                           'register, section C)',
+    ("v2.3.1", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 9.5.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                          "longest code is 'Application' (section 2.8.36 prints it). Schema stores 11, the smallest"
+                          ' length that admits them (limitations register, section C)',
+    ("v2.4", "MSH", 9): 'G10 (P6-6 fix 1): LEN cell prints 13, shorter than values the spec defines as valid; '
+                        'section 2.16.9.9 defines three components <message type (ID)> ^ <trigger event (ID)> ^ '
+                        '<message structure (ID)>; Tables 0076 and 0003 codes are 3 characters and Table 0354 '
+                        'codes at most 7 (e.g. ADT_A01), so ADT^A01^ADT_A01 is 15; v2.5.1 prints 15. Schema '
+                        'stores 15, the smallest length that admits them (limitations register, section C)',
+    ("v2.4", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 7.4.2.2 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                        'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                        'register, section C)',
+    ("v2.4", "OM3", 7): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 8.8.5.7 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                        'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                        'register, section C)',
+    ("v2.4", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.4", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                        "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                        '(limitations register, section C)',
+    ("v2.5.1", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 7.4.2.2 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                          'letters (XAD, CWE); v2.6 prints 3. Schema stores 3, the smallest length that admits them'
+                          ' (limitations register, section C)',
+    ("v2.5.1", "OM3", 7): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 8.8.10.7 binds the field to HL7 Table 0125 - Value type, whose codes are three '
+                          'letters (XAD, CWE). Schema stores 3, the smallest length that admits them (limitations '
+                          'register, section C)',
+    ("v2.5.1", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                           'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                           "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                           'register, section C)',
+    ("v2.5.1", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                          'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                          "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                          '(limitations register, section C)',
+    ("v2.6", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
+                         'section 7.12.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '
+                         "includes 'NA'. Schema stores 2, the smallest length that admits them (limitations "
+                         'register, section C)',
+    ("v2.6", "PSL", 21): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                         'section 16.4.6.21 binds the field to HL7 Table 0532 - Expanded yes/no indicator, which '
+                         "includes 'ASKU' and 'NASK'. Schema stores 4, the smallest length that admits them "
+                         '(limitations register, section C)',
+    ("v2.6", "TXA", 3): 'G10 (P6-6 fix 1): LEN cell prints 2, shorter than values the spec defines as valid; '
+                        'section 9.6.1.3 binds the field to HL7 Table 0191 - Type of referenced data, whose '
+                        "longest code is 'multipart'. Schema stores 9, the smallest length that admits them "
+                        '(limitations register, section C)',
 }
 
 # P6-12: slots M19 / M22 / M25 cannot compare (see read_slot) are reported unless listed here,

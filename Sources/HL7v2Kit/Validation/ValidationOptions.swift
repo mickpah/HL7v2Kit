@@ -115,7 +115,8 @@ public struct ValidationOptions: Sendable {
     /// lets a site agreement change the length, "such as a conformance profile ...
     /// it shall not render the implementation non-conformant" (v2.5.1 section
     /// 2.5.3.2; v2.3.1 section 2.6.2 "often negotiated on a site-specific basis"),
-    /// and the agreement is not on the wire. `*` and `64K` cells are not checked.
+    /// and the agreement is not on the wire. `*`, `64K` and the v2.4 to v2.6 symbols
+    /// 65536 (very large number) and 99999 (variable) are not checked.
     /// Not an init parameter. P6-6.
     public var fieldLengthSeverity: IssueSeverity? = .warning
 
@@ -167,7 +168,9 @@ public struct ValidationOptions: Sendable {
 
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
     /// message validation where the senders shouldn't be emitting custom
-    /// Z-segments.
+    /// Z-segments. The length severities (`fieldLengthSeverity`,
+    /// `normativeLengthSeverity`) stay `.warning` here as in `default` (owner
+    /// gate G4).
     public static let strict = ValidationOptions(
         zSegmentPolicy: .reject,
         checkRequiredFields: true,

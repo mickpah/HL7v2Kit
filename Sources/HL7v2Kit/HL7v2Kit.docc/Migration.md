@@ -116,6 +116,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 - **To keep the old results:** set `options.fieldLengthSeverity = nil` and `options.normativeLengthSeverity = nil`. The ``ValidationOptions/lenient`` preset already does.
 - **To make v2.7+ normative lengths binding:** set `options.normativeLengthSeverity = .error` (v2.8.2 section 2.5.5.0: conformant messages SHALL lie within them).
 - **If you switch over `IssueCode`:** it is an open enum; the new case lands in your `@unknown default` branch.
+- **Schema lengths corrected (owner ruling G10):** 18 pre-v2.7 LEN cells that were shorter than values their own spec defines as valid now carry the corrected length, so `FieldGrammar.length` reads, for example, `"15"` for v2.4 MSH-9 (printed 13) and `"3"` for v2.5.1 OBX-2 (printed 2). The full list and derivations are in the permanent-limitations register, section C.
 
 ## The code-table check is on by default (ADR-016)
 

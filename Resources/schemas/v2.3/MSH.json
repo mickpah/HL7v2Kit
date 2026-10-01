@@ -146,7 +146,7 @@
       "index": 18,
       "swiftName": "characterSet",
       "name": "Character Set",
-      "dataType": "ID", "length": "6", "table": "0211",
+      "dataType": "ID", "length": "10", "table": "0211",
       "optionality": "O",
       "repeatability": "3",
       "tables": ["0211"]

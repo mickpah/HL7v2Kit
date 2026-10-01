@@ -16,6 +16,7 @@ extension Validator {
         segmentID: String,
         version: Version,
         dataType: String,
+        encoding: EncodingCharacters,
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
@@ -33,7 +34,7 @@ extension Validator {
         }
         guard let severity else { return }
         for (offset, repetition) in field.repetitions.enumerated() {
-            guard let length = Self.occupiedLength(repetition), !rule.admits(length) else { continue }
+            guard let length = Self.occupiedLength(repetition, encoding: encoding), !rule.admits(length) else { continue }
             issues.append(ValidationIssue(
                 severity: severity,
                 code: .fieldLengthOutOfRange(length: printed, actual: length),
@@ -43,15 +44,29 @@ extension Validator {
         }
     }
 
-    /// Characters one repetition occupies: every decoded subcomponent value plus
-    /// the component and subcomponent separators between them (v2.3.1 §2.6.2).
-    /// `nil` for an empty repetition or the HL7 null `""`, which has no length
-    /// (v2.8.2 §2.5.5.0 note); a `""` subcomponent inside a composite counts as
-    /// empty, so the measure can only under-count against the wire.
-    static func occupiedLength(_ repetition: Repetition) -> Int? {
+    /// Characters one repetition occupies: every subcomponent value, measured in
+    /// its encoded form, plus the component and subcomponent separators between
+    /// them (v2.3.1 section 2.6.2; v2.5.1 section 2.5.3.2). Inside an escape
+    /// sequence every character between the opening and closing escape character
+    /// counts, the escape characters themselves do not: `\F\` is 1, `\.br\` 3,
+    /// `\X0D0A\` 5 (v2.8.2 section 2.7, "This applies to all the escape
+    /// sequences, including the formatting ones"; the pre-v2.7 texts say nothing
+    /// on escapes and length, so the v2.8.2 rule applies to every version).
+    /// Values are stored decoded, so the encoded form is the canonical
+    /// re-encoding (`EscapeSequences.encode`); a non-canonical wire
+    /// escape such as `\X41\` for `A` is measured as `A`. `nil` for an empty
+    /// repetition or the HL7 null `""`, which has no length (v2.8.2 section
+    /// 2.5.5.0 note); a `""` subcomponent inside a composite counts as empty.
+    static func occupiedLength(_ repetition: Repetition, encoding: EncodingCharacters) -> Int? {
         let null = "\"\""
+        let escape = encoding.escapeCharacter
+        func measure(_ value: String) -> Int {
+            if value == null { return 0 }
+            let encoded = EscapeSequences.encode(value, encoding: encoding)
+            return encoded.reduce(0) { $1 == escape ? $0 : $0 + 1 }
+        }
         let characters = repetition.components.reduce(0) { total, component in
-            total + component.subcomponents.reduce(0) { $0 + ($1.value == null ? 0 : $1.value.count) }
+            total + component.subcomponents.reduce(0) { $0 + measure($1.value) }
         }
         guard characters > 0 else { return nil }
         let separators = max(repetition.components.count - 1, 0)

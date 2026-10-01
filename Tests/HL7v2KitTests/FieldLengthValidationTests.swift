@@ -123,14 +123,58 @@ struct FieldLengthValidationTests {
         #expect(try lengthIssues(twoFull).isEmpty)
     }
 
-    @Test("occupiedLength counts component and subcomponent separators, decoded values, and no null")
+    @Test("occupiedLength counts component and subcomponent separators, and no null")
     func occupied() throws {
         let message = try Parser().parse(msh231() + "PID|1||A&B^C~\\T\\X||\"\"\r")
         let pid = try #require(message.segments.first { $0.segmentID == "PID" })
         let reps = try #require(pid.field(3)).repetitions
-        #expect(Validator.occupiedLength(reps[0]) == 5, "A & B ^ C")
-        #expect(Validator.occupiedLength(reps[1]) == 2, "an escape sequence is the one character it stands for")
-        #expect(Validator.occupiedLength(try #require(pid.field(5)).repetitions[0]) == nil)
+        let encoding = message.encodingCharacters
+        #expect(Validator.occupiedLength(reps[0], encoding: encoding) == 5, "A & B ^ C")
+        #expect(Validator.occupiedLength(reps[1], encoding: encoding) == 2, "T inside the escape, then X")
+        #expect(Validator.occupiedLength(try #require(pid.field(5)).repetitions[0], encoding: encoding) == nil)
+    }
+
+    // v2.8.2 section 2.7: "all the characters inside the escape (all between the opening and
+    // closing \, not including the \ symbols themselves) count towards the length. This applies
+    // to all the escape sequences, including the formatting ones." The pre-v2.7 texts say nothing
+    // on escapes and length, so the same rule applies to every version.
+    @Test("An escape counts the characters between its delimiters", arguments: zip(
+        ["\\F\\", "\\H\\", "\\.br\\", "\\X0D0A\\", "A\\E\\B", "\\H\\bold\\N\\"],
+        [1, 1, 3, 5, 3, 6]))
+    func escapes(_ wire: String, _ expected: Int) throws {
+        let message = try Parser().parse(msh231() + "NTE|1||\(wire)\r")
+        let nte = try #require(message.segments.first { $0.segmentID == "NTE" })
+        let repetition = try #require(nte.field(3)?.repetitions.first)
+        #expect(Validator.occupiedLength(repetition, encoding: message.encodingCharacters) == expected, "\(wire)")
+    }
+
+    @Test("v2.3.1 MSH-10 (LEN 20): an escape is measured by its body, not its decoded character")
+    func escapeAgainstMaximum() throws {
+        let fits = msh231(controlID: String(repeating: "X", count: 19) + "\\F\\")
+        let over = msh231(controlID: String(repeating: "X", count: 18) + "\\.br\\")
+        #expect(try lengthIssues(fits).isEmpty)
+        #expect(try lengthIssues(over).map(\.code) == [.fieldLengthOutOfRange(length: "20", actual: 21)])
+    }
+
+    @Test("v2.4 to v2.6 very-large-number symbols 65536 and 99999 are not checked; 64K before v2.4 neither")
+    func veryLargeNumber() {
+        for version in [Version.v2_4, .v2_5_1, .v2_6] {
+            #expect(FieldLengthRule.parse("65536", version: version) == nil, "\(version)")
+            #expect(FieldLengthRule.parse("99999", version: version) == nil, "\(version)")
+        }
+        #expect(FieldLengthRule.parse("64K", version: .v2_3) == nil)
+        #expect(FieldLengthRule.parse("65535", version: .v2_6) == .maximum(65535))
+        #expect(PrintedLength("65536") == .number(65536))
+    }
+
+    @Test("A Z-segment and a field beyond the grammar (v2.5.1 PID-40) carry no length rule")
+    func outsideGrammar() throws {
+        let msh251 = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01^ADT_A01|M1|P|2.5.1\r"
+        let long = String(repeating: "Z", count: 300)
+        var pid = "PID|1||123||DOE^JOHN"
+        pid += String(repeating: "|", count: 35) + long
+        #expect(try lengthIssues(msh251 + "ZXX|\(long)\r").isEmpty)
+        #expect(try lengthIssues(msh251 + pid + "\r").isEmpty)
     }
 
     @Test("MSH-1 and MSH-2 are delimiters, not data")

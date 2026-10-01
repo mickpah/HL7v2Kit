@@ -7,11 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-6 fix 1: G10 length corrections, escape measurement, very-large-number symbols
+
+- Owner ruling G10: 18 pre-v2.7 LEN cells shorter than values their own spec
+  defines as valid are corrected in the schema, each with a cited
+  `LENGTH_WHITELIST` entry: v2.3 MSH-18 6 to 10 (Table 0211 `JIS X 0202`);
+  OBX-2 2 to 3 on v2.3, v2.4 and v2.5.1 and OM3-7 2 to 3 on v2.4 and v2.5.1
+  (Table 0125); MSH-9 7 to 15 on v2.3.1 and 13 to 15 on v2.4 (three
+  message-type components, 3 + 3 + 7 plus two separators); PEO-25 1 to 2 on
+  every pre-v2.7 version (Table 0243 `NA`); TXA-3 2 to 11 on v2.3.1 (Table 0191
+  `Application`) and 2 to 9 on v2.4, v2.5.1 and v2.6 (`multipart`); v2.6
+  PSL-21 2 to 4 (Table 0532 `ASKU`). The P6-2 assertion on v2.3 OBX-2 moves
+  from 2 to 3.
+- New guard (`FieldLengthSpecConflictTests`): every pre-v2.7 ID or IS field
+  bound to an HL7 table, and every closed-coded composite field, admits its
+  longest valid value.
+- Escape sequences count the characters between their escape delimiters
+  (`\F\` 1, `\.br\` 3, `\X0D0A\` 5), per v2.8.2 section 2.7; the pre-v2.7
+  texts are silent, so the rule applies to every version. Previously an escape
+  counted as the one character it decodes to.
+- The v2.4 to v2.6 LEN symbols 65536 (very large number) and 99999 (variable)
+  are no longer read as maxima (v2.5.1 section 2.5.3.2 b, c).
+- `ValidationOptions.strict` DocC states the length severities stay `.warning`.
+
 ### Added — P6-6: field length validation
 
 - `IssueCode.fieldLengthOutOfRange(length:actual:)` (additive; open enum per
   ADR-014). `length` is the printed cell; `actual` is the repetition's
-  decoded length with component and subcomponent separators counted.
+  length with component and subcomponent separators counted.
 - `ValidationOptions.fieldLengthSeverity: IssueSeverity?` (default
   `.warning`; `nil` in `.lenient`): the pre-v2.7 maximum length (v2.3 to
   v2.6), which the spec lets a site agreement change (v2.5.1 section

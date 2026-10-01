@@ -9,6 +9,6 @@
     { "index": 4, "swiftName": "normalTextCodesForCategoricalObservations", "name": "Normal Text/Codes for Categorical Observations", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
     { "index": 5, "swiftName": "abnormalTextCodesForCategoricalObservations", "name": "Abnormal Text/Codes for Categorical Observations", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 6, "swiftName": "criticalTextCodesForCategoricalObservations", "name": "Critical Text/Codes for Categorical Observations", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
-    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "length": "2", "table": "0125", "optionality": "O", "repeatability": "1", "tables": ["0125"] }
+    { "index": 7, "swiftName": "valueType", "name": "Value Type", "dataType": "ID", "length": "3", "table": "0125", "optionality": "O", "repeatability": "1", "tables": ["0125"] }
   ]
 }

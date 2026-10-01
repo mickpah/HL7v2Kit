@@ -5,7 +5,7 @@
   "fields": [
     { "index": 1, "swiftName": "setIdTxa", "name": "Set ID - TXA", "dataType": "SI", "length": "4", "optionality": "R", "repeatability": "1" },
     { "index": 2, "swiftName": "documentType", "name": "Document Type", "dataType": "IS", "length": "30", "table": "0270", "optionality": "R", "repeatability": "1", "tables": ["0270"] },
-    { "index": 3, "swiftName": "documentContentPresentation", "name": "Document Content Presentation", "dataType": "ID", "length": "2", "table": "0191", "optionality": "C", "repeatability": "1", "tables": ["0191"], "condition": "OBX present" },
+    { "index": 3, "swiftName": "documentContentPresentation", "name": "Document Content Presentation", "dataType": "ID", "length": "9", "table": "0191", "optionality": "C", "repeatability": "1", "tables": ["0191"], "condition": "OBX present" },
     { "index": 4, "swiftName": "activityDateTime", "name": "Activity Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "primaryActivityProviderCodeName", "name": "Primary Activity Provider Code/Name", "dataType": "XCN", "length": "250", "optionality": "C", "repeatability": "*", "condition": "TXA-4 populated" },
     { "index": 6, "swiftName": "originationDateTime", "name": "Origination Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },

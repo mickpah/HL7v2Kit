@@ -603,6 +603,7 @@ public struct Validator: Sendable {
             checkFieldLength(fieldGrammar, field: field, segmentID: grammar.segmentID,
                              version: message.version,
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                             encoding: message.encodingCharacters,
                              location: location, issues: &issues)
         }
 

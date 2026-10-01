@@ -30,7 +30,9 @@ struct SchemaAttributeFixTests {
     func obxBaseFigureLengths() {
         #expect(SegmentGrammarTable.v2_3_1["OBX"]?.field(2)?.length == "3")
         #expect(SegmentGrammarTable.v2_3_1["OBX"]?.field(16)?.length == "80")
-        #expect(SegmentGrammarTable.v2_3["OBX"]?.field(2)?.length == "2")
+        // v2.3 Figure 7-5 prints 2, shorter than Table 0125's three-letter codes: G10 stores 3
+        // (FieldLengthSpecConflictTests).
+        #expect(SegmentGrammarTable.v2_3["OBX"]?.field(2)?.length == "3")
         #expect(SegmentGrammarTable.v2_3["OBX"]?.field(16)?.length == "80")
     }
 

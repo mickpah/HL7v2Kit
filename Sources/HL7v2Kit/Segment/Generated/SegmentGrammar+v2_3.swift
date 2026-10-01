@@ -1058,7 +1058,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 15, name: "Accept Acknowledgment Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0155", length: "2"),
             FieldGrammar(index: 16, name: "Application Acknowledgment Type", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0155", length: "2"),
             FieldGrammar(index: 17, name: "Country Code", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "2"),
-            FieldGrammar(index: 18, name: "Character Set", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0211", length: "6", maxRepetitions: 3),
+            FieldGrammar(index: 18, name: "Character Set", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0211", length: "10", maxRepetitions: 3),
             FieldGrammar(index: 19, name: "Principal Language Of Message", dataType: "CE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
         ]
     )
@@ -1181,7 +1181,7 @@ extension SegmentGrammarTable {
         version: "2.3",
         fields: [
             FieldGrammar(index: 1, name: "Set ID - OBX", dataType: "SI", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10"),
-            FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X", prohibitedWhen: nil, variableColumns: false, table: "0125", length: "2"),
+            FieldGrammar(index: 2, name: "Value Type", dataType: "ID", optionality: .conditional, repeatability: .single, condition: "OBX-11 != X", prohibitedWhen: nil, variableColumns: false, table: "0125", length: "3"),
             FieldGrammar(index: 3, name: "Observation Identifier", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "590"),
             FieldGrammar(index: 4, name: "Observation Sub-ID", dataType: "ST", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
             FieldGrammar(index: 5, name: "Observation Value", dataType: "*", optionality: .conditional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "*"),
@@ -1471,7 +1471,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 22, name: "Primary Observer's Qualification", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0242", length: "1"),
             FieldGrammar(index: 23, name: "Confirmation Provided By", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0242", length: "1"),
             FieldGrammar(index: 24, name: "Primary Observer Aware Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
-            FieldGrammar(index: 25, name: "Primary Observer's identity May Be Divulged", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0243", length: "1"),
+            FieldGrammar(index: 25, name: "Primary Observer's identity May Be Divulged", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0243", length: "2"),
         ]
     )
 

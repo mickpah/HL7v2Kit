@@ -14,4 +14,16 @@ extension Version {
         case .v2_8_2, .v2_8: return false
         }
     }
+
+    /// True where a pre-v2.7 LEN cell may print the symbols 65536 ("the notion of
+    /// a Very Large Number", replacing the earlier `64K`) and 99999 (a length that
+    /// "cannot be definitively expressed because the data type for the field is
+    /// variable"): v2.4 section 2.7.2, v2.5.1 and v2.6 section 2.5.3.2 b) and c).
+    /// v2.3 and v2.3.1 abbreviate as `64K` instead; v2.7+ prints no maximum.
+    var printsLengthSymbols: Bool {
+        switch self {
+        case .v2_4, .v2_5_1, .v2_6: return true
+        case .v2_3, .v2_3_1, .v2_8_2, .v2_8: return false
+        }
+    }
 }
