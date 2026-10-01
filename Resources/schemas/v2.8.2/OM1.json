@@ -58,7 +58,7 @@
     { "index": 53, "swiftName": "priorResutsInstructions", "name": "Prior Resuts Instructions", "dataType": "TX", "optionality": "O", "repeatability": "*" },
     { "index": 54, "swiftName": "specialInstructions", "name": "Special Instructions", "dataType": "TX", "optionality": "O", "repeatability": "1" },
     { "index": 55, "swiftName": "testCategory", "name": "Test Category", "dataType": "CWE", "optionality": "O", "repeatability": "*" },
-    { "index": 56, "swiftName": "observationIdentifierAssociatedWithProducerSServiceTestObservationId", "name": "Observation/Identifier associated with Producer's Service/Test/Observation ID", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 56, "swiftName": "observationIdentifierAssociatedWithProducerServiceTestObservationId", "name": "Observation/Identifier associated with Producer's Service/Test/Observation ID", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 57, "swiftName": "typicalTurnAroundTime2", "name": "Typical Turn-Around Time", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
     { "index": 58, "swiftName": "genderRestriction", "name": "Gender Restriction", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0001"] },
     { "index": 59, "swiftName": "ageRestriction", "name": "Age Restriction", "dataType": "NR", "optionality": "O", "repeatability": "*" }

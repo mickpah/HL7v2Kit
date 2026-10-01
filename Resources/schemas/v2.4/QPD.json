@@ -4,6 +4,6 @@
   "description": "QPD",
   "fields": [
     { "index": 1, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CE", "length": "250", "optionality": "R", "repeatability": "1", "tables": ["0471"] },
-    { "index": 2, "swiftName": "queryTagUserParametersInSuccessiveFields", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "C", "repeatability": "1" }
+    { "index": 2, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32", "optionality": "C", "repeatability": "1" }
   ]
 }

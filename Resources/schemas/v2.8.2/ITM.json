@@ -18,7 +18,7 @@
     { "index": 13, "swiftName": "transactionAmountUnit", "name": "Transaction amount - unit", "dataType": "CP", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "stockedItemIndicator", "name": "Stocked Item Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
     { "index": 15, "swiftName": "supplyRiskCodes", "name": "Supply Risk Codes", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0871"] },
-    { "index": 16, "swiftName": "approvingRegulatoryAgencyIBeingCpt4ModifiersIiCdt2AndGenuineHcpcsNServiceNtisWwwNtisGovAndNtis", "name": "Approving Regulatory Agency I being CPT-4 modifiers, II CDT-2 and genuine HCPCS n Service (NTIS, www.ntis.gov) and NTIS", "dataType": "XON", "optionality": "O", "repeatability": "*", "tables": ["0790"] },
+    { "index": 16, "swiftName": "approvingRegulatoryAgency", "name": "Approving Regulatory Agency", "dataType": "XON", "optionality": "O", "repeatability": "*", "tables": ["0790"] },
     { "index": 17, "swiftName": "latexIndicator", "name": "Latex Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
     { "index": 18, "swiftName": "rulingAct", "name": "Ruling Act", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0793"] },
     { "index": 19, "swiftName": "itemNaturalAccountCode", "name": "Item Natural Account Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0320"] },

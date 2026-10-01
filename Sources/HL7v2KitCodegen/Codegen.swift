@@ -66,6 +66,10 @@ struct FieldSchema: Decodable {
     /// nothing lets the field be valued while it is false. Required with the marker; read by
     /// the schema audit, not emitted. P4-31.
     let predicateCitation: String?
+    /// Accessor names this field shipped under in a released version before `swiftName`
+    /// corrected them. Each is emitted as a deprecated alias that forwards to `swiftName`,
+    /// so released source keeps compiling (ADR-014). P6-9.
+    let deprecatedSwiftNames: [String]?
 }
 
 /// The `version|SEG-n` key of a field marked `conditionIsPredicate`, or `nil` when it is not
@@ -229,6 +233,30 @@ func escapedIdentifier(_ s: String) -> String {
     swiftKeywords.contains(s) ? "`\(s)`" : s
 }
 
+/// The deprecated aliases for a field's `deprecatedSwiftNames`: each released name forwards to
+/// the corrected `swiftName` (ADR-014: deprecate rather than remove). Fails codegen on an
+/// empty list, a duplicate, or an alias equal to `swiftName`. P6-9.
+func deprecatedAliases(for field: FieldSchema, segmentID: String, returnType: String) -> String {
+    guard let names = field.deprecatedSwiftNames else { return "" }
+    let context = "\(segmentID)-\(field.index)"
+    precondition(!names.isEmpty, "\(context): deprecatedSwiftNames is empty (omit the key instead)")
+    precondition(Set(names).count == names.count, "\(context): deprecatedSwiftNames has a duplicate")
+    precondition(!names.contains(field.swiftName), "\(context): deprecatedSwiftNames repeats the swiftName")
+    let target = escapedIdentifier(field.swiftName)
+    return names.map { old in
+        """
+
+
+            /// \(segmentID)-\(field.index): \(field.name). The name this accessor shipped under before
+            /// the schema corrected it; use ``\(field.swiftName)``.
+            @available(*, deprecated, renamed: "\(field.swiftName)")
+            public var \(escapedIdentifier(old)): \(returnType) {
+                \(target)
+            }
+        """
+    }.joined()
+}
+
 func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
     let returnType: String
     let body: String
@@ -251,7 +279,7 @@ func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
         public var \(escapedIdentifier(field.swiftName)): \(returnType) {
             \(body)
         }
-    """
+    """ + deprecatedAliases(for: field, segmentID: segmentID, returnType: returnType)
     guard let plural = field.variableColumns else { return primary }
     return primary + """
 

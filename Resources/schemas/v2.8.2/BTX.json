@@ -22,6 +22,6 @@
     { "index": 17, "swiftName": "bpTransfusionEndDateTimeOfStatus", "name": "BP Transfusion End Date/Time of Status", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 18, "swiftName": "bpAdverseReactionType", "name": "BP Adverse Reaction Type", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0514"] },
     { "index": 19, "swiftName": "bpTransfusionInterruptedReason", "name": "BP Transfusion Interrupted Reason", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0515"] },
-    { "index": 20, "swiftName": "bpUniqueIdOrCommerciallyPreparedBloodProductThatIsTributePertainsOnlyToBloodComponentsABloodDDonationForExampleFromOneWholeBloodNtoRedBloodCellsPlasmaAndPlateletsWithEachOodProductsAreAlwaysAssignedAUniqueEThatIndicatesTheTypeOfComponentContainedInTributePertainsOnlyToCommercialProductsATuredProductSuchAsBloodDerivativesRhIentSetsOrFiltersTheseTypesOfProductsAreSsarilyAssignedAUniqueDonationNumber", "name": "BP Unique ID", "dataType": "EI", "optionality": "O", "repeatability": "1" }
+    { "index": 20, "swiftName": "bpUniqueId", "name": "BP Unique ID", "dataType": "EI", "optionality": "O", "repeatability": "1" }
   ]
 }

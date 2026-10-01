@@ -3,14 +3,14 @@
   "version": "2.4",
   "description": "LOC",
   "fields": [
-    { "index": 1, "swiftName": "alueLoc", "name": "Primary Key Value - LOC", "dataType": "PL", "length": "200", "optionality": "R", "repeatability": "1" },
-    { "index": 2, "swiftName": "ription", "name": "Location Description", "dataType": "ST", "length": "48", "optionality": "O", "repeatability": "1" },
+    { "index": 1, "swiftName": "primaryKeyValueLoc", "name": "Primary Key Value - LOC", "dataType": "PL", "length": "200", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "locationDescription", "name": "Location Description", "dataType": "ST", "length": "48", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "loc", "name": "Location Type - LOC", "dataType": "IS", "length": "2", "table": "0260", "optionality": "R", "repeatability": "*", "tables": ["0260"] },
     { "index": 4, "swiftName": "nameLoc", "name": "Organization Name - LOC", "dataType": "XON", "length": "250", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "ess", "name": "Location Address", "dataType": "XAD", "length": "250", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "field", "name": "Location Phone", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "*" },
-    { "index": 7, "swiftName": "field2", "name": "License Number", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0461"] },
-    { "index": 8, "swiftName": "pment", "name": "Location Equipment", "dataType": "IS", "length": "3", "table": "0261", "optionality": "O", "repeatability": "*", "tables": ["0261"] },
-    { "index": 9, "swiftName": "iceCode", "name": "Location Service Code", "dataType": "IS", "length": "1", "table": "0442", "optionality": "O", "repeatability": "1", "tables": ["0442"] }
+    { "index": 5, "swiftName": "locationAddress", "name": "Location Address", "dataType": "XAD", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "locationPhone", "name": "Location Phone", "dataType": "XTN", "length": "250", "optionality": "O", "repeatability": "*" },
+    { "index": 7, "swiftName": "licenseNumber", "name": "License Number", "dataType": "CE", "length": "250", "optionality": "O", "repeatability": "*", "tables": ["0461"] },
+    { "index": 8, "swiftName": "locationEquipment", "name": "Location Equipment", "dataType": "IS", "length": "3", "table": "0261", "optionality": "O", "repeatability": "*", "tables": ["0261"] },
+    { "index": 9, "swiftName": "locationServiceCode", "name": "Location Service Code", "dataType": "IS", "length": "1", "table": "0442", "optionality": "O", "repeatability": "1", "tables": ["0442"] }
   ]
 }

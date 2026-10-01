@@ -17,7 +17,14 @@ public struct QPD: TypedSegment {
     }
 
     /// QPD-2: Query Tag. HL7 data type `ST`.
-    public var queryTagUserParametersInSuccessiveFields: String? {
+    public var queryTag: String? {
         field(2)?.stringValue
+    }
+
+    /// QPD-2: Query Tag. The name this accessor shipped under before
+    /// the schema corrected it; use ``queryTag``.
+    @available(*, deprecated, renamed: "queryTag")
+    public var queryTagUserParametersInSuccessiveFields: String? {
+        queryTag
     }
 }

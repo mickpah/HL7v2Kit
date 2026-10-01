@@ -1654,7 +1654,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 13, name: "Transaction amount - unit", dataType: "CP", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 14, name: "Stocked Item Indicator", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 15, name: "Supply Risk Codes", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
-            FieldGrammar(index: 16, name: "Approving Regulatory Agency I being CPT-4 modifiers, II CDT-2 and genuine HCPCS n Service (NTIS, www.ntis.gov) and NTIS", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+            FieldGrammar(index: 16, name: "Approving Regulatory Agency", dataType: "XON", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 17, name: "Latex Indicator", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 18, name: "Ruling Act", dataType: "CWE", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 19, name: "Item Natural Account Code", dataType: "CWE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
@@ -3337,7 +3337,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 4, name: "Vendor ID", dataType: "CWE", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 5, name: "Vendor Catalog", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "RQ1-2 empty OR RQ1-3 empty", prohibitedWhen: nil, variableColumns: false, table: nil, length: "16="),
             FieldGrammar(index: 6, name: "Taxable", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1..1"),
-            FieldGrammar(index: 7, name: "Substitute Allowed e requisition unit of measure that is known to the", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1..1"),
+            FieldGrammar(index: 7, name: "Substitute Allowed", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0136", length: "1..1"),
         ]
     )
 

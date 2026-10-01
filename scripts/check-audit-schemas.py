@@ -159,10 +159,52 @@ def check_condition_predicate():
         assert f(field), f"{name} must be a finding"
 
 
+def check_swift_name():
+    # P6-9: the extractor let definition prose bleed into swiftName (v2.5.1 TQ2-10 shipped at
+    # 873 characters; QPD-2 absorbed the next row's "User Parameters (in successive fields)")
+    # and cut others short (v2.8.2 RXA-2 "nistrationSubIdCounter", v2.4 RXE-6 "field4").
+    f = audit.swift_name_findings
+    clean = {
+        "plain": ("administrationSubIdCounter", "Administration Sub-ID Counter", None),
+        "set id": ("setIdTq2", "Set ID - TQ2", None),
+        "digits glued": ("hl7ErrorCode", "HL7 Error Code", None),
+        "initials": ("ruDateTime", "R/U Date/Time", None),
+        "hyphen joined": ("readmissionIndicator", "Re-Admission Indicator", None),
+        "longest printed": ("observationIdentifierAssociatedWithProducerServiceTestObservationId",
+                            "Observation/Identifier associated with Producer's Service/Test/Observation ID", None),
+        "inherited canonical": ("administrativeSex", "Sex", "administrativeSex"),
+    }
+    for name, (swift, element, canonical) in clean.items():
+        assert f({"swiftName": swift, "name": element}, canonical) == [], f"{name} must be clean"
+    bad = {
+        "truncated head": ("nistrationSubIdCounter", "Administration Sub-ID Counter", None),
+        "placeholder": ("field4", "Give Dosage Form", None),
+        "next row glued on": ("queryTagUserParametersInSuccessiveFields", "Query Tag", None),
+        "prose bleed": ("bpUniqueIdOrCommerciallyPreparedBloodProductThatIsTributePertainsToAny",
+                        "BP Unique ID", None),
+        "over the bound": ("a" + "b" * audit.SWIFT_NAME_MAX, "A" + "b" * audit.SWIFT_NAME_MAX, None),
+        "underscore": ("query_tag", "Query Tag", None),
+        "upper first": ("QueryTag", "Query Tag", None),
+        "empty": ("", "Query Tag", None),
+        "inherited but differs": ("nistrationSubIdCounter", "Administration Sub-ID Counter",
+                                  "administrationSubIdCounter"),
+    }
+    for name, (swift, element, canonical) in bad.items():
+        assert f({"swiftName": swift, "name": element}, canonical), f"{name} must be a finding"
+    # The deprecated alias key: a non-empty list of distinct identifiers, never the new name.
+    base = {"swiftName": "queryTag", "name": "Query Tag"}
+    assert f(dict(base, deprecatedSwiftNames=["queryTagUserParametersInSuccessiveFields"]), None) == [], \
+        "a well-formed alias list is clean (old names are exempt from the length bound)"
+    for name, aliases in {"empty list": [], "not a list": "queryTagOld", "same as new": ["queryTag"],
+                          "duplicate": ["oldName", "oldName"], "not an identifier": ["old name"],
+                          "not a string": [3]}.items():
+        assert f(dict(base, deprecatedSwiftNames=aliases), None), f"alias {name} must be a finding"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
-          check_condition_predicate]
+          check_condition_predicate, check_swift_name]
 
 
 def main():

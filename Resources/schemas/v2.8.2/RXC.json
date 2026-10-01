@@ -8,10 +8,10 @@
     { "index": 3, "swiftName": "componentAmount", "name": "Component Amount", "dataType": "NM", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "componentUnits", "name": "Component Units", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
     { "index": 5, "swiftName": "componentStrength", "name": "Component Strength", "dataType": "NM", "optionality": "O", "repeatability": "1" },
-    { "index": 6, "swiftName": "mponentStrengthUnits", "name": "Component Strength Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 6, "swiftName": "componentStrengthUnits", "name": "Component Strength Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 7, "swiftName": "supplementaryCode", "name": "Supplementary Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["9999"] },
-    { "index": 8, "swiftName": "nentDrugStrengthVolume", "name": "Component Drug Strength Volume", "dataType": "NM", "length": "5#", "optionality": "O", "repeatability": "1" },
-    { "index": 9, "swiftName": "tDrugStrengthVolumeUnits", "name": "Component Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
+    { "index": 8, "swiftName": "componentDrugStrengthVolume", "name": "Component Drug Strength Volume", "dataType": "NM", "length": "5#", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "componentDrugStrengthVolumeUnits", "name": "Component Drug Strength Volume Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["9999"] },
     { "index": 10, "swiftName": "dispenseAmount", "name": "Dispense Amount", "dataType": "NM", "optionality": "C", "repeatability": "1" },
     { "index": 11, "swiftName": "dispenseUnits", "name": "Dispense Units", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"] }
   ]

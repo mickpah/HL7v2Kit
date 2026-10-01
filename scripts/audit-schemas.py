@@ -317,6 +317,69 @@ def condition_predicate_findings(f):
     return out
 
 
+# P6-9: swiftName shape. The longest legitimate name is 66 characters (v2.8.2 OM1-56,
+# "Observation/Identifier associated with Producer's Service/Test/Observation ID"); every prose
+# bleed the sweep found was 94 or more (v2.8.2 ITM-16), so 70 leaves headroom for a longer
+# printed name without admitting a bleed. Bleeds shorter than the bound are caught by the
+# foreign-word rule instead (QPD-2 "queryTagUserParametersInSuccessiveFields", 40 characters).
+SWIFT_NAME_MAX = 70
+SWIFT_NAME_FOREIGN_MAX = 2
+SWIFT_IDENTIFIER = re.compile(r"[a-z][A-Za-z0-9]*")
+
+
+def swift_name_findings(f, canonical=None):
+    """P6-9. `swiftName` is a lowerCamelCase identifier of at most SWIFT_NAME_MAX characters,
+    rendered from the field's printed element name. Unless it is the canonical v2.5.1 name
+    for the same slot (`canonical`: non-canonical versions inherit that by index, by design,
+    even where the element was later renamed), its first four letters must start some run of
+    the element name's words (a truncated head such as "nistrationSubIdCounter" or a
+    placeholder "field4" fails), and at most SWIFT_NAME_FOREIGN_MAX of its camel-case words may
+    be absent from the element name (prose bleed). `deprecatedSwiftNames`, the released names
+    a renamed accessor keeps as deprecated aliases (ADR-014), is a non-empty list of distinct
+    identifiers, none equal to `swiftName`; the old names are exempt from the length bound.
+    Returns the finding messages for one field."""
+    out = []
+    swift, element = f.get("swiftName") or "", f.get("name") or ""
+    if not SWIFT_IDENTIFIER.fullmatch(swift):
+        out.append(f"swiftName {swift[:60]!r} is not a lowerCamelCase identifier")
+    if len(swift) > SWIFT_NAME_MAX:
+        out.append(f"swiftName {len(swift)} chars (bound {SWIFT_NAME_MAX}) — prose bleed?")
+    if swift and swift != canonical:
+        words = [w for w in re.split(r"[^a-z0-9]+", element.lower()) if w]
+        head = swift.lower()
+        if re.match(r"f[0-9]", head):
+            head = head[1:]   # the extractor prefixes "f" to a name that starts with a digit
+        if not any("".join(words[i:]).startswith(head[:4]) for i in range(len(words))):
+            out.append(f"swiftName {swift[:60]!r} does not start a word of {element[:60]!r} — truncated?")
+        joined = "".join(words)
+        foreign = [w for w in re.findall(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+|[0-9]+", swift)
+                   if w.lower() not in joined]
+        if len(foreign) > SWIFT_NAME_FOREIGN_MAX:
+            out.append(f"swiftName has {len(foreign)} words absent from {element[:60]!r} — prose bleed?")
+    if "deprecatedSwiftNames" in f:
+        old = f["deprecatedSwiftNames"]
+        if not isinstance(old, list) or not old:
+            out.append("deprecatedSwiftNames must be a non-empty list")
+        else:
+            if any(not (isinstance(o, str) and SWIFT_IDENTIFIER.fullmatch(o)) for o in old):
+                out.append("deprecatedSwiftNames holds a non-identifier")
+            if swift in old:
+                out.append("deprecatedSwiftNames repeats the swiftName")
+            if len(set(map(str, old))) != len(old):
+                out.append("deprecatedSwiftNames has a duplicate")
+    return out
+
+
+def canonical_swift_names():
+    """`SEG-n` -> swiftName for every canonical (v2.5.1) schema field."""
+    names = {}
+    for path in glob.glob(f"{SCHEMAS}/v2.5.1/*.json"):
+        doc = json.load(open(path))
+        for f in doc["fields"]:
+            names[f"{doc['segmentID']}-{f['index']}"] = f.get("swiftName")
+    return names
+
+
 PROHIBITION_KEYS = {"when", "severity", "citation", "permitsNull"}
 
 
@@ -363,12 +426,16 @@ def additional_prohibition_findings(f):
 def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
+    canonical = canonical_swift_names()
     for path in sorted(glob.glob(f"{SCHEMAS}/*/*.json")):
         rel = os.path.relpath(path, REPO)
         doc = json.load(open(path))
+        is_canonical = os.path.basename(os.path.dirname(path)) == "v2.5.1"
         seen = collections.Counter()
+        identifiers = collections.Counter()   # P6-9: accessor names, aliases included
         for f in doc["fields"]:
             seen[f["index"]] += 1
+            identifiers.update([f.get("swiftName")] + list(f.get("deprecatedSwiftNames") or []))
             name, dt, opt = f.get("name", ""), f.get("dataType", ""), f.get("optionality", "")
             if not name and not dt:
                 findings.append((rel, f["index"], "phantom row (no name, no dataType)"))
@@ -390,9 +457,14 @@ def integrity():
             findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
             findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
             findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
+            inherited = None if is_canonical else canonical.get(f"{doc['segmentID']}-{f['index']}")
+            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(f, inherited))
         for idx, n in seen.items():
             if n > 1:
                 findings.append((rel, idx, f"duplicate field index ({n}x)"))
+        for ident, n in identifiers.items():
+            if n > 1:
+                findings.append((rel, 0, f"swiftName {str(ident)[:60]!r} used {n}x in the segment"))
         got = sorted(seen)
         if got and got != list(range(1, max(got) + 1)):
             missing = sorted(set(range(1, max(got) + 1)) - set(got))

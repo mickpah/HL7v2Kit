@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-9: swiftName prose bleed and truncation
+
+- The schema extractor let definition prose bleed into `swiftName` and cut other
+  names short. A sweep of all 853 schemas corrected 145 slots from the printed
+  element name. Prose bleed: TQ2-10 on v2.5.1 (873 characters), v2.6 (847) and
+  v2.8.2 (806); QPD-2 on v2.4, v2.5.1, v2.6 and v2.8.2, which had absorbed the
+  next row's "User Parameters (in successive fields)"; and v2.8.2 BPX-21 (421),
+  BTX-20 (400) and ITM-16 (94). Truncated heads and `fieldN` placeholders: v2.3
+  QRF (6), v2.3.1 RXE (24), v2.4 LOC (7) and RXE (26), and v2.8.2 RXA (13,
+  including RXA-2 "nistrationSubIdCounter"), RXC (3), RXD (12), RXE (16), RXG
+  (9) and RXO (18). v2.8.2 OM1-56 drops the stray possessive "S", as the
+  extractor's current naming rule does. Non-canonical slots take the canonical
+  v2.5.1 name where the element is unchanged, as the rest of each segment does.
+- The typed accessors change on two segments: `TQ2.specialServiceRequestRelationship`
+  and `QPD.queryTag` (see Deprecated). Only the v2.5.1 schemas (and the earliest
+  definer of a segment v2.5.1 lacks) emit typed structs, so no other slot was
+  public.
+- The element names of v2.8.2 ITM-16 and RQ1-7 also carried prose; they are now
+  the printed "Approving Regulatory Agency" and "Substitute Allowed"
+  (`FieldGrammar.name` on the v2.8.2 grammar).
+- v2.8.2 RXA-2's length "4=" was checked against the print and is correct: the
+  attribute table leaves LEN blank and prints C.LEN "4=", which the schema records
+  under the extractor's LEN-else-C.LEN rule (as RXA-1 does). Unchanged.
+- New audit guard: `scripts/audit-schemas.py` now fails any swiftName that is not a
+  lowerCamelCase identifier, is over 70 characters, does not start a word of its
+  element name, carries three or more words absent from it, or repeats within a
+  segment. Self-check `check_swift_name` in `scripts/check-audit-schemas.py`.
+
+### Deprecated — P6-9: two prose-bled accessor names
+
+- `TQ2.specialServiceRequestRelationshipRequestsUsingTheParentChild...` (the
+  873-character v3.13.0 name), renamed `TQ2.specialServiceRequestRelationship`.
+- `QPD.queryTagUserParametersInSuccessiveFields`, renamed `QPD.queryTag`.
+- Both old names stay as `@available(*, deprecated, renamed:)` aliases that
+  forward to the new accessors (ADR-014). Codegen emits them from a new optional
+  schema key, `deprecatedSwiftNames`, which the audit validates.
+
 ### Added — P4-32: AU OBR-29 "not used" (owner decision G7)
 
 - Under `.auLocalisation`, OBR-29 (Parent) should not be valued on ORM, ORU

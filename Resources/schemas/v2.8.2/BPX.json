@@ -23,6 +23,6 @@
     { "index": 18, "swiftName": "bpActualDispensedToLocation", "name": "BP Actual Dispensed To Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 19, "swiftName": "bpActualDispensedToAddress", "name": "BP Actual Dispensed To Address", "dataType": "XAD", "optionality": "O", "repeatability": "1" },
     { "index": 20, "swiftName": "bpDispensedToReceiver", "name": "BP Dispensed to Receiver", "dataType": "XCN", "optionality": "O", "repeatability": "1" },
-    { "index": 21, "swiftName": "bpDispensingIndividualButePertainsToAnyTypeOfBloodProductACommerciallyPreparedBloodProductThatIsButePertainsOnlyToBloodComponentsABloodOnationForExampleFromOneWholeBloodRedBloodCellsPlasmaAndPlateletsWithEachProductsAreAssignedAUniqueDonationAtesTheTypeOfComponentContainedInTheBagButePertainsOnlyToCommercialProductsAEdProductSuchAsBloodDerivativesRhTSetsOrFiltersTheseTypesOfProductsAreRilyAssignedAUniqueDonationNumber", "name": "BP Dispensing Individual", "dataType": "XCN", "optionality": "O", "repeatability": "1" }
+    { "index": 21, "swiftName": "bpDispensingIndividual", "name": "BP Dispensing Individual", "dataType": "XCN", "optionality": "O", "repeatability": "1" }
   ]
 }

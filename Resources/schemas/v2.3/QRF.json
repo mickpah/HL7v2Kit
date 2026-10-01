@@ -4,13 +4,13 @@
   "description": "QRF",
   "fields": [
     { "index": 1, "swiftName": "filter", "name": "Where Subject Filter", "dataType": "ST", "length": "20", "optionality": "R", "repeatability": "*" },
-    { "index": 2, "swiftName": "rtDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
+    { "index": 2, "swiftName": "whenDataStartDateTime", "name": "When Data Start Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
     { "index": 3, "swiftName": "dateTime", "name": "When Data End Date/Time", "dataType": "TS", "length": "26", "optionality": "O", "repeatability": "1" },
-    { "index": 4, "swiftName": "lifier", "name": "What User Qualifier", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
-    { "index": 5, "swiftName": "jectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
-    { "index": 6, "swiftName": "meQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "length": "12", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
-    { "index": 7, "swiftName": "meStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "length": "12", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
-    { "index": 8, "swiftName": "ectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "length": "12", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
+    { "index": 4, "swiftName": "whatUserQualifier", "name": "What User Qualifier", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "otherQrySubjectFilter", "name": "Other QRY Subject Filter", "dataType": "ST", "length": "60", "optionality": "O", "repeatability": "*" },
+    { "index": 6, "swiftName": "whichDateTimeQualifier", "name": "Which Date/Time Qualifier", "dataType": "ID", "length": "12", "table": "0156", "optionality": "O", "repeatability": "*", "tables": ["0156"] },
+    { "index": 7, "swiftName": "whichDateTimeStatusQualifier", "name": "Which Date/Time Status Qualifier", "dataType": "ID", "length": "12", "table": "0157", "optionality": "O", "repeatability": "*", "tables": ["0157"] },
+    { "index": 8, "swiftName": "dateTimeSelectionQualifier", "name": "Date/Time Selection Qualifier", "dataType": "ID", "length": "12", "table": "0158", "optionality": "O", "repeatability": "*", "tables": ["0158"] },
     { "index": 9, "swiftName": "timingQualifier", "name": "When Quantity/Timing Qualifier", "dataType": "TQ", "length": "60", "optionality": "O", "repeatability": "1" }
   ]
 }
