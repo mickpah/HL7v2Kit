@@ -509,7 +509,13 @@ _RXA4_EMPTY_REASON = (
     "null, which Chapter 2 defines as the two double quotes \"\" and distinguishes from an "
     "omitted field (v2.3 sec 2.6; v2.6/v2.8.2 \"Null\" against \"Not populated\"; v2.8.2 "
     "Chapter 2B: \"A required element can have a null value\"). A conformant print sends "
-    "RXA-4 as \"\" or repeats RXA-3.")
+    "RXA-4 as \"\" or repeats RXA-3. Counter-evidence, weighed: other definitions use "
+    "\"null\" loosely for not valued (v2.5.1 CH04 ORC-6 \"When the field is null, D is the "
+    "default\"; v2.5.1 CH07 OBX-15 and OBX-23 \"When this field is null, the receiving system "
+    "assumes ...\"), the field name carries \"(If Applies)\", and every one of these printed "
+    "examples leaves it empty. The ruling stands because it is the only reading under which "
+    "the table R and the definition agree with the Chapter 2/2B vocabulary; reading \"null\" "
+    "as not valued would make the printed R contradict its own definition.")
 _CSR_SHIFT_REASON = (
     "v2.3 CH7 / v2.3.1 chapter 7 CRM^C01 example prints \"CSR|1|DM94-004^MDACC||MDACC|3||"
     "19941013||342^^^^^^^PDMS|\": a leading \"1\" (CSR has no Set ID) shifts every field one "

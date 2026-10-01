@@ -105,10 +105,19 @@ struct SegmentTableDefinitionConflictTests {
 
     private let rolNoPerson = "ROL|R1^^^F|AD|AT^Attending^HL70443"
 
+    // PMU events that carry both STF and ROL: v2.5.1 and v2.6 define ROL only in PMU^B07
+    // (Grant Certificate/Permission); v2.8.2 adds it to PMU^B01.
+    private static let staffWithRole = ["2.5.1": ("PMU^B07", "B07"), "2.6": ("PMU^B07", "B07"),
+                                        "2.8.2": ("PMU^B01", "B01")]
+
+    private func staffWire(_ version: String) -> String {
+        let (type, event) = Self.staffWithRole[version] ?? ("PMU^B07", "B07")
+        return TestWires.wire(type, version, "EVN|\(event)|200601010800", "STF|S1|S1^^^HOSP", rolNoPerson)
+    }
+
     @Test("ROL-4 is optional beside STF and required without it", arguments: ["2.6", "2.8.2"])
     func rol4ConditionalOnSTF(version: String) throws {
-        let withStaff = TestWires.wire("PMU^B01", version, "EVN|B01|200601010800",
-                                       "STF|S1|S1^^^HOSP", rolNoPerson)
+        let withStaff = staffWire(version)
         #expect(try issues(withStaff, "ROL", 4).isEmpty, "v\(version)")
         let withoutStaff = TestWires.wire("ADT^A01", version, "EVN|A01|200601010800",
                                           "PID|1||123^^^HOSP^MR||DOE^JOHN", "PV1|1|I", rolNoPerson)
@@ -119,10 +128,15 @@ struct SegmentTableDefinitionConflictTests {
 
     @Test("ROL-4 stays R where the definition prints no STF sentence", arguments: ["2.3", "2.3.1", "2.4", "2.5.1"])
     func rol4RequiredBefore26(version: String) throws {
-        let withStaff = TestWires.wire("PMU^B01", version, "EVN|B01|200601010800",
-                                       "STF|S1|S1^^^HOSP", rolNoPerson)
-        let hits = try issues(withStaff, "ROL", 4)
-        #expect(hits.count == 1, "v\(version)")
-        #expect(hits.first?.code == .requiredFieldMissing, "v\(version)")
+        let rol4 = grammarTables[version]?["ROL"]?.field(4)
+        #expect(rol4?.optionality == .required, "v\(version)")
+        #expect(rol4?.condition == nil, "v\(version)")
+    }
+
+    @Test("v2.5.1 PMU^B07 with STF still misses an empty ROL-4")
+    func rol4RequiredBesideSTFOn251() throws {
+        let hits = try issues(staffWire("2.5.1"), "ROL", 4)
+        #expect(hits.count == 1)
+        #expect(hits.first?.code == .requiredFieldMissing)
     }
 }

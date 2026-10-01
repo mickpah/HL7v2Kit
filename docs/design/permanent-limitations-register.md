@@ -36,6 +36,22 @@ per `global-constraints.md`); out of scope for this task.
 matching the v2.6 precedent already shipped; it is recorded here so the modelled optionality is
 never mistaken for a transcription error against the printed table.
 
+### Addendum to §A — printed `R` restricted by its own definition (P4-30)
+
+P4-30 (2026-10-01) models three printed-`R` fields as `C` because their definitions limit them,
+each citing the spec in the schema field's `optionalityCitation` (which `scripts/audit-schemas.py`
+reads as the slot's optionality whitelist entry): MFI-6 `messageCode = MFN`, CSR-8
+`triggerEvent = C01` (all six versions), and ROL-4 `STF absent` (v2.6, v2.8.2). RXA-4 stays `R`
+(its "If null" is the HL7 null `""`). Rows and evidence: `conditional-completeness-audit.md`.
+
+**Known limitation (req #3), blocks spec-completeness:** the v2.6 and v2.8.2 ROL-4 definition
+(CH15 §15.4.7.4) continues: "If this field is populated, then it must be populated with the same
+values as the correlated field", the correlated fields being STF-2 Staff Identifier List and
+STF-3 Staff Name. That is a cross-segment value equality between ROL-4 (XCN) and two STF fields
+of different types (CX and XPN); the condition DSL compares a field with literals, not with
+another segment's composite value, so the rule is not enforced. Closing it needs a model
+extension (cross-segment composite comparison).
+
 ## B. AU-localisation (ADRM 2021) narrowings
 
 The machine-checkable HL7au:00044.* CE/CNE/CWE narrowings shipped in v0.13 (ADR-011). The following AU rules are **not** machine-checkable from the wire:

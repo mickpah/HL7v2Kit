@@ -119,9 +119,26 @@ def check_additional_prohibitions():
         assert audit.additional_prohibition_findings(field), f"{name} must be a finding"
 
 
+def check_optionality_citation():
+    # P4-30: a field's `optionalityCitation` is its optionality whitelist entry. A departure
+    # from the print needs it (or an OPTIONALITY_WHITELIST entry); a citation on a slot that
+    # matches the print is stale.
+    cite = "v2.5.1 CH08 section 8.5.1.6: 'Required for MFN-Master File Notification message'"
+    f = audit.optionality_citation_finding
+    assert f("C", {"R"}, cite, False) is None, "a cited departure is not a finding"
+    assert f("C", {"R"}, None, False) == "uncited", "an uncited departure is a finding"
+    assert f("C", {"R"}, "  ", False) == "uncited", "a blank citation does not cite"
+    assert f("C", {"R"}, None, True) is None, "an OPTIONALITY_WHITELIST entry still cites"
+    assert f("R", {"R"}, cite, False) == "stale", "a citation on a printed match is stale"
+    assert f("R", set(), cite, False) is None, "an unextracted slot has nothing to compare"
+    assert f("R", {"R"}, None, False) is None, "a printed match without a citation is clean"
+    assert not any(k[1:] in {("MFI", 6), ("CSR", 8), ("ROL", 4)} for k in audit.OPTIONALITY_WHITELIST), \
+        "P4-30 slots cite through optionalityCitation, not the whitelist"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
-          check_table_open, check_additional_prohibitions]
+          check_table_open, check_additional_prohibitions, check_optionality_citation]
 
 
 def main():

@@ -52,7 +52,8 @@ struct FieldSchema: Decodable {
     /// The spec citation for an `optionality` that departs from the printed attribute table,
     /// naming the printed code and quoting the field definition that overrides it (for
     /// example a table R whose definition limits the field to MFN messages). Read by the
-    /// schema audit (its OPTIONALITY_WHITELIST), not emitted. P4-30.
+    /// schema audit as that slot's optionality whitelist entry (required whenever the
+    /// optionality departs from the print), not emitted. P4-30.
     let optionalityCitation: String?
     /// Further prohibitions beyond `prohibitedWhen`, each with its own severity and
     /// spec citation. See `FieldGrammar.additionalProhibitions`. P4-21.

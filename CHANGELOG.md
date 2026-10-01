@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Fields whose attribute table prints R while the field definition limits or relaxes them
 (Requirement 4). Each ruling cites the definition; the printed R stays visible in the schema's
-new `optionalityCitation` key and in the schema audit's optionality whitelist.
+new `optionalityCitation` key, which the schema audit reads as that slot's optionality whitelist
+entry and requires wherever a field's optionality departs from the printed table. The ROL-4
+STF-2/STF-3 value-equality sentence is recorded in the permanent-limitations register.
 
 - **MFI-6 Response Level Code** (all six versions): R to C, `messageCode = MFN`. The
   definition reads "Required for MFN-Master File Notification message" (v2.3 CH8 sec 8.4.1.6;

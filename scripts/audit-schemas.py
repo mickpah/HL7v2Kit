@@ -132,7 +132,10 @@ def name_agrees(schema_name, printed):
 
 
 # M19 optionality whitelist: (version, segment, index) -> citation. An entry is a divergence
-# from the printed OPT column that the spec text itself backs. Anything else is a finding.
+# from the printed OPT column that the spec text itself backs. P4-30: a schema field may instead
+# carry the citation itself as "optionalityCitation" (the single source for new divergences, as
+# "tableOpenCitation" is for openness); see optionality_citation_finding. Anything else is a
+# finding.
 OPTIONALITY_WHITELIST = {
     ("v2.3", "DG1", 2): "v2.3 CH6 DG1 attribute table prints '(B) R' in one OPT cell; the "
                         "extractor reads B, the schema keeps R",
@@ -162,23 +165,6 @@ OPTIONALITY_WHITELIST = {
                          "it must be present in the associated OBR'; printed O, modelled C (P4-18)",
     ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
                           "child.'; printed O, modelled C (P4-18)",
-    # P4-30: a printed R whose own definition limits the field (Requirement 4). The schema
-    # field carries the same text as "optionalityCitation".
-    **{(v, "MFI", 6): f"{v} {sec}: 'Required for MFN-Master File Notification message'; "
-                      "printed R, modelled C as messageCode = MFN (P4-30)"
-       for v, sec in [("v2.3", "CH8 section 8.4.1.6"), ("v2.3.1", "chapter 8 section 8.4.1.6"),
-                      ("v2.4", "CH08 section 8.5.1.6"), ("v2.5.1", "CH08 section 8.5.1.6"),
-                      ("v2.6", "CH08 section 8.5.1.6"), ("v2.8.2", "CH08 section 8.5.1.6")]},
-    **{(v, "CSR", 8): f"{v} {sec}: 'This field is required for the patient registration "
-                      "trigger event (C01)', as CSR-9/CSR-10 (printed C); printed R, modelled C as "
-                      "triggerEvent = C01 (P4-30)"
-       for v, sec in [("v2.3", "CH7 section 7.7.1.8"), ("v2.3.1", "chapter 7 section 7.7.1.8"),
-                      ("v2.4", "CH07 section 7.8.1.8"), ("v2.5.1", "CH07 section 7.8.1.8"),
-                      ("v2.6", "CH07 section 7.8.1.8"), ("v2.8.2", "CH07 section 7.8.1.8")]},
-    **{(v, "ROL", 4): f"{v} CH15 section 15.4.7.4: 'If both STF and ROL are present in the same "
-                      "message, populating this field is optional'; printed R, modelled C as "
-                      "STF absent (P4-30)"
-       for v in ("v2.6", "v2.8.2")},
 }
 REPEATABILITY_WHITELIST = {}
 LENGTH_WHITELIST = {}
@@ -433,6 +419,20 @@ def optionality_finding(have, printed):
     return bool(printed) and have not in printed
 
 
+def optionality_citation_finding(have, printed, cite, whitelisted):
+    """P4-30. A field's `optionalityCitation` is its whitelist entry. Returns None when the
+    slot is clean: OPT matches the print, or departs from it with a citation (the field's own
+    `optionalityCitation` of at least 20 characters, or an OPTIONALITY_WHITELIST entry).
+    Returns "uncited" when OPT departs with neither, and "stale" when a field carries an
+    `optionalityCitation` although its OPT matches the extracted print."""
+    cited = isinstance(cite, str) and len(cite.strip()) >= 20
+    if optionality_finding(have, printed):
+        return None if (cited or whitelisted) else "uncited"
+    if cite is not None and printed:
+        return "stale"
+    return None
+
+
 def extracted_depths(version):
     """(segment -> deepest max-field-index, (segment, index) -> {dataTypes seen})
     across that version's chapter PDFs.
@@ -624,16 +624,19 @@ def depth(write=False, correct_names=False, record_lengths=False, versions=None)
             # false "required field missing"; a B it prints as O is a false deprecation
             # warning. C is compared like every other code (X-C10 / V26-C07): the
             # conditional-completeness register decides how a printed C is modelled, but a
-            # C / non-C disagreement with the print stays a finding until
-            # OPTIONALITY_WHITELIST names it with its spec citation.
+            # C / non-C disagreement with the print stays a finding until the field's own
+            # `optionalityCitation` or an OPTIONALITY_WHITELIST entry cites the spec; a
+            # citation on a slot that matches the print is a finding too (P4-30).
             for f in schema_fields:
                 printed = printed_for(spec_def, spec_opts, seg, f["index"], "optionality")
                 have = (f.get("optionality") or "").strip()
-                if not optionality_finding(have, printed):
+                problem = optionality_citation_finding(
+                    have, printed, f.get("optionalityCitation"),
+                    (version, seg, f["index"]) in OPTIONALITY_WHITELIST)
+                if problem is None:
                     continue
-                if (version, seg, f["index"]) in OPTIONALITY_WHITELIST:
-                    continue
-                optionality_findings.append((version, seg, f["index"], have, sorted(printed)))
+                label = have if problem == "uncited" else f"{have} (optionalityCitation on a printed match)"
+                optionality_findings.append((version, seg, f["index"], label, sorted(printed)))
             # M9-A: the schema's `tables` must equal the version's own TBL#
             # column, both directions (a stale binding is as wrong as a
             # missing one).
