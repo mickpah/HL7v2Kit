@@ -238,11 +238,32 @@ def check_element_name():
         assert e(name), f"{name[:40]!r} must be a finding"
 
 
+def check_repeatability_defining_table():
+    # P6-4 fix 1: M22 compares the defining table's RP/# cell. v2.5.1 OBX-8: the CH07 OBX
+    # table prints 5, a constrained copy misreads the cell as Y; the union {'*', '5'} used to
+    # accept a schema '*' and so hide the bound.
+    defining = audit.defining_rows([("OBX", [{"index": 8, "repeatability": "5"},
+                                             {"index": 9, "repeatability": "1"}]),
+                                    ("OBX", [{"index": 8, "repeatability": "*"}])])
+    union = {("OBX", 8): {"*", "5"}, ("OBX", 9): {"1", "5"}}
+    assert audit.printed_for(defining, union, "OBX", 8, "repeatability") == {"5"}
+    assert audit.printed_for(defining, union, "OBX", 9, "repeatability") == {"1"}
+
+
+def check_repeatability_token_rule():
+    # P6-4: integrity() accepts 1, * or a decimal bound of 2 or more, and nothing else.
+    ok = audit.REPEATABILITY_TOKEN
+    for good in ("1", "*", "2", "20", "200"):
+        assert ok.fullmatch(good), good
+    for bad in ("", "0", "Y", "Y/3", "0-5", "1000", "02"):
+        assert not ok.fullmatch(bad), bad
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
           check_condition_predicate, check_swift_name, check_swift_name_uniqueness,
-          check_element_name]
+          check_element_name, check_repeatability_defining_table, check_repeatability_token_rule]
 
 
 def main():

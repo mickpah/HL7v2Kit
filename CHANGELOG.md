@@ -21,9 +21,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   --write-repeatability` writes it; M22 compares bounds, and `integrity()`
   rejects any other token. Codegen emits `maxRepetitions:` only for a bounded
   field, so every other generated line is unchanged.
-- 203 bounded fields across the six versions (v2.3 35, v2.3.1 31, v2.4 35,
-  v2.5.1 34, v2.6 34, v2.8.2 34), for example v2.3 MSH-18 `Y/3`, v2.4 OBR-17
+- 221 bounded fields across the six versions (v2.3 35, v2.3.1 31, v2.4 35,
+  v2.5.1 34, v2.6 43, v2.8.2 43), for example v2.3 MSH-18 `Y/3`, v2.4 OBR-17
   `Y/2`, v2.6 PID-38 `2`, UB2-13 `Y/23`.
+- A printed range keeps its maximum as the bound: v2.6 and v2.8.2 CH16
+  PYE-4 `0-5`, PYE-5/-6 `0-4`, PSL-8/-19 `0-5`, PSL-17/-18/-20 `0-20` and
+  ADJ-5 `0-5`. The minimum is not modelled; every printed minimum is 0, which
+  adds nothing beyond the field's optionality, and the extractor reports any
+  minimum above 0 as a known limitation.
+- The extractor no longer reads a stray cell as a repeat: a LEN bled into the
+  RP/# column (v2.8.2 CH07 OBX-4/-13 `20=`) and an OPT or DT code (`R`, `O`,
+  `CE`) map to `1`; `Y` plus a footnote digit (v2.3 `Y3`, v2.3.1 `Y4`, OBX-5)
+  maps to `*`. `extract-segment-tables.swift --self-check-rp` pins the mapping.
+- M22 compares a slot against the defining table's RP/# cell, as M19 and M21
+  do, not the union of every chapter's print, so a constrained copy can no
+  longer hide a bound.
+- `FieldGrammar`'s initialiser traps on a non-nil `maxRepetitions` with
+  `.single` or a value below 2.
 - OBX-8 on v2.3, v2.3.1 and v2.4 is bounded at 5 by hand: the base OBX table
   prints `Y/5` (v2.3 CH7, v2.4 CH07), and the constrained OBX copies that
   print a blank RP/# are message profiles, not the segment definition.

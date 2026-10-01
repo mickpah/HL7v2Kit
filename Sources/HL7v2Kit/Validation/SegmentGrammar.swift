@@ -119,7 +119,8 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
     /// v2.5, a bare `3` from v2.5 ("the field may repeat up to the number of
     /// times specified by the integer", v2.3.1 §2.6.5, v2.5.1 §2.5.3.5).
     /// `nil` when the column prints `Y` (unbounded) or the field does not
-    /// repeat. Non-nil implies `repeatability == .multiple`. An overrun raises
+    /// repeat. Non-nil implies `repeatability == .multiple` and a value of at least 2;
+    /// the initialiser traps (`precondition`) otherwise. An overrun raises
     /// `.cardinalityExceeded` at `.warning`. Not set by the released
     /// initialisers; `nil` by default. P6-4.
     public let maxRepetitions: Int?
@@ -230,6 +231,13 @@ public struct FieldGrammar: Sendable, Equatable, Hashable {
         additionalProhibitions: [FieldProhibition] = [],
         maxRepetitions: Int?
     ) {
+        // P6-4: a bound only means something on a repeating field, and a bound of 1 is
+        // `.single`. Codegen never emits either; a hand-built grammar that does is a
+        // programmer error, trapped here rather than silently ignored by the Validator.
+        if let bound = maxRepetitions {
+            precondition(repeatability == .multiple && bound >= 2,
+                         "FieldGrammar \(index): maxRepetitions \(bound) requires .multiple and a bound of at least 2")
+        }
         self.index = index
         self.name = name
         self.dataType = dataType

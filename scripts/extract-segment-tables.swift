@@ -336,17 +336,50 @@ func isNameContinuation(_ cont: String, currentName: String) -> Bool {
 }
 
 // Map RP/# cell to repeatability token: blank or N -> "1", Y -> "*", a printed bound
-// ("Y/3" before v2.5, a bare "3" from v2.5; v2.5.1 §2.5.3.5) -> "3". A value of four or
-// more digits is a TBL# number bled into the RP column (see scripts/table-repairs.json),
-// kept as "*" exactly as before so M22 and the repairs keep seeing it.
+// ("Y/3" before v2.5, a bare "3" from v2.5; v2.5.1 §2.5.3.5) -> "3". A printed range
+// ("0-5", v2.6/v2.8.2 CH16 PYE, PSL, ADJ) keeps its maximum as the bound; its minimum is
+// not modelled (a 0 adds nothing beyond OPT, and a minimum above 0 is reported on stderr as
+// a known limitation). Shapes that are not an RP print fall through as follows:
+//   - "Y" + one footnote digit ("Y3" v2.3 CH7, "Y4" v2.3.1, OBX-5) -> "*";
+//   - a LEN cell bled into the column ("20=", "2..2", "250#"; v2.8.2 CH07 OBX-4/-13) -> "1",
+//     since the RP cell itself was blank;
+//   - an OPT or DT code bled in ("R", "O", "CE") -> "1";
+//   - four or more digits is a TBL# number bled in (see scripts/table-repairs.json), kept as
+//     "*" exactly as before so M22 and the repairs keep seeing it.
 func repeatability(_ rp: String) -> String {
     let t = rp.trimmingCharacters(in: .whitespaces).uppercased()
     if t.isEmpty || t == "N" { return "1" }
     if t == "Y" { return "*" }
+    if t.range(of: #"^Y[0-9]$"#, options: .regularExpression) != nil { return "*" }
+    if t.range(of: #"^[0-9]+(\.\.[0-9]+)?[=#]?$"#, options: .regularExpression) != nil,
+       t.contains("=") || t.contains("#") || t.contains("..") { return "1" }
+    if let r = t.range(of: #"^[0-9]{1,3}\s*-\s*[0-9]{1,3}$"#, options: .regularExpression), r == t.startIndex..<t.endIndex {
+        let parts = t.split(separator: "-").map { Int($0.trimmingCharacters(in: .whitespaces)) ?? 0 }
+        if parts[0] > 0 {
+            FileHandle.standardError.write("RP range \(t): minimum above 0 is not modelled (known limitation)\n".data(using: .utf8)!)
+        }
+        return parts[1] > 1 ? String(parts[1]) : "1"
+    }
     let tail = t.split(separator: "/").last.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
     if tail.count <= 3, let n = Int(tail) { return n > 1 ? String(n) : "1" }
     if t.contains("Y") || t.first(where: { $0.isNumber }) != nil { return "*" }
     return "1"
+}
+
+// Self-check of the RP/# mapping (P6-4): `extract-segment-tables.swift --self-check-rp`.
+func selfCheckRepeatability() -> Never {
+    let cases: [(String, String)] = [
+        ("", "1"), ("N", "1"), ("Y", "*"), ("Y/3", "3"), ("Y/23", "23"), ("2", "2"), ("1", "1"),
+        ("0-5", "5"), ("0-20", "20"), ("0 - 4", "4"), ("Y3", "*"), ("20=", "1"), ("2..2", "1"),
+        ("250#", "1"), ("R", "1"), ("CE", "1"), ("0125", "*"),
+    ]
+    var failed = 0
+    for (raw, want) in cases where repeatability(raw) != want {
+        failed += 1
+        print("FAIL rp \(raw.debugDescription): got \(repeatability(raw)), want \(want)")
+    }
+    print("\(cases.count - failed) passed, \(failed) failed")
+    exit(failed == 0 ? 0 : 1)
 }
 
 // MARK: - table extraction from full text
@@ -574,6 +607,7 @@ func emitSchema(pdf: String, seg: String, version: String, refPath: String) -> N
 // MARK: - main
 
 let args = CommandLine.arguments
+if args.count == 2, args[1] == "--self-check-rp" { selfCheckRepeatability() }
 if args.count >= 5, args[1] == "--verify" {
     // --verify <pdf> <SEGID> <schema.json>
     verify(pdf: args[2], seg: args[3], schemaPath: args[4])

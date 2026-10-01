@@ -74,6 +74,42 @@ struct BoundedRepetitionTests {
         #expect(issue.message.contains("at most 2"))
     }
 
+    @Test("v2.6 and v2.8.2 CH16 range bounds keep their maximum: PSL-17 0-20, PYE-5 0-4, ADJ-5 0-5")
+    func rangeBounds() {
+        for table in [SegmentGrammarTable.v2_6, SegmentGrammarTable.v2_8_2] {
+            #expect(table["PSL"]?.field(17)?.maxRepetitions == 20)
+            #expect(table["PYE"]?.field(5)?.maxRepetitions == 4)
+            #expect(table["ADJ"]?.field(5)?.maxRepetitions == 5)
+        }
+    }
+
+    // Inherited rule: every `~`-separated repetition counts, empty ones included.
+    @Test("Empty and trailing-~ repetitions count against the bound")
+    func emptyRepetitionsCount() throws {
+        let msh = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.4\r"
+        let trailing = msh + line("OBR", [1: "1", 4: "GLU^Glucose^L", 17: "5550001~5550002~"])
+        let empties = msh + line("OBR", [1: "1", 4: "GLU^Glucose^L", 17: "5550001~~"])
+        #expect(try cardinality(trailing).first?.message.contains("but has 3") == true)
+        #expect(try cardinality(empties).first?.message.contains("but has 3") == true)
+    }
+
+    @Test("The HL7 null \"\" is one repetition and stays silent against a bound")
+    func hl7NullIsOne() throws {
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.4\r"
+            + line("OBR", [1: "1", 4: "GLU^Glucose^L", 17: "\"\""])
+        #expect(try cardinality(wire).isEmpty)
+    }
+
+    @Test("v2.6 ADJ-7 prints RP/# 1: a repeated ADJ-7 is a cardinalityExceeded error")
+    func adj7Single() throws {
+        #expect(SegmentGrammarTable.v2_6["ADJ"]?.field(7)?.repeatability == .single)
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||EHC^E12|M1|P|2.6\r"
+            + line("ADJ", [1: "1", 2: "1", 7: "A^Reason~B^Reason"])
+        let issue = try #require(try cardinality(wire).first { $0.location.segmentID == "ADJ" && $0.location.fieldIndex == 7 })
+        #expect(issue.severity == .error)
+        #expect(issue.message.contains("is single-cardinality but has 2 repetitions"))
+    }
+
     @Test("A single-cardinality field keeps its existing message and error severity")
     func singleUnchanged() throws {
         let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"

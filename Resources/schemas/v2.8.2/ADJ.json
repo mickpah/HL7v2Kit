@@ -7,7 +7,7 @@
     { "index": 2, "swiftName": "payerAdjustmentNumber", "name": "Payer Adjustment Number", "dataType": "EI", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "adjustmentSequenceNumber", "name": "Adjustment Sequence Number", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
     { "index": 4, "swiftName": "adjustmentCategory", "name": "Adjustment Category", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0564"] },
-    { "index": 5, "swiftName": "adjustmentAmount", "name": "Adjustment Amount", "dataType": "CP", "optionality": "O", "repeatability": "*" },
+    { "index": 5, "swiftName": "adjustmentAmount", "name": "Adjustment Amount", "dataType": "CP", "optionality": "O", "repeatability": "5" },
     { "index": 6, "swiftName": "adjustmentQuantity", "name": "Adjustment Quantity", "dataType": "CQ", "optionality": "O", "repeatability": "1", "tables": ["0560"] },
     { "index": 7, "swiftName": "adjustmentReasonPa", "name": "Adjustment Reason PA", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["0565"] },
     { "index": 8, "swiftName": "adjustmentDescription", "name": "Adjustment Description", "dataType": "ST", "length": "250#", "optionality": "O", "repeatability": "1" },

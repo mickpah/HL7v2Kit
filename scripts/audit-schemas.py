@@ -193,6 +193,8 @@ OPTIONALITY_WHITELIST = {
     ("v2.5.1", "OBR", 29): "v2.5.1 CH04 section 4.5.3.29: 'It is required when the order is a "
                           "child.'; printed O, modelled C (P4-18)",
 }
+# The schema `repeatability` vocabulary: "1", "*", or a decimal RP/# bound of 2 or more (P6-4).
+REPEATABILITY_TOKEN = re.compile(r"1|\*|[2-9]|[1-9]\d{1,2}")
 REPEATABILITY_WHITELIST = {
     ("v2.6", "OBX", 5): "v2.6 CH07 section 7.4.2 OBX attribute table prints RP/# 'Y' wrapped under a "
                        "superscript footnote marker '2', which the extractor reads as a bound; the "
@@ -535,7 +537,7 @@ def integrity():
                 # empty dataType is spec-CORRECT for withdrawn/reserved fields only
                 findings.append((rel, f["index"], f"empty dataType with optionality {opt!r}"))
             rp = f.get("repeatability", "")
-            if not re.fullmatch(r"1|\*|[2-9]|[1-9]\d{1,2}", rp):
+            if not REPEATABILITY_TOKEN.fullmatch(rp):
                 findings.append((rel, f["index"], f"repeatability {rp!r} is not 1, *, or a bound of 2 or more"))
             if len(name) > 120:
                 findings.append((rel, f["index"], f"element name {len(name)} chars — prose bleed?"))
@@ -808,9 +810,11 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             # M22: the RP/# column, which drives cardinalityExceeded. The extractor renders a
             # printed Y as "*", a blank as "1", and a printed bound ("Y/3", "3") as the bound
             # itself; the schema carries the same token (P6-4). A slot whose printed token is
-            # unambiguous is written by --write-repeatability.
+            # unambiguous is written by --write-repeatability. Compared against the DEFINING
+            # table's cell (as M19/M21 do), not the union of every chapter's print: a
+            # constrained copy that misreads a cell no longer hides a bound (P6-4 fix 1).
             for f in schema_fields:
-                printed = spec_reps.get((seg, f["index"]))
+                printed = printed_for(spec_def, spec_reps, seg, f["index"], "repeatability")
                 have = (f.get("repeatability") or "").strip()
                 if not printed or have in printed or (version, seg, f["index"]) in REPEATABILITY_WHITELIST:
                     continue
