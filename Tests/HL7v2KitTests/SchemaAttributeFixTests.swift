@@ -79,4 +79,28 @@ struct SchemaAttributeFixTests {
         #expect(SegmentGrammarTable.v2_3_1["OBX"]?.field(5)?.length == "*")
         #expect(SegmentGrammarTable.v2_3_1["OBX"]?.field(5)?.dataType == "*")
     }
+
+    // V282-C04: CH02 §2.14.1 prints the ADD attribute table on v2.6 and v2.8.2 (SEQ 1-n, ST, O).
+    @Test("ADD is modelled on v2.6 and v2.8.2 and is not treated as a Z-segment")
+    func addOnV26AndV282() throws {
+        let cases: [([String: SegmentGrammar], String)] = [
+            (SegmentGrammarTable.v2_6, "2.6"),
+            (SegmentGrammarTable.v2_8_2, "2.8.2"),
+        ]
+        var options = ValidationOptions.default
+        options.zSegmentPolicy = .reject
+        for (table, version) in cases {
+            let add = try #require(table["ADD"], "v\(version)")
+            #expect(add.fields.count == 1)
+            #expect(add.field(1)?.dataType == "ST")
+            #expect(add.field(1)?.optionality == .optional)
+            #expect(add.field(1)?.variableColumns == true)
+            let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|\(version)\r"
+                + "ADD|more text|and more\r"
+            let report = Validator(options: options).validate(try Parser().parse(wire))
+            #expect(!report.issues.contains { $0.code == .zSegmentPresent }, "v\(version)")
+        }
+        #expect(SegmentGrammarTable.v2_6["ADD"]?.field(1)?.length == "65536")
+        #expect(SegmentGrammarTable.v2_8_2["ADD"]?.field(1)?.length == nil, "v2.8.2 prints neither LEN nor C.LEN")
+    }
 }

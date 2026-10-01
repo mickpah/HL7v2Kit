@@ -33,7 +33,7 @@ Predicates are deliberately *shape*-based (length, character class, emptiness) r
 enumerated content lists: a marker-word list only finds the corruption you already thought
 of. That distinction is what surfaced the v1.7 names.
 """
-import argparse, collections, glob, json, os, re, shutil, subprocess, sys, tempfile
+import argparse, collections, functools, glob, json, os, re, shutil, subprocess, sys, tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCHEMAS = os.path.join(REPO, "Resources/schemas")
@@ -73,6 +73,27 @@ STANDARDS = _standards_dir()
 # (schema hand-authored, eye-verified; see segment-coverage-extraction.md "Appendix C
 # exception").
 DEPTH_WHITELIST = {"RDT", "ADD", "v2.3.1/NSC"}
+
+
+def whitelisted_ids(version):
+    """The DEPTH_WHITELIST segment IDs that apply to `version` (a bare ID applies everywhere)."""
+    return {w.split("/")[-1] for w in DEPTH_WHITELIST if "/" not in w or w.startswith(version + "/")}
+
+
+@functools.lru_cache(maxsize=None)
+def _pdf_text(path):
+    return subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"],
+                          capture_output=True, text=True).stdout
+
+
+def caption_present(version, seg):
+    """True when a chapter of `version` prints `seg`'s attribute-table caption:
+    "HL7 Attribute Table - ADD" (v2.4 on) or "Figure 2-8. ADD attributes" (v2.3, v2.3.1)."""
+    pattern = re.compile(rf"HL7 Attribute Table\s*[-–]\s*{seg}\b|\b{seg} attributes\b")
+    return any(pattern.search(_pdf_text(pdf))
+               for glob_pattern in CHAPTER_GLOBS[version]
+               for pdf in sorted(glob.glob(os.path.join(STANDARDS, glob_pattern))))
+
 
 # Owner-deferred versions. The 2026-08-23 deferral of v2.6 / v2.8.2 closed with M5 on
 # 2026-09-16 (docs/design/deferred-coverage-backlog.md, closure header), so the set is empty:
@@ -702,6 +723,12 @@ def depth(write=False, correct_names=False, record_lengths=False, versions=None)
                 presence.append((version, seg, found[seg]))
             else:
                 backlog[version] = backlog.get(version, 0) + 1
+        # V282-C04: a DEPTH_WHITELIST segment's `1-n` row never parses, so it never enters
+        # `found` and the loop above cannot see it missing. Check its caption instead. A miss
+        # is always a PRESENCE defect (never DEFERRED): these schemas are hand-authored.
+        for seg in sorted(whitelisted_ids(version) - authored[version]):
+            if caption_present(version, seg):
+                presence.append((version, seg, "(caption)"))
         for path in sorted(glob.glob(f"{SCHEMAS}/{version}/*.json")):
             seg = os.path.basename(path)[:-5].upper()
             if seg in DEPTH_WHITELIST or f"{version}/{seg}" in DEPTH_WHITELIST or seg not in found:

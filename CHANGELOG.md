@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P6-3: ADD on v2.6 and v2.8.2
+
+- The ADD (Addendum) segment is modelled on v2.6 and v2.8.2 (CH02 §2.14.1,
+  SEQ `1-n`), so it now validates instead of taking the Z-segment path.
+  Typed accessors are generated as on the other versions. (V282-C04)
+- `audit-schemas.py --depth` checks a `DEPTH_WHITELIST` segment's presence
+  from its attribute-table caption, so a missing ADD, RDT or NSC is reported.
+
 ### Fixed — P6-2: OBX, OBR and NSC lengths (v2.3, v2.3.1)
 
 - v2.3.1 OBX-2 LEN is 3 and OBX-16 is 80, and v2.3 OBX-16 is 80: the values

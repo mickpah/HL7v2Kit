@@ -348,6 +348,12 @@ future `1-n` segment needs the same treatment.
 > still bind it, so the RDT whitelist stays. `ADD` is now simply absent from the caption set
 > — hand-authored like RDT on all four AU-priority versions (§3C) and whitelisted alongside it.
 
+**Presence of whitelisted segments (P6-3).** `DEPTH_WHITELIST` keeps these segments out
+of the depth pass, which also kept them out of the presence check: ADD was missing on
+v2.6 and v2.8.2 without any finding (V282-C04). `audit-schemas.py` now checks a
+whitelisted ID's presence from its attribute-table caption ("HL7 Attribute Table - ADD",
+or "Figure n-m. ADD attributes" before v2.4), independent of row parsing.
+
 ### Spec-text defects normalised in authored schemas
 
 The attribute table is authoritative, but a handful of cells are typeset wrong in the PDF

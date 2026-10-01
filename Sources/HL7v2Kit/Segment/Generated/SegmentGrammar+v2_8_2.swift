@@ -7,6 +7,7 @@ extension SegmentGrammarTable {
     public static let v2_8_2: [String: SegmentGrammar] = [
         "ABS": v2_8_2_ABS,
         "ACC": v2_8_2_ACC,
+        "ADD": v2_8_2_ADD,
         "ADJ": v2_8_2_ADJ,
         "AFF": v2_8_2_AFF,
         "AIG": v2_8_2_AIG,
@@ -224,6 +225,14 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 11, name: "Accident Address", dataType: "XAD", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
             FieldGrammar(index: 12, name: "Degree of patient liability", dataType: "NM", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "3#"),
             FieldGrammar(index: 13, name: "Accident Identifier", dataType: "EI", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: nil),
+        ]
+    )
+
+    private static let v2_8_2_ADD: SegmentGrammar = SegmentGrammar(
+        segmentID: "ADD",
+        version: "2.8.2",
+        fields: [
+            FieldGrammar(index: 1, name: "Addendum Continuation Pointer", dataType: "ST", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: true, table: nil, length: nil),
         ]
     )
 
