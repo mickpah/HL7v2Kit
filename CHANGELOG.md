@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-2: OBX, OBR and NSC lengths (v2.3, v2.3.1)
+
+- v2.3.1 OBX-2 LEN is 3 and OBX-16 is 80, and v2.3 OBX-16 is 80: the values
+  printed in the base Figure 7-5, not the waveform category tables
+  (Figures 7-26/7-27). (V231-C14)
+- v2.3.1 NSC carries the Appendix C Figure C-3 lengths (4, then 30 for
+  NSC-2..9). (V231-C16)
+- Pre-flight ruling d4 (P7-1 length intake, OBR/OBX rows): v2.3.1 OBR-16 is
+  120 and v2.3 OBR-2/OBR-3 are both 75 — the values each segment's defining
+  Chapter 4 (Order Entry) attribute table prints, not Chapter 7's stale
+  reproduction. v2.3 OBX-1 is 10 and OBX-3 is 590, per Figure 7-5.
+- v2.3 and v2.3.1 OBX-5 keeps its variable-length `*`: each version's own
+  footnote on the field ("The length of the observation value field is
+  variable, depending upon value type") overrides the LEN column's printed
+  numeric cap (65536, OCR-glued to its footnote marker). Recorded as a cited
+  `LENGTH_WHITELIST` entry in `scripts/audit-schemas.py`.
+
 ### Fixed — P6-9: swiftName prose bleed and truncation
 
 - The schema extractor let definition prose bleed into `swiftName` and cut other

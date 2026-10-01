@@ -7,7 +7,7 @@
       "index": 1,
       "swiftName": "setID",
       "name": "Set ID - OBX",
-      "dataType": "SI", "length": "4",
+      "dataType": "SI", "length": "10",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -25,7 +25,7 @@
       "index": 3,
       "swiftName": "observationIdentifier",
       "name": "Observation Identifier",
-      "dataType": "CE", "length": "80",
+      "dataType": "CE", "length": "590",
       "optionality": "R",
       "repeatability": "1"
     },
@@ -132,7 +132,7 @@
       "index": 16,
       "swiftName": "responsibleObserver",
       "name": "Responsible Observer",
-      "dataType": "XCN", "length": "60",
+      "dataType": "XCN", "length": "80",
       "optionality": "O",
       "repeatability": "1"
     },

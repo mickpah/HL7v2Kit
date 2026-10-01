@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "valueType",
       "name": "Value Type",
-      "dataType": "ID", "length": "2", "table": "0125",
+      "dataType": "ID", "length": "3", "table": "0125",
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0125"],
@@ -135,7 +135,7 @@
       "index": 16,
       "swiftName": "responsibleObserver",
       "name": "Responsible Observer",
-      "dataType": "XCN", "length": "60",
+      "dataType": "XCN", "length": "80",
       "optionality": "O",
       "repeatability": "*"
     },

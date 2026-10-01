@@ -132,7 +132,7 @@
       "index": 16,
       "swiftName": "orderingProvider",
       "name": "Ordering Provider",
-      "dataType": "XCN", "length": "80",
+      "dataType": "XCN", "length": "120",
       "optionality": "O",
       "repeatability": "*"
     },

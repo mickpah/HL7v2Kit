@@ -15,7 +15,7 @@
       "index": 2,
       "swiftName": "placerOrderNumber",
       "name": "Placer Order Number",
-      "dataType": "EI", "length": "22",
+      "dataType": "EI", "length": "75",
       "optionality": "C",
       "repeatability": "1",
       "condition": "OBR-3 empty AND ORC-2 empty AND ORC-3 empty OR OBR-3 empty AND ORC absent AND messageCode in (ORU, ORF)"
@@ -24,7 +24,7 @@
       "index": 3,
       "swiftName": "fillerOrderNumber",
       "name": "Filler Order Number",
-      "dataType": "EI", "length": "22",
+      "dataType": "EI", "length": "75",
       "optionality": "C",
       "repeatability": "1",
       "condition": "OBR-2 empty AND ORC-2 empty AND ORC-3 empty OR ORC absent AND messageCode in (ORU, ORF)"

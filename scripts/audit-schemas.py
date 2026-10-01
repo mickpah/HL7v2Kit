@@ -173,7 +173,22 @@ OPTIONALITY_WHITELIST = {
                           "child.'; printed O, modelled C (P4-18)",
 }
 REPEATABILITY_WHITELIST = {}
-LENGTH_WHITELIST = {}
+# v2.3/v2.3.1 OBX-5: the LEN cell prints a numeric cap (v2.3 Figure 7-5 "655362", v2.3.1
+# Figure 7-5 "65536" + footnote marker, both OCR-glued footnote digits onto 65536) but the
+# field's own footnote overrides it: v2.3 CH7 (p. 7-30) footnote 2 and v2.3.1 CH7 (p. 7-35)
+# footnote 3 both read "The length of the observation value field is variable, depending
+# upon value type. See OBX-2-value type." The schema keeps the variable-length placeholder
+# `*`, matching the DT column's own printed `*` (P6-2 / pre-flight ruling d4).
+LENGTH_WHITELIST = {
+    ("v2.3", "OBX", 5): "v2.3 CH7 Figure 7-5 (p. 7-30) footnote 2: 'The length of the "
+                       "observation value field is variable, depending upon value type. "
+                       "See OBX-2-value type.' LEN cell prints 65536 (OCR-glued to its "
+                       "footnote marker as 655362); schema keeps the variable-length `*`",
+    ("v2.3.1", "OBX", 5): "v2.3.1 Figure 7-5 (p. 7-35) footnote 3: 'The length of the "
+                         "observation value field is variable, depending upon value type. "
+                         "See OBX-2-value type.' LEN cell prints 65536 (footnote marker "
+                         "glued on); schema keeps the variable-length `*`",
+}
 
 # M9-A tables predicate. A TBL# cell is well-formed when it is one or more
 # 4-digit table numbers joined by "/" (a field may bind more than one table:
