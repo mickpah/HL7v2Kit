@@ -274,13 +274,13 @@ limitations, all fail-safe:
 
 ADRM-2021 Appendix 5 (p. 466), HL7au:00060.4: "HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied." ADRM §1 (p. 11): "If the predicate is NOT satisfied: A conformant sending application must NOT send the element." ADR-021 decides how that is enforced: only on fields whose stored `condition` is marked `conditionIsPredicate` (the spec's full C predicate), and only when the condition is definitely false.
 
-Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carry, with the ADRM REF_I12 additions (ADRM §7.2.1) and the ADRM-only C on OBR-1; the P4-24 table was the starting point. Quotes are v2.4 unless marked ADRM. Classes: **(a)** full predicate, marked; **(b)** trigger only, the text lets the field be valued while the trigger is false; **(c)** not determinable from the text; **(n)** predicate not decidable from the message (bare C, §A).
+Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carry, with the ADRM REF_I12 additions (ADRM §7.2.1) and the ADRM-only C on OBR-1; the P4-24 table was the starting point. Quotes are v2.4 unless marked ADRM. Classes: **(a)** full predicate, marked; **(b)** trigger only, the text lets the field be valued while the trigger is false; **(c)** no derivable prohibition from the text; **(n)** no derivable prohibition from the message, because the predicate depends on facts the message does not carry (bare C, §A). Owner ruling G9 (2026-10-01): classes (b), (c) and (n) carry no prohibition, each for its own reason.
 
 | Field | Class | Quote | Shipped |
 |---|---|---|---|
-| PID-36 | a | §3.4.2.36: "Conditionality Rule: This field must be valued if PID-37 - Strain is valued." No other use stated (ADRM §2.2.1.36 repeats it) | marked; AU error |
-| CTI-2 | a | §7.8.4.3: "CTI-2-study phase identifier must be valued if CTI-3-study scheduled time point is valued." §7.8.4.2 is a plain definition | marked; AU error |
-| OBX-2 | a | §7.4.2.2: "It must be valued if OBX-11-Observ result status is not valued with an 'X'." ADRM §4.4.2.2 (p. 236) the same | marked; AU error (under O the base null rule reports instead) |
+| PID-36 | b | §3.4.2.36: "Conditionality Rule: This field must be valued if PID-37 - Strain is valued." A parent required when its child is valued, the shape of PID-35; the section's own examples send breed alone: "...\|L-80900^Weimaraner^SNM3\|..." (owner ruling G9) | none |
+| CTI-2 | b | §7.8.4: the CTI segment "contains information to identify the clinical trial, phase and time point with which an order or result is associated"; §7.8.4.3 states the rule on CTI-3: "CTI-2-study phase identifier must be valued if CTI-3-study scheduled time point is valued." A parent required when its child is valued; a phase may be sent without a time point (owner ruling G9) | none |
+| OBX-2 | a | §7.4.2.2: "It must be valued if OBX-11-Observ result status is not valued with an 'X'." ADRM §4.4.2.2 (p. 236) the same. ADRM §4.17.2 Scenario 5 (p. 268), an unavailable result: "OBX-2 value type is null", "OBX-11 Result status is 'X'", and "If the \|""\| format is used then OBX- 11 will not contain 'X' as OBX-2 is valued." | marked; AU error (under O the base null rule reports instead) |
 | PID-35 | b | §3.4.2.35: "If this field is not valued, a human is assumed." Species is sent for any non-human subject | none |
 | PV2-1 | b | §3.4.4.1: "This field is required for cancel pending transfer (A26) messages. In all other events it is optional." | none |
 | PV2-47 | b | §3.4.4.47: "It may be populated in A22 - Patient returns from LOA as well as in the A53 ... and the A54 ... triggers." | none |
@@ -304,9 +304,9 @@ Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carr
 | RXE-15 | b | §4.14.4.15: "This is a required field in RXE when used in pharmacy/treatment messages, but it is not required when used in product experience messages" | none |
 | RXD-5 | b | §4.14.5.5: "If present, it overrides units implied by the actual dispense code." | none |
 | ROL-1 | b | §12.4.3.1: "The field is optional when used in ADT and Finance messages." | none |
-| RQ1-2/3/4/5 | c | §4.11.2.2-5: "either RQ1-2-manufacturer ID and RQ1-3-manufacturer's catalog or RQ1-4-vendor ID and RQ1-5-vendor catalog must be valued." Inclusive or exclusive "either ... or" is not stated | none (NEEDS_CONTEXT) |
-| RXE-10, RXE-18, RXE-19 | c | §4.14.4.10 / .18 / .19: plain definitions ("This field contains the amount dispensed ..."), no predicate printed | none (NEEDS_CONTEXT) |
-| PTH-6 | c | §12.4.4.6: "(Marked as conditional - must be filled in if trigger event is update or terminate pathway)". Chapter 12 defines no "terminate" event, and the field is a status date also meaningful in a referral | none (NEEDS_CONTEXT) |
+| RQ1-2/3/4/5 | c | §4.11.2.2-5: "either RQ1-2-manufacturer ID and RQ1-3-manufacturer's catalog or RQ1-4-vendor ID and RQ1-5-vendor catalog must be valued." Read inclusively (G9): it sets a minimum, and the text prints no prohibition on sending both pairs | none |
+| RXE-10, RXE-18, RXE-19 | c | §4.14.4.10 / .18 / .19: plain definitions ("This field contains the amount dispensed ..."), no predicate printed (bare C, §A) | none |
+| PTH-6 | c | §12.4.4.6: "(Marked as conditional - must be filled in if trigger event is update or terminate pathway)". Chapter 12 defines no "terminate" event, so no trigger set can be derived (G9) | none |
 | OBR-14 | n | §4.5.3.14: "This field must contain a value when the order is accompanied by a specimen, or when the observation required a specimen and the message is a report." | none |
 | RXO-14, RXE-13 | n | §4.14.1.14: "required when the substance being requested is a controlled substance (e.g., a narcotic)" | none |
 | RXO-15 | n | §4.14.1.15: "Use if required by the pharmacy or treatment application or site on orders (or some subgroup of orders), in addition to ORC-11-verified by." | none |
@@ -314,7 +314,7 @@ Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carr
 | RXE-11, RXA-7 | n | §4.14.4.11: "required if the units are not implied by the actual dispense code"; §4.14.7.7 "if the administered amount code does not imply units" | none |
 | RXE-16, RXE-17, RXD-8 | n | §4.14.4.16: "required when a prescription is dispensed to an outpatient. It is not relevant to inpatient treatment orders." | none |
 
-Counts: (a) 3, (b) 29, (c) 8, (n) 12; 52 in all. HL7au:00060.4 stays PARTIAL until the (c) and (n) rows are ruled on (permanent-limitations register, §D addendum "HL7au:00060.4").
+Counts: (a) 1, (b) 31, (c) 8, (n) 12; 52 in all. HL7au:00060.4 is SHIPPED with this scope (owner rulings G6 and G9): OBX-2 is the one field enforced by route C, and the other 51 carry no derivable prohibition.
 
 ## Outcome
 

@@ -1574,7 +1574,7 @@ extension Profile {
         // "If the predicate is NOT satisfied: A conformant sending
         // application must NOT send the element." Applies only to the C
         // fields whose schema marks the stored condition as the full
-        // predicate (v2.4 PID-36, CTI-2, OBX-2); every other stored
+        // predicate (v2.4 OBX-2 only, owner ruling G9); every other stored
         // condition is a "required when" trigger whose false branch the
         // spec leaves open. Must not: error.
         fullPredicateRule: FullPredicateRule(

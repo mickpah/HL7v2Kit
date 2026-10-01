@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added — P4-31: HL7au:00060.4 route C, full-predicate enforcement (ADR-021)
 
 - Schema keys `conditionIsPredicate` and `predicateCitation`: a field may mark its stored condition as the spec's complete C predicate (required when true, must not be sent when false). Codegen emits the marked set into an internal lookup; `FieldGrammar` and the public API are unchanged. `scripts/audit-schemas.py` requires the citation, a printed C and a condition, with a self-check case.
-- AU profile: in ORM, ORU and REF, a marked C field valued (other than with the HL7 null) while its condition is definitely false reports `.profileConstraintViolation("HL7au:00060.4 ...")`, error. Unknown never fires; a field a base or AU prohibition already reports is not reported twice. Marked on v2.4: PID-36 (PID-37 empty), CTI-2 (CTI-3 empty), OBX-2 (OBX-11 = X).
-- Every C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments classified with quotes (`docs/design/conditional-completeness-audit.md`): 3 full predicates, 29 trigger-only, 8 not determinable from the text, 12 not decidable from the message. HL7au:00060.4 stays PARTIAL on the last two groups.
+- AU profile: in ORM, ORU and REF, a marked C field valued (other than with the HL7 null) while its condition is definitely false reports `.profileConstraintViolation("HL7au:00060.4 ...")`, error. Unknown never fires; a field a base or AU prohibition already reports is not reported twice. Marked on v2.4: OBX-2 only (valued while OBX-11 = X; ADRM §4.17.2 Scenario 5 confirms). PID-36 and CTI-2 are parents required when their child is valued and stay unmarked (owner ruling G9).
+- Every C field in the v2.4 ORM^O01, ORU^R01 and REF^I12 segments classified with quotes (`docs/design/conditional-completeness-audit.md`): 1 full predicate, 31 trigger-only, 8 with no prohibition derivable from the text, 12 with no prohibition derivable from the message (owner ruling G9). HL7au:00060.4 moves from PARTIAL to SHIPPED with that scope (ADRM conformance register: 74 shipped, 17 partial).
 
 ### Added — P4: expressible conditions
 

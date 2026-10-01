@@ -308,9 +308,7 @@
       "optionality": "C",
       "repeatability": "1",
       "tables": ["0447"],
-      "condition": "PID-37 populated",
-      "conditionIsPredicate": true,
-      "predicateCitation": "v2.4 Chapter 3 section 3.4.2.36: 'Conditionality Rule: This field must be valued if PID-37 - Strain is valued.' The definition ('The specific breed of animal') states no other use, unlike PID-35, whose 'If this field is not valued, a human is assumed' lets species be sent alone. AU ADRM-2021 section 2.2.1.36 repeats the rule (P4-31)."
+      "condition": "PID-37 populated"
     },
     {
       "index": 37,

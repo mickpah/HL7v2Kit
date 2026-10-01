@@ -6,8 +6,6 @@
 extension FullPredicateConditions {
     /// `version|SEG-n` keys, sorted.
     static let generated: Set<String> = [
-        "2.4|CTI-2",
         "2.4|OBX-2",
-        "2.4|PID-36",
     ]
 }

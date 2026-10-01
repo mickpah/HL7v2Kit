@@ -41,61 +41,40 @@ struct AUFullPredicateTests {
 
     // MARK: - The marking
 
-    @Test("v2.4 PID-36, CTI-2 and OBX-2 are marked as full predicates; OBR-2 and ORC-2 are not")
+    @Test("v2.4 OBX-2 is the one field marked as a full predicate (owner ruling G9)")
     func marking() {
-        #expect(FullPredicateConditions.isMarked(version: "2.4", segmentID: "PID", fieldIndex: 36))
-        #expect(FullPredicateConditions.isMarked(version: "2.4", segmentID: "CTI", fieldIndex: 2))
+        #expect(FullPredicateConditions.generated == ["2.4|OBX-2"])
         #expect(FullPredicateConditions.isMarked(version: "2.4", segmentID: "OBX", fieldIndex: 2))
-        #expect(!FullPredicateConditions.isMarked(version: "2.4", segmentID: "OBR", fieldIndex: 2))
-        #expect(!FullPredicateConditions.isMarked(version: "2.4", segmentID: "ORC", fieldIndex: 2))
-        #expect(!FullPredicateConditions.isMarked(version: "2.4", segmentID: "PID", fieldIndex: 35))
-        #expect(!FullPredicateConditions.isMarked(version: "2.5.1", segmentID: "PID", fieldIndex: 36))
+        for (segment, field) in [("PID", 36), ("CTI", 2), ("PID", 35), ("OBR", 2), ("ORC", 2)] {
+            #expect(!FullPredicateConditions.isMarked(version: "2.4", segmentID: segment, fieldIndex: field))
+        }
+        #expect(!FullPredicateConditions.isMarked(version: "2.5.1", segmentID: "OBX", fieldIndex: 2))
     }
 
-    // MARK: - PID-36 (must be valued if PID-37 is valued)
+    // MARK: - PID-36 and CTI-2: trigger-only, never fire (owner ruling G9)
 
-    @Test("PID-36 valued without PID-37 fires in ORU, ORM and REF")
-    func pid36Fires() throws {
+    // PID-36 "must be valued if PID-37 - Strain is valued" (v2.4 §3.4.2.36)
+    // is a parent required when its child is valued, the shape of PID-35;
+    // the section's own example sends breed alone ("L-80900^Weimaraner^SNM3").
+
+    @Test("Species plus breed without strain does not fire HL7au:00060.4 in ORU, ORM or REF")
+    func pid36WithoutStrainDoesNotFire() throws {
         for type in ["ORU^R01", "ORM^O01", "REF^I12"] {
             let report = try validate(wire(type, pid([35: species, 36: breed]), obr))
-            let found = issues00060_4(report)
-            #expect(found.count == 1, "\(type): \(found.map(\.message))")
-            #expect(found.first?.severity == .error)
-            #expect(found.first?.location.segmentID == "PID")
-            #expect(found.first?.location.fieldIndex == 36)
+            #expect(issues00060_4(report).isEmpty, "\(type): \(issues00060_4(report).map(\.message))")
+            #expect(!report.issues.contains { $0.location.segmentID == "PID" && $0.location.fieldIndex == 36 })
         }
     }
 
-    @Test("PID-36 is silent when PID-37 is valued, when empty, and when the HL7 null")
-    func pid36Silent() throws {
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([35: species, 36: breed, 37: "DXL"]), obr))).isEmpty)
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([35: species]), obr))).isEmpty)
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([35: species, 36: "\"\""]), obr))).isEmpty)
-    }
+    // CTI-2 "must be valued if CTI-3 ... is valued" (v2.4 §7.8.4.3): the
+    // segment identifies "the clinical trial, phase and time point" (§7.8.4),
+    // and a phase may be sent without a time point.
 
-    @Test("PID-36 is silent under .international and on a message outside ORM, ORU and REF")
-    func pid36OutOfScope() throws {
-        let international = try validate(wire("ORU^R01", pid([35: species, 36: breed]), obr), locale: .international)
-        #expect(issues00060_4(international).isEmpty)
-        #expect(!international.issues.contains { $0.location.segmentID == "PID" && $0.location.fieldIndex == 36 })
-        let adt = try validate(wire("ADT^A08", "EVN|A08|20260930120000", pid([35: species, 36: breed])))
-        #expect(issues00060_4(adt).isEmpty)
-    }
-
-    // MARK: - CTI-2 (must be valued if CTI-3 is valued)
-
-    @Test("CTI-2 valued without CTI-3 fires; with CTI-3, empty or null it is silent")
-    func cti2() throws {
-        let fires = try validate(wire("ORU^R01", pid([:]), obr, "CTI|STUDY1^SPONSOR|PH1^Phase 1^L"))
-        #expect(issues00060_4(fires).map(\.location.fieldIndex) == [2])
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr,
-                                               "CTI|STUDY1^SPONSOR|PH1^Phase 1^L|TP1^Day 1^L"))).isEmpty)
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, "CTI|STUDY1^SPONSOR"))).isEmpty)
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, "CTI|STUDY1^SPONSOR|\"\""))).isEmpty)
-        #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, "CTI|STUDY1^SPONSOR|PH1^Phase 1^L"),
-                                       locale: .international)).isEmpty)
-        #expect(issues00060_4(try validate(wire("ADT^A08", "EVN|A08|20260930120000", pid([:]),
-                                               "CTI|STUDY1^SPONSOR|PH1^Phase 1^L"))).isEmpty)
+    @Test("A study phase without a time point does not fire HL7au:00060.4")
+    func cti2WithoutTimePointDoesNotFire() throws {
+        let report = try validate(wire("ORU^R01", pid([:]), obr, "CTI|STUDY1^SPONSOR|PH1^Phase 1^L"))
+        #expect(issues00060_4(report).isEmpty)
+        #expect(!report.issues.contains { $0.location.segmentID == "CTI" && $0.location.fieldIndex == 2 })
     }
 
     // MARK: - OBX-2 (must be valued if OBX-11 is not X)
@@ -106,8 +85,12 @@ struct AUFullPredicateTests {
 
     @Test("OBX-2 valued while OBX-11 = X fires; under F, empty or null it is silent")
     func obx2() throws {
-        let fires = try validate(wire("ORU^R01", pid([:]), obr, obx(type: "NM", status: "X")))
-        #expect(issues00060_4(fires).map(\.location.fieldIndex) == [2])
+        for type in ["ORU^R01", "ORM^O01", "REF^I12"] {
+            let fires = issues00060_4(try validate(wire(type, pid([:]), obr, obx(type: "NM", status: "X"))))
+            #expect(fires.map(\.location.fieldIndex) == [2], "\(type)")
+            #expect(fires.first?.severity == .error)
+            #expect(fires.first?.location.segmentID == "OBX")
+        }
         #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, obx(type: "NM", status: "F")))).isEmpty)
         #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, obx(type: "", status: "X")))).isEmpty)
         #expect(issues00060_4(try validate(wire("ORU^R01", pid([:]), obr, obx(type: "\"\"", status: "X")))).isEmpty)

@@ -98,7 +98,29 @@ CALLER_ASSERTED = {
     'HL7au:00044.3.3': (None, 'shipped caller-asserted (M33): `ValidationOptions.auNASHTransport`, datatype-wide on EI'),
 }
 
+# Shipped points whose register row needs a scope note.
+SHIPPED_NOTES = {
+    # P4-20 / P4-24 / P4-26 / P4-31 (owner rulings G6, G9): see
+    # permanent-limitations-register (00060.4 row) and ADR-021.
+    'HL7au:00060.4': 'explicit prohibitions on C fields (`prohibitedWhen` / '
+                     '`additionalProhibitions`, `.conditionalFieldProhibited`): '
+                     'AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); '
+                     'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
+                     'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
+                     '(v2.8.2); OBX-2 and OBX-5 other than the HL7 null when '
+                     'OBX-11 = O (v2.4 7.4.2.11; P4-24, base since P4-26); and, '
+                     'route C (P4-31, ADR-021), v2.4 OBX-2 valued while OBX-11 = X, '
+                     'the one C field whose stored condition is the full predicate, '
+                     'reported when that condition is definitely false. The other 51 '
+                     'candidate C fields in the v2.4 ORM/ORU/REF segments carry no '
+                     'derivable prohibition (owner ruling G9): 31 trigger-only, 8 with '
+                     'no predicate the text settles as a prohibition (RQ1-2/3/4/5 read '
+                     'inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose '
+                     'predicate the message does not carry',
+}
+
 SHIPPED = {
+    'HL7au:00060.4',
     'HL7au:000003', 'HL7au:000004.1', 'HL7au:000005', 'HL7au:000006',
     'HL7au:000007', 'HL7au:000008', 'HL7au:000008.1',
     'HL7au:000040.1', 'HL7au:000040.2', 'HL7au:000040.3', 'HL7au:000040.4',
@@ -153,23 +175,6 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
-    # P4-20 / P4-24 / P4-26 / P4-31: see permanent-limitations-register (00060.4 row).
-    'HL7au:00060.4': 'enforced where the base schema carries an explicit '
-                     '`prohibitedWhen` on a C field (`.conditionalFieldProhibited`): '
-                     'AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); '
-                     'PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, '
-                     'SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 '
-                     '(v2.8.2); OBX-2 and OBX-5 must not be valued other than '
-                     'with the HL7 null when OBX-11 = O (v2.4 7.4.2.11; route B, '
-                     'P4-24, moved to the base grammar in P4-26); and, route C '
-                     '(P4-31, ADR-021), on the v2.4 C fields whose stored condition '
-                     'is marked as the full predicate (PID-36, CTI-2, OBX-2), '
-                     'reported when the condition is definitely false. Of 52 '
-                     'candidates, 29 are trigger-only and imply no prohibition; '
-                     'the remainder blocks: 8 whose predicate the text does not '
-                     'settle (RQ1-2/3/4/5, RXE-10/18/19, PTH-6) and 12 whose '
-                     'predicate is not decidable from the message (OBR-14, '
-                     'RXO-14/15/17, RXE-11/13/16/17/22, RXD-8, RXA-7/12)',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',
@@ -379,7 +384,7 @@ def classify(row):
         if marker is None or marker in row['text']:
             return ('SHIPPED', note)
     if i in SHIPPED:
-        return ('SHIPPED', '')
+        return ('SHIPPED', SHIPPED_NOTES.get(i, ''))
     if i in BASE:
         return ('BASE', BASE[i])
     if i in REGISTERED:

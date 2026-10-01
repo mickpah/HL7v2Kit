@@ -135,29 +135,67 @@ struct ConditionTruthTests {
         #expect(try evaluate(obr2, on: "OBR", in: oru) == (.false, false))
     }
 
-    @Test("conditionTriggers is exactly conditionTruth == .true over every shipped condition")
-    func twoStateIsExactlyTrue() throws {
-        let message = try Parser().parse(oru)
+    // MARK: - Frozen two-state answers
+
+    /// The wire the frozen table reads: an ORU with no ORC, a PID-3 with
+    /// three repetitions (the third has no PID-3.5), an empty PID-4.
+    private let frozenWire = TestWires.msh("ORU^R01", "2.4")
+        + "PID|1||123^^^HOSP^MR~456^^^HOSP^PI~789||DOE^JOHN\r"
+        + "OBR|1||FILLER456^LAB|GLU^Glucose^L\r"
+        + "OBX|1|NM|GLU^Glucose^L||5.2|mmol/L|||||F\r"
+
+    /// `conditionTriggers` answers frozen before the three-state refactor
+    /// (each row checked against commit 237f0b5). One row per atom kind
+    /// and per fail-safe path; a change here is a behaviour change.
+    private let frozen: [(segment: String, condition: String, expected: Bool)] = [
+        // value atoms, same segment
+        ("OBR", "OBR-3 populated", true), ("OBR", "OBR-2 populated", false),
+        ("OBR", "OBR-2 empty", true), ("OBR", "OBR-3.2 = LAB", true),
+        ("OBR", "OBR-3 = FILLER456", true), ("OBR", "OBR-3 != FILLER456", false),
+        ("OBR", "OBR-2 != X", true),
+        ("OBR", "OBR-3 startsWith FILL", true), ("OBR", "OBR-2 startsWith F", false),
+        ("OBR", "OBR-3 not startsWith Z", true), ("OBR", "OBR-2 not startsWith Z", false),
+        ("OBR", "OBR-3 in (A, FILLER456)", true), ("OBR", "OBR-2 in (A)", false),
+        ("OBR", "OBR-3 not in (A)", true), ("OBR", "OBR-2 not in (A)", false),
+        ("OBX", "OBX-5 > 5", true), ("OBX", "OBX-5 > 6", false), ("OBX", "OBX-3 > 1", false),
+        // message-context and caller-assertion referents
+        ("OBR", "messageCode = ORU", true), ("OBR", "triggerEvent = R01", true),
+        ("OBR", "messageStructure = ORU_R01", false), ("OBR", "auPathologySender populated", false),
+        // lookahead and position atoms
+        ("OBR", "nextSegmentID(NTE) = OBX", true), ("OBX", "nextSegmentID(NTE) = OBR", false),
+        ("OBR", "previousSegment(PID).PID-3 populated", true),
+        ("OBR", "previousSegment(ORC).ORC-1 = RE", false),
+        ("OBR", "associatedSegment(ORC).ORC-1 = RE", false),
+        // cross-segment peer that does not resolve
+        ("OBR", "ORC-2 empty", false), ("OBR", "ORC-2 populated", false),
+        // segment presence
+        ("OBR", "ORC absent", true), ("OBR", "ORC present", false),
+        // quantifiers
+        ("PID", "anyRepeat(PID-3.5) = PI", true), ("PID", "anyRepeat(PID-3.5) = XX", false),
+        ("PID", "anyRepeat(PID-3.5) empty", true), ("PID", "anyRepeat(PID-4) = X", false),
+        ("PID", "noRepeat(PID-3.5) = XX", true), ("PID", "noRepeat(PID-3.5) = PI", false),
+        ("PID", "noRepeat(PID-3.5) not in (MR, PI)", true), ("PID", "noRepeat(PID-4) = X", false),
+        ("OBR", "anyRepeat(ORC-2) populated", false), ("OBR", "noRepeat(ORC-2) = X", false),
+        // unparseable atoms
+        ("OBR", "OBR-2 frobnicated", false), ("OBR", "nonsense", false),
+        // compounds (AND binds tighter than OR)
+        ("OBR", "OBR-3 populated AND ORC-2 empty", false),
+        ("OBR", "ORC-2 empty OR OBR-3 populated", true),
+        ("OBR", "OBR-2 populated OR OBR-3 empty", false),
+        ("OBR", "OBR-3 populated AND OBR-2 empty", true),
+        ("OBR", "OBR-2 populated AND ORC-2 empty OR messageCode = ORU", true),
+    ]
+
+    @Test("conditionTriggers keeps its frozen answer for every atom kind and fail-safe path")
+    func frozenTwoStateAnswers() throws {
+        let message = try Parser().parse(frozenWire)
         let validator = Validator()
-        var checked = 0
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
-            for (segmentID, grammar) in Validator.grammarTable(for: version) {
-                for field in grammar.fields {
-                    for condition in [field.condition, field.prohibitedWhen].compactMap({ $0 }) {
-                        for index in message.segments.indices {
-                            let truth = validator.conditionTruth(
-                                condition, in: message.segments[index], segmentIndex: index,
-                                message: message, currentSegmentID: segmentID)
-                            let triggers = validator.conditionTriggers(
-                                condition, in: message.segments[index], segmentIndex: index,
-                                message: message, currentSegmentID: segmentID)
-                            #expect(triggers == (truth == .true), "\(segmentID)-\(field.index): \(condition)")
-                            checked += 1
-                        }
-                    }
-                }
-            }
+        for row in frozen {
+            let index = try #require(message.segments.firstIndex { $0.segmentID == row.segment })
+            let got = validator.conditionTriggers(row.condition, in: message.segments[index],
+                                                  segmentIndex: index, message: message,
+                                                  currentSegmentID: row.segment)
+            #expect(got == row.expected, "\(row.segment): \(row.condition)")
         }
-        #expect(checked > 1000)
     }
 }

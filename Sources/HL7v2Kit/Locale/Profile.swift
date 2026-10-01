@@ -470,20 +470,6 @@ struct FieldOverride: Sendable, Equatable, Hashable {
     }
 }
 
-/// A profile-authored "must not be valued" rule on one field (P4-24).
-/// Only rules whose spec text states the prohibition in so many words
-/// are modelled; a base "required when" condition is never negated
-/// (see the HL7au:00060.4 limitation row, P4-20).
-///
-/// The HL7 null (`""`) is always exempt from every rule here (P4-26's
-/// `carriesNonNullValue`), unlike the base `FieldProhibition`, which
-/// exempts the null only when its `permitsNull` flag is set. These
-/// profile prohibitions are all "not used" rules: the cited prose asks
-/// that the field carry no real content, and sending the HL7 null is a
-/// delete instruction ("clear any prior value"), not a value in the
-/// sense the prohibition means — so there is no profile rule, unlike
-/// some base rules' mixed phrasing, where the null itself is the thing
-/// the prose forbids.
 /// A profile's "a C element must not be valued when its predicate is not
 /// satisfied" rule (P4-31, ADR-021). It reports a populated field, other
 /// than the HL7 null, whose stored condition is marked as the spec's full
@@ -515,6 +501,20 @@ struct FullPredicateRule: Sendable, Equatable, Hashable {
     }
 }
 
+/// A profile-authored "must not be valued" rule on one field (P4-24).
+/// Only rules whose spec text states the prohibition in so many words
+/// are modelled; a base "required when" condition is never negated
+/// (see the HL7au:00060.4 limitation row, P4-20).
+///
+/// The HL7 null (`""`) is always exempt from every rule here (P4-26's
+/// `carriesNonNullValue`), unlike the base `FieldProhibition`, which
+/// exempts the null only when its `permitsNull` flag is set. These
+/// profile prohibitions are all "not used" rules: the cited prose asks
+/// that the field carry no real content, and sending the HL7 null is a
+/// delete instruction ("clear any prior value"), not a value in the
+/// sense the prohibition means — so there is no profile rule, unlike
+/// some base rules' mixed phrasing, where the null itself is the thing
+/// the prose forbids.
 struct ProfileFieldProhibition: Sendable, Equatable, Hashable {
     /// Predicate under which the field must not be valued, in the
     /// shared condition grammar (ADR-009), including the message-type

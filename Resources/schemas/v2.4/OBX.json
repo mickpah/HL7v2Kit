@@ -21,7 +21,7 @@
       "tables": ["0125"],
       "condition": "OBX-11 != X",
       "conditionIsPredicate": true,
-      "predicateCitation": "v2.4 Chapter 7 section 7.4.2.2: 'It must be valued if OBX-11-Observ result status is not valued with an X.' AU ADRM-2021 section 4.4.2.2 (p. 236) prints the same sentence. With OBX-11 = X ('Results cannot be obtained for this observation', Table 0085) there is no observation value for OBX-2 to type, and nothing lets OBX-2 be sent (P4-31).",
+      "predicateCitation": "v2.4 Chapter 7 section 7.4.2.2: 'It must be valued if OBX-11-Observ result status is not valued with an X.' AU ADRM-2021 section 4.4.2.2 (p. 236) prints the same sentence. With OBX-11 = X ('Results cannot be obtained for this observation', Table 0085) there is no observation value for OBX-2 to type, and nothing lets OBX-2 be sent. ADRM-2021 section 4.17.2 Reconciling Results, Scenario 5 (p. 268), an unavailable result: 'OBX-2 value type is null', 'OBX-11 Result status is ‘X’', and 'If the |\"\"| format is used then OBX- 11 will not contain ‘X’ as OBX-2 is valued.' (P4-31).",
       "additionalProhibitions": [{ "when": "OBX-11 = O", "severity": "error", "permitsNull": true, "citation": "v2.4 Chapter 7 section 7.4.2.11 OBX-11 Observation result status: \"The status of O shall be used to indicate that the OBX segment is used for a dynamic specification of the required result. An OBX used for a dynamic specification must contain the detailed examination code, units, etc., with OBX-11 valued with O, and OBX-2 and OBX-5 valued with null.\" HL7 Table 0085 value O is \"Order detail description only (no result)\". The null is the HL7 null \"\" (Chapter 2 section 2.7 Fields), so OBX-2 valued with \"\" is conformant and any other value is not" }]
     },
     {

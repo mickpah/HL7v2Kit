@@ -15,8 +15,8 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 |---|---:|---|
 | CANDIDATE | 0 | expressible with the DSL today — the shippable gap |
 | EXTEND | 0 | needs a model extension to express faithfully (req #3) |
-| SHIPPED | 73 | enforced by the `.auLocalisation` overlay today |
-| PARTIAL | 18 | partly enforced — see each row's note for what is not |
+| SHIPPED | 74 | enforced by the `.auLocalisation` overlay today |
+| PARTIAL | 17 | partly enforced — see each row's note for what is not |
 | BASE | 10 | already enforced by the base model; overlay deliberately silent |
 | REGISTERED | 8 | known limitation, already registered |
 | WITHDRAWN | 3 | removed by revision r2 |
@@ -25,7 +25,7 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | GROUPER | 39 | heading row, not a conformance point |
 | UNTRIAGED | 0 | not yet classified — must be zero |
 
-## SHIPPED (73)
+## SHIPPED (74)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -97,13 +97,14 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00049.2` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <trigger event (ID)> component must be valued. |  |
 | `HL7au:00049.3` |  | Senders | Orders, Results, Referrals | MSH-9 Message type <message structure (ID)> component must be valued. |  |
 | `HL7au:00050.1.5` |  | Senders (Pathology only) | Results | The OBX-6 (Units) <name of coding system (IS)> component must be "UCUM". | shipped caller-asserted (M29): `ValidationOptions.auPathologySender` |
+| `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | explicit prohibitions on C fields (`prohibitedWhen` / `additionalProhibitions`, `.conditionalFieldProhibited`): AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 (v2.8.2); OBX-2 and OBX-5 other than the HL7 null when OBX-11 = O (v2.4 7.4.2.11; P4-24, base since P4-26); and, route C (P4-31, ADR-021), v2.4 OBX-2 valued while OBX-11 = X, the one C field whose stored condition is the full predicate, reported when that condition is definitely false. The other 51 candidate C fields in the v2.4 ORM/ORU/REF segments carry no derivable prohibition (owner ruling G9): 31 trigger-only, 8 with no predicate the text settles as a prohibition (RQ1-2/3/4/5 read inclusively, RXE-10/18/19 bare, PTH-6 undefined event), 12 whose predicate the message does not carry |
 | `HL7au:00104.1.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "AP" (Authoring Provider) in the REF message. |  |
 | `HL7au:00104.1.1` |  | Receivers | Referrals | The receiving system must identify the authoring provider in its display of the message content (indicated by "AP" in the associated PRD-1). |  |
 | `HL7au:00104.2.1` |  | Senders | Referrals | There must be exactly one PRD with a PRD-1 value of "IR" (Intended Recipient) in the REF message. |  |
 | `HL7au:00104.7.0` | r3 | Senders | Referrals | PRD-7 must have at least 1 repeat (for providers receiving electronic communication specified by IR - Intended Recipient in PRD-1). |  |
 | `HL7au:00104.7.3.1` |  | Senders | Referrals | <other qualifying info (ST)> must be a valued from HL7 Table 0203 - Identifier Type (see page 301). |  |
 
-## PARTIAL (18)
+## PARTIAL (17)
 
 | HL7au | Rev | Applies to | Message types | Conformance point | Note |
 |---|---|---|---|---|---|
@@ -123,7 +124,6 @@ python3 scripts/extract-adrm-conformance.py /tmp/adrm2021.txt \
 | `HL7au:00044.10.1.6` |  | Senders | Results, Referrals | When the ED <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | ED subtype => type enforced for the 0291 subtypes whose 0191 main type §3.20.5 states; unstated ones skip |
 | `HL7au:00044.11.1.5` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a MIME sub-type value, then the corresponding MIME type must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.5 |
 | `HL7au:00044.11.1.6` |  | Senders | Results, Referrals | When the RP <subtype (ID)> component is valued with a HL7 2.4 defined <Subtype (ID)> (Table 0291) value, then the corresponding HL7 2.4 type of data (Table 0191) must be used in the <Type of data (ID)> component. | RP subtype => type, as 00044.10.1.6 |
-| `HL7au:00060.4` |  | Senders | Orders, Results, Referrals | HL7 message elements with a usage of C (conditional) must not be valued when the associated predicate is not satisfied. | enforced where the base schema carries an explicit `prohibitedWhen` on a C field (`.conditionalFieldProhibited`): AIS-10, AIG-14, AIL-12, AIP-12 (all six, P4-23); PRA-1, PRA-12, STF-1 (v2.4 on); BPX-5/6/8/9/10, BTX-2/3/5/6/7, SPM-13, TQ2-7 (v2.5.1 on); PYE-3/4/5/6 (v2.6 on); PRT-6/7 (v2.8.2); OBX-2 and OBX-5 must not be valued other than with the HL7 null when OBX-11 = O (v2.4 7.4.2.11; route B, P4-24, moved to the base grammar in P4-26); and, route C (P4-31, ADR-021), on the v2.4 C fields whose stored condition is marked as the full predicate (PID-36, CTI-2, OBX-2), reported when the condition is definitely false. Of 52 candidates, 29 are trigger-only and imply no prohibition; the remainder blocks: 8 whose predicate the text does not settle (RQ1-2/3/4/5, RXE-10/18/19, PTH-6) and 12 whose predicate is not decidable from the message (OBR-14, RXO-14/15/17, RXE-11/13/16/17/22, RXD-8, RXA-7/12) |
 | `HL7au:00104.7.1.4` |  | Senders | Referrals | For a PRD-7 <ID number (ST)> the correct matching <type of ID number (IS)> and <other qualifying info (ST)> must be used as per table Table 7.3.3.7.1 - Valid PRD-7 component matches (see page 334) | authority => qualifier pairs enforced for the closed AU authorities (AUSHICPR => UPIN, AUSHIC => NPIO/NOI); vendor authorities are open-ended examples and skip |
 
 ## BASE (10)
