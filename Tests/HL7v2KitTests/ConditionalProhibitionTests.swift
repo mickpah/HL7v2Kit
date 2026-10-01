@@ -176,11 +176,13 @@ struct ConditionalProhibitionTests {
 
     @Test("PRT-14 is required when PRT-4 is POMD (v2.8.2 §7.4.4.14, partial)")
     func prt14() throws {
-        func missing(_ participation: String, prt14: String? = nil) throws -> [ValidationIssue] {
+        func wire(_ participation: String, prt14: String? = nil) -> String {
             var fields: [Int: String] = [1: "1", 2: "AD", 4: participation, 5: "1234^SMITH^JOHN"]
             if let prt14 { fields[14] = prt14 }
-            let wire = TestWires.wire("ORU^R01^ORU_R01", "2.8.2", TestWires.segment("PRT", fields))
-            return Validator().validate(try Parser().parse(wire)).errors.filter {
+            return TestWires.wire("ORU^R01^ORU_R01", "2.8.2", TestWires.segment("PRT", fields))
+        }
+        func missing(_ participation: String, prt14: String? = nil) throws -> [ValidationIssue] {
+            Validator().validate(try Parser().parse(wire(participation, prt14: prt14))).errors.filter {
                 $0.code == .conditionalFieldMissing
                     && $0.location.segmentID == "PRT" && $0.location.fieldIndex == 14
             }
@@ -188,9 +190,16 @@ struct ConditionalProhibitionTests {
         #expect(try missing("POMD^Performing Organization Medical Director^HL70912").count == 1)
         #expect(try missing("OP^Ordering Provider^HL70912").isEmpty)
         // PRT-14 populated under POMD is silent: the rule is satisfied, not
-        // merely inapplicable (P4-5 minor).
-        #expect(try missing("POMD^Performing Organization Medical Director^HL70912",
-                             prt14: "ORG^Acme^HL70448").isEmpty)
+        // merely inapplicable (P4-5 minor). Asserting on the whole PRT issue
+        // set, not just conditionalFieldMissing, so this can still fail if
+        // some other rule fired (fix round 1: a conditionalFieldMissing-only
+        // filter can never fail on a populated field, since that code only
+        // fires on an unpopulated one).
+        let satisfied = wire("POMD^Performing Organization Medical Director^HL70912", prt14: "ORG^Acme^HL70448")
+        let prtIssues = Validator().validate(try Parser().parse(satisfied)).issues.filter {
+            $0.location.segmentID == "PRT"
+        }
+        #expect(prtIssues.isEmpty, "unexpected PRT issues: \(prtIssues.map(\.message))")
     }
 
     // MARK: - More than one prohibition per field (P4-21)

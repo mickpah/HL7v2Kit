@@ -60,10 +60,17 @@ struct OrderConditionTests {
         #expect(try missing(sequence, "TQ2", 6).isEmpty, "v\(version)")
         #expect(try missing(sequence, "TQ2", 10).isEmpty, "v\(version)")
         // Both populated: each rule is satisfied, not merely inapplicable
-        // because the peer happens to be populated (P4-10 minor).
+        // because the peer happens to be populated (P4-10 minor). Asserting
+        // on the whole TQ2 issue set, not just conditionalFieldMissing on
+        // the populated fields, so this can still fail if some other rule
+        // fired (fix round 1: a conditionalFieldMissing-only filter can
+        // never fail on a populated field, since that code only fires on an
+        // unpopulated one).
         let both = tq2(version, [3: "PL2^SYS", 6: "ES", 10: "RR2^SYS"])
-        #expect(try missing(both, "TQ2", 6).isEmpty, "v\(version) both populated")
-        #expect(try missing(both, "TQ2", 10).isEmpty, "v\(version) both populated")
+        let tq2Issues = Validator().validate(try Parser().parse(both)).issues.filter {
+            $0.location.segmentID == "TQ2"
+        }
+        #expect(tq2Issues.isEmpty, "v\(version) unexpected TQ2 issues: \(tq2Issues.map(\.message))")
     }
 
     @Test("TQ1-12 must be valued on a TQ1 that another TQ1 follows", arguments: orderVersions)
