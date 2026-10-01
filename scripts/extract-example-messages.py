@@ -169,8 +169,11 @@ def _elision_metadata(cleaned_segs, dropped):
 # exact SpecExampleMessageTests issue code, and a regex against the location column (e.g.
 # "AIL[1]-6") — with the exact "count" of SPECEX lines that key must match, and a one-line
 # "reason" the EXAMPLE is at fault, not the rule. `check_registry()` below verifies every
-# count against a real report and is run from the self-check and from CI's `fixture-safety`
-# job (`--check-registry`) — the same discipline as audit-schemas.py's
+# count against a real report, via `--check-registry <report.tsv>` — that needs the
+# author-local PDFs to regenerate a report, so (like `audit-schemas.py --examples`) it
+# cannot run in CI and is interactive-only; CI instead runs only the synthetic-fixture
+# version of the same check, `check_registry_matches_a_synthetic_report` in
+# check-extract-example-messages.py (no PDFs needed). Same discipline as audit-schemas.py's
 # EXPECTED_EXAMPLE_REJECTIONS (M17, "registered exceptions"), adapted for this sweep (a
 # triage source per the module docstring, so nothing here gates `swift test` itself) and
 # deliberately NOT wired into EXPECTED_EXAMPLE_REJECTIONS, which keys a different check
@@ -204,19 +207,27 @@ _RXO_FREE_TEXT_REASON = (
 _RXO_INVISIBLE_REASON = (
     "Fix round 1: v2.3.1 index 36 IS a splice (RQD|5's own <cr> is missing in the PDF, so "
     "before the round-1 heading/length guard it absorbed ~2,300 lines of section 4.8 prose, "
-    "including this example's own MSH/PID/ORC/RXO) — v2.3 CH4 index 1 is the same worked "
-    "example, same splice. The guard now correctly truncates RQD-5 and stops before "
-    "reaching the glued-on RXO, so this example is no longer extracted at all: its own MSH "
-    "is itself fully elided (\"MSH|...\", no encoding characters), which this extractor's "
-    "message-boundary detection (a literal \"MSH|^~\\&\" prefix) does not recognise as a "
-    "new message. Both things were true before the fix — it was a splice, AND the RXO line "
-    "it carried had the genuine free-text defect above — the fix removes the line, not the "
-    "underlying defect, which is simply no longer visible to this sweep. The v2.4+ "
-    "CH04/CH04A \"E-mail only\" and custom-IV examples the original brief cited are the "
-    "same \"MSH|...\" fragment convention and are equally invisible; they produce no SPECEX "
-    "lines at all, which is why this entry's count is 0 rather than a line count. This is a "
-    "named, deliberate limitation of the message-boundary heuristic, not a silently-dropped "
-    "finding.")
+    "ending at the glued-on ORC/RXO text of this worked example, which the giant RQD-5 "
+    "string's own eventual <cr> terminator cut loose as its own, separate RXO segment, "
+    "eight lines into a message where it does not belong) — v2.3 CH4 index 1 is the same "
+    "worked example, same splice. The round-1 guard now correctly truncates RQD-5 and stops "
+    "before reaching the glued-on content at all, so this example is no longer extracted: "
+    "its own MSH is fully elided (\"MSH|...\", no encoding characters), which this "
+    "extractor's message-boundary detection (a literal \"MSH|^~\\&\" prefix) does not "
+    "recognise as a new message. Both things were true before the fix — it was a splice, "
+    "AND the RXO line it carried had the genuine free-text defect above — the fix removes "
+    "the line, not the underlying defect, which is simply no longer visible to this sweep.\n"
+    "Fix round 2 correction: the v2.4+ CH04/CH04A \"E-mail only\" and custom-IV examples the "
+    "original brief cited are invisible for a DIFFERENT reason, not the same \"MSH|...\" "
+    "elision as v2.3.1 — their printed MSH header transposes two encoding characters, "
+    "\"MSH|^&~\\|...\" instead of \"MSH|^~\\&...\" (confirmed directly in the PDF text: "
+    "v2.4 CH04.PDF 20 occurrences, v2.5.1 V251_CH04.pdf 22, v2.6 V26_CH04_Orders.pdf 22, "
+    "v2.8.2 V282_CH04_Orders.pdf 4, v2.8.2 V282_CH04A_Orders.pdf 12 — roughly 80 messages "
+    "total), so the literal \"MSH|^~\\&\" prefix check simply does not match and these "
+    "examples are never recognised as message starts at all. Both causes are named,"
+    " deliberate limitations of the message-boundary heuristic, not silently-dropped "
+    "findings; neither is fixed in this round — the controller scoped bringing the ~80 "
+    "swapped-header messages into the sweep as a separate task, P4-28.")
 _AI_SOURCES = ["v2.3/CH10.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH10.PDF",
                "v2.5.1/V251_CH10.pdf", "v2.6/V26_CH10_Scheduling.pdf", "v2.8.2/V282_CH10_Scheduling.pdf"]
 _AI_SHIFT_COUNTS = {"v2.3/CH10.pdf": 10, "v2.3.1/Hl7V231.pdf": 10, "v2.4/CH10.PDF": 10,
@@ -240,12 +251,18 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": 2, "code": "conditionalFieldMissing",
        "location_pattern": r"^RXO\[\d+\]-[12]$", "count": 2, "reason": _RXO_FREE_TEXT_REASON}
       for src in _RXO_CH12_SOURCES],
-    # Documentation/regression-guard entries: these should match NOTHING (count 0). If one
-    # of them ever starts matching real lines, the message-boundary heuristic changed and
-    # this whole explanation needs re-checking, not a silent drift.
-    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": 36, "code": "*", "location_pattern": r"^RXO",
+    # Documentation/regression-guard entries: these should match NOTHING (count 0). Fix
+    # round 2: keyed to "all" indices, not literally index 36 / index 1 — those specific
+    # indices can never match RXO again regardless of what the extractor does (the message
+    # is gone, not relocated), which made the original index-keyed guard pass trivially no
+    # matter what changed. Keying "all" instead means this runs against whatever RXO lines
+    # remain in the whole source after the real registered RXO entries above have already
+    # claimed theirs (entries are consumed in order, see check_registry), so if the E-mail
+    # example ever starts being extracted again — at index 36, or at any other index a
+    # future extractor change gives it — its RXO lines are what trips this to a mismatch.
+    {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": "*", "location_pattern": r"^RXO",
      "count": 0, "reason": _RXO_INVISIBLE_REASON},
-    {"source_glob": "v2.3/CH4.pdf", "index": 1, "code": "*", "location_pattern": r"^RXO",
+    {"source_glob": "v2.3/CH4.pdf", "index": "all", "code": "*", "location_pattern": r"^RXO",
      "count": 0, "reason": _RXO_INVISIBLE_REASON},
 ]
 
