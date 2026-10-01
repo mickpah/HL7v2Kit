@@ -29,18 +29,53 @@ CHAPTERS = {
 FURN = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|^\f")
 SEG = re.compile(r"^\s*([A-Z][A-Z0-9]{2})\|")
 _LITERAL_CR = re.compile(r"<cr>", re.IGNORECASE)
-# P4-22 fix round 1 / P4-28 fix round 2: a numbered section/subsection heading ("4.8
-# PHARMACY/TREATMENT ORDERS", "2.11 CHAPTER FORMATS..."), the marker that a segment whose
-# own <cr> the PDF dropped has run off the end of its figure and into ordinary prose. Needs
-# heading SHAPE, not just a number followed by any capital letter — the original pattern
-# also matched an ordinary wrapped continuation that happens to start with a number and a
-# capitalised unit, e.g. "2.5 MG q4h...". A real heading's title is a capitalised WORD of
-# three or more letters (ruling out a two-letter unit like "MG").
-_SECTION_HEADING = re.compile(r"^\s*\d+(\.\d+){1,3}\s+[A-Z]{3,}")
+# P4-22 fix round 1 / P4-28 fix rounds 2-3: a numbered section/subsection heading ("4.8
+# PHARMACY/TREATMENT ORDERS", "2.11 CHAPTER FORMATS...", "7.4.2 Unsolicited", "4.5.4 TQ1 -
+# Timing"), the marker that a segment whose own <cr> the PDF dropped has run off the end of
+# its figure and into ordinary prose. Needs heading SHAPE, not just a number followed by any
+# capital letter — the original pattern also matched an ordinary wrapped continuation that
+# happens to start with a number and a capitalised unit, e.g. "2.5 MG q4h...". Fix round 2's
+# "[A-Z]{3,}" (a capitalised WORD of three or more letters) ruled that out, but also missed
+# two real heading shapes: sentence case ("Unsolicited", one capital) and a segment ID
+# leading the title ("TQ1 - Timing", capital+capital+digit, not three letters).
+#
+# Two separate patterns, split on how many dots the section number has:
+#   - Two or three dots ("7.4.2", "4.5.4") is always a genuine subsection reference in this
+#     corpus — no printed dosage or other quantity ever carries two decimal points — so the
+#     title word only needs heading SHAPE: a capital letter plus one more letter or digit
+#     (covers "Un[solicited]" and "TQ[1]" alike).
+#   - Exactly one dot ("4.8", "2.11") is shape-identical to a decimal quantity ("2.5"), so
+#     the title word must be a real one: four or more letters/digits after the capital,
+#     which every genuine one-dot heading in this corpus clears ("PHARMACY", "CHAPTER") and
+#     every printed unit abbreviation ("MG", "ML", "TAB") does not.
+_SECTION_HEADING_MULTI_DOT = re.compile(r"^\s*\d+(\.\d+){2,3}\s+[A-Z][A-Za-z0-9]")
+_SECTION_HEADING_ONE_DOT = re.compile(r"^\s*\d+\.\d+\s+[A-Z][A-Za-z0-9]{3,}")
 # No printed segment in this corpus, even wrapped over several lines, gets within an order
 # of magnitude of this; a real missing <cr> that runs a continuation into unrelated prose
 # (a swallowed worked example, a swallowed component table) reaches 100K+ characters.
 _MAX_SEGMENT_LEN = 3000
+
+
+def _strip_comment(line):
+    """P4-28 fix round 1 (task review): an inline "// comment" annotation ends whatever
+    segment content precedes it on the same printed line — both on its own line ("// Other
+    parts of message might follow") and trailing real content on the same line
+    ("OBR|...|...                       // 1ST child OBR.", v2.3/CH4.pdf's child-OBR worked
+    example) — the PDF's own <cr> is missing in both shapes, so without this the comment (and,
+    via that same gap, the next segment's content right after it) gets glued on, corrupting
+    later field positions. Confirmed as the cause of spurious OBR-8.2/OBR-11 valueNotInTable
+    findings (v2.3/CH4.pdf, v2.3/CH7.pdf, v2.3.1/Hl7V231.pdf — now fixed).
+
+    Normalises to an explicit "<cr>" terminator (the same marker a printed one uses) right
+    where the comment starts, so the existing <cr>-splitting machinery in _split_literal_cr
+    treats it identically to a printed terminator: real content before the comment is kept
+    and closed, the comment itself is dropped. A comment with nothing real before it (the
+    whole line is the comment) becomes an empty line, the same as a blank line in the print."""
+    idx = line.find("//")
+    if idx == -1:
+        return line
+    before = line[:idx].rstrip()
+    return before + "<cr>" if before else ""
 
 
 def _continuation_runs_into_prose(seg, line):
@@ -48,8 +83,10 @@ def _continuation_runs_into_prose(seg, line):
     PDF dropped its <cr>) has run off the end of its figure into ordinary document text — a
     numbered section heading (heading shape AND no "|" anywhere on the line — segment data
     always has one, prose heading never does), or (heading or not) a segment that has grown
-    far past any real printed example's length."""
-    looks_like_heading = bool(_SECTION_HEADING.match(line)) and "|" not in line
+    far past any real printed example's length. ("// comment" annotations are handled
+    earlier, by _strip_comment, before a line ever reaches this check.)"""
+    looks_like_heading = (bool(_SECTION_HEADING_MULTI_DOT.match(line))
+                          or bool(_SECTION_HEADING_ONE_DOT.match(line))) and "|" not in line
     return looks_like_heading or len(seg) > _MAX_SEGMENT_LEN
 
 
@@ -79,18 +116,17 @@ def _split_literal_cr(line):
 
 
 # P4-28: standard HL7 encoding characters (component ^, repetition ~, escape \, subcomponent
-# &) and the transposed order ~80 CH04/CH04A examples across v2.4-v2.8.2 print instead
-# (component ^, subcomponent &, repetition ~, escape \). Verified directly against the PDF
-# text: the body of every affected example consistently uses the characters in their
-# STANDARD roles, not the role the printed header's own position would declare — e.g. CH04's
-# FT1 composite price "125.43&USD" uses & as a subcomponent separator (amount & currency
-# code), and the PID-3 assigning authority "MPI&GenHosp&L" is the same HD subcomponent use —
-# so the printed header is a transposition of two characters, not a distinct,
-# self-consistent encoding, and is normalised to the standard order for parsing. Swapped
-# counts verified directly in the PDF text: v2.4 CH04.PDF 20, v2.5.1 V251_CH04.pdf 22, v2.6
-# V26_CH04_Orders.pdf 22, v2.8.2 V282_CH04_Orders.pdf 4, v2.8.2 V282_CH04A_Orders.pdf 12
-# (same QBP/RTB query example family as the others; it carries no FT1/PID evidence of its
-# own, but is treated the same way for consistency with its four siblings).
+# &) and the transposed order a number of CH03/CH04/CH04A/CH05 examples across v2.4-v2.8.2
+# print instead (component ^, subcomponent &, repetition ~, escape \). Verified directly
+# against the PDF text: the body of every affected example consistently uses the characters
+# in their STANDARD roles, not the role the printed header's own position would declare —
+# e.g. CH04's FT1 composite price "125.43&USD" uses & as a subcomponent separator (amount &
+# currency code), and the PID-3 assigning authority "MPI&GenHosp&L" is the same HD
+# subcomponent use — so the printed header is a transposition of two characters, not a
+# distinct, self-consistent encoding, and is normalised to the standard order for parsing.
+# Per-source counts, verified directly against the PDF text: see KNOWN_SWAPPED_HEADER_SOURCES
+# below (the authoritative, --check-registry-pinned count — 138 occurrences across nine
+# sources; do not restate a total here, it drifts out of sync with the registry).
 _STD_ENC = "^~\\&"
 _SWAPPED_ENC = "^&~\\"
 # P4-28: the whole header — encoding characters and everything after them — replaced with
@@ -127,8 +163,13 @@ def _message_start(line):
     if _BARE_MSH_HEADER.match(line):
         # The Parser requires MSH-2 to be immediately followed by another field separator
         # (it reads encoding characters as a fixed 4-character window, not a delimited
-        # field) — the trailing "|" is required, not merely cosmetic.
-        return "MSH|" + _STD_ENC + "|", False, True
+        # field) — the trailing "|" is required, not merely cosmetic. P4-28 fix round 1
+        # (task review): a printed "MSH|...<cr>" terminator must survive the fabrication —
+        # dropping it left the fabricated "MSH|^~\&|" looking un-terminated to the state
+        # machine below, so a genuine next segment (not itself bare-elided) got glued onto
+        # it as more "wrapped continuation" text instead of opening its own segment.
+        terminator = "<cr>" if line.endswith("<cr>") else ""
+        return "MSH|" + _STD_ENC + "|" + terminator, False, True
     return None
 
 
@@ -168,7 +209,7 @@ def messages(pdf):
         cur, seg, cur_swapped, cur_bare = None, None, False, False
     for raw in text:
         if FURN.search(raw): continue
-        for line in _split_literal_cr(raw.strip()):
+        for line in _split_literal_cr(_strip_comment(raw.strip())):
             start = _message_start(line)
             if start is not None:
                 close(); cur, seg, cur_swapped, cur_bare = [], start[0], start[1], start[2]; continue
@@ -178,11 +219,24 @@ def messages(pdf):
                 continue
             m = SEG.match(line)
             if seg is None:
-                if m: seg = line
-                else: close()
+                # P4-28 fix round 1 (task review): a bare-elided line is self-terminating in
+                # every state, including here — nothing can follow "SEG|...", so it goes
+                # straight to `cur` rather than being opened as `seg` and left waiting for a
+                # terminator it will never carry.
+                if m and _BARE_ELIDED_SEGMENT.match(line):
+                    cur.append(line)
+                elif m:
+                    seg = line
+                else:
+                    close()
             elif seg.endswith("<cr>"):
-                cur.append(seg); seg = line if m else None
-                if not m: close()
+                cur.append(seg)
+                if m and _BARE_ELIDED_SEGMENT.match(line):
+                    cur.append(line); seg = None
+                elif m:
+                    seg = line
+                else:
+                    seg = None; close()
             elif _continuation_runs_into_prose(seg, line):
                 # P4-22 fix round 1: the PDF dropped this segment's own <cr>, so the
                 # "wrapped continuation" branch below would otherwise keep absorbing raw
@@ -415,6 +469,52 @@ def _swapped_header_mismatches(actual=None):
     return mismatches
 
 
+# P4-28 fix round 1 (task review): KNOWN_SWAPPED_HEADER_SOURCES alone doesn't pin the
+# EXTRACTOR — it re-derives its own count independently of messages()/_message_start, via a
+# raw pdftotext substring search, so it would keep passing unchanged even if
+# _message_start's swapped-header branch were deleted outright. This second registry counts
+# the messages that actually come out of messages() flagged swappedHeader=True — only the
+# four sources whose messages survive the separate, documented no-"<cr>" segment-merge
+# limitation have any (the other five sources' occurrences never form a complete message at
+# all, swapped-header handling or not). Verified: deleting the swapped-header `if` branch in
+# _message_start drops every one of these four counts to 0, which --check-registry catches.
+KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS = {
+    "v2.4/CH04.PDF": 16,
+    "v2.5.1/V251_CH04.pdf": 16,
+    "v2.6/V26_CH04_Orders.pdf": 16,
+    "v2.8.2/V282_CH04A_Orders.pdf": 10,
+}
+
+
+def check_swapped_header_extracted_counts():
+    """P4-28 fix round 1: count, per source, how many messages messages() actually extracts
+    with swappedHeader=True — exercising the full extraction pipeline (_message_start included),
+    not a raw PDF-text search. Needs the author-local PDFs, interactive-only via
+    --check-registry, same as check_swapped_header_counts."""
+    counts = {}
+    for version, pattern in CHAPTERS.items():
+        for pdf in sorted(glob.glob(os.path.join(REPO, "docs/standards", pattern))):
+            n = sum(1 for e in messages(pdf) if e.get("swappedHeader"))
+            if n:
+                counts[f"{version}/{os.path.basename(pdf)}"] = n
+    return counts
+
+
+def _swapped_header_extracted_mismatches(actual=None):
+    """P4-28 fix round 1: compare KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS against the real
+    extracted counts (or, for the synthetic self-check, an `actual` dict passed in directly).
+    Same shape as _swapped_header_mismatches."""
+    if actual is None:
+        actual = check_swapped_header_extracted_counts()
+    mismatches = []
+    for source in sorted(set(KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) | set(actual)):
+        expected = KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.get(source, 0)
+        got = actual.get(source, 0)
+        if expected != got:
+            mismatches.append((source, expected, got))
+    return mismatches
+
+
 def check_registry(report_lines):
     """P4-22 fix round 1: verify every KNOWN_SPEC_EXAMPLE_ERRORS entry's recorded count
     against a real SPECEX report (a list of already tab-split rows). Each entry consumes
@@ -499,11 +599,18 @@ def main():
         swapped_mismatches = _swapped_header_mismatches()
         for source, expected, got in swapped_mismatches:
             print(f"MISMATCH swapped header {source}: expected {expected}, counted {got}")
+        # P4-28 fix round 1 (task review): the PDF-text count above doesn't pin the extractor
+        # itself — this does, by exercising messages()/_message_start directly.
+        extracted_mismatches = _swapped_header_extracted_mismatches()
+        for source, expected, got in extracted_mismatches:
+            print(f"MISMATCH swapped header extracted {source}: expected {expected}, counted {got}")
         print(f"{len(KNOWN_SPEC_EXAMPLE_ERRORS)} registry entries, {len(mismatches)} mismatched, "
               f"{len(unmatched)} SPECEX lines unclaimed by any entry; "
               f"{len(KNOWN_SWAPPED_HEADER_SOURCES)} swapped-header sources, "
-              f"{len(swapped_mismatches)} mismatched")
-        sys.exit(1 if (mismatches or swapped_mismatches) else 0)
+              f"{len(swapped_mismatches)} mismatched; "
+              f"{len(KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS)} swapped-header extracted sources, "
+              f"{len(extracted_mismatches)} mismatched")
+        sys.exit(1 if (mismatches or swapped_mismatches or extracted_mismatches) else 0)
     out = []
     for version, pattern in CHAPTERS.items():
         n = 0

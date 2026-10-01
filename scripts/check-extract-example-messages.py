@@ -133,9 +133,11 @@ def check_message_start_recognises_standard_swapped_and_bare_headers():
     # the trailing "|" after the encoding characters is required, not cosmetic: the Parser
     # reads MSH-2 as a fixed four-character window and requires a field separator right
     # after it (Sources/HL7v2Kit/Parser/Parser.swift's "MSH-2 not followed by field
-    # separator" check).
+    # separator" check). A printed "<cr>" terminator must survive the fabrication too (P4-28
+    # fix round 1): dropping it left the fabricated text looking un-terminated to the state
+    # machine, so a genuine next segment got glued onto it instead of opening its own.
     assert extract._message_start("MSH|...") == ("MSH|^~\\&|", False, True)
-    assert extract._message_start("MSH|...<cr>") == ("MSH|^~\\&|", False, True)
+    assert extract._message_start("MSH|...<cr>") == ("MSH|^~\\&|<cr>", False, True)
     # a line that is not any recognised message-start shape is not one.
     assert extract._message_start("PID|1||123") is None
     assert extract._message_start("MSH|APP|FAC") is None, \
@@ -145,20 +147,47 @@ def check_message_start_recognises_standard_swapped_and_bare_headers():
 
 
 def check_heading_guard_needs_heading_shape():
-    # P4-28 Part 1(c): the section-heading splice guard needs heading SHAPE -- a section
-    # number followed by a capitalised TITLE WORD (three or more letters, ruling out a
-    # two-letter unit like "MG") and no "|" anywhere on the line (segment data always has
-    # one; prose heading never does).
+    # P4-28 fix round 1 (task review): the one-dot/multi-dot split. Two or three dots is
+    # always a genuine subsection reference in this corpus (no printed quantity ever carries
+    # two decimal points), so only heading SHAPE is required there -- a capital letter plus
+    # one more letter or digit, covering sentence case ("7.4.2 Unsolicited") and a segment ID
+    # leading the title ("4.5.4 TQ1 - Timing"), both of which fix round 2's bare "[A-Z]{3,}"
+    # missed (confirmed against the corpus: CH7.pdf/Hl7V231.pdf's "7.4.2 Unsolicited" was
+    # being glued onto an open OBR under fix round 2 -- see the task report's corpus-effect
+    # measurements). Exactly one dot is shape-identical to a decimal quantity ("2.5"), so it
+    # still needs a real title word (four or more letters/digits after the capital).
     short_seg = "RXO|1|500 mg Polycillin"
     # a numbered dosage wrapped mid-segment must NOT be mistaken for a heading.
     assert not extract._continuation_runs_into_prose(short_seg, "2.5 MG q4h for 10 days")
-    # a real heading, with the spacing the PDFs actually use (anywhere from one space to a
-    # wide tab-stop gap), is still recognised.
+    # multi-dot sentence-case and segment-ID-led headings are now recognised.
+    assert extract._continuation_runs_into_prose(short_seg, "7.4.2 Unsolicited")
+    assert extract._continuation_runs_into_prose(short_seg, "4.5.4 TQ1 - Timing")
+    # one-dot real headings, with the spacing the PDFs actually use (anywhere from one space
+    # to a wide tab-stop gap), are still recognised.
     assert extract._continuation_runs_into_prose(short_seg, "4.8       PHARMACY/TREATMENT ORDERS")
     assert extract._continuation_runs_into_prose(short_seg, "2.11 CHAPTER FORMATS FOR DEFINING HL7 MESSAGES")
     # a line with heading shape but carrying a "|" is segment data, not prose, even if it
     # happens to start with a number and a capitalised word.
     assert not extract._continuation_runs_into_prose(short_seg, "4.8 REFERENCE|SOMETHING")
+    assert not extract._continuation_runs_into_prose(short_seg, "7.4.2 Un|solicited")
+
+
+def check_strip_comment_ends_a_segment():
+    # P4-28 fix round 1 (task review): a "// comment" annotation ends whatever segment
+    # content precedes it on the same printed line, in BOTH shapes this corpus uses --
+    # trailing after real content, same line (v2.3/CH4.pdf's
+    # "OBR|...|...                       // 1ST child OBR.") and alone on its own line
+    # ("// Other parts of message might follow") -- normalised to an explicit "<cr>"
+    # terminator the existing <cr>-splitting machinery already knows how to handle.
+    assert extract._strip_comment("OBR|||89-551^EKG|8601-7^EKG IMPRESSION^LN|...     // 1ST child OBR.") \
+        == "OBR|||89-551^EKG|8601-7^EKG IMPRESSION^LN|...<cr>"
+    # a comment with nothing real before it becomes an empty line, the same as a blank line
+    # in the print -- not a bare "<cr>" fragment (which would wrongly look like a terminated,
+    # re-appendable segment of its own to the state machine).
+    assert extract._strip_comment("          // Other parts of message might") == ""
+    assert extract._strip_comment("//just a comment") == ""
+    # a line with no comment at all passes through unchanged.
+    assert extract._strip_comment("OBR|1|4521") == "OBR|1|4521"
 
 
 def check_bare_elided_segment_is_self_terminating():
@@ -249,16 +278,39 @@ def check_swapped_header_registry_and_mismatches():
         extract.KNOWN_SWAPPED_HEADER_SOURCES.update(saved)
 
 
+def check_swapped_header_extracted_registry_and_mismatches():
+    # P4-28 fix round 1 (task review): KNOWN_SWAPPED_HEADER_SOURCES alone doesn't pin the
+    # EXTRACTOR -- it re-derives its own count independently via a raw PDF-text search, so it
+    # would keep passing even if _message_start's swapped-header branch were deleted
+    # outright. KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS instead records, per source, how many
+    # messages() actually flags swappedHeader=True -- only the four sources whose messages
+    # survive the separate no-"<cr>" segment-merge limitation have any.
+    assert len(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) == 4
+    assert all(n > 0 for n in extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values())
+    assert sum(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values()) == 58
+    saved = dict(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS)
+    try:
+        extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.clear()
+        extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.update({"v2.4/CH04.PDF": 16})
+        mismatches = extract._swapped_header_extracted_mismatches(actual={"v2.4/CH04.PDF": 0})
+        assert mismatches == [("v2.4/CH04.PDF", 16, 0)], mismatches
+    finally:
+        extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.clear()
+        extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.update(saved)
+
+
 CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_segment,
           check_elided_msh12_keeps_message_but_drops_version,
           check_elision_metadata_marks_truncated_segments_and_msh_version,
           check_continuation_closes_before_running_into_prose,
           check_message_start_recognises_standard_swapped_and_bare_headers,
           check_heading_guard_needs_heading_shape,
+          check_strip_comment_ends_a_segment,
           check_bare_elided_segment_is_self_terminating,
           check_known_spec_example_errors_cite,
           check_registry_matches_a_synthetic_report,
-          check_swapped_header_registry_and_mismatches]
+          check_swapped_header_registry_and_mismatches,
+          check_swapped_header_extracted_registry_and_mismatches]
 
 
 def main():
