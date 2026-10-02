@@ -98,6 +98,12 @@ private func undeprecated(_ name: String) -> String {
     name.hasSuffix(" (deprecated)") ? String(name.dropLast(" (deprecated)".count)) : name
 }
 
+/// The comparison key for a printed element name: without a "(deprecated)" suffix,
+/// lower-cased, with runs of whitespace collapsed. Names with one key are one name.
+private func nameKey(_ name: String) -> String {
+    undeprecated(name).lowercased().split(whereSeparator: \.isWhitespace).joined(separator: " ")
+}
+
 private func unionFailure(_ message: String) -> ExitCode {
     FileHandle.standardError.write(Data("HL7v2KitCodegen: \(message)\n".utf8))
     return ExitCode.failure
@@ -184,13 +190,19 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
                 // This accessor's own slot: the note names the printed name only, so the runs
                 // group by name alone (non-contiguous versions merge into one note), and a
                 // "(deprecated)" suffix is not a rename (v2.5.1 OBR-15 "Specimen Source (deprecated)").
-                for run in runs(slots[m].entries.filter { !$0.field.dataType.isEmpty }
-                    .map { ($0.version, undeprecated($0.field.name)) }) where run.value != undeprecated(slot.name) {
+                // Names compare by `nameKey`, so a case-only difference (IN1-17 "To" against
+                // "to") is not a rename either; the note prints the first spelling seen.
+                let named = slots[m].entries.filter { !$0.field.dataType.isEmpty }
+                var spelling: [String: String] = [:]
+                for entry in named where spelling[nameKey(entry.field.name)] == nil {
+                    spelling[nameKey(entry.field.name)] = undeprecated(entry.field.name)
+                }
+                for run in runs(named.map { ($0.version, nameKey($0.field.name)) }) where run.value != nameKey(slot.name) {
                     // A later rename kept as its own accessor is stated once, by its "Renamed" note.
                     if run.versions.allSatisfy({ versionLess(base.version, $0) }),
                        family.contains(where: { $0 != n && slots[$0].renameOf != nil
-                           && undeprecated(slots[$0].name) == run.value }) { continue }
-                    notes.append("\(versionList(run.versions)) \(agree(run.versions, "print")) this element as `\(run.value)`.")
+                           && nameKey(slots[$0].name) == run.value }) { continue }
+                    notes.append("\(versionList(run.versions)) \(agree(run.versions, "print")) this element as `\(spelling[run.value]!)`.")
                 }
                 continue
             }

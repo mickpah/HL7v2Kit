@@ -170,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **P9 final review: generator fixes.** Segment and composite codegen render every file
   before writing any, and delete a file in its output directory that the run did not
   produce. Rename notes ignore a "(deprecated)" suffix and merge versions that print the
-  same name (OBR-15, IN1-17). A retype note names an existing accessor of that type before
+  same name (OBR-15); a case-only difference is not a rename (IN1-17). A retype note names an existing accessor of that type before
   `viewed(as:)` (`PID.speciesCode` on v2.6: `taxonomicClassificationCode`). The redundant
   `checkAllNames` pass is gone; the union pass's name claims cover it.
 

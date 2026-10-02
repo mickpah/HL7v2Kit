@@ -32,7 +32,6 @@ public struct SAC: TypedSegment {
     }
 
     /// SAC-4: Primary (parent) Container Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
-    /// v2.6, v2.8.2 print this element as `Primary (Parent) Container Identifier`.
     public var primaryParentContainerIdentifier: EI? {
         field(4).map(EI.init(field:))
     }

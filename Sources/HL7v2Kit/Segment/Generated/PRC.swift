@@ -175,7 +175,6 @@ public struct PRC: TypedSegment {
     }
 
     /// PRC-18: Charge On Indicator. HL7 data type `IS`.
-    /// v2.6, v2.8.2 print this element as `Charge on Indicator`.
     /// v2.8.2 prints `CWE`: use `chargeOnIndicatorAsCWE`.
     public var chargeOnIndicator: String? {
         field(18)?.stringValue

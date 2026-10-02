@@ -147,11 +147,11 @@ struct VersionUnionAccessorTests {
         #expect(!specimen.contains("print this element as `Specimen Source`"))
         #expect(!specimen.contains("prints this element as `Specimen Source`"))
         #expect(!(try doc("OBR", "quantityTiming")).contains("this element as `Quantity/Timing`"))
-        let relationship = try doc("IN1", "insuredsRelationshipToPatient")
-        #expect(relationship.contains("v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Relationship To Patient`."))
-        #expect(relationship.components(separatedBy: "this element as").count == 2)
-        #expect(try doc("IN1", "insuredsDateOfBirth")
-            .contains("v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Date Of Birth`."))
+        // A case-only difference (IN1-17 "To" against v2.5.1's "to") is not a rename.
+        #expect(!(try doc("IN1", "insuredsRelationshipToPatient")).contains("this element as"))
+        #expect(!(try doc("IN1", "insuredsDateOfBirth")).contains("this element as"))
+        // A real rename still gets its note.
+        #expect(try doc("IN2", "militaryIdNumber").contains("v2.3 prints this element as `Champus ID Number`."))
     }
 
     @Test("A retype note points to an existing accessor of that type before viewed(as:)")

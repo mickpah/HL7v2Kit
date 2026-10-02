@@ -22,14 +22,12 @@ public struct DB1: TypedSegment {
     }
 
     /// DB1-2: Disabled Person Code. HL7 data type `IS`.
-    /// v2.3 prints this element as `Disabled person code`.
     /// v2.8.2 prints `CWE`: use `disabledPersonCodeAsCWE`.
     public var disabledPersonCode: String? {
         field(2)?.stringValue
     }
 
     /// DB1-3: Disabled Person Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `disabledPersonIdentifierAll` returns every repetition.
-    /// v2.3 prints this element as `Disabled person identifier`.
     public var disabledPersonIdentifier: CX? {
         field(3).map(CX.init(field:))
     }
@@ -39,7 +37,6 @@ public struct DB1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.3 prints this element as `Disabled person identifier`.
     public var disabledPersonIdentifierAll: [CX] {
         repetitions(3).map(CX.init(field:))
     }
@@ -51,25 +48,21 @@ public struct DB1: TypedSegment {
     }
 
     /// DB1-5: Disability Start Date. HL7 data type `DT`.
-    /// v2.3 prints this element as `Disability start date`.
     public var disabilityStartDate: String? {
         field(5)?.stringValue
     }
 
     /// DB1-6: Disability End Date. HL7 data type `DT`.
-    /// v2.3 prints this element as `Disability end date`.
     public var disabilityEndDate: String? {
         field(6)?.stringValue
     }
 
     /// DB1-7: Disability Return to Work Date. HL7 data type `DT`.
-    /// v2.3 prints this element as `Disability return to work date`.
     public var disabilityReturnToWorkDate: String? {
         field(7)?.stringValue
     }
 
     /// DB1-8: Disability Unable to Work Date. HL7 data type `DT`.
-    /// v2.3 prints this element as `Disability unable to work date`.
     public var disabilityUnableToWorkDate: String? {
         field(8)?.stringValue
     }

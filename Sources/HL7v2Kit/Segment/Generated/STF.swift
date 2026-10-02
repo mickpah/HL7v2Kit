@@ -81,7 +81,6 @@ public struct STF: TypedSegment {
     }
 
     /// STF-6: Date/Time of Birth. HL7 data type `TS`.
-    /// v2.3, v2.3.1, v2.4 print this element as `Date/Time Of Birth`.
     public var dateTimeOfBirth: String? {
         field(6)?.stringValue
     }
@@ -225,7 +224,6 @@ public struct STF: TypedSegment {
     }
 
     /// STF-16: Preferred Method of Contact. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// v2.3, v2.3.1, v2.4 print this element as `Preferred Method Of Contact`.
     /// v2.3 prints `ID`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var preferredMethodOfContact: CE? {

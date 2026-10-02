@@ -198,7 +198,6 @@ public struct OM1: TypedSegment {
 
     /// OM1-21: Date/Time Stamp for any change in Definition for the Observation. HL7 data type `TS`.
     /// v2.3 prints this element as `Date/Time Stamp for any change in Def Attri for Obs`.
-    /// v2.8.2 prints this element as `Date/Time Stamp for Any Change in Definition for the Observation`.
     public var dateTimeStampForAnyChangeInDefinitionForTheObservation: String? {
         field(21)?.stringValue
     }
@@ -240,7 +239,6 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-27: Outside Site(s) Where Observation may be Performed. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `outsideSiteSWhereObservationMayBePerformedAll` returns every repetition.
-    /// v2.8.2 prints this element as `Outside Site(s) Where Observation May Be Performed`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var outsideSiteSWhereObservationMayBePerformed: CE? {
         field(27).map(CE.init(field:))
@@ -251,7 +249,6 @@ public struct OM1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.8.2 prints this element as `Outside Site(s) Where Observation May Be Performed`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var outsideSiteSWhereObservationMayBePerformedAll: [CE] {
         repetitions(27).map(CE.init(field:))
@@ -451,7 +448,6 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-47: Modality Of Imaging Measurement. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// v2.8.2 prints this element as `Modality of Imaging Measurement`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var modalityOfImagingMeasurement: CE? {
         field(47).map(CE.init(field:))
