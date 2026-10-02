@@ -2202,7 +2202,7 @@ ADRM-2021 conformance rows accounted for (65 shipped / 12 partial /
 
 ## [3.0.0] — 2026-09-16
 
-**The M6 release — AU localisation completeness (ADRM-2021), closed and measured.** One ⚠️ **breaking** change (the M6-D5 OBX-5 datatype fix, shipped under an owner-directed ADR-014 override — see "Changed — BREAKING" below and `Migration.md` → "The 3.0 boundary"); everything else is additive. The additive-only contract resumes for the 3.x line from this tag.
+**The M6 release — AU localisation completeness (ADRM-2021), closed and measured.** One **BREAKING** change (the M6-D5 OBX-5 datatype fix, shipped under an owner-directed ADR-014 override — see "Changed — BREAKING" below and `Migration.md` → "The 3.0 boundary"); everything else is additive. The additive-only contract resumes for the 3.x line from this tag.
 
 ### Added
 - **M6 — ADRM-2021 AU localisation audit (audit only; no behaviour change).**
@@ -2340,7 +2340,7 @@ ADRM-2021 conformance rows accounted for (65 shipped / 12 partial /
   is a major (`v3.0.0`)**. The additive-only contract is otherwise unchanged.
 
 ### Known limitations found by M6 (registered, not fixed)
-- ~~**M6-O5**~~ ✅ closed above — the dataType predicate now runs each batch.
+- ~~**M6-O5**~~ done — closed above — the dataType predicate now runs each batch.
 - **M6-O6 — HL7 code tables are not modelled.** The schemas drop the spec's
   `TBL#` column and there is no code-table registry, so every "value from HL7
   Table NNNN" point is unshippable: `000032`/`.2` (0074), `00044.7.3` (0200),
@@ -2554,7 +2554,7 @@ v1.10). Additive under ADR-014.
 
 ## [2.0.0] — 2026-08-28
 
-⚠️ **BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10
+**BREAKING.** The first exercise of ADR-014's "waits for 2.0" lane: remediation stage R10
 removed the dead public surface (the `HL7v2KitDictionaries` product, four never-raised enum
 cases, two no-op `ParserOptions` members, `ValidationReport.empty`,
 `MessageBuilder.append(unknown:)`), made `RequiredComponentSet.init`'s `description` required,
@@ -2773,7 +2773,7 @@ was verified equal to the enumerated fold map exactly.
 - Verification: suite **515 green** in 26 suites; name diff = the fold map exactly;
   warning-free. R10's `unknownSegment` disjunction lines re-located post-fold (:394/:443/:494/:749).
 
-### R10 — ⚠️ BREAKING: the v2.0.0 capstone (remediation stage 10 of 10)
+### R10 — BREAKING: the v2.0.0 capstone (remediation stage 10 of 10)
 
 **The next release cut from this point is `v2.0.0`** (owner-scheduled 2026-08-27; ADR-014's
 "waits for 2.0" lane, exercised for the first time). Every removal shipped dead — zero
@@ -3933,7 +3933,7 @@ v0.3 cycle release. Covers four parallel-track surface expansions and a post-cyc
 - **`Tests/HL7v2KitTests/FuzzTests.swift`** — byte-level fuzz harness covering all four parser surfaces: `Parser.parse(_ data:)`, `BatchParser.parse(_ data:)`, `StreamingBatchParser.feed/finish`, and `MLLPUnframer.feed(_:)` (plus a `MLLPUnframer → Parser` round-trip composition). For each surface, the harness iterates over the cross-product `gold-corpus fixtures × mutators × iterations` and asserts the only acceptable failure mode is a thrown `ParseError`. Any other behaviour (non-`ParseError` throw, force-unwrap trap, slice out-of-bounds, infinite loop) fails the test.
 - **Mutators**: 7 small targeted perturbations — `bitFlip`, `byteReplace`, `byteInsert`, `byteDelete`, `truncate`, `delimiterCorrupt` (corrupts one of `|^~\&\r`), `nulInject`. Designed to surface bounds-checking bugs, not to model real-world corruption.
 - **Seeded PRNG**: small Xorshift64\* generator with a fixed seed (`0xC0FFEE`) drives all mutations, so every fuzz failure is reproducible — the failing test records the (fixture × mutator × iteration) tuple and a replay against the same seed reproduces the case.
-- **Skipped by default** like `PerformanceTests`. Run with `RUN_FUZZ_TESTS=1 xcrun swift test --filter FuzzTests`. Default `swift test` count goes 306 → 311 with the 5 fuzz tests marked `➜ skipped: "Set RUN_FUZZ_TESTS=1 to run the fuzz suite"`.
+- **Skipped by default** like `PerformanceTests`. Run with `RUN_FUZZ_TESTS=1 xcrun swift test --filter FuzzTests`. Default `swift test` count goes 306 → 311 with the 5 fuzz tests marked `skipped: "Set RUN_FUZZ_TESTS=1 to run the fuzz suite"`.
 - **Coverage at landing time**: 47 fixtures × 7 mutators × 100 iterations × 5 surfaces ≈ 165,000 mutated payloads exercised in ~5.4 s on the dev machine. All five tests pass — no crashes, no unexpected error types — across the full grid. Validates the byte-level robustness of every parser-side surface added through v0.3.
 
 ### Added — Streaming batch parser (v0.3-S1)
@@ -4091,7 +4091,7 @@ Tests: 159 (v0.1.0 tag) → 205 (default `swift test`); 210 with `RUN_PERF_TESTS
   - Round-trip 1,000 messages under 10s
   - Validate 1 message (default options) under 2ms warm
   - Validate 1,000 messages under 10s
-- **Skipped by default.** The suite gates on `ProcessInfo.processInfo.environment["RUN_PERF_TESTS"] == nil` via the `@Suite(.disabled(if:))` trait, so the everyday `swift test` run stays fast. To run the perf suite: `RUN_PERF_TESTS=1 xcrun swift test`. Output marks the skipped tests with `➜ ... skipped: "Set RUN_PERF_TESTS=1 to run the perf suite"`.
+- **Skipped by default.** The suite gates on `ProcessInfo.processInfo.environment["RUN_PERF_TESTS"] == nil` via the `@Suite(.disabled(if:))` trait, so the everyday `swift test` run stays fast. To run the perf suite: `RUN_PERF_TESTS=1 xcrun swift test`. Output marks the skipped tests with `... skipped: "Set RUN_PERF_TESTS=1 to run the perf suite"`.
 - **Timing uses `Date()` differences** for portability with macOS 12+ (Foundation's `ContinuousClock` is macOS 13+). Precision is ~µs — plenty for ms/s budgets.
 - Representative ~600-byte ADT^A01 wire (synthesised from the `adt_a01_minimal.hl7` gold-corpus fixture) carries the composite types most AU clinical traffic populates (CX/XPN/CE/XAD/XTN on PID; PL/XCN on PV1) so the budget covers a realistic critical path. Warm-up loops (100 iterations) precede the single-iteration measurements.
 - Measured on the dev machine at landing time: parse-warm ≈ 41ms suite time; 1000-parse 0.176s; 1000-round-trip 0.233s; validate-warm 35ms suite time; 1000-validate 0.056s. All comfortably under budget; spec also reserves a 20% regression threshold above these numbers.

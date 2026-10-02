@@ -105,7 +105,7 @@ verified (or written) against current behaviour before any code moves.
 **F1, F26, F34, F35, F36 · ~278 lines · P3 + P2.** The single biggest cut, and the most
 mechanically provable: a 3-line template change ripples across all 116 generated files.
 
-**Status: ✅ landed 2026-08-26.** All gates held: step-a regeneration byte-identical (F34/F35
+**Status: landed 2026-08-26.** All gates held: step-a regeneration byte-identical (F34/F35
 proven output-neutral); step-b diff exactly the two intended line classes (116 import+blank
 removals, 109 decl rewrites); test-name diff empty; 519/519 green; warning-free. **F26 was
 dropped per the never-force rule** — `String(reflecting:)` escapes apostrophes (`\'`), churning
@@ -141,7 +141,7 @@ ADR-010 Ext 2 documented the axis as deliberate; record in the commit message th
 axis with zero encoded rules is plumbing, not spec surface, and reinstate from git when a first
 universal rule is authored.
 
-**Status: ✅ landed 2026-08-26.** 35 lines removed from `Codegen.swift`; regenerated output
+**Status: landed 2026-08-26.** 35 lines removed from `Codegen.swift`; regenerated output
 byte-identical (`Generated/` diff empty); runtime `SegmentCardinalityRule` + AU
 `Profile.cardinalityExtensions` untouched; test-name diff empty; 519/519 green; warning-free.
 
@@ -166,7 +166,7 @@ byte-identical (`Generated/` diff empty); runtime `SegmentCardinalityRule` + AU
 
 **Done when:** 16 structs ride `CompositeView`; suite green; zero warnings.
 
-**Status: ✅ landed 2026-08-26 (F2 + F30; F13 re-binned to R10).** All 16 structs ride
+**Status: landed 2026-08-26 (F2 + F30; F13 re-binned to R10).** All 16 structs ride
 `CompositeView` (duplication proven byte-identical by md5 before the hoist: one hash ×16 for
 `componentValue`, one for the `init(repetition:)` body); the 5 empty `requiredComponents` decls
 (+ stale docs — HD's described the `RequiredComponentSet` refactor as "explicitly avoided" when
@@ -202,7 +202,7 @@ signature change, prohibited in 1.x by ADR-014 — moved to R10 where it rides t
 
 **Done when:** C1/C2 green before AND after; `ProfileLoader.swift` deleted; suite green.
 
-**Status: ✅ landed 2026-08-27.** C1 (2 tests, CrossSegmentDSLTests — placed beside the existing
+**Status: landed 2026-08-27.** C1 (2 tests, CrossSegmentDSLTests — placed beside the existing
 `evaluate` seam rather than ConditionalFieldTests) and C2 (7 exact-message rows, parameterized)
 were green on the FIRST pre-refactor run and stayed green through the fold/swap. All six findings
 landed; suite 522 green (519 + the 3 characterization test names — the enumerated addition; the
@@ -234,7 +234,7 @@ canonical refs are unchanged and C1 pins the `~N`/`[N]` rejections.
 
 **Done when:** C3 green before and after; one shared `decodeWirePayload`; suite green.
 
-**Status: ✅ landed 2026-08-27.** C3 could NOT go green "before" — writing it exposed a genuine
+**Status: landed 2026-08-27.** C3 could NOT go green "before" — writing it exposed a genuine
 pre-existing defect: `probeMSH18` examined only the first probe line, so batch wires (which open
 with FHS/BHS) silently fell back to UTF-8 and a correctly-declared Latin-1 batch failed to parse,
 contradicting BatchParser's documented contract. Fixed in its own commit (scan to the first MSH
@@ -268,7 +268,7 @@ F33 → `.scalar("")` ×2. Refactor net −29 lines; suite 524 green; warning-fr
 **Done when:** `--verify` output byte-identical; repo-wide grep finds zero stale referrers;
 fixture-safety CI green.
 
-**Status: ✅ landed 2026-08-27.** F7 script deleted (9/9 markers verified present); F18 `git mv`
+**Status: landed 2026-08-27.** F7 script deleted (9/9 markers verified present); F18 `git mv`
 executed with the 3-step policy folded into the promoted README. **F16 exposed a second latent
 defect**: the old scanner NEVER appended single spaces to run text (its own comment claimed
 otherwise) — element names survived only because they're re-sliced from the raw line by offsets,
@@ -292,7 +292,7 @@ delete the orphan `// MARK: - AL1` (`TypedSegmentTests.swift:157`).
 
 **Done when:** test-name diff **empty**; suite green at the same test count.
 
-**Status: ✅ landed 2026-08-27.** Honest scope correction: F5's 144 count conflated two shapes.
+**Status: landed 2026-08-27.** Honest scope correction: F5's 144 count conflated two shapes.
 The 103 TypedSegmentTests sites were the true verbatim pair — 97 swept (+2 plain Composite
 ones); 67 became `hydratedMessage` (tuple form) because their tests cross-check path access
 against typed accessors per the working notes's agreement requirement, 3 needed a `Data` overload for
@@ -316,7 +316,7 @@ failures to the caller via `sourceLocation`. Test-name diff empty; 524 green; wa
 
 **Done when:** test-name diff **empty**; both shared files exist; suite green.
 
-**Status: ✅ landed 2026-08-27.** F4: 69 multiline wire literals opening with the two canonical
+**Status: landed 2026-08-27.** F4: 69 multiline wire literals opening with the two canonical
 headers → `TestWires.adt(…)`/`.oru(…)` builder calls (byte-identical construction; LocaleAU's 16
 = its 8 ADT + 8 ORU twins; content-relevant headers — batch/AU-MSH/version-variant/DSL — stay
 inline by design; the R4-C2 single-line row wires untouched). F8: all six discovery
@@ -344,7 +344,7 @@ the delta is enumerated:
 **Done when:** the test-name diff equals the fold map **exactly** (9 MultiVersion names → 3
 parameterized; `roundTripPreservesBody` removed; LocaleAUProfile names unchanged); suite green.
 
-**Status: ✅ landed 2026-08-27.** Fold map delivered EXACTLY, slightly larger than planned on the
+**Status: landed 2026-08-27.** Fold map delivered EXACTLY, slightly larger than planned on the
 MultiVersion side: **12 removals** (the 9 triple names + `v26VersionDetected` +
 `v282VersionDetected` — both detected legs folded as table rows, incl. the bare-2.8 legacy check
 as a 6th detected row — + MLLP's `roundTripPreservesBody`) → **3 parameterized additions**
@@ -387,7 +387,7 @@ boundary (likely post-v1.15). Every earlier stage is 1.x-safe; this one IS the m
 **Done when:** suite green; test-name diff = exactly the `HL7v2KitDictionariesTests` names;
 zero warnings; Migration/ADR/CHANGELOG written; ready for the owner to cut `v2.0.0`.
 
-**Status: ✅ landed 2026-08-27 (owner-scheduled the boundary by starting the stage).** All
+**Status: landed 2026-08-27 (owner-scheduled the boundary by starting the stage).** All
 seven findings + the two v1.6-deferred OBX swiftName renames (`effectiveDateOfReferenceRangeValues`,
 `producersReference` — schema + regenerate, Generated/ diff exactly the two accessor decls, zero
 call-site churn) + F13's required-description tightening. Every zero-call-site claim re-verified

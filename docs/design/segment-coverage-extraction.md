@@ -127,20 +127,20 @@ misfire validation (an empty/wrong `dataType` yields an untyped `Field?` accesso
 field still parses / round-trips), but they were a req-#2/#4 faithfulness gap. All three
 are now fixed in `scripts/extract-segment-tables.swift`:
 
-1. ✅ **Column assignment mis-binned right/left-leaning values.** `nearestColumnKey`
+1. Done — **Column assignment mis-binned right/left-leaning values.** `nearestColumnKey`
    assigned each run to the nearest header-label **centre**. Where a table's `DT` values sit
    well right of the label (v2.5.1 **CH12 GOL** — GOL-1 `Action Code` extracted empty `DT`
    instead of `ID`; GOL-4/5 dropped `EI`) or a hair left (v2.5.1 **CH04 BPO** — `CWE` just
    left of the `DT` label), the datatype was dropped/mis-assigned. **Fixed:** `columnKey(forStart:)`
    assigns by smallest distance between the run's **start** and each label's **start** —
    resolves GOL *and* BPO, golden NK1/PV1/IN1 still pass.
-2. ✅ **Spurious rows from wrapped `LEN` digits.** Row detection now rejects `seq < 1` and
+2. Done — **Spurious rows from wrapped `LEN` digits.** Row detection now rejects `seq < 1` and
    any row with **both** an empty name and an empty `DT`. Root cause identified: these were
    never "non-field lines" in general — they are the **overflow digits of a wrapped `LEN`
    cell** landing left of the `DT` column (OM6's `10240` wraps, leaving a bare `0`; EQP's
    `65536` leaves a bare `6`; OM4/OM1 likewise). They both inflated field counts and
    collided on derived swiftNames (`field2`, `field3`).
-3. ✅ **`deriveSwiftName`** drops lone `s` fragments left by a possessive apostrophe
+3. Done — **`deriveSwiftName`** drops lone `s` fragments left by a possessive apostrophe
    (`Contact Person's Name` → `contactPersonName`, not `contactPersonSName`).
 
 ### Rule: empty `dataType` is not automatically a defect
@@ -397,8 +397,8 @@ schemas stop short of the spec's field count. Confirmed on **OBX**, a core segme
 | v2.3 | 11 | **17** | OBX-12 … OBX-17 (through `Observation Method`) |
 | v2.3.1 | 14 | *unverified* | — |
 | v2.4 | 16 | *unverified* | extraction breaks at field 4 on this layout — needs a manual read |
-| v2.6 | 25 | 25 | ✅ |
-| v2.8.2 | 30 | 30 | ✅ |
+| v2.6 | 25 | 25 | yes |
+| v2.8.2 | 30 | 30 | yes |
 
 The v1.1 audit completed OBX 17 → 24 but stopped one field short of the v2.5.1 table, and
 never covered the legacy versions. **This is a req-#1/#4 completeness gap, not a

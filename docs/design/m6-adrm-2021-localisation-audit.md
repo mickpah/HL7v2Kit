@@ -82,7 +82,7 @@ auditable rather than assumed.
 
 ## Findings
 
-### M6-D1 — CNE pair rules cite a withdrawn conformance point ✅ FIXED 2026-09-04
+### M6-D1 — CNE pair rules cite a withdrawn conformance point FIXED 2026-09-04
 
 `ceCwePairRules(citePrefix:)` in `Profile+au_adrm_2021.swift` assumes CE and CNE
 share the alternate-identifier numbering `.5` / `.6`, and only CWE differs at
@@ -90,9 +90,9 @@ share the alternate-identifier numbering `.5` / `.6`, and only CWE differs at
 
 | Composite | "alt id set ⇒ alt system set" | "alt id empty ⇒ alt system empty" |
 |---|---|---|
-| CE (`00044.4`) | `.4.5` ✅ cited correctly | `.4.6` ✅ cited correctly |
-| **CNE (`00044.5`)** | **`.5.4`** — code cites `.5.5` ❌ | **`.5.5`** — code cites `.5.6` ❌ |
-| CWE (`00044.6`) | `.6.4` ✅ cited correctly | `.6.5` ✅ cited correctly |
+| CE (`00044.4`) | `.4.5` yes, cited correctly | `.4.6` yes, cited correctly |
+| **CNE (`00044.5`)** | **`.5.4`** — code cites `.5.5` (wrong) | **`.5.5`** — code cites `.5.6` (wrong) |
+| CWE (`00044.6`) | `.6.4` yes, cited correctly | `.6.5` yes, cited correctly |
 
 `HL7au:00044.5.6` is not merely the wrong point — it is marked **"Removed"** in
 revision r2 and no longer exists. The two CNE rules are behaviourally correct;
@@ -111,7 +111,7 @@ pin the numbering per composite and assert `HL7au:00044.5.6` is never cited.
 (M6-D1). The register carries them so a future sweep does not resurrect them
 from an older revision of the PDF.
 
-### M6-D3 — profile usage narrowings fired outside their message-type scope ✅ FIXED 2026-09-04
+### M6-D3 — profile usage narrowings fired outside their message-type scope FIXED 2026-09-04
 
 Appendix 5 scopes almost every conformance point to a named set of message
 types. `HL7au:000041` (MSH-17 = AUS) and `HL7au:000042` (MSH-19 =
@@ -149,7 +149,7 @@ points (`00047.1`, `00047.2`, `00049.1`–`.3`, `00048.3.1`, `000024.1`–`.5`) 
 scoped to Orders/Results/Referrals and need `.required` narrowings. Without
 `usageCondition` they could only have shipped with the same defect.
 
-### M6-D4 — composite overrides fired outside their message-type scope ✅ FIXED 2026-09-04
+### M6-D4 — composite overrides fired outside their message-type scope FIXED 2026-09-04
 
 The composite-track twin of M6-D3, found while starting M6-A stage 2. Every
 `HL7au:00044.*` datatype point is scoped to *"Orders, Results, Referrals"* (or
@@ -175,7 +175,7 @@ and its test passed. What exposed them was diffing against the applicability
 column of the source table — the column the overlay had never been checked
 against.
 
-### M6-D5 — OBX-5's declared datatype is wrong in all six schemas ✅ FIXED (2026-09-15, owner-directed ADR-014 override)
+### M6-D5 — OBX-5's declared datatype is wrong in all six schemas FIXED (2026-09-15, owner-directed ADR-014 override)
 
 Every supported version's attribute table gives OBX-5 (Observation Value) the
 variable datatype. All six committed schemas said **`ST`**.
@@ -255,7 +255,7 @@ sets against HL7 tables, one is a group-scope cardinality. The four clusters
 below partition the 31 exactly; **cluster 1 shipped on 2026-09-04**, leaving
 20 CANDIDATE.
 
-- ✅ **MSH envelope literals** (`000024.1`–`.5`, `00047.1`, `00047.2`,
+- Done: **MSH envelope literals** (`000024.1`–`.5`, `00047.1`, `00047.2`,
   `00049.1`–`.3`, `00048.3.1`) — encoding characters, `AL` acknowledgement
   modes, MSH-9 and MSH-18 value sets. Eleven points, no new machinery.
   **Shipped 2026-09-04**: nine enforced outright, `00049.1` reclassified BASE
@@ -276,7 +276,7 @@ below partition the 31 exactly; **cluster 1 shipped on 2026-09-04**, leaving
   points → EXTEND (M6-O6).
 - **`000023`** — "the NTE segment must NOT be used" is a group-scope cardinality
   of 0. ADR-010's model was minimum-only; stage 3 added
-  `SegmentCardinalityRule.maxCount` and shipped it. ✅
+  `SegmentCardinalityRule.maxCount` and shipped it.
 
 ### M6-O2 — the extension tranche clusters into five model gaps
 
@@ -323,20 +323,20 @@ parser until you see which inputs actually reach it.
 
 ## Recommended sequencing
 
-1. ~~**M6-D1** — the citation fix.~~ ✅ done 2026-09-04.
-   ~~**M6-D3** — gate `profileUsage` on message type.~~ ✅ done 2026-09-04;
+1. ~~**M6-D1** — the citation fix.~~ done 2026-09-04.
+   ~~**M6-D3** — gate `profileUsage` on message type.~~ done 2026-09-04;
    prerequisite for step 2.
-   ~~**M6-D4** — gate composite overrides on message type.~~ ✅ done
+   ~~**M6-D4** — gate composite overrides on message type.~~ done
    2026-09-04; prerequisite for stage 2.
 2. **M6-A** — the CANDIDATE points, additive under ADR-014, split by cluster so
    each lands as its own stage with its own tests.
-   - ✅ **Stage 1 — MSH envelope literals** (2026-09-04). Nine points shipped,
+   - Done: **Stage 1 — MSH envelope literals** (2026-09-04). Nine points shipped,
      one reclassified BASE, one PARTIAL.
-   - ✅ **Stage 2 — composite required components** (2026-09-04). Only XCN was
+   - Done: **Stage 2 — composite required components** (2026-09-04). Only XCN was
      shippable: `00044.7.2`/`.7.5` outright, `.7.3`/`.7.4` PARTIAL (presence,
      not table membership), `.7.1` and `00044.3.1` reclassified BASE, and the
      eight ED/RP points moved to EXTEND per M6-O7.
-   - ✅ **Stage 3 — the last three CANDIDATE points** (2026-09-15). The two
+   - Done: **Stage 3 — the last three CANDIDATE points** (2026-09-15). The two
      prohibitions shipped via `SegmentCardinalityRule.maxCount` (an upper
      bound the minimum-only v0.11 model could not state; `maxCount: 0` is a
      prohibition, and an empty predicate counts every segment of the ID):

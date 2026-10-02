@@ -55,7 +55,7 @@ AU-critical version** and because the tooling gap hid it.
 **Done when:** the presence audit reports zero unexplained gaps on v2.4 for already-modelled
 segments, and the tool would have caught this class.
 
-**Status: ✅ landed 2026-08-28 (items 1–3).** Predicate written first and run red: exactly
+**Status: landed 2026-08-28 (items 1–3).** Predicate written first and run red: exactly
 `PRESENCE v2.4 {EQP,EQU,INV,SAC,TCC,TCD}`, nothing else — the tool catches this class. Then
 the six authored from the v2.4 CH13 tables (`--emit-schema` seed → PDF check → `--verify`
 PASS ×6); INV is **18** on v2.4, SAC-6/TCC-3 `CM`/`O` (v2.5.1 `SPS`/`C`,`B`), SAC-27/43 `CE`,
@@ -65,7 +65,7 @@ v2.3 24, v2.3.1 27, v2.4 37, v2.5.1 41, v2.6 61, v2.8.2 73 = **263** (the 2026-0
 above was a floor by 6). Suite 514 → 515. The v2.4 chapter sweep continues under this sprint
 (NEXT_STEPS Sprint 0 §3).
 
-**§3 batch A — CH15 personnel ✅ 2026-08-28.** `STF/PRA/ORG/AFF/LAN/EDU` on v2.4 **and**
+**§3 batch A — CH15 personnel done 2026-08-28.** `STF/PRA/ORG/AFF/LAN/EDU` on v2.4 **and**
 v2.5.1 (structs come from the canonical version only, so the AU version alone would be grammar
 without accessors), plus `STF/PRA` on v2.3/v2.3.1 — 16 schemas → 115 typed. This sets the
 §3 rule: **a segment lands on every AU-priority version it exists in, in one batch**; the
@@ -73,29 +73,29 @@ presence predicate flags a split, and v2.6/v2.8.2 absences of modelled segments 
 *deferred* class (listed, not failed — `DEFERRED_VERSIONS` in `audit-schemas.py`). Sprint 2's
 CH15 scope is therefore already done for these six.
 
-**§3 batch B — CH04 orders ✅ 2026-08-28.** `BLG/ODS/ODT/RQ1/RQD` on all four AU-priority
+**§3 batch B — CH04 orders done 2026-08-28.** `BLG/ODS/ODT/RQ1/RQD` on all four AU-priority
 versions (20 schemas, `--verify` PASS ×20) → 120 typed. Closes Sprint 3's CH04 line and the
 `BLG` loose end. Divergences pinned (BLG depth/DT, RQ1-2 name drift).
 
-**§3 batch C — CH02 envelopes ✅ 2026-08-29.** `BHS/FHS/BTS/FTS/DSC/ADD` on all four
+**§3 batch C — CH02 envelopes done 2026-08-29.** `BHS/FHS/BTS/FTS/DSC/ADD` on all four
 AU-priority versions (24 schemas; `ADD` hand-authored, `1-n`) → 126 typed. Closes Sprint 1's
 envelope lead item and its parser/schema coherence gap — and the pin found the parser
 numbering BHS/FHS one field off the spec (BHS-1/FHS-1 are the field separator, like MSH-1);
 fixed in `Parser` + `Serializer`. Sprint 1's remaining CH02 scope: `OVR`/`SFT` (v2.5+) and the
 query-adjacent set (batch D).
 
-**§3 batch D — CH05 queries ✅ 2026-08-30.** `DSP/EQL/ERQ/SPR/URD/URS/VTQ` on all four
+**§3 batch D — CH05 queries done 2026-08-30.** `DSP/EQL/ERQ/SPR/URD/URS/VTQ` on all four
 AU-priority versions + `QRI` (v2.4+) — 30 schemas → 134 typed. Closes Sprint 1's query-adjacent
 set and Sprint 3's CH05 line, including the `SPR` loose end. Uniform across versions; the
 "Query/ Response" spacing artifact registered in `segment-coverage-extraction.md`.
 
-**§3 batch E — CH03/06/07 ✅ 2026-09-01.** `IAM/NPU/PDA` + `BLC/RMI` + `FAC` (16 schemas;
+**§3 batch E — CH03/06/07 done 2026-09-01.** `IAM/NPU/PDA` + `BLC/RMI` + `FAC` (16 schemas;
 IAM/PDA/BLC/RMI are v2.4+) → 140 typed. Covers Sprint 4's CH3/CH7 lines and Sprint 3's CH06
 remainder. Third tool fix of the sweep: v2.3 CH7 wraps the `RP/#` header (`RP/`), which hid
 the repeat column and put its `Y` cells in OPT — pattern added, FAC re-extracted to match the
 PDF exactly.
 
-**§3 batch F — CH08/CH14 ✅ 2026-09-02, and §3 COMPLETE.** `CM0/CM1/CM2` (all four versions) +
+**§3 batch F — CH08/CH14 done 2026-09-02, and §3 COMPLETE.** `CM0/CM1/CM2` (all four versions) +
 `NCK/NSC/NST` (v2.3.1+; v2.3 has no network-management chapter) — 21 schemas → **146 typed**.
 The three v2.3.1 CH14 schemas are hand-authored from the raw Appendix C figures (mega-PDF
 prose-bleed; one documented `--verify` exception, NSC). Blank-OPT-means-optional is now encoded
@@ -103,7 +103,7 @@ in `--verify`/`--emit-schema`. **Sprint 0 §3 closes with zero never-authored se
 v2.3 / v2.3.1 / v2.4**; Sprints 1–4's segment-authoring scope is fully absorbed, leaving
 Sprint 5 (closure/verification) plus the v2.5-only quartet (`OVR/SFT/CER` + co) and M6.
 
-**Close-out (Sprint-5-style) ✅ 2026-09-03.** Conditional sweep over the sweep's 8 distinct
+**Close-out (Sprint-5-style) done 2026-09-03.** Conditional sweep over the sweep's 8 distinct
 `C` fields: **10 predicates shipped** spec-cited (STF-1/PRA-1/PRA-12 MFN rules; RQ1
 either-pair; RQD one-of-three — prose identical on every version carrying the `C`), IAM-7
 registered as not message-expressible (`conditional-completeness-audit.md`). Coverage claims

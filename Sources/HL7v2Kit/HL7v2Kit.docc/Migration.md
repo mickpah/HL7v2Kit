@@ -201,10 +201,10 @@ The early minors (0.2–0.5) included source-breaking refactors while the surfac
 
 ## v1.0 gates — all met (v1.0.0)
 
-1. **M1 version coverage** — ✅ v2.3 → v2.8.2 (v0.14 / v0.15).
-2. **M2 conformance surface** — ✅ v0.16 conditional register + v0.17 permanent-limitations register.
-3. **M3 API stabilisation** — ✅ v0.18 (ADR-014 + the public-API-surface inventory + this contract).
-4. **M4 IP review** — ✅ cleared (2026-07-09); public push unblocked.
+1. **M1 version coverage** — done: v2.3 → v2.8.2 (v0.14 / v0.15).
+2. **M2 conformance surface** — done: v0.16 conditional register + v0.17 permanent-limitations register.
+3. **M3 API stabilisation** — done: v0.18 (ADR-014 + the public-API-surface inventory + this contract).
+4. **M4 IP review** — done: cleared (2026-07-09); public push unblocked.
 
 ## See Also
 

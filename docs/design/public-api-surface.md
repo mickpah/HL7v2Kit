@@ -37,12 +37,12 @@
 
 | Enum | Cases | Class | Note added |
 |------|-------|-------|-----------|
-| `Version` | 7 (v2_3 … v2_8_2, v2_8) | **Open** | ✅ `@unknown default` |
-| `HL7Locale` | 2 (international, auLocalisation) | **Open** | ✅ |
-| `IssueCode` | 21 | **Open** | ✅ (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`) |
-| `ParseError` | 8 | **Open** | ✅ |
-| `PathError` | 3 | **Open** | ✅ |
-| `BuilderError` | 3 | **Open** | ✅ |
+| `Version` | 7 (v2_3 … v2_8_2, v2_8) | **Open** | yes — `@unknown default` |
+| `HL7Locale` | 2 (international, auLocalisation) | **Open** | yes |
+| `IssueCode` | 21 | **Open** | yes (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`) |
+| `ParseError` | 8 | **Open** | yes |
+| `PathError` | 3 | **Open** | yes |
+| `BuilderError` | 3 | **Open** | yes |
 | `FieldOptionality` | 6 (R/O/C/X/B/W) | **Stable** — HL7's complete optionality-code set | — |
 | `FieldRepeatability` | 2 (single, multiple) | **Stable** | — |
 | `IssueSeverity` | 3 (info, warning, error) | **Stable** | — |
