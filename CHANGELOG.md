@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P6-11: OR-rule issue messages name the failing sub-rule
+
+- The OR-rule issue message (`RequiredComponentSet`, used today only by `HD`) named every
+  OR alternative even when a grouped pair was the actual failure — misleading when, for
+  example, HD-1 is valued and only one of the HD-2/HD-3 pair is valued: the pair rule fired,
+  not the OR, yet the message read as if HD-1 were missing too. `RequiredComponentSet.violationMessage(populatedIndices:compositeCode:)`
+  now names the partially-populated group's "both or neither" rule directly in that case,
+  and falls back to the OR alternatives (unchanged wording) when nothing in the field
+  satisfies either side. Issue codes, severities and locations are unaffected — message text
+  only, and `ValidationIssue.message` carries no stability guarantee (ADR-014).
+
 ### Fixed — P6-14: extra components on every primitive; component-level table check
 
 - `extraComponentsInPrimitiveField` covered `ID` and `IS` fields only. It now

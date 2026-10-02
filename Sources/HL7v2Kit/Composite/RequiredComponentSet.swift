@@ -88,4 +88,38 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
         }
     }
 
+    /// The `ValidationIssue.message` clause naming the sub-rule that actually failed, for a
+    /// `populatedIndices` that fails `isSatisfied(populatedIndices:)`. `compositeCode` is the
+    /// composite's HL7 data-type code (e.g. `"HD"`), prefixed onto component indices the same
+    /// way `description` does (P6-11).
+    ///
+    /// Under `.allOfGroupOrAtLeastOne(group:)`, a *partially* populated group is its own
+    /// sub-rule — "these must both be valued or both be empty" — independent of whether the
+    /// non-group alternative is already satisfied. Naming the full OR (`description`) in that
+    /// case is misleading: e.g. for HD with HD-1 valued and only HD-2 of the HD-2/HD-3 pair
+    /// valued, the OR's non-group side (HD-1) already holds, so printing "expected HD-1 OR
+    /// (HD-2 AND HD-3) populated" reads as if HD-1 were also missing. The group's "both or
+    /// neither" rule is the one that fired, so that's what's named.
+    ///
+    /// Every other case — nothing in the field satisfies either side, or `.atLeastOneOf`
+    /// (which has no group and so no partial-pair reading) — names the OR alternatives via
+    /// `description`, unchanged from before this task.
+    public func violationMessage(populatedIndices: Set<Int>, compositeCode: String) -> String {
+        if case .allOfGroupOrAtLeastOne(let group) = semantics,
+           !group.allSatisfy({ populatedIndices.contains($0) }),
+           group.contains(where: { populatedIndices.contains($0) }) {
+            let labels = group.map { "\(compositeCode)-\($0)" }
+            let quantifier = labels.count == 2 ? "both" : "all"
+            let joined: String
+            switch labels.count {
+            case 0: joined = ""
+            case 1: joined = labels[0]
+            case 2: joined = "\(labels[0]) and \(labels[1])"
+            default: joined = labels.dropLast().joined(separator: ", ") + ", and \(labels.last!)"
+            }
+            return "\(joined) must \(quantifier) be valued or \(quantifier) be empty"
+        }
+        return "expected \(description) populated"
+    }
+
 }

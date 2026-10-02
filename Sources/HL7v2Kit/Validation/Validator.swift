@@ -1910,7 +1910,8 @@ public struct Validator: Sendable {
                         severity: options.requiredComponentSeverity,
                         code: .requiredComponentMissing,
                         location: location,
-                        message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): expected \(set.description) populated"
+                        message: "OR-rule violated in \(grammar.dataType) field \(location.pathDescription) ('\(grammar.name)'): "
+                            + set.violationMessage(populatedIndices: populatedIndices, compositeCode: grammar.dataType)
                     ))
                 }
             }
