@@ -3,7 +3,7 @@
   "version": "2.7.1",
   "description": "Error",
   "fields": [
-    { "index": 1, "swiftName": "errorCodeAndLocation", "name": "Error Code and Location", "dataType": "ELD", "optionality": "W", "repeatability": "1" },
+    { "index": 1, "swiftName": "errorCodeAndLocation", "name": "Error Code and Location", "dataType": "", "optionality": "W", "repeatability": "1" },
     { "index": 2, "swiftName": "errorLocation", "name": "Error Location", "dataType": "ERL", "optionality": "O", "repeatability": "*" },
     { "index": 3, "swiftName": "hl7ErrorCode", "name": "HL7 Error Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0357"] },
     { "index": 4, "swiftName": "severity", "name": "Severity", "dataType": "ID", "table": "0516", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0516"] },

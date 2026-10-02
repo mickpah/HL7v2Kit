@@ -9,7 +9,7 @@
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "orderStatus", "name": "Order Status", "dataType": "ID", "table": "0038", "length": "2..2", "optionality": "O", "repeatability": "1", "tables": ["0038"] },
     { "index": 6, "swiftName": "responseFlag", "name": "Response Flag", "dataType": "ID", "table": "0121", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0121"] },
-    { "index": 7, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "TQ", "optionality": "W", "repeatability": "*" },
+    { "index": 7, "swiftName": "quantityTiming", "name": "Quantity/Timing", "dataType": "", "optionality": "W", "repeatability": "*" },
     { "index": 8, "swiftName": "parent", "name": "Parent Order", "dataType": "EIP", "optionality": "O", "repeatability": "1" },
     { "index": 9, "swiftName": "dateTimeOfTransaction", "name": "Date/Time of Transaction", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 10, "swiftName": "enteredBy", "name": "Entered By", "dataType": "XCN", "optionality": "B", "repeatability": "*" },

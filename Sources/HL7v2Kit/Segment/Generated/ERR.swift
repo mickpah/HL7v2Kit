@@ -17,6 +17,7 @@ public struct ERR: TypedSegment {
     }
 
     /// ERR-1: Error Code and Location. HL7 data type `ELD`. Repeating field: this accessor reads the first repetition; `errorCodeAndLocationAll` returns every repetition.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever ERR-1 holds on the wire.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var errorCodeAndLocation: Field? {
         field(1)
@@ -27,6 +28,7 @@ public struct ERR: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever ERR-1 holds on the wire.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var errorCodeAndLocationAll: [Field] {
         repetitions(1)

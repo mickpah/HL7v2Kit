@@ -458,4 +458,21 @@ struct V271GrammarTests {
         #expect(try field("SCD", 1).dataType == "TM")
         #expect(try field("SCD", 1).optionality == .optional)
     }
+
+    @Test("A withdrawn field carries only the data type its attribute table prints")
+    func withdrawnFieldsAsPrinted() throws {
+        // CH02 section 2.8.4 (p. 24): a withdrawn field's narrative is removed and its detail
+        // lives in an earlier version; the tables print its DT cell blank. Only UB1-1 prints
+        // one (CH06 section 6.5.10, p. 130: `1  SI  W  00530  Set ID - UB1`).
+        let withdrawn = segments.values.flatMap { grammar in
+            grammar.fields.filter { $0.optionality == .withdrawn }.map { (grammar.segmentID, $0) }
+        }
+        #expect(withdrawn.count == 77)
+        let typed = withdrawn.filter { !$0.1.dataType.isEmpty }.map { "\($0.0)-\($0.1.index)" }
+        #expect(typed == ["UB1-1"])
+        #expect(segments["UB1"]?.field(1)?.dataType == "SI")
+        // No type is carried from an earlier version (v2.6 and v2.8.2 type PID-2 CX).
+        #expect(try #require(segments["PID"]?.field(2)).dataType == "")
+        #expect(try #require(segments["DG1"]?.field(7)).dataType == "")
+    }
 }

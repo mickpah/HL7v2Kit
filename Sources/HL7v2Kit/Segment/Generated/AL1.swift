@@ -65,6 +65,7 @@ public struct AL1: TypedSegment {
     }
 
     /// AL1-6: Identification Date (deprecated). HL7 data type `DT`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever AL1-6 holds on the wire.
     public var identificationDate: String? {
         field(6)?.stringValue
     }

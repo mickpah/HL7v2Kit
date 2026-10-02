@@ -122,6 +122,56 @@ SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", 
 # components come from the field grammar (DataTypeGrammarTable.grammar(segment:field:version:)).
 CM_REFINEMENTS = {"MSG", "MOC", "PRL", "EIP"}
 
+# P10-4c: every field's dataType must exist on its own version (integrity check
+# `datatype_existence_findings`). A field may name a composite with a component table under
+# Resources/datatypes/<version>, a primitive of the version, or a variable-type marker. The
+# primitives mirror Validator.primitiveTypes; v2.7.1 CH02A prints the v2.8.2 set (SNM included).
+PRIMITIVE_TYPES = {
+    "v2.3": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.3.1": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.4": {"DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"},
+    "v2.5.1": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"},
+    "v2.6": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"},
+    "v2.7.1": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"},
+    "v2.8.2": {"DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"},
+}
+VARIABLE_TYPES = {"varies", "Varies", "Variable", "*"}
+# Withdrawn datatypes the version's Chapter 2A still prints as a "WITHDRAWN (...)" stub
+# (v2.7.1 2.A.6, 2.A.27, 2.A.50, 2.A.73, 2.A.77, 2.A.78; v2.8.2 adds LA1 and LA2). Such a
+# type is accepted only on a W or B field.
+WITHDRAWN_TYPES = {
+    "v2.7.1": {"CE", "ELD", "OSD", "SPS", "TQ", "TS"},
+    "v2.8.2": {"CE", "ELD", "LA1", "LA2", "OSD", "SPS", "TQ", "TS"},
+}
+# Before v2.5 a field typed CM (or a CM refinement, or v2.3's PTS and SVC) is checked through
+# its own field-local grammar, not a Chapter 2 component table (permanent-limitations
+# register section C, P6-15 bullet; ADR-017 P5 addendum).
+FIELD_LOCAL_TYPES = {
+    "v2.3": {"CM", "PTS", "SVC"} | CM_REFINEMENTS,
+    "v2.3.1": {"CM"} | CM_REFINEMENTS,
+    "v2.4": {"CM"} | CM_REFINEMENTS,
+}
+# (version, dataType) -> why a type with no component table is accepted. Each is an intake row.
+DATATYPE_EXISTENCE_EXEMPT = {
+    ("v2.4", "NA"): "v2.4 CH02 section 2.9.27 prints NA - numeric array and refers to CH07 "
+                    "section 7.14.1.1; Resources/datatypes/v2.4 has no NA file (intake). NA is "
+                    "open-ended and never width-checked (register section C)",
+}
+# P10-4c rule for withdrawn fields: a W field's dataType is the DT cell its defining attribute
+# table prints. v2.7.1 CH02 section 2.8.4 (p. 24): a deprecated field "will be marked as
+# withdrawn and all explanatory narrative will be removed", and "To refer to the detail of a
+# withdrawn message constituent, the reader will need to review the appropriate earlier
+# version of the standard". The tables print the DT cell of a W field blank, so no type is
+# carried from an earlier version. Versions listed here are held to the rule; the value maps
+# each W field whose table does print a type to its citation. v2.8.2 is not yet listed: 30 of
+# its W fields carry a type its print leaves blank (intake; register section C).
+WITHDRAWN_TYPED_AS_PRINTED = {
+    "v2.7.1": {
+        ("UB1", 1): "v2.7.1 CH06 section 6.5.10 UB1 attribute table (p. 130) prints `1  SI  W  "
+                    "00530  Set ID - UB1`",
+    },
+}
+
 # (version, segment, index) -> citation: slots where the schema deliberately diverges from
 # the extracted attribute-table value. Every entry names its source (check-audit-schemas.py
 # fails an entry without one).
@@ -760,9 +810,46 @@ def additional_prohibition_findings(f):
     return out
 
 
+def composite_types():
+    """version -> the composite datatypes with a component table under Resources/datatypes."""
+    out = collections.defaultdict(set)
+    for path in glob.glob(os.path.join(REPO, "Resources/datatypes/v*/*.json")):
+        out[os.path.basename(os.path.dirname(path))].add(os.path.basename(path)[:-5])
+    return out
+
+
+def datatype_existence_findings(version, f, composites):
+    """P10-4c. A field's non-blank dataType exists on its own version: a composite with a
+    component table, a primitive, a variable-type marker, a pre-v2.5 field-local CM type, a
+    cited exemption, or a withdrawn Chapter 2A stub on a W or B field."""
+    dt, opt = f.get("dataType") or "", f.get("optionality") or ""
+    if (not dt or dt in composites or dt in PRIMITIVE_TYPES.get(version, set()) or dt in VARIABLE_TYPES
+            or dt in FIELD_LOCAL_TYPES.get(version, set()) or (version, dt) in DATATYPE_EXISTENCE_EXEMPT):
+        return []
+    if dt in WITHDRAWN_TYPES.get(version, set()):
+        return [] if opt in ("W", "B") else [
+            f"dataType {dt!r} is withdrawn on {version} (Chapter 2A stub); only a W or B field may carry it"]
+    return [f"dataType {dt!r} is not a {version} composite, primitive or variable type"]
+
+
+def withdrawn_datatype_findings(version, seg, f):
+    """P10-4c. On a version held to the withdrawn-field rule (WITHDRAWN_TYPED_AS_PRINTED), a W
+    field carries a dataType only where its attribute table prints one, and then it must."""
+    rule = WITHDRAWN_TYPED_AS_PRINTED.get(version)
+    if rule is None or f.get("optionality") != "W":
+        return []
+    printed, dt = (seg, f["index"]) in rule, f.get("dataType") or ""
+    if dt and not printed:
+        return [f"withdrawn field carries dataType {dt!r}, which its {version} table does not print"]
+    if printed and not dt:
+        return ["withdrawn field lost the dataType its table prints"]
+    return []
+
+
 def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
+    composites = composite_types()
     canonical = canonical_swift_names()
     released = released_swift_names()
     for path in sorted(glob.glob(f"{SCHEMAS}/*/*.json")):
@@ -799,6 +886,11 @@ def integrity():
             findings.extend((rel, f["index"], msg) for msg in table_open_findings(f))
             findings.extend((rel, f["index"], msg) for msg in additional_prohibition_findings(f))
             findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
+            version = os.path.basename(os.path.dirname(path))
+            findings.extend((rel, f["index"], msg)
+                            for msg in datatype_existence_findings(version, f, composites[version]))
+            findings.extend((rel, f["index"], msg)
+                            for msg in withdrawn_datatype_findings(version, doc["segmentID"], f))
             inherited, inherited_name = (None, None) if is_canonical else \
                 canonical.get(f"{doc['segmentID']}-{f['index']}", (None, None))
             findings.extend((rel, f["index"], msg) for msg in swift_name_findings(
@@ -1119,6 +1211,15 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                     continue
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
+            # P10-4c: under the withdrawn-field rule, a W field the defining table types must
+            # be a cited entry of WITHDRAWN_TYPED_AS_PRINTED (the integrity check holds the rest).
+            if version in WITHDRAWN_TYPED_AS_PRINTED:
+                for f in schema_fields:
+                    printed_dt = ((spec_def.get(seg, {}).get(f["index"]) or {}).get("dataType") or "").strip()
+                    if (f.get("optionality") == "W" and printed_dt
+                            and (seg, f["index"]) not in WITHDRAWN_TYPED_AS_PRINTED[version]):
+                        datatype_findings.append((version, seg, f["index"], f.get("dataType") or "",
+                                                  [printed_dt]))
             # M25: the LEN column, recorded VERBATIM. Up to v2.6 the cell is a maximum length,
             # and v2.6 section 2.5.3.2 states "The length of a field is normative"; from v2.7
             # it prints a normative range ("2..2", "32=" truncation-allowed, "250#"

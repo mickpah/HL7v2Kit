@@ -531,6 +531,34 @@ def check_unicode_ellipsis_is_suspect():
     assert not audit.SUSPECT_CODE.search("2 \u2026"), "a range row is not a bare ellipsis"
 
 
+def check_datatype_existence():
+    # P10-4c: a field's dataType exists on its own version.
+    composites = audit.composite_types()
+    def found(version, dt, opt="O"):
+        return audit.datatype_existence_findings(version, {"dataType": dt, "optionality": opt}, composites[version])
+    assert not found("v2.7.1", "CWE") and not found("v2.7.1", "SNM") and not found("v2.7.1", "varies")
+    assert not found("v2.7.1", ""), "a blank dataType is not this check's business"
+    assert found("v2.7.1", "CWX"), "an unknown type is a finding"
+    assert found("v2.6", "SNM"), "SNM is not a v2.6 primitive"
+    assert found("v2.7.1", "CE"), "a withdrawn stub on an optional field is a finding"
+    assert not found("v2.7.1", "CE", "W") and not found("v2.8.2", "TQ", "B"), "a stub on W or B is accepted"
+    assert not found("v2.3", "CM") and found("v2.5.1", "CM"), "CM is field-local only before v2.5"
+    assert not found("v2.4", "NA"), "the cited v2.4 NA exemption"
+    assert all(len(why) >= 40 for why in audit.DATATYPE_EXISTENCE_EXEMPT.values())
+
+
+def check_withdrawn_datatype_rule():
+    # P10-4c: on a version held to the rule, a W field is typed only where its table prints a type.
+    rule = audit.withdrawn_datatype_findings
+    assert rule("v2.7.1", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "a carried type"
+    assert not rule("v2.7.1", "PID", {"index": 2, "dataType": "", "optionality": "W"})
+    assert not rule("v2.7.1", "UB1", {"index": 1, "dataType": "SI", "optionality": "W"}), "printed SI"
+    assert rule("v2.7.1", "UB1", {"index": 1, "dataType": "", "optionality": "W"}), "a printed type dropped"
+    assert not rule("v2.7.1", "PID", {"index": 3, "dataType": "CX", "optionality": "R"}), "not withdrawn"
+    assert not rule("v2.8.2", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "v2.8.2 not yet held"
+    assert all(len(why) >= 40 for cites in audit.WITHDRAWN_TYPED_AS_PRINTED.values() for why in cites.values())
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
@@ -540,7 +568,8 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
           check_field_grammar_shape, check_cm_refinements, check_datatype_name,
           check_version_maps_agree, check_unicode_ellipsis_is_suspect,
-          check_pending_maps_empty_once_released, check_component_table_spans_second_footer]
+          check_pending_maps_empty_once_released, check_component_table_spans_second_footer,
+          check_datatype_existence, check_withdrawn_datatype_rule]
 
 
 def main():

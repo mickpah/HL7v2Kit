@@ -3,7 +3,7 @@
   "version": "2.7.1",
   "description": "Event Type",
   "fields": [
-    { "index": 1, "swiftName": "eventTypeCode", "name": "Event Type Code", "dataType": "ID", "optionality": "W", "repeatability": "1" },
+    { "index": 1, "swiftName": "eventTypeCode", "name": "Event Type Code", "dataType": "", "optionality": "W", "repeatability": "1" },
     { "index": 2, "swiftName": "recordedDateTime", "name": "Recorded Date/Time", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "dateTimePlannedEvent", "name": "Date/Time Planned Event", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "eventReasonCode", "name": "Event Reason Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0062"] },

@@ -27,6 +27,7 @@ public struct MSA: TypedSegment {
     }
 
     /// MSA-3: Text Message. HL7 data type `ST`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever MSA-3 holds on the wire.
     public var textMessage: String? {
         field(3)?.stringValue
     }
@@ -37,11 +38,13 @@ public struct MSA: TypedSegment {
     }
 
     /// MSA-5: Delayed Acknowledgment Type. HL7 data type `ID`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever MSA-5 holds on the wire.
     public var delayedAcknowledgmentType: String? {
         field(5)?.stringValue
     }
 
     /// MSA-6: Error Condition. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever MSA-6 holds on the wire.
     public var errorCondition: CE? {
         field(6).map(CE.init(field:))
     }

@@ -17,6 +17,7 @@ public struct EVN: TypedSegment {
     }
 
     /// EVN-1: Event Type Code. HL7 data type `ID`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever EVN-1 holds on the wire.
     public var eventTypeCode: String? {
         field(1)?.stringValue
     }
