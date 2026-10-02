@@ -23,7 +23,6 @@ public struct PID: TypedSegment {
     }
 
     /// PID-2: Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
-    /// v2.3, v2.6, v2.8.2 print this element as `Patient ID`.
     public var patientID: CX? {
         field(2).map(CX.init(field:))
     }
@@ -45,7 +44,6 @@ public struct PID: TypedSegment {
     }
 
     /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `alternatePatientIDAll` returns every repetition.
-    /// v2.3 prints this element as `Alternate Patient ID`.
     /// v2.6, v2.8.2 print this element as `Alternate Patient ID - PID`.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var alternatePatientID: CX? {
@@ -57,7 +55,6 @@ public struct PID: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.3 prints this element as `Alternate Patient ID`.
     /// v2.6, v2.8.2 print this element as `Alternate Patient ID - PID`.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var alternatePatientIDAll: [CX] {
@@ -107,7 +104,6 @@ public struct PID: TypedSegment {
     }
 
     /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientAliasAll` returns every repetition.
-    /// v2.3, v2.3.1, v2.6, v2.8.2 print this element as `Patient Alias`.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var patientAlias: XPN? {
         field(9).map(XPN.init(field:))
@@ -118,7 +114,6 @@ public struct PID: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.3, v2.3.1, v2.6, v2.8.2 print this element as `Patient Alias`.
     /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
     public var patientAliasAll: [XPN] {
         repetitions(9).map(XPN.init(field:))
@@ -159,7 +154,6 @@ public struct PID: TypedSegment {
     }
 
     /// PID-12: County Code (deprecated). HL7 data type `IS`.
-    /// v2.6, v2.8.2 print this element as `County Code`.
     public var countyCode: String? {
         field(12)?.stringValue
     }
@@ -218,13 +212,11 @@ public struct PID: TypedSegment {
     }
 
     /// PID-19: SSN Number - Patient (deprecated). HL7 data type `ST`.
-    /// v2.3, v2.8.2 print this element as `SSN Number - Patient`.
     public var ssnNumberPatient: String? {
         field(19)?.stringValue
     }
 
     /// PID-20: Driver's License Number - Patient (deprecated). HL7 data type `DLN`.
-    /// v2.3, v2.3.1, v2.4, v2.8.2 print this element as `Driver's License Number - Patient`.
     public var driversLicenseNumberPatient: Field? {
         field(20)
     }
@@ -303,8 +295,6 @@ public struct PID: TypedSegment {
     }
 
     /// PID-28: Nationality (deprecated). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// v2.3, v2.3.1 print this element as `Nationality`.
-    /// v2.8.2 prints this element as `Nationality`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var nationality: CE? {
         field(28).map(CE.init(field:))
@@ -361,7 +351,7 @@ public struct PID: TypedSegment {
     /// PID-35: Species Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-35 holds on the wire.
     /// Renamed `Taxonomic Classification Code` in v2.8.2, which types it `CWE`: use `taxonomicClassificationCode`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `taxonomicClassificationCode`.
     public var speciesCode: CE? {
         field(35).map(CE.init(field:))
     }

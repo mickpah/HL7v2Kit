@@ -93,6 +93,11 @@ private func runs(_ pairs: [(version: String, value: String)]) -> [(versions: [S
     return out
 }
 
+/// `name` without the " (deprecated)" suffix some versions print on a backward-compatible element.
+private func undeprecated(_ name: String) -> String {
+    name.hasSuffix(" (deprecated)") ? String(name.dropLast(" (deprecated)".count)) : name
+}
+
 private func unionFailure(_ message: String) -> ExitCode {
     FileHandle.standardError.write(Data("HL7v2KitCodegen: \(message)\n".utf8))
     return ExitCode.failure
@@ -175,6 +180,20 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
         }
         // Every printed name of this element, with the accessor whose type matches that version.
         for m in family {
+            if m == n {
+                // This accessor's own slot: the note names the printed name only, so the runs
+                // group by name alone (non-contiguous versions merge into one note), and a
+                // "(deprecated)" suffix is not a rename (v2.5.1 OBR-15 "Specimen Source (deprecated)").
+                for run in runs(slots[m].entries.filter { !$0.field.dataType.isEmpty }
+                    .map { ($0.version, undeprecated($0.field.name)) }) where run.value != undeprecated(slot.name) {
+                    // A later rename kept as its own accessor is stated once, by its "Renamed" note.
+                    if run.versions.allSatisfy({ versionLess(base.version, $0) }),
+                       family.contains(where: { $0 != n && slots[$0].renameOf != nil
+                           && undeprecated(slots[$0].name) == run.value }) { continue }
+                    notes.append("\(versionList(run.versions)) \(agree(run.versions, "print")) this element as `\(run.value)`.")
+                }
+                continue
+            }
             for run in runs(slots[m].entries.filter { !$0.field.dataType.isEmpty }.map { entry in
                 let match = family.first { swiftType(slots[$0].dataType) == swiftType(entry.field.dataType) } ?? m
                 return (entry.version, "\(entry.field.name)\u{1F}\(slots[match].swiftName)\u{1F}\(entry.field.dataType)")
@@ -182,13 +201,7 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
                 let parts = run.value.split(separator: "\u{1F}", omittingEmptySubsequences: false).map(String.init)
                 let (name, accessor, type) = (parts[0], parts[1], parts[2])
                 let verb = agree(run.versions, "print")
-                if m == n && name == slot.name { continue }
-                if m == n {
-                    // A later rename kept as its own accessor is stated once, by its "Renamed" note.
-                    if run.versions.allSatisfy({ versionLess(base.version, $0) }),
-                       family.contains(where: { $0 != n && slots[$0].renameOf != nil && slots[$0].name == name }) { continue }
-                    notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)`.")
-                } else if accessor == slot.swiftName {
+                if accessor == slot.swiftName {
                     notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)` (`\(type)`), which this accessor reads.")
                 } else if slots[m].renameOf != nil && name == slots[m].name {
                     let renamed = renamedIn(m)
@@ -224,7 +237,11 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
             let t = run.value
             let printed = agree(run.versions, "print")
             if case .view = refKind {
-                notes.append("\(versionList(run.versions)) \(printed) `\(t)`: use `viewed(as: \(t).self)`.")
+                // Prefer an accessor of this element that already has the type (v2.6 PID-35
+                // `CWE`: `taxonomicClassificationCode`) over the `viewed(as:)` re-view.
+                let typed = family.first { $0 != n && accessorKind(slots[$0].dataType) == .view(t) }
+                let use = typed.map { slots[$0].swiftName } ?? "viewed(as: \(t).self)"
+                notes.append("\(versionList(run.versions)) \(printed) `\(t)`: use `\(use)`.")
                 continue
             }
             let asName = slot.swiftName + "As" + t

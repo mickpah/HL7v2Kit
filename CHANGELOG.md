@@ -167,6 +167,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `audit-schemas.py` now rejects a stranded "S" on any name neither released at v3.13.0 nor
   canonical-inherited. `AccessorSurfaceSnapshotTests` pins every segment and composite
   accessor (name, type, index) for equality against `Tests/Fixtures/APISurface/*-unreleased.txt`.
+- **P9 final review: generator fixes.** Segment and composite codegen render every file
+  before writing any, and delete a file in its output directory that the run did not
+  produce. Rename notes ignore a "(deprecated)" suffix and merge versions that print the
+  same name (OBR-15, IN1-17). A retype note names an existing accessor of that type before
+  `viewed(as:)` (`PID.speciesCode` on v2.6: `taxonomicClassificationCode`). The redundant
+  `checkAllNames` pass is gone; the union pass's name claims cover it.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

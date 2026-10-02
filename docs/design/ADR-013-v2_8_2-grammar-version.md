@@ -99,5 +99,5 @@ The deferred `.v2_8` grammar question above is decided by ADR-018: a `2.8` messa
 
 **Addendum (P9, ADR-020):** point 3's "typed segments / composites are version-agnostic,
 generated once from the canonical v2.5.1 schema" is superseded. The structs keep the v2.5.1
-base and add the v2.6 and v2.8.2 surface (fields, names, `As<T>` views), and composite views
+base and add the other supported versions' surface (fields, names, `As<T>` views), and composite views
 cover every component through v2.8.2 (CWE and CNE 22, XAD 23, XCN 25).

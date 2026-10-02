@@ -287,7 +287,7 @@ public struct OM1: TypedSegment {
     /// OM1-31: Observations Required to Interpret the Observation. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// v2.3, v2.3.1 print this element as `Observations Required to Interpret the Obs`.
     /// Renamed `Observations Required to Interpret this Observation` in v2.8.2, which types it `CWE`: use `observationsRequiredToInterpretThisObservation`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `observationsRequiredToInterpretThisObservation`.
     public var observationsRequiredToInterpretTheObservation: CE? {
         field(31).map(CE.init(field:))
     }

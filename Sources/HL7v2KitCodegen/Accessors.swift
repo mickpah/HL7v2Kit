@@ -116,19 +116,6 @@ func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = ni
 }
 
 /// Members every `TypedSegment` already has; a generated name must not shadow one.
+/// `unionSurface` claims these first, so a generated name (`<name>All` included) that
+/// would shadow one fails codegen.
 let typedSegmentMembers: Set<String> = ["fields", "segmentID", "field", "repetitions", "cast"]
-
-/// A generated `<name>All` must not collide with any other accessor in the
-/// struct: a schema `swiftName`, a deprecated alias, a Track B plural or a
-/// `TypedSegment` member. Codegen fails loudly rather than renaming.
-func checkAllNames(_ schema: SegmentSchema) throws {
-    let names = typedSegmentMembers
-        .union(schema.fields.map(\.swiftName))
-        .union(schema.fields.compactMap(\.variableColumns))
-        .union(schema.fields.flatMap { $0.deprecatedSwiftNames ?? [] })
-    for field in schema.fields where fieldRepeats(field) && names.contains(field.swiftName + "All") {
-        FileHandle.standardError.write(Data(
-            "HL7v2KitCodegen: \(schema.segmentID)-\(field.index): `\(field.swiftName)All` collides with an existing accessor\n".utf8))
-        throw ExitCode.failure
-    }
-}

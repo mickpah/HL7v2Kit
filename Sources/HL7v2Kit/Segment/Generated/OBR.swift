@@ -39,13 +39,11 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-5: Priority (deprecated). HL7 data type `ID`.
-    /// v2.6, v2.8.2 print this element as `Priority`.
     public var priority: String? {
         field(5)?.stringValue
     }
 
     /// OBR-6: Requested Date/Time (deprecated). HL7 data type `TS`.
-    /// v2.8.2 prints this element as `Requested Date/Time`.
     public var requestedDateTime: String? {
         field(6)?.stringValue
     }
@@ -118,8 +116,6 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-15: Specimen Source (deprecated). HL7 data type `SPS`.
-    /// v2.3, v2.3.1, v2.4 print this element as `Specimen Source`.
-    /// v2.6, v2.8.2 print this element as `Specimen Source`.
     public var specimenSource: Field? {
         field(15)
     }
@@ -198,7 +194,6 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-27: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
-    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     public var quantityTiming: Field? {
         field(27)
     }
@@ -208,7 +203,6 @@ public struct OBR: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     public var quantityTimingAll: [Field] {
         repetitions(27)
     }

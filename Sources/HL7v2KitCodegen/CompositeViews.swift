@@ -213,9 +213,5 @@ func emitCompositeViews(specFile: URL, outputRoot: URL, dataTypesByVersion: [Str
                                                    firstSubcomponents: firstSubcomponents)
         rendered.append((outputRoot.appendingPathComponent("\(type)+Components.swift"), source))
     }
-    try FileManager.default.createDirectory(at: outputRoot, withIntermediateDirectories: true)
-    for (outFile, source) in rendered {
-        try Data(source.utf8).write(to: outFile)
-        print("emitted \(outFile.path)")
-    }
+    try writeGeneratedDirectory(rendered, into: outputRoot)
 }

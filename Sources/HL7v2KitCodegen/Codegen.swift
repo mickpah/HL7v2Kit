@@ -8,10 +8,11 @@
 //   outputRoot:  ./Sources/HL7v2Kit/Segment/Generated
 //
 // The schemas root contains version directories (e.g. v2.5.1/) each with one
-// JSON file per segment (e.g. PID.json). Each file is rendered to
-//   <outputRoot>/<VersionDir>/<SegmentID>.swift
-// Existing files are overwritten — the generated tree is intended to be
-// owned by this tool, not edited by hand.
+// JSON file per segment (e.g. PID.json). Each segment renders once, across
+// versions, to
+//   <outputRoot>/<SegmentID>.swift
+// The output directory is owned by this tool: every file is rendered before any
+// is written, and a file there that the run did not produce is deleted.
 
 import Foundation
 
@@ -679,37 +680,31 @@ struct Codegen {
                 schemasBySegment[schema.segmentID, default: []].append(schema)
             }
         }
-        try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
+        // All-or-nothing: render every file for the directory first, then write
+        // them and delete any file the run did not produce (writeGeneratedDirectory).
+        var rendered: [(file: URL, source: String)] = []
         for (segmentID, schemas) in schemasBySegment.sorted(by: { $0.key < $1.key }) {
             let base = schemas.first { $0.version == canonicalVersion } ?? schemas[0]
-            try checkAllNames(base)
             let union = try unionSurface(base: base, others: schemas.filter { $0.version != base.version })
-            let outFile = outputRoot.appendingPathComponent("\(segmentID).swift")
-            try Data(render(base, union: union).utf8).write(to: outFile)
-            print("emitted \(outFile.path)")
+            rendered.append((outputRoot.appendingPathComponent("\(segmentID).swift"), render(base, union: union)))
             emitted += 1
             emittedSegmentIDs.insert(segmentID)
         }
 
-        // Emit the cross-version SegmentRegistry extension.
-        try fm.createDirectory(at: outputRoot, withIntermediateDirectories: true)
-        let registrySource = renderRegistry(segmentIDs: Array(emittedSegmentIDs))
-        let registryFile = outputRoot.appendingPathComponent("SegmentRegistry+Generated.swift")
-        try Data(registrySource.utf8).write(to: registryFile)
-        print("emitted \(registryFile.path)")
+        // The cross-version SegmentRegistry extension.
+        rendered.append((outputRoot.appendingPathComponent("SegmentRegistry+Generated.swift"),
+                         renderRegistry(segmentIDs: Array(emittedSegmentIDs))))
 
-        // Emit the per-version SegmentGrammar table consumed by Validator.
+        // The per-version SegmentGrammar table consumed by Validator.
         for (version, schemas) in schemasByVersion.sorted(by: { $0.key < $1.key }) {
-            let grammarSource = renderGrammarTable(version: version, schemas: schemas)
-            let grammarFile = outputRoot.appendingPathComponent("SegmentGrammar+\(versionDirName(version)).swift")
-            try Data(grammarSource.utf8).write(to: grammarFile)
-            print("emitted \(grammarFile.path)")
+            rendered.append((outputRoot.appendingPathComponent("SegmentGrammar+\(versionDirName(version)).swift"),
+                             renderGrammarTable(version: version, schemas: schemas)))
         }
 
         // P4-31: the full-predicate marking (ADR-021).
-        let fullPredicateFile = outputRoot.appendingPathComponent("FullPredicateConditions+Generated.swift")
-        try Data(renderFullPredicateConditions(schemasByVersion).utf8).write(to: fullPredicateFile)
-        print("emitted \(fullPredicateFile.path)")
+        rendered.append((outputRoot.appendingPathComponent("FullPredicateConditions+Generated.swift"),
+                         renderFullPredicateConditions(schemasByVersion)))
+        try writeGeneratedDirectory(rendered, into: outputRoot)
 
         // Emit the per-version HL7 code-table registry (M6-O6). Version
         // directories are the ones whose name starts with "v"; anything

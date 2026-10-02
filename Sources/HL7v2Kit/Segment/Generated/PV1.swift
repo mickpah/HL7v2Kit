@@ -109,8 +109,7 @@ public struct PV1: TypedSegment {
 
     /// PV1-13: Re-Admission Indicator. HL7 data type `IS`.
     /// v2.3 prints this element as `Readmission Indicator`.
-    /// v2.3.1, v2.4, v2.6 print this element as `Re-admission Indicator`.
-    /// v2.8.2 prints this element as `Re-admission Indicator`.
+    /// v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Re-admission Indicator`.
     /// v2.8.2 prints `CWE`: use `readmissionIndicatorAsCWE`.
     public var readmissionIndicator: String? {
         field(13)?.stringValue

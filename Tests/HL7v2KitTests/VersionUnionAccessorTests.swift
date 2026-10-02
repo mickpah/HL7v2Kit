@@ -141,6 +141,26 @@ struct VersionUnionAccessorTests {
         #expect(reserved.hasPrefix("OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1."))
     }
 
+    @Test("Rename notes ignore a (deprecated) suffix and merge versions that print the same name")
+    func renameNotesAreNotRepeated() throws {
+        let specimen = try doc("OBR", "specimenSource")
+        #expect(!specimen.contains("print this element as `Specimen Source`"))
+        #expect(!specimen.contains("prints this element as `Specimen Source`"))
+        #expect(!(try doc("OBR", "quantityTiming")).contains("this element as `Quantity/Timing`"))
+        let relationship = try doc("IN1", "insuredsRelationshipToPatient")
+        #expect(relationship.contains("v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Relationship To Patient`."))
+        #expect(relationship.components(separatedBy: "this element as").count == 2)
+        #expect(try doc("IN1", "insuredsDateOfBirth")
+            .contains("v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Date Of Birth`."))
+    }
+
+    @Test("A retype note points to an existing accessor of that type before viewed(as:)")
+    func retypeNotePrefersAccessor() throws {
+        let species = try doc("PID", "speciesCode")
+        #expect(species.contains("v2.6 prints `CWE`: use `taxonomicClassificationCode`."))
+        #expect(!species.contains("viewed(as: CWE.self)"))
+    }
+
     @Test("Generated composite DocC states the wire behaviour on other versions")
     func compositeVersionDocC() throws {
         let file = Self.generated.deletingLastPathComponent().deletingLastPathComponent()

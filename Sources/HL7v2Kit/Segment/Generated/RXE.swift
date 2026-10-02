@@ -157,7 +157,7 @@ public struct RXE: TypedSegment {
 
     /// RXE-21: Pharmacy/Treatment Supplier's Special Dispensing Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll` returns every repetition.
     /// Renamed `Special Dispensing Instructions` in v2.8.2, which types it `CWE`: use `specialDispensingInstructions`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `specialDispensingInstructions`.
     public var pharmacyTreatmentSupplierSSpecialDispensingInstructions: CE? {
         field(21).map(CE.init(field:))
     }
@@ -168,7 +168,7 @@ public struct RXE: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// Renamed `Special Dispensing Instructions` in v2.8.2, which types it `CWE`: use `specialDispensingInstructions`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `specialDispensingInstructions`.
     public var pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll: [CE] {
         repetitions(21).map(CE.init(field:))
     }

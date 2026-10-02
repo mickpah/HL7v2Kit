@@ -569,8 +569,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-57: Insurance Co. Contact Reason. HL7 data type `IS`.
-    /// v2.6 prints this element as `Insurance Co Contact Reason`.
-    /// v2.8.2 prints this element as `Insurance Co Contact Reason`.
+    /// v2.6, v2.8.2 print this element as `Insurance Co Contact Reason`.
     /// v2.8.2 prints `CWE`: use `insuranceCoContactReasonAsCWE`.
     public var insuranceCoContactReason: String? {
         field(57)?.stringValue
@@ -610,8 +609,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-62: Guarantor's Relationship to Insured. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// v2.3 prints this element as `Guarantor's Relationship To Insured`.
-    /// v2.3.1, v2.4 print this element as `Guarantor's Relationship To Insured`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Guarantor's Relationship To Insured`.
     /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var guarantorSRelationshipToInsured: CE? {

@@ -95,7 +95,7 @@ public struct RXG: TypedSegment {
     /// RXG-13: Pharmacy/Treatment Supplier's Special Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll` returns every repetition.
     /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions`.
     /// Renamed `Special Administration Instructions` in v2.8.2, which types it `CWE`: use `specialAdministrationInstructions`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `specialAdministrationInstructions`.
     public var pharmacyTreatmentSupplierSSpecialAdministrationInstructions: CE? {
         field(13).map(CE.init(field:))
     }
@@ -107,7 +107,7 @@ public struct RXG: TypedSegment {
     /// holding the literal `""`.
     /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions`.
     /// Renamed `Special Administration Instructions` in v2.8.2, which types it `CWE`: use `specialAdministrationInstructions`.
-    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
+    /// v2.6 prints `CWE`: use `specialAdministrationInstructions`.
     public var pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll: [CE] {
         repetitions(13).map(CE.init(field:))
     }

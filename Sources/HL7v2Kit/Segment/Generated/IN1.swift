@@ -187,9 +187,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-17: Insured's Relationship to Patient. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// v2.3 prints this element as `Insured's Relationship To Patient`.
-    /// v2.3.1, v2.4 print this element as `Insured's Relationship To Patient`.
-    /// v2.6, v2.8.2 print this element as `Insured's Relationship To Patient`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Relationship To Patient`.
     /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var insuredsRelationshipToPatient: CE? {
@@ -197,8 +195,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-18: Insured's Date of Birth. HL7 data type `TS`.
-    /// v2.3, v2.3.1, v2.4 print this element as `Insured's Date Of Birth`.
-    /// v2.6, v2.8.2 print this element as `Insured's Date Of Birth`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Date Of Birth`.
     public var insuredsDateOfBirth: String? {
         field(18)?.stringValue
     }
@@ -218,16 +215,14 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-20: Assignment of Benefits. HL7 data type `IS`.
-    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Assignment Of Benefits`.
-    /// v2.8.2 prints this element as `Assignment Of Benefits`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Assignment Of Benefits`.
     /// v2.8.2 prints `CWE`: use `assignmentOfBenefitsAsCWE`.
     public var assignmentOfBenefits: String? {
         field(20)?.stringValue
     }
 
     /// IN1-21: Coordination of Benefits. HL7 data type `IS`.
-    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Coordination Of Benefits`.
-    /// v2.8.2 prints this element as `Coordination Of Benefits`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Coordination Of Benefits`.
     /// v2.8.2 prints `CWE`: use `coordinationOfBenefitsAsCWE`.
     public var coordinationOfBenefits: String? {
         field(21)?.stringValue
@@ -298,8 +293,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-31: Type of Agreement Code. HL7 data type `IS`.
-    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Type Of Agreement Code`.
-    /// v2.8.2 prints this element as `Type Of Agreement Code`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Type Of Agreement Code`.
     /// v2.8.2 prints `CWE`: use `typeOfAgreementCodeAsCWE`.
     public var typeOfAgreementCode: String? {
         field(31)?.stringValue

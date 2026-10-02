@@ -48,7 +48,6 @@ public struct ORC: TypedSegment {
     }
 
     /// ORC-7: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
-    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     /// Repeats in v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var quantityTiming: Field? {
         field(7)
@@ -59,7 +58,6 @@ public struct ORC: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     /// Repeats in v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var quantityTimingAll: [Field] {
         repetitions(7)
