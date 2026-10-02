@@ -206,6 +206,6 @@
     "tables": [
       "0078"
     ],
-    "cite": "v2.7.1 CH02C section 2.C.2.15 (p. 25) table metadata 'Where used: OBX-8' for User-defined Table 0078 - Interpretation Codes; the defining CH07 section 7.3.2 OBX attribute table (p. 46) leaves TBL# blank and the 7.3.2.8 prose names no table, while the CH07 example tables (pp. 141 to 143) and the CH09 OBX usage table print 0078"
+    "cite": "The defining attribute table omits TBL#: v2.7.1 CH07 section 7.3.2 OBX attribute table (p. 46) prints TBL# blank for Interpretation Codes, and the 7.3.2.8 prose names no table. The 0078 binding rests on v2.7.1 CH02C section 2.C.2.15 (p. 25), whose metadata for User-defined Table 0078 - Interpretation Codes reads 'Where used: OBX-8', and on the CH07 observation category tables (pp. 141 to 143), which print 0078 for OBX-8 (as does the CH09 OBX usage table)"
   }
 }

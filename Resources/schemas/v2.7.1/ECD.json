@@ -1,0 +1,12 @@
+{
+  "segmentID": "ECD",
+  "version": "2.7.1",
+  "description": "Equipment Command",
+  "fields": [
+    { "index": 1, "swiftName": "referenceCommandNumber", "name": "Reference Command Number", "dataType": "NM", "length": "10=", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "remoteControlCommand", "name": "Remote Control Command", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0368"] },
+    { "index": 3, "swiftName": "responseRequired", "name": "Response Required", "dataType": "ID", "table": "0136", "length": "1..1", "optionality": "O", "repeatability": "1", "tables": ["0136"] },
+    { "index": 4, "swiftName": "requestedCompletionTime", "name": "Requested Completion Time", "dataType": "", "optionality": "W", "repeatability": "1" },
+    { "index": 5, "swiftName": "parameters", "name": "Parameters", "dataType": "TX", "optionality": "O", "repeatability": "*" }
+  ]
+}

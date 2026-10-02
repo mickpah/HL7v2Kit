@@ -288,9 +288,6 @@ struct V271GrammarTests {
             // Conditions are P10-5a/5b's: nothing is copied from another version here.
             #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
         }
-        // The grammar holds exactly the chapters authored so far (CH02 to CH10).
-        let earlier = Set(Self.chapterFieldCounts.values.flatMap(\.keys))
-        #expect(Set(segments.keys) == earlier.union(counts.keys))
         // CH05 section 5.5.8 (p. 48): RDT prints SEQ `1-n`, `varies`, R, 00703 Column Value.
         #expect(segments["RDT"]?.field(1)?.variableColumns == true)
         #expect(segments["RDT"]?.field(1)?.optionality == .required)
@@ -347,5 +344,118 @@ struct V271GrammarTests {
         #expect(try field("MFI", 2).repeatability == .multiple)
         // CH08 8.8.11.7 OM4-7 (p. 41): 0371 "can be extended with user specific values".
         #expect(try field("OM4", 7).tableOpen)
+    }
+
+    // MARK: - P10-4c: segment schemas, chapters 11 to 17, and the full segment set
+
+    /// Field count of each segment first defined in CH11 to CH17, from the defining attribute
+    /// table (re-measured by the P10-4c extraction). ITM is 29: the page-foot footnote on
+    /// p. 10 of CH17 is no longer read as a second ITM-2.
+    static let finalChapterFieldCounts: [String: [String: Int]] = [
+        "CH11": ["AUT": 12, "CTD": 7, "PRD": 14, "RF1": 12],
+        "CH12": ["GOL": 22, "PRB": 28, "PTH": 7, "REL": 16, "VAR": 6],
+        "CH13": ["CNS": 6, "ECD": 5, "ECR": 3, "EQP": 5, "EQU": 5, "INV": 20, "ISD": 3,
+                 "NDS": 4, "SAC": 44, "SID": 4, "TCC": 14, "TCD": 8],
+        "CH14": ["NCK": 1, "NSC": 9, "NST": 15],
+        "CH15": ["AFF": 5, "CER": 31, "EDU": 9, "LAN": 4, "ORG": 13, "PRA": 12, "ROL": 14,
+                 "STF": 41],
+        "CH16": ["ADJ": 15, "IPR": 8, "IVC": 30, "PMT": 12, "PSG": 6, "PSL": 48, "PSS": 5,
+                 "PYE": 7, "RFI": 4],
+        "CH17": ["IIM": 15, "ILT": 10, "ITM": 29, "IVT": 26, "PCE": 4, "PKG": 7, "SCD": 37,
+                 "SCP": 8, "SDD": 7, "SLT": 5, "STZ": 4, "VND": 5],
+    ]
+
+    @Test("CH11 to CH17: 53 segments, 691 fields")
+    func finalChapterSegments() throws {
+        let counts = Self.finalChapterFieldCounts.values.reduce(into: [String: Int]()) { $0.merge($1) { a, _ in a } }
+        #expect(Self.finalChapterFieldCounts.mapValues(\.count)
+                == ["CH11": 4, "CH12": 5, "CH13": 12, "CH14": 3, "CH15": 8, "CH16": 9, "CH17": 12])
+        #expect(counts.count == 53)
+        #expect(counts.values.reduce(0, +) == 691)
+        for (segment, count) in counts {
+            let grammar = try #require(segments[segment], "\(segment)")
+            #expect(grammar.version == "2.7.1")
+            #expect(grammar.fields.count == count, "\(segment)")
+            #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
+            // Conditions are P10-5a/5b's: nothing is copied from another version here.
+            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+        }
+    }
+
+    @Test("The full v2.7.1 segment set: 170 segments, 2519 fields")
+    func segmentSet() {
+        let pinned = [Self.chapterFieldCounts, Self.laterChapterFieldCounts, Self.finalChapterFieldCounts]
+            .flatMap(\.values).reduce(into: [String: Int]()) { $0.merge($1) { a, _ in a } }
+        #expect(pinned.count == 170)
+        #expect(Set(segments.keys) == Set(pinned.keys))
+        #expect(segments.values.map(\.fields.count).reduce(0, +) == 2519)
+        // Against the neighbours: v2.7.1 adds IAR, PAC, PRT and SHP to v2.6 and drops the
+        // withdrawn query and summary segments; v2.8.2 adds ten segments v2.7.1 lacks.
+        let v26 = Set(SegmentGrammarTable.v2_6.keys), v282 = Set(SegmentGrammarTable.v2_8_2.keys)
+        let mine = Set(segments.keys)
+        #expect(mine.subtracting(v26) == ["IAR", "PAC", "PRT", "SHP"])
+        #expect(v26.subtracting(mine) == ["QRD", "QRF", "URD", "URS"])
+        #expect(mine.subtracting(v282).isEmpty)
+        #expect(v282.subtracting(mine)
+                == ["BUI", "CDO", "DON", "DPS", "MCP", "OMC", "PM1", "RXV", "SGH", "SGT"])
+    }
+
+    @Test("CH11 to CH17 fields read by hand against the v2.7.1 attribute tables")
+    func finalPrintedFields() throws {
+        func field(_ segment: String, _ index: Int) throws -> FieldGrammar {
+            try #require(segments[segment]?.field(index), "\(segment)-\(index)")
+        }
+        // CH11 11.8.1 RF1 (p. 45): `1  CWE O 0283 01137 Referral Status`.
+        #expect(try field("RF1", 1).dataType == "CWE")
+        #expect(try field("RF1", 1).optionality == .optional)
+        // CH11 11.8.3 PRD (p. 52): `1  CWE R Y 0286 01155 Provider Role`; PRD-6 and PRD-14
+        // 0185 "for suggested values" (11.8.3.6, p. 57; 11.8.3.14, p. 62).
+        #expect(try field("PRD", 1).optionality == .required)
+        #expect(try field("PRD", 1).repeatability == .multiple)
+        #expect(try field("PRD", 6).tableOpen)
+        #expect(try field("PRD", 14).tableOpen)
+        // CH11 11.8.4 CTD (p. 62): `1  CWE R Y 0131 00196 Contact Role`.
+        #expect(try field("CTD", 1).name == "Contact Role")
+        #expect(try field("CTD", 1).repeatability == .multiple)
+        #expect(try field("CTD", 6).tableOpen)
+        // CH12 GOL (p. 24) and PTH (p. 35): `1  2..2  ID R 0287 00816 Action Code`.
+        #expect(try field("GOL", 1).length == "2..2")
+        #expect(try field("GOL", 1).table == "0287")
+        #expect(try field("PTH", 1).dataType == "ID")
+        #expect(try field("PTH", 1).optionality == .required)
+        // CH13 NDS (p. 42): `1  10=  NM R 01398 Notification Reference Number`; EQU-1 prints
+        // no RP/# (v2.8.2 Y), CH13 p. 20.
+        #expect(try field("NDS", 1).length == "10=")
+        #expect(try field("NDS", 1).dataType == "NM")
+        #expect(try field("EQU", 1).repeatability == .single)
+        // CH13 13.4.3.27 SAC-27 (p. 29): 0371 "can be extended with user specific values".
+        #expect(try field("SAC", 27).tableOpen)
+        // CH14 NSC (p. 3): R/O printed blank for NSC-2 to NSC-9, stored as optional.
+        #expect(try field("NSC", 1).optionality == .required)
+        #expect(try field("NSC", 2).optionality == .optional)
+        // CH15 STF (p. 41): `2  CX O Y 0061/0203/0363 00672 Staff Identifier List`.
+        #expect(try field("STF", 2).dataType == "CX")
+        #expect(try field("STF", 2).repeatability == .multiple)
+        // CH15 PRA (p. 28): `1  CWE C 9999 00685 Primary Key Value - PRA`, bare (P10-5).
+        #expect(try field("PRA", 1).optionality == .conditional)
+        // CH15 LAN (p. 23, header prints C.LEN before LEN): `1  1..4  SI R`; `2  CWE R 0296`.
+        #expect(try field("LAN", 1).length == "1..4")
+        #expect(try field("LAN", 2).name == "Language Code")
+        #expect(try field("LAN", 2).optionality == .required)
+        // CH15 ROL (p. 32): `4  XCN R Y 01198 Role Person` (v2.8.2 prints C).
+        #expect(try field("ROL", 4).optionality == .required)
+        // CH16 RFI (p. 26, header in mixed case): `3  1..1  ID O 0136`, "for suggested values".
+        #expect(try field("RFI", 3).length == "1..1")
+        #expect(try field("RFI", 3).tableOpen)
+        // CH17 IIM (p. 7): `1  CWE R 01897 Primary Key Value - IIM`.
+        #expect(try field("IIM", 1).dataType == "CWE")
+        #expect(try field("IIM", 1).optionality == .required)
+        // CH17 ITM (p. 10): `1  EI R 02186 Item Identifier`; `2  999#  ST O 02274`, read once.
+        #expect(try field("ITM", 1).dataType == "EI")
+        #expect(try field("ITM", 2).name == "Item Description")
+        #expect(try field("ITM", 2).length == "999#")
+        // CH17 SCD (p. 44): `1  TM 02104 Cycle Start Time`, R/O/C printed blank.
+        #expect(try field("SCD", 1).dataType == "TM")
+        #expect(try field("SCD", 1).optionality == .optional)
     }
 }

@@ -1,0 +1,22 @@
+{
+  "segmentID": "NST",
+  "version": "2.7.1",
+  "description": "Application Control Level Statistics",
+  "fields": [
+    { "index": 1, "swiftName": "statisticsAvailable", "name": "Statistics Available", "dataType": "ID", "table": "0136", "length": "1..1", "optionality": "R", "repeatability": "1", "tables": ["0136"] },
+    { "index": 2, "swiftName": "sourceIdentifier", "name": "Source Identifier", "dataType": "ST", "optionality": "", "repeatability": "1" },
+    { "index": 3, "swiftName": "sourceType", "name": "Source Type", "dataType": "ID", "table": "0332", "optionality": "", "repeatability": "1", "tables": ["0332"] },
+    { "index": 4, "swiftName": "statisticsStart", "name": "Statistics Start", "dataType": "DTM", "optionality": "", "repeatability": "1" },
+    { "index": 5, "swiftName": "statisticsEnd", "name": "Statistics End", "dataType": "DTM", "optionality": "", "repeatability": "1" },
+    { "index": 6, "swiftName": "receiveCharacterCount", "name": "Receive Character Count", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 7, "swiftName": "sendCharacterCount", "name": "Send Character Count", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 8, "swiftName": "messagesReceived", "name": "Messages Received", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 9, "swiftName": "messagesSent", "name": "Messages Sent", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 10, "swiftName": "checksumErrorsReceived", "name": "Checksum Errors Received", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 11, "swiftName": "lengthErrorsReceived", "name": "Length Errors Received", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 12, "swiftName": "otherErrorsReceived", "name": "Other Errors Received", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 13, "swiftName": "connectTimeouts", "name": "Connect Timeouts", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 14, "swiftName": "receiveTimeouts", "name": "Receive Timeouts", "dataType": "NM", "optionality": "", "repeatability": "1" },
+    { "index": 15, "swiftName": "applicationControlLevelErrors", "name": "Application control-level Errors", "dataType": "NM", "optionality": "", "repeatability": "1" }
+  ]
+}

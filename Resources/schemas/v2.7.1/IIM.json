@@ -1,0 +1,22 @@
+{
+  "segmentID": "IIM",
+  "version": "2.7.1",
+  "description": "IIM",
+  "fields": [
+    { "index": 1, "swiftName": "primaryKeyValueIim", "name": "Primary Key Value - IIM", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "serviceItemCode", "name": "Service Item Code", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "inventoryLotNumber", "name": "Inventory Lot Number", "dataType": "ST", "length": "250=", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "inventoryExpirationDate", "name": "Inventory Expiration Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 5, "swiftName": "inventoryManufacturerName", "name": "Inventory Manufacturer Name", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "inventoryLocation", "name": "Inventory Location", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "inventoryReceivedDate", "name": "Inventory Received Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 8, "swiftName": "inventoryReceivedQuantity", "name": "Inventory Received Quantity", "dataType": "NM", "length": "12#", "optionality": "O", "repeatability": "1" },
+    { "index": 9, "swiftName": "inventoryReceivedQuantityUnit", "name": "Inventory Received Quantity Unit", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 10, "swiftName": "inventoryReceivedItemCost", "name": "Inventory Received Item Cost", "dataType": "MO", "optionality": "O", "repeatability": "1" },
+    { "index": 11, "swiftName": "inventoryOnHandDate", "name": "Inventory On Hand Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 12, "swiftName": "inventoryOnHandQuantity", "name": "Inventory On Hand Quantity", "dataType": "NM", "length": "12#", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "inventoryOnHandQuantityUnit", "name": "Inventory On Hand Quantity Unit", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
+    { "index": 14, "swiftName": "procedureCode", "name": "Procedure Code", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0088"] },
+    { "index": 15, "swiftName": "procedureCodeModifier", "name": "Procedure Code Modifier", "dataType": "CNE", "optionality": "O", "repeatability": "*", "tables": ["0340"] }
+  ]
+}

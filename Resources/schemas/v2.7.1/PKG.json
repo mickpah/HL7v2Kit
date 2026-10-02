@@ -1,0 +1,14 @@
+{
+  "segmentID": "PKG",
+  "version": "2.7.1",
+  "description": "Packaging",
+  "fields": [
+    { "index": 1, "swiftName": "setIdPkg", "name": "Set Id - PKG", "dataType": "SI", "length": "1..4", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "packagingUnits", "name": "Packaging Units", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0818"] },
+    { "index": 3, "swiftName": "defaultOrderUnitOfMeasureIndicator", "name": "Default Order Unit Of Measure Indicator", "dataType": "CNE", "optionality": "O", "repeatability": "1", "tables": ["0532"] },
+    { "index": 4, "swiftName": "packageQuantity", "name": "Package Quantity", "dataType": "NM", "length": "12=", "optionality": "", "repeatability": "1" },
+    { "index": 5, "swiftName": "price", "name": "Price", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 6, "swiftName": "futureItemPrice", "name": "Future Item Price", "dataType": "CP", "optionality": "O", "repeatability": "1" },
+    { "index": 7, "swiftName": "futureItemPriceEffectiveDate", "name": "Future Item Price Effective Date", "dataType": "DTM", "optionality": "O", "repeatability": "1" }
+  ]
+}

@@ -396,6 +396,24 @@ UNREADABLE_WHITELIST = {
                                    "OPT blank for Segment group inclusion (TBL# 0391 is printed); %s",
     ("M19", "v2.7.1", "ACC", 12, 12, "blank cell"): "v2.7.1 CH06 section 6.5.9 ACC attribute table (p. 126) prints "
                                     "OPT blank for Degree of patient liability; %s",
+    ("M19", "v2.7.1", "NSC", 2, 9, "blank cell"): "v2.7.1 CH14 section 14.4.2 NSC attribute table (p. 3) prints R/O "
+                                 "blank for NSC-2 to NSC-9; %s",
+    ("M19", "v2.7.1", "NST", 2, 15, "blank cell"): "v2.7.1 CH14 section 14.4.3 NST attribute table (p. 6) prints R/O "
+                                  "blank for NST-2 to NST-15; %s",
+    ("M19", "v2.7.1", "STF", 41, 41, "blank cell"): "v2.7.1 CH15 section 15.4.8 STF attribute table (pp. 41 to 42) "
+                                   "prints OPT blank for Signature; %s",
+    ("M19", "v2.7.1", "STZ", 1, 4, "blank cell"): "v2.7.1 CH17 section 17.4.3 STZ attribute table (p. 19) prints OPT "
+                                 "blank for every field; %s",
+    ("M19", "v2.7.1", "PKG", 4, 4, "blank cell"): "v2.7.1 CH17 section 17.4.5 PKG attribute table (p. 22) prints OPT "
+                                 "blank for Package Quantity; %s",
+    ("M19", "v2.7.1", "SCP", 1, 8, "blank cell"): "v2.7.1 CH17 section 17.7.1 SCP attribute table (p. 40) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SLT", 1, 5, "blank cell"): "v2.7.1 CH17 section 17.7.2 SLT attribute table (p. 42) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SDD", 1, 7, "blank cell"): "v2.7.1 CH17 section 17.7.3 SDD attribute table (p. 43) prints "
+                                 "R/O/C blank for every field; %s",
+    ("M19", "v2.7.1", "SCD", 1, 37, "blank cell"): "v2.7.1 CH17 section 17.7.4 SCD attribute table (p. 44) prints "
+                                  "R/O/C blank for every field; %s",
 }
 UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREADABLE_WHITELIST.items()}
 
@@ -457,14 +475,7 @@ CHAPTER_GLOBS = {
     "v2.5.1": ["HL7_v251_PDF/V251_CH*.pdf"],
     "v2.6":   ["HL7_v26_PDF/V26_CH*.pdf"],
     "v2.8.2": ["HL7_V2.8.2_PDF/PDF/V282_CH*.pdf"],
-    # P10-4a, P10-4b: v2.7.1 is staged (CHAPTER_GLOBS_STAGED). Only the chapters whose
-    # segments are authored are swept, so the presence check holds them in full and stays
-    # silent on the chapters still to come.
-    "v2.7.1": ["HL7_V271_PDF/PDF/V271_CH02*.pdf", "HL7_V271_PDF/PDF/V271_CH03*.pdf",
-               "HL7_V271_PDF/PDF/V271_CH04*.pdf", "HL7_V271_PDF/PDF/V271_CH05*.pdf",
-               "HL7_V271_PDF/PDF/V271_CH06*.pdf", "HL7_V271_PDF/PDF/V271_CH07*.pdf",
-               "HL7_V271_PDF/PDF/V271_CH08*.pdf", "HL7_V271_PDF/PDF/V271_CH09*.pdf",
-               "HL7_V271_PDF/PDF/V271_CH10*.pdf"],
+    "v2.7.1": ["HL7_V271_PDF/PDF/V271_CH*.pdf"],
 }
 
 # P10-4a: a version whose CHAPTER_GLOBS entry covers only some chapters while its segment
@@ -472,9 +483,7 @@ CHAPTER_GLOBS = {
 # owner decision, see DEFERRED_VERSIONS): every swept chapter gets the full presence check.
 # check-audit-schemas.py fails once Version.swift declares a staged version, so the entry
 # cannot outlive the rollout.
-CHAPTER_GLOBS_STAGED = {
-    "v2.7.1": "P10-4c (CH11 to CH17) widens the glob to V271_CH*.pdf",
-}
+CHAPTER_GLOBS_STAGED = {}   # P10-4c widened v2.7.1 to every chapter
 
 # M6-O6 code-table registry. The per-version table JSON lives beside the schemas; the
 # hand-kept overlay (permitsLocalExtensions / dropCodes) sits at the root of that tree and

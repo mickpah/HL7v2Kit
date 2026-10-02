@@ -337,6 +337,14 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     }
 }
 
+// P10-4c: a page-foot footnote that falls inside a table spanning the page break. Its number
+// sits in the SEQ column and its prose runs across the row (v2.7.1 CH17 ITM, p. 10: footnote 2
+// on the HCPCS levels was read as a second ITM-2). A real row is the next SEQ, or prints a
+// data type, an optionality or an item number; a backward SEQ with none of them is the note.
+func isFootnoteRow(_ row: FieldRow, expected: Int) -> Bool {
+    row.seq < expected && row.dt.isEmpty && row.opt.isEmpty && row.item.isEmpty
+}
+
 // Page furniture between table rows (footers / running heads / form feeds) — skipped,
 // not treated as table end.
 func isPageFurniture(_ line: String) -> Bool {
@@ -481,7 +489,23 @@ func selfCheckRepeatability() -> Never {
         appendContinuation(line, to: &rows, columns: cols)
         if rows[0].name != want { failed += 1; print("FAIL cont \(line.prefix(30).debugDescription): got \(rows[0].name)") }
     }
-    let total = cases.count + optCases.count + rowCases.count + contCases.count
+    // P10-4c: a page-foot footnote inside a table is not a row (v2.7.1 CH17 ITM, p. 10); the
+    // next SEQ, or a backward SEQ with a data type or item number, still is.
+    let noteHeader = "SEQ       LEN     C.LEN       DT       OPT       RP/#       TBL#        ITEM#     ELEMENT NAME"
+    let noteCases: [(String, Int, Bool)] = [
+        ("2     The HCPCS code is divided into three \"levels.\" Level I includes the entire CPT-4 code by reference. Level II includes the American Dental", 7, true),
+        (" 7                           CWE         O                              02191     Manufacturer Identifier", 7, false),
+        (" 2                 999#       ST         O                              02274     Item Description", 7, false),
+    ]
+    for (line, expected, want) in noteCases {
+        guard let cols = detectHeader(noteHeader), let r = parseRow(line, columns: cols) else {
+            failed += 1; print("FAIL note \(line.prefix(30).debugDescription): not parsed"); continue
+        }
+        if isFootnoteRow(r, expected: expected) != want {
+            failed += 1; print("FAIL note \(line.prefix(30).debugDescription): want footnote \(want)")
+        }
+    }
+    let total = cases.count + optCases.count + rowCases.count + contCases.count + noteCases.count
     print("\(total - failed) passed, \(failed) failed")
     exit(failed == 0 ? 0 : 1)
 }
@@ -546,6 +570,7 @@ func extractTables(from text: String) -> [Table] {
             if isPageFurniture(line) { j += 1; continue }
             // A data row, or a continuation of the previous row.
             if let row = parseRow(line, columns: columns) {
+                if isFootnoteRow(row, expected: expected) { j += 1; continue }
                 if row.seq == 1 && expected > 2 { break loop } // a new segment restarted at 1
                 rows.append(row); expected = row.seq + 1
             } else if let seqCol = columns.first(where: { $0.key == "SEQ" })?.start,
