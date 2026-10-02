@@ -123,7 +123,7 @@
       "index": 15,
       "swiftName": "specimenSource",
       "name": "Specimen Source",
-      "dataType": "SPS", "length": "300",
+      "dataType": "CM", "length": "300",
       "optionality": "O",
       "repeatability": "1",
       "tables": ["0070", "0163", "0369"]
@@ -265,7 +265,7 @@
       "index": 32,
       "swiftName": "principalResultInterpreter",
       "name": "Principal Result Interpreter",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "1"
     },
@@ -273,7 +273,7 @@
       "index": 33,
       "swiftName": "assistantResultInterpreter",
       "name": "Assistant Result Interpreter",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -281,7 +281,7 @@
       "index": 34,
       "swiftName": "technician",
       "name": "Technician",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },
@@ -289,7 +289,7 @@
       "index": 35,
       "swiftName": "transcriptionist",
       "name": "Transcriptionist",
-      "dataType": "NDL", "length": "200",
+      "dataType": "CM", "length": "200",
       "optionality": "O",
       "repeatability": "*"
     },

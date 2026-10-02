@@ -104,14 +104,23 @@ DEFERRED_VERSIONS = set()
 # M6-O5 dataType predicate knobs.
 #
 # Pre-v2.5 attribute tables type most composites as the placeholder `CM`
-# ("composite, defined in the field definition"); the schemas carry the
-# v2.5-era NAME of the identical component structure (v2.3 MSH-9's
-# components are MSG's) because grammar-level composite dispatch keys on
-# it — e.g. the HL7au:00049.1 overlay rule reaches v2.4 MSH-9 only because it is typed MSG.
-# A spec `CM` therefore accepts any named COMPOSITE; a scalar against a
-# spec `CM` still flags. Scalar set mirrors `scalarDataTypes` in
-# Codegen.swift.
+# ("composite, defined in the field definition"). A schema may carry the
+# v2.5-era NAME instead only where that name's structure is the field's own,
+# because grammar-level composite dispatch keys on it — e.g. the HL7au:00049.1
+# overlay rule reaches v2.4 MSH-9 only because it is typed MSG. A spec `CM`
+# therefore accepts only a name in the enumerated CM_REFINEMENTS set below;
+# any other name against a spec `CM`, scalar or composite, flags. Scalar set
+# mirrors `scalarDataTypes` in Codegen.swift.
 SCALAR_DATATYPES = {"SI", "ID", "IS", "ST", "NM", "DT", "TM", "TS", "FT", "TX", "DTM"}
+
+# P5 (V24-C08): the exception class is enumerated. A spec `CM` may carry a v2.5-era name
+# only when that name's structure is the field's own: MSG (v2.3 MSH-9 prints the first two
+# of its three components; v2.5 appended message structure), MOC (OBR-23 <dollar amount (MO)>
+# ^ <charge code (CE)>), PRL (OBR-26 <OBX-3 (CE)> ^ <OBX-4 (ST)> ^ <part of OBX-5 (TX)>),
+# EIP (OBR-29 / ORC-8 <placer (EI)> ^ <filler (EI)>). SPS and NDL are not (v2.4 OBR-15.2
+# additives TX vs SPS.2 CWE; OBR-32.1 CN vs NDL.1 CNN): those fields stay CM, and their
+# components come from the field grammar (DataTypeGrammarTable.grammar(segment:field:version:)).
+CM_REFINEMENTS = {"MSG", "MOC", "PRL", "EIP"}
 
 # (version, segment, index) -> citation: slots where the schema deliberately diverges from
 # the extracted attribute-table value. Every entry names its source (check-audit-schemas.py
@@ -1031,8 +1040,8 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
                     continue
                 if (version, seg, f["index"]) in DATATYPE_WHITELIST:
                     continue
-                if "CM" in candidates and schema_dt not in SCALAR_DATATYPES:
-                    continue  # named refinement of the CM placeholder
+                if "CM" in candidates and schema_dt in CM_REFINEMENTS:
+                    continue  # enumerated refinement of the CM placeholder (identical structure)
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
             # M25: the LEN column, recorded VERBATIM. Up to v2.6 the cell is a maximum length,

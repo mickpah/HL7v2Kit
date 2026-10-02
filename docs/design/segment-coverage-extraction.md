@@ -470,11 +470,14 @@ to match a stray table is the residual risk, same as before the predicate existe
 
 Two carve-outs, both enumerated in `audit-schemas.py`:
 
-- **`CM` accepts any named composite.** Pre-v2.5 tables type most composites as the
-  placeholder `CM` ("composite, see the field definition"); the schemas carry the v2.5-era
-  NAME of the identical component structure because grammar-level composite dispatch keys
-  on it (the HL7au:00049.1 overlay rule reaches v2.4 MSH-9 only because it is typed `MSG`). A **scalar** against
-  a spec `CM` still flags.
+- **`CM` accepts an enumerated refinement only.** Pre-v2.5 tables type most composites as the
+  placeholder `CM` ("composite, see the field definition"). A schema may carry the
+  v2.5-era name only where that structure is the field's own (`CM_REFINEMENTS`: MSG, MOC,
+  PRL, EIP). Grammar-level dispatch keys on those names: HL7au:00049.1 is BASE only
+  because v2.4 MSH-9 is typed `MSG`. SPS and NDL differ (v2.4 OBR-15.2 is TX, SPS.2 CWE;
+  OBR-32.1 is CN, NDL.1 CNN), so OBR-15 and OBR-32..35 stay `CM` on v2.3 to v2.4. Every
+  `CM` field's components come from its own definition (ADR-017, P5 addendum). A scalar
+  against a spec `CM` still flags.
 - **`DATATYPE_WHITELIST`** — `v2.4/AL1-1`: the v2.4 table *and* heading print `CE` for
   `Set ID - AL1` (SI in v2.3 and v2.5+), a spec typo; following it verbatim would dispatch
   the AU CE composite rules onto every plain set-ID (req #4 misfire), so the schema

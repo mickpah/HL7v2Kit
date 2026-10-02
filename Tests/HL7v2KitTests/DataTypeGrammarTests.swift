@@ -213,8 +213,9 @@ struct DataTypeGrammarTests {
 
     @Test("P5: every pre-v2.5 field-local composite has a grammar or a registered reason")
     func fieldLocalCoverage() {
-        // v2.5-era names on pre-v2.5 CM fields, and v2.3's field-printed names.
-        let fieldLocal: Set<String> = ["CM", "MSG", "MOC", "PRL", "EIP", "SPS", "NDL", "PTS", "SVC"]
+        // The enumerated v2.5-era names on pre-v2.5 CM fields (audit-schemas.py CM_REFINEMENTS;
+        // SPS and NDL are not among them, P5-7), and v2.3's field-printed names.
+        let fieldLocal: Set<String> = ["CM", "MSG", "MOC", "PRL", "EIP", "PTS", "SVC"]
         // ADR-017 P5 addendum: OM2-6 prints its structure as a narrative repetition list.
         let registered: Set<String> = ["2.3/OM2-6", "2.3.1/OM2-6", "2.4/OM2-6"]
         let versions: [(Version, [String: SegmentGrammar])] = [
@@ -230,5 +231,25 @@ struct DataTypeGrammarTests {
                 }
             }
         }
+    }
+
+    @Test("P5: pre-v2.5 OBR-15 and OBR-32..35 stay CM; v2.5's SPS and NDL are different structures")
+    func cmRefinementsHonest() throws {
+        let versions: [(Version, [String: SegmentGrammar])] = [
+            (.v2_3, SegmentGrammarTable.v2_3), (.v2_3_1, SegmentGrammarTable.v2_3_1), (.v2_4, SegmentGrammarTable.v2_4),
+        ]
+        for (version, segments) in versions {
+            let obr = try #require(segments["OBR"], "\(version)")
+            #expect(obr.field(15)?.dataType == "CM", "\(version) OBR-15")
+            for index in 32...35 {
+                #expect(obr.field(index)?.dataType == "CM", "\(version) OBR-\(index)")
+            }
+            #expect(obr.field(26)?.dataType == "PRL", "\(version): identical structure keeps the v2.5 name")
+            #expect(DataTypeGrammarTable.grammar(segment: "OBR", field: 15, version: version)?.component(2)?.dataType == "TX",
+                    "\(version): additives (TX); v2.5.1 SPS.2 is CWE")
+            #expect(DataTypeGrammarTable.grammar(segment: "OBR", field: 32, version: version)?.component(1)?.dataType == "CN",
+                    "\(version): name (CN); v2.5.1 NDL.1 is CNN")
+        }
+        #expect(SegmentGrammarTable.v2_4["MSH"]?.field(9)?.dataType == "MSG", "HL7au:00049.1 dispatch")
     }
 }
