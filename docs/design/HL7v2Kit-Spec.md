@@ -36,6 +36,7 @@ These three answers from the planning session determine the v0.1.0 API surface.
 |---|---|---|
 | Parser scope | Parse + build (round-trip) | AST must be lossless. Builder API ships alongside parser. Round-trip property tests are mandatory. |
 | Validation depth | Structural + segment grammar + Z-segment tolerance | Ships with v2.3.1 / 2.4 / 2.5.1 / 2.8 segment grammars. Unknown segments (Z-segments) parse as `UnknownSegment` without errors. |
+| Acknowledgments (ADR-019, decision 9) | Build and validate the general acknowledgment; no protocol logic | `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` applies the MSA-2 echo and sender/receiver swap; the ACK structure is validated with the other message structures. Choosing whether and when to send accept or application acknowledgments from MSH-15/MSH-16 (v2.5.1 CH02 §2.9.2-2.9.3) is receiving-application behaviour and a non-goal. |
 | Public API style | Both — paths for ad-hoc, typed for known segments | Two parallel access patterns: string-path subscripts and typed segment accessors. Tests verify they return identical values. |
 
 ---
