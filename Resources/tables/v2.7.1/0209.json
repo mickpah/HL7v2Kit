@@ -1,0 +1,42 @@
+{
+  "table": "0209",
+  "version": "2.7.1",
+  "name": "Relational Operator",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0209 - Relational Operator",
+  "entries": [
+    {
+      "code": "CT",
+      "description": "Contains"
+    },
+    {
+      "code": "EQ",
+      "description": "Equal"
+    },
+    {
+      "code": "GE",
+      "description": "Greater than or equal"
+    },
+    {
+      "code": "GN",
+      "description": "Generic"
+    },
+    {
+      "code": "GT",
+      "description": "Greater than"
+    },
+    {
+      "code": "LE",
+      "description": "Less than or equal"
+    },
+    {
+      "code": "LT",
+      "description": "Less than"
+    },
+    {
+      "code": "NE",
+      "description": "Not Equal"
+    }
+  ]
+}

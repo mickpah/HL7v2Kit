@@ -1,0 +1,38 @@
+{
+  "table": "0438",
+  "version": "2.7.1",
+  "name": "Allergy Clinical Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0438 - Allergy Clinical Status",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Confirmed or verified"
+    },
+    {
+      "code": "D",
+      "description": "Doubt raised"
+    },
+    {
+      "code": "E",
+      "description": "Erroneous"
+    },
+    {
+      "code": "I",
+      "description": "Confirmed but inactive"
+    },
+    {
+      "code": "P",
+      "description": "Pending"
+    },
+    {
+      "code": "S",
+      "description": "Suspect"
+    },
+    {
+      "code": "U",
+      "description": "Unconfirmed"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "table": "0555",
+  "version": "2.7.1",
+  "name": "Invoice Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0555 - Invoice Type",
+  "entries": [
+    {
+      "code": "BK",
+      "description": "Block"
+    },
+    {
+      "code": "FN",
+      "description": "Final"
+    },
+    {
+      "code": "FS",
+      "description": "Fee for Service"
+    },
+    {
+      "code": "GP",
+      "description": "Group"
+    },
+    {
+      "code": "IN",
+      "description": "Information Only"
+    },
+    {
+      "code": "NP",
+      "description": "Non Patient"
+    },
+    {
+      "code": "PA",
+      "description": "Partial"
+    },
+    {
+      "code": "SL",
+      "description": "Salary"
+    },
+    {
+      "code": "SS",
+      "description": "By Session"
+    },
+    {
+      "code": "SU",
+      "description": "Supplemental"
+    }
+  ]
+}

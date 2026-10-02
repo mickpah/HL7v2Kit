@@ -408,6 +408,76 @@ def check_datatype_name():
     assert audit.datatype_name_findings("") == []
 
 
+def _script(name):
+    spec = importlib.util.spec_from_file_location(name.replace("-", "_")[:-3], os.path.join(HERE, name))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# P10 (scan rows A31, B14): a version is modelled once it has a resource tree under
+# Resources/tables, Resources/schemas or Resources/datatypes. Every per-version source map in
+# the audit and the extractors must name every modelled version, or an audit or extraction
+# mode skips it silently. A staged rollout names here the maps it has not wired yet, each with
+# the task that wires it; an entry that is no longer missing fails too, so the list empties
+# as the rollout lands and never goes stale.
+VERSION_MAPS_PENDING = {
+    "audit-schemas.py CHAPTER_GLOBS": {"2.7.1"},       # P10-4a (segment chapters)
+    "audit-schemas.py EXAMPLE_SOURCES": {"2.7.1"},     # P10-2 (CH02A examples)
+    "extract-datatype-components.py PDFS": {"2.7.1"},  # P10-2 (CH02A component tables)
+}
+
+
+def _modelled_versions():
+    root = os.path.join(os.path.dirname(HERE), "Resources")
+    found = set()
+    for tree in ("tables", "schemas", "datatypes"):
+        for entry in os.listdir(os.path.join(root, tree)):
+            if entry.startswith("v") and os.path.isdir(os.path.join(root, tree, entry)):
+                found.add(entry[1:])
+    return found
+
+
+def check_version_maps_agree():
+    modelled = _modelled_versions()
+    assert "2.7.1" in modelled, "Resources/tables/v2.7.1 is the P10-1 deliverable"
+    dtx, dtp = _script("extract-datatype-components.py"), _script("extract-datatype-prose.py")
+    examples = _script("extract-example-messages.py")
+    maps = {
+        "audit-schemas.py CHAPTER_GLOBS": audit.CHAPTER_GLOBS,
+        "audit-schemas.py TABLE_PDFS": audit.TABLE_PDFS,
+        "audit-schemas.py EXAMPLE_SOURCES": audit.EXAMPLE_SOURCES,
+        "extract-example-messages.py CHAPTERS": examples.CHAPTERS,
+        "extract-datatype-components.py PDFS": dtx.PDFS,
+    }
+    assert set(VERSION_MAPS_PENDING) <= set(maps), sorted(set(VERSION_MAPS_PENDING) - set(maps))
+    for name, table in maps.items():
+        keys = {k[1:] if k.startswith("v") else k for k in table}
+        pending = VERSION_MAPS_PENDING.get(name, set())
+        missing = modelled - keys
+        if name == "extract-datatype-components.py PDFS":
+            # B14: CH02A component tables from v2.5.1 on; earlier versions are read from the
+            # prose (extract-datatype-prose.py SOURCES). Together they cover each version once.
+            both = keys & set(dtp.SOURCES)
+            assert not both, f"read by both datatype extractors: {sorted(both)}"
+            missing -= set(dtp.SOURCES)
+        assert missing == pending, f"{name}: missing {sorted(missing)}, pending {sorted(pending)}"
+        assert keys <= modelled, f"{name}: names unmodelled versions {sorted(keys - modelled)}"
+        for key, source in table.items():
+            source = source[0] if isinstance(source, tuple) else source
+            for path in (source if isinstance(source, list) else [source]):
+                if key.lstrip("v") == "2.7.1":
+                    assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
+
+
+def check_unicode_ellipsis_is_suspect():
+    # v2.7.1 Appendix A prints the "no suggested values" row with U+2026 where the earlier
+    # appendices print "..." (P10-0). Either form surviving as a code is a TOOL defect.
+    assert audit.SUSPECT_CODE.search("..."), "the bare three-full-stop row"
+    assert audit.SUSPECT_CODE.search("…"), "the bare Unicode-ellipsis row"
+    assert not audit.SUSPECT_CODE.search("2 …"), "a range row is not a bare ellipsis"
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
@@ -415,7 +485,8 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
           check_unreadable_is_reported, check_length_token, check_write_lengths,
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
-          check_field_grammar_shape, check_cm_refinements, check_datatype_name]
+          check_field_grammar_shape, check_cm_refinements, check_datatype_name,
+          check_version_maps_agree, check_unicode_ellipsis_is_suspect]
 
 
 def main():

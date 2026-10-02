@@ -1,0 +1,46 @@
+{
+  "table": "0038",
+  "version": "2.7.1",
+  "name": "Order status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0038 - Order status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Some, but not all, results available"
+    },
+    {
+      "code": "CA",
+      "description": "Order was canceled"
+    },
+    {
+      "code": "CM",
+      "description": "Order is completed"
+    },
+    {
+      "code": "DC",
+      "description": "Order was discontinued"
+    },
+    {
+      "code": "ER",
+      "description": "Error, order not found"
+    },
+    {
+      "code": "HD",
+      "description": "Order is on hold"
+    },
+    {
+      "code": "IP",
+      "description": "In process, unspecified"
+    },
+    {
+      "code": "RP",
+      "description": "Order has been replaced"
+    },
+    {
+      "code": "SC",
+      "description": "In process, scheduled"
+    }
+  ]
+}

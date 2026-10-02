@@ -1,0 +1,9 @@
+{
+  "table": "0350",
+  "version": "2.7.1",
+  "name": "Occurrence Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0350 - Occurrence Code: the only printed row is the ellipsis with 'Use NUBC codes': the values are an external code set",
+  "entries": []
+}

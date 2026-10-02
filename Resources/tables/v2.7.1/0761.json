@@ -1,0 +1,30 @@
+{
+  "table": "0761",
+  "version": "2.7.1",
+  "name": "DRG Procedure Determination Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0761 - DRG Procedure Determination Status",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Valid code"
+    },
+    {
+      "code": "1",
+      "description": "Invalid code"
+    },
+    {
+      "code": "2",
+      "description": "Not used"
+    },
+    {
+      "code": "3",
+      "description": "Invalid for this gender"
+    },
+    {
+      "code": "4",
+      "description": "Invalid for this age"
+    }
+  ]
+}

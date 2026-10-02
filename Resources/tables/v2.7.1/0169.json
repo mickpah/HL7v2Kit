@@ -1,0 +1,18 @@
+{
+  "table": "0169",
+  "version": "2.7.1",
+  "name": "Reporting Priority",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0169 - Reporting Priority",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Call back results"
+    },
+    {
+      "code": "R",
+      "description": "Rush reporting"
+    }
+  ]
+}

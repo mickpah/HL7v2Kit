@@ -1,0 +1,142 @@
+{
+  "table": "0912",
+  "version": "2.7.1",
+  "name": "Participation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.315 (p188), HL7 Table 0912 - Participation; Chapter 7 sec 7.3.4.4 PRT-4 (p70) 'Refer to HL7 Table 0912 ... for valid values'",
+  "entries": [
+    {
+      "code": "AD",
+      "description": "Admitting Provider"
+    },
+    {
+      "code": "AI",
+      "description": "Assistant/Alternate Interpreter"
+    },
+    {
+      "code": "AP",
+      "description": "Administering Provider"
+    },
+    {
+      "code": "ARI",
+      "description": "Assistant Result Interpreter"
+    },
+    {
+      "code": "AT",
+      "description": "Attending Provider"
+    },
+    {
+      "code": "AUT",
+      "description": "AUT Author/Event Initiator"
+    },
+    {
+      "code": "CP",
+      "description": "Consulting Provider"
+    },
+    {
+      "code": "DP",
+      "description": "Dispensing Provider"
+    },
+    {
+      "code": "EP",
+      "description": "Entering Provider (probably not the same as transcriptionist)"
+    },
+    {
+      "code": "EQUIP",
+      "description": "Equipment"
+    },
+    {
+      "code": "FHCP",
+      "description": "Family Health Care Professional"
+    },
+    {
+      "code": "MDIR",
+      "description": "Medical Director"
+    },
+    {
+      "code": "OP",
+      "description": "Ordering Provider"
+    },
+    {
+      "code": "PB",
+      "description": "Packed by"
+    },
+    {
+      "code": "PH",
+      "description": "Pharmacist (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"
+    },
+    {
+      "code": "PI",
+      "description": "Primary Interpreter"
+    },
+    {
+      "code": "PO",
+      "description": "Performing Organization"
+    },
+    {
+      "code": "POMD",
+      "description": "Performing Organization Medical Director"
+    },
+    {
+      "code": "PP",
+      "description": "Primary Care Provider"
+    },
+    {
+      "code": "PRI",
+      "description": "Principal Result Interpreter"
+    },
+    {
+      "code": "RCT",
+      "description": "Results Copies To"
+    },
+    {
+      "code": "RO",
+      "description": "Responsible Observer"
+    },
+    {
+      "code": "RP",
+      "description": "Referring Provider"
+    },
+    {
+      "code": "RT",
+      "description": "Referred to Provider"
+    },
+    {
+      "code": "SB",
+      "description": "Send by"
+    },
+    {
+      "code": "SC",
+      "description": "Specimen Collector"
+    },
+    {
+      "code": "TN",
+      "description": "Technician"
+    },
+    {
+      "code": "TR",
+      "description": "Transcriptionist"
+    },
+    {
+      "code": "VP",
+      "description": "Verifying Provider"
+    },
+    {
+      "code": "VPS",
+      "description": "Verifying Pharmaceutical Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"
+    },
+    {
+      "code": "VTS",
+      "description": "Verifying Treatment Supplier (not sure how to dissect Pharmacist/Treatment Supplier's Verifier ID)"
+    },
+    {
+      "code": "WAY",
+      "description": "Waypoint"
+    },
+    {
+      "code": "WAYR",
+      "description": "Waypoint Recipient"
+    }
+  ]
+}

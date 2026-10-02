@@ -3066,5 +3066,393 @@
       "citation": "HL7 v2.8.2 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master File Identifier Code",
       "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
     }
+  },
+  "2.7.1": {
+    "0003": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "Z73",
+        "Z74",
+        "Z75",
+        "Z76",
+        "Z77",
+        "Z78",
+        "Z79",
+        "Z80",
+        "Z81",
+        "Z82",
+        "Z83",
+        "Z84",
+        "Z85",
+        "Z86",
+        "Z87"
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.2 (p12), HL7 Table 0003 - Event Type; Chapter 2 sec 2.5.1 (p6): 'All message types and trigger event codes beginning with the letter \"Z\" are reserved for locally defined messages', so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (pp34-35) prints bare rows Z73 to Z99 with no description; Chapter 2C prints none. Chapter 2 sec 2.5.1 (p6) adds 'No such codes will be defined within the HL7 Standard', so Chapter 2C governs: Z73-Z87 are dropped here and the extractor already skips Z88-Z99 as note rows."
+    },
+    "0076": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.14 (p22), HL7 Table 0076 - Message Type; Chapter 2 sec 2.5.1 (p6) reserves message types beginning with \"Z\" for locally defined messages, so the printed rows are not a closed set"
+    },
+    "0104": {
+      "permitsLocalExtensions": true,
+      "addEntries": [
+        [
+          "2.7.1",
+          "Release 2.7.1"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.22 (p28), HL7 Table 0104 - Version ID; Chapter 2 sec 2.14.9.12 MSH-12 (p60): the field 'is matched by the receiving system to its own version' and an affiliate may carry 'local' versions, so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p50) stops at 2.7; Chapter 2C (p28) also prints '2.7.1 Release 2.7.1 July 2012'. Chapter 2C governs. Openness follows the reading every other version records; CH02A sec 2.A.82.1 VID.1 (p87) itself says 'for valid values'."
+    },
+    "0105": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2 sec 2.14.10.2 NTE-2 Source of Comment (p65), HL7 Table 0105 - Source of Comment: 'This table may be extended locally during implementation.'"
+    },
+    "0175": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier (p7), HL7 Table 0175 - Master File Identifier Code: 'This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).'"
+    },
+    "0355": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.176 (p106), HL7 Table 0355 - Primary Key Value Type: 'For locally defined master files, this table can be locally extended with other HL7 data types'"
+    },
+    "0203": {
+      "patterns": [
+        {
+          "code": "NNxxx",
+          "regex": "^NN[A-Z]{3}$"
+        }
+      ],
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.71 (p56), HL7 Table 0203 - Identifier Type; CH02A sec 2.A.14.5 CX.5 (p33) 'Refer to HL7 Table 0203 - Identifier Type for suggested values', so the printed rows are not a closed set",
+      "note": "The row NNxxx (Chapter 2C p59, Appendix A p67) is 'National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code': a family of codes, modelled as a pattern row as on v2.6 and v2.8.2."
+    },
+    "0396": {
+      "permitsLocalExtensions": true,
+      "renameCodes": {
+        "CE (obsolete)": "CE",
+        "ISOnnnn(deprecated)": "ISOnnnn"
+      },
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.214 (p123), HL7 Table 0396 - Coding System; the table prints the local forms 99zzz and L, and its Note says 'Changes to Table 0396 occur' after publication, so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p121) governs: Chapter 2C runs four wide Values into the Description and wraps others (extraction artefacts). '(obsolete)' and '(deprecated)' are status annotations printed in the Value column, as on v2.6 and v2.8.2."
+    },
+    "0399": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.316 (p189), External Table 0399 - Country Code: 'use 3-character (alphabetic) form of ISO 3166'; Chapter 2 sec 2.14.9.17 MSH-17 (p61). The values are ISO 3166 by reference, so the printed rows are not a closed set"
+    },
+    "0354": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "MFN_Znn",
+        "QBP_Qnn",
+        "QBP_Z73",
+        "RSP_Z82",
+        "RSP_Z86",
+        "RSP_Z88",
+        "RSP_Z90",
+        "RTB_Knn",
+        "RTB_Z74"
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.175 (p102), HL7 Table 0354 - Message Structure. Chapter 2 sec 2.5.1 (p6) reserves \"Z\" message types and events for locally defined messages, whose structures are local too, so the printed rows are not a closed set",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p101) prints nine rows Chapter 2C omits: the families MFN_Znn, QBP_Qnn, RTB_Knn and the site query structures QBP_Z73, RSP_Z82, RSP_Z86, RSP_Z88, RSP_Z90, RTB_Z74 (\"Z\" events, Chapter 2 sec 2.5.1). None is an HL7-defined structure; Chapter 2C governs. Measured: every structure on a v2.7.1 chapter trigger line is in the table; eight structures appear only in example messages (ADT_A04, ADT_A31, CRM_C05, CRM_C09, MFK_M13, QSX_J01, RSP_K61, RTB_R13)."
+    },
+    "0207": {
+      "dropCodes": [
+        "Not present"
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p70), HL7 Table 0207 - Processing Mode; HL7 v2.7.1 Chapter 2C sec 2.C.2.75 (p62)",
+      "note": "Processing mode prints 'Not present' = 'the default, meaning current processing'. The row denotes an ABSENT field, not a literal value."
+    },
+    "0211": {
+      "addEntries": [
+        [
+          "UNICODE UTF-16",
+          "UCS Transformation Format, 16-bit form"
+        ],
+        [
+          "UNICODE UTF-32",
+          "UCS Transformation Format, 32-bit form"
+        ],
+        [
+          "UNICODE UTF-8",
+          "UCS Transformation Format, 8-bit form"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.79 (p63), HL7 Table 0211 - Alternate Character Sets",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (pp71-72) wraps the Values 'UNICODE UTF-16', '-32' and '-8' after 'UTF-', so the extractor reads the first as a reprint of UNICODE and skips the others as note rows. Chapter 2C prints all three whole; the prints agree, Chapter 2C's reading governs."
+    },
+    "0301": {
+      "renameCodes": {
+        "L,M,N": "L"
+      },
+      "addEntries": [
+        [
+          "M",
+          "Locally defined coding entity identifier."
+        ],
+        [
+          "N",
+          "Locally defined coding entity identifier."
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p95), HL7 Table 0301 - Universal ID Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.143 (p91)",
+      "note": "Universal ID type prints one row whose Value is 'L,M,N': three codes, each 'Locally defined coding entity identifier.', not one. Split into three rows carrying the printed description."
+    },
+    "0335": {
+      "renameCodes": {
+        "Meal RelatedTimings": "Meal Related Timings"
+      },
+      "citation": "HL7 v2.7.1 Appendix A (p99), User-defined Table 0335 - Repeat Pattern; HL7 v2.7.1 Chapter 2C sec 2.C.2.165 (p98)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints wrap the row label 'Meal Related / Timings' over two lines; Appendix A governs once the wrap is rejoined with its space."
+    },
+    "0528": {
+      "addEntries": [
+        [
+          "AHS",
+          "Spelling used by the specification's own RPT example (before the hour of sleep); not a printed row"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p160), HL7 Table 0528 - Event Related Period; CH02A sec 2.A.66 RPT (p78)",
+      "note": "The table prints HS ('the hour of sleep'); the RPT section's own example is '|QHS&Every day before the hours of sleep&HL7xxx^^^^1^d^^AHS|', whose RPT.8 'AHS' is in no row. The example's spelling is added so the closed table accepts the specification's own example."
+    },
+    "0125": {
+      "addEntries": [
+        [
+          "CD",
+          "Channel definition (Chapter 7 waveform: CHN category)"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Appendix A (p53), HL7 Table 0125 - Value Type; Chapter 7 sec 7.15.4 (p141)",
+      "note": "Chapter 7 sec 7.15.4 (p141): 'When using the OBX for the CHN category, OBX-2 Value Type should be valued to CD'. The table prints MA and NA (sec 7.13.1.3, p139) but omits CD. Unlike v2.6, v2.7.1 OBX-2 (sec 7.3.2.2, p46) has no 'All HL7 data types are valid' sentence, so no further datatypes are added."
+    },
+    "0391": {
+      "renameCodes": {
+        "CLOCK_AND_STATS_WITH_NOTE": "CLOCK_AND_STATS_WITH_NOTES"
+      },
+      "addEntries": [
+        [
+          "CLOCK_AND_STATS_WITH_NOTES_ALT",
+          ""
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.209 (pp119-120), HL7 Table 0391 - Segment Group; Chapter 14 sec 14.3.2 NMD^N02^NMD_N02 (p2)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p117) prints CLOCK_AND_STATS_WITH_NOTE; Chapter 2C prints CLOCK_AND_STATS_WITH_NOTES and CLOCK_AND_STATS_WITH_NOTES_ALT, and the defining chapter's NMD_N02 structure names the group CLOCK_AND_STATS_WITH_NOTES. Chapter 2C governs."
+    },
+    "0347": {
+      "addEntries": [
+        [
+          "AB",
+          "Alberta (US and Canada)"
+        ],
+        [
+          "MI",
+          "Michigan (US)"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.171 (p101), User-defined Table 0347 - State/Province",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p101) prints only 'No suggested values defined'; Chapter 2C prints AB and MI ('This table is country specific'). Chapter 2C is the table's defining print (CH02A refers to it 'for suggested values'), so it governs."
+    },
+    "0492": {
+      "dropCodes": [
+        "??"
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.253 (p156), User-defined Table 0492 - Specimen Appropriateness; Chapter 7 sec 7.3.3.23 SPM-23 (p66)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p151) prints a placeholder row '?? Inappropriate due to ...'; Chapter 2C prints P, A and I only. Chapter 2C governs."
+    },
+    "0507": {
+      "addEntries": [
+        [
+          "A",
+          "Alert provider when abnormal"
+        ],
+        [
+          "CC",
+          "Copies Requested"
+        ],
+        [
+          "BCC",
+          "Blind Copy"
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.268 (p164), User-defined Table 0507 - Observation Result Handling",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A (p157) prints F and N; Chapter 2C prints F, N, A, CC and BCC. Chapter 2C governs."
+    },
+    "0200": {
+      "citation": "HL7 v2.7.1 Appendix A (p65), User-defined Table 0200 - Name Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.68 (p54)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Chapter 2C's extra 'name.' is the tail of the Note under the table (p55); the prints agree, Appendix A governs. No change."
+    },
+    "0440": {
+      "citation": "HL7 v2.7.1 Appendix A (p132), HL7 Table 0440 - Data Types; HL7 v2.7.1 Chapter 2C sec 2.C.2.223 (p138)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Chapter 2C's extra 'type' is the wrapped column header 'Data type' (pp138-139); the prints agree, Appendix A governs. No change."
+    },
+    "0055": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.7 (p20), External Table 0055 - Diagnosis Related Group; Chapter 6 sec 6.5.3.1 DRG-1 (p38) 'Refer to Externally-defined Table 0055'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0088": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.18 (p27), External Table 0088 - Procedure Code; Chapter 6 sec 6.5.1.25 FT1-25 (p24) 'Refer to Externally-defined Table 0088'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0118": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.25 (p29), External Table 0118 - Major Diagnostic Category; Chapter 8 sec 8.13.2.2 DMI-2 (p97) 'Refer to External Table 0118'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0910": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.314 (p188), External Table 0910 - Acquisition Modality; Chapter 4 sec 4.5.6.5 IPC-5 (p87) 'Refer to External Table 0910'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and the defining chapter call it External. The defining chapter governs: an externally-defined table is HL7-owned with values from an outside body (the extractor's reading of 'External' on every version), so it is never a closed set."
+    },
+    "0544": {
+      "kind": "HL7",
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.295 (p172), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.3.3.28 SPM-28 (p67) and sec 7.17.2.9 SHP-9 (p155): 'Refer to HL7 Table 0544 - Container Condition for suggested values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For suggested values' leaves it open (ADR-016 criterion). Chapter 2C's extra code 'temperature' is a wrapped Description (p173): no code change."
+    },
+    "0905": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.309 (p185), HL7 Table 0905 - Shipment Status; Chapter 7 sec 7.17.2.3 SHP-3 (p154) 'Refer to HL7 Table 0905 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0906": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.310 (p186), HL7 Table 0906 - ActPriority; Chapter 7 sec 7.17.2.6 SHP-6 (p155) 'Refer to HL7 Table 0906 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0907": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.311 (p186), HL7 Table 0907 - Confidentiality; Chapter 7 sec 7.17.2.7 SHP-7 (p155) 'Refer to HL7 Table 0907 ... for specific values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For specific values' with no extension clause: closed."
+    },
+    "0912": {
+      "kind": "HL7",
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.315 (p188), HL7 Table 0912 - Participation; Chapter 7 sec 7.3.4.4 PRT-4 (p70) 'Refer to HL7 Table 0912 ... for valid values'",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: Appendix A's index types the table User; Chapter 2C and Chapter 7 call it HL7, which governs. 'For valid values' with no extension clause: closed."
+    },
+    "0487": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0487 - Specimen Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.248 (p149)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0488": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0488 - Specimen Collection Method; HL7 v2.7.1 Chapter 2C sec 2.C.2.249 (p154)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0495": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0495 - Body Site Modifier; HL7 v2.7.1 Chapter 2C sec 2.C.2.256 (p157)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0503": {
+      "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0503 - Sequence/Results Flag; HL7 v2.7.1 Chapter 2C sec 2.C.2.264 (p162)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: both prints say HL7 (Chapter 2C captions it 'HL7 table' or 'HL7 Defined Table', which the Chapter 2C layout does not read, so it defaulted to User). Appendix A governs. No change."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p108), HL7 Table 0359 - Diagnosis Priority; Chapter 6 sec 6.5.2.15 DG1-15 (p33) 'for suggested values', and 'Values 2-99 convey ranked secondary' diagnoses: the printed 0, 1, 2 and '...' are not a closed set"
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p128), HL7 Table 0418 - Procedure Priority; Chapter 6 sec 6.5.4.14 PR1-14 (p49): 'Values 2-99 convey ranked secondary procedures', so the printed 0, 1, 2 and '...' are not a closed set"
+    },
+    "0365": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0365 - Equipment State; Chapter 13 sec 13.4.1.3 EQU (p20) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No state change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0366": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p110), HL7 Table 0366 - Local/Remote Control State; Chapter 13 sec 13.4.1.4 EQU (p21) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No state change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0367": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Appendix A (p111), HL7 Table 0367 - Alert Level; Chapter 13 sec 13.4.1.5 EQU (p21) 'for valid values'",
+      "note": "Appendix A prints the ellipsis for the row '(null) No level change': it denotes an ABSENT field, not an open list, so the printed rows stay a closed set."
+    },
+    "0291": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p90), HL7 Table 0291 - Subtype of Referenced Data ('... Source RFC 2046'); CH02A sec 2.A.65.4 RP.4 (p76): the values are the MIME subtypes of RFC 2046, so the printed row is not a closed set"
+    },
+    "0093": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p49), User-defined Table 0093 - Release Information: the ellipsis row reads 'user-defined codes'"
+    },
+    "0458": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p137), User-defined Table 0458 - OCE Edit Code; Chapter 6 sec 6.5.15.4 GP1-4 and sec 6.5.16.6 GP2-6 refer to it 'for suggested values'"
+    },
+    "0466": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p139), User-defined Table 0466 - Ambulatory Payment Classification Code; the ellipsis row continues the printed sample"
+    },
+    "0153": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p57), HL7 Table 0153 - Value Code: the only printed row is the ellipsis with 'See NUBC codes': the values are an external code set"
+    },
+    "0350": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0350 - Occurrence Code: the only printed row is the ellipsis with 'Use NUBC codes': the values are an external code set"
+    },
+    "0351": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p101), HL7 Table 0351 - Occurrence Span: the only printed row is the ellipsis with 'use NUBC codes': the values are an external code set"
+    },
+    "0340": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.7.1 Appendix A (p100), Table 0340 - Procedure Code Modifier, typed 'undefined' (external) in the Appendix A index (p19)"
+    },
+    "0371": {
+      "permitsLocalExtensions": false,
+      "citation": "HL7 v2.7.1 Chapter 7 sec 7.3.3.6 SPM-6 (p62), HL7 Table 0371 - Additive/Preservative 'for valid values'",
+      "note": "Mixed: SAC-27 (Chapter 13, p29) and OM4-7 (Chapter 8) add 'The value set can be extended with user specific values'; SPM-6 does not. A mixed table stays closed, as on v2.5.1, v2.6 and v2.8.2 (register row)."
+    },
+    "0617": {
+      "kind": "User",
+      "citation": "HL7 v2.7.1 Chapter 2A sec 2.A.86.18 XAD.18 Address Usage (p92): 'Refer to User-defined Table 0617 - Address Usage' (HL7 v2.7.1 Chapter 2C sec 2.C.2.302, p183, and Appendix A p178 print HL7)"
+    },
+    "0916": {
+      "createName": "Relevant Clinical Information",
+      "kind": "User",
+      "addEntries": [
+        [
+          "F",
+          "Patient was fasting prior to the procedure."
+        ],
+        [
+          "NF",
+          "The patient indicated they did not fast prior to the procedure."
+        ],
+        [
+          "NG",
+          "Not Given - Patient was not asked at the time of the procedure."
+        ],
+        [
+          "FNA",
+          "Fasting not asked of the patient at time of procedure."
+        ]
+      ],
+      "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.318 (p190), User-defined Table 0916 - Relevant Clinical Information; Chapter 4 sec 4.5.3.13 OBR-13 (p59)",
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: printed in Chapter 2C only; Appendix A omits it. Chapter 2C governs, so the table is created here. Chapter 2C notes 'These values are suggestions only'."
+    },
+    "0550": {
+      "citation": "HL7 v2.7.1 Appendix A (p163), HL7 Table 0550 - Body Parts; HL7 v2.7.1 Chapter 2C sec 2.C.2.297 (p176)",
+      "note": "Neither print gives the row 'External Jugular' a code: Appendix A prints a mis-decoded no-break space in the Value column, Chapter 2C a blank one. No entry is emitted, as on v2.6."
+    },
+    "0070": {
+      "note": "P10-1 Appendix A versus Chapter 2C cross-check: printed in Chapter 2C only (sec 2.C.2.11, p21): 'Table 0070 was retained for backward compatibility as of v2.5 and withdrawn in v2.7.' Chapter 7 (p61) says HL7 Table 0487 replaces it. Not created."
+    },
+    "0048": {
+      "note": "P10-1: Table 0048 - What subject filter is printed nowhere in v2.7.1 (Appendix A, Chapter 2C or any chapter); QRD and URD are not in v2.7.1. No table, so no openness reading."
+    }
   }
 }

@@ -1,0 +1,9 @@
+{
+  "table": "0022",
+  "version": "2.7.1",
+  "name": "Billing Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0022 - Billing Status",
+  "entries": []
+}

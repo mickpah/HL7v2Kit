@@ -1,0 +1,26 @@
+{
+  "table": "0538",
+  "version": "2.7.1",
+  "name": "Institution Relationship Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0538 - Institution Relationship Type",
+  "entries": [
+    {
+      "code": "CON",
+      "description": "Contractor"
+    },
+    {
+      "code": "CST",
+      "description": "Consultant"
+    },
+    {
+      "code": "EMP",
+      "description": "Employee"
+    },
+    {
+      "code": "VOL",
+      "description": "Volunteer"
+    }
+  ]
+}

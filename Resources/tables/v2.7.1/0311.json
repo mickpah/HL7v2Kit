@@ -1,0 +1,26 @@
+{
+  "table": "0311",
+  "version": "2.7.1",
+  "name": "Job Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0311 - Job Status",
+  "entries": [
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Permanent"
+    },
+    {
+      "code": "T",
+      "description": "Temporary"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

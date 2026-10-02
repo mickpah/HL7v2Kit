@@ -17,10 +17,12 @@
 //   --report   print every row the parser could not classify as a clean
 //              two-column value row, with the decision it took. Use this when
 //              re-extracting a new source: it is the eyeball list.
+//   --self-check   run the synthetic row-rule cases (no PDF needed) and exit:
+//              /tmp/tablesbin --self-check
 //
 // Two source layouts are supported.
 //
-// A. Appendix A (v2.3, v2.3.1, v2.4, v2.5.1, v2.6)
+// A. Appendix A (v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1)
 //    Section "HL7 AND USER-DEFINED TABLES - ALPHABETIC SORT" is the index: one
 //    line per table, `<kind> <number> <name> <chapter/field refs>`. Section
 //    "... - NUMERIC SORT" prints the values: a caption line `<kind> [number]
@@ -187,6 +189,13 @@ func kindOfToken(_ token: String) -> (kind: String, external: Bool) {
 /// does (v2.8.2 0200 and 0301 both print one directly beneath the last row).
 func isNoteLead(_ cell: String) -> Bool { cell.hasSuffix(":") }
 
+/// A Value cell as the rest of the pipeline reads it. v2.7.1 Appendix A prints the bare
+/// ellipsis row ("no suggested values", 0010 p39; an open list, 0291 p90; a null row,
+/// 0365 p110) with U+2026 where v2.3 to v2.6 print three full stops. Both are one printed
+/// marker, so the Unicode form is read as "..." and dropped by the same rule in render().
+/// Appendix A layout only: v2.8.2 Chapter 2C is extracted by extract282(), untouched.
+func appendixValue(_ cell: String) -> String { cell == "\u{2026}" ? "..." : cell }
+
 /// Rows the spec prints in place of values when a table has none.
 let noValuesPhrase = RE("^(no suggested values|no values defined|no values are defined|needs values)", [.caseInsensitive])
 
@@ -255,7 +264,7 @@ func padNumber(_ n: String) -> String {
     n.count >= 4 ? n : String(repeating: "0", count: 4 - n.count) + n
 }
 
-// MARK: - layout A: Appendix A (v2.3 .. v2.6)
+// MARK: - layout A: Appendix A (v2.3 .. v2.7.1)
 
 let reIndexRow = RE("^\\s*(HL7|User|undefined)\\s+([0-9]{1,4})\\s+(\\S.*)$")
 let reCaptionNumbered = RE("^(HL7|User|undefined|undef)\\s+([0-9]{1,4})\\s+(\\S.*)$")
@@ -355,7 +364,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if cells.count >= 2 {
-                t.codes.append(cells[0].text)
+                t.codes.append(appendixValue(cells[0].text))
                 t.descriptions.append(cells[1...].map(\.text).joined(separator: " "))
                 let descCol = restCol + cells[1].offset
                 lastDescCol[number] = descCol
@@ -388,7 +397,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if !only.contains(" ") {
-                t.codes.append(only)
+                t.codes.append(appendixValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 continue
@@ -399,7 +408,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             // PDF bled into the column always carries lower-case words.
             if established < 0 && only.uppercased() == only
                 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol) {
-                t.codes.append(only)
+                t.codes.append(appendixValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 if report { notes.append("\(number): description-less table, whole cell taken as the code: \(only)") }
@@ -416,7 +425,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             let aligned = established >= 0 && abs(remCol - established) <= 8
             let complete = established >= 0 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol)
             if aligned || complete {
-                t.codes.append(firstTok)
+                t.codes.append(appendixValue(firstTok))
                 t.descriptions.append(remainder)
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: remCol)
                 if report { notes.append("\(number): single-column row accepted as \(firstTok) | \(remainder)") }
@@ -734,7 +743,8 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     let source = appendix ? "Appendix A" : "Chapter 2C"
     let citation = override?.citation
         ?? "HL7 v\(version) \(source), \(kindLabel) \(t.number) - \(t.name)"
-    // A bare "..." row is never a code. The specs print it for "no suggested values" (an
+    // A bare "..." row (v2.7.1 Appendix A: U+2026, read as "..." by appendixValue) is never
+    // a code. The specs print it for "no suggested values" (an
     // otherwise empty table), for an external or open-ended list that continues (v2.6 0153
     // "See NUBC codes", 0359 / 0418 ranks), and for a null row (v2.6 0365 "(null) No state
     // change"). It is dropped structurally. Fail-safe (req #4): when other rows remain, the
@@ -832,7 +842,37 @@ func loadOverrides(_ path: String, version: String) -> [String: Override] {
     return out
 }
 
+// MARK: - self-check
+
+/// `--self-check`: synthetic cases for row rules a re-extraction of the committed versions
+/// cannot exercise. Prints one `ok` line per case; exits 1 on the first failure.
+func selfCheck() -> Never {
+    func expect(_ ok: Bool, _ what: String) {
+        guard ok else { print("FAIL \(what)"); exit(1) }
+        print("ok   \(what)")
+    }
+    func rendered(_ codes: [String]) -> String {
+        let t = Table(number: "0010", name: "Physician ID", kind: "User")
+        t.codes = codes.map(appendixValue)
+        t.descriptions = codes.map { $0 == "A" ? "Alpha" : "" }
+        return render(t, version: "2.7.1", appendix: true, override: nil).json
+    }
+    // v2.7.1 Appendix A prints the "no suggested values" row with U+2026 (0010, p39).
+    let lone = rendered(["\u{2026}"])
+    expect(!lone.contains("\"code\""), "a lone Unicode-ellipsis row yields no entry")
+    expect(lone == rendered(["..."]), "a lone Unicode-ellipsis row renders as a lone \"...\" row")
+    // ... and beside real rows (0291, 0365 to 0367): dropped, the table left open.
+    let mixed = rendered(["A", "\u{2026}"])
+    expect(mixed.components(separatedBy: "\"code\":").count == 2, "an ellipsis beside a real row is dropped")
+    expect(mixed.contains("\"permitsLocalExtensions\": true"), "an ellipsis beside real rows leaves the table open")
+    expect(mixed == rendered(["A", "..."]), "both ellipsis forms render alike beside real rows")
+    expect(appendixValue("2\u{2026}") == "2\u{2026}", "only a bare ellipsis cell is normalised")
+    exit(0)
+}
+
 // MARK: - main
+
+if CommandLine.arguments.contains("--self-check") { selfCheck() }
 
 var args = Array(CommandLine.arguments.dropFirst())
 let report = args.contains("--report")

@@ -1,0 +1,22 @@
+{
+  "table": "0569",
+  "version": "2.7.1",
+  "name": "Adjustment Action",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0569 - Adjustment Action",
+  "entries": [
+    {
+      "code": "EOB",
+      "description": "Print on EOB"
+    },
+    {
+      "code": "PAT",
+      "description": "Inform Patient"
+    },
+    {
+      "code": "PRO",
+      "description": "Inform Provider"
+    }
+  ]
+}

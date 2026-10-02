@@ -1,0 +1,34 @@
+{
+  "table": "0005",
+  "version": "2.7.1",
+  "name": "Race",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0005 - Race",
+  "entries": [
+    {
+      "code": "1002-5",
+      "description": "American Indian or Alaska Native"
+    },
+    {
+      "code": "2028-9",
+      "description": "Asian"
+    },
+    {
+      "code": "2054-5",
+      "description": "Black or African American"
+    },
+    {
+      "code": "2076-8",
+      "description": "Native Hawaiian or Other Pacific Islander"
+    },
+    {
+      "code": "2106-3",
+      "description": "White"
+    },
+    {
+      "code": "2131-1",
+      "description": "Other Race"
+    }
+  ]
+}

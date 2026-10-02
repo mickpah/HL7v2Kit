@@ -26,6 +26,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHAPTERS = {
     "v2.3": "HL7_v23_PDF/CH*.pdf", "v2.3.1": "HL7_v231_PDF/Hl7V231.pdf", "v2.4": "HL7_v24_PDF/CH*.PDF",
     "v2.5.1": "HL7_v251_PDF/V251_CH*.pdf", "v2.6": "HL7_v26_PDF/V26_CH*.pdf",
+    "v2.7.1": "HL7_V271_PDF/PDF/V271_CH*.pdf",
     "v2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH*.pdf",
 }
 FURN = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|^\f")
@@ -754,6 +755,11 @@ KNOWN_SWAPPED_HEADER_SOURCES = {
     "v2.5.1/V251_CH03.pdf": 10,
     "v2.5.1/V251_CH04.pdf": 22,
     "v2.6/V26_CH04_Orders.pdf": 22,
+    # P10-1 (scan row C1): CHAPTERS gained v2.7.1; its chapters print the same transposed
+    # header as v2.8.2, measured by --check-registry on 2026-10-02.
+    "v2.7.1/V271_CH03_PatientAdmin.pdf": 2,
+    "v2.7.1/V271_CH04_Orders.pdf": 4,
+    "v2.7.1/V271_CH04A_Orders.pdf": 12,
     "v2.8.2/V282_CH03_PatientAdmin.pdf": 2,
     "v2.8.2/V282_CH04_Orders.pdf": 4,
     "v2.8.2/V282_CH04A_Orders.pdf": 12,
@@ -812,6 +818,11 @@ KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS = {
     "v2.5.1/V251_CH03.pdf": 10,
     "v2.5.1/V251_CH04.pdf": 22,
     "v2.6/V26_CH04_Orders.pdf": 22,
+    # P10-1 (scan row C1): CHAPTERS gained v2.7.1; its chapters print the same transposed
+    # header as v2.8.2, measured by --check-registry on 2026-10-02.
+    "v2.7.1/V271_CH03_PatientAdmin.pdf": 2,
+    "v2.7.1/V271_CH04_Orders.pdf": 4,
+    "v2.7.1/V271_CH04A_Orders.pdf": 12,
     "v2.8.2/V282_CH03_PatientAdmin.pdf": 2,
     "v2.8.2/V282_CH04_Orders.pdf": 4,
     "v2.8.2/V282_CH04A_Orders.pdf": 12,

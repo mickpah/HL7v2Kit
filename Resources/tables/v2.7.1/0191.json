@@ -1,0 +1,50 @@
+{
+  "table": "0191",
+  "version": "2.7.1",
+  "name": "Type of Referenced Data",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0191 - Type of Referenced Data",
+  "entries": [
+    {
+      "code": "AP",
+      "description": "Other application data, typically uninterpreted binary data (HL7 V2.3 and later)"
+    },
+    {
+      "code": "AU",
+      "description": "Audio data (HL7 V2.3 and later)"
+    },
+    {
+      "code": "FT",
+      "description": "Formatted text (HL7 V2.2 only)"
+    },
+    {
+      "code": "IM",
+      "description": "Image data (HL7 V2.3 and later)"
+    },
+    {
+      "code": "multipart",
+      "description": "MIME multipart package"
+    },
+    {
+      "code": "NS",
+      "description": "Non-scanned image (HL7 V2.2 only)"
+    },
+    {
+      "code": "SD",
+      "description": "Scanned document (HL7 V2.2 only)"
+    },
+    {
+      "code": "SI",
+      "description": "Scanned image (HL7 V2.2 only)"
+    },
+    {
+      "code": "TEXT",
+      "description": "Machine readable text document (HL7 V2.3.1 and later)"
+    },
+    {
+      "code": "TX",
+      "description": "Machine readable text document (HL7 V2.2 only)"
+    }
+  ]
+}

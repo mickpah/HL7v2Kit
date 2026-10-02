@@ -1,0 +1,26 @@
+{
+  "table": "0206",
+  "version": "2.7.1",
+  "name": "Segment action code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0206 - Segment action code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Add/Insert"
+    },
+    {
+      "code": "D",
+      "description": "Delete"
+    },
+    {
+      "code": "U",
+      "description": "Update"
+    },
+    {
+      "code": "X",
+      "description": "No Change"
+    }
+  ]
+}

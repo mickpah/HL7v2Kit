@@ -1,0 +1,9 @@
+{
+  "table": "0308",
+  "version": "2.7.1",
+  "name": "Floor",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0308 - Floor",
+  "entries": []
+}

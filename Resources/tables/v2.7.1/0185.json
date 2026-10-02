@@ -1,0 +1,34 @@
+{
+  "table": "0185",
+  "version": "2.7.1",
+  "name": "Preferred Method of Contact",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0185 - Preferred Method of Contact",
+  "entries": [
+    {
+      "code": "B",
+      "description": "Beeper Number"
+    },
+    {
+      "code": "C",
+      "description": "Cellular Phone Number"
+    },
+    {
+      "code": "E",
+      "description": "E-Mail Address (for backward compatibility)"
+    },
+    {
+      "code": "F",
+      "description": "FAX Number"
+    },
+    {
+      "code": "H",
+      "description": "Home Phone Number"
+    },
+    {
+      "code": "O",
+      "description": "Office Phone Number"
+    }
+  ]
+}

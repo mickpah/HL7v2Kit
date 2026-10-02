@@ -1,0 +1,22 @@
+{
+  "table": "0502",
+  "version": "2.7.1",
+  "name": "Non-Subject Consenter Reason",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0502 - Non-Subject Consenter Reason",
+  "entries": [
+    {
+      "code": "LM",
+      "description": "Legally mandated"
+    },
+    {
+      "code": "MIN",
+      "description": "Subject is a minor"
+    },
+    {
+      "code": "NC",
+      "description": "Subject is not competent to consent"
+    }
+  ]
+}

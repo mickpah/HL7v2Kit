@@ -1,0 +1,26 @@
+{
+  "table": "0367",
+  "version": "2.7.1",
+  "name": "Alert Level",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p111), HL7 Table 0367 - Alert Level; Chapter 13 sec 13.4.1.5 EQU (p21) 'for valid values'",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Critical"
+    },
+    {
+      "code": "N",
+      "description": "Normal"
+    },
+    {
+      "code": "S",
+      "description": "Serious"
+    },
+    {
+      "code": "W",
+      "description": "Warning"
+    }
+  ]
+}

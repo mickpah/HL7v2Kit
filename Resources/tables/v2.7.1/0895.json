@@ -1,0 +1,30 @@
+{
+  "table": "0895",
+  "version": "2.7.1",
+  "name": "Present On Admission (POA) Indicator",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0895 - Present On Admission (POA) Indicator",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Exempt"
+    },
+    {
+      "code": "N",
+      "description": "No"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    },
+    {
+      "code": "W",
+      "description": "Not applicable"
+    },
+    {
+      "code": "Y",
+      "description": "Yes"
+    }
+  ]
+}

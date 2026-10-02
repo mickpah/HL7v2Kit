@@ -1,0 +1,18 @@
+{
+  "table": "0556",
+  "version": "2.7.1",
+  "name": "Benefit Group",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0556 - Benefit Group",
+  "entries": [
+    {
+      "code": "AMB",
+      "description": "AMBULATORY CARE"
+    },
+    {
+      "code": "DENT",
+      "description": "DENTAL"
+    }
+  ]
+}

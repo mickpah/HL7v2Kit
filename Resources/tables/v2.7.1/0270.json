@@ -1,0 +1,66 @@
+{
+  "table": "0270",
+  "version": "2.7.1",
+  "name": "Document Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0270 - Document Type",
+  "entries": [
+    {
+      "code": "AR",
+      "description": "Autopsy report"
+    },
+    {
+      "code": "CD",
+      "description": "Cardiodiagnostics"
+    },
+    {
+      "code": "CN",
+      "description": "Consultation"
+    },
+    {
+      "code": "DI",
+      "description": "Diagnostic imaging"
+    },
+    {
+      "code": "DS",
+      "description": "Discharge summary"
+    },
+    {
+      "code": "ED",
+      "description": "Emergency department report"
+    },
+    {
+      "code": "HP",
+      "description": "History and physical examination"
+    },
+    {
+      "code": "OP",
+      "description": "Operative report"
+    },
+    {
+      "code": "PC",
+      "description": "Psychiatric consultation"
+    },
+    {
+      "code": "PH",
+      "description": "Psychiatric history and physical examination"
+    },
+    {
+      "code": "PN",
+      "description": "Procedure note"
+    },
+    {
+      "code": "PR",
+      "description": "Progress note"
+    },
+    {
+      "code": "SP",
+      "description": "Surgical pathology"
+    },
+    {
+      "code": "TS",
+      "description": "Transfer summary"
+    }
+  ]
+}

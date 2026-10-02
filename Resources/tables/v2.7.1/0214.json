@@ -1,0 +1,30 @@
+{
+  "table": "0214",
+  "version": "2.7.1",
+  "name": "Special Program Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0214 - Special Program Code",
+  "entries": [
+    {
+      "code": "CH",
+      "description": "Child Health Assistance"
+    },
+    {
+      "code": "ES",
+      "description": "Elective Surgery Program"
+    },
+    {
+      "code": "FP",
+      "description": "Family Planning"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "table": "0200",
+  "version": "2.7.1",
+  "name": "Name Type",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A (p65), User-defined Table 0200 - Name Type; HL7 v2.7.1 Chapter 2C sec 2.C.2.68 (p54)",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Assigned"
+    },
+    {
+      "code": "B",
+      "description": "Birth name"
+    },
+    {
+      "code": "BAD",
+      "description": "Bad Name"
+    },
+    {
+      "code": "C",
+      "description": "Adopted Name"
+    },
+    {
+      "code": "D",
+      "description": "Customary Name"
+    },
+    {
+      "code": "I",
+      "description": "Licensing Name"
+    },
+    {
+      "code": "K",
+      "description": "Business name"
+    },
+    {
+      "code": "L",
+      "description": "Official Registry Name"
+    },
+    {
+      "code": "M",
+      "description": "Maiden Name"
+    },
+    {
+      "code": "MSK",
+      "description": "Masked"
+    },
+    {
+      "code": "N",
+      "description": "Nickname"
+    },
+    {
+      "code": "NAV",
+      "description": "Temporarily Unavailable"
+    },
+    {
+      "code": "NB",
+      "description": "Newborn Name"
+    },
+    {
+      "code": "NOUSE",
+      "description": "No Longer To Be Used"
+    },
+    {
+      "code": "P",
+      "description": "Name of Partner/Spouse"
+    },
+    {
+      "code": "R",
+      "description": "Registered Name"
+    },
+    {
+      "code": "REL",
+      "description": "Religious"
+    },
+    {
+      "code": "S",
+      "description": "Pseudonym"
+    },
+    {
+      "code": "T",
+      "description": "Indigenous/Tribal"
+    },
+    {
+      "code": "TEMP",
+      "description": "Temporary Name"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

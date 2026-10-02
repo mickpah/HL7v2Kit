@@ -1,0 +1,14 @@
+{
+  "table": "0453",
+  "version": "2.7.1",
+  "name": "Health Care Provider Classification",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0453 - Health Care Provider Classification",
+  "entries": [
+    {
+      "code": "SUGGESTION",
+      "description": "ANSI ASC X12 Health Care Provider Taxonomy, Level 2 - Classification"
+    }
+  ]
+}

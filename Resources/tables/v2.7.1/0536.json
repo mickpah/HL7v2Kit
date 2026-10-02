@@ -1,0 +1,30 @@
+{
+  "table": "0536",
+  "version": "2.7.1",
+  "name": "Certificate Status",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0536 - Certificate Status",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Expired"
+    },
+    {
+      "code": "I",
+      "description": "Inactive"
+    },
+    {
+      "code": "P",
+      "description": "Provisional"
+    },
+    {
+      "code": "R",
+      "description": "Revoked"
+    },
+    {
+      "code": "V",
+      "description": "Active/Valid"
+    }
+  ]
+}

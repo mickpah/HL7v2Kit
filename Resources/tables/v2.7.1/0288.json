@@ -1,0 +1,9 @@
+{
+  "table": "0288",
+  "version": "2.7.1",
+  "name": "Census Tract",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0288 - Census Tract",
+  "entries": []
+}

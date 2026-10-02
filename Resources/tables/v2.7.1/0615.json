@@ -1,0 +1,18 @@
+{
+  "table": "0615",
+  "version": "2.7.1",
+  "name": "User Authentication Credential Type Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0615 - User Authentication Credential Type Code",
+  "entries": [
+    {
+      "code": "KERB",
+      "description": "Kerberos Service Ticket"
+    },
+    {
+      "code": "SAML",
+      "description": "Authenticated User Identity Assertion"
+    }
+  ]
+}

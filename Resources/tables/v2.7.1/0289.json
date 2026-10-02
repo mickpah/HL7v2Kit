@@ -1,0 +1,9 @@
+{
+  "table": "0289",
+  "version": "2.7.1",
+  "name": "County/Parish",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0289 - County/Parish",
+  "entries": []
+}

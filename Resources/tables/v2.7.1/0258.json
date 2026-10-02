@@ -1,0 +1,26 @@
+{
+  "table": "0258",
+  "version": "2.7.1",
+  "name": "Relationship Modifier",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0258 - Relationship Modifier",
+  "entries": [
+    {
+      "code": "BPU",
+      "description": "Blood product unit"
+    },
+    {
+      "code": "CONTROL",
+      "description": "Control"
+    },
+    {
+      "code": "DONOR",
+      "description": "Donor"
+    },
+    {
+      "code": "PATIENT",
+      "description": "Patient"
+    }
+  ]
+}

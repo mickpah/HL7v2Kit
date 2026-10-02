@@ -1,0 +1,9 @@
+{
+  "table": "0552",
+  "version": "2.7.1",
+  "name": "Advanced Beneficiary Notice Override Reason",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0552 - Advanced Beneficiary Notice Override Reason",
+  "entries": []
+}

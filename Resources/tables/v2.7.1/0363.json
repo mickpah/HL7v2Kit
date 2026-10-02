@@ -1,0 +1,9 @@
+{
+  "table": "0363",
+  "version": "2.7.1",
+  "name": "Assigning Authority",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0363 - Assigning Authority",
+  "entries": []
+}

@@ -1,0 +1,18 @@
+{
+  "table": "0882",
+  "version": "2.7.1",
+  "name": "Medical Role Executing Physician",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0882 - Medical Role Executing Physician",
+  "entries": [
+    {
+      "code": "E",
+      "description": "Employed"
+    },
+    {
+      "code": "SE",
+      "description": "Self-employed"
+    }
+  ]
+}

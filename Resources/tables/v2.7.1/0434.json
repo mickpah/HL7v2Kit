@@ -1,0 +1,34 @@
+{
+  "table": "0434",
+  "version": "2.7.1",
+  "name": "Patient Condition Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0434 - Patient Condition Code",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Satisfactory"
+    },
+    {
+      "code": "C",
+      "description": "Critical"
+    },
+    {
+      "code": "O",
+      "description": "Other"
+    },
+    {
+      "code": "P",
+      "description": "Poor"
+    },
+    {
+      "code": "S",
+      "description": "Stable"
+    },
+    {
+      "code": "U",
+      "description": "Unknown"
+    }
+  ]
+}

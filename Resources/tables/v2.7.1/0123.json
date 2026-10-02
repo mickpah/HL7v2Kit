@@ -1,0 +1,54 @@
+{
+  "table": "0123",
+  "version": "2.7.1",
+  "name": "Result Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0123 - Result Status",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Some, but not all, results available"
+    },
+    {
+      "code": "C",
+      "description": "Correction to results"
+    },
+    {
+      "code": "F",
+      "description": "Final results; results stored and verified. Can only be changed with a corrected result."
+    },
+    {
+      "code": "I",
+      "description": "No results available; specimen received, procedure incomplete"
+    },
+    {
+      "code": "O",
+      "description": "Order received; specimen not yet received"
+    },
+    {
+      "code": "P",
+      "description": "Preliminary: A verified early result is available, final results not yet obtained"
+    },
+    {
+      "code": "R",
+      "description": "Results stored; not yet verified"
+    },
+    {
+      "code": "S",
+      "description": "No results available; procedure scheduled, but not done"
+    },
+    {
+      "code": "X",
+      "description": "No results available; Order canceled."
+    },
+    {
+      "code": "Y",
+      "description": "No order on record for this test. (Used only on queries)"
+    },
+    {
+      "code": "Z",
+      "description": "No record of this patient. (Used only on queries)"
+    }
+  ]
+}

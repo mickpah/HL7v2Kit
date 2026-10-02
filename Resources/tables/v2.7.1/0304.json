@@ -1,0 +1,9 @@
+{
+  "table": "0304",
+  "version": "2.7.1",
+  "name": "Bed",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0304 - Bed",
+  "entries": []
+}

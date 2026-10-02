@@ -1,0 +1,62 @@
+{
+  "table": "0175",
+  "version": "2.7.1",
+  "name": "Master File Identifier Code",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier (p7), HL7 Table 0175 - Master File Identifier Code: 'This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).'",
+  "entries": [
+    {
+      "code": "CDM",
+      "description": "Charge description master file"
+    },
+    {
+      "code": "CLN",
+      "description": "Clinic master file"
+    },
+    {
+      "code": "CMA",
+      "description": "Clinical study with phases and scheduled master file"
+    },
+    {
+      "code": "CMB",
+      "description": "Clinical study without phases but with scheduled master file"
+    },
+    {
+      "code": "INV",
+      "description": "Inventory master file"
+    },
+    {
+      "code": "LOC",
+      "description": "Location master file"
+    },
+    {
+      "code": "OMA",
+      "description": "Numerical observation master file"
+    },
+    {
+      "code": "OMB",
+      "description": "Categorical observation master file"
+    },
+    {
+      "code": "OMC",
+      "description": "Observation batteries master file"
+    },
+    {
+      "code": "OMD",
+      "description": "Calculated observations master file"
+    },
+    {
+      "code": "OME",
+      "description": "Other Observation/Service Item master file"
+    },
+    {
+      "code": "PRA",
+      "description": "Practitioner master file"
+    },
+    {
+      "code": "STF",
+      "description": "Staff master file"
+    }
+  ]
+}

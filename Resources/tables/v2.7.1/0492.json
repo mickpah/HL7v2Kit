@@ -1,0 +1,22 @@
+{
+  "table": "0492",
+  "version": "2.7.1",
+  "name": "Specimen Appropriateness",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.253 (p156), User-defined Table 0492 - Specimen Appropriateness; Chapter 7 sec 7.3.3.23 SPM-23 (p66)",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Appropriate"
+    },
+    {
+      "code": "I",
+      "description": "Inappropriate"
+    },
+    {
+      "code": "P",
+      "description": "Preferred"
+    }
+  ]
+}

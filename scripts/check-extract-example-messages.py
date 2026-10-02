@@ -394,9 +394,10 @@ def check_swapped_header_registry_and_mismatches():
     # directly against the PDF text (as the brief instructs) surfaced the transposed header
     # in CH03 and CH05 too, not just the CH04/CH04A the brief named -- nine sources, 138
     # occurrences, not the ~80 across five an earlier, narrower investigation found.
-    assert len(extract.KNOWN_SWAPPED_HEADER_SOURCES) == 9
+    # P10-1: v2.7.1 adds three sources (CH03 2, CH04 4, CH04A 12): 12 sources, 156.
+    assert len(extract.KNOWN_SWAPPED_HEADER_SOURCES) == 12
     assert all(n > 0 for n in extract.KNOWN_SWAPPED_HEADER_SOURCES.values())
-    assert sum(extract.KNOWN_SWAPPED_HEADER_SOURCES.values()) == 138
+    assert sum(extract.KNOWN_SWAPPED_HEADER_SOURCES.values()) == 156
     # _swapped_header_mismatches takes an `actual` dict directly so this runs without PDFs;
     # it reports every source where the two sides disagree, including one side missing a
     # source the other has (the missing side's count is then 0).
@@ -421,8 +422,9 @@ def check_swapped_header_extracted_registry_and_mismatches():
     # printed "<cr>" to end, every printed swapped header forms a message, so the extracted
     # registry now matches the PDF-text registry source for source (nine sources, 138).
     assert extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS == extract.KNOWN_SWAPPED_HEADER_SOURCES
-    assert len(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) == 9
-    assert sum(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values()) == 138
+    # P10-1: v2.7.1 adds three sources (CH03 2, CH04 4, CH04A 12): 12 sources, 156.
+    assert len(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS) == 12
+    assert sum(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.values()) == 156
     saved = dict(extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS)
     try:
         extract.KNOWN_SWAPPED_HEADER_EXTRACTED_COUNTS.clear()

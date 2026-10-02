@@ -1,0 +1,34 @@
+{
+  "table": "0905",
+  "version": "2.7.1",
+  "name": "Shipment Status",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.309 (p185), HL7 Table 0905 - Shipment Status; Chapter 7 sec 7.17.2.3 SHP-3 (p154) 'Refer to HL7 Table 0905 ... for specific values'",
+  "entries": [
+    {
+      "code": "INV",
+      "description": "Inventoried"
+    },
+    {
+      "code": "ONH",
+      "description": "On Hold"
+    },
+    {
+      "code": "PRC",
+      "description": "Processing"
+    },
+    {
+      "code": "REJ",
+      "description": "Rejected"
+    },
+    {
+      "code": "TRN",
+      "description": "In Transit"
+    },
+    {
+      "code": "TTL",
+      "description": "Triaged to Lab"
+    }
+  ]
+}

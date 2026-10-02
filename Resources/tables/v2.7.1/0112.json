@@ -1,0 +1,9 @@
+{
+  "table": "0112",
+  "version": "2.7.1",
+  "name": "Discharge Disposition",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0112 - Discharge Disposition",
+  "entries": []
+}

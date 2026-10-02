@@ -1,0 +1,34 @@
+{
+  "table": "0467",
+  "version": "2.7.1",
+  "name": "Modifier Edit Code",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0467 - Modifier Edit Code",
+  "entries": [
+    {
+      "code": "0",
+      "description": "Modifier does NOT exist"
+    },
+    {
+      "code": "1",
+      "description": "Modifier present, no errors"
+    },
+    {
+      "code": "2",
+      "description": "Modifier invalid"
+    },
+    {
+      "code": "3",
+      "description": "Modifier NOT approved for ASC/HOPD use"
+    },
+    {
+      "code": "4",
+      "description": "Modifier approved for ASC/HOPD use, inappropriate for code"
+    },
+    {
+      "code": "U",
+      "description": "Modifier edit code unknown"
+    }
+  ]
+}

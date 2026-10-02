@@ -1,0 +1,9 @@
+{
+  "table": "0186",
+  "version": "2.7.1",
+  "name": "Practitioner Category",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0186 - Practitioner Category",
+  "entries": []
+}

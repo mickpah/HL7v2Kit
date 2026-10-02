@@ -1,0 +1,9 @@
+{
+  "table": "0055",
+  "version": "2.7.1",
+  "name": "Diagnosis Related Group",
+  "kind": "HL7",
+  "permitsLocalExtensions": true,
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.7 (p20), External Table 0055 - Diagnosis Related Group; Chapter 6 sec 6.5.3.1 DRG-1 (p38) 'Refer to Externally-defined Table 0055'",
+  "entries": []
+}

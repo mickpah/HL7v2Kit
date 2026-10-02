@@ -1,0 +1,9 @@
+{
+  "table": "0024",
+  "version": "2.7.1",
+  "name": "Fee Schedule",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0024 - Fee Schedule",
+  "entries": []
+}

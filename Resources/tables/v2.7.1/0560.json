@@ -1,0 +1,30 @@
+{
+  "table": "0560",
+  "version": "2.7.1",
+  "name": "Quantity Units",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0560 - Quantity Units",
+  "entries": [
+    {
+      "code": "DY",
+      "description": "Days"
+    },
+    {
+      "code": "FL",
+      "description": "Units"
+    },
+    {
+      "code": "HS",
+      "description": "Hours"
+    },
+    {
+      "code": "MN",
+      "description": "Month"
+    },
+    {
+      "code": "YY",
+      "description": "Years"
+    }
+  ]
+}

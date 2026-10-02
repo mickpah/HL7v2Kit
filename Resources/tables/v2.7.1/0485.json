@@ -1,0 +1,62 @@
+{
+  "table": "0485",
+  "version": "2.7.1",
+  "name": "Extended Priority Codes",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0485 - Extended Priority Codes",
+  "entries": [
+    {
+      "code": "A",
+      "description": "ASAP"
+    },
+    {
+      "code": "C",
+      "description": "Callback"
+    },
+    {
+      "code": "P",
+      "description": "Preop"
+    },
+    {
+      "code": "PRN",
+      "description": "As needed"
+    },
+    {
+      "code": "R",
+      "description": "Routine"
+    },
+    {
+      "code": "S",
+      "description": "Stat"
+    },
+    {
+      "code": "T",
+      "description": "Timing critical"
+    },
+    {
+      "code": "TD<integer>",
+      "description": ""
+    },
+    {
+      "code": "TH<integer>",
+      "description": ""
+    },
+    {
+      "code": "TL<integer>",
+      "description": ""
+    },
+    {
+      "code": "TM<integer>",
+      "description": ""
+    },
+    {
+      "code": "TS<integer>",
+      "description": ""
+    },
+    {
+      "code": "TW<integer>",
+      "description": ""
+    }
+  ]
+}

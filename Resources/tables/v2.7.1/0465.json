@@ -1,0 +1,22 @@
+{
+  "table": "0465",
+  "version": "2.7.1",
+  "name": "Name/Address Representation",
+  "kind": "HL7",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, HL7 Table 0465 - Name/Address Representation",
+  "entries": [
+    {
+      "code": "A",
+      "description": "Alphabetic (i.e., Default or some single-byte)"
+    },
+    {
+      "code": "I",
+      "description": "Ideographic (i.e., Kanji)"
+    },
+    {
+      "code": "P",
+      "description": "Phonetic (i.e., ASCII, Katakana, Hiragana, etc.)"
+    }
+  ]
+}

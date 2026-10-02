@@ -1,0 +1,22 @@
+{
+  "table": "0617",
+  "version": "2.7.1",
+  "name": "Address Usage",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Chapter 2A sec 2.A.86.18 XAD.18 Address Usage (p92): 'Refer to User-defined Table 0617 - Address Usage' (HL7 v2.7.1 Chapter 2C sec 2.C.2.302, p183, and Appendix A p178 print HL7)",
+  "entries": [
+    {
+      "code": "C",
+      "description": "Classification"
+    },
+    {
+      "code": "M",
+      "description": "Mailing"
+    },
+    {
+      "code": "V",
+      "description": "Visit"
+    }
+  ]
+}

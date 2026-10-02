@@ -460,6 +460,7 @@ TABLE_PDFS = {
     "v2.4":   "HL7_v24_PDF/AppendixA.PDF",
     "v2.5.1": "HL7_v251_PDF/V251_Appendix_A.pdf",
     "v2.6":   "HL7_v26_PDF/V26_Appendix_A.pdf",
+    "v2.7.1": "HL7_V271_PDF/PDF/V271_Appendix_A.pdf",
     "v2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH02C_CodeTables.pdf",
 }
 TABLE_EXTRACTOR = "/tmp/tablesbin"
@@ -481,10 +482,11 @@ TABLE_EXTRACTOR = "/tmp/tablesbin"
 #                    (v2.6 0396 "CE (obsolete)", v2.8.2 0340 "(HCPCS)")
 #   three+ words     a Value wider than its column run into the Description
 #                    (v2.8.2 0396 "CDCEDACUITY CDC Emergency"); "..." ranges are exempt
-#   bare "..."       an ellipsis row: the list continues or the row means null — never a code
+#   bare "..."       an ellipsis row: the list continues or the row means null — never a code;
+#                    also its U+2026 form (v2.7.1 Appendix A, and v2.8.2 Chapter 2C 0359 / 0418)
 #   a comma           several codes printed in one Value cell (0301 "L,M,N"): as one code the
 #                    closed table rejects each of them
-SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^\.\.\.$")
+SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^(\.\.\.|…)$")
 
 # Printed codes the shape test would wrongly flag. Each was read against the PDF. Keyed
 # (table, code): version-agnostic because the same printed value recurs across versions.

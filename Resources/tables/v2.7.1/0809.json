@@ -1,0 +1,9 @@
+{
+  "table": "0809",
+  "version": "2.7.1",
+  "name": "Maintenance Cycle",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0809 - Maintenance Cycle",
+  "entries": []
+}

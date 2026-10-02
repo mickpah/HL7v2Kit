@@ -1,0 +1,22 @@
+{
+  "table": "0806",
+  "version": "2.7.1",
+  "name": "Sterilization Type",
+  "kind": "User",
+  "permitsLocalExtensions": false,
+  "citation": "HL7 v2.7.1 Appendix A, User-defined Table 0806 - Sterilization Type",
+  "entries": [
+    {
+      "code": "EOG",
+      "description": "Ethylene Oxide Gas"
+    },
+    {
+      "code": "PCA",
+      "description": "Peracetic acid"
+    },
+    {
+      "code": "STM",
+      "description": "Steam"
+    }
+  ]
+}
