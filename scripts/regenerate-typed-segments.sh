@@ -4,7 +4,9 @@
 # Swift sources under Sources/HL7v2Kit/Segment/Generated/, and against the code
 # tables under Resources/tables/ (output: Sources/HL7v2Kit/Tables/Generated/),
 # and the datatype component tables under Resources/datatypes/ (output:
-# Sources/HL7v2Kit/DataTypes/Generated/).
+# Sources/HL7v2Kit/DataTypes/Generated/),
+# and the message structures under Resources/structures/ (output:
+# Sources/HL7v2Kit/Structures/Generated/, ADR-019).
 # Commit the result.
 #
 # Run from the repo root:
@@ -23,6 +25,8 @@ PROFILES_DIR="$REPO_ROOT/Resources/profiles"
 PROFILES_OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/Locale/Generated"
 COMPOSITES_FILE="$REPO_ROOT/Resources/composites/composite-views.json"
 COMPOSITES_OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/Composite/Generated"
+STRUCTURES_DIR="$REPO_ROOT/Resources/structures"
+STRUCTURES_OUTPUT_DIR="$REPO_ROOT/Sources/HL7v2Kit/Structures/Generated"
 
 # The Testing module ships with full Xcode, not Command Line Tools. The
 # codegen target itself only imports Foundation, but `swift run` plans the
@@ -31,4 +35,4 @@ if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
   export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fi
 
-xcrun swift run --package-path "$REPO_ROOT" HL7v2KitCodegen "$SCHEMAS_DIR" "$OUTPUT_DIR" "$TABLES_DIR" "$TABLES_OUTPUT_DIR" "$DATATYPES_DIR" "$DATATYPES_OUTPUT_DIR" "$PROFILES_DIR" "$PROFILES_OUTPUT_DIR" "$COMPOSITES_FILE" "$COMPOSITES_OUTPUT_DIR"
+xcrun swift run --package-path "$REPO_ROOT" HL7v2KitCodegen "$SCHEMAS_DIR" "$OUTPUT_DIR" "$TABLES_DIR" "$TABLES_OUTPUT_DIR" "$DATATYPES_DIR" "$DATATYPES_OUTPUT_DIR" "$PROFILES_DIR" "$PROFILES_OUTPUT_DIR" "$COMPOSITES_FILE" "$COMPOSITES_OUTPUT_DIR" "$STRUCTURES_DIR" "$STRUCTURES_OUTPUT_DIR"

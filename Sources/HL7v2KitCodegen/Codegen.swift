@@ -878,6 +878,11 @@ struct Codegen {
         try emitCompositeViews(specFile: compositesFile, outputRoot: compositesOutputRoot,
                                dataTypesByVersion: dataTypesByVersion)
 
+        // ADR-019: message structures (positional arguments 11 and 12). Required, like the composites.
+        let structuresRoot = URL(fileURLWithPath: args.count > 11 ? args[11] : "\(cwd)/Resources/structures")
+        let structuresOutputRoot = URL(fileURLWithPath: args.count > 12 ? args[12] : "\(cwd)/Sources/HL7v2Kit/Structures/Generated")
+        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot)
+
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")
     }
 }

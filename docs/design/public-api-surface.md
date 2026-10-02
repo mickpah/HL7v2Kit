@@ -9,6 +9,9 @@
 > since this compile: the `CompositeView` protocol (R3 — the shared surface of the 16 composite
 > views; additive under ADR-014), taking the type count 74 → 75 before typed-segment growth
 > (15 codegen'd segments at compile time → 109 today, all additive).
+> P8-3 (ADR-019, unreleased) adds three hand-written public types, `MessageStructure`,
+> `StructureElement` and `MessageStructureTable` (see "Message structures" below), taking
+> that count 75 → 78.
 > Read this file with those deltas in mind; a fresh inventory belongs to the v2.0 gate if one runs.
 
 **Compiled:** 2026-07-09 (v0.18 cycle, ROADMAP M3 API stabilisation).
@@ -32,10 +35,13 @@ Every component that any supported version defines has a named accessor (hand-wr
 ### Validation
 `Validator`, `ValidationReport`, `ValidationIssue`, `ValidationOptions`, `IssueLocation`, `SegmentGrammar`, `FieldGrammar` (P6-4 adds `maxRepetitions`), `SegmentGrammarTable` (enum namespace), `RequiredComponent`, `RequiredComponentSet` (+ nested `Semantics` enum), `ZSegmentPolicy` (enum).
 
+### Message structures (P8-3, ADR-019; unreleased)
+`MessageStructure` (struct: `id`, `version`, `triggers`, `citation`, `elements`, `init(id:version:triggers:citation:elements:)`, `accepts(messageCode:triggerEvent:)`), `StructureElement` (indirect enum: `segment(_:min:max:)`, `group(_:min:max:elements:)`, `min`, `max`; **open**: ADR-019 adds a `choice` case before the first version that prints `< X | Y >`, so its DocC carries the `@unknown default` note), `MessageStructureTable` (enum namespace: `structure(_:version:)`, `structures(messageCode:triggerEvent:version:)`, both resolving `Version.grammarVersion`). Generated into `Structures/Generated/` from `Resources/structures/`; pinned in `SignatureCompatibilityTests`. The Validator does not read it yet (P8-5).
+
 ### Transport
 `MLLP` (enum namespace), `MLLPUnframer`.
 
-### Enums (16) — evolution classification per ADR-014
+### Enums (17; `StructureElement` added by P8-3) — evolution classification per ADR-014
 
 | Enum | Cases | Class | Note added |
 |------|-------|-------|-----------|
@@ -53,9 +59,10 @@ Every component that any supported version defines has a named accessor (hand-wr
 | `CharacterEncoding` | (encoding family) | **Stable** | — |
 | `RequiredComponentSet.Semantics` | (and/or family) | **Stable** | — |
 | `Segment` | typed / unknown sum-type | **Stable** (shape closed; the *set of typed segments* grows additively via new struct members, not new `Segment` cases) | — |
-| `MLLP` / `SegmentGrammarTable` | namespace enums (no cases) | n/a | — |
+| `StructureElement` | 2 (segment, group) | **Open** (P8-3; a `choice` case is planned, ADR-019) | yes |
+| `MLLP` / `SegmentGrammarTable` / `MessageStructureTable` | namespace enums (no cases) | n/a | — |
 
-The 6 **open** enums each carry a DocC `- Note:` telling consumers to switch with `@unknown default` (added in this cycle). The **stable** enums are closed by their domain; the additive-only 1.x rule still applies if a domain ever surprises us, but no growth is anticipated.
+The 7 **open** enums (6 at the v1.0 compile, plus `StructureElement`) each carry a DocC `- Note:` telling consumers to switch with `@unknown default` (added in this cycle). The **stable** enums are closed by their domain; the additive-only 1.x rule still applies if a domain ever surprises us, but no growth is anticipated.
 
 ## Conformances (part of the frozen contract)
 

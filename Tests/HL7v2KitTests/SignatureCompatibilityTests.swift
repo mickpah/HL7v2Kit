@@ -178,4 +178,30 @@ struct SignatureCompatibilityTests {
         let cx = CX(field: Field(repetitions: [Repetition(components: parts)]))
         #expect(cx[keyPath: cxPin] == "c12")
     }
+
+    // Deliberate pin of new, unreleased API (P8-3, ADR-019): the message structure
+    // model and its lookups. MessageStructureTableTests pins the pilot data.
+    @Test("MessageStructure, StructureElement and MessageStructureTable keep their signatures")
+    func messageStructureModel() {
+        let make: (String, String, [String], String, [StructureElement]) -> MessageStructure =
+            MessageStructure.init(id:version:triggers:citation:elements:)
+        let segment: (String, Int, Int?) -> StructureElement = StructureElement.segment(_:min:max:)
+        let group: (String, Int, Int?, [StructureElement]) -> StructureElement = StructureElement.group(_:min:max:elements:)
+        let byID: (String, Version) -> MessageStructure? = MessageStructureTable.structure(_:version:)
+        let byTrigger: (String, String, Version) -> [MessageStructure] =
+            MessageStructureTable.structures(messageCode:triggerEvent:version:)
+        let _: KeyPath<MessageStructure, String> = \.id
+        let _: KeyPath<MessageStructure, String> = \.version
+        let _: KeyPath<MessageStructure, [String]> = \.triggers
+        let _: KeyPath<MessageStructure, String> = \.citation
+        let _: KeyPath<MessageStructure, [StructureElement]> = \.elements
+        let minimum: KeyPath<StructureElement, Int> = \.min
+        let maximum: KeyPath<StructureElement, Int?> = \.max
+        let element = group("G", 0, nil, [segment("PID", 1, 1)])
+        let structure = make("ZZZ_Z01", "2.5.1", ["ZZZ^Z01"], "test", [segment("MSH", 1, 1), element])
+        #expect(structure.accepts(messageCode: "ZZZ", triggerEvent: "Z01"))
+        #expect(element[keyPath: minimum] == 0 && element[keyPath: maximum] == nil)
+        #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
+        #expect(byTrigger("ZZZ", "Z01", .v2_5_1).isEmpty)
+    }
 }
