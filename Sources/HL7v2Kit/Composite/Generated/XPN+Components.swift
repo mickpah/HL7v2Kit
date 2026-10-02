@@ -53,6 +53,8 @@ extension XPN {
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
+    ///
+    /// `DR` (v2.4, v2.5.1, v2.6) is a composite with no view: this accessor returns only DR.1, Range Start Date/Time. Read the other subcomponents through ``field``: `field.repetitions.first?.components[9].subcomponents[1]` is DR.2.
     public var nameValidityRange: String? {
         componentValue(10)
     }
@@ -69,6 +71,8 @@ extension XPN {
     /// Typed `TS` in v2.5.1.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
+    ///
+    /// `TS` (v2.5.1) is a composite with no view: this accessor returns only TS.1, Time. Read the other subcomponents through ``field``: `field.repetitions.first?.components[11].subcomponents[1]` is TS.2.
     public var effectiveDate: String? {
         componentValue(12)
     }
@@ -78,6 +82,8 @@ extension XPN {
     /// Typed `TS` in v2.5.1.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
+    ///
+    /// `TS` (v2.5.1) is a composite with no view: this accessor returns only TS.1, Time. Read the other subcomponents through ``field``: `field.repetitions.first?.components[12].subcomponents[1]` is TS.2.
     public var expirationDate: String? {
         componentValue(13)
     }

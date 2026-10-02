@@ -36,8 +36,11 @@ func compositeFailure(_ type: String, _ message: String) -> ExitCode {
 }
 
 /// The `/// ...` DocC lines for generated component `index` of `type`.
+/// `firstSubcomponents` maps a version to each composite datatype it defines
+/// that has no view (DR, TS, ...) and the name of that datatype's component 1.
 func compositeComponentDoc(type: String, index: Int,
-                           definitions: [(version: String, component: ComponentSchema)]) -> [String] {
+                           definitions: [(version: String, component: ComponentSchema)],
+                           firstSubcomponents: [String: [String: String]] = [:]) -> [String] {
     let newest = definitions[definitions.count - 1].component
     let typed = definitions.last { !($0.component.dataType ?? "").isEmpty }
     let dataType = typed?.component.dataType ?? ""
@@ -89,10 +92,29 @@ func compositeComponentDoc(type: String, index: Int,
     if compositeDataTypes.contains(dataType) {
         doc.append("For the typed view use `component(\(index), as: \(dataType).self)`.")
     }
+    // A component typed as a composite with no view returns only that
+    // composite's first subcomponent; say so, and how to reach the rest.
+    var nonView: [String] = []
+    var nonViewVersions: [String: [String]] = [:]
+    var nonViewFirst: [String: String] = [:]
+    for row in definitions where row.component.optionality != "W" {
+        guard let t = row.component.dataType, !compositeDataTypes.contains(t),
+              let first = firstSubcomponents[row.version]?[t] else { continue }
+        if nonViewVersions[t] == nil { nonView.append(t) }
+        nonViewFirst[t] = first   // rows run oldest to newest: keep the newest name
+        nonViewVersions[t, default: []].append("v" + row.version)
+    }
+    for t in nonView {
+        doc.append("`\(t)` (\(nonViewVersions[t]!.joined(separator: ", "))) is a composite with no view: "
+            + "this accessor returns only \(t).1, \(nonViewFirst[t]!). Read the other subcomponents "
+            + "through ``field``: `field.repetitions.first?.components[\(index - 1)].subcomponents[1]` "
+            + "is \(t).2.")
+    }
     return doc
 }
 
-func renderCompositeComponents(type: String, spec: CompositeViewSpec, grammars: [DataTypeSchema]) throws -> String {
+func renderCompositeComponents(type: String, spec: CompositeViewSpec, grammars: [DataTypeSchema],
+                                firstSubcomponents: [String: [String: String]] = [:]) throws -> String {
     let ordered = grammars.sorted { versionLess($0.version, $1.version) }
     let defined = Set(ordered.flatMap { $0.components.map(\.index) })
 
@@ -125,7 +147,8 @@ func renderCompositeComponents(type: String, spec: CompositeViewSpec, grammars: 
         let definitions: [(version: String, component: ComponentSchema)] = ordered.compactMap { grammar in
             grammar.components.first { $0.index == index }.map { (grammar.version, $0) }
         }
-        let doc = compositeComponentDoc(type: type, index: index, definitions: definitions)
+        let doc = compositeComponentDoc(type: type, index: index, definitions: definitions,
+                                        firstSubcomponents: firstSubcomponents)
         accessors.append([
             doc.map { "    /// \($0)" }.joined(separator: "\n    ///\n"),
             "    public var \(names[index]!): String? {",
@@ -157,17 +180,40 @@ func renderCompositeComponents(type: String, spec: CompositeViewSpec, grammars: 
     return lines.joined(separator: "\n")
 }
 
+/// Render every view first and write only when all of them succeed, so a
+/// failure on one view leaves the generated tree untouched.
 func emitCompositeViews(specFile: URL, outputRoot: URL, dataTypesByVersion: [String: [DataTypeSchema]]) throws {
-    let specs = try JSONDecoder().decode([String: CompositeViewSpec].self, from: Data(contentsOf: specFile))
+    guard FileManager.default.fileExists(atPath: specFile.path) else {
+        throw compositeFailure("*", "\(specFile.path) is missing; it is required (the curated accessor names)")
+    }
+    let specs: [String: CompositeViewSpec]
+    do {
+        specs = try JSONDecoder().decode([String: CompositeViewSpec].self, from: Data(contentsOf: specFile))
+    } catch {
+        throw compositeFailure("*", "\(specFile.path): malformed view map: \(error)")
+    }
     let unlisted = compositeDataTypes.subtracting(specs.keys).sorted()
     guard unlisted.isEmpty else { throw compositeFailure("*", "views \(unlisted) are missing from \(specFile.lastPathComponent)") }
-    try FileManager.default.createDirectory(at: outputRoot, withIntermediateDirectories: true)
+    // Per version: each composite datatype with no view, and its component 1 name.
+    var firstSubcomponents: [String: [String: String]] = [:]
+    for (version, types) in dataTypesByVersion {
+        for t in types where !compositeDataTypes.contains(t.dataType) {
+            if let first = t.components.first(where: { $0.index == 1 }) {
+                firstSubcomponents[version, default: [:]][t.dataType] = first.name
+            }
+        }
+    }
+    var rendered: [(file: URL, source: String)] = []
     for (type, spec) in specs.sorted(by: { $0.key < $1.key }) {
         guard compositeDataTypes.contains(type) else { throw compositeFailure(type, "is not a composite view type") }
         let grammars = dataTypesByVersion.values.compactMap { types in types.first { $0.dataType == type } }
         guard !grammars.isEmpty else { throw compositeFailure(type, "no Resources/datatypes version defines it") }
-        let source = try renderCompositeComponents(type: type, spec: spec, grammars: grammars)
-        let outFile = outputRoot.appendingPathComponent("\(type)+Components.swift")
+        let source = try renderCompositeComponents(type: type, spec: spec, grammars: grammars,
+                                                   firstSubcomponents: firstSubcomponents)
+        rendered.append((outputRoot.appendingPathComponent("\(type)+Components.swift"), source))
+    }
+    try FileManager.default.createDirectory(at: outputRoot, withIntermediateDirectories: true)
+    for (outFile, source) in rendered {
         try Data(source.utf8).write(to: outFile)
         print("emitted \(outFile.path)")
     }

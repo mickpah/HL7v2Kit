@@ -917,10 +917,9 @@ struct Codegen {
         // P9-3 (V251-C11, ADR-020): generated composite-view component accessors.
         let compositesFile = URL(fileURLWithPath: args.count > 9 ? args[9] : "\(cwd)/Resources/composites/composite-views.json")
         let compositesOutputRoot = URL(fileURLWithPath: args.count > 10 ? args[10] : "\(cwd)/Sources/HL7v2Kit/Composite/Generated")
-        if fm.fileExists(atPath: compositesFile.path) {
-            try emitCompositeViews(specFile: compositesFile, outputRoot: compositesOutputRoot,
-                                   dataTypesByVersion: dataTypesByVersion)
-        }
+        // Required: without it the generated views would go stale unseen.
+        try emitCompositeViews(specFile: compositesFile, outputRoot: compositesOutputRoot,
+                               dataTypesByVersion: dataTypesByVersion)
 
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")
     }

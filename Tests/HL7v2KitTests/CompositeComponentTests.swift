@@ -167,4 +167,17 @@ struct CompositeComponentTests {
         #expect(emptyCX.effectiveDate == emptyCX.checkDigit)
         #expect(emptyCX.expirationDate == emptyCX.id)
     }
+
+    @Test("A DR-typed component (no view) returns the range start; the documented field route gives the end")
+    func nonViewComposite() throws {
+        let wire = TestWires.adt("PID|1||c1^c2^c3^c4^c5^c6^c7^c8^c9^20200101&20251231")
+        let (message, pid) = try hydratedMessage(PID.self, from: wire)
+        let xpn = XPN(field: try #require(pid.field(3)))
+        #expect(xpn.nameValidityRange == "20200101")
+        #expect(xpn.nameValidityRange == message["PID-3.10.1"])
+        // The route the generated DocC gives: components[index - 1].subcomponents[1] is DR.2.
+        let end = xpn.field.repetitions.first?.components[9].subcomponents[1].value
+        #expect(end == "20251231")
+        #expect(end == message["PID-3.10.2"])
+    }
 }
