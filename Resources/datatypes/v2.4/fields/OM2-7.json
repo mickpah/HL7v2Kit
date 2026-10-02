@@ -1,0 +1,21 @@
+{
+  "field": "OM2-7",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Critical range for ordinal and continuous observations",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Low value",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "High value",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

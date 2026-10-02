@@ -347,13 +347,35 @@ def check_write_lengths():
         assert got == {1: "250", 2: "60"}, got
 
 
+def check_field_grammar_shape():
+    # P5-5: a field-local composite file (Resources/datatypes/v<X>/fields/<SEG>-<N>.json).
+    good = {"field": "IN3-20", "dataType": "CM", "version": "2.4", "name": "Pre-certification req/window",
+            "source": "prose-field",
+            "components": [{"index": 1, "name": "Pre-certification patient type", "dataType": "IS",
+                            "optionality": "", "tables": ["0150"]},
+                           {"index": 2, "name": "Pre-certification window", "dataType": "TS", "optionality": ""}]}
+    assert audit.field_grammar_findings("IN3-20", "v2.4", good) == []
+    assert audit.field_grammar_findings("IN3-21", "v2.4", good), "field must match the path"
+    assert audit.field_grammar_findings("IN3-20", "v2.3", good), "version must match the path"
+    bad = dict(good, field="in3_20")
+    assert any("not SEG-N" in f for f in audit.field_grammar_findings("in3_20", "v2.4", bad))
+    gap = dict(good, components=[dict(good["components"][0], index=2)])
+    assert any("1..n" in f for f in audit.field_grammar_findings("IN3-20", "v2.4", gap))
+    opt = dict(good, components=[dict(good["components"][0], optionality="O")])
+    assert any("optionality" in f for f in audit.field_grammar_findings("IN3-20", "v2.4", opt))
+    table = dict(good, components=[dict(good["components"][0], tables=["0001", "8888"])])
+    found = audit.field_grammar_findings("IN3-20", "v2.4", table)
+    assert len(found) == 1 and "8888" in found[0], found
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
           check_condition_predicate, check_swift_name, check_swift_name_uniqueness,
           check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
           check_unreadable_is_reported, check_length_token, check_write_lengths,
-          check_blank_read_never_removes_a_length, check_repairs_file_comment]
+          check_blank_read_never_removes_a_length, check_repairs_file_comment,
+          check_field_grammar_shape]
 
 
 def main():

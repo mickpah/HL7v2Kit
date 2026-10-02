@@ -1,0 +1,21 @@
+{
+  "field": "MSH-9",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Message type",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Message type",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Trigger event",
+      "dataType": "ID",
+      "optionality": ""
+    }
+  ]
+}

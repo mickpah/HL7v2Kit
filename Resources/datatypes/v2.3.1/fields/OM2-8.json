@@ -1,0 +1,33 @@
+{
+  "field": "OM2-8",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "Absolute range for ordinal and continuous observations",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Range",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Numeric change",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "%/a change",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Days",
+      "dataType": "",
+      "optionality": ""
+    }
+  ]
+}

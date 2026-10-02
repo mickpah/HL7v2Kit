@@ -1,0 +1,33 @@
+{
+  "field": "PRA-6",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Practitioner ID numbers",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Type of ID number",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "State/other qualifying info",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Expiration date",
+      "dataType": "",
+      "optionality": ""
+    }
+  ]
+}

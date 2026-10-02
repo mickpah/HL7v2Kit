@@ -137,4 +137,14 @@ struct SignatureCompatibilityTests {
         #expect(!plain.permitsNull)
         #expect(rule != plain)
     }
+
+    // Deliberate pin of new, unreleased API (P5-5): the field-local composite lookup is an
+    // additive static function beside grammar(_:version:), which keeps its own signature.
+    @Test("DataTypeGrammarTable.grammar(segment:field:version:) is additive beside grammar(_:version:)")
+    func fieldLocalGrammarLookup() {
+        let byField: (String, Int, Version) -> DataTypeGrammar? = DataTypeGrammarTable.grammar(segment:field:version:)
+        let byType: (String, Version) -> DataTypeGrammar? = DataTypeGrammarTable.grammar(_:version:)
+        #expect(byField("IN3", 20, .v2_4)?.dataType == "CM")
+        #expect(byType("CX", .v2_5_1)?.dataType == "CX")
+    }
 }

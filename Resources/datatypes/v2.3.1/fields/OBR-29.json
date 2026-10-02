@@ -1,0 +1,21 @@
+{
+  "field": "OBR-29",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "Parent",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Parent's placer order number",
+      "dataType": "EI",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Parent's filler order number",
+      "dataType": "EI",
+      "optionality": ""
+    }
+  ]
+}

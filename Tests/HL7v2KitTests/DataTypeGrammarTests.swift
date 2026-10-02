@@ -145,4 +145,59 @@ struct DataTypeGrammarTests {
         }
         #expect(DataTypeGrammarTable.grammar("NA", version: .v2_5_1) != nil, "v2.5.1 prints a component table")
     }
+
+    @Test("P5: a field-local CM composite carries its own component grammar")
+    func fieldLocalGrammar() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            let in3 = try #require(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: version), "\(version)")
+            #expect(in3.dataType == "CM", "\(version)")
+            #expect(in3.components.map(\.dataType) == ["IS", "ID", "TS"], "\(version)")
+            #expect(in3.component(2)?.tables == ["0136"], "\(version)")
+        }
+        let msh9 = try #require(DataTypeGrammarTable.grammar(segment: "MSH", field: 9, version: .v2_3_1))
+        #expect(msh9.components.map(\.tables) == [["0076"], ["0003"], ["0354"]])
+        #expect(DataTypeGrammarTable.grammar(segment: "MSH", field: 9, version: .v2_3)?.components.count == 2)
+        let err1 = try #require(DataTypeGrammarTable.grammar(segment: "ERR", field: 1, version: .v2_4))
+        #expect(err1.component(4)?.dataType == "CE")
+        #expect(err1.component(4)?.tables == ["0357"])
+        #expect(DataTypeGrammarTable.grammar(segment: "OBR", field: 15, version: .v2_4)?.components.count == 7,
+                "CH04 sec 4.5.3.15 adds specimen role; CH07 repeats the older six")
+        #expect(DataTypeGrammarTable.grammar(segment: "OBR", field: 15, version: .v2_4)?.component(2)?.dataType == "TX")
+        #expect(DataTypeGrammarTable.grammar(segment: "PID", field: 3, version: .v2_4) == nil, "CX has its own grammar")
+        #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_5_1) == nil, "v2.5 prints tables")
+    }
+
+    @Test("P5: the field-local lookup resolves the version's grammar version")
+    func fieldLocalGrammarVersion() {
+        // `2.8` validates against the v2.8.2 grammar (ADR-018): it reads v2.8.2's table.
+        for version in Version.allCases {
+            #expect(DataTypeGrammarTable.fieldGrammars(for: version)
+                    == DataTypeGrammarTable.fieldGrammars(for: version.grammarVersion), "\(version)")
+        }
+        #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_8) == nil, "v2.8.2 prints tables")
+        #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_4).count == 43)
+        #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3_1).count == 41)
+        #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3).count == 45)
+    }
+
+    @Test("P5: every pre-v2.5 field-local composite has a grammar or a registered reason")
+    func fieldLocalCoverage() {
+        // v2.5-era names on pre-v2.5 CM fields, and v2.3's field-printed names.
+        let fieldLocal: Set<String> = ["CM", "MSG", "MOC", "PRL", "EIP", "SPS", "NDL", "PTS", "SVC"]
+        // ADR-017 P5 addendum: OM2-6 prints its structure as a narrative repetition list.
+        let registered: Set<String> = ["2.3/OM2-6", "2.3.1/OM2-6", "2.4/OM2-6"]
+        let versions: [(Version, [String: SegmentGrammar])] = [
+            (.v2_3, SegmentGrammarTable.v2_3), (.v2_3_1, SegmentGrammarTable.v2_3_1), (.v2_4, SegmentGrammarTable.v2_4),
+        ]
+        for (version, segments) in versions {
+            for (id, segment) in segments {
+                for field in segment.fields where fieldLocal.contains(field.dataType) {
+                    guard DataTypeGrammarTable.grammar(field.dataType, version: version) == nil else { continue }
+                    let key = "\(version.rawValue)/\(id)-\(field.index)"
+                    let modelled = DataTypeGrammarTable.grammar(segment: id, field: field.index, version: version) != nil
+                    #expect(modelled != registered.contains(key), "\(key): modelled \(modelled)")
+                }
+            }
+        }
+    }
 }

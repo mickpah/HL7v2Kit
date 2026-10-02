@@ -1,0 +1,21 @@
+{
+  "field": "UB1-10",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Value amount & code (46-49)",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Value code",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Value amount",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

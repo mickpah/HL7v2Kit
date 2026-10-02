@@ -1,0 +1,27 @@
+{
+  "field": "OBR-26",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Parent result",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "OBX-3-observation identifier of parent result",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "OBX-4-sub-ID of parent result",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Part of OBX-5 observation result from parent",
+      "dataType": "TX",
+      "optionality": ""
+    }
+  ]
+}

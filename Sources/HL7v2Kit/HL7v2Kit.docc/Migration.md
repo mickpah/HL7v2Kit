@@ -112,6 +112,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | *Unreleased* | `IssueCode.extraComponentsInCompositeField` (additive; open enum), governed by the existing `ValidationOptions.extraComponentsSeverity`. P6-15: more warnings may fire by default; see below. |
 | *Unreleased* | `IssueCode.valueFormatInvalid(dataType:)` (additive; open enum) and `ValidationOptions.valueFormatSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, `.warning` in `.strict`; not an init parameter). Malformed NM, SI, DT, TM, DTM and TS values now raise a warning. |
 | *Unreleased* | `ValidationOptions.repetitionBoundSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, `.warning` in `.strict`; not an init parameter). P6-4 final review: the ``IssueCode/cardinalityExceeded`` bound warning's severity is now configurable; the single-cardinality error (gated by `checkCardinality`) is unaffected. |
+| *Unreleased* | `DataTypeGrammarTable.grammar(segment:field:version:)` (additive static function): the component grammar a v2.3 to v2.4 `CM` field prints on its own Components line (P5-5). `grammar(_:version:)` is unchanged. The validator does not read it yet, so default output is unchanged. |
 
 ## Extra components in composite fields (P6-15)
 

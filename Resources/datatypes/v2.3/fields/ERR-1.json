@@ -1,0 +1,33 @@
+{
+  "field": "ERR-1",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Error code and location",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Segment ID",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Sequence",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Field position",
+      "dataType": "NM",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Code identifying error",
+      "dataType": "CE",
+      "optionality": ""
+    }
+  ]
+}

@@ -1281,6 +1281,35 @@ NO_TABLE_SENTINEL = "9999"
 COMPONENT_OPT = {"R", "O", "C", "B", "W", "X", "RE"}
 
 
+def field_grammar_findings(stem, version, doc):
+    """P5 — shape of one field-local composite file, `Resources/datatypes/<version>/fields/<stem>.json`:
+    field / version / source match the path, the key is SEG-N, components are contiguous from 1,
+    carry no optionality (prose prints none) and a plausible datatype, and every table resolves
+    under Resources/tables/<version>."""
+    out = []
+    if doc.get("field") != stem or doc.get("version") != version[1:] or doc.get("source") != "prose-field":
+        out.append("field / version / source do not match the path")
+    if not re.fullmatch(r"[A-Z][A-Z0-9]{2}-[1-9]\d*", stem):
+        out.append(f"{stem!r} is not SEG-N")
+    comps = doc.get("components", [])
+    if not comps or [c.get("index") for c in comps] != list(range(1, len(comps) + 1)):
+        out.append(f"component indexes are not 1..n: {[c.get('index') for c in comps]}")
+    for c in comps:
+        where = f"{stem}.{c.get('index')}"
+        if c.get("optionality") != "":
+            out.append(f"{where}: a prose-derived component cannot carry an optionality")
+        if c.get("dataType") and not re.fullmatch(r"[A-Z][A-Z0-9]{1,3}", c["dataType"]):
+            out.append(f"{where}: implausible datatype {c['dataType']!r}")
+        if not c.get("name") or len(c["name"]) > 70:
+            out.append(f"{where}: empty or over-long name — prose bleed?")
+        for number in c.get("tables", []):
+            if not re.fullmatch(r"\d{4}", number):
+                out.append(f"{where}: malformed table number {number!r}")
+            elif not os.path.exists(f"{TABLES}/{version}/{number}.json"):
+                out.append(f"{where}: table {number} has no file under Resources/tables/{version}")
+    return out
+
+
 def datatypes(depth=False):
     """M10-A — audit Resources/datatypes/ (the Chapter 2A component tables).
 
@@ -1331,6 +1360,19 @@ def datatypes(depth=False):
                     findings.append((rel, f"{where}: malformed table number {number!r}"))
                 elif number != NO_TABLE_SENTINEL and not os.path.exists(f"{TABLES}/{version}/{number}.json"):
                     findings.append((rel, f"{where}: table {number} has no file under Resources/tables/{version}"))
+    # P5: field-local composites, Resources/datatypes/v<X>/fields/<SEG>-<N>.json.
+    fields_by_version = collections.defaultdict(dict)
+    for path in sorted(glob.glob(f"{DATATYPES}/v*/fields/*.json")):
+        files += 1
+        rel, stem = os.path.relpath(path, REPO), os.path.basename(path)[:-5]
+        version = os.path.basename(os.path.dirname(os.path.dirname(path)))
+        try:
+            doc = json.load(open(path))
+        except ValueError as exc:
+            findings.append((rel, f"malformed JSON: {exc}"))
+            continue
+        fields_by_version[version][stem] = doc
+        findings += [(rel, why) for why in field_grammar_findings(stem, version, doc)]
     if depth:
         import importlib.util
         spec = importlib.util.spec_from_file_location("dtx", os.path.join(REPO, "scripts/extract-datatype-components.py"))
@@ -1360,6 +1402,19 @@ def datatypes(depth=False):
                         for c in committed.get(code, {}).get("components", [])]
                 if got != have:
                     findings.append((f"Resources/datatypes/{version}/{code}.json", "DRIFT against a fresh extraction"))
+        # P5: the field-local composites are re-extracted too; the extractor is their only author.
+        spec = importlib.util.spec_from_file_location("dfc", os.path.join(REPO, "scripts/extract-field-components.py"))
+        dfc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dfc)
+        for version in sorted(f"v{v}" for v in dtp.SOURCES):
+            if not any(glob.glob(os.path.join(STANDARDS, p)) for p in CHAPTER_GLOBS[version]):
+                findings.append((f"Resources/datatypes/{version}/fields", "cannot re-extract (missing PDF)"))
+                continue
+            fresh = {key: dfc.document(t) for key, t in dfc.extract(version[1:])[0].items()}
+            committed = fields_by_version.get(version, {})
+            for key in sorted(set(fresh) | set(committed)):
+                if fresh.get(key) != committed.get(key):
+                    findings.append((f"Resources/datatypes/{version}/fields/{key}.json", "DRIFT against a fresh field extraction"))
     return files, findings
 
 

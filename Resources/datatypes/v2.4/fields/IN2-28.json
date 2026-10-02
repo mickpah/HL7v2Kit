@@ -1,0 +1,27 @@
+{
+  "field": "IN2-28",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Room coverage type/amount",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Room type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Amount type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Coverage amount",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

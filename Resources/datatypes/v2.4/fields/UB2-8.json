@@ -1,0 +1,27 @@
+{
+  "field": "UB2-8",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Occurrence span code/dates (36)",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Occurrence span code",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Occurrence span start date",
+      "dataType": "DT",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Occurrence span stop date",
+      "dataType": "DT",
+      "optionality": ""
+    }
+  ]
+}

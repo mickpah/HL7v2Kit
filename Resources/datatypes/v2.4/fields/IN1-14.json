@@ -1,0 +1,27 @@
+{
+  "field": "IN1-14",
+  "dataType": "CM",
+  "version": "2.4",
+  "name": "Authorization information",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Authorization number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Date",
+      "dataType": "DT",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Source",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

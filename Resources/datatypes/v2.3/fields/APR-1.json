@@ -1,0 +1,21 @@
+{
+  "field": "APR-1",
+  "dataType": "SVC",
+  "version": "2.3",
+  "name": "Time selection criteria",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Parameter class",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Parameter value",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

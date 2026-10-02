@@ -1,0 +1,21 @@
+{
+  "field": "PV1-37",
+  "dataType": "CM",
+  "version": "2.3.1",
+  "name": "Discharged to location",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Discharge location",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Effective date",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

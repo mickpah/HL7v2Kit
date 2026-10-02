@@ -1,0 +1,99 @@
+{
+  "field": "TXA-22",
+  "dataType": "PTS",
+  "version": "2.3",
+  "name": "Authentication person, time stamp (set)",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Family name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Given name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Middle initial or name",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Degree (e.g., MD)",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 8,
+      "name": "Source table",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Assigning authority",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 10,
+      "name": "Name type code",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 11,
+      "name": "Identifier check digit",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 12,
+      "name": "Code identifying the check digit scheme employed",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 13,
+      "name": "Identifier type code",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 14,
+      "name": "Assigning facility",
+      "dataType": "HD",
+      "optionality": ""
+    },
+    {
+      "index": 15,
+      "name": "When authenticated",
+      "dataType": "TS",
+      "optionality": ""
+    }
+  ]
+}

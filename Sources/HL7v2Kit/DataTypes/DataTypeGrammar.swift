@@ -93,7 +93,7 @@ public struct DataTypeGrammar: Sendable, Equatable, Hashable {
 public enum DataTypeGrammarTable {
     /// The component table of `dataType` as printed by `version`, or `nil` when that version
     /// defines no fixed components for it: a primitive; `CM`, a field-local composite whose
-    /// components each field defines (see `grammar(segment:field:version:)`); a withdrawn
+    /// components each field defines (see ``grammar(segment:field:version:)``); a withdrawn
     /// datatype; or `MA` / `NA` before v2.5, which print an open list (`<value1> ^ <value2> ^
     /// ...`) with no fixed component count to state — the same pair `Validator.openComposites`
     /// names for the width check, the single source for that decision. On v2.3 to v2.4 the
@@ -117,6 +117,37 @@ public enum DataTypeGrammarTable {
         case .v2_6:   return v2_6
         case .v2_8_2: return v2_8_2
         case .v2_8:   return [:]
+        }
+    }
+
+    /// The component grammar a field defines for itself, or `nil`. Before v2.5
+    /// most composite fields are typed `CM`: "the specific components of CM
+    /// fields are defined within the field descriptions" (v2.3 sec 2.8.6). Each
+    /// prints them on a "Components:" line under the field heading, and that
+    /// line is extracted here (ADR-017, P5 addendum). v2.3 also prints a few
+    /// field-local names (`TXA-22` PTS, `APR-1` SVC). `dataType` is the code the
+    /// field heading prints and `name` is the field's heading name. Always `nil`
+    /// from v2.5, where every composite has a component table of its own.
+    ///
+    /// `version` resolves through ``Version/grammarVersion``, so `2.8` reads the
+    /// v2.8.2 table. A component is recorded with the datatype its Components
+    /// line prints, `TS` included (`IN3-20.3`); a caller checking values must
+    /// still route each component through `Validator.componentGrammar(_:version:)`
+    /// so a `TS` component stays bounded by the primitive's own component limit
+    /// and format check. The validator does not read this table yet.
+    public static func grammar(segment: String, field: Int, version: Version) -> DataTypeGrammar? {
+        fieldGrammars(for: version.grammarVersion)["\(segment)-\(field)"]
+    }
+
+    /// Every field-local composite grammar printed by `version`, keyed `SEG-N`.
+    static func fieldGrammars(for version: Version) -> [String: DataTypeGrammar] {
+        switch version {
+        case .v2_3:   return v2_3_fields
+        case .v2_3_1: return v2_3_1_fields
+        case .v2_4:   return v2_4_fields
+        case .v2_5_1: return v2_5_1_fields
+        case .v2_6:   return v2_6_fields
+        case .v2_8_2, .v2_8: return v2_8_2_fields   // ADR-018: 2.8 reads v2.8.2
         }
     }
 }

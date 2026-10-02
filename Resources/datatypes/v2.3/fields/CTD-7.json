@@ -1,0 +1,27 @@
+{
+  "field": "CTD-7",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Contact identifiers",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID number",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Type of ID number",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Other qualifying info",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "field": "IN3-11",
+  "dataType": "CM",
+  "version": "2.3",
+  "name": "Days",
+  "source": "prose-field",
+  "components": [
+    {
+      "index": 1,
+      "name": "Day type",
+      "dataType": "IS",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Number of days",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}
