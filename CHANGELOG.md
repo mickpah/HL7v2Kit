@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P5 final review: TQ.6 priority repeat on v2.3/v2.3.1; v2.3 QRD-11
+
+- v2.3 and v2.3.1 section 4.4.6 let TQ.6 Priority repeat with the repeat
+  delimiter (`1^Q6H^^200001011200^^S~A^^^S`), which the parser reads as a
+  field repetition. On those versions a single-repeat `TQ` field (ORC-7,
+  RXE-1, RXG-3, GOL-15, QRF-9, URS-9) no longer raises `cardinalityExceeded`
+  for repetitions 2 to n, and no component, format, length or table check
+  runs on them; repetition 1 is validated as usual. v2.4 (section 4.3.6)
+  uses a space and is unchanged. A genuinely wrong second repetition there
+  now goes unreported: a known limit, recorded in the limitations register.
+- v2.3 QRD-11 is typed `CM`, as its section 2.24.4.11 heading and Components
+  line print (`<first data code value (ST)> ^ <last data code value (ST)>`),
+  not `ST` as its attribute table prints; a cited `DATATYPE_WHITELIST` entry
+  records the disagreement. `A^Z` no longer raises
+  `extraComponentsInPrimitiveField`; a third component raises
+  `extraComponentsInCompositeField`. v2.3 now has 46 field-local grammars.
+
+### Changed — P5-1 to P5-3: more issues may fire by default
+
+- No API change, but default output changes, and more errors may fire:
+  `valueNotInTable(table: "0472")` on v2.4 TQ.9, `valueNotInTable(table:
+  "0191")` on v2.3 ED.2, `CD` and `CF` width-checked, and `TQ` checked
+  against its CH4 component grammar. The width warning on a six-component
+  v2.3/v2.3.1 `CE` is gone. See Migration.md.
+
 ### Fixed — P5-9: v2.3.1 datatype names without table-of-contents residue
 
 - `DataTypeGrammar.name` for every v2.3.1 composite datatype carried leftover
