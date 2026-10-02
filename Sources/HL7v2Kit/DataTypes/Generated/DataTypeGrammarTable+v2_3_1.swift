@@ -5,7 +5,9 @@
 extension DataTypeGrammarTable {
     static let v2_3_1: [String: DataTypeGrammar] = [
         "AD": v2_3_1_AD,
+        "CD": v2_3_1_CD,
         "CE": v2_3_1_CE,
+        "CF": v2_3_1_CF,
         "CK": v2_3_1_CK,
         "CN": v2_3_1_CN,
         "CNE": v2_3_1_CNE,
@@ -32,6 +34,7 @@ extension DataTypeGrammarTable {
         "RP": v2_3_1_RP,
         "SCV": v2_3_1_SCV,
         "SN": v2_3_1_SN,
+        "TS": v2_3_1_TS,
         "VH": v2_3_1_VH,
         "VID": v2_3_1_VID,
         "XAD": v2_3_1_XAD,
@@ -57,6 +60,20 @@ extension DataTypeGrammarTable {
         ]
     )
 
+    private static let v2_3_1_CD: DataTypeGrammar = DataTypeGrammar(
+        dataType: "CD",
+        version: "2.3.1",
+        name: "channel definition                                                                               2-14",
+        components: [
+            ComponentGrammar(index: 1, name: "Channel identifier", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Electrode names", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 3, name: "Channel sensitivity/units", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Calibration parameters", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "Sampling frequency", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Minimum/maximum data values", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
     private static let v2_3_1_CE: DataTypeGrammar = DataTypeGrammar(
         dataType: "CE",
         version: "2.3.1",
@@ -67,6 +84,20 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 3, name: "Name of coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "Alternate identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Alternate text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Name of alternate coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
+    private static let v2_3_1_CF: DataTypeGrammar = DataTypeGrammar(
+        dataType: "CF",
+        version: "2.3.1",
+        name: "coded element with formatted values                                                              2-15",
+        components: [
+            ComponentGrammar(index: 1, name: "Identifier", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Formatted text", dataType: "FT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 3, name: "Name of coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Alternate identifier", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "Alternate formatted text", dataType: "FT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 6, name: "Name of alternate coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -398,6 +429,16 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 2, name: "Num1", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Separator/suffix", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "Num2", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
+    private static let v2_3_1_TS: DataTypeGrammar = DataTypeGrammar(
+        dataType: "TS",
+        version: "2.3.1",
+        name: "time stamp                                                                          2-52",
+        components: [
+            ComponentGrammar(index: 1, name: "YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Degree of precision", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

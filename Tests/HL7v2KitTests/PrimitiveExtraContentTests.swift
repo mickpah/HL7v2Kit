@@ -253,4 +253,38 @@ struct PrimitiveExtraContentTests {
         let table = try #require(found.first(where: isTable))
         #expect(table.location.componentIndex == 7)
     }
+
+    // MARK: P5-2
+
+    @Test("P5-2: TS on v2.3 to v2.4 has a grammar but is still walked as a primitive")
+    func componentGrammarHelper() {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            #expect(DataTypeGrammarTable.grammar("TS", version: version)?.components.count == 2)
+            #expect(Validator.componentGrammar("TS", version: version) == nil)
+            #expect(Validator.closedComposite("TS", version: version) == nil)
+            #expect(Validator.componentGrammar("CF", version: version)?.components.count == 6)
+            #expect(Validator.closedComposite("CD", version: version)?.components.count == 6)
+        }
+        #expect(Validator.componentGrammar("TS", version: .v2_5_1)?.components.count == 2)
+        #expect(Validator.componentGrammar("ST", version: .v2_5_1) == nil)
+    }
+
+    @Test("P5-2: a three-component TS on v2.3 to v2.4 PID-7 is reported once, as primitive content")
+    func tsThreeComponentsOnce() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let found = try issues(pid(7, "19990101^D^x", version: version), at: "PID", 7)
+            #expect(found.filter { $0.code == .extraComponentsInPrimitiveField }.count == 1, "\(version)")
+            #expect(found.filter { $0.code == .extraComponentsInCompositeField }.isEmpty, "\(version)")
+            #expect(try issues(pid(7, "19990101^D", version: version), at: "PID", 7).isEmpty, "\(version)")
+        }
+    }
+
+    @Test("P5-2: a raw & inside CF.2 (FT) on v2.3 to v2.4 warns at component 2")
+    func ftComponentPreV25() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let found = extras(try issues(withVersion(obx("CF", "C1^line a&line b^L"), version), at: "OBX", 5))
+            #expect(found.count == 1, "\(version)")
+            #expect(found.first?.location.componentIndex == 2, "\(version)")
+        }
+    }
 }

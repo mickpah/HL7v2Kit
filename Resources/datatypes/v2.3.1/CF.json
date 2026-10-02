@@ -1,0 +1,44 @@
+{
+  "dataType": "CF",
+  "version": "2.3.1",
+  "name": "coded element with formatted values                                                              2-15",
+  "source": "prose-line",
+  "components": [
+    {
+      "index": 1,
+      "name": "Identifier",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Formatted text",
+      "dataType": "FT",
+      "optionality": ""
+    },
+    {
+      "index": 3,
+      "name": "Name of coding system",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Alternate identifier",
+      "dataType": "ID",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Alternate formatted text",
+      "dataType": "FT",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Name of alternate coding system",
+      "dataType": "ST",
+      "optionality": ""
+    }
+  ]
+}

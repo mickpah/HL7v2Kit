@@ -1308,8 +1308,10 @@ def datatypes(depth=False):
         # no optionality, and a heading can print no datatype code (XTN.1), so those two
         # checks apply to the printed component tables only. A trailing component with no
         # datatype would be a note the extractor failed to drop.
-        prose = doc.get("source") == "prose"
-        if prose and comps and not comps[-1].get("dataType"):
+        # P5: "prose-line" files come from a printed Components / Format line; every entry is a
+        # printed component by construction, and TS prints no datatype code at all.
+        prose = doc.get("source") in ("prose", "prose-line")
+        if doc.get("source") == "prose" and comps and not comps[-1].get("dataType"):
             findings.append((rel, f"{stem}: trailing component without a datatype — a note, not a component?"))
         for c in comps:
             where = f"{stem}.{c.get('index')}"

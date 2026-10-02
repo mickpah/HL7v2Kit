@@ -1,0 +1,20 @@
+{
+  "dataType": "TS",
+  "version": "2.4",
+  "name": "time stamp",
+  "source": "prose-line",
+  "components": [
+    {
+      "index": 1,
+      "name": "YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]",
+      "dataType": "",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Degree of precision",
+      "dataType": "",
+      "optionality": ""
+    }
+  ]
+}

@@ -24,7 +24,9 @@ component, and the other six are all none-or-several cases that stay unbound.
 The printed "Components:" line is a second, subordinate source (P5). It completes the
 subsections: a heading that prints no datatype gives way to the line's entry when that
 entry prints one (v2.3 CE.4 "Alternate components" covers CE.4-6; v2.3.1 CNE.9), and the
-line supplies components past the last subsection. It never binds a table.
+line supplies components past the last subsection. It never binds a table. A composite
+with no numbered subsections takes its components from the line alone (P5-2: CD, CF, TS;
+`"source": "prose-line"`), with `""` where the line prints no datatype code.
 """
 import json, os, re, subprocess, sys
 
@@ -214,9 +216,14 @@ def extract(version):
         source = "prose"
         if comps and printed:
             comps = reconcile(code, comps, printed)
+        elif printed:
+            # P5-2: no numbered subsections, only the printed Components / Format line (CD,
+            # CF, TS). Every entry is a printed component; TS prints no datatype code.
+            comps = [{"index": i, "name": n, "dataType": d, "text": ""} for i, (n, d) in enumerate(printed, 1)]
+            source = "prose-line"
         # A trailing subsection with no datatype code is a note, not a component ("Usage
         # notes:", "References for internationalization", "Type-subtype combinations").
-        while comps and not comps[-1]["dataType"]:
+        while source == "prose" and comps and not comps[-1]["dataType"]:
             comps.pop()
         if not comps:
             continue                                   # a primitive: no component subsections

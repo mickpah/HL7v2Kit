@@ -30,7 +30,7 @@ extension Validator {
         case .maximum:
             severity = options.fieldLengthSeverity
         case .range, .oneOf:
-            guard DataTypeGrammarTable.grammar(dataType, version: version.grammarVersion) == nil else { return }
+            guard Self.componentGrammar(dataType, version: version) == nil else { return }
             severity = options.normativeLengthSeverity
         }
         guard let severity else { return }
@@ -97,14 +97,16 @@ extension Validator {
     }
 
     /// Lexical format of populated primitive values (V251-C10, PrimitiveFormat).
-    /// Where `dataType` has a component grammar on the version, each component
+    /// Where `dataType` has a component grammar on the version
+    /// (``componentGrammar(_:version:)``, which keeps a primitive primitive), each component
     /// whose grammar datatype has a rule is checked, and a composite component is
     /// descended one level into its subcomponents, as the component code-table
     /// check does (TS.1 is DTM on v2.5.1). Otherwise a datatype with a rule is
     /// checked on the value a recipient reads, the first subcomponent of the
     /// first component (``primitiveValue(_:)``; v2.5.1 and v2.8.2 section 2.6.2
-    /// a): a primitive, or TS on v2.3 to v2.4, which prints no component table
-    /// and whose second component is the degree of precision. Empty values and
+    /// a): a primitive, including TS on v2.3 to v2.4, whose Format-line grammar
+    /// prints no datatype codes and whose second component is the degree of
+    /// precision (P5-2). Empty values and
     /// the HL7 null `""` carry no value to check.
     func checkValueFormat(
         dataType: String,
@@ -130,7 +132,7 @@ extension Validator {
         }
         for (offset, repetition) in field.repetitions.enumerated() {
             let n = offset + 1
-            guard let grammar = DataTypeGrammarTable.grammar(dataType, version: grammarVersion) else {
+            guard let grammar = Self.componentGrammar(dataType, version: grammarVersion) else {
                 if PrimitiveFormat.checkedTypes.contains(dataType) {
                     report(Self.primitiveValue(repetition), as: dataType, component: nil, subcomponent: nil, repetition: n)
                 }
@@ -138,7 +140,7 @@ extension Validator {
             }
             for entry in grammar.components where repetition.components.count >= entry.index {
                 let component = repetition.components[entry.index - 1]
-                if let nested = DataTypeGrammarTable.grammar(entry.dataType, version: grammarVersion) {
+                if let nested = Self.componentGrammar(entry.dataType, version: grammarVersion) {
                     for inner in nested.components
                     where component.subcomponents.count >= inner.index
                         && PrimitiveFormat.checkedTypes.contains(inner.dataType) {

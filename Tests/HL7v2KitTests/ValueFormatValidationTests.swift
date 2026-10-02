@@ -144,7 +144,7 @@ struct ValueFormatValidationTests {
         #expect(try formatIssues(msh251 + line("PID", [1: "1", 3: "123", 5: "DOE^JOHN^^^^^L^^^^^19800101"])).isEmpty)
     }
 
-    @Test("v2.3.1 OBX-14 (TS, no component grammar): component 1 is checked as TS")
+    @Test("v2.3.1 OBX-14 (TS, a primitive on v2.3 to v2.4): component 1 is checked as TS")
     func preV25Timestamp() throws {
         let msh = "MSH|^~\\&|A|B|C|D|20240101120000||ORU^R01|M1|P|2.3.1\r"
         let bad = try formatIssues(msh + line("OBX", [1: "1", 2: "ST", 3: "X^Y^L", 5: "t", 14: "1999-01-01"]))
@@ -152,6 +152,33 @@ struct ValueFormatValidationTests {
         // The hour alone (TS prose) and the degree-of-precision component are both allowed.
         let good = try formatIssues(msh + line("OBX", [1: "1", 2: "ST", 3: "X^Y^L", 5: "t", 14: "1999010112^H"]))
         #expect(good.isEmpty)
+    }
+
+    // P5-2: TS on v2.3 to v2.4 now has a component grammar from its Format line (TS.1 and
+    // TS.2 print no datatype code). The format check still reads it as a primitive
+    // (Validator.componentGrammar), so the time is checked and the precision accepted.
+    @Test("P5-2: a malformed TS on v2.3 to v2.4 PID-7 still warns; a ^-precision TS is accepted")
+    func preV25TimestampWithGrammar() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let msh = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|\(version)\r"
+            #expect(DataTypeGrammarTable.grammar("TS", version: try #require(Version(rawValue: version))) != nil)
+            let bad = try formatIssues(msh + line("PID", [1: "1", 3: "123", 5: "DOE^JOHN", 7: "19991301"]))
+            #expect(bad.map(\.code) == [.valueFormatInvalid(dataType: "TS")], "\(version)")
+            #expect(bad.first?.location.componentIndex == nil, "\(version)")
+            #expect(try formatIssues(msh + line("PID", [1: "1", 3: "123", 5: "DOE^JOHN", 7: "19991231^D"])).isEmpty,
+                    "\(version)")
+        }
+    }
+
+    @Test("P5-2: a TS component (v2.3 ARQ-11 DR.1) and a TS OBX-5 are still checked as TS")
+    func preV25TimestampNestedAndVaries() throws {
+        let msh = "MSH|^~\\&|A|B|C|D|20240101120000||ORU^R01|M1|P|2.3\r"
+        let nested = try formatIssues(msh + line("ARQ", [11: "19991301^20000101"]))
+        #expect(nested.map(\.code) == [.valueFormatInvalid(dataType: "TS")])
+        #expect(nested.first?.location.componentIndex == 1)
+        #expect(try formatIssues(msh + line("ARQ", [11: "19991201^20000101"])).isEmpty)
+        let obx = try formatIssues(msh + line("OBX", [1: "1", 2: "TS", 3: "X^Y^L", 5: "19991301^S", 11: "F"]))
+        #expect(obx.map(\.code) == [.valueFormatInvalid(dataType: "TS")])
     }
 
     @Test("v2.8.2 RF1-18 (MO): MO.1 Quantity is checked as NM")

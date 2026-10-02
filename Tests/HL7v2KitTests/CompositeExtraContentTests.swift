@@ -126,4 +126,16 @@ struct CompositeExtraContentTests {
         options.extraComponentsSeverity = .error
         #expect(try extras(adt(pid5: Self.fifteen), at: "PID", 5, options: options).first?.severity == .error)
     }
+
+    @Test("P5-2: CD and CF on v2.3 to v2.4 take their six-component printed line: a 7th warns")
+    func cdCfPreV25Width() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            for type in ["CD", "CF"] {
+                let six = obx(type, "a^b^c^d^1^f").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|\(version)\r")
+                let seven = obx(type, "a^b^c^d^1^f^g").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|\(version)\r")
+                #expect(try extras(six, at: "OBX", 5).isEmpty, "\(version) \(type)")
+                #expect(try extras(seven, at: "OBX", 5).count == 1, "\(version) \(type)")
+            }
+        }
+    }
 }

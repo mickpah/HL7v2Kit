@@ -8,9 +8,10 @@ extension Validator {
 
     /// The primitive data types each version defines: a datatype section in the
     /// version's CH02 that prints no components. CD, CF, CM, MA, NA and TQ are not
-    /// primitives: their sections define components (CD and CF have no component
-    /// grammar on v2.3 to v2.4, but do from v2.5.1). TS is listed only where it prints no component table;
-    /// v2.5.1 onward define it as a composite (TS.1 DTM, TS.2 ID).
+    /// primitives: their sections define components (CD and CF on v2.3 to v2.4 from the
+    /// printed Components line, P5-2). TS is listed where it prints no component table:
+    /// on v2.3 to v2.4 its Format line gives it a grammar, but ``componentGrammar(_:version:)``
+    /// keeps it a primitive. v2.5.1 onward define it as a composite (TS.1 DTM, TS.2 ID).
     ///
     /// - v2.3 CH2 2.8 (DT 2.8.13, FT 2.8.17, ID 2.8.19, IS 2.8.20, NM 2.8.25, SI 2.8.36,
     ///   ST 2.8.38, TM 2.8.39, TN 2.8.40, TS 2.8.42, TX 2.8.43)
@@ -49,6 +50,18 @@ extension Validator {
         case "TS": return 2
         default:   return 1
         }
+    }
+
+    /// The component grammar the validator walks for `dataType` on `version`, or `nil`
+    /// for a primitive there (``primitiveComponentLimit(_:version:)``), which is read as
+    /// one value, before the grammar table is consulted. TS on v2.3 to v2.4 has a
+    /// grammar from its Format line (P5-2: "YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]^<degree
+    /// of precision>", v2.3 2.8.42, v2.3.1 2.8.44, v2.4 2.9.47), whose components print no
+    /// datatype code; walking it would check nothing, so its time is checked as `TS` and
+    /// its width bounded by the primitive limit of two.
+    static func componentGrammar(_ dataType: String, version: Version) -> DataTypeGrammar? {
+        guard primitiveComponentLimit(dataType, version: version) == nil else { return nil }
+        return DataTypeGrammarTable.grammar(dataType, version: version.grammarVersion)
     }
 
     /// A primitive component the spec lets carry subcomponents, keyed either by the
@@ -141,8 +154,7 @@ extension Validator {
     /// v2.4, `varies`), or an ``openComposites`` array.
     static func closedComposite(_ dataType: String, version: Version) -> DataTypeGrammar? {
         guard !openComposites.contains(dataType),
-              primitiveComponentLimit(dataType, version: version) == nil,
-              let grammar = DataTypeGrammarTable.grammar(dataType, version: version),
+              let grammar = componentGrammar(dataType, version: version),
               !grammar.components.isEmpty else { return nil }
         return grammar
     }
@@ -195,7 +207,7 @@ extension Validator {
             }
             return
         }
-        guard let composite = DataTypeGrammarTable.grammar(dataType, version: grammarVersion) else { return }
+        guard let composite = Self.componentGrammar(dataType, version: grammarVersion) else { return }
         let closed = Self.closedComposite(dataType, version: grammarVersion) != nil
         for (offset, repetition) in field.repetitions.enumerated() {
             // P6-15: populated components beyond the datatype's component table.

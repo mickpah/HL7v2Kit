@@ -12,7 +12,9 @@ public struct ComponentGrammar: Sendable, Equatable, Hashable {
     /// The printed component name.
     public let name: String
     /// The component's own datatype code, or `""` for a withdrawn component,
-    /// which the spec prints without one.
+    /// which the spec prints without one, and for a v2.3 to v2.4 component
+    /// whose Components / Format line prints no code (`TS.1`, `TS.2`, and
+    /// `CD.1` on v2.3 and v2.3.1).
     public let dataType: String
     /// The printed optionality code, verbatim: `R`, `O`, `C`, `B`, `W`, or
     /// `RE` (required but may be empty, v2.7+). Kept as printed because `RE`

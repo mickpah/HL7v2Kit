@@ -86,4 +86,20 @@ struct DataTypeGrammarTests {
         #expect(DataTypeGrammarTable.grammar("ED", version: .v2_3)?.component(2)?.tables == ["0191"])
         #expect(DataTypeGrammarTable.grammar("SN", version: .v2_3)?.component(1)?.name == "Comparator")
     }
+
+    @Test("P5: CD, CF and TS come from their printed Components / Format line on v2.3 to v2.4")
+    func componentsLineOnly() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            let ts = try #require(DataTypeGrammarTable.grammar("TS", version: version), "\(version)")
+            #expect(ts.components.count == 2, "\(version)")
+            #expect(ts.component(2)?.name == "Degree of precision", "\(version)")
+            #expect(ts.component(2)?.dataType == "", "\(version): the Format line prints no code")
+            let cf = try #require(DataTypeGrammarTable.grammar("CF", version: version), "\(version)")
+            let coding = version == .v2_4 ? "IS" : "ST"
+            #expect(cf.components.map(\.dataType) == ["ID", "FT", coding, "ID", "FT", coding], "\(version)")
+            let cd = try #require(DataTypeGrammarTable.grammar("CD", version: version), "\(version)")
+            #expect(cd.components.count == 6, "\(version)")
+            #expect(cd.component(5)?.dataType == "NM", "\(version)")
+        }
+    }
 }
