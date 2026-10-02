@@ -955,6 +955,18 @@ def write_lengths(path, wanted):
     open(path, "w", encoding="utf-8").write("".join(out) + text[pos:])
 
 
+def datatype_disagrees(version, seg, index, schema_dt, candidates):
+    """M6-O5: True when the schema's dataType is a finding against the extracted candidates
+    for that slot. A spec `CM` accepts only an enumerated CM_REFINEMENTS name (P5-7)."""
+    if not candidates or not schema_dt or schema_dt in candidates:
+        return False
+    if (version, seg, index) in DATATYPE_WHITELIST:
+        return False
+    if "CM" in candidates and schema_dt in CM_REFINEMENTS:
+        return False  # enumerated refinement of the CM placeholder (identical structure)
+    return True
+
+
 def write_repeatability(path, wanted):
     """Replace each listed field's `repeatability` value in place, textually (see write_tables)."""
     text = open(path, encoding="utf-8").read()
@@ -1036,12 +1048,8 @@ def depth(write=False, correct_names=False, record_lengths=False, record_repeata
             for f in schema_fields:
                 candidates = spec_dts.get((seg, f["index"]))
                 schema_dt = (f.get("dataType") or "").strip()
-                if not candidates or not schema_dt or schema_dt in candidates:
+                if not datatype_disagrees(version, seg, f["index"], schema_dt, candidates):
                     continue
-                if (version, seg, f["index"]) in DATATYPE_WHITELIST:
-                    continue
-                if "CM" in candidates and schema_dt in CM_REFINEMENTS:
-                    continue  # enumerated refinement of the CM placeholder (identical structure)
                 datatype_findings.append(
                     (version, seg, f["index"], schema_dt, sorted(candidates)))
             # M25: the LEN column, recorded VERBATIM. Up to v2.6 the cell is a maximum length,

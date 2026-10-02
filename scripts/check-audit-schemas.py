@@ -368,6 +368,16 @@ def check_field_grammar_shape():
     assert len(found) == 1 and "8888" in found[0], found
 
 
+def check_cm_refinements():
+    # P5-7 (V24-C08): a spec `CM` accepts only names whose structure is the field's own.
+    assert audit.CM_REFINEMENTS == {"MSG", "MOC", "PRL", "EIP"}, audit.CM_REFINEMENTS
+    assert not {"SPS", "NDL"} & audit.CM_REFINEMENTS
+    for name in sorted(audit.CM_REFINEMENTS):
+        assert not audit.datatype_disagrees("v2.4", "ZZZ", 1, name, {"CM"}), name
+    for name in ("SPS", "NDL", "CWE", "ST"):
+        assert audit.datatype_disagrees("v2.4", "ZZZ", 1, name, {"CM"}), name
+    assert not audit.datatype_disagrees("v2.4", "ZZZ", 1, "CM", {"CM"})
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
@@ -375,7 +385,7 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
           check_unreadable_is_reported, check_length_token, check_write_lengths,
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
-          check_field_grammar_shape]
+          check_field_grammar_shape, check_cm_refinements]
 
 
 def main():
