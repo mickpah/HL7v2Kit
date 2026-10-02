@@ -207,7 +207,6 @@ public struct CON: TypedSegment {
     }
 
     /// CON-25: Relationship to Subject Table. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `relationshipToSubjectTableAll` returns every repetition.
-    /// v2.6 prints this element as `Relationship to Subject`.
     /// Renamed `Relationship to Subject` in v2.6, and v2.8.2 types it `CWE`: use `relationshipToSubject`.
     public var relationshipToSubjectTable: String? {
         field(25)?.stringValue
@@ -220,7 +219,6 @@ public struct CON: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
-    /// v2.6 prints this element as `Relationship to Subject`.
     /// Renamed `Relationship to Subject` in v2.6, and v2.8.2 types it `CWE`: use `relationshipToSubject`.
     public var relationshipToSubjectTableAll: [String?] {
         repetitions(25).map(\.stringValue)

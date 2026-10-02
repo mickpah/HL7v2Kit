@@ -43,6 +43,33 @@ The accessor's return type encodes the field's HL7 datatype:
 - **`String?`** for scalar HL7 datatypes (`SI`, `ID`, `IS`, `ST`, `NM`, `DT`, `TM`, `TS`, `FT`, `GTS`, `TX`, `DTM`). Returns the rendered first-subcomponent value if the field is single-everything-the-way-down; nil if absent.
 - **A typed composite struct** for every HL7 v2.5.1 composite datatype the typed-segment surface uses: `XPN?` / `CX?` / `XAD?` (shipped v0.2-C1); `CE?` / `CWE?` (shipped v0.3-C2); `EI?` / `XCN?` / `XTN?` (shipped v0.3-C3); `HD?` / `MSG?` / `PT?` / `VID?` / `PL?` / `CNE?` / `XON?` / `EIP?` (shipped v0.3-C4). Each struct exposes named accessors (`familyName`, `id`, `streetAddress`, `identifier`, `text`, `entityIdentifier`, `idNumber`, `telephoneNumber`, `namespaceID`, `messageCode`, `pointOfCare`, `organizationName`, `placerAssignedIdentifier`, …) for the most common components, plus a public `field: Field` for raw access to repetitions and unexposed components. After v0.3-C4 there are no remaining "Field?-typed" structured composites on the 9 spec § 17 segments — every populated typed-segment accessor returns either a `String?` (for scalar HL7 datatypes) or a typed composite struct.
 
+## Composite components and later-version accessors
+
+Every component that any supported version defines has a named accessor on its composite
+view, and each typed segment struct reaches every field, name and repetition through
+v2.8.2 (ADR-020). The examples below are compiled in `TypedSegmentsArticleExamplesTests`.
+
+```swift
+// A named accessor for every component, and a sub-composite view by position.
+let cx = pid.patientIdentifierList                        // CX?
+let effective = cx?.effectiveDate                         // CX-7
+let authority = cx?.component(4, as: HD.self)?.universalID
+
+// Every repetition of a repeating field, in wire order.
+let ids = pid.patientIdentifierListAll                    // [CX]
+
+// A field a later version defines: nil on an older message.
+let kind = obx.observationType                            // OBX-29 (v2.8.2)
+
+// A later version retypes a composite field: re-view it.
+let coded = obx.observationIdentifier?.viewed(as: CWE.self)
+```
+
+`component(_:as:)` returns `nil` only for an absent component; a present but empty
+component gives an empty view. Accessors are not gated by the message's version: each
+accessor's documentation names the versions that define the field, and an accessor for a
+field the declared version lacks still reads that wire position.
+
 ## Iterating multi-occurrence segments
 
 For segments that can appear more than once (e.g. multiple `OBX` per message):

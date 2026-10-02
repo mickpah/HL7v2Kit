@@ -11,6 +11,17 @@ import Foundation
 /// Conformers expose strongly-typed accessors for the named fields of a segment
 /// (e.g. `PID.patientName`) while still preserving the raw `Field` array for
 /// round-trip serialisation.
+///
+/// ## Versions
+///
+/// One struct serves every supported HL7 version. Its accessors come from the
+/// segment's base schema (v2.5.1, or the earliest version that defines it) plus
+/// every field, name and composite retype that later versions add (ADR-020). An
+/// accessor for a field the message's version does not define returns `nil`.
+/// Where a later version changes a composite field's type, the property keeps its
+/// base type; use ``CompositeView/viewed(as:)`` (for example
+/// `obx.observationIdentifier?.viewed(as: CWE.self)`). Repeating fields also have
+/// a `...All` accessor.
 public protocol TypedSegment: Sendable, Equatable, Hashable {
     /// The 3-character segment identifier (e.g. "PID", "MSH").
     static var segmentID: String { get }

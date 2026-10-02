@@ -184,6 +184,9 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
                 let verb = agree(run.versions, "print")
                 if m == n && name == slot.name { continue }
                 if m == n {
+                    // A later rename kept as its own accessor is stated once, by its "Renamed" note.
+                    if run.versions.allSatisfy({ versionLess(base.version, $0) }),
+                       family.contains(where: { $0 != n && slots[$0].renameOf != nil && slots[$0].name == name }) { continue }
                     notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)`.")
                 } else if accessor == slot.swiftName {
                     notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)` (`\(type)`), which this accessor reads.")

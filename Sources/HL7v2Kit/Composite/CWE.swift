@@ -35,6 +35,10 @@
 /// CWE-10..22 are generated accessors (``CWE/secondAltIdentifier`` through
 /// ``CWE/secondAltValueSetVersionID``); see `CWE+Components.swift`.
 ///
+/// CWE-10 through CWE-22 (the second alternate triplet, and the OID and
+/// value-set components) are defined in v2.8.2 only. Their generated accessors
+/// return `nil` on earlier messages.
+///
 /// **Required components.** None: v2.5.1 prints every CWE component as `O`, and its usage
 /// notes include an "Uncoded" case with only the text (CWE-2) valued.
 public struct CWE: CompositeView {
