@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8 final review: internal structure initialiser; wording and doc corrections
+
+- `MessageStructure.init(id:version:triggers:citation:elements:)` is internal (unreleased
+  API, so no compatibility break): there is no public matcher to hand a consumer-built
+  structure to, and the AU overlay will add fields. The DocC of `triggers` gives the
+  `"CODE^EVENT"` / `"CODE^*"` format, `version` is the printed version string, and
+  `StructureElement` says a later release adds cases.
+- An MSH-9.3 that differs from a modelled structure ID only by case or surrounding
+  whitespace (`ADT_A01 `, `adt_a01`) is still `messageStructureNotModelled` (info, no body
+  match), and its message now says so. Default output unchanged.
+- Docs: README feature line, Migration.md open-enum list (`StructureElement`), ADR-019
+  (internal initialiser; where the pilot differs: no overrides.json or JSON Schema file,
+  lookup rule 3 not implemented, lint run per message uncached), ACK syntax citations per
+  version (UAC from v2.6), the MSH-18 echo in the DocC and register rows, and a
+  `Validation.md` note that batch input goes through `BatchParser` and `BatchValidator`.
+
 ### Documentation — P8-8: message-structure pilot close-out
 
 - Permanent-limitations register section E: each row restated for what is true after

@@ -65,6 +65,14 @@ extension Validator {
             return (structure, [])
         }
         guard let structure = table[declared] else {
+            // An ID that matches a loaded structure once trimmed and
+            // upper-cased is named as such; IDs still match exactly.
+            let near = String(declared.drop(while: \.isWhitespace).reversed()
+                .drop(while: \.isWhitespace).reversed()).uppercased()
+            if near != declared, table[near] != nil {
+                return (nil, [notModelled(declared, message: message,
+                    reason: "MSH-9.3 \"\(declared)\" differs from the modelled structure ID \(near) only by case or whitespace; structure IDs are matched exactly")])
+            }
             let printed = byTrigger.isEmpty ? nil
                 : "no \(ver) abstract message syntax is modelled for \(declared); \(ver) prints \(trigger) under "
                 + byTrigger.joined(separator: ", ")

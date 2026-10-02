@@ -248,7 +248,9 @@ optional AU keys added at the top level.
 
 Runtime: `MessageStructure` (id, version, triggers, citation, elements) and an indirect
 enum `StructureElement { case segment(String, min:, max:); case group(String, min:,
-max:, elements:) }`, public and `Sendable`, emitted by `HL7v2KitCodegen` into
+max:, elements:) }`, public and `Sendable` (the `MessageStructure` memberwise initialiser is
+internal, amended in the P8 final review: there is no public matcher, so a consumer-built
+structure has no use, and the AU overlay will add fields), emitted by `HL7v2KitCodegen` into
 `Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+v<X_Y_Z>.swift`, one constant
 per structure (as ADR-017 does for datatypes, to keep type-checking cheap). The codegen
 takes the structures as positional arguments 11 (the input root, `Resources/structures`)
@@ -705,21 +707,35 @@ it. What the code does, checked against the source at P8-8:
 - **Resolution.** MSH-9.3 when valued, else MSH-9.1^9.2 through the triggers; a mismatch is
   reported alone, with no body match. Z-segments, ADD and segments the version's grammar does
   not define are skipped by the matcher.
-- **Public model.** `MessageStructure` (`id`, `version`, `triggers`, `citation`, `elements`,
-  the public `init(id:version:triggers:citation:elements:)` and
-  `accepts(messageCode:triggerEvent:)`), `StructureElement` (`segment(_:min:max:)`,
+- **Public model.** `MessageStructure` (`id`, `version`, `triggers`, `citation`, `elements`
+  and `accepts(messageCode:triggerEvent:)`; the initialiser is internal since the P8 final
+  review), `StructureElement` (`segment(_:min:max:)`,
   `group(_:min:max:elements:)`, `min`, `max`; open, for the planned `choice` case) and
   `MessageStructureTable` (`structure(_:version:)`, `structures(messageCode:triggerEvent:version:)`).
 - **Builder.** `AcknowledgmentCode` (Table 0008, six cases, open),
   `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` and
   `BuilderError.acknowledgedMessageControlIDMissing` (decision 9 as amended above).
 
+Where the pilot differs from the text above (P8 final review):
+
+- **No `Resources/structures/overrides.json` and no JSON Schema file yet.** Each pilot
+  structure carries its override citations (group names taken from HL7 v2.xml, the
+  `{[X]}` reading) in its own `citation`, and `StructureCodegen` enforces the file shape
+  (unknown keys and missing `max` are rejected). The rollout's extractor task creates
+  `overrides.json`.
+- **Lookup rule 3 is not implemented.** v2.3 has no MSH-9.3, so it resolves from
+  MSH-9.1^9.2 only; until v2.3 structures load, every v2.3 message is not modelled, and the
+  rule cannot be exercised.
+- **The determinism lint also runs at validation time,** on every message that reaches the
+  matcher, uncached (`Validator+MessageStructure.swift`). The rollout caches it.
+
 Tests, measured at P8-8 with `swift test --filter` per suite: `MessageStructureDataTests` 1,
 `MessageStructureTableTests` 8, `StructureLintTests` 13, `StructureMatcherTests` 26,
 `StructureMatcherPropertyTests` 6, `StructureMatcherCorpusTests` 1,
 `MessageStructureValidationTests` 39, `AcknowledgmentBuilderTests` 13 (one added in P8-8):
 107 tests in 8 suites. The full suite is 1291 tests in 92 suites. Parameterised tests count
-once.
+once. The P8 final review added one (`MessageStructureValidationTests` 40): 108 tests in the
+8 suites, 1292 in all.
 
 To show that the check changes no default output, extract the spec examples with
 `scripts/extract-example-messages.py`, run the env-gated `ValidationDigestTests`

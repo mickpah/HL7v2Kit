@@ -151,13 +151,15 @@ let report = Validator(options: options).validate(message)
 
 Look structures up with ``MessageStructureTable``.
 
+Batch input (`FHS`/`BHS` ... `BTS`/`FTS`) must go through ``BatchParser`` and ``BatchValidator``, which give one report per contained message; a batch trailer (`BTS`, `FTS`) left on a message passed to the plain ``Parser`` is reported as an unexpected segment when the structure check is on.
+
 ## What the validator does not check
 
 - **Message structure (partial).** Segment order, groups and required segments are checked only for the structures modelled so far (v2.5.1 ADT_A01, ORU_R01 and ACK), and only when ``ValidationOptions/messageStructureSeverity`` is set. Every other structure and version reports ``IssueCode/messageStructureNotModelled(structure:)``, and so do fragments and an MSH-9.3 naming a structure that is not modelled (`ADT^A04^ADT_A04` on v2.5.1). Registered as blocking spec-completeness until the per-version rollout completes (permanent-limitations register §E; ADR-019).
 - **Component optionality.** The component grammar records it where the spec prints it; nothing enforces it yet. On v2.3 to v2.4, a component whose prose names no table, several tables, or a table whose name does not match is left unchecked (ADR-017).
 - **Component length.** Recorded on every component, never enforced. Conditional components are checked where the prose states a sibling-presence condition; the "as of v2.7" rules are opt-in (`conformanceConditionSeverity`), off by default because the spec's own examples violate them. Conditions on the coding system in use (CWE.7 and kin) and CNE.20's self-contradictory sentence are not modelled.
 - **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.
-- **Acknowledgment protocol.** ``MessageBuilder/acknowledgment(to:code:messageControlID:dateTime:)`` builds the general acknowledgment of a message (MSA-2 echoes MSH-10, sender and receiver swap, `ACK^<event>^ACK`, MSH-11 and MSH-12 echoed; ADR-019 decision 9), and the built ACK validates like any other message. Whether, when and with which ``AcknowledgmentCode`` to acknowledge, the MSH-15 and MSH-16 enhanced-mode rules and the sequence number protocol are receiving-application behaviour (v2.5.1 CH02 §2.9.2 to §2.9.3) and a non-goal: the caller chooses the code and adds any ERR detail.
+- **Acknowledgment protocol.** ``MessageBuilder/acknowledgment(to:code:messageControlID:dateTime:)`` builds the general acknowledgment of a message (MSA-2 echoes MSH-10, sender and receiver swap, `ACK^<event>^ACK`, MSH-11 and MSH-12 echoed, and a populated MSH-18 echoed so the ACK declares the character set it is serialised in, a builder rule beyond the spec's echo list; ADR-019 decision 9), and the built ACK validates like any other message. Whether, when and with which ``AcknowledgmentCode`` to acknowledge, the MSH-15 and MSH-16 enhanced-mode rules and the sequence number protocol are receiving-application behaviour (v2.5.1 CH02 §2.9.2 to §2.9.3) and a non-goal: the caller chooses the code and adds any ERR detail.
 
 ## See Also
 

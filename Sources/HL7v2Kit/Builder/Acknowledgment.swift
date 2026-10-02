@@ -1,9 +1,10 @@
 // Acknowledgment.swift
 // The general acknowledgment (ACK) of a received message, ADR-019 decision 9:
 // build and validate the general ACK, no protocol logic. Structure
-// MSH [{SFT}] [UAC] MSA [{ERR}] (v2.5.1 CH02 §2.14.1; v2.6 and v2.8.2 §2.13.1;
-// MSH MSA [ERR] in v2.3 and v2.3.1 §2.13.1 and v2.4 §2.14.1), with the
-// original-mode response rules of v2.5.1 CH02 §2.9.2.2 (v2.3 and v2.3.1
+// MSH [{SFT}] [UAC] MSA [{ERR}] in v2.6 and v2.8.2 CH02 §2.13.1;
+// MSH [{SFT}] MSA [{ERR}] in v2.5.1 CH02 §2.14.1; MSH MSA [ERR] in v2.3 and
+// v2.3.1 CH2 §2.13.1 and v2.4 CH02 §2.14.1. UAC first appears in v2.6. The
+// original-mode response rules are those of v2.5.1 CH02 §2.9.2.2 (v2.3 and v2.3.1
 // §2.12.1.2.1, v2.4 §2.13.1.2.1, v2.6 and v2.8.2 §2.9.2.2).
 
 /// HL7 Table 0008, Acknowledgment Code: the value of MSA-1.
@@ -87,7 +88,8 @@ public extension MessageBuilder {
     /// Left to the caller: every other MSH field (MSH-8, MSH-13 to MSH-17,
     /// MSH-19 onward), MSA-3 (Text Message, backward compatible from v2.5.1
     /// in favour of ERR), MSA-4 (sequence number protocol), MSA-5 and MSA-6,
-    /// and the optional SFT, UAC and ERR segments. To add them, build a new
+    /// and the optional SFT and ERR segments (SFT from v2.5.1; ERR repeats
+    /// from v2.5.1) and, on v2.6 and later only, UAC. To add them, build a new
     /// ``Message`` from the returned message's `segments`.
     ///
     /// The builder has no protocol logic (ADR-019 decision 9): it does not

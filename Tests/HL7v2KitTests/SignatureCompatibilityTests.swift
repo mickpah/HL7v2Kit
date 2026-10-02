@@ -209,10 +209,10 @@ struct SignatureCompatibilityTests {
 
     // Deliberate pin of new, unreleased API (P8-3, ADR-019): the message structure
     // model and its lookups. MessageStructureTableTests pins the pilot data.
+    // The memberwise init is internal (P8 final review): this file imports
+    // HL7v2Kit without @testable, so it reads a generated structure instead.
     @Test("MessageStructure, StructureElement and MessageStructureTable keep their signatures")
-    func messageStructureModel() {
-        let make: (String, String, [String], String, [StructureElement]) -> MessageStructure =
-            MessageStructure.init(id:version:triggers:citation:elements:)
+    func messageStructureModel() throws {
         let segment: (String, Int, Int?) -> StructureElement = StructureElement.segment(_:min:max:)
         let group: (String, Int, Int?, [StructureElement]) -> StructureElement = StructureElement.group(_:min:max:elements:)
         let byID: (String, Version) -> MessageStructure? = MessageStructureTable.structure(_:version:)
@@ -226,10 +226,10 @@ struct SignatureCompatibilityTests {
         let minimum: KeyPath<StructureElement, Int> = \.min
         let maximum: KeyPath<StructureElement, Int?> = \.max
         let element = group("G", 0, nil, [segment("PID", 1, 1)])
-        let structure = make("ZZZ_Z01", "2.5.1", ["ZZZ^Z01"], "test", [segment("MSH", 1, 1), element])
+        let structure = try #require(byID("ACK", .v2_5_1))
         let accepts: (MessageStructure) -> (String, String) -> Bool = MessageStructure.accepts(messageCode:triggerEvent:)
-        #expect(accepts(structure)("ZZZ", "Z01"))
-        #expect(!accepts(structure)("ZZZ", "Z02"))
+        #expect(accepts(structure)("ACK", "A01"))
+        #expect(!accepts(structure)("ADT", "A01"))
         #expect(element[keyPath: minimum] == 0 && element[keyPath: maximum] == nil)
         #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
         #expect(byTrigger("ZZZ", "Z01", .v2_5_1).isEmpty)

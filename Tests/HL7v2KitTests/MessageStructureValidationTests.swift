@@ -200,6 +200,16 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.message.contains("prints ADT^A04 under ADT_A01") == true)
     }
 
+    @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: still info, named as such, no body match",
+          arguments: ["ADT_A01 ", "adt_a01"])
+    func nearMissStructureID(declared: String) throws {
+        let issues = try structureIssues(Self.wire("ADT^A01^\(declared)", [Self.pid]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: declared)])
+        #expect(issues.first?.severity == .info)
+        #expect(issues.first?.message.contains("differs from the modelled structure ID ADT_A01 only by case or whitespace") == true,
+                "\(issues.map(\.message))")
+    }
+
     @Test("A two-component ACK resolves through ACK^* whatever the event")
     func ackTwoComponents() throws {
         #expect(try structureIssues(Self.wire("ACK^R01", ["MSA|AA|MSG00001"])).isEmpty)

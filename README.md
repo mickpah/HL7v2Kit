@@ -7,7 +7,7 @@ A native Swift package for **parsing, building, and validating** HL7 v2.x health
 ## Why use this
 
 - **Round-trip safe.** Parse a v2 message, modify it, serialise it — the bytes match (including escape sequences and the original character set).
-- **Spec-faithful validation.** Per-version field grammar for v2.3 → v2.8.2, a conditional-field DSL, cross-segment / message-context rules, group-scope cardinality (AU profile rules), and component-level checks. Message-level structure (segment order and groups per trigger event) is not yet checked; it is registered as a blocking gap. Conformance gaps that can't be checked from the wire are documented, not silently skipped.
+- **Spec-faithful validation.** Per-version field grammar for v2.3 → v2.8.2, a conditional-field DSL, cross-segment / message-context rules, group-scope cardinality (AU profile rules), and component-level checks. Message-level structure (segment order and groups per trigger event) is checked only for a pilot, v2.5.1 ADT_A01, ORU_R01 and ACK, and only when `ValidationOptions.messageStructureSeverity` is set (off by default); every other structure and version is registered as a blocking gap. Conformance gaps that can't be checked from the wire are documented, not silently skipped.
 - **Australian-aware.** An `HL7Locale.auLocalisation` profile layers the ADRM-2021 (`HL7au`) narrowings on top of the base spec; AU Z-segments (ZAU, ZPI, …) round-trip without false negatives.
 - **Two APIs, one AST.** String paths (`msg["PID-5.1"]`) for ad-hoc work, typed accessors (`msg.firstSegment(PID.self)?.patientName`) for known segments.
 - **Zero runtime dependencies.** Pure Swift 6 + Foundation, strict concurrency on. Apache 2.0.

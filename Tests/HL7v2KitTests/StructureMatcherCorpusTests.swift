@@ -2,8 +2,9 @@
 // P8-4 measurement (project requirement 4): run the structure matcher over
 // every spec example (SPEC_EXAMPLE_MESSAGES, optional) and every parseable
 // fixture whose v2.5.1 structure is a modelled pilot structure, and write one
-// line per finding to STRUCTURE_MATCH_OUT for classification. Not production
-// wiring: the Validator does not call the matcher yet. Skipped unless
+// line per finding to STRUCTURE_MATCH_OUT for classification. It calls the
+// matcher directly; production use is through the Validator when
+// ValidationOptions.messageStructureSeverity is set (P8-5). Skipped unless
 // STRUCTURE_MATCH_OUT is set.
 
 import Foundation

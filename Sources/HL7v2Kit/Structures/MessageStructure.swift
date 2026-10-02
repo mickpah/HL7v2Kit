@@ -11,9 +11,11 @@
 /// The print's `{[X]}` reads the same as `[{X}]`: `min` 0, `max` `nil`.
 ///
 /// - Note: This is an **open** enum per the API evolution policy (ADR-014):
-///   ADR-019 adds a choice element before the first modelled version that
-///   prints `< X | Y >`. Exhaustive `switch` over it must include
-///   `@unknown default`.
+///   a later release adds cases (ADR-019 plans a choice between
+///   alternatives before the first modelled version that prints
+///   `< X | Y >`). Code that walks the tree must handle `@unknown default`
+///   and should not assume it has seen every segment ID the structure
+///   allows.
 public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// A segment, by its three-character ID.
     case segment(String, min: Int, max: Int?)
@@ -88,10 +90,14 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
 public struct MessageStructure: Sendable, Equatable, Hashable {
     /// The structure ID, e.g. `"ORU_R01"`.
     public let id: String
-    /// The HL7 version that prints this structure, e.g. `"2.5.1"`.
+    /// The printed HL7 version string of the chapters this structure comes
+    /// from, e.g. `"2.5.1"`, as ``DataTypeGrammar/version`` and
+    /// ``SegmentGrammar/version`` carry it.
     public let version: String
-    /// Every `CODE^EVENT` caption line printed for this structure; the event
-    /// `*` stands for "varies" (`ACK^varies^ACK`).
+    /// Every caption line printed for this structure, each as
+    /// `"CODE^EVENT"` (MSH-9.1 and MSH-9.2, e.g. `"ADT^A04"`). `"CODE^*"`
+    /// means any event with that message code: the print's "varies"
+    /// (`ACK^varies^ACK` is stored as `"ACK^*"`).
     public let triggers: [String]
     /// Where the structure is printed, and where any group name the print
     /// omits was taken from.
@@ -99,8 +105,10 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     /// The ordered top-level elements, starting with MSH.
     public let elements: [StructureElement]
 
-    /// Creates a structure from its parts; the generated table uses this.
-    public init(id: String, version: String, triggers: [String], citation: String, elements: [StructureElement]) {
+    // Internal (P8 final review): there is no public matcher, so a structure
+    // built outside the package has no use, and the AU overlay will add
+    // fields. The generated table and the tests (`@testable`) use it.
+    init(id: String, version: String, triggers: [String], citation: String, elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
