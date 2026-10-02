@@ -170,10 +170,14 @@ extension Validator {
     /// or `nil`: a primitive, a datatype the version prints no table for (CM on v2.3 to
     /// v2.4, `varies`), or an ``openComposites`` array.
     static func closedComposite(_ dataType: String, version: Version) -> DataTypeGrammar? {
-        guard !openComposites.contains(dataType),
-              let grammar = componentGrammar(dataType, version: version),
-              !grammar.components.isEmpty else { return nil }
-        return grammar
+        componentGrammar(dataType, version: version).flatMap { closedComposite($0, dataType: dataType) }
+    }
+
+    /// `grammar`, already resolved for a field typed `dataType`
+    /// (``fieldGrammar(segment:field:dataType:version:)``), when its width is fixed, or `nil`
+    /// for an ``openComposites`` array or a grammar with no components.
+    static func closedComposite(_ grammar: DataTypeGrammar, dataType: String) -> DataTypeGrammar? {
+        openComposites.contains(dataType) || grammar.components.isEmpty ? nil : grammar
     }
 
     /// The populated values at 1-based positions past `limit`, each position given as
@@ -228,10 +232,11 @@ extension Validator {
         }
         guard let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
                                                 dataType: dataType, version: grammarVersion) else { return }
-        // ``closedComposite(_:version:)`` applied to the resolved grammar, so a field-local
-        // composite (P5-6) is width-checked against the components its field prints.
-        let closed = !Self.openComposites.contains(dataType) && !composite.components.isEmpty
-        let printedBy = composite == Self.componentGrammar(dataType, version: grammarVersion)
+        // P5-6: a field-local composite is width-checked against the components its field
+        // prints. One is extracted only where the field's datatype has no table of its own
+        // (extract-field-components.py), so a datatype with a table names the table.
+        let closed = Self.closedComposite(composite, dataType: dataType) != nil
+        let printedBy = Self.componentGrammar(dataType, version: grammarVersion) != nil
             ? "which the v\(grammarVersion.rawValue) component table defines with"
             : "whose v\(grammarVersion.rawValue) field definition prints"
         for (offset, repetition) in field.repetitions.enumerated() {

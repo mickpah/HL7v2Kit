@@ -1707,7 +1707,9 @@ public struct Validator: Sendable {
     /// A top-level `CE` component bound to one closed HL7 table (P5-6: OBR-15.1 0070,
     /// OBR-15.4 0163, ERR-1.4 0357, SAC-6 and TCC-3) is checked on its identifier, located at
     /// subcomponent 1, only when its coding system explicitly names that table, compared
-    /// case-insensitively: "When an HL7 table is used for a CE data type, the name of coding
+    /// case-insensitively; its alternate identifier (CE.4, located at subcomponent 4) likewise
+    /// when the alternate coding system CE.6 names it, the alternate components being "defined
+    /// analogously" (v2.4 2.9.3.6): "When an HL7 table is used for a CE data type, the name of coding
     /// system component is defined as HL7nnnn where nnnn is the HL7 table number" (v2.3 /
     /// v2.3.1 2.8.3.3, v2.4 2.9.3.3). An empty CE.3 leaves the system unstated and is silent:
     /// the spec's own ERR-1 example sends `X3L` with none, "the locally-established code"
@@ -1773,11 +1775,14 @@ public struct Validator: Sendable {
                     // (the spec's own ERR-1 "X3L"), and another system (OBR-15: "Veterinary
                     // medicine may choose the tables supported for the components of this
                     // field") is not the HL7 table.
+                    // The alternate triplet CE.4-6 is "defined analogously" (v2.4 2.9.3.6), so
+                    // CE.4 is checked when CE.6 names the table, reported at subcomponent 4.
                     let parts = component.subcomponents.map(\.value)
-                    let system = parts.count >= 3 ? parts[2] : ""
-                    if system.caseInsensitiveCompare("HL7\(table.number)") == .orderedSame {
-                        report(parts.first, table: table, name: entry.name,
-                               component: entry.index, subcomponent: 1, repetition: offset + 1)
+                    func part(_ i: Int) -> String { parts.count >= i ? parts[i - 1] : "" }
+                    for (identifier, system) in [(1, 3), (4, 6)]
+                    where part(system).caseInsensitiveCompare("HL7\(table.number)") == .orderedSame {
+                        report(part(identifier), table: table, name: entry.name,
+                               component: entry.index, subcomponent: identifier, repetition: offset + 1)
                     }
                 }
                 if let nested = Self.componentGrammar(entry.dataType, version: version) {
@@ -1978,7 +1983,7 @@ public struct Validator: Sendable {
     /// ``fieldGrammar(segment:field:dataType:version:)`` as every other composite check. `.v2_8` is validated as v2.8.2 (ADR-018), so it is checked
     /// against that table like any other version. `RE` (required but may be empty) is,
     /// by its own definition, never a missing value.
-    private func requiredComponents(forCompositeCode code: String, segmentID: String, fieldIndex: Int,
+    func requiredComponents(forCompositeCode code: String, segmentID: String, fieldIndex: Int,
                                     version: Version) -> [RequiredComponent] {
         guard let grammar = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: code,
                                               version: version) else { return [] }

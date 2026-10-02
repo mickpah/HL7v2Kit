@@ -58,6 +58,11 @@ struct FieldLocalCompositeTests {
 
     @Test("Prose-defined components print no optionality, so nothing is required of them")
     func noRequiredComponents() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            #expect(Validator.fieldGrammar(segment: "IN3", field: 20, dataType: "CM", version: version) != nil)
+            #expect(Validator().requiredComponents(forCompositeCode: "CM", segmentID: "IN3", fieldIndex: 20,
+                                                   version: version).isEmpty, "\(version)")
+        }
         let codes = try issues(wire("2.4", "IN3", 20, "^^19991231"), at: "IN3[1]-20")
         #expect(codes.isEmpty)
     }
@@ -88,6 +93,24 @@ struct FieldLocalCompositeTests {
         }
         #expect(try tableCodes(wire("2.4", "SAC", 6, "QQQ&&HL70070")) == [.valueNotInTable(table: "0070")])
         #expect(try tableCodes(wire("2.4", "TCC", 3, "BLD^^^QQ&&HL70163")) == [.valueNotInTable(table: "0163")])
+        #expect(try tableCodes(wire("2.4", "SAC", 6, "BLD^^^QQ&&HL70163")) == [.valueNotInTable(table: "0163")])
+        #expect(try tableCodes(wire("2.4", "TCC", 3, "QQQ&&HL70070")) == [.valueNotInTable(table: "0070")])
+        #expect(try tableCodes(wire("2.4", "SAC", 6, "BLD&&HL70070^^^LA&&HL70163")).isEmpty)
+        #expect(try tableCodes(wire("2.4", "TCC", 3, "BLD&&HL70070^^^LA&&HL70163")).isEmpty)
+    }
+
+    @Test("The CE alternate triplet is checked the same way: CE.4 against its table when CE.6 names HL7nnnn")
+    func ceAlternateTriplet() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let bad = Validator().validate(try Parser().parse(wire(version, "OBR", 15, "BLD^^^LA&Left arm&SCT&QQ&Bad&HL70163")))
+                .issues.filter { if case .valueNotInTable = $0.code { return true } else { return false } }
+            #expect(bad.map(\.code) == [.valueNotInTable(table: "0163")], "v\(version)")
+            #expect(bad.first?.location.pathDescription == "OBR[1]-15.4.4", "v\(version)")
+            #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&Left arm&HL70163&RA&Right arm&hl70163")).isEmpty)
+            #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&&HL70163&QQ")).isEmpty, "CE.6 empty")
+            #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^LA&&HL70163&QQ&&SCT")).isEmpty, "CE.6 non-HL7")
+        }
+        #expect(try tableCodes(wire("2.4", "ERR", 1, "PID^1^16^X3L&&L&999&&HL70357")) == [.valueNotInTable(table: "0357")])
     }
 
     @Test("An empty or non-HL7 coding system is silent: the spec's own ERR-1 'X3L', and OBR-15's veterinary tables")

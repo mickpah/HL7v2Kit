@@ -216,10 +216,14 @@ struct ComponentCodeTableTests {
         #expect(try tableIssues(in3Wire(version: version, in3_20: "ZZ^N")).isEmpty, "IN3-20.1 is IS: never enforced")
     }
 
-    @Test("P5: MSH-9 components bind open tables on v2.3.1, so a local trigger event is silent")
+    @Test("P5: MSH-9 components bind open tables on v2.3.1 and v2.4, so local codes are silent")
     func msh9OpenTablesSilent() throws {
         #expect(HL7TableRegistry.table("0003", version: .v2_3_1)?.isClosed == false)
-        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^Z99^ADT_A01|MSG00001|P|2.3.1\r"
-        #expect(try tableIssues(wire).isEmpty)
+        for version in ["2.3.1", "2.4"] {
+            #expect(HL7TableRegistry.table("0076", version: Version(rawValue: version)!)?.isClosed == false)
+            #expect(HL7TableRegistry.table("0354", version: Version(rawValue: version)!)?.isClosed == false)
+            let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ZZZ^Z99^ZZZ_Z99|MSG00001|P|\(version)\r"
+            #expect(try tableIssues(wire).isEmpty, "v\(version)")
+        }
     }
 }
