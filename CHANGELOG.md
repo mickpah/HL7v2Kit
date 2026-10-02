@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P6-14: extra components on every primitive; component-level table check
+
+- `extraComponentsInPrimitiveField` covered `ID` and `IS` fields only. It now
+  covers every primitive field of the message's version, from each version's
+  datatype sections: DT, FT, ID, IS, NM, SI, ST, TM, TN, TS and TX on v2.3 to
+  v2.4 (section 2.8 / 2.9); DT, DTM, FT, GTS, ID, IS, NM, SI, ST, TM and TX on
+  v2.5.1 and v2.6 (section 2.A); the same plus SNM on v2.8.2. Content after
+  the first value of an NM, SI, DT, TM, DTM or TS field (for example `12^abc`)
+  is now reported; the P6-7 limitations-register sentence is removed.
+- A primitive component of a composite carrying a subcomponent after its value
+  (CX.1 `12&3`) is reported with the same code, located at the component.
+- Spec-allowed shapes stay silent: the TS degree-of-precision component on
+  v2.3 to v2.4 ("...[+/-ZZZZ]^<degree of precision>"), FT line markers ("The
+  component separator that marks each line", v2.5.1 section 2.7.6), one
+  observation ID suffix in OBX-3.1 ("71020&IMP", v2.5.1 section 7.2.3), and
+  escaped `\S\` / `\T\`. TX and GTS are checked: TX lines are separated by
+  the repetition separator, and GTS "follows the formatting rules for a ST
+  field" (v2.5.1 section 2.A.32).
+- The component-level table check skipped an `ID` component with
+  subcomponents (`Component.stringValue` is nil there). It now checks the first
+  subcomponent and locates the issue at subcomponent 1 when more follow. It
+  also looks up the grammar by `Version.grammarVersion` directly; a `2.8`
+  message already ran these checks, because `validate(_:)` declares the
+  grammar version first.
+- Spec examples: no change to the error report (149 registry entries, 0
+  mismatched). The new warnings are print defects (field shifts, composite
+  shapes in primitive fields, unescaped delimiters). One class was a misfire
+  and is fixed: 253 OBX-3.1 suffix warnings (`73916&IMP`) are now silent.
+
 ### Added — P6-7: primitive lexical rules
 
 - `IssueCode.valueFormatInvalid(dataType:)` (additive; open enum per ADR-014)

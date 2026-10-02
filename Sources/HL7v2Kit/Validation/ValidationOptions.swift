@@ -129,8 +129,9 @@ public struct ValidationOptions: Sendable {
     /// never checked. Not an init parameter. P6-6.
     public var normativeLengthSeverity: IssueSeverity? = .warning
 
-    /// Severity for ``IssueCode/extraComponentsInPrimitiveField``: an `ID` or `IS`
-    /// field repetition with content after its first component or subcomponent.
+    /// Severity for ``IssueCode/extraComponentsInPrimitiveField``: a primitive
+    /// field repetition with content after its value, or a primitive component
+    /// with a subcomponent after its value (every primitive since P6-14).
     /// `.warning` by default (owner gate G4): the spec has the recipient ignore
     /// the unexpected components (v2.5.1 and v2.8.2 section 2.6.2 a), and a field
     /// whose data type a later version widened (an `IS` to a `CE`, v2.5.1 section
@@ -142,7 +143,7 @@ public struct ValidationOptions: Sendable {
     /// check measures that first component only, so the extra components are
     /// reported once, here. Below it, or `nil` (this check off), the length check
     /// measures the whole occurrence, so a binding length rule is never hidden.
-    /// Not an init parameter. P6-13.
+    /// Not an init parameter. P6-13, widened to every primitive in P6-14.
     public var extraComponentsSeverity: IssueSeverity? = .warning
 
     /// Severity for ``IssueCode/valueFormatInvalid(dataType:)``: a populated NM,

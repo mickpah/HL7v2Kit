@@ -605,9 +605,10 @@ public struct Validator: Sendable {
                              dataType: effectiveDataType(of: fieldGrammar, in: segment),
                              encoding: message.encodingCharacters,
                              location: location, issues: &issues)
-            // P6-13: content after the first value of an ID / IS field.
+            // P6-13 / P6-14: content after the value of a primitive field or component.
             checkExtraPrimitiveComponents(fieldGrammar, field: field,
                                           dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                          version: message.version,
                                           location: location, issues: &issues)
             // P6-7: primitive lexical rules (PrimitiveFormat).
             checkValueFormat(dataType: effectiveDataType(of: fieldGrammar, in: segment), field: field,
@@ -1694,8 +1695,9 @@ public struct Validator: Sendable {
     ///
     /// The same guards as the field-level rule: `IS` and user-defined or open tables are
     /// never enforced; empty and HL7-null values are never checked; a locale's rendering of
-    /// the table widens the check and never narrows it. Versions that print no component
-    /// tables (v2.3 to v2.4) have no grammar, so nothing fires there.
+    /// the table widens the check and never narrows it. A datatype the version gives no
+    /// component grammar is not checked. The value of an `ID` component is its first
+    /// subcomponent (P6-14; section 2.6.2 a), located at subcomponent 1 when more follow.
     private func checkComponentCodeTables(
         dataType: String,
         field: Field,
@@ -1703,6 +1705,9 @@ public struct Validator: Sendable {
         location: IssueLocation,
         issues: inout [ValidationIssue]
     ) {
+        // P6-14: the grammar version, so a 2.8 message reads the v2.8.2 tables directly
+        // (validate(_:) already declares it; this keeps the lookup right on its own).
+        let version = version.grammarVersion
         guard let grammar = DataTypeGrammarTable.grammar(dataType, version: version) else { return }
 
         /// The closed table an `ID` entry is bound to, or nil when it is not enforceable.
@@ -1730,8 +1735,12 @@ public struct Validator: Sendable {
             for entry in grammar.components where repetition.components.count >= entry.index {
                 let component = repetition.components[entry.index - 1]
                 if let table = closedTable(entry) {
-                    report(component.stringValue, table: table, name: entry.name,
-                           component: entry.index, subcomponent: nil, repetition: offset + 1)
+                    // P6-14: the value is the first subcomponent (section 2.6.2 a); with
+                    // subcomponents after it, the issue is located at that subcomponent and
+                    // the rest is reported as extraComponentsInPrimitiveField.
+                    let partial = component.subcomponents.dropFirst().contains { !$0.value.isEmpty }
+                    report(component.subcomponents.first?.value, table: table, name: entry.name,
+                           component: entry.index, subcomponent: partial ? 1 : nil, repetition: offset + 1)
                 } else if let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version) {
                     for inner in nested.components where component.subcomponents.count >= inner.index {
                         guard let table = closedTable(inner) else { continue }

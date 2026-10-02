@@ -34,17 +34,17 @@ extension Validator {
             severity = options.normativeLengthSeverity
         }
         guard let severity else { return }
-        // P6-13: content after the first value of an ID / IS field is reported once, as
+        // P6-13 / P6-14: content after the value of a primitive field is reported once, as
         // extraComponentsInPrimitiveField, and the length is that of the value a recipient
         // reads, but only while that report is at least as severe as this length rule; a
         // length rule the caller has made more binding is never hidden behind it. Otherwise,
         // and with that check off, the whole occurrence is measured as before.
-        let primitive = Self.primitiveCodeTypes.contains(dataType)
-            && Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
+        let limit = Self.rank(options.extraComponentsSeverity) >= Self.rank(severity)
+            ? Self.primitiveComponentLimit(dataType, version: version) : nil
         for (offset, whole) in field.repetitions.enumerated() {
             var repetition = whole
-            if primitive, Self.hasExtraPrimitiveContent(whole) {
-                repetition = Repetition(components: [Component(subcomponents: [Subcomponent(Self.primitiveValue(whole) ?? "")])])
+            if let limit, !Self.extraPrimitiveContent(whole, limit: limit).isEmpty {
+                repetition = Self.acceptedPrimitiveContent(whole, limit: limit)
             }
             guard let length = Self.occupiedLength(repetition, encoding: encoding), !rule.admits(length) else { continue }
             issues.append(ValidationIssue(

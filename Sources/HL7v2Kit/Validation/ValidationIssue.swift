@@ -186,14 +186,19 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// Additive case introduced in P6-6; the enum is open per ADR-014.
     case fieldLengthOutOfRange(length: String, actual: Int)
 
-    /// An `ID`- or `IS`-typed field repetition carries content after its first
-    /// component or subcomponent: an unescaped component or subcomponent
-    /// separator inside a primitive value. The component separator "separates
+    /// A primitive-typed field repetition carries content after its value (any
+    /// primitive since P6-14, ID and IS before), or a primitive component of a
+    /// composite carries a subcomponent after its value: an unescaped component or
+    /// subcomponent separator inside a primitive value. The primitives are each
+    /// version's (see the Validation article); TS on v2.3 to v2.4 admits its
+    /// degree-of-precision component, FT its line-marking component separators,
+    /// and OBX-3.1 an observation ID suffix subcomponent. The component separator "separates
     /// adjacent components of data fields where allowed" (v2.5.1 and v2.8.2
     /// section 2.5.4), a sender escapes it in data as `\S\` (section 2.6.1), and
     /// a recipient ignores components "present but ... not expected" (section
     /// 2.6.2 a). So the primitive value is the first component, and that is what
-    /// the code-table and length checks read. Located at the field; severity
+    /// the code-table and length checks read. Located at the field, or at the
+    /// component for a component's subcomponents; severity
     /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
     /// introduced in P6-13; the enum is open per ADR-014.
     case extraComponentsInPrimitiveField
