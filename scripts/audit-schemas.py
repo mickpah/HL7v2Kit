@@ -232,7 +232,7 @@ LENGTH_WHITELIST = {
                          'them (limitations register, section C)',
     ("v2.3", "OBX", 2): 'G10 (P6-6 fix 1): LEN cell prints 2 (Figure 7-5), shorter than values the spec defines '
                         'as valid; section 7.3.2.2 binds the field to HL7 Table 0125 - Value type, whose codes '
-                        'are three letters (XAD, CWE). Schema stores 3, the smallest length that admits them '
+                        'are three letters (XAD, XCN). Schema stores 3, the smallest length that admits them '
                         '(limitations register, section C)',
     ("v2.3", "PEO", 25): 'G10 (P6-6 fix 1): LEN cell prints 1, shorter than values the spec defines as valid; '
                          'section 7.11.2.25 binds the field to HL7 Table 0243 - Identity may be divulged, which '

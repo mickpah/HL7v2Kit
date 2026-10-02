@@ -91,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ADR-014) reports an `ID` or `IS` field repetition with content after its
   first value. The component separator separates components "of data fields
   where allowed" (section 2.5.4) and a sender escapes it in data as `\S\`
-  (section 2.6.1); an escaped separator is one value and stays silent.
+  (§2.7.1); an escaped separator is one value and stays silent.
   Severity follows the new `ValidationOptions.extraComponentsSeverity:
   IssueSeverity?` (default `.warning`, owner gate G4; `nil` in `.lenient`).
 - Length: while that check is at least as severe as the length severity that

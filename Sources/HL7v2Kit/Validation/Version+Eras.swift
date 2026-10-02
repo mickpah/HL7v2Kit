@@ -33,9 +33,10 @@ extension Version {
     /// §2.8.38 and v2.4 §2.9.40 print only "a non-negative integer in the form
     /// of a NM field" (P6-7). This property gates only the *value* bound (0 to
     /// 9999) in `PrimitiveFormat.isSequenceID`; the same sentence's printed
-    /// maximum length of 4 (so a zero-padded `09999` is as long as the value
-    /// bound allows) is a separate, field-length concern enforced by the P6-6
-    /// length check (`fieldLengthOutOfRange`), not by this format check.
+    /// maximum length of 4 is a separate, field-length concern: `09999` is
+    /// within the value bound but is 5 characters, so the length check
+    /// reports it where the field's LEN is 4 (`fieldLengthOutOfRange`), not
+    /// by this format check. A component-level SI is not length-checked.
     var boundsSequenceID: Bool {
         switch self {
         case .v2_5_1, .v2_6, .v2_8_2, .v2_8: return true

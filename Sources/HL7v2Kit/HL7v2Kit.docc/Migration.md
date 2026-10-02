@@ -147,6 +147,18 @@ The field-level code-table check used to skip an `ID` field repetition with more
 - **If you switch over `IssueCode`:** it is an open enum; the new case lands in your `@unknown default` branch.
 - **Schema lengths corrected (owner ruling G10):** 18 pre-v2.7 LEN cells that were shorter than values their own spec defines as valid now carry the corrected length, so `FieldGrammar.length` reads, for example, `"15"` for v2.4 MSH-9 (printed 13) and `"3"` for v2.5.1 OBX-2 (printed 2). The full list and derivations are in the permanent-limitations register, section C.
 
+## Bounded repetitions (P6-4)
+
+`FieldGrammar.maxRepetitions: Int?` now carries the printed RP/# bound (`Y/3` before v2.5, `3` from v2.5) for 221 fields across the six versions, and `FieldRepeatability(wireValue:)` maps a decimal of 2 or more to `.multiple`. No source break, but default output changes in three places:
+
+- **The bound warning:** a field carries more `~`-repetitions than its printed bound and ``IssueCode/cardinalityExceeded`` fires at `options.repetitionBoundSeverity` (`.warning` by default), where it was silent. The pre-existing single-cardinality check (a `.single` field with more than one repetition) is unaffected and stays an `.error` gated by `checkCardinality`, never by `repetitionBoundSeverity`.
+- **ADJ-7 on v2.6 and v2.8.2:** prints RP/# `1` and is now single-cardinality (the old extractor read any digit as a repeat), so a repeated ADJ-7 raises `cardinalityExceeded` as an error, where it was silent.
+- **v2.5.1 OBX-20 to 22 (P6-12):** these fields' OPT cell prints blank, which is now stored verbatim (`""`) instead of the `X` the extractor previously read. The validator treats a blank OPT as optional, so a populated OBX-20/-21/-22 is no longer reported as not supported (`fieldNotSupported`), where it was.
+
+- **To keep the old bound-warning results:** set `options.repetitionBoundSeverity = nil`. The ``ValidationOptions/lenient`` preset already does.
+- **To make an over-bound field fail validation:** set `options.repetitionBoundSeverity = .error`.
+- **A non-nil `maxRepetitions` traps** in `FieldGrammar`'s initialiser when paired with `.single` repeatability or a bound below 2.
+
 ## The code-table check is on by default (ADR-016)
 
 The registry release adds no source break, but it does change validation results. A message that carried an out-of-table value in an `ID` field bound to a closed HL7 table (1,073 fields across the six versions) used to validate clean and now reports ``IssueCode/valueNotInTable(table:)`` as an error.
