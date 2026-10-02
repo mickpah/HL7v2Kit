@@ -31,7 +31,9 @@ That line is the evidence:
 
 A field is emitted only when neither its printed datatype nor its schema datatype has a
 grammar of its own for the version, and the schema does not type it as a scalar (the
-attribute table wins: v2.3 QRD-11 is printed CM in its heading and ST in the table). A field
+attribute table wins, bar enumerated, cited exceptions in audit-schemas.DATATYPE_WHITELIST:
+v2.3 QRD-11 is printed CM with a Components line in its heading and ST in the table, and the
+schema types it CM, so the Components line is emitted). A field
 printed twice (v2.4 OBR-15 in CH04 and CH07) keeps the copy that extends the other; copies
 that disagree otherwise are dropped and reported.
 """

@@ -132,6 +132,10 @@ CM_REFINEMENTS = {"MSG", "MOC", "PRL", "EIP"}
 DATATYPE_WHITELIST = {
     ("v2.4", "AL1", 1): "v2.4 CH3 AL1 attribute table and heading print CE for Set ID - AL1, a "
                         "spec typo (SI in v2.3 and v2.5+); registered in segment-coverage-extraction.md",
+    ("v2.3", "QRD", 11): "v2.3 CH2 sec 2.24.4.11 heading prints QRD-11 (CM) with Components: "
+                         "<first data code value (ST)> ^ <last data code value (ST)>; the attribute "
+                         "table prints ST. The printed Components line wins (P5 final review), as "
+                         "v2.3.1 and v2.4 type it CM in both places",
     ("v2.5.1", "OBX", 5): "v2.5.1 CH7 OBX-5 variable-type row defeats the extractor (candidates *, "
                           "'NA or', 'varie'); schema `varies` hand-verified in M6-D5",
     ("v2.8.2", "RF1", 18): "v2.8.2 CH11 RF1-18 attribute table prints `M0` (zero), a misprint; "

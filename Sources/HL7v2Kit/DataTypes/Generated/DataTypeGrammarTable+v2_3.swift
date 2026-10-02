@@ -75,6 +75,7 @@ extension DataTypeGrammarTable {
         "PRA-7": v2_3_field_PRA_7,
         "PRD-7": v2_3_field_PRD_7,
         "PV1-37": v2_3_field_PV1_37,
+        "QRD-11": v2_3_field_QRD_11,
         "RXA-11": v2_3_field_RXA_11,
         "RXD-13": v2_3_field_RXD_13,
         "RXE-8": v2_3_field_RXE_8,
@@ -949,6 +950,16 @@ extension DataTypeGrammarTable {
         components: [
             ComponentGrammar(index: 1, name: "Discharge location", dataType: "IS", optionalityCode: "", tables: ["0113"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Effective date", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
+    private static let v2_3_field_QRD_11: DataTypeGrammar = DataTypeGrammar(
+        dataType: "CM",
+        version: "2.3",
+        name: "What data code value qual",
+        components: [
+            ComponentGrammar(index: 1, name: "First data code value", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Last data code value", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

@@ -534,8 +534,15 @@ public struct Validator: Sendable {
             fieldIndex: position
         )
 
-        let field = segment.field(position)
-        let isPopulated = field.map { isFieldPopulated($0) } ?? false
+        let parsedField = segment.field(position)
+        let isPopulated = parsedField.map { isFieldPopulated($0) } ?? false
+        // v2.3 / v2.3.1 section 4.4.6: a single-repeat TQ field's repetitions 2..n are its
+        // TQ.6 Priority repeat, not field repetitions (priorityContinuationTrimmed).
+        let field = parsedField.map {
+            Self.priorityContinuationTrimmed($0, grammar: fieldGrammar,
+                                             dataType: effectiveDataType(of: fieldGrammar, in: segment),
+                                             version: message.version)
+        }
 
         if options.checkRequiredFields, requiredApplies {
             checkRequired(

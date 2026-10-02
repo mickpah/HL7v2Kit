@@ -208,7 +208,7 @@ struct DataTypeGrammarTests {
         #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_8) == nil, "v2.8.2 prints tables")
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_4).count == 43)
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3_1).count == 41)
-        #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3).count == 45)
+        #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3).count == 46)
     }
 
     @Test("P5: every pre-v2.5 field-local composite has a grammar or a registered reason")

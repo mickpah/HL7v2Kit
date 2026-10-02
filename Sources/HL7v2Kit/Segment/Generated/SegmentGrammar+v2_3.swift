@@ -1802,7 +1802,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 8, name: "Who Subject Filter", dataType: "XCN", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 9, name: "What Subject Filter", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 10, name: "What Department Data Code", dataType: "CE", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
-            FieldGrammar(index: 11, name: "What Data Code Value Qual.", dataType: "ST", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
+            FieldGrammar(index: 11, name: "What Data Code Value Qual.", dataType: "CM", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
             FieldGrammar(index: 12, name: "Query Results Level", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0108", length: "1"),
         ]
     )

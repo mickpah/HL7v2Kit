@@ -46,7 +46,10 @@ public struct ValidationOptions: Sendable {
     public var checkComponentGrammar: Bool
 
     /// If true (default), check that single-cardinality fields don't carry
-    /// multiple repetitions.
+    /// multiple repetitions. On v2.3 and v2.3.1 a single-repeat `TQ` field's
+    /// repetitions 2 to n are read as its TQ.6 Priority repeat (section 4.4.6,
+    /// "Priority component"), not reported, and not otherwise checked; v2.4
+    /// (section 4.3.6) separates repeated priorities with a space instead.
     public var checkCardinality: Bool
 
     /// If true (default), emit a `.warning` when a deprecated (`B`) or
