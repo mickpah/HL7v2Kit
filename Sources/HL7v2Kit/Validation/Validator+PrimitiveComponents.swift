@@ -127,11 +127,13 @@ extension Validator {
         })
     }
 
-    /// Composite datatypes whose component table is open-ended: it lists the first
-    /// few components and then an ellipsis. NA ("A field of this type may contain a
-    /// one-dimensional array (vector or row) of numbers", example "125^34^-22^-234^569^442^-212^6")
-    /// and MA ("channels within a sample are separated by component delimiters"), v2.5.1
-    /// 2.A.45 / 2.A.40, v2.6 and v2.8.2 2.A.45 and 2.A.40.
+    /// Composite datatypes that are open-ended arrays. NA: every version's table
+    /// lists four values and then an ellipsis, and "A field of this type may contain a
+    /// one-dimensional array (vector or row) of numbers", example
+    /// "125^34^-22^-234^569^442^-212^6" (v2.5.1, v2.6 and v2.8.2 2.A.45). MA: the v2.5.1
+    /// table (2.A.40) lists six rows ending "Sample N From Channel N" with no ellipsis,
+    /// but its prose has "channels within a sample are separated by component
+    /// delimiters", and the v2.6 and v2.8.2 tables (2.A.40) end in an ellipsis.
     static let openComposites: Set<String> = ["MA", "NA"]
 
     /// The component table of a composite `dataType` on `version` whose width is fixed,

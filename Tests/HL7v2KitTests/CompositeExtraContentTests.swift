@@ -75,6 +75,10 @@ struct CompositeExtraContentTests {
         #expect(found.count == 1)
         #expect(found.first?.location.componentIndex == 1)
         #expect(found.first?.message.contains("\"EXTRA\"") == true)
+        let primitive = Validator().validate(try Parser().parse(adt(pid5: "DOE&VAN&DER&BERG&SMITH&EXTRA^JOHN"))).issues
+            .filter { $0.location.segmentID == "PID" && $0.location.fieldIndex == 5 }
+            .filter { $0.code == .extraComponentsInPrimitiveField }
+        #expect(primitive.isEmpty)
         #expect(try extras(adt(pid5: "DOE&VAN&DER&BERG&SMITH&&^JOHN"), at: "PID", 5).isEmpty)
     }
 

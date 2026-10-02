@@ -23,9 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   section 2.8.1 h), so a value shaped by a later version may carry them.
 - Silent: trailing empty components and subcomponents, escaped `\S\` / `\T\`,
   a datatype the version prints no component table for (CM on v2.3 to v2.4,
-  OBX-5 `varies` with no OBX-2), and the open-ended arrays NA and MA, whose
-  tables end in an ellipsis (v2.5.1 section 2.A.45 example
-  `125^34^-22^-234^569^442^-212^6`). OBX-5 takes the datatype OBX-2 names.
+  OBX-5 `varies` with no OBX-2), and the open-ended arrays NA (its tables end
+  in an ellipsis; v2.5.1 section 2.A.45 example
+  `125^34^-22^-234^569^442^-212^6`) and MA ("channels within a sample are
+  separated by component delimiters", v2.5.1 section 2.A.40; the v2.6 and
+  v2.8.2 tables end in an ellipsis). OBX-5 takes the datatype OBX-2 names.
   Primitive fields and components keep `extraComponentsInPrimitiveField`.
 - The length check is unchanged for composites: it still measures the whole
   occurrence.

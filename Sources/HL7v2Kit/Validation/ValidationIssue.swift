@@ -217,7 +217,9 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// type may carry them. Trailing empty components and escaped separators are
     /// never reported. Not checked: a datatype the version gives no component
     /// table (CM on v2.3 to v2.4, `varies` with no OBX-2), and the open-ended
-    /// arrays NA and MA, whose component tables end in an ellipsis. Located at
+    /// arrays NA (its tables end in an ellipsis) and MA (its prose: "channels
+    /// within a sample are separated by component delimiters"; the v2.6 and
+    /// v2.8.2 tables end in an ellipsis). Located at
     /// the field, or at the component for a component's subcomponents; severity
     /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
     /// introduced in P6-15; the enum is open per ADR-014.
