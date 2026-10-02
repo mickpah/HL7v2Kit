@@ -4,9 +4,10 @@ Versioning contract and per-release migration notes for HL7v2Kit consumers.
 
 ## Overview
 
-HL7v2Kit is at **`v1.0.0`** — the first stable release. The public API is now frozen under the evolution policy below (ADR-014); it has been stable since v0.5.0 and every change since was additive.
+HL7v2Kit is at **`v3.13.0`** (the latest release); the stable API line began at `v1.0.0`. The public API is governed by the evolution policy below (ADR-014). It has been stable since v0.5.0; every change since has been additive, except the two owner-directed boundaries recorded below (2.0 and 3.0).
 
-- **`1.x`**: strict SemVer under the evolution policy below (ADR-014). Additive-only in minors; breaking changes wait for `2.0`.
+- **`3.x`**: strict SemVer under the evolution policy below (ADR-014). Additive-only in minors; breaking changes wait for `4.0`.
+- **`2.0` and `3.0` (historical)**: the two boundaries below. Each removal or behaviour change is listed in its own section and in `CHANGELOG.md`.
 - **`0.x` (historical)**: pre-1.0 minors *could* make source-breaking changes (none did after v0.5.0), each called out in `CHANGELOG.md`.
 
 ## The v1.0 API evolution contract (ADR-014)
@@ -116,10 +117,10 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | *Unreleased* | `DataTypeGrammarTable.grammar(segment:field:version:)` (additive static function): the component grammar a v2.3 to v2.4 `CM` field prints on its own Components line (P5-5). `grammar(_:version:)` is unchanged. The validator does not read it yet (P5-6 wires it in; see next row). |
 | *Unreleased* | No API change. P5-6: the validator now reads `DataTypeGrammarTable.grammar(segment:field:version:)`, so a v2.3 to v2.4 `CM` field (and the v2.3 to v2.4 MSG, EIP, MOC, PRL, PTS and SVC fields) is checked against the components its own definition prints: width (`extraComponentsInCompositeField`), primitive subcomponents, value format, and closed HL7 component tables. More issues may fire by default: `valueNotInTable` errors on IN3-20.2 (0136), BLG-1.1 (0100), PRA-5.3 (0337), and on a CE component (OBR-15.1 0070, OBR-15.4 0163, ERR-1.4 0357, SAC-6, TCC-3) whose CE.3 explicitly names the table (`HL7nnnn`, case-insensitive); an empty or other coding system is not checked, and the same CE rule now also applies to v2.5.1 ELD.4 (0357). IS bindings and the open MSH-9 tables stay unenforced. v2.3.1 / v2.4 PRA-7 now has five components (a misprinted `&` in its Components line). P5-7: on v2.3 to v2.4, `SegmentGrammarTable` reports OBR-15 and OBR-32 to OBR-35 as `CM`, the type their attribute tables print, where it reported the v2.5-era `SPS` and `NDL`; those structures differ (OBR-15.2 additives TX vs SPS.2 CWE, OBR-32.1 CN vs NDL.1 CNN). Typed accessors stay `Field?` and validation is unchanged, as it already read each field's own components. |
 | *Unreleased* | No API change. P5-9: `DataTypeGrammar.name` changes for every v2.3.1 composite datatype (39 values) — leftover table-of-contents padding and a page number (`"address                                                                                          2-12"`) are gone, leaving the body heading text (`"address"`). v2.3 and v2.4 names are unchanged. No component, datatype or table binding changed, and no validator output changed; a consumer that reads `DataTypeGrammar.name` for display or diagnostics on v2.3.1 sees the corrected text. |
-| *Unreleased* | `CompositeView.component(_:as:)`, `CompositeView.viewed(as:)` and `TypedSegment.repetitions(_:)` (additive access helpers, P9-2). No default output changes. |
-| *Unreleased* | 102 generated `String?` component accessors on CX, XPN, XAD, XCN, XTN, PL, CWE, CNE and XON (additive, P9-3; ADR-020). Every v3.13.0 composite accessor keeps its name and type. No default output changes. |
-| *Unreleased* | 536 generated `<name>All` accessors, one per repeating field (`*` or a bound) on the generated segment structs: `[<View>]`, `[String?]` or `[Field]` (additive, P9-4; ADR-020). Each passes `TypedSegment.repetitions(_:)` through unchanged. Every v3.13.0 segment accessor keeps its name and type; only the singular accessor's DocC changes, to say the field repeats. No default output changes. |
-| *Unreleased* | 510 version-union accessors on the generated segment structs, one per element and Swift type (additive, P9-5; ADR-020): 222 later-version fields past the base maximum or at a position the base reserves (for example `OBX.observationType: String?`, `PID.patientTelecommunicationInformation: XTN?`), 9 later names whose type differs from the base accessor's (for example `OBX.interpretationCodes: CWE?`), 186 `<name>As<T>` composite views of scalar or raw fields (for example `CON.languageTranslatedToAsCWE: CWE?`), and 93 more `<name>All` accessors, emitted wherever any supported version repeats the element (629 in all). Every v3.13.0 segment accessor keeps its name and type; DocC on 1303 of them now names the versions they apply to, renames and other elements at their position, and the type each version prints. No default output changes. |
+| *Unreleased* | `CompositeView.component(_:as:)`, `CompositeView.viewed(as:)` and `TypedSegment.repetitions(_:)` (additive access helpers, P9-2). `component(_:as:)` returns `nil` only for an absent component, never for an empty one; `repetitions(_:)` is pinned on empty and null repetitions. No default output changes. |
+| *Unreleased* | 102 generated `String?` component accessors on CX, XPN, XAD, XCN, XTN, PL, CWE, CNE and XON (additive, P9-3; ADR-020). Withdrawn components are kept, and components typed as a composite without a view (DR, TS) are documented as raw. Every v3.13.0 composite accessor keeps its name and type. No default output changes. |
+| *Unreleased* | 536 generated `<name>All` accessors, one per repeating field (`*` or a bound) on the generated segment structs: `[<View>]`, `[String?]` or `[Field]` (additive, P9-4; ADR-020). Each passes `TypedSegment.repetitions(_:)` through unchanged; a `[String?]` element is `nil` for a repetition that is not a single scalar. Every v3.13.0 segment accessor keeps its name and type; only the singular accessor's DocC changes, to say the field repeats. No default output changes. |
+| *Unreleased* | 510 version-union accessors on the generated segment structs, one per element and Swift type (additive, P9-5; ADR-020): 222 later-version fields past the base maximum or at a position the base reserves (for example `OBX.observationType: String?`, `PID.patientTelecommunicationInformation: XTN?`), 9 later names whose type differs from the base accessor's (for example `OBX.interpretationCodes: CWE?`), 186 `<name>As<T>` composite views of scalar or raw fields (for example `CON.languageTranslatedToAsCWE: CWE?`), and 93 more `<name>All` accessors, emitted wherever any supported version repeats the element (629 in all). Every v3.13.0 segment accessor keeps its name and type; DocC on 1303 of them now names the versions they apply to, renames and other elements at their position, and the type each version prints. OBX-20 to OBX-22 are the only positions whose element a later version redefines. No default output changes. |
 
 ## Extra components in composite fields (P6-15)
 
@@ -198,6 +199,32 @@ Until now the Validator took required components from hand-written lists applied
 - **Either-or rules (v3.7):** `XTN`, `PL`, `CWE` and `EIP` no longer carry one. The first three rejected the spec's own examples: a delimited phone number (`^ORN^FX^^^734^6777777`), a location with only its person location type, an uncoded `CWE` with only its text. `HD` keeps its rule.
 - **Relaxing without disabling (v3.7):** `options.requiredComponentSeverity = .warning` keeps the findings and makes the report valid. It applies to every required-component finding, not just `MSH-9`; the default stays `.error`.
 - `XPN.requiredComponents` and its siblings now hold what v2.5.1 prints and are informational; `checkComponentGrammar = false` still turns the whole check off.
+
+## Composite views and later-version accessors (ADR-020)
+
+Additive in 3.x; nothing to change in existing code.
+
+- Every composite component now has a named accessor (102 generated, on CX, XPN, XAD,
+  XCN, XTN, PL, CWE, CNE and XON), including components a later version withdrew. For
+  example, `CX.effectiveDate`, `XCN.assigningAuthorityNamespace` and `CWE.valueSetOID`
+  (v2.8.2). A component typed as a composite that has no view (DR, TS) is a raw `String?`
+  accessor whose DocC says so. Use `component(_:as:)` for a sub-composite:
+  `cx.component(4, as: HD.self)?.universalID`. It returns `nil` only when the component
+  is absent; a present but empty component returns an empty view.
+- Every repeating field (`*` or a bound, in any supported version) has `<name>All`, in
+  wire order and unfiltered: `pid.patientIdentifierListAll` returns every `CX`
+  repetition. For a scalar field it is `[String?]`, with a `nil` element for a repetition
+  that is not a single scalar.
+- Fields that later versions define have accessors on the shared struct. For example,
+  `obx.observationType` (OBX-29, v2.8.2) and `obx.interpretationCodes` (OBX-8 as v2.8.2
+  prints it). On an older message they return `nil`. There is one accessor per element
+  and Swift type; a rename that keeps the type is a DocC note, not a second accessor.
+- Where a later version retypes a composite field, the property keeps its original
+  type. Re-view it: `obx.observationIdentifier?.viewed(as: CWE.self)`. Where a later
+  version prints a composite at a scalar or raw field, `<name>As<T>` gives the view
+  (`con.languageTranslatedToAsCWE`).
+- Accessors are not gated by the message's version. One for a field the declared version
+  does not define still reads that wire position; the DocC names the versions that apply.
 
 ## Historical: 0.1.0 → 0.5.0
 

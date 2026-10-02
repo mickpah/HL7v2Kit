@@ -227,13 +227,16 @@ A message declaring one of these parses, falls back to the v2.5.1 grammar, and c
 
 **Populated MSH-12 with no resolvable VID.1 (not a limitation; recorded to prevent re-litigation).** Any MSH-12 that carries content but from which no modelled version resolves is reported the same way as the excluded versions above: a whitespace-only MSH-12, an empty VID.1 with VID.2 valued (`^AUS&Australia&ISO3166_1`, legal on v2.5.1, where VID.1 is printed O), a VID.1 with a subcomponent (`2.4&X`, `&2.4`) and an escaped VID.1 (`2.4\S\x`). The parser falls back to v2.5.1 and the Validator reports `versionNotRecognised(wireValue:)` (warning) with VID.1 as rendered (empty when VID.1 is empty); `ParserOptions.rejectUnknownVersion` (set by `.strict`) throws `ParseError.unsupportedVersion(found:)` with the same value. Only an empty MSH-12 falls back without a version issue, because MSH-12 is required and the required-field check reports it. The earlier "revisit if observed" freeze for the subcomponent and empty-VID.1 shapes was withdrawn in the P3 fix wave; project requirement 1 rules out a traffic-based deferral. `VersionHandlingTests.versionMatrix` pins every shape under the default, `.strict` and `rejectUnknownVersion` options.
 
-## H. Typed API shape across versions (V251-C11, V282-C10) -- open, blocks spec-completeness
+## H. Typed API shape across versions (V251-C11, V282-C10) — closed, residual registered
 
 | Gap | Status | Remediation |
 |---|---|---|
-| Composite views expose a subset of components (CX 6/12, XPN 6/15, XAD 7/23, XCN 6/25, XTN 8/18, PL 4/11, CWE 9/22, CNE 6/22, XON 4/10 across the supported versions) | open | ADR-020 Option B, P9-3 |
-| Repeating fields expose the first repetition only through typed accessors | open | P9-4 |
-| Typed segment structs are v2.5.1-shaped: no accessors for fields past the v2.5.1 maximum (PID-40, ORC-32..34, OBR-51..54, OBX-26..30) or for later names and types (OBX-8 Interpretation Codes) | open | P9-5 |
+| Composite views expose a subset of components | **closed (P9-3, 493d3f8)**: every component any supported version defines is named; completeness is a codegen invariant | ADR-020 |
+| Repeating fields expose the first repetition only | **closed (P9-4, 3662890)**: `<name>All` | ADR-020 |
+| Typed structs are v2.5.1-shaped | **closed (P9-5, df04dc6, e5436f8)**: version-union accessors | ADR-020 |
+| **Residual:** composite-to-composite retypes (for example CE to CWE from v2.6) surface through `viewed(as:)`, not a retyped property; retyping the property would break ADR-014 | registered: waits for a major release | ADR-020 |
+| **Residual:** names used only before v2.5.1 (v2.3 to v2.4 spellings) have no accessor; the base-name accessor reads the same index | registered | ADR-020 |
+| **Residual:** accessors are not gated by the message's version; an accessor for a field the declared version does not define still reads that wire position | registered by design: version facts are in DocC, `SegmentGrammar` and `DataTypeGrammarTable` | ADR-020 |
 
 Wire data is never lost: `field(_:)` and `CompositeView.field` reach every position.
 

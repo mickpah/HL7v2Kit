@@ -152,6 +152,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Schema fix: v2.5.1 MFA-5 and MFE-4 data type `Varies`.** The schemas stored `Varie`,
   the attribute table's truncated cell; the field headings (CH08 8.5.2.4, 8.5.3.5) print
   `Varies`, as v2.6 and v2.8.2 store it.
+- **P9 close-out (documentation).** The `TypedSegment` and `CWE` DocC state the version
+  shape; the TypedSegments article gains compiled examples for the new accessors;
+  Migration.md, the public-API inventory and register section H (now closed, with three
+  registered residuals) describe what shipped; ADR-013 carries an addendum. A generated
+  accessor that was renamed no longer states the rename twice in its DocC.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

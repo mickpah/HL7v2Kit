@@ -94,3 +94,10 @@ Each substage is its own commit at green tests. The `Version` case lands in S1 s
 ## Addendum (2026, ADR-018)
 
 The deferred `.v2_8` grammar question above is decided by ADR-018: a `2.8` message is validated against the v2.8.2 grammar, and the Validator reports the substitution (`IssueCode.versionGrammarSubstituted`, info). `.v2_8` keeps its public case and still owns no tables in the public registries.
+
+---
+
+**Addendum (P9, ADR-020):** point 3's "typed segments / composites are version-agnostic,
+generated once from the canonical v2.5.1 schema" is superseded. The structs keep the v2.5.1
+base and add the v2.6 and v2.8.2 surface (fields, names, `As<T>` views), and composite views
+cover every component through v2.8.2 (CWE and CNE 22, XAD 23, XCN 25).
