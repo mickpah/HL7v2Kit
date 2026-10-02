@@ -37,6 +37,11 @@ SOURCES = {   # version -> (pdf, datatype section number)
     "2.3.1": ("HL7_v231_PDF/Hl7V231.pdf", "2.8"),
     "2.4":   ("HL7_v24_PDF/CH02.PDF", "2.9"),
 }
+TQ_SOURCES = {   # version -> (pdf, section) of the TQ definition, which CH2 defers to CH4
+    "2.3":   ("HL7_v23_PDF/CH4.pdf", "4.4"),
+    "2.3.1": ("HL7_v231_PDF/Hl7V231.pdf", "4.4"),
+    "2.4":   ("HL7_v24_PDF/CH04.PDF", "4.3"),
+}
 FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+:|^\f|\.{6,}"
                        r"|^\s*\d{1,2}/\d{4}\s*$|^\s*(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}")
 TABLE = re.compile(r"(?:HL7\s+(?:[Tt]able\s+)?|[Uu]ser-\s*defined\s+[Tt]able\s+)(\d{4})(?:\s*[-–]\s*([A-Za-z][A-Za-z /'’-]*))?")
@@ -130,6 +135,43 @@ def reconcile(code, comps, printed):
     return out
 
 
+def extract_tq(version):
+    """TQ's components. CH2 defers to CH4 (v2.3 / v2.3.1 sec 4.4, v2.4 sec 4.3), which numbers
+    them exactly as CH2 numbers any other composite ("4.4.1 Quantity component (CQ)"). The
+    last heading match is the body; earlier ones are the table of contents."""
+    pdf, section = TQ_SOURCES[version]
+    lines = pdf_text(pdf)
+    sec = re.escape(section)
+    heads = [i for i, l in enumerate(lines) if re.match(rf"^\s*{sec}\s+QUANTITY/TIMING", l)]
+    if not heads:
+        return []
+    # v2.4 prints a stray change-bar parenthesis after two headings ("4.3.11 Occurrence
+    # duration component (CE) )"): a trailing ")" is layout, not text.
+    component = re.compile(rf"^\s*{sec}\.(\d+)\s+(.*?)(?:\s*\(\s*([A-Z][A-Z0-9]{{1,2}})\s*\))?[\s)]*$")
+    deeper = re.compile(rf"^\s*{sec}\.\d+\.\d+")
+    end = re.compile(r"^\s*\d+\.\d+\s+[A-Z]")
+    comps, comp = [], None
+    for line in lines[heads[-1] + 1:]:
+        if FURNITURE.search(line):
+            continue
+        if end.match(line):
+            break
+        if deeper.match(line):
+            continue
+        m = component.match(line)
+        if m:
+            comp = {"index": int(m.group(1)), "name": m.group(2).strip(), "dataType": m.group(3) or "", "text": ""}
+            if not any(c["index"] == comp["index"] for c in comps):
+                comps.append(comp)
+            continue
+        if comp is not None:
+            comp["text"] += " " + line.strip()
+    comps.sort(key=lambda c: c["index"])
+    while comps and not comps[-1]["dataType"]:
+        comps.pop()                                    # "Examples of quantity/timing usage"
+    return comps
+
+
 def dehyphenate(text):
     """Rejoin 'table' hyphenated across a line break. v2.3.1 sec 2.8.31.2 prints 'Refer to HL7
     ta-' / 'ble 0207', and sec 2.8.28.6 'User-defined ta-' / 'ble 0305'; the joined component text
@@ -221,6 +263,8 @@ def extract(version):
             # CF, TS). Every entry is a printed component; TS prints no datatype code.
             comps = [{"index": i, "name": n, "dataType": d, "text": ""} for i, (n, d) in enumerate(printed, 1)]
             source = "prose-line"
+        if code == "TQ" and version in TQ_SOURCES:
+            comps, source = extract_tq(version), "prose"
         # A trailing subsection with no datatype code is a note, not a component ("Usage
         # notes:", "References for internationalization", "Type-subtype combinations").
         while source == "prose" and comps and not comps[-1]["dataType"]:

@@ -138,4 +138,33 @@ struct CompositeExtraContentTests {
             }
         }
     }
+
+    // P5-3: TQ on v2.3 to v2.4 takes its CH4 component headings (v2.3 4.4.1-4.4.10, v2.3.1
+    // 4.4.1-4.4.12, v2.4 4.3.1-4.3.12). No TQ component is open-ended, so the width is fixed.
+    @Test("P5-3: TQ (ORC-7) on v2.3 to v2.4 takes its CH4 width: one more populated component warns")
+    func tqPreV25Width() throws {
+        for (version, width) in [("2.3", 10), ("2.3.1", 12), ("2.4", 12)] {
+            func orc(_ tq: String) -> String {
+                "MSH|^~\\&|A|B|C|D|20260101||ORM^O01|M1|P|\(version)\rORC|NW|1|||||\(tq)\r"
+            }
+            let full = (1...width).map { $0 == 1 ? "1" : $0 == 4 ? "19991231" : "" }.joined(separator: "^")
+            #expect(try extras(orc(full + "Z"), at: "ORC", 7).isEmpty, "\(version)")
+            #expect(try extras(orc(full + "^Z"), at: "ORC", 7).count == 1, "\(version)")
+        }
+    }
+
+    // TQ.1 Quantity (CQ): "When units are required, they can be added, specified by a
+    // subcomponent delimiter" (v2.3 / v2.3.1 4.4.1, v2.4 4.3.1); TQ.4 Start date/time (TS)
+    // carries its degree of precision as a subcomponent.
+    @Test("P5-3: the CQ units and TS precision subcomponents inside TQ are silent")
+    func tqSubcomponentsAreSanctioned() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let wire = "MSH|^~\\&|A|B|C|D|20260101||ORM^O01|M1|P|\(version)\r"
+                + "ORC|NW|1|||||1&ML^Q1H^X3^19991231&D^20000101&D^S\r"
+            let found = Validator().validate(try Parser().parse(wire)).issues.filter {
+                $0.location.segmentID == "ORC" && $0.location.fieldIndex == 7
+            }
+            #expect(found.isEmpty, "\(version): \(found.map(\.message))")
+        }
+    }
 }

@@ -32,6 +32,7 @@ extension DataTypeGrammarTable {
         "RP": v2_3_RP,
         "SCV": v2_3_SCV,
         "SN": v2_3_SN,
+        "TQ": v2_3_TQ,
         "TS": v2_3_TS,
         "VH": v2_3_VH,
         "XAD": v2_3_XAD,
@@ -391,6 +392,24 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 2, name: "<num1>", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "<num2>", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "<separator/suffix>", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
+    private static let v2_3_TQ: DataTypeGrammar = DataTypeGrammar(
+        dataType: "TQ",
+        version: "2.3",
+        name: "timing quantity",
+        components: [
+            ComponentGrammar(index: 1, name: "Quantity component", dataType: "CQ", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Interval component", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 3, name: "Duration component", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Start date/time component", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "End date/time component", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Priority component", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 7, name: "Condition component", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 8, name: "Text component", dataType: "TX", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 9, name: "Conjunction component", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 10, name: "Order sequencing component", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

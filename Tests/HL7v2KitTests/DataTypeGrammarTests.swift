@@ -102,4 +102,38 @@ struct DataTypeGrammarTests {
             #expect(cd.component(5)?.dataType == "NM", "\(version)")
         }
     }
+
+    @Test("P5: TQ comes from the CH4 quantity/timing definition on v2.3 to v2.4")
+    func tqFromChapter4() throws {
+        for (version, count) in [(Version.v2_3, 10), (.v2_3_1, 12), (.v2_4, 12)] {
+            let tq = try #require(DataTypeGrammarTable.grammar("TQ", version: version), "\(version)")
+            #expect(tq.components.count == count, "\(version)")
+            #expect(tq.component(1)?.dataType == "CQ", "\(version)")
+            #expect(tq.component(4)?.dataType == "TS", "\(version)")
+        }
+        let tq24 = try #require(DataTypeGrammarTable.grammar("TQ", version: .v2_4))
+        #expect(tq24.component(9)?.dataType == "ID")
+        #expect(tq24.component(9)?.tables == ["0472"])
+        #expect(tq24.component(12)?.dataType == "NM", "the stray ')' after 4.3.12 is layout")
+        #expect(SegmentGrammarTable.v2_3["ORC"]?.field(7)?.dataType == "TQ")
+        #expect(SegmentGrammarTable.v2_3["OBR"]?.field(27)?.dataType == "TQ")
+    }
+
+    // P5-3: the code-table check reaches TQ through Validator.componentGrammar. v2.4 TQ.9
+    // Conjunction is ID bound to Table 0472 (CH04 4.3.9); v2.3 prints it as ST.
+    @Test("P5-3: v2.4 ORC-7 TQ.9 outside Table 0472 is reported; v2.3 TQ.9 (ST) is not")
+    func tqConjunctionTable() throws {
+        func tableIssues(_ tq: String, _ version: String) throws -> [ValidationIssue] {
+            let wire = "MSH|^~\\&|A|B|C|D|20260101||ORM^O01|M1|P|\(version)\rORC|NW|1|||||\(tq)\r"
+            return Validator().validate(try Parser().parse(wire)).issues.filter {
+                $0.location.segmentID == "ORC" && $0.location.fieldIndex == 7
+                    && $0.code == .valueNotInTable(table: "0472")
+            }
+        }
+        let bad = try tableIssues("1^Q1H^^^^^^^X", "2.4")
+        #expect(bad.count == 1)
+        #expect(bad.first?.location.componentIndex == 9)
+        #expect(try tableIssues("1^Q1H^^^^^^^S", "2.4").isEmpty)
+        #expect(try tableIssues("1^Q1H^^^^^^^X", "2.3").isEmpty)
+    }
 }

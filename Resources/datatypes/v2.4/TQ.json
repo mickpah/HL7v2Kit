@@ -1,0 +1,86 @@
+{
+  "dataType": "TQ",
+  "version": "2.4",
+  "name": "timing quantity",
+  "source": "prose",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity component",
+      "dataType": "CQ",
+      "optionality": ""
+    },
+    {
+      "index": 2,
+      "name": "Interval component",
+      "dataType": "CM",
+      "optionality": "",
+      "tables": [
+        "0335"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Duration component",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Start date/time component",
+      "dataType": "TS",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "End date/time component",
+      "dataType": "TS",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Priority component",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 7,
+      "name": "Condition component",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 8,
+      "name": "Text component",
+      "dataType": "TX",
+      "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Conjunction component",
+      "dataType": "ID",
+      "optionality": "",
+      "tables": [
+        "0472"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Order sequencing component",
+      "dataType": "CM",
+      "optionality": ""
+    },
+    {
+      "index": 11,
+      "name": "Occurrence duration component",
+      "dataType": "CE",
+      "optionality": ""
+    },
+    {
+      "index": 12,
+      "name": "Total occurrences component",
+      "dataType": "NM",
+      "optionality": ""
+    }
+  ]
+}

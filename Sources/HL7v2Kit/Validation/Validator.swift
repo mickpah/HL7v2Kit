@@ -1698,7 +1698,8 @@ public struct Validator: Sendable {
     /// The same guards as the field-level rule: `IS` and user-defined or open tables are
     /// never enforced; empty and HL7-null values are never checked; a locale's rendering of
     /// the table widens the check and never narrows it. A datatype the version gives no
-    /// component grammar is not checked. The value of an `ID` component is its first
+    /// component grammar (``componentGrammar(_:version:)``, which keeps a primitive primitive,
+    /// P5-3) is not checked. The value of an `ID` component is its first
     /// subcomponent (P6-14; section 2.6.2 a), located at subcomponent 1 when more follow.
     private func checkComponentCodeTables(
         dataType: String,
@@ -1710,7 +1711,7 @@ public struct Validator: Sendable {
         // P6-14: the grammar version, so a 2.8 message reads the v2.8.2 tables directly
         // (validate(_:) already declares it; this keeps the lookup right on its own).
         let version = version.grammarVersion
-        guard let grammar = DataTypeGrammarTable.grammar(dataType, version: version) else { return }
+        guard let grammar = Self.componentGrammar(dataType, version: version) else { return }
 
         /// The closed table an `ID` entry is bound to, or nil when it is not enforceable.
         func closedTable(_ entry: ComponentGrammar) -> HL7Table? {
@@ -1743,7 +1744,7 @@ public struct Validator: Sendable {
                     let partial = component.subcomponents.dropFirst().contains { !$0.value.isEmpty }
                     report(component.subcomponents.first?.value, table: table, name: entry.name,
                            component: entry.index, subcomponent: partial ? 1 : nil, repetition: offset + 1)
-                } else if let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version) {
+                } else if let nested = Self.componentGrammar(entry.dataType, version: version) {
                     for inner in nested.components where component.subcomponents.count >= inner.index {
                         guard let table = closedTable(inner) else { continue }
                         report(component.subcomponents[inner.index - 1].value, table: table, name: inner.name,
@@ -1813,7 +1814,7 @@ public struct Validator: Sendable {
     /// Composite types HL7v2Kit doesn't have typed metadata for skip
     /// silently in both dispatches.
     /// Conditional components (M26, ADR-017): for every populated repetition of a field
-    /// whose datatype has a component grammar, a component carrying a `condition` must be
+    /// whose datatype has a component grammar (``componentGrammar(_:version:)``), a component carrying a `condition` must be
     /// populated when that predicate holds over its sibling components. One level of
     /// nesting is descended, as for the code-table check (the CNN inside NDL). Reported at
     /// the component with ``IssueCode/conditionalComponentMissing`` at
@@ -1827,7 +1828,7 @@ public struct Validator: Sendable {
         version: Version,
         issues: inout [ValidationIssue]
     ) {
-        guard let dataType = DataTypeGrammarTable.grammar(grammar.dataType, version: version) else { return }
+        guard let dataType = Self.componentGrammar(grammar.dataType, version: version) else { return }
         let repeated = field.repetitions.filter(isRepetitionPopulated).count > 1
         func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
                    component: Int?, subcomponent: (Int) -> Int?) {
@@ -1858,7 +1859,7 @@ public struct Validator: Sendable {
             let values = repetition.components.map(\.stringValue)
             check(dataType.components, values: values, typeName: grammar.dataType, component: nil, subcomponent: { _ in nil })
             for entry in dataType.components where repetition.components.count >= entry.index {
-                guard let nested = DataTypeGrammarTable.grammar(entry.dataType, version: version),
+                guard let nested = Self.componentGrammar(entry.dataType, version: version),
                       nested.components.contains(where: { $0.condition != nil || $0.conformanceCondition != nil }) else { continue }
                 let subs = repetition.components[entry.index - 1].subcomponents.map { Optional($0.value) }
                 check(nested.components, values: subs, typeName: "\(grammar.dataType).\(entry.index) (\(entry.dataType))",
@@ -1938,7 +1939,7 @@ public struct Validator: Sendable {
     /// against that table like any other version. `RE` (required but may be empty) is,
     /// by its own definition, never a missing value.
     private func requiredComponents(forCompositeCode code: String, version: Version) -> [RequiredComponent] {
-        guard let grammar = DataTypeGrammarTable.grammar(code, version: version) else { return [] }
+        guard let grammar = Self.componentGrammar(code, version: version) else { return [] }
         return grammar.components
             .filter { $0.optionalityCode == "R" }
             .map { RequiredComponent(index: $0.index, name: $0.name) }

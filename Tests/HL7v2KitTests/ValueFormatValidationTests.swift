@@ -181,6 +181,21 @@ struct ValueFormatValidationTests {
         #expect(obx.map(\.code) == [.valueFormatInvalid(dataType: "TS")])
     }
 
+    // P5-3: TQ on v2.3 to v2.4 now has a component grammar (CH4 4.4 / 4.3). Its TS
+    // components (TQ.4 start, TQ.5 end) are still checked as TS, and the degree of
+    // precision, demoted to a subcomponent inside TQ, is accepted.
+    @Test("P5-3: a malformed TS in ORC-7.4 (TQ) on v2.3 to v2.4 warns; a &-precision TS is accepted")
+    func preV25TimestampInsideTQ() throws {
+        for version in ["2.3", "2.3.1", "2.4"] {
+            let msh = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|\(version)\r"
+            let bad = try formatIssues(msh + line("ORC", [1: "NW", 2: "1", 7: "1^Q1H^^19991301"]))
+            #expect(bad.map(\.code) == [.valueFormatInvalid(dataType: "TS")], "\(version)")
+            #expect(bad.first?.location.componentIndex == 4, "\(version)")
+            #expect(try formatIssues(msh + line("ORC", [1: "NW", 2: "1", 7: "1^Q1H^^19991231&D^20000101"])).isEmpty,
+                    "\(version)")
+        }
+    }
+
     @Test("v2.8.2 RF1-18 (MO): MO.1 Quantity is checked as NM")
     func rf1MoneyQuantity() throws {
         let msh = "MSH|^~\\&|A|B|C|D|20240101120000||REF^I12^REF_I12|M1|P|2.8.2\r"
