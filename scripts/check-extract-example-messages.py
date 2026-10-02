@@ -340,6 +340,22 @@ def check_segment_first_on_a_page_is_kept():
     assert got == [[_MSH, "RCP|I|20^RD", "QAK|1|OK"]], got
 
 
+def check_second_footer_line_is_furniture():
+    # P10-2: v2.7.1 prints a second page-footer line under "Health Level Seven ... Page n":
+    # "2.7.1.    July 2012." on odd pages and "July 2012.    2.7.1." on even pages. Unfiltered,
+    # the left-margin line closed the open message at the page break (CH04 4.9.1, p102, and
+    # one CH07 message lost their tail).
+    for footer in ("July 2012.                2.7.1.", "2.7.1.                July 2012."):
+        got = _segments([_MSH, "PID|1||123", "",
+                         "Page 102          Health Level Seven, Version 2.7.1 (c) 2012. All rights reserved.",
+                         footer, "\f       Chapter 4: Order Entry", "", "ORC|NW|1235^NURS"])
+        assert got == [[_MSH, "PID|1||123", "ORC|NW|1235^NURS"]], (footer, got)
+        assert extract.FURN.search(footer), footer
+    # a segment or prose naming a month and year is not furniture.
+    assert not extract.FURN.search("EVN|A01|201207011200")
+    assert not extract.FURN.search("Version 2.7.1 was published in July 2012. It adds")
+
+
 def check_known_spec_example_errors_cite():
     # P4-22 Part 3 / fix round 1 item 5: every registered exception is keyed by (source
     # glob, index, code, location pattern) with an exact expected count, and cites the spec
@@ -466,7 +482,7 @@ CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_se
           check_bare_elided_segment_is_self_terminating,
           check_segment_id_line_starts_a_segment_without_cr,
           check_outdented_line_is_prose_not_continuation,
-          check_segment_first_on_a_page_is_kept,
+          check_segment_first_on_a_page_is_kept, check_second_footer_line_is_furniture,
           check_wrapped_line_led_by_a_non_segment_word_is_not_split,
           check_standalone_comment_line_closes_the_open_segment,
           check_elision_only_line_does_not_glue_its_neighbours,

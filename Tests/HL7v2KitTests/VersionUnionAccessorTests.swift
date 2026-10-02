@@ -166,7 +166,7 @@ struct VersionUnionAccessorTests {
         let file = Self.generated.deletingLastPathComponent().deletingLastPathComponent()
             .appendingPathComponent("Composite/Generated/CX+Components.swift")
         let text = try String(contentsOf: file, encoding: .utf8)
-        #expect(text.contains("/// CX-7: Effective Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. "
+        #expect(text.contains("/// CX-7: Effective Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. "
             + "On a message of another version this returns whatever CX-7 holds on the wire."))
     }
 

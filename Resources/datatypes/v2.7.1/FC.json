@@ -1,0 +1,22 @@
+{
+  "dataType": "FC",
+  "version": "2.7.1",
+  "name": "Financial Class",
+  "components": [
+    {
+      "index": 1,
+      "name": "Financial Class Code",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0064"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O"
+    }
+  ]
+}

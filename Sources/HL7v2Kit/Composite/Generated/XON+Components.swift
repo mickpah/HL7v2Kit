@@ -12,9 +12,9 @@ extension XON {
         9: "nameRepresentationCode", 10: "organizationIdentifier",
     ]
 
-    /// XON-3: ID Number (`NM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-3 holds on the wire.
+    /// XON-3: ID Number (`NM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-3 holds on the wire.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -23,7 +23,7 @@ extension XON {
         componentValue(3)
     }
 
-    /// XON-4: Identifier Check Digit (`NM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-4 holds on the wire.
+    /// XON-4: Identifier Check Digit (`NM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-4 holds on the wire.
     ///
     /// Printed as "Check digit" (v2.3, v2.3.1, v2.4, v2.5.1).
     ///
@@ -34,7 +34,7 @@ extension XON {
         componentValue(4)
     }
 
-    /// XON-5: Check Digit Scheme (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-5 holds on the wire.
+    /// XON-5: Check Digit Scheme (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-5 holds on the wire.
     ///
     /// Printed as "Code identifying the check digit scheme employed" (v2.3, v2.3.1, v2.4).
     ///
@@ -45,7 +45,7 @@ extension XON {
         componentValue(5)
     }
 
-    /// XON-6: Assigning Authority (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-6 holds on the wire.
+    /// XON-6: Assigning Authority (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-6 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -54,7 +54,7 @@ extension XON {
         componentValue(6)
     }
 
-    /// XON-8: Assigning Facility (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-8 holds on the wire.
+    /// XON-8: Assigning Facility (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-8 holds on the wire.
     ///
     /// Printed as "Assigning facility ID" (v2.3, v2.3.1, v2.4).
     ///
@@ -65,7 +65,7 @@ extension XON {
         componentValue(8)
     }
 
-    /// XON-9: Name Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XON-9 holds on the wire.
+    /// XON-9: Name Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XON-9 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameRepresentationCode: String? {

@@ -1,0 +1,192 @@
+{
+  "dataType": "XAD",
+  "version": "2.7.1",
+  "name": "Extended Address",
+  "components": [
+    {
+      "index": 1,
+      "name": "Street Address",
+      "dataType": "SAD",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Other Designation",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "120#"
+    },
+    {
+      "index": 3,
+      "name": "City",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 4,
+      "name": "State or Province",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 5,
+      "name": "Zip or Postal Code",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "12="
+    },
+    {
+      "index": 6,
+      "name": "Country",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "3..3",
+      "tables": [
+        "0399"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Address Type",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "1..3",
+      "condition": "repeated",
+      "tables": [
+        "0190"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Other Geographic Designation",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "50#"
+    },
+    {
+      "index": 9,
+      "name": "County/Parish Code",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0289"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Census Tract",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0288"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Address Representation Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 12,
+      "name": "Address Validity Range",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 13,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O",
+      "length": "8="
+    },
+    {
+      "index": 14,
+      "name": "Expiration Date",
+      "dataType": "DTM",
+      "optionality": "O",
+      "length": "8="
+    },
+    {
+      "index": 15,
+      "name": "Expiration Reason",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0616"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Temporary Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0136"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Bad Address Indicator",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0136"
+      ]
+    },
+    {
+      "index": 18,
+      "name": "Address Usage",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0617"
+      ]
+    },
+    {
+      "index": 19,
+      "name": "Addressee",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199#"
+    },
+    {
+      "index": 20,
+      "name": "Comment",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199#"
+    },
+    {
+      "index": 21,
+      "name": "Preference Order",
+      "dataType": "NM",
+      "optionality": "O",
+      "length": "2="
+    },
+    {
+      "index": 22,
+      "name": "Protection Code",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0618"
+      ]
+    },
+    {
+      "index": 23,
+      "name": "Address Identifier",
+      "dataType": "EI",
+      "optionality": "O"
+    }
+  ]
+}

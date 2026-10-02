@@ -1,0 +1,100 @@
+{
+  "dataType": "CX",
+  "version": "2.7.1",
+  "name": "Extended Composite ID with Check Digit",
+  "components": [
+    {
+      "index": 1,
+      "name": "ID Number",
+      "dataType": "ST",
+      "optionality": "R",
+      "length": "15="
+    },
+    {
+      "index": 2,
+      "name": "Identifier Check Digit",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "4="
+    },
+    {
+      "index": 3,
+      "name": "Check Digit Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "3..3",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Assigning Authority",
+      "dataType": "HD",
+      "optionality": "C",
+      "conformanceCondition": "9 empty AND 10 empty",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Identifier Type Code",
+      "dataType": "ID",
+      "optionality": "R",
+      "length": "2..5",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Assigning Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 7,
+      "name": "Effective Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 8,
+      "name": "Expiration Date",
+      "dataType": "DT",
+      "optionality": "O"
+    },
+    {
+      "index": 9,
+      "name": "Assigning Jurisdiction",
+      "dataType": "CWE",
+      "optionality": "C",
+      "conformanceCondition": "4 empty AND 10 empty"
+    },
+    {
+      "index": 10,
+      "name": "Assigning Agency or Department",
+      "dataType": "CWE",
+      "optionality": "C",
+      "conformanceCondition": "4 empty AND 9 empty"
+    },
+    {
+      "index": 11,
+      "name": "Security Check",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "4="
+    },
+    {
+      "index": 12,
+      "name": "Security Check Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "3..3",
+      "tables": [
+        "0904"
+      ]
+    }
+  ]
+}

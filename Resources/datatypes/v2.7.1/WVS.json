@@ -1,0 +1,21 @@
+{
+  "dataType": "WVS",
+  "version": "2.7.1",
+  "name": "Waveform Source",
+  "components": [
+    {
+      "index": 1,
+      "name": "Source One Name",
+      "dataType": "ST",
+      "optionality": "R",
+      "length": "8="
+    },
+    {
+      "index": 2,
+      "name": "Source Two Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "8="
+    }
+  ]
+}

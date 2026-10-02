@@ -14,7 +14,7 @@ extension XTN {
         17: "sharedTelecommunicationIdentifier", 18: "preferenceOrder",
     ]
 
-    /// XTN-8: Extension (`SNM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XTN-8 holds on the wire.
+    /// XTN-8: Extension (`SNM`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-8 holds on the wire.
     ///
     /// Typed `NM` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
@@ -23,42 +23,42 @@ extension XTN {
         componentValue(8)
     }
 
-    /// XTN-9: Any Text (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XTN-9 holds on the wire.
+    /// XTN-9: Any Text (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-9 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var anyText: String? {
         componentValue(9)
     }
 
-    /// XTN-10: Extension Prefix (`ST`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XTN-10 holds on the wire.
+    /// XTN-10: Extension Prefix (`ST`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-10 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var extensionPrefix: String? {
         componentValue(10)
     }
 
-    /// XTN-11: Speed Dial Code (`ST`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XTN-11 holds on the wire.
+    /// XTN-11: Speed Dial Code (`ST`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var speedDialCode: String? {
         componentValue(11)
     }
 
-    /// XTN-13: Effective Start Date (`DTM`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-13 holds on the wire.
+    /// XTN-13: Effective Start Date (`DTM`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-13 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var effectiveStartDate: String? {
         componentValue(13)
     }
 
-    /// XTN-14: Expiration Date (`DTM`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-14 holds on the wire.
+    /// XTN-14: Expiration Date (`DTM`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-14 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var expirationDate: String? {
         componentValue(14)
     }
 
-    /// XTN-15: Expiration Reason (`CWE`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-15 holds on the wire.
+    /// XTN-15: Expiration Reason (`CWE`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-15 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -67,7 +67,7 @@ extension XTN {
         componentValue(15)
     }
 
-    /// XTN-16: Protection Code (`CWE`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-16 holds on the wire.
+    /// XTN-16: Protection Code (`CWE`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-16 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -76,7 +76,7 @@ extension XTN {
         componentValue(16)
     }
 
-    /// XTN-17: Shared Telecommunication Identifier (`EI`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-17 holds on the wire.
+    /// XTN-17: Shared Telecommunication Identifier (`EI`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-17 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -85,7 +85,7 @@ extension XTN {
         componentValue(17)
     }
 
-    /// XTN-18: Preference Order (`NM`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XTN-18 holds on the wire.
+    /// XTN-18: Preference Order (`NM`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XTN-18 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var preferenceOrder: String? {

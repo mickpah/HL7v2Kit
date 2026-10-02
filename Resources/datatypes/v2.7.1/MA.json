@@ -1,0 +1,31 @@
+{
+  "dataType": "MA",
+  "version": "2.7.1",
+  "name": "Multiplexed Array",
+  "components": [
+    {
+      "index": 1,
+      "name": "Sample Y From Channel 1",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Sample Y From Channel 2",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 3,
+      "name": "Sample Y From Channel 3",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 4,
+      "name": "Sample Y From Channel 4",
+      "dataType": "NM",
+      "optionality": "O"
+    }
+  ]
+}

@@ -424,8 +424,6 @@ def _script(name):
 # as the rollout lands and never goes stale.
 VERSION_MAPS_PENDING = {
     "audit-schemas.py CHAPTER_GLOBS": {"2.7.1"},       # P10-4a (segment chapters)
-    "audit-schemas.py EXAMPLE_SOURCES": {"2.7.1"},     # P10-2 (CH02A examples)
-    "extract-datatype-components.py PDFS": {"2.7.1"},  # P10-2 (CH02A component tables)
 }
 
 
@@ -490,6 +488,29 @@ def check_pending_maps_empty_once_released():
     assert not stale, f"Version.swift declares these versions but their maps are still pending: {stale}"
 
 
+def check_component_table_spans_second_footer():
+    # P10-2: v2.7.1 prints a second page-footer line ("2.7.1.    July 2012." on odd pages,
+    # "July 2012.    2.7.1." on even pages). At the left margin it read as prose and ended
+    # the component table at the page break: 14 v2.7.1 composites were truncated (CF p7 ...).
+    dtx = _script("extract-datatype-components.py")
+    header = "SEQ     LEN       C.LEN      DT        OPT    TBL#     COMPONENT NAME                       COMMENTS   SEC.REF."
+    row = " {:<2}                 20=       ST         O              {:<33}                2.A.75"
+    for footer in ("2.7.1.                                       July 2012.",
+                   "July 2012.                                       2.7.1."):
+        lines = ["                  HL7 Component Table - CF – Coded Element with Formatted Values", header,
+                 row.format(1, "Identifier"), "",
+                 "Health Level Seven, Version 2.7.1 © 2012. All rights reserved.            Page 7",
+                 footer, "\f Chapter 2A: Control – Data Types", "", header,
+                 row.format(2, "Alternate Identifier")]
+        types = dtx.components_from_lines(lines, "2.7.1")
+        got = [c["index"] for c in types["CF"]["components"]]
+        assert got == [1, 2], (footer, got)
+    # prose at the left margin still ends the table.
+    lines = ["  HL7 Component Table - CF – Coded Element", header, row.format(1, "Identifier"),
+             "Definition: This data type transmits codes.", row.format(2, "Alternate Identifier")]
+    assert [c["index"] for c in dtx.components_from_lines(lines, "2.7.1")["CF"]["components"]] == [1]
+
+
 def check_unicode_ellipsis_is_suspect():
     # v2.7.1 Appendix A prints the "no suggested values" row with U+2026 where the earlier
     # appendices print "..." (P10-0). Either form surviving as a code is a TOOL defect.
@@ -507,7 +528,7 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
           check_field_grammar_shape, check_cm_refinements, check_datatype_name,
           check_version_maps_agree, check_unicode_ellipsis_is_suspect,
-          check_pending_maps_empty_once_released]
+          check_pending_maps_empty_once_released, check_component_table_spans_second_footer]
 
 
 def main():

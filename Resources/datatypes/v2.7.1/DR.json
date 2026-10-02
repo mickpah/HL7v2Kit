@@ -1,0 +1,19 @@
+{
+  "dataType": "DR",
+  "version": "2.7.1",
+  "name": "Date/Time Range",
+  "components": [
+    {
+      "index": 1,
+      "name": "Range Start Date/Time",
+      "dataType": "DTM",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Range End Date/Time",
+      "dataType": "DTM",
+      "optionality": "O"
+    }
+  ]
+}

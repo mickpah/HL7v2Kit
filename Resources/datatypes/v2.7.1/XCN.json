@@ -1,0 +1,207 @@
+{
+  "dataType": "XCN",
+  "version": "2.7.1",
+  "name": "Extended Composite ID Number and Name for Persons",
+  "components": [
+    {
+      "index": 1,
+      "name": "Person Identifier",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "15=",
+      "condition": "2 empty"
+    },
+    {
+      "index": 2,
+      "name": "Family Name",
+      "dataType": "FN",
+      "optionality": "C",
+      "condition": "1 empty"
+    },
+    {
+      "index": 3,
+      "name": "Given Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "30#"
+    },
+    {
+      "index": 4,
+      "name": "Second and Further Given Names or Initials Thereof",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "30#"
+    },
+    {
+      "index": 5,
+      "name": "Suffix (e.g., JR or III)",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 6,
+      "name": "Prefix (e.g., DR)",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20#"
+    },
+    {
+      "index": 7,
+      "name": "Degree (e.g., MD)",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 8,
+      "name": "Source Table",
+      "dataType": "CWE",
+      "optionality": "B",
+      "tables": [
+        "0297"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Assigning Authority",
+      "dataType": "HD",
+      "optionality": "C",
+      "conformanceCondition": "1 populated AND 22 empty AND 23 empty",
+      "tables": [
+        "0363"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Name Type Code",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "1..5",
+      "conformanceCondition": "2 populated",
+      "tables": [
+        "0200"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Identifier Check Digit",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "1..4"
+    },
+    {
+      "index": 12,
+      "name": "Check Digit Scheme",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "3..3",
+      "tables": [
+        "0061"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Identifier Type Code",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "2..5",
+      "conformanceCondition": "1 populated",
+      "tables": [
+        "0203"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Assigning Facility",
+      "dataType": "HD",
+      "optionality": "O"
+    },
+    {
+      "index": 15,
+      "name": "Name Representation Code",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0465"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Name Context",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0448"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Name Validity Range",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 18,
+      "name": "Name Assembly Order",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..1",
+      "tables": [
+        "0444"
+      ]
+    },
+    {
+      "index": 19,
+      "name": "Effective Date",
+      "dataType": "DTM",
+      "optionality": "O",
+      "length": "8="
+    },
+    {
+      "index": 20,
+      "name": "Expiration Date",
+      "dataType": "DTM",
+      "optionality": "O",
+      "length": "8="
+    },
+    {
+      "index": 21,
+      "name": "Professional Suffix",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199#"
+    },
+    {
+      "index": 22,
+      "name": "Assigning Jurisdiction",
+      "dataType": "CWE",
+      "optionality": "C",
+      "conformanceCondition": "1 populated AND 9 empty AND 23 empty"
+    },
+    {
+      "index": 23,
+      "name": "Assigning Agency or Department",
+      "dataType": "CWE",
+      "optionality": "C",
+      "conformanceCondition": "1 populated AND 9 empty AND 22 empty"
+    },
+    {
+      "index": 24,
+      "name": "Security Check",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "4="
+    },
+    {
+      "index": 25,
+      "name": "Security Check Scheme",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "3..3",
+      "tables": [
+        "0904"
+      ]
+    }
+  ]
+}

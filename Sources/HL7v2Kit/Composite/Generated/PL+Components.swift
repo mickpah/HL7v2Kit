@@ -12,21 +12,21 @@ extension PL {
         9: "locationDescription", 10: "comprehensiveLocationIdentifier", 11: "assigningAuthorityForLocation",
     ]
 
-    /// PL-5: Location Status (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-5 holds on the wire.
+    /// PL-5: Location Status (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-5 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var locationStatus: String? {
         componentValue(5)
     }
 
-    /// PL-6: Person Location Type (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-6 holds on the wire.
+    /// PL-6: Person Location Type (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-6 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var personLocationType: String? {
         componentValue(6)
     }
 
-    /// PL-7: Building (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-7 holds on the wire.
+    /// PL-7: Building (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-7 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
@@ -37,7 +37,7 @@ extension PL {
         componentValue(7)
     }
 
-    /// PL-8: Floor (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-8 holds on the wire.
+    /// PL-8: Floor (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-8 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
@@ -48,14 +48,14 @@ extension PL {
         componentValue(8)
     }
 
-    /// PL-9: Location Description (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-9 holds on the wire.
+    /// PL-9: Location Description (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-9 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var locationDescription: String? {
         componentValue(9)
     }
 
-    /// PL-10: Comprehensive Location Identifier (`EI`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-10 holds on the wire.
+    /// PL-10: Comprehensive Location Identifier (`EI`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-10 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -64,7 +64,7 @@ extension PL {
         componentValue(10)
     }
 
-    /// PL-11: Assigning Authority for Location (`HD`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PL-11 holds on the wire.
+    /// PL-11: Assigning Authority for Location (`HD`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever PL-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///

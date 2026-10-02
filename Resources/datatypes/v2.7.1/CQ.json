@@ -1,0 +1,22 @@
+{
+  "dataType": "CQ",
+  "version": "2.7.1",
+  "name": "Composite Quantity with Units",
+  "components": [
+    {
+      "index": 1,
+      "name": "Quantity",
+      "dataType": "NM",
+      "optionality": "O"
+    },
+    {
+      "index": 2,
+      "name": "Units",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "9999"
+      ]
+    }
+  ]
+}

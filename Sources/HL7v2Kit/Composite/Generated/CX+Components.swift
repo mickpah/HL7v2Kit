@@ -12,21 +12,21 @@ extension CX {
         9: "assigningJurisdiction", 10: "assigningAgencyOrDepartment", 11: "securityCheck", 12: "securityCheckScheme",
     ]
 
-    /// CX-7: Effective Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever CX-7 holds on the wire.
+    /// CX-7: Effective Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever CX-7 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var effectiveDate: String? {
         componentValue(7)
     }
 
-    /// CX-8: Expiration Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever CX-8 holds on the wire.
+    /// CX-8: Expiration Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever CX-8 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var expirationDate: String? {
         componentValue(8)
     }
 
-    /// CX-9: Assigning Jurisdiction (`CWE`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever CX-9 holds on the wire.
+    /// CX-9: Assigning Jurisdiction (`CWE`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever CX-9 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -35,7 +35,7 @@ extension CX {
         componentValue(9)
     }
 
-    /// CX-10: Assigning Agency or Department (`CWE`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever CX-10 holds on the wire.
+    /// CX-10: Assigning Agency or Department (`CWE`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever CX-10 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -44,14 +44,14 @@ extension CX {
         componentValue(10)
     }
 
-    /// CX-11: Security Check (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CX-11 holds on the wire.
+    /// CX-11: Security Check (`ST`). Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever CX-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var securityCheck: String? {
         componentValue(11)
     }
 
-    /// CX-12: Security Check Scheme (`ID`). Defined in v2.8.2. On a message of another version this returns whatever CX-12 holds on the wire.
+    /// CX-12: Security Check Scheme (`ID`). Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever CX-12 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var securityCheckScheme: String? {

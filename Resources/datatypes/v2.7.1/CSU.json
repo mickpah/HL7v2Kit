@@ -1,0 +1,186 @@
+{
+  "dataType": "CSU",
+  "version": "2.7.1",
+  "name": "Channel Sensitivity and Units",
+  "components": [
+    {
+      "index": 1,
+      "name": "Channel Sensitivity",
+      "dataType": "NM",
+      "optionality": "R"
+    },
+    {
+      "index": 2,
+      "name": "Unit of Measure Identifier",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "20=",
+      "condition": "3 empty"
+    },
+    {
+      "index": 3,
+      "name": "Unit of Measure Description",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "199#",
+      "condition": "2 empty"
+    },
+    {
+      "index": 4,
+      "name": "Unit of Measure Coding System",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "1..12",
+      "conformanceCondition": "2 populated",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Alternate Unit of Measure Identifier",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20="
+    },
+    {
+      "index": 6,
+      "name": "Alternate Unit of Measure Description",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199#"
+    },
+    {
+      "index": 7,
+      "name": "Alternate Unit of Measure Coding System",
+      "dataType": "ID",
+      "optionality": "C",
+      "length": "1..12",
+      "conformanceCondition": "5 populated",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Unit of Measure Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "10="
+    },
+    {
+      "index": 9,
+      "name": "Alternate Unit of Measure Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "10="
+    },
+    {
+      "index": 10,
+      "name": "Original Text",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199"
+    },
+    {
+      "index": 11,
+      "name": "Second Alternate Unit of Measure Identifier",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "20="
+    },
+    {
+      "index": 12,
+      "name": "Second Alternate Unit of Measure Text",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199#"
+    },
+    {
+      "index": 13,
+      "name": "Name of Second Alternate Unit of Measure Coding System",
+      "dataType": "ID",
+      "optionality": "O",
+      "length": "1..12",
+      "tables": [
+        "0396"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Second Alternate Unit of Measure Coding System Version ID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "10="
+    },
+    {
+      "index": 15,
+      "name": "Unit of Measure Coding System OID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "199=",
+      "conformanceCondition": "2 populated AND 4 empty"
+    },
+    {
+      "index": 16,
+      "name": "Unit of Measure Value Set OID",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199="
+    },
+    {
+      "index": 17,
+      "name": "Unit of Measure Value Set Version ID",
+      "dataType": "DTM",
+      "optionality": "C",
+      "length": "8=",
+      "condition": "16 populated"
+    },
+    {
+      "index": 18,
+      "name": "Alternate Unit of Measure Coding System OID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "199=",
+      "conformanceCondition": "5 populated AND 7 empty"
+    },
+    {
+      "index": 19,
+      "name": "Alternate Unit of Measure Value Set OID",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199="
+    },
+    {
+      "index": 20,
+      "name": "Alternate Unit of Measure Value Set Version ID",
+      "dataType": "DTM",
+      "optionality": "C",
+      "length": "8=",
+      "condition": "19 populated"
+    },
+    {
+      "index": 21,
+      "name": "Alternate Unit of Measure Coding System OID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "199=",
+      "conformanceCondition": "11 populated AND 13 empty"
+    },
+    {
+      "index": 22,
+      "name": "Alternate Unit of Measure Value Set OID",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "199="
+    },
+    {
+      "index": 23,
+      "name": "Alternate Unit of Measure Value Set Version ID",
+      "dataType": "ST",
+      "optionality": "C",
+      "length": "8=",
+      "condition": "22 populated"
+    }
+  ]
+}

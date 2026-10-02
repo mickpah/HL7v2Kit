@@ -1,0 +1,21 @@
+{
+  "dataType": "VR",
+  "version": "2.7.1",
+  "name": "Value Range",
+  "components": [
+    {
+      "index": 1,
+      "name": "First Data Code Value",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "6="
+    },
+    {
+      "index": 2,
+      "name": "Last Data Code Value",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "6="
+    }
+  ]
+}

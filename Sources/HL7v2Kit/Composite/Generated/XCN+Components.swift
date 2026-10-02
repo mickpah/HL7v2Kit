@@ -16,13 +16,13 @@ extension XCN {
         25: "securityCheckScheme",
     ]
 
-    /// XCN-7: Degree (e.g., MD) (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-7 holds on the wire.
+    /// XCN-7: Degree (e.g., MD) (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-7 holds on the wire.
     ///
     /// Printed as "Degree" (v2.3, v2.3.1, v2.4).
     ///
     /// Typed `ST` in v2.3.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -31,11 +31,11 @@ extension XCN {
         componentValue(7)
     }
 
-    /// XCN-8: Source Table (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-8 holds on the wire.
+    /// XCN-8: Source Table (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-8 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
-    /// Retained for backward compatibility (`B`) in v2.8.2.
+    /// Retained for backward compatibility (`B`) in v2.7.1, v2.8.2.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -44,7 +44,7 @@ extension XCN {
         componentValue(8)
     }
 
-    /// XCN-9: Assigning Authority (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-9 holds on the wire.
+    /// XCN-9: Assigning Authority (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-9 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -53,21 +53,21 @@ extension XCN {
         componentValue(9)
     }
 
-    /// XCN-10: Name Type Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-10 holds on the wire.
+    /// XCN-10: Name Type Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-10 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameTypeCode: String? {
         componentValue(10)
     }
 
-    /// XCN-11: Identifier Check Digit (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-11 holds on the wire.
+    /// XCN-11: Identifier Check Digit (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var identifierCheckDigit: String? {
         componentValue(11)
     }
 
-    /// XCN-12: Check Digit Scheme (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-12 holds on the wire.
+    /// XCN-12: Check Digit Scheme (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-12 holds on the wire.
     ///
     /// Printed as "Code identifying the check digit scheme employed" (v2.3, v2.3.1, v2.4).
     ///
@@ -76,7 +76,7 @@ extension XCN {
         componentValue(12)
     }
 
-    /// XCN-13: Identifier Type Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-13 holds on the wire.
+    /// XCN-13: Identifier Type Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-13 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4.
     ///
@@ -85,7 +85,7 @@ extension XCN {
         componentValue(13)
     }
 
-    /// XCN-14: Assigning Facility (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-14 holds on the wire.
+    /// XCN-14: Assigning Facility (`HD`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-14 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -94,14 +94,14 @@ extension XCN {
         componentValue(14)
     }
 
-    /// XCN-15: Name Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-15 holds on the wire.
+    /// XCN-15: Name Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-15 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameRepresentationCode: String? {
         componentValue(15)
     }
 
-    /// XCN-16: Name Context (`CWE`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-16 holds on the wire.
+    /// XCN-16: Name Context (`CWE`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-16 holds on the wire.
     ///
     /// Typed `CE` in v2.4, v2.5.1.
     ///
@@ -112,9 +112,9 @@ extension XCN {
         componentValue(16)
     }
 
-    /// XCN-17: Name Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-17 holds on the wire.
+    /// XCN-17: Name Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-17 holds on the wire.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -125,14 +125,14 @@ extension XCN {
         componentValue(17)
     }
 
-    /// XCN-18: Name Assembly Order (`ID`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-18 holds on the wire.
+    /// XCN-18: Name Assembly Order (`ID`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-18 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameAssemblyOrder: String? {
         componentValue(18)
     }
 
-    /// XCN-19: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-19 holds on the wire.
+    /// XCN-19: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-19 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -143,7 +143,7 @@ extension XCN {
         componentValue(19)
     }
 
-    /// XCN-20: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-20 holds on the wire.
+    /// XCN-20: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-20 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -154,14 +154,14 @@ extension XCN {
         componentValue(20)
     }
 
-    /// XCN-21: Professional Suffix (`ST`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-21 holds on the wire.
+    /// XCN-21: Professional Suffix (`ST`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-21 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var professionalSuffix: String? {
         componentValue(21)
     }
 
-    /// XCN-22: Assigning Jurisdiction (`CWE`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-22 holds on the wire.
+    /// XCN-22: Assigning Jurisdiction (`CWE`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-22 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -170,7 +170,7 @@ extension XCN {
         componentValue(22)
     }
 
-    /// XCN-23: Assigning Agency or Department (`CWE`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XCN-23 holds on the wire.
+    /// XCN-23: Assigning Agency or Department (`CWE`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-23 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -179,14 +179,14 @@ extension XCN {
         componentValue(23)
     }
 
-    /// XCN-24: Security Check (`ST`). Defined in v2.8.2. On a message of another version this returns whatever XCN-24 holds on the wire.
+    /// XCN-24: Security Check (`ST`). Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-24 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var securityCheck: String? {
         componentValue(24)
     }
 
-    /// XCN-25: Security Check Scheme (`ID`). Defined in v2.8.2. On a message of another version this returns whatever XCN-25 holds on the wire.
+    /// XCN-25: Security Check Scheme (`ID`). Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever XCN-25 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var securityCheckScheme: String? {

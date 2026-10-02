@@ -29,7 +29,11 @@ CHAPTERS = {
     "v2.7.1": "HL7_V271_PDF/PDF/V271_CH*.pdf",
     "v2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH*.pdf",
 }
-FURN = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|^\f")
+# The last alternative is v2.7.1's second page-footer line: "2.7.1.    July 2012." on odd
+# pages and "July 2012.    2.7.1." on even pages (P10-2; the same pattern as
+# extract-datatype-components.py SECOND_FOOTER).
+FURN = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|^\f|"
+                  r"^\s*(?:\d+(?:\.\d+)+\.\s+[A-Z][a-z]+ \d{4}\.|[A-Z][a-z]+ \d{4}\.\s+\d+(?:\.\d+)+\.)\s*$")
 SEG = re.compile(r"^\s*([A-Z][A-Z0-9]{2})\|")
 _LITERAL_CR = re.compile(r"<cr>", re.IGNORECASE)
 # P4-22 fix round 1 / P4-28 fix rounds 2-3: a numbered section/subsection heading ("4.8

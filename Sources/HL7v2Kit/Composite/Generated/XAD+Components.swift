@@ -15,14 +15,14 @@ extension XAD {
         21: "preferenceOrder", 22: "protectionCode", 23: "addressIdentifier",
     ]
 
-    /// XAD-8: Other Geographic Designation (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-8 holds on the wire.
+    /// XAD-8: Other Geographic Designation (`ST`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-8 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var otherGeographicDesignation: String? {
         componentValue(8)
     }
 
-    /// XAD-9: County/Parish Code (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-9 holds on the wire.
+    /// XAD-9: County/Parish Code (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-9 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
@@ -33,7 +33,7 @@ extension XAD {
         componentValue(9)
     }
 
-    /// XAD-10: Census Tract (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-10 holds on the wire.
+    /// XAD-10: Census Tract (`CWE`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-10 holds on the wire.
     ///
     /// Typed `IS` in v2.3, v2.3.1, v2.4, v2.5.1, v2.6.
     ///
@@ -44,16 +44,16 @@ extension XAD {
         componentValue(10)
     }
 
-    /// XAD-11: Address Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-11 holds on the wire.
+    /// XAD-11: Address Representation Code (`ID`). Defined in v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var addressRepresentationCode: String? {
         componentValue(11)
     }
 
-    /// XAD-12: Address Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-12 holds on the wire.
+    /// XAD-12: Address Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-12 holds on the wire.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -64,7 +64,7 @@ extension XAD {
         componentValue(12)
     }
 
-    /// XAD-13: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-13 holds on the wire.
+    /// XAD-13: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-13 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -75,7 +75,7 @@ extension XAD {
         componentValue(13)
     }
 
-    /// XAD-14: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XAD-14 holds on the wire.
+    /// XAD-14: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-14 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -86,7 +86,7 @@ extension XAD {
         componentValue(14)
     }
 
-    /// XAD-15: Expiration Reason (`CWE`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-15 holds on the wire.
+    /// XAD-15: Expiration Reason (`CWE`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-15 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -95,49 +95,49 @@ extension XAD {
         componentValue(15)
     }
 
-    /// XAD-16: Temporary Indicator (`ID`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-16 holds on the wire.
+    /// XAD-16: Temporary Indicator (`ID`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-16 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var temporaryIndicator: String? {
         componentValue(16)
     }
 
-    /// XAD-17: Bad Address Indicator (`ID`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-17 holds on the wire.
+    /// XAD-17: Bad Address Indicator (`ID`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-17 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var badAddressIndicator: String? {
         componentValue(17)
     }
 
-    /// XAD-18: Address Usage (`ID`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-18 holds on the wire.
+    /// XAD-18: Address Usage (`ID`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-18 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var addressUsage: String? {
         componentValue(18)
     }
 
-    /// XAD-19: Addressee (`ST`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-19 holds on the wire.
+    /// XAD-19: Addressee (`ST`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-19 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var addressee: String? {
         componentValue(19)
     }
 
-    /// XAD-20: Comment (`ST`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-20 holds on the wire.
+    /// XAD-20: Comment (`ST`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-20 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var comment: String? {
         componentValue(20)
     }
 
-    /// XAD-21: Preference Order (`NM`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-21 holds on the wire.
+    /// XAD-21: Preference Order (`NM`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-21 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var preferenceOrder: String? {
         componentValue(21)
     }
 
-    /// XAD-22: Protection Code (`CWE`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-22 holds on the wire.
+    /// XAD-22: Protection Code (`CWE`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-22 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///
@@ -146,7 +146,7 @@ extension XAD {
         componentValue(22)
     }
 
-    /// XAD-23: Address Identifier (`EI`). Defined in v2.6, v2.8.2. On a message of another version this returns whatever XAD-23 holds on the wire.
+    /// XAD-23: Address Identifier (`EI`). Defined in v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XAD-23 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     ///

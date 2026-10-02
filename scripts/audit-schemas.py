@@ -1543,6 +1543,7 @@ EXAMPLE_SOURCES = {
     "v2.4":   ("HL7_v24_PDF/CH02.PDF", r"2\.9"),
     "v2.5.1": ("HL7_v251_PDF/V251_CH02A.pdf", r"2\.A"),
     "v2.6":   ("HL7_v26_PDF/V26_CH02A_DataTypes.pdf", r"2\.A"),
+    "v2.7.1": ("HL7_V271_PDF/PDF/V271_CH02A_DataTypes.pdf", r"2\.A"),
     "v2.8.2": ("HL7_V2.8.2_PDF/PDF/V282_CH02A_DataTypes.pdf", r"2\.?A"),
 }
 EXPECTED_EXAMPLE_REJECTIONS = {
@@ -1553,6 +1554,10 @@ EXPECTED_EXAMPLE_REJECTIONS = {
     # that one component; they are not complete XTN values. v2.8.2 prints XTN.3 as R.
     ("v2.8.2", "XTN", "^^^^^^^^Do not use after 5PM", "XTN.3"),
     ("v2.8.2", "XTN", "^^^^^^^^^^^1-800-Dentist", "XTN.3"),
+    # v2.7.1 prints the same two fragments (Chapter 2A 2.A.90.9 and 2.A.90.12, p107) and
+    # XTN.3 as R (component table, 2.A.90, p104).
+    ("v2.7.1", "XTN", "^^^^^^^^Do not use after 5PM", "XTN.3"),
+    ("v2.7.1", "XTN", "^^^^^^^^^^^1-800-Dentist", "XTN.3"),
 }
 _EXAMPLE_FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Page \d|^\s*Chapter \d+A?:|\.{6,}")
 

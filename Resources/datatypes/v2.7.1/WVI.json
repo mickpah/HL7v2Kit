@@ -1,0 +1,21 @@
+{
+  "dataType": "WVI",
+  "version": "2.7.1",
+  "name": "Channel Identifier",
+  "components": [
+    {
+      "index": 1,
+      "name": "Channel Number",
+      "dataType": "NM",
+      "optionality": "R",
+      "length": "4="
+    },
+    {
+      "index": 2,
+      "name": "Channel Name",
+      "dataType": "ST",
+      "optionality": "O",
+      "length": "17#"
+    }
+  ]
+}

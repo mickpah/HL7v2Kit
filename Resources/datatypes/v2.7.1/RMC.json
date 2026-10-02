@@ -1,0 +1,37 @@
+{
+  "dataType": "RMC",
+  "version": "2.7.1",
+  "name": "Room Coverage",
+  "components": [
+    {
+      "index": 1,
+      "name": "Room Type",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0145"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Amount Type",
+      "dataType": "CWE",
+      "optionality": "O",
+      "tables": [
+        "0146"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Coverage Amount",
+      "dataType": "",
+      "optionality": "W"
+    },
+    {
+      "index": 4,
+      "name": "Money or Percentage",
+      "dataType": "MOP",
+      "optionality": "R"
+    }
+  ]
+}

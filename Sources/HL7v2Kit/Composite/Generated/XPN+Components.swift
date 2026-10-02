@@ -13,13 +13,13 @@ extension XPN {
         13: "expirationDate", 14: "professionalSuffix", 15: "calledBy",
     ]
 
-    /// XPN-6: Degree (e.g., MD) (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-6 holds on the wire.
+    /// XPN-6: Degree (e.g., MD) (`IS`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-6 holds on the wire.
     ///
     /// Printed as "Degree" (v2.3, v2.3.1, v2.4).
     ///
     /// Typed `ST` in v2.3.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -28,14 +28,14 @@ extension XPN {
         componentValue(6)
     }
 
-    /// XPN-8: Name Representation Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-8 holds on the wire.
+    /// XPN-8: Name Representation Code (`ID`). Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-8 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameRepresentationCode: String? {
         componentValue(8)
     }
 
-    /// XPN-9: Name Context (`CWE`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-9 holds on the wire.
+    /// XPN-9: Name Context (`CWE`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-9 holds on the wire.
     ///
     /// Typed `CE` in v2.4, v2.5.1.
     ///
@@ -46,9 +46,9 @@ extension XPN {
         componentValue(9)
     }
 
-    /// XPN-10: Name Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-10 holds on the wire.
+    /// XPN-10: Name Validity Range (`DR`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-10 holds on the wire.
     ///
-    /// Withdrawn (`W`) in v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
+    /// Withdrawn (`W`) in v2.7.1, v2.8.2; the accessor still reads it, because earlier versions define it and a wire can carry it.
     ///
     /// Retained for backward compatibility (`B`) in v2.5.1, v2.6.
     ///
@@ -59,14 +59,14 @@ extension XPN {
         componentValue(10)
     }
 
-    /// XPN-11: Name Assembly Order (`ID`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-11 holds on the wire.
+    /// XPN-11: Name Assembly Order (`ID`). Defined in v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameAssemblyOrder: String? {
         componentValue(11)
     }
 
-    /// XPN-12: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-12 holds on the wire.
+    /// XPN-12: Effective Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-12 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -77,7 +77,7 @@ extension XPN {
         componentValue(12)
     }
 
-    /// XPN-13: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-13 holds on the wire.
+    /// XPN-13: Expiration Date (`DTM`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-13 holds on the wire.
     ///
     /// Typed `TS` in v2.5.1.
     ///
@@ -88,14 +88,14 @@ extension XPN {
         componentValue(13)
     }
 
-    /// XPN-14: Professional Suffix (`ST`). Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever XPN-14 holds on the wire.
+    /// XPN-14: Professional Suffix (`ST`). Defined in v2.5.1, v2.6, v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-14 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var professionalSuffix: String? {
         componentValue(14)
     }
 
-    /// XPN-15: Called By (`ST`). Defined in v2.8.2. On a message of another version this returns whatever XPN-15 holds on the wire.
+    /// XPN-15: Called By (`ST`). Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever XPN-15 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var calledBy: String? {

@@ -4,7 +4,7 @@
     python3 scripts/extract-datatype-components.py 2.5.1            # print a summary
     python3 scripts/extract-datatype-components.py 2.5.1 --write    # emit Resources/datatypes/v2.5.1/*.json
 
-Only v2.5.1, v2.6 and v2.8.2 print "HL7 Component Table - <DT>" figures. v2.3, v2.3.1
+Only v2.5.1, v2.6, v2.7.1 and v2.8.2 print "HL7 Component Table - <DT>" figures. v2.3, v2.3.1
 and v2.4 define components in prose ("Components: <a> ^ <b>") and are out of scope
 (registered in ADR-017).
 
@@ -20,12 +20,17 @@ STANDARDS = os.path.join(REPO, "docs/standards")
 PDFS = {
     "2.5.1": "HL7_v251_PDF/V251_CH02A.pdf",
     "2.6":   "HL7_v26_PDF/V26_CH02A_DataTypes.pdf",
+    "2.7.1": "HL7_V271_PDF/PDF/V271_CH02A_DataTypes.pdf",
     "2.8.2": "HL7_V2.8.2_PDF/PDF/V282_CH02A_DataTypes.pdf",
 }
 CAPTION = re.compile(r"HL7 Component Table\s*[-–]\s*([A-Z][A-Z0-9]{1,3})\s*[-–]?\s*(.*)$")
 HEADER_KEYS = [("SEQ", "SEQ"), ("LEN", "LEN"), ("CLEN", "C.LEN"), ("DT", "DT"), ("OPT", "OPT"),
                ("TBL", "TBL#"), ("NAME", "COMPONENT NAME"), ("COMMENTS", "COMMENTS"), ("SECREF", "SEC.REF")]
-FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Chapter 2A?:|^\s*Page \d|^\f")
+# The last alternative is v2.7.1's second page-footer line: "2.7.1.    July 2012." on odd
+# pages and "July 2012.    2.7.1." on even pages (P10-2). extract-example-messages.py FURN carries the same pattern.
+SECOND_FOOTER = r"^\s*(?:\d+(?:\.\d+)+\.\s+[A-Z][a-z]+ \d{4}\.|[A-Z][a-z]+ \d{4}\.\s+\d+(?:\.\d+)+\.)\s*$"
+FURNITURE = re.compile(r"Health Level Seven|All rights reserved|Final Standard|^\s*Chapter 2A?:|^\s*Page \d|^\f|"
+                       + SECOND_FOOTER)
 HEADING = re.compile(r"^\s*2\.?A?\.\d+(\.\d+)*\s+\S")
 
 
@@ -72,6 +77,12 @@ def table_numbers(cell):
 def extract(version):
     text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", os.path.join(STANDARDS, PDFS[version]), "-"],
                           capture_output=True, text=True).stdout.split("\n")
+    return apply_resources(components_from_lines(text, version), version)
+
+
+def components_from_lines(text, version):
+    """The component tables read from the printed lines of one Chapter 2A (pdftotext -layout
+    output, or synthetic lines in the self-check), before overrides and conditions."""
     types, cur, cols = {}, None, None
     for line in text:
         cap = CAPTION.search(line)
@@ -115,7 +126,10 @@ def extract(version):
             if c.get("NAME") and first >= start.get("TBL", 0) and end <= start.get("COMMENTS", 10**6) + 2 \
                     and not c.get("COMMENTS") and not c.get("SECREF"):
                 last["name"] = (last["name"] + " " + c["NAME"]).strip()
-    types = {k: v for k, v in types.items() if v["components"]}   # primitives print no rows
+    return {k: v for k, v in types.items() if v["components"]}   # primitives print no rows
+
+
+def apply_resources(types, version):
     # Resources/datatypes/overrides.json: hand-verified, cited corrections for the rare
     # component whose printed optionality the same section's prose and example contradict
     # ({"<version>": {"<DT>": {"<index>": {"optionality": "O", "note": "..."}}}}).

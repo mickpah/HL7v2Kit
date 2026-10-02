@@ -1,0 +1,23 @@
+{
+  "dataType": "DTN",
+  "version": "2.7.1",
+  "name": "Day Type and Number",
+  "components": [
+    {
+      "index": 1,
+      "name": "Day Type",
+      "dataType": "CWE",
+      "optionality": "R",
+      "tables": [
+        "0149"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Number of Days",
+      "dataType": "NM",
+      "optionality": "R",
+      "length": "3#"
+    }
+  ]
+}

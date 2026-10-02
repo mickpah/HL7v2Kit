@@ -127,8 +127,17 @@ M13 took structure from numbered headings only. Reviews V23-C04/C05, V231-C06/C0
 
 Also deferred, and blocking spec-completeness: 15 table mentions in CM field definitions that no rule above can attribute to one component, 7 on v2.3, 4 on v2.3.1 and 4 on v2.4. They are IN2-28 (0145, 0146) and IN2-29 (0147, 0193) on all three versions, where one sentence names two tables over two IS components; v2.3 MSH-9 (0076 and 0003), whose sec 2.24.1.9 names both tables in one sentence ("first ... table 0076 ...; second is ... table 0003"); and v2.3 IN3-11.1, which names 0149 "Day type" where the v2.3 registry prints "Days Type". `python3 scripts/extract-field-components.py <version> --report` lists every one with its reason. The permanent-limitations register carries both deferrals as rows (addendum to section D).
 
+## Addendum 2026-10-03 — P10-2: v2.7.1 component tables
+
+v2.7.1 Chapter 2A prints "HL7 Component Table" figures like v2.5.1, v2.6 and v2.8.2, so the same column reader extracts it: 72 composites, 469 components, 72 printed `C`, 151 bound to a table. The 12 primitives print no table, and CE, ELD, OSD, SPS, TQ and TS are withdrawn stubs (2.A.6, 2.A.27, 2.A.50, 2.A.73, 2.A.77, 2.A.78) with no grammar, as on v2.8.2.
+
+- **Second page-footer line.** v2.7.1 prints "2.7.1.  July 2012." (odd pages) or "July 2012.  2.7.1." (even pages) under the usual footer. At the left margin it read as prose and ended 14 component tables at a page break. It is furniture now in this extractor and in `extract-example-messages.py`; the other versions' component tables and example messages are unchanged by the fix.
+- **Against v2.8.2.** v2.7.1 adds LA1 and LA2 (retained for backward compatibility), has no OG, types PRL.2 `ST` (v2.8.2 `OG`), and prints XON.4 and XON.5 `O` where v2.8.2 withdraws them. Every other shared component has the same name, datatype, optionality and tables.
+- **Conditions.** The 72 `C` positions are v2.8.2's, and their definitions match it apart from cross-references. The `"2.7.1"` blocks of `conditions.json` carry the same 23 conditions and 30 conformance conditions, each cited to the v2.7.1 sentence. The 19 bare positions are rows in the register's section D addendum.
+- **Reach.** The grammar is generated as `DataTypeGrammarTable.v2_7_1`. The `Version` case that routes a message to it arrives in P10-6.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).
 - `scripts/extract-datatype-components.py`, `Resources/datatypes/`, `Sources/HL7v2Kit/DataTypes/`.
-- HL7 v2.5.1 / v2.6 / v2.8.2 Chapter 2A, "HL7 Component Table" figures.
+- HL7 v2.5.1 / v2.6 / v2.7.1 / v2.8.2 Chapter 2A, "HL7 Component Table" figures.
