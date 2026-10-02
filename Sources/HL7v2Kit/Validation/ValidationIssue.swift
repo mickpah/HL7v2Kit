@@ -203,6 +203,26 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// introduced in P6-13; the enum is open per ADR-014.
     case extraComponentsInPrimitiveField
 
+    /// A composite-typed field repetition carries a populated component beyond
+    /// the components its datatype's component table defines on the message's
+    /// version, or a composite component of a composite carries a populated
+    /// subcomponent beyond the components of its own datatype. The component
+    /// separator "separates adjacent components of data fields where allowed"
+    /// (v2.5.1 and v2.8.2 section 2.5.4), and a recipient ignores components and
+    /// subcomponents "that are present but were not expected" (section 2.6.2 a).
+    /// A warning by default, not an error: "New components may be added at the
+    /// end of a data type" (v2.5.1 section 2.8.1, v2.8.2 section 2.8.1 h), and
+    /// "Data types may be locally extended by adding new components at the end"
+    /// (section 2.11.5 c), so a value shaped by a later version or a local Z data
+    /// type may carry them. Trailing empty components and escaped separators are
+    /// never reported. Not checked: a datatype the version gives no component
+    /// table (CM on v2.3 to v2.4, `varies` with no OBX-2), and the open-ended
+    /// arrays NA and MA, whose component tables end in an ellipsis. Located at
+    /// the field, or at the component for a component's subcomponents; severity
+    /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
+    /// introduced in P6-15; the enum is open per ADR-014.
+    case extraComponentsInCompositeField
+
     /// A populated primitive value does not match the format its datatype
     /// section prints: NM, SI, DT, TM, DTM, and TS (v2.5.1 §2.A.21, 2.A.22,
     /// 2.A.47, 2.A.69, 2.A.75; v2.8.2 §2A; v2.3 to v2.4 section 2.8 / 2.9). On a

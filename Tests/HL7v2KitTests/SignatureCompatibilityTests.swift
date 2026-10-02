@@ -42,6 +42,8 @@ struct SignatureCompatibilityTests {
         #expect(ValidationOptions.lenient[keyPath: severity] == nil)
         let code: IssueCode = .extraComponentsInPrimitiveField
         #expect(code != .fieldNotSupported)
+        let composite: IssueCode = .extraComponentsInCompositeField
+        #expect(composite != code)
     }
 
     @Test("P6-7 value-format setting and issue code are additive")

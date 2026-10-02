@@ -127,6 +127,32 @@ extension Validator {
         })
     }
 
+    /// Composite datatypes whose component table is open-ended: it lists the first
+    /// few components and then an ellipsis. NA ("A field of this type may contain a
+    /// one-dimensional array (vector or row) of numbers", example "125^34^-22^-234^569^442^-212^6")
+    /// and MA ("channels within a sample are separated by component delimiters"), v2.5.1
+    /// 2.A.45 / 2.A.40, v2.6 and v2.8.2 2.A.45 and 2.A.40.
+    static let openComposites: Set<String> = ["MA", "NA"]
+
+    /// The component table of a composite `dataType` on `version` whose width is fixed,
+    /// or `nil`: a primitive, a datatype the version prints no table for (CM on v2.3 to
+    /// v2.4, `varies`), or an ``openComposites`` array.
+    static func closedComposite(_ dataType: String, version: Version) -> DataTypeGrammar? {
+        guard !openComposites.contains(dataType),
+              primitiveComponentLimit(dataType, version: version) == nil,
+              let grammar = DataTypeGrammarTable.grammar(dataType, version: version),
+              !grammar.components.isEmpty else { return nil }
+        return grammar
+    }
+
+    /// The populated values at 1-based positions past `limit`, each position given as
+    /// the values it holds. Empty values carry nothing and are not reported.
+    static func extraParts(_ parts: [[String]], limit: Int) -> [(index: Int, value: String)] {
+        parts.enumerated().dropFirst(limit).flatMap { offset, values in
+            values.filter { !$0.isEmpty }.map { (index: offset + 1, value: $0) }
+        }
+    }
+
     /// Reports ``IssueCode/extraComponentsInPrimitiveField`` once per repetition of a
     /// primitive field (``primitiveComponentLimit(_:version:)``) that carries content
     /// after its value, and once per primitive component of a composite field that
@@ -134,7 +160,11 @@ extension Validator {
     /// separator separates "components of data fields where allowed" (v2.5.1 and v2.8.2
     /// section 2.5.4), and a sender escapes a separator in data as `\S\`
     /// or `\T\` (section 2.7.1); an escaped separator is decoded into the value and never
-    /// reaches here.
+    /// reaches here. P6-15: for a composite field (``closedComposite(_:version:)``), also
+    /// reports ``IssueCode/extraComponentsInCompositeField`` once per repetition with a
+    /// populated component past its datatype's table, and once per composite component
+    /// with a populated subcomponent past its own datatype's table, located at that
+    /// component.
     func checkExtraPrimitiveComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -164,8 +194,35 @@ extension Validator {
             return
         }
         guard let composite = DataTypeGrammarTable.grammar(dataType, version: grammarVersion) else { return }
+        let closed = Self.closedComposite(dataType, version: grammarVersion) != nil
         for (offset, repetition) in field.repetitions.enumerated() {
+            // P6-15: populated components beyond the datatype's component table.
+            let beyond = !closed ? [] : Self.extraParts(repetition.components.map { $0.subcomponents.map(\.value) },
+                                                        limit: composite.components.count)
+            if !beyond.isEmpty {
+                issues.append(ValidationIssue(
+                    severity: severity,
+                    code: .extraComponentsInCompositeField,
+                    location: location,
+                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), which the v\(grammarVersion.rawValue) component table defines with \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
+                ))
+            }
             for entry in composite.components where repetition.components.count >= entry.index {
+                // P6-15: a composite component, one level down, against its own table.
+                if let nested = Self.closedComposite(entry.dataType, version: grammarVersion) {
+                    let parts = repetition.components[entry.index - 1].subcomponents.map { [$0.value] }
+                    let over = Self.extraParts(parts, limit: nested.components.count)
+                    guard !over.isEmpty else { continue }
+                    let at = IssueLocation(segmentID: location.segmentID, segmentIndex: location.segmentIndex,
+                                           fieldIndex: location.fieldIndex, componentIndex: entry.index)
+                    issues.append(ValidationIssue(
+                        severity: severity,
+                        code: .extraComponentsInCompositeField,
+                        location: at,
+                        message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) is \(entry.dataType), which the v\(grammarVersion.rawValue) component table defines with \(nested.components.count) components, but carries \(over.map { "subcomponent \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores subcomponents it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a subcomponent separator inside a value is escaped as \\T\\"
+                    ))
+                    continue
+                }
                 guard let limit = Self.subcomponentLimit(
                     componentType: entry.dataType, component: entry.index, fieldType: dataType,
                     segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: grammarVersion

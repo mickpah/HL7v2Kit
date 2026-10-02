@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P6-15: extra components on composite fields
+
+- New `IssueCode.extraComponentsInCompositeField` (additive; the enum is open
+  per ADR-014). A composite field repetition carrying a populated component
+  beyond its datatype's component table on the message's version (an XPN with
+  a 15th component on v2.5.1) is reported at the field. A composite component
+  carrying a populated subcomponent beyond its own datatype's table (a sixth
+  FN subcomponent in XPN.1, a fourth HD subcomponent in CX.4) is reported at
+  that component. Before, neither was reported anywhere.
+- Severity follows `ValidationOptions.extraComponentsSeverity` (`.warning` by
+  default, off under `.lenient`). A recipient ignores components "present but
+  were not expected" (v2.5.1 and v2.8.2 section 2.6.2 a), and "New components
+  may be added at the end of a data type" (v2.5.1 section 2.8.1, v2.8.2
+  section 2.8.1 h), so a value shaped by a later version may carry them.
+- Silent: trailing empty components and subcomponents, escaped `\S\` / `\T\`,
+  a datatype the version prints no component table for (CM on v2.3 to v2.4,
+  OBX-5 `varies` with no OBX-2), and the open-ended arrays NA and MA, whose
+  tables end in an ellipsis (v2.5.1 section 2.A.45 example
+  `125^34^-22^-234^569^442^-212^6`). OBX-5 takes the datatype OBX-2 names.
+  Primitive fields and components keep `extraComponentsInPrimitiveField`.
+- The length check is unchanged for composites: it still measures the whole
+  occurrence.
+- Fixtures: no new warnings. Spec examples: no change to the error report
+  (149 registry entries, 0 mismatched). 43 new warnings, all print defects
+  (field shifts, a TQ-shaped RXA-3, an XCN in a CE field, a four-component QIP)
+  or print elisions (`...` inside ORC-9); five also depend on version
+  substitution (MSH-12 elided, validated as v2.5.1).
+
 ### Changed — P6-11: OR-rule issue messages name the failing sub-rule
 
 - The OR-rule issue message (`RequiredComponentSet`, used today only by `HD`) named every

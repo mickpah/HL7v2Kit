@@ -143,6 +143,9 @@ public struct ValidationOptions: Sendable {
     /// check measures that first component only, so the extra components are
     /// reported once, here. Below it, or `nil` (this check off), the length check
     /// measures the whole occurrence, so a binding length rule is never hidden.
+    /// Also the severity for ``IssueCode/extraComponentsInCompositeField``: a
+    /// composite field or component carrying more components than its
+    /// datatype's table defines (P6-15); the length check is not affected there.
     /// Not an init parameter. P6-13, widened to every primitive in P6-14.
     public var extraComponentsSeverity: IssueSeverity? = .warning
 
