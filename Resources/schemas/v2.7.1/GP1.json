@@ -1,0 +1,12 @@
+{
+  "segmentID": "GP1",
+  "version": "2.7.1",
+  "description": "Grouping/Reimbursement - Visit",
+  "fields": [
+    { "index": 1, "swiftName": "typeOfBillCode", "name": "Type of Bill Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0455"] },
+    { "index": 2, "swiftName": "revenueCode", "name": "Revenue Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0456"] },
+    { "index": 3, "swiftName": "overallClaimDispositionCode", "name": "Overall Claim Disposition Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0457"] },
+    { "index": 4, "swiftName": "oceEditsPerVisitCode", "name": "OCE Edits per Visit Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0458"] },
+    { "index": 5, "swiftName": "outlierCost", "name": "Outlier Cost", "dataType": "CP", "optionality": "O", "repeatability": "1" }
+  ]
+}

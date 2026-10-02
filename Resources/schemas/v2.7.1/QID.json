@@ -1,0 +1,9 @@
+{
+  "segmentID": "QID",
+  "version": "2.7.1",
+  "description": "QID",
+  "fields": [
+    { "index": 1, "swiftName": "queryTag", "name": "Query Tag", "dataType": "ST", "length": "32=", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "messageQueryName", "name": "Message Query Name", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0471"] }
+  ]
+}

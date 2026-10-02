@@ -111,7 +111,7 @@ struct VersionUnionAccessorTests {
         #expect(typed.priorAlternateVisitIdAll[1].id == message["MRG-6~2.1"])
         #expect(try doc("MRG", "priorAlternateVisitId").contains("Repeats in v2.8.2 only"))
         #expect(try doc("MRG", "priorAlternateVisitIdAll").contains("Repeats in v2.8.2 only"))
-        #expect(try doc("AIL", "locationResourceIdAll").contains("Repeats in v2.5.1, v2.6, v2.8.2 only"))
+        #expect(try doc("AIL", "locationResourceIdAll").contains("Repeats in v2.5.1, v2.6, v2.7.1, v2.8.2 only"))
     }
 
     @Test("A reserved v2.5.1 position later defined as an element gets its own accessor (OBX-20 Observation Site)")
@@ -121,7 +121,7 @@ struct VersionUnionAccessorTests {
         #expect(typed.observationSite?.identifier == message["OBX-20.1"])
         #expect(typed.observationSiteAll.map(\.identifier) == ["S1", "S2"])
         let reserved = try doc("OBX", "reservedForHarmonization20")
-        #expect(reserved.contains("v2.6, v2.8.2 define OBX-20 as `Observation Site`: use `observationSite`."))
+        #expect(reserved.contains("v2.6, v2.7.1, v2.8.2 define OBX-20 as `Observation Site`: use `observationSite`."))
         #expect(try doc("OBX", "observationSite").contains("v2.5.1 defines OBX-20 as `Reserved for harmonization with V2.6`: use `reservedForHarmonization20`."))
     }
 
@@ -130,13 +130,13 @@ struct VersionUnionAccessorTests {
         let observationType = try doc("OBX", "observationType")
         #expect(observationType.contains("Defined in v2.8.2."))
         #expect(observationType.contains("On a message of another version this returns whatever OBX-29 holds on the wire"))
-        #expect(try doc("OBX", "abnormalFlags").contains("Renamed `Interpretation Codes` in v2.8.2, which types it `CWE`: use `interpretationCodes`."))
-        #expect(try doc("OBX", "observationIdentifier").contains("v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`."))
-        #expect(try doc("CON", "languageTranslatedTo").contains("v2.6, v2.8.2 print `CWE`: use `languageTranslatedToAsCWE`."))
+        #expect(try doc("OBX", "abnormalFlags").contains("Renamed `Interpretation Codes` in v2.7.1, which types it `CWE`: use `interpretationCodes`."))
+        #expect(try doc("OBX", "observationIdentifier").contains("v2.6, v2.7.1, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`."))
+        #expect(try doc("CON", "languageTranslatedTo").contains("v2.6, v2.7.1, v2.8.2 print `CWE`: use `languageTranslatedToAsCWE`."))
         #expect(try doc("PV1", "bedStatus").contains("Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6."))
         #expect(try doc("IN2", "militaryIdNumber").contains("v2.3 prints this element as `Champus ID Number`."))
         let text = try String(contentsOf: Self.generated.appendingPathComponent("PRT.swift"), encoding: .utf8)
-        #expect(text.contains("/// Defined in HL7 v2.8.2."))
+        #expect(text.contains("/// Defined in HL7 v2.7.1, v2.8.2."))
         let reserved = try doc("OBX", "reservedForHarmonization21")
         #expect(reserved.hasPrefix("OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1."))
     }
@@ -179,7 +179,7 @@ struct VersionUnionAccessorTests {
         #expect(producersID.contains("Same element as `producersReference`, renamed in v2.6; typed as v2.6 prints it."))
         #expect(producersID.contains("v2.3, v2.3.1, v2.4 print this element as `Producer's ID` (`CE`): use `producersReference`."))
         #expect(try doc("OBX", "producersReference").contains("Renamed `Producer's ID` in v2.6, which types it `CWE`: use `producersID`."))
-        #expect(try doc("CON", "relationshipToSubject").contains("Same element as `relationshipToSubjectTable`, renamed in v2.6; typed as v2.8.2 prints it."))
+        #expect(try doc("CON", "relationshipToSubject").contains("Same element as `relationshipToSubjectTable`, renamed in v2.6; typed as v2.7.1 prints it."))
         #expect(try doc("MSH", "messageProfileIdentifier").contains("v2.4 prints `ID`, a scalar: the value reads as the first component."))
         let (message, typed) = try hydratedMessage(MFA.self, from: msh("2.4") + segment("MFA", 5, [1: "MAD", 5: "K1^Key^L"]))
         #expect(typed.primaryKeyValueMfaAsCE?.identifier == message["MFA-5.1"])

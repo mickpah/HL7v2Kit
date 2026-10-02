@@ -1,0 +1,11 @@
+{
+  "segmentID": "CSP",
+  "version": "2.7.1",
+  "description": "Clinical Study Phase",
+  "fields": [
+    { "index": 1, "swiftName": "studyPhaseIdentifier", "name": "Study Phase Identifier", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["9999"] },
+    { "index": 2, "swiftName": "dateTimeStudyPhaseBegan", "name": "Date/time Study Phase Began", "dataType": "DTM", "optionality": "R", "repeatability": "1" },
+    { "index": 3, "swiftName": "dateTimeStudyPhaseEnded", "name": "Date/time Study Phase Ended", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
+    { "index": 4, "swiftName": "studyPhaseEvaluability", "name": "Study Phase Evaluability", "dataType": "CWE", "optionality": "C", "repeatability": "1", "tables": ["9999"] }
+  ]
+}

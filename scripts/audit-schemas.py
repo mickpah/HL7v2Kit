@@ -392,6 +392,10 @@ UNREADABLE_WHITELIST = {
                                    "LEN '(1..250)' in parentheses for the CWE RXG-13, a shape section "
                                    "2.5.5 does not define; schema keeps the range '1..250' that the "
                                    "v2.8.2 table prints for the same element",
+    ("M19", "v2.7.1", "RCP", 7, 7, "blank cell"): "v2.7.1 CH05 section 5.5.6 RCP attribute table (p. 46) prints "
+                                   "OPT blank for Segment group inclusion (TBL# 0391 is printed); %s",
+    ("M19", "v2.7.1", "ACC", 12, 12, "blank cell"): "v2.7.1 CH06 section 6.5.9 ACC attribute table (p. 126) prints "
+                                    "OPT blank for Degree of patient liability; %s",
 }
 UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREADABLE_WHITELIST.items()}
 
@@ -453,11 +457,14 @@ CHAPTER_GLOBS = {
     "v2.5.1": ["HL7_v251_PDF/V251_CH*.pdf"],
     "v2.6":   ["HL7_v26_PDF/V26_CH*.pdf"],
     "v2.8.2": ["HL7_V2.8.2_PDF/PDF/V282_CH*.pdf"],
-    # P10-4a: v2.7.1 is staged (CHAPTER_GLOBS_STAGED). Only the chapters whose segments are
-    # authored are swept, so the presence check holds them in full and stays silent on the
-    # chapters still to come.
+    # P10-4a, P10-4b: v2.7.1 is staged (CHAPTER_GLOBS_STAGED). Only the chapters whose
+    # segments are authored are swept, so the presence check holds them in full and stays
+    # silent on the chapters still to come.
     "v2.7.1": ["HL7_V271_PDF/PDF/V271_CH02*.pdf", "HL7_V271_PDF/PDF/V271_CH03*.pdf",
-               "HL7_V271_PDF/PDF/V271_CH04*.pdf"],
+               "HL7_V271_PDF/PDF/V271_CH04*.pdf", "HL7_V271_PDF/PDF/V271_CH05*.pdf",
+               "HL7_V271_PDF/PDF/V271_CH06*.pdf", "HL7_V271_PDF/PDF/V271_CH07*.pdf",
+               "HL7_V271_PDF/PDF/V271_CH08*.pdf", "HL7_V271_PDF/PDF/V271_CH09*.pdf",
+               "HL7_V271_PDF/PDF/V271_CH10*.pdf"],
 }
 
 # P10-4a: a version whose CHAPTER_GLOBS entry covers only some chapters while its segment
@@ -466,7 +473,7 @@ CHAPTER_GLOBS = {
 # check-audit-schemas.py fails once Version.swift declares a staged version, so the entry
 # cannot outlive the rollout.
 CHAPTER_GLOBS_STAGED = {
-    "v2.7.1": "P10-4b (CH05 to CH09) and P10-4c (CH10 to CH17) widen the glob to V271_CH*.pdf",
+    "v2.7.1": "P10-4c (CH11 to CH17) widens the glob to V271_CH*.pdf",
 }
 
 # M6-O6 code-table registry. The per-version table JSON lives beside the schemas; the

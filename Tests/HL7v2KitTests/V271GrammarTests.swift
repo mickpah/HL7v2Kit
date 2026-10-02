@@ -251,4 +251,101 @@ struct V271GrammarTests {
         #expect(try field("RXA", 11).dataType == "LA2")
         #expect(try field("RXA", 11).optionality == .backwardCompat)
     }
+
+    // MARK: - P10-4b: segment schemas, chapters 5 to 10
+
+    /// Field count of each segment first defined in CH05 to CH10, from the defining attribute
+    /// table (re-measured by the P10-4b extraction). RDT is `1-n`, one field. OBR (CH07) is
+    /// CH04's; the CH07 OBX example tables and the CH09 OBX usage table are not definitions.
+    static let laterChapterFieldCounts: [String: [String: Int]] = [
+        "CH05": ["DSP": 5, "QAK": 6, "QID": 2, "QPD": 2, "QRI": 3, "RCP": 7, "RDF": 2, "RDT": 1],
+        "CH06": ["ABS": 14, "ACC": 12, "BLC": 2, "DG1": 26, "DRG": 33, "FT1": 43, "GP1": 5,
+                 "GP2": 14, "GT1": 57, "IN1": 54, "IN2": 72, "IN3": 25, "PR1": 25, "RMI": 3,
+                 "UB1": 23, "UB2": 17],
+        "CH07": ["CSP": 4, "CSR": 16, "CSS": 3, "CTI": 3, "FAC": 12, "OBX": 26, "PAC": 8,
+                 "PCR": 23, "PDC": 15, "PEO": 25, "PES": 13, "PRT": 15, "PSH": 14, "SHP": 11,
+                 "SPM": 32],
+        "CH08": ["CDM": 13, "CM0": 11, "CM1": 3, "CM2": 4, "DMI": 5, "LCC": 4, "LCH": 5,
+                 "LDP": 12, "LOC": 9, "LRL": 6, "MFA": 6, "MFE": 7, "MFI": 6, "OM1": 47,
+                 "OM2": 10, "OM3": 7, "OM4": 14, "OM5": 3, "OM6": 2, "OM7": 24, "PRC": 18],
+        "CH09": ["CON": 25, "TXA": 26],
+        "CH10": ["AIG": 14, "AIL": 12, "AIP": 12, "AIS": 12, "APR": 5, "ARQ": 25, "RGS": 3,
+                 "SCH": 27],
+    ]
+
+    @Test("CH05 to CH10: 70 segments (69 extracted plus RDT), 1050 fields")
+    func laterChapterSegments() throws {
+        let counts = Self.laterChapterFieldCounts.values.reduce(into: [String: Int]()) { $0.merge($1) { a, _ in a } }
+        #expect(Self.laterChapterFieldCounts.mapValues(\.count)
+                == ["CH05": 8, "CH06": 16, "CH07": 15, "CH08": 21, "CH09": 2, "CH10": 8])
+        #expect(counts.count == 70)
+        #expect(counts.values.reduce(0, +) == 1050)
+        for (segment, count) in counts {
+            let grammar = try #require(segments[segment], "\(segment)")
+            #expect(grammar.version == "2.7.1")
+            #expect(grammar.fields.count == count, "\(segment)")
+            #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
+            // Conditions are P10-5a/5b's: nothing is copied from another version here.
+            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+        }
+        // The grammar holds exactly the chapters authored so far (CH02 to CH10).
+        let earlier = Set(Self.chapterFieldCounts.values.flatMap(\.keys))
+        #expect(Set(segments.keys) == earlier.union(counts.keys))
+        // CH05 section 5.5.8 (p. 48): RDT prints SEQ `1-n`, `varies`, R, 00703 Column Value.
+        #expect(segments["RDT"]?.field(1)?.variableColumns == true)
+        #expect(segments["RDT"]?.field(1)?.optionality == .required)
+    }
+
+    @Test("CH05 to CH10 fields read by hand against the v2.7.1 attribute tables")
+    func laterPrintedFields() throws {
+        func field(_ segment: String, _ index: Int) throws -> FieldGrammar {
+            try #require(segments[segment]?.field(index), "\(segment)-\(index)")
+        }
+        // CH07 7.3.2 OBX (p. 46): `2  2..3  ID C 0125 00570 Value Type`;
+        // `5  varies C Y 00573`; `11  1..1  ID R 0085 00579`; `26  1..10  ID O N 0909 02313`.
+        #expect(try field("OBX", 2).dataType == "ID")
+        #expect(try field("OBX", 2).optionality == .conditional)
+        #expect(try field("OBX", 2).length == "2..3")
+        #expect(try field("OBX", 2).table == "0125")
+        #expect(try field("OBX", 5).dataType == "varies")
+        #expect(try field("OBX", 5).optionality == .conditional)
+        #expect(try field("OBX", 5).repeatability == .multiple)
+        #expect(try field("OBX", 11).optionality == .required)
+        #expect(try field("OBX", 11).table == "0085")
+        #expect(try field("OBX", 26).name == "Patient Results Release Category")
+        #expect(try field("OBX", 26).length == "1..10")
+        // CH07 7.3.3 SPM (p. 60): `4  CWE R 0487 01900 Specimen Type`.
+        #expect(try field("SPM", 4).dataType == "CWE")
+        #expect(try field("SPM", 4).optionality == .required)
+        // CH07 7.3.4 PRT (p. 69): `4  CWE R 0912 02381 Participation`; 15 fields (v2.8.2 has 22).
+        #expect(try field("PRT", 4).dataType == "CWE")
+        #expect(try field("PRT", 4).optionality == .required)
+        // CH06 6.5.2 DG1 (p. 31, header prints C_LEN): `3  CWE R 0051 00377`; DG1-24 0136 is
+        // "for suggested values" (6.5.2.24, p. 36).
+        #expect(try field("DG1", 3).dataType == "CWE")
+        #expect(try field("DG1", 3).optionality == .required)
+        #expect(try field("DG1", 24).tableOpen)
+        // CH06 IN1 (p. 73): `2  CWE R 0072 00368 Health Plan ID`.
+        #expect(try field("IN1", 2).name == "Health Plan ID")
+        #expect(try field("IN1", 2).optionality == .required)
+        // CH08 MFE (p. 8, no C.LEN column): `4  Varies R Y 9999 00667`.
+        #expect(try field("MFE", 4).dataType == "Varies")
+        #expect(try field("MFE", 4).repeatability == .multiple)
+        // CH06 GT1 (p. 52): `3  XPN R Y 00407 Guarantor Name`.
+        #expect(try field("GT1", 3).dataType == "XPN")
+        #expect(try field("GT1", 3).repeatability == .multiple)
+        // CH06 FT1 (p. 15): `4  DR R 00358 Transaction Date`.
+        #expect(try field("FT1", 4).dataType == "DR")
+        #expect(try field("FT1", 4).optionality == .required)
+        // CH06 UB2 (p. 132): `13  1..4  ST O Y/23 00565`; UB1 (p. 130): `2  W 00531`.
+        #expect(try field("UB2", 13).maxRepetitions == 23)
+        #expect(try field("UB1", 2).optionality == .withdrawn)
+        // Where v2.7.1 differs from v2.8.2: ARQ-4 is EI (v2.8.2 EIP, CH10 p. 22); OM1-7 does
+        // not repeat (CH08 p. 21); MFI-2 prints RP/# `y` (CH08 p. 7).
+        #expect(try field("ARQ", 4).dataType == "EI")
+        #expect(try field("OM1", 7).repeatability == .single)
+        #expect(try field("MFI", 2).repeatability == .multiple)
+        // CH08 8.8.11.7 OM4-7 (p. 41): 0371 "can be extended with user specific values".
+        #expect(try field("OM4", 7).tableOpen)
+    }
 }
