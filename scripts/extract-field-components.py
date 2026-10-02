@@ -15,9 +15,19 @@ That line is the evidence:
               heading's last number; kept when the schema types that position CM (or the
               printed code), or its name agrees (audit-schemas.name_agrees)
   components  the Components line (extract-datatype-prose.parse_components_line)
-  tables      only from a chunk that opens "The <ordinal> component" or a bullet that opens
-              with the component's name, under M13's three tests (judge); anything else
-              stays unbound: an absent check, never a wrong one
+  tables      bound to a coded component (IS, ID, or CE / CNE / CWE) only, under M13's three
+              tests (judge), from one of two kinds of evidence:
+              - ordinal: a chunk that opens "The <ordinal> component", as a word ("first") or a
+                number ("7th": v2.4 OBR-15.7, SAC-6.7, TCC-3.7, Table 0369), or a bullet that
+                opens with the component's name;
+              - single coded component: any other sentence naming exactly one table, when the
+                field has exactly one coded component. The table can only be that component's:
+                v2.4 PV1-37 "Refer to User-defined Table 0113 - Discharged to location", whose
+                other component is a TS.
+              A sentence naming two or more tables never binds (v2.4 IN2-28 "Table 0145 - Room
+              type and User-defined Table 0146"), nor does a mention on a field with several
+              coded components and no ordinal. Every unbound mention is listed by --report with
+              its reason: an absent check, never a wrong one
 
 A field is emitted only when neither its printed datatype nor its schema datatype has a
 grammar of its own for the version, and the schema does not type it as a scalar (the
@@ -46,8 +56,57 @@ HEADING = re.compile(r"^\s*\d+(?:\.\d+){2,}\s*[A-Z]")
 ARRAYS = {"MA", "NA"}
 ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
             "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth"]
-OPENER = re.compile(r"(?=\b[Tt]he\s+(?:%s)\s+component\b)|(?=•)" % "|".join(ORDINALS))
-ORDINAL = re.compile(r"[Tt]he\s+(%s)\s+component\b" % "|".join(ORDINALS))
+_ORD = r"(?:%s|\d{1,2}(?:st|nd|rd|th))" % "|".join(ORDINALS)
+OPENER = re.compile(r"(?=\b[Tt]he\s+%s\s+component\b)|(?=•)" % _ORD)
+ORDINAL = re.compile(r"[Tt]he\s+(%s)\s+component\b" % _ORD)
+# A table mention in a field body. Wider than extract-datatype-prose.TABLE: field prose also
+# prints "Userdefined Table 0113" (v2.4 PV1-37) and a bare "(Table 0338)" (v2.4 PRA-6).
+_TABLE_KEY = r"(?:HL7\s+(?:[Tt]able\s+)?|[Uu]ser-?\s*defined\s+[Tt]able\s+|\b[Tt]able\s+)(\d{4})"
+MENTION = re.compile(_TABLE_KEY + r"(?:\s*[-–]\s*([A-Za-z][A-Za-z /'’-]*))?")
+NUMBER = re.compile(_TABLE_KEY)
+
+
+def mentions_in(text):
+    """[(table number, stated name)]. The stated name is greedy ("Room type and User-defined
+    Table 0146 ..." reads as one name), so every number NUMBER finds is kept, unnamed when
+    MENTION swallowed it: a sentence naming two tables must count two."""
+    pairs = MENTION.findall(text)
+    seen = {n for n, _ in pairs}
+    return pairs + [(n, "") for n in NUMBER.findall(text) if n not in seen]
+SENTENCE = re.compile(r"(?<=\.)\s+(?=[A-Z])")
+CODED = {"IS", "ID", "CE", "CNE", "CWE"}
+
+
+def ordinal_index(word):
+    return ORDINALS.index(word) + 1 if word in ORDINALS else int(re.match(r"\d+", word).group())
+
+
+def attribute(definition, names):
+    """({component index: [(table number, stated name)]}, [[mentions] per free sentence]).
+
+    A chunk that opens "The <ordinal> component" (a word or "7th") or a bullet that opens with a
+    component's name attributes its mentions to that component. The rest of the text is split
+    into sentences, kept for the single-coded-component rule in `extract`. A paragraph ends at a
+    blank line, so a table figure printed after the bullets (v2.4 IN3-20's Table 0150) is never
+    attributed to the last bullet."""
+    found, free = collections.defaultdict(list), []
+    for paragraph in re.split(r"\n\s*\n", definition):
+        text = " ".join(dtp.unhyphenate(paragraph).split())
+        for chunk in OPENER.split(text):
+            chunk = chunk.strip()
+            m = ORDINAL.match(chunk)
+            if m:
+                index = ordinal_index(m.group(1))
+            elif chunk.startswith("•"):
+                head = chunk[1:].strip().lower()
+                hits = [i for i, n in enumerate(names, 1) if head.startswith(n.lower())]
+                index = max(hits, key=lambda i: len(names[i - 1])) if hits else None
+            else:
+                free += [mentions_in(s) for s in SENTENCE.split(chunk) if NUMBER.search(s)]
+                continue
+            if index and index <= len(names):
+                found[index] += mentions_in(chunk)
+    return found, free
 
 
 def schema_fields(version):
@@ -57,29 +116,6 @@ def schema_fields(version):
         for f in doc.get("fields", []):
             out[(doc["segmentID"], f["index"])] = f
     return out
-
-
-def attribute(definition, names):
-    """{component index: [(table number, stated name)]} from the definition's paragraphs. A
-    paragraph ends at a blank line, so a table figure printed after the bullets (v2.4 IN3-20's
-    Table 0150) is never attributed to the last bullet."""
-    found = collections.defaultdict(list)
-    for paragraph in re.split(r"\n\s*\n", definition):
-        text = " ".join(dtp.unhyphenate(paragraph).split())
-        for chunk in OPENER.split(text):
-            chunk = chunk.strip()
-            m = ORDINAL.match(chunk)
-            if m:
-                index = ORDINALS.index(m.group(1)) + 1
-            elif chunk.startswith("•"):
-                head = chunk[1:].strip().lower()
-                hits = [i for i, n in enumerate(names, 1) if head.startswith(n.lower())]
-                index = max(hits, key=lambda i: len(names[i - 1])) if hits else None
-            else:
-                continue
-            if index and index <= len(names):
-                found[index] += dtp.TABLE.findall(chunk)
-    return found
 
 
 def extract(version):
@@ -136,14 +172,40 @@ def extract(version):
                     if now[:len(had)] != had:
                         conflicts[key] = name          # two chapters print different structures
                         continue
-                mentions = attribute("\n".join(body), [n for n, _ in comps])
+                text = "\n".join(body)
+                mentions, free = attribute(text, [n for n, _ in comps])
+                coded = [i for i, (_, dt) in enumerate(comps, 1) if dt in CODED]
+                notes = []                             # (component, table, why) for unattributable mentions
+                for sentence in free:
+                    numbers = sorted({n for n, _ in sentence})
+                    if len(numbers) > 1:               # fail-safe: never split a sentence between tables
+                        notes += [(None, n, f"one sentence names several tables {numbers}") for n in numbers]
+                    elif len(coded) == 1:              # the single-coded-component rule
+                        mentions[coded[0]] += sentence
+                    else:
+                        notes.append((None, numbers[0], "no ordinal or bullet names its component, and the "
+                                                        f"field has {len(coded)} coded components"))
                 components = []
                 for index, (cname, dt) in enumerate(comps, 1):
-                    tables, rejected = dtp.judge(version, mentions.get(index, []))
+                    # A table binds coded values only. A figure caption can trail the last
+                    # ordinal chunk ("Table 0100 - When to charge" after v2.3.1 BLG-1.2, a TS).
+                    if dt in CODED:
+                        tables, rejected = dtp.judge(version, mentions.get(index, []))
+                    else:
+                        tables = []
+                        rejected = [f"the component is {dt or 'untyped'}, not a coded type"] if mentions.get(index) else []
                     components.append({"index": index, "name": cname, "dataType": dt,
                                        "tables": tables, "rejected": rejected})
+                    notes += [(index, n, why) for why in rejected for n in sorted({n for n, _ in mentions[index]})]
+                bound = {n for c in components for n in c["tables"]}
+                named = set(NUMBER.findall(" ".join(dtp.unhyphenate(text).split())))
+                unbound = []
+                for number in sorted(named - bound):
+                    why = [(i, w) for i, n, w in notes if n == number]
+                    unbound += [(i, number, w) for i, w in dict.fromkeys(why)] or \
+                               [(None, number, "named outside any sentence a rule reads (a figure or cross-reference)")]
                 found[key] = {"field": key, "dataType": printed, "version": version, "name": name,
-                              "components": components}
+                              "components": components, "unbound": unbound}
     for key, name in conflicts.items():
         found.pop(key, None)
         skipped.append((key, name, "two chapters print different, non-extending Components lines"))
@@ -164,15 +226,17 @@ def main():
     version = sys.argv[1].lstrip("v")
     found, skipped = extract(version)
     comps = [c for t in found.values() for c in t["components"]]
+    unbound = sorted({(key, number) for key, t in found.items() for _, number, _ in t["unbound"]})
     print(f"v{version}: {len(found)} field-local composites, {len(comps)} components, "
-          f"{sum(1 for c in comps if c['tables'])} bound, {len(skipped)} skipped")
+          f"{sum(1 for c in comps if c['tables'])} bound, {len(skipped)} skipped, "
+          f"{len(unbound)} unbound table mention(s)")
     if "--report" in sys.argv:
         for key, name, why in skipped:
             print(f"   SKIPPED {key} {name!r}: {why}")
         for key, t in sorted(found.items()):
-            for c in t["components"]:
-                for why in c["rejected"]:
-                    print(f"   UNBOUND {key}.{c['index']} ({c['dataType'] or '-'}) {why}")
+            for index, number, why in t["unbound"]:
+                where = f"{key}.{index} ({t['components'][index - 1]['dataType'] or '-'})" if index else key
+                print(f"   UNBOUND {where} table {number}: {why}")
     if "--write" in sys.argv:
         out = os.path.join(REPO, f"Resources/datatypes/v{version}/fields")
         os.makedirs(out, exist_ok=True)

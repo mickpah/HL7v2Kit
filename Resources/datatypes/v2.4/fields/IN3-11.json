@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Day type",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0149"
+      ]
     },
     {
       "index": 2,

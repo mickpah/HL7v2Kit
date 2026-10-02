@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Occurrence span code",
       "dataType": "CE",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0351"
+      ]
     },
     {
       "index": 2,

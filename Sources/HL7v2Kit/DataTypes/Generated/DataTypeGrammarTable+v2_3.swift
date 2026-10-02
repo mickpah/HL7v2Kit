@@ -577,7 +577,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Time selection criteria",
         components: [
-            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: ["0294"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Parameter value", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -587,7 +587,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Resource selection criteria",
         components: [
-            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: ["0294"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Parameter value", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -597,7 +597,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Location selection criteria",
         components: [
-            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: ["0294"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Parameter value", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -715,7 +715,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Penalty",
         components: [
-            ComponentGrammar(index: 1, name: "Penalty type", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Penalty type", dataType: "IS", optionalityCode: "", tables: ["0148"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Penalty amount", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -913,7 +913,7 @@ extension DataTypeGrammarTable {
         name: "Practitioner ID numbers",
         components: [
             ComponentGrammar(index: 1, name: "ID number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 2, name: "Type of ID number", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Type of ID number", dataType: "IS", optionalityCode: "", tables: ["0338"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "State/other qualifying info", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "Expiration date", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
@@ -947,7 +947,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Discharged to location",
         components: [
-            ComponentGrammar(index: 1, name: "Discharge location", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Discharge location", dataType: "IS", optionalityCode: "", tables: ["0113"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Effective date", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -1113,7 +1113,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Value amount and code",
         components: [
-            ComponentGrammar(index: 1, name: "Value code", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Value code", dataType: "IS", optionalityCode: "", tables: ["0153"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Value amount", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
@@ -1133,7 +1133,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "Value amount and code",
         components: [
-            ComponentGrammar(index: 1, name: "Value code", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Value code", dataType: "IS", optionalityCode: "", tables: ["0153"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Value amount", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )

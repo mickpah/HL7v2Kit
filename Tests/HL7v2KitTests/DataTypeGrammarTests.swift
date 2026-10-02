@@ -167,12 +167,43 @@ struct DataTypeGrammarTests {
         #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_5_1) == nil, "v2.5 prints tables")
     }
 
+    @Test("P5-5: field-local table bindings, from word and numeric ordinals and a single coded component")
+    func fieldLocalBindings() {
+        func tables(_ segment: String, _ field: Int, _ component: Int, _ version: Version) -> [String]? {
+            DataTypeGrammarTable.grammar(segment: segment, field: field, version: version)?.component(component)?.tables
+        }
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            #expect(tables("OBR", 15, 1, version) == ["0070"], "\(version)")
+            #expect(tables("OBR", 15, 4, version) == ["0163"], "\(version)")
+            #expect(tables("BLG", 1, 1, version) == ["0100"], "\(version)")
+            #expect(tables("BLG", 1, 2, version) == [], "\(version): the trailing Table 0100 figure is not the TS's")
+            #expect(tables("PV1", 37, 1, version) == ["0113"], "\(version): the field's one coded component")
+        }
+        for (segment, field) in [("SAC", 6), ("TCC", 3), ("OBR", 15)] {
+            #expect(tables(segment, field, 1, .v2_4) == ["0070"], "\(segment)-\(field)")
+            #expect(tables(segment, field, 4, .v2_4) == ["0163"], "\(segment)-\(field)")
+            #expect(tables(segment, field, 7, .v2_4) == ["0369"], "\(segment)-\(field): \"The 7th component\"")
+        }
+        #expect(tables("UB2", 7, 1, .v2_4) == ["0350"])
+        #expect(tables("IN2", 28, 1, .v2_4) == [], "one sentence names 0145 and 0146: fail-safe")
+        #expect(tables("MSH", 9, 1, .v2_3) == [], "v2.3 names 0076 and 0003 in one sentence")
+    }
+
     @Test("P5: the field-local lookup resolves the version's grammar version")
     func fieldLocalGrammarVersion() {
-        // `2.8` validates against the v2.8.2 grammar (ADR-018): it reads v2.8.2's table.
-        for version in Version.allCases {
-            #expect(DataTypeGrammarTable.fieldGrammars(for: version)
-                    == DataTypeGrammarTable.fieldGrammars(for: version.grammarVersion), "\(version)")
+        // `2.8` validates against the v2.8.2 grammar (ADR-018); the lookup reaches v2.8.2's table
+        // through Version.grammarVersion alone. v2.8.2 prints no CM, so that table is empty today.
+        let keys = Set([Version.v2_3, .v2_3_1, .v2_4].flatMap { DataTypeGrammarTable.fieldGrammars(for: $0).keys })
+        for key in keys {
+            let parts = key.split(separator: "-")
+            let (segment, field) = (String(parts[0]), Int(parts[1])!)
+            for version in Version.allCases {
+                #expect(DataTypeGrammarTable.grammar(segment: segment, field: field, version: version)
+                        == DataTypeGrammarTable.grammar(segment: segment, field: field, version: version.grammarVersion),
+                        "\(key) \(version)")
+            }
+            #expect(DataTypeGrammarTable.grammar(segment: segment, field: field, version: .v2_8)
+                    == DataTypeGrammarTable.grammar(segment: segment, field: field, version: .v2_8_2), "\(key)")
         }
         #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_8) == nil, "v2.8.2 prints tables")
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_4).count == 43)

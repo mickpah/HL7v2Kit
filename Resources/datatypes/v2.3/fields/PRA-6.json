@@ -15,7 +15,10 @@
       "index": 2,
       "name": "Type of ID number",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0338"
+      ]
     },
     {
       "index": 3,

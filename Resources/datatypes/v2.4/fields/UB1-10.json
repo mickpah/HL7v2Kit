@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Value code",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0153"
+      ]
     },
     {
       "index": 2,

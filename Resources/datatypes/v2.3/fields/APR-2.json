@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Parameter class",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0294"
+      ]
     },
     {
       "index": 2,

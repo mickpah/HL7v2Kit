@@ -51,7 +51,10 @@
       "index": 7,
       "name": "Specimen role",
       "dataType": "CE",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0369"
+      ]
     }
   ]
 }

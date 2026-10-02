@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Penalty type",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0148"
+      ]
     },
     {
       "index": 2,

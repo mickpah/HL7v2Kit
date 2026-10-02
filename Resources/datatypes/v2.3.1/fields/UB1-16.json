@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Occurrence code",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0350"
+      ]
     },
     {
       "index": 2,

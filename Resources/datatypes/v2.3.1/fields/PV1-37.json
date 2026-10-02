@@ -9,7 +9,10 @@
       "index": 1,
       "name": "Discharge location",
       "dataType": "IS",
-      "optionality": ""
+      "optionality": "",
+      "tables": [
+        "0113"
+      ]
     },
     {
       "index": 2,

@@ -198,6 +198,15 @@ Recorded 2026-10-01. ADRM-2021 Appendix 5 (p. 466): "HL7au:00060.4 | Senders | O
 
 A test pins the current behaviour (`LocaleAUProfileTests`, P4-20): an AU v2.4 ORU with OBR-2 valued while its condition is false (ORC-2 and OBR-3 also valued) raises no `HL7au:00060.4` issue. OBR-2 is class (b), so it stays unmarked and the pin stays green after route C. Do not "fix" that test by negating `condition` or by marking OBR-2.
 
+### Addendum to §D — field-local composite grammar gaps (P5-5 review finding, not an ADRM point)
+
+Found during the P5-5 review (2026-10-02). Not an ADRM-2021 point; added here per the global-constraints rule that rows go into the existing lettered sections. Both rows block spec-completeness (requirement 3). Neither is enforced today: the validator does not read field-local grammars until P5-6.
+
+| Position | Versions | Spec text | What it needs |
+|---|---|---|---|
+| 15 table mentions in CM field definitions left unbound: IN2-28 (0145, 0146) and IN2-29 (0147, 0193) on v2.3, v2.3.1 and v2.4; v2.3 IN3-11.1 (0149); v2.3 MSH-9 (0076, 0003) | v2.3 (7), v2.3.1 (4), v2.4 (4) | IN2-28 / IN2-29 name two tables in one sentence over two IS components ("Refer to User-defined Table 0145 - Room type and User-defined Table 0146 - Amount type"); v2.3 sec 2.24.1.9 MSH-9 names 0076 and 0003 in one sentence ("first ... table 0076 ...; second is ... table 0003"); v2.3 IN3-11 names 0149 "Day type" where the v2.3 registry prints "Days Type". | Pairing a table with a component by the order of its mention, or by the component's name, is a reading the M13 tests do not license. `python3 scripts/extract-field-components.py <version> --report` lists each mention with its reason; the absent binding is an absent check, never a wrong one. |
+| OM2-6 Reference (normal) range for ordinal and continuous observations | v2.3, v2.3.1 (sec 8.7.4.6), v2.4 (CH08 sec 8.8.4.6) | The structure is printed as a narrative repetition list (`<ref. (normal) range1>^<sex1>^<age range1>^...~`) with a nested `Components: <low value (NM)> & <high value (NM)>`, and no field-level Components line. | A field grammar that can state a repeating tuple with nested subcomponents. `DataTypeGrammarTests.fieldLocalCoverage` pins it as registered (ADR-017, P5 addendum). |
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries
