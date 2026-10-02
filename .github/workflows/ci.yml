@@ -37,6 +37,8 @@ jobs:
         run: python3 scripts/check-audit-schemas.py
       - name: Example-message extractor self-check
         run: python3 scripts/check-extract-example-messages.py
+      - name: Datatype prose extractor self-check
+        run: python3 scripts/check-extract-datatype-prose.py
 
   codegen-drift:
     name: Codegen drift

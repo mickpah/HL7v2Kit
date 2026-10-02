@@ -1298,6 +1298,23 @@ NO_TABLE_SENTINEL = "9999"
 COMPONENT_OPT = {"R", "O", "C", "B", "W", "X", "RE"}
 
 
+PAGE_REFERENCE = re.compile(r"\d+-\d+$")
+MULTIPLE_SPACES = re.compile(r"   +")
+
+
+def datatype_name_findings(name):
+    """P5-9: a datatype `name` is the body heading text, never the table-of-contents entry it
+    was extracted alongside (v2.3.1's contents lines carry no dot leaders, so a regression could
+    recapture one). Two tells of contents residue: a trailing page reference ("address  2-12")
+    and the run of padding spaces before it ("timing quantity      2-52")."""
+    out = []
+    if PAGE_REFERENCE.search(name or ""):
+        out.append(f"name {name!r} ends in what looks like a page reference — contents-line residue?")
+    if MULTIPLE_SPACES.search(name or ""):
+        out.append(f"name {name!r} has a run of 3+ spaces — contents-line residue?")
+    return out
+
+
 def field_grammar_findings(stem, version, doc):
     """P5 — shape of one field-local composite file, `Resources/datatypes/<version>/fields/<stem>.json`:
     field / version / source match the path, the key is SEG-N, components are contiguous from 1,
@@ -1347,6 +1364,7 @@ def datatypes(depth=False):
         by_version[version][stem] = doc
         if doc.get("dataType") != stem or doc.get("version") != version[1:]:
             findings.append((rel, "dataType / version do not match the path"))
+        findings += [(rel, why) for why in datatype_name_findings(doc.get("name"))]
         comps = doc.get("components", [])
         if [c.get("index") for c in comps] != list(range(1, len(comps) + 1)) or not comps:
             findings.append((rel, f"component indexes are not 1..n: {[c.get('index') for c in comps]}"))

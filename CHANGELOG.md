@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P5-9: v2.3.1 datatype names without table-of-contents residue
+
+- `DataTypeGrammar.name` for every v2.3.1 composite datatype carried leftover
+  padding and a page number from `scripts/extract-datatype-prose.py` picking
+  up the table-of-contents entry instead of the body heading (`"address
+  2-12"`, `"timing quantity      2-52"`, 39 names in all). v2.3.1's contents
+  entries print no dot leaders, so the extractor's furniture filter — which
+  drops v2.3 and v2.4's dot-leadered contents lines — missed them, and the
+  extractor kept the first heading match it saw rather than the last.
+- Fixed at the source: the extractor now keeps the LAST match of the datatype
+  heading pattern, the body heading that is actually followed by the
+  datatype's definition text, discarding any earlier contents-line match
+  (the same rule `extract_tq` already applied to Chapter 4's TQ numbering).
+  v2.3 and v2.4 print no such duplicate match, so the fix is a no-op there.
+- `audit-schemas.py --datatypes` now also rejects a datatype `name` ending in
+  what looks like a page reference (`\d+-\d+$`) or containing a run of three
+  or more spaces, on every version.
+- Added `scripts/check-extract-datatype-prose.py` (wired into the CI
+  `fixture-safety` job alongside `check-extract-example-messages.py`),
+  covering the name-capture fix, `parse_components_line`, `reconcile`'s
+  WARN-and-keep path, and `extract-field-components.py`'s
+  `promote_misprinted_ampersands`.
+- No component, datatype or table binding changed; only the 39 `name`
+  strings. Confirmed by diffing every re-extracted v2.3.1 file, by a clean
+  re-extraction of v2.3 and v2.4, and by a before/after diff of
+  `Validator().validate(_:).issues` (all severities) over the 1233 spec
+  example messages and the fixture corpus: identical.
+
 ### Added — P6-15: extra components on composite fields
 
 - New `IssueCode.extraComponentsInCompositeField` (additive; the enum is open

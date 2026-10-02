@@ -378,6 +378,25 @@ def check_cm_refinements():
         assert audit.datatype_disagrees("v2.4", "ZZZ", 1, name, {"CM"}), name
     assert not audit.datatype_disagrees("v2.4", "ZZZ", 1, "CM", {"CM"})
 
+
+def check_datatype_name():
+    # P5-9: a datatype `name` must never carry table-of-contents residue — a trailing page
+    # reference, or the run of padding spaces printed before one.
+    assert audit.datatype_name_findings("address") == []
+    assert audit.datatype_name_findings("extended composite ID with check digit") == []
+    found = audit.datatype_name_findings("address                                         2-12")
+    assert len(found) == 2, found
+    assert "page reference" in found[0] and "3+ spaces" in found[1], found
+    # a page reference with no padding run still trips the page-reference check alone.
+    found = audit.datatype_name_findings("timing quantity 2-52")
+    assert len(found) == 1 and "page reference" in found[0], found
+    # a genuine hyphenated number inside a name (not at the end) is not a page reference.
+    assert audit.datatype_name_findings("HL7 2-11 something") == []
+    # None / empty is not a crash.
+    assert audit.datatype_name_findings(None) == []
+    assert audit.datatype_name_findings("") == []
+
+
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
           check_whitelists_cite, check_no_deferred_versions, check_natural_chapter_order,
           check_table_open, check_additional_prohibitions, check_optionality_citation,
@@ -385,7 +404,7 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_element_name, check_repeatability_defining_table, check_repeatability_token_rule,
           check_unreadable_is_reported, check_length_token, check_write_lengths,
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
-          check_field_grammar_shape, check_cm_refinements]
+          check_field_grammar_shape, check_cm_refinements, check_datatype_name]
 
 
 def main():

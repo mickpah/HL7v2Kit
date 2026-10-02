@@ -227,7 +227,14 @@ def extract(version):
         m = datatype.match(line)
         if m:
             inside = True
-            cur = types.setdefault(m.group(2), {"n": m.group(1), "name": m.group(3).strip(), "components": [], "head": []})
+            # v2.3.1's chapter 2 contents entries carry no dot leaders ("2.8.1    AD - address
+            # 2-12"), so FURNITURE's dot-leader test (used for v2.3 / v2.4) does not filter
+            # them: this heading pattern matches twice, the contents entry then the body
+            # heading. Unconditionally replacing `cur` on every match discards the contents
+            # entry and keeps the last one, the body heading that is actually followed by the
+            # datatype's definition text (confirmed: each v2.3.1 code matches this pattern
+            # exactly twice; v2.3 / v2.4 match once, so overwriting is a no-op there).
+            cur = types[m.group(2)] = {"n": m.group(1), "name": m.group(3).strip(), "components": [], "head": []}
             comp = None
             continue
         if not inside:

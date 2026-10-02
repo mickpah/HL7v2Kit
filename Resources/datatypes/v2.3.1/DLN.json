@@ -1,7 +1,7 @@
 {
   "dataType": "DLN",
   "version": "2.3.1",
-  "name": "driver’s license number                                                                         2-28",
+  "name": "driver’s license number",
   "source": "prose",
   "components": [
     {

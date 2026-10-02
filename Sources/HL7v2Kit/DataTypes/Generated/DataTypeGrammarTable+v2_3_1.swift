@@ -92,7 +92,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_AD: DataTypeGrammar = DataTypeGrammar(
         dataType: "AD",
         version: "2.3.1",
-        name: "address                                                                                          2-12",
+        name: "address",
         components: [
             ComponentGrammar(index: 1, name: "Street address", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Other designation", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -108,7 +108,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CD: DataTypeGrammar = DataTypeGrammar(
         dataType: "CD",
         version: "2.3.1",
-        name: "channel definition                                                                               2-14",
+        name: "channel definition",
         components: [
             ComponentGrammar(index: 1, name: "Channel identifier", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Electrode names", dataType: "CM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -122,7 +122,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CE: DataTypeGrammar = DataTypeGrammar(
         dataType: "CE",
         version: "2.3.1",
-        name: "coded element                                                                                    2-14",
+        name: "coded element",
         components: [
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -136,7 +136,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CF: DataTypeGrammar = DataTypeGrammar(
         dataType: "CF",
         version: "2.3.1",
-        name: "coded element with formatted values                                                              2-15",
+        name: "coded element with formatted values",
         components: [
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Formatted text", dataType: "FT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -150,7 +150,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CK: DataTypeGrammar = DataTypeGrammar(
         dataType: "CK",
         version: "2.3.1",
-        name: "composite ID with check digit                                                                    2-15",
+        name: "composite ID with check digit",
         components: [
             ComponentGrammar(index: 1, name: "ID number", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Check digit", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -162,7 +162,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CN: DataTypeGrammar = DataTypeGrammar(
         dataType: "CN",
         version: "2.3.1",
-        name: "composite ID number and name                                                                     2-17",
+        name: "composite ID number and name",
         components: [
             ComponentGrammar(index: 1, name: "ID number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Family name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -179,7 +179,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CNE: DataTypeGrammar = DataTypeGrammar(
         dataType: "CNE",
         version: "2.3.1",
-        name: "coded with no exceptions                                                                        2-18",
+        name: "coded with no exceptions",
         components: [
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -196,7 +196,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CP: DataTypeGrammar = DataTypeGrammar(
         dataType: "CP",
         version: "2.3.1",
-        name: "composite price                                                                                  2-21",
+        name: "composite price",
         components: [
             ComponentGrammar(index: 1, name: "Price", dataType: "MO", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Price type", dataType: "ID", optionalityCode: "", tables: ["0205"], length: nil, condition: nil, conformanceCondition: nil),
@@ -210,7 +210,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CQ: DataTypeGrammar = DataTypeGrammar(
         dataType: "CQ",
         version: "2.3.1",
-        name: "composite quantity with units                                                                    2-23",
+        name: "composite quantity with units",
         components: [
             ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Units", dataType: "CE", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -220,7 +220,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CWE: DataTypeGrammar = DataTypeGrammar(
         dataType: "CWE",
         version: "2.3.1",
-        name: "coded with exceptions                                                                           2-23",
+        name: "coded with exceptions",
         components: [
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -237,7 +237,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_CX: DataTypeGrammar = DataTypeGrammar(
         dataType: "CX",
         version: "2.3.1",
-        name: "extended composite ID with check digit                                                           2-26",
+        name: "extended composite ID with check digit",
         components: [
             ComponentGrammar(index: 1, name: "ID", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Check digit", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -251,7 +251,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_DLN: DataTypeGrammar = DataTypeGrammar(
         dataType: "DLN",
         version: "2.3.1",
-        name: "driver’s license number                                                                         2-28",
+        name: "driver’s license number",
         components: [
             ComponentGrammar(index: 1, name: "License number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Issuing state, province, country", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -262,7 +262,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_DR: DataTypeGrammar = DataTypeGrammar(
         dataType: "DR",
         version: "2.3.1",
-        name: "date/time range                                                                                  2-28",
+        name: "date/time range",
         components: [
             ComponentGrammar(index: 1, name: "Range start date/time", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Range end date/time", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -272,7 +272,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_ED: DataTypeGrammar = DataTypeGrammar(
         dataType: "ED",
         version: "2.3.1",
-        name: "encapsulated data                                                                                2-29",
+        name: "encapsulated data",
         components: [
             ComponentGrammar(index: 1, name: "Source application", dataType: "HD", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Type of data", dataType: "ID", optionalityCode: "", tables: ["0191"], length: nil, condition: nil, conformanceCondition: nil),
@@ -285,7 +285,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_EI: DataTypeGrammar = DataTypeGrammar(
         dataType: "EI",
         version: "2.3.1",
-        name: "entity identifier                                                                                2-31",
+        name: "entity identifier",
         components: [
             ComponentGrammar(index: 1, name: "Entity identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Namespace ID", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -297,7 +297,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_FC: DataTypeGrammar = DataTypeGrammar(
         dataType: "FC",
         version: "2.3.1",
-        name: "financial class                                                                                  2-32",
+        name: "financial class",
         components: [
             ComponentGrammar(index: 1, name: "Financial class", dataType: "IS", optionalityCode: "", tables: ["0064"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Effective date", dataType: "TS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -307,7 +307,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_HD: DataTypeGrammar = DataTypeGrammar(
         dataType: "HD",
         version: "2.3.1",
-        name: "hierarchic designator                                                                            2-32",
+        name: "hierarchic designator",
         components: [
             ComponentGrammar(index: 1, name: "Namespace ID", dataType: "IS", optionalityCode: "", tables: ["0300"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Universal ID", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -318,7 +318,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_JCC: DataTypeGrammar = DataTypeGrammar(
         dataType: "JCC",
         version: "2.3.1",
-        name: "job code/class                                                                                  2-35",
+        name: "job code/class",
         components: [
             ComponentGrammar(index: 1, name: "Job code", dataType: "IS", optionalityCode: "", tables: ["0327"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Job class", dataType: "IS", optionalityCode: "", tables: ["0328"], length: nil, condition: nil, conformanceCondition: nil),
@@ -328,7 +328,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_MO: DataTypeGrammar = DataTypeGrammar(
         dataType: "MO",
         version: "2.3.1",
-        name: "money                                                                                            2-36",
+        name: "money",
         components: [
             ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Denomination", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -338,7 +338,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_PL: DataTypeGrammar = DataTypeGrammar(
         dataType: "PL",
         version: "2.3.1",
-        name: "person location                                                                     2-36",
+        name: "person location",
         components: [
             ComponentGrammar(index: 1, name: "Point of care", dataType: "IS", optionalityCode: "", tables: ["0302"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Room", dataType: "IS", optionalityCode: "", tables: ["0303"], length: nil, condition: nil, conformanceCondition: nil),
@@ -355,7 +355,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_PN: DataTypeGrammar = DataTypeGrammar(
         dataType: "PN",
         version: "2.3.1",
-        name: "person name                                                                         2-37",
+        name: "person name",
         components: [
             ComponentGrammar(index: 1, name: "Family name and last name prefix", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Given name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -369,7 +369,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_PPN: DataTypeGrammar = DataTypeGrammar(
         dataType: "PPN",
         version: "2.3.1",
-        name: "performing person time stamp                                                       2-40",
+        name: "performing person time stamp",
         components: [
             ComponentGrammar(index: 1, name: "ID number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Family name (ST) & last name prefix", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -393,7 +393,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_PT: DataTypeGrammar = DataTypeGrammar(
         dataType: "PT",
         version: "2.3.1",
-        name: "processing type                                                                     2-42",
+        name: "processing type",
         components: [
             ComponentGrammar(index: 1, name: "Processing ID", dataType: "ID", optionalityCode: "", tables: ["0103"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Processing mode", dataType: "ID", optionalityCode: "", tables: ["0207"], length: nil, condition: nil, conformanceCondition: nil),
@@ -403,7 +403,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_QIP: DataTypeGrammar = DataTypeGrammar(
         dataType: "QIP",
         version: "2.3.1",
-        name: "query input parameter list                                                         2-43",
+        name: "query input parameter list",
         components: [
             ComponentGrammar(index: 1, name: "Segment field name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Value1 & value2 & value3", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -413,7 +413,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_QSC: DataTypeGrammar = DataTypeGrammar(
         dataType: "QSC",
         version: "2.3.1",
-        name: "query selection criteria                                                           2-43",
+        name: "query selection criteria",
         components: [
             ComponentGrammar(index: 1, name: "Segment field name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Relational operator", dataType: "ID", optionalityCode: "", tables: ["0209"], length: nil, condition: nil, conformanceCondition: nil),
@@ -425,7 +425,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_RCD: DataTypeGrammar = DataTypeGrammar(
         dataType: "RCD",
         version: "2.3.1",
-        name: "row column definition                                                              2-44",
+        name: "row column definition",
         components: [
             ComponentGrammar(index: 1, name: "Segment field name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "HL7 data type", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -436,7 +436,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_RI: DataTypeGrammar = DataTypeGrammar(
         dataType: "RI",
         version: "2.3.1",
-        name: "repeat interval                                                                     2-45",
+        name: "repeat interval",
         components: [
             ComponentGrammar(index: 1, name: "Repeat pattern", dataType: "IS", optionalityCode: "", tables: ["0335"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Explicit time interval", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -446,7 +446,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_RP: DataTypeGrammar = DataTypeGrammar(
         dataType: "RP",
         version: "2.3.1",
-        name: "reference pointer                                                                   2-45",
+        name: "reference pointer",
         components: [
             ComponentGrammar(index: 1, name: "Pointer", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Application ID", dataType: "HD", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -458,7 +458,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_SCV: DataTypeGrammar = DataTypeGrammar(
         dataType: "SCV",
         version: "2.3.1",
-        name: "scheduling class value pair                                                        2-49",
+        name: "scheduling class value pair",
         components: [
             ComponentGrammar(index: 1, name: "Parameter class", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Parameter value", dataType: "IS", optionalityCode: "", tables: ["0294"], length: nil, condition: nil, conformanceCondition: nil),
@@ -468,7 +468,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_SN: DataTypeGrammar = DataTypeGrammar(
         dataType: "SN",
         version: "2.3.1",
-        name: "structured numeric                                                                  2-50",
+        name: "structured numeric",
         components: [
             ComponentGrammar(index: 1, name: "Comparator", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Num1", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -480,7 +480,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_TQ: DataTypeGrammar = DataTypeGrammar(
         dataType: "TQ",
         version: "2.3.1",
-        name: "timing quantity                                                                     2-52",
+        name: "timing quantity",
         components: [
             ComponentGrammar(index: 1, name: "Quantity component", dataType: "CQ", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Interval component", dataType: "CM", optionalityCode: "", tables: ["0335"], length: nil, condition: nil, conformanceCondition: nil),
@@ -500,7 +500,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_TS: DataTypeGrammar = DataTypeGrammar(
         dataType: "TS",
         version: "2.3.1",
-        name: "time stamp                                                                          2-52",
+        name: "time stamp",
         components: [
             ComponentGrammar(index: 1, name: "YYYY[MM[DD[HHMM[SS[.S[S[S[S]]]]]]]][+/-ZZZZ]", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Degree of precision", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -510,7 +510,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_VH: DataTypeGrammar = DataTypeGrammar(
         dataType: "VH",
         version: "2.3.1",
-        name: "visiting hours                                                                      2-53",
+        name: "visiting hours",
         components: [
             ComponentGrammar(index: 1, name: "Start day range", dataType: "ID", optionalityCode: "", tables: ["0267"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "End day range", dataType: "ID", optionalityCode: "", tables: ["0267"], length: nil, condition: nil, conformanceCondition: nil),
@@ -522,7 +522,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_VID: DataTypeGrammar = DataTypeGrammar(
         dataType: "VID",
         version: "2.3.1",
-        name: "version identifier                                                                 2-54",
+        name: "version identifier",
         components: [
             ComponentGrammar(index: 1, name: "Version ID", dataType: "ID", optionalityCode: "", tables: ["0104"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Internationalization code", dataType: "CE", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -533,7 +533,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_XAD: DataTypeGrammar = DataTypeGrammar(
         dataType: "XAD",
         version: "2.3.1",
-        name: "extended address                                                                   2-54",
+        name: "extended address",
         components: [
             ComponentGrammar(index: 1, name: "Street address", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Other designation", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -552,7 +552,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_XCN: DataTypeGrammar = DataTypeGrammar(
         dataType: "XCN",
         version: "2.3.1",
-        name: "extended composite ID number and name for persons                                  2-56",
+        name: "extended composite ID number and name for persons",
         components: [
             ComponentGrammar(index: 1, name: "ID number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Family name (ST) & last name prefix", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -575,7 +575,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_XON: DataTypeGrammar = DataTypeGrammar(
         dataType: "XON",
         version: "2.3.1",
-        name: "extended composite name and identification number for organizations                2-58",
+        name: "extended composite name and identification number for organiza-",
         components: [
             ComponentGrammar(index: 1, name: "Organization name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Organization name type code", dataType: "IS", optionalityCode: "", tables: ["0204"], length: nil, condition: nil, conformanceCondition: nil),
@@ -592,7 +592,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_XPN: DataTypeGrammar = DataTypeGrammar(
         dataType: "XPN",
         version: "2.3.1",
-        name: "extended person name                                                               2-60",
+        name: "extended person name",
         components: [
             ComponentGrammar(index: 1, name: "Family name (ST) & last name prefix", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Given name", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -608,7 +608,7 @@ extension DataTypeGrammarTable {
     private static let v2_3_1_XTN: DataTypeGrammar = DataTypeGrammar(
         dataType: "XTN",
         version: "2.3.1",
-        name: "extended telecommunication number                                                  2-63",
+        name: "extended telecommunication number",
         components: [
             ComponentGrammar(index: 1, name: "[(999)] 999-9999 [X99999] [C any text]", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Telecommunication use code", dataType: "ID", optionalityCode: "", tables: ["0201"], length: nil, condition: nil, conformanceCondition: nil),
