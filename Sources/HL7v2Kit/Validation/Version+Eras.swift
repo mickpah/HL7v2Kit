@@ -26,4 +26,16 @@ extension Version {
         case .v2_3, .v2_3_1, .v2_8_2, .v2_8: return false
         }
     }
+
+    /// True where the SI section bounds a sequence ID to 0 to 9999: "Maximum
+    /// Length: 4. This allows for a number between 0 and 9999 to be specified"
+    /// (v2.5.1 §2.A.69, v2.6 §2.A.69, v2.8.2 §2.A.70). v2.3 §2.8.36, v2.3.1
+    /// §2.8.38 and v2.4 §2.9.40 print only "a non-negative integer in the form
+    /// of a NM field" (P6-7).
+    var boundsSequenceID: Bool {
+        switch self {
+        case .v2_5_1, .v2_6, .v2_8_2, .v2_8: return true
+        case .v2_3, .v2_3_1, .v2_4: return false
+        }
+    }
 }

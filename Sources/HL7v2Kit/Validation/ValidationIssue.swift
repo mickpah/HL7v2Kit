@@ -197,6 +197,17 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// follows ``ValidationOptions/extraComponentsSeverity``. Additive case
     /// introduced in P6-13; the enum is open per ADR-014.
     case extraComponentsInPrimitiveField
+
+    /// A populated primitive value does not match the format its datatype
+    /// section prints: NM, SI, DT, TM, DTM, and TS (v2.5.1 §2.A.21, 2.A.22,
+    /// 2.A.47, 2.A.69, 2.A.75; v2.8.2 §2A; v2.3 to v2.4 section 2.8 / 2.9). On a
+    /// composite, the components (and one level of subcomponents) whose grammar
+    /// datatype has a rule are checked; a primitive field is read as its first
+    /// value. `dataType` names the rule applied. Located at the field, or at the
+    /// component and subcomponent checked. Severity follows
+    /// ``ValidationOptions/valueFormatSeverity``. Additive case introduced in
+    /// P6-7; the enum is open per ADR-014.
+    case valueFormatInvalid(dataType: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

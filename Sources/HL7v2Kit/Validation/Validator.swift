@@ -609,6 +609,9 @@ public struct Validator: Sendable {
             checkExtraPrimitiveComponents(fieldGrammar, field: field,
                                           dataType: effectiveDataType(of: fieldGrammar, in: segment),
                                           location: location, issues: &issues)
+            // P6-7: primitive lexical rules (PrimitiveFormat).
+            checkValueFormat(dataType: effectiveDataType(of: fieldGrammar, in: segment), field: field,
+                             version: message.version, location: location, issues: &issues)
         }
 
         if options.checkCodeTables, let field, isPopulated, let tableNumber = fieldGrammar.table {

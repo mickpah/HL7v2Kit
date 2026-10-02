@@ -44,6 +44,16 @@ struct SignatureCompatibilityTests {
         #expect(code != .fieldNotSupported)
     }
 
+    @Test("P6-7 value-format setting and issue code are additive")
+    func valueFormat() {
+        let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.valueFormatSeverity
+        #expect(ValidationOptions.default[keyPath: severity] == .warning)
+        #expect(ValidationOptions.strict[keyPath: severity] == .warning)
+        #expect(ValidationOptions.lenient[keyPath: severity] == nil)
+        let make: (String) -> IssueCode = IssueCode.valueFormatInvalid(dataType:)
+        #expect(make("NM") == .valueFormatInvalid(dataType: "NM"))
+    }
+
     @Test("HL7Table.init keeps its five-parameter signature; patterns: is a separate overload")
     func hl7TableInit() {
         let entries = [HL7Table.Entry(code: "A", description: "a")]

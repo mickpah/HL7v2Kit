@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P6-7: primitive lexical rules
+
+- `IssueCode.valueFormatInvalid(dataType:)` (additive; open enum per ADR-014)
+  and `ValidationOptions.valueFormatSeverity: IssueSeverity?` (default
+  `.warning`, owner gate G4; `.warning` in `.strict`; `nil` in `.lenient`).
+  NM, SI, DT, TM, DTM and TS are checked against their printed formats on
+  every version, including composite components one level of subcomponents
+  down and OBX-5 by its OBX-2 type; a primitive field is read as its first
+  value. (V251-C10)
+- Rules (v2.5.1 and v2.8.2 section 2.A; v2.3 to v2.4 section 2.8 / 2.9): NM is
+  an optional sign, digits and an optional decimal point; SI a non-negative
+  integer in NM form, bounded 0 to 9999 from v2.5.1 where the section prints
+  the bound (`Version.boundsSequenceID`); DT `YYYY[MM[DD]]` naming a calendar
+  date; TM `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`; DTM and TS
+  `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`. The pre-v2.5 TS format
+  line prints `HHMM`, but the same section's prose has `YYYYMMDDHH` specify a
+  precision of hour, so the hour alone is accepted on every version.
+
+### Changed — P6-7
+
+- Messages carrying a malformed primitive value (for example an NM of `<5`,
+  or a DT of `1980-01-01`) now raise a `valueFormatInvalid` warning. Set
+  `valueFormatSeverity = .error` to fail validation on it, or `nil` for the
+  previous behaviour.
+- Fixture `adt_a04_register_paediatric.hl7`: PD1-3 carried `L` in XON.3 (ID
+  number, NM); corrected to `Family Health^L` (XON.1 name, XON.2 type code).
+
 ### Fixed — P6-13: table check covers multi-component values in primitive fields
 
 - The field-level code-table check skipped any `ID` field repetition with more

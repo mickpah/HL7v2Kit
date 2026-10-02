@@ -145,6 +145,14 @@ public struct ValidationOptions: Sendable {
     /// Not an init parameter. P6-13.
     public var extraComponentsSeverity: IssueSeverity? = .warning
 
+    /// Severity for ``IssueCode/valueFormatInvalid(dataType:)``: a populated NM,
+    /// SI, DT, TM, DTM or TS value that does not match the format its datatype
+    /// section prints ("no non-numeric ASCII characters are allowed", v2.5.1
+    /// §2.A.47). `.warning` by default (owner gate G4), as are the length checks;
+    /// set `.error` to make a malformed value fail validation, or `nil` to turn
+    /// the check off. Not an init parameter. P6-7.
+    public var valueFormatSeverity: IssueSeverity? = .warning
+
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
     ///
     /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
@@ -185,8 +193,8 @@ public struct ValidationOptions: Sendable {
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
     /// message validation where the senders shouldn't be emitting custom
     /// Z-segments. The length severities (`fieldLengthSeverity`,
-    /// `normativeLengthSeverity`) stay `.warning` here as in `default` (owner
-    /// gate G4).
+    /// `normativeLengthSeverity`) and `valueFormatSeverity` stay `.warning` here
+    /// as in `default` (owner gate G4).
     public static let strict = ValidationOptions(
         zSegmentPolicy: .reject,
         checkRequiredFields: true,
@@ -202,8 +210,9 @@ public struct ValidationOptions: Sendable {
     /// "would HL7v2Kit be happy parsing this round-trip?" answer. The
     /// code-table membership check (`checkCodeTables`) is a content rule,
     /// not a structural one, so this preset turns it off too, as it does the
-    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`) and
-    /// the extra-component check (`extraComponentsSeverity`).
+    /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`),
+    /// the extra-component check (`extraComponentsSeverity`) and the value-format
+    /// check (`valueFormatSeverity`).
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
@@ -217,6 +226,7 @@ public struct ValidationOptions: Sendable {
         options.fieldLengthSeverity = nil
         options.normativeLengthSeverity = nil
         options.extraComponentsSeverity = nil
+        options.valueFormatSeverity = nil
         return options
     }()
 }
