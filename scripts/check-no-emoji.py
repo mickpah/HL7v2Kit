@@ -28,7 +28,7 @@ SKIP_PREFIXES = ("docs/archive/",)
 
 # Literal documented exceptions: (path, exact substring). the working notes quotes the grep pattern
 # that matches Swift Testing's own failure marker; the character is the match target.
-ALLOWED = [("the working notes", 'grep -E "Test run with|✘"')]
+ALLOWED = [("the working notes", 'grep -E "Test run with|\u2718"')]
 
 
 def is_icon(ch):
@@ -65,17 +65,17 @@ def scan_repo():
 
 
 def self_test():
-    flagged = ["✅", "❌", "✔", "✖", "✨", "⚠", "⭐",
-               "\U0001F600", "\U0001F680", "✘", "➜"]
+    flagged = ["\u2705", "\u274c", "\u2714", "\u2716", "\u2728", "\u26a0", "\u2b50",
+               "\U0001F600", "\U0001F680", "\u2718", "\u279c"]
     for ch in flagged:
         assert scan_text("a " + ch + " b"), "should flag U+%04X" % ord(ch)
-    assert scan_text("x\ny ⚠️") == [(2, "⚠"), (2, "️")]
+    assert scan_text("x\ny \u26a0\ufe0f") == [(2, "\u26a0"), (2, "\ufe0f")]
     clean = ["plain text", "→ ← ⇒ arrows", "café µs — dash",
              "box ─│┌", "math ≤ ≠ ×", "… ellipsis §"]
     for s in clean:
         assert not scan_text(s), "should allow %r" % s
-    assert not scan_text('grep -E "Test run with|✘"', "the working notes")
-    assert scan_text('grep -E "Test run with|✘"', "other.md")
+    assert not scan_text('grep -E "Test run with|\u2718"', "the working notes")
+    assert scan_text('grep -E "Test run with|\u2718"', "other.md")
     assert "docs/archive/x.md".startswith(SKIP_PREFIXES)
     print("check-no-emoji self-test: ok")
 
