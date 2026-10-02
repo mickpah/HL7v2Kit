@@ -50,59 +50,67 @@ struct StructureLintTests {
 
     @Test("ADR-019's example: a trailing NTE in a group followed by a sibling NTE fails")
     func trailingThenSibling() {
-        let elements: [StructureElement] = [
-            .segment("OBR", min: 1, max: 1),
-            .group("OBSERVATION", min: 0, max: nil, elements: [
-                .segment("OBX", min: 1, max: 1),
-                .segment("NTE", min: 0, max: nil),
-            ]),
-            .segment("NTE", min: 0, max: nil),
-        ]
-        let result = StructureMatcher.lint(elements)
+        let result = StructureMatcher.lint(StructureShapes.trailingThenSibling)
         #expect(!result.isDeterministic)
         #expect(result.conflicts == [overlap(["OBSERVATION", "NTE"], ["NTE"])])
         #expect(result.exempt.isEmpty)
     }
 
-    @Test("The pre-v2.5 shape OBR {[NTE]} {[OBX] {[NTE]}} fails")
+    @Test("The pre-v2.5 shape OBR {[NTE]} {[OBX] {[NTE]}} fails on the sibling NTE only")
     func preV25Shape() {
         // Top NTE against the sibling group's FIRST {OBX, NTE}: a conflict.
-        // OBX is optional but not repeating, so its overlap with the group's
-        // own re-entry is not exempt. The inner NTE repeats and overlaps only
-        // the unbounded enclosing group's re-entry: exempt.
-        let elements: [StructureElement] = [
-            .segment("OBR", min: 1, max: 1),
-            .segment("NTE", min: 0, max: nil),
-            .group("OBSERVATION", min: 0, max: nil, elements: [
-                .segment("OBX", min: 0, max: 1),
-                .segment("NTE", min: 0, max: nil),
-            ]),
-        ]
-        let result = StructureMatcher.lint(elements)
-        #expect(result.conflicts == [overlap(["NTE"], ["NTE"]), overlap(["OBSERVATION", "OBX"], ["OBX"])])
-        #expect(result.exempt == [overlap(["OBSERVATION", "NTE"], ["NTE"], via: "OBSERVATION")])
+        // Inside OBSERVATION, OBX and NTE overlap only the re-entry of the
+        // unbounded group itself with an empty prefix: exempt (ruling 3).
+        let result = StructureMatcher.lint(StructureShapes.preV25)
+        #expect(result.conflicts == [overlap(["NTE"], ["NTE"])])
+        #expect(result.exempt == [
+            overlap(["OBSERVATION", "OBX"], ["OBX"], via: "OBSERVATION"),
+            overlap(["OBSERVATION", "NTE"], ["NTE"], via: "OBSERVATION"),
+        ])
+    }
+
+    @Test("{G: [X] [{N}]}: a non-repeating optional first child is exempt (ruling 3)")
+    func allOptionalGroup() {
+        let result = StructureMatcher.lint(StructureShapes.allOptionalGroup)
+        #expect(result.conflicts.isEmpty)
+        #expect(result.exempt == [overlap(["G", "X"], ["X"], via: "G"), overlap(["G", "N"], ["N"], via: "G")])
+    }
+
+    @Test("{G: [A] [X] [{N}]}: a nullable prefix that cannot begin with the segment keeps the exemption")
+    func nullablePrefix() {
+        let result = StructureMatcher.lint(StructureShapes.nullablePrefix)
+        #expect(result.conflicts.isEmpty)
+        #expect(result.exempt.map(\.path) == [["G", "A"], ["G", "X"], ["G", "N"]])
+    }
+
+    @Test("Reviewer's counter-example {G: X {Q: X Y}}: a required prefix voids the exemption")
+    func counterExample() {
+        let result = StructureMatcher.lint(StructureShapes.counterExample)
+        #expect(result.conflicts == [overlap(["G", "Q"], ["X"])])
+        #expect(result.exempt.isEmpty)
+    }
+
+    @Test("{G: [X] {Q: X Y}}: a nullable prefix that can begin with the segment voids the exemption")
+    func prefixBeginsWithSegment() {
+        let result = StructureMatcher.lint(StructureShapes.prefixBeginsWithSegment)
+        #expect(result.conflicts == [overlap(["G", "X"], ["X"]), overlap(["G", "Q"], ["X"])])
+        #expect(result.exempt.isEmpty)
     }
 
     @Test("The exemption needs an unbounded enclosing group: a finite maximum fails")
     func finiteEnclosingGroup() {
-        let elements: [StructureElement] = [
-            .segment("MSH", min: 1, max: 1),
-            .group("P", min: 1, max: 2, elements: [
-                .segment("H", min: 0, max: 1),
-                .group("O", min: 1, max: nil, elements: [.segment("A", min: 0, max: 1), .segment("B", min: 1, max: 1)]),
-            ]),
-        ]
-        #expect(StructureMatcher.lint(elements).conflicts == [overlap(["P", "O"], ["A", "B"])])
+        #expect(StructureMatcher.lint(StructureShapes.finiteEnclosing).conflicts == [overlap(["P", "O"], ["A", "B"])])
     }
 
     @Test("FOLLOW looks past a nullable required group")
     func nullableGroupInFollow() {
-        let elements: [StructureElement] = [
-            .segment("MSH", min: 1, max: 1),
-            .segment("X", min: 0, max: nil),
-            .group("G", min: 1, max: 1, elements: [.segment("Y", min: 0, max: 1)]),
-            .segment("X", min: 1, max: 1),
-        ]
-        #expect(StructureMatcher.lint(elements).conflicts == [overlap(["X"], ["X"])])
+        #expect(StructureMatcher.lint(StructureShapes.nullableFollow).conflicts == [overlap(["X"], ["X"])])
+    }
+
+    @Test("A required group of optional children followed by a required segment passes")
+    func nullableGroup() {
+        let result = StructureMatcher.lint(StructureShapes.nullableGroup)
+        #expect(result.isDeterministic)
+        #expect(result.exempt.isEmpty)
     }
 }

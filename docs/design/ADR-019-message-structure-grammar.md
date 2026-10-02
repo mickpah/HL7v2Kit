@@ -294,24 +294,60 @@ lint.
 **Determinism lint** (test suite). The lint checks, for every structure, that greedy
 matching resolves each choice the same way a full match would. One rule:
 
-> For every optional or repeating element E, FIRST(E) must be disjoint from FOLLOW(E):
-> the FIRST sets of the elements that may follow E up to and including the next required
-> sibling (excluding E itself, so a repeating element's own re-entry is not an overlap), extended, when E is trailing (everything after it in its group is optional),
-> with the inherited follow set of the enclosing level. The one exempt overlap is between
-> a repeating element and the re-entry of an ENCLOSING repeating group with unbounded
-> maximum: the matcher attributes the segment to the innermost open group, and the lint
+> For every element E that is nullable (it can match no segment: optional, or a group all
+> of whose elements are nullable) or may repeat, FIRST(E) must be disjoint from FOLLOW(E):
+> the FIRST sets of the siblings after E up to and including the next one that is not
+> nullable (excluding E itself, so a repeating element's own re-entry is not an overlap),
+> extended, when E is trailing (everything after it in its group is nullable), with the
+> inherited follow set of the enclosing level. That inherited set includes the re-entry of
+> the enclosing group when it repeats. A segment S in the overlap is **exempt** when every
+> part of FOLLOW(E) that contains S is the re-entry of an ENCLOSING group G with unbounded
+> maximum, and for each such G the re-entry can begin with S only through E itself
+> (**the prefix condition**): on the path from G down to E, every element that precedes
+> the path at each level is nullable, and none of their FIRST sets contains S. E may
+> repeat or not. The matcher attributes S to the innermost open group, and the lint
 > accepts exactly that case. Any other overlap fails the lint.
 
 A trailing optional `NTE` inside a group followed by a sibling `NTE` therefore fails
-rather than being resolved silently. The exempt case is v2.5.1 ORU_R01: ORDER_OBSERVATION
-is the trailing repeating element of the repeating PATIENT_RESULT, and PATIENT is
-optional, so the inherited follow set overlaps FIRST(ORDER_OBSERVATION) on ORC and OBR.
-Staying in ORDER_OBSERVATION and starting a new PATIENT_RESULT accept the same segments,
-so the choice cannot change acceptance, the missing and unexpected findings, or any count
-for these structures; only which group instance a span belongs to is a convention, and
-group-scoped predicates anchor on ORC and OBR, which both readings put in an
-ORDER_OBSERVATION. It could change a result only if the enclosing group had a finite
-maximum (an AU narrowing), which is why the exemption requires an unbounded one.
+rather than being resolved silently. The exempt case on the pilot is v2.5.1 ORU_R01:
+ORDER_OBSERVATION is the trailing repeating element of the repeating PATIENT_RESULT, and
+PATIENT, the only element before it, is nullable with FIRST {PID}, so the inherited
+follow set overlaps FIRST(ORDER_OBSERVATION) on ORC and OBR only through the re-entry,
+and that re-entry can begin with ORC or OBR only through ORDER_OBSERVATION. Staying in
+ORDER_OBSERVATION and starting a new PATIENT_RESULT then lead to the same remaining match,
+so the choice cannot change acceptance, the missing and unexpected findings, or any count;
+only which group instance a span belongs to is a convention, and group-scoped predicates
+anchor on ORC and OBR, which both readings put in an ORDER_OBSERVATION. It could change a
+result if the enclosing group had a finite maximum (an AU narrowing), which is why the
+exemption requires an unbounded one.
+
+The prefix condition is necessary. Counter-example (fix round 1 of the matcher task):
+`MSH {G: X {Q: X Y}}`. Without the condition the lint passes with Q exempt on X via G,
+yet for the valid `MSH X X Y X X Y` (two G instances) the greedy matcher keeps the third
+X in Q and reports `Y` missing in Q. G's re-entry begins with X through G's required X,
+not through Q, so the prefix condition fails and the structure now fails the lint.
+
+**Non-repeating E.** The original text exempted only a repeating E. A nullable
+non-repeating first child of an all-optional unbounded group (pre-v2.5 OBSERVATION
+`{[OBX] {[NTE]}}`) overlaps that group's own re-entry; the only other parse inserts an
+instance boundary at E (an empty or shorter instance before it), so one-pass matching
+accepts exactly the same sequences, and a second occurrence closes the instance and
+re-enters the group. The exemption therefore covers E whether or not it repeats, under
+the same prefix condition.
+
+**The guard.** The lint rule is not trusted on its own. A property test in the test
+target (`StructureMatcherPropertyTests`) runs a backtracking reference recogniser (it
+tries every way to match, skipping Z-segments and ADD) against the one-pass matcher on
+generated segment sequences: every sequence over the alphabet up to length 8 after MSH
+for small synthetic structures, and seeded random grammar derivations of at most 16
+segments with single-edit mutations for the pilot structures. For every structure that
+passes the lint, the matcher must report no finding exactly when the reference accepts.
+The counter-example above disagrees with the reference and is rejected by the lint. Each
+version's rollout adds its structures to this test.
+
+Pre-v2.5 structures may still fail the lint (the pre-v2.5 ORU shape
+`OBR {[NTE]} {[OBX] {[NTE]}}` fails on the top-level `NTE` against the sibling group's
+FIRST set, a genuine attribution ambiguity) and are then reported as not modelled.
 
 The lint does not check Z-segments or ADD segments (transparent to the matcher). A
 structure that fails is listed in the register and reported at runtime as
@@ -344,9 +380,11 @@ holds).
    out-of-order PID reports "PID missing" and "PID unexpected"). The first issue is always
    accurate.
 3. The lint's exempt case (above): an element whose FIRST set overlaps the re-entry of an
-   enclosing unbounded repeating group (ORU_R01 ORDER_OBSERVATION inside PATIENT_RESULT
-   without PATIENT) is attributed to the innermost open group. Acceptance is unaffected;
-   only group attribution is a convention.
+   enclosing unbounded repeating group, where the prefix condition holds (ORU_R01
+   ORDER_OBSERVATION inside PATIENT_RESULT without PATIENT; the pre-v2.5 `[OBX]` inside
+   `{[OBX] {[NTE]}}`), is attributed to the innermost open group. Acceptance is
+   unaffected; only group attribution is a convention. The reference-recogniser property
+   test guards the rule.
 4. Group spans are exact only when the match has no deviation. After a deviation the spans
    are best-effort, so group-scoped predicates do not use them (below).
 5. Where Z-segments may sit is not checked (fact 3).

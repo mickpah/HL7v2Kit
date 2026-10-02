@@ -19,32 +19,54 @@ struct StructureLint: Sendable, Equatable {
 
     /// Overlaps that make greedy matching inexact: any one fails the lint.
     let conflicts: [Overlap]
-    /// The one accepted case: a repeating element against the re-entry of
-    /// an enclosing repeating group with unbounded maximum. The matcher
-    /// attributes the segment to the innermost open group.
+    /// The one accepted case: an element against the re-entry of an
+    /// enclosing group with unbounded maximum that can begin with the
+    /// segment only through the element itself (see `lint(_:)`). The
+    /// matcher attributes the segment to the innermost open group.
     let exempt: [Overlap]
 
     var isDeterministic: Bool { conflicts.isEmpty }
 }
 
 extension StructureMatcher {
+    /// The re-entry of an enclosing group with unbounded maximum, as seen
+    /// from one sequence inside it: the group's FIRST set, and the elements
+    /// that precede the path down to this sequence at every level between
+    /// (whether all are nullable, and the union of their FIRST sets).
+    private struct Reentry {
+        let group: String
+        let first: Set<String>
+        var prefixNullable = true
+        var prefixFirst: Set<String> = []
+    }
+
     /// The follow set of one element, split into segments that may follow
     /// it outright and the re-entries of enclosing unbounded groups
     /// (innermost last).
     private struct Follow {
         var plain: Set<String> = []
-        var reentries: [(group: String, first: Set<String>)] = []
+        var reentries: [Reentry] = []
     }
 
-    /// The single ADR-019 rule. For every optional or repeating element E,
-    /// FIRST(E) must be disjoint from FOLLOW(E): the FIRST sets of the
-    /// siblings after E up to and including the next one that is not
+    /// The single ADR-019 rule. For every element E that is nullable or may
+    /// repeat, FIRST(E) must be disjoint from FOLLOW(E): the FIRST sets of
+    /// the siblings after E up to and including the next one that is not
     /// nullable (E's own re-entry excluded), extended, when E is trailing,
     /// with the inherited follow set of the enclosing level, which includes
-    /// the enclosing group's re-entry when that group repeats. The one exempt
-    /// overlap is between a repeating E and the re-entry of an enclosing
-    /// group whose maximum is unbounded. Z-segments and ADD never appear in
-    /// a structure, so they are not checked.
+    /// the enclosing group's re-entry when that group repeats.
+    ///
+    /// One overlap is exempt: segment S of FIRST(E) that S reaches only
+    /// through the re-entry of enclosing groups G with unbounded maximum,
+    /// where for each such G the re-entry can begin with S only through E
+    /// itself: on the path from G down to E, every element that precedes
+    /// the path at each level is nullable and none of their FIRST sets
+    /// contains S. Staying in E and opening a new G instance then lead to
+    /// the same remaining match, so the greedy choice (stay in E) loses
+    /// nothing. This holds whether or not E repeats; for a non-repeating E
+    /// the only other parse inserts an instance boundary at E. The
+    /// reference-recogniser property test is the guard on this rule.
+    /// Z-segments and ADD never appear in a structure, so they are not
+    /// checked.
     static func lint(_ elements: [StructureElement]) -> StructureLint {
         var conflicts: [StructureLint.Overlap] = []
         var exempt: [StructureLint.Overlap] = []
@@ -60,6 +82,9 @@ extension StructureMatcher {
         _ exempt: inout [StructureLint.Overlap]
     ) {
         for (i, element) in elements.enumerated() {
+            let before = elements[..<i]
+            let levelNullable = before.allSatisfy(\.isNullable)
+            let levelFirst = before.reduce(into: Set<String>()) { $0.formUnion($1.firstSet) }
             var follow = Follow()
             var trailing = true
             for sibling in elements[(i + 1)...] {
@@ -77,12 +102,14 @@ extension StructureMatcher {
             case .group(let group, _, _, _): name = group
             }
             if element.isNullable || element.max != 1 {
-                let repeating = element.max != 1
                 var hard = first.intersection(follow.plain)
                 var viaGroup: [(group: String, ids: Set<String>)] = []
                 for id in first.sorted() where !hard.contains(id) {
-                    guard let via = follow.reentries.last(where: { $0.first.contains(id) }) else { continue }
-                    if !repeating {
+                    let hits = follow.reentries.filter { $0.first.contains(id) }
+                    guard let via = hits.last else { continue }
+                    let sound = levelNullable && !levelFirst.contains(id)
+                        && hits.allSatisfy { $0.prefixNullable && !$0.prefixFirst.contains(id) }
+                    if !sound {
                         hard.insert(id)
                     } else if let at = viaGroup.firstIndex(where: { $0.group == via.group }) {
                         viaGroup[at].ids.insert(id)
@@ -99,8 +126,12 @@ extension StructureMatcher {
             }
             if case .group(let group, _, let max, let children) = element {
                 var childInherited = follow
+                for k in childInherited.reentries.indices {
+                    childInherited.reentries[k].prefixNullable = childInherited.reentries[k].prefixNullable && levelNullable
+                    childInherited.reentries[k].prefixFirst.formUnion(levelFirst)
+                }
                 if max == nil {
-                    childInherited.reentries.append((group, first))
+                    childInherited.reentries.append(Reentry(group: group, first: first))
                 } else if max != 1 {
                     childInherited.plain.formUnion(first)
                 }

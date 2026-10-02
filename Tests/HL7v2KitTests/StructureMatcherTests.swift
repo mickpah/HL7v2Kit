@@ -47,6 +47,12 @@ struct StructureMatcherTests {
         #expect(try match("ADT_A01", ["MSH", "EVN", "PID"]) == [missing("PV1", nil, 3)])
     }
 
+    @Test("Missing at the end after a trailing Z-segment: index is the segment count (end of message)")
+    func missingAtEndAfterZ() throws {
+        #expect(try match("ADT_A01", ["MSH", "EVN", "PID", "ZPI"]) == [missing("PV1", nil, 4)])
+        #expect(try match("ADT_A01", ["MSH", "EVN", "PID", "ZPI", "ADD"]) == [missing("PV1", nil, 5)])
+    }
+
     @Test("Cascade (ADR-019 ceiling 2): PV1 before PID gives PID missing, then PID unexpected")
     func adtOutOfOrder() throws {
         #expect(try match("ADT_A01", ["MSH", "EVN", "PV1", "PID"]) == [missing("PID", nil, 2), unexpected("PID", 3)])
@@ -198,11 +204,8 @@ struct StructureMatcherTests {
     // MARK: - Nullable groups (P8-3 review)
 
     /// MSH, a required group whose children are all optional, then C.
-    private let nullable = MessageStructure(id: "X_N01", version: "2.5.1", triggers: [], citation: "test", elements: [
-        .segment("MSH", min: 1, max: 1),
-        .group("G", min: 1, max: 1, elements: [.segment("A", min: 0, max: 1), .segment("B", min: 0, max: 1)]),
-        .segment("C", min: 1, max: 1),
-    ])
+    private let nullable = MessageStructure(id: "X_N01", version: "2.5.1", triggers: [], citation: "test",
+                                            elements: StructureShapes.nullableGroup)
 
     @Test("A required group of optional children is nullable, and FIRST looks past it")
     func nullableFirstSet() {
@@ -220,5 +223,15 @@ struct StructureMatcherTests {
         #expect(matcher.match(["MSH", "B", "C"]).findings.isEmpty)
         #expect(matcher.match(["MSH", "B", "C"]).spans.map(\.description) == ["G 1...1"])
         #expect(matcher.match(["MSH", "B", "A"]).findings == [unexpected("A", 2), missing("C", nil, 3)])
+    }
+
+    @Test("{G: [X] [{N}]}: a second X closes the instance and re-enters G (fix round 1, ruling 3)")
+    func allOptionalGroupReentry() {
+        let matcher = StructureMatcher(structure: MessageStructure(
+            id: "X_G01", version: "2.5.1", triggers: [], citation: "test", elements: StructureShapes.allOptionalGroup))
+        let result = matcher.match(["MSH", "X", "N", "X", "X", "N", "N"])
+        #expect(result.findings.isEmpty)
+        #expect(result.spans.map(\.description) == ["G 1...2", "G 3...3", "G 4...6"])
+        #expect(matcher.match(["MSH", "N", "X"]).spans.map(\.description) == ["G 1...1", "G 2...2"])
     }
 }

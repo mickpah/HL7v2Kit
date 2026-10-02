@@ -12,20 +12,27 @@ struct StructureFinding: Sendable, Equatable {
         /// A segment has no place at this point: out of order, or a segment
         /// the structure does not contain.
         case unexpected
-        /// A further occurrence of a segment whose element (or whose
-        /// innermost enclosing element that can begin with it) has already
-        /// occurred its maximum number of times.
+        /// A stray segment that is a further occurrence past a maximum. It
+        /// is chosen by looking, in the sequences still open (innermost
+        /// first, latest element first), for the nearest element already
+        /// passed whose FIRST set contains the segment: if that element
+        /// reached its maximum the stray is `.exceededMaximum`, otherwise
+        /// `.unexpected`. Elements inside group instances already closed
+        /// are not considered. Both map to `messageStructureSegmentUnexpected`.
         case exceededMaximum
     }
 
     let kind: Kind
     let segmentID: String
     /// For `.missing`: the group the absent element belongs to, or the
-    /// absent group itself; nil at top level. Nil for the other kinds.
+    /// absent group itself; nil at top level. Always nil for `.unexpected`
+    /// and `.exceededMaximum`.
     let group: String?
     /// The message index (MSH is 0). For `.missing`, the index of the next
-    /// matched (non-transparent) segment it was expected before, or the
-    /// message's segment count when it was expected at the end.
+    /// matched (non-transparent) segment it was expected before, or
+    /// `ids.count` (one past the last segment, after any trailing Z-segment
+    /// or ADD) when it was expected at the end; the consumer maps that value
+    /// to "end of message" (ADR-019 locates it at the last segment).
     let index: Int
 }
 
