@@ -205,7 +205,9 @@ struct AUP13OBR29ProhibitionTests {
     @Test("OBR-29 valued does not double-report against HL7au:00060.4 (P4-31 full-predicate marking)")
     func noDoubleReportAgainst00060_4() throws {
         let message = try Parser(locale: .auLocalisation).parse(
-            Self.wire("ORU^R01", obr29: "1234^GLU-PARENT^HOSP"))
+            Self.wire("ORU^R01", obr29: "1234&HOSP^GLU-PARENT&HOSP"))
+        // v2.4 OBR-29 prints two EI components (7.4.1.29), so the value is spec-shaped and the
+        // only issue is the prohibition (a third component would add a P5-6 width warning).
         let issues = Validator(locale: .auLocalisation).validate(message).issues.filter {
             $0.location.segmentID == "OBR" && $0.location.fieldIndex == 29
         }

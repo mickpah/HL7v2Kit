@@ -64,6 +64,23 @@ extension Validator {
         return DataTypeGrammarTable.grammar(dataType, version: version.grammarVersion)
     }
 
+    /// The component grammar the validator walks for field `field` of `segment`, typed
+    /// `dataType`, on `version` (P5-6): the one resolution point every composite-aware check
+    /// calls at field level. A primitive stays primitive (``componentGrammar(_:version:)``).
+    /// Otherwise the grammar the field prints for itself, where it prints one: before v2.5
+    /// "the specific components of CM fields are defined within the field descriptions"
+    /// (v2.3 sec 2.8.6), extracted as ``DataTypeGrammarTable/grammar(segment:field:version:)``.
+    /// Else the datatype's own component table. A component one level down is still resolved
+    /// by its datatype through ``componentGrammar(_:version:)``, so a field-local `TS`
+    /// component (IN3-20.3) is checked as the primitive it is on v2.3 to v2.4.
+    static func fieldGrammar(segment: String, field: Int?, dataType: String, version: Version) -> DataTypeGrammar? {
+        guard primitiveComponentLimit(dataType, version: version) == nil else { return nil }
+        if let field, let local = DataTypeGrammarTable.grammar(segment: segment, field: field, version: version) {
+            return local
+        }
+        return componentGrammar(dataType, version: version)
+    }
+
     /// A primitive component the spec lets carry subcomponents, keyed either by the
     /// composite datatype or by segment and field, with the subcomponent count it admits.
     struct SubcomponentAllowance: Sendable {
@@ -174,7 +191,9 @@ extension Validator {
     /// separator separates "components of data fields where allowed" (v2.5.1 and v2.8.2
     /// section 2.5.4), and a sender escapes a separator in data as `\S\`
     /// or `\T\` (section 2.7.1); an escaped separator is decoded into the value and never
-    /// reaches here. P6-15: for a composite field (``closedComposite(_:version:)``), also
+    /// reaches here. P6-15: for a composite field (``closedComposite(_:version:)``, applied
+    /// to the grammar ``fieldGrammar(segment:field:dataType:version:)`` resolves, so a
+    /// pre-v2.5 `CM` field is bounded by the components its field definition prints), also
     /// reports ``IssueCode/extraComponentsInCompositeField`` once per repetition with a
     /// populated component past its datatype's table, and once per composite component
     /// with a populated subcomponent past its own datatype's table, located at that
@@ -207,8 +226,14 @@ extension Validator {
             }
             return
         }
-        guard let composite = Self.componentGrammar(dataType, version: grammarVersion) else { return }
-        let closed = Self.closedComposite(dataType, version: grammarVersion) != nil
+        guard let composite = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+                                                dataType: dataType, version: grammarVersion) else { return }
+        // ``closedComposite(_:version:)`` applied to the resolved grammar, so a field-local
+        // composite (P5-6) is width-checked against the components its field prints.
+        let closed = !Self.openComposites.contains(dataType) && !composite.components.isEmpty
+        let printedBy = composite == Self.componentGrammar(dataType, version: grammarVersion)
+            ? "which the v\(grammarVersion.rawValue) component table defines with"
+            : "whose v\(grammarVersion.rawValue) field definition prints"
         for (offset, repetition) in field.repetitions.enumerated() {
             // P6-15: populated components beyond the datatype's component table.
             let beyond = !closed ? [] : Self.extraParts(repetition.components.map { $0.subcomponents.map(\.value) },
@@ -218,7 +243,7 @@ extension Validator {
                     severity: severity,
                     code: .extraComponentsInCompositeField,
                     location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), which the v\(grammarVersion.rawValue) component table defines with \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
+                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
                 ))
             }
             for entry in composite.components where repetition.components.count >= entry.index {

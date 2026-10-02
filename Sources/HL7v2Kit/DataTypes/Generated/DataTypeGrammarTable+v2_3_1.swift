@@ -935,10 +935,11 @@ extension DataTypeGrammarTable {
         version: "2.3.1",
         name: "Privileges",
         components: [
-            ComponentGrammar(index: 1, name: "Privilege", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 2, name: "Expiration date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 3, name: "Activation date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 4, name: "Facility", dataType: "EI", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Privilege", dataType: "CE", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Privilege class", dataType: "CE", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 3, name: "Expiration date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Activation date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "Facility", dataType: "EI", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 

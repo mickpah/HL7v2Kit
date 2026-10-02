@@ -789,7 +789,8 @@ public struct Validator: Sendable {
                 // silently suppress a future OBX-5-eligible `yieldsToBase`
                 // requirement (P3-5 fix round 1).
                 if options.checkComponentGrammar, requirement.yieldsToBase, requirement.subcomponent == nil,
-                   requiredComponents(forCompositeCode: fieldGrammar.dataType, version: message.version)
+                   requiredComponents(forCompositeCode: fieldGrammar.dataType, segmentID: segmentID,
+                                      fieldIndex: fieldIndex, version: message.version)
                        .contains(where: { $0.index == requirement.component }) {
                     continue
                 }
@@ -1698,9 +1699,18 @@ public struct Validator: Sendable {
     /// The same guards as the field-level rule: `IS` and user-defined or open tables are
     /// never enforced; empty and HL7-null values are never checked; a locale's rendering of
     /// the table widens the check and never narrows it. A datatype the version gives no
-    /// component grammar (``componentGrammar(_:version:)``, which keeps a primitive primitive,
-    /// P5-3) is not checked. The value of an `ID` component is its first
+    /// component grammar (``fieldGrammar(segment:field:dataType:version:)``, which keeps a
+    /// primitive primitive, P5-3, and gives a pre-v2.5 `CM` field the components its own
+    /// definition prints, P5-6) is not checked. The value of an `ID` component is its first
     /// subcomponent (P6-14; section 2.6.2 a), located at subcomponent 1 when more follow.
+    ///
+    /// A top-level `CE` component bound to one closed HL7 table (P5-6: OBR-15.1 0070,
+    /// OBR-15.4 0163, ERR-1.4 0357, SAC-6 and TCC-3) is checked on its identifier, located at
+    /// subcomponent 1, only when its coding system is empty or names that table: "When an
+    /// HL7 table is used for a CE data type, the name of coding system component is defined
+    /// as HL7nnnn where nnnn is the HL7 table number" (v2.3 / v2.3.1 2.8.3.3, v2.4 2.9.3.3).
+    /// Any other coding system is not that table, so OBR-15's "Veterinary medicine may choose
+    /// the tables supported for the components of this field" (v2.4 7.4.1.15) stays silent.
     private func checkComponentCodeTables(
         dataType: String,
         field: Field,
@@ -1711,11 +1721,18 @@ public struct Validator: Sendable {
         // P6-14: the grammar version, so a 2.8 message reads the v2.8.2 tables directly
         // (validate(_:) already declares it; this keeps the lookup right on its own).
         let version = version.grammarVersion
-        guard let grammar = Self.componentGrammar(dataType, version: version) else { return }
+        guard let grammar = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+                                              dataType: dataType, version: version) else { return }
 
         /// The closed table an `ID` entry is bound to, or nil when it is not enforceable.
         func closedTable(_ entry: ComponentGrammar) -> HL7Table? {
             guard entry.dataType == "ID", entry.tables.count == 1,
+                  let table = HL7TableRegistry.table(entry.tables[0], version: version), table.isClosed else { return nil }
+            return table
+        }
+        /// The closed table a `CE` entry is bound to, or nil (P5-6: OBR-15.1 0070, ERR-1.4 0357).
+        func closedCodedTable(_ entry: ComponentGrammar) -> HL7Table? {
+            guard entry.dataType == "CE", entry.tables.count == 1,
                   let table = HL7TableRegistry.table(entry.tables[0], version: version), table.isClosed else { return nil }
             return table
         }
@@ -1744,7 +1761,20 @@ public struct Validator: Sendable {
                     let partial = component.subcomponents.dropFirst().contains { !$0.value.isEmpty }
                     report(component.subcomponents.first?.value, table: table, name: entry.name,
                            component: entry.index, subcomponent: partial ? 1 : nil, repetition: offset + 1)
-                } else if let nested = Self.componentGrammar(entry.dataType, version: version) {
+                    continue
+                }
+                if let table = closedCodedTable(entry) {
+                    // A CE names its coding system in CE.3, "HL7nnnn" for an HL7 table; an
+                    // identifier from another system (OBR-15: "Veterinary medicine may choose
+                    // the tables supported for the components of this field") is not checked.
+                    let parts = component.subcomponents.map(\.value)
+                    let system = parts.count >= 3 ? parts[2] : ""
+                    if system.isEmpty || system == "HL7\(table.number)" {
+                        report(parts.first, table: table, name: entry.name,
+                               component: entry.index, subcomponent: 1, repetition: offset + 1)
+                    }
+                }
+                if let nested = Self.componentGrammar(entry.dataType, version: version) {
                     for inner in nested.components where component.subcomponents.count >= inner.index {
                         guard let table = closedTable(inner) else { continue }
                         report(component.subcomponents[inner.index - 1].value, table: table, name: inner.name,
@@ -1828,7 +1858,8 @@ public struct Validator: Sendable {
         version: Version,
         issues: inout [ValidationIssue]
     ) {
-        guard let dataType = Self.componentGrammar(grammar.dataType, version: version) else { return }
+        guard let dataType = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: grammar.dataType,
+                                               version: version) else { return }
         let repeated = field.repetitions.filter(isRepetitionPopulated).count > 1
         func check(_ entries: [ComponentGrammar], values: [String?], typeName: String,
                    component: Int?, subcomponent: (Int) -> Int?) {
@@ -1879,7 +1910,8 @@ public struct Validator: Sendable {
     ) {
         checkConditionalComponents(grammar, field: field, fieldIndex: fieldIndex, segmentID: segmentID,
                                    segmentIndex: segmentIndex, version: version, issues: &issues)
-        let required = requiredComponents(forCompositeCode: grammar.dataType, version: version)
+        let required = requiredComponents(forCompositeCode: grammar.dataType, segmentID: segmentID,
+                                          fieldIndex: fieldIndex, version: version)
         let requiredSet = requiredComponentSet(forCompositeCode: grammar.dataType)
         guard !required.isEmpty || requiredSet != nil else { return }
         for repetition in field.repetitions where isRepetitionPopulated(repetition) {
@@ -1935,11 +1967,15 @@ public struct Validator: Sendable {
     /// not: CX.5, PT.1, VID.1 and XTN.3 become `R` in v2.8.2.
     ///
     /// v2.3 to v2.4 define components in prose and print no optionality, so nothing is
-    /// required of them here. `.v2_8` is validated as v2.8.2 (ADR-018), so it is checked
+    /// required of them here; nor of a field-local `CM` grammar (P5-6), whose Components
+    /// line prints none either, though it resolves through the same
+    /// ``fieldGrammar(segment:field:dataType:version:)`` as every other composite check. `.v2_8` is validated as v2.8.2 (ADR-018), so it is checked
     /// against that table like any other version. `RE` (required but may be empty) is,
     /// by its own definition, never a missing value.
-    private func requiredComponents(forCompositeCode code: String, version: Version) -> [RequiredComponent] {
-        guard let grammar = Self.componentGrammar(code, version: version) else { return [] }
+    private func requiredComponents(forCompositeCode code: String, segmentID: String, fieldIndex: Int,
+                                    version: Version) -> [RequiredComponent] {
+        guard let grammar = Self.fieldGrammar(segment: segmentID, field: fieldIndex, dataType: code,
+                                              version: version) else { return [] }
         return grammar.components
             .filter { $0.optionalityCode == "R" }
             .map { RequiredComponent(index: $0.index, name: $0.name) }

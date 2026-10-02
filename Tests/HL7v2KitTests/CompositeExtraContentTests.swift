@@ -107,10 +107,12 @@ struct CompositeExtraContentTests {
         #expect(try extras(obx("MA", "0^0^0^0^0^0^0^0~1^1^1^1^1^1^1^1"), at: "OBX", 5).isEmpty)
     }
 
-    @Test("A v2.3 CM field (PV1-37) has no component table and is silent")
-    func cmOnV23IsSilent() throws {
+    @Test("A v2.3 CM field (PV1-37) is bounded by the two components its field definition prints (P5-6)")
+    func cmOnV23IsFieldLocal() throws {
         let pv1 = "PV1|1|I" + String(repeating: "|", count: 35) + "a^b^c^d^e^f^g^h"
-        #expect(try extras(adt(pv1: pv1, version: "2.3"), at: "PV1", 37).isEmpty)
+        #expect(try extras(adt(pv1: pv1, version: "2.3"), at: "PV1", 37).count == 1)
+        let two = "PV1|1|I" + String(repeating: "|", count: 35) + "a^19990101"
+        #expect(try extras(adt(pv1: two, version: "2.3"), at: "PV1", 37).isEmpty)
     }
 
     @Test(".lenient turns the check off")

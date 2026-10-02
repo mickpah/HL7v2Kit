@@ -134,7 +134,9 @@ public enum DataTypeGrammarTable {
     /// line prints, `TS` included (`IN3-20.3`); a caller checking values must
     /// still route each component through `Validator.componentGrammar(_:version:)`
     /// so a `TS` component stays bounded by the primitive's own component limit
-    /// and format check. The validator does not read this table yet.
+    /// and format check. The validator reads this table only through
+    /// `Validator.fieldGrammar(segment:field:dataType:version:)` (P5-6), the one
+    /// resolution point its composite-aware checks share.
     public static func grammar(segment: String, field: Int, version: Version) -> DataTypeGrammar? {
         fieldGrammars(for: version.grammarVersion)["\(segment)-\(field)"]
     }

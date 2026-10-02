@@ -30,7 +30,8 @@ extension Validator {
         case .maximum:
             severity = options.fieldLengthSeverity
         case .range, .oneOf:
-            guard Self.componentGrammar(dataType, version: version) == nil else { return }
+            guard Self.fieldGrammar(segment: segmentID, field: grammar.index, dataType: dataType,
+                                    version: version) == nil else { return }
             severity = options.normativeLengthSeverity
         }
         guard let severity else { return }
@@ -98,7 +99,8 @@ extension Validator {
 
     /// Lexical format of populated primitive values (V251-C10, PrimitiveFormat).
     /// Where `dataType` has a component grammar on the version
-    /// (``componentGrammar(_:version:)``, which keeps a primitive primitive), each component
+    /// (``fieldGrammar(segment:field:dataType:version:)``, which keeps a primitive primitive
+    /// and gives a pre-v2.5 `CM` field the components its definition prints), each component
     /// whose grammar datatype has a rule is checked, and a composite component is
     /// descended one level into its subcomponents, as the component code-table
     /// check does (TS.1 is DTM on v2.5.1). Otherwise a datatype with a rule is
@@ -132,7 +134,8 @@ extension Validator {
         }
         for (offset, repetition) in field.repetitions.enumerated() {
             let n = offset + 1
-            guard let grammar = Self.componentGrammar(dataType, version: grammarVersion) else {
+            guard let grammar = Self.fieldGrammar(segment: location.segmentID, field: location.fieldIndex,
+                                                  dataType: dataType, version: grammarVersion) else {
                 if PrimitiveFormat.checkedTypes.contains(dataType) {
                     report(Self.primitiveValue(repetition), as: dataType, component: nil, subcomponent: nil, repetition: n)
                 }

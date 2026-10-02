@@ -109,6 +109,30 @@ def attribute(definition, names):
     return found, free
 
 
+SUBCOMPONENTS_FOR = re.compile(r"Subcomponents\s+for\s+([^:]+):", re.I)
+
+
+def promote_misprinted_ampersands(text, body):
+    """The Components line with an "&" read as "^" where every piece after it is a component
+    the field's own "Subcomponents for <name>:" lines describe: a piece with subcomponents of
+    its own is a component, never a subcomponent. v2.3.1 and v2.4 PRA-7 print "<privilege
+    (CE)> & <privilege class (CE)> ^ <expiration date (DT)> ^ ...", then "Subcomponents for
+    privilege:" and "Subcomponents for privilege class:", and the v2.4 CH15 example carries
+    "ADMIT&&ADT^MED&&L2^19941231" (privilege class at component 2, the date at 3). Any other
+    "&" is left to parse_components_line (v2.3.1 CD's channel number & channel name)."""
+    described = {" ".join(n.split()).lower()
+                 for n in SUBCOMPONENTS_FOR.findall(" ".join(dtp.unhyphenate("\n".join(body)).split()))}
+    pieces = []
+    for piece in " ".join(dtp.unhyphenate(text).split()).split("^"):
+        parts = piece.split("&")
+        later = [dtp.PIECE.match(p.strip().lstrip("<").rstrip(">").strip()) for p in parts[1:]]
+        if later and all(m and m.group(1).strip().lower() in described for m in later):
+            pieces += parts
+        else:
+            pieces.append(piece)
+    return "^".join(pieces)
+
+
 def schema_fields(version):
     out = {}
     for path in glob.glob(os.path.join(REPO, f"Resources/schemas/v{version}/*.json")):
@@ -159,7 +183,7 @@ def extract(version):
                                           or audit.name_agrees(schema["name"], [name])):
                     skipped.append((key, name, "no schema field of that type or name at that position"))
                     continue
-                comps = dtp.parse_components_line(text)
+                comps = dtp.parse_components_line(promote_misprinted_ampersands(text, body))
                 if not comps:
                     skipped.append((key, name, "the Components line prints no fixed list"))
                     continue

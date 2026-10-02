@@ -200,4 +200,26 @@ struct ComponentCodeTableTests {
         let good = wire(version: "2.3.1").replacingOccurrences(of: "|P|2.3.1", with: "|P^T|2.3.1")
         #expect(try tableIssues(good).isEmpty)
     }
+
+    private func in3Wire(version: String, in3_20: String) -> String {
+        "MSH|^~\\&|HIS|FAC|PAYER|FAC|||BAR^P01|MSG00001|P|\(version)\r"
+            + "IN3|1" + String(repeating: "|", count: 19) + in3_20 + "\r"
+    }
+
+    @Test("P5: a CM component bound to a closed HL7 table is checked on v2.3 to v2.4",
+          arguments: ["2.3", "2.3.1", "2.4"])
+    func fieldLocalClosedTable(version: String) throws {
+        let issues = try tableIssues(in3Wire(version: version, in3_20: "ER^X"))
+        #expect(issues.map(\.code) == [.valueNotInTable(table: "0136")], "IN3-20.2 is HL7 Table 0136 (Y, N)")
+        #expect(issues.first?.location.pathDescription == "IN3[1]-20.2")
+        #expect(try tableIssues(in3Wire(version: version, in3_20: "ER^Y")).isEmpty)
+        #expect(try tableIssues(in3Wire(version: version, in3_20: "ZZ^N")).isEmpty, "IN3-20.1 is IS: never enforced")
+    }
+
+    @Test("P5: MSH-9 components bind open tables on v2.3.1, so a local trigger event is silent")
+    func msh9OpenTablesSilent() throws {
+        #expect(HL7TableRegistry.table("0003", version: .v2_3_1)?.isClosed == false)
+        let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^Z99^ADT_A01|MSG00001|P|2.3.1\r"
+        #expect(try tableIssues(wire).isEmpty)
+    }
 }
