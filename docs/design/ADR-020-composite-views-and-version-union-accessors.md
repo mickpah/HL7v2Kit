@@ -78,7 +78,8 @@ and hand-add later-version accessors to the segment structs.
    `TypedSegment.repetitions(_:)`. The singular accessor's DocC says the field
    repeats.
 3. **Version union.** Each segment struct renders from its base schema (canonical
-   v2.5.1, or else the earliest definer, as today) and then adds what the other
+   v2.5.1, or else the earliest definer, as today; a released struct's base is pinned,
+   see the P10-3 amendment) and then adds what the other
    supported versions contribute (P9-5, with the controller's rulings 1 to 3):
    - fields past the base maximum, and positions the base reserves (no data type)
      that a later version defines, under their own names and types. These are
@@ -160,6 +161,39 @@ No symbol is removed, renamed or retyped. So the release is a 3.x **minor**.
 - P9-5 shipped 510 accessors on the segment structs: 231 later or redefined element
   names (9 of them renames whose type differs), 186 `<name>As<T>`, and 93 more
   `<name>All` (629 in all).
+
+## Amendment (P10-3, 2026-10-02): a released struct's union base never changes
+
+**Rule.** Once a segment struct has been released, its base version is fixed for ever. The
+base of every generated struct that is not the canonical v2.5.1 is recorded in
+`Resources/struct-bases.json` (`segment -> version`), and the codegen
+(`structBase(segmentID:schemas:pins:)` in `Sources/HL7v2KitCodegen/StructBase.swift`) takes a
+listed segment's base from there. Only an unlisted segment takes the original rule: canonical
+v2.5.1, else the earliest definer. A pin to a version that does not define the segment fails
+the run.
+
+**Why.** "The earliest definer" is a property of the supported version set, not of the
+segment. Adding v2.7.1 (remediation P10, ruling D2) would make v2.7.1 the earliest definer of
+IAR, PAC, PRT and SHP, which v3.13.0 released based on v2.8.2. Re-basing them would rename or
+retype released accessors wherever the v2.7.1 element name or type differs, a breaking change
+ADR-014 forbids in 3.x. The pin is data rather than a comparison of version strings, so adding
+any earlier version cannot move a base either; the added version contributes through the
+union surface like any other non-base version.
+
+**The list.** 38 bases, derived from the `// Source schema:` headers of the v3.13.0 generated
+files and checked against `Tests/Fixtures/APISurface/segment-structs-v3.13.0.txt`: v2.6 for
+ADJ, ARV, DMI, ILT, IPR, ITM, IVC, IVT, PCE, PKG, PMT, PSG, PSL, PSS, PYE, REL, RFI, SCD,
+SCP, SDD, SLT, STZ, UAC and VND; v2.8.2 for BUI, CDO, DON, DPS, IAR, MCP, OMC, PAC, PM1,
+PRT, RXV, SGH, SGT and SHP. The other 150 structs are based on v2.5.1 and need no entry.
+
+**Guards.** `StructBasePinTests` fails when a generated struct's base differs from its pin (or
+from v2.5.1 when it has none), when a pin names no generated struct, or when a v3.13.0 struct
+is no longer generated. A new segment with a non-v2.5.1 base therefore has its base added to
+the list in the commit that introduces it, and from then on it is pinned too.
+`scripts/check-struct-base-pin.py` (CI, codegen-drift job) runs the codegen on a scratch copy
+of the schemas with a synthetic earlier version defining PRT under a different name and type,
+and shows PRT stays on v2.8.2 with every released declaration intact, while an unpinned
+segment still takes its earliest definer.
 
 ## References
 

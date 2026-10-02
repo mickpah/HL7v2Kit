@@ -61,3 +61,5 @@ jobs:
             echo "::error::Generated files are untracked or out of date. Run scripts/regenerate-typed-segments.sh and commit the result."
             exit 1
           fi
+      - name: Pinned struct bases self-check
+        run: python3 scripts/check-struct-base-pin.py

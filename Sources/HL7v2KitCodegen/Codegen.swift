@@ -638,6 +638,8 @@ struct Codegen {
         let outputRoot = URL(fileURLWithPath: args.count > 2 ? args[2] : "\(cwd)/Sources/HL7v2Kit/Segment/Generated")
         let tablesRoot = URL(fileURLWithPath: args.count > 3 ? args[3] : "\(cwd)/Resources/tables")
         let tablesOutputRoot = URL(fileURLWithPath: args.count > 4 ? args[4] : "\(cwd)/Sources/HL7v2Kit/Tables/Generated")
+        let structBasePins = try StructBasePins.load(
+            URL(fileURLWithPath: args.count > 13 ? args[13] : "\(cwd)/Resources/struct-bases.json"))
 
         let fm = FileManager.default
 
@@ -668,8 +670,10 @@ struct Codegen {
         // Union surface (P9-5, V282-C10, ADR-020; supersedes the v3-C5 fallback
         // pass). Each segment struct emits once, at the Generated/ root (the
         // struct is shared across versions; per-version field sets live in the
-        // SegmentGrammar+vX_Y_Z.swift tables), from its base schema: canonical
-        // v2.5.1, else the earliest version that defines the segment. The other
+        // SegmentGrammar+vX_Y_Z.swift tables), from its base schema: the version
+        // pinned in Resources/struct-bases.json (P10-3: a released struct's base
+        // never moves), else canonical v2.5.1, else the earliest version that
+        // defines the segment (StructBase.swift). The other
         // versions add accessors on top (later element names, fields past the
         // base maximum, `<name>As<T>` where a scalar or raw field is printed as a
         // composite, `<name>All` where any version repeats the field) and DocC
@@ -684,7 +688,7 @@ struct Codegen {
         // them and delete any file the run did not produce (writeGeneratedDirectory).
         var rendered: [(file: URL, source: String)] = []
         for (segmentID, schemas) in schemasBySegment.sorted(by: { $0.key < $1.key }) {
-            let base = schemas.first { $0.version == canonicalVersion } ?? schemas[0]
+            let base = try structBase(segmentID: segmentID, schemas: schemas, pins: structBasePins)
             let union = try unionSurface(base: base, others: schemas.filter { $0.version != base.version })
             rendered.append((outputRoot.appendingPathComponent("\(segmentID).swift"), render(base, union: union)))
             emitted += 1

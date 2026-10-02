@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P10-3: a released struct's union base never changes (ADR-020 amendment)
+
+- The codegen takes a segment struct's base schema from `Resources/struct-bases.json` where
+  the segment is listed there, and only otherwise from canonical v2.5.1 or the earliest
+  definer (`StructBase.swift`). The list pins the 38 structs released in v3.13.0 on a base
+  other than v2.5.1 (24 on v2.6, 14 on v2.8.2, including IAR, PAC, PRT and SHP), so adding
+  v2.7.1 or any other earlier version cannot rename or retype a released accessor. A pin to
+  a version that does not define the segment fails the run.
+- `StructBasePinTests` (3 tests) fails when a generated struct's base differs from its pin
+  or from v2.5.1, when a pin names no struct, or when a v3.13.0 struct is no longer
+  generated: a new segment's non-v2.5.1 base is added to the list in the commit that
+  introduces it. `scripts/check-struct-base-pin.py` (CI, codegen-drift job) runs the codegen
+  on a scratch schema copy with a synthetic earlier PRT and shows its base and released
+  declarations do not move.
+- Regeneration output is unchanged; `docs/design/public-api-surface.md` states the
+  guarantee.
+
 ### Changed — P8 final review: internal structure initialiser; wording and doc corrections
 
 - `MessageStructure.init(id:version:triggers:citation:elements:)` is internal (unreleased
