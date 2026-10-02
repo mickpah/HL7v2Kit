@@ -296,7 +296,7 @@ matching resolves each choice the same way a full match would. One rule:
 
 > For every optional or repeating element E, FIRST(E) must be disjoint from FOLLOW(E):
 > the FIRST sets of the elements that may follow E up to and including the next required
-> sibling, extended, when E is trailing (everything after it in its group is optional),
+> sibling (excluding E itself, so a repeating element's own re-entry is not an overlap), extended, when E is trailing (everything after it in its group is optional),
 > with the inherited follow set of the enclosing level. The one exempt overlap is between
 > a repeating element and the re-entry of an ENCLOSING repeating group with unbounded
 > maximum: the matcher attributes the segment to the innermost open group, and the lint
@@ -351,6 +351,10 @@ holds).
    are best-effort, so group-scoped predicates do not use them (below).
 5. Where Z-segments may sit is not checked (fact 3).
 6. Message fragments are not structure-checked and not reassembled (above).
+7. A message whose `message.version` differs from the wire reading of MSH-12 (for example
+   one parsed with `ParserOptions.versionOverride`) is not structure-checked; it raises
+   `messageStructureNotModelled`. This is the conservative choice (no misfire); honouring
+   an explicit override would need version provenance on `Message`.
 
 ---
 
