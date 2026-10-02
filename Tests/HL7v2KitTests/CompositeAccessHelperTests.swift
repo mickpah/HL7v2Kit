@@ -62,4 +62,26 @@ struct CompositeAccessHelperTests {
         #expect(cx.id == "A^B")
         #expect(cx.component(4, as: HD.self)?.namespaceID == "NS^X")
     }
+
+    @Test("repetitions(_:) keeps empty repetitions, present-but-empty fields and HL7 null")
+    func repetitionsEmptyAndNull() throws {
+        let gaps = try hydrated(PID.self, from: TestWires.adt("PID|1||A~~B"))
+        let reps = gaps.repetitions(3)
+        #expect(reps.count == 3)
+        #expect(CX(field: reps[0]).id == "A")
+        #expect(CX(field: reps[2]).id == "B")
+        #expect(reps[1].repetitions.count == 1)
+        #expect(reps[1].repetitions[0].components.allSatisfy { $0.subcomponents.allSatisfy { $0.value.isEmpty } })
+
+        let empty = try hydrated(PID.self, from: TestWires.adt("PID|1||"))
+        let emptyReps = empty.repetitions(2)
+        #expect(emptyReps.count == empty.field(2)?.repetitions.count)
+        #expect(emptyReps.count == 1)
+        #expect(emptyReps[0].repetitions[0].components.allSatisfy { $0.subcomponents.allSatisfy { $0.value.isEmpty } })
+
+        let null = try hydrated(PID.self, from: TestWires.adt("PID|1||\"\""))
+        let nullReps = null.repetitions(3)
+        #expect(nullReps.count == 1)
+        #expect(CX(field: nullReps[0]).id == "\"\"")
+    }
 }

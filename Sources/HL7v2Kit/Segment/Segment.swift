@@ -36,6 +36,12 @@ extension TypedSegment {
     /// Every repetition of the 1-based field `index`, each wrapped as a
     /// single-repetition ``Field``, in wire order. Empty when the field is
     /// absent. The generated `All` accessors call this.
+    ///
+    /// Empty repetitions are kept, so positions match the wire: `A~~B` gives three
+    /// entries and the middle one has only empty components. A field that is present
+    /// but empty (`PID|1||`, read at index 2) gives one entry with no content, not an
+    /// empty array. An HL7 null (`""`) gives one entry holding the literal `""`;
+    /// callers decide how to treat null.
     public func repetitions(_ index: Int) -> [Field] {
         guard let field = field(index) else { return [] }
         return field.repetitions.map { Field(repetitions: [$0]) }
