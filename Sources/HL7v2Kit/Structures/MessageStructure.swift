@@ -48,25 +48,36 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         }
     }
 
+    /// Whether this element can match no segment at all: it is optional, or
+    /// it is a group all of whose elements are nullable.
+    var isNullable: Bool {
+        switch self {
+        case .segment(_, let min, _):
+            return min == 0
+        case .group(_, let min, _, let elements):
+            return min == 0 || elements.allSatisfy(\.isNullable)
+        }
+    }
+
     /// The segment reported when this element is required and absent: the
-    /// first required segment it contains, or its first segment.
+    /// first non-nullable segment it contains, or its first segment.
     var headSegmentID: String {
         switch self {
         case .segment(let id, _, _):
             return id
         case .group(_, _, _, let elements):
-            let head = elements.first { $0.min > 0 } ?? elements.first
+            let head = elements.first { !$0.isNullable } ?? elements.first
             return head?.headSegmentID ?? ""
         }
     }
 
     /// FIRST set of a sequence: the union of each element's FIRST set up to
-    /// and including the first required element.
+    /// and including the first element that is not nullable.
     static func firstSet(of elements: ArraySlice<StructureElement>) -> Set<String> {
         var result: Set<String> = []
         for element in elements {
             result.formUnion(element.firstSet)
-            if element.min > 0 { break }
+            if !element.isNullable { break }
         }
         return result
     }
