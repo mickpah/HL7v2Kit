@@ -138,8 +138,37 @@ def check_promote_misprinted_ampersands():
     assert got2 == text2, got2
 
 
+def check_judge():
+    # P5-1 review (P5-8 carry-in): judge()'s three tests, against the real v2.3 table
+    # registry so "resolves" and "same name" exercise genuine data, not a stub.
+    # "one": more than one distinct table number named in a subsection rejects it outright.
+    tables, reasons = dtp.judge("2.3", [("0070", "a"), ("0071", "b")])
+    assert tables == [] and reasons == ["names several tables ['0070', '0071']"], (tables, reasons)
+    # no mention at all: nothing to bind, nothing to report.
+    tables, reasons = dtp.judge("2.3", [])
+    assert tables == [] and reasons == [], (tables, reasons)
+    # "resolves": the number must be a table in this version's own registry.
+    tables, reasons = dtp.judge("2.3", [("9999", "Nonexistent")])
+    assert tables == [] and reasons == ["table 9999 is not in the v2.3 registry"], (tables, reasons)
+    # "same name": the module's own docstring example — v2.3 sec 2.8.31.4 names table 0102
+    # "Relation conjunction", but v2.3's 0102 is "Delayed Acknowledgment Type": a misprint
+    # for 0210, and must be rejected, not bound.
+    tables, reasons = dtp.judge("2.3", [("0102", "Relation conjunction")])
+    assert tables == [] and reasons == [
+        "names table 0102 as 'Relation conjunction', but v2.3 0102 is 'Delayed Acknowledgment Type'"
+    ], reasons
+    # the corrected table (0210, "Relational Conjunction") shares "conjunction" with the
+    # stated name and resolves: this is the binding that should have been made.
+    tables, reasons = dtp.judge("2.3", [("0210", "Relation conjunction")])
+    assert tables == ["0210"] and reasons == [], (tables, reasons)
+    # a mention with no stated name still binds once it resolves (no name to compare).
+    tables, reasons = dtp.judge("2.3", [("0001", "")])
+    assert tables == ["0001"] and reasons == [], (tables, reasons)
+
+
 CHECKS = [check_body_heading_wins_over_contents_entry, check_parse_components_line,
-          check_reconcile_warns_and_keeps_subsections, check_promote_misprinted_ampersands]
+          check_reconcile_warns_and_keeps_subsections, check_promote_misprinted_ampersands,
+          check_judge]
 
 
 def main():

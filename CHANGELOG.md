@@ -35,6 +35,93 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Validator().validate(_:).issues` (all severities) over the 1233 spec
   example messages and the fixture corpus: identical.
 
+### Fixed — P5-7: OBR-15 and OBR-32 to OBR-35 typed `CM`, not the v2.5-era names
+
+- v2.3, v2.3.1 and v2.4 OBR-15 and OBR-32 to OBR-35 were reported as the
+  v2.5-era `SPS` / `NDL` composites. Those structures differ from what the
+  field actually prints (OBR-15.2 additives `TX` vs `SPS.2` `CWE`; OBR-32.1
+  `CN` vs `NDL.1` `CNN`), so the typed name was misleading even though the
+  field-local grammar (P5-5/P5-6) already supplied the right components. The
+  schemas now print `CM`, as the attribute table does; components come only
+  from the field-local grammar. (V24-C08)
+- `audit-schemas.py`'s `CM` carve-out is now an enumerated set,
+  `CM_REFINEMENTS` (`MSG`, `MOC`, `PRL`, `EIP`): only those four pre-v2.5
+  `CM` fields may be typed with their v2.5-era name, because only their
+  structure is identical to it. Every other `CM` field stays `CM`. Guarded
+  by `check_cm_refinements` in `scripts/check-audit-schemas.py`.
+
+### Fixed — P5-6: CE components checked only under an explicit HL7nnnn coding system; width-check dedupe
+
+- Every composite-aware check (width, primitive-component, component
+  code-table, value-format, conditional and required components) now
+  resolves a field's grammar through one point,
+  `Validator.fieldGrammar(segment:field:dataType:version:)`: a primitive
+  stays primitive, else the field-local grammar (P5-5) where the field
+  prints one, else the datatype-level grammar. This closes the
+  component-table half of V231-C03, V23-C06 and V24-C06: a closed HL7 table
+  bound to a field-local `CE`/`CWE` component (OBR-15.1 0070, OBR-15.4 0163,
+  ERR-1.4 0357, SAC-6, TCC-3, IN3-20.2 0136, BLG-1.1 0100, PRA-5.3 0337) is
+  now enforced, where it was silent.
+- A `CE` component's closed-table check only fires when the component's own
+  coding-system subcomponent (CE.3, or CE.6 for the alternate triplet
+  CE.4-6, "defined analogously") explicitly names the table as `HL7nnnn`
+  (case-insensitive; v2.3/v2.3.1 section 2.8.3.3, v2.4 section 2.9.3.3). An
+  empty CE.3 is silent — the spec's own ERR-1 example sends `X3L` with none
+  and calls it "the locally-established code" — and so is any other coding
+  system, which is how OBR-15's veterinary-table allowance (v2.4 section
+  7.4.1.15) is honoured. The same rule now also reaches the existing
+  v2.5.1 ELD.4 (0357) type-level binding.
+- v2.3.1 and v2.4 PRA-7 now has five components: the extractor reads a
+  misprinted `&` as `^` when every later piece has its own "Subcomponents
+  for <name>:" line.
+- IS bindings and the open MSH-9 tables (0076, 0003, 0354 on v2.3.1/v2.4)
+  stay unenforced.
+
+### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
+
+- `DataTypeGrammarTable.grammar(segment:field:version:)` (additive): the
+  component grammar a pre-v2.5 field defines for itself on its own printed
+  Components line, read by `scripts/extract-field-components.py` into
+  `Resources/datatypes/v<X>/fields/<SEG>-<N>.json`. 45 fields on v2.3, 41 on
+  v2.3.1, 43 on v2.4. A table binds only to a coded component (IS, ID,
+  CE/CNE/CWE), under the existing three-test evidence rule, reaching
+  13/19/26 bound components across the three versions; 15 field mentions
+  (IN2-28, IN2-29, v2.3 MSH-9, v2.3 IN3-11.1) stay unbound because the prose
+  names two tables in one sentence or misprints the table number, and are
+  recorded in the limitations register.
+- The component code-table check now runs on these fields (the width check
+  and the others are wired in by P5-6).
+
+### Added — P5-2/P5-3: CD, CF, TS and TQ component grammar
+
+- v2.3, v2.3.1 and v2.4 `CD` (6 components), `CF` (6) and `TS` (2) now have
+  a component grammar, read from each datatype's printed Components /
+  Format line when it has no numbered prose subsections
+  (`"source": "prose-line"`); `CD` and `CF` are now width-checked and
+  `CF.2`/`CF.5` follow the FT line-marker rule.
+- v2.3, v2.3.1 and v2.4 `TQ` now has a component grammar (10/12/12
+  components), read from the CH4 quantity/timing definition (v2.3/v2.3.1
+  section 4.4, v2.4 section 4.3) rather than CH02; v2.4 TQ.9 is bound to
+  Table 0472.
+- `Validator.componentGrammar(_:version:)`: the single resolution point a
+  composite check calls for a type with no field-local grammar. It keeps
+  `TS` a primitive before consulting the table, so giving `TS` a component
+  grammar does not regress the P6-7 format check, the P6-14
+  primitive-component limit or the P6-15 width check.
+  `checkComponentCodeTables`, `checkConditionalComponents` and
+  `requiredComponents` all route through it.
+
+### Fixed — P5-1: pre-v2.5 composites corrected from the printed Components line
+
+- `extract-datatype-prose.py` now also reads the printed "Components:"
+  line: a numbered subsection that prints no datatype yields to it, and a
+  component the line names past the last numbered subsection comes from it.
+- v2.3 and v2.3.1 `CE` now has six components (was three); v2.3.1 `CNE` now
+  has nine (was eight). (V23-C04, V231-C07)
+- Side effects, each printed by the line: `DLN.1` is `ST` on v2.3 to v2.4
+  (was unset); v2.3 `ED.2` is `ID` bound to Table 0191 (was unset); v2.3
+  `SN.1` is the comparator component.
+
 ### Added — P6-15: extra components on composite fields
 
 - New `IssueCode.extraComponentsInCompositeField` (additive; the enum is open
