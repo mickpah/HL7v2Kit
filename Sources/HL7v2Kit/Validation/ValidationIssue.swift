@@ -257,7 +257,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     case messageStructureMismatch(declared: String, trigger: String)
     /// No abstract message syntax was applied to this message, so segment
     /// order and groups were not checked: the structure (`structure`, the
-    /// MSH-9.3 value or `CODE^EVENT`) is not modelled for the version, the
+    /// MSH-9.3 value or `CODE^EVENT`) is not modelled for the version (an
+    /// MSH-9.3 ID outside the modelled structures included, until the
+    /// version is complete), a `CODE^EVENT` with no MSH-9.3 is printed under
+    /// two modelled structures (ambiguous), the
     /// version is not resolved from MSH-12, the message is a fragment
     /// (MSH-14 populated, a trailing DSC with DSC-1 populated, or a trailing
     /// DSC the structure does not define), or the structure fails the

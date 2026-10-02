@@ -189,6 +189,62 @@ struct MessageStructureValidationTests {
         #expect(try structureIssues(Self.wire("SIU^S12", [])).map(\.code) == [.messageStructureNotModelled(structure: "SIU^S12")])
     }
 
+    // ADR-019 lookup rule 1: an MSH-9.3 ID outside the loaded structures is
+    // not modelled while the version is incomplete (a mismatch only once the
+    // version is complete), even when the trigger resolves elsewhere.
+    @Test("ADT^A04^ADT_A04 on the incomplete v2.5.1 pilot: not modelled, naming the printed ADT_A01, no body match")
+    func a04DeclaredWrongly() throws {
+        let issues = try structureIssues(Self.wire("ADT^A04^ADT_A04", [Self.pid]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A04")])
+        #expect(issues.first?.severity == .info)
+        #expect(issues.first?.message.contains("prints ADT^A04 under ADT_A01") == true)
+    }
+
+    @Test("A two-component ACK resolves through ACK^* whatever the event")
+    func ackTwoComponents() throws {
+        #expect(try structureIssues(Self.wire("ACK^R01", ["MSA|AA|MSG00001"])).isEmpty)
+        #expect(try structureIssues(Self.wire("ACK^R01^ACK", [])).map(\.code)
+            == [.messageStructureSegmentMissing(structure: "ACK", segmentID: "MSA", group: nil)])
+    }
+
+    static func synthetic(_ id: String) -> MessageStructure {
+        MessageStructure(id: id, version: "2.5.1", triggers: ["ZZZ^Z01"], citation: "synthetic",
+                         elements: [.segment("MSH", min: 1, max: 1), .segment("PID", min: 1, max: 1)])
+    }
+
+    @Test("A trigger printed under two loaded structures is ambiguous: not modelled, naming both (B6)")
+    func ambiguousTrigger() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01"), "ZZZ_Z02": Self.synthetic("ZZZ_Z02")]
+        let message = try Parser().parse(Self.wire("ZZZ^Z01", [Self.pid]))
+        let resolved = Validator().resolveStructure(message, severity: .error, structures: table)
+        #expect(resolved.structure == nil)
+        #expect(resolved.issues.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ^Z01")])
+        #expect(resolved.issues.first?.message.contains("ambiguous") == true)
+        #expect(resolved.issues.first?.message.contains("ZZZ_Z01 and ZZZ_Z02") == true)
+        #expect(resolved.issues.first?.message.contains("no v2.5.1 abstract message syntax") == false)
+
+        let declared = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z02", [Self.pid]))
+        let named = Validator().resolveStructure(declared, severity: .error, structures: table)
+        #expect(named.structure?.id == "ZZZ_Z02")
+        #expect(named.issues.isEmpty)
+    }
+
+    @Test("ADT^A02^ADT_A01 contradicts v2.5.1 (ADT_A01 is printed for A01, A04, A08, A13 only)")
+    func a02UnderA01() throws {
+        let issues = try structureIssues(Self.wire("ADT^A02^ADT_A01", [Self.evn, Self.pid, Self.pv1]))
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: "ADT_A01", trigger: "ADT^A02")])
+    }
+
+    @Test("ADT^A08^ADT_A01 agrees with the print")
+    func a08UnderA01() throws {
+        #expect(try structureIssues(Self.wire("ADT^A08^ADT_A01", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+    }
+
+    @Test("MSH-9 of just ACK resolves to the ACK structure (event varies)")
+    func ackCodeOnly() throws {
+        #expect(try structureIssues(Self.wire("ACK", ["MSA|AA|MSG00001"])).isEmpty)
+    }
+
     // MARK: - Version rule
 
     @Test("A recognised version with no structure data (v2.4) is an info issue")

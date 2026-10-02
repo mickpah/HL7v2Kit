@@ -425,8 +425,8 @@ holds).
 |---|---|---|---|
 | `messageStructureSegmentMissing(structure:segmentID:group:)` | A required segment, or the head of a required group, is absent. `group` is `nil` at top level. | The segment it was expected before (the last segment when expected at the end) | `messageStructureSeverity` |
 | `messageStructureSegmentUnexpected(structure:segmentID:)` | A segment has no place at that point: out of order, an extra repetition of a non-repeating segment or group, or a non-Z segment the structure does not contain. | The segment | `messageStructureSeverity` |
-| `messageStructureMismatch(declared:trigger:)` | MSH-9.3 names a structure the version does not print for MSH-9.1^9.2, or MSH-9.1^9.2 is printed only under another structure. | MSH-9.3 | `messageStructureSeverity` |
-| `messageStructureNotModelled(structure:)` | No structure is modelled for this message (or it fails the lint, or the version is unresolved), so order and groups were not checked. | MSH-9 | always `.info` |
+| `messageStructureMismatch(declared:trigger:)` | MSH-9.3 names a structure the version does not print for MSH-9.1^9.2, or (on a complete version only, lookup rule 1) MSH-9.3 is not a structure of the version and MSH-9.1^9.2 is printed only under another structure. | MSH-9.3 | `messageStructureSeverity` |
+| `messageStructureNotModelled(structure:)` | No structure is modelled for this message (or it fails the lint, or the version is unresolved, or MSH-9.3 is empty and MSH-9.1^9.2 is printed under two loaded structures), so order and groups were not checked. | MSH-9 | always `.info` |
 
 AU 00060.1 findings reuse the existing `profileConstraintViolation(localeRule:
 "HL7au:00060.1")`, as every other AU point does; no AU-specific code.
@@ -514,7 +514,10 @@ Lookup, within the grammar version's `MessageStructureTable`:
    `messageStructureMismatch`.
 2. MSH-9.3 empty: resolve MSH-9.1^9.2 through the `triggers` index (the v2.3 case and
    legacy two-component MSH-9). The missing component itself stays the business of the
-   required-component check (M21).
+   required-component check (M21). A trigger no loaded structure prints is
+   `messageStructureNotModelled`; one printed under two loaded structures (pre-flight B6;
+   none in the pilot) is not resolved either, and the info issue names it ambiguous and
+   lists both structures (amended in P8-6).
 3. v2.3: resolution uses MSH-9.1^9.2 only; v2.3 defines no MSH-9.3.
 4. `ACK^<any>` resolves to `ACK` via `*`.
 

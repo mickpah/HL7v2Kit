@@ -18,11 +18,20 @@ extension Validator {
     /// apply only when MSH-12 reads as a recognised version whose grammar
     /// version is the message's; an empty, unresolved or different reading
     /// (for example `ParserOptions.versionOverride`) is not matched.
-    /// Lookup: MSH-9.3 when valued, else MSH-9.1^9.2 through the caption-line
-    /// triggers when exactly one structure prints it. An MSH-9.3 whose
-    /// structure does not print MSH-9.1^9.2 is reported as a mismatch alone,
-    /// with no body match. Table 0354 is not consulted.
-    func resolveStructure(_ message: Message, severity: IssueSeverity) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
+    /// Lookup (ADR-019 "Structure resolution and version", rules 1 to 4):
+    /// MSH-9.3 when valued; else MSH-9.1^9.2 (a bare `ACK` as `ACK^`) through
+    /// the caption-line triggers, `ACK^*` matching any event. A trigger no
+    /// loaded structure prints, or one printed under two (B6, ambiguous), is
+    /// not modelled. An MSH-9.3 whose structure does not print MSH-9.1^9.2 is
+    /// reported as a mismatch alone, with no body match. An MSH-9.3 ID that is
+    /// not loaded is not modelled: no version is complete yet, and rule 1
+    /// raises the mismatch for an unknown ID only on a complete version.
+    /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
+    ///
+    /// `structures` replaces the version's loaded table; tests pass a
+    /// synthetic one.
+    func resolveStructure(_ message: Message, severity: IssueSeverity,
+                          structures: [String: MessageStructure]? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
         let code = message.messageCode ?? ""
         let event = message.triggerEvent ?? ""
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
@@ -38,13 +47,29 @@ extension Validator {
             return (nil, [notModelled(name, message: message, reason: why)])
         }
 
+        let table = structures ?? MessageStructureTable.structures(for: message.version.grammarVersion)
+        let byTrigger = table.values
+            .filter { $0.accepts(messageCode: code, triggerEvent: event) }
+            .map(\.id).sorted()
+        let ver = "v\(message.version.rawValue)"
+
         guard !declared.isEmpty else {
-            let byTrigger = MessageStructureTable.structures(messageCode: code, triggerEvent: event, version: message.version)
-            guard byTrigger.count == 1 else { return (nil, [notModelled(trigger, message: message)]) }
-            return (byTrigger[0], [])
+            if byTrigger.count > 1 {
+                let both = byTrigger.dropLast().joined(separator: ", ") + " and " + byTrigger[byTrigger.count - 1]
+                return (nil, [notModelled(trigger, message: message,
+                    reason: "the trigger is ambiguous, printed under \(both) in \(ver), and MSH-9.3 does not say which")])
+            }
+            guard let only = byTrigger.first, let structure = table[only] else {
+                return (nil, [notModelled(trigger, message: message)])
+            }
+            return (structure, [])
         }
-        guard let structure = MessageStructureTable.structure(declared, version: message.version) else {
-            return (nil, [notModelled(declared, message: message)])
+        guard let structure = table[declared] else {
+            let printed = byTrigger.isEmpty ? nil
+                : "no \(ver) abstract message syntax is modelled for \(declared); \(ver) prints \(trigger) under "
+                + byTrigger.joined(separator: ", ")
+                + ", but an unmodelled MSH-9.3 is reported as a mismatch only once every \(ver) structure is modelled"
+            return (nil, [notModelled(declared, message: message, reason: printed)])
         }
         guard structure.accepts(messageCode: code, triggerEvent: event) else {
             return (nil, [ValidationIssue(
@@ -130,7 +155,9 @@ extension Validator {
     /// DSC with DSC-1 populated, whatever the structure defines; or the last
     /// segment is DSC and the structure's last top-level element is not DSC.
     /// A trailing DSC with an empty or null DSC-1 on a structure that ends in
-    /// `[DSC]` is matched.
+    /// `[DSC]` is matched. MSH-14 is read the same way: it carries the unique
+    /// value that matched a previous DSC-1, and the HL7 null `""` is not a
+    /// value that can match one, so it does not mark a fragment.
     func fragmentReason(_ message: Message, structure: MessageStructure) -> String? {
         func populated(_ field: Field?) -> Bool {
             let value = field?.stringValue ?? ""
