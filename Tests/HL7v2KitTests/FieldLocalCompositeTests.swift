@@ -74,30 +74,35 @@ struct FieldLocalCompositeTests {
         }
     }
 
-    @Test("A CE component bound to a closed HL7 table: ERR-1.4 0357, OBR-15.1 0070, OBR-15.4 0163")
+    @Test("A CE component's closed HL7 table is enforced only when CE.3 names it: ERR-1.4 0357, OBR-15.1 0070, OBR-15.4 0163")
     func ceBindings() throws {
-        for version in ["2.3.1", "2.4"] {
-            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^999")) == [.valueNotInTable(table: "0357")])
-            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^103&Table value not found&HL70357")).isEmpty)
+        for version in ["2.3.1", "2.4", "2.5.1"] {
+            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^999&&HL70357")) == [.valueNotInTable(table: "0357")], "v\(version)")
+            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^999&&hl70357")) == [.valueNotInTable(table: "0357")], "v\(version)")
+            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^103&Table value not found&HL70357")).isEmpty, "v\(version)")
         }
         for version in ["2.3", "2.3.1", "2.4"] {
-            let bad = try issues(wire(version, "OBR", 15, "QQQ"), at: "OBR[1]-15")
-            #expect(bad == [.valueNotInTable(table: "0070")], "v\(version)")
-            #expect(try tableCodes(wire(version, "OBR", 15, "QQQ&&HL70070")) == [.valueNotInTable(table: "0070")])
-            #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^QQ")) == [.valueNotInTable(table: "0163")])
-            #expect(try tableCodes(wire(version, "OBR", 15, "BLD&Blood&HL70070^^^LA")).isEmpty)
+            #expect(try issues(wire(version, "OBR", 15, "QQQ&&HL70070"), at: "OBR[1]-15") == [.valueNotInTable(table: "0070")], "v\(version)")
+            #expect(try tableCodes(wire(version, "OBR", 15, "BLD^^^QQ&&HL70163")) == [.valueNotInTable(table: "0163")])
+            #expect(try tableCodes(wire(version, "OBR", 15, "BLD&Blood&HL70070^^^LA&&HL70163")).isEmpty)
         }
-        #expect(try tableCodes(wire("2.4", "SAC", 6, "QQQ")) == [.valueNotInTable(table: "0070")])
-        #expect(try tableCodes(wire("2.4", "TCC", 3, "BLD^^^QQ")) == [.valueNotInTable(table: "0163")])
+        #expect(try tableCodes(wire("2.4", "SAC", 6, "QQQ&&HL70070")) == [.valueNotInTable(table: "0070")])
+        #expect(try tableCodes(wire("2.4", "TCC", 3, "BLD^^^QQ&&HL70163")) == [.valueNotInTable(table: "0163")])
     }
 
-    @Test("Veterinary medicine may choose the tables for OBR-15: a non-HL7 coding system is silent")
+    @Test("An empty or non-HL7 coding system is silent: the spec's own ERR-1 'X3L', and OBR-15's veterinary tables")
     func otherCodingSystemSilent() throws {
+        for version in ["2.3.1", "2.4", "2.5.1"] {
+            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^X3L")).isEmpty, "v\(version): the locally-established code")
+            #expect(try tableCodes(wire(version, "ERR", 1, "PID^1^16^999&&L")).isEmpty, "v\(version)")
+        }
         for version in ["2.3", "2.3.1", "2.4"] {
+            #expect(try tableCodes(wire(version, "OBR", 15, "QQQ^^^QQ")).isEmpty, "v\(version): CE.3 unstated")
             #expect(try tableCodes(wire(version, "OBR", 15, "123038009&Specimen&SCT^^^456&Site&SCT")).isEmpty, "v\(version)")
             #expect(try tableCodes(wire(version, "OBR", 15, "QQQ&&99VET")).isEmpty, "v\(version)")
         }
-        #expect(try tableCodes(wire("2.4", "ERR", 1, "PID^1^16^999&&L")).isEmpty)
+        #expect(try tableCodes(wire("2.4", "SAC", 6, "QQQ")).isEmpty)
+        #expect(try tableCodes(wire("2.4", "TCC", 3, "BLD^^^QQ")).isEmpty)
     }
 
     @Test("PRA-7's misprinted '&' between two components is read as '^': its Subcomponents lines and example agree")

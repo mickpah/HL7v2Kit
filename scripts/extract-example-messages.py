@@ -664,20 +664,6 @@ _MSA_QAK_ONE_LINE_REASON = (
 _TCC9_REASON = (
     "TCC-9 Automatic Rerun Allowed is ID (Table 0136), but the example prints \" Y^YES\": a "
     "leading space (present in the PDF text) and a CNE-shaped code^text pair.")
-# P5-6: ERR-1.4 is a CE bound to HL7 Table 0357, checked when CE.3 is empty or "HL70357"
-# (v2.3.1 / v2.4 field-local ERR-1; v2.5.1 ELD.4, where the v2.3 and v2.3.1 copies land as
-# their MSH-12 prints 2.1). The example carries X3L, which its own prose calls "the
-# locally-established code X3L" (v2.3 / v2.3.1 2.25.2, v2.4 2.18.2 Error return): a local
-# extension of a closed HL7 table, which a recipient declares (localTableExtensions), with no
-# coding system naming it as local. The rule is right; the example uses an undeclared extension.
-_ERR1_LOCAL_CODE_REASON = ("ERR-1.4 'X3L' is the prose's own 'locally-established code', a local extension "
-                           "of closed HL7 Table 0357 sent with no coding system (v2.3/v2.3.1 2.25.2, v2.4 2.18.2)")
-_P5_6_ENTRIES = [
-    {"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0357")',
-     "location_pattern": r"^ERR\[\d+\]-1\.4\.1$", "count": 1, "reason": _ERR1_LOCAL_CODE_REASON}
-    for src in ["v2.3/CH2.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH02.PDF"]
-]
-
 _P6_13_ENTRIES = [
     *[{"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0206")',
        "location_pattern": r"^AI[LP]\[\d+\]-2\.1$", "count": n,
@@ -740,7 +726,6 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     *_P4_29_ENTRIES,
     *_P4_30_ENTRIES,
     *_P6_13_ENTRIES,
-    *_P5_6_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact

@@ -1706,11 +1706,15 @@ public struct Validator: Sendable {
     ///
     /// A top-level `CE` component bound to one closed HL7 table (P5-6: OBR-15.1 0070,
     /// OBR-15.4 0163, ERR-1.4 0357, SAC-6 and TCC-3) is checked on its identifier, located at
-    /// subcomponent 1, only when its coding system is empty or names that table: "When an
-    /// HL7 table is used for a CE data type, the name of coding system component is defined
-    /// as HL7nnnn where nnnn is the HL7 table number" (v2.3 / v2.3.1 2.8.3.3, v2.4 2.9.3.3).
-    /// Any other coding system is not that table, so OBR-15's "Veterinary medicine may choose
-    /// the tables supported for the components of this field" (v2.4 7.4.1.15) stays silent.
+    /// subcomponent 1, only when its coding system explicitly names that table, compared
+    /// case-insensitively: "When an HL7 table is used for a CE data type, the name of coding
+    /// system component is defined as HL7nnnn where nnnn is the HL7 table number" (v2.3 /
+    /// v2.3.1 2.8.3.3, v2.4 2.9.3.3). An empty CE.3 leaves the system unstated and is silent:
+    /// the spec's own ERR-1 example sends `X3L` with none, "the locally-established code"
+    /// (v2.3 / v2.3.1 2.25.2, v2.4 2.18.2). Any other coding system is not that table, so
+    /// OBR-15's "Veterinary medicine may choose the tables supported for the components of
+    /// this field" (v2.4 7.4.1.15) stays silent. The rule applies to any CE component a
+    /// grammar binds to one closed HL7 table, type-level included (v2.5.1 ELD.4 0357).
     private func checkComponentCodeTables(
         dataType: String,
         field: Field,
@@ -1764,12 +1768,14 @@ public struct Validator: Sendable {
                     continue
                 }
                 if let table = closedCodedTable(entry) {
-                    // A CE names its coding system in CE.3, "HL7nnnn" for an HL7 table; an
-                    // identifier from another system (OBR-15: "Veterinary medicine may choose
-                    // the tables supported for the components of this field") is not checked.
+                    // A CE names its coding system in CE.3, "HL7nnnn" for an HL7 table. Only
+                    // that explicit claim is checked: an unstated system may carry a local code
+                    // (the spec's own ERR-1 "X3L"), and another system (OBR-15: "Veterinary
+                    // medicine may choose the tables supported for the components of this
+                    // field") is not the HL7 table.
                     let parts = component.subcomponents.map(\.value)
                     let system = parts.count >= 3 ? parts[2] : ""
-                    if system.isEmpty || system == "HL7\(table.number)" {
+                    if system.caseInsensitiveCompare("HL7\(table.number)") == .orderedSame {
                         report(parts.first, table: table, name: entry.name,
                                component: entry.index, subcomponent: 1, repetition: offset + 1)
                     }
