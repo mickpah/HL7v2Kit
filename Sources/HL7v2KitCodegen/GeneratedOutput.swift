@@ -33,7 +33,8 @@ func writeGeneratedDirectory(_ rendered: [(file: URL, source: String)], into dir
         ? try fm.contentsOfDirectory(atPath: directory.path).sorted() : []
     var stale: [URL] = []
     var foreign: [String] = []
-    for entry in existing where !produced.contains(entry) {
+    // Hidden entries (a Finder `.DS_Store`) are neither generated nor source: left alone.
+    for entry in existing where !produced.contains(entry) && !entry.hasPrefix(".") {
         let url = directory.appendingPathComponent(entry)
         if isGeneratedFile(url) { stale.append(url) } else { foreign.append(url.path) }
     }
