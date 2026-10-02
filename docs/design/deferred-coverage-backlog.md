@@ -84,12 +84,15 @@ on its own rationale: the `2.8` MSH-12 raw value is rare in the field.
 ## Also deferred: abstract message syntax (all versions)
 
 Message structures (segment order, segment groups, required segments per trigger event,
-and the MSH-9.3 event-to-structure mapping) are not modelled on any version. This is a
-different axis from the segment surface above: every segment can be modelled and a message
-can still be structurally invalid. It is registered as blocking spec-completeness in
-`permanent-limitations-register.md` section E, designed in ADR-019 (accepted 2026-09-30),
-piloted by `planning/remediation/P8-message-structures.md` and rolled out per version by
-`planning/remediation/P8b-message-structure-rollout.md`.
+and the MSH-9.3 event-to-structure mapping) are modelled only for the P8 pilot: v2.5.1
+ADT_A01, ORU_R01 and ACK, checked when `ValidationOptions.messageStructureSeverity` is set
+(off by default; P8-3 to P8-7, 2026-10-02). Every other structure and version is not
+modelled. This is a different axis from the segment surface above: every segment can be
+modelled and a message can still be structurally invalid. It is registered as blocking
+spec-completeness in `permanent-limitations-register.md` section E, designed in ADR-019
+(accepted 2026-10-02 under gate G2), piloted by `planning/remediation/P8-message-structures.md`
+and rolled out per version by `planning/remediation/P8b-message-structure-rollout.md` (to be
+scoped by P8-9).
 
 ## Exit criteria — when this register closes
 

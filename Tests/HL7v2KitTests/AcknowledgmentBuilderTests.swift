@@ -119,6 +119,32 @@ struct AcknowledgmentBuilderTests {
         #expect(String(decoding: ack.serialize(), as: UTF8.self).contains("|ACK^A01|"))
     }
 
+    @Test("An empty original MSH-9.2 gives ACK^^ACK: a required-MSG.2 error where the version prints it, as on the original",
+          arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+    func emptyEvent(version: String) throws {
+        let original = try Parser().parse(Self.original(version: version, msh9: "ADT"))
+        let ack = try Self.ack(Self.original(version: version, msh9: "ADT"))
+        #expect(String(decoding: ack.serialize(), as: UTF8.self).contains("|ACK^^ACK|"))
+        let reparsed = try Parser().parse(Data(ack.serialize()))
+        let atMSG2 = { (report: ValidationReport) in
+            report.issues.filter {
+                $0.code == .requiredComponentMissing && $0.location.segmentID == "MSH"
+                    && $0.location.fieldIndex == 9 && $0.location.componentIndex == 2
+            }
+        }
+        let ackIssues = atMSG2(Validator().validate(reparsed))
+        let originalIssues = atMSG2(Validator().validate(original))
+        if ["2.5.1", "2.6", "2.8.2"].contains(version) {
+            #expect(ackIssues.count == 1 && ackIssues.allSatisfy { $0.severity == .error },
+                    "\(version): \(ackIssues.map(\.message))")
+            #expect(originalIssues.count == 1, "\(version): the original fails MSG.2 the same way")
+        } else {
+            // v2.3.1 and v2.4 print no component optionality.
+            #expect(Validator().validate(reparsed).issues.isEmpty, "\(version)")
+            #expect(originalIssues.isEmpty)
+        }
+    }
+
     @Test("Every Table 0008 code builds, and the enum is exactly Table 0008 on every supported version")
     func table0008() throws {
         let original = try Parser().parse(Self.original())

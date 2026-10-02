@@ -227,7 +227,9 @@ struct SignatureCompatibilityTests {
         let maximum: KeyPath<StructureElement, Int?> = \.max
         let element = group("G", 0, nil, [segment("PID", 1, 1)])
         let structure = make("ZZZ_Z01", "2.5.1", ["ZZZ^Z01"], "test", [segment("MSH", 1, 1), element])
-        #expect(structure.accepts(messageCode: "ZZZ", triggerEvent: "Z01"))
+        let accepts: (MessageStructure) -> (String, String) -> Bool = MessageStructure.accepts(messageCode:triggerEvent:)
+        #expect(accepts(structure)("ZZZ", "Z01"))
+        #expect(!accepts(structure)("ZZZ", "Z02"))
         #expect(element[keyPath: minimum] == 0 && element[keyPath: maximum] == nil)
         #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
         #expect(byTrigger("ZZZ", "Z01", .v2_5_1).isEmpty)

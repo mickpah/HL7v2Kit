@@ -59,9 +59,17 @@ public extension MessageBuilder {
     ///   acknowledged message's and the structure "is always ACK" (v2.5.1
     ///   CH02 §2.14.1 note; v2.4 §2.14.1, v2.6 and v2.8.2 §2.13.1). On v2.3,
     ///   whose MSH-9 has two components (v2.3 CH02 §2.24.1.9), it is
-    ///   `ACK^<event>`; v2.3.1 adds the third component (§2.24.1.9). The
-    ///   version is the original's parsed `version`. An empty original
-    ///   MSH-9.2 leaves the event empty rather than guessing one.
+    ///   `ACK^<event>`; v2.3.1 adds the third component (§2.24.1.9). On v2.3
+    ///   and v2.3.1, §2.24.1.9 says "The second component is not required on
+    ///   response or acknowledgment messages" and prints no note that the
+    ///   event equals the original's, so echoing it there is permitted, not
+    ///   mandated; the builder echoes it on every version. The version is
+    ///   the original's parsed `version`. An empty original MSH-9.2 (an MSH-9
+    ///   of `ADT`, or a bare `ACK`) leaves the event empty rather than
+    ///   guessing one, so MSH-9 is `ACK^^ACK` (`ACK` on v2.3). On v2.5.1,
+    ///   v2.6 and v2.8.2, which print MSG.2 as required, that ACK fails the
+    ///   required-component check at MSH-9.2, as the original itself does;
+    ///   v2.3.1 and v2.4 print no component optionality and accept it.
     /// - MSH-12: the original's MSH-12, copied as a field, so the ACK
     ///   declares the version it was built in. An unrecognised or empty
     ///   MSH-12 is echoed as received (the parser reads such a message as
@@ -69,6 +77,9 @@ public extension MessageBuilder {
     ///   original.
     /// - MSH-18: the original's MSH-18, copied as a field, because the ACK is
     ///   serialised in the original's character set and must declare it.
+    ///   This is a builder rule, not a spec echo: §2.9.2.2 lists MSH-3, MSH-4
+    ///   and MSH-11 as the copied fields, and MSH-18 is not among them (nor
+    ///   in ADR-019 decision 9's original list; amended in P8-8).
     /// - MSA-1: `code`. MSA-2: the original's MSH-10 field, copied so that an
     ///   escape sequence round-trips ("MSH-10 from MSH segment of incoming
     ///   message", v2.5.1 CH02 §2.9.2.2 table).

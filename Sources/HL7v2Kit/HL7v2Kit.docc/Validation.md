@@ -77,7 +77,7 @@ let options = ValidationOptions(
 )
 ```
 
-Three further switches are set by mutation, not the initialiser: ``ValidationOptions/requiredComponentSeverity``, ``ValidationOptions/conformanceConditionSeverity`` (the opt-in v2.7 component rules), ``ValidationOptions/auPathologySender``, ``ValidationOptions/auDisplayIntended`` and ``ValidationOptions/auNASHTransport``. The last three are caller assertions of facts no message carries, each gating an ADRM rule that is scoped on one:
+Further switches are set by mutation, not the initialiser, among them ``ValidationOptions/requiredComponentSeverity``, ``ValidationOptions/conformanceConditionSeverity`` (the opt-in v2.7 component rules), ``ValidationOptions/messageStructureSeverity`` (see <doc:#Message-structures>), ``ValidationOptions/auPathologySender``, ``ValidationOptions/auDisplayIntended`` and ``ValidationOptions/auNASHTransport``. The last three are caller assertions of facts no message carries, each gating an ADRM rule that is scoped on one:
 
 | Option | Rule it applies | The fact the wire lacks |
 | --- | --- | --- |
@@ -139,9 +139,21 @@ Semantics:
 
 Conditions live in the per-segment JSON schemas under `Resources/schemas/<version>/` and are emitted into the codegen-produced ``SegmentGrammarTable``. To add a condition to a field, edit the schema and run `bash scripts/regenerate-typed-segments.sh`. See <doc:AddingASegment>.
 
+## Message structures
+
+Set ``ValidationOptions/messageStructureSeverity`` to check the message's abstract message syntax (ADR-019); it is `nil`, off, in every preset, so default output is unchanged. The structure comes from MSH-9.3, or from MSH-9.1 and MSH-9.2 through the chapter caption lines when MSH-9.3 is empty. The check reports a missing required segment or group (``IssueCode/messageStructureSegmentMissing(structure:segmentID:group:)``), a segment out of place or beyond its maximum repetitions (``IssueCode/messageStructureSegmentUnexpected(structure:segmentID:)``), and an MSH-9.3 that names a modelled structure not printed for the trigger event (``IssueCode/messageStructureMismatch(declared:trigger:)``, reported alone, with no segment-order findings). When no structure is applied, one ``IssueCode/messageStructureNotModelled(structure:)`` issue at `.info` says why: the structure or version is not modelled, MSH-12 is empty or does not resolve to the version validated, the trigger is printed under two structures, the message is a fragment (MSH-14 populated, or a trailing DSC with a continuation pointer or where the structure defines none), or the structure fails the determinism lint. Z-segments are left to ``ZSegmentPolicy`` and ADD continuations are skipped; a segment the version's grammar does not define is reported once, by ``IssueCode/segmentNotInVersionGrammar``. Receivers ignore unexpected segments (v2.5.1 CH02 §2.6.2), so use `.warning` on the receiving side and `.error` on the sending side.
+
+```swift
+var options = ValidationOptions.default
+options.messageStructureSeverity = .warning
+let report = Validator(options: options).validate(message)
+```
+
+Look structures up with ``MessageStructureTable``.
+
 ## What the validator does not check
 
-- **Message structure.** Segment order, segment groups, the segments each trigger event requires, and the MSH-9.3 event-to-structure mapping are not checked on any version: a v2.5.1 `ADT^A01` with no EVN or PV1, or an ACK with no MSA, raises no issue. Registered as blocking spec-completeness (permanent-limitations register §E; ADR-019).
+- **Message structure (partial).** Segment order, groups and required segments are checked only for the structures modelled so far (v2.5.1 ADT_A01, ORU_R01 and ACK), and only when ``ValidationOptions/messageStructureSeverity`` is set. Every other structure and version reports ``IssueCode/messageStructureNotModelled(structure:)``, and so do fragments and an MSH-9.3 naming a structure that is not modelled (`ADT^A04^ADT_A04` on v2.5.1). Registered as blocking spec-completeness until the per-version rollout completes (permanent-limitations register §E; ADR-019).
 - **Component optionality.** The component grammar records it where the spec prints it; nothing enforces it yet. On v2.3 to v2.4, a component whose prose names no table, several tables, or a table whose name does not match is left unchecked (ADR-017).
 - **Component length.** Recorded on every component, never enforced. Conditional components are checked where the prose states a sibling-presence condition; the "as of v2.7" rules are opt-in (`conformanceConditionSeverity`), off by default because the spec's own examples violate them. Conditions on the coding system in use (CWE.7 and kin) and CNE.20's self-contradictory sentence are not modelled.
 - **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.

@@ -7,6 +7,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation — P8-8: message-structure pilot close-out
+
+- Permanent-limitations register section E: each row restated for what is true after
+  the pilot (three v2.5.1 structures modelled, every other structure and version not
+  modelled; fragments; version provenance; lint-failing structures reported as not
+  modelled); still blocking, "pilot shipped PARTIAL".
+- ADR-019: "pilot shipped" addendum with measured test counts; decision 9 amended for
+  the MSH-18 echo; rollout step 4 records that `isComplete` switches lookup rule 1's
+  unknown-ID case from not-modelled to mismatch.
+- DocC `Validation.md`: a "Message structures" section; the "does not check" bullet now
+  reads "partial". `Migration.md`: every P8 public member listed.
+- `public-api-surface.md`: a fresh inventory, 263 public types (75 hand-written, 188
+  generated segment structs), every type listed; 11 types the old tally missed and the
+  `ParseError` case count (7, not 8) corrected.
+- `MessageBuilder.acknowledgment` DocC: an empty original MSH-9.2 gives `ACK^^ACK`
+  (pinned by a new test); MSH-18 is a builder rule; on v2.3 and v2.3.1 echoing the
+  event is permitted, not mandated. `MessageStructure.accepts` pinned by function type.
+
+### Added — P8-7: general acknowledgment builder (ADR-019 decision 9)
+
+- `AcknowledgmentCode` (HL7 Table 0008, six cases, open enum),
+  `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` and
+  `BuilderError.acknowledgedMessageControlIDMissing`. Builds MSH and MSA in the
+  original's version: MSA-2 copies the MSH-10 field, MSH-3/4 and MSH-5/6 swap, MSH-9 is
+  `ACK^<event>^ACK` (`ACK^<event>` on v2.3), MSH-11, MSH-12 and a populated MSH-18 are
+  echoed. No protocol logic (MSH-15/16, enhanced mode, sequence numbers): the caller
+  chooses the code and adds SFT, UAC or ERR. Additive; default output unchanged.
+
+### Added — P8-6: MSH-9 resolution cases and event-to-structure consistency
+
+- An MSH-9.3 naming a modelled structure not printed for MSH-9.1^9.2 raises
+  `messageStructureMismatch` alone, with no body match. An MSH-9.3 naming an unmodelled
+  structure (`ADT^A04^ADT_A04` on v2.5.1) is `messageStructureNotModelled` until a
+  version is complete; a trigger printed under two structures is not resolved and the
+  info issue names both.
+
+### Added — P8-5: message-structure validation, opt-in (ADR-019)
+
+- `ValidationOptions.messageStructureSeverity` (`IssueSeverity?`, `nil` in every preset;
+  not an init parameter) and four `IssueCode` cases:
+  `messageStructureSegmentMissing(structure:segmentID:group:)`,
+  `messageStructureSegmentUnexpected(structure:segmentID:)`,
+  `messageStructureMismatch(declared:trigger:)` and
+  `messageStructureNotModelled(structure:)` (always `.info`). The structure comes from
+  MSH-9.3, or MSH-9.1^9.2 through the caption-line triggers; it applies only when MSH-12
+  reads as the version validated. Z-segments, ADD and segments the version's grammar does
+  not define are skipped. A fragment (MSH-14 populated, or a trailing DSC with a
+  continuation pointer or where the structure defines none) is not structure-checked.
+  Default output unchanged.
+
+### Added — P8-4: structure matcher and determinism lint
+
+- Greedy recursive-descent matcher (internal) reporting missing, unexpected and
+  over-maximum segments, and the determinism lint every modelled structure must pass;
+  a structure that fails it is reported as not modelled. A reference recogniser property
+  test checks that the matcher and a full recogniser agree on the pilot structures and on
+  every synthetic shape that passes the lint.
+
+### Added — P8-3: message structure model, codegen and the v2.5.1 pilot
+
+- `MessageStructure`, `StructureElement` (open enum) and `MessageStructureTable`,
+  generated into `Sources/HL7v2Kit/Structures/Generated/` from `Resources/structures/`.
+  Three structures: v2.5.1 `ADT_A01` (A01, A04, A08, A13), `ORU_R01` and `ACK`. The
+  codegen-drift CI job covers the new generated directory.
+
+### Documentation — P8-1 and P8-2: abstract message syntax registered; ADR-019
+
+- P8-1: permanent-limitations register section E registers message structures,
+  event-to-structure consistency and acknowledgment construction as blocking
+  spec-completeness; README and DocC state the gap.
+- P8-2: ADR-019 (message structure grammar) accepted under owner gate G2: hybrid source
+  of truth, greedy matcher with determinism lint, ADD skipped on every version, fragments
+  not structure-checked, the version rule, and a mismatch reported alone.
+
 ### Fixed — P5 final review: TQ.6 priority repeat on v2.3/v2.3.1; v2.3 QRD-11
 
 - v2.3 and v2.3.1 section 4.4.6 let TQ.6 Priority repeat with the repeat

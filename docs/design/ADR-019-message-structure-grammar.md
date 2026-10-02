@@ -424,7 +424,7 @@ holds).
 | Code | Meaning | Location | Severity |
 |---|---|---|---|
 | `messageStructureSegmentMissing(structure:segmentID:group:)` | A required segment, or the head of a required group, is absent. `group` is `nil` at top level. | The segment it was expected before (the last segment when expected at the end) | `messageStructureSeverity` |
-| `messageStructureSegmentUnexpected(structure:segmentID:)` | A segment has no place at that point: out of order, an extra repetition of a non-repeating segment or group, or a non-Z segment the structure does not contain. | The segment | `messageStructureSeverity` |
+| `messageStructureSegmentUnexpected(structure:segmentID:)` | A segment has no place at that point: out of order, an extra repetition of a non-repeating segment or group, or a non-Z segment the structure does not contain (ADD, and a segment the version's grammar does not define, are skipped; see "Matcher"). | The segment | `messageStructureSeverity` |
 | `messageStructureMismatch(declared:trigger:)` | MSH-9.3 names a structure the version does not print for MSH-9.1^9.2, or (on a complete version only, lookup rule 1) MSH-9.3 is not a structure of the version and MSH-9.1^9.2 is printed only under another structure. | MSH-9.3 | `messageStructureSeverity` |
 | `messageStructureNotModelled(structure:)` | No structure is modelled for this message (or it fails the lint, or the version is unresolved, or MSH-9.3 is empty and MSH-9.1^9.2 is printed under two loaded structures), so order and groups were not checked. | MSH-9 | always `.info` |
 
@@ -592,7 +592,10 @@ the wire is a 00060.1 finding, or only a missing required one is, is decision 7.
 2. **R1 extractor**, done when it reproduces the pilot byte for byte.
 3. **AU overlay** (00060.1): the three ADRM-2021 structures, hand-authored with page
    citations (decision 8).
-4. **v2.5.1 complete** (169 structure IDs measured), with `isComplete` per version.
+4. **v2.5.1 complete** (169 structure IDs measured), with `isComplete` per version. Setting
+   `isComplete` also switches lookup rule 1's unknown-ID case from `messageStructureNotModelled`
+   to `messageStructureMismatch` for that version (until then `ADT^A04^ADT_A04` on v2.5.1 is
+   info only; register §E carries the row). Amended in P8-8.
 5. **v2.6**, **v2.8.2**, **v2.4** complete, in order of print regularity.
 6. **v2.3.1** (structure IDs through Table 0354), then **v2.3** (section-title events,
    synthesised IDs).
@@ -616,6 +619,15 @@ Decision 9: option 3. Option 4 is receiving-application behaviour (v2.5.1 CH02 �
 `AcknowledgmentCode`, `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)`
 (a new static method, no change to existing initialisers), and
 `BuilderError.acknowledgedMessageControlIDMissing`.
+
+Amended in P8-8 (2026-10-02), recording what P8-7 shipped: the builder also echoes the
+original's MSH-18 when it is populated, because the ACK is serialised in the original's
+character set and must declare it. That is a builder rule, beyond both the list above and the
+spec's echo list (v2.5.1 CH02 §2.9.2.2 names MSH-3, MSH-4 and MSH-11 as copied). On v2.3 and
+v2.3.1, §2.24.1.9 says "The second component is not required on response or acknowledgment
+messages", so echoing the event there is permitted, not mandated. An original with an empty
+MSH-9.2 gives `ACK^^ACK`, which fails the required MSG.2 on v2.5.1, v2.6 and v2.8.2 exactly as
+the original does (`AcknowledgmentBuilderTests` pins it).
 
 ---
 
@@ -670,3 +682,49 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
+
+## Addendum 2026-10-02 — pilot shipped
+
+P8-3 to P8-7 shipped the pilot (rollout step 1) and the acknowledgment builder; P8-8 recorded
+it. What the code does, checked against the source at P8-8:
+
+- **Structures.** Three, all v2.5.1, hand-authored in `Resources/structures/v2.5.1/` and
+  generated into `Sources/HL7v2Kit/Structures/Generated/`: `ADT_A01` (triggers ADT^A01,
+  ADT^A04, ADT^A08, ADT^A13), `ORU_R01` (ORU^R01) and `ACK` (`ACK^*`). Each passes the
+  determinism lint. No version is complete; the `isComplete` probe and span-derived groups
+  (R9) are not built, so group-dependent predicates still use the existing walks everywhere.
+- **Option.** `ValidationOptions.messageStructureSeverity` (`IssueSeverity?`, `nil` in
+  `.default`, `.strict` and `.lenient`). Off, the Validator does not run the check, so default
+  output is unchanged. Presets stay `nil` until close-out (decision 10).
+- **Issue codes.** `messageStructureSegmentMissing(structure:segmentID:group:)`,
+  `messageStructureSegmentUnexpected(structure:segmentID:)` and
+  `messageStructureMismatch(declared:trigger:)` at the configured severity;
+  `messageStructureNotModelled(structure:)` always `.info`, raised for an unmodelled structure
+  or version, an empty, unresolved or different-grammar MSH-12, an unknown MSH-9.3 (no version
+  is complete), an ambiguous trigger, a fragment, and a structure failing the lint.
+- **Resolution.** MSH-9.3 when valued, else MSH-9.1^9.2 through the triggers; a mismatch is
+  reported alone, with no body match. Z-segments, ADD and segments the version's grammar does
+  not define are skipped by the matcher.
+- **Public model.** `MessageStructure` (`id`, `version`, `triggers`, `citation`, `elements`,
+  the public `init(id:version:triggers:citation:elements:)` and
+  `accepts(messageCode:triggerEvent:)`), `StructureElement` (`segment(_:min:max:)`,
+  `group(_:min:max:elements:)`, `min`, `max`; open, for the planned `choice` case) and
+  `MessageStructureTable` (`structure(_:version:)`, `structures(messageCode:triggerEvent:version:)`).
+- **Builder.** `AcknowledgmentCode` (Table 0008, six cases, open),
+  `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` and
+  `BuilderError.acknowledgedMessageControlIDMissing` (decision 9 as amended above).
+
+Tests, measured at P8-8 with `swift test --filter` per suite: `MessageStructureDataTests` 1,
+`MessageStructureTableTests` 8, `StructureLintTests` 13, `StructureMatcherTests` 26,
+`StructureMatcherPropertyTests` 6, `StructureMatcherCorpusTests` 1,
+`MessageStructureValidationTests` 39, `AcknowledgmentBuilderTests` 13 (one added in P8-8):
+107 tests in 8 suites. The full suite is 1291 tests in 92 suites. Parameterised tests count
+once.
+
+To show that the check changes no default output, extract the spec examples with
+`scripts/extract-example-messages.py`, run the env-gated `ValidationDigestTests`
+(`VALIDATION_DIGEST_OUT`, `SPEC_EXAMPLE_MESSAGES`, optionally
+`VALIDATION_DIGEST_STRUCTURE_SEVERITY`) at two commits, and compare the two digests.
+
+Register §E stays blocking, with this modelled set stated. Next: the per-version rollout,
+scoped as its own plan by P8-9 with an owner gate, starting with the extractor (step 2).
