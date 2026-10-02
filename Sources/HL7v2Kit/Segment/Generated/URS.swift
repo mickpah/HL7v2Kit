@@ -21,6 +21,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruWhereSubjectDefinitionAll: [String?] {
         repetitions(1).map(\.stringValue)
     }
@@ -45,6 +47,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruWhatUserQualifierAll: [String?] {
         repetitions(4).map(\.stringValue)
     }
@@ -59,6 +63,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruOtherResultsSubjectDefinitionAll: [String?] {
         repetitions(5).map(\.stringValue)
     }
@@ -73,6 +79,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruWhichDateTimeQualifierAll: [String?] {
         repetitions(6).map(\.stringValue)
     }
@@ -87,6 +95,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruWhichDateTimeStatusQualifierAll: [String?] {
         repetitions(7).map(\.stringValue)
     }
@@ -101,6 +111,8 @@ public struct URS: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ruDateTimeSelectionQualifierAll: [String?] {
         repetitions(8).map(\.stringValue)
     }

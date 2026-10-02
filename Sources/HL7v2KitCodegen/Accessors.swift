@@ -46,8 +46,14 @@ func accessorShape(_ dataType: String, index: Int) -> AccessorShape {
 
 /// A field repeats when its schema repeatability is `*` or a bound of 2 or more
 /// (the same rule `FieldGrammar.repeatability` is generated from).
+/// Any other value fails codegen.
 func fieldRepeats(_ field: FieldSchema) -> Bool {
-    field.repeatability != "1"
+    if field.repeatability == "1" { return false }
+    if field.repeatability == "*" { return true }
+    guard let bound = Int(field.repeatability), bound >= 2 else {
+        preconditionFailure("HL7v2KitCodegen: \(field.name) (index \(field.index)): repeatability must be 1, * or a bound of 2 or more, got \(field.repeatability)")
+    }
+    return true
 }
 
 /// Emit the accessors for one field.
@@ -75,13 +81,17 @@ func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = ni
         ].joined(separator: "\n") + deprecatedAliases(for: field, segmentID: segmentID, returnType: shape.type))
     }
     if all ?? repeats {
-        let allDoc = [
+        var allDoc = [
             "\(segmentID)-\(field.index): every repetition of \(field.name), in wire order. Passes",
             "``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and",
             "the validator: empty when the field is absent; one entry when it is present but empty;",
             "`A~~B` gives three entries, the middle one empty; an HL7 null (`\"\"`) gives one entry",
             "holding the literal `\"\"`.",
         ]
+        if accessorKind(field.dataType) == .scalar {
+            allDoc.append("An element is `nil` when that repetition is not a single scalar (more than one")
+            allDoc.append("component or subcomponent), as for the singular accessor.")
+        }
         blocks.append((allDoc + (single ? [] : notes)).map { "    /// \($0)" }.joined(separator: "\n") + "\n" + [
             "    public var \(escapedIdentifier(accessorName + "All")): \(shape.allType) {",
             "        \(shape.allBody)",

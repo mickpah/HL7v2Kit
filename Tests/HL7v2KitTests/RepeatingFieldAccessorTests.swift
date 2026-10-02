@@ -61,6 +61,14 @@ struct RepeatingFieldAccessorTests {
         #expect(scalar.abnormalFlagsAll == ["H", "", "\"\""])
         let lone = try hydrated(OBX.self, from: TestWires.oru("OBX|1|NM|8867-4^Heart rate^LN||72|/min|60-100|"))
         #expect(lone.abnormalFlagsAll.count == lone.repetitions(8).count)
+        #expect(lone.abnormalFlagsAll == [""])
+    }
+
+    @Test("A scalar All element is nil when that repetition is not a single scalar")
+    func scalarAllNonScalarRepetition() throws {
+        let obx = try hydrated(OBX.self, from: TestWires.oru("OBX|1|NM|8867-4^Heart rate^LN||72|/min|60-100|H^X~A"))
+        #expect(obx.abnormalFlagsAll == [nil, "A"])
+        #expect(obx.abnormalFlags == nil)
     }
 
     @Test("A bounded repeating field (OBR-17, max 2) gets an All accessor")

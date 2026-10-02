@@ -118,6 +118,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ambulatoryStatusAll: [String?] {
         repetitions(15).map(\.stringValue)
     }
@@ -190,6 +192,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var contractCodeAll: [String?] {
         repetitions(24).map(\.stringValue)
     }
@@ -204,6 +208,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var contractEffectiveDateAll: [String?] {
         repetitions(25).map(\.stringValue)
     }
@@ -218,6 +224,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var contractAmountAll: [String?] {
         repetitions(26).map(\.stringValue)
     }
@@ -232,6 +240,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var contractPeriodAll: [String?] {
         repetitions(27).map(\.stringValue)
     }
@@ -331,6 +341,8 @@ public struct PV1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var dischargeDateTimeAll: [String?] {
         repetitions(45).map(\.stringValue)
     }

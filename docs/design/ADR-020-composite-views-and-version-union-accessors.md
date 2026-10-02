@@ -71,7 +71,7 @@ and hand-add later-version accessors to the segment structs.
    lists the versions that define the component and every differing printed name.
    A new public `component(_:as:)` views a sub-composite (CX-4 as `HD`), and
    `viewed(as:)` views the same field as another composite.
-2. **Repeating fields.** Every `*` field gains `<name>All: [T]` (`[String?]` for
+2. **Repeating fields.** Every repeating field (`*` or a bound of 2 or more) gains `<name>All: [T]` (`[String?]` for
    scalars, `[Field]` for raw fields), built on a new public
    `TypedSegment.repetitions(_:)`. The singular accessor's DocC says the field
    repeats.

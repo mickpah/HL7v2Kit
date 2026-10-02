@@ -47,6 +47,38 @@ struct SegmentReleasedSurfaceTests {
         }
     }
 
+    /// `File|attribute declaration` for every deprecated alias on the segment structs. Each
+    /// keeps a name released in v3.13.0 (pinned above) after P6-9 corrected the schema
+    /// `swiftName`; v3.13.0 itself had no `@available` lines. Pinning the attribute with the
+    /// declaration notices a change to, or removal of, the deprecation.
+    static let deprecatedAliases: [String] = [
+        "QPD|@available(*, deprecated, renamed: \"queryTag\") public var queryTagUserParametersInSuccessiveFields: String?",
+        "TQ2|@available(*, deprecated, renamed: \"specialServiceRequestRelationship\") public var specialServiceRequestRelationshipRequestsUsingTheParentChildParadigmTheFollowingOccursEcifiesThatItFollowTheFirstChildServiceRequestCifiesThatItFollowTheSecondChildServiceRequestEcifiesThatItFollowTheThirdServiceRequestStsInACyclicMannerTheFollowingOccursCifiesThatItIsToBeExecutedOnceWithoutAnyIceRequestsItsSecondExecutionFollowsTheSeeExampleInSection4152RxoSegmentFieldRequestsToBeReportedBackAtTheLevelOfTheParentRequestByFollowingTheStatusOfTheCorrespondingSentAsAGroupOfFourServiceRequestsWithoutANTheirQuantityTimingFieldsInThisCaseThereIsTheServiceRequestStatusOfTheGroupAsAWholeFTheFourSeparateServiceRequestsEventsFTheReferencedPredecessorServiceRequestThusAPredecessorServiceRequestImpliesTheCancellationQuentServiceRequestsInTheChainNCanceledOrDiscontinuedOrHeldTheCurrentOldOfThePredecessorImpliesARemovalOfTheHoldThenBeExecutedAccordingToTheSpecificationInThe: String?",
+    ]
+
+    /// Each `@available` line joined to the declaration that follows it, normalised.
+    static func deprecations(_ file: String) -> [String] {
+        let url = root.appendingPathComponent("Sources/HL7v2Kit/Segment/Generated/\(file).swift")
+        guard let text = try? String(contentsOf: url, encoding: .utf8) else { return [] }
+        let lines = text.components(separatedBy: "\n").map { $0.trimmingCharacters(in: .whitespaces) }
+        return lines.indices.dropLast().filter { lines[$0].hasPrefix("@available") }.map { i in
+            var decl = lines[i + 1]
+            if let brace = decl.range(of: " {") { decl = String(decl[..<brace.lowerBound]) }
+            return "\(file)|\(lines[i]) \(decl)"
+        }
+    }
+
+    @Test("Every deprecated alias keeps its @available attribute, and there are no others")
+    func deprecationsArePinned() throws {
+        let dir = Self.root.appendingPathComponent("Sources/HL7v2Kit/Segment/Generated")
+        let files = try FileManager.default.contentsOfDirectory(atPath: dir.path)
+            .filter { $0.hasSuffix(".swift") && $0.count == 9 }
+            .map { String($0.dropLast(".swift".count)) }
+        let declared = files.sorted().flatMap(Self.deprecations)
+        #expect(Self.deprecatedAliases.count == 2)
+        #expect(declared == Self.deprecatedAliases)
+    }
+
     @Test("No segment struct declares an accessor name twice")
     func accessorNamesAreUnique() throws {
         let dir = Self.root.appendingPathComponent("Sources/HL7v2Kit/Segment/Generated")

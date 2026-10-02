@@ -119,7 +119,7 @@ Not messages: no fixture harness reads them, and they hold no patient data. `Seg
 
 | File | Category | Purpose | Anonymisation log |
 |---|---|---|---|
-| `APISurface/segment-structs-v3.13.0.txt` | API snapshot | Every `public` declaration in v3.13.0's `Sources/HL7v2Kit/Segment/Generated/` (`git show v3.13.0:<path>`), as `File\|signature` with the body and initial value removed (P9-4) | N/A — no PHI; source declarations only |
+| `APISurface/segment-structs-v3.13.0.txt` | API snapshot | Every `public` declaration in v3.13.0's `Sources/HL7v2Kit/Segment/Generated/` (`git show v3.13.0:<path>`), as `File\|signature` with the body and initial value removed (P9-4). v3.13.0 had no `@available` lines, so the deprecation attributes on the later aliases (P6-9) are pinned in `SegmentReleasedSurfaceTests` itself | N/A — no PHI; source declarations only |
 
 ## Corrections log
 

@@ -146,6 +146,8 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var livingDependencyAll: [String?] {
         repetitions(17).map(\.stringValue)
     }
@@ -160,6 +162,8 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// An element is `nil` when that repetition is not a single scalar (more than one
+    /// component or subcomponent), as for the singular accessor.
     public var ambulatoryStatusAll: [String?] {
         repetitions(18).map(\.stringValue)
     }
