@@ -251,8 +251,9 @@ enum `StructureElement { case segment(String, min:, max:); case group(String, mi
 max:, elements:) }`, public and `Sendable`, emitted by `HL7v2KitCodegen` into
 `Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+v<X_Y_Z>.swift`, one constant
 per structure (as ADR-017 does for datatypes, to keep type-checking cheap). The codegen
-reads the base and AU structure roots as positional arguments 11 and 12 (arguments 1 to 10
-are taken by the segment, table, datatype, profile and composite inputs). The new
+takes the structures as positional arguments 11 (the input root, `Resources/structures`)
+and 12 (the output directory, `Sources/HL7v2Kit/Structures/Generated`); arguments 1 to 10
+are taken by the segment, table, datatype, profile and composite inputs. The new
 generated directory joins the codegen-drift CI job (both its `git diff` and its
 `git status --porcelain` guards) and the never-hand-edit list.
 
@@ -275,29 +276,42 @@ lint.
   replaces the ORC walk (below).
 - Z-segments are transparent to the matcher (skipped, not matched); `ZSegmentPolicy`
   keeps governing them.
-- ADD (addendum) segments are transparent in the same way on every version that allows
-  them after any segment, because from v2.4 an ADD "can be used within a message to break
-  a long segment into shorter segments" and continues the preceding segment, so it can
-  follow any segment. Cited per version: v2.4 CH02 §2.15.2.1; v2.5.1 CH02 §2.10.2.1;
-  v2.6 CH02 §2.10.2.1; v2.8.2 CH02 §2.10.2.0 (the heading as printed). On v2.3 and v2.3.1
-  the ADD segment appears only in the continuation-across-messages protocol (CH2
-  §2.23.2), not within a message, so it is not skipped there. The parser does not merge
-  ADD continuations today; the matcher only declines to report them as unexpected.
+- ADD (addendum) segments are transparent in the same way on **every** version, because an
+  ADD continues the preceding segment and the abstract message definitions never list it.
+  Within a message: v2.4 CH02 §2.15.2.1, v2.5.1 and v2.6 CH02 §2.10.2.1 and v2.8.2 CH02
+  §2.10.2.0 (the heading as printed) say an ADD "can be used within a message to break a
+  long segment into shorter segments". On v2.3 and v2.3.1 CH2 §2.23.2 b) to f) place the
+  ADD inside messages too: b) "the following segment is the ADD segment"; d) for a
+  continued unsolicited update "the ADD segment will be the first segment after the MSH
+  segment"; f) on the unsolicited display message "the ADD record on the continuation
+  comes just after the URD/[URS] pair". The parser does not merge ADD continuations today;
+  the matcher only declines to report them as unexpected.
 - A non-Z segment the version's grammar does not define already raises
   `segmentNotInVersionGrammar` (ADR-018); the matcher skips it without a second issue.
 - Linear time. FIRST sets are computed once per structure and cached if the performance
   budget (`HL7v2Kit-Spec.md` §9.5) regresses.
 
 **Determinism lint** (test suite). The lint checks, for every structure, that greedy
-matching resolves each choice the same way a full match would:
+matching resolves each choice the same way a full match would. One rule:
 
-1. Within every sequence, the FIRST set of an optional or repeating element is disjoint
-   from the FIRST set of everything that may follow it, up to and including the next
-   required sibling.
-2. The follow set is inherited. For the trailing optional or repeating elements of a
-   group, "what may follow" includes what may follow the group in the enclosing sequence
-   (FOLLOW from the enclosing level), so a trailing optional `NTE` inside a group followed
-   by a sibling `NTE` fails the lint rather than being resolved silently.
+> For every optional or repeating element E, FIRST(E) must be disjoint from FOLLOW(E):
+> the FIRST sets of the elements that may follow E up to and including the next required
+> sibling, extended, when E is trailing (everything after it in its group is optional),
+> with the inherited follow set of the enclosing level. The one exempt overlap is between
+> a repeating element and the re-entry of an ENCLOSING repeating group with unbounded
+> maximum: the matcher attributes the segment to the innermost open group, and the lint
+> accepts exactly that case. Any other overlap fails the lint.
+
+A trailing optional `NTE` inside a group followed by a sibling `NTE` therefore fails
+rather than being resolved silently. The exempt case is v2.5.1 ORU_R01: ORDER_OBSERVATION
+is the trailing repeating element of the repeating PATIENT_RESULT, and PATIENT is
+optional, so the inherited follow set overlaps FIRST(ORDER_OBSERVATION) on ORC and OBR.
+Staying in ORDER_OBSERVATION and starting a new PATIENT_RESULT accept the same segments,
+so the choice cannot change acceptance, the missing and unexpected findings, or any count
+for these structures; only which group instance a span belongs to is a convention, and
+group-scoped predicates anchor on ORC and OBR, which both readings put in an
+ORDER_OBSERVATION. It could change a result only if the enclosing group had a finite
+maximum (an AU narrowing), which is why the exemption requires an unbounded one.
 
 The lint does not check Z-segments or ADD segments (transparent to the matcher). A
 structure that fails is listed in the register and reported at runtime as
@@ -305,6 +319,18 @@ structure that fails is listed in the register and reported at runtime as
 precondition for any acceptance, attribution or count the matcher reports. If the failures
 are many (plausible before v2.5), the owner can fund a position-set (Glushkov) NFA matcher
 for them later; that is an amendment, not part of this ADR.
+
+**Message fragments are not structure-checked.** A logical message may be "broken after an
+arbitrary segment" and sent as several messages: the first ends in a DSC segment and each
+later fragment carries a value in MSH-14 (v2.4 CH02 §2.15.2.2; v2.5.1 and v2.6 CH02
+§2.10.2.2; v2.8.2 CH02 §2.10.2.1, the heading as printed; v2.3 and v2.3.1 CH2 §2.15.4,
+§2.23.2 and the DSC segment §2.24.8, where MSH-14 is §2.24.1.14). A message is a fragment
+when MSH-14 is populated, or when its last segment is DSC and the resolved structure does
+not itself define a DSC at that point (query responses do). A fragment raises
+`messageStructureNotModelled` (info) and is not matched, because a fragment's segment list
+is a slice of the structure and would draw false missing-segment findings. Reassembling
+fragments is out of scope; the gap is registered as blocking in section E of the
+limitations register.
 
 Alternatives rejected: a regular expression over the joined segment IDs (yes or no only,
 no location, no group attribution, backtracking risk); a Glushkov NFA for every structure
@@ -317,12 +343,14 @@ holds).
 2. After the first divergence, recovery can report a second issue for one real defect (an
    out-of-order PID reports "PID missing" and "PID unexpected"). The first issue is always
    accurate.
-3. An element repeating inside a group that itself repeats with the same FIRST set (ORU_R01
-   ORDER_OBSERVATION inside PATIENT_RESULT without PATIENT) is attributed to the innermost
-   repetition. Acceptance is unaffected; only group attribution is a convention.
+3. The lint's exempt case (above): an element whose FIRST set overlaps the re-entry of an
+   enclosing unbounded repeating group (ORU_R01 ORDER_OBSERVATION inside PATIENT_RESULT
+   without PATIENT) is attributed to the innermost open group. Acceptance is unaffected;
+   only group attribution is a convention.
 4. Group spans are exact only when the match has no deviation. After a deviation the spans
    are best-effort, so group-scoped predicates do not use them (below).
 5. Where Z-segments may sit is not checked (fact 3).
+6. Message fragments are not structure-checked and not reassembled (above).
 
 ---
 
@@ -397,11 +425,17 @@ row:
 | 2.8 | v2.8.2 | Covered by the existing `versionGrammarSubstituted` info |
 | 2.7.1 (until P10), other, unresolved, or empty | None | `messageStructureNotModelled` (info). Not the v2.5.1 fallback grammar that ADR-018 uses for segments: applying v2.5.1 structures would report every later-version segment and group as a deviation (decision 4) |
 
-The version comes from `Version.reading(msh12:subcomponentSeparator:)`, not from
-`message.version` (the parser sets `.v2_5_1` for an empty or unrecognised MSH-12). For the
-`.unresolved` and `.empty` readings the structure is not resolved and no body match runs;
-the one info issue is `messageStructureNotModelled`, alongside the version finding ADR-018
-already raises. A `versionOverride` message keeps `message.version`.
+The version comes from the wire reading, `Version.reading(msh12:subcomponentSeparator:)`,
+taken at validation time, because `Message` carries no record of where `message.version`
+came from (`ParserOptions.versionOverride`, or a message built directly). The rule: when the
+reading is `.recognised(v)` and `v` equals `message.version`, the structures of
+`v.grammarVersion` apply; when the reading is `.unresolved` or `.empty`, or recognises a
+version other than `message.version`, no structure is resolved, no body match runs, and
+the one info issue is `messageStructureNotModelled`. On an unresolved populated MSH-12
+`versionNotRecognised` (warning) also fires today. On an empty MSH-12 no version issue
+fires (`appendVersionIssues` returns nothing for `.empty`); the required-field check
+reports `requiredFieldMissing` for MSH-12, so `messageStructureNotModelled` is the only
+structure-related finding.
 
 Lookup, within the grammar version's `MessageStructureTable`:
 
@@ -409,8 +443,7 @@ Lookup, within the grammar version's `MessageStructureTable`:
    raise `messageStructureMismatch` and report the mismatch only: the body is not matched
    against the structure MSH-9.3 names, because the print gives that event another
    structure and a conforming body of the event would draw spurious missing or
-   unexpected findings. (If the trigger itself resolves to a loaded structure through the
-   `triggers` index, that structure alone is matched.) Unknown ID on an incomplete
+   unexpected findings. No body match runs on a mismatch. Unknown ID on an incomplete
    version: `messageStructureNotModelled`; on a complete version:
    `messageStructureMismatch`.
 2. MSH-9.3 empty: resolve MSH-9.1^9.2 through the `triggers` index (the v2.3 case and
@@ -456,10 +489,10 @@ DSL atoms keep their syntax and meaning ("in the same group"); only the definiti
 
 **ORC-8 on OUL R22 to R24.** With spans, the ORC and OBR of one ORDER group are in the same
 span, so `OBR absent` is false and the leg does not fire. P4-7 has already shipped the
-interim fix (decision 6): the `OBR absent` leg of ORC-8 carries
-`messageCode not in (OUL)` on v2.5.1 and `messageCode not in (OUL, OPU, OPL)` on v2.6 and
-v2.8.2 (`Resources/schemas/<ver>/ORC.json`, and the matching OBR conditions on v2.6 and
-v2.8.2). It is spec-defensible for OUL_R22 to R24 and OPU_R25 (OBR is the required group
+interim fix (decision 6). The `OBR absent` leg of the conditional fields carries
+`messageCode not in (OUL)` on v2.5.1 (6 ORC fields, 3 OBR fields) and
+`messageCode not in (OUL, OPU, OPL)` on v2.6 (6 ORC, 3 OBR) and v2.8.2 (4 ORC, 2 OBR),
+in `Resources/schemas/<ver>/ORC.json` and `OBR.json`. It is spec-defensible for OUL_R22 to R24 and OPU_R25 (OBR is the required group
 head, so the leg is vacuous) but under-fires on OUL_R21, which prints `[ORC] OBR`. **The
 P4-7 gates are removed only by the rollout task that supplies the spans** for the version
 in question (R9), never earlier and never as part of the pilot, so the misfire stays fixed
@@ -470,13 +503,13 @@ outcomes with `messageStructureSeverity` off. This is accepted under G2 but is a
 default output: R9 ships a before and after test for each affected predicate and a
 Migration.md row recording it.
 
-**HL7au:00060.1.** Enforced through this model under the AU profile, in a later task
-(P8-10): AU messages are matched against the ADRM-2021 constrained structure for their
+**HL7au:00060.1.** Enforced through this model under the AU profile, in the rollout
+task immediately after the extractor (decision 8): AU messages are matched against the ADRM-2021 constrained structure for their
 trigger (AU files, `profileConstraintViolation(localeRule: "HL7au:00060.1")`) in addition
 to the base v2.4 structure. It needs the matcher and codegen from the pilot, not the v2.4
 base rollout, so it can land straight after the extractor. (The conformance generator
 currently classifies 00060.1 as base, "R-optionality enforcement is the Validator core";
-that classification is revisited by P8-10.)
+that classification is revisited by that task.)
 ADRM says "some optional segments have been removed"; whether a removed base segment on
 the wire is a 00060.1 finding, or only a missing required one is, is decision 7.
 
@@ -535,13 +568,16 @@ Decision 9: option 3. Option 4 is receiving-application behaviour (v2.5.1 CH02 �
   confirms the preset change at close-out.
 - Group-dependent predicates become structure-exact on complete versions for conforming
   messages; the ORC walk remains the fallback.
+- Fragments are not structure-checked (`messageStructureNotModelled`); registered as blocking.
 - Until the rollout completes, register §E stays blocking with the modelled set stated.
 
 ## References
 
 - v2.5.1 CH02 §2.5.2, §2.6.2, §2.9.2, §2.9.3, §2.14.1; CH03 §3.3.1; CH07 §7.3.1, §7.3.9.
   v2.6 CH07 §7.3.10. v2.8.2 CH03 ADT_A01. ADD segment: v2.4 CH02 §2.15.2.1, v2.5.1 and
-  v2.6 CH02 §2.10.2.1, v2.8.2 CH02 §2.10.2.0, v2.3 and v2.3.1 CH2 §2.23.2.
+  v2.6 CH02 §2.10.2.1, v2.8.2 CH02 §2.10.2.0, v2.3 and v2.3.1 CH2 §2.23.2 b) to f).
+  Fragments: v2.4 CH02 §2.15.2.2, v2.5.1 and v2.6 CH02 §2.10.2.2, v2.8.2 CH02 §2.10.2.1,
+  v2.3 and v2.3.1 CH2 §2.15.4 and §2.23.2.
   ADRM-2021 HL7au:00060.1, pp 17, 205.
 - ADR-008, ADR-010, ADR-014, ADR-015, ADR-016, ADR-017, ADR-018.
 - `planning/reviews/README.md` X-C04; `planning/remediation/P8-message-structures.md`
