@@ -7,9 +7,9 @@ import Foundation
 extension Validator {
 
     /// The primitive data types each version defines: a datatype section in the
-    /// version's CH02 that prints no components. Composites without an extracted
-    /// component table (CD, CF, CM, MA, NA, TQ) are not primitives: their prose
-    /// defines components. TS is listed only where it prints no component table;
+    /// version's CH02 that prints no components. CD, CF, CM, MA, NA and TQ are not
+    /// primitives: their sections define components (CD and CF have no component
+    /// grammar on v2.3 to v2.4, but do from v2.5.1). TS is listed only where it prints no component table;
     /// v2.5.1 onward define it as a composite (TS.1 DTM, TS.2 ID).
     ///
     /// - v2.3 CH2 2.8 (DT 2.8.13, FT 2.8.17, ID 2.8.19, IS 2.8.20, NM 2.8.25, SI 2.8.36,
@@ -51,12 +51,47 @@ extension Validator {
         }
     }
 
-    /// True for OBX-3 component 1, whose identifier may carry an observation ID suffix in
-    /// a second subcomponent: "the chest X-ray observation ID (if CPT4, it would be 71020),
-    /// a subcomponent delimiter, and the suffix, IMP, i.e., 71020&IMP" (CH07: v2.3 and
-    /// v2.3.1 7.1.2, v2.4 / v2.5.1 / v2.6 7.2.3, v2.8.2 7.2.5).
-    static func allowsObservationSuffix(segmentID: String, fieldIndex: Int?, component: Int) -> Bool {
-        segmentID == "OBX" && fieldIndex == 3 && component == 1
+    /// A primitive component the spec lets carry subcomponents, keyed either by the
+    /// composite datatype or by segment and field, with the subcomponent count it admits.
+    struct SubcomponentAllowance: Sendable {
+        let dataType: String?
+        let segmentID: String?
+        let fieldIndex: Int?
+        let component: Int
+        let limit: Int
+    }
+
+    /// Every spec-sanctioned subcomponent use in a primitive component, in one place:
+    /// - QIP.2 Values, a list: "A simple list of values (i.e., a one-dimensional array)
+    ///   may be passed instead of a single value by separating each value with the
+    ///   subcomponent delimiter: <field name> ^ <value1 & value2 &...>" (v2.3 2.8.30.2 and
+    ///   2.24.20.4, v2.3.1 2.8.32.2, v2.4 2.9.33.2, v2.5.1 / v2.6 2.A.59.2, v2.8.2 2.A.60.2).
+    /// - OBX-3 observation identifier, one suffix: "the chest X-ray observation ID (if CPT4,
+    ///   it would be 71020), a subcomponent delimiter, and the suffix, IMP, i.e., 71020&IMP",
+    ///   and "This same combining rule applies to other coding systems" (CH07: v2.3 and
+    ///   v2.3.1 7.1.2, v2.4 / v2.5.1 / v2.6 7.2.3, v2.8.2 7.2.5). So the identifier
+    ///   (component 1), the alternate identifier (component 4) and, on v2.8.2 where OBX-3
+    ///   is CWE, the second alternate identifier (CWE.10).
+    static let subcomponentAllowances: [SubcomponentAllowance] = [
+        SubcomponentAllowance(dataType: "QIP", segmentID: nil, fieldIndex: nil, component: 2, limit: .max),
+        SubcomponentAllowance(dataType: nil, segmentID: "OBX", fieldIndex: 3, component: 1, limit: 2),
+        SubcomponentAllowance(dataType: nil, segmentID: "OBX", fieldIndex: 3, component: 4, limit: 2),
+        SubcomponentAllowance(dataType: nil, segmentID: "OBX", fieldIndex: 3, component: 10, limit: 2),
+    ]
+
+    /// How many subcomponents a primitive component admits, or `nil` when the
+    /// component's datatype is not a primitive on `version`. One, except TS on v2.3 to
+    /// v2.4 (two, its degree of precision demoted) and an entry of
+    /// ``subcomponentAllowances``. FT is one here: the component separator marks FT
+    /// lines only at field level, and nothing turns a line marker into `&`.
+    static func subcomponentLimit(componentType: String, component: Int, fieldType: String,
+                                  segmentID: String, fieldIndex: Int?, version: Version) -> Int? {
+        guard let base = primitiveComponentLimit(componentType, version: version) else { return nil }
+        let allowance = subcomponentAllowances.first {
+            $0.component == component
+                && ($0.dataType.map { $0 == fieldType } ?? ($0.segmentID == segmentID && $0.fieldIndex == fieldIndex))
+        }
+        return max(componentType == "FT" ? 1 : base, allowance?.limit ?? 1)
     }
 
     /// The value a recipient reads from a repetition of a primitive field: the first
@@ -131,11 +166,10 @@ extension Validator {
         guard let composite = DataTypeGrammarTable.grammar(dataType, version: grammarVersion) else { return }
         for (offset, repetition) in field.repetitions.enumerated() {
             for entry in composite.components where repetition.components.count >= entry.index {
-                guard var limit = Self.primitiveComponentLimit(entry.dataType, version: grammarVersion) else { continue }
-                if Self.allowsObservationSuffix(segmentID: location.segmentID, fieldIndex: location.fieldIndex,
-                                                component: entry.index) {
-                    limit = max(limit, 2)
-                }
+                guard let limit = Self.subcomponentLimit(
+                    componentType: entry.dataType, component: entry.index, fieldType: dataType,
+                    segmentID: location.segmentID, fieldIndex: location.fieldIndex, version: grammarVersion
+                ) else { continue }
                 let component = repetition.components[entry.index - 1]
                 let extras = component.subcomponents.enumerated().compactMap { sub, value in
                     sub >= limit && !value.value.isEmpty ? value.value : nil

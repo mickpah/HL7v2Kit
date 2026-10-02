@@ -21,10 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Spec-allowed shapes stay silent: the TS degree-of-precision component on
   v2.3 to v2.4 ("...[+/-ZZZZ]^<degree of precision>"), FT line markers ("The
   component separator that marks each line", v2.5.1 section 2.7.6), one
-  observation ID suffix in OBX-3.1 ("71020&IMP", v2.5.1 section 7.2.3), and
-  escaped `\S\` / `\T\`. TX and GTS are checked: TX lines are separated by
+  observation ID suffix in OBX-3.1, OBX-3.4 and v2.8.2 OBX-3.10 ("71020&IMP",
+  "This same combining rule applies to other coding systems", v2.5.1 section
+  7.2.3), the QIP.2 value list ("<value1 & value2 &...>", v2.5.1 section
+  2.A.59.2), and escaped `\S\` / `\T\`. TX and GTS are checked: TX lines are separated by
   the repetition separator, and GTS "follows the formatting rules for a ST
-  field" (v2.5.1 section 2.A.32).
+  field" (v2.5.1 section 2.A.32). FT line markers are field-level only: an FT
+  component (CF.2, CF.5; CF.11 on v2.8.2) admits one subcomponent.
 - The component-level table check skipped an `ID` component with
   subcomponents (`Component.stringValue` is nil there). It now checks the first
   subcomponent and locates the issue at subcomponent 1 when more follow. It

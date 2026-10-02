@@ -123,7 +123,7 @@ Populated NM, SI, DT, TM, DTM and TS values are now checked against the format t
 
 ``IssueCode/extraComponentsInPrimitiveField`` used to cover `ID` and `IS` fields only. It now covers every primitive field of the message's version (ST, NM, DT, TM, DTM, SI, TX, GTS, SNM and the rest), and a primitive component of a composite that carries a subcomponent after its value (located at that component). So more warnings fire by default: an ST field carrying `a^b`, an NM carrying `12^abc`, or a CX.1 carrying `12&3` now warns. No API changed; the issue code and ``ValidationOptions/extraComponentsSeverity`` are the same.
 
-- **Shapes the spec allows stay silent:** the TS degree-of-precision component on v2.3 to v2.4, the component separators that mark FT lines, one observation ID suffix in OBX-3.1 (`71020&IMP`), escaped `\S\` and `\T\`, and trailing empty components.
+- **Shapes the spec allows stay silent:** the TS degree-of-precision component on v2.3 to v2.4, the component separators that mark FT lines, one observation ID suffix in OBX-3.1, OBX-3.4 or (v2.8.2) OBX-3.10 (`71020&IMP`), the QIP.2 value list (`@PID.3^123&456` in SPR-4 or ERQ-3), escaped `\S\` and `\T\`, and trailing empty components.
 - **Component table check:** an `ID` component carrying `Q&B` used to skip its table check. Its first subcomponent is now checked, and an issue for it is located at subcomponent 1.
 - **Length collapse:** the same severity rule as P6-13 now applies to every primitive field.
 - **To drop the new warnings:** set `options.extraComponentsSeverity = nil`, as the ``ValidationOptions/lenient`` preset does.

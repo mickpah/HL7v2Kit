@@ -203,6 +203,43 @@ struct PrimitiveExtraContentTests {
         #expect(table.location.subcomponentIndex == nil)
     }
 
+    // MARK: Fix round 1
+
+    private func withVersion(_ wire: String, _ version: String) -> String {
+        wire.replacingOccurrences(of: "|P|2.5.1\r", with: "|P|\(version)\r")
+    }
+
+    @Test("QIP.2 carries a subcomponent list (<value1 & value2 & ...>): SPR-4 and ERQ-3 stay silent")
+    func qipValueList() throws {
+        for version in ["2.3", "2.4", "2.5.1"] {
+            let spr = "MSH|^~\\&|A|F|B|F|20260101||SPQ^Q08|M1|P|\(version)\r"
+                + "SPR|Q1|T|SEL|@PID.3^123&456\r"
+            #expect(extras(try issues(spr, at: "SPR", 4)).isEmpty, "SPR-4 v\(version)")
+            let erq = "MSH|^~\\&|A|F|B|F|20260101||ERP^R09|M1|P|\(version)\r"
+                + "ERQ|Q1|EVT|@PID.3^123&456\r"
+            #expect(extras(try issues(erq, at: "ERQ", 3)).isEmpty, "ERQ-3 v\(version)")
+        }
+    }
+
+    @Test("A raw & inside an FT component of a CF (CF.2) warns: line markers are field-level only")
+    func ftComponent() throws {
+        let found = extras(try issues(obx("CF", "C1^line a&line b^L"), at: "OBX", 5))
+        #expect(found.count == 1)
+        #expect(found.first?.location.componentIndex == 2)
+        #expect(extras(try issues(withVersion(obx("CF", "C1^line a&line b^L"), "2.8.2"), at: "OBX", 5)).count == 1)
+    }
+
+    @Test("The observation ID suffix applies to the alternate identifier OBX-3.4 and v2.8.2 CWE.10")
+    func suffixOnAlternateIdentifiers() throws {
+        let alt = obx("ST", "x").replacingOccurrences(of: "1^Test", with: "71020^Chest^C4^X1&IMP^Alt^99L")
+        #expect(extras(try issues(alt, at: "OBX", 3)).isEmpty)
+        let second = withVersion(obx("ST", "x").replacingOccurrences(
+            of: "1^Test", with: "71020^Chest^C4^^^^^^^X1&IMP"), "2.8.2")
+        #expect(extras(try issues(second, at: "OBX", 3)).isEmpty)
+        let twice = obx("ST", "x").replacingOccurrences(of: "1^Test", with: "71020^Chest^C4^X1&IMP&Z^Alt^99L")
+        #expect(extras(try issues(twice, at: "OBX", 3)).count == 1)
+    }
+
     @Test("With the extra-component check off, component extras are silent")
     func componentCheckOff() throws {
         var options = ValidationOptions()
