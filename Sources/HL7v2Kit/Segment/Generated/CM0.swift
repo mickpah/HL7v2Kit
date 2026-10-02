@@ -27,6 +27,7 @@ public struct CM0: TypedSegment {
     }
 
     /// CM0-3: Alternate Study ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `alternateStudyIdAll` returns every repetition.
+    /// v2.3 prints this element as `Alternate Study ID's`.
     /// v2.3 prints `CE`: use `viewed(as: CE.self)`.
     public var alternateStudyId: EI? {
         field(3).map(EI.init(field:))
@@ -37,6 +38,7 @@ public struct CM0: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Alternate Study ID's`.
     /// v2.3 prints `CE`: use `viewed(as: CE.self)`.
     public var alternateStudyIdAll: [EI] {
         repetitions(3).map(EI.init(field:))
@@ -95,6 +97,7 @@ public struct CM0: TypedSegment {
     }
 
     /// CM0-10: Contact's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Contact's Tel. Number`.
     public var contactTelephoneNumber: XTN? {
         field(10).map(XTN.init(field:))
     }

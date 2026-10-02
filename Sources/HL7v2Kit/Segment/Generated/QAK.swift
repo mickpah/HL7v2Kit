@@ -34,8 +34,8 @@ public struct QAK: TypedSegment {
     }
 
     /// QAK-4: Hit Count. HL7 data type `NM`.
-    /// Defined in v2.4, v2.5.1. On a message of another version this returns whatever QAK-4 holds on the wire.
-    /// v2.6, v2.8.2 define QAK-4 as `Hit Count Total`: use `hitCountTotal`.
+    /// Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever QAK-4 holds on the wire.
+    /// v2.6, v2.8.2 print this element as `Hit Count Total`.
     public var hitCount: String? {
         field(4)?.stringValue
     }
@@ -50,12 +50,5 @@ public struct QAK: TypedSegment {
     /// Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever QAK-6 holds on the wire.
     public var hitsRemaining: String? {
         field(6)?.stringValue
-    }
-
-    /// QAK-4: Hit Count Total. HL7 data type `NM`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever QAK-4 holds on the wire.
-    /// v2.4, v2.5.1 define QAK-4 as `Hit Count`: use `hitCount`.
-    public var hitCountTotal: String? {
-        field(4)?.stringValue
     }
 }

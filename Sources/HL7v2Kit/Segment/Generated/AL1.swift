@@ -22,24 +22,30 @@ public struct AL1: TypedSegment {
     }
 
     /// AL1-2: Allergen Type Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Allergy Type`.
+    /// v2.3, v2.3.1 print `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var allergenTypeCode: CE? {
         field(2).map(CE.init(field:))
     }
 
     /// AL1-3: Allergen Code/Mnemonic/Description. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Allergy Code/Mnemonic/Description`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var allergenCodeMnemonicDescription: CE? {
         field(3).map(CE.init(field:))
     }
 
     /// AL1-4: Allergy Severity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Allergy Severity`.
+    /// v2.3, v2.3.1 print `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var allergySeverityCode: CE? {
         field(4).map(CE.init(field:))
     }
 
     /// AL1-5: Allergy Reaction Code. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `allergyReactionCodeAll` returns every repetition.
+    /// v2.3, v2.3.1 print this element as `Allergy Reaction`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var allergyReactionCode: String? {
         field(5)?.stringValue
@@ -52,12 +58,14 @@ public struct AL1: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.3, v2.3.1 print this element as `Allergy Reaction`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var allergyReactionCodeAll: [String?] {
         repetitions(5).map(\.stringValue)
     }
 
     /// AL1-6: Identification Date (deprecated). HL7 data type `DT`.
+    /// v2.3, v2.3.1, v2.8.2 print this element as `Identification Date`.
     public var identificationDate: String? {
         field(6)?.stringValue
     }

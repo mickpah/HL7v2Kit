@@ -17,6 +17,7 @@ public struct SPM: TypedSegment {
     }
 
     /// SPM-1: Set ID – SPM. HL7 data type `SI`.
+    /// v2.6, v2.8.2 print this element as `Set ID - SPM`.
     public var setIdSpm: String? {
         field(1)?.stringValue
     }

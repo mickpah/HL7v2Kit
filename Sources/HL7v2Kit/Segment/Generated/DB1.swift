@@ -22,12 +22,14 @@ public struct DB1: TypedSegment {
     }
 
     /// DB1-2: Disabled Person Code. HL7 data type `IS`.
+    /// v2.3 prints this element as `Disabled person code`.
     /// v2.8.2 prints `CWE`: use `disabledPersonCodeAsCWE`.
     public var disabledPersonCode: String? {
         field(2)?.stringValue
     }
 
     /// DB1-3: Disabled Person Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `disabledPersonIdentifierAll` returns every repetition.
+    /// v2.3 prints this element as `Disabled person identifier`.
     public var disabledPersonIdentifier: CX? {
         field(3).map(CX.init(field:))
     }
@@ -37,34 +39,37 @@ public struct DB1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Disabled person identifier`.
     public var disabledPersonIdentifierAll: [CX] {
         repetitions(3).map(CX.init(field:))
     }
 
     /// DB1-4: Disabled Indicator. HL7 data type `ID`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DB1-4 holds on the wire.
-    /// v2.4 prints this element as `Disability Indicator`.
-    /// v2.6, v2.8.2 define DB1-4 as `Disability Indicator`: use `disabilityIndicator`.
+    /// v2.4, v2.6, v2.8.2 print this element as `Disability Indicator`.
     public var disabledIndicator: String? {
         field(4)?.stringValue
     }
 
     /// DB1-5: Disability Start Date. HL7 data type `DT`.
+    /// v2.3 prints this element as `Disability start date`.
     public var disabilityStartDate: String? {
         field(5)?.stringValue
     }
 
     /// DB1-6: Disability End Date. HL7 data type `DT`.
+    /// v2.3 prints this element as `Disability end date`.
     public var disabilityEndDate: String? {
         field(6)?.stringValue
     }
 
     /// DB1-7: Disability Return to Work Date. HL7 data type `DT`.
+    /// v2.3 prints this element as `Disability return to work date`.
     public var disabilityReturnToWorkDate: String? {
         field(7)?.stringValue
     }
 
     /// DB1-8: Disability Unable to Work Date. HL7 data type `DT`.
+    /// v2.3 prints this element as `Disability unable to work date`.
     public var disabilityUnableToWorkDate: String? {
         field(8)?.stringValue
     }
@@ -73,13 +78,5 @@ public struct DB1: TypedSegment {
     /// DB1-2 viewed as the `CWE` that v2.8.2 prints (v2.3, v2.3.1, v2.4, v2.5.1, v2.6 print `IS`). On a message of another version this views whatever DB1-2 holds on the wire.
     public var disabledPersonCodeAsCWE: CWE? {
         field(2).map(CWE.init(field:))
-    }
-
-    /// DB1-4: Disability Indicator. HL7 data type `ID`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever DB1-4 holds on the wire.
-    /// v2.3, v2.3.1, v2.5.1 define DB1-4 as `Disabled Indicator`: use `disabledIndicator`.
-    /// v2.4 defines DB1-4 as `Disability Indicator`: use `disabledIndicator`.
-    public var disabilityIndicator: String? {
-        field(4)?.stringValue
     }
 }

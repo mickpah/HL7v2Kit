@@ -22,6 +22,7 @@ public struct LCC: TypedSegment {
     }
 
     /// LCC-2: Location Department. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var locationDepartment: CE? {
         field(2).map(CE.init(field:))

@@ -22,8 +22,7 @@ public struct BPO: TypedSegment {
     }
 
     /// BPO-2: BP Universal Service ID. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.5.1. On a message of another version this returns whatever BPO-2 holds on the wire.
-    /// v2.6, v2.8.2 define BPO-2 as `BP Universal Service Identifier`: use `bpUniversalServiceIdentifier`.
+    /// v2.6, v2.8.2 print this element as `BP Universal Service Identifier`.
     public var bpUniversalServiceId: CWE? {
         field(2).map(CWE.init(field:))
     }
@@ -105,12 +104,5 @@ public struct BPO: TypedSegment {
     /// BPO-14: BP Informed Consent Indicator. HL7 data type `ID`.
     public var bpInformedConsentIndicator: String? {
         field(14)?.stringValue
-    }
-
-    /// BPO-2: BP Universal Service Identifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever BPO-2 holds on the wire.
-    /// v2.5.1 defines BPO-2 as `BP Universal Service ID`: use `bpUniversalServiceId`.
-    public var bpUniversalServiceIdentifier: CWE? {
-        field(2).map(CWE.init(field:))
     }
 }

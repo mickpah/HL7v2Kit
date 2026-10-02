@@ -17,6 +17,7 @@ public struct TXA: TypedSegment {
     }
 
     /// TXA-1: Set ID - TXA. HL7 data type `SI`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Set ID- TXA`.
     public var setIdTxa: String? {
         field(1)?.stringValue
     }
@@ -185,8 +186,7 @@ public struct TXA: TypedSegment {
     }
 
     /// TXA-22: Authentication Person, Time Stamp. HL7 data type `PPN`. Repeating field: this accessor reads the first repetition; `authenticationPersonTimeStampAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever TXA-22 holds on the wire.
-    /// v2.6, v2.8.2 define TXA-22 as `Authentication Person, Time Stamp (set)`: use `authenticationPersonTimeStampSet`.
+    /// v2.6, v2.8.2 print this element as `Authentication Person, Time Stamp (set)`.
     public var authenticationPersonTimeStamp: Field? {
         field(22)
     }
@@ -196,13 +196,13 @@ public struct TXA: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever TXA-22 holds on the wire.
-    /// v2.6, v2.8.2 define TXA-22 as `Authentication Person, Time Stamp (set)`: use `authenticationPersonTimeStampSet`.
+    /// v2.6, v2.8.2 print this element as `Authentication Person, Time Stamp (set)`.
     public var authenticationPersonTimeStampAll: [Field] {
         repetitions(22)
     }
 
     /// TXA-23: Distributed Copies (Code and Name of Recipients). HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `distributedCopiesCodeAndNameOfRecipientsAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Distributed Copies (Code and Name of Recipient(s) )`.
     public var distributedCopiesCodeAndNameOfRecipients: XCN? {
         field(23).map(XCN.init(field:))
     }
@@ -212,6 +212,7 @@ public struct TXA: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.6, v2.8.2 print this element as `Distributed Copies (Code and Name of Recipient(s) )`.
     public var distributedCopiesCodeAndNameOfRecipientsAll: [XCN] {
         repetitions(23).map(XCN.init(field:))
     }
@@ -220,24 +221,6 @@ public struct TXA: TypedSegment {
     /// TXA-2 viewed as the `CWE` that v2.8.2 prints (v2.3, v2.3.1, v2.4, v2.5.1, v2.6 print `IS`). On a message of another version this views whatever TXA-2 holds on the wire.
     public var documentTypeAsCWE: CWE? {
         field(2).map(CWE.init(field:))
-    }
-
-    /// TXA-22: Authentication Person, Time Stamp (set). HL7 data type `PPN`. Repeating field: this accessor reads the first repetition; `authenticationPersonTimeStampSetAll` returns every repetition.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever TXA-22 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1 define TXA-22 as `Authentication Person, Time Stamp`: use `authenticationPersonTimeStamp`.
-    public var authenticationPersonTimeStampSet: Field? {
-        field(22)
-    }
-
-    /// TXA-22: every repetition of Authentication Person, Time Stamp (set), in wire order. Passes
-    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
-    /// the validator: empty when the field is absent; one entry when it is present but empty;
-    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
-    /// holding the literal `""`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever TXA-22 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1 define TXA-22 as `Authentication Person, Time Stamp`: use `authenticationPersonTimeStamp`.
-    public var authenticationPersonTimeStampSetAll: [Field] {
-        repetitions(22)
     }
 
     /// TXA-24: Folder Assignment. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `folderAssignmentAll` returns every repetition.

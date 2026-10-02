@@ -167,12 +167,14 @@ public struct IVC: TypedSegment {
     }
 
     /// IVC-28: Provider Tax status. HL7 data type `IS`.
+    /// v2.8.2 prints this element as `Provider Tax Status`.
     /// v2.8.2 prints `CWE`: use `providerTaxStatusAsCWE`.
     public var providerTaxStatus: String? {
         field(28)?.stringValue
     }
 
     /// IVC-29: Payer Tax status. HL7 data type `IS`.
+    /// v2.8.2 prints this element as `Payer Tax Status`.
     /// v2.8.2 prints `CWE`: use `payerTaxStatusAsCWE`.
     public var payerTaxStatus: String? {
         field(29)?.stringValue

@@ -39,6 +39,7 @@ public struct LCH: TypedSegment {
 
     /// LCH-5: Location Characteristic Value-LCH. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// v2.3 prints this element as `Location Characteristic Value`.
+    /// v2.6, v2.8.2 print this element as `Location Characteristic Value - LCH`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var locationCharacteristicValueLch: CE? {
         field(5).map(CE.init(field:))

@@ -319,6 +319,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-33: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var citizenship: CE? {
@@ -330,6 +331,7 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var citizenshipAll: [CE] {
@@ -367,6 +369,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-39: Religion. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var religion: CE? {
         field(39).map(CE.init(field:))
@@ -395,6 +398,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-42: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroup: CE? {
@@ -406,6 +410,7 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroupAll: [CE] {
@@ -413,6 +418,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-43: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `maritalStatusAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var maritalStatus: CE? {
         field(43).map(CE.init(field:))
@@ -423,6 +429,7 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var maritalStatusAll: [CE] {
         repetitions(43).map(CE.init(field:))
@@ -538,11 +545,13 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-55: Relationship to the Patient Start Date. HL7 data type `DT`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Relationship To The Patient Start Date`.
     public var relationshipToThePatientStartDate: String? {
         field(55)?.stringValue
     }
 
     /// IN2-56: Relationship to the Patient Stop Date. HL7 data type `DT`. Repeating field: this accessor reads the first repetition; `relationshipToThePatientStopDateAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4 print this element as `Relationship To The Patient Stop Date`.
     public var relationshipToThePatientStopDate: String? {
         field(56)?.stringValue
     }
@@ -554,11 +563,14 @@ public struct IN2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.3, v2.3.1, v2.4 print this element as `Relationship To The Patient Stop Date`.
     public var relationshipToThePatientStopDateAll: [String?] {
         repetitions(56).map(\.stringValue)
     }
 
     /// IN2-57: Insurance Co. Contact Reason. HL7 data type `IS`.
+    /// v2.6 prints this element as `Insurance Co Contact Reason`.
+    /// v2.8.2 prints this element as `Insurance Co Contact Reason`.
     /// v2.8.2 prints `CWE`: use `insuranceCoContactReasonAsCWE`.
     public var insuranceCoContactReason: String? {
         field(57)?.stringValue
@@ -598,6 +610,9 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-62: Guarantor's Relationship to Insured. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Guarantor's Relationship To Insured`.
+    /// v2.3.1, v2.4 print this element as `Guarantor's Relationship To Insured`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var guarantorSRelationshipToInsured: CE? {
         field(62).map(CE.init(field:))
@@ -657,6 +672,7 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-69: Insured Organization Name and ID. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredOrganizationNameAndIdAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4 print this element as `Insured Organization Name And ID`.
     public var insuredOrganizationNameAndId: XON? {
         field(69).map(XON.init(field:))
     }
@@ -666,11 +682,13 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Insured Organization Name And ID`.
     public var insuredOrganizationNameAndIdAll: [XON] {
         repetitions(69).map(XON.init(field:))
     }
 
     /// IN2-70: Insured Employer Organization Name and ID. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredEmployerOrganizationNameAndIdAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4 print this element as `Insured Employer Organization Name And ID`.
     public var insuredEmployerOrganizationNameAndId: XON? {
         field(70).map(XON.init(field:))
     }
@@ -680,11 +698,13 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Insured Employer Organization Name And ID`.
     public var insuredEmployerOrganizationNameAndIdAll: [XON] {
         repetitions(70).map(XON.init(field:))
     }
 
     /// IN2-71: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `raceAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var race: CE? {
@@ -696,6 +716,7 @@ public struct IN2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var raceAll: [CE] {
@@ -703,10 +724,9 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-72: CMS Patient's Relationship to Insured. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever IN2-72 holds on the wire.
     /// v2.3 prints this element as `HCFA Patient Relationship to Insured`.
     /// v2.3.1, v2.4 print this element as `HCFA Patient's Relationship to Insured`.
-    /// v2.6, v2.8.2 define IN2-72 as `Patient's Relationship to Insured`: use `patientSRelationshipToInsured`.
+    /// Renamed `Patient's Relationship to Insured` in v2.6, which types it `CWE`: use `patientSRelationshipToInsured`.
     public var cmsPatientSRelationshipToInsured: CE? {
         field(72).map(CE.init(field:))
     }
@@ -854,10 +874,10 @@ public struct IN2: TypedSegment {
     }
 
     /// IN2-72: Patient's Relationship to Insured. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever IN2-72 holds on the wire.
-    /// v2.3 defines IN2-72 as `HCFA Patient Relationship to Insured`: use `cmsPatientSRelationshipToInsured`.
-    /// v2.3.1, v2.4 define IN2-72 as `HCFA Patient's Relationship to Insured`: use `cmsPatientSRelationshipToInsured`.
-    /// v2.5.1 defines IN2-72 as `CMS Patient's Relationship to Insured`: use `cmsPatientSRelationshipToInsured`.
+    /// Same element as `cmsPatientSRelationshipToInsured`, renamed in v2.6; typed as v2.6 prints it.
+    /// v2.3 prints this element as `HCFA Patient Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
+    /// v2.3.1, v2.4 print this element as `HCFA Patient's Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
+    /// v2.5.1 prints this element as `CMS Patient's Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
     public var patientSRelationshipToInsured: CWE? {
         field(72).map(CWE.init(field:))
     }

@@ -262,7 +262,7 @@ func deprecatedAliases(for field: FieldSchema, segmentID: String, returnType: St
 func render(_ schema: SegmentSchema, union: UnionSurface = UnionSurface()) -> String {
     var blocks = schema.fields.map {
         swiftAccessor(for: $0, segmentID: schema.segmentID, notes: union.notes[$0.index] ?? [],
-                      all: union.repeats[$0.index])
+                      all: union.repeats[$0.index], version: schema.version)
     }
     blocks += union.accessors.map {
         swiftAccessor(for: $0.field, segmentID: schema.segmentID, name: $0.swiftName,

@@ -27,8 +27,7 @@ public struct CON: TypedSegment {
     }
 
     /// CON-3: Consent Form ID. HL7 data type `ST`.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-3 holds on the wire.
-    /// v2.6, v2.8.2 define CON-3 as `Consent Form ID and Version`: use `consentFormIdAndVersion`.
+    /// v2.6, v2.8.2 print this element as `Consent Form ID and Version`.
     public var consentFormId: String? {
         field(3)?.stringValue
     }
@@ -71,8 +70,7 @@ public struct CON: TypedSegment {
     }
 
     /// CON-7: Consent Background. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `consentBackgroundAll` returns every repetition.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-7 holds on the wire.
-    /// v2.6, v2.8.2 define CON-7 as `Consent Background Information`: use `consentBackgroundInformation`.
+    /// v2.6, v2.8.2 print this element as `Consent Background Information`.
     public var consentBackground: String? {
         field(7)?.stringValue
     }
@@ -84,15 +82,13 @@ public struct CON: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-7 holds on the wire.
-    /// v2.6, v2.8.2 define CON-7 as `Consent Background Information`: use `consentBackgroundInformation`.
+    /// v2.6, v2.8.2 print this element as `Consent Background Information`.
     public var consentBackgroundAll: [String?] {
         repetitions(7).map(\.stringValue)
     }
 
     /// CON-8: Subject-specific Consent Background. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `subjectSpecificConsentBackgroundAll` returns every repetition.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-8 holds on the wire.
-    /// v2.6, v2.8.2 define CON-8 as `Subject-specific Consent Background Text`: use `subjectSpecificConsentBackgroundText`.
+    /// v2.6, v2.8.2 print this element as `Subject-specific Consent Background Text`.
     public var subjectSpecificConsentBackground: String? {
         field(8)?.stringValue
     }
@@ -104,8 +100,7 @@ public struct CON: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-8 holds on the wire.
-    /// v2.6, v2.8.2 define CON-8 as `Subject-specific Consent Background Text`: use `subjectSpecificConsentBackgroundText`.
+    /// v2.6, v2.8.2 print this element as `Subject-specific Consent Background Text`.
     public var subjectSpecificConsentBackgroundAll: [String?] {
         repetitions(8).map(\.stringValue)
     }
@@ -212,8 +207,8 @@ public struct CON: TypedSegment {
     }
 
     /// CON-25: Relationship to Subject Table. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `relationshipToSubjectTableAll` returns every repetition.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-25 holds on the wire.
-    /// v2.6, v2.8.2 define CON-25 as `Relationship to Subject`: use `relationshipToSubject`.
+    /// v2.6 prints this element as `Relationship to Subject`.
+    /// Renamed `Relationship to Subject` in v2.6, and v2.8.2 types it `CWE`: use `relationshipToSubject`.
     public var relationshipToSubjectTable: String? {
         field(25)?.stringValue
     }
@@ -225,57 +220,10 @@ public struct CON: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.5.1. On a message of another version this returns whatever CON-25 holds on the wire.
-    /// v2.6, v2.8.2 define CON-25 as `Relationship to Subject`: use `relationshipToSubject`.
+    /// v2.6 prints this element as `Relationship to Subject`.
+    /// Renamed `Relationship to Subject` in v2.6, and v2.8.2 types it `CWE`: use `relationshipToSubject`.
     public var relationshipToSubjectTableAll: [String?] {
         repetitions(25).map(\.stringValue)
-    }
-
-    /// CON-3: Consent Form ID and Version. HL7 data type `ST`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-3 holds on the wire.
-    /// v2.5.1 defines CON-3 as `Consent Form ID`: use `consentFormId`.
-    public var consentFormIdAndVersion: String? {
-        field(3)?.stringValue
-    }
-
-    /// CON-7: Consent Background Information. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `consentBackgroundInformationAll` returns every repetition.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-7 holds on the wire.
-    /// v2.5.1 defines CON-7 as `Consent Background`: use `consentBackground`.
-    public var consentBackgroundInformation: String? {
-        field(7)?.stringValue
-    }
-
-    /// CON-7: every repetition of Consent Background Information, in wire order. Passes
-    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
-    /// the validator: empty when the field is absent; one entry when it is present but empty;
-    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
-    /// holding the literal `""`.
-    /// An element is `nil` when that repetition is not a single scalar (more than one
-    /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-7 holds on the wire.
-    /// v2.5.1 defines CON-7 as `Consent Background`: use `consentBackground`.
-    public var consentBackgroundInformationAll: [String?] {
-        repetitions(7).map(\.stringValue)
-    }
-
-    /// CON-8: Subject-specific Consent Background Text. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `subjectSpecificConsentBackgroundTextAll` returns every repetition.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-8 holds on the wire.
-    /// v2.5.1 defines CON-8 as `Subject-specific Consent Background`: use `subjectSpecificConsentBackground`.
-    public var subjectSpecificConsentBackgroundText: String? {
-        field(8)?.stringValue
-    }
-
-    /// CON-8: every repetition of Subject-specific Consent Background Text, in wire order. Passes
-    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
-    /// the validator: empty when the field is absent; one entry when it is present but empty;
-    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
-    /// holding the literal `""`.
-    /// An element is `nil` when that repetition is not a single scalar (more than one
-    /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-8 holds on the wire.
-    /// v2.5.1 defines CON-8 as `Subject-specific Consent Background`: use `subjectSpecificConsentBackground`.
-    public var subjectSpecificConsentBackgroundTextAll: [String?] {
-        repetitions(8).map(\.stringValue)
     }
 
     /// CON-18: Language Translated To. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -284,31 +232,11 @@ public struct CON: TypedSegment {
         field(18).map(CWE.init(field:))
     }
 
-    /// CON-25: Relationship to Subject. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `relationshipToSubjectAll` returns every repetition.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-25 holds on the wire.
-    /// v2.5.1 defines CON-25 as `Relationship to Subject Table`: use `relationshipToSubjectTable`.
-    /// v2.8.2 prints `CWE`: use `relationshipToSubjectAsCWE`.
-    public var relationshipToSubject: String? {
-        field(25)?.stringValue
-    }
-
-    /// CON-25: every repetition of Relationship to Subject, in wire order. Passes
-    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
-    /// the validator: empty when the field is absent; one entry when it is present but empty;
-    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
-    /// holding the literal `""`.
-    /// An element is `nil` when that repetition is not a single scalar (more than one
-    /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever CON-25 holds on the wire.
-    /// v2.5.1 defines CON-25 as `Relationship to Subject Table`: use `relationshipToSubjectTable`.
-    /// v2.8.2 prints `CWE`: use `relationshipToSubjectAsCWE`.
-    public var relationshipToSubjectAll: [String?] {
-        repetitions(25).map(\.stringValue)
-    }
-
-    /// CON-25: Relationship to Subject. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `relationshipToSubjectAsCWEAll` returns every repetition.
-    /// CON-25 viewed as the `CWE` that v2.8.2 prints (v2.6 prints `IS`). On a message of another version this views whatever CON-25 holds on the wire.
-    public var relationshipToSubjectAsCWE: CWE? {
+    /// CON-25: Relationship to Subject. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `relationshipToSubjectAll` returns every repetition.
+    /// Same element as `relationshipToSubjectTable`, renamed in v2.6; typed as v2.8.2 prints it.
+    /// v2.5.1 prints this element as `Relationship to Subject Table` (`IS`): use `relationshipToSubjectTable`.
+    /// v2.6 prints this element as `Relationship to Subject` (`IS`): use `relationshipToSubjectTable`.
+    public var relationshipToSubject: CWE? {
         field(25).map(CWE.init(field:))
     }
 
@@ -317,8 +245,10 @@ public struct CON: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// CON-25 viewed as the `CWE` that v2.8.2 prints (v2.6 prints `IS`). On a message of another version this views whatever CON-25 holds on the wire.
-    public var relationshipToSubjectAsCWEAll: [CWE] {
+    /// Same element as `relationshipToSubjectTable`, renamed in v2.6; typed as v2.8.2 prints it.
+    /// v2.5.1 prints this element as `Relationship to Subject Table` (`IS`): use `relationshipToSubjectTable`.
+    /// v2.6 prints this element as `Relationship to Subject` (`IS`): use `relationshipToSubjectTable`.
+    public var relationshipToSubjectAll: [CWE] {
         repetitions(25).map(CWE.init(field:))
     }
 }

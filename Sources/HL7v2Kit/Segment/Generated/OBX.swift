@@ -63,8 +63,7 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-8: Abnormal Flags. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `abnormalFlagsAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBX-8 holds on the wire.
-    /// v2.8.2 defines OBX-8 as `Interpretation Codes`: use `interpretationCodes`.
+    /// Renamed `Interpretation Codes` in v2.8.2, which types it `CWE`: use `interpretationCodes`.
     public var abnormalFlags: String? {
         field(8)?.stringValue
     }
@@ -76,8 +75,7 @@ public struct OBX: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBX-8 holds on the wire.
-    /// v2.8.2 defines OBX-8 as `Interpretation Codes`: use `interpretationCodes`.
+    /// Renamed `Interpretation Codes` in v2.8.2, which types it `CWE`: use `interpretationCodes`.
     public var abnormalFlagsAll: [String?] {
         repetitions(8).map(\.stringValue)
     }
@@ -109,10 +107,9 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-12: Effective Date of Reference Range Values. HL7 data type `TS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever OBX-12 holds on the wire.
     /// v2.3, v2.3.1 print this element as `Date Last Obs Normal Values`.
     /// v2.4 prints this element as `Date Last Observation Normal Value`.
-    /// v2.6, v2.8.2 define OBX-12 as `Effective Date of Reference Range`: use `effectiveDateOfReferenceRange`.
+    /// v2.6, v2.8.2 print this element as `Effective Date of Reference Range`.
     public var effectiveDateOfReferenceRangeValues: String? {
         field(12)?.stringValue
     }
@@ -128,9 +125,8 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-15: Producer's Reference. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever OBX-15 holds on the wire.
     /// v2.3, v2.3.1, v2.4 print this element as `Producer's ID`.
-    /// v2.6, v2.8.2 define OBX-15 as `Producer's ID`: use `producersID`.
+    /// Renamed `Producer's ID` in v2.6, which types it `CWE`: use `producersID`.
     public var producersReference: CE? {
         field(15).map(CE.init(field:))
     }
@@ -189,21 +185,21 @@ public struct OBX: TypedSegment {
         field(19)?.stringValue
     }
 
-    /// OBX-20: Reserved for harmonization with V2.6. HL7 data type ``.
+    /// OBX-20: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1.
     /// v2.5.1 reserves OBX-20 without defining an element; this returns whatever OBX-20 holds on the wire.
     /// v2.6, v2.8.2 define OBX-20 as `Observation Site`: use `observationSite`.
     public var reservedForHarmonization20: Field? {
         field(20)
     }
 
-    /// OBX-21: Reserved for harmonization with V2.6. HL7 data type ``.
+    /// OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1.
     /// v2.5.1 reserves OBX-21 without defining an element; this returns whatever OBX-21 holds on the wire.
     /// v2.6, v2.8.2 define OBX-21 as `Observation Instance Identifier`: use `observationInstanceIdentifier`.
     public var reservedForHarmonization21: Field? {
         field(21)
     }
 
-    /// OBX-22: Reserved for harmonization with V2.6. HL7 data type ``.
+    /// OBX-22: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1.
     /// v2.5.1 reserves OBX-22 without defining an element; this returns whatever OBX-22 holds on the wire.
     /// v2.6, v2.8.2 define OBX-22 as `Mood Code`: use `moodCode`.
     public var reservedForHarmonization22: Field? {
@@ -229,8 +225,9 @@ public struct OBX: TypedSegment {
     }
 
     /// OBX-8: Interpretation Codes. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `interpretationCodesAll` returns every repetition.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OBX-8 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define OBX-8 as `Abnormal Flags`: use `abnormalFlags`.
+    /// Same element as `abnormalFlags`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1 print this element as `Abnormal Flags` (`ID`): use `abnormalFlags`.
+    /// v2.4, v2.5.1, v2.6 print this element as `Abnormal Flags` (`IS`): use `abnormalFlags`.
     public var interpretationCodes: CWE? {
         field(8).map(CWE.init(field:))
     }
@@ -240,25 +237,17 @@ public struct OBX: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OBX-8 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define OBX-8 as `Abnormal Flags`: use `abnormalFlags`.
+    /// Same element as `abnormalFlags`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1 print this element as `Abnormal Flags` (`ID`): use `abnormalFlags`.
+    /// v2.4, v2.5.1, v2.6 print this element as `Abnormal Flags` (`IS`): use `abnormalFlags`.
     public var interpretationCodesAll: [CWE] {
         repetitions(8).map(CWE.init(field:))
     }
 
-    /// OBX-12: Effective Date of Reference Range. HL7 data type `DTM`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever OBX-12 holds on the wire.
-    /// v2.3, v2.3.1 define OBX-12 as `Date Last Obs Normal Values`: use `effectiveDateOfReferenceRangeValues`.
-    /// v2.4 defines OBX-12 as `Date Last Observation Normal Value`: use `effectiveDateOfReferenceRangeValues`.
-    /// v2.5.1 defines OBX-12 as `Effective Date of Reference Range Values`: use `effectiveDateOfReferenceRangeValues`.
-    public var effectiveDateOfReferenceRange: String? {
-        field(12)?.stringValue
-    }
-
     /// OBX-15: Producer's ID. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever OBX-15 holds on the wire.
-    /// v2.3, v2.3.1, v2.4 define OBX-15 as `Producer's ID`: use `producersReference`.
-    /// v2.5.1 defines OBX-15 as `Producer's Reference`: use `producersReference`.
+    /// Same element as `producersReference`, renamed in v2.6; typed as v2.6 prints it.
+    /// v2.3, v2.3.1, v2.4 print this element as `Producer's ID` (`CE`): use `producersReference`.
+    /// v2.5.1 prints this element as `Producer's Reference` (`CE`): use `producersReference`.
     public var producersID: CWE? {
         field(15).map(CWE.init(field:))
     }

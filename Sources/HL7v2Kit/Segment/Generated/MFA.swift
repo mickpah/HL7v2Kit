@@ -38,7 +38,8 @@ public struct MFA: TypedSegment {
         field(4).map(CE.init(field:))
     }
 
-    /// MFA-5: Primary Key Value - MFA. HL7 data type `Varie`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfaAll` returns every repetition.
+    /// MFA-5: Primary Key Value - MFA. HL7 data type `Varies`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfaAll` returns every repetition.
+    /// v2.3.1 prints this element as `Primary Key Value – MFA`.
     /// v2.3, v2.3.1, v2.4 print `CE`: use `primaryKeyValueMfaAsCE`.
     public var primaryKeyValueMfa: Field? {
         field(5)
@@ -49,6 +50,7 @@ public struct MFA: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3.1 prints this element as `Primary Key Value – MFA`.
     /// v2.3, v2.3.1, v2.4 print `CE`: use `primaryKeyValueMfaAsCE`.
     public var primaryKeyValueMfaAll: [Field] {
         repetitions(5)
@@ -73,7 +75,7 @@ public struct MFA: TypedSegment {
     }
 
     /// MFA-5: Primary Key Value - MFA. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfaAsCEAll` returns every repetition.
-    /// MFA-5 viewed as the `CE` that v2.3, v2.3.1, v2.4 print (v2.5.1 prints `Varie`; v2.6, v2.8.2 print `Varies`). On a message of another version this views whatever MFA-5 holds on the wire.
+    /// MFA-5 viewed as the `CE` that v2.3, v2.3.1, v2.4 print (v2.5.1, v2.6, v2.8.2 print `Varies`). On a message of another version this views whatever MFA-5 holds on the wire.
     public var primaryKeyValueMfaAsCE: CE? {
         field(5).map(CE.init(field:))
     }
@@ -83,7 +85,7 @@ public struct MFA: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// MFA-5 viewed as the `CE` that v2.3, v2.3.1, v2.4 print (v2.5.1 prints `Varie`; v2.6, v2.8.2 print `Varies`). On a message of another version this views whatever MFA-5 holds on the wire.
+    /// MFA-5 viewed as the `CE` that v2.3, v2.3.1, v2.4 print (v2.5.1, v2.6, v2.8.2 print `Varies`). On a message of another version this views whatever MFA-5 holds on the wire.
     public var primaryKeyValueMfaAsCEAll: [CE] {
         repetitions(5).map(CE.init(field:))
     }

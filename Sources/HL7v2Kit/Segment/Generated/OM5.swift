@@ -18,12 +18,15 @@ public struct OM5: TypedSegment {
 
     /// OM5-1: Sequence Number - Test/Observation Master File. HL7 data type `NM`.
     /// v2.3 prints this element as `Sequence Number`.
+    /// v2.3.1 prints this element as `Sequence Number – Test/Observation Master File`.
+    /// v2.4 prints this element as `Sequence Number- Test/Observation Master File`.
     public var sequenceNumberTestObservationMasterFile: String? {
         field(1)?.stringValue
     }
 
     /// OM5-2: Test/Observations Included within an Ordered Test Battery. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `testObservationsIncludedWithinAnOrderedTestBatteryAll` returns every repetition.
     /// v2.3 prints this element as `Test/Observations Included w/an Ordered Test Battery`.
+    /// v2.6, v2.8.2 print this element as `Test/Observations Included Within an Ordered Test Battery`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var testObservationsIncludedWithinAnOrderedTestBattery: CE? {
         field(2).map(CE.init(field:))
@@ -35,6 +38,7 @@ public struct OM5: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// v2.3 prints this element as `Test/Observations Included w/an Ordered Test Battery`.
+    /// v2.6, v2.8.2 print this element as `Test/Observations Included Within an Ordered Test Battery`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var testObservationsIncludedWithinAnOrderedTestBatteryAll: [CE] {
         repetitions(2).map(CE.init(field:))

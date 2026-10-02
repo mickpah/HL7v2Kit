@@ -18,6 +18,7 @@ public struct OM1: TypedSegment {
 
     /// OM1-1: Sequence Number - Test/Observation Master File. HL7 data type `NM`.
     /// v2.3 prints this element as `Sequence Number`.
+    /// v2.3.1 prints this element as `Sequence Number – Test/Observation Master File`.
     public var sequenceNumberTestObservationMasterFile: String? {
         field(1)?.stringValue
     }
@@ -103,8 +104,7 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-10: Preferred Short Name or Mnemonic for Observation. HL7 data type `ST`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OM1-10 holds on the wire.
-    /// v2.8.2 defines OM1-10 as `Preferred Short Name or Mnemonic for the Observation`: use `preferredShortNameOrMnemonicForTheObservation`.
+    /// v2.8.2 prints this element as `Preferred Short Name or Mnemonic for the Observation`.
     public var preferredShortNameOrMnemonicForObservation: String? {
         field(10)?.stringValue
     }
@@ -198,6 +198,7 @@ public struct OM1: TypedSegment {
 
     /// OM1-21: Date/Time Stamp for any change in Definition for the Observation. HL7 data type `TS`.
     /// v2.3 prints this element as `Date/Time Stamp for any change in Def Attri for Obs`.
+    /// v2.8.2 prints this element as `Date/Time Stamp for Any Change in Definition for the Observation`.
     public var dateTimeStampForAnyChangeInDefinitionForTheObservation: String? {
         field(21)?.stringValue
     }
@@ -239,6 +240,7 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-27: Outside Site(s) Where Observation may be Performed. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `outsideSiteSWhereObservationMayBePerformedAll` returns every repetition.
+    /// v2.8.2 prints this element as `Outside Site(s) Where Observation May Be Performed`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var outsideSiteSWhereObservationMayBePerformed: CE? {
         field(27).map(CE.init(field:))
@@ -249,6 +251,7 @@ public struct OM1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.8.2 prints this element as `Outside Site(s) Where Observation May Be Performed`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var outsideSiteSWhereObservationMayBePerformedAll: [CE] {
         repetitions(27).map(CE.init(field:))
@@ -276,14 +279,14 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-30: Confidentiality Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `IS`, a scalar: the value reads as the first component.
     public var confidentialityCode: CWE? {
         field(30).map(CWE.init(field:))
     }
 
     /// OM1-31: Observations Required to Interpret the Observation. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OM1-31 holds on the wire.
     /// v2.3, v2.3.1 print this element as `Observations Required to Interpret the Obs`.
-    /// v2.8.2 defines OM1-31 as `Observations Required to Interpret this Observation`: use `observationsRequiredToInterpretThisObservation`.
+    /// Renamed `Observations Required to Interpret this Observation` in v2.8.2, which types it `CWE`: use `observationsRequiredToInterpretThisObservation`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var observationsRequiredToInterpretTheObservation: CE? {
         field(31).map(CE.init(field:))
@@ -448,16 +451,10 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-47: Modality Of Imaging Measurement. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.8.2 prints this element as `Modality of Imaging Measurement`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var modalityOfImagingMeasurement: CE? {
         field(47).map(CE.init(field:))
-    }
-
-    /// OM1-10: Preferred Short Name or Mnemonic for the Observation. HL7 data type `ST`.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OM1-10 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define OM1-10 as `Preferred Short Name or Mnemonic for Observation`: use `preferredShortNameOrMnemonicForObservation`.
-    public var preferredShortNameOrMnemonicForTheObservation: String? {
-        field(10)?.stringValue
     }
 
     /// OM1-18: Nature of Service/Test/Observation. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -467,9 +464,10 @@ public struct OM1: TypedSegment {
     }
 
     /// OM1-31: Observations Required to Interpret this Observation. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `observationsRequiredToInterpretThisObservationAll` returns every repetition.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OM1-31 holds on the wire.
-    /// v2.3, v2.3.1 define OM1-31 as `Observations Required to Interpret the Obs`: use `observationsRequiredToInterpretTheObservation`.
-    /// v2.4, v2.5.1, v2.6 define OM1-31 as `Observations Required to Interpret the Observation`: use `observationsRequiredToInterpretTheObservation`.
+    /// Same element as `observationsRequiredToInterpretTheObservation`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1 print this element as `Observations Required to Interpret the Obs` (`CE`): use `observationsRequiredToInterpretTheObservation`.
+    /// v2.4, v2.5.1 print this element as `Observations Required to Interpret the Observation` (`CE`): use `observationsRequiredToInterpretTheObservation`.
+    /// v2.6 prints this element as `Observations Required to Interpret the Observation` (`CWE`), which this accessor reads.
     public var observationsRequiredToInterpretThisObservation: CWE? {
         field(31).map(CWE.init(field:))
     }
@@ -479,9 +477,10 @@ public struct OM1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OM1-31 holds on the wire.
-    /// v2.3, v2.3.1 define OM1-31 as `Observations Required to Interpret the Obs`: use `observationsRequiredToInterpretTheObservation`.
-    /// v2.4, v2.5.1, v2.6 define OM1-31 as `Observations Required to Interpret the Observation`: use `observationsRequiredToInterpretTheObservation`.
+    /// Same element as `observationsRequiredToInterpretTheObservation`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1 print this element as `Observations Required to Interpret the Obs` (`CE`): use `observationsRequiredToInterpretTheObservation`.
+    /// v2.4, v2.5.1 print this element as `Observations Required to Interpret the Observation` (`CE`): use `observationsRequiredToInterpretTheObservation`.
+    /// v2.6 prints this element as `Observations Required to Interpret the Observation` (`CWE`), which this accessor reads.
     public var observationsRequiredToInterpretThisObservationAll: [CWE] {
         repetitions(31).map(CWE.init(field:))
     }

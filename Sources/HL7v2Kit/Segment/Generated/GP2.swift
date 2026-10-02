@@ -99,6 +99,7 @@ public struct GP2: TypedSegment {
     }
 
     /// GP2-11: Expected CMS Payment Amount. HL7 data type `CP`.
+    /// v2.4 prints this element as `Expected HCFA Payment Amount`.
     public var expectedCmsPaymentAmount: Field? {
         field(11)
     }

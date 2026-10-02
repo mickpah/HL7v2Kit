@@ -42,6 +42,7 @@ public struct CER: TypedSegment {
     }
 
     /// CER-6: Signature of Issuing Authority. HL7 data type `ED`.
+    /// v2.8.2 prints this element as `Signature`.
     public var signatureOfIssuingAuthority: Field? {
         field(6)
     }
@@ -83,6 +84,7 @@ public struct CER: TypedSegment {
     }
 
     /// CER-14: Subject Directory Attribute Extension (Health Professional Data). HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `subjectDirectoryAttributeExtensionAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Subject Directory Attribute Extension`.
     public var subjectDirectoryAttributeExtension: CWE? {
         field(14).map(CWE.init(field:))
     }
@@ -92,6 +94,7 @@ public struct CER: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.6, v2.8.2 print this element as `Subject Directory Attribute Extension`.
     public var subjectDirectoryAttributeExtensionAll: [CWE] {
         repetitions(14).map(CWE.init(field:))
     }
@@ -196,6 +199,7 @@ public struct CER: TypedSegment {
     }
 
     /// CER-31: Certificate Status. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// v2.6, v2.8.2 print this element as `Certificate Status Code`.
     public var certificateStatus: CWE? {
         field(31).map(CWE.init(field:))
     }

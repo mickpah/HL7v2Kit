@@ -27,21 +27,25 @@ public struct FHS: TypedSegment {
     }
 
     /// FHS-3: File Sending Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var fileSendingApplication: HD? {
         field(3).map(HD.init(field:))
     }
 
     /// FHS-4: File Sending Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var fileSendingFacility: HD? {
         field(4).map(HD.init(field:))
     }
 
     /// FHS-5: File Receiving Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var fileReceivingApplication: HD? {
         field(5).map(HD.init(field:))
     }
 
     /// FHS-6: File Receiving Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var fileReceivingFacility: HD? {
         field(6).map(HD.init(field:))
     }

@@ -17,6 +17,7 @@ public struct IAM: TypedSegment {
     }
 
     /// IAM-1: Set ID - IAM. HL7 data type `SI`.
+    /// v2.4 prints this element as `Set ID – IAM`.
     public var setIdIam: String? {
         field(1)?.stringValue
     }

@@ -17,6 +17,7 @@ public struct PRA: TypedSegment {
     }
 
     /// PRA-1: Primary Key Value - PRA. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `ST`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var primaryKeyValuePra: CE? {
         field(1).map(CE.init(field:))

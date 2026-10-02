@@ -202,6 +202,8 @@ public struct RXA: TypedSegment {
 
     /// RXA-21: Action Code - RXA. HL7 data type `ID`.
     /// v2.3 prints this element as `Action Code`.
+    /// v2.3.1, v2.4 print this element as `Action Code-RXA`.
+    /// v2.6, v2.8.2 print this element as `Action Code – RXA`.
     public var actionCodeRxa: String? {
         field(21)?.stringValue
     }

@@ -51,6 +51,8 @@ public struct RQD: TypedSegment {
     }
 
     /// RQD-7: Dept. Cost Center. HL7 data type `IS`.
+    /// v2.6 prints this element as `Cost Center Account Number`.
+    /// v2.8.2 prints this element as `Cost Center Account Number`.
     /// v2.8.2 prints `CX`: use `deptCostCenterAsCX`.
     public var deptCostCenter: String? {
         field(7)?.stringValue

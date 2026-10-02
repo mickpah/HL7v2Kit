@@ -72,6 +72,7 @@ public struct MSH: TypedSegment {
     }
 
     /// MSH-12: Version ID. HL7 data type `VID`. Returns the typed ``VID`` view; use `.field` for raw access.
+    /// v2.3 prints `ID`, a scalar: the value reads as the first component.
     public var versionID: VID? {
         field(12).map(VID.init(field:))
     }
@@ -132,6 +133,7 @@ public struct MSH: TypedSegment {
     /// MSH-21: Message Profile Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `messageProfileIdentifierAll` returns every repetition.
     /// Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever MSH-21 holds on the wire.
     /// v2.4 prints this element as `Conformance Statement ID`.
+    /// v2.4 prints `ID`, a scalar: the value reads as the first component.
     public var messageProfileIdentifier: EI? {
         field(21).map(EI.init(field:))
     }
@@ -143,6 +145,7 @@ public struct MSH: TypedSegment {
     /// holding the literal `""`.
     /// Defined in v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever MSH-21 holds on the wire.
     /// v2.4 prints this element as `Conformance Statement ID`.
+    /// v2.4 prints `ID`, a scalar: the value reads as the first component.
     public var messageProfileIdentifierAll: [EI] {
         repetitions(21).map(EI.init(field:))
     }

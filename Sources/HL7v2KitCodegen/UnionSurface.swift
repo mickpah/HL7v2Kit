@@ -4,13 +4,18 @@
 // v2.5.1, else the earliest version that defines the segment), and the DocC
 // that says which versions each accessor applies to.
 //
-// Elements are keyed by position and P6-9-normalised swiftName. A later
-// version that prints a different element name at a position gets its own
-// accessor (a rename and a redefinition are treated alike, so no accessor
-// named for one element silently stands for another); each accessor's DocC
-// names the other elements at its position. An earlier version that prints
-// another name at a base position is noted on the base accessor, which is the
-// only accessor for that position on an older wire.
+// The rules (ADR-020, P9-5 rulings 1 to 3):
+// - A position the base schema defines is the same element in every version.
+//   A version that prints it under another name joins the base accessor (a
+//   DocC note) unless its Swift type differs, in which case the later name gets
+//   its own accessor, typed as that version prints it, and the two DocC blocks
+//   cross-reference each other as a rename. One accessor per element and type.
+// - A position the base reserves (no data type), or one past the base maximum,
+//   that a later version defines is a redefinition: a separate accessor, with
+//   DocC naming the other elements at the position.
+// - A version that types an accessor's position as a composite view where the
+//   accessor is scalar or raw gets `<name>As<T>`. A view accessor gets a DocC
+//   note instead: `viewed(as:)` for another view, the scalar type for a scalar.
 
 import Foundation
 
@@ -29,6 +34,11 @@ func versionList(_ versions: [String]) -> String {
 /// The verb in agreement with a version list: one version "prints", several "print".
 private func agree(_ versions: [String], _ verb: String) -> String {
     versions.count == 1 ? verb + "s" : verb
+}
+
+/// The Swift type of the singular accessor for an HL7 data type.
+private func swiftType(_ dataType: String) -> String {
+    accessorShape(dataType, index: 0).type
 }
 
 /// One accessor contributed by another version: a later element name, or `<name>As<T>`.
@@ -52,15 +62,17 @@ struct UnionSurface {
     var repeats: [Int: Bool] = [:]
 }
 
-/// One element at one position, with every version that prints it.
+/// One accessor's element at one position, with every version that prints it.
 private struct Slot {
     let index: Int
     let swiftName: String
     /// The printed name in the first version of the slot.
     let name: String
+    /// The accessor's own data type: the base field's, else the first defining version's.
+    let dataType: String
     var entries: [(version: String, field: FieldSchema)]
-    /// Earlier versions that print the base element under another name.
-    var renames: [(version: String, name: String)] = []
+    /// For a later rename kept as its own accessor (ruling 1), the base slot's position in `slots`.
+    var renameOf: Int?
 
     var defining: [String] { entries.filter { !$0.field.dataType.isEmpty }.map(\.version) }
     var repeating: [String] {
@@ -92,26 +104,31 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
     surface.segmentVersions = ([base] + others).map(\.version).sorted(by: versionLess)
 
     var slots = base.fields.map {
-        Slot(index: $0.index, swiftName: $0.swiftName, name: $0.name, entries: [(base.version, $0)])
+        Slot(index: $0.index, swiftName: $0.swiftName, name: $0.name, dataType: $0.dataType,
+             entries: [(base.version, $0)])
     }
     let baseCount = slots.count
     for schema in others.sorted(by: { versionLess($0.version, $1.version) }) {
         let later = versionLess(base.version, schema.version)
         for field in schema.fields where !field.dataType.isEmpty {
-            if let s = slots.firstIndex(where: { $0.index == field.index && $0.swiftName == field.swiftName }) {
+            // An earlier version only ever reaches the base accessor for its position.
+            let candidates = later ? slots.indices : slots.indices.prefix(baseCount)
+            if let s = candidates.first(where: { slots[$0].index == field.index && slots[$0].swiftName == field.swiftName }) {
                 slots[s].entries.append((schema.version, field))
+                continue
+            }
+            let b = slots.prefix(baseCount).firstIndex { $0.index == field.index && !$0.dataType.isEmpty }
+            if let b, !later || swiftType(field.dataType) == swiftType(slots[b].dataType) {
+                // The same element under another name, same accessor type: one accessor.
+                slots[b].entries.append((schema.version, field))
             } else if later {
                 slots.append(Slot(index: field.index, swiftName: field.swiftName, name: field.name,
-                                  entries: [(schema.version, field)]))
-            } else if let s = slots.prefix(baseCount).firstIndex(where: { $0.index == field.index }) {
-                slots[s].entries.append((schema.version, field))
-                slots[s].renames.append((schema.version, field.name))
+                                  dataType: field.dataType, entries: [(schema.version, field)], renameOf: b))
             } else {
                 throw unionFailure("\(id)-\(field.index): v\(schema.version) defines a field v\(base.version) lacks")
             }
         }
     }
-
     for i in slots.indices { slots[i].entries.sort { versionLess($0.version, $1.version) } }
 
     // Every accessor name in the struct names exactly one field.
@@ -133,36 +150,77 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
     for (n, slot) in slots.enumerated() {
         let isBase = n < baseCount
         let sid = "\(id)-\(slot.index)"
-        // The accessor's own type: the base field's, else the first defining version's.
-        let ref = isBase ? base.fields[n] : slot.entries[0].field
-        let defining = slot.defining
+        // A rename family: the base accessor and the later names kept beside it.
+        let root = slot.renameOf ?? n
+        let family = [root] + slots.indices.filter { slots[$0].renameOf == root }
+        let familyVersions = family.flatMap { slots[$0].defining }.sorted(by: versionLess)
+        let defining = family.count > 1 ? familyVersions : slot.defining
         let repeating = slot.repeating
         var notes: [String] = []
-        if defining.isEmpty {
+        if slot.dataType.isEmpty {
             notes.append("v\(base.version) reserves \(sid) without defining an element; this returns whatever \(sid) holds on the wire.")
         } else if defining != surface.segmentVersions {
             notes.append("Defined in \(versionList(defining)). On a message of another version this returns whatever \(sid) holds on the wire.")
         }
-        for run in runs(slot.renames.map { ($0.version, $0.name) }) {
-            notes.append("\(versionList(run.versions)) \(agree(run.versions, "print")) this element as `\(run.value)`.")
+        // The first version after the base that prints a family member's name: a same-type
+        // version merged into the base accessor can carry the rename before the type changes.
+        func renamedIn(_ m: Int) -> String {
+            family.flatMap { slots[$0].entries }
+                .filter { $0.field.swiftName == slots[m].swiftName && versionLess(base.version, $0.version) }
+                .map(\.version).min(by: versionLess) ?? slots[m].entries[0].version
         }
-        for other in slots where other.index == slot.index && other.swiftName != slot.swiftName {
+        if let b = slot.renameOf {
+            let first = slot.entries[0].version
+            notes.append("Same element as `\(slots[b].swiftName)`, renamed in v\(renamedIn(n)); typed as v\(first) prints it.")
+        }
+        // Every printed name of this element, with the accessor whose type matches that version.
+        for m in family {
+            for run in runs(slots[m].entries.filter { !$0.field.dataType.isEmpty }.map { entry in
+                let match = family.first { swiftType(slots[$0].dataType) == swiftType(entry.field.dataType) } ?? m
+                return (entry.version, "\(entry.field.name)\u{1F}\(slots[match].swiftName)\u{1F}\(entry.field.dataType)")
+            }) {
+                let parts = run.value.split(separator: "\u{1F}", omittingEmptySubsequences: false).map(String.init)
+                let (name, accessor, type) = (parts[0], parts[1], parts[2])
+                let verb = agree(run.versions, "print")
+                if m == n && name == slot.name { continue }
+                if m == n {
+                    notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)`.")
+                } else if accessor == slot.swiftName {
+                    notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)` (`\(type)`), which this accessor reads.")
+                } else if slots[m].renameOf != nil && name == slots[m].name {
+                    let renamed = renamedIn(m)
+                    let typedBy = renamed == run.versions[0] ? "which types it" : "and v\(run.versions[0]) types it"
+                    notes.append("Renamed `\(name)` in v\(renamed), \(typedBy) `\(type)`: use `\(accessor)`.")
+                } else {
+                    notes.append("\(versionList(run.versions)) \(verb) this element as `\(name)` (`\(type)`): use `\(accessor)`.")
+                }
+            }
+        }
+        // Redefinitions: other elements at a reserved or past-maximum position.
+        for (m, other) in slots.enumerated() where other.index == slot.index && !family.contains(m) && m != n {
             for run in runs(other.entries.map { ($0.version, $0.field.name) }) {
                 notes.append("\(versionList(run.versions)) \(agree(run.versions, "define")) \(sid) as `\(run.value)`: use `\(other.swiftName)`.")
             }
         }
 
-        // Versions that print a composite this accessor does not return.
+        // Versions that type the position differently from this accessor.
+        let refKind = accessorKind(slot.dataType)
+        let scalars = runs(slot.entries.compactMap { entry in
+            guard case .view = refKind, accessorKind(entry.field.dataType) == .scalar else { return nil }
+            return (entry.version, entry.field.dataType)
+        })
+        for run in scalars {
+            notes.append("\(versionList(run.versions)) \(agree(run.versions, "print")) `\(run.value)`, a scalar: the value reads as the first component.")
+        }
         let retyped = runs(slot.entries.compactMap { entry in
-            guard case .view(let t) = accessorKind(entry.field.dataType),
-                  accessorKind(ref.dataType) != .view(t) else { return nil }
+            guard case .view(let t) = accessorKind(entry.field.dataType), refKind != .view(t) else { return nil }
             return (entry.version, t)
         })
         var asAccessors: [UnionAccessor] = []
         for run in retyped {
             let t = run.value
             let printed = agree(run.versions, "print")
-            if case .view = accessorKind(ref.dataType) {
+            if case .view = refKind {
                 notes.append("\(versionList(run.versions)) \(printed) `\(t)`: use `viewed(as: \(t).self)`.")
                 continue
             }
@@ -182,7 +240,7 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
             asAccessors.append(UnionAccessor(field: entries[0].field, swiftName: asName, notes: asNotes,
                                              all: !asRepeating.isEmpty))
         }
-        if !repeating.isEmpty && repeating != defining {
+        if !repeating.isEmpty && repeating != slot.defining {
             notes.append("Repeats in \(versionList(repeating)) only.")
         }
 
@@ -193,8 +251,8 @@ func unionSurface(base: SegmentSchema, others: [SegmentSchema]) throws -> UnionS
         } else {
             try claim(slot.swiftName, sid)
             if !repeating.isEmpty { try claim(slot.swiftName + "All", sid) }
-            surface.accessors.append(UnionAccessor(field: ref, swiftName: slot.swiftName, notes: notes,
-                                                   all: !repeating.isEmpty))
+            surface.accessors.append(UnionAccessor(field: slot.entries[0].field, swiftName: slot.swiftName,
+                                                   notes: notes, all: !repeating.isEmpty))
         }
         surface.accessors += asAccessors
     }

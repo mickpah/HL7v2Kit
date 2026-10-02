@@ -17,6 +17,7 @@ public struct CTI: TypedSegment {
     }
 
     /// CTI-1: Sponsor Study ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Sponsor Study Identifier`.
     public var sponsorStudyId: EI? {
         field(1).map(EI.init(field:))
     }

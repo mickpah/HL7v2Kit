@@ -217,6 +217,7 @@ public struct PV2: TypedSegment {
     }
 
     /// PV2-30: Patient Charge Adjustment Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var patientChargeAdjustmentCode: CE? {
         field(30).map(CE.init(field:))

@@ -127,24 +127,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Additive.
 - **V282-C10: version-union typed accessors.** Generated segment structs keep their
   v2.5.1 base (or the earliest defining version) and add what the other supported
-  versions define (530 accessors):
-  - fields past the base maximum and positions a later version prints under another
-    element name, each with its later name and type (245; for example PID-40,
-    ORC-32..34, OBR-51..54, OBX-26..30, and `OBX.interpretationCodes: CWE?` for v2.8.2
-    OBX-8);
-  - `<name>As<T>` where a version prints a scalar or raw field as a composite (187; for
-    example `CON.languageTranslatedToAsCWE`);
-  - `<name>All` wherever any supported version repeats the field (98 more, 634 in all:
-    16 base fields that repeat only in another version, 49 later element names, 33
+  versions define (510 accessors, one per element and Swift type):
+  - fields past the base maximum, and positions the base reserves that a later version
+    defines, with their later name and type (222; for example PID-40, ORC-32..34,
+    OBR-51..54, OBX-26..30, and `OBX.observationSite` where v2.5.1 reserves OBX-20);
+  - a later name for a base position only when its Swift type differs from the base
+    accessor's (9; for example `OBX.interpretationCodes: CWE?` for v2.8.2 OBX-8, renamed
+    from Abnormal Flags). A same-type rename is a DocC note on the base accessor;
+  - `<name>As<T>` where any version prints a scalar or raw field as a composite (186;
+    for example `CON.languageTranslatedToAsCWE`, and `MFA.primaryKeyValueMfaAsCE` for
+    v2.3 to v2.4);
+  - `<name>All` wherever any supported version repeats the element (93 more, 629 in
+    all: 16 base fields that repeat only in another version, 45 later element names, 32
     `As<T>` views; for example `MRG.priorAlternateVisitIdAll`).
 
   DocC names the versions each accessor applies to and says that on another version's
-  message it returns whatever the position holds. Composite-to-composite retypes (CE to
-  CWE) carry a DocC note pointing at `viewed(as:)`. A rename and a redefinition are
-  treated alike: OBX-20..22, reserved in v2.5.1, keep their reserved accessors, and the
-  elements v2.6 defines there (Observation Site, Observation Instance Identifier, Mood
-  Code) get their own. The v3-C5 fallback pass is
-  folded into the union pass. No existing accessor changes name or type. Additive.
+  message it returns whatever the position holds. A kept rename says "Same element as
+  ..., renamed in ..." and the base accessor points back to it; every printed name is
+  listed with the accessor whose type matches that version. Composite-to-composite
+  retypes (CE to CWE) point at `viewed(as:)`; 48 view accessors note the version that
+  prints a scalar there. A reserved position's DocC says "No data type: reserved
+  position in v2.5.1". The v3-C5 fallback pass is folded into the union pass. ADR-020
+  records the rules. No existing accessor changes name or type. Additive.
+- **Schema fix: v2.5.1 MFA-5 and MFE-4 data type `Varies`.** The schemas stored `Varie`,
+  the attribute table's truncated cell; the field headings (CH08 8.5.2.4, 8.5.3.5) print
+  `Varies`, as v2.6 and v2.8.2 store it.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

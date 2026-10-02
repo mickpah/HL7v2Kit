@@ -130,13 +130,61 @@ struct VersionUnionAccessorTests {
         let observationType = try doc("OBX", "observationType")
         #expect(observationType.contains("Defined in v2.8.2."))
         #expect(observationType.contains("On a message of another version this returns whatever OBX-29 holds on the wire"))
-        #expect(try doc("OBX", "abnormalFlags").contains("v2.8.2 defines OBX-8 as `Interpretation Codes`: use `interpretationCodes`."))
+        #expect(try doc("OBX", "abnormalFlags").contains("Renamed `Interpretation Codes` in v2.8.2, which types it `CWE`: use `interpretationCodes`."))
         #expect(try doc("OBX", "observationIdentifier").contains("v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`."))
         #expect(try doc("CON", "languageTranslatedTo").contains("v2.6, v2.8.2 print `CWE`: use `languageTranslatedToAsCWE`."))
         #expect(try doc("PV1", "bedStatus").contains("Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6."))
         #expect(try doc("IN2", "militaryIdNumber").contains("v2.3 prints this element as `Champus ID Number`."))
         let text = try String(contentsOf: Self.generated.appendingPathComponent("PRT.swift"), encoding: .utf8)
         #expect(text.contains("/// Defined in HL7 v2.8.2."))
+        let reserved = try doc("OBX", "reservedForHarmonization21")
+        #expect(reserved.hasPrefix("OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1."))
+    }
+
+    @Test("A same-type rename is a note on the base accessor; a retyped rename is its own accessor, worded as a rename")
+    func renameWording() throws {
+        let db1 = try String(contentsOf: Self.generated.appendingPathComponent("DB1.swift"), encoding: .utf8)
+        #expect(!db1.contains("public var disabilityIndicator"))
+        #expect(try doc("DB1", "disabledIndicator").contains("v2.4, v2.6, v2.8.2 print this element as `Disability Indicator`."))
+        let producersID = try doc("OBX", "producersID")
+        #expect(producersID.contains("Same element as `producersReference`, renamed in v2.6; typed as v2.6 prints it."))
+        #expect(producersID.contains("v2.3, v2.3.1, v2.4 print this element as `Producer's ID` (`CE`): use `producersReference`."))
+        #expect(try doc("OBX", "producersReference").contains("Renamed `Producer's ID` in v2.6, which types it `CWE`: use `producersID`."))
+        #expect(try doc("CON", "relationshipToSubject").contains("Same element as `relationshipToSubjectTable`, renamed in v2.6; typed as v2.8.2 prints it."))
+        #expect(try doc("MSH", "messageProfileIdentifier").contains("v2.4 prints `ID`, a scalar: the value reads as the first component."))
+        let (message, typed) = try hydratedMessage(MFA.self, from: msh("2.4") + segment("MFA", 5, [1: "MAD", 5: "K1^Key^L"]))
+        #expect(typed.primaryKeyValueMfaAsCE?.identifier == message["MFA-5.1"])
+    }
+
+    @Test("No two accessors in a struct read the same position with the same Swift type")
+    func oneAccessorPerElementAndType() throws {
+        // A deprecated alias forwards to another accessor (no `field(`/`repetitions(` body),
+        // and an All accessor's array type never equals its singular's, so both pass.
+        let files = try FileManager.default.contentsOfDirectory(atPath: Self.generated.path)
+            .filter { $0.count == 9 && $0.hasSuffix(".swift") }
+        #expect(files.count == 188)
+        var duplicates: [String] = []
+        for file in files.sorted() {
+            let text = try String(contentsOf: Self.generated.appendingPathComponent(file), encoding: .utf8)
+            let lines = text.components(separatedBy: "\n").map { $0.trimmingCharacters(in: .whitespaces) }
+            var seen: [String: String] = [:]
+            for (i, line) in lines.enumerated() where line.hasPrefix("public var ") && i + 1 < lines.count {
+                let decl = line.dropFirst("public var ".count)
+                guard let colon = decl.firstIndex(of: ":") else { continue }
+                let name = String(decl[..<colon])
+                let type = decl[decl.index(after: colon)...].dropLast().trimmingCharacters(in: .whitespaces)
+                let body = lines[i + 1]
+                guard body.hasPrefix("field(") || body.hasPrefix("repetitions("),
+                      let open = body.firstIndex(of: "("),
+                      let close = body.firstIndex(of: ")") else { continue }
+                let key = "\(body[..<open])\(body[open...close]) \(type)"
+                if let other = seen[key] {
+                    duplicates.append("\(file.dropLast(6)): \(other) and \(name) both read \(key)")
+                }
+                seen[key] = name
+            }
+        }
+        #expect(duplicates.isEmpty, "\(duplicates.count) duplicates: \(duplicates.prefix(20))")
     }
 
     @Test("Representative union signatures are pinned")

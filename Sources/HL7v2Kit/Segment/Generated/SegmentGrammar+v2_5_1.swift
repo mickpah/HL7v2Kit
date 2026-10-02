@@ -1473,7 +1473,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 2, name: "MFN Control ID", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "MFI-6 not in (NE)", prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
             FieldGrammar(index: 3, name: "Event Completion Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
             FieldGrammar(index: 4, name: "MFN Record Level Error Return", dataType: "CE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 5, name: "Primary Key Value - MFA", dataType: "Varie", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
+            FieldGrammar(index: 5, name: "Primary Key Value - MFA", dataType: "Varies", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 6, name: "Primary Key Value Type - MFA", dataType: "ID", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0355", length: "3"),
         ]
     )
@@ -1485,7 +1485,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 1, name: "Record-Level Event Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0180", length: "3"),
             FieldGrammar(index: 2, name: "MFN Control ID", dataType: "ST", optionality: .conditional, repeatability: .single, condition: "MFI-6 not in (NE)", prohibitedWhen: nil, variableColumns: false, table: nil, length: "20"),
             FieldGrammar(index: 3, name: "Effective Date/Time", dataType: "TS", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "26"),
-            FieldGrammar(index: 4, name: "Primary Key Value - MFE", dataType: "Varie", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "200"),
+            FieldGrammar(index: 4, name: "Primary Key Value - MFE", dataType: "Varies", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "200"),
             FieldGrammar(index: 5, name: "Primary Key Value Type", dataType: "ID", optionality: .required, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0355", length: "3"),
         ]
     )

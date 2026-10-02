@@ -23,8 +23,7 @@ public struct TCC: TypedSegment {
     }
 
     /// TCC-2: Test Application Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
-    /// Defined in v2.4, v2.5.1. On a message of another version this returns whatever TCC-2 holds on the wire.
-    /// v2.6, v2.8.2 define TCC-2 as `Equipment Test Application Identifier`: use `equipmentTestApplicationIdentifier`.
+    /// v2.6, v2.8.2 print this element as `Equipment Test Application Identifier`.
     public var testApplicationIdentifier: EI? {
         field(2).map(EI.init(field:))
     }
@@ -90,13 +89,6 @@ public struct TCC: TypedSegment {
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var processingType: CE? {
         field(14).map(CE.init(field:))
-    }
-
-    /// TCC-2: Equipment Test Application Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever TCC-2 holds on the wire.
-    /// v2.4, v2.5.1 define TCC-2 as `Test Application Identifier`: use `testApplicationIdentifier`.
-    public var equipmentTestApplicationIdentifier: EI? {
-        field(2).map(EI.init(field:))
     }
 
     /// TCC-15: Test Criticality. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

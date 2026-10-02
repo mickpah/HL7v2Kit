@@ -118,11 +118,13 @@ public struct PDC: TypedSegment {
     }
 
     /// PDC-14: Date First Marketed. HL7 data type `TS`.
+    /// v2.3 prints this element as `Date First Marked`.
     public var dateFirstMarketed: String? {
         field(14)?.stringValue
     }
 
     /// PDC-15: Date Last Marketed. HL7 data type `TS`.
+    /// v2.3 prints this element as `Date Last Marked`.
     public var dateLastMarketed: String? {
         field(15)?.stringValue
     }

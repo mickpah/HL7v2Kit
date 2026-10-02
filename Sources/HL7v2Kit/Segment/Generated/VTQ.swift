@@ -22,6 +22,7 @@ public struct VTQ: TypedSegment {
     }
 
     /// VTQ-2: Query/Response Format Code. HL7 data type `ID`.
+    /// v2.3.1 prints this element as `Query/ Response Format Code`.
     public var queryResponseFormatCode: String? {
         field(2)?.stringValue
     }

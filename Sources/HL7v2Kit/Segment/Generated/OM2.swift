@@ -18,6 +18,8 @@ public struct OM2: TypedSegment {
 
     /// OM2-1: Sequence Number - Test/Observation Master File. HL7 data type `NM`.
     /// v2.3 prints this element as `Sequence Number`.
+    /// v2.3.1 prints this element as `Sequence Number – Test/Observation Master File`.
+    /// v2.4 prints this element as `Sequence Number- Test/Observation Master File`.
     public var sequenceNumberTestObservationMasterFile: String? {
         field(1)?.stringValue
     }
@@ -56,10 +58,9 @@ public struct OM2: TypedSegment {
     }
 
     /// OM2-6: Reference (Normal) Range - Ordinal and Continuous Observations. HL7 data type `RFR`. Repeating field: this accessor reads the first repetition; `referenceNormalRangeOrdinalAndContinuousObservationsAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever OM2-6 holds on the wire.
     /// v2.3, v2.3.1 print this element as `Reference (Normal) Range - Ordinal & Continuous Obs`.
-    /// v2.6, v2.8.2 define OM2-6 as `Reference (Normal) Range for Ordinal and Continuous Observations`: use `referenceNormalRangeForOrdinalAndContinuousObservations`.
-    /// Repeats in v2.5.1 only.
+    /// v2.6, v2.8.2 print this element as `Reference (Normal) Range for Ordinal and Continuous Observations`.
+    /// Repeats in v2.5.1, v2.6, v2.8.2 only.
     public var referenceNormalRangeOrdinalAndContinuousObservations: Field? {
         field(6)
     }
@@ -69,10 +70,9 @@ public struct OM2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever OM2-6 holds on the wire.
     /// v2.3, v2.3.1 print this element as `Reference (Normal) Range - Ordinal & Continuous Obs`.
-    /// v2.6, v2.8.2 define OM2-6 as `Reference (Normal) Range for Ordinal and Continuous Observations`: use `referenceNormalRangeForOrdinalAndContinuousObservations`.
-    /// Repeats in v2.5.1 only.
+    /// v2.6, v2.8.2 print this element as `Reference (Normal) Range for Ordinal and Continuous Observations`.
+    /// Repeats in v2.5.1, v2.6, v2.8.2 only.
     public var referenceNormalRangeOrdinalAndContinuousObservationsAll: [Field] {
         repetitions(6)
     }
@@ -118,25 +118,5 @@ public struct OM2: TypedSegment {
     /// OM2-10: Minimum Meaningful Increments. HL7 data type `NM`.
     public var minimumMeaningfulIncrements: String? {
         field(10)?.stringValue
-    }
-
-    /// OM2-6: Reference (Normal) Range for Ordinal and Continuous Observations. HL7 data type `RFR`. Repeating field: this accessor reads the first repetition; `referenceNormalRangeForOrdinalAndContinuousObservationsAll` returns every repetition.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever OM2-6 holds on the wire.
-    /// v2.3, v2.3.1 define OM2-6 as `Reference (Normal) Range - Ordinal & Continuous Obs`: use `referenceNormalRangeOrdinalAndContinuousObservations`.
-    /// v2.4, v2.5.1 define OM2-6 as `Reference (Normal) Range - Ordinal and Continuous Observations`: use `referenceNormalRangeOrdinalAndContinuousObservations`.
-    public var referenceNormalRangeForOrdinalAndContinuousObservations: Field? {
-        field(6)
-    }
-
-    /// OM2-6: every repetition of Reference (Normal) Range for Ordinal and Continuous Observations, in wire order. Passes
-    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
-    /// the validator: empty when the field is absent; one entry when it is present but empty;
-    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
-    /// holding the literal `""`.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever OM2-6 holds on the wire.
-    /// v2.3, v2.3.1 define OM2-6 as `Reference (Normal) Range - Ordinal & Continuous Obs`: use `referenceNormalRangeOrdinalAndContinuousObservations`.
-    /// v2.4, v2.5.1 define OM2-6 as `Reference (Normal) Range - Ordinal and Continuous Observations`: use `referenceNormalRangeOrdinalAndContinuousObservations`.
-    public var referenceNormalRangeForOrdinalAndContinuousObservationsAll: [Field] {
-        repetitions(6)
     }
 }

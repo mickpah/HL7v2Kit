@@ -63,13 +63,15 @@ func fieldRepeats(_ field: FieldSchema) -> Bool {
 /// - all: emit `<name>All`; defaults to "the field repeats" in this schema.
 /// - plural: emit the Track B `1-n` column accessor.
 /// - aliases: emit the P6-9 deprecated aliases (released names only, so base schemas only).
+/// - version: the schema version, named in the summary of a reserved position (no data type).
 func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = nil,
                    notes: [String] = [], single: Bool = true, all: Bool? = nil,
-                   plural: Bool = true, aliases: Bool = true) -> String {
+                   plural: Bool = true, aliases: Bool = true, version: String = "") -> String {
     let accessorName = name ?? field.swiftName
     let shape = accessorShape(field.dataType, index: field.index)
     let repeats = all ?? fieldRepeats(field)
-    var summary = "\(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(shape.docTail)"
+    let typeText = field.dataType.isEmpty ? "No data type: reserved position in v\(version)." : "HL7 data type `\(field.dataType)`."
+    var summary = "\(segmentID)-\(field.index): \(field.name). \(typeText)\(shape.docTail)"
     if repeats {
         summary += " Repeating field: this accessor reads the first repetition; `\(accessorName)All` returns every repetition."
     }

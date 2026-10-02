@@ -80,6 +80,7 @@ public struct IPC: TypedSegment {
     }
 
     /// IPC-9: Scheduled AE Title. HL7 data type `ST`.
+    /// v2.6, v2.8.2 print this element as `Scheduled Station AE Title`.
     public var scheduledAETitle: String? {
         field(9)?.stringValue
     }

@@ -32,6 +32,7 @@ public struct RFI: TypedSegment {
     }
 
     /// RFI-4: Date Additional Information was submitted. HL7 data type `DTM`.
+    /// v2.8.2 prints this element as `Date Additional Information Was Submitted`.
     public var dateAdditionalInformationWasSubmitted: String? {
         field(4)?.stringValue
     }

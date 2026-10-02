@@ -17,6 +17,7 @@ public struct SID: TypedSegment {
     }
 
     /// SID-1: Application / Method Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.6, v2.8.2 print this element as `Application/Method Identifier`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var applicationMethodIdentifier: CE? {
         field(1).map(CE.init(field:))

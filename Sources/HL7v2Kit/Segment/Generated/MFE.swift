@@ -31,7 +31,7 @@ public struct MFE: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// MFE-4: Primary Key Value - MFE. HL7 data type `Varie`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfeAll` returns every repetition.
+    /// MFE-4: Primary Key Value - MFE. HL7 data type `Varies`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfeAll` returns every repetition.
     public var primaryKeyValueMfe: Field? {
         field(4)
     }

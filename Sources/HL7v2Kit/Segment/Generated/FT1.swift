@@ -17,6 +17,7 @@ public struct FT1: TypedSegment {
     }
 
     /// FT1-1: Set ID - FT1. HL7 data type `SI`.
+    /// v2.3 prints this element as `Set ID -FT1`.
     public var setIdFt1: String? {
         field(1)?.stringValue
     }
@@ -87,6 +88,7 @@ public struct FT1: TypedSegment {
     }
 
     /// FT1-14: Insurance Plan ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.8.2 prints this element as `Health Plan ID`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var insurancePlanId: CE? {
         field(14).map(CE.init(field:))
@@ -115,6 +117,7 @@ public struct FT1: TypedSegment {
     }
 
     /// FT1-19: Diagnosis Code - FT1. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `diagnosisCodeFt1All` returns every repetition.
+    /// v2.3 prints this element as `Diagnosis Code`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var diagnosisCodeFt1: CE? {
         field(19).map(CE.init(field:))
@@ -125,6 +128,7 @@ public struct FT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Diagnosis Code`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var diagnosisCodeFt1All: [CE] {
         repetitions(19).map(CE.init(field:))
@@ -221,6 +225,7 @@ public struct FT1: TypedSegment {
 
     /// FT1-28: Medically Necessary Duplicate Procedure Reason.. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
     /// Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever FT1-28 holds on the wire.
+    /// v2.6, v2.8.2 print this element as `Medically Necessary Duplicate Procedure Reason`.
     public var medicallyNecessaryDuplicateProcedureReason: CWE? {
         field(28).map(CWE.init(field:))
     }

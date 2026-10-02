@@ -32,17 +32,20 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-4: Universal Service Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Universal Service ID`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var universalServiceIdentifier: CE? {
         field(4).map(CE.init(field:))
     }
 
     /// OBR-5: Priority (deprecated). HL7 data type `ID`.
+    /// v2.6, v2.8.2 print this element as `Priority`.
     public var priority: String? {
         field(5)?.stringValue
     }
 
     /// OBR-6: Requested Date/Time (deprecated). HL7 data type `TS`.
+    /// v2.8.2 prints this element as `Requested Date/Time`.
     public var requestedDateTime: String? {
         field(6)?.stringValue
     }
@@ -88,6 +91,7 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-13: Relevant Clinical Information. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `relevantClinicalInformationAll` returns every repetition.
+    /// v2.3, v2.3.1 print this element as `Relevant Clinical Info.`.
     /// v2.8.2 prints `CWE`: use `relevantClinicalInformationAsCWE`.
     /// Repeats in v2.8.2 only.
     public var relevantClinicalInformation: String? {
@@ -101,6 +105,7 @@ public struct OBR: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.3, v2.3.1 print this element as `Relevant Clinical Info.`.
     /// v2.8.2 prints `CWE`: use `relevantClinicalInformationAsCWE`.
     /// Repeats in v2.8.2 only.
     public var relevantClinicalInformationAll: [String?] {
@@ -113,6 +118,8 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-15: Specimen Source (deprecated). HL7 data type `SPS`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Specimen Source`.
+    /// v2.6, v2.8.2 print this element as `Specimen Source`.
     public var specimenSource: Field? {
         field(15)
     }
@@ -191,6 +198,7 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-27: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     public var quantityTiming: Field? {
         field(27)
     }
@@ -200,6 +208,7 @@ public struct OBR: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Quantity/Timing`.
     public var quantityTimingAll: [Field] {
         repetitions(27)
     }
@@ -219,8 +228,7 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-29: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-29 holds on the wire.
-    /// v2.8.2 defines OBR-29 as `Parent Results Observation Identifier`: use `parentResultsObservationIdentifier`.
+    /// v2.8.2 prints this element as `Parent Results Observation Identifier`.
     public var parent: EIP? {
         field(29).map(EIP.init(field:))
     }
@@ -461,13 +469,6 @@ public struct OBR: TypedSegment {
     /// OBR-13 viewed as the `CWE` that v2.8.2 prints (v2.3, v2.3.1, v2.4, v2.5.1, v2.6 print `ST`). On a message of another version this views whatever OBR-13 holds on the wire.
     public var relevantClinicalInformationAsCWEAll: [CWE] {
         repetitions(13).map(CWE.init(field:))
-    }
-
-    /// OBR-29: Parent Results Observation Identifier. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
-    /// Defined in v2.8.2. On a message of another version this returns whatever OBR-29 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define OBR-29 as `Parent`: use `parent`.
-    public var parentResultsObservationIdentifier: EIP? {
-        field(29).map(EIP.init(field:))
     }
 
     /// OBR-49: Result Handling. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

@@ -83,12 +83,14 @@ public struct PD1: TypedSegment {
     }
 
     /// PD1-7: Living Will Code. HL7 data type `IS`.
+    /// v2.3, v2.3.1 print this element as `Living Will`.
     /// v2.8.2 prints `CWE`: use `livingWillCodeAsCWE`.
     public var livingWillCode: String? {
         field(7)?.stringValue
     }
 
     /// PD1-8: Organ Donor Code. HL7 data type `IS`.
+    /// v2.3, v2.3.1 print this element as `Organ Donor`.
     /// v2.8.2 prints `CWE`: use `organDonorCodeAsCWE`.
     public var organDonorCode: String? {
         field(8)?.stringValue
@@ -114,6 +116,7 @@ public struct PD1: TypedSegment {
     }
 
     /// PD1-11: Publicity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Publicity Indicator`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var publicityCode: CE? {
         field(11).map(CE.init(field:))

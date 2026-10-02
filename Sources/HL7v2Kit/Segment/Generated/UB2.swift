@@ -55,6 +55,7 @@ public struct UB2: TypedSegment {
     }
 
     /// UB2-6: Value Amount & Code. HL7 data type `UVC`. Repeating field: this accessor reads the first repetition; `valueAmountCodeAll` returns every repetition.
+    /// v2.8.2 prints this element as `Value Amount & Code (39-41)`.
     public var valueAmountCode: Field? {
         field(6)
     }
@@ -64,6 +65,7 @@ public struct UB2: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.8.2 prints this element as `Value Amount & Code (39-41)`.
     public var valueAmountCodeAll: [Field] {
         repetitions(6)
     }
@@ -97,6 +99,7 @@ public struct UB2: TypedSegment {
     }
 
     /// UB2-9: UB92 Locator 2 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator2StateAll` returns every repetition.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 2 (state)`.
     public var ub92Locator2State: String? {
         field(9)?.stringValue
     }
@@ -108,11 +111,13 @@ public struct UB2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 2 (state)`.
     public var ub92Locator2StateAll: [String?] {
         repetitions(9).map(\.stringValue)
     }
 
     /// UB2-10: UB92 Locator 11 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator11StateAll` returns every repetition.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 11 (state)`.
     public var ub92Locator11State: String? {
         field(10)?.stringValue
     }
@@ -124,11 +129,13 @@ public struct UB2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 11 (state)`.
     public var ub92Locator11StateAll: [String?] {
         repetitions(10).map(\.stringValue)
     }
 
     /// UB2-11: UB92 Locator 31 (National). HL7 data type `ST`.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 31 (national)`.
     public var ub92Locator31National: String? {
         field(11)?.stringValue
     }
@@ -150,6 +157,7 @@ public struct UB2: TypedSegment {
     }
 
     /// UB2-13: UB92 Locator 49 (National). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator49NationalAll` returns every repetition.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 49 (national)`.
     public var ub92Locator49National: String? {
         field(13)?.stringValue
     }
@@ -161,11 +169,13 @@ public struct UB2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 49 (national)`.
     public var ub92Locator49NationalAll: [String?] {
         repetitions(13).map(\.stringValue)
     }
 
     /// UB2-14: UB92 Locator 56 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator56StateAll` returns every repetition.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 56 (state)`.
     public var ub92Locator56State: String? {
         field(14)?.stringValue
     }
@@ -177,16 +187,19 @@ public struct UB2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 56 (state)`.
     public var ub92Locator56StateAll: [String?] {
         repetitions(14).map(\.stringValue)
     }
 
     /// UB2-15: UB92 Locator 57 (National). HL7 data type `ST`.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 57 (sational)`.
     public var ub92Locator57National: String? {
         field(15)?.stringValue
     }
 
     /// UB2-16: UB92 Locator 78 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator78StateAll` returns every repetition.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 78 (state)`.
     public var ub92Locator78State: String? {
         field(16)?.stringValue
     }
@@ -198,6 +211,7 @@ public struct UB2: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.8.2 prints this element as `Uniform Billing Locator 78 (state)`.
     public var ub92Locator78StateAll: [String?] {
         repetitions(16).map(\.stringValue)
     }

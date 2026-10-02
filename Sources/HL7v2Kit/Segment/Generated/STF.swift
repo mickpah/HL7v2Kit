@@ -17,12 +17,14 @@ public struct STF: TypedSegment {
     }
 
     /// STF-1: Primary Key Value - STF. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.8.2 prints this element as `Primary Key Value – STF`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var primaryKeyValueStf: CE? {
         field(1).map(CE.init(field:))
     }
 
     /// STF-2: Staff Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `staffIdentifierListAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4 print this element as `Staff ID Code`.
     public var staffIdentifierList: CX? {
         field(2).map(CX.init(field:))
     }
@@ -32,6 +34,7 @@ public struct STF: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Staff ID Code`.
     public var staffIdentifierListAll: [CX] {
         repetitions(2).map(CX.init(field:))
     }
@@ -71,17 +74,20 @@ public struct STF: TypedSegment {
     }
 
     /// STF-5: Administrative Sex. HL7 data type `IS`.
+    /// v2.3, v2.3.1 print this element as `Sex`.
     /// v2.8.2 prints `CWE`: use `administrativeSexAsCWE`.
     public var administrativeSex: String? {
         field(5)?.stringValue
     }
 
     /// STF-6: Date/Time of Birth. HL7 data type `TS`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Date/Time Of Birth`.
     public var dateTimeOfBirth: String? {
         field(6)?.stringValue
     }
 
     /// STF-7: Active/Inactive Flag. HL7 data type `ID`.
+    /// v2.3 prints this element as `Active/Inactive`.
     public var activeInactiveFlag: String? {
         field(7)?.stringValue
     }
@@ -103,6 +109,9 @@ public struct STF: TypedSegment {
     }
 
     /// STF-9: Hospital Service - STF. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `hospitalServiceStfAll` returns every repetition.
+    /// v2.3 prints this element as `Service`.
+    /// v2.3.1 prints this element as `Hospital Service`.
+    /// v2.8.2 prints this element as `Hospital Service – STF`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var hospitalServiceStf: CE? {
         field(9).map(CE.init(field:))
@@ -113,6 +122,9 @@ public struct STF: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Service`.
+    /// v2.3.1 prints this element as `Hospital Service`.
+    /// v2.8.2 prints this element as `Hospital Service – STF`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var hospitalServiceStfAll: [CE] {
         repetitions(9).map(CE.init(field:))
@@ -133,6 +145,7 @@ public struct STF: TypedSegment {
     }
 
     /// STF-11: Office/Home Address/Birthplace. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `officeHomeAddressBirthplaceAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4 print this element as `Office/Home Address`.
     public var officeHomeAddressBirthplace: XAD? {
         field(11).map(XAD.init(field:))
     }
@@ -142,11 +155,13 @@ public struct STF: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Office/Home Address`.
     public var officeHomeAddressBirthplaceAll: [XAD] {
         repetitions(11).map(XAD.init(field:))
     }
 
     /// STF-12: Institution Activation Date. HL7 data type `DIN`. Repeating field: this accessor reads the first repetition; `institutionActivationDateAll` returns every repetition.
+    /// v2.3 prints this element as `Activation Date`.
     public var institutionActivationDate: Field? {
         field(12)
     }
@@ -156,11 +171,13 @@ public struct STF: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Activation Date`.
     public var institutionActivationDateAll: [Field] {
         repetitions(12)
     }
 
     /// STF-13: Institution Inactivation Date. HL7 data type `DIN`. Repeating field: this accessor reads the first repetition; `institutionInactivationDateAll` returns every repetition.
+    /// v2.3 prints this element as `Inactivation Date - STF`.
     public var institutionInactivationDate: Field? {
         field(13)
     }
@@ -170,6 +187,7 @@ public struct STF: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Inactivation Date - STF`.
     public var institutionInactivationDateAll: [Field] {
         repetitions(13)
     }
@@ -207,12 +225,16 @@ public struct STF: TypedSegment {
     }
 
     /// STF-16: Preferred Method of Contact. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Preferred Method Of Contact`.
+    /// v2.3.1, v2.4 print this element as `Preferred Method Of Contact`.
+    /// v2.3 prints `ID`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var preferredMethodOfContact: CE? {
         field(16).map(CE.init(field:))
     }
 
     /// STF-17: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var maritalStatus: CE? {
         field(17).map(CE.init(field:))
@@ -229,6 +251,8 @@ public struct STF: TypedSegment {
     }
 
     /// STF-20: Employment Status Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1 print this element as `Employment Status`.
+    /// v2.3, v2.3.1 print `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var employmentStatusCode: CE? {
         field(20).map(CE.init(field:))
@@ -240,6 +264,7 @@ public struct STF: TypedSegment {
     }
 
     /// STF-22: Driver's License Number – Staff. HL7 data type `DLN`.
+    /// v2.3 prints this element as `Driver's License Number - Staff`.
     public var driverLicenseNumberStaff: Field? {
         field(22)
     }
@@ -250,6 +275,7 @@ public struct STF: TypedSegment {
     }
 
     /// STF-24: Auto Ins. Expires. HL7 data type `DT`.
+    /// v2.6, v2.8.2 print this element as `Auto Ins Expires`.
     public var autoInsExpires: String? {
         field(24)?.stringValue
     }
@@ -302,6 +328,7 @@ public struct STF: TypedSegment {
 
     /// STF-31: Death Date and Time. HL7 data type `TS`.
     /// Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever STF-31 holds on the wire.
+    /// v2.6, v2.8.2 print this element as `Date/Time of Death`.
     public var deathDateAndTime: String? {
         field(31)?.stringValue
     }

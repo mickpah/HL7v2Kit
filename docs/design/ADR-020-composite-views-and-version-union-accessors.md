@@ -44,7 +44,9 @@ P5 and P6):
   `swiftName`, and any other slot takes `deriveSwiftName` of its printed name. A released
   name that a correction changes is kept as a deprecated alias through
   `deprecatedSwiftNames` (TQ2-10 and QPD-2 so far). This ADR relies on that rule: a
-  later-version name for an existing index is a new accessor, never a rename.
+  released name never changes. A later-version name for an index the base defines is the
+  same element renamed; it gets its own accessor only when its Swift type differs from the
+  base accessor's (P9-5 ruling 1), otherwise a DocC note on the base accessor.
 - **Cardinality and extra components.** `FieldGrammar.maxRepetitions` (P6-4) records a
   printed repetition bound, and the validator checks it. The validator also checks extra
   components on primitive and composite fields (P6-13 to P6-15). Those checks read the
@@ -76,16 +78,33 @@ and hand-add later-version accessors to the segment structs.
    `TypedSegment.repetitions(_:)`. The singular accessor's DocC says the field
    repeats.
 3. **Version union.** Each segment struct renders from its base schema (canonical
-   v2.5.1, or else the earliest definer, as today) and then adds what later versions
-   contribute:
-   - fields past the base maximum, under their own names and types;
-   - a later name for an existing index, typed as that version prints it;
-   - `<name>As<T>` where the later type is a composite view but the base type is
-     scalar or raw.
+   v2.5.1, or else the earliest definer, as today) and then adds what the other
+   supported versions contribute (P9-5, with the controller's rulings 1 to 3):
+   - fields past the base maximum, and positions the base reserves (no data type)
+     that a later version defines, under their own names and types. These are
+     redefinitions: each accessor's DocC names the other elements at the position.
+   - **Ruling 1, one accessor per element and type.** A position the base defines is
+     the same element in every version. A later name for it gets its own accessor,
+     typed as that version prints it, only when that Swift type differs from the base
+     accessor's; a same-type rename is a DocC note on the base accessor ("v2.8.2
+     prints this element as `Disability Indicator`").
+   - **Ruling 2, renames are worded as renames.** A kept rename's DocC says "Same
+     element as `<base name>`, renamed in <version>; typed as <version> prints it",
+     its "Defined in" lists every version that defines the position, and the two
+     accessors cross-reference each other. Every printed name of the element is
+     listed with the accessor whose type matches that version. An earlier version
+     never reaches a later accessor by name.
+   - **Ruling 3, retypes.** A version (earlier or later) that types the position as a
+     composite view where the accessor is scalar or raw gets `<name>As<T>`. Where the
+     accessor is a view and another version prints a different view, the DocC points
+     at `viewed(as:)` and no symbol is added, unless the element was also renamed
+     (ruling 1 then applies and the DocC says so). Where the accessor is a view and
+     another version prints a scalar, the DocC names the version and the scalar type.
+   - `<name>All` wherever any version that prints the element repeats it, with the
+     repeating versions in the DocC.
 
-   A composite-to-composite retype (CE to CWE) gets a DocC note that points at
-   `viewed(as:)`, not a new symbol. A name clash stops codegen, so a curator must
-   fix it. The union is computed from the schemas alone.
+   A name clash stops codegen, so a curator must fix it. The union is computed from
+   the schemas alone.
 - **Cost:** about 1,100 new generated accessors across the segment structs, plus
   about 115 composite accessors. There are 3 new public methods. The generated
   files get larger; compile time must be measured in P9-5.
@@ -132,10 +151,15 @@ No symbol is removed, renamed or retyped. So the release is a 3.x **minor**.
   it. That failure is the point.
 - **Residual limitation (register section H):**
   - Composite-to-composite retypes surface through `viewed(as:)`, not typed
-    properties.
-  - Names used only before v2.5.1 (v2.3 to v2.4 spellings) are not surfaced; the
-    index-based accessor still reads them.
-  - Accessors are not gated by the message's version.
+    properties, unless the element was also renamed (ruling 1).
+  - Names used only before v2.5.1 (v2.3 to v2.4 spellings), and same-type later
+    renames, are DocC notes on the base accessor, not accessors (ruling 1).
+  - Accessors are not gated by the message's version: each DocC names the versions
+    it applies to, and on another version's message it reads whatever the position
+    holds.
+- P9-5 shipped 510 accessors on the segment structs: 231 later or redefined element
+  names (9 of them renames whose type differs), 186 `<name>As<T>`, and 93 more
+  `<name>All` (629 in all).
 
 ## References
 

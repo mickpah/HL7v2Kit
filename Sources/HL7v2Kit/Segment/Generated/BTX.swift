@@ -83,15 +83,13 @@ public struct BTX: TypedSegment {
     }
 
     /// BTX-14: BP Administrator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
-    /// Defined in v2.5.1. On a message of another version this returns whatever BTX-14 holds on the wire.
-    /// v2.6, v2.8.2 define BTX-14 as `BP Transfusion Administrator`: use `bpTransfusionAdministrator`.
+    /// v2.6, v2.8.2 print this element as `BP Transfusion Administrator`.
     public var bpAdministrator: XCN? {
         field(14).map(XCN.init(field:))
     }
 
     /// BTX-15: BP Verifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
-    /// Defined in v2.5.1. On a message of another version this returns whatever BTX-15 holds on the wire.
-    /// v2.6, v2.8.2 define BTX-15 as `BP Transfusion Verifier`: use `bpTransfusionVerifier`.
+    /// v2.6, v2.8.2 print this element as `BP Transfusion Verifier`.
     public var bpVerifier: XCN? {
         field(15).map(XCN.init(field:))
     }
@@ -123,20 +121,6 @@ public struct BTX: TypedSegment {
     /// BTX-19: BP Transfusion Interrupted Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
     public var bpTransfusionInterruptedReason: CWE? {
         field(19).map(CWE.init(field:))
-    }
-
-    /// BTX-14: BP Transfusion Administrator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever BTX-14 holds on the wire.
-    /// v2.5.1 defines BTX-14 as `BP Administrator`: use `bpAdministrator`.
-    public var bpTransfusionAdministrator: XCN? {
-        field(14).map(XCN.init(field:))
-    }
-
-    /// BTX-15: BP Transfusion Verifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
-    /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever BTX-15 holds on the wire.
-    /// v2.5.1 defines BTX-15 as `BP Verifier`: use `bpVerifier`.
-    public var bpTransfusionVerifier: XCN? {
-        field(15).map(XCN.init(field:))
     }
 
     /// BTX-20: BP Unique ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.

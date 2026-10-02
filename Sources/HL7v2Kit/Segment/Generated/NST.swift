@@ -87,6 +87,7 @@ public struct NST: TypedSegment {
     }
 
     /// NST-15: Application control-level Errors. HL7 data type `NM`.
+    /// v2.3.1 prints this element as `Network Errors`.
     public var applicationControlLevelErrors: String? {
         field(15)?.stringValue
     }

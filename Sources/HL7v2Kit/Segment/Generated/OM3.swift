@@ -18,6 +18,8 @@ public struct OM3: TypedSegment {
 
     /// OM3-1: Sequence Number - Test/Observation Master File. HL7 data type `NM`.
     /// v2.3 prints this element as `Sequence Number`.
+    /// v2.3.1 prints this element as `Sequence Number – Test/Observation Master File`.
+    /// v2.4 prints this element as `Sequence Number- Test/Observation Master File`.
     public var sequenceNumberTestObservationMasterFile: String? {
         field(1)?.stringValue
     }
@@ -81,6 +83,7 @@ public struct OM3: TypedSegment {
     }
 
     /// OM3-6: Critical Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `criticalTextCodesForCategoricalObservationsAll` returns every repetition.
+    /// v2.3, v2.3.1 print this element as `Critical Text Codes for Categorical Observations`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.5.1, v2.6, v2.8.2 only.
     public var criticalTextCodesForCategoricalObservations: CE? {
@@ -92,6 +95,7 @@ public struct OM3: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1 print this element as `Critical Text Codes for Categorical Observations`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.5.1, v2.6, v2.8.2 only.
     public var criticalTextCodesForCategoricalObservationsAll: [CE] {

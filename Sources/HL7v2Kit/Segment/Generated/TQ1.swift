@@ -120,6 +120,7 @@ public struct TQ1: TypedSegment {
     }
 
     /// TQ1-14: Total occurrence's. HL7 data type `NM`.
+    /// v2.6, v2.8.2 print this element as `Total occurrences`.
     public var totalOccurrenceS: String? {
         field(14)?.stringValue
     }

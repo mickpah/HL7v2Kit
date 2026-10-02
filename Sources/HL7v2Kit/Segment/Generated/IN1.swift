@@ -22,6 +22,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-2: Insurance Plan ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.8.2 prints this element as `Health Plan ID`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var insurancePlanID: CE? {
         field(2).map(CE.init(field:))
@@ -70,6 +71,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-6: Insurance Co Contact Person. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCoContactPersonAll` returns every repetition.
+    /// v2.3 prints this element as `Insurance Co. Contact Person`.
     public var insuranceCoContactPerson: XPN? {
         field(6).map(XPN.init(field:))
     }
@@ -79,6 +81,7 @@ public struct IN1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Insurance Co. Contact Person`.
     public var insuranceCoContactPersonAll: [XPN] {
         repetitions(6).map(XPN.init(field:))
     }
@@ -117,6 +120,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-10: Insured's Group Emp. ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsGroupEmpIDAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Group Emp ID`.
     public var insuredsGroupEmpID: CX? {
         field(10).map(CX.init(field:))
     }
@@ -126,6 +130,7 @@ public struct IN1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Insured's Group Emp ID`.
     public var insuredsGroupEmpIDAll: [CX] {
         repetitions(10).map(CX.init(field:))
     }
@@ -166,6 +171,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-16: Name of Insured. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `nameOfInsuredAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Name Of Insured`.
     public var nameOfInsured: XPN? {
         field(16).map(XPN.init(field:))
     }
@@ -175,17 +181,24 @@ public struct IN1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Name Of Insured`.
     public var nameOfInsuredAll: [XPN] {
         repetitions(16).map(XPN.init(field:))
     }
 
     /// IN1-17: Insured's Relationship to Patient. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Insured's Relationship To Patient`.
+    /// v2.3.1, v2.4 print this element as `Insured's Relationship To Patient`.
+    /// v2.6, v2.8.2 print this element as `Insured's Relationship To Patient`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var insuredsRelationshipToPatient: CE? {
         field(17).map(CE.init(field:))
     }
 
     /// IN1-18: Insured's Date of Birth. HL7 data type `TS`.
+    /// v2.3, v2.3.1, v2.4 print this element as `Insured's Date Of Birth`.
+    /// v2.6, v2.8.2 print this element as `Insured's Date Of Birth`.
     public var insuredsDateOfBirth: String? {
         field(18)?.stringValue
     }
@@ -205,38 +218,47 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-20: Assignment of Benefits. HL7 data type `IS`.
+    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Assignment Of Benefits`.
+    /// v2.8.2 prints this element as `Assignment Of Benefits`.
     /// v2.8.2 prints `CWE`: use `assignmentOfBenefitsAsCWE`.
     public var assignmentOfBenefits: String? {
         field(20)?.stringValue
     }
 
     /// IN1-21: Coordination of Benefits. HL7 data type `IS`.
+    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Coordination Of Benefits`.
+    /// v2.8.2 prints this element as `Coordination Of Benefits`.
     /// v2.8.2 prints `CWE`: use `coordinationOfBenefitsAsCWE`.
     public var coordinationOfBenefits: String? {
         field(21)?.stringValue
     }
 
     /// IN1-22: Coord of Ben. Priority. HL7 data type `ST`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Coord Of Ben. Priority`.
     public var coordOfBenPriority: String? {
         field(22)?.stringValue
     }
 
     /// IN1-23: Notice of Admission Flag. HL7 data type `ID`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Notice Of Admission Flag`.
     public var noticeOfAdmissionFlag: String? {
         field(23)?.stringValue
     }
 
     /// IN1-24: Notice of Admission Date. HL7 data type `DT`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Notice Of Admission Date`.
     public var noticeOfAdmissionDate: String? {
         field(24)?.stringValue
     }
 
     /// IN1-25: Report of Eligibility Flag. HL7 data type `ID`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Report Of Eligibility Flag`.
     public var reportOfEligibilityFlag: String? {
         field(25)?.stringValue
     }
 
     /// IN1-26: Report of Eligibility Date. HL7 data type `DT`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Report Of Eligibility Date`.
     public var reportOfEligibilityDate: String? {
         field(26)?.stringValue
     }
@@ -258,6 +280,7 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-30: Verification by. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `verificationByAll` returns every repetition.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Verification By`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var verificationBy: XCN? {
         field(30).map(XCN.init(field:))
@@ -268,12 +291,15 @@ public struct IN1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1, v2.4, v2.6, v2.8.2 print this element as `Verification By`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var verificationByAll: [XCN] {
         repetitions(30).map(XCN.init(field:))
     }
 
     /// IN1-31: Type of Agreement Code. HL7 data type `IS`.
+    /// v2.3, v2.3.1, v2.4, v2.6 print this element as `Type Of Agreement Code`.
+    /// v2.8.2 prints this element as `Type Of Agreement Code`.
     /// v2.8.2 prints `CWE`: use `typeOfAgreementCodeAsCWE`.
     public var typeOfAgreementCode: String? {
         field(31)?.stringValue
@@ -341,12 +367,14 @@ public struct IN1: TypedSegment {
     }
 
     /// IN1-43: Insured's Administrative Sex. HL7 data type `IS`.
+    /// v2.3, v2.3.1 print this element as `Insured's Sex`.
     /// v2.8.2 prints `CWE`: use `insuredsAdministrativeSexAsCWE`.
     public var insuredsAdministrativeSex: String? {
         field(43)?.stringValue
     }
 
     /// IN1-44: Insured's Employer's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsEmployersAddressAll` returns every repetition.
+    /// v2.3 prints this element as `Insured's Employer Address`.
     public var insuredsEmployersAddress: XAD? {
         field(44).map(XAD.init(field:))
     }
@@ -356,6 +384,7 @@ public struct IN1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Insured's Employer Address`.
     public var insuredsEmployersAddressAll: [XAD] {
         repetitions(44).map(XAD.init(field:))
     }

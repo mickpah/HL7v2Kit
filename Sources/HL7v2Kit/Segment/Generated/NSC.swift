@@ -17,6 +17,7 @@ public struct NSC: TypedSegment {
     }
 
     /// NSC-1: Application Change Type. HL7 data type `IS`.
+    /// v2.3.1 prints this element as `Network Change Type`.
     /// v2.8.2 prints `CWE`: use `applicationChangeTypeAsCWE`.
     public var applicationChangeType: String? {
         field(1)?.stringValue
@@ -33,11 +34,13 @@ public struct NSC: TypedSegment {
     }
 
     /// NSC-4: Current Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3.1 prints `ST`, a scalar: the value reads as the first component.
     public var currentApplication: HD? {
         field(4).map(HD.init(field:))
     }
 
     /// NSC-5: Current Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3.1 prints `ST`, a scalar: the value reads as the first component.
     public var currentFacility: HD? {
         field(5).map(HD.init(field:))
     }
@@ -53,11 +56,13 @@ public struct NSC: TypedSegment {
     }
 
     /// NSC-8: New Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3.1 prints `ST`, a scalar: the value reads as the first component.
     public var newApplication: HD? {
         field(8).map(HD.init(field:))
     }
 
     /// NSC-9: New Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3.1 prints `ST`, a scalar: the value reads as the first component.
     public var newFacility: HD? {
         field(9).map(HD.init(field:))
     }

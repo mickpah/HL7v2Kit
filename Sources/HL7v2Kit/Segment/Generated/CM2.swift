@@ -17,6 +17,7 @@ public struct CM2: TypedSegment {
     }
 
     /// CM2-1: Set ID - CM2. HL7 data type `SI`.
+    /// v2.6, v2.8.2 print this element as `Set ID- CM2`.
     public var setIdCm2: String? {
         field(1)?.stringValue
     }

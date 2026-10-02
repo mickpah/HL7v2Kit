@@ -17,6 +17,7 @@ public struct ISD: TypedSegment {
     }
 
     /// ISD-1: Reference Interaction Number (unique identifier). HL7 data type `NM`.
+    /// v2.6, v2.8.2 print this element as `Reference Interaction Number`.
     public var referenceInteractionNumberUniqueIdentifier: String? {
         field(1)?.stringValue
     }

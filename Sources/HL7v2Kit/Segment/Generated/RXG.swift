@@ -93,9 +93,8 @@ public struct RXG: TypedSegment {
     }
 
     /// RXG-13: Pharmacy/Treatment Supplier's Special Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever RXG-13 holds on the wire.
     /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions`.
-    /// v2.8.2 defines RXG-13 as `Special Administration Instructions`: use `specialAdministrationInstructions`.
+    /// Renamed `Special Administration Instructions` in v2.8.2, which types it `CWE`: use `specialAdministrationInstructions`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var pharmacyTreatmentSupplierSSpecialAdministrationInstructions: CE? {
         field(13).map(CE.init(field:))
@@ -106,9 +105,8 @@ public struct RXG: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever RXG-13 holds on the wire.
     /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions`.
-    /// v2.8.2 defines RXG-13 as `Special Administration Instructions`: use `specialAdministrationInstructions`.
+    /// Renamed `Special Administration Instructions` in v2.8.2, which types it `CWE`: use `specialAdministrationInstructions`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll: [CE] {
         repetitions(13).map(CE.init(field:))
@@ -230,9 +228,10 @@ public struct RXG: TypedSegment {
     }
 
     /// RXG-13: Special Administration Instructions. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specialAdministrationInstructionsAll` returns every repetition.
-    /// Defined in v2.8.2. On a message of another version this returns whatever RXG-13 holds on the wire.
-    /// v2.3 defines RXG-13 as `Pharmacy/Treatment Supplier Special Administration Instructions`: use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
-    /// v2.3.1, v2.4, v2.5.1, v2.6 define RXG-13 as `Pharmacy/Treatment Supplier's Special Administration Instructions`: use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// Same element as `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// v2.3.1, v2.4, v2.5.1 print this element as `Pharmacy/Treatment Supplier's Special Administration Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// v2.6 prints this element as `Pharmacy/Treatment Supplier's Special Administration Instructions` (`CWE`), which this accessor reads.
     public var specialAdministrationInstructions: CWE? {
         field(13).map(CWE.init(field:))
     }
@@ -242,9 +241,10 @@ public struct RXG: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.8.2. On a message of another version this returns whatever RXG-13 holds on the wire.
-    /// v2.3 defines RXG-13 as `Pharmacy/Treatment Supplier Special Administration Instructions`: use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
-    /// v2.3.1, v2.4, v2.5.1, v2.6 define RXG-13 as `Pharmacy/Treatment Supplier's Special Administration Instructions`: use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// Same element as `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3 prints this element as `Pharmacy/Treatment Supplier Special Administration Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// v2.3.1, v2.4, v2.5.1 print this element as `Pharmacy/Treatment Supplier's Special Administration Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialAdministrationInstructions`.
+    /// v2.6 prints this element as `Pharmacy/Treatment Supplier's Special Administration Instructions` (`CWE`), which this accessor reads.
     public var specialAdministrationInstructionsAll: [CWE] {
         repetitions(13).map(CWE.init(field:))
     }

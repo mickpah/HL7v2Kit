@@ -115,6 +115,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-13: Organization Name - NK1. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `organizationNameAll` returns every repetition.
+    /// v2.3 prints this element as `Organization Name`.
     public var organizationName: XON? {
         field(13).map(XON.init(field:))
     }
@@ -124,17 +125,20 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints this element as `Organization Name`.
     public var organizationNameAll: [XON] {
         repetitions(13).map(XON.init(field:))
     }
 
     /// NK1-14: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var maritalStatus: CE? {
         field(14).map(CE.init(field:))
     }
 
     /// NK1-15: Administrative Sex. HL7 data type `IS`.
+    /// v2.3, v2.3.1 print this element as `Sex`.
     /// v2.8.2 prints `CWE`: use `administrativeSexAsCWE`.
     public var administrativeSex: String? {
         field(15)?.stringValue
@@ -182,6 +186,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-19: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var citizenship: CE? {
         field(19).map(CE.init(field:))
@@ -192,6 +197,7 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var citizenshipAll: [CE] {
         repetitions(19).map(CE.init(field:))
@@ -210,6 +216,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-22: Publicity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Publicity Indicator`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var publicityCode: CE? {
         field(22).map(CE.init(field:))
@@ -227,6 +234,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-25: Religion. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var religion: CE? {
         field(25).map(CE.init(field:))
@@ -255,6 +263,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-28: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroup: CE? {
@@ -266,6 +275,7 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroupAll: [CE] {
@@ -351,6 +361,7 @@ public struct NK1: TypedSegment {
     }
 
     /// NK1-35: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `raceAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var race: CE? {
@@ -362,6 +373,7 @@ public struct NK1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var raceAll: [CE] {
@@ -381,6 +393,7 @@ public struct NK1: TypedSegment {
 
     /// NK1-38: Next-of-Kin Birth Place. HL7 data type `ST`.
     /// Defined in v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever NK1-38 holds on the wire.
+    /// v2.6, v2.8.2 print this element as `Next of Kin Birth Place`.
     public var nextOfKinBirthPlace: String? {
         field(38)?.stringValue
     }

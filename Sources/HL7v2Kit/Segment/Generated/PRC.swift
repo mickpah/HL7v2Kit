@@ -17,6 +17,7 @@ public struct PRC: TypedSegment {
     }
 
     /// PRC-1: Primary Key Value - PRC. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.6 prints this element as `Primary Key Value—PRC`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var primaryKeyValuePrc: CE? {
         field(1).map(CE.init(field:))
@@ -24,6 +25,7 @@ public struct PRC: TypedSegment {
 
     /// PRC-2: Facility ID - PRC. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `facilityIdPrcAll` returns every repetition.
     /// v2.3 prints this element as `Facility ID`.
+    /// v2.6 prints this element as `Facility ID—PRC`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var facilityIdPrc: CE? {
         field(2).map(CE.init(field:))
@@ -35,6 +37,7 @@ public struct PRC: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// v2.3 prints this element as `Facility ID`.
+    /// v2.6 prints this element as `Facility ID—PRC`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var facilityIdPrcAll: [CE] {
         repetitions(2).map(CE.init(field:))
@@ -172,6 +175,8 @@ public struct PRC: TypedSegment {
     }
 
     /// PRC-18: Charge On Indicator. HL7 data type `IS`.
+    /// v2.6 prints this element as `Charge on Indicator`.
+    /// v2.8.2 prints this element as `Charge on Indicator`.
     /// v2.8.2 prints `CWE`: use `chargeOnIndicatorAsCWE`.
     public var chargeOnIndicator: String? {
         field(18)?.stringValue

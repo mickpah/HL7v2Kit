@@ -78,6 +78,8 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-6: Guarantor Ph Num - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorPhNumHomeAll` returns every repetition.
+    /// v2.3, v2.3.1 print this element as `Guarantor Ph Num-Home`.
+    /// v2.8.2 prints this element as `Guarantor Ph Num – Home`.
     public var guarantorPhNumHome: XTN? {
         field(6).map(XTN.init(field:))
     }
@@ -87,11 +89,15 @@ public struct GT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1 print this element as `Guarantor Ph Num-Home`.
+    /// v2.8.2 prints this element as `Guarantor Ph Num – Home`.
     public var guarantorPhNumHomeAll: [XTN] {
         repetitions(6).map(XTN.init(field:))
     }
 
     /// GT1-7: Guarantor Ph Num - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorPhNumBusinessAll` returns every repetition.
+    /// v2.3, v2.3.1 print this element as `Guarantor Ph Num-Business`.
+    /// v2.8.2 prints this element as `Guarantor Ph Num – Business`.
     public var guarantorPhNumBusiness: XTN? {
         field(7).map(XTN.init(field:))
     }
@@ -101,6 +107,8 @@ public struct GT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3, v2.3.1 print this element as `Guarantor Ph Num-Business`.
+    /// v2.8.2 prints this element as `Guarantor Ph Num – Business`.
     public var guarantorPhNumBusinessAll: [XTN] {
         repetitions(7).map(XTN.init(field:))
     }
@@ -124,6 +132,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-11: Guarantor Relationship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var guarantorRelationship: CE? {
         field(11).map(CE.init(field:))
@@ -277,6 +286,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-30: Guarantor Marital Status Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var guarantorMaritalStatusCode: CE? {
         field(30).map(CE.init(field:))
@@ -319,6 +329,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-35: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var citizenship: CE? {
@@ -330,6 +341,7 @@ public struct GT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var citizenshipAll: [CE] {
@@ -367,6 +379,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-41: Religion. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var religion: CE? {
         field(41).map(CE.init(field:))
@@ -395,6 +408,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-44: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroup: CE? {
@@ -406,6 +420,7 @@ public struct GT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var ethnicGroupAll: [CE] {
@@ -494,6 +509,7 @@ public struct GT1: TypedSegment {
     }
 
     /// GT1-55: Guarantor Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorRaceAll` returns every repetition.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var guarantorRace: CE? {
@@ -505,6 +521,7 @@ public struct GT1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     /// Repeats in v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2 only.
     public var guarantorRaceAll: [CE] {

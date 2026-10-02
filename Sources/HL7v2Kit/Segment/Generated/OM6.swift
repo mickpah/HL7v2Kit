@@ -18,6 +18,8 @@ public struct OM6: TypedSegment {
 
     /// OM6-1: Sequence Number - Test/Observation Master File. HL7 data type `NM`.
     /// v2.3 prints this element as `Sequence Number`.
+    /// v2.3.1 prints this element as `Sequence Number – Test/Observation Master File`.
+    /// v2.4 prints this element as `Sequence Number- Test/Observation Master File`.
     public var sequenceNumberTestObservationMasterFile: String? {
         field(1)?.stringValue
     }

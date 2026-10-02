@@ -44,6 +44,7 @@ public struct AIL: TypedSegment {
 
     /// AIL-4: Location Type-AIL. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// v2.3 prints this element as `Location Type`.
+    /// v2.6, v2.8.2 print this element as `Location Type - AIL`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var locationTypeAil: CE? {
         field(4).map(CE.init(field:))

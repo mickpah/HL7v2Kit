@@ -32,6 +32,7 @@ public struct SAC: TypedSegment {
     }
 
     /// SAC-4: Primary (parent) Container Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// v2.6, v2.8.2 print this element as `Primary (Parent) Container Identifier`.
     public var primaryParentContainerIdentifier: EI? {
         field(4).map(EI.init(field:))
     }
@@ -75,6 +76,7 @@ public struct SAC: TypedSegment {
     }
 
     /// SAC-12: Tray Type - SAC. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.6, v2.8.2 print this element as `Tray Type – SAC`.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var trayTypeSac: CE? {
         field(12).map(CE.init(field:))
@@ -138,6 +140,7 @@ public struct SAC: TypedSegment {
     }
 
     /// SAC-22: Available Specimen Volume. HL7 data type `NM`.
+    /// v2.4 prints this element as `Available Volume`.
     public var availableSpecimenVolume: String? {
         field(22)?.stringValue
     }
@@ -286,6 +289,7 @@ public struct SAC: TypedSegment {
     }
 
     /// SAC-43: Special Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specialHandlingCodeAll` returns every repetition.
+    /// v2.4 prints this element as `Special Handling Considerations`.
     /// v2.4 prints `CE`: use `viewed(as: CE.self)`.
     public var specialHandlingCode: CWE? {
         field(43).map(CWE.init(field:))
@@ -296,6 +300,7 @@ public struct SAC: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
+    /// v2.4 prints this element as `Special Handling Considerations`.
     /// v2.4 prints `CE`: use `viewed(as: CE.self)`.
     public var specialHandlingCodeAll: [CWE] {
         repetitions(43).map(CWE.init(field:))

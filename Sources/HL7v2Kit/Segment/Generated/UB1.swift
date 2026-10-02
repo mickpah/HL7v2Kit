@@ -29,30 +29,35 @@ public struct UB1: TypedSegment {
 
     /// UB1-3: Blood Furnished-Pints Of (40). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-3 holds on the wire.
+    /// v2.6 prints this element as `Blood Furnished-Pints`.
     public var bloodFurnishedPintsOf40: String? {
         field(3)?.stringValue
     }
 
     /// UB1-4: Blood Replaced-Pints (41). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-4 holds on the wire.
+    /// v2.6 prints this element as `Blood Replaced-Pints`.
     public var bloodReplacedPints41: String? {
         field(4)?.stringValue
     }
 
     /// UB1-5: Blood Not Replaced-Pints(42). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-5 holds on the wire.
+    /// v2.6 prints this element as `Blood Not Replaced-Pints`.
     public var bloodNotReplacedPints42: String? {
         field(5)?.stringValue
     }
 
     /// UB1-6: Co-Insurance Days (25). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-6 holds on the wire.
+    /// v2.6 prints this element as `Co-Insurance Days`.
     public var coInsuranceDays25: String? {
         field(6)?.stringValue
     }
 
     /// UB1-7: Condition Code (35-39). HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `conditionCode3539All` returns every repetition.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-7 holds on the wire.
+    /// v2.6 prints this element as `Condition Code`.
     public var conditionCode3539: String? {
         field(7)?.stringValue
     }
@@ -65,24 +70,28 @@ public struct UB1: TypedSegment {
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-7 holds on the wire.
+    /// v2.6 prints this element as `Condition Code`.
     public var conditionCode3539All: [String?] {
         repetitions(7).map(\.stringValue)
     }
 
     /// UB1-8: Covered Days - (23). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-8 holds on the wire.
+    /// v2.6 prints this element as `Covered Days`.
     public var coveredDays23: String? {
         field(8)?.stringValue
     }
 
     /// UB1-9: Non Covered Days - (24). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-9 holds on the wire.
+    /// v2.6 prints this element as `Non Covered Days`.
     public var nonCoveredDays24: String? {
         field(9)?.stringValue
     }
 
     /// UB1-10: Value Amount & Code (46-49). HL7 data type `UVC`. Repeating field: this accessor reads the first repetition; `valueAmountCode4649All` returns every repetition.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-10 holds on the wire.
+    /// v2.6 prints this element as `Value Amount & Code`.
     public var valueAmountCode4649: Field? {
         field(10)
     }
@@ -93,18 +102,22 @@ public struct UB1: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-10 holds on the wire.
+    /// v2.6 prints this element as `Value Amount & Code`.
     public var valueAmountCode4649All: [Field] {
         repetitions(10)
     }
 
     /// UB1-11: Number Of Grace Days (90). HL7 data type `NM`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-11 holds on the wire.
+    /// v2.6 prints this element as `Number Of Grace Days`.
     public var numberOfGraceDays90: String? {
         field(11)?.stringValue
     }
 
     /// UB1-12: Special Program Indicator (44). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-12 holds on the wire.
+    /// v2.3 prints this element as `Spec Program Indicator (44)`.
+    /// v2.6 prints this element as `Special Program Indicator`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var specialProgramIndicator44: CE? {
         field(12).map(CE.init(field:))
@@ -112,6 +125,7 @@ public struct UB1: TypedSegment {
 
     /// UB1-13: PSRO/UR Approval Indicator (87). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-13 holds on the wire.
+    /// v2.6 prints this element as `PSRO/UR Approval Indicator`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var psroUrApprovalIndicator87: CE? {
         field(13).map(CE.init(field:))
@@ -119,18 +133,21 @@ public struct UB1: TypedSegment {
 
     /// UB1-14: PSRO/UR Approved Stay-Fm (88). HL7 data type `DT`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-14 holds on the wire.
+    /// v2.6 prints this element as `PSRO/UR Approved Stay-Fm`.
     public var psroUrApprovedStayFm88: String? {
         field(14)?.stringValue
     }
 
     /// UB1-15: PSRO/UR Approved Stay-To (89). HL7 data type `DT`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-15 holds on the wire.
+    /// v2.6 prints this element as `PSRO/UR Approved Stay-To`.
     public var psroUrApprovedStayTo89: String? {
         field(15)?.stringValue
     }
 
     /// UB1-16: Occurrence (28-32). HL7 data type `OCD`. Repeating field: this accessor reads the first repetition; `occurrence2832All` returns every repetition.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-16 holds on the wire.
+    /// v2.6 prints this element as `Occurrence`.
     public var occurrence2832: Field? {
         field(16)
     }
@@ -141,12 +158,14 @@ public struct UB1: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-16 holds on the wire.
+    /// v2.6 prints this element as `Occurrence`.
     public var occurrence2832All: [Field] {
         repetitions(16)
     }
 
     /// UB1-17: Occurrence Span (33). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-17 holds on the wire.
+    /// v2.6 prints this element as `Occurrence Span`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var occurrenceSpan33: CE? {
         field(17).map(CE.init(field:))
@@ -154,12 +173,14 @@ public struct UB1: TypedSegment {
 
     /// UB1-18: Occur Span Start Date(33). HL7 data type `DT`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-18 holds on the wire.
+    /// v2.6 prints this element as `Occur Span Start Date`.
     public var occurSpanStartDate33: String? {
         field(18)?.stringValue
     }
 
     /// UB1-19: Occur Span End Date (33). HL7 data type `DT`.
     /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever UB1-19 holds on the wire.
+    /// v2.6 prints this element as `Occur Span End Date`.
     public var occurSpanEndDate33: String? {
         field(19)?.stringValue
     }

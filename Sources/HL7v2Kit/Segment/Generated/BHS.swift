@@ -27,21 +27,25 @@ public struct BHS: TypedSegment {
     }
 
     /// BHS-3: Batch Sending Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var batchSendingApplication: HD? {
         field(3).map(HD.init(field:))
     }
 
     /// BHS-4: Batch Sending Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var batchSendingFacility: HD? {
         field(4).map(HD.init(field:))
     }
 
     /// BHS-5: Batch Receiving Application. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var batchReceivingApplication: HD? {
         field(5).map(HD.init(field:))
     }
 
     /// BHS-6: Batch Receiving Facility. HL7 data type `HD`. Returns the typed ``HD`` view; use `.field` for raw access.
+    /// v2.3, v2.3.1, v2.4 print `ST`, a scalar: the value reads as the first component.
     public var batchReceivingFacility: HD? {
         field(6).map(HD.init(field:))
     }

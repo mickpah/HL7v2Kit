@@ -132,6 +132,7 @@ public struct PEO: TypedSegment {
     }
 
     /// PEO-13: Event Description From Others. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromOthersAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Event Description from Others`.
     public var eventDescriptionFromOthers: String? {
         field(13)?.stringValue
     }
@@ -143,11 +144,13 @@ public struct PEO: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.6, v2.8.2 print this element as `Event Description from Others`.
     public var eventDescriptionFromOthersAll: [String?] {
         repetitions(13).map(\.stringValue)
     }
 
     /// PEO-14: Event From Original Reporter. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventFromOriginalReporterAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Event Description from Original Reporter`.
     public var eventFromOriginalReporter: String? {
         field(14)?.stringValue
     }
@@ -159,11 +162,13 @@ public struct PEO: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.6, v2.8.2 print this element as `Event Description from Original Reporter`.
     public var eventFromOriginalReporterAll: [String?] {
         repetitions(14).map(\.stringValue)
     }
 
     /// PEO-15: Event Description From Patient. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromPatientAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Event Description from Patient`.
     public var eventDescriptionFromPatient: String? {
         field(15)?.stringValue
     }
@@ -175,11 +180,13 @@ public struct PEO: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.6, v2.8.2 print this element as `Event Description from Patient`.
     public var eventDescriptionFromPatientAll: [String?] {
         repetitions(15).map(\.stringValue)
     }
 
     /// PEO-16: Event Description From Practitioner. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromPractitionerAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Event Description from Practitioner`.
     public var eventDescriptionFromPractitioner: String? {
         field(16)?.stringValue
     }
@@ -191,11 +198,13 @@ public struct PEO: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.6, v2.8.2 print this element as `Event Description from Practitioner`.
     public var eventDescriptionFromPractitionerAll: [String?] {
         repetitions(16).map(\.stringValue)
     }
 
     /// PEO-17: Event Description From Autopsy. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromAutopsyAll` returns every repetition.
+    /// v2.6, v2.8.2 print this element as `Event Description from Autopsy`.
     public var eventDescriptionFromAutopsy: String? {
         field(17)?.stringValue
     }
@@ -207,6 +216,7 @@ public struct PEO: TypedSegment {
     /// holding the literal `""`.
     /// An element is `nil` when that repetition is not a single scalar (more than one
     /// component or subcomponent), as for the singular accessor.
+    /// v2.6, v2.8.2 print this element as `Event Description from Autopsy`.
     public var eventDescriptionFromAutopsyAll: [String?] {
         repetitions(17).map(\.stringValue)
     }

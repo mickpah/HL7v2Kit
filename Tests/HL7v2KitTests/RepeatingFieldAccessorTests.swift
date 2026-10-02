@@ -119,17 +119,19 @@ struct RepeatingFieldAccessorTests {
 
     /// The `…All` names the union surface owes a segment, `<name>As<T>All` aside: a base
     /// field that repeats in any version that prints it (an earlier version under any name,
-    /// a later one under the base name), and a later element name that repeats in any
-    /// version that prints it.
-    private static func expectedAll(_ schemas: [Schema]) -> Set<String> {
+    /// a later one under the base name or under a same-type rename, which has no accessor of
+    /// its own), and a later element name that repeats in any version that prints it.
+    /// `declared` is the struct's accessor names; the one-accessor-per-type rule itself is
+    /// pinned by `VersionUnionAccessorTests`.
+    private static func expectedAll(_ schemas: [Schema], declared: Set<String>) -> Set<String> {
         let base = schemas.first { $0.version == "2.5.1" } ?? schemas[0]
         let baseKey = versionKey(base.version)
         var expected: Set<String> = []
         for schema in schemas {
             let earlier = versionKey(schema.version).lexicographicallyPrecedes(baseKey)
             for field in schema.fields where !field.dataType.isEmpty && field.repeatability != "1" {
-                let baseField = base.fields.first { $0.index == field.index }
-                if earlier, let baseField {
+                let baseField = base.fields.first { $0.index == field.index && !$0.dataType.isEmpty }
+                if let baseField, earlier || !declared.contains(field.swiftName) {
                     expected.insert(baseField.swiftName + "All")
                 } else {
                     expected.insert(field.swiftName + "All")
@@ -152,7 +154,7 @@ struct RepeatingFieldAccessorTests {
                 .compactMap { $0.dropFirst("public var ".count).split(separator: ":").first.map(String.init) })
             let declared = vars.filter { $0.hasSuffix("All") }
             let asAll = declared.filter { $0.range(of: "As[A-Z]{2,3}All$", options: .regularExpression) != nil }
-            let expected = Self.expectedAll(schemas)
+            let expected = Self.expectedAll(schemas, declared: vars)
             #expect(declared.subtracting(asAll) == expected,
                     "\(segmentID): All accessors \(declared.subtracting(asAll).sorted()) != \(expected.sorted())")
             for name in asAll {
@@ -166,8 +168,11 @@ struct RepeatingFieldAccessorTests {
             total += expected.count
             asTotal += asAll.count
         }
-        #expect(total == 601)
-        #expect(asTotal == 33)
+        // 536 at P9-4, plus P9-5: 16 base fields that repeat only in another version and 45
+        // later element names (fields past the base maximum, positions the base reserves,
+        // and renames whose Swift type differs). Plus 32 `<name>As<T>All`.
+        #expect(total == 597)
+        #expect(asTotal == 32)
         let pid = try String(contentsOf: generated.appendingPathComponent("PID.swift"), encoding: .utf8)
         #expect(pid.contains("Repeating field: this accessor reads the first repetition; `patientIdentifierListAll` returns every repetition."))
     }

@@ -17,6 +17,7 @@ public struct FAC: TypedSegment {
     }
 
     /// FAC-1: Facility ID-FAC. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// v2.3 prints this element as `Facility ID`.
     public var facilityIdFac: EI? {
         field(1).map(EI.init(field:))
     }

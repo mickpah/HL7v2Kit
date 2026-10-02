@@ -113,8 +113,7 @@ public struct RXD: TypedSegment {
     }
 
     /// RXD-15: Pharmacy/Treatment Supplier's Special Dispensing Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever RXD-15 holds on the wire.
-    /// v2.8.2 defines RXD-15 as `Special Dispensing Instructions`: use `specialDispensingInstructions`.
+    /// Renamed `Special Dispensing Instructions` in v2.8.2, which types it `CWE`: use `specialDispensingInstructions`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var pharmacyTreatmentSupplierSSpecialDispensingInstructions: CE? {
         field(15).map(CE.init(field:))
@@ -125,8 +124,7 @@ public struct RXD: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever RXD-15 holds on the wire.
-    /// v2.8.2 defines RXD-15 as `Special Dispensing Instructions`: use `specialDispensingInstructions`.
+    /// Renamed `Special Dispensing Instructions` in v2.8.2, which types it `CWE`: use `specialDispensingInstructions`.
     /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll: [CE] {
         repetitions(15).map(CE.init(field:))
@@ -292,8 +290,9 @@ public struct RXD: TypedSegment {
     }
 
     /// RXD-15: Special Dispensing Instructions. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specialDispensingInstructionsAll` returns every repetition.
-    /// Defined in v2.8.2. On a message of another version this returns whatever RXD-15 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define RXD-15 as `Pharmacy/Treatment Supplier's Special Dispensing Instructions`: use `pharmacyTreatmentSupplierSSpecialDispensingInstructions`.
+    /// Same element as `pharmacyTreatmentSupplierSSpecialDispensingInstructions`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1, v2.4, v2.5.1 print this element as `Pharmacy/Treatment Supplier's Special Dispensing Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialDispensingInstructions`.
+    /// v2.6 prints this element as `Pharmacy/Treatment Supplier's Special Dispensing Instructions` (`CWE`), which this accessor reads.
     public var specialDispensingInstructions: CWE? {
         field(15).map(CWE.init(field:))
     }
@@ -303,8 +302,9 @@ public struct RXD: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.8.2. On a message of another version this returns whatever RXD-15 holds on the wire.
-    /// v2.3, v2.3.1, v2.4, v2.5.1, v2.6 define RXD-15 as `Pharmacy/Treatment Supplier's Special Dispensing Instructions`: use `pharmacyTreatmentSupplierSSpecialDispensingInstructions`.
+    /// Same element as `pharmacyTreatmentSupplierSSpecialDispensingInstructions`, renamed in v2.8.2; typed as v2.8.2 prints it.
+    /// v2.3, v2.3.1, v2.4, v2.5.1 print this element as `Pharmacy/Treatment Supplier's Special Dispensing Instructions` (`CE`): use `pharmacyTreatmentSupplierSSpecialDispensingInstructions`.
+    /// v2.6 prints this element as `Pharmacy/Treatment Supplier's Special Dispensing Instructions` (`CWE`), which this accessor reads.
     public var specialDispensingInstructionsAll: [CWE] {
         repetitions(15).map(CWE.init(field:))
     }

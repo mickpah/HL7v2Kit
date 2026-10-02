@@ -108,6 +108,9 @@ public struct PV1: TypedSegment {
     }
 
     /// PV1-13: Re-Admission Indicator. HL7 data type `IS`.
+    /// v2.3 prints this element as `Readmission Indicator`.
+    /// v2.3.1, v2.4, v2.6 print this element as `Re-admission Indicator`.
+    /// v2.8.2 prints this element as `Re-admission Indicator`.
     /// v2.8.2 prints `CWE`: use `readmissionIndicatorAsCWE`.
     public var readmissionIndicator: String? {
         field(13)?.stringValue
@@ -322,6 +325,7 @@ public struct PV1: TypedSegment {
     }
 
     /// PV1-38: Diet Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// v2.3 prints `IS`, a scalar: the value reads as the first component.
     /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
     public var dietType: CE? {
         field(38).map(CE.init(field:))

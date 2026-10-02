@@ -43,6 +43,7 @@ public struct CSR: TypedSegment {
     }
 
     /// CSR-6: Date/Time Of Patient Study Registration. HL7 data type `TS`.
+    /// v2.6, v2.8.2 print this element as `Date/Time of Patient Study Registration`.
     public var dateTimeOfPatientStudyRegistration: String? {
         field(6)?.stringValue
     }
@@ -80,6 +81,7 @@ public struct CSR: TypedSegment {
     }
 
     /// CSR-9: Date/time Patient Study Consent Signed. HL7 data type `TS`.
+    /// v2.8.2 prints this element as `Date/Time Patient Study Consent Signed`.
     public var dateTimePatientStudyConsentSigned: String? {
         field(9)?.stringValue
     }
@@ -145,6 +147,7 @@ public struct CSR: TypedSegment {
     }
 
     /// CSR-15: Date/time Ended Study. HL7 data type `TS`.
+    /// v2.8.2 prints this element as `Date/Time Ended Study`.
     public var dateTimeEndedStudy: String? {
         field(15)?.stringValue
     }
