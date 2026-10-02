@@ -361,8 +361,24 @@ arbitrary segment" and sent as several messages: the first ends in a DSC segment
 later fragment carries a value in MSH-14 (v2.4 CH02 §2.15.2.2; v2.5.1 and v2.6 CH02
 §2.10.2.2; v2.8.2 CH02 §2.10.2.1, the heading as printed; v2.3 and v2.3.1 CH2 §2.15.4,
 §2.23.2 and the DSC segment §2.24.8, where MSH-14 is §2.24.1.14). A message is a fragment
-when MSH-14 is populated, or when its last segment is DSC and the resolved structure does
-not itself define a DSC at that point (query responses do). A fragment raises
+when (amended in P8-5 fix round 1):
+
+- MSH-14 is populated; or
+- its last segment (Z-segments and ADD ignored) is DSC and DSC-1 is populated, whatever
+  the structure defines; or
+- its last segment is DSC and the structure's last top-level element is not DSC.
+
+A trailing DSC with an empty (or null) DSC-1 on a structure that ends in `[DSC]` is matched
+normally. The earlier text exempted any structure that "itself defines a DSC at that point
+(query responses do)"; that was wrong. v2.5.1 ORU_R01 prints `[DSC]`, and v2.5.1 CH02
+§2.10.2.2 says "the logical message is broken after an arbitrary segment", "The DSC-1-
+Continuation pointer field will contain a unique value that is used to match a subsequent
+message", "The DSC terminates the first fragment of the logical message" and "The receiver
+can tell that a given incoming message is a fragment by the presence of the trailing DSC",
+so `ORU^R01^ORU_R01 | PID | DSC|CP001|F` is a conformant first fragment. DSC-1 (§2.15.4.1):
+"If the responder returns a value of null or not present, then there is no more data".
+DSC-2 (§2.15.4.2, Table 0398: F Fragmentation, I Interactive Continuation) is not
+consulted. A fragment raises
 `messageStructureNotModelled` (info) and is not matched, because a fragment's segment list
 is a slice of the structure and would draw false missing-segment findings. Reassembling
 fragments is out of scope; the gap is registered as blocking in section E of the
@@ -388,8 +404,13 @@ holds).
 4. Group spans are exact only when the match has no deviation. After a deviation the spans
    are best-effort, so group-scoped predicates do not use them (below).
 5. Where Z-segments may sit is not checked (fact 3).
-6. Message fragments are not structure-checked and not reassembled (above).
-7. A message whose `message.version` differs from the wire reading of MSH-12 (for example
+6. Message fragments are not structure-checked and not reassembled (above). Known cost of
+   the DSC-1 rule: a complete message that carries a continuation pointer (for example an
+   interactive query response installment, DSC-2 = I, v2.5.1 CH05 §5.6.3.1) is not
+   structure-checked either. Neither CH02 §2.10.2 nor CH05 §5.6.3 says whether each
+   interactive installment is a structurally complete message, so no DSC-2 refinement is
+   made. Versions that print DSC other than last at top level are a rollout item.
+7. A message whose `message.version` has a different grammar version from the wire reading of MSH-12 (for example
    one parsed with `ParserOptions.versionOverride`) is not structure-checked; it raises
    `messageStructureNotModelled`. This is the conservative choice (no misfire); honouring
    an explicit override would need version provenance on `Message`.
@@ -470,9 +491,12 @@ row:
 The version comes from the wire reading, `Version.reading(msh12:subcomponentSeparator:)`,
 taken at validation time, because `Message` carries no record of where `message.version`
 came from (`ParserOptions.versionOverride`, or a message built directly). The rule: when the
-reading is `.recognised(v)` and `v` equals `message.version`, the structures of
-`v.grammarVersion` apply; when the reading is `.unresolved` or `.empty`, or recognises a
-version other than `message.version`, no structure is resolved, no body match runs, and
+reading is `.recognised(v)` and `v.grammarVersion` equals `message.version.grammarVersion`
+(the comparison is between GRAMMAR versions, amended in P8-5 fix round 1: a 2.8 wire message
+is validated as v2.8.2 and takes the v2.8.2 structures, as the table above says), the
+structures of `v.grammarVersion` apply; when the reading is `.unresolved` or `.empty`, or
+recognises a version whose grammar version differs from that of `message.version`, no
+structure is resolved, no body match runs, and
 the one info issue is `messageStructureNotModelled`. On an unresolved populated MSH-12
 `versionNotRecognised` (warning) also fires today. On an empty MSH-12 no version issue
 fires (`appendVersionIssues` returns nothing for `.empty`); the required-field check

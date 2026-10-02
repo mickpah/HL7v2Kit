@@ -62,13 +62,7 @@ extension Validator {
     /// every finding is located on a real segment of the message.
     func matchStructure(_ structure: MessageStructure, message: Message, severity: IssueSeverity) -> [ValidationIssue] {
         let ids = message.segments.map(\.segmentID)
-        // ADR-019 ceiling 6: a fragment (MSH-14 populated, or a last DSC the
-        // structure does not define) is a slice of a logical message.
-        let continued = !(message["MSH-14"] ?? "").isEmpty
-        let definesDSC: Bool
-        if case .segment("DSC", _, _) = structure.elements.last { definesDSC = true } else { definesDSC = false }
-        if continued || (ids.last == "DSC" && !definesDSC) {
-            let why = continued ? "MSH-14 is populated" : "the last segment is a DSC that \(structure.id) does not define"
+        if let why = fragmentReason(message, structure: structure) {
             return [notModelled(structure.id, message: message, reason: "the message is a fragment (\(why))")]
         }
         guard StructureMatcher.lint(structure.elements).isDeterministic else {
@@ -117,15 +111,52 @@ extension Validator {
         }
     }
 
-    /// The info issue for a message no structure is applied to.
+    /// Why the message is a fragment of a logical message, or nil (ADR-019
+    /// ceiling 6). A fragment's segment list is a slice of its structure, so
+    /// it is not matched. v2.5.1 CH02 2.10.2.2: "the logical message is broken
+    /// after an arbitrary segment"; "The DSC-1-Continuation pointer field will
+    /// contain a unique value that is used to match a subsequent message";
+    /// "The DSC terminates the first fragment of the logical message"; "The
+    /// presence of a value in MSH-14 indicates that the message is a fragment
+    /// of an earlier message"; "The receiver can tell that a given incoming
+    /// message is a fragment by the presence of the trailing DSC". DSC-1
+    /// (2.15.4.1): "If the responder returns a value of null or not present,
+    /// then there is no more data". DSC-2 (2.15.4.2, Table 0398: F
+    /// Fragmentation, I Interactive Continuation) is not consulted, so a
+    /// complete message that carries a continuation pointer (an interactive
+    /// query response, CH05 5.6.3.1) is not matched either.
+    ///
+    /// The rule: MSH-14 populated; or the last segment (Z and ADD ignored) is
+    /// DSC with DSC-1 populated, whatever the structure defines; or the last
+    /// segment is DSC and the structure's last top-level element is not DSC.
+    /// A trailing DSC with an empty or null DSC-1 on a structure that ends in
+    /// `[DSC]` is matched.
+    func fragmentReason(_ message: Message, structure: MessageStructure) -> String? {
+        func populated(_ field: Field?) -> Bool {
+            let value = field?.stringValue ?? ""
+            return !value.isEmpty && value != "\"\""
+        }
+        if populated(message.segments.first?.field(14)) { return "MSH-14 is populated" }
+        guard let last = message.segments.last(where: { !StructureMatcher.isTransparent($0.segmentID) }),
+              last.segmentID == "DSC" else { return nil }
+        if populated(last.field(1)) { return "it ends in a DSC whose DSC-1 continuation pointer is populated" }
+        if case .segment("DSC", _, _) = structure.elements.last { return nil }
+        return "it ends in a DSC, which \(structure.id) does not define there"
+    }
+
+    /// The info issue for a message no structure is applied to. An empty
+    /// `name` means MSH-9 is empty.
     func notModelled(_ name: String, message: Message,
                      reason: String? = nil) -> ValidationIssue {
-        let why = reason ?? "no v\(message.version.rawValue) abstract message syntax is modelled for \(name)"
+        let subject = name.isEmpty ? "this message" : name
+        let why = reason.map { name.isEmpty ? "MSH-9 is empty; \($0)" : $0 }
+            ?? (name.isEmpty ? "MSH-9 is empty, so no structure can be resolved"
+                : "no v\(message.version.rawValue) abstract message syntax is modelled for \(name)")
         return ValidationIssue(
             severity: .info,
             code: .messageStructureNotModelled(structure: name),
             location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9),
-            message: "Segment order and groups were not checked for \(name): \(why) (ADR-019)."
+            message: "Segment order and groups were not checked for \(subject): \(why) (ADR-019)."
         )
     }
 }

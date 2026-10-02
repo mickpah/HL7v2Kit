@@ -231,14 +231,37 @@ struct MessageStructureValidationTests {
     func dscFragment() throws {
         let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", [Self.evn, Self.pid, "DSC|CONT0001"]))
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
+        let empty = try structureIssues(Self.wire("ADT^A01^ADT_A01", [Self.evn, Self.pid, Self.pv1, "DSC"]))
+        #expect(empty.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
     }
 
-    @Test("A last DSC that the structure defines (ORU_R01 [DSC]) is matched as usual")
-    func dscDefinedByStructure() throws {
-        let body = [Self.pid, "OBR|1||F1|GLU^Glucose", "OBX|1|NM|GLU^Glucose||5.4", "DSC|CONT0001"]
+    @Test("ORU first fragment (PID then DSC with a continuation pointer): the info issue only")
+    func oruFirstFragment() throws {
+        let issues = try structureIssues(Self.wire("ORU^R01^ORU_R01", [Self.pid, "DSC|CP001|F"]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ORU_R01")])
+        #expect(issues.first?.severity == .info)
+    }
+
+    @Test("A complete ORU ending in a DSC with an empty DSC-1 is matched as usual")
+    func dscEmptyPointerMatched() throws {
+        let body = [Self.pid, "OBR|1||F1|GLU^Glucose", "OBX|1|NM|GLU^Glucose||5.4", "DSC"]
         #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", body)).isEmpty)
-        let missing = try structureIssues(Self.wire("ORU^R01^ORU_R01", [Self.pid, "DSC|CONT0001"]))
+        let missing = try structureIssues(Self.wire("ORU^R01^ORU_R01", [Self.pid, "DSC||F"]))
         #expect(missing.map(\.code) == [.messageStructureSegmentMissing(structure: "ORU_R01", segmentID: "OBR", group: "ORDER_OBSERVATION")])
+    }
+
+    @Test("A complete ORU ending in a DSC with a continuation pointer is not matched (the info issue only)")
+    func dscPointerOnCompleteMessage() throws {
+        let body = [Self.pid, "OBR|1||F1|GLU^Glucose", "OBX|1|NM|GLU^Glucose||5.4", "DSC|CP001", "ZIN|x"]
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", body)).map(\.code) == [.messageStructureNotModelled(structure: "ORU_R01")])
+    }
+
+    @Test("An empty MSH-9 gets a clear info issue")
+    func emptyMSH9() throws {
+        let issues = try structureIssues(Self.wire("", [Self.pid]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "")])
+        #expect(issues.first?.message.contains("MSH-9 is empty") == true)
+        #expect(issues.first?.message.contains("for :") == false)
     }
 
     // MARK: - Lint

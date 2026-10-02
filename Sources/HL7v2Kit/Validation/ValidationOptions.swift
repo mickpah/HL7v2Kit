@@ -245,8 +245,9 @@ public struct ValidationOptions: Sendable {
     /// the extra-component check (`extraComponentsSeverity`), the value-format
     /// check (`valueFormatSeverity`) and the repetition-bound check
     /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
-    /// to `nil` explicitly (off in every preset today). `checkCardinality` is already `false` here,
-    /// which also silences the single-cardinality error.
+    /// to `nil` explicitly (off in every preset today). `checkCardinality`
+    /// is already `false` here, which also silences the single-cardinality
+    /// error.
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
