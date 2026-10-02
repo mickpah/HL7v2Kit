@@ -6,8 +6,8 @@
   "components": [
     {
       "index": 1,
-      "name": "Driver’s license number (as ST data type)",
-      "dataType": "",
+      "name": "License number",
+      "dataType": "ST",
       "optionality": ""
     },
     {

@@ -65,6 +65,9 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Name of coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Alternate identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "Alternate text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Name of alternate coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 
@@ -110,6 +113,7 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 6, name: "Name of alternate coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 7, name: "Coding system version ID", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 8, name: "Alternate coding system version ID", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 9, name: "Original text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 
@@ -173,7 +177,7 @@ extension DataTypeGrammarTable {
         version: "2.3.1",
         name: "driver’s license number                                                                         2-28",
         components: [
-            ComponentGrammar(index: 1, name: "Driver’s license number (as ST data type)", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "License number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Issuing state, province, country", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Expiration date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]

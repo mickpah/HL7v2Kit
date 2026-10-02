@@ -51,6 +51,12 @@
       "name": "Alternate coding system version ID",
       "dataType": "ST",
       "optionality": ""
+    },
+    {
+      "index": 9,
+      "name": "Original text",
+      "dataType": "ST",
+      "optionality": ""
     }
   ]
 }

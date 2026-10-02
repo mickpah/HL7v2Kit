@@ -66,4 +66,24 @@ struct DataTypeGrammarTests {
         let wire = "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|20240101120000||ADT^A01^ADT_A01|MSG00001|P|2.5.1\rPID|1||123^^^HOSP^MR||\(String(repeating: "X", count: 300))^JOHN\r"
         #expect(Validator().validate(try Parser().parse(wire)).isValid)
     }
+
+    @Test("P5: the printed Components line completes prose composites (CE.4-6, CNE.9)")
+    func componentsLineCompletesProse() throws {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            let ce = try #require(DataTypeGrammarTable.grammar("CE", version: version), "\(version)")
+            #expect(ce.components.count == 6, "\(version): the Components line prints six")
+            #expect(ce.component(4)?.name.lowercased() == "alternate identifier", "\(version)")
+            #expect(ce.component(4)?.dataType == "ST", "\(version)")
+            #expect(ce.component(6)?.dataType == (version == .v2_4 ? "IS" : "ST"), "\(version)")
+            #expect(DataTypeGrammarTable.grammar("DLN", version: version)?.component(1)?.dataType == "ST", "\(version)")
+        }
+        let cne = try #require(DataTypeGrammarTable.grammar("CNE", version: .v2_3_1))
+        #expect(cne.components.count == 9)
+        #expect(cne.component(9)?.name.lowercased() == "original text")
+        #expect(cne.component(9)?.dataType == "ST")
+        #expect(DataTypeGrammarTable.grammar("CNE", version: .v2_4)?.components.count == 9)
+        #expect(DataTypeGrammarTable.grammar("ED", version: .v2_3)?.component(2)?.dataType == "ID")
+        #expect(DataTypeGrammarTable.grammar("ED", version: .v2_3)?.component(2)?.tables == ["0191"])
+        #expect(DataTypeGrammarTable.grammar("SN", version: .v2_3)?.component(1)?.name == "Comparator")
+    }
 }

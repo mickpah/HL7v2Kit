@@ -62,6 +62,9 @@ extension DataTypeGrammarTable {
             ComponentGrammar(index: 1, name: "Identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Name of coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Alternate identifier", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 5, name: "Alternate text", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 6, name: "Name of alternate coding system", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 
@@ -137,7 +140,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "driver’s license number",
         components: [
-            ComponentGrammar(index: 1, name: "Driver’s license number (as ST data type)", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "License number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Issuing state, province, country", dataType: "IS", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Expiration date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
@@ -159,7 +162,7 @@ extension DataTypeGrammarTable {
         name: "encapsulated data",
         components: [
             ComponentGrammar(index: 1, name: "Source application", dataType: "HD", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
-            ComponentGrammar(index: 2, name: "Type of data", dataType: "", optionalityCode: "", tables: ["0191"], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Type of data", dataType: "ID", optionalityCode: "", tables: ["0191"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Subtype", dataType: "", optionalityCode: "", tables: ["0291"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "Encoding", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 5, name: "Data", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
@@ -353,7 +356,7 @@ extension DataTypeGrammarTable {
         version: "2.3",
         name: "structured numeric",
         components: [
-            ComponentGrammar(index: 1, name: "<comparator> = “>” or “<” or “>=” or “<=” or “=” or “<>”", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "Comparator", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "<num1>", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "<num2>", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 4, name: "<separator/suffix>", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),

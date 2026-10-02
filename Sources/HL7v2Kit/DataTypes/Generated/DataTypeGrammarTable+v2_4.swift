@@ -182,7 +182,7 @@ extension DataTypeGrammarTable {
         version: "2.4",
         name: "driver’s license number",
         components: [
-            ComponentGrammar(index: 1, name: "Driver’s license number (as ST data type)", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 1, name: "License number", dataType: "ST", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Issuing state, province, country", dataType: "IS", optionalityCode: "", tables: ["0333"], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 3, name: "Expiration date", dataType: "DT", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]

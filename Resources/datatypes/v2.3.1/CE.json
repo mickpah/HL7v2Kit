@@ -21,6 +21,24 @@
       "name": "Name of coding system",
       "dataType": "ST",
       "optionality": ""
+    },
+    {
+      "index": 4,
+      "name": "Alternate identifier",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 5,
+      "name": "Alternate text",
+      "dataType": "ST",
+      "optionality": ""
+    },
+    {
+      "index": 6,
+      "name": "Name of alternate coding system",
+      "dataType": "ST",
+      "optionality": ""
     }
   ]
 }

@@ -6,8 +6,8 @@
   "components": [
     {
       "index": 1,
-      "name": "<comparator> = “>” or “<” or “>=” or “<=” or “=” or “<>”",
-      "dataType": "",
+      "name": "Comparator",
+      "dataType": "ST",
       "optionality": ""
     },
     {
