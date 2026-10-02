@@ -136,4 +136,13 @@ struct DataTypeGrammarTests {
         #expect(try tableIssues("1^Q1H^^^^^^^S", "2.4").isEmpty)
         #expect(try tableIssues("1^Q1H^^^^^^^X", "2.3").isEmpty)
     }
+
+    @Test("P5: MA and NA print no fixed component list before v2.5, so they have no grammar")
+    func arraysHaveNoFixedList() {
+        for version in [Version.v2_3, .v2_3_1, .v2_4] {
+            #expect(DataTypeGrammarTable.grammar("MA", version: version) == nil, "\(version)")
+            #expect(DataTypeGrammarTable.grammar("NA", version: version) == nil, "\(version)")
+        }
+        #expect(DataTypeGrammarTable.grammar("NA", version: .v2_5_1) != nil, "v2.5.1 prints a component table")
+    }
 }

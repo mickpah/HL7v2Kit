@@ -91,8 +91,18 @@ public struct DataTypeGrammar: Sendable, Equatable, Hashable {
 /// both match the version's own registry, and `optionalityCode` is `""`
 /// because the prose prints none (ADR-017 addendum, M13).
 public enum DataTypeGrammarTable {
-    /// The component table of `dataType` as printed by `version`, or `nil`
-    /// when that version prints none (or has withdrawn the datatype).
+    /// The component table of `dataType` as printed by `version`, or `nil` when that version
+    /// defines no fixed components for it: a primitive; `CM`, a field-local composite whose
+    /// components each field defines (see `grammar(segment:field:version:)`); a withdrawn
+    /// datatype; or `MA` / `NA` before v2.5, which print an open list (`<value1> ^ <value2> ^
+    /// ...`) with no fixed component count to state — the same pair `Validator.openComposites`
+    /// names for the width check, the single source for that decision. On v2.3 to v2.4 the
+    /// components come from the numbered prose subsections, completed by the printed
+    /// Components / Format line, and for `TQ` from the CH4 quantity/timing section (ADR-017,
+    /// M13 and P5 addenda). Validator code never calls this directly:
+    /// `Validator.componentGrammar(_:version:)` wraps it, returning `nil` first for any type
+    /// its own `primitiveComponentLimit(_:version:)` bounds instead — TS's two-component count
+    /// on v2.3 to v2.4 is documented there, not restated here.
     public static func grammar(_ dataType: String, version: Version) -> DataTypeGrammar? {
         grammars(for: version)[dataType]
     }

@@ -109,6 +109,15 @@ The 32 rules M26 registered now ship on `ComponentGrammar.conformanceCondition`,
 
 XAD.7's sentence ("required if there are multiple occurrences of XAD in a field") was registered by M26 as a repetition-count condition the language could not carry. One token carries it: `repeated`, true when the field has more than one populated repetition, evaluated by the Swift and Python evaluators alike. The single v2.7+ example with two address repetitions is mis-delimited and does not count against the sentence; the judgement is recorded in the rule's citation. What the model still cannot express: CWE.7 and kin (a version ID when .3 names anything but an HL7-type `HL7nnnn` table: a value-pattern term plus a table-type lookup, and the spec's own v2.7+ examples supply .7 in 1 of the 13 values that would require it, so it could only ever join the opt-in tier; measured 2026-09-22 and left registered), and CNE.20, whose sentence contradicts its own summary.
 
+## Addendum 2026-10 — P5: the printed Components line, TQ, arrays and field-local composites
+
+M13 took structure from numbered headings only. Reviews V23-C04/C05, V231-C06/C07 and V24-C05 showed what that misses. P5 adds the printed "Components:" / "Format:" line as a second source that ranks below the headings. It never binds a table.
+
+- **Completion.** A subsection that prints no datatype gives way to the line when the line prints one: v2.3 sec 2.8.3.4 "Alternate components" is one heading over CE.4-6, and v2.3.1 sec 2.8.8.9 "Original text" prints no `(ST)`. A component that the line names past the last subsection comes from the line. CE now has 6 components on v2.3 and v2.3.1, and CNE has 9 on v2.3.1. The same rule corrected DLN.1 (ST) on all three versions and v2.3 ED.2 (ID, table 0191) and SN.1. A line shorter than the typed subsections is not trusted (v2.3 PPN, XCN, XTN).
+- **Line-only composites** (`"source": "prose-line"`): CD, CF and TS, which have no numbered subsections on any of the three versions. TS prints `YYYY[...]^<degree of precision>` with no datatype codes, so both components carry `""`.
+- **TQ** comes from CH4 (v2.3 / v2.3.1 sec 4.4, v2.4 sec 4.3), numbered like any CH2 composite: 10, 12 and 12 components.
+- **MA and NA have no grammar, by design.** Before v2.5 each prints an open list (`<value1> ^ <value2> ^ ...`, `...~`) whose components are all NM. No fixed component list exists to state. The NM lexical rule is P6's primitive-lexical work. This is not a gap in the grammar.
+
 ## References
 
 - ADR-015 (extraction discipline), ADR-016 (the registry, the closed-set rule, the locale axis), ADR-014 (additive API).
