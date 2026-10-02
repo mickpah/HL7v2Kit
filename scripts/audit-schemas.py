@@ -486,7 +486,7 @@ TABLE_EXTRACTOR = "/tmp/tablesbin"
 #                    also its U+2026 form (v2.7.1 Appendix A, and v2.8.2 Chapter 2C 0359 / 0418)
 #   a comma           several codes printed in one Value cell (0301 "L,M,N"): as one code the
 #                    closed table rejects each of them
-SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^(\.\.\.|…)$")
+SUSPECT_CODE = re.compile(r"[\[\]|(),]|^.{31,}$|[-_:]$|^[A-Z][a-z]{2,}\s\S|^(?!.*\.\.\.)\S+(\s+\S+){2,}$|^(\.\.\.|\u2026)$")
 
 # Printed codes the shape test would wrongly flag. Each was read against the PDF. Keyed
 # (table, code): version-agnostic because the same printed value recurs across versions.

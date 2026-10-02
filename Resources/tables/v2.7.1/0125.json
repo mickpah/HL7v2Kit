@@ -4,7 +4,7 @@
   "name": "Value Type",
   "kind": "HL7",
   "permitsLocalExtensions": false,
-  "citation": "HL7 v2.7.1 Appendix A (p53), HL7 Table 0125 - Value Type; Chapter 7 sec 7.15.4 (p141)",
+  "citation": "HL7 v2.7.1 Appendix A (p53), HL7 Table 0125 - Value Type; Chapter 7 sec 7.3.2.2 OBX-2 (p46) and sec 7.15.4 (p141)",
   "entries": [
     {
       "code": "AD",
@@ -57,10 +57,6 @@
     {
       "code": "FT",
       "description": "Formatted Text (Display)"
-    },
-    {
-      "code": "ID",
-      "description": "Coded Value for HL7 Defined Tables"
     },
     {
       "code": "IS",

@@ -4,7 +4,7 @@
   "name": "Version ID",
   "kind": "HL7",
   "permitsLocalExtensions": true,
-  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.22 (p28), HL7 Table 0104 - Version ID; Chapter 2 sec 2.14.9.12 MSH-12 (p60): the field 'is matched by the receiving system to its own version' and an affiliate may carry 'local' versions, so the printed rows are not a closed set",
+  "citation": "HL7 v2.7.1 Chapter 2C sec 2.C.2.22 (p28), HL7 Table 0104 - Version ID. MSH-12 (Chapter 2 sec 2.14.9.12, p60) and VID.1 (CH02A sec 2.A.82.1, p87) both refer to the table 'for valid values'; the table is left open on the cross-version reading recorded for 0104 on v2.3 to v2.8.2 in this file ('MSH-12 may carry a locally agreed version identifier')",
   "entries": [
     {
       "code": "2.0",

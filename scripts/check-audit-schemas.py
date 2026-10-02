@@ -8,6 +8,7 @@ can run it in the fixture-safety job (Python is on the runner; nothing else is n
 """
 import importlib.util
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -470,12 +471,31 @@ def check_version_maps_agree():
                     assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
 
 
+def pending_versions_released(version_source):
+    """Pending map entries whose version Version.swift already declares as a case."""
+    declared = set(re.findall(r"\bcase\s+v(\d+(?:_\d+)*)\b", version_source))
+    return sorted((name, v) for name, versions in VERSION_MAPS_PENDING.items()
+                  for v in versions if v.replace(".", "_") in declared)
+
+
+def check_pending_maps_empty_once_released():
+    # P10-1 fix round 1: VERSION_MAPS_PENDING is a staging list only. Once Version.swift
+    # declares the case (P10-6), every map must name the version, as DEFERRED_VERSIONS is
+    # asserted empty.
+    assert pending_versions_released("    case v2_6   = \"2.6\"\n    case v2_7_1 = \"2.7.1\"\n"), \
+        "a declared v2_7_1 case with v2.7.1 still pending must be caught"
+    assert not pending_versions_released("    case v2_6   = \"2.6\"\n"), "an undeclared version may stay pending"
+    source = open(os.path.join(os.path.dirname(HERE), "Sources/HL7v2Kit/Version.swift")).read()
+    stale = pending_versions_released(source)
+    assert not stale, f"Version.swift declares these versions but their maps are still pending: {stale}"
+
+
 def check_unicode_ellipsis_is_suspect():
     # v2.7.1 Appendix A prints the "no suggested values" row with U+2026 where the earlier
     # appendices print "..." (P10-0). Either form surviving as a code is a TOOL defect.
     assert audit.SUSPECT_CODE.search("..."), "the bare three-full-stop row"
-    assert audit.SUSPECT_CODE.search("…"), "the bare Unicode-ellipsis row"
-    assert not audit.SUSPECT_CODE.search("2 …"), "a range row is not a bare ellipsis"
+    assert audit.SUSPECT_CODE.search("\u2026"), "the bare Unicode-ellipsis row"
+    assert not audit.SUSPECT_CODE.search("2 \u2026"), "a range row is not a bare ellipsis"
 
 
 CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_cell_falls_back,
@@ -486,7 +506,8 @@ CHECKS = [check_c_is_compared, check_defining_table_wins, check_blank_defining_c
           check_unreadable_is_reported, check_length_token, check_write_lengths,
           check_blank_read_never_removes_a_length, check_repairs_file_comment,
           check_field_grammar_shape, check_cm_refinements, check_datatype_name,
-          check_version_maps_agree, check_unicode_ellipsis_is_suspect]
+          check_version_maps_agree, check_unicode_ellipsis_is_suspect,
+          check_pending_maps_empty_once_released]
 
 
 def main():

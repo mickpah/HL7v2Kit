@@ -2173,7 +2173,6 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "DTM", description: "Time Stamp (Date & Time)"),
             HL7Table.Entry(code: "ED", description: "Encapsulated Data"),
             HL7Table.Entry(code: "FT", description: "Formatted Text (Display)"),
-            HL7Table.Entry(code: "ID", description: "Coded Value for HL7 Defined Tables"),
             HL7Table.Entry(code: "IS", description: "Coded Value for User-Defined Tables"),
             HL7Table.Entry(code: "MA", description: "Multiplexed Array"),
             HL7Table.Entry(code: "MO", description: "Money"),
@@ -8277,6 +8276,7 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
+            HL7Table.Entry(code: "??", description: "Inappropriate due to ..."),
             HL7Table.Entry(code: "A", description: "Appropriate"),
             HL7Table.Entry(code: "I", description: "Inappropriate"),
             HL7Table.Entry(code: "P", description: "Preferred"),
@@ -10656,7 +10656,7 @@ extension HL7TableRegistry {
         entries: [
             HL7Table.Entry(code: "F", description: "Patient was fasting prior to the procedure."),
             HL7Table.Entry(code: "NF", description: "The patient indicated they did not fast prior to the procedure."),
-            HL7Table.Entry(code: "NG", description: "Not Given - Patient was not asked at the time of the procedure."),
+            HL7Table.Entry(code: "NG", description: "Not Given – Patient was not asked at the time of the procedure."),
             HL7Table.Entry(code: "FNA", description: "Fasting not asked of the patient at time of procedure."),
         ] as [HL7Table.Entry]
     )

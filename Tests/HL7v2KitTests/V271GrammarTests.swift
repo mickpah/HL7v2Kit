@@ -51,11 +51,18 @@ struct V271GrammarTests {
         let clinical = try table("0916")
         #expect(clinical.kind == .userDefined)
         #expect(Set(clinical.codes) == ["F", "NF", "NG", "FNA"])
+        // The print's en dash is kept, as on v2.8.2.
+        #expect(clinical.entries.first { $0.code == "NG" }?.description.contains("\u{2013}") == true)
+        // Both prints carry the row "?? Inappropriate due to ..." (Appendix A p151; Chapter 2C p157,
+        // where the table continues over the page break).
+        #expect(try table("0492").contains("??"))
         // Chapter 2C sec 2.C.2.22 (p28) prints 2.7.1; Appendix A stops at 2.7.
         #expect(try table("0104").contains("2.7.1"))
         // CH07 sec 7.15.4 (p141): "OBX-2 Value Type should be valued to CD"; MA and NA are printed.
         let valueType = try table("0125")
         #expect(valueType.contains("CD") && valueType.contains("MA") && valueType.contains("NA"))
+        // CH07 sec 7.3.2.2 OBX-2 (p46): CQ, SI and ID are invalid; the tables print ID regardless.
+        #expect(!valueType.contains("ID") && !valueType.contains("CQ") && !valueType.contains("SI"))
         // CH02 sec 2.5.1 (p6): "Z" events are reserved for local definition, never HL7 codes.
         #expect(try table("0003").codes.allSatisfy { !$0.hasPrefix("Z") })
         #expect(!(try table("0354")).contains("QBP_Z73"))
