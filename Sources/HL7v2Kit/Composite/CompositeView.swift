@@ -7,6 +7,7 @@
 // component access, single-repetition wrapping, and the empty metadata
 // defaults — live here. Per-spec accessors, docs, and non-empty metadata
 // stay on each conforming type: component names are spec surface. R3.
+// Accessors beyond the hand-written set are generated (P9-3, ADR-020).
 
 /// Shared surface of the typed composite views (``CX``, ``XPN``, ``CWE``, …).
 ///
@@ -14,10 +15,20 @@
 /// accessors read from the **first repetition** of the underlying field;
 /// use ``field`` to walk further repetitions, or wrap an individual
 /// ``Repetition`` via ``init(repetition:)``.
+///
+/// Every component index that any supported HL7 version defines has a named
+/// `String?` accessor (ADR-020). Accessors added after v3.13.0 are generated
+/// from the datatype component tables into `Composite/Generated/`; their DocC
+/// lists the versions that define each component. A component withdrawn
+/// (`W`) in a later version keeps its accessor, because earlier versions
+/// define it and a wire can carry it. A component a version prints without a
+/// data type takes the type from the newest version that prints one. Open
+/// arrays such as `MA` and `NA` have no fixed component indices, so they are
+/// not composite views.
 public protocol CompositeView: Sendable, Equatable, Hashable {
     /// The underlying ``Field``. Use this when you need access to
-    /// repetitions beyond the first, or to components not exposed as
-    /// named accessors.
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     var field: Field { get }
 
     /// Wrap an entire ``Field``. Accessors read from the first repetition.

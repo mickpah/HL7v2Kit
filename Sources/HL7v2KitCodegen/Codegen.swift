@@ -196,8 +196,9 @@ let scalarDataTypes: Set<String> = [
 
 /// HL7 composite data types for which HL7v2Kit ships a Swift struct view.
 /// Accessors return `<Composite>?` instead of `Field?` — callers reach
-/// into the named accessors on the struct, with `.field` available for
-/// unexposed components and additional repetitions.
+/// into the named accessors on the struct (every component is named; P9-3
+/// generates the rest from CompositeViews.swift), with `.field` available
+/// for additional repetitions.
 ///
 /// v0.2-C1 shipped XPN / CX / XAD. v0.3-C2 added CE / CWE. v0.3-C3
 /// added EI / XCN / XTN. v0.3-C4 closes out the v2.5.1 typed-segment
@@ -848,6 +849,7 @@ struct Codegen {
         }
 
         // M10-B: datatype component tables.
+        var dataTypesByVersion: [String: [DataTypeSchema]] = [:]
         let dataTypesRoot = URL(fileURLWithPath: args.count > 5 ? args[5] : "\(cwd)/Resources/datatypes")
         let dataTypesOutputRoot = URL(fileURLWithPath: args.count > 6 ? args[6] : "\(cwd)/Sources/HL7v2Kit/DataTypes/Generated")
         if fm.fileExists(atPath: dataTypesRoot.path) {
@@ -875,6 +877,7 @@ struct Codegen {
                     }
                     types.append(type)
                 }
+                dataTypesByVersion[version] = types
                 // P5: field-local composites, Resources/datatypes/v<X>/fields/<SEG>-<N>.json.
                 var fields: [DataTypeSchema] = []
                 let fieldsURL = dirURL.appendingPathComponent("fields")
@@ -909,6 +912,14 @@ struct Codegen {
                     .write(to: outFile)
                 print("emitted \(outFile.path) (\(types.count) datatype(s), \(fields.count) field-local)")
             }
+        }
+
+        // P9-3 (V251-C11, ADR-020): generated composite-view component accessors.
+        let compositesFile = URL(fileURLWithPath: args.count > 9 ? args[9] : "\(cwd)/Resources/composites/composite-views.json")
+        let compositesOutputRoot = URL(fileURLWithPath: args.count > 10 ? args[10] : "\(cwd)/Sources/HL7v2Kit/Composite/Generated")
+        if fm.fileExists(atPath: compositesFile.path) {
+            try emitCompositeViews(specFile: compositesFile, outputRoot: compositesOutputRoot,
+                                   dataTypesByVersion: dataTypesByVersion)
         }
 
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")

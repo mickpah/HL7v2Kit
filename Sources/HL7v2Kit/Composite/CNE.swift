@@ -15,13 +15,16 @@
 /// CNE-1 is non-conformant. The v2.5.1 typed-segment surface uses CNE
 /// for ORC-30 (enterer authorization mode).
 ///
-/// CNE component layout (HL7 v2.5.1; identical to CE):
+/// CNE component layout (hand-written accessors; components 1-6 match CE):
 /// 1. Identifier (ST) → ``CNE/identifier``. Required. The coded value.
 /// 2. Text (ST) → ``CNE/text``. Human-readable description.
 /// 3. Name of Coding System (ID) → ``CNE/nameOfCodingSystem``.
 /// 4. Alternate Identifier (ST) → ``CNE/altIdentifier``.
 /// 5. Alternate Text (ST) → ``CNE/altText``.
 /// 6. Name of Alternate Coding System (ID) → ``CNE/nameOfAltCodingSystem``.
+///
+/// CNE-7..22 are generated accessors (``CNE/codingSystemVersionID`` through
+/// ``CNE/secondAltValueSetVersionID``); see `CNE+Components.swift`.
 public struct CNE: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the CNE component
     /// table (CNE.1). Informational, for the canonical

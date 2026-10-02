@@ -32,6 +32,9 @@
 ///    sender saw before mapping to CWE-1; useful when CWE-1 can't be
 ///    resolved.
 ///
+/// CWE-10..22 are generated accessors (``CWE/secondAltIdentifier`` through
+/// ``CWE/secondAltValueSetVersionID``); see `CWE+Components.swift`.
+///
 /// **Required components.** None: v2.5.1 prints every CWE component as `O`, and its usage
 /// notes include an "Uncoded" case with only the text (CWE-2) valued.
 public struct CWE: CompositeView {

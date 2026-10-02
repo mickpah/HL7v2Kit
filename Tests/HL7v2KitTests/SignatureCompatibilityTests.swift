@@ -159,4 +159,23 @@ struct SignatureCompatibilityTests {
         #expect(view(cx)(EI.self).field == cx.field)
         #expect(reps(PID(fields: [Field(repetitions: [])]))(3).isEmpty)
     }
+
+    // Deliberate pin of new, unreleased API (P9-3): generated composite component
+    // accessors, one per extended view. CompositeComponentTests pins every one of
+    // them by key path; CompositeReleasedSurfaceTests pins the v3.13.0 surface.
+    @Test("Generated composite component accessors keep their names and String? type")
+    func generatedCompositeAccessors() {
+        let cxPin: KeyPath<CX, String?> = \.securityCheckScheme
+        let _: KeyPath<XPN, String?> = \.calledBy
+        let _: KeyPath<XAD, String?> = \.addressIdentifier
+        let _: KeyPath<XCN, String?> = \.securityCheckScheme
+        let _: KeyPath<XTN, String?> = \.preferenceOrder
+        let _: KeyPath<PL, String?> = \.assigningAuthorityForLocation
+        let _: KeyPath<CWE, String?> = \.secondAltValueSetVersionID
+        let _: KeyPath<CNE, String?> = \.codingSystemVersionID
+        let _: KeyPath<XON, String?> = \.nameRepresentationCode
+        let parts = (1...12).map { Component(subcomponents: [Subcomponent("c\($0)")]) }
+        let cx = CX(field: Field(repetitions: [Repetition(components: parts)]))
+        #expect(cx[keyPath: cxPin] == "c12")
+    }
 }

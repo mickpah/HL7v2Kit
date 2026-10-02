@@ -21,12 +21,11 @@
 /// 3. Second and Further Given Names or Initials Thereof (ST) → ``XPN/middleName``.
 /// 4. Suffix (ST) → ``XPN/suffix``.
 /// 5. Prefix (ST) → ``XPN/prefix``.
-/// 6. Degree (IS) — deprecated; not exposed.
+/// 6. Degree (IS) → ``XPN/degree`` (generated; retained for backward
+///    compatibility (`B`) in v2.5.1 and v2.6, withdrawn in v2.8.2).
 /// 7. Name Type Code (ID) → ``XPN/nameTypeCode`` (e.g. `"L"` legal, `"M"` maiden).
 ///
-/// Components 8–14 (representation code, context, validity range, assembly
-/// order, dates, professional suffix) are reachable via ``XPN/field`` but
-/// not exposed as named accessors in v0.2.
+/// Components 8-15 are generated accessors; see `XPN+Components.swift`.
 public struct XPN: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XPN component
     /// table (none: every XPN component is optional there). Informational, for the canonical
@@ -35,8 +34,9 @@ public struct XPN: CompositeView {
     /// they differ between versions (M14, ADR-017).
     public static let requiredComponents: [RequiredComponent] = []
 
-    /// The underlying ``Field``. Use this when you need access to repetitions
-    /// beyond the first, or to components not exposed as named accessors.
+    /// The underlying ``Field``. Use this when you need access to
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     public let field: Field
 
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.

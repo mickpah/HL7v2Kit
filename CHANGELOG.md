@@ -108,6 +108,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `CompositeView.viewed(as:)` views the same field as another composite (for example
   a v2.5.1-typed `CE` as the `CWE` that v2.6+ prints); `TypedSegment.repetitions(_:)`
   returns each repetition of a field as its own `Field`. Additive (ADR-014).
+- **V251-C11, V282-C10: composite views reach full spec depth.**
+  - Every component that any supported version defines now has a named accessor on CX (12), XPN (15), XAD (23), XCN (25), XTN (18), PL (11), CWE (22), CNE (22) and XON (10). CE, EI, EIP, HD, MSG, PT and VID were already complete.
+  - The new accessors are generated from the datatype component tables and a curated name map (`Resources/composites/composite-views.json`) into `Sources/HL7v2Kit/Composite/Generated/`. Codegen fails if any component is unnamed.
+  - Withdrawn components keep an accessor (earlier versions define them); a component printed without a data type takes the type from the newest version that prints one; open arrays (MA, NA) are not composite views.
+  - Hand-written accessors are unchanged, checked against v3.13.0 by `CompositeReleasedSurfaceTests`. The "commonly-populated" rationale is removed.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

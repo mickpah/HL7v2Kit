@@ -25,9 +25,7 @@
 /// 6. Country (ID) → ``XAD/country``.
 /// 7. Address Type (ID) → ``XAD/addressType`` (e.g. `"H"` home, `"B"` business).
 ///
-/// Components 8–14 (other geographic designation, county/parish, census
-/// tract, representation code, validity range, dates) are reachable via
-/// ``XAD/field`` but not exposed as named accessors in v0.2.
+/// Components 8-23 are generated accessors; see `XAD+Components.swift`.
 public struct XAD: CompositeView {
     /// The components HL7 v2.5.1 PRINTS as required (`R`) in the XAD component
     /// table (none: every XAD component is optional there). Informational, for the canonical
@@ -37,8 +35,8 @@ public struct XAD: CompositeView {
     public static let requiredComponents: [RequiredComponent] = []
 
     /// The underlying ``Field``. Use this when you need access to
-    /// repetitions beyond the first, or to components not exposed as
-    /// named accessors.
+    /// repetitions beyond the first. Every component has a named accessor;
+    /// use ``component(_:as:)`` for a sub-composite's subcomponents.
     public let field: Field
 
     /// Wrap an entire ``Field``. Accessors read from `.first` repetition.
