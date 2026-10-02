@@ -147,4 +147,16 @@ struct SignatureCompatibilityTests {
         #expect(byField("IN3", 20, .v2_4)?.dataType == "CM")
         #expect(byType("CX", .v2_5_1)?.dataType == "CX")
     }
+
+    // Deliberate pin of new, unreleased API (P9-2): additive access helpers.
+    @Test("CompositeView.component(_:as:), viewed(as:) and TypedSegment.repetitions(_:) keep their signatures")
+    func accessHelpers() {
+        let sub: (CX) -> (Int, HD.Type) -> HD? = { cx in { cx.component($0, as: $1) } }
+        let view: (CX) -> (EI.Type) -> EI = { cx in { cx.viewed(as: $0) } }
+        let reps: (PID) -> (Int) -> [Field] = { pid in { pid.repetitions($0) } }
+        let cx = CX(field: Field(repetitions: [Repetition(components: [Component(subcomponents: [Subcomponent("1")])])]))
+        #expect(sub(cx)(1, HD.self)?.namespaceID == "1")
+        #expect(view(cx)(EI.self).field == cx.field)
+        #expect(reps(PID(fields: [Field(repetitions: [])]))(3).isEmpty)
+    }
 }

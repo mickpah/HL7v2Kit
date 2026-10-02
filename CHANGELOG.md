@@ -102,6 +102,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IS bindings and the open MSH-9 tables (0076, 0003, 0354 on v2.3.1/v2.4)
   stay unenforced.
 
+### Added — P9: complete composite views and later-version typed accessors (ADR-020)
+
+- `CompositeView.component(_:as:)` views a sub-composite (for example CX-4 as `HD`);
+  `CompositeView.viewed(as:)` views the same field as another composite (for example
+  a v2.5.1-typed `CE` as the `CWE` that v2.6+ prints); `TypedSegment.repetitions(_:)`
+  returns each repetition of a field as its own `Field`. Additive (ADR-014).
+
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 
 - `DataTypeGrammarTable.grammar(segment:field:version:)` (additive): the

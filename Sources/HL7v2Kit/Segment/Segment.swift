@@ -32,6 +32,14 @@ extension TypedSegment {
         guard index >= 1, index < fields.count else { return nil }
         return fields[index]
     }
+
+    /// Every repetition of the 1-based field `index`, each wrapped as a
+    /// single-repetition ``Field``, in wire order. Empty when the field is
+    /// absent. The generated `All` accessors call this.
+    public func repetitions(_ index: Int) -> [Field] {
+        guard let field = field(index) else { return [] }
+        return field.repetitions.map { Field(repetitions: [$0]) }
+    }
 }
 
 /// A parsed segment. One of:

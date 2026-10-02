@@ -50,6 +50,27 @@ extension CompositeView {
         self.init(field: Field(repetitions: [repetition]))
     }
 
+    /// The 1-based component `index` of the first repetition, viewed as the
+    /// composite `type`: the component's subcomponents become the view's
+    /// components. Use it for sub-composites such as ``CX`` component 4 (an
+    /// ``HD``): `cx.component(4, as: HD.self)?.universalID`. `nil` when the
+    /// component is absent.
+    public func component<V: CompositeView>(_ index: Int, as type: V.Type) -> V? {
+        guard let rep = field.repetitions.first,
+              rep.components.indices.contains(index - 1) else {
+            return nil
+        }
+        let parts = rep.components[index - 1].subcomponents.map { Component(subcomponents: [$0]) }
+        return V(field: Field(repetitions: [Repetition(components: parts)]))
+    }
+
+    /// The same ``field`` viewed as another composite. Use it where a later
+    /// HL7 version retypes a field. For example, OBX-3 is `CE` in v2.5.1 and
+    /// `CWE` from v2.6: `obx.observationIdentifier?.viewed(as: CWE.self)`.
+    public func viewed<V: CompositeView>(as type: V.Type) -> V {
+        V(field: field)
+    }
+
     /// The first-subcomponent value of the 1-based component `index` in the
     /// first repetition, or `nil` when the component is absent.
     func componentValue(_ index: Int) -> String? {
