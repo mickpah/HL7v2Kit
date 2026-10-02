@@ -21,9 +21,18 @@ public struct LAN: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// LAN-3: Language Ability Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// LAN-3: Language Ability Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `languageAbilityCodeAll` returns every repetition.
     public var languageAbilityCode: CE? {
         field(3).map(CE.init(field:))
+    }
+
+    /// LAN-3: every repetition of Language Ability Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var languageAbilityCodeAll: [CE] {
+        repetitions(3).map(CE.init(field:))
     }
 
     /// LAN-4: Language Proficiency Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

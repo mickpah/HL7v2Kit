@@ -11,24 +11,60 @@ public struct PES: TypedSegment {
         self.fields = fields
     }
 
-    /// PES-1: Sender Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PES-1: Sender Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `senderOrganizationNameAll` returns every repetition.
     public var senderOrganizationName: XON? {
         field(1).map(XON.init(field:))
     }
 
-    /// PES-2: Sender Individual Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PES-1: every repetition of Sender Organization Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var senderOrganizationNameAll: [XON] {
+        repetitions(1).map(XON.init(field:))
+    }
+
+    /// PES-2: Sender Individual Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `senderIndividualNameAll` returns every repetition.
     public var senderIndividualName: XCN? {
         field(2).map(XCN.init(field:))
     }
 
-    /// PES-3: Sender Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PES-2: every repetition of Sender Individual Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var senderIndividualNameAll: [XCN] {
+        repetitions(2).map(XCN.init(field:))
+    }
+
+    /// PES-3: Sender Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `senderAddressAll` returns every repetition.
     public var senderAddress: XAD? {
         field(3).map(XAD.init(field:))
     }
 
-    /// PES-4: Sender Telephone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PES-3: every repetition of Sender Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var senderAddressAll: [XAD] {
+        repetitions(3).map(XAD.init(field:))
+    }
+
+    /// PES-4: Sender Telephone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `senderTelephoneAll` returns every repetition.
     public var senderTelephone: XTN? {
         field(4).map(XTN.init(field:))
+    }
+
+    /// PES-4: every repetition of Sender Telephone, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var senderTelephoneAll: [XTN] {
+        repetitions(4).map(XTN.init(field:))
     }
 
     /// PES-5: Sender Event Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
@@ -41,9 +77,18 @@ public struct PES: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// PES-7: Sender Event Description. HL7 data type `FT`.
+    /// PES-7: Sender Event Description. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `senderEventDescriptionAll` returns every repetition.
     public var senderEventDescription: String? {
         field(7)?.stringValue
+    }
+
+    /// PES-7: every repetition of Sender Event Description, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var senderEventDescriptionAll: [String?] {
+        repetitions(7).map(\.stringValue)
     }
 
     /// PES-8: Sender Comment. HL7 data type `FT`.
@@ -61,9 +106,18 @@ public struct PES: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// PES-11: Event Report Timing/Type. HL7 data type `ID`.
+    /// PES-11: Event Report Timing/Type. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `eventReportTimingTypeAll` returns every repetition.
     public var eventReportTimingType: String? {
         field(11)?.stringValue
+    }
+
+    /// PES-11: every repetition of Event Report Timing/Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventReportTimingTypeAll: [String?] {
+        repetitions(11).map(\.stringValue)
     }
 
     /// PES-12: Event Report Source. HL7 data type `ID`.
@@ -71,8 +125,17 @@ public struct PES: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// PES-13: Event Reported To. HL7 data type `ID`.
+    /// PES-13: Event Reported To. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `eventReportedToAll` returns every repetition.
     public var eventReportedTo: String? {
         field(13)?.stringValue
+    }
+
+    /// PES-13: every repetition of Event Reported To, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventReportedToAll: [String?] {
+        repetitions(13).map(\.stringValue)
     }
 }

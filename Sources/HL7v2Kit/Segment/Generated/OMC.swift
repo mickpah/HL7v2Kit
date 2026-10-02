@@ -31,9 +31,18 @@ public struct OMC: TypedSegment {
         field(4).map(CWE.init(field:))
     }
 
-    /// OMC-5: Collection Event/Process Step. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// OMC-5: Collection Event/Process Step. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `collectionEventProcessStepAll` returns every repetition.
     public var collectionEventProcessStep: CWE? {
         field(5).map(CWE.init(field:))
+    }
+
+    /// OMC-5: every repetition of Collection Event/Process Step, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var collectionEventProcessStepAll: [CWE] {
+        repetitions(5).map(CWE.init(field:))
     }
 
     /// OMC-6: Communication Location. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -61,9 +70,18 @@ public struct OMC: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// OMC-11: Answer Choices. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// OMC-11: Answer Choices. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `answerChoicesAll` returns every repetition.
     public var answerChoices: CWE? {
         field(11).map(CWE.init(field:))
+    }
+
+    /// OMC-11: every repetition of Answer Choices, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var answerChoicesAll: [CWE] {
+        repetitions(11).map(CWE.init(field:))
     }
 
     /// OMC-12: Character Limit. HL7 data type `NM`.

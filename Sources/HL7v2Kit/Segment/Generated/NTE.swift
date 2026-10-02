@@ -21,9 +21,18 @@ public struct NTE: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// NTE-3: Comment. HL7 data type `FT`.
+    /// NTE-3: Comment. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `commentAll` returns every repetition.
     public var comment: String? {
         field(3)?.stringValue
+    }
+
+    /// NTE-3: every repetition of Comment, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var commentAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 
     /// NTE-4: Comment Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

@@ -16,9 +16,18 @@ public struct INV: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// INV-2: Substance Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// INV-2: Substance Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `substanceStatusAll` returns every repetition.
     public var substanceStatus: CE? {
         field(2).map(CE.init(field:))
+    }
+
+    /// INV-2: every repetition of Substance Status, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceStatusAll: [CE] {
+        repetitions(2).map(CE.init(field:))
     }
 
     /// INV-3: Substance Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -81,9 +90,18 @@ public struct INV: TypedSegment {
         field(14)
     }
 
-    /// INV-15: Test/Fluid Identifier(s). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// INV-15: Test/Fluid Identifier(s). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `testFluidIdentifierSAll` returns every repetition.
     public var testFluidIdentifierS: CE? {
         field(15).map(CE.init(field:))
+    }
+
+    /// INV-15: every repetition of Test/Fluid Identifier(s), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var testFluidIdentifierSAll: [CE] {
+        repetitions(15).map(CE.init(field:))
     }
 
     /// INV-16: Manufacturer Lot Number. HL7 data type `ST`.

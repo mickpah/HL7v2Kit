@@ -21,9 +21,18 @@ public struct OM2: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// OM2-3: Range of Decimal Precision. HL7 data type `NM`.
+    /// OM2-3: Range of Decimal Precision. HL7 data type `NM`. Repeating field: this accessor reads the first repetition; `rangeOfDecimalPrecisionAll` returns every repetition.
     public var rangeOfDecimalPrecision: String? {
         field(3)?.stringValue
+    }
+
+    /// OM2-3: every repetition of Range of Decimal Precision, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var rangeOfDecimalPrecisionAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 
     /// OM2-4: Corresponding SI Units of Measure. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -36,14 +45,32 @@ public struct OM2: TypedSegment {
         field(5)?.stringValue
     }
 
-    /// OM2-6: Reference (Normal) Range - Ordinal and Continuous Observations. HL7 data type `RFR`.
+    /// OM2-6: Reference (Normal) Range - Ordinal and Continuous Observations. HL7 data type `RFR`. Repeating field: this accessor reads the first repetition; `referenceNormalRangeOrdinalAndContinuousObservationsAll` returns every repetition.
     public var referenceNormalRangeOrdinalAndContinuousObservations: Field? {
         field(6)
     }
 
-    /// OM2-7: Critical Range for Ordinal and Continuous Observations. HL7 data type `RFR`.
+    /// OM2-6: every repetition of Reference (Normal) Range - Ordinal and Continuous Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var referenceNormalRangeOrdinalAndContinuousObservationsAll: [Field] {
+        repetitions(6)
+    }
+
+    /// OM2-7: Critical Range for Ordinal and Continuous Observations. HL7 data type `RFR`. Repeating field: this accessor reads the first repetition; `criticalRangeForOrdinalAndContinuousObservationsAll` returns every repetition.
     public var criticalRangeForOrdinalAndContinuousObservations: Field? {
         field(7)
+    }
+
+    /// OM2-7: every repetition of Critical Range for Ordinal and Continuous Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var criticalRangeForOrdinalAndContinuousObservationsAll: [Field] {
+        repetitions(7)
     }
 
     /// OM2-8: Absolute Range for Ordinal and Continuous Observations. HL7 data type `RFR`.
@@ -51,9 +78,18 @@ public struct OM2: TypedSegment {
         field(8)
     }
 
-    /// OM2-9: Delta Check Criteria. HL7 data type `DLT`.
+    /// OM2-9: Delta Check Criteria. HL7 data type `DLT`. Repeating field: this accessor reads the first repetition; `deltaCheckCriteriaAll` returns every repetition.
     public var deltaCheckCriteria: Field? {
         field(9)
+    }
+
+    /// OM2-9: every repetition of Delta Check Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var deltaCheckCriteriaAll: [Field] {
+        repetitions(9)
     }
 
     /// OM2-10: Minimum Meaningful Increments. HL7 data type `NM`.

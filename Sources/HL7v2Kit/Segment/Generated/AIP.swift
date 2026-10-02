@@ -21,9 +21,18 @@ public struct AIP: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// AIP-3: Personnel Resource ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// AIP-3: Personnel Resource ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `personnelResourceIdAll` returns every repetition.
     public var personnelResourceId: XCN? {
         field(3).map(XCN.init(field:))
+    }
+
+    /// AIP-3: every repetition of Personnel Resource ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var personnelResourceIdAll: [XCN] {
+        repetitions(3).map(XCN.init(field:))
     }
 
     /// AIP-4: Resource Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

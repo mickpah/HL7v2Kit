@@ -16,9 +16,18 @@ public struct NK1: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// NK1-2: Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// NK1-2: Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `nameAll` returns every repetition.
     public var name: XPN? {
         field(2).map(XPN.init(field:))
+    }
+
+    /// NK1-2: every repetition of Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var nameAll: [XPN] {
+        repetitions(2).map(XPN.init(field:))
     }
 
     /// NK1-3: Relationship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -26,19 +35,46 @@ public struct NK1: TypedSegment {
         field(3).map(CE.init(field:))
     }
 
-    /// NK1-4: Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// NK1-4: Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `addressAll` returns every repetition.
     public var address: XAD? {
         field(4).map(XAD.init(field:))
     }
 
-    /// NK1-5: Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// NK1-4: every repetition of Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var addressAll: [XAD] {
+        repetitions(4).map(XAD.init(field:))
+    }
+
+    /// NK1-5: Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phoneNumberAll` returns every repetition.
     public var phoneNumber: XTN? {
         field(5).map(XTN.init(field:))
     }
 
-    /// NK1-6: Business Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// NK1-5: every repetition of Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phoneNumberAll: [XTN] {
+        repetitions(5).map(XTN.init(field:))
+    }
+
+    /// NK1-6: Business Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `businessPhoneNumberAll` returns every repetition.
     public var businessPhoneNumber: XTN? {
         field(6).map(XTN.init(field:))
+    }
+
+    /// NK1-6: every repetition of Business Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var businessPhoneNumberAll: [XTN] {
+        repetitions(6).map(XTN.init(field:))
     }
 
     /// NK1-7: Contact Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -71,9 +107,18 @@ public struct NK1: TypedSegment {
         field(12).map(CX.init(field:))
     }
 
-    /// NK1-13: Organization Name - NK1. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// NK1-13: Organization Name - NK1. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `organizationNameAll` returns every repetition.
     public var organizationName: XON? {
         field(13).map(XON.init(field:))
+    }
+
+    /// NK1-13: every repetition of Organization Name - NK1, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var organizationNameAll: [XON] {
+        repetitions(13).map(XON.init(field:))
     }
 
     /// NK1-14: Marital Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -91,19 +136,46 @@ public struct NK1: TypedSegment {
         field(16)?.stringValue
     }
 
-    /// NK1-17: Living Dependency. HL7 data type `IS`.
+    /// NK1-17: Living Dependency. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `livingDependencyAll` returns every repetition.
     public var livingDependency: String? {
         field(17)?.stringValue
     }
 
-    /// NK1-18: Ambulatory Status. HL7 data type `IS`.
+    /// NK1-17: every repetition of Living Dependency, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var livingDependencyAll: [String?] {
+        repetitions(17).map(\.stringValue)
+    }
+
+    /// NK1-18: Ambulatory Status. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `ambulatoryStatusAll` returns every repetition.
     public var ambulatoryStatus: String? {
         field(18)?.stringValue
     }
 
-    /// NK1-19: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// NK1-18: every repetition of Ambulatory Status, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ambulatoryStatusAll: [String?] {
+        repetitions(18).map(\.stringValue)
+    }
+
+    /// NK1-19: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
     public var citizenship: CE? {
         field(19).map(CE.init(field:))
+    }
+
+    /// NK1-19: every repetition of Citizenship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var citizenshipAll: [CE] {
+        repetitions(19).map(CE.init(field:))
     }
 
     /// NK1-20: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -136,9 +208,18 @@ public struct NK1: TypedSegment {
         field(25).map(CE.init(field:))
     }
 
-    /// NK1-26: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// NK1-26: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `mothersMaidenNameAll` returns every repetition.
     public var mothersMaidenName: XPN? {
         field(26).map(XPN.init(field:))
+    }
+
+    /// NK1-26: every repetition of Mother's Maiden Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var mothersMaidenNameAll: [XPN] {
+        repetitions(26).map(XPN.init(field:))
     }
 
     /// NK1-27: Nationality. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -146,34 +227,88 @@ public struct NK1: TypedSegment {
         field(27).map(CE.init(field:))
     }
 
-    /// NK1-28: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// NK1-28: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
     public var ethnicGroup: CE? {
         field(28).map(CE.init(field:))
     }
 
-    /// NK1-29: Contact Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// NK1-28: every repetition of Ethnic Group, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ethnicGroupAll: [CE] {
+        repetitions(28).map(CE.init(field:))
+    }
+
+    /// NK1-29: Contact Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactReasonAll` returns every repetition.
     public var contactReason: CE? {
         field(29).map(CE.init(field:))
     }
 
-    /// NK1-30: Contact Person's Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// NK1-29: every repetition of Contact Reason, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactReasonAll: [CE] {
+        repetitions(29).map(CE.init(field:))
+    }
+
+    /// NK1-30: Contact Person's Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonsNameAll` returns every repetition.
     public var contactPersonsName: XPN? {
         field(30).map(XPN.init(field:))
     }
 
-    /// NK1-31: Contact Person's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// NK1-30: every repetition of Contact Person's Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonsNameAll: [XPN] {
+        repetitions(30).map(XPN.init(field:))
+    }
+
+    /// NK1-31: Contact Person's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonsTelephoneNumberAll` returns every repetition.
     public var contactPersonsTelephoneNumber: XTN? {
         field(31).map(XTN.init(field:))
     }
 
-    /// NK1-32: Contact Person's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// NK1-31: every repetition of Contact Person's Telephone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonsTelephoneNumberAll: [XTN] {
+        repetitions(31).map(XTN.init(field:))
+    }
+
+    /// NK1-32: Contact Person's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonsAddressAll` returns every repetition.
     public var contactPersonsAddress: XAD? {
         field(32).map(XAD.init(field:))
     }
 
-    /// NK1-33: Next of Kin/Associated Party's Identifiers. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// NK1-32: every repetition of Contact Person's Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonsAddressAll: [XAD] {
+        repetitions(32).map(XAD.init(field:))
+    }
+
+    /// NK1-33: Next of Kin/Associated Party's Identifiers. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `nextOfKinAssociatedPartysIdentifiersAll` returns every repetition.
     public var nextOfKinAssociatedPartysIdentifiers: CX? {
         field(33).map(CX.init(field:))
+    }
+
+    /// NK1-33: every repetition of Next of Kin/Associated Party's Identifiers, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var nextOfKinAssociatedPartysIdentifiersAll: [CX] {
+        repetitions(33).map(CX.init(field:))
     }
 
     /// NK1-34: Job Status. HL7 data type `IS`.
@@ -181,9 +316,18 @@ public struct NK1: TypedSegment {
         field(34)?.stringValue
     }
 
-    /// NK1-35: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// NK1-35: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `raceAll` returns every repetition.
     public var race: CE? {
         field(35).map(CE.init(field:))
+    }
+
+    /// NK1-35: every repetition of Race, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var raceAll: [CE] {
+        repetitions(35).map(CE.init(field:))
     }
 
     /// NK1-36: Handicap. HL7 data type `IS`.

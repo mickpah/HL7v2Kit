@@ -11,14 +11,32 @@ public struct ERR: TypedSegment {
         self.fields = fields
     }
 
-    /// ERR-1: Error Code and Location. HL7 data type `ELD`.
+    /// ERR-1: Error Code and Location. HL7 data type `ELD`. Repeating field: this accessor reads the first repetition; `errorCodeAndLocationAll` returns every repetition.
     public var errorCodeAndLocation: Field? {
         field(1)
     }
 
-    /// ERR-2: Error Location. HL7 data type `ERL`.
+    /// ERR-1: every repetition of Error Code and Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var errorCodeAndLocationAll: [Field] {
+        repetitions(1)
+    }
+
+    /// ERR-2: Error Location. HL7 data type `ERL`. Repeating field: this accessor reads the first repetition; `errorLocationAll` returns every repetition.
     public var errorLocation: Field? {
         field(2)
+    }
+
+    /// ERR-2: every repetition of Error Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var errorLocationAll: [Field] {
+        repetitions(2)
     }
 
     /// ERR-3: HL7 Error Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -36,9 +54,18 @@ public struct ERR: TypedSegment {
         field(5).map(CWE.init(field:))
     }
 
-    /// ERR-6: Application Error Parameter. HL7 data type `ST`.
+    /// ERR-6: Application Error Parameter. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `applicationErrorParameterAll` returns every repetition.
     public var applicationErrorParameter: String? {
         field(6)?.stringValue
+    }
+
+    /// ERR-6: every repetition of Application Error Parameter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var applicationErrorParameterAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 
     /// ERR-7: Diagnostic Information. HL7 data type `TX`.
@@ -51,9 +78,18 @@ public struct ERR: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// ERR-9: Inform Person Indicator. HL7 data type `IS`.
+    /// ERR-9: Inform Person Indicator. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `informPersonIndicatorAll` returns every repetition.
     public var informPersonIndicator: String? {
         field(9)?.stringValue
+    }
+
+    /// ERR-9: every repetition of Inform Person Indicator, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var informPersonIndicatorAll: [String?] {
+        repetitions(9).map(\.stringValue)
     }
 
     /// ERR-10: Override Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -61,13 +97,31 @@ public struct ERR: TypedSegment {
         field(10).map(CWE.init(field:))
     }
 
-    /// ERR-11: Override Reason Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// ERR-11: Override Reason Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `overrideReasonCodeAll` returns every repetition.
     public var overrideReasonCode: CWE? {
         field(11).map(CWE.init(field:))
     }
 
-    /// ERR-12: Help Desk Contact Point. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ERR-11: every repetition of Override Reason Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var overrideReasonCodeAll: [CWE] {
+        repetitions(11).map(CWE.init(field:))
+    }
+
+    /// ERR-12: Help Desk Contact Point. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `helpDeskContactPointAll` returns every repetition.
     public var helpDeskContactPoint: XTN? {
         field(12).map(XTN.init(field:))
+    }
+
+    /// ERR-12: every repetition of Help Desk Contact Point, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var helpDeskContactPointAll: [XTN] {
+        repetitions(12).map(XTN.init(field:))
     }
 }

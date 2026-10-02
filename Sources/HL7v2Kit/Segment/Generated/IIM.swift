@@ -81,8 +81,17 @@ public struct IIM: TypedSegment {
         field(14).map(CE.init(field:))
     }
 
-    /// IIM-15: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// IIM-15: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeModifierAll` returns every repetition.
     public var procedureCodeModifier: CE? {
         field(15).map(CE.init(field:))
+    }
+
+    /// IIM-15: every repetition of Procedure Code Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeModifierAll: [CE] {
+        repetitions(15).map(CE.init(field:))
     }
 }

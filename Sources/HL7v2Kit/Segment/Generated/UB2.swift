@@ -21,9 +21,18 @@ public struct UB2: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// UB2-3: Condition Code (24-30). HL7 data type `IS`.
+    /// UB2-3: Condition Code (24-30). HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `conditionCode2430All` returns every repetition.
     public var conditionCode2430: String? {
         field(3)?.stringValue
+    }
+
+    /// UB2-3: every repetition of Condition Code (24-30), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var conditionCode2430All: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 
     /// UB2-4: Covered Days (7). HL7 data type `ST`.
@@ -36,29 +45,74 @@ public struct UB2: TypedSegment {
         field(5)?.stringValue
     }
 
-    /// UB2-6: Value Amount & Code. HL7 data type `UVC`.
+    /// UB2-6: Value Amount & Code. HL7 data type `UVC`. Repeating field: this accessor reads the first repetition; `valueAmountCodeAll` returns every repetition.
     public var valueAmountCode: Field? {
         field(6)
     }
 
-    /// UB2-7: Occurrence Code & Date (32-35). HL7 data type `OCD`.
+    /// UB2-6: every repetition of Value Amount & Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var valueAmountCodeAll: [Field] {
+        repetitions(6)
+    }
+
+    /// UB2-7: Occurrence Code & Date (32-35). HL7 data type `OCD`. Repeating field: this accessor reads the first repetition; `occurrenceCodeDate3235All` returns every repetition.
     public var occurrenceCodeDate3235: Field? {
         field(7)
     }
 
-    /// UB2-8: Occurrence Span Code/Dates (36). HL7 data type `OSP`.
+    /// UB2-7: every repetition of Occurrence Code & Date (32-35), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var occurrenceCodeDate3235All: [Field] {
+        repetitions(7)
+    }
+
+    /// UB2-8: Occurrence Span Code/Dates (36). HL7 data type `OSP`. Repeating field: this accessor reads the first repetition; `occurrenceSpanCodeDates36All` returns every repetition.
     public var occurrenceSpanCodeDates36: Field? {
         field(8)
     }
 
-    /// UB2-9: UB92 Locator 2 (State). HL7 data type `ST`.
+    /// UB2-8: every repetition of Occurrence Span Code/Dates (36), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var occurrenceSpanCodeDates36All: [Field] {
+        repetitions(8)
+    }
+
+    /// UB2-9: UB92 Locator 2 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator2StateAll` returns every repetition.
     public var ub92Locator2State: String? {
         field(9)?.stringValue
     }
 
-    /// UB2-10: UB92 Locator 11 (State). HL7 data type `ST`.
+    /// UB2-9: every repetition of UB92 Locator 2 (State), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ub92Locator2StateAll: [String?] {
+        repetitions(9).map(\.stringValue)
+    }
+
+    /// UB2-10: UB92 Locator 11 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator11StateAll` returns every repetition.
     public var ub92Locator11State: String? {
         field(10)?.stringValue
+    }
+
+    /// UB2-10: every repetition of UB92 Locator 11 (State), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ub92Locator11StateAll: [String?] {
+        repetitions(10).map(\.stringValue)
     }
 
     /// UB2-11: UB92 Locator 31 (National). HL7 data type `ST`.
@@ -66,19 +120,46 @@ public struct UB2: TypedSegment {
         field(11)?.stringValue
     }
 
-    /// UB2-12: Document Control Number. HL7 data type `ST`.
+    /// UB2-12: Document Control Number. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `documentControlNumberAll` returns every repetition.
     public var documentControlNumber: String? {
         field(12)?.stringValue
     }
 
-    /// UB2-13: UB92 Locator 49 (National). HL7 data type `ST`.
+    /// UB2-12: every repetition of Document Control Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var documentControlNumberAll: [String?] {
+        repetitions(12).map(\.stringValue)
+    }
+
+    /// UB2-13: UB92 Locator 49 (National). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator49NationalAll` returns every repetition.
     public var ub92Locator49National: String? {
         field(13)?.stringValue
     }
 
-    /// UB2-14: UB92 Locator 56 (State). HL7 data type `ST`.
+    /// UB2-13: every repetition of UB92 Locator 49 (National), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ub92Locator49NationalAll: [String?] {
+        repetitions(13).map(\.stringValue)
+    }
+
+    /// UB2-14: UB92 Locator 56 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator56StateAll` returns every repetition.
     public var ub92Locator56State: String? {
         field(14)?.stringValue
+    }
+
+    /// UB2-14: every repetition of UB92 Locator 56 (State), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ub92Locator56StateAll: [String?] {
+        repetitions(14).map(\.stringValue)
     }
 
     /// UB2-15: UB92 Locator 57 (National). HL7 data type `ST`.
@@ -86,9 +167,18 @@ public struct UB2: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// UB2-16: UB92 Locator 78 (State). HL7 data type `ST`.
+    /// UB2-16: UB92 Locator 78 (State). HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ub92Locator78StateAll` returns every repetition.
     public var ub92Locator78State: String? {
         field(16)?.stringValue
+    }
+
+    /// UB2-16: every repetition of UB92 Locator 78 (State), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ub92Locator78StateAll: [String?] {
+        repetitions(16).map(\.stringValue)
     }
 
     /// UB2-17: Special Visit Count. HL7 data type `NM`.

@@ -16,29 +16,74 @@ public struct PRC: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// PRC-2: Facility ID - PRC. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRC-2: Facility ID - PRC. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `facilityIdPrcAll` returns every repetition.
     public var facilityIdPrc: CE? {
         field(2).map(CE.init(field:))
     }
 
-    /// PRC-3: Department. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRC-2: every repetition of Facility ID - PRC, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var facilityIdPrcAll: [CE] {
+        repetitions(2).map(CE.init(field:))
+    }
+
+    /// PRC-3: Department. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `departmentAll` returns every repetition.
     public var department: CE? {
         field(3).map(CE.init(field:))
     }
 
-    /// PRC-4: Valid Patient Classes. HL7 data type `IS`.
+    /// PRC-3: every repetition of Department, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var departmentAll: [CE] {
+        repetitions(3).map(CE.init(field:))
+    }
+
+    /// PRC-4: Valid Patient Classes. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `validPatientClassesAll` returns every repetition.
     public var validPatientClasses: String? {
         field(4)?.stringValue
     }
 
-    /// PRC-5: Price. HL7 data type `CP`.
+    /// PRC-4: every repetition of Valid Patient Classes, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var validPatientClassesAll: [String?] {
+        repetitions(4).map(\.stringValue)
+    }
+
+    /// PRC-5: Price. HL7 data type `CP`. Repeating field: this accessor reads the first repetition; `priceAll` returns every repetition.
     public var price: Field? {
         field(5)
     }
 
-    /// PRC-6: Formula. HL7 data type `ST`.
+    /// PRC-5: every repetition of Price, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var priceAll: [Field] {
+        repetitions(5)
+    }
+
+    /// PRC-6: Formula. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `formulaAll` returns every repetition.
     public var formula: String? {
         field(6)?.stringValue
+    }
+
+    /// PRC-6: every repetition of Formula, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var formulaAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 
     /// PRC-7: Minimum Quantity. HL7 data type `NM`.
@@ -76,9 +121,18 @@ public struct PRC: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// PRC-14: Billing Category. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRC-14: Billing Category. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `billingCategoryAll` returns every repetition.
     public var billingCategory: CE? {
         field(14).map(CE.init(field:))
+    }
+
+    /// PRC-14: every repetition of Billing Category, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var billingCategoryAll: [CE] {
+        repetitions(14).map(CE.init(field:))
     }
 
     /// PRC-15: Chargeable Flag. HL7 data type `ID`.

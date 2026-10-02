@@ -56,9 +56,18 @@ public struct OBR: TypedSegment {
         field(9)
     }
 
-    /// OBR-10: Collector Identifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// OBR-10: Collector Identifier. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `collectorIdentifierAll` returns every repetition.
     public var collectorIdentifier: XCN? {
         field(10).map(XCN.init(field:))
+    }
+
+    /// OBR-10: every repetition of Collector Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var collectorIdentifierAll: [XCN] {
+        repetitions(10).map(XCN.init(field:))
     }
 
     /// OBR-11: Specimen Action Code. HL7 data type `ID`.
@@ -86,14 +95,32 @@ public struct OBR: TypedSegment {
         field(15)
     }
 
-    /// OBR-16: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// OBR-16: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingProviderAll` returns every repetition.
     public var orderingProvider: XCN? {
         field(16).map(XCN.init(field:))
     }
 
-    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// OBR-16: every repetition of Ordering Provider, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingProviderAll: [XCN] {
+        repetitions(16).map(XCN.init(field:))
+    }
+
+    /// OBR-17: Order Callback Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderCallbackPhoneNumberAll` returns every repetition.
     public var orderCallbackPhoneNumber: XTN? {
         field(17).map(XTN.init(field:))
+    }
+
+    /// OBR-17: every repetition of Order Callback Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderCallbackPhoneNumberAll: [XTN] {
+        repetitions(17).map(XTN.init(field:))
     }
 
     /// OBR-18: Placer Field 1. HL7 data type `ST`.
@@ -141,14 +168,32 @@ public struct OBR: TypedSegment {
         field(26)
     }
 
-    /// OBR-27: Quantity/Timing (deprecated). HL7 data type `TQ`.
+    /// OBR-27: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
     public var quantityTiming: Field? {
         field(27)
     }
 
-    /// OBR-28: Result Copies To. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// OBR-27: every repetition of Quantity/Timing (deprecated), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var quantityTimingAll: [Field] {
+        repetitions(27)
+    }
+
+    /// OBR-28: Result Copies To. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `resultCopiesToAll` returns every repetition.
     public var resultCopiesTo: XCN? {
         field(28).map(XCN.init(field:))
+    }
+
+    /// OBR-28: every repetition of Result Copies To, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var resultCopiesToAll: [XCN] {
+        repetitions(28).map(XCN.init(field:))
     }
 
     /// OBR-29: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
@@ -161,9 +206,18 @@ public struct OBR: TypedSegment {
         field(30)?.stringValue
     }
 
-    /// OBR-31: Reason for Study. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-31: Reason for Study. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `reasonForStudyAll` returns every repetition.
     public var reasonForStudy: CE? {
         field(31).map(CE.init(field:))
+    }
+
+    /// OBR-31: every repetition of Reason for Study, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var reasonForStudyAll: [CE] {
+        repetitions(31).map(CE.init(field:))
     }
 
     /// OBR-32: Principal Result Interpreter. HL7 data type `NDL`.
@@ -171,19 +225,46 @@ public struct OBR: TypedSegment {
         field(32)
     }
 
-    /// OBR-33: Assistant Result Interpreter. HL7 data type `NDL`.
+    /// OBR-33: Assistant Result Interpreter. HL7 data type `NDL`. Repeating field: this accessor reads the first repetition; `assistantResultInterpreterAll` returns every repetition.
     public var assistantResultInterpreter: Field? {
         field(33)
     }
 
-    /// OBR-34: Technician. HL7 data type `NDL`.
+    /// OBR-33: every repetition of Assistant Result Interpreter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var assistantResultInterpreterAll: [Field] {
+        repetitions(33)
+    }
+
+    /// OBR-34: Technician. HL7 data type `NDL`. Repeating field: this accessor reads the first repetition; `technicianAll` returns every repetition.
     public var technician: Field? {
         field(34)
     }
 
-    /// OBR-35: Transcriptionist. HL7 data type `NDL`.
+    /// OBR-34: every repetition of Technician, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var technicianAll: [Field] {
+        repetitions(34)
+    }
+
+    /// OBR-35: Transcriptionist. HL7 data type `NDL`. Repeating field: this accessor reads the first repetition; `transcriptionistAll` returns every repetition.
     public var transcriptionist: Field? {
         field(35)
+    }
+
+    /// OBR-35: every repetition of Transcriptionist, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var transcriptionistAll: [Field] {
+        repetitions(35)
     }
 
     /// OBR-36: Scheduled Date/Time. HL7 data type `TS`.
@@ -196,14 +277,32 @@ public struct OBR: TypedSegment {
         field(37)?.stringValue
     }
 
-    /// OBR-38: Transport Logistics of Collected Sample. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-38: Transport Logistics of Collected Sample. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `transportLogisticsOfCollectedSampleAll` returns every repetition.
     public var transportLogisticsOfCollectedSample: CE? {
         field(38).map(CE.init(field:))
     }
 
-    /// OBR-39: Collector's Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-38: every repetition of Transport Logistics of Collected Sample, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var transportLogisticsOfCollectedSampleAll: [CE] {
+        repetitions(38).map(CE.init(field:))
+    }
+
+    /// OBR-39: Collector's Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `collectorsCommentAll` returns every repetition.
     public var collectorsComment: CE? {
         field(39).map(CE.init(field:))
+    }
+
+    /// OBR-39: every repetition of Collector's Comment, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var collectorsCommentAll: [CE] {
+        repetitions(39).map(CE.init(field:))
     }
 
     /// OBR-40: Transport Arrangement Responsibility. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -221,9 +320,18 @@ public struct OBR: TypedSegment {
         field(42)?.stringValue
     }
 
-    /// OBR-43: Planned Patient Transport Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-43: Planned Patient Transport Comment. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `plannedPatientTransportCommentAll` returns every repetition.
     public var plannedPatientTransportComment: CE? {
         field(43).map(CE.init(field:))
+    }
+
+    /// OBR-43: every repetition of Planned Patient Transport Comment, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var plannedPatientTransportCommentAll: [CE] {
+        repetitions(43).map(CE.init(field:))
     }
 
     /// OBR-44: Procedure Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -231,19 +339,46 @@ public struct OBR: TypedSegment {
         field(44).map(CE.init(field:))
     }
 
-    /// OBR-45: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-45: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeModifierAll` returns every repetition.
     public var procedureCodeModifier: CE? {
         field(45).map(CE.init(field:))
     }
 
-    /// OBR-46: Placer Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-45: every repetition of Procedure Code Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeModifierAll: [CE] {
+        repetitions(45).map(CE.init(field:))
+    }
+
+    /// OBR-46: Placer Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerSupplementalServiceInformationAll` returns every repetition.
     public var placerSupplementalServiceInformation: CE? {
         field(46).map(CE.init(field:))
     }
 
-    /// OBR-47: Filler Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBR-46: every repetition of Placer Supplemental Service Information, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerSupplementalServiceInformationAll: [CE] {
+        repetitions(46).map(CE.init(field:))
+    }
+
+    /// OBR-47: Filler Supplemental Service Information. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `fillerSupplementalServiceInformationAll` returns every repetition.
     public var fillerSupplementalServiceInformation: CE? {
         field(47).map(CE.init(field:))
+    }
+
+    /// OBR-47: every repetition of Filler Supplemental Service Information, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerSupplementalServiceInformationAll: [CE] {
+        repetitions(47).map(CE.init(field:))
     }
 
     /// OBR-48: Medically Necessary Duplicate Procedure Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

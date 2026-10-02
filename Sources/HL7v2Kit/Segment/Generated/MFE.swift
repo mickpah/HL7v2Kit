@@ -26,13 +26,31 @@ public struct MFE: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// MFE-4: Primary Key Value - MFE. HL7 data type `Varie`.
+    /// MFE-4: Primary Key Value - MFE. HL7 data type `Varie`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfeAll` returns every repetition.
     public var primaryKeyValueMfe: Field? {
         field(4)
     }
 
-    /// MFE-5: Primary Key Value Type. HL7 data type `ID`.
+    /// MFE-4: every repetition of Primary Key Value - MFE, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryKeyValueMfeAll: [Field] {
+        repetitions(4)
+    }
+
+    /// MFE-5: Primary Key Value Type. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `primaryKeyValueTypeAll` returns every repetition.
     public var primaryKeyValueType: String? {
         field(5)?.stringValue
+    }
+
+    /// MFE-5: every repetition of Primary Key Value Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryKeyValueTypeAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 }

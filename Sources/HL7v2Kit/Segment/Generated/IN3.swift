@@ -21,9 +21,18 @@ public struct IN3: TypedSegment {
         field(2).map(CX.init(field:))
     }
 
-    /// IN3-3: Certified By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// IN3-3: Certified By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `certifiedByAll` returns every repetition.
     public var certifiedBy: XCN? {
         field(3).map(XCN.init(field:))
+    }
+
+    /// IN3-3: every repetition of Certified By, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var certifiedByAll: [XCN] {
+        repetitions(3).map(XCN.init(field:))
     }
 
     /// IN3-4: Certification Required. HL7 data type `ID`.
@@ -46,9 +55,18 @@ public struct IN3: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// IN3-8: Operator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// IN3-8: Operator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `operatorAll` returns every repetition.
     public var `operator`: XCN? {
         field(8).map(XCN.init(field:))
+    }
+
+    /// IN3-8: every repetition of Operator, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var operatorAll: [XCN] {
+        repetitions(8).map(XCN.init(field:))
     }
 
     /// IN3-9: Certification Begin Date. HL7 data type `DT`.
@@ -76,9 +94,18 @@ public struct IN3: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// IN3-14: Physician Reviewer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// IN3-14: Physician Reviewer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `physicianReviewerAll` returns every repetition.
     public var physicianReviewer: XCN? {
         field(14).map(XCN.init(field:))
+    }
+
+    /// IN3-14: every repetition of Physician Reviewer, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var physicianReviewerAll: [XCN] {
+        repetitions(14).map(XCN.init(field:))
     }
 
     /// IN3-15: Certification Contact. HL7 data type `ST`.
@@ -86,9 +113,18 @@ public struct IN3: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// IN3-16: Certification Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// IN3-16: Certification Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `certificationContactPhoneNumberAll` returns every repetition.
     public var certificationContactPhoneNumber: XTN? {
         field(16).map(XTN.init(field:))
+    }
+
+    /// IN3-16: every repetition of Certification Contact Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var certificationContactPhoneNumberAll: [XTN] {
+        repetitions(16).map(XTN.init(field:))
     }
 
     /// IN3-17: Appeal Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -101,14 +137,32 @@ public struct IN3: TypedSegment {
         field(18).map(CE.init(field:))
     }
 
-    /// IN3-19: Certification Agency Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// IN3-19: Certification Agency Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `certificationAgencyPhoneNumberAll` returns every repetition.
     public var certificationAgencyPhoneNumber: XTN? {
         field(19).map(XTN.init(field:))
     }
 
-    /// IN3-20: Pre-Certification Requirement. HL7 data type `ICD`.
+    /// IN3-19: every repetition of Certification Agency Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var certificationAgencyPhoneNumberAll: [XTN] {
+        repetitions(19).map(XTN.init(field:))
+    }
+
+    /// IN3-20: Pre-Certification Requirement. HL7 data type `ICD`. Repeating field: this accessor reads the first repetition; `preCertificationRequirementAll` returns every repetition.
     public var preCertificationRequirement: Field? {
         field(20)
+    }
+
+    /// IN3-20: every repetition of Pre-Certification Requirement, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var preCertificationRequirementAll: [Field] {
+        repetitions(20)
     }
 
     /// IN3-21: Case Manager. HL7 data type `ST`.
@@ -126,13 +180,31 @@ public struct IN3: TypedSegment {
         field(23)?.stringValue
     }
 
-    /// IN3-24: Second Opinion Documentation Received. HL7 data type `IS`.
+    /// IN3-24: Second Opinion Documentation Received. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `secondOpinionDocumentationReceivedAll` returns every repetition.
     public var secondOpinionDocumentationReceived: String? {
         field(24)?.stringValue
     }
 
-    /// IN3-25: Second Opinion Physician. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// IN3-24: every repetition of Second Opinion Documentation Received, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var secondOpinionDocumentationReceivedAll: [String?] {
+        repetitions(24).map(\.stringValue)
+    }
+
+    /// IN3-25: Second Opinion Physician. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `secondOpinionPhysicianAll` returns every repetition.
     public var secondOpinionPhysician: XCN? {
         field(25).map(XCN.init(field:))
+    }
+
+    /// IN3-25: every repetition of Second Opinion Physician, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var secondOpinionPhysicianAll: [XCN] {
+        repetitions(25).map(XCN.init(field:))
     }
 }

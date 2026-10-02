@@ -41,9 +41,18 @@ public struct RXE: TypedSegment {
         field(6).map(CE.init(field:))
     }
 
-    /// RXE-7: Provider's Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXE-7: Provider's Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerSAdministrationInstructionsAll` returns every repetition.
     public var providerSAdministrationInstructions: CE? {
         field(7).map(CE.init(field:))
+    }
+
+    /// RXE-7: every repetition of Provider's Administration Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerSAdministrationInstructionsAll: [CE] {
+        repetitions(7).map(CE.init(field:))
     }
 
     /// RXE-8: Deliver-to Location. HL7 data type `LA1`.
@@ -71,14 +80,32 @@ public struct RXE: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// RXE-13: Ordering Provider's DEA Number. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// RXE-13: Ordering Provider's DEA Number. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingProviderSDeaNumberAll` returns every repetition.
     public var orderingProviderSDeaNumber: XCN? {
         field(13).map(XCN.init(field:))
     }
 
-    /// RXE-14: Pharmacist/Treatment Supplier's Verifier ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// RXE-13: every repetition of Ordering Provider's DEA Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingProviderSDeaNumberAll: [XCN] {
+        repetitions(13).map(XCN.init(field:))
+    }
+
+    /// RXE-14: Pharmacist/Treatment Supplier's Verifier ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacistTreatmentSupplierSVerifierIdAll` returns every repetition.
     public var pharmacistTreatmentSupplierSVerifierId: XCN? {
         field(14).map(XCN.init(field:))
+    }
+
+    /// RXE-14: every repetition of Pharmacist/Treatment Supplier's Verifier ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var pharmacistTreatmentSupplierSVerifierIdAll: [XCN] {
+        repetitions(14).map(XCN.init(field:))
     }
 
     /// RXE-15: Prescription Number. HL7 data type `ST`.
@@ -111,9 +138,18 @@ public struct RXE: TypedSegment {
         field(20)?.stringValue
     }
 
-    /// RXE-21: Pharmacy/Treatment Supplier's Special Dispensing Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXE-21: Pharmacy/Treatment Supplier's Special Dispensing Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll` returns every repetition.
     public var pharmacyTreatmentSupplierSSpecialDispensingInstructions: CE? {
         field(21).map(CE.init(field:))
+    }
+
+    /// RXE-21: every repetition of Pharmacy/Treatment Supplier's Special Dispensing Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var pharmacyTreatmentSupplierSSpecialDispensingInstructionsAll: [CE] {
+        repetitions(21).map(CE.init(field:))
     }
 
     /// RXE-22: Give Per (Time Unit). HL7 data type `ST`.
@@ -141,9 +177,18 @@ public struct RXE: TypedSegment {
         field(26).map(CE.init(field:))
     }
 
-    /// RXE-27: Give Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXE-27: Give Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `giveIndicationAll` returns every repetition.
     public var giveIndication: CE? {
         field(27).map(CE.init(field:))
+    }
+
+    /// RXE-27: every repetition of Give Indication, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var giveIndicationAll: [CE] {
+        repetitions(27).map(CE.init(field:))
     }
 
     /// RXE-28: Dispense Package Size. HL7 data type `NM`.
@@ -161,9 +206,18 @@ public struct RXE: TypedSegment {
         field(30)?.stringValue
     }
 
-    /// RXE-31: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXE-31: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `supplementaryCodeAll` returns every repetition.
     public var supplementaryCode: CE? {
         field(31).map(CE.init(field:))
+    }
+
+    /// RXE-31: every repetition of Supplementary Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var supplementaryCodeAll: [CE] {
+        repetitions(31).map(CE.init(field:))
     }
 
     /// RXE-32: Original Order Date/Time. HL7 data type `TS`.
@@ -191,9 +245,18 @@ public struct RXE: TypedSegment {
         field(36)?.stringValue
     }
 
-    /// RXE-37: Pharmaceutical Substance Alternative. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// RXE-37: Pharmaceutical Substance Alternative. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmaceuticalSubstanceAlternativeAll` returns every repetition.
     public var pharmaceuticalSubstanceAlternative: CWE? {
         field(37).map(CWE.init(field:))
+    }
+
+    /// RXE-37: every repetition of Pharmaceutical Substance Alternative, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var pharmaceuticalSubstanceAlternativeAll: [CWE] {
+        repetitions(37).map(CWE.init(field:))
     }
 
     /// RXE-38: Pharmacy of Most Recent Fill. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

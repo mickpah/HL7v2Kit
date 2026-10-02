@@ -16,34 +16,88 @@ public struct GT1: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// GT1-2: Guarantor Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// GT1-2: Guarantor Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorNumberAll` returns every repetition.
     public var guarantorNumber: CX? {
         field(2).map(CX.init(field:))
     }
 
-    /// GT1-3: Guarantor Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GT1-2: every repetition of Guarantor Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorNumberAll: [CX] {
+        repetitions(2).map(CX.init(field:))
+    }
+
+    /// GT1-3: Guarantor Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorNameAll` returns every repetition.
     public var guarantorName: XPN? {
         field(3).map(XPN.init(field:))
     }
 
-    /// GT1-4: Guarantor Spouse Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GT1-3: every repetition of Guarantor Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorNameAll: [XPN] {
+        repetitions(3).map(XPN.init(field:))
+    }
+
+    /// GT1-4: Guarantor Spouse Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorSpouseNameAll` returns every repetition.
     public var guarantorSpouseName: XPN? {
         field(4).map(XPN.init(field:))
     }
 
-    /// GT1-5: Guarantor Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// GT1-4: every repetition of Guarantor Spouse Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorSpouseNameAll: [XPN] {
+        repetitions(4).map(XPN.init(field:))
+    }
+
+    /// GT1-5: Guarantor Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorAddressAll` returns every repetition.
     public var guarantorAddress: XAD? {
         field(5).map(XAD.init(field:))
     }
 
-    /// GT1-6: Guarantor Ph Num - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// GT1-5: every repetition of Guarantor Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorAddressAll: [XAD] {
+        repetitions(5).map(XAD.init(field:))
+    }
+
+    /// GT1-6: Guarantor Ph Num - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorPhNumHomeAll` returns every repetition.
     public var guarantorPhNumHome: XTN? {
         field(6).map(XTN.init(field:))
     }
 
-    /// GT1-7: Guarantor Ph Num - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// GT1-6: every repetition of Guarantor Ph Num - Home, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorPhNumHomeAll: [XTN] {
+        repetitions(6).map(XTN.init(field:))
+    }
+
+    /// GT1-7: Guarantor Ph Num - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorPhNumBusinessAll` returns every repetition.
     public var guarantorPhNumBusiness: XTN? {
         field(7).map(XTN.init(field:))
+    }
+
+    /// GT1-7: every repetition of Guarantor Ph Num - Business, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorPhNumBusinessAll: [XTN] {
+        repetitions(7).map(XTN.init(field:))
     }
 
     /// GT1-8: Guarantor Date/Time Of Birth. HL7 data type `TS`.
@@ -86,24 +140,60 @@ public struct GT1: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// GT1-16: Guarantor Employer Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GT1-16: Guarantor Employer Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployerNameAll` returns every repetition.
     public var guarantorEmployerName: XPN? {
         field(16).map(XPN.init(field:))
     }
 
-    /// GT1-17: Guarantor Employer Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// GT1-16: every repetition of Guarantor Employer Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployerNameAll: [XPN] {
+        repetitions(16).map(XPN.init(field:))
+    }
+
+    /// GT1-17: Guarantor Employer Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployerAddressAll` returns every repetition.
     public var guarantorEmployerAddress: XAD? {
         field(17).map(XAD.init(field:))
     }
 
-    /// GT1-18: Guarantor Employer Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// GT1-17: every repetition of Guarantor Employer Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployerAddressAll: [XAD] {
+        repetitions(17).map(XAD.init(field:))
+    }
+
+    /// GT1-18: Guarantor Employer Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployerPhoneNumberAll` returns every repetition.
     public var guarantorEmployerPhoneNumber: XTN? {
         field(18).map(XTN.init(field:))
     }
 
-    /// GT1-19: Guarantor Employee ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// GT1-18: every repetition of Guarantor Employer Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployerPhoneNumberAll: [XTN] {
+        repetitions(18).map(XTN.init(field:))
+    }
+
+    /// GT1-19: Guarantor Employee ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployeeIdNumberAll` returns every repetition.
     public var guarantorEmployeeIdNumber: CX? {
         field(19).map(CX.init(field:))
+    }
+
+    /// GT1-19: every repetition of Guarantor Employee ID Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployeeIdNumberAll: [CX] {
+        repetitions(19).map(CX.init(field:))
     }
 
     /// GT1-20: Guarantor Employment Status. HL7 data type `IS`.
@@ -111,9 +201,18 @@ public struct GT1: TypedSegment {
         field(20)?.stringValue
     }
 
-    /// GT1-21: Guarantor Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// GT1-21: Guarantor Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorOrganizationNameAll` returns every repetition.
     public var guarantorOrganizationName: XON? {
         field(21).map(XON.init(field:))
+    }
+
+    /// GT1-21: every repetition of Guarantor Organization Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorOrganizationNameAll: [XON] {
+        repetitions(21).map(XON.init(field:))
     }
 
     /// GT1-22: Guarantor Billing Hold Flag. HL7 data type `ID`.
@@ -151,9 +250,18 @@ public struct GT1: TypedSegment {
         field(28)?.stringValue
     }
 
-    /// GT1-29: Guarantor Employer ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// GT1-29: Guarantor Employer ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployerIdNumberAll` returns every repetition.
     public var guarantorEmployerIdNumber: CX? {
         field(29).map(CX.init(field:))
+    }
+
+    /// GT1-29: every repetition of Guarantor Employer ID Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployerIdNumberAll: [CX] {
+        repetitions(29).map(CX.init(field:))
     }
 
     /// GT1-30: Guarantor Marital Status Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -176,14 +284,32 @@ public struct GT1: TypedSegment {
         field(33)?.stringValue
     }
 
-    /// GT1-34: Ambulatory Status. HL7 data type `IS`.
+    /// GT1-34: Ambulatory Status. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `ambulatoryStatusAll` returns every repetition.
     public var ambulatoryStatus: String? {
         field(34)?.stringValue
     }
 
-    /// GT1-35: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// GT1-34: every repetition of Ambulatory Status, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ambulatoryStatusAll: [String?] {
+        repetitions(34).map(\.stringValue)
+    }
+
+    /// GT1-35: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
     public var citizenship: CE? {
         field(35).map(CE.init(field:))
+    }
+
+    /// GT1-35: every repetition of Citizenship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var citizenshipAll: [CE] {
+        repetitions(35).map(CE.init(field:))
     }
 
     /// GT1-36: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -216,9 +342,18 @@ public struct GT1: TypedSegment {
         field(41).map(CE.init(field:))
     }
 
-    /// GT1-42: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GT1-42: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `motherSMaidenNameAll` returns every repetition.
     public var motherSMaidenName: XPN? {
         field(42).map(XPN.init(field:))
+    }
+
+    /// GT1-42: every repetition of Mother's Maiden Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var motherSMaidenNameAll: [XPN] {
+        repetitions(42).map(XPN.init(field:))
     }
 
     /// GT1-43: Nationality. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -226,19 +361,46 @@ public struct GT1: TypedSegment {
         field(43).map(CE.init(field:))
     }
 
-    /// GT1-44: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// GT1-44: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
     public var ethnicGroup: CE? {
         field(44).map(CE.init(field:))
     }
 
-    /// GT1-45: Contact Person's Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GT1-44: every repetition of Ethnic Group, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ethnicGroupAll: [CE] {
+        repetitions(44).map(CE.init(field:))
+    }
+
+    /// GT1-45: Contact Person's Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonSNameAll` returns every repetition.
     public var contactPersonSName: XPN? {
         field(45).map(XPN.init(field:))
     }
 
-    /// GT1-46: Contact Person's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// GT1-45: every repetition of Contact Person's Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonSNameAll: [XPN] {
+        repetitions(45).map(XPN.init(field:))
+    }
+
+    /// GT1-46: Contact Person's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonSTelephoneNumberAll` returns every repetition.
     public var contactPersonSTelephoneNumber: XTN? {
         field(46).map(XTN.init(field:))
+    }
+
+    /// GT1-46: every repetition of Contact Person's Telephone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonSTelephoneNumberAll: [XTN] {
+        repetitions(46).map(XTN.init(field:))
     }
 
     /// GT1-47: Contact Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -261,9 +423,18 @@ public struct GT1: TypedSegment {
         field(50)
     }
 
-    /// GT1-51: Guarantor Employer's Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// GT1-51: Guarantor Employer's Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorEmployerSOrganizationNameAll` returns every repetition.
     public var guarantorEmployerSOrganizationName: XON? {
         field(51).map(XON.init(field:))
+    }
+
+    /// GT1-51: every repetition of Guarantor Employer's Organization Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorEmployerSOrganizationNameAll: [XON] {
+        repetitions(51).map(XON.init(field:))
     }
 
     /// GT1-52: Handicap. HL7 data type `IS`.
@@ -281,9 +452,18 @@ public struct GT1: TypedSegment {
         field(54)
     }
 
-    /// GT1-55: Guarantor Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// GT1-55: Guarantor Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `guarantorRaceAll` returns every repetition.
     public var guarantorRace: CE? {
         field(55).map(CE.init(field:))
+    }
+
+    /// GT1-55: every repetition of Guarantor Race, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var guarantorRaceAll: [CE] {
+        repetitions(55).map(CE.init(field:))
     }
 
     /// GT1-56: Guarantor Birth Place. HL7 data type `ST`.

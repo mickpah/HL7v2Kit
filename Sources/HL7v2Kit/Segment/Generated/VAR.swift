@@ -26,9 +26,18 @@ public struct VAR: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// VAR-4: Variance Originator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// VAR-4: Variance Originator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `varianceOriginatorAll` returns every repetition.
     public var varianceOriginator: XCN? {
         field(4).map(XCN.init(field:))
+    }
+
+    /// VAR-4: every repetition of Variance Originator, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var varianceOriginatorAll: [XCN] {
+        repetitions(4).map(XCN.init(field:))
     }
 
     /// VAR-5: Variance Classification. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -36,8 +45,17 @@ public struct VAR: TypedSegment {
         field(5).map(CE.init(field:))
     }
 
-    /// VAR-6: Variance Description. HL7 data type `ST`.
+    /// VAR-6: Variance Description. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `varianceDescriptionAll` returns every repetition.
     public var varianceDescription: String? {
         field(6)?.stringValue
+    }
+
+    /// VAR-6: every repetition of Variance Description, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var varianceDescriptionAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 }

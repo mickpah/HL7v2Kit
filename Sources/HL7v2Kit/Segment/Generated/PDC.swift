@@ -11,9 +11,18 @@ public struct PDC: TypedSegment {
         self.fields = fields
     }
 
-    /// PDC-1: Manufacturer/Distributor. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PDC-1: Manufacturer/Distributor. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `manufacturerDistributorAll` returns every repetition.
     public var manufacturerDistributor: XON? {
         field(1).map(XON.init(field:))
+    }
+
+    /// PDC-1: every repetition of Manufacturer/Distributor, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var manufacturerDistributorAll: [XON] {
+        repetitions(1).map(XON.init(field:))
     }
 
     /// PDC-2: Country. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -36,9 +45,18 @@ public struct PDC: TypedSegment {
         field(5).map(CE.init(field:))
     }
 
-    /// PDC-6: Model Identifier. HL7 data type `ST`.
+    /// PDC-6: Model Identifier. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `modelIdentifierAll` returns every repetition.
     public var modelIdentifier: String? {
         field(6)?.stringValue
+    }
+
+    /// PDC-6: every repetition of Model Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var modelIdentifierAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 
     /// PDC-7: Catalogue Identifier. HL7 data type `ST`.
@@ -46,9 +64,18 @@ public struct PDC: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// PDC-8: Other Identifier. HL7 data type `ST`.
+    /// PDC-8: Other Identifier. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `otherIdentifierAll` returns every repetition.
     public var otherIdentifier: String? {
         field(8)?.stringValue
+    }
+
+    /// PDC-8: every repetition of Other Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var otherIdentifierAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// PDC-9: Product Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

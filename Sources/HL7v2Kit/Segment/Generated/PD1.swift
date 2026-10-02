@@ -11,9 +11,18 @@ public struct PD1: TypedSegment {
         self.fields = fields
     }
 
-    /// PD1-1: Living Dependency. HL7 data type `IS`.
+    /// PD1-1: Living Dependency. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `livingDependencyAll` returns every repetition.
     public var livingDependency: String? {
         field(1)?.stringValue
+    }
+
+    /// PD1-1: every repetition of Living Dependency, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var livingDependencyAll: [String?] {
+        repetitions(1).map(\.stringValue)
     }
 
     /// PD1-2: Living Arrangement. HL7 data type `IS`.
@@ -21,14 +30,32 @@ public struct PD1: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// PD1-3: Patient Primary Facility. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PD1-3: Patient Primary Facility. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientPrimaryFacilityAll` returns every repetition.
     public var patientPrimaryFacility: XON? {
         field(3).map(XON.init(field:))
     }
 
-    /// PD1-4: Patient Primary Care Provider Name & ID No.. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PD1-3: every repetition of Patient Primary Facility, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientPrimaryFacilityAll: [XON] {
+        repetitions(3).map(XON.init(field:))
+    }
+
+    /// PD1-4: Patient Primary Care Provider Name & ID No.. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientPrimaryCareProviderNameAndIDNoAll` returns every repetition.
     public var patientPrimaryCareProviderNameAndIDNo: XCN? {
         field(4).map(XCN.init(field:))
+    }
+
+    /// PD1-4: every repetition of Patient Primary Care Provider Name & ID No., in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientPrimaryCareProviderNameAndIDNoAll: [XCN] {
+        repetitions(4).map(XCN.init(field:))
     }
 
     /// PD1-5: Student Indicator. HL7 data type `IS`.
@@ -56,9 +83,18 @@ public struct PD1: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// PD1-10: Duplicate Patient. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// PD1-10: Duplicate Patient. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `duplicatePatientAll` returns every repetition.
     public var duplicatePatient: CX? {
         field(10).map(CX.init(field:))
+    }
+
+    /// PD1-10: every repetition of Duplicate Patient, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var duplicatePatientAll: [CX] {
+        repetitions(10).map(CX.init(field:))
     }
 
     /// PD1-11: Publicity Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -76,14 +112,32 @@ public struct PD1: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// PD1-14: Place of Worship. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PD1-14: Place of Worship. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placeOfWorshipAll` returns every repetition.
     public var placeOfWorship: XON? {
         field(14).map(XON.init(field:))
     }
 
-    /// PD1-15: Advance Directive Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PD1-14: every repetition of Place of Worship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placeOfWorshipAll: [XON] {
+        repetitions(14).map(XON.init(field:))
+    }
+
+    /// PD1-15: Advance Directive Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `advanceDirectiveCodeAll` returns every repetition.
     public var advanceDirectiveCode: CE? {
         field(15).map(CE.init(field:))
+    }
+
+    /// PD1-15: every repetition of Advance Directive Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var advanceDirectiveCodeAll: [CE] {
+        repetitions(15).map(CE.init(field:))
     }
 
     /// PD1-16: Immunization Registry Status. HL7 data type `IS`.

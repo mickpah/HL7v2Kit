@@ -41,9 +41,18 @@ public struct IVT: TypedSegment {
         field(6).map(CWE.init(field:))
     }
 
-    /// IVT-7: Bin Location Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// IVT-7: Bin Location Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `binLocationIdentifierAll` returns every repetition.
     public var binLocationIdentifier: EI? {
         field(7).map(EI.init(field:))
+    }
+
+    /// IVT-7: every repetition of Bin Location Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var binLocationIdentifierAll: [EI] {
+        repetitions(7).map(EI.init(field:))
     }
 
     /// IVT-8: Order Packaging. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -101,9 +110,18 @@ public struct IVT: TypedSegment {
         field(18)
     }
 
-    /// IVT-19: Substitute Item Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// IVT-19: Substitute Item Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `substituteItemIdentifierAll` returns every repetition.
     public var substituteItemIdentifier: EI? {
         field(19).map(EI.init(field:))
+    }
+
+    /// IVT-19: every repetition of Substitute Item Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substituteItemIdentifierAll: [EI] {
+        repetitions(19).map(EI.init(field:))
     }
 
     /// IVT-20: Latex-Free Substitute Item Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.

@@ -26,19 +26,46 @@ public struct PYE: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// PYE-4: Payee Identification List. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PYE-4: Payee Identification List. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `payeeIdentificationListAll` returns every repetition.
     public var payeeIdentificationList: XON? {
         field(4).map(XON.init(field:))
     }
 
-    /// PYE-5: Payee Person Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PYE-4: every repetition of Payee Identification List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var payeeIdentificationListAll: [XON] {
+        repetitions(4).map(XON.init(field:))
+    }
+
+    /// PYE-5: Payee Person Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `payeePersonNameAll` returns every repetition.
     public var payeePersonName: XPN? {
         field(5).map(XPN.init(field:))
     }
 
-    /// PYE-6: Payee Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PYE-5: every repetition of Payee Person Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var payeePersonNameAll: [XPN] {
+        repetitions(5).map(XPN.init(field:))
+    }
+
+    /// PYE-6: Payee Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `payeeAddressAll` returns every repetition.
     public var payeeAddress: XAD? {
         field(6).map(XAD.init(field:))
+    }
+
+    /// PYE-6: every repetition of Payee Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var payeeAddressAll: [XAD] {
+        repetitions(6).map(XAD.init(field:))
     }
 
     /// PYE-7: Payment Method. HL7 data type `IS`.

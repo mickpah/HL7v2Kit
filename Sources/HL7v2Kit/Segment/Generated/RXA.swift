@@ -51,14 +51,32 @@ public struct RXA: TypedSegment {
         field(8).map(CE.init(field:))
     }
 
-    /// RXA-9: Administration Notes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXA-9: Administration Notes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `administrationNotesAll` returns every repetition.
     public var administrationNotes: CE? {
         field(9).map(CE.init(field:))
     }
 
-    /// RXA-10: Administering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// RXA-9: every repetition of Administration Notes, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var administrationNotesAll: [CE] {
+        repetitions(9).map(CE.init(field:))
+    }
+
+    /// RXA-10: Administering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `administeringProviderAll` returns every repetition.
     public var administeringProvider: XCN? {
         field(10).map(XCN.init(field:))
+    }
+
+    /// RXA-10: every repetition of Administering Provider, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var administeringProviderAll: [XCN] {
+        repetitions(10).map(XCN.init(field:))
     }
 
     /// RXA-11: Administered-at Location. HL7 data type `LA2`.
@@ -81,29 +99,74 @@ public struct RXA: TypedSegment {
         field(14).map(CE.init(field:))
     }
 
-    /// RXA-15: Substance Lot Number. HL7 data type `ST`.
+    /// RXA-15: Substance Lot Number. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `substanceLotNumberAll` returns every repetition.
     public var substanceLotNumber: String? {
         field(15)?.stringValue
     }
 
-    /// RXA-16: Substance Expiration Date. HL7 data type `TS`.
+    /// RXA-15: every repetition of Substance Lot Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceLotNumberAll: [String?] {
+        repetitions(15).map(\.stringValue)
+    }
+
+    /// RXA-16: Substance Expiration Date. HL7 data type `TS`. Repeating field: this accessor reads the first repetition; `substanceExpirationDateAll` returns every repetition.
     public var substanceExpirationDate: String? {
         field(16)?.stringValue
     }
 
-    /// RXA-17: Substance Manufacturer Name. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXA-16: every repetition of Substance Expiration Date, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceExpirationDateAll: [String?] {
+        repetitions(16).map(\.stringValue)
+    }
+
+    /// RXA-17: Substance Manufacturer Name. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `substanceManufacturerNameAll` returns every repetition.
     public var substanceManufacturerName: CE? {
         field(17).map(CE.init(field:))
     }
 
-    /// RXA-18: Substance/Treatment Refusal Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXA-17: every repetition of Substance Manufacturer Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceManufacturerNameAll: [CE] {
+        repetitions(17).map(CE.init(field:))
+    }
+
+    /// RXA-18: Substance/Treatment Refusal Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `substanceTreatmentRefusalReasonAll` returns every repetition.
     public var substanceTreatmentRefusalReason: CE? {
         field(18).map(CE.init(field:))
     }
 
-    /// RXA-19: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXA-18: every repetition of Substance/Treatment Refusal Reason, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceTreatmentRefusalReasonAll: [CE] {
+        repetitions(18).map(CE.init(field:))
+    }
+
+    /// RXA-19: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `indicationAll` returns every repetition.
     public var indication: CE? {
         field(19).map(CE.init(field:))
+    }
+
+    /// RXA-19: every repetition of Indication, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var indicationAll: [CE] {
+        repetitions(19).map(CE.init(field:))
     }
 
     /// RXA-20: Completion Status. HL7 data type `ID`.

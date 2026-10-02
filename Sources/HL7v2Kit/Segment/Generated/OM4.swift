@@ -71,9 +71,18 @@ public struct OM4: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// OM4-13: Specimen Priorities. HL7 data type `ID`.
+    /// OM4-13: Specimen Priorities. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `specimenPrioritiesAll` returns every repetition.
     public var specimenPriorities: String? {
         field(13)?.stringValue
+    }
+
+    /// OM4-13: every repetition of Specimen Priorities, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenPrioritiesAll: [String?] {
+        repetitions(13).map(\.stringValue)
     }
 
     /// OM4-14: Specimen Retention Time. HL7 data type `CQ`.

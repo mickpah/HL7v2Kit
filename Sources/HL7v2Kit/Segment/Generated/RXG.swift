@@ -51,9 +51,18 @@ public struct RXG: TypedSegment {
         field(8).map(CE.init(field:))
     }
 
-    /// RXG-9: Administration Notes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXG-9: Administration Notes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `administrationNotesAll` returns every repetition.
     public var administrationNotes: CE? {
         field(9).map(CE.init(field:))
+    }
+
+    /// RXG-9: every repetition of Administration Notes, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var administrationNotesAll: [CE] {
+        repetitions(9).map(CE.init(field:))
     }
 
     /// RXG-10: Substitution Status. HL7 data type `ID`.
@@ -71,9 +80,18 @@ public struct RXG: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// RXG-13: Pharmacy/Treatment Supplier's Special Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXG-13: Pharmacy/Treatment Supplier's Special Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll` returns every repetition.
     public var pharmacyTreatmentSupplierSSpecialAdministrationInstructions: CE? {
         field(13).map(CE.init(field:))
+    }
+
+    /// RXG-13: every repetition of Pharmacy/Treatment Supplier's Special Administration Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var pharmacyTreatmentSupplierSSpecialAdministrationInstructionsAll: [CE] {
+        repetitions(13).map(CE.init(field:))
     }
 
     /// RXG-14: Give Per (Time Unit). HL7 data type `ST`.
@@ -101,24 +119,60 @@ public struct RXG: TypedSegment {
         field(18).map(CE.init(field:))
     }
 
-    /// RXG-19: Substance Lot Number. HL7 data type `ST`.
+    /// RXG-19: Substance Lot Number. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `substanceLotNumberAll` returns every repetition.
     public var substanceLotNumber: String? {
         field(19)?.stringValue
     }
 
-    /// RXG-20: Substance Expiration Date. HL7 data type `TS`.
+    /// RXG-19: every repetition of Substance Lot Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceLotNumberAll: [String?] {
+        repetitions(19).map(\.stringValue)
+    }
+
+    /// RXG-20: Substance Expiration Date. HL7 data type `TS`. Repeating field: this accessor reads the first repetition; `substanceExpirationDateAll` returns every repetition.
     public var substanceExpirationDate: String? {
         field(20)?.stringValue
     }
 
-    /// RXG-21: Substance Manufacturer Name. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXG-20: every repetition of Substance Expiration Date, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceExpirationDateAll: [String?] {
+        repetitions(20).map(\.stringValue)
+    }
+
+    /// RXG-21: Substance Manufacturer Name. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `substanceManufacturerNameAll` returns every repetition.
     public var substanceManufacturerName: CE? {
         field(21).map(CE.init(field:))
     }
 
-    /// RXG-22: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXG-21: every repetition of Substance Manufacturer Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var substanceManufacturerNameAll: [CE] {
+        repetitions(21).map(CE.init(field:))
+    }
+
+    /// RXG-22: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `indicationAll` returns every repetition.
     public var indication: CE? {
         field(22).map(CE.init(field:))
+    }
+
+    /// RXG-22: every repetition of Indication, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var indicationAll: [CE] {
+        repetitions(22).map(CE.init(field:))
     }
 
     /// RXG-23: Give Drug Strength Volume. HL7 data type `NM`.

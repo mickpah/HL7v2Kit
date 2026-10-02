@@ -11,19 +11,46 @@ public struct PRD: TypedSegment {
         self.fields = fields
     }
 
-    /// PRD-1: Provider Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRD-1: Provider Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerRoleAll` returns every repetition.
     public var providerRole: CE? {
         field(1).map(CE.init(field:))
     }
 
-    /// PRD-2: Provider Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PRD-1: every repetition of Provider Role, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerRoleAll: [CE] {
+        repetitions(1).map(CE.init(field:))
+    }
+
+    /// PRD-2: Provider Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerNameAll` returns every repetition.
     public var providerName: XPN? {
         field(2).map(XPN.init(field:))
     }
 
-    /// PRD-3: Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PRD-2: every repetition of Provider Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerNameAll: [XPN] {
+        repetitions(2).map(XPN.init(field:))
+    }
+
+    /// PRD-3: Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerAddressAll` returns every repetition.
     public var providerAddress: XAD? {
         field(3).map(XAD.init(field:))
+    }
+
+    /// PRD-3: every repetition of Provider Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerAddressAll: [XAD] {
+        repetitions(3).map(XAD.init(field:))
     }
 
     /// PRD-4: Provider Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -31,9 +58,18 @@ public struct PRD: TypedSegment {
         field(4).map(PL.init(field:))
     }
 
-    /// PRD-5: Provider Communication Information. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PRD-5: Provider Communication Information. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerCommunicationInformationAll` returns every repetition.
     public var providerCommunicationInformation: XTN? {
         field(5).map(XTN.init(field:))
+    }
+
+    /// PRD-5: every repetition of Provider Communication Information, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerCommunicationInformationAll: [XTN] {
+        repetitions(5).map(XTN.init(field:))
     }
 
     /// PRD-6: Preferred Method of Contact. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -41,9 +77,18 @@ public struct PRD: TypedSegment {
         field(6).map(CE.init(field:))
     }
 
-    /// PRD-7: Provider Identifiers. HL7 data type `PLN`.
+    /// PRD-7: Provider Identifiers. HL7 data type `PLN`. Repeating field: this accessor reads the first repetition; `providerIdentifiersAll` returns every repetition.
     public var providerIdentifiers: Field? {
         field(7)
+    }
+
+    /// PRD-7: every repetition of Provider Identifiers, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerIdentifiersAll: [Field] {
+        repetitions(7)
     }
 
     /// PRD-8: Effective Start Date of Provider Role. HL7 data type `TS`.

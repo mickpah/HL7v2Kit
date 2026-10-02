@@ -21,8 +21,17 @@ public struct ECR: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// ECR-3: Command Response Parameters. HL7 data type `TX`.
+    /// ECR-3: Command Response Parameters. HL7 data type `TX`. Repeating field: this accessor reads the first repetition; `commandResponseParametersAll` returns every repetition.
     public var commandResponseParameters: String? {
         field(3)?.stringValue
+    }
+
+    /// ECR-3: every repetition of Command Response Parameters, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var commandResponseParametersAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 }

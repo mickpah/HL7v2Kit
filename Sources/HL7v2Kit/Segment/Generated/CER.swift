@@ -76,9 +76,18 @@ public struct CER: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// CER-14: Subject Directory Attribute Extension (Health Professional Data). HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// CER-14: Subject Directory Attribute Extension (Health Professional Data). HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `subjectDirectoryAttributeExtensionAll` returns every repetition.
     public var subjectDirectoryAttributeExtension: CWE? {
         field(14).map(CWE.init(field:))
+    }
+
+    /// CER-14: every repetition of Subject Directory Attribute Extension (Health Professional Data), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var subjectDirectoryAttributeExtensionAll: [CWE] {
+        repetitions(14).map(CWE.init(field:))
     }
 
     /// CER-15: Subject Public Key Info. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -96,9 +105,18 @@ public struct CER: TypedSegment {
         field(17)?.stringValue
     }
 
-    /// CER-18: CRL Distribution Point. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// CER-18: CRL Distribution Point. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `crlDistributionPointAll` returns every repetition.
     public var crlDistributionPoint: CWE? {
         field(18).map(CWE.init(field:))
+    }
+
+    /// CER-18: every repetition of CRL Distribution Point, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var crlDistributionPointAll: [CWE] {
+        repetitions(18).map(CWE.init(field:))
     }
 
     /// CER-19: Jurisdiction Country. HL7 data type `ID`.
@@ -116,9 +134,18 @@ public struct CER: TypedSegment {
         field(21).map(CWE.init(field:))
     }
 
-    /// CER-22: Jurisdiction Breadth. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// CER-22: Jurisdiction Breadth. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `jurisdictionBreadthAll` returns every repetition.
     public var jurisdictionBreadth: CWE? {
         field(22).map(CWE.init(field:))
+    }
+
+    /// CER-22: every repetition of Jurisdiction Breadth, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var jurisdictionBreadthAll: [CWE] {
+        repetitions(22).map(CWE.init(field:))
     }
 
     /// CER-23: Granting Date. HL7 data type `TS`.

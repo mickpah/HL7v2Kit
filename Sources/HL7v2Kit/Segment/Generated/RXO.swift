@@ -36,14 +36,32 @@ public struct RXO: TypedSegment {
         field(5).map(CE.init(field:))
     }
 
-    /// RXO-6: Provider's Pharmacy/Treatment Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXO-6: Provider's Pharmacy/Treatment Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerSPharmacyTreatmentInstructionsAll` returns every repetition.
     public var providerSPharmacyTreatmentInstructions: CE? {
         field(6).map(CE.init(field:))
     }
 
-    /// RXO-7: Provider's Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXO-6: every repetition of Provider's Pharmacy/Treatment Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerSPharmacyTreatmentInstructionsAll: [CE] {
+        repetitions(6).map(CE.init(field:))
+    }
+
+    /// RXO-7: Provider's Administration Instructions. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerSAdministrationInstructionsAll` returns every repetition.
     public var providerSAdministrationInstructions: CE? {
         field(7).map(CE.init(field:))
+    }
+
+    /// RXO-7: every repetition of Provider's Administration Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerSAdministrationInstructionsAll: [CE] {
+        repetitions(7).map(CE.init(field:))
     }
 
     /// RXO-8: Deliver-To Location. HL7 data type `LA1`.
@@ -76,14 +94,32 @@ public struct RXO: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// RXO-14: Ordering Provider's DEA Number. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// RXO-14: Ordering Provider's DEA Number. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingProviderSDeaNumberAll` returns every repetition.
     public var orderingProviderSDeaNumber: XCN? {
         field(14).map(XCN.init(field:))
     }
 
-    /// RXO-15: Pharmacist/Treatment Supplier's Verifier ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// RXO-14: every repetition of Ordering Provider's DEA Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingProviderSDeaNumberAll: [XCN] {
+        repetitions(14).map(XCN.init(field:))
+    }
+
+    /// RXO-15: Pharmacist/Treatment Supplier's Verifier ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `pharmacistTreatmentSupplierSVerifierIdAll` returns every repetition.
     public var pharmacistTreatmentSupplierSVerifierId: XCN? {
         field(15).map(XCN.init(field:))
+    }
+
+    /// RXO-15: every repetition of Pharmacist/Treatment Supplier's Verifier ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var pharmacistTreatmentSupplierSVerifierIdAll: [XCN] {
+        repetitions(15).map(XCN.init(field:))
     }
 
     /// RXO-16: Needs Human Review. HL7 data type `ID`.
@@ -106,9 +142,18 @@ public struct RXO: TypedSegment {
         field(19).map(CE.init(field:))
     }
 
-    /// RXO-20: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXO-20: Indication. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `indicationAll` returns every repetition.
     public var indication: CE? {
         field(20).map(CE.init(field:))
+    }
+
+    /// RXO-20: every repetition of Indication, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var indicationAll: [CE] {
+        repetitions(20).map(CE.init(field:))
     }
 
     /// RXO-21: Requested Give Rate Amount. HL7 data type `ST`.
@@ -126,9 +171,18 @@ public struct RXO: TypedSegment {
         field(23)
     }
 
-    /// RXO-24: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXO-24: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `supplementaryCodeAll` returns every repetition.
     public var supplementaryCode: CE? {
         field(24).map(CE.init(field:))
+    }
+
+    /// RXO-24: every repetition of Supplementary Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var supplementaryCodeAll: [CE] {
+        repetitions(24).map(CE.init(field:))
     }
 
     /// RXO-25: Requested Drug Strength Volume. HL7 data type `NM`.

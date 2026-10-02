@@ -21,9 +21,18 @@ public struct AIL: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// AIL-3: Location Resource ID. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    /// AIL-3: Location Resource ID. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `locationResourceIdAll` returns every repetition.
     public var locationResourceId: PL? {
         field(3).map(PL.init(field:))
+    }
+
+    /// AIL-3: every repetition of Location Resource ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationResourceIdAll: [PL] {
+        repetitions(3).map(PL.init(field:))
     }
 
     /// AIL-4: Location Type-AIL. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

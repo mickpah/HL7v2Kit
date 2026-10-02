@@ -26,14 +26,32 @@ public struct ARV: TypedSegment {
         field(3).map(CWE.init(field:))
     }
 
-    /// ARV-4: Access Restriction Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// ARV-4: Access Restriction Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `accessRestrictionReasonAll` returns every repetition.
     public var accessRestrictionReason: CWE? {
         field(4).map(CWE.init(field:))
     }
 
-    /// ARV-5: Special Access Restriction Instructions. HL7 data type `ST`.
+    /// ARV-4: every repetition of Access Restriction Reason, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var accessRestrictionReasonAll: [CWE] {
+        repetitions(4).map(CWE.init(field:))
+    }
+
+    /// ARV-5: Special Access Restriction Instructions. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `specialAccessRestrictionInstructionsAll` returns every repetition.
     public var specialAccessRestrictionInstructions: String? {
         field(5)?.stringValue
+    }
+
+    /// ARV-5: every repetition of Special Access Restriction Instructions, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specialAccessRestrictionInstructionsAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 
     /// ARV-6: Access Restriction Date Range. HL7 data type `DR`.

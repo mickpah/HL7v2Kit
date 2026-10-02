@@ -51,8 +51,17 @@ public struct EDU: TypedSegment {
         field(8).map(XAD.init(field:))
     }
 
-    /// EDU-9: Major Field of Study. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// EDU-9: Major Field of Study. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `majorFieldOfStudyAll` returns every repetition.
     public var majorFieldOfStudy: CWE? {
         field(9).map(CWE.init(field:))
+    }
+
+    /// EDU-9: every repetition of Major Field of Study, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var majorFieldOfStudyAll: [CWE] {
+        repetitions(9).map(CWE.init(field:))
     }
 }

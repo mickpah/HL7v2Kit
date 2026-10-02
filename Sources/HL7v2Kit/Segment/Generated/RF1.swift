@@ -26,9 +26,18 @@ public struct RF1: TypedSegment {
         field(3).map(CE.init(field:))
     }
 
-    /// RF1-4: Referral Disposition. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RF1-4: Referral Disposition. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `referralDispositionAll` returns every repetition.
     public var referralDisposition: CE? {
         field(4).map(CE.init(field:))
+    }
+
+    /// RF1-4: every repetition of Referral Disposition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var referralDispositionAll: [CE] {
+        repetitions(4).map(CE.init(field:))
     }
 
     /// RF1-5: Referral Category. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -56,13 +65,31 @@ public struct RF1: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// RF1-10: Referral Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RF1-10: Referral Reason. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `referralReasonAll` returns every repetition.
     public var referralReason: CE? {
         field(10).map(CE.init(field:))
     }
 
-    /// RF1-11: External Referral Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// RF1-10: every repetition of Referral Reason, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var referralReasonAll: [CE] {
+        repetitions(10).map(CE.init(field:))
+    }
+
+    /// RF1-11: External Referral Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `externalReferralIdentifierAll` returns every repetition.
     public var externalReferralIdentifier: EI? {
         field(11).map(EI.init(field:))
+    }
+
+    /// RF1-11: every repetition of External Referral Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var externalReferralIdentifierAll: [EI] {
+        repetitions(11).map(EI.init(field:))
     }
 }

@@ -21,19 +21,46 @@ public struct TQ2: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// TQ2-3: Related Placer Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// TQ2-3: Related Placer Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `relatedPlacerNumberAll` returns every repetition.
     public var relatedPlacerNumber: EI? {
         field(3).map(EI.init(field:))
     }
 
-    /// TQ2-4: Related Filler Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// TQ2-3: every repetition of Related Placer Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var relatedPlacerNumberAll: [EI] {
+        repetitions(3).map(EI.init(field:))
+    }
+
+    /// TQ2-4: Related Filler Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `relatedFillerNumberAll` returns every repetition.
     public var relatedFillerNumber: EI? {
         field(4).map(EI.init(field:))
     }
 
-    /// TQ2-5: Related Placer Group Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// TQ2-4: every repetition of Related Filler Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var relatedFillerNumberAll: [EI] {
+        repetitions(4).map(EI.init(field:))
+    }
+
+    /// TQ2-5: Related Placer Group Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `relatedPlacerGroupNumberAll` returns every repetition.
     public var relatedPlacerGroupNumber: EI? {
         field(5).map(EI.init(field:))
+    }
+
+    /// TQ2-5: every repetition of Related Placer Group Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var relatedPlacerGroupNumberAll: [EI] {
+        repetitions(5).map(EI.init(field:))
     }
 
     /// TQ2-6: Sequence Condition Code. HL7 data type `ID`.

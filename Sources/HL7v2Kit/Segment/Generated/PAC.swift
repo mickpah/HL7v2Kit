@@ -36,18 +36,45 @@ public struct PAC: TypedSegment {
         field(5).map(CWE.init(field:))
     }
 
-    /// PAC-6: Package Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// PAC-6: Package Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `packageConditionAll` returns every repetition.
     public var packageCondition: CWE? {
         field(6).map(CWE.init(field:))
     }
 
-    /// PAC-7: Package Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// PAC-6: every repetition of Package Condition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var packageConditionAll: [CWE] {
+        repetitions(6).map(CWE.init(field:))
+    }
+
+    /// PAC-7: Package Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `packageHandlingCodeAll` returns every repetition.
     public var packageHandlingCode: CWE? {
         field(7).map(CWE.init(field:))
     }
 
-    /// PAC-8: Package Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// PAC-7: every repetition of Package Handling Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var packageHandlingCodeAll: [CWE] {
+        repetitions(7).map(CWE.init(field:))
+    }
+
+    /// PAC-8: Package Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `packageRiskCodeAll` returns every repetition.
     public var packageRiskCode: CWE? {
         field(8).map(CWE.init(field:))
+    }
+
+    /// PAC-8: every repetition of Package Risk Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var packageRiskCodeAll: [CWE] {
+        repetitions(8).map(CWE.init(field:))
     }
 }

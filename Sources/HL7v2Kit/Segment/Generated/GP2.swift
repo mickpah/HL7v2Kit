@@ -36,9 +36,18 @@ public struct GP2: TypedSegment {
         field(5)?.stringValue
     }
 
-    /// GP2-6: OCE Edit Code. HL7 data type `IS`.
+    /// GP2-6: OCE Edit Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `oceEditCodeAll` returns every repetition.
     public var oceEditCode: String? {
         field(6)?.stringValue
+    }
+
+    /// GP2-6: every repetition of OCE Edit Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var oceEditCodeAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 
     /// GP2-7: Ambulatory Payment Classification Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -46,9 +55,18 @@ public struct GP2: TypedSegment {
         field(7).map(CE.init(field:))
     }
 
-    /// GP2-8: Modifier Edit Code. HL7 data type `IS`.
+    /// GP2-8: Modifier Edit Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `modifierEditCodeAll` returns every repetition.
     public var modifierEditCode: String? {
         field(8)?.stringValue
+    }
+
+    /// GP2-8: every repetition of Modifier Edit Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var modifierEditCodeAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// GP2-9: Payment Adjustment Code. HL7 data type `IS`.

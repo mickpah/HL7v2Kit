@@ -21,9 +21,18 @@ public struct FAC: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// FAC-3: Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// FAC-3: Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `facilityAddressAll` returns every repetition.
     public var facilityAddress: XAD? {
         field(3).map(XAD.init(field:))
+    }
+
+    /// FAC-3: every repetition of Facility Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var facilityAddressAll: [XAD] {
+        repetitions(3).map(XAD.init(field:))
     }
 
     /// FAC-4: Facility Telecommunication. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -31,29 +40,74 @@ public struct FAC: TypedSegment {
         field(4).map(XTN.init(field:))
     }
 
-    /// FAC-5: Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// FAC-5: Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactPersonAll` returns every repetition.
     public var contactPerson: XCN? {
         field(5).map(XCN.init(field:))
     }
 
-    /// FAC-6: Contact Title. HL7 data type `ST`.
+    /// FAC-5: every repetition of Contact Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactPersonAll: [XCN] {
+        repetitions(5).map(XCN.init(field:))
+    }
+
+    /// FAC-6: Contact Title. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `contactTitleAll` returns every repetition.
     public var contactTitle: String? {
         field(6)?.stringValue
     }
 
-    /// FAC-7: Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// FAC-6: every repetition of Contact Title, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactTitleAll: [String?] {
+        repetitions(6).map(\.stringValue)
+    }
+
+    /// FAC-7: Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactAddressAll` returns every repetition.
     public var contactAddress: XAD? {
         field(7).map(XAD.init(field:))
     }
 
-    /// FAC-8: Contact Telecommunication. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// FAC-7: every repetition of Contact Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactAddressAll: [XAD] {
+        repetitions(7).map(XAD.init(field:))
+    }
+
+    /// FAC-8: Contact Telecommunication. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactTelecommunicationAll` returns every repetition.
     public var contactTelecommunication: XTN? {
         field(8).map(XTN.init(field:))
     }
 
-    /// FAC-9: Signature Authority. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// FAC-8: every repetition of Contact Telecommunication, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactTelecommunicationAll: [XTN] {
+        repetitions(8).map(XTN.init(field:))
+    }
+
+    /// FAC-9: Signature Authority. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `signatureAuthorityAll` returns every repetition.
     public var signatureAuthority: XCN? {
         field(9).map(XCN.init(field:))
+    }
+
+    /// FAC-9: every repetition of Signature Authority, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var signatureAuthorityAll: [XCN] {
+        repetitions(9).map(XCN.init(field:))
     }
 
     /// FAC-10: Signature Authority Title. HL7 data type `ST`.
@@ -61,9 +115,18 @@ public struct FAC: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// FAC-11: Signature Authority Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// FAC-11: Signature Authority Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `signatureAuthorityAddressAll` returns every repetition.
     public var signatureAuthorityAddress: XAD? {
         field(11).map(XAD.init(field:))
+    }
+
+    /// FAC-11: every repetition of Signature Authority Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var signatureAuthorityAddressAll: [XAD] {
+        repetitions(11).map(XAD.init(field:))
     }
 
     /// FAC-12: Signature Authority Telecommunication. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.

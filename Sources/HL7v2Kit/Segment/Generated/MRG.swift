@@ -11,14 +11,32 @@ public struct MRG: TypedSegment {
         self.fields = fields
     }
 
-    /// MRG-1: Prior Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// MRG-1: Prior Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `priorPatientIdentifierListAll` returns every repetition.
     public var priorPatientIdentifierList: CX? {
         field(1).map(CX.init(field:))
     }
 
-    /// MRG-2: Prior Alternate Patient ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// MRG-1: every repetition of Prior Patient Identifier List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var priorPatientIdentifierListAll: [CX] {
+        repetitions(1).map(CX.init(field:))
+    }
+
+    /// MRG-2: Prior Alternate Patient ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `priorAlternatePatientIdAll` returns every repetition.
     public var priorAlternatePatientId: CX? {
         field(2).map(CX.init(field:))
+    }
+
+    /// MRG-2: every repetition of Prior Alternate Patient ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var priorAlternatePatientIdAll: [CX] {
+        repetitions(2).map(CX.init(field:))
     }
 
     /// MRG-3: Prior Patient Account Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
@@ -41,8 +59,17 @@ public struct MRG: TypedSegment {
         field(6).map(CX.init(field:))
     }
 
-    /// MRG-7: Prior Patient Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// MRG-7: Prior Patient Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `priorPatientNameAll` returns every repetition.
     public var priorPatientName: XPN? {
         field(7).map(XPN.init(field:))
+    }
+
+    /// MRG-7: every repetition of Prior Patient Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var priorPatientNameAll: [XPN] {
+        repetitions(7).map(XPN.init(field:))
     }
 }

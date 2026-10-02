@@ -31,9 +31,18 @@ public struct AL1: TypedSegment {
         field(4).map(CE.init(field:))
     }
 
-    /// AL1-5: Allergy Reaction Code. HL7 data type `ST`.
+    /// AL1-5: Allergy Reaction Code. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `allergyReactionCodeAll` returns every repetition.
     public var allergyReactionCode: String? {
         field(5)?.stringValue
+    }
+
+    /// AL1-5: every repetition of Allergy Reaction Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var allergyReactionCodeAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 
     /// AL1-6: Identification Date (deprecated). HL7 data type `DT`.

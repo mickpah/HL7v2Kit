@@ -21,8 +21,17 @@ public struct BTS: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// BTS-3: Batch Totals. HL7 data type `NM`.
+    /// BTS-3: Batch Totals. HL7 data type `NM`. Repeating field: this accessor reads the first repetition; `batchTotalsAll` returns every repetition.
     public var batchTotals: String? {
         field(3)?.stringValue
+    }
+
+    /// BTS-3: every repetition of Batch Totals, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var batchTotalsAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 }

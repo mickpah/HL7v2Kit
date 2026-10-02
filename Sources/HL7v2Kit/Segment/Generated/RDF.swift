@@ -16,8 +16,17 @@ public struct RDF: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// RDF-2: Column Description. HL7 data type `RCD`.
+    /// RDF-2: Column Description. HL7 data type `RCD`. Repeating field: this accessor reads the first repetition; `columnDescriptionAll` returns every repetition.
     public var columnDescription: Field? {
         field(2)
+    }
+
+    /// RDF-2: every repetition of Column Description, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var columnDescriptionAll: [Field] {
+        repetitions(2)
     }
 }

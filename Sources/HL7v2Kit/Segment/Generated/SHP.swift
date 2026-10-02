@@ -16,9 +16,18 @@ public struct SHP: TypedSegment {
         field(1).map(EI.init(field:))
     }
 
-    /// SHP-2: Internal Shipment ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// SHP-2: Internal Shipment ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `internalShipmentIdAll` returns every repetition.
     public var internalShipmentId: EI? {
         field(2).map(EI.init(field:))
+    }
+
+    /// SHP-2: every repetition of Internal Shipment ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var internalShipmentIdAll: [EI] {
+        repetitions(2).map(EI.init(field:))
     }
 
     /// SHP-3: Shipment Status. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -41,9 +50,18 @@ public struct SHP: TypedSegment {
         field(6).map(CWE.init(field:))
     }
 
-    /// SHP-7: Shipment Confidentiality. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SHP-7: Shipment Confidentiality. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `shipmentConfidentialityAll` returns every repetition.
     public var shipmentConfidentiality: CWE? {
         field(7).map(CWE.init(field:))
+    }
+
+    /// SHP-7: every repetition of Shipment Confidentiality, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var shipmentConfidentialityAll: [CWE] {
+        repetitions(7).map(CWE.init(field:))
     }
 
     /// SHP-8: Number of Packages in Shipment. HL7 data type `NM`.
@@ -51,18 +69,45 @@ public struct SHP: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// SHP-9: Shipment Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SHP-9: Shipment Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `shipmentConditionAll` returns every repetition.
     public var shipmentCondition: CWE? {
         field(9).map(CWE.init(field:))
     }
 
-    /// SHP-10: Shipment Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SHP-9: every repetition of Shipment Condition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var shipmentConditionAll: [CWE] {
+        repetitions(9).map(CWE.init(field:))
+    }
+
+    /// SHP-10: Shipment Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `shipmentHandlingCodeAll` returns every repetition.
     public var shipmentHandlingCode: CWE? {
         field(10).map(CWE.init(field:))
     }
 
-    /// SHP-11: Shipment Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SHP-10: every repetition of Shipment Handling Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var shipmentHandlingCodeAll: [CWE] {
+        repetitions(10).map(CWE.init(field:))
+    }
+
+    /// SHP-11: Shipment Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `shipmentRiskCodeAll` returns every repetition.
     public var shipmentRiskCode: CWE? {
         field(11).map(CWE.init(field:))
+    }
+
+    /// SHP-11: every repetition of Shipment Risk Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var shipmentRiskCodeAll: [CWE] {
+        repetitions(11).map(CWE.init(field:))
     }
 }

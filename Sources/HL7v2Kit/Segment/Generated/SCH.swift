@@ -61,14 +61,32 @@ public struct SCH: TypedSegment {
         field(10).map(CE.init(field:))
     }
 
-    /// SCH-11: Appointment Timing Quantity. HL7 data type `TQ`.
+    /// SCH-11: Appointment Timing Quantity. HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `appointmentTimingQuantityAll` returns every repetition.
     public var appointmentTimingQuantity: Field? {
         field(11)
     }
 
-    /// SCH-12: Placer Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// SCH-11: every repetition of Appointment Timing Quantity, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var appointmentTimingQuantityAll: [Field] {
+        repetitions(11)
+    }
+
+    /// SCH-12: Placer Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerContactPersonAll` returns every repetition.
     public var placerContactPerson: XCN? {
         field(12).map(XCN.init(field:))
+    }
+
+    /// SCH-12: every repetition of Placer Contact Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerContactPersonAll: [XCN] {
+        repetitions(12).map(XCN.init(field:))
     }
 
     /// SCH-13: Placer Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -76,9 +94,18 @@ public struct SCH: TypedSegment {
         field(13).map(XTN.init(field:))
     }
 
-    /// SCH-14: Placer Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// SCH-14: Placer Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerContactAddressAll` returns every repetition.
     public var placerContactAddress: XAD? {
         field(14).map(XAD.init(field:))
+    }
+
+    /// SCH-14: every repetition of Placer Contact Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerContactAddressAll: [XAD] {
+        repetitions(14).map(XAD.init(field:))
     }
 
     /// SCH-15: Placer Contact Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -86,9 +113,18 @@ public struct SCH: TypedSegment {
         field(15).map(PL.init(field:))
     }
 
-    /// SCH-16: Filler Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// SCH-16: Filler Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `fillerContactPersonAll` returns every repetition.
     public var fillerContactPerson: XCN? {
         field(16).map(XCN.init(field:))
+    }
+
+    /// SCH-16: every repetition of Filler Contact Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerContactPersonAll: [XCN] {
+        repetitions(16).map(XCN.init(field:))
     }
 
     /// SCH-17: Filler Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -96,9 +132,18 @@ public struct SCH: TypedSegment {
         field(17).map(XTN.init(field:))
     }
 
-    /// SCH-18: Filler Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// SCH-18: Filler Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `fillerContactAddressAll` returns every repetition.
     public var fillerContactAddress: XAD? {
         field(18).map(XAD.init(field:))
+    }
+
+    /// SCH-18: every repetition of Filler Contact Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerContactAddressAll: [XAD] {
+        repetitions(18).map(XAD.init(field:))
     }
 
     /// SCH-19: Filler Contact Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -106,14 +151,32 @@ public struct SCH: TypedSegment {
         field(19).map(PL.init(field:))
     }
 
-    /// SCH-20: Entered by Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// SCH-20: Entered by Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByPersonAll` returns every repetition.
     public var enteredByPerson: XCN? {
         field(20).map(XCN.init(field:))
     }
 
-    /// SCH-21: Entered by Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// SCH-20: every repetition of Entered by Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByPersonAll: [XCN] {
+        repetitions(20).map(XCN.init(field:))
+    }
+
+    /// SCH-21: Entered by Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByPhoneNumberAll` returns every repetition.
     public var enteredByPhoneNumber: XTN? {
         field(21).map(XTN.init(field:))
+    }
+
+    /// SCH-21: every repetition of Entered by Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByPhoneNumberAll: [XTN] {
+        repetitions(21).map(XTN.init(field:))
     }
 
     /// SCH-22: Entered by Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -136,13 +199,31 @@ public struct SCH: TypedSegment {
         field(25).map(CE.init(field:))
     }
 
-    /// SCH-26: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// SCH-26: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerOrderNumberAll` returns every repetition.
     public var placerOrderNumber: EI? {
         field(26).map(EI.init(field:))
     }
 
-    /// SCH-27: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// SCH-26: every repetition of Placer Order Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerOrderNumberAll: [EI] {
+        repetitions(26).map(EI.init(field:))
+    }
+
+    /// SCH-27: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `fillerOrderNumberAll` returns every repetition.
     public var fillerOrderNumber: EI? {
         field(27).map(EI.init(field:))
+    }
+
+    /// SCH-27: every repetition of Filler Order Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerOrderNumberAll: [EI] {
+        repetitions(27).map(EI.init(field:))
     }
 }

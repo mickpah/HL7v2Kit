@@ -46,9 +46,18 @@ public struct PR1: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// PR1-8: Anesthesiologist. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PR1-8: Anesthesiologist. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `anesthesiologistAll` returns every repetition.
     public var anesthesiologist: XCN? {
         field(8).map(XCN.init(field:))
+    }
+
+    /// PR1-8: every repetition of Anesthesiologist, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var anesthesiologistAll: [XCN] {
+        repetitions(8).map(XCN.init(field:))
     }
 
     /// PR1-9: Anesthesia Code. HL7 data type `IS`.
@@ -61,14 +70,32 @@ public struct PR1: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// PR1-11: Surgeon. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PR1-11: Surgeon. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `surgeonAll` returns every repetition.
     public var surgeon: XCN? {
         field(11).map(XCN.init(field:))
     }
 
-    /// PR1-12: Procedure Practitioner. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PR1-11: every repetition of Surgeon, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var surgeonAll: [XCN] {
+        repetitions(11).map(XCN.init(field:))
+    }
+
+    /// PR1-12: Procedure Practitioner. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedurePractitionerAll` returns every repetition.
     public var procedurePractitioner: XCN? {
         field(12).map(XCN.init(field:))
+    }
+
+    /// PR1-12: every repetition of Procedure Practitioner, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedurePractitionerAll: [XCN] {
+        repetitions(12).map(XCN.init(field:))
     }
 
     /// PR1-13: Consent Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -86,9 +113,18 @@ public struct PR1: TypedSegment {
         field(15).map(CE.init(field:))
     }
 
-    /// PR1-16: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PR1-16: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeModifierAll` returns every repetition.
     public var procedureCodeModifier: CE? {
         field(16).map(CE.init(field:))
+    }
+
+    /// PR1-16: every repetition of Procedure Code Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeModifierAll: [CE] {
+        repetitions(16).map(CE.init(field:))
     }
 
     /// PR1-17: Procedure DRG Type. HL7 data type `IS`.
@@ -96,9 +132,18 @@ public struct PR1: TypedSegment {
         field(17)?.stringValue
     }
 
-    /// PR1-18: Tissue Type Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PR1-18: Tissue Type Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `tissueTypeCodeAll` returns every repetition.
     public var tissueTypeCode: CE? {
         field(18).map(CE.init(field:))
+    }
+
+    /// PR1-18: every repetition of Tissue Type Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var tissueTypeCodeAll: [CE] {
+        repetitions(18).map(CE.init(field:))
     }
 
     /// PR1-19: Procedure Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.

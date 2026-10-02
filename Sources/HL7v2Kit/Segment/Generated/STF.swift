@@ -16,19 +16,46 @@ public struct STF: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// STF-2: Staff Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// STF-2: Staff Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `staffIdentifierListAll` returns every repetition.
     public var staffIdentifierList: CX? {
         field(2).map(CX.init(field:))
     }
 
-    /// STF-3: Staff Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// STF-2: every repetition of Staff Identifier List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var staffIdentifierListAll: [CX] {
+        repetitions(2).map(CX.init(field:))
+    }
+
+    /// STF-3: Staff Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `staffNameAll` returns every repetition.
     public var staffName: XPN? {
         field(3).map(XPN.init(field:))
     }
 
-    /// STF-4: Staff Type. HL7 data type `IS`.
+    /// STF-3: every repetition of Staff Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var staffNameAll: [XPN] {
+        repetitions(3).map(XPN.init(field:))
+    }
+
+    /// STF-4: Staff Type. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `staffTypeAll` returns every repetition.
     public var staffType: String? {
         field(4)?.stringValue
+    }
+
+    /// STF-4: every repetition of Staff Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var staffTypeAll: [String?] {
+        repetitions(4).map(\.stringValue)
     }
 
     /// STF-5: Administrative Sex. HL7 data type `IS`.
@@ -46,44 +73,116 @@ public struct STF: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// STF-8: Department. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// STF-8: Department. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `departmentAll` returns every repetition.
     public var department: CE? {
         field(8).map(CE.init(field:))
     }
 
-    /// STF-9: Hospital Service - STF. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// STF-8: every repetition of Department, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var departmentAll: [CE] {
+        repetitions(8).map(CE.init(field:))
+    }
+
+    /// STF-9: Hospital Service - STF. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `hospitalServiceStfAll` returns every repetition.
     public var hospitalServiceStf: CE? {
         field(9).map(CE.init(field:))
     }
 
-    /// STF-10: Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// STF-9: every repetition of Hospital Service - STF, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var hospitalServiceStfAll: [CE] {
+        repetitions(9).map(CE.init(field:))
+    }
+
+    /// STF-10: Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phoneAll` returns every repetition.
     public var phone: XTN? {
         field(10).map(XTN.init(field:))
     }
 
-    /// STF-11: Office/Home Address/Birthplace. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// STF-10: every repetition of Phone, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phoneAll: [XTN] {
+        repetitions(10).map(XTN.init(field:))
+    }
+
+    /// STF-11: Office/Home Address/Birthplace. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `officeHomeAddressBirthplaceAll` returns every repetition.
     public var officeHomeAddressBirthplace: XAD? {
         field(11).map(XAD.init(field:))
     }
 
-    /// STF-12: Institution Activation Date. HL7 data type `DIN`.
+    /// STF-11: every repetition of Office/Home Address/Birthplace, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var officeHomeAddressBirthplaceAll: [XAD] {
+        repetitions(11).map(XAD.init(field:))
+    }
+
+    /// STF-12: Institution Activation Date. HL7 data type `DIN`. Repeating field: this accessor reads the first repetition; `institutionActivationDateAll` returns every repetition.
     public var institutionActivationDate: Field? {
         field(12)
     }
 
-    /// STF-13: Institution Inactivation Date. HL7 data type `DIN`.
+    /// STF-12: every repetition of Institution Activation Date, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var institutionActivationDateAll: [Field] {
+        repetitions(12)
+    }
+
+    /// STF-13: Institution Inactivation Date. HL7 data type `DIN`. Repeating field: this accessor reads the first repetition; `institutionInactivationDateAll` returns every repetition.
     public var institutionInactivationDate: Field? {
         field(13)
     }
 
-    /// STF-14: Backup Person ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// STF-13: every repetition of Institution Inactivation Date, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var institutionInactivationDateAll: [Field] {
+        repetitions(13)
+    }
+
+    /// STF-14: Backup Person ID. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `backupPersonIdAll` returns every repetition.
     public var backupPersonId: CE? {
         field(14).map(CE.init(field:))
     }
 
-    /// STF-15: E-Mail Address. HL7 data type `ST`.
+    /// STF-14: every repetition of Backup Person ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var backupPersonIdAll: [CE] {
+        repetitions(14).map(CE.init(field:))
+    }
+
+    /// STF-15: E-Mail Address. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `eMailAddressAll` returns every repetition.
     public var eMailAddress: String? {
         field(15)?.stringValue
+    }
+
+    /// STF-15: every repetition of E-Mail Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eMailAddressAll: [String?] {
+        repetitions(15).map(\.stringValue)
     }
 
     /// STF-16: Preferred Method of Contact. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -156,9 +255,18 @@ public struct STF: TypedSegment {
         field(29)?.stringValue
     }
 
-    /// STF-30: Citizenship. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// STF-30: Citizenship. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
     public var citizenship: CWE? {
         field(30).map(CWE.init(field:))
+    }
+
+    /// STF-30: every repetition of Citizenship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var citizenshipAll: [CWE] {
+        repetitions(30).map(CWE.init(field:))
     }
 
     /// STF-31: Death Date and Time. HL7 data type `TS`.
@@ -186,9 +294,18 @@ public struct STF: TypedSegment {
         field(35)?.stringValue
     }
 
-    /// STF-36: Cost Center Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// STF-36: Cost Center Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `costCenterCodeAll` returns every repetition.
     public var costCenterCode: CWE? {
         field(36).map(CWE.init(field:))
+    }
+
+    /// STF-36: every repetition of Cost Center Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var costCenterCodeAll: [CWE] {
+        repetitions(36).map(CWE.init(field:))
     }
 
     /// STF-37: Generic Classification Indicator. HL7 data type `ID`.

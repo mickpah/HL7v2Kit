@@ -21,13 +21,31 @@ public struct LCC: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// LCC-3: Accommodation Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// LCC-3: Accommodation Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `accommodationTypeAll` returns every repetition.
     public var accommodationType: CE? {
         field(3).map(CE.init(field:))
     }
 
-    /// LCC-4: Charge Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// LCC-3: every repetition of Accommodation Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var accommodationTypeAll: [CE] {
+        repetitions(3).map(CE.init(field:))
+    }
+
+    /// LCC-4: Charge Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `chargeCodeAll` returns every repetition.
     public var chargeCode: CE? {
         field(4).map(CE.init(field:))
+    }
+
+    /// LCC-4: every repetition of Charge Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var chargeCodeAll: [CE] {
+        repetitions(4).map(CE.init(field:))
     }
 }

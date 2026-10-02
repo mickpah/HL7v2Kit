@@ -16,9 +16,18 @@ public struct OM5: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// OM5-2: Test/Observations Included within an Ordered Test Battery. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM5-2: Test/Observations Included within an Ordered Test Battery. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `testObservationsIncludedWithinAnOrderedTestBatteryAll` returns every repetition.
     public var testObservationsIncludedWithinAnOrderedTestBattery: CE? {
         field(2).map(CE.init(field:))
+    }
+
+    /// OM5-2: every repetition of Test/Observations Included within an Ordered Test Battery, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var testObservationsIncludedWithinAnOrderedTestBatteryAll: [CE] {
+        repetitions(2).map(CE.init(field:))
     }
 
     /// OM5-3: Observation ID Suffixes. HL7 data type `ST`.

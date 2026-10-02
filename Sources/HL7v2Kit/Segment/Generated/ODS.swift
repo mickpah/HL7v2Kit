@@ -16,18 +16,45 @@ public struct ODS: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// ODS-2: Service Period. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// ODS-2: Service Period. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `servicePeriodAll` returns every repetition.
     public var servicePeriod: CE? {
         field(2).map(CE.init(field:))
     }
 
-    /// ODS-3: Diet, Supplement, or Preference Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// ODS-2: every repetition of Service Period, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var servicePeriodAll: [CE] {
+        repetitions(2).map(CE.init(field:))
+    }
+
+    /// ODS-3: Diet, Supplement, or Preference Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `dietSupplementOrPreferenceCodeAll` returns every repetition.
     public var dietSupplementOrPreferenceCode: CE? {
         field(3).map(CE.init(field:))
     }
 
-    /// ODS-4: Text Instruction. HL7 data type `ST`.
+    /// ODS-3: every repetition of Diet, Supplement, or Preference Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var dietSupplementOrPreferenceCodeAll: [CE] {
+        repetitions(3).map(CE.init(field:))
+    }
+
+    /// ODS-4: Text Instruction. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `textInstructionAll` returns every repetition.
     public var textInstruction: String? {
         field(4)?.stringValue
+    }
+
+    /// ODS-4: every repetition of Text Instruction, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var textInstructionAll: [String?] {
+        repetitions(4).map(\.stringValue)
     }
 }

@@ -16,9 +16,18 @@ public struct CDM: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// CDM-2: Charge Code Alias. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CDM-2: Charge Code Alias. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `chargeCodeAliasAll` returns every repetition.
     public var chargeCodeAlias: CE? {
         field(2).map(CE.init(field:))
+    }
+
+    /// CDM-2: every repetition of Charge Code Alias, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var chargeCodeAliasAll: [CE] {
+        repetitions(2).map(CE.init(field:))
     }
 
     /// CDM-3: Charge Description Short. HL7 data type `ST`.
@@ -36,14 +45,32 @@ public struct CDM: TypedSegment {
         field(5)?.stringValue
     }
 
-    /// CDM-6: Exploding Charges. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CDM-6: Exploding Charges. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `explodingChargesAll` returns every repetition.
     public var explodingCharges: CE? {
         field(6).map(CE.init(field:))
     }
 
-    /// CDM-7: Procedure Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CDM-6: every repetition of Exploding Charges, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var explodingChargesAll: [CE] {
+        repetitions(6).map(CE.init(field:))
+    }
+
+    /// CDM-7: Procedure Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeAll` returns every repetition.
     public var procedureCode: CE? {
         field(7).map(CE.init(field:))
+    }
+
+    /// CDM-7: every repetition of Procedure Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeAll: [CE] {
+        repetitions(7).map(CE.init(field:))
     }
 
     /// CDM-8: Active/Inactive Flag. HL7 data type `ID`.
@@ -51,9 +78,18 @@ public struct CDM: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// CDM-9: Inventory Number. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CDM-9: Inventory Number. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `inventoryNumberAll` returns every repetition.
     public var inventoryNumber: CE? {
         field(9).map(CE.init(field:))
+    }
+
+    /// CDM-9: every repetition of Inventory Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var inventoryNumberAll: [CE] {
+        repetitions(9).map(CE.init(field:))
     }
 
     /// CDM-10: Resource Load. HL7 data type `NM`.
@@ -61,14 +97,32 @@ public struct CDM: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// CDM-11: Contract Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// CDM-11: Contract Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contractNumberAll` returns every repetition.
     public var contractNumber: CX? {
         field(11).map(CX.init(field:))
     }
 
-    /// CDM-12: Contract Organization. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// CDM-11: every repetition of Contract Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractNumberAll: [CX] {
+        repetitions(11).map(CX.init(field:))
+    }
+
+    /// CDM-12: Contract Organization. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contractOrganizationAll` returns every repetition.
     public var contractOrganization: XON? {
         field(12).map(XON.init(field:))
+    }
+
+    /// CDM-12: every repetition of Contract Organization, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractOrganizationAll: [XON] {
+        repetitions(12).map(XON.init(field:))
     }
 
     /// CDM-13: Room Fee Indicator. HL7 data type `ID`.

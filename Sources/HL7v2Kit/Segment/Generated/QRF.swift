@@ -11,9 +11,18 @@ public struct QRF: TypedSegment {
         self.fields = fields
     }
 
-    /// QRF-1: Where Subject Filter. HL7 data type `ST`.
+    /// QRF-1: Where Subject Filter. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `whereSubjectFilterAll` returns every repetition.
     public var whereSubjectFilter: String? {
         field(1)?.stringValue
+    }
+
+    /// QRF-1: every repetition of Where Subject Filter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whereSubjectFilterAll: [String?] {
+        repetitions(1).map(\.stringValue)
     }
 
     /// QRF-2: When Data Start Date/Time. HL7 data type `TS`.
@@ -26,29 +35,74 @@ public struct QRF: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// QRF-4: What User Qualifier. HL7 data type `ST`.
+    /// QRF-4: What User Qualifier. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `whatUserQualifierAll` returns every repetition.
     public var whatUserQualifier: String? {
         field(4)?.stringValue
     }
 
-    /// QRF-5: Other QRY Subject Filter. HL7 data type `ST`.
+    /// QRF-4: every repetition of What User Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whatUserQualifierAll: [String?] {
+        repetitions(4).map(\.stringValue)
+    }
+
+    /// QRF-5: Other QRY Subject Filter. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `otherQrySubjectFilterAll` returns every repetition.
     public var otherQrySubjectFilter: String? {
         field(5)?.stringValue
     }
 
-    /// QRF-6: Which Date/Time Qualifier. HL7 data type `ID`.
+    /// QRF-5: every repetition of Other QRY Subject Filter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var otherQrySubjectFilterAll: [String?] {
+        repetitions(5).map(\.stringValue)
+    }
+
+    /// QRF-6: Which Date/Time Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `whichDateTimeQualifierAll` returns every repetition.
     public var whichDateTimeQualifier: String? {
         field(6)?.stringValue
     }
 
-    /// QRF-7: Which Date/Time Status Qualifier. HL7 data type `ID`.
+    /// QRF-6: every repetition of Which Date/Time Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whichDateTimeQualifierAll: [String?] {
+        repetitions(6).map(\.stringValue)
+    }
+
+    /// QRF-7: Which Date/Time Status Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `whichDateTimeStatusQualifierAll` returns every repetition.
     public var whichDateTimeStatusQualifier: String? {
         field(7)?.stringValue
     }
 
-    /// QRF-8: Date/Time Selection Qualifier. HL7 data type `ID`.
+    /// QRF-7: every repetition of Which Date/Time Status Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whichDateTimeStatusQualifierAll: [String?] {
+        repetitions(7).map(\.stringValue)
+    }
+
+    /// QRF-8: Date/Time Selection Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `dateTimeSelectionQualifierAll` returns every repetition.
     public var dateTimeSelectionQualifier: String? {
         field(8)?.stringValue
+    }
+
+    /// QRF-8: every repetition of Date/Time Selection Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var dateTimeSelectionQualifierAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// QRF-9: When Quantity/Timing Qualifier. HL7 data type `TQ`.

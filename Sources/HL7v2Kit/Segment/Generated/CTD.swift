@@ -11,19 +11,46 @@ public struct CTD: TypedSegment {
         self.fields = fields
     }
 
-    /// CTD-1: Contact Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CTD-1: Contact Role. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactRoleAll` returns every repetition.
     public var contactRole: CE? {
         field(1).map(CE.init(field:))
     }
 
-    /// CTD-2: Contact Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// CTD-1: every repetition of Contact Role, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactRoleAll: [CE] {
+        repetitions(1).map(CE.init(field:))
+    }
+
+    /// CTD-2: Contact Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactNameAll` returns every repetition.
     public var contactName: XPN? {
         field(2).map(XPN.init(field:))
     }
 
-    /// CTD-3: Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// CTD-2: every repetition of Contact Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactNameAll: [XPN] {
+        repetitions(2).map(XPN.init(field:))
+    }
+
+    /// CTD-3: Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactAddressAll` returns every repetition.
     public var contactAddress: XAD? {
         field(3).map(XAD.init(field:))
+    }
+
+    /// CTD-3: every repetition of Contact Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactAddressAll: [XAD] {
+        repetitions(3).map(XAD.init(field:))
     }
 
     /// CTD-4: Contact Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -31,9 +58,18 @@ public struct CTD: TypedSegment {
         field(4).map(PL.init(field:))
     }
 
-    /// CTD-5: Contact Communication Information. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// CTD-5: Contact Communication Information. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactCommunicationInformationAll` returns every repetition.
     public var contactCommunicationInformation: XTN? {
         field(5).map(XTN.init(field:))
+    }
+
+    /// CTD-5: every repetition of Contact Communication Information, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactCommunicationInformationAll: [XTN] {
+        repetitions(5).map(XTN.init(field:))
     }
 
     /// CTD-6: Preferred Method of Contact. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -41,8 +77,17 @@ public struct CTD: TypedSegment {
         field(6).map(CE.init(field:))
     }
 
-    /// CTD-7: Contact Identifiers. HL7 data type `PLN`.
+    /// CTD-7: Contact Identifiers. HL7 data type `PLN`. Repeating field: this accessor reads the first repetition; `contactIdentifiersAll` returns every repetition.
     public var contactIdentifiers: Field? {
         field(7)
+    }
+
+    /// CTD-7: every repetition of Contact Identifiers, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactIdentifiersAll: [Field] {
+        repetitions(7)
     }
 }

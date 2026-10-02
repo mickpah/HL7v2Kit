@@ -31,29 +31,74 @@ public struct CON: TypedSegment {
         field(4).map(EI.init(field:))
     }
 
-    /// CON-5: Consent Text. HL7 data type `FT`.
+    /// CON-5: Consent Text. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `consentTextAll` returns every repetition.
     public var consentText: String? {
         field(5)?.stringValue
     }
 
-    /// CON-6: Subject-specific Consent Text. HL7 data type `FT`.
+    /// CON-5: every repetition of Consent Text, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var consentTextAll: [String?] {
+        repetitions(5).map(\.stringValue)
+    }
+
+    /// CON-6: Subject-specific Consent Text. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `subjectSpecificConsentTextAll` returns every repetition.
     public var subjectSpecificConsentText: String? {
         field(6)?.stringValue
     }
 
-    /// CON-7: Consent Background. HL7 data type `FT`.
+    /// CON-6: every repetition of Subject-specific Consent Text, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var subjectSpecificConsentTextAll: [String?] {
+        repetitions(6).map(\.stringValue)
+    }
+
+    /// CON-7: Consent Background. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `consentBackgroundAll` returns every repetition.
     public var consentBackground: String? {
         field(7)?.stringValue
     }
 
-    /// CON-8: Subject-specific Consent Background. HL7 data type `FT`.
+    /// CON-7: every repetition of Consent Background, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var consentBackgroundAll: [String?] {
+        repetitions(7).map(\.stringValue)
+    }
+
+    /// CON-8: Subject-specific Consent Background. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `subjectSpecificConsentBackgroundAll` returns every repetition.
     public var subjectSpecificConsentBackground: String? {
         field(8)?.stringValue
     }
 
-    /// CON-9: Consenter-imposed limitations. HL7 data type `FT`.
+    /// CON-8: every repetition of Subject-specific Consent Background, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var subjectSpecificConsentBackgroundAll: [String?] {
+        repetitions(8).map(\.stringValue)
+    }
+
+    /// CON-9: Consenter-imposed limitations. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `consenterImposedLimitationsAll` returns every repetition.
     public var consenterImposedLimitations: String? {
         field(9)?.stringValue
+    }
+
+    /// CON-9: every repetition of Consenter-imposed limitations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var consenterImposedLimitationsAll: [String?] {
+        repetitions(9).map(\.stringValue)
     }
 
     /// CON-10: Consent Mode. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
@@ -126,13 +171,31 @@ public struct CON: TypedSegment {
         field(23).map(CWE.init(field:))
     }
 
-    /// CON-24: Consenter ID. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// CON-24: Consenter ID. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `consenterIdAll` returns every repetition.
     public var consenterId: XPN? {
         field(24).map(XPN.init(field:))
     }
 
-    /// CON-25: Relationship to Subject Table. HL7 data type `IS`.
+    /// CON-24: every repetition of Consenter ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var consenterIdAll: [XPN] {
+        repetitions(24).map(XPN.init(field:))
+    }
+
+    /// CON-25: Relationship to Subject Table. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `relationshipToSubjectTableAll` returns every repetition.
     public var relationshipToSubjectTable: String? {
         field(25)?.stringValue
+    }
+
+    /// CON-25: every repetition of Relationship to Subject Table, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var relationshipToSubjectTableAll: [String?] {
+        repetitions(25).map(\.stringValue)
     }
 }

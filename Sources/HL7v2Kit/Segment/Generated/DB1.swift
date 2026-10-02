@@ -21,9 +21,18 @@ public struct DB1: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// DB1-3: Disabled Person Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// DB1-3: Disabled Person Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `disabledPersonIdentifierAll` returns every repetition.
     public var disabledPersonIdentifier: CX? {
         field(3).map(CX.init(field:))
+    }
+
+    /// DB1-3: every repetition of Disabled Person Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var disabledPersonIdentifierAll: [CX] {
+        repetitions(3).map(CX.init(field:))
     }
 
     /// DB1-4: Disabled Indicator. HL7 data type `ID`.

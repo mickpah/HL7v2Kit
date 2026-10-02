@@ -96,9 +96,18 @@ public struct MSH: TypedSegment {
         field(17)?.stringValue
     }
 
-    /// MSH-18: Character Set. HL7 data type `ID`.
+    /// MSH-18: Character Set. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `characterSetAll` returns every repetition.
     public var characterSet: String? {
         field(18)?.stringValue
+    }
+
+    /// MSH-18: every repetition of Character Set, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var characterSetAll: [String?] {
+        repetitions(18).map(\.stringValue)
     }
 
     /// MSH-19: Principal Language Of Message. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -111,8 +120,17 @@ public struct MSH: TypedSegment {
         field(20)?.stringValue
     }
 
-    /// MSH-21: Message Profile Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// MSH-21: Message Profile Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `messageProfileIdentifierAll` returns every repetition.
     public var messageProfileIdentifier: EI? {
         field(21).map(EI.init(field:))
+    }
+
+    /// MSH-21: every repetition of Message Profile Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var messageProfileIdentifierAll: [EI] {
+        repetitions(21).map(EI.init(field:))
     }
 }

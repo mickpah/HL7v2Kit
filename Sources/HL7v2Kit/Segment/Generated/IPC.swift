@@ -36,9 +36,18 @@ public struct IPC: TypedSegment {
         field(5).map(CE.init(field:))
     }
 
-    /// IPC-6: Protocol Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// IPC-6: Protocol Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `protocolCodeAll` returns every repetition.
     public var protocolCode: CE? {
         field(6).map(CE.init(field:))
+    }
+
+    /// IPC-6: every repetition of Protocol Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var protocolCodeAll: [CE] {
+        repetitions(6).map(CE.init(field:))
     }
 
     /// IPC-7: Scheduled Station Name. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
@@ -46,9 +55,18 @@ public struct IPC: TypedSegment {
         field(7).map(EI.init(field:))
     }
 
-    /// IPC-8: Scheduled Procedure Step Location. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// IPC-8: Scheduled Procedure Step Location. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `scheduledProcedureStepLocationAll` returns every repetition.
     public var scheduledProcedureStepLocation: CE? {
         field(8).map(CE.init(field:))
+    }
+
+    /// IPC-8: every repetition of Scheduled Procedure Step Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var scheduledProcedureStepLocationAll: [CE] {
+        repetitions(8).map(CE.init(field:))
     }
 
     /// IPC-9: Scheduled AE Title. HL7 data type `ST`.

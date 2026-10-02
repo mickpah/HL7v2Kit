@@ -21,9 +21,18 @@ public struct CM0: TypedSegment {
         field(2).map(EI.init(field:))
     }
 
-    /// CM0-3: Alternate Study ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// CM0-3: Alternate Study ID. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `alternateStudyIdAll` returns every repetition.
     public var alternateStudyId: EI? {
         field(3).map(EI.init(field:))
+    }
+
+    /// CM0-3: every repetition of Alternate Study ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var alternateStudyIdAll: [EI] {
+        repetitions(3).map(EI.init(field:))
     }
 
     /// CM0-4: Title of Study. HL7 data type `ST`.
@@ -31,9 +40,18 @@ public struct CM0: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// CM0-5: Chairman of Study. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// CM0-5: Chairman of Study. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `chairmanOfStudyAll` returns every repetition.
     public var chairmanOfStudy: XCN? {
         field(5).map(XCN.init(field:))
+    }
+
+    /// CM0-5: every repetition of Chairman of Study, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var chairmanOfStudyAll: [XCN] {
+        repetitions(5).map(XCN.init(field:))
     }
 
     /// CM0-6: Last IRB Approval Date. HL7 data type `DT`.
@@ -51,9 +69,18 @@ public struct CM0: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// CM0-9: Contact for Study. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// CM0-9: Contact for Study. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactForStudyAll` returns every repetition.
     public var contactForStudy: XCN? {
         field(9).map(XCN.init(field:))
+    }
+
+    /// CM0-9: every repetition of Contact for Study, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactForStudyAll: [XCN] {
+        repetitions(9).map(XCN.init(field:))
     }
 
     /// CM0-10: Contact's Telephone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -61,8 +88,17 @@ public struct CM0: TypedSegment {
         field(10).map(XTN.init(field:))
     }
 
-    /// CM0-11: Contact's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// CM0-11: Contact's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `contactAddressAll` returns every repetition.
     public var contactAddress: XAD? {
         field(11).map(XAD.init(field:))
+    }
+
+    /// CM0-11: every repetition of Contact's Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contactAddressAll: [XAD] {
+        repetitions(11).map(XAD.init(field:))
     }
 }

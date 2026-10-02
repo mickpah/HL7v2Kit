@@ -91,9 +91,18 @@ public struct GOL: TypedSegment {
         field(16).map(CE.init(field:))
     }
 
-    /// GOL-17: Goal Evaluation Comment. HL7 data type `ST`.
+    /// GOL-17: Goal Evaluation Comment. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `goalEvaluationCommentAll` returns every repetition.
     public var goalEvaluationComment: String? {
         field(17)?.stringValue
+    }
+
+    /// GOL-17: every repetition of Goal Evaluation Comment, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var goalEvaluationCommentAll: [String?] {
+        repetitions(17).map(\.stringValue)
     }
 
     /// GOL-18: Goal Life Cycle Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -106,13 +115,31 @@ public struct GOL: TypedSegment {
         field(19)?.stringValue
     }
 
-    /// GOL-20: Goal Target Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// GOL-20: Goal Target Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `goalTargetTypeAll` returns every repetition.
     public var goalTargetType: CE? {
         field(20).map(CE.init(field:))
     }
 
-    /// GOL-21: Goal Target Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// GOL-20: every repetition of Goal Target Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var goalTargetTypeAll: [CE] {
+        repetitions(20).map(CE.init(field:))
+    }
+
+    /// GOL-21: Goal Target Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `goalTargetNameAll` returns every repetition.
     public var goalTargetName: XPN? {
         field(21).map(XPN.init(field:))
+    }
+
+    /// GOL-21: every repetition of Goal Target Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var goalTargetNameAll: [XPN] {
+        repetitions(21).map(XPN.init(field:))
     }
 }

@@ -26,9 +26,18 @@ public struct AFF: TypedSegment {
         field(3).map(XAD.init(field:))
     }
 
-    /// AFF-4: Professional Organization Affiliation Date Range. HL7 data type `DR`.
+    /// AFF-4: Professional Organization Affiliation Date Range. HL7 data type `DR`. Repeating field: this accessor reads the first repetition; `professionalOrganizationAffiliationDateRangeAll` returns every repetition.
     public var professionalOrganizationAffiliationDateRange: Field? {
         field(4)
+    }
+
+    /// AFF-4: every repetition of Professional Organization Affiliation Date Range, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var professionalOrganizationAffiliationDateRangeAll: [Field] {
+        repetitions(4)
     }
 
     /// AFF-5: Professional Affiliation Additional Information. HL7 data type `ST`.

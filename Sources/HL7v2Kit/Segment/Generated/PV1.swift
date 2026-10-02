@@ -41,19 +41,46 @@ public struct PV1: TypedSegment {
         field(6).map(PL.init(field:))
     }
 
-    /// PV1-7: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV1-7: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `attendingDoctorAll` returns every repetition.
     public var attendingDoctor: XCN? {
         field(7).map(XCN.init(field:))
     }
 
-    /// PV1-8: Referring Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV1-7: every repetition of Attending Doctor, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var attendingDoctorAll: [XCN] {
+        repetitions(7).map(XCN.init(field:))
+    }
+
+    /// PV1-8: Referring Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `referringDoctorAll` returns every repetition.
     public var referringDoctor: XCN? {
         field(8).map(XCN.init(field:))
     }
 
-    /// PV1-9: Consulting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV1-8: every repetition of Referring Doctor, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var referringDoctorAll: [XCN] {
+        repetitions(8).map(XCN.init(field:))
+    }
+
+    /// PV1-9: Consulting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `consultingDoctorAll` returns every repetition.
     public var consultingDoctor: XCN? {
         field(9).map(XCN.init(field:))
+    }
+
+    /// PV1-9: every repetition of Consulting Doctor, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var consultingDoctorAll: [XCN] {
+        repetitions(9).map(XCN.init(field:))
     }
 
     /// PV1-10: Hospital Service. HL7 data type `IS`.
@@ -81,9 +108,18 @@ public struct PV1: TypedSegment {
         field(14)?.stringValue
     }
 
-    /// PV1-15: Ambulatory Status. HL7 data type `IS`.
+    /// PV1-15: Ambulatory Status. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `ambulatoryStatusAll` returns every repetition.
     public var ambulatoryStatus: String? {
         field(15)?.stringValue
+    }
+
+    /// PV1-15: every repetition of Ambulatory Status, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ambulatoryStatusAll: [String?] {
+        repetitions(15).map(\.stringValue)
     }
 
     /// PV1-16: VIP Indicator. HL7 data type `IS`.
@@ -91,9 +127,18 @@ public struct PV1: TypedSegment {
         field(16)?.stringValue
     }
 
-    /// PV1-17: Admitting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV1-17: Admitting Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `admittingDoctorAll` returns every repetition.
     public var admittingDoctor: XCN? {
         field(17).map(XCN.init(field:))
+    }
+
+    /// PV1-17: every repetition of Admitting Doctor, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var admittingDoctorAll: [XCN] {
+        repetitions(17).map(XCN.init(field:))
     }
 
     /// PV1-18: Patient Type. HL7 data type `IS`.
@@ -106,9 +151,18 @@ public struct PV1: TypedSegment {
         field(19).map(CX.init(field:))
     }
 
-    /// PV1-20: Financial Class. HL7 data type `FC`.
+    /// PV1-20: Financial Class. HL7 data type `FC`. Repeating field: this accessor reads the first repetition; `financialClassAll` returns every repetition.
     public var financialClass: Field? {
         field(20)
+    }
+
+    /// PV1-20: every repetition of Financial Class, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var financialClassAll: [Field] {
+        repetitions(20)
     }
 
     /// PV1-21: Charge Price Indicator. HL7 data type `IS`.
@@ -126,24 +180,60 @@ public struct PV1: TypedSegment {
         field(23)?.stringValue
     }
 
-    /// PV1-24: Contract Code. HL7 data type `IS`.
+    /// PV1-24: Contract Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `contractCodeAll` returns every repetition.
     public var contractCode: String? {
         field(24)?.stringValue
     }
 
-    /// PV1-25: Contract Effective Date. HL7 data type `DT`.
+    /// PV1-24: every repetition of Contract Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractCodeAll: [String?] {
+        repetitions(24).map(\.stringValue)
+    }
+
+    /// PV1-25: Contract Effective Date. HL7 data type `DT`. Repeating field: this accessor reads the first repetition; `contractEffectiveDateAll` returns every repetition.
     public var contractEffectiveDate: String? {
         field(25)?.stringValue
     }
 
-    /// PV1-26: Contract Amount. HL7 data type `NM`.
+    /// PV1-25: every repetition of Contract Effective Date, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractEffectiveDateAll: [String?] {
+        repetitions(25).map(\.stringValue)
+    }
+
+    /// PV1-26: Contract Amount. HL7 data type `NM`. Repeating field: this accessor reads the first repetition; `contractAmountAll` returns every repetition.
     public var contractAmount: String? {
         field(26)?.stringValue
     }
 
-    /// PV1-27: Contract Period. HL7 data type `NM`.
+    /// PV1-26: every repetition of Contract Amount, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractAmountAll: [String?] {
+        repetitions(26).map(\.stringValue)
+    }
+
+    /// PV1-27: Contract Period. HL7 data type `NM`. Repeating field: this accessor reads the first repetition; `contractPeriodAll` returns every repetition.
     public var contractPeriod: String? {
         field(27)?.stringValue
+    }
+
+    /// PV1-27: every repetition of Contract Period, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var contractPeriodAll: [String?] {
+        repetitions(27).map(\.stringValue)
     }
 
     /// PV1-28: Interest Code. HL7 data type `IS`.
@@ -231,9 +321,18 @@ public struct PV1: TypedSegment {
         field(44)?.stringValue
     }
 
-    /// PV1-45: Discharge Date/Time. HL7 data type `TS`.
+    /// PV1-45: Discharge Date/Time. HL7 data type `TS`. Repeating field: this accessor reads the first repetition; `dischargeDateTimeAll` returns every repetition.
     public var dischargeDateTime: String? {
         field(45)?.stringValue
+    }
+
+    /// PV1-45: every repetition of Discharge Date/Time, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var dischargeDateTimeAll: [String?] {
+        repetitions(45).map(\.stringValue)
     }
 
     /// PV1-46: Current Patient Balance. HL7 data type `NM`.
@@ -266,8 +365,17 @@ public struct PV1: TypedSegment {
         field(51)?.stringValue
     }
 
-    /// PV1-52: Other Healthcare Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV1-52: Other Healthcare Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `otherHealthcareProviderAll` returns every repetition.
     public var otherHealthcareProvider: XCN? {
         field(52).map(XCN.init(field:))
+    }
+
+    /// PV1-52: every repetition of Other Healthcare Provider, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var otherHealthcareProviderAll: [XCN] {
+        repetitions(52).map(XCN.init(field:))
     }
 }

@@ -31,9 +31,18 @@ public struct ADJ: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// ADJ-5: Adjustment Amount. HL7 data type `CP`.
+    /// ADJ-5: Adjustment Amount. HL7 data type `CP`. Repeating field: this accessor reads the first repetition; `adjustmentAmountAll` returns every repetition.
     public var adjustmentAmount: Field? {
         field(5)
+    }
+
+    /// ADJ-5: every repetition of Adjustment Amount, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var adjustmentAmountAll: [Field] {
+        repetitions(5)
     }
 
     /// ADJ-6: Adjustment Quantity. HL7 data type `CQ`.

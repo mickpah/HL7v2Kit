@@ -21,24 +21,60 @@ public struct PID: TypedSegment {
         field(2).map(CX.init(field:))
     }
 
-    /// PID-3: Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// PID-3: Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientIdentifierListAll` returns every repetition.
     public var patientIdentifierList: CX? {
         field(3).map(CX.init(field:))
     }
 
-    /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// PID-3: every repetition of Patient Identifier List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientIdentifierListAll: [CX] {
+        repetitions(3).map(CX.init(field:))
+    }
+
+    /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `alternatePatientIDAll` returns every repetition.
     public var alternatePatientID: CX? {
         field(4).map(CX.init(field:))
     }
 
-    /// PID-5: Patient Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PID-4: every repetition of Alternate Patient ID (deprecated), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var alternatePatientIDAll: [CX] {
+        repetitions(4).map(CX.init(field:))
+    }
+
+    /// PID-5: Patient Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientNameAll` returns every repetition.
     public var patientName: XPN? {
         field(5).map(XPN.init(field:))
     }
 
-    /// PID-6: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PID-5: every repetition of Patient Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientNameAll: [XPN] {
+        repetitions(5).map(XPN.init(field:))
+    }
+
+    /// PID-6: Mother's Maiden Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `mothersMaidenNameAll` returns every repetition.
     public var mothersMaidenName: XPN? {
         field(6).map(XPN.init(field:))
+    }
+
+    /// PID-6: every repetition of Mother's Maiden Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var mothersMaidenNameAll: [XPN] {
+        repetitions(6).map(XPN.init(field:))
     }
 
     /// PID-7: Date/Time of Birth. HL7 data type `TS`.
@@ -51,19 +87,46 @@ public struct PID: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientAliasAll` returns every repetition.
     public var patientAlias: XPN? {
         field(9).map(XPN.init(field:))
     }
 
-    /// PID-10: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PID-9: every repetition of Patient Alias (deprecated), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientAliasAll: [XPN] {
+        repetitions(9).map(XPN.init(field:))
+    }
+
+    /// PID-10: Race. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `raceAll` returns every repetition.
     public var race: CE? {
         field(10).map(CE.init(field:))
     }
 
-    /// PID-11: Patient Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PID-10: every repetition of Race, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var raceAll: [CE] {
+        repetitions(10).map(CE.init(field:))
+    }
+
+    /// PID-11: Patient Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientAddressAll` returns every repetition.
     public var patientAddress: XAD? {
         field(11).map(XAD.init(field:))
+    }
+
+    /// PID-11: every repetition of Patient Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientAddressAll: [XAD] {
+        repetitions(11).map(XAD.init(field:))
     }
 
     /// PID-12: County Code (deprecated). HL7 data type `IS`.
@@ -71,14 +134,32 @@ public struct PID: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// PID-13: Phone Number - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PID-13: Phone Number - Home. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phoneNumberHomeAll` returns every repetition.
     public var phoneNumberHome: XTN? {
         field(13).map(XTN.init(field:))
     }
 
-    /// PID-14: Phone Number - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PID-13: every repetition of Phone Number - Home, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phoneNumberHomeAll: [XTN] {
+        repetitions(13).map(XTN.init(field:))
+    }
+
+    /// PID-14: Phone Number - Business. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phoneNumberBusinessAll` returns every repetition.
     public var phoneNumberBusiness: XTN? {
         field(14).map(XTN.init(field:))
+    }
+
+    /// PID-14: every repetition of Phone Number - Business, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phoneNumberBusinessAll: [XTN] {
+        repetitions(14).map(XTN.init(field:))
     }
 
     /// PID-15: Primary Language. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -111,14 +192,32 @@ public struct PID: TypedSegment {
         field(20)
     }
 
-    /// PID-21: Mother's Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// PID-21: Mother's Identifier. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `mothersIdentifierAll` returns every repetition.
     public var mothersIdentifier: CX? {
         field(21).map(CX.init(field:))
     }
 
-    /// PID-22: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PID-21: every repetition of Mother's Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var mothersIdentifierAll: [CX] {
+        repetitions(21).map(CX.init(field:))
+    }
+
+    /// PID-22: Ethnic Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ethnicGroupAll` returns every repetition.
     public var ethnicGroup: CE? {
         field(22).map(CE.init(field:))
+    }
+
+    /// PID-22: every repetition of Ethnic Group, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ethnicGroupAll: [CE] {
+        repetitions(22).map(CE.init(field:))
     }
 
     /// PID-23: Birth Place. HL7 data type `ST`.
@@ -136,9 +235,18 @@ public struct PID: TypedSegment {
         field(25)?.stringValue
     }
 
-    /// PID-26: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PID-26: Citizenship. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `citizenshipAll` returns every repetition.
     public var citizenship: CE? {
         field(26).map(CE.init(field:))
+    }
+
+    /// PID-26: every repetition of Citizenship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var citizenshipAll: [CE] {
+        repetitions(26).map(CE.init(field:))
     }
 
     /// PID-27: Veterans Military Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -166,9 +274,18 @@ public struct PID: TypedSegment {
         field(31)?.stringValue
     }
 
-    /// PID-32: Identity Reliability Code. HL7 data type `IS`.
+    /// PID-32: Identity Reliability Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `identityReliabilityCodeAll` returns every repetition.
     public var identityReliabilityCode: String? {
         field(32)?.stringValue
+    }
+
+    /// PID-32: every repetition of Identity Reliability Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var identityReliabilityCodeAll: [String?] {
+        repetitions(32).map(\.stringValue)
     }
 
     /// PID-33: Last Update Date/Time. HL7 data type `TS`.
@@ -196,13 +313,31 @@ public struct PID: TypedSegment {
         field(37)?.stringValue
     }
 
-    /// PID-38: Production Class Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PID-38: Production Class Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `productionClassCodeAll` returns every repetition.
     public var productionClassCode: CE? {
         field(38).map(CE.init(field:))
     }
 
-    /// PID-39: Tribal Citizenship. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// PID-38: every repetition of Production Class Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var productionClassCodeAll: [CE] {
+        repetitions(38).map(CE.init(field:))
+    }
+
+    /// PID-39: Tribal Citizenship. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `tribalCitizenshipAll` returns every repetition.
     public var tribalCitizenship: CWE? {
         field(39).map(CWE.init(field:))
+    }
+
+    /// PID-39: every repetition of Tribal Citizenship, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var tribalCitizenshipAll: [CWE] {
+        repetitions(39).map(CWE.init(field:))
     }
 }

@@ -21,9 +21,18 @@ public struct OM7: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// OM7-3: Category Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM7-3: Category Identifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `categoryIdentifierAll` returns every repetition.
     public var categoryIdentifier: CE? {
         field(3).map(CE.init(field:))
+    }
+
+    /// OM7-3: every repetition of Category Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var categoryIdentifierAll: [CE] {
+        repetitions(3).map(CE.init(field:))
     }
 
     /// OM7-4: Category Description. HL7 data type `TX`.
@@ -31,9 +40,18 @@ public struct OM7: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// OM7-5: Category Synonym. HL7 data type `ST`.
+    /// OM7-5: Category Synonym. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `categorySynonymAll` returns every repetition.
     public var categorySynonym: String? {
         field(5)?.stringValue
+    }
+
+    /// OM7-5: every repetition of Category Synonym, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var categorySynonymAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 
     /// OM7-6: Effective Test/Service Start Date/Time. HL7 data type `TS`.
@@ -111,9 +129,18 @@ public struct OM7: TypedSegment {
         field(20).map(XCN.init(field:))
     }
 
-    /// OM7-21: Orderable-at Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    /// OM7-21: Orderable-at Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderableAtLocationAll` returns every repetition.
     public var orderableAtLocation: PL? {
         field(21).map(PL.init(field:))
+    }
+
+    /// OM7-21: every repetition of Orderable-at Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderableAtLocationAll: [PL] {
+        repetitions(21).map(PL.init(field:))
     }
 
     /// OM7-22: Formulary Status. HL7 data type `IS`.
@@ -126,8 +153,17 @@ public struct OM7: TypedSegment {
         field(23)?.stringValue
     }
 
-    /// OM7-24: Primary Key Value - CDM. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM7-24: Primary Key Value - CDM. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryKeyValueCdmAll` returns every repetition.
     public var primaryKeyValueCdm: CE? {
         field(24).map(CE.init(field:))
+    }
+
+    /// OM7-24: every repetition of Primary Key Value - CDM, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryKeyValueCdmAll: [CE] {
+        repetitions(24).map(CE.init(field:))
     }
 }

@@ -11,9 +11,18 @@ public struct URS: TypedSegment {
         self.fields = fields
     }
 
-    /// URS-1: R/U Where Subject Definition. HL7 data type `ST`.
+    /// URS-1: R/U Where Subject Definition. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ruWhereSubjectDefinitionAll` returns every repetition.
     public var ruWhereSubjectDefinition: String? {
         field(1)?.stringValue
+    }
+
+    /// URS-1: every repetition of R/U Where Subject Definition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhereSubjectDefinitionAll: [String?] {
+        repetitions(1).map(\.stringValue)
     }
 
     /// URS-2: R/U When Data Start Date/Time. HL7 data type `TS`.
@@ -26,29 +35,74 @@ public struct URS: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// URS-4: R/U What User Qualifier. HL7 data type `ST`.
+    /// URS-4: R/U What User Qualifier. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ruWhatUserQualifierAll` returns every repetition.
     public var ruWhatUserQualifier: String? {
         field(4)?.stringValue
     }
 
-    /// URS-5: R/U Other Results Subject Definition. HL7 data type `ST`.
+    /// URS-4: every repetition of R/U What User Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhatUserQualifierAll: [String?] {
+        repetitions(4).map(\.stringValue)
+    }
+
+    /// URS-5: R/U Other Results Subject Definition. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ruOtherResultsSubjectDefinitionAll` returns every repetition.
     public var ruOtherResultsSubjectDefinition: String? {
         field(5)?.stringValue
     }
 
-    /// URS-6: R/U Which Date/Time Qualifier. HL7 data type `ID`.
+    /// URS-5: every repetition of R/U Other Results Subject Definition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruOtherResultsSubjectDefinitionAll: [String?] {
+        repetitions(5).map(\.stringValue)
+    }
+
+    /// URS-6: R/U Which Date/Time Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `ruWhichDateTimeQualifierAll` returns every repetition.
     public var ruWhichDateTimeQualifier: String? {
         field(6)?.stringValue
     }
 
-    /// URS-7: R/U Which Date/Time Status Qualifier. HL7 data type `ID`.
+    /// URS-6: every repetition of R/U Which Date/Time Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhichDateTimeQualifierAll: [String?] {
+        repetitions(6).map(\.stringValue)
+    }
+
+    /// URS-7: R/U Which Date/Time Status Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `ruWhichDateTimeStatusQualifierAll` returns every repetition.
     public var ruWhichDateTimeStatusQualifier: String? {
         field(7)?.stringValue
     }
 
-    /// URS-8: R/U Date/Time Selection Qualifier. HL7 data type `ID`.
+    /// URS-7: every repetition of R/U Which Date/Time Status Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhichDateTimeStatusQualifierAll: [String?] {
+        repetitions(7).map(\.stringValue)
+    }
+
+    /// URS-8: R/U Date/Time Selection Qualifier. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `ruDateTimeSelectionQualifierAll` returns every repetition.
     public var ruDateTimeSelectionQualifier: String? {
         field(8)?.stringValue
+    }
+
+    /// URS-8: every repetition of R/U Date/Time Selection Qualifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruDateTimeSelectionQualifierAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// URS-9: R/U Quantity/Timing Qualifier. HL7 data type `TQ`.

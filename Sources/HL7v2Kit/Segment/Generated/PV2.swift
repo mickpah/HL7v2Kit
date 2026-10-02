@@ -31,9 +31,18 @@ public struct PV2: TypedSegment {
         field(4).map(CE.init(field:))
     }
 
-    /// PV2-5: Patient Valuables. HL7 data type `ST`.
+    /// PV2-5: Patient Valuables. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `patientValuablesAll` returns every repetition.
     public var patientValuables: String? {
         field(5)?.stringValue
+    }
+
+    /// PV2-5: every repetition of Patient Valuables, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientValuablesAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 
     /// PV2-6: Patient Valuables Location. HL7 data type `ST`.
@@ -41,9 +50,18 @@ public struct PV2: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// PV2-7: Visit User Code. HL7 data type `IS`.
+    /// PV2-7: Visit User Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `visitUserCodeAll` returns every repetition.
     public var visitUserCode: String? {
         field(7)?.stringValue
+    }
+
+    /// PV2-7: every repetition of Visit User Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var visitUserCodeAll: [String?] {
+        repetitions(7).map(\.stringValue)
     }
 
     /// PV2-8: Expected Admit Date/Time. HL7 data type `TS`.
@@ -71,9 +89,18 @@ public struct PV2: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// PV2-13: Referral Source Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PV2-13: Referral Source Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `referralSourceCodeAll` returns every repetition.
     public var referralSourceCode: XCN? {
         field(13).map(XCN.init(field:))
+    }
+
+    /// PV2-13: every repetition of Referral Source Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var referralSourceCodeAll: [XCN] {
+        repetitions(13).map(XCN.init(field:))
     }
 
     /// PV2-14: Previous Service Date. HL7 data type `DT`.
@@ -121,9 +148,18 @@ public struct PV2: TypedSegment {
         field(22)?.stringValue
     }
 
-    /// PV2-23: Clinic Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PV2-23: Clinic Organization Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `clinicOrganizationNameAll` returns every repetition.
     public var clinicOrganizationName: XON? {
         field(23).map(XON.init(field:))
+    }
+
+    /// PV2-23: every repetition of Clinic Organization Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var clinicOrganizationNameAll: [XON] {
+        repetitions(23).map(XON.init(field:))
     }
 
     /// PV2-24: Patient Status Code. HL7 data type `IS`.
@@ -201,9 +237,18 @@ public struct PV2: TypedSegment {
         field(38).map(CE.init(field:))
     }
 
-    /// PV2-39: Recreational Drug Use Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PV2-39: Recreational Drug Use Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `recreationalDrugUseCodeAll` returns every repetition.
     public var recreationalDrugUseCode: CE? {
         field(39).map(CE.init(field:))
+    }
+
+    /// PV2-39: every repetition of Recreational Drug Use Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var recreationalDrugUseCodeAll: [CE] {
+        repetitions(39).map(CE.init(field:))
     }
 
     /// PV2-40: Admission Level of Care Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -211,9 +256,18 @@ public struct PV2: TypedSegment {
         field(40).map(CE.init(field:))
     }
 
-    /// PV2-41: Precaution Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PV2-41: Precaution Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `precautionCodeAll` returns every repetition.
     public var precautionCode: CE? {
         field(41).map(CE.init(field:))
+    }
+
+    /// PV2-41: every repetition of Precaution Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var precautionCodeAll: [CE] {
+        repetitions(41).map(CE.init(field:))
     }
 
     /// PV2-42: Patient Condition Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -231,9 +285,18 @@ public struct PV2: TypedSegment {
         field(44)?.stringValue
     }
 
-    /// PV2-45: Advance Directive Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PV2-45: Advance Directive Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `advanceDirectiveCodeAll` returns every repetition.
     public var advanceDirectiveCode: CE? {
         field(45).map(CE.init(field:))
+    }
+
+    /// PV2-45: every repetition of Advance Directive Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var advanceDirectiveCodeAll: [CE] {
+        repetitions(45).map(CE.init(field:))
     }
 
     /// PV2-46: Patient Status Effective Date. HL7 data type `DT`.
@@ -251,8 +314,17 @@ public struct PV2: TypedSegment {
         field(48)?.stringValue
     }
 
-    /// PV2-49: Notify Clergy Code. HL7 data type `IS`.
+    /// PV2-49: Notify Clergy Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `notifyClergyCodeAll` returns every repetition.
     public var notifyClergyCode: String? {
         field(49)?.stringValue
+    }
+
+    /// PV2-49: every repetition of Notify Clergy Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var notifyClergyCodeAll: [String?] {
+        repetitions(49).map(\.stringValue)
     }
 }

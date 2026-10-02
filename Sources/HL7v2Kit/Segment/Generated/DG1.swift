@@ -86,9 +86,18 @@ public struct DG1: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// DG1-16: Diagnosing Clinician. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// DG1-16: Diagnosing Clinician. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `diagnosingClinicianAll` returns every repetition.
     public var diagnosingClinician: XCN? {
         field(16).map(XCN.init(field:))
+    }
+
+    /// DG1-16: every repetition of Diagnosing Clinician, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var diagnosingClinicianAll: [XCN] {
+        repetitions(16).map(XCN.init(field:))
     }
 
     /// DG1-17: Diagnosis Classification. HL7 data type `IS`.

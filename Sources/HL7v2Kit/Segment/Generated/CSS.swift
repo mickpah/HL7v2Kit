@@ -21,8 +21,17 @@ public struct CSS: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// CSS-3: Study Quality Control Codes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CSS-3: Study Quality Control Codes. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `studyQualityControlCodesAll` returns every repetition.
     public var studyQualityControlCodes: CE? {
         field(3).map(CE.init(field:))
+    }
+
+    /// CSS-3: every repetition of Study Quality Control Codes, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var studyQualityControlCodesAll: [CE] {
+        repetitions(3).map(CE.init(field:))
     }
 }

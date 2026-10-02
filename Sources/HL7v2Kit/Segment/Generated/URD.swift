@@ -21,24 +21,60 @@ public struct URD: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// URD-3: R/U Who Subject Definition. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// URD-3: R/U Who Subject Definition. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ruWhoSubjectDefinitionAll` returns every repetition.
     public var ruWhoSubjectDefinition: XCN? {
         field(3).map(XCN.init(field:))
     }
 
-    /// URD-4: R/U What Subject Definition. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// URD-3: every repetition of R/U Who Subject Definition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhoSubjectDefinitionAll: [XCN] {
+        repetitions(3).map(XCN.init(field:))
+    }
+
+    /// URD-4: R/U What Subject Definition. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ruWhatSubjectDefinitionAll` returns every repetition.
     public var ruWhatSubjectDefinition: CE? {
         field(4).map(CE.init(field:))
     }
 
-    /// URD-5: R/U What Department Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// URD-4: every repetition of R/U What Subject Definition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhatSubjectDefinitionAll: [CE] {
+        repetitions(4).map(CE.init(field:))
+    }
+
+    /// URD-5: R/U What Department Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `ruWhatDepartmentCodeAll` returns every repetition.
     public var ruWhatDepartmentCode: CE? {
         field(5).map(CE.init(field:))
     }
 
-    /// URD-6: R/U Display/Print Locations. HL7 data type `ST`.
+    /// URD-5: every repetition of R/U What Department Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruWhatDepartmentCodeAll: [CE] {
+        repetitions(5).map(CE.init(field:))
+    }
+
+    /// URD-6: R/U Display/Print Locations. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `ruDisplayPrintLocationsAll` returns every repetition.
     public var ruDisplayPrintLocations: String? {
         field(6)?.stringValue
+    }
+
+    /// URD-6: every repetition of R/U Display/Print Locations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var ruDisplayPrintLocationsAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 
     /// URD-7: R/U Results Level. HL7 data type `ID`.

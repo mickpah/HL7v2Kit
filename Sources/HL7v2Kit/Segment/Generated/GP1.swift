@@ -16,9 +16,18 @@ public struct GP1: TypedSegment {
         field(1)?.stringValue
     }
 
-    /// GP1-2: Revenue Code. HL7 data type `IS`.
+    /// GP1-2: Revenue Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `revenueCodeAll` returns every repetition.
     public var revenueCode: String? {
         field(2)?.stringValue
+    }
+
+    /// GP1-2: every repetition of Revenue Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var revenueCodeAll: [String?] {
+        repetitions(2).map(\.stringValue)
     }
 
     /// GP1-3: Overall Claim Disposition Code. HL7 data type `IS`.
@@ -26,9 +35,18 @@ public struct GP1: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// GP1-4: OCE Edits per Visit Code. HL7 data type `IS`.
+    /// GP1-4: OCE Edits per Visit Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `oceEditsPerVisitCodeAll` returns every repetition.
     public var oceEditsPerVisitCode: String? {
         field(4)?.stringValue
+    }
+
+    /// GP1-4: every repetition of OCE Edits per Visit Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var oceEditsPerVisitCodeAll: [String?] {
+        repetitions(4).map(\.stringValue)
     }
 
     /// GP1-5: Outlier Cost. HL7 data type `CP`.

@@ -31,13 +31,31 @@ public struct MFA: TypedSegment {
         field(4).map(CE.init(field:))
     }
 
-    /// MFA-5: Primary Key Value - MFA. HL7 data type `Varie`.
+    /// MFA-5: Primary Key Value - MFA. HL7 data type `Varie`. Repeating field: this accessor reads the first repetition; `primaryKeyValueMfaAll` returns every repetition.
     public var primaryKeyValueMfa: Field? {
         field(5)
     }
 
-    /// MFA-6: Primary Key Value Type - MFA. HL7 data type `ID`.
+    /// MFA-5: every repetition of Primary Key Value - MFA, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryKeyValueMfaAll: [Field] {
+        repetitions(5)
+    }
+
+    /// MFA-6: Primary Key Value Type - MFA. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `primaryKeyValueTypeMfaAll` returns every repetition.
     public var primaryKeyValueTypeMfa: String? {
         field(6)?.stringValue
+    }
+
+    /// MFA-6: every repetition of Primary Key Value Type - MFA, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryKeyValueTypeMfaAll: [String?] {
+        repetitions(6).map(\.stringValue)
     }
 }

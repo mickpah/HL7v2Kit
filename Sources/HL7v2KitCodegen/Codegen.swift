@@ -259,43 +259,6 @@ func deprecatedAliases(for field: FieldSchema, segmentID: String, returnType: St
     }.joined()
 }
 
-func swiftAccessor(for field: FieldSchema, segmentID: String) -> String {
-    let returnType: String
-    let body: String
-    let docTail: String
-    if scalarDataTypes.contains(field.dataType) {
-        returnType = "String?"
-        body = "field(\(field.index))?.stringValue"
-        docTail = ""
-    } else if compositeDataTypes.contains(field.dataType) {
-        returnType = "\(field.dataType)?"
-        body = "field(\(field.index)).map(\(field.dataType).init(field:))"
-        docTail = " Returns the typed ``\(field.dataType)`` view; use `.field` for raw access."
-    } else {
-        returnType = "Field?"
-        body = "field(\(field.index))"
-        docTail = ""
-    }
-    let primary = """
-        /// \(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(docTail)
-        public var \(escapedIdentifier(field.swiftName)): \(returnType) {
-            \(body)
-        }
-    """ + deprecatedAliases(for: field, segmentID: segmentID, returnType: returnType)
-    guard let plural = field.variableColumns else { return primary }
-    return primary + """
-
-
-        /// \(segmentID)-\(field.index)..n: every `\(field.name)` column. The spec's SEQ is `1-n`:
-        /// the field position recurs, so this returns each `|`-separated column from
-        /// position \(field.index) upward in wire order (empty columns included). Not
-        /// `~`-repetition — each element is one column.
-        public var \(escapedIdentifier(plural)): [Field] {
-            fields.count > \(field.index) ? Array(fields[\(field.index)...]) : []
-        }
-    """
-}
-
 func render(_ schema: SegmentSchema) -> String {
     let accessors = schema.fields
         .map { swiftAccessor(for: $0, segmentID: schema.segmentID) }
@@ -700,6 +663,7 @@ struct Codegen {
                 let schema = try JSONDecoder().decode(SegmentSchema.self, from: data)
                 schemasByVersion[version, default: []].append(schema)
                 guard isCanonical else { continue }
+                try checkAllNames(schema)
                 let source = render(schema)
                 let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
                 try Data(source.utf8).write(to: outFile)
@@ -720,6 +684,7 @@ struct Codegen {
         // on canonical.)
         for (_, schemas) in schemasByVersion.sorted(by: { $0.key < $1.key }) {
             for schema in schemas where !emittedSegmentIDs.contains(schema.segmentID) {
+                try checkAllNames(schema)
                 let source = render(schema)
                 let outFile = outputRoot.appendingPathComponent("\(schema.segmentID).swift")
                 try Data(source.utf8).write(to: outFile)

@@ -46,24 +46,60 @@ public struct QRD: TypedSegment {
         field(7)
     }
 
-    /// QRD-8: Who Subject Filter. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// QRD-8: Who Subject Filter. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `whoSubjectFilterAll` returns every repetition.
     public var whoSubjectFilter: XCN? {
         field(8).map(XCN.init(field:))
     }
 
-    /// QRD-9: What Subject Filter. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// QRD-8: every repetition of Who Subject Filter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whoSubjectFilterAll: [XCN] {
+        repetitions(8).map(XCN.init(field:))
+    }
+
+    /// QRD-9: What Subject Filter. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `whatSubjectFilterAll` returns every repetition.
     public var whatSubjectFilter: CE? {
         field(9).map(CE.init(field:))
     }
 
-    /// QRD-10: What Department Data Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// QRD-9: every repetition of What Subject Filter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whatSubjectFilterAll: [CE] {
+        repetitions(9).map(CE.init(field:))
+    }
+
+    /// QRD-10: What Department Data Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `whatDepartmentDataCodeAll` returns every repetition.
     public var whatDepartmentDataCode: CE? {
         field(10).map(CE.init(field:))
     }
 
-    /// QRD-11: What Data Code Value Qual.. HL7 data type `VR`.
+    /// QRD-10: every repetition of What Department Data Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whatDepartmentDataCodeAll: [CE] {
+        repetitions(10).map(CE.init(field:))
+    }
+
+    /// QRD-11: What Data Code Value Qual.. HL7 data type `VR`. Repeating field: this accessor reads the first repetition; `whatDataCodeValueQualAll` returns every repetition.
     public var whatDataCodeValueQual: Field? {
         field(11)
+    }
+
+    /// QRD-11: every repetition of What Data Code Value Qual., in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var whatDataCodeValueQualAll: [Field] {
+        repetitions(11)
     }
 
     /// QRD-12: Query Results Level. HL7 data type `ID`.

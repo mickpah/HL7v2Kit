@@ -26,8 +26,17 @@ public struct CM2: TypedSegment {
         field(3)?.stringValue
     }
 
-    /// CM2-4: Events Scheduled This Time Point. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CM2-4: Events Scheduled This Time Point. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `eventsScheduledThisTimePointAll` returns every repetition.
     public var eventsScheduledThisTimePoint: CE? {
         field(4).map(CE.init(field:))
+    }
+
+    /// CM2-4: every repetition of Events Scheduled This Time Point, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventsScheduledThisTimePointAll: [CE] {
+        repetitions(4).map(CE.init(field:))
     }
 }

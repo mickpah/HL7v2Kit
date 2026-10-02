@@ -21,29 +21,74 @@ public struct IN1: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// IN1-3: Insurance Company ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// IN1-3: Insurance Company ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCompanyIDAll` returns every repetition.
     public var insuranceCompanyID: CX? {
         field(3).map(CX.init(field:))
     }
 
-    /// IN1-4: Insurance Company Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// IN1-3: every repetition of Insurance Company ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuranceCompanyIDAll: [CX] {
+        repetitions(3).map(CX.init(field:))
+    }
+
+    /// IN1-4: Insurance Company Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCompanyNameAll` returns every repetition.
     public var insuranceCompanyName: XON? {
         field(4).map(XON.init(field:))
     }
 
-    /// IN1-5: Insurance Company Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// IN1-4: every repetition of Insurance Company Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuranceCompanyNameAll: [XON] {
+        repetitions(4).map(XON.init(field:))
+    }
+
+    /// IN1-5: Insurance Company Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCompanyAddressAll` returns every repetition.
     public var insuranceCompanyAddress: XAD? {
         field(5).map(XAD.init(field:))
     }
 
-    /// IN1-6: Insurance Co Contact Person. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// IN1-5: every repetition of Insurance Company Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuranceCompanyAddressAll: [XAD] {
+        repetitions(5).map(XAD.init(field:))
+    }
+
+    /// IN1-6: Insurance Co Contact Person. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCoContactPersonAll` returns every repetition.
     public var insuranceCoContactPerson: XPN? {
         field(6).map(XPN.init(field:))
     }
 
-    /// IN1-7: Insurance Co Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// IN1-6: every repetition of Insurance Co Contact Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuranceCoContactPersonAll: [XPN] {
+        repetitions(6).map(XPN.init(field:))
+    }
+
+    /// IN1-7: Insurance Co Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuranceCoPhoneNumberAll` returns every repetition.
     public var insuranceCoPhoneNumber: XTN? {
         field(7).map(XTN.init(field:))
+    }
+
+    /// IN1-7: every repetition of Insurance Co Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuranceCoPhoneNumberAll: [XTN] {
+        repetitions(7).map(XTN.init(field:))
     }
 
     /// IN1-8: Group Number. HL7 data type `ST`.
@@ -51,19 +96,46 @@ public struct IN1: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// IN1-9: Group Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// IN1-9: Group Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `groupNameAll` returns every repetition.
     public var groupName: XON? {
         field(9).map(XON.init(field:))
     }
 
-    /// IN1-10: Insured's Group Emp. ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// IN1-9: every repetition of Group Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var groupNameAll: [XON] {
+        repetitions(9).map(XON.init(field:))
+    }
+
+    /// IN1-10: Insured's Group Emp. ID. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsGroupEmpIDAll` returns every repetition.
     public var insuredsGroupEmpID: CX? {
         field(10).map(CX.init(field:))
     }
 
-    /// IN1-11: Insured's Group Emp Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// IN1-10: every repetition of Insured's Group Emp. ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuredsGroupEmpIDAll: [CX] {
+        repetitions(10).map(CX.init(field:))
+    }
+
+    /// IN1-11: Insured's Group Emp Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsGroupEmpNameAll` returns every repetition.
     public var insuredsGroupEmpName: XON? {
         field(11).map(XON.init(field:))
+    }
+
+    /// IN1-11: every repetition of Insured's Group Emp Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuredsGroupEmpNameAll: [XON] {
+        repetitions(11).map(XON.init(field:))
     }
 
     /// IN1-12: Plan Effective Date. HL7 data type `DT`.
@@ -86,9 +158,18 @@ public struct IN1: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// IN1-16: Name of Insured. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// IN1-16: Name of Insured. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `nameOfInsuredAll` returns every repetition.
     public var nameOfInsured: XPN? {
         field(16).map(XPN.init(field:))
+    }
+
+    /// IN1-16: every repetition of Name of Insured, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var nameOfInsuredAll: [XPN] {
+        repetitions(16).map(XPN.init(field:))
     }
 
     /// IN1-17: Insured's Relationship to Patient. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -101,9 +182,18 @@ public struct IN1: TypedSegment {
         field(18)?.stringValue
     }
 
-    /// IN1-19: Insured's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// IN1-19: Insured's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsAddressAll` returns every repetition.
     public var insuredsAddress: XAD? {
         field(19).map(XAD.init(field:))
+    }
+
+    /// IN1-19: every repetition of Insured's Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuredsAddressAll: [XAD] {
+        repetitions(19).map(XAD.init(field:))
     }
 
     /// IN1-20: Assignment of Benefits. HL7 data type `IS`.
@@ -156,9 +246,18 @@ public struct IN1: TypedSegment {
         field(29)?.stringValue
     }
 
-    /// IN1-30: Verification by. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// IN1-30: Verification by. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `verificationByAll` returns every repetition.
     public var verificationBy: XCN? {
         field(30).map(XCN.init(field:))
+    }
+
+    /// IN1-30: every repetition of Verification by, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var verificationByAll: [XCN] {
+        repetitions(30).map(XCN.init(field:))
     }
 
     /// IN1-31: Type of Agreement Code. HL7 data type `IS`.
@@ -226,9 +325,18 @@ public struct IN1: TypedSegment {
         field(43)?.stringValue
     }
 
-    /// IN1-44: Insured's Employer's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// IN1-44: Insured's Employer's Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsEmployersAddressAll` returns every repetition.
     public var insuredsEmployersAddress: XAD? {
         field(44).map(XAD.init(field:))
+    }
+
+    /// IN1-44: every repetition of Insured's Employer's Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuredsEmployersAddressAll: [XAD] {
+        repetitions(44).map(XAD.init(field:))
     }
 
     /// IN1-45: Verification Status. HL7 data type `ST`.
@@ -251,9 +359,18 @@ public struct IN1: TypedSegment {
         field(48)?.stringValue
     }
 
-    /// IN1-49: Insured's ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// IN1-49: Insured's ID Number. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `insuredsIDNumberAll` returns every repetition.
     public var insuredsIDNumber: CX? {
         field(49).map(CX.init(field:))
+    }
+
+    /// IN1-49: every repetition of Insured's ID Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var insuredsIDNumberAll: [CX] {
+        repetitions(49).map(CX.init(field:))
     }
 
     /// IN1-50: Signature Code. HL7 data type `IS`.

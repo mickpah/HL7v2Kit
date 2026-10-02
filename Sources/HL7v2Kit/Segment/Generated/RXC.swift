@@ -41,9 +41,18 @@ public struct RXC: TypedSegment {
         field(6).map(CE.init(field:))
     }
 
-    /// RXC-7: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// RXC-7: Supplementary Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `supplementaryCodeAll` returns every repetition.
     public var supplementaryCode: CE? {
         field(7).map(CE.init(field:))
+    }
+
+    /// RXC-7: every repetition of Supplementary Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var supplementaryCodeAll: [CE] {
+        repetitions(7).map(CE.init(field:))
     }
 
     /// RXC-8: Component Drug Strength Volume. HL7 data type `NM`.

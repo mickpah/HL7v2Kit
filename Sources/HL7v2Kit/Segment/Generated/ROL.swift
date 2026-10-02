@@ -26,9 +26,18 @@ public struct ROL: TypedSegment {
         field(3).map(CE.init(field:))
     }
 
-    /// ROL-4: Role Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ROL-4: Role Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `rolePersonAll` returns every repetition.
     public var rolePerson: XCN? {
         field(4).map(XCN.init(field:))
+    }
+
+    /// ROL-4: every repetition of Role Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var rolePersonAll: [XCN] {
+        repetitions(4).map(XCN.init(field:))
     }
 
     /// ROL-5: Role Begin Date/Time. HL7 data type `TS`.
@@ -51,9 +60,18 @@ public struct ROL: TypedSegment {
         field(8).map(CE.init(field:))
     }
 
-    /// ROL-9: Provider Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// ROL-9: Provider Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `providerTypeAll` returns every repetition.
     public var providerType: CE? {
         field(9).map(CE.init(field:))
+    }
+
+    /// ROL-9: every repetition of Provider Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var providerTypeAll: [CE] {
+        repetitions(9).map(CE.init(field:))
     }
 
     /// ROL-10: Organization Unit Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -61,13 +79,31 @@ public struct ROL: TypedSegment {
         field(10).map(CE.init(field:))
     }
 
-    /// ROL-11: Office/Home Address/Birthplace. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// ROL-11: Office/Home Address/Birthplace. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `officeHomeAddressBirthplaceAll` returns every repetition.
     public var officeHomeAddressBirthplace: XAD? {
         field(11).map(XAD.init(field:))
     }
 
-    /// ROL-12: Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ROL-11: every repetition of Office/Home Address/Birthplace, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var officeHomeAddressBirthplaceAll: [XAD] {
+        repetitions(11).map(XAD.init(field:))
+    }
+
+    /// ROL-12: Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `phoneAll` returns every repetition.
     public var phone: XTN? {
         field(12).map(XTN.init(field:))
+    }
+
+    /// ROL-12: every repetition of Phone, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var phoneAll: [XTN] {
+        repetitions(12).map(XTN.init(field:))
     }
 }

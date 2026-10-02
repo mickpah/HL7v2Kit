@@ -21,19 +21,46 @@ public struct LDP: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// LDP-3: Location Service. HL7 data type `IS`.
+    /// LDP-3: Location Service. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `locationServiceAll` returns every repetition.
     public var locationService: String? {
         field(3)?.stringValue
     }
 
-    /// LDP-4: Specialty Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// LDP-3: every repetition of Location Service, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationServiceAll: [String?] {
+        repetitions(3).map(\.stringValue)
+    }
+
+    /// LDP-4: Specialty Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specialtyTypeAll` returns every repetition.
     public var specialtyType: CE? {
         field(4).map(CE.init(field:))
     }
 
-    /// LDP-5: Valid Patient Classes. HL7 data type `IS`.
+    /// LDP-4: every repetition of Specialty Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specialtyTypeAll: [CE] {
+        repetitions(4).map(CE.init(field:))
+    }
+
+    /// LDP-5: Valid Patient Classes. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `validPatientClassesAll` returns every repetition.
     public var validPatientClasses: String? {
         field(5)?.stringValue
+    }
+
+    /// LDP-5: every repetition of Valid Patient Classes, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var validPatientClassesAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 
     /// LDP-6: Active/Inactive Flag. HL7 data type `ID`.
@@ -56,9 +83,18 @@ public struct LDP: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// LDP-10: Visiting Hours. HL7 data type `VH`.
+    /// LDP-10: Visiting Hours. HL7 data type `VH`. Repeating field: this accessor reads the first repetition; `visitingHoursAll` returns every repetition.
     public var visitingHours: Field? {
         field(10)
+    }
+
+    /// LDP-10: every repetition of Visiting Hours, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var visitingHoursAll: [Field] {
+        repetitions(10)
     }
 
     /// LDP-11: Contact Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.

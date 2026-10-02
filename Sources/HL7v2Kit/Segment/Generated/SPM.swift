@@ -21,9 +21,18 @@ public struct SPM: TypedSegment {
         field(2).map(EIP.init(field:))
     }
 
-    /// SPM-3: Specimen Parent IDs. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
+    /// SPM-3: Specimen Parent IDs. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenParentIdsAll` returns every repetition.
     public var specimenParentIds: EIP? {
         field(3).map(EIP.init(field:))
+    }
+
+    /// SPM-3: every repetition of Specimen Parent IDs, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenParentIdsAll: [EIP] {
+        repetitions(3).map(EIP.init(field:))
     }
 
     /// SPM-4: Specimen Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -31,14 +40,32 @@ public struct SPM: TypedSegment {
         field(4).map(CWE.init(field:))
     }
 
-    /// SPM-5: Specimen Type Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-5: Specimen Type Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenTypeModifierAll` returns every repetition.
     public var specimenTypeModifier: CWE? {
         field(5).map(CWE.init(field:))
     }
 
-    /// SPM-6: Specimen Additives. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-5: every repetition of Specimen Type Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenTypeModifierAll: [CWE] {
+        repetitions(5).map(CWE.init(field:))
+    }
+
+    /// SPM-6: Specimen Additives. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenAdditivesAll` returns every repetition.
     public var specimenAdditives: CWE? {
         field(6).map(CWE.init(field:))
+    }
+
+    /// SPM-6: every repetition of Specimen Additives, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenAdditivesAll: [CWE] {
+        repetitions(6).map(CWE.init(field:))
     }
 
     /// SPM-7: Specimen Collection Method. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -51,9 +78,18 @@ public struct SPM: TypedSegment {
         field(8).map(CWE.init(field:))
     }
 
-    /// SPM-9: Specimen Source Site Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-9: Specimen Source Site Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenSourceSiteModifierAll` returns every repetition.
     public var specimenSourceSiteModifier: CWE? {
         field(9).map(CWE.init(field:))
+    }
+
+    /// SPM-9: every repetition of Specimen Source Site Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenSourceSiteModifierAll: [CWE] {
+        repetitions(9).map(CWE.init(field:))
     }
 
     /// SPM-10: Specimen Collection Site. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -61,9 +97,18 @@ public struct SPM: TypedSegment {
         field(10).map(CWE.init(field:))
     }
 
-    /// SPM-11: Specimen Role. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-11: Specimen Role. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenRoleAll` returns every repetition.
     public var specimenRole: CWE? {
         field(11).map(CWE.init(field:))
+    }
+
+    /// SPM-11: every repetition of Specimen Role, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenRoleAll: [CWE] {
+        repetitions(11).map(CWE.init(field:))
     }
 
     /// SPM-12: Specimen Collection Amount. HL7 data type `CQ`.
@@ -76,19 +121,46 @@ public struct SPM: TypedSegment {
         field(13)?.stringValue
     }
 
-    /// SPM-14: Specimen Description. HL7 data type `ST`.
+    /// SPM-14: Specimen Description. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `specimenDescriptionAll` returns every repetition.
     public var specimenDescription: String? {
         field(14)?.stringValue
     }
 
-    /// SPM-15: Specimen Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-14: every repetition of Specimen Description, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenDescriptionAll: [String?] {
+        repetitions(14).map(\.stringValue)
+    }
+
+    /// SPM-15: Specimen Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenHandlingCodeAll` returns every repetition.
     public var specimenHandlingCode: CWE? {
         field(15).map(CWE.init(field:))
     }
 
-    /// SPM-16: Specimen Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-15: every repetition of Specimen Handling Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenHandlingCodeAll: [CWE] {
+        repetitions(15).map(CWE.init(field:))
+    }
+
+    /// SPM-16: Specimen Risk Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenRiskCodeAll` returns every repetition.
     public var specimenRiskCode: CWE? {
         field(16).map(CWE.init(field:))
+    }
+
+    /// SPM-16: every repetition of Specimen Risk Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenRiskCodeAll: [CWE] {
+        repetitions(16).map(CWE.init(field:))
     }
 
     /// SPM-17: Specimen Collection Date/Time. HL7 data type `DR`.
@@ -111,9 +183,18 @@ public struct SPM: TypedSegment {
         field(20)?.stringValue
     }
 
-    /// SPM-21: Specimen Reject Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-21: Specimen Reject Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenRejectReasonAll` returns every repetition.
     public var specimenRejectReason: CWE? {
         field(21).map(CWE.init(field:))
+    }
+
+    /// SPM-21: every repetition of Specimen Reject Reason, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenRejectReasonAll: [CWE] {
+        repetitions(21).map(CWE.init(field:))
     }
 
     /// SPM-22: Specimen Quality. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -126,9 +207,18 @@ public struct SPM: TypedSegment {
         field(23).map(CWE.init(field:))
     }
 
-    /// SPM-24: Specimen Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SPM-24: Specimen Condition. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specimenConditionAll` returns every repetition.
     public var specimenCondition: CWE? {
         field(24).map(CWE.init(field:))
+    }
+
+    /// SPM-24: every repetition of Specimen Condition, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specimenConditionAll: [CWE] {
+        repetitions(24).map(CWE.init(field:))
     }
 
     /// SPM-25: Specimen Current Quantity. HL7 data type `CQ`.

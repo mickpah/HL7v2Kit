@@ -66,9 +66,18 @@ public struct BPX: TypedSegment {
         field(11).map(CNE.init(field:))
     }
 
-    /// BPX-12: BC Special Testing. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
+    /// BPX-12: BC Special Testing. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `bcSpecialTestingAll` returns every repetition.
     public var bcSpecialTesting: CNE? {
         field(12).map(CNE.init(field:))
+    }
+
+    /// BPX-12: every repetition of BC Special Testing, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var bcSpecialTestingAll: [CNE] {
+        repetitions(12).map(CNE.init(field:))
     }
 
     /// BPX-13: BP Expiration Date/Time. HL7 data type `TS`.

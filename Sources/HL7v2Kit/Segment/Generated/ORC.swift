@@ -41,9 +41,18 @@ public struct ORC: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// ORC-7: Quantity/Timing (deprecated). HL7 data type `TQ`.
+    /// ORC-7: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
     public var quantityTiming: Field? {
         field(7)
+    }
+
+    /// ORC-7: every repetition of Quantity/Timing (deprecated), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var quantityTimingAll: [Field] {
+        repetitions(7)
     }
 
     /// ORC-8: Parent. HL7 data type `EIP`. Returns the typed ``EIP`` view; use `.field` for raw access.
@@ -56,19 +65,46 @@ public struct ORC: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// ORC-10: Entered By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ORC-10: Entered By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByAll` returns every repetition.
     public var enteredBy: XCN? {
         field(10).map(XCN.init(field:))
     }
 
-    /// ORC-11: Verified By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ORC-10: every repetition of Entered By, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByAll: [XCN] {
+        repetitions(10).map(XCN.init(field:))
+    }
+
+    /// ORC-11: Verified By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `verifiedByAll` returns every repetition.
     public var verifiedBy: XCN? {
         field(11).map(XCN.init(field:))
     }
 
-    /// ORC-12: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ORC-11: every repetition of Verified By, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var verifiedByAll: [XCN] {
+        repetitions(11).map(XCN.init(field:))
+    }
+
+    /// ORC-12: Ordering Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingProviderAll` returns every repetition.
     public var orderingProvider: XCN? {
         field(12).map(XCN.init(field:))
+    }
+
+    /// ORC-12: every repetition of Ordering Provider, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingProviderAll: [XCN] {
+        repetitions(12).map(XCN.init(field:))
     }
 
     /// ORC-13: Enterer's Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -76,9 +112,18 @@ public struct ORC: TypedSegment {
         field(13).map(PL.init(field:))
     }
 
-    /// ORC-14: Call Back Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ORC-14: Call Back Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `callBackPhoneNumberAll` returns every repetition.
     public var callBackPhoneNumber: XTN? {
         field(14).map(XTN.init(field:))
+    }
+
+    /// ORC-14: every repetition of Call Back Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var callBackPhoneNumberAll: [XTN] {
+        repetitions(14).map(XTN.init(field:))
     }
 
     /// ORC-15: Order Effective Date/Time. HL7 data type `TS`.
@@ -101,9 +146,18 @@ public struct ORC: TypedSegment {
         field(18).map(CE.init(field:))
     }
 
-    /// ORC-19: Action By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ORC-19: Action By. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `actionByAll` returns every repetition.
     public var actionBy: XCN? {
         field(19).map(XCN.init(field:))
+    }
+
+    /// ORC-19: every repetition of Action By, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var actionByAll: [XCN] {
+        repetitions(19).map(XCN.init(field:))
     }
 
     /// ORC-20: Advanced Beneficiary Notice Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -111,24 +165,60 @@ public struct ORC: TypedSegment {
         field(20).map(CE.init(field:))
     }
 
-    /// ORC-21: Ordering Facility Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// ORC-21: Ordering Facility Name. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingFacilityNameAll` returns every repetition.
     public var orderingFacilityName: XON? {
         field(21).map(XON.init(field:))
     }
 
-    /// ORC-22: Ordering Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// ORC-21: every repetition of Ordering Facility Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingFacilityNameAll: [XON] {
+        repetitions(21).map(XON.init(field:))
+    }
+
+    /// ORC-22: Ordering Facility Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingFacilityAddressAll` returns every repetition.
     public var orderingFacilityAddress: XAD? {
         field(22).map(XAD.init(field:))
     }
 
-    /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ORC-22: every repetition of Ordering Facility Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingFacilityAddressAll: [XAD] {
+        repetitions(22).map(XAD.init(field:))
+    }
+
+    /// ORC-23: Ordering Facility Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingFacilityPhoneNumberAll` returns every repetition.
     public var orderingFacilityPhoneNumber: XTN? {
         field(23).map(XTN.init(field:))
     }
 
-    /// ORC-24: Ordering Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// ORC-23: every repetition of Ordering Facility Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingFacilityPhoneNumberAll: [XTN] {
+        repetitions(23).map(XTN.init(field:))
+    }
+
+    /// ORC-24: Ordering Provider Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderingProviderAddressAll` returns every repetition.
     public var orderingProviderAddress: XAD? {
         field(24).map(XAD.init(field:))
+    }
+
+    /// ORC-24: every repetition of Ordering Provider Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderingProviderAddressAll: [XAD] {
+        repetitions(24).map(XAD.init(field:))
     }
 
     /// ORC-25: Order Status Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

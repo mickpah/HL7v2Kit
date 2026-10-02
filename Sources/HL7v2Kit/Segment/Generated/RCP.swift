@@ -36,13 +36,31 @@ public struct RCP: TypedSegment {
         field(5)?.stringValue
     }
 
-    /// RCP-6: Sort-by Field. HL7 data type `SRT`.
+    /// RCP-6: Sort-by Field. HL7 data type `SRT`. Repeating field: this accessor reads the first repetition; `sortByFieldAll` returns every repetition.
     public var sortByField: Field? {
         field(6)
     }
 
-    /// RCP-7: Segment group inclusion. HL7 data type `ID`.
+    /// RCP-6: every repetition of Sort-by Field, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var sortByFieldAll: [Field] {
+        repetitions(6)
+    }
+
+    /// RCP-7: Segment group inclusion. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `segmentGroupInclusionAll` returns every repetition.
     public var segmentGroupInclusion: String? {
         field(7)?.stringValue
+    }
+
+    /// RCP-7: every repetition of Segment group inclusion, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var segmentGroupInclusionAll: [String?] {
+        repetitions(7).map(\.stringValue)
     }
 }

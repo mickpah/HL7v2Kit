@@ -11,9 +11,18 @@ public struct PDA: TypedSegment {
         self.fields = fields
     }
 
-    /// PDA-1: Death Cause Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PDA-1: Death Cause Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `deathCauseCodeAll` returns every repetition.
     public var deathCauseCode: CE? {
         field(1).map(CE.init(field:))
+    }
+
+    /// PDA-1: every repetition of Death Cause Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var deathCauseCodeAll: [CE] {
+        repetitions(1).map(CE.init(field:))
     }
 
     /// PDA-2: Death Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.

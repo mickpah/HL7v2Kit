@@ -26,8 +26,17 @@ public struct SPR: TypedSegment {
         field(3).map(CE.init(field:))
     }
 
-    /// SPR-4: Input Parameter List. HL7 data type `QIP`.
+    /// SPR-4: Input Parameter List. HL7 data type `QIP`. Repeating field: this accessor reads the first repetition; `inputParameterListAll` returns every repetition.
     public var inputParameterList: Field? {
         field(4)
+    }
+
+    /// SPR-4: every repetition of Input Parameter List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var inputParameterListAll: [Field] {
+        repetitions(4)
     }
 }

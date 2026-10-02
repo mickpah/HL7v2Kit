@@ -31,9 +31,18 @@ public struct EVN: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// EVN-5: Operator ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// EVN-5: Operator ID. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `operatorIDAll` returns every repetition.
     public var operatorID: XCN? {
         field(5).map(XCN.init(field:))
+    }
+
+    /// EVN-5: every repetition of Operator ID, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var operatorIDAll: [XCN] {
+        repetitions(5).map(XCN.init(field:))
     }
 
     /// EVN-6: Event Occurred. HL7 data type `TS`.

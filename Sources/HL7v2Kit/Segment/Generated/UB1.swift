@@ -41,9 +41,18 @@ public struct UB1: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// UB1-7: Condition Code (35-39). HL7 data type `IS`.
+    /// UB1-7: Condition Code (35-39). HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `conditionCode3539All` returns every repetition.
     public var conditionCode3539: String? {
         field(7)?.stringValue
+    }
+
+    /// UB1-7: every repetition of Condition Code (35-39), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var conditionCode3539All: [String?] {
+        repetitions(7).map(\.stringValue)
     }
 
     /// UB1-8: Covered Days - (23). HL7 data type `NM`.
@@ -56,9 +65,18 @@ public struct UB1: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// UB1-10: Value Amount & Code (46-49). HL7 data type `UVC`.
+    /// UB1-10: Value Amount & Code (46-49). HL7 data type `UVC`. Repeating field: this accessor reads the first repetition; `valueAmountCode4649All` returns every repetition.
     public var valueAmountCode4649: Field? {
         field(10)
+    }
+
+    /// UB1-10: every repetition of Value Amount & Code (46-49), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var valueAmountCode4649All: [Field] {
+        repetitions(10)
     }
 
     /// UB1-11: Number Of Grace Days (90). HL7 data type `NM`.
@@ -86,9 +104,18 @@ public struct UB1: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// UB1-16: Occurrence (28-32). HL7 data type `OCD`.
+    /// UB1-16: Occurrence (28-32). HL7 data type `OCD`. Repeating field: this accessor reads the first repetition; `occurrence2832All` returns every repetition.
     public var occurrence2832: Field? {
         field(16)
+    }
+
+    /// UB1-16: every repetition of Occurrence (28-32), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var occurrence2832All: [Field] {
+        repetitions(16)
     }
 
     /// UB1-17: Occurrence Span (33). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

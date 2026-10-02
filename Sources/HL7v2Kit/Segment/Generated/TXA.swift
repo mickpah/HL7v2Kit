@@ -31,9 +31,18 @@ public struct TXA: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// TXA-5: Primary Activity Provider Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// TXA-5: Primary Activity Provider Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryActivityProviderCodeNameAll` returns every repetition.
     public var primaryActivityProviderCodeName: XCN? {
         field(5).map(XCN.init(field:))
+    }
+
+    /// TXA-5: every repetition of Primary Activity Provider Code/Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryActivityProviderCodeNameAll: [XCN] {
+        repetitions(5).map(XCN.init(field:))
     }
 
     /// TXA-6: Origination Date/Time. HL7 data type `TS`.
@@ -46,24 +55,60 @@ public struct TXA: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// TXA-8: Edit Date/Time. HL7 data type `TS`.
+    /// TXA-8: Edit Date/Time. HL7 data type `TS`. Repeating field: this accessor reads the first repetition; `editDateTimeAll` returns every repetition.
     public var editDateTime: String? {
         field(8)?.stringValue
     }
 
-    /// TXA-9: Originator Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// TXA-8: every repetition of Edit Date/Time, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var editDateTimeAll: [String?] {
+        repetitions(8).map(\.stringValue)
+    }
+
+    /// TXA-9: Originator Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `originatorCodeNameAll` returns every repetition.
     public var originatorCodeName: XCN? {
         field(9).map(XCN.init(field:))
     }
 
-    /// TXA-10: Assigned Document Authenticator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// TXA-9: every repetition of Originator Code/Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var originatorCodeNameAll: [XCN] {
+        repetitions(9).map(XCN.init(field:))
+    }
+
+    /// TXA-10: Assigned Document Authenticator. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `assignedDocumentAuthenticatorAll` returns every repetition.
     public var assignedDocumentAuthenticator: XCN? {
         field(10).map(XCN.init(field:))
     }
 
-    /// TXA-11: Transcriptionist Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// TXA-10: every repetition of Assigned Document Authenticator, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var assignedDocumentAuthenticatorAll: [XCN] {
+        repetitions(10).map(XCN.init(field:))
+    }
+
+    /// TXA-11: Transcriptionist Code/Name. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `transcriptionistCodeNameAll` returns every repetition.
     public var transcriptionistCodeName: XCN? {
         field(11).map(XCN.init(field:))
+    }
+
+    /// TXA-11: every repetition of Transcriptionist Code/Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var transcriptionistCodeNameAll: [XCN] {
+        repetitions(11).map(XCN.init(field:))
     }
 
     /// TXA-12: Unique Document Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
@@ -76,9 +121,18 @@ public struct TXA: TypedSegment {
         field(13).map(EI.init(field:))
     }
 
-    /// TXA-14: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// TXA-14: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerOrderNumberAll` returns every repetition.
     public var placerOrderNumber: EI? {
         field(14).map(EI.init(field:))
+    }
+
+    /// TXA-14: every repetition of Placer Order Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerOrderNumberAll: [EI] {
+        repetitions(14).map(EI.init(field:))
     }
 
     /// TXA-15: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
@@ -116,13 +170,31 @@ public struct TXA: TypedSegment {
         field(21)?.stringValue
     }
 
-    /// TXA-22: Authentication Person, Time Stamp. HL7 data type `PPN`.
+    /// TXA-22: Authentication Person, Time Stamp. HL7 data type `PPN`. Repeating field: this accessor reads the first repetition; `authenticationPersonTimeStampAll` returns every repetition.
     public var authenticationPersonTimeStamp: Field? {
         field(22)
     }
 
-    /// TXA-23: Distributed Copies (Code and Name of Recipients). HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// TXA-22: every repetition of Authentication Person, Time Stamp, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var authenticationPersonTimeStampAll: [Field] {
+        repetitions(22)
+    }
+
+    /// TXA-23: Distributed Copies (Code and Name of Recipients). HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `distributedCopiesCodeAndNameOfRecipientsAll` returns every repetition.
     public var distributedCopiesCodeAndNameOfRecipients: XCN? {
         field(23).map(XCN.init(field:))
+    }
+
+    /// TXA-23: every repetition of Distributed Copies (Code and Name of Recipients), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var distributedCopiesCodeAndNameOfRecipientsAll: [XCN] {
+        repetitions(23).map(XCN.init(field:))
     }
 }

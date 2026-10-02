@@ -21,19 +21,46 @@ public struct TQ1: TypedSegment {
         field(2)
     }
 
-    /// TQ1-3: Repeat Pattern. HL7 data type `RPT`.
+    /// TQ1-3: Repeat Pattern. HL7 data type `RPT`. Repeating field: this accessor reads the first repetition; `repeatPatternAll` returns every repetition.
     public var repeatPattern: Field? {
         field(3)
     }
 
-    /// TQ1-4: Explicit Time. HL7 data type `TM`.
+    /// TQ1-3: every repetition of Repeat Pattern, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var repeatPatternAll: [Field] {
+        repetitions(3)
+    }
+
+    /// TQ1-4: Explicit Time. HL7 data type `TM`. Repeating field: this accessor reads the first repetition; `explicitTimeAll` returns every repetition.
     public var explicitTime: String? {
         field(4)?.stringValue
     }
 
-    /// TQ1-5: Relative Time and Units. HL7 data type `CQ`.
+    /// TQ1-4: every repetition of Explicit Time, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var explicitTimeAll: [String?] {
+        repetitions(4).map(\.stringValue)
+    }
+
+    /// TQ1-5: Relative Time and Units. HL7 data type `CQ`. Repeating field: this accessor reads the first repetition; `relativeTimeAndUnitsAll` returns every repetition.
     public var relativeTimeAndUnits: Field? {
         field(5)
+    }
+
+    /// TQ1-5: every repetition of Relative Time and Units, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var relativeTimeAndUnitsAll: [Field] {
+        repetitions(5)
     }
 
     /// TQ1-6: Service Duration. HL7 data type `CQ`.
@@ -51,9 +78,18 @@ public struct TQ1: TypedSegment {
         field(8)?.stringValue
     }
 
-    /// TQ1-9: Priority. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// TQ1-9: Priority. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `priorityAll` returns every repetition.
     public var priority: CWE? {
         field(9).map(CWE.init(field:))
+    }
+
+    /// TQ1-9: every repetition of Priority, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var priorityAll: [CWE] {
+        repetitions(9).map(CWE.init(field:))
     }
 
     /// TQ1-10: Condition text. HL7 data type `TX`.

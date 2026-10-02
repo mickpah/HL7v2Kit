@@ -66,9 +66,18 @@ public struct PCR: TypedSegment {
         field(11)?.stringValue
     }
 
-    /// PCR-12: Product Serial/Lot Number. HL7 data type `ST`.
+    /// PCR-12: Product Serial/Lot Number. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `productSerialLotNumberAll` returns every repetition.
     public var productSerialLotNumber: String? {
         field(12)?.stringValue
+    }
+
+    /// PCR-12: every repetition of Product Serial/Lot Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var productSerialLotNumberAll: [String?] {
+        repetitions(12).map(\.stringValue)
     }
 
     /// PCR-13: Product Available For Inspection. HL7 data type `IS`.
@@ -111,18 +120,45 @@ public struct PCR: TypedSegment {
         field(20)?.stringValue
     }
 
-    /// PCR-21: Action Taken In Response To The Event. HL7 data type `ID`.
+    /// PCR-21: Action Taken In Response To The Event. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `actionTakenInResponseToTheEventAll` returns every repetition.
     public var actionTakenInResponseToTheEvent: String? {
         field(21)?.stringValue
     }
 
-    /// PCR-22: Event Causality Observations. HL7 data type `ID`.
+    /// PCR-21: every repetition of Action Taken In Response To The Event, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var actionTakenInResponseToTheEventAll: [String?] {
+        repetitions(21).map(\.stringValue)
+    }
+
+    /// PCR-22: Event Causality Observations. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `eventCausalityObservationsAll` returns every repetition.
     public var eventCausalityObservations: String? {
         field(22)?.stringValue
     }
 
-    /// PCR-23: Indirect Exposure Mechanism. HL7 data type `ID`.
+    /// PCR-22: every repetition of Event Causality Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventCausalityObservationsAll: [String?] {
+        repetitions(22).map(\.stringValue)
+    }
+
+    /// PCR-23: Indirect Exposure Mechanism. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `indirectExposureMechanismAll` returns every repetition.
     public var indirectExposureMechanism: String? {
         field(23)?.stringValue
+    }
+
+    /// PCR-23: every repetition of Indirect Exposure Mechanism, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var indirectExposureMechanismAll: [String?] {
+        repetitions(23).map(\.stringValue)
     }
 }

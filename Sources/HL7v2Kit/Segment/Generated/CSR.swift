@@ -41,14 +41,32 @@ public struct CSR: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// CSR-7: Person Performing Study Registration. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// CSR-7: Person Performing Study Registration. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `personPerformingStudyRegistrationAll` returns every repetition.
     public var personPerformingStudyRegistration: XCN? {
         field(7).map(XCN.init(field:))
     }
 
-    /// CSR-8: Study Authorizing Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// CSR-7: every repetition of Person Performing Study Registration, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var personPerformingStudyRegistrationAll: [XCN] {
+        repetitions(7).map(XCN.init(field:))
+    }
+
+    /// CSR-8: Study Authorizing Provider. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `studyAuthorizingProviderAll` returns every repetition.
     public var studyAuthorizingProvider: XCN? {
         field(8).map(XCN.init(field:))
+    }
+
+    /// CSR-8: every repetition of Study Authorizing Provider, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var studyAuthorizingProviderAll: [XCN] {
+        repetitions(8).map(XCN.init(field:))
     }
 
     /// CSR-9: Date/time Patient Study Consent Signed. HL7 data type `TS`.
@@ -61,19 +79,46 @@ public struct CSR: TypedSegment {
         field(10).map(CE.init(field:))
     }
 
-    /// CSR-11: Study Randomization Date/time. HL7 data type `TS`.
+    /// CSR-11: Study Randomization Date/time. HL7 data type `TS`. Repeating field: this accessor reads the first repetition; `studyRandomizationDateTimeAll` returns every repetition.
     public var studyRandomizationDateTime: String? {
         field(11)?.stringValue
     }
 
-    /// CSR-12: Randomized Study Arm. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CSR-11: every repetition of Study Randomization Date/time, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var studyRandomizationDateTimeAll: [String?] {
+        repetitions(11).map(\.stringValue)
+    }
+
+    /// CSR-12: Randomized Study Arm. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `randomizedStudyArmAll` returns every repetition.
     public var randomizedStudyArm: CE? {
         field(12).map(CE.init(field:))
     }
 
-    /// CSR-13: Stratum for Study Randomization. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// CSR-12: every repetition of Randomized Study Arm, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var randomizedStudyArmAll: [CE] {
+        repetitions(12).map(CE.init(field:))
+    }
+
+    /// CSR-13: Stratum for Study Randomization. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `stratumForStudyRandomizationAll` returns every repetition.
     public var stratumForStudyRandomization: CE? {
         field(13).map(CE.init(field:))
+    }
+
+    /// CSR-13: every repetition of Stratum for Study Randomization, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var stratumForStudyRandomizationAll: [CE] {
+        repetitions(13).map(CE.init(field:))
     }
 
     /// CSR-14: Patient Evaluability Status. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.

@@ -11,14 +11,32 @@ public struct PEO: TypedSegment {
         self.fields = fields
     }
 
-    /// PEO-1: Event Identifiers Used. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PEO-1: Event Identifiers Used. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `eventIdentifiersUsedAll` returns every repetition.
     public var eventIdentifiersUsed: CE? {
         field(1).map(CE.init(field:))
     }
 
-    /// PEO-2: Event Symptom/Diagnosis Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PEO-1: every repetition of Event Identifiers Used, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventIdentifiersUsedAll: [CE] {
+        repetitions(1).map(CE.init(field:))
+    }
+
+    /// PEO-2: Event Symptom/Diagnosis Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `eventSymptomDiagnosisCodeAll` returns every repetition.
     public var eventSymptomDiagnosisCode: CE? {
         field(2).map(CE.init(field:))
+    }
+
+    /// PEO-2: every repetition of Event Symptom/Diagnosis Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventSymptomDiagnosisCodeAll: [CE] {
+        repetitions(2).map(CE.init(field:))
     }
 
     /// PEO-3: Event Onset Date/Time. HL7 data type `TS`.
@@ -41,14 +59,32 @@ public struct PEO: TypedSegment {
         field(6)?.stringValue
     }
 
-    /// PEO-7: Event Location Occurred Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PEO-7: Event Location Occurred Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `eventLocationOccurredAddressAll` returns every repetition.
     public var eventLocationOccurredAddress: XAD? {
         field(7).map(XAD.init(field:))
     }
 
-    /// PEO-8: Event Qualification. HL7 data type `ID`.
+    /// PEO-7: every repetition of Event Location Occurred Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventLocationOccurredAddressAll: [XAD] {
+        repetitions(7).map(XAD.init(field:))
+    }
+
+    /// PEO-8: Event Qualification. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `eventQualificationAll` returns every repetition.
     public var eventQualification: String? {
         field(8)?.stringValue
+    }
+
+    /// PEO-8: every repetition of Event Qualification, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventQualificationAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// PEO-9: Event Serious. HL7 data type `ID`.
@@ -61,9 +97,18 @@ public struct PEO: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// PEO-11: Event Outcome. HL7 data type `ID`.
+    /// PEO-11: Event Outcome. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `eventOutcomeAll` returns every repetition.
     public var eventOutcome: String? {
         field(11)?.stringValue
+    }
+
+    /// PEO-11: every repetition of Event Outcome, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventOutcomeAll: [String?] {
+        repetitions(11).map(\.stringValue)
     }
 
     /// PEO-12: Patient Outcome. HL7 data type `ID`.
@@ -71,49 +116,130 @@ public struct PEO: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// PEO-13: Event Description From Others. HL7 data type `FT`.
+    /// PEO-13: Event Description From Others. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromOthersAll` returns every repetition.
     public var eventDescriptionFromOthers: String? {
         field(13)?.stringValue
     }
 
-    /// PEO-14: Event From Original Reporter. HL7 data type `FT`.
+    /// PEO-13: every repetition of Event Description From Others, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventDescriptionFromOthersAll: [String?] {
+        repetitions(13).map(\.stringValue)
+    }
+
+    /// PEO-14: Event From Original Reporter. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventFromOriginalReporterAll` returns every repetition.
     public var eventFromOriginalReporter: String? {
         field(14)?.stringValue
     }
 
-    /// PEO-15: Event Description From Patient. HL7 data type `FT`.
+    /// PEO-14: every repetition of Event From Original Reporter, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventFromOriginalReporterAll: [String?] {
+        repetitions(14).map(\.stringValue)
+    }
+
+    /// PEO-15: Event Description From Patient. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromPatientAll` returns every repetition.
     public var eventDescriptionFromPatient: String? {
         field(15)?.stringValue
     }
 
-    /// PEO-16: Event Description From Practitioner. HL7 data type `FT`.
+    /// PEO-15: every repetition of Event Description From Patient, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventDescriptionFromPatientAll: [String?] {
+        repetitions(15).map(\.stringValue)
+    }
+
+    /// PEO-16: Event Description From Practitioner. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromPractitionerAll` returns every repetition.
     public var eventDescriptionFromPractitioner: String? {
         field(16)?.stringValue
     }
 
-    /// PEO-17: Event Description From Autopsy. HL7 data type `FT`.
+    /// PEO-16: every repetition of Event Description From Practitioner, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventDescriptionFromPractitionerAll: [String?] {
+        repetitions(16).map(\.stringValue)
+    }
+
+    /// PEO-17: Event Description From Autopsy. HL7 data type `FT`. Repeating field: this accessor reads the first repetition; `eventDescriptionFromAutopsyAll` returns every repetition.
     public var eventDescriptionFromAutopsy: String? {
         field(17)?.stringValue
     }
 
-    /// PEO-18: Cause Of Death. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PEO-17: every repetition of Event Description From Autopsy, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var eventDescriptionFromAutopsyAll: [String?] {
+        repetitions(17).map(\.stringValue)
+    }
+
+    /// PEO-18: Cause Of Death. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `causeOfDeathAll` returns every repetition.
     public var causeOfDeath: CE? {
         field(18).map(CE.init(field:))
     }
 
-    /// PEO-19: Primary Observer Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access.
+    /// PEO-18: every repetition of Cause Of Death, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var causeOfDeathAll: [CE] {
+        repetitions(18).map(CE.init(field:))
+    }
+
+    /// PEO-19: Primary Observer Name. HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryObserverNameAll` returns every repetition.
     public var primaryObserverName: XPN? {
         field(19).map(XPN.init(field:))
     }
 
-    /// PEO-20: Primary Observer Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PEO-19: every repetition of Primary Observer Name, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryObserverNameAll: [XPN] {
+        repetitions(19).map(XPN.init(field:))
+    }
+
+    /// PEO-20: Primary Observer Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryObserverAddressAll` returns every repetition.
     public var primaryObserverAddress: XAD? {
         field(20).map(XAD.init(field:))
     }
 
-    /// PEO-21: Primary Observer Telephone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PEO-20: every repetition of Primary Observer Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryObserverAddressAll: [XAD] {
+        repetitions(20).map(XAD.init(field:))
+    }
+
+    /// PEO-21: Primary Observer Telephone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `primaryObserverTelephoneAll` returns every repetition.
     public var primaryObserverTelephone: XTN? {
         field(21).map(XTN.init(field:))
+    }
+
+    /// PEO-21: every repetition of Primary Observer Telephone, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var primaryObserverTelephoneAll: [XTN] {
+        repetitions(21).map(XTN.init(field:))
     }
 
     /// PEO-22: Primary Observer's Qualification. HL7 data type `ID`.

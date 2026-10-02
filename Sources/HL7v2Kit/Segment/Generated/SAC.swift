@@ -81,9 +81,18 @@ public struct SAC: TypedSegment {
         field(14)
     }
 
-    /// SAC-15: Location. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// SAC-15: Location. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `locationAll` returns every repetition.
     public var location: CE? {
         field(15).map(CE.init(field:))
+    }
+
+    /// SAC-15: every repetition of Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationAll: [CE] {
+        repetitions(15).map(CE.init(field:))
     }
 
     /// SAC-16: Container Height. HL7 data type `NM`.
@@ -141,9 +150,18 @@ public struct SAC: TypedSegment {
         field(26).map(CE.init(field:))
     }
 
-    /// SAC-27: Additive. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SAC-27: Additive. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `additiveAll` returns every repetition.
     public var additive: CWE? {
         field(27).map(CWE.init(field:))
+    }
+
+    /// SAC-27: every repetition of Additive, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var additiveAll: [CWE] {
+        repetitions(27).map(CWE.init(field:))
     }
 
     /// SAC-28: Specimen Component. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -206,14 +224,32 @@ public struct SAC: TypedSegment {
         field(39).map(CE.init(field:))
     }
 
-    /// SAC-40: System Induced Contaminants. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// SAC-40: System Induced Contaminants. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `systemInducedContaminantsAll` returns every repetition.
     public var systemInducedContaminants: CE? {
         field(40).map(CE.init(field:))
     }
 
-    /// SAC-41: Drug Interference. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// SAC-40: every repetition of System Induced Contaminants, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var systemInducedContaminantsAll: [CE] {
+        repetitions(40).map(CE.init(field:))
+    }
+
+    /// SAC-41: Drug Interference. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `drugInterferenceAll` returns every repetition.
     public var drugInterference: CE? {
         field(41).map(CE.init(field:))
+    }
+
+    /// SAC-41: every repetition of Drug Interference, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var drugInterferenceAll: [CE] {
+        repetitions(41).map(CE.init(field:))
     }
 
     /// SAC-42: Artificial Blood. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -221,13 +257,31 @@ public struct SAC: TypedSegment {
         field(42).map(CE.init(field:))
     }
 
-    /// SAC-43: Special Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// SAC-43: Special Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `specialHandlingCodeAll` returns every repetition.
     public var specialHandlingCode: CWE? {
         field(43).map(CWE.init(field:))
     }
 
-    /// SAC-44: Other Environmental Factors. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// SAC-43: every repetition of Special Handling Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specialHandlingCodeAll: [CWE] {
+        repetitions(43).map(CWE.init(field:))
+    }
+
+    /// SAC-44: Other Environmental Factors. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `otherEnvironmentalFactorsAll` returns every repetition.
     public var otherEnvironmentalFactors: CE? {
         field(44).map(CE.init(field:))
+    }
+
+    /// SAC-44: every repetition of Other Environmental Factors, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var otherEnvironmentalFactorsAll: [CE] {
+        repetitions(44).map(CE.init(field:))
     }
 }

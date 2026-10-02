@@ -21,9 +21,18 @@ public struct BPO: TypedSegment {
         field(2).map(CWE.init(field:))
     }
 
-    /// BPO-3: BP Processing Requirements. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// BPO-3: BP Processing Requirements. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `bpProcessingRequirementsAll` returns every repetition.
     public var bpProcessingRequirements: CWE? {
         field(3).map(CWE.init(field:))
+    }
+
+    /// BPO-3: every repetition of BP Processing Requirements, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var bpProcessingRequirementsAll: [CWE] {
+        repetitions(3).map(CWE.init(field:))
     }
 
     /// BPO-4: BP Quantity. HL7 data type `NM`.
@@ -71,9 +80,18 @@ public struct BPO: TypedSegment {
         field(12).map(XAD.init(field:))
     }
 
-    /// BPO-13: BP Indication for Use. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// BPO-13: BP Indication for Use. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `bpIndicationForUseAll` returns every repetition.
     public var bpIndicationForUse: CWE? {
         field(13).map(CWE.init(field:))
+    }
+
+    /// BPO-13: every repetition of BP Indication for Use, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var bpIndicationForUseAll: [CWE] {
+        repetitions(13).map(CWE.init(field:))
     }
 
     /// BPO-14: BP Informed Consent Indicator. HL7 data type `ID`.

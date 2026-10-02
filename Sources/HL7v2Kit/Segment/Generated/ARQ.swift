@@ -61,9 +61,18 @@ public struct ARQ: TypedSegment {
         field(10).map(CE.init(field:))
     }
 
-    /// ARQ-11: Requested Start Date/Time Range. HL7 data type `DR`.
+    /// ARQ-11: Requested Start Date/Time Range. HL7 data type `DR`. Repeating field: this accessor reads the first repetition; `requestedStartDateTimeRangeAll` returns every repetition.
     public var requestedStartDateTimeRange: Field? {
         field(11)
+    }
+
+    /// ARQ-11: every repetition of Requested Start Date/Time Range, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var requestedStartDateTimeRangeAll: [Field] {
+        repetitions(11)
     }
 
     /// ARQ-12: Priority-ARQ. HL7 data type `ST`.
@@ -81,19 +90,46 @@ public struct ARQ: TypedSegment {
         field(14)?.stringValue
     }
 
-    /// ARQ-15: Placer Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ARQ-15: Placer Contact Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerContactPersonAll` returns every repetition.
     public var placerContactPerson: XCN? {
         field(15).map(XCN.init(field:))
     }
 
-    /// ARQ-16: Placer Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ARQ-15: every repetition of Placer Contact Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerContactPersonAll: [XCN] {
+        repetitions(15).map(XCN.init(field:))
+    }
+
+    /// ARQ-16: Placer Contact Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerContactPhoneNumberAll` returns every repetition.
     public var placerContactPhoneNumber: XTN? {
         field(16).map(XTN.init(field:))
     }
 
-    /// ARQ-17: Placer Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// ARQ-16: every repetition of Placer Contact Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerContactPhoneNumberAll: [XTN] {
+        repetitions(16).map(XTN.init(field:))
+    }
+
+    /// ARQ-17: Placer Contact Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerContactAddressAll` returns every repetition.
     public var placerContactAddress: XAD? {
         field(17).map(XAD.init(field:))
+    }
+
+    /// ARQ-17: every repetition of Placer Contact Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerContactAddressAll: [XAD] {
+        repetitions(17).map(XAD.init(field:))
     }
 
     /// ARQ-18: Placer Contact Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -101,14 +137,32 @@ public struct ARQ: TypedSegment {
         field(18).map(PL.init(field:))
     }
 
-    /// ARQ-19: Entered By Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// ARQ-19: Entered By Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByPersonAll` returns every repetition.
     public var enteredByPerson: XCN? {
         field(19).map(XCN.init(field:))
     }
 
-    /// ARQ-20: Entered By Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// ARQ-19: every repetition of Entered By Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByPersonAll: [XCN] {
+        repetitions(19).map(XCN.init(field:))
+    }
+
+    /// ARQ-20: Entered By Phone Number. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByPhoneNumberAll` returns every repetition.
     public var enteredByPhoneNumber: XTN? {
         field(20).map(XTN.init(field:))
+    }
+
+    /// ARQ-20: every repetition of Entered By Phone Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByPhoneNumberAll: [XTN] {
+        repetitions(20).map(XTN.init(field:))
     }
 
     /// ARQ-21: Entered By Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
@@ -126,13 +180,31 @@ public struct ARQ: TypedSegment {
         field(23).map(EI.init(field:))
     }
 
-    /// ARQ-24: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// ARQ-24: Placer Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `placerOrderNumberAll` returns every repetition.
     public var placerOrderNumber: EI? {
         field(24).map(EI.init(field:))
     }
 
-    /// ARQ-25: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// ARQ-24: every repetition of Placer Order Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var placerOrderNumberAll: [EI] {
+        repetitions(24).map(EI.init(field:))
+    }
+
+    /// ARQ-25: Filler Order Number. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `fillerOrderNumberAll` returns every repetition.
     public var fillerOrderNumber: EI? {
         field(25).map(EI.init(field:))
+    }
+
+    /// ARQ-25: every repetition of Filler Order Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerOrderNumberAll: [EI] {
+        repetitions(25).map(EI.init(field:))
     }
 }

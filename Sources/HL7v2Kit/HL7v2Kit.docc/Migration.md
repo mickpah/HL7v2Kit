@@ -118,6 +118,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | *Unreleased* | No API change. P5-9: `DataTypeGrammar.name` changes for every v2.3.1 composite datatype (39 values) — leftover table-of-contents padding and a page number (`"address                                                                                          2-12"`) are gone, leaving the body heading text (`"address"`). v2.3 and v2.4 names are unchanged. No component, datatype or table binding changed, and no validator output changed; a consumer that reads `DataTypeGrammar.name` for display or diagnostics on v2.3.1 sees the corrected text. |
 | *Unreleased* | `CompositeView.component(_:as:)`, `CompositeView.viewed(as:)` and `TypedSegment.repetitions(_:)` (additive access helpers, P9-2). No default output changes. |
 | *Unreleased* | 102 generated `String?` component accessors on CX, XPN, XAD, XCN, XTN, PL, CWE, CNE and XON (additive, P9-3; ADR-020). Every v3.13.0 composite accessor keeps its name and type. No default output changes. |
+| *Unreleased* | 536 generated `<name>All` accessors, one per repeating field (`*` or a bound) on the generated segment structs: `[<View>]`, `[String?]` or `[Field]` (additive, P9-4; ADR-020). Each passes `TypedSegment.repetitions(_:)` through unchanged. Every v3.13.0 segment accessor keeps its name and type; only the singular accessor's DocC changes, to say the field repeats. No default output changes. |
 
 ## Extra components in composite fields (P6-15)
 

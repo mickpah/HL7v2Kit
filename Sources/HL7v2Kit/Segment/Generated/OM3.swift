@@ -26,19 +26,46 @@ public struct OM3: TypedSegment {
         field(3).map(CE.init(field:))
     }
 
-    /// OM3-4: Normal Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM3-4: Normal Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `normalTextCodesForCategoricalObservationsAll` returns every repetition.
     public var normalTextCodesForCategoricalObservations: CE? {
         field(4).map(CE.init(field:))
     }
 
-    /// OM3-5: Abnormal Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM3-4: every repetition of Normal Text/Codes for Categorical Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var normalTextCodesForCategoricalObservationsAll: [CE] {
+        repetitions(4).map(CE.init(field:))
+    }
+
+    /// OM3-5: Abnormal Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `abnormalTextCodesForCategoricalObservationsAll` returns every repetition.
     public var abnormalTextCodesForCategoricalObservations: CE? {
         field(5).map(CE.init(field:))
     }
 
-    /// OM3-6: Critical Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM3-5: every repetition of Abnormal Text/Codes for Categorical Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var abnormalTextCodesForCategoricalObservationsAll: [CE] {
+        repetitions(5).map(CE.init(field:))
+    }
+
+    /// OM3-6: Critical Text/Codes for Categorical Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `criticalTextCodesForCategoricalObservationsAll` returns every repetition.
     public var criticalTextCodesForCategoricalObservations: CE? {
         field(6).map(CE.init(field:))
+    }
+
+    /// OM3-6: every repetition of Critical Text/Codes for Categorical Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var criticalTextCodesForCategoricalObservationsAll: [CE] {
+        repetitions(6).map(CE.init(field:))
     }
 
     /// OM3-7: Value Type. HL7 data type `ID`.

@@ -31,9 +31,18 @@ public struct OBX: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// OBX-5: Observation Value. HL7 data type `varies`.
+    /// OBX-5: Observation Value. HL7 data type `varies`. Repeating field: this accessor reads the first repetition; `observationValueAll` returns every repetition.
     public var observationValue: Field? {
         field(5)
+    }
+
+    /// OBX-5: every repetition of Observation Value, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var observationValueAll: [Field] {
+        repetitions(5)
     }
 
     /// OBX-6: Units. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -46,9 +55,18 @@ public struct OBX: TypedSegment {
         field(7)?.stringValue
     }
 
-    /// OBX-8: Abnormal Flags. HL7 data type `IS`.
+    /// OBX-8: Abnormal Flags. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `abnormalFlagsAll` returns every repetition.
     public var abnormalFlags: String? {
         field(8)?.stringValue
+    }
+
+    /// OBX-8: every repetition of Abnormal Flags, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var abnormalFlagsAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// OBX-9: Probability. HL7 data type `NM`.
@@ -56,9 +74,18 @@ public struct OBX: TypedSegment {
         field(9)?.stringValue
     }
 
-    /// OBX-10: Nature of Abnormal Test. HL7 data type `ID`.
+    /// OBX-10: Nature of Abnormal Test. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `natureOfAbnormalTestAll` returns every repetition.
     public var natureOfAbnormalTest: String? {
         field(10)?.stringValue
+    }
+
+    /// OBX-10: every repetition of Nature of Abnormal Test, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var natureOfAbnormalTestAll: [String?] {
+        repetitions(10).map(\.stringValue)
     }
 
     /// OBX-11: Observation Result Status. HL7 data type `ID`.
@@ -86,19 +113,46 @@ public struct OBX: TypedSegment {
         field(15).map(CE.init(field:))
     }
 
-    /// OBX-16: Responsible Observer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// OBX-16: Responsible Observer. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `responsibleObserverAll` returns every repetition.
     public var responsibleObserver: XCN? {
         field(16).map(XCN.init(field:))
     }
 
-    /// OBX-17: Observation Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OBX-16: every repetition of Responsible Observer, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var responsibleObserverAll: [XCN] {
+        repetitions(16).map(XCN.init(field:))
+    }
+
+    /// OBX-17: Observation Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `observationMethodAll` returns every repetition.
     public var observationMethod: CE? {
         field(17).map(CE.init(field:))
     }
 
-    /// OBX-18: Equipment Instance Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// OBX-17: every repetition of Observation Method, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var observationMethodAll: [CE] {
+        repetitions(17).map(CE.init(field:))
+    }
+
+    /// OBX-18: Equipment Instance Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `equipmentInstanceIdentifierAll` returns every repetition.
     public var equipmentInstanceIdentifier: EI? {
         field(18).map(EI.init(field:))
+    }
+
+    /// OBX-18: every repetition of Equipment Instance Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var equipmentInstanceIdentifierAll: [EI] {
+        repetitions(18).map(EI.init(field:))
     }
 
     /// OBX-19: Date/Time of the Analysis. HL7 data type `TS`.

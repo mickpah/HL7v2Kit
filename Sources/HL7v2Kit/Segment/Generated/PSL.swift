@@ -46,9 +46,18 @@ public struct PSL: TypedSegment {
         field(7).map(CWE.init(field:))
     }
 
-    /// PSL-8: Product/Service Code Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// PSL-8: Product/Service Code Modifier. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `productServiceCodeModifierAll` returns every repetition.
     public var productServiceCodeModifier: CWE? {
         field(8).map(CWE.init(field:))
+    }
+
+    /// PSL-8: every repetition of Product/Service Code Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var productServiceCodeModifierAll: [CWE] {
+        repetitions(8).map(CWE.init(field:))
     }
 
     /// PSL-9: Product/Service Code Description. HL7 data type `ST`.
@@ -91,24 +100,60 @@ public struct PSL: TypedSegment {
         field(16)
     }
 
-    /// PSL-17: Product/Service Clarification Code Type. HL7 data type `IS`.
+    /// PSL-17: Product/Service Clarification Code Type. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `productServiceClarificationCodeTypeAll` returns every repetition.
     public var productServiceClarificationCodeType: String? {
         field(17)?.stringValue
     }
 
-    /// PSL-18: Product/Service Clarification Code Value. HL7 data type `ST`.
+    /// PSL-17: every repetition of Product/Service Clarification Code Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var productServiceClarificationCodeTypeAll: [String?] {
+        repetitions(17).map(\.stringValue)
+    }
+
+    /// PSL-18: Product/Service Clarification Code Value. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `productServiceClarificationCodeValueAll` returns every repetition.
     public var productServiceClarificationCodeValue: String? {
         field(18)?.stringValue
     }
 
-    /// PSL-19: Health Document Reference Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// PSL-18: every repetition of Product/Service Clarification Code Value, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var productServiceClarificationCodeValueAll: [String?] {
+        repetitions(18).map(\.stringValue)
+    }
+
+    /// PSL-19: Health Document Reference Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `healthDocumentReferenceIdentifierAll` returns every repetition.
     public var healthDocumentReferenceIdentifier: EI? {
         field(19).map(EI.init(field:))
     }
 
-    /// PSL-20: Processing Consideration Code. HL7 data type `IS`.
+    /// PSL-19: every repetition of Health Document Reference Identifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var healthDocumentReferenceIdentifierAll: [EI] {
+        repetitions(19).map(EI.init(field:))
+    }
+
+    /// PSL-20: Processing Consideration Code. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `processingConsiderationCodeAll` returns every repetition.
     public var processingConsiderationCode: String? {
         field(20)?.stringValue
+    }
+
+    /// PSL-20: every repetition of Processing Consideration Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var processingConsiderationCodeAll: [String?] {
+        repetitions(20).map(\.stringValue)
     }
 
     /// PSL-21: Restricted Disclosure Indicator. HL7 data type `ID`.

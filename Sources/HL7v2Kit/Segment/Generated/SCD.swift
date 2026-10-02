@@ -171,9 +171,18 @@ public struct SCD: TypedSegment {
         field(32).map(CNE.init(field:))
     }
 
-    /// SCD-33: Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
+    /// SCD-33: Patient Identifier List. HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientIdentifierListAll` returns every repetition.
     public var patientIdentifierList: CX? {
         field(33).map(CX.init(field:))
+    }
+
+    /// SCD-33: every repetition of Patient Identifier List, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var patientIdentifierListAll: [CX] {
+        repetitions(33).map(CX.init(field:))
     }
 
     /// SCD-34: Attending Doctor. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.

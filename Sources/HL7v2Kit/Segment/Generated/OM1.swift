@@ -21,9 +21,18 @@ public struct OM1: TypedSegment {
         field(2).map(CE.init(field:))
     }
 
-    /// OM1-3: Permitted Data Types. HL7 data type `ID`.
+    /// OM1-3: Permitted Data Types. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `permittedDataTypesAll` returns every repetition.
     public var permittedDataTypes: String? {
         field(3)?.stringValue
+    }
+
+    /// OM1-3: every repetition of Permitted Data Types, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var permittedDataTypesAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 
     /// OM1-4: Specimen Required. HL7 data type `ID`.
@@ -46,9 +55,18 @@ public struct OM1: TypedSegment {
         field(7).map(CE.init(field:))
     }
 
-    /// OM1-8: Other Names. HL7 data type `ST`.
+    /// OM1-8: Other Names. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `otherNamesAll` returns every repetition.
     public var otherNames: String? {
         field(8)?.stringValue
+    }
+
+    /// OM1-8: every repetition of Other Names, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var otherNamesAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// OM1-9: Preferred Report Name for the Observation. HL7 data type `ST`.
@@ -71,14 +89,32 @@ public struct OM1: TypedSegment {
         field(12)?.stringValue
     }
 
-    /// OM1-13: Identity of Instrument Used to Perform this Study. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM1-13: Identity of Instrument Used to Perform this Study. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `identityOfInstrumentUsedToPerformThisStudyAll` returns every repetition.
     public var identityOfInstrumentUsedToPerformThisStudy: CE? {
         field(13).map(CE.init(field:))
     }
 
-    /// OM1-14: Coded Representation of Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM1-13: every repetition of Identity of Instrument Used to Perform this Study, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var identityOfInstrumentUsedToPerformThisStudyAll: [CE] {
+        repetitions(13).map(CE.init(field:))
+    }
+
+    /// OM1-14: Coded Representation of Method. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `codedRepresentationOfMethodAll` returns every repetition.
     public var codedRepresentationOfMethod: CE? {
         field(14).map(CE.init(field:))
+    }
+
+    /// OM1-14: every repetition of Coded Representation of Method, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var codedRepresentationOfMethodAll: [CE] {
+        repetitions(14).map(CE.init(field:))
     }
 
     /// OM1-15: Portable Device Indicator. HL7 data type `ID`.
@@ -86,9 +122,18 @@ public struct OM1: TypedSegment {
         field(15)?.stringValue
     }
 
-    /// OM1-16: Observation Producing Department/Section. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM1-16: Observation Producing Department/Section. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `observationProducingDepartmentSectionAll` returns every repetition.
     public var observationProducingDepartmentSection: CE? {
         field(16).map(CE.init(field:))
+    }
+
+    /// OM1-16: every repetition of Observation Producing Department/Section, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var observationProducingDepartmentSectionAll: [CE] {
+        repetitions(16).map(CE.init(field:))
     }
 
     /// OM1-17: Telephone Number of Section. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -131,9 +176,18 @@ public struct OM1: TypedSegment {
         field(24)?.stringValue
     }
 
-    /// OM1-25: Processing Priority. HL7 data type `ID`.
+    /// OM1-25: Processing Priority. HL7 data type `ID`. Repeating field: this accessor reads the first repetition; `processingPriorityAll` returns every repetition.
     public var processingPriority: String? {
         field(25)?.stringValue
+    }
+
+    /// OM1-25: every repetition of Processing Priority, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var processingPriorityAll: [String?] {
+        repetitions(25).map(\.stringValue)
     }
 
     /// OM1-26: Reporting Priority. HL7 data type `ID`.
@@ -141,14 +195,32 @@ public struct OM1: TypedSegment {
         field(26)?.stringValue
     }
 
-    /// OM1-27: Outside Site(s) Where Observation may be Performed. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM1-27: Outside Site(s) Where Observation may be Performed. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `outsideSiteSWhereObservationMayBePerformedAll` returns every repetition.
     public var outsideSiteSWhereObservationMayBePerformed: CE? {
         field(27).map(CE.init(field:))
     }
 
-    /// OM1-28: Address of Outside Site(s). HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// OM1-27: every repetition of Outside Site(s) Where Observation may be Performed, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var outsideSiteSWhereObservationMayBePerformedAll: [CE] {
+        repetitions(27).map(CE.init(field:))
+    }
+
+    /// OM1-28: Address of Outside Site(s). HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `addressOfOutsideSiteSAll` returns every repetition.
     public var addressOfOutsideSiteS: XAD? {
         field(28).map(XAD.init(field:))
+    }
+
+    /// OM1-28: every repetition of Address of Outside Site(s), in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var addressOfOutsideSiteSAll: [XAD] {
+        repetitions(28).map(XAD.init(field:))
     }
 
     /// OM1-29: Phone Number of Outside Site. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
@@ -176,9 +248,18 @@ public struct OM1: TypedSegment {
         field(33).map(CE.init(field:))
     }
 
-    /// OM1-34: Reflex Tests/Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// OM1-34: Reflex Tests/Observations. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `reflexTestsObservationsAll` returns every repetition.
     public var reflexTestsObservations: CE? {
         field(34).map(CE.init(field:))
+    }
+
+    /// OM1-34: every repetition of Reflex Tests/Observations, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var reflexTestsObservationsAll: [CE] {
+        repetitions(34).map(CE.init(field:))
     }
 
     /// OM1-35: Rules that Trigger Reflex Testing. HL7 data type `TX`.
@@ -206,9 +287,18 @@ public struct OM1: TypedSegment {
         field(39)?.stringValue
     }
 
-    /// OM1-40: Service/Test/Observation Performance Schedule. HL7 data type `ST`.
+    /// OM1-40: Service/Test/Observation Performance Schedule. HL7 data type `ST`. Repeating field: this accessor reads the first repetition; `serviceTestObservationPerformanceScheduleAll` returns every repetition.
     public var serviceTestObservationPerformanceSchedule: String? {
         field(40)?.stringValue
+    }
+
+    /// OM1-40: every repetition of Service/Test/Observation Performance Schedule, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var serviceTestObservationPerformanceScheduleAll: [String?] {
+        repetitions(40).map(\.stringValue)
     }
 
     /// OM1-41: Description of Test Methods. HL7 data type `TX`.

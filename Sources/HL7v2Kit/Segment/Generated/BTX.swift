@@ -96,9 +96,18 @@ public struct BTX: TypedSegment {
         field(17)?.stringValue
     }
 
-    /// BTX-18: BP Adverse Reaction Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// BTX-18: BP Adverse Reaction Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `bpAdverseReactionTypeAll` returns every repetition.
     public var bpAdverseReactionType: CWE? {
         field(18).map(CWE.init(field:))
+    }
+
+    /// BTX-18: every repetition of BP Adverse Reaction Type, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var bpAdverseReactionTypeAll: [CWE] {
+        repetitions(18).map(CWE.init(field:))
     }
 
     /// BTX-19: BP Transfusion Interrupted Reason. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.

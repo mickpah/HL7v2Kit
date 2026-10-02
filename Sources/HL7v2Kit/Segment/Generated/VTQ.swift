@@ -31,8 +31,17 @@ public struct VTQ: TypedSegment {
         field(4).map(CE.init(field:))
     }
 
-    /// VTQ-5: Selection Criteria. HL7 data type `QSC`.
+    /// VTQ-5: Selection Criteria. HL7 data type `QSC`. Repeating field: this accessor reads the first repetition; `selectionCriteriaAll` returns every repetition.
     public var selectionCriteria: Field? {
         field(5)
+    }
+
+    /// VTQ-5: every repetition of Selection Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var selectionCriteriaAll: [Field] {
+        repetitions(5)
     }
 }

@@ -113,6 +113,14 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 | `Batches/batch_file_full.hl7` | Batch (fully wrapped) | FHS + BHS + 2 MSH + BTS + FTS — exercises all four framing markers in one file | N/A — synthetic from scratch (v0.3-Z2) |
 | `Batches/batch_multi_groups.hl7` | Batch (multi-group) | FHS + 2 BHS/BTS pairs + FTS — one ADT batch followed by one ORU batch | N/A — synthetic from scratch (v0.3-Z2) |
 
+### API-surface snapshots (`APISurface/` subdirectory)
+
+Not messages: no fixture harness reads them, and they hold no patient data. `SegmentReleasedSurfaceTests` reads the file by path and checks that each released declaration is still there.
+
+| File | Category | Purpose | Anonymisation log |
+|---|---|---|---|
+| `APISurface/segment-structs-v3.13.0.txt` | API snapshot | Every `public` declaration in v3.13.0's `Sources/HL7v2Kit/Segment/Generated/` (`git show v3.13.0:<path>`), as `File\|signature` with the body and initial value removed (P9-4) | N/A — no PHI; source declarations only |
+
 ## Corrections log
 
 - **2026-09-21 — `MSH-9` completed in 48 v2.5.1 fixtures (49 MSH segments, batches included)** (M14). v2.5 onward prints all three `MSG` components as required; the fixtures carried `ADT^A01`-style values with no message structure, and the two ACK fixtures a bare `ACK`. Structures taken from v2.5.1 Table 0354 (`ADT_A01` for A01 / A04 / A08, `ORM_O01`, `ORU_R01`, `ACK^A01^ACK`). The v2.3, v2.3.1 and v2.4 fixtures are unchanged: those versions print no component optionality. Synthetic data; no PHI implications.

@@ -113,6 +113,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The new accessors are generated from the datatype component tables and a curated name map (`Resources/composites/composite-views.json`) into `Sources/HL7v2Kit/Composite/Generated/`. Codegen fails if any component is unnamed.
   - Withdrawn components keep an accessor (earlier versions define them); a component printed without a data type takes the type from the newest version that prints one; open arrays (MA, NA) are not composite views.
   - Hand-written accessors are unchanged, checked against v3.13.0 by `CompositeReleasedSurfaceTests`. The "commonly-populated" rationale is removed.
+- **V251-C11: repeating fields.** Every repeating field (`*` or a bound, 536 in all) on the
+  generated segment structs gains `<name>All`, which returns every repetition in wire order:
+  - `[<View>]` for composite views;
+  - `[String?]` for scalars;
+  - `[Field]` for other types.
+
+  For example, `PID.patientIdentifierListAll: [CX]`. Each passes `TypedSegment.repetitions(_:)`
+  through unchanged: empty when the field is absent, one entry when it is present but empty,
+  three for `A~~B`, and one entry holding `""` for an HL7 null. The singular accessor's DocC
+  now says the field repeats. Codegen fails on an `…All` name that collides with another
+  accessor. The v3.13.0 segment-struct surface is checked by `SegmentReleasedSurfaceTests`.
+  Additive.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

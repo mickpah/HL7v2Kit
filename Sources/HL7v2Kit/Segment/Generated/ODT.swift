@@ -16,9 +16,18 @@ public struct ODT: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// ODT-2: Service Period. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// ODT-2: Service Period. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `servicePeriodAll` returns every repetition.
     public var servicePeriod: CE? {
         field(2).map(CE.init(field:))
+    }
+
+    /// ODT-2: every repetition of Service Period, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var servicePeriodAll: [CE] {
+        repetitions(2).map(CE.init(field:))
     }
 
     /// ODT-3: Text Instruction. HL7 data type `ST`.

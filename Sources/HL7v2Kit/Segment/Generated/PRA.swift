@@ -16,14 +16,32 @@ public struct PRA: TypedSegment {
         field(1).map(CE.init(field:))
     }
 
-    /// PRA-2: Practitioner Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRA-2: Practitioner Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `practitionerGroupAll` returns every repetition.
     public var practitionerGroup: CE? {
         field(2).map(CE.init(field:))
     }
 
-    /// PRA-3: Practitioner Category. HL7 data type `IS`.
+    /// PRA-2: every repetition of Practitioner Group, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var practitionerGroupAll: [CE] {
+        repetitions(2).map(CE.init(field:))
+    }
+
+    /// PRA-3: Practitioner Category. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `practitionerCategoryAll` returns every repetition.
     public var practitionerCategory: String? {
         field(3)?.stringValue
+    }
+
+    /// PRA-3: every repetition of Practitioner Category, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var practitionerCategoryAll: [String?] {
+        repetitions(3).map(\.stringValue)
     }
 
     /// PRA-4: Provider Billing. HL7 data type `ID`.
@@ -31,19 +49,46 @@ public struct PRA: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// PRA-5: Specialty. HL7 data type `SPD`.
+    /// PRA-5: Specialty. HL7 data type `SPD`. Repeating field: this accessor reads the first repetition; `specialtyAll` returns every repetition.
     public var specialty: Field? {
         field(5)
     }
 
-    /// PRA-6: Practitioner ID Numbers. HL7 data type `PLN`.
+    /// PRA-5: every repetition of Specialty, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var specialtyAll: [Field] {
+        repetitions(5)
+    }
+
+    /// PRA-6: Practitioner ID Numbers. HL7 data type `PLN`. Repeating field: this accessor reads the first repetition; `practitionerIdNumbersAll` returns every repetition.
     public var practitionerIdNumbers: Field? {
         field(6)
     }
 
-    /// PRA-7: Privileges. HL7 data type `PIP`.
+    /// PRA-6: every repetition of Practitioner ID Numbers, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var practitionerIdNumbersAll: [Field] {
+        repetitions(6)
+    }
+
+    /// PRA-7: Privileges. HL7 data type `PIP`. Repeating field: this accessor reads the first repetition; `privilegesAll` returns every repetition.
     public var privileges: Field? {
         field(7)
+    }
+
+    /// PRA-7: every repetition of Privileges, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var privilegesAll: [Field] {
+        repetitions(7)
     }
 
     /// PRA-8: Date Entered Practice. HL7 data type `DT`.
@@ -61,9 +106,18 @@ public struct PRA: TypedSegment {
         field(10)?.stringValue
     }
 
-    /// PRA-11: Government Reimbursement Billing Eligibility. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// PRA-11: Government Reimbursement Billing Eligibility. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `governmentReimbursementBillingEligibilityAll` returns every repetition.
     public var governmentReimbursementBillingEligibility: CE? {
         field(11).map(CE.init(field:))
+    }
+
+    /// PRA-11: every repetition of Government Reimbursement Billing Eligibility, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var governmentReimbursementBillingEligibilityAll: [CE] {
+        repetitions(11).map(CE.init(field:))
     }
 
     /// PRA-12: Set ID - PRA. HL7 data type `SI`.

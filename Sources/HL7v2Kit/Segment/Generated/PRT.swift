@@ -31,9 +31,18 @@ public struct PRT: TypedSegment {
         field(4).map(CWE.init(field:))
     }
 
-    /// PRT-5: Participation Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// PRT-5: Participation Person. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participationPersonAll` returns every repetition.
     public var participationPerson: XCN? {
         field(5).map(XCN.init(field:))
+    }
+
+    /// PRT-5: every repetition of Participation Person, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participationPersonAll: [XCN] {
+        repetitions(5).map(XCN.init(field:))
     }
 
     /// PRT-6: Participation Person Provider Type. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
@@ -46,19 +55,46 @@ public struct PRT: TypedSegment {
         field(7).map(CWE.init(field:))
     }
 
-    /// PRT-8: Participation Organization. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// PRT-8: Participation Organization. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participationOrganizationAll` returns every repetition.
     public var participationOrganization: XON? {
         field(8).map(XON.init(field:))
     }
 
-    /// PRT-9: Participant Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
+    /// PRT-8: every repetition of Participation Organization, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participationOrganizationAll: [XON] {
+        repetitions(8).map(XON.init(field:))
+    }
+
+    /// PRT-9: Participant Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participantLocationAll` returns every repetition.
     public var participantLocation: PL? {
         field(9).map(PL.init(field:))
     }
 
-    /// PRT-10: Participation Device. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
+    /// PRT-9: every repetition of Participant Location, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participantLocationAll: [PL] {
+        repetitions(9).map(PL.init(field:))
+    }
+
+    /// PRT-10: Participation Device. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participationDeviceAll` returns every repetition.
     public var participationDevice: EI? {
         field(10).map(EI.init(field:))
+    }
+
+    /// PRT-10: every repetition of Participation Device, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participationDeviceAll: [EI] {
+        repetitions(10).map(EI.init(field:))
     }
 
     /// PRT-11: Participation Begin Date/Time (arrival time). HL7 data type `DTM`.
@@ -76,14 +112,32 @@ public struct PRT: TypedSegment {
         field(13).map(CWE.init(field:))
     }
 
-    /// PRT-14: Participation Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// PRT-14: Participation Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participationAddressAll` returns every repetition.
     public var participationAddress: XAD? {
         field(14).map(XAD.init(field:))
     }
 
-    /// PRT-15: Participant Telecommunication Address. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// PRT-14: every repetition of Participation Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participationAddressAll: [XAD] {
+        repetitions(14).map(XAD.init(field:))
+    }
+
+    /// PRT-15: Participant Telecommunication Address. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `participantTelecommunicationAddressAll` returns every repetition.
     public var participantTelecommunicationAddress: XTN? {
         field(15).map(XTN.init(field:))
+    }
+
+    /// PRT-15: every repetition of Participant Telecommunication Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var participantTelecommunicationAddressAll: [XTN] {
+        repetitions(15).map(XTN.init(field:))
     }
 
     /// PRT-16: Participant Device Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.

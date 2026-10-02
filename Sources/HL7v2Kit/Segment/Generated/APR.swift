@@ -11,19 +11,46 @@ public struct APR: TypedSegment {
         self.fields = fields
     }
 
-    /// APR-1: Time Selection Criteria. HL7 data type `SCV`.
+    /// APR-1: Time Selection Criteria. HL7 data type `SCV`. Repeating field: this accessor reads the first repetition; `timeSelectionCriteriaAll` returns every repetition.
     public var timeSelectionCriteria: Field? {
         field(1)
     }
 
-    /// APR-2: Resource Selection Criteria. HL7 data type `SCV`.
+    /// APR-1: every repetition of Time Selection Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var timeSelectionCriteriaAll: [Field] {
+        repetitions(1)
+    }
+
+    /// APR-2: Resource Selection Criteria. HL7 data type `SCV`. Repeating field: this accessor reads the first repetition; `resourceSelectionCriteriaAll` returns every repetition.
     public var resourceSelectionCriteria: Field? {
         field(2)
     }
 
-    /// APR-3: Location Selection Criteria. HL7 data type `SCV`.
+    /// APR-2: every repetition of Resource Selection Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var resourceSelectionCriteriaAll: [Field] {
+        repetitions(2)
+    }
+
+    /// APR-3: Location Selection Criteria. HL7 data type `SCV`. Repeating field: this accessor reads the first repetition; `locationSelectionCriteriaAll` returns every repetition.
     public var locationSelectionCriteria: Field? {
         field(3)
+    }
+
+    /// APR-3: every repetition of Location Selection Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationSelectionCriteriaAll: [Field] {
+        repetitions(3)
     }
 
     /// APR-4: Slot Spacing Criteria. HL7 data type `NM`.
@@ -31,8 +58,17 @@ public struct APR: TypedSegment {
         field(4)?.stringValue
     }
 
-    /// APR-5: Filler Override Criteria. HL7 data type `SCV`.
+    /// APR-5: Filler Override Criteria. HL7 data type `SCV`. Repeating field: this accessor reads the first repetition; `fillerOverrideCriteriaAll` returns every repetition.
     public var fillerOverrideCriteria: Field? {
         field(5)
+    }
+
+    /// APR-5: every repetition of Filler Override Criteria, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var fillerOverrideCriteriaAll: [Field] {
+        repetitions(5)
     }
 }

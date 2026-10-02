@@ -21,34 +21,88 @@ public struct LOC: TypedSegment {
         field(2)?.stringValue
     }
 
-    /// LOC-3: Location Type - LOC. HL7 data type `IS`.
+    /// LOC-3: Location Type - LOC. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `locationTypeLocAll` returns every repetition.
     public var locationTypeLoc: String? {
         field(3)?.stringValue
     }
 
-    /// LOC-4: Organization Name - LOC. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access.
+    /// LOC-3: every repetition of Location Type - LOC, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationTypeLocAll: [String?] {
+        repetitions(3).map(\.stringValue)
+    }
+
+    /// LOC-4: Organization Name - LOC. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `organizationNameLocAll` returns every repetition.
     public var organizationNameLoc: XON? {
         field(4).map(XON.init(field:))
     }
 
-    /// LOC-5: Location Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access.
+    /// LOC-4: every repetition of Organization Name - LOC, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var organizationNameLocAll: [XON] {
+        repetitions(4).map(XON.init(field:))
+    }
+
+    /// LOC-5: Location Address. HL7 data type `XAD`. Returns the typed ``XAD`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `locationAddressAll` returns every repetition.
     public var locationAddress: XAD? {
         field(5).map(XAD.init(field:))
     }
 
-    /// LOC-6: Location Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
+    /// LOC-5: every repetition of Location Address, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationAddressAll: [XAD] {
+        repetitions(5).map(XAD.init(field:))
+    }
+
+    /// LOC-6: Location Phone. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `locationPhoneAll` returns every repetition.
     public var locationPhone: XTN? {
         field(6).map(XTN.init(field:))
     }
 
-    /// LOC-7: License Number. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// LOC-6: every repetition of Location Phone, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationPhoneAll: [XTN] {
+        repetitions(6).map(XTN.init(field:))
+    }
+
+    /// LOC-7: License Number. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `licenseNumberAll` returns every repetition.
     public var licenseNumber: CE? {
         field(7).map(CE.init(field:))
     }
 
-    /// LOC-8: Location Equipment. HL7 data type `IS`.
+    /// LOC-7: every repetition of License Number, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var licenseNumberAll: [CE] {
+        repetitions(7).map(CE.init(field:))
+    }
+
+    /// LOC-8: Location Equipment. HL7 data type `IS`. Repeating field: this accessor reads the first repetition; `locationEquipmentAll` returns every repetition.
     public var locationEquipment: String? {
         field(8)?.stringValue
+    }
+
+    /// LOC-8: every repetition of Location Equipment, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var locationEquipmentAll: [String?] {
+        repetitions(8).map(\.stringValue)
     }
 
     /// LOC-9: Location Service Code. HL7 data type `IS`.

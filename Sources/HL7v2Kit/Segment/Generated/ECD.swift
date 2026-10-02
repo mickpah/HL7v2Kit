@@ -31,8 +31,17 @@ public struct ECD: TypedSegment {
         field(4)
     }
 
-    /// ECD-5: Parameters. HL7 data type `TX`.
+    /// ECD-5: Parameters. HL7 data type `TX`. Repeating field: this accessor reads the first repetition; `parametersAll` returns every repetition.
     public var parameters: String? {
         field(5)?.stringValue
+    }
+
+    /// ECD-5: every repetition of Parameters, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var parametersAll: [String?] {
+        repetitions(5).map(\.stringValue)
     }
 }

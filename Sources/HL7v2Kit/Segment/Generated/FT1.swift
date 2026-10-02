@@ -101,19 +101,46 @@ public struct FT1: TypedSegment {
         field(18)?.stringValue
     }
 
-    /// FT1-19: Diagnosis Code - FT1. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// FT1-19: Diagnosis Code - FT1. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `diagnosisCodeFt1All` returns every repetition.
     public var diagnosisCodeFt1: CE? {
         field(19).map(CE.init(field:))
     }
 
-    /// FT1-20: Performed By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// FT1-19: every repetition of Diagnosis Code - FT1, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var diagnosisCodeFt1All: [CE] {
+        repetitions(19).map(CE.init(field:))
+    }
+
+    /// FT1-20: Performed By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `performedByCodeAll` returns every repetition.
     public var performedByCode: XCN? {
         field(20).map(XCN.init(field:))
     }
 
-    /// FT1-21: Ordered By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// FT1-20: every repetition of Performed By Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var performedByCodeAll: [XCN] {
+        repetitions(20).map(XCN.init(field:))
+    }
+
+    /// FT1-21: Ordered By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `orderedByCodeAll` returns every repetition.
     public var orderedByCode: XCN? {
         field(21).map(XCN.init(field:))
+    }
+
+    /// FT1-21: every repetition of Ordered By Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var orderedByCodeAll: [XCN] {
+        repetitions(21).map(XCN.init(field:))
     }
 
     /// FT1-22: Unit Cost. HL7 data type `CP`.
@@ -126,9 +153,18 @@ public struct FT1: TypedSegment {
         field(23).map(EI.init(field:))
     }
 
-    /// FT1-24: Entered By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access.
+    /// FT1-24: Entered By Code. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `enteredByCodeAll` returns every repetition.
     public var enteredByCode: XCN? {
         field(24).map(XCN.init(field:))
+    }
+
+    /// FT1-24: every repetition of Entered By Code, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var enteredByCodeAll: [XCN] {
+        repetitions(24).map(XCN.init(field:))
     }
 
     /// FT1-25: Procedure Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -136,9 +172,18 @@ public struct FT1: TypedSegment {
         field(25).map(CE.init(field:))
     }
 
-    /// FT1-26: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
+    /// FT1-26: Procedure Code Modifier. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeModifierAll` returns every repetition.
     public var procedureCodeModifier: CE? {
         field(26).map(CE.init(field:))
+    }
+
+    /// FT1-26: every repetition of Procedure Code Modifier, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var procedureCodeModifierAll: [CE] {
+        repetitions(26).map(CE.init(field:))
     }
 
     /// FT1-27: Advanced Beneficiary Notice Code. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
@@ -161,8 +206,17 @@ public struct FT1: TypedSegment {
         field(30).map(CX.init(field:))
     }
 
-    /// FT1-31: Transaction Reference Key. HL7 data type `SI`.
+    /// FT1-31: Transaction Reference Key. HL7 data type `SI`. Repeating field: this accessor reads the first repetition; `transactionReferenceKeyAll` returns every repetition.
     public var transactionReferenceKey: String? {
         field(31)?.stringValue
+    }
+
+    /// FT1-31: every repetition of Transaction Reference Key, in wire order. Passes
+    /// ``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and
+    /// the validator: empty when the field is absent; one entry when it is present but empty;
+    /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
+    /// holding the literal `""`.
+    public var transactionReferenceKeyAll: [String?] {
+        repetitions(31).map(\.stringValue)
     }
 }
