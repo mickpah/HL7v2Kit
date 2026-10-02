@@ -217,7 +217,9 @@ Additive in 3.x; nothing to change in existing code.
   that is not a single scalar.
 - Fields that later versions define have accessors on the shared struct. For example,
   `obx.observationType` (OBX-29, v2.8.2) and `obx.interpretationCodes` (OBX-8 as v2.8.2
-  prints it). On an older message they return `nil`. There is one accessor per element
+  prints it). Accessors are not version-gated: on an older message they return `nil`
+  when the position is absent and otherwise read whatever that position holds on the
+  wire (`obx.interpretationCodes` reads OBX-8 on every version). There is one accessor per element
   and Swift type; a rename that keeps the type is a DocC note, not a second accessor.
 - Where a later version retypes a composite field, the property keeps its original
   type. Re-view it: `obx.observationIdentifier?.viewed(as: CWE.self)`. Where a later

@@ -115,11 +115,13 @@ These fixtures use the HL7 v2 batch grammar (FHS / BHS / BTS / FTS framing marke
 
 ### API-surface snapshots (`APISurface/` subdirectory)
 
-Not messages: no fixture harness reads them, and they hold no patient data. `SegmentReleasedSurfaceTests` reads the file by path and checks that each released declaration is still there.
+Not messages: no fixture harness reads them, and they hold no patient data. `SegmentReleasedSurfaceTests` reads the released file by path and checks that each released declaration is still there; `AccessorSurfaceSnapshotTests` checks the `-unreleased` files for equality with HEAD.
 
 | File | Category | Purpose | Anonymisation log |
 |---|---|---|---|
 | `APISurface/segment-structs-v3.13.0.txt` | API snapshot | Every `public` declaration in v3.13.0's `Sources/HL7v2Kit/Segment/Generated/` (`git show v3.13.0:<path>`), as `File\|signature` with the body and initial value removed (P9-4). v3.13.0 had no `@available` lines, so the deprecation attributes on the later aliases (P6-9) are pinned in `SegmentReleasedSurfaceTests` itself | N/A — no PHI; source declarations only |
+| `APISurface/segment-accessors-unreleased.txt` | API snapshot | Every `public var` in the generated segment structs at HEAD (3602), as `File\|name\|type\|field index`. `AccessorSurfaceSnapshotTests` tests it for equality, so any rename, retype, drop, addition or re-index fails. Regenerate deliberately with `API_SURFACE_SNAPSHOT_WRITE=1 xcrun swift test --filter AccessorSurfaceSnapshotTests` and review the diff; promoted to the release snapshot at tag time | N/A — no PHI; source declarations only |
+| `APISurface/composite-accessors-unreleased.txt` | API snapshot | Every `public var` in `Sources/HL7v2Kit/Composite/` (hand-written views and generated `+Components` extensions) at HEAD (181), as `File\|name\|type\|component index`. Same equality test, regeneration and promotion as the segment file | N/A — no PHI; source declarations only |
 
 ## Corrections log
 

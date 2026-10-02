@@ -726,7 +726,7 @@ public struct IN2: TypedSegment {
     /// IN2-72: CMS Patient's Relationship to Insured. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
     /// v2.3 prints this element as `HCFA Patient Relationship to Insured`.
     /// v2.3.1, v2.4 print this element as `HCFA Patient's Relationship to Insured`.
-    /// Renamed `Patient's Relationship to Insured` in v2.6, which types it `CWE`: use `patientSRelationshipToInsured`.
+    /// Renamed `Patient's Relationship to Insured` in v2.6, which types it `CWE`: use `patientRelationshipToInsured`.
     public var cmsPatientSRelationshipToInsured: CE? {
         field(72).map(CE.init(field:))
     }
@@ -878,7 +878,7 @@ public struct IN2: TypedSegment {
     /// v2.3 prints this element as `HCFA Patient Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
     /// v2.3.1, v2.4 print this element as `HCFA Patient's Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
     /// v2.5.1 prints this element as `CMS Patient's Relationship to Insured` (`CE`): use `cmsPatientSRelationshipToInsured`.
-    public var patientSRelationshipToInsured: CWE? {
+    public var patientRelationshipToInsured: CWE? {
         field(72).map(CWE.init(field:))
     }
 }

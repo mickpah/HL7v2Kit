@@ -213,6 +213,17 @@ def check_swift_name():
     assert f({"swiftName": "networkChangeType", "name": "Network Change Type"},
              "applicationChangeType", "Application Change Type") == [], \
         "a renamed element may take its own derived name"
+    # P9 final review: a stranded possessive "S" ([a-z]S[A-Z]) is the canonical spelling only.
+    # A new name that is neither released at v3.13.0 nor canonical-inherited takes
+    # `deriveSwiftName`, which drops the lone "s" (v2.8.2 ROL-13 "Person's Location").
+    rol13 = {"swiftName": "personSLocation", "name": "Person's Location"}
+    assert f(rol13, None, None), "a new stranded possessive S must be a finding"
+    assert f(dict(rol13, swiftName="personLocation"), None, None) == [], "the derived name is clean"
+    assert f(rol13, None, None, frozenset({"personSLocation"})) == [], \
+        "a name released at v3.13.0 is exempt"
+    assert f({"swiftName": "patientSRelationshipToInsured", "name": "Patient's Relationship to Insured"},
+             "cmsPatientSRelationshipToInsured", "CMS Patient's Relationship to Insured"), \
+        "a renamed element does not inherit the canonical possessive S"
 
 
 def check_swift_name_uniqueness():

@@ -43,6 +43,6 @@
     { "index": 38, "swiftName": "nextOfKinBirthPlace", "name": "Next of Kin Birth Place", "dataType": "ST", "length": "250#", "optionality": "O", "repeatability": "1" },
     { "index": 39, "swiftName": "vipIndicator", "name": "VIP Indicator", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0099"] },
     { "index": 40, "swiftName": "nextOfKinTelecommunicationInformation", "name": "Next of Kin Telecommunication Information", "dataType": "XTN", "optionality": "O", "repeatability": "1" },
-    { "index": 41, "swiftName": "contactPersonSTelecommunicationInformation", "name": "Contact Person's Telecommunication Information", "dataType": "XTN", "optionality": "O", "repeatability": "1" }
+    { "index": 41, "swiftName": "contactPersonTelecommunicationInformation", "name": "Contact Person's Telecommunication Information", "dataType": "XTN", "optionality": "O", "repeatability": "1" }
   ]
 }

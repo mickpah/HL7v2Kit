@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "organizationUnitType", "name": "Organization Unit Type", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0406"] },
     { "index": 11, "swiftName": "officeHomeAddressBirthplace", "name": "Office/Home Address/Birthplace", "dataType": "XAD", "optionality": "O", "repeatability": "*" },
     { "index": 12, "swiftName": "phone", "name": "Phone", "dataType": "XTN", "optionality": "O", "repeatability": "*" },
-    { "index": 13, "swiftName": "personSLocation", "name": "Person's Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
+    { "index": 13, "swiftName": "personLocation", "name": "Person's Location", "dataType": "PL", "optionality": "O", "repeatability": "1" },
     { "index": 14, "swiftName": "organization", "name": "Organization", "dataType": "XON", "optionality": "O", "repeatability": "1" }
   ]
 }

@@ -157,6 +157,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Migration.md, the public-API inventory and register section H (now closed, with three
   registered residuals) describe what shipped; ADR-013 carries an addendum. A generated
   accessor that was renamed no longer states the rename twice in its DocC.
+- **P9 final review: wire behaviour, names and a full surface snapshot.** Accessors are not
+  version-gated: the `TypedSegment` and `CWE` DocC, Migration.md and the TypedSegments
+  article now say an accessor returns `nil` only when its position is absent and otherwise
+  reads what the wire holds, and generated composite DocC says so beside "Defined in". Four
+  unreleased later-version names drop a stranded possessive "S" (`IN2.patientRelationshipToInsured`,
+  `NK1.contactPersonTelecommunicationInformation`, `OM1.replacementProducerServiceTestObservationId`,
+  `ROL.personLocation`), as do nine v2.3 to v2.4 schema rows whose names reach no accessor;
+  `audit-schemas.py` now rejects a stranded "S" on any name neither released at v3.13.0 nor
+  canonical-inherited. `AccessorSurfaceSnapshotTests` pins every segment and composite
+  accessor (name, type, index) for equality against `Tests/Fixtures/APISurface/*-unreleased.txt`.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

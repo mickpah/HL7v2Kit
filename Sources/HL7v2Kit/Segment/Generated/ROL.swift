@@ -132,7 +132,7 @@ public struct ROL: TypedSegment {
 
     /// ROL-13: Person's Location. HL7 data type `PL`. Returns the typed ``PL`` view; use `.field` for raw access.
     /// Defined in v2.6, v2.8.2. On a message of another version this returns whatever ROL-13 holds on the wire.
-    public var personSLocation: PL? {
+    public var personLocation: PL? {
         field(13).map(PL.init(field:))
     }
 

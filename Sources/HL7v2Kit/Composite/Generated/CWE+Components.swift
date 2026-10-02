@@ -15,91 +15,91 @@ extension CWE {
         21: "secondAltValueSetOID", 22: "secondAltValueSetVersionID",
     ]
 
-    /// CWE-10: Second Alternate Identifier (`ST`). Defined in v2.8.2.
+    /// CWE-10: Second Alternate Identifier (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-10 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltIdentifier: String? {
         componentValue(10)
     }
 
-    /// CWE-11: Second Alternate Text (`ST`). Defined in v2.8.2.
+    /// CWE-11: Second Alternate Text (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-11 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltText: String? {
         componentValue(11)
     }
 
-    /// CWE-12: Name of Second Alternate Coding System (`ID`). Defined in v2.8.2.
+    /// CWE-12: Name of Second Alternate Coding System (`ID`). Defined in v2.8.2. On a message of another version this returns whatever CWE-12 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var nameOfSecondAltCodingSystem: String? {
         componentValue(12)
     }
 
-    /// CWE-13: Second Alternate Coding System Version ID (`ST`). Defined in v2.8.2.
+    /// CWE-13: Second Alternate Coding System Version ID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-13 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltCodingSystemVersionID: String? {
         componentValue(13)
     }
 
-    /// CWE-14: Coding System OID (`ST`). Defined in v2.8.2.
+    /// CWE-14: Coding System OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-14 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var codingSystemOID: String? {
         componentValue(14)
     }
 
-    /// CWE-15: Value Set OID (`ST`). Defined in v2.8.2.
+    /// CWE-15: Value Set OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-15 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var valueSetOID: String? {
         componentValue(15)
     }
 
-    /// CWE-16: Value Set Version ID (`DTM`). Defined in v2.8.2.
+    /// CWE-16: Value Set Version ID (`DTM`). Defined in v2.8.2. On a message of another version this returns whatever CWE-16 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var valueSetVersionID: String? {
         componentValue(16)
     }
 
-    /// CWE-17: Alternate Coding System OID (`ST`). Defined in v2.8.2.
+    /// CWE-17: Alternate Coding System OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-17 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var altCodingSystemOID: String? {
         componentValue(17)
     }
 
-    /// CWE-18: Alternate Value Set OID (`ST`). Defined in v2.8.2.
+    /// CWE-18: Alternate Value Set OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-18 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var altValueSetOID: String? {
         componentValue(18)
     }
 
-    /// CWE-19: Alternate Value Set Version ID (`DTM`). Defined in v2.8.2.
+    /// CWE-19: Alternate Value Set Version ID (`DTM`). Defined in v2.8.2. On a message of another version this returns whatever CWE-19 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var altValueSetVersionID: String? {
         componentValue(19)
     }
 
-    /// CWE-20: Second Alternate Coding System OID (`ST`). Defined in v2.8.2.
+    /// CWE-20: Second Alternate Coding System OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-20 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltCodingSystemOID: String? {
         componentValue(20)
     }
 
-    /// CWE-21: Second Alternate Value Set OID (`ST`). Defined in v2.8.2.
+    /// CWE-21: Second Alternate Value Set OID (`ST`). Defined in v2.8.2. On a message of another version this returns whatever CWE-21 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltValueSetOID: String? {
         componentValue(21)
     }
 
-    /// CWE-22: Second Alternate Value Set Version ID (`DTM`). Defined in v2.8.2.
+    /// CWE-22: Second Alternate Value Set Version ID (`DTM`). Defined in v2.8.2. On a message of another version this returns whatever CWE-22 holds on the wire.
     ///
     /// Reads the first repetition and returns the component's first subcomponent: `nil` when the component is absent, empty when it is present but empty.
     public var secondAltValueSetVersionID: String? {

@@ -48,7 +48,8 @@ func compositeComponentDoc(type: String, index: Int,
         rows.map { "v" + $0.version }.joined(separator: ", ")
     }
     var doc = ["\(type)-\(index): \(newest.name)\(dataType.isEmpty ? "" : " (`\(dataType)`)"). "
-        + "Defined in \(versions(definitions))."]
+        + "Defined in \(versions(definitions)). "
+        + "On a message of another version this returns whatever \(type)-\(index) holds on the wire."]
     // Earlier printed names and data types that differ from the current ones,
     // each with the versions that print it. Case-only differences are not news.
     func variants(_ value: (ComponentSchema) -> String, current: String) -> [(value: String, versions: String)] {

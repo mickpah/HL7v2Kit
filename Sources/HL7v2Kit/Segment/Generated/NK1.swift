@@ -481,7 +481,7 @@ public struct NK1: TypedSegment {
 
     /// NK1-41: Contact Person's Telecommunication Information. HL7 data type `XTN`. Returns the typed ``XTN`` view; use `.field` for raw access.
     /// Defined in v2.8.2. On a message of another version this returns whatever NK1-41 holds on the wire.
-    public var contactPersonSTelecommunicationInformation: XTN? {
+    public var contactPersonTelecommunicationInformation: XTN? {
         field(41).map(XTN.init(field:))
     }
 }

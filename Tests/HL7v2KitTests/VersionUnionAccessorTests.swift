@@ -141,6 +141,15 @@ struct VersionUnionAccessorTests {
         #expect(reserved.hasPrefix("OBX-21: Reserved for harmonization with V2.6. No data type: reserved position in v2.5.1."))
     }
 
+    @Test("Generated composite DocC states the wire behaviour on other versions")
+    func compositeVersionDocC() throws {
+        let file = Self.generated.deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Composite/Generated/CX+Components.swift")
+        let text = try String(contentsOf: file, encoding: .utf8)
+        #expect(text.contains("/// CX-7: Effective Date (`DT`). Defined in v2.4, v2.5.1, v2.6, v2.8.2. "
+            + "On a message of another version this returns whatever CX-7 holds on the wire."))
+    }
+
     @Test("A same-type rename is a note on the base accessor; a retyped rename is its own accessor, worded as a rename")
     func renameWording() throws {
         let db1 = try String(contentsOf: Self.generated.appendingPathComponent("DB1.swift"), encoding: .utf8)

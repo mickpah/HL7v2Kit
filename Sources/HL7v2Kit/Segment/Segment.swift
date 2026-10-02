@@ -16,8 +16,10 @@ import Foundation
 ///
 /// One struct serves every supported HL7 version. Its accessors come from the
 /// segment's base schema (v2.5.1, or the earliest version that defines it) plus
-/// every field, name and composite retype that later versions add (ADR-020). An
-/// accessor for a field the message's version does not define returns `nil`.
+/// every field, name and composite retype that later versions add (ADR-020).
+/// Accessors are not version-gated: an accessor returns `nil` when its position
+/// is absent from the segment, and otherwise reads whatever that position holds
+/// on the wire, whichever version the message declares.
 /// Where a later version changes a composite field's type, the property keeps its
 /// base type; use ``CompositeView/viewed(as:)`` (for example
 /// `obx.observationIdentifier?.viewed(as: CWE.self)`). Repeating fields also have

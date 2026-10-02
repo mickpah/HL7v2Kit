@@ -557,7 +557,10 @@ SWIFT_NAME_FOREIGN_MAX = 2
 SWIFT_IDENTIFIER = re.compile(r"[a-z][A-Za-z0-9]*")
 
 
-def swift_name_findings(f, canonical=None, canonical_name=None):
+STRANDED_POSSESSIVE_S = re.compile(r"[a-z]S[A-Z]")
+
+
+def swift_name_findings(f, canonical=None, canonical_name=None, released=frozenset()):
     """P6-9. `swiftName` is a lowerCamelCase identifier of at most SWIFT_NAME_MAX characters,
     rendered from the field's printed element name. The naming convention (AddingASegment.md):
     a non-canonical slot whose element name normalises equal to the canonical v2.5.1 element
@@ -571,6 +574,9 @@ def swift_name_findings(f, canonical=None, canonical_name=None):
     be absent from the element name (prose bleed). `deprecatedSwiftNames`, the released names
     a renamed accessor keeps as deprecated aliases (ADR-014), is a non-empty list of distinct
     identifiers, none equal to `swiftName`; the old names are exempt from the length bound.
+    A stranded possessive "S" (`[a-z]S[A-Z]`, as in "personSLocation") is allowed only on a
+    name `released` at v3.13.0 or inherited from the canonical slot: `deriveSwiftName` drops
+    the lone "s", and the foreign-word rule cannot see it (an "s" is in every element name).
     Returns the finding messages for one field."""
     out = []
     swift, element = f.get("swiftName") or "", f.get("name") or ""
@@ -582,6 +588,9 @@ def swift_name_findings(f, canonical=None, canonical_name=None):
             and normalised_name(element).replace(" ", "") == normalised_name(canonical_name).replace(" ", "")):
         out.append(f"swiftName {swift[:60]!r} differs from the canonical {canonical!r} for the same element"
                    " — dropped words?")
+    if swift != canonical and swift not in released and STRANDED_POSSESSIVE_S.search(swift):
+        out.append(f"swiftName {swift[:60]!r} has a stranded possessive S; not released at v3.13.0"
+                   " nor canonical-inherited, so it takes deriveSwiftName")
     if swift and swift != canonical:
         words = [w for w in re.split(r"[^a-z0-9]+", element.lower()) if w]
         head = swift.lower()
@@ -606,6 +615,18 @@ def swift_name_findings(f, canonical=None, canonical_name=None):
             if len(set(map(str, old))) != len(old):
                 out.append("deprecatedSwiftNames has a duplicate")
     return out
+
+
+def released_swift_names():
+    """`SEG` -> the accessor names its typed struct declared at v3.13.0, from the released
+    surface snapshot (`SEG|public var name: Type` lines). Released names never change."""
+    names = collections.defaultdict(set)
+    path = os.path.join(REPO, "Tests/Fixtures/APISurface/segment-structs-v3.13.0.txt")
+    for line in open(path):
+        m = re.match(r"([A-Z0-9]{3})\|public var ([A-Za-z0-9_]+):", line)
+        if m:
+            names[m.group(1)].add(m.group(2))
+    return names
 
 
 def canonical_swift_names():
@@ -704,6 +725,7 @@ def integrity():
     """Shape predicates over every committed schema. Returns a list of findings."""
     findings = []
     canonical = canonical_swift_names()
+    released = released_swift_names()
     for path in sorted(glob.glob(f"{SCHEMAS}/*/*.json")):
         rel = os.path.relpath(path, REPO)
         doc = json.load(open(path))
@@ -740,7 +762,8 @@ def integrity():
             findings.extend((rel, f["index"], msg) for msg in condition_predicate_findings(f))
             inherited, inherited_name = (None, None) if is_canonical else \
                 canonical.get(f"{doc['segmentID']}-{f['index']}", (None, None))
-            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(f, inherited, inherited_name))
+            findings.extend((rel, f["index"], msg) for msg in swift_name_findings(
+                f, inherited, inherited_name, released[doc["segmentID"]]))
             findings.extend((rel, f["index"], msg) for msg in element_name_findings(name))
         for idx, n in seen.items():
             if n > 1:

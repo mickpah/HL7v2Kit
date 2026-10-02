@@ -521,9 +521,9 @@ public struct OM1: TypedSegment {
         repetitions(51).map(\.stringValue)
     }
 
-    /// OM1-52: Replacement Producer's Service/Test/Observation ID. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `replacementProducerSServiceTestObservationIdAll` returns every repetition.
+    /// OM1-52: Replacement Producer's Service/Test/Observation ID. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `replacementProducerServiceTestObservationIdAll` returns every repetition.
     /// Defined in v2.8.2. On a message of another version this returns whatever OM1-52 holds on the wire.
-    public var replacementProducerSServiceTestObservationId: CWE? {
+    public var replacementProducerServiceTestObservationId: CWE? {
         field(52).map(CWE.init(field:))
     }
 
@@ -533,7 +533,7 @@ public struct OM1: TypedSegment {
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
     /// Defined in v2.8.2. On a message of another version this returns whatever OM1-52 holds on the wire.
-    public var replacementProducerSServiceTestObservationIdAll: [CWE] {
+    public var replacementProducerServiceTestObservationIdAll: [CWE] {
         repetitions(52).map(CWE.init(field:))
     }
 

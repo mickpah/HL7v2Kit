@@ -58,7 +58,8 @@ let authority = cx?.component(4, as: HD.self)?.universalID
 // Every repetition of a repeating field, in wire order.
 let ids = pid.patientIdentifierListAll                    // [CX]
 
-// A field a later version defines: nil on an older message.
+// A field a later version defines. Not version-gated: nil when OBX-29 is
+// absent, otherwise whatever OBX-29 holds on the wire.
 let kind = obx.observationType                            // OBX-29 (v2.8.2)
 
 // A later version retypes a composite field: re-view it.
