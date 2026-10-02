@@ -149,6 +149,16 @@ struct StructureMatcherPropertyTests {
         }
     }
 
+    @Test("Pilot sequences are not vacuous: the reference accepts some and rejects some")
+    func pilotsNotVacuous() throws {
+        for id in ["ADT_A01", "ORU_R01"] {
+            let structure = try #require(MessageStructureTable.structure(id, version: .v2_5_1))
+            let accepted = Self.sequences(structure.elements).map { Self.referenceAccepts(structure.elements, $0) }
+            #expect(accepted.contains(true), "\(id): no accepted sequence")
+            #expect(accepted.contains(false), "\(id): no rejected sequence")
+        }
+    }
+
     @Test("Synthetic shapes that pass the lint: matcher and reference agree on every sequence", arguments: StructureShapes.all.map(\.name))
     func synthetic(_ name: String) throws {
         let elements = try #require(StructureShapes.all.first { $0.name == name }).elements

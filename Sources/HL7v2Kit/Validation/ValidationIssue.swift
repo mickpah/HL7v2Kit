@@ -235,6 +235,35 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// ``ValidationOptions/valueFormatSeverity``. Additive case introduced in
     /// P6-7; the enum is open per ADR-014.
     case valueFormatInvalid(dataType: String)
+
+    /// A segment the message's structure requires is absent: a required
+    /// segment, or the head segment of a required group (`group` names the
+    /// group; nil at the top level). Located at the segment it was expected
+    /// before, or at the last segment when expected at the end. Severity
+    /// follows ``ValidationOptions/messageStructureSeverity`` (off by
+    /// default). ADR-019; additive case introduced in P8-5 per ADR-014.
+    case messageStructureSegmentMissing(structure: String, segmentID: String, group: String?)
+    /// A segment has no place in the message's structure at that point: out
+    /// of order, an extra repetition of a non-repeating segment or group, or
+    /// a non-Z segment the structure does not contain. Z-segments, ADD
+    /// continuations and segments the version grammar does not define are
+    /// never reported here. Located at the segment. ADR-019; additive case
+    /// introduced in P8-5.
+    case messageStructureSegmentUnexpected(structure: String, segmentID: String)
+    /// MSH-9.3 names a structure whose caption lines do not print
+    /// MSH-9.1^9.2 (`trigger`, as `CODE^EVENT`). The mismatch is reported
+    /// alone: the body is not matched against either structure. Located at
+    /// MSH-9.3. ADR-019; additive case introduced in P8-5.
+    case messageStructureMismatch(declared: String, trigger: String)
+    /// No abstract message syntax was applied to this message, so segment
+    /// order and groups were not checked: the structure (`structure`, the
+    /// MSH-9.3 value or `CODE^EVENT`) is not modelled for the version, the
+    /// version is not resolved from MSH-12, the message is a fragment
+    /// (MSH-14 populated, or a last DSC the structure does not define), or
+    /// the structure fails the determinism lint. Always `.info`; emitted only
+    /// when ``ValidationOptions/messageStructureSeverity`` is set. Located at
+    /// MSH-9. ADR-019; additive case introduced in P8-5.
+    case messageStructureNotModelled(structure: String)
 }
 
 /// One observation from validation. Always non-fatal: collected into a

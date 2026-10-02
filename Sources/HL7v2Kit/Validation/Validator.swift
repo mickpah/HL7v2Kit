@@ -138,6 +138,12 @@ public struct Validator: Sendable {
         // are the base standard's own identity assertions.
         checkOrcObrPairEquality(message: message, issues: &issues)
 
+        // ADR-019: abstract message syntax (segment order, groups, required
+        // segments per structure). Opt-in.
+        if let severity = options.messageStructureSeverity {
+            checkMessageStructure(message: message, severity: severity, issues: &issues)
+        }
+
         return ValidationReport(issues: issues, locale: locale)
     }
 

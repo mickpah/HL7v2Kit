@@ -47,7 +47,7 @@ Every component that any supported version defines has a named accessor (hand-wr
 |------|-------|-------|-----------|
 | `Version` | 7 (v2_3 … v2_8_2, v2_8) | **Open** | yes — `@unknown default` |
 | `HL7Locale` | 2 (international, auLocalisation) | **Open** | yes |
-| `IssueCode` | 21 | **Open** | yes (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`) |
+| `IssueCode` | 25 | **Open** | yes (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`; 25 after P8-5 `.messageStructureSegmentMissing(structure:segmentID:group:)`, `.messageStructureSegmentUnexpected(structure:segmentID:)`, `.messageStructureMismatch(declared:trigger:)` and `.messageStructureNotModelled(structure:)`) |
 | `ParseError` | 8 | **Open** | yes |
 | `PathError` | 3 | **Open** | yes |
 | `BuilderError` | 3 | **Open** | yes |

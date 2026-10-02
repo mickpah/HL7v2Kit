@@ -56,6 +56,22 @@ struct SignatureCompatibilityTests {
         #expect(make("NM") == .valueFormatInvalid(dataType: "NM"))
     }
 
+    @Test("P8-5 message-structure setting and issue codes are additive; the check is off in every preset")
+    func messageStructure() {
+        let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.messageStructureSeverity
+        #expect(ValidationOptions.default[keyPath: severity] == nil)
+        #expect(ValidationOptions.strict[keyPath: severity] == nil)
+        #expect(ValidationOptions.lenient[keyPath: severity] == nil)
+        let missing: (String, String, String?) -> IssueCode = IssueCode.messageStructureSegmentMissing(structure:segmentID:group:)
+        let unexpected: (String, String) -> IssueCode = IssueCode.messageStructureSegmentUnexpected(structure:segmentID:)
+        let mismatch: (String, String) -> IssueCode = IssueCode.messageStructureMismatch(declared:trigger:)
+        let notModelled: (String) -> IssueCode = IssueCode.messageStructureNotModelled(structure:)
+        #expect(missing("ADT_A01", "EVN", nil) == .messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil))
+        #expect(unexpected("ADT_A01", "PID") == .messageStructureSegmentUnexpected(structure: "ADT_A01", segmentID: "PID"))
+        #expect(mismatch("ADT_A01", "ADT^A02") == .messageStructureMismatch(declared: "ADT_A01", trigger: "ADT^A02"))
+        #expect(notModelled("SIU_S12") == .messageStructureNotModelled(structure: "SIU_S12"))
+    }
+
     @Test("P6-4 repetition-bound severity is a mutable IssueSeverity? property defaulting to .warning")
     func repetitionBoundSeverity() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.repetitionBoundSeverity

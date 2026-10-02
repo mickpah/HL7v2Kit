@@ -32,7 +32,16 @@ struct ValidationDigestTests {
             let text = try String(contentsOf: dir.appendingPathComponent(file), encoding: .utf8)
             wires.append((file, text.replacingOccurrences(of: "\n", with: "\r")))
         }
-        var asserted = ValidationOptions.default
+        // P8-5: VALIDATION_DIGEST_STRUCTURE_SEVERITY=warning (or error) turns the
+        // opt-in message-structure check on in both variants, for the corpus run.
+        let structureSeverity: IssueSeverity? = switch env["VALIDATION_DIGEST_STRUCTURE_SEVERITY"] {
+        case "warning": .warning
+        case "error": .error
+        default: nil
+        }
+        var base = ValidationOptions.default
+        base.messageStructureSeverity = structureSeverity
+        var asserted = base
         asserted.auPathologySender = true
         asserted.auDisplayIntended = true
         asserted.auNASHTransport = true
@@ -43,7 +52,7 @@ struct ValidationDigestTests {
                     lines.append("\(name)\t\(locale)\tPARSE")
                     continue
                 }
-                let validators = [Validator(locale: locale), Validator(options: asserted, locale: locale)]
+                let validators = [Validator(options: base, locale: locale), Validator(options: asserted, locale: locale)]
                 for (variant, validator) in validators.enumerated() {
                     for issue in validator.validate(message).issues {
                         lines.append("\(name)\t\(locale)\t\(variant)\t\(issue.severity)\t\(issue.code)\t\(issue.location.pathDescription)\t\(issue.message)")

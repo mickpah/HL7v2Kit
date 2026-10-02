@@ -81,6 +81,20 @@ public struct ValidationOptions: Sendable {
     /// Set it to report them as advisories. Not an init parameter. M27.
     public var conformanceConditionSeverity: IssueSeverity? = nil
 
+    /// Severity for the abstract-message-syntax check (ADR-019): segment
+    /// order, required segments and groups, and repetition for the message's
+    /// structure, plus an MSH-9.3 that names a structure its MSH-9.1^9.2 is
+    /// not printed under. `nil`, the default in every preset, leaves the
+    /// check off. Only the structures generated from `Resources/structures/`
+    /// are modelled; a message with no structure applied (unmodelled
+    /// structure or version, an MSH-12 that does not resolve or differs from
+    /// ``Message/version``, a fragment) gets one
+    /// ``IssueCode/messageStructureNotModelled(structure:)`` info issue
+    /// instead of a silent pass. Receivers ignore unexpected segments
+    /// (v2.5.1 CH02 2.6.2), so `.warning` suits receiver-side use and
+    /// `.error` sender-side use. Not an init parameter. P8-5.
+    public var messageStructureSeverity: IssueSeverity? = nil
+
     /// The caller asserts that the message comes from a pathology sender.
     /// ADRM-2021 scopes HL7au:00050.1.5 (OBX-6.3 Units coding system must
     /// be `UCUM` on Results) to "Senders (Pathology only)", a fact the wire
@@ -230,7 +244,8 @@ public struct ValidationOptions: Sendable {
     /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`),
     /// the extra-component check (`extraComponentsSeverity`), the value-format
     /// check (`valueFormatSeverity`) and the repetition-bound check
-    /// (`repetitionBoundSeverity`). `checkCardinality` is already `false` here,
+    /// (`repetitionBoundSeverity`), and it sets `messageStructureSeverity`
+    /// to `nil` explicitly (off in every preset today). `checkCardinality` is already `false` here,
     /// which also silences the single-cardinality error.
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
@@ -247,6 +262,7 @@ public struct ValidationOptions: Sendable {
         options.extraComponentsSeverity = nil
         options.valueFormatSeverity = nil
         options.repetitionBoundSeverity = nil
+        options.messageStructureSeverity = nil
         return options
     }()
 }
