@@ -89,6 +89,21 @@ Per the working notes's "honesty over completeness" requirement, these are the p
    - **DG1** — 19 fields v2.3–v2.4. Per-version divergences preserved: v2.3 DG1-2 (Coding Method) is R (v2.4 downgraded to B); v2.3 DG1-15 (Diagnosis Priority) is NM, revised to ID in v2.3.1 (matching v2.4).
    - **IN1** — 25-field curation (the shared typed-segment surface). Per-version divergences preserved: IN1-14 (Authorization Information) is CM in v2.3 / v2.3.1, retyped AUI in v2.4; IN1-17 (Insured's Relationship To Patient) is IS in v2.3, revised to CE in v2.3.1 (matching v2.4). **Caveat**: the v2.3 / v2.3.1 CH6 IN1 attribute table's OPT column could not be cleanly extracted from the PDF's multi-column layout; field optionality follows the established v2.4 curation (R on IN1-1/2/3, O elsewhere), with the three R-fields cross-checked against the visible v2.3 spec tokens. Types and field count are extracted positionally and are exact. Pins: `MultiVersionTests.v23BackportedSegmentsRecognised`, `v231BackportedSegmentsRecognised`, `v23DG1RequiredFieldsFire`, plus the extended `grammarTablePopulated` / `v23GrammarTablePopulated`.
 
+## P6 findings closed (2026-10-02)
+
+The 2026-09 review (`planning/reviews/v2.3-review.md`, `v2.3.1-review.md`, `v2.4-review.md`)
+raised six findings against the schema/validator layer this audit does not itself cover
+(repeatability bounds, field length). All six are closed:
+
+| Finding | Gap | Closed by |
+|---|---|---|
+| V23-C08 | v2.3 `RP/#` bounds (`Y/n`) collapsed to unbounded `*` | P6-4 (`11a5b44`, `ebec7b4`) — `FieldGrammar.maxRepetitions`, `cardinalityExceeded` past the bound |
+| V24-C07 | Same defect, v2.4 | P6-4 (`11a5b44`, `ebec7b4`) |
+| V231-C05 | v2.3.1 PCR-9/11/13/15/17/19/20 read as `*` from a column shift | P6-5 (`1d77fa1`) — printed bounds restored from Figure 7-22 |
+| V231-C14 | v2.3.1 (and v2.3) OBX-2/OBX-16 lengths taken from the waveform category tables instead of the base Figure 7-5 | P6-2 (`ad0ad02`) |
+| V231-C15 | Printed `LEN` recorded but never checked, pre-v2.7 and v2.7+ alike | P6-6 (`33d415e`, `32bf6d1`) — `fieldLengthOutOfRange` / `normativeLengthSeverity` |
+| V231-C16 | v2.3.1 NSC had no recorded lengths | P6-2 (`ad0ad02`) — Appendix C Figure C-3 lengths |
+
 ## Conclusion
 
 Under the project's the working notes requirements, the v2.3 / v2.3.1 / v2.4 schemas as of v0.4-S2 are:

@@ -83,7 +83,7 @@ def whitelisted_ids(version):
 @functools.lru_cache(maxsize=None)
 def _pdf_text(path):
     return subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"],
-                          capture_output=True, text=True).stdout
+                          capture_output=True, text=True, timeout=30).stdout
 
 
 def caption_present(version, seg):
@@ -1501,7 +1501,7 @@ def spec_examples():
             findings.append((version, f"cannot read {pdf}"))
             continue
         grammar = {os.path.basename(p)[:-5]: json.load(open(p)) for p in glob.glob(f"{DATATYPES}/{version}/*.json")}
-        text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"], capture_output=True, text=True).stdout
+        text = subprocess.run(["pdftotext", "-layout", "-enc", "UTF-8", path, "-"], capture_output=True, text=True, timeout=30).stdout
         current, inside, seen = None, False, set()
         for line in text.split("\n"):
             if _EXAMPLE_FURNITURE.search(line):

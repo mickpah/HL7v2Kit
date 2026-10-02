@@ -31,7 +31,11 @@ extension Version {
     /// Length: 4. This allows for a number between 0 and 9999 to be specified"
     /// (v2.5.1 §2.A.69, v2.6 §2.A.69, v2.8.2 §2.A.70). v2.3 §2.8.36, v2.3.1
     /// §2.8.38 and v2.4 §2.9.40 print only "a non-negative integer in the form
-    /// of a NM field" (P6-7).
+    /// of a NM field" (P6-7). This property gates only the *value* bound (0 to
+    /// 9999) in `PrimitiveFormat.isSequenceID`; the same sentence's printed
+    /// maximum length of 4 (so a zero-padded `09999` is as long as the value
+    /// bound allows) is a separate, field-length concern enforced by the P6-6
+    /// length check (`fieldLengthOutOfRange`), not by this format check.
     var boundsSequenceID: Bool {
         switch self {
         case .v2_5_1, .v2_6, .v2_8_2, .v2_8: return true

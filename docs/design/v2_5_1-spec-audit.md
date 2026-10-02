@@ -147,6 +147,15 @@ DG1-20 / DG1-21 and PR1-19 / PR1-20 carry `triggerEvent = P12`. The spec scopes 
 - **Spec table errata** — the audit uses the public Final Standard April 2007 PDFs (author's local copy). The official HL7 v2.5.1 ballot's errata sheets (HL7-member access) were not directly consulted. Any errata not reflected in the Final Standard PDFs slip through.
 - **Composite OR-rule literal spec text** — see Gap 3 above; the OR-rules from S4 substage A are interpretive, not directly cited.
 
+## P6 findings closed (2026-10-02)
+
+The 2026-09 review (`planning/reviews/v2.5.1-review.md`) found V251-C10: no primitive-value
+lexical checks existed, and no issue code could report one. Closed by P6-7 (`3890ff0`):
+`IssueCode.valueFormatInvalid(dataType:)`, `ValidationOptions.valueFormatSeverity` and
+`PrimitiveFormat` now check NM, SI, DT, TM, DTM and TS against their printed section 2.A
+formats, including one level of composite/subcomponent nesting and OBX-5 read by its OBX-2
+type.
+
 ## Conclusion
 
 Under the project's the working notes requirements (feature-complete over AU-specific; integrator primary reference), the v2.5.1 schemas as of v0.4-S4 commit C are:

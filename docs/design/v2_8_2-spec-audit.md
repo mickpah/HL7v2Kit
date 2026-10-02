@@ -71,3 +71,14 @@ Additive only: `Version.v2_8_2 = "2.8.2"` (the grammar-less `.v2_8 = "2.8"` is r
 ## Regression coverage
 
 `MultiVersionTests` pins, per substage: version detection incl. `.v2_8`/`.v2_8_2` coexistence; S1–S4 grammar-table field counts + divergences (withdrawn sets, IS→CWE / O→B waves, EI→EIP, ST→OG, ID→NM, renames, new fields, carried conditions); S1 dispatch no-unknown-segment; and the S5 clean-ORU no-spurious-error regression.
+
+## P6 findings closed (2026-10-02)
+
+The 2026-09 review (`planning/reviews/v2.8.2-review.md`) found two gaps invisible to this
+audit's own scope (it does not check segment presence or datatype misprints against the
+attribute-table caption):
+
+| Finding | Gap | Closed by |
+|---|---|---|
+| V282-C04 | ADD (Addendum) segment missing on v2.8.2 (and v2.6), so Z-segment fallback applied silently | P6-3 (`8be2df4`) — `v2.8.2/ADD.json` / `v2.6/ADD.json` authored from CH02 §2.14.1; `audit-schemas.py` caption presence pass added for `DEPTH_WHITELIST` IDs |
+| V282-C11 | RF1-18 Remaining Benefit Amount typed `M0` (attribute-table misprint) instead of `MO` | P6-1 (`4fcd004`) — normalised to `MO`, cited in `DATATYPE_WHITELIST` and `segment-coverage-extraction.md` |

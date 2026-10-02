@@ -104,7 +104,11 @@ public struct RequiredComponentSet: Sendable, Equatable, Hashable {
     /// Every other case — nothing in the field satisfies either side, or `.atLeastOneOf`
     /// (which has no group and so no partial-pair reading) — names the OR alternatives via
     /// `description`, unchanged from before this task.
-    public func violationMessage(populatedIndices: Set<Int>, compositeCode: String) -> String {
+    ///
+    /// Internal: `ValidationIssue.message` carries no stability guarantee (ADR-014), so this
+    /// renderer has no public need. The Validator is the only caller; tests reach it via
+    /// `@testable import`.
+    func violationMessage(populatedIndices: Set<Int>, compositeCode: String) -> String {
         if case .allOfGroupOrAtLeastOne(let group) = semantics,
            !group.allSatisfy({ populatedIndices.contains($0) }),
            group.contains(where: { populatedIndices.contains($0) }) {
