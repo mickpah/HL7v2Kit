@@ -154,6 +154,16 @@ public struct ValidationOptions: Sendable {
     /// the check off. Not an init parameter. P6-7.
     public var valueFormatSeverity: IssueSeverity? = .warning
 
+    /// Severity for the ``IssueCode/cardinalityExceeded`` bound check: a `.multiple`
+    /// field carrying more `~`-repetitions than its printed RP/# bound
+    /// (``FieldGrammar/maxRepetitions``). `.warning` by default (owner gate G4): the
+    /// bound is a new check, so it does not fail validation by default. Set `.error`
+    /// to make an over-bound field fail validation, or `nil` to turn the bound check
+    /// off. The single-cardinality check (a `.single` field carrying more than one
+    /// repetition) is unaffected — it stays an `.error` gated by `checkCardinality`,
+    /// never by this property. Not an init parameter. P6-4.
+    public var repetitionBoundSeverity: IssueSeverity? = .warning
+
     /// Codes the caller has added locally to HL7 tables, keyed by four-digit table number.
     ///
     /// Every supported version allows an HL7 table to be extended locally: v2.3 and v2.3.1
@@ -194,8 +204,8 @@ public struct ValidationOptions: Sendable {
     /// All checks on; Z-segments rejected. Useful for sender-side outgoing
     /// message validation where the senders shouldn't be emitting custom
     /// Z-segments. The length severities (`fieldLengthSeverity`,
-    /// `normativeLengthSeverity`) and `valueFormatSeverity` stay `.warning` here
-    /// as in `default` (owner gate G4).
+    /// `normativeLengthSeverity`), `valueFormatSeverity` and
+    /// `repetitionBoundSeverity` stay `.warning` here as in `default` (owner gate G4).
     public static let strict = ValidationOptions(
         zSegmentPolicy: .reject,
         checkRequiredFields: true,
@@ -212,8 +222,10 @@ public struct ValidationOptions: Sendable {
     /// code-table membership check (`checkCodeTables`) is a content rule,
     /// not a structural one, so this preset turns it off too, as it does the
     /// field length checks (`fieldLengthSeverity`, `normativeLengthSeverity`),
-    /// the extra-component check (`extraComponentsSeverity`) and the value-format
-    /// check (`valueFormatSeverity`).
+    /// the extra-component check (`extraComponentsSeverity`), the value-format
+    /// check (`valueFormatSeverity`) and the repetition-bound check
+    /// (`repetitionBoundSeverity`). `checkCardinality` is already `false` here,
+    /// which also silences the single-cardinality error.
     public static let lenient: ValidationOptions = {
         var options = ValidationOptions(
             zSegmentPolicy: .ignore,
@@ -228,6 +240,7 @@ public struct ValidationOptions: Sendable {
         options.normativeLengthSeverity = nil
         options.extraComponentsSeverity = nil
         options.valueFormatSeverity = nil
+        options.repetitionBoundSeverity = nil
         return options
     }()
 }

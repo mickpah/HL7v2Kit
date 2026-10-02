@@ -110,6 +110,7 @@ All additive — no source break for a consumer who follows the `@unknown defaul
 | *Unreleased* | `IssueCode.fieldLengthOutOfRange(length:actual:)` (additive; open enum), `ValidationOptions.fieldLengthSeverity` and `ValidationOptions.normativeLengthSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, not init parameters). P6-6: LEN is now checked; see below. |
 | *Unreleased* | `IssueCode.extraComponentsInPrimitiveField` (additive; open enum) and `ValidationOptions.extraComponentsSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, not an init parameter). P6-13: more issues may fire by default; see below. | P6-14 widens it to every primitive field and to subcomponents of primitive components (more warnings by default; no API change).
 | *Unreleased* | `IssueCode.valueFormatInvalid(dataType:)` (additive; open enum) and `ValidationOptions.valueFormatSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, `.warning` in `.strict`; not an init parameter). Malformed NM, SI, DT, TM, DTM and TS values now raise a warning. |
+| *Unreleased* | `ValidationOptions.repetitionBoundSeverity` (additive, `IssueSeverity?`, default `.warning`, `nil` in `.lenient`, `.warning` in `.strict`; not an init parameter). P6-4 final review: the ``IssueCode/cardinalityExceeded`` bound warning's severity is now configurable; the single-cardinality error (gated by `checkCardinality`) is unaffected. |
 
 ## Primitive value format is checked (P6-7)
 

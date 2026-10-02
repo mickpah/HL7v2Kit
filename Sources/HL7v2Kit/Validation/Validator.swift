@@ -1660,9 +1660,11 @@ public struct Validator: Sendable {
             severity = .error
             detail = "is single-cardinality but has \(count) repetitions"
         case .multiple:
-            // P6-4: a printed RP/# bound. A new count check, so .warning (G4).
-            guard let bound = grammar.maxRepetitions, count > bound else { return }
-            severity = .warning
+            // P6-4: a printed RP/# bound, severity set by repetitionBoundSeverity (G4).
+            // Single-cardinality errors above are unaffected by this option.
+            guard let bound = grammar.maxRepetitions, count > bound,
+                  let boundSeverity = options.repetitionBoundSeverity else { return }
+            severity = boundSeverity
             detail = "allows at most \(bound) repetitions but has \(count)"
         }
         issues.append(ValidationIssue(

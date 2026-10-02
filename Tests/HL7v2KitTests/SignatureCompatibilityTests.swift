@@ -54,6 +54,14 @@ struct SignatureCompatibilityTests {
         #expect(make("NM") == .valueFormatInvalid(dataType: "NM"))
     }
 
+    @Test("P6-4 repetition-bound severity is a mutable IssueSeverity? property defaulting to .warning")
+    func repetitionBoundSeverity() {
+        let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.repetitionBoundSeverity
+        #expect(ValidationOptions.default[keyPath: severity] == .warning)
+        #expect(ValidationOptions.strict[keyPath: severity] == .warning)
+        #expect(ValidationOptions.lenient[keyPath: severity] == nil)
+    }
+
     @Test("HL7Table.init keeps its five-parameter signature; patterns: is a separate overload")
     func hl7TableInit() {
         let entries = [HL7Table.Entry(code: "A", description: "a")]

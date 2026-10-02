@@ -118,4 +118,40 @@ struct BoundedRepetitionTests {
         #expect(issue.message.contains("is single-cardinality but has 2 repetitions"))
         #expect(issue.severity == .error)
     }
+
+    // Minor 1 (final review): a severity knob for the bound warning, mirroring
+    // fieldLengthSeverity / extraComponentsSeverity / valueFormatSeverity.
+    @Test("repetitionBoundSeverity nil silences the bound warning")
+    func repetitionBoundSeverityNilIsSilent() throws {
+        var options = ValidationOptions.default
+        options.repetitionBoundSeverity = nil
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.4\r"
+            + line("OBR", [1: "1", 4: "GLU^Glucose^L", 17: "5550001~5550002~5550003"])
+        let report = Validator(options: options).validate(try Parser().parse(wire))
+        #expect(report.issues.filter { $0.code == .cardinalityExceeded }.isEmpty)
+    }
+
+    @Test("repetitionBoundSeverity .error makes the bound an error")
+    func repetitionBoundSeverityError() throws {
+        var options = ValidationOptions.default
+        options.repetitionBoundSeverity = .error
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ORM^O01|M1|P|2.4\r"
+            + line("OBR", [1: "1", 4: "GLU^Glucose^L", 17: "5550001~5550002~5550003"])
+        let report = Validator(options: options).validate(try Parser().parse(wire))
+        let issue = try #require(report.issues.first { $0.code == .cardinalityExceeded })
+        #expect(issue.severity == .error)
+        #expect(issue.message.contains("at most 2"))
+    }
+
+    @Test("Single-cardinality errors stay under checkCardinality, unaffected by repetitionBoundSeverity")
+    func singleCardinalityIgnoresBoundSeverity() throws {
+        var options = ValidationOptions.default
+        options.repetitionBoundSeverity = nil
+        let wire = "MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01|M1|P|2.5.1\r"
+            + line("PID", [1: "1", 3: "123", 8: "M~F"])
+        let report = Validator(options: options).validate(try Parser().parse(wire))
+        let issue = try #require(report.issues.first { $0.code == .cardinalityExceeded })
+        #expect(issue.severity == .error)
+        #expect(issue.message.contains("is single-cardinality but has 2 repetitions"))
+    }
 }
