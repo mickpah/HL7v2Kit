@@ -193,8 +193,18 @@ func isNoteLead(_ cell: String) -> Bool { cell.hasSuffix(":") }
 /// ellipsis row ("no suggested values", 0010 p39; an open list, 0291 p90; a null row,
 /// 0365 p110) with U+2026 where v2.3 to v2.6 print three full stops. Both are one printed
 /// marker, so the Unicode form is read as "..." and dropped by the same rule in render().
-/// Appendix A layout only: v2.8.2 Chapter 2C is extracted by extract282(), untouched.
-func appendixValue(_ cell: String) -> String { cell == "\u{2026}" ? "..." : cell }
+/// Both layouts: v2.8.2 Chapter 2C prints it too (0359, 0418; P10-1 fix round 1).
+func ellipsisValue(_ cell: String) -> String { cell == "\u{2026}" ? "..." : cell }
+
+/// A printed range row: 0141 "E1 ... E9", "E1... E9", "O1 ... O10", "W1 ... W4". It names
+/// every code from the first to the last, so render() emits it as a pattern row matching
+/// exactly those codes (the mechanism 0203 NNxxx uses) instead of one literal code.
+let reRange = RE("^([A-Z]+)([0-9]+)\\s*(?:\\.\\.\\.|\u{2026})\\s*([A-Z]+)([0-9]+)$")
+func rangePattern(_ code: String) -> String? {
+    guard let g = reRange.groups(code), g[1] == g[3], let lo = Int(g[2]), let hi = Int(g[4]),
+          lo < hi, hi - lo < 100 else { return nil }
+    return "^" + g[1] + "(" + (lo...hi).map(String.init).joined(separator: "|") + ")$"
+}
 
 /// Rows the spec prints in place of values when a table has none.
 let noValuesPhrase = RE("^(no suggested values|no values defined|no values are defined|needs values)", [.caseInsensitive])
@@ -364,7 +374,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if cells.count >= 2 {
-                t.codes.append(appendixValue(cells[0].text))
+                t.codes.append(ellipsisValue(cells[0].text))
                 t.descriptions.append(cells[1...].map(\.text).joined(separator: " "))
                 let descCol = restCol + cells[1].offset
                 lastDescCol[number] = descCol
@@ -397,7 +407,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
                 continue
             }
             if !only.contains(" ") {
-                t.codes.append(appendixValue(only))
+                t.codes.append(ellipsisValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 continue
@@ -408,7 +418,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             // PDF bled into the column always carries lower-case words.
             if established < 0 && only.uppercased() == only
                 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol) {
-                t.codes.append(appendixValue(only))
+                t.codes.append(ellipsisValue(only))
                 t.descriptions.append("")
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: -1)
                 if report { notes.append("\(number): description-less table, whole cell taken as the code: \(only)") }
@@ -425,7 +435,7 @@ func extractAppendixA(_ text: String, report: Bool) -> ([String: Table], [String
             let aligned = established >= 0 && abs(remCol - established) <= 8
             let complete = established >= 0 && !continuesInValueColumn(after: lineNumber, valueColumn: restCol)
             if aligned || complete {
-                t.codes.append(appendixValue(firstTok))
+                t.codes.append(ellipsisValue(firstTok))
                 t.descriptions.append(remainder)
                 lastRow = Row(table: number, index: t.codes.count - 1, codeCol: restCol, descCol: remCol)
                 if report { notes.append("\(number): single-column row accepted as \(firstTok) | \(remainder)") }
@@ -530,7 +540,10 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
     for raw in text.split(separator: "\n", omittingEmptySubsequences: false).map({ clean(String($0)) }) {
         let s = raw.trimmingCharacters(in: .whitespaces)
         if s.isEmpty { continue }
-        if s.contains("..") { continue }        // table of contents
+        // A table-of-contents line carries a dotted leader. Two full stops alone do not
+        // mark one: rows print "..." (v2.7.1 0492 "?? Inappropriate due to ...", 0141
+        // "E1... E9") and the old two-dot test dropped them (P10-1 fix round 1).
+        if s.contains("....") { continue }
 
         if let g = reHeading282.groups(raw) {
             let number = g[1]
@@ -639,7 +652,7 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
                 if report { notes.append("\(t.number): SKIPPED note row: \(first.text) \(cells[1].text)") }
                 continue
             }
-            t.codes.append(first.text)
+            t.codes.append(ellipsisValue(first.text))
             t.descriptions.append(cells[1].text)
             descCol = cells[1].offset
             if cells.count >= 3 { commentCol = cells[2].offset }
@@ -654,7 +667,7 @@ func extract282(_ text: String, report: Bool) -> ([String: Table], [String]) {
             if report { notes.append("\(t.number): SKIPPED note row: \(first.text)") }
             continue
         }
-        t.codes.append(first.text)
+        t.codes.append(ellipsisValue(first.text))
         t.descriptions.append("")
     }
     return (tables, notes)
@@ -743,7 +756,7 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
     let source = appendix ? "Appendix A" : "Chapter 2C"
     let citation = override?.citation
         ?? "HL7 v\(version) \(source), \(kindLabel) \(t.number) - \(t.name)"
-    // A bare "..." row (v2.7.1 Appendix A: U+2026, read as "..." by appendixValue) is never
+    // A bare "..." row (v2.7.1 Appendix A: U+2026, read as "..." by ellipsisValue) is never
     // a code. The specs print it for "no suggested values" (an
     // otherwise empty table), for an external or open-ended list that continues (v2.6 0153
     // "See NUBC codes", 0359 / 0418 ranks), and for a null row (v2.6 0365 "(null) No state
@@ -769,7 +782,11 @@ func render(_ t: Table, version: String, appendix: Bool, override: Override?) ->
         addedNotes.append("\(t.number): added by overrides.json: \(pair[0])")
     }
     var patternRows: [(code: String, description: String, regex: String)] = []
-    for p in override?.patterns ?? [] {
+    var overridePatterns = override?.patterns ?? []
+    for pair in rowPairs where !overridePatterns.contains(where: { $0["code"] == pair.0 }) {
+        if let regex = rangePattern(pair.0) { overridePatterns.append(["code": pair.0, "regex": regex]) }
+    }
+    for p in overridePatterns {
         guard let code = p["code"], let regex = p["regex"],
               let i = rowPairs.firstIndex(where: { $0.0 == code }) else {
             addedNotes.append("\(t.number): pattern \(p["code"] ?? "?") declared in overrides.json but not printed")
@@ -853,7 +870,7 @@ func selfCheck() -> Never {
     }
     func rendered(_ codes: [String]) -> String {
         let t = Table(number: "0010", name: "Physician ID", kind: "User")
-        t.codes = codes.map(appendixValue)
+        t.codes = codes.map(ellipsisValue)
         t.descriptions = codes.map { $0 == "A" ? "Alpha" : "" }
         return render(t, version: "2.7.1", appendix: true, override: nil).json
     }
@@ -866,7 +883,41 @@ func selfCheck() -> Never {
     expect(mixed.components(separatedBy: "\"code\":").count == 2, "an ellipsis beside a real row is dropped")
     expect(mixed.contains("\"permitsLocalExtensions\": true"), "an ellipsis beside real rows leaves the table open")
     expect(mixed == rendered(["A", "..."]), "both ellipsis forms render alike beside real rows")
-    expect(appendixValue("2\u{2026}") == "2\u{2026}", "only a bare ellipsis cell is normalised")
+    expect(ellipsisValue("2\u{2026}") == "2\u{2026}", "only a bare ellipsis cell is normalised")
+
+    // Chapter 2C layout (v2.8.2 0359 / 0418, v2.7.1 0492 p157, v2.8.2 0141).
+    let chapter2C = [
+        "2.C.2.99 0359 - Diagnosis Priority",
+        "                     User-defined Table 0359 - Diagnosis Priority",
+        "          Value     Description",
+        "            0       Not included in diagnosis ranking",
+        "            1       The primary diagnosis",
+        "            2       For ranked secondary diagnoses",
+        "            \u{2026}",
+        "            ??      Inappropriate due to ...",
+        "          E1... E9  Enlisted",
+        "2.C.2.100 0360 - Degree",
+        "2.C.2.101 0361 - Application ...................................... 12",
+    ].joined(separator: "\n")
+    let b = extract282(chapter2C, report: false).0["0359"]
+    expect(b?.codes.contains("...") == true && b?.codes.contains("\u{2026}") == false,
+           "Chapter 2C: a bare Unicode-ellipsis row reads as \"...\"")
+    expect(b?.codes.contains("??") == true, "Chapter 2C: a row whose description contains \"...\" is kept")
+    expect(b?.codes.contains("E1... E9") == true, "Chapter 2C: a range row is kept")
+    let b2 = render(b!, version: "2.8.2", appendix: false, override: nil).json
+    expect(b2.contains("\"permitsLocalExtensions\": true") && !b2.contains("\u{2026}"),
+           "Chapter 2C: the ellipsis row is dropped and leaves the table open")
+    expect(extract282(chapter2C, report: false).0["0361"] == nil, "a dotted contents line is still skipped")
+
+    // Range rows (0141 'E1 ... E9', 'O1 ... O10'): one pattern row each, not a literal code.
+    let r = Table(number: "0141", name: "Military Rank/Grade", kind: "User")
+    r.codes = ["E1... E9", "O1 ... O10", "W1 ... W4"]
+    r.descriptions = ["Enlisted", "Officers", "Warrant Officers"]
+    let rj = render(r, version: "2.4", appendix: true, override: nil).json
+    expect(!rj.contains("\"entries\": [\n"), "range rows are not literal entries")
+    expect(rj.contains("\"regex\": \"^E(1|2|3|4|5|6|7|8|9)$\"")
+           && rj.contains("\"regex\": \"^O(1|2|3|4|5|6|7|8|9|10)$\"")
+           && rj.contains("\"regex\": \"^W(1|2|3|4)$\""), "each range row becomes the pattern of its codes")
     exit(0)
 }
 

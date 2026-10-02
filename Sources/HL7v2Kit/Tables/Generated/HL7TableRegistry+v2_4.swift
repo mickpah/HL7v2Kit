@@ -2484,10 +2484,13 @@ extension HL7TableRegistry {
         kind: .userDefined,
         permitsLocalExtensions: false,
         entries: [
-            HL7Table.Entry(code: "E1 ... E9", description: "Enlisted"),
-            HL7Table.Entry(code: "O1 ... O10", description: "Officers"),
-            HL7Table.Entry(code: "W1 ... W4", description: "Warrant Officers"),
-        ] as [HL7Table.Entry]
+
+        ] as [HL7Table.Entry],
+        patterns: [
+            HL7Table.CodePattern(code: "E1 ... E9", description: "Enlisted", regex: "^E(1|2|3|4|5|6|7|8|9)$"),
+            HL7Table.CodePattern(code: "O1 ... O10", description: "Officers", regex: "^O(1|2|3|4|5|6|7|8|9|10)$"),
+            HL7Table.CodePattern(code: "W1 ... W4", description: "Warrant Officers", regex: "^W(1|2|3|4)$"),
+        ] as [HL7Table.CodePattern]
     )
 
     static let t0142_v2_4 = HL7Table(

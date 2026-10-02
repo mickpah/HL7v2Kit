@@ -2957,9 +2957,10 @@
         "Department Acuity",
         "Information Network",
         "data element nnnn [as",
-        "used in segment sss]"
+        "used in segment sss]",
+        "codes"
       ],
-      "note": "Four Values wider than their column ran into the Description (text lines 10652, 10701, 11123, 11254) and their wrapped Description lines parsed as rows. 'CE (obsolete)' and '(deprecated)' under ISOnnnn (line 10978) are status annotations printed in the Value column, not part of the code; v2.4 and v2.5.1 print the same row as plain CE."
+      "note": "Four Values wider than their column ran into the Description (text lines 10652, 10701, 11123, 11254) and their wrapped Description lines parsed as rows. 'CE (obsolete)' and '(deprecated)' under ISOnnnn (line 10978) are status annotations printed in the Value column, not part of the code; v2.4 and v2.5.1 print the same row as plain CE. P10-1 fix round 1: 'codes' (p175) is the wrapped second line of CE's Description 'CEN ECG diagnostic / codes', not a code."
     },
     "0399": {
       "permitsLocalExtensions": true,
@@ -3065,6 +3066,56 @@
       "permitsLocalExtensions": true,
       "citation": "HL7 v2.8.2 Chapter 8 sec 8.5.1.1 MFI-1 Master File Identifier, HL7 Table 0175 - Master File Identifier Code",
       "note": "P2-14: MFI-1, the table's only governing field, reads \"This table may be extended by local agreement during implementation to cover site-specific master files (z-master files).\" (unchanged wording on all six supported versions), so the printed rows are not a closed set."
+    },
+    "0359": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.284 (p155), User-defined Table 0359 - Diagnosis Priority; Chapter 6 sec 6.5.2.15 DG1-15 (p34): 'The value 1 means that this is the primary diagnosis. Values 2-99 convey ranked secondary diagnoses', so the printed 0, 1, 2 and ellipsis rows are not a closed set",
+      "note": "P10-1 fix round 1: the lone ellipsis row (U+2026) was stored as a code and the table closed; the extractor now reads it as the bare '...' row and drops it."
+    },
+    "0418": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.337 (p190), HL7 Table 0418 - Procedure Priority; Chapter 6 sec 6.5.4.14 PR1-14 (p47): 'Values 2-99 convey ranked secondary procedures', so the printed 0, 1, 2 and ellipsis rows are not a closed set",
+      "note": "P10-1 fix round 1: the lone ellipsis row (U+2026) was stored as a code and the table closed; the extractor now reads it as the bare '...' row and drops it."
+    },
+    "0544": {
+      "permitsLocalExtensions": true,
+      "dropCodes": [
+        "temperature"
+      ],
+      "fixDescriptions": {
+        "XAMB": "Not Ambient temperature",
+        "XCAMB": "Not Critical ambient temperature",
+        "XREF": "Not Refrigerated temperature",
+        "XCREF": "Not Critical refrigerated temperature",
+        "XFRZ": "Not Frozen temperature",
+        "XCFRZ": "Not Critical frozen temperature"
+      },
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.454 (pp243-244), HL7 Table 0544 - Container Condition; Chapter 7 sec 7.4.3.28 SPM-28 (p76), sec 7.18.2.9 SHP-9 (p170) and sec 7.18.3.6 PAC-6 (p172): 'Refer to HL7 Table 0544 - Container Condition for suggested values', so the printed rows are not a closed set",
+      "note": "P10-1 fix round 1. Chapter 2C prints the Descriptions 'Not Critical ambient / temperature', 'Not Refrigerated / temperature', 'Not Critical refrigerated / temperature' and 'Not Critical frozen / temperature' on two lines centred on the row, so the extractor took the Comment as the Description, glued the first line onto the row above (XAMB, XFRZ) and stored the wrapped 'temperature' as a code. The fragment is dropped and the six Descriptions are restored as printed."
+    },
+    "0088": {
+      "dropCodes": [
+        "contractors."
+      ],
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.53 (pp48-49), Externally-defined Table 0088 - Procedure Code",
+      "note": "P10-1 fix round 1: 'contractors.' is the last line of the HCPCS paragraph under the table ('CMS may distribute the CPT-4 part to its / contractors.', p49), not a code."
+    },
+    "0343": {
+      "dropCodes": [
+        "contractors."
+      ],
+      "citation": "HL7 v2.8.2 Chapter 2C sec 2.C.2.271 (p146), Table 0343 - Military Handicapped Program Code",
+      "note": "P10-1 fix round 1: 'contractors.' is the last line of the HCPCS paragraph printed under the table (p146), not a code."
+    },
+    "0093": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C (p50), User-defined Table 0093 - Release Information: the row '... user-defined codes' continues the printed values",
+      "note": "P10-1 fix round 1: the Chapter 2C layout used to skip every line containing '..' as a table-of-contents line, so this ellipsis row was lost and the table read as closed."
+    },
+    "0466": {
+      "permitsLocalExtensions": true,
+      "citation": "HL7 v2.8.2 Chapter 2C (p209), User-defined Table 0466 - Ambulatory Payment Classification Code: the row '...' continues the printed values",
+      "note": "P10-1 fix round 1: the Chapter 2C layout used to skip every line containing '..' as a table-of-contents line, so this ellipsis row was lost and the table read as closed."
     }
   },
   "2.7.1": {

@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P10-1 fix round: shipped v2.8.2 and v2.6 table data
+
+- v2.8.2 Tables 0359 (Diagnosis Priority) and 0418 (Procedure Priority) stored the printed
+  ellipsis row (U+2026) as a code and were closed. They now hold 0, 1 and 2 and are open:
+  Chapter 6 DG1-15 and PR1-14 say "Values 2-99 convey ranked secondary" diagnoses or
+  procedures. The extractor reads the Unicode ellipsis as the bare "..." row in both layouts.
+- v2.8.2 Table 0544 (Container Condition) is open, as Chapter 7 SPM-28, SHP-9 and PAC-6
+  cite it "for suggested values"; the wrapped fragment `temperature` is no longer a code and
+  six descriptions are restored as printed.
+- v2.8.2 wrapped prose stored as codes is dropped: `contractors.` (Tables 0088, 0343) and
+  `codes` (Table 0396).
+- The Chapter 2C layout skipped every line containing ".." as a table-of-contents line,
+  losing rows that print "..."; only a dotted leader is skipped now. v2.8.2 Tables 0093 and
+  0466 regain their ellipsis row and are open; Table 0141 regains its range rows.
+- Table 0141 (Military Rank/Grade) range rows `E1 ... E9`, `O1 ... O9` (`O1 ... O10` on
+  v2.3.1 and v2.4) and `W1 ... W4` were literal codes on v2.3.1 to v2.6 and missing on v2.8.2.
+  They are now pattern rows matching exactly the codes they name, on every version that prints
+  them.
+- See Migration.md for the visible `HL7TableRegistry` changes; validation output is unchanged.
+
 ### Changed — P10-3: a released struct's union base never changes (ADR-020 amendment)
 
 - The codegen takes a segment struct's base schema from `Resources/struct-bases.json` where

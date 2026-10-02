@@ -22,7 +22,9 @@ struct V271GrammarTests {
         #expect(tables.count == 535)
         #expect(tables.values.filter { $0.kind == .hl7 }.count == 174)
         #expect(tables.values.filter { $0.kind == .userDefined }.count == 361)
-        #expect(tables.values.reduce(0) { $0 + $1.entries.count } == 5158)
+        // 5,155 entries plus four pattern rows (0203 NNxxx; 0141 E1... E9, O1 ... O9, W1 ... W4).
+        #expect(tables.values.reduce(0) { $0 + $1.entries.count } == 5155)
+        #expect(tables.values.reduce(0) { $0 + $1.patterns.count } == 4)
         // Chapter 2C sec 2.C.2.11 (p21): "withdrawn in v2.7". Table 0048 is printed nowhere.
         #expect(tables["0070"] == nil)
         #expect(tables["0048"] == nil)

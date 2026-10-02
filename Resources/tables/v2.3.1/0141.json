@@ -5,18 +5,22 @@
   "kind": "User",
   "permitsLocalExtensions": false,
   "citation": "HL7 v2.3.1 Appendix A, User-defined Table 0141 - Military rank/grade",
-  "entries": [
+  "entries": [],
+  "patterns": [
     {
       "code": "E1 ... E9",
-      "description": "Enlisted"
+      "description": "Enlisted",
+      "regex": "^E(1|2|3|4|5|6|7|8|9)$"
     },
     {
       "code": "O1 ... O10",
-      "description": "Officers"
+      "description": "Officers",
+      "regex": "^O(1|2|3|4|5|6|7|8|9|10)$"
     },
     {
       "code": "W1 ... W4",
-      "description": "Warrant Officers"
+      "description": "Warrant Officers",
+      "regex": "^W(1|2|3|4)$"
     }
   ]
 }
