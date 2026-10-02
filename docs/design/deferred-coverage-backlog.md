@@ -81,6 +81,16 @@ picked up.
 documented decision (ADR-013). It is unaffected by this re-prioritisation and stays deferred
 on its own rationale: the `2.8` MSH-12 raw value is rare in the field.
 
+## Also deferred: abstract message syntax (all versions)
+
+Message structures (segment order, segment groups, required segments per trigger event,
+and the MSH-9.3 event-to-structure mapping) are not modelled on any version. This is a
+different axis from the segment surface above: every segment can be modelled and a message
+can still be structurally invalid. It is registered as blocking spec-completeness in
+`permanent-limitations-register.md` section E, designed in ADR-019 (accepted 2026-09-30),
+piloted by `planning/remediation/P8-message-structures.md` and rolled out per version by
+`planning/remediation/P8b-message-structure-rollout.md`.
+
 ## Exit criteria — when this register closes
 
 1. The AU-priority tier reaches full per-version depth (v2.3 / v2.3.1 / v2.4 / v2.5.1).

@@ -209,6 +209,19 @@ Found during the P5-5 review (2026-10-02). Not an ADRM-2021 point; added here pe
 | 15 table mentions in CM field definitions left unbound: IN2-28 (0145, 0146) and IN2-29 (0147, 0193) on v2.3, v2.3.1 and v2.4; v2.3 IN3-11.1 (0149); v2.3 MSH-9 (0076, 0003) | v2.3 (7), v2.3.1 (4), v2.4 (4) | IN2-28 / IN2-29 name two tables in one sentence over two IS components ("Refer to User-defined Table 0145 - Room type and User-defined Table 0146 - Amount type"); v2.3 sec 2.24.1.9 MSH-9 names 0076 and 0003 in one sentence ("first ... table 0076 ...; second is ... table 0003"); v2.3 IN3-11 names 0149 "Day type" where the v2.3 registry prints "Days Type". | Pairing a table with a component by the order of its mention, or by the component's name, is a reading the M13 tests do not license. `python3 scripts/extract-field-components.py <version> --report` lists each mention with its reason; the absent binding is an absent check, never a wrong one. |
 | OM2-6 Reference (normal) range for ordinal and continuous observations | v2.3, v2.3.1 (sec 8.7.4.6), v2.4 (CH08 sec 8.8.4.6) | The structure is printed as a narrative repetition list (`<ref. (normal) range1>^<sex1>^<age range1>^...~`) with a nested `Components: <low value (NM)> & <high value (NM)>`, and no field-level Components line. | A field grammar that can state a repeating tuple with nested subcomponents. `DataTypeGrammarTests.fieldLocalCoverage` pins it as registered (ADR-017, P5 addendum). |
 
+## E. Abstract message syntax (blocks spec-completeness)
+
+Registered 2026-09-30 (review finding X-C04). This is **not** a permanent limitation: every
+part of it is decidable from the wire. It is a model gap that blocks spec-completeness under
+project requirements 1 and 3, and it stays in this register until the per-version rollout
+in `planning/remediation/P8b-message-structure-rollout.md` closes it.
+
+| Capability | Spec | What is not checked today | Status |
+|---|---|---|---|
+| Message structures (segment order, `[ ]` optional and `{ }` repeating segments, segment groups, required segments per trigger event) | v2.3 CH3 §3.2.1 (ADT^A01) and CH2 ACK; v2.3.1 CH2 §2.11-2.11.1; v2.4 CH02 §2.12-2.12.1 and §2.14; v2.5.1 CH02 §2.5.2 and each chapter's message definitions; v2.6 CH02 §2.5.2; v2.8.2 CH02 §2.12 | A v2.5.1 `ADT^A01` with no EVN or PV1, an ACK with no MSA, or an ORU^R01 with OBX before OBR raises no issue on any version. `SegmentCardinalityRule` covers only the AU profile's 21 group rules, through the `orcObxGroup` / `obrObxGroup` / `messageWide` back-walk heuristics. | **Blocking.** Design: ADR-019 (accepted 2026-09-30). Plan: `planning/remediation/P8-message-structures.md`. |
+| Event-to-structure consistency (MSH-9.3 against MSH-9.1/9.2) | Table 0354 and the chapter caption lines (`ADT^A04^ADT_A01`) | `ADT^A04^ADT_A04` on v2.5.1 (no such structure; A04 uses ADT_A01) raises no issue. Table 0354 is deliberately open (it lags the chapters), so the table check cannot catch it. | **Blocking.** Same design and plan. |
+| Acknowledgment construction and the MSH-15/MSH-16 processing rules | v2.4 CH02 §2.3.2, §2.3.3, §2.13, §2.14.1; v2.5.1 CH02 §2.9.2, §2.9.3, §2.14.1 | No ACK builder; MSA-2 echo and the sender/receiver swap are not modelled. | **Owner decision** (ADR-019 D6). |
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries

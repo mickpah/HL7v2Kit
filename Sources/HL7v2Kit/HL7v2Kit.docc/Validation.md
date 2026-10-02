@@ -141,6 +141,7 @@ Conditions live in the per-segment JSON schemas under `Resources/schemas/<versio
 
 ## What the validator does not check
 
+- **Message structure.** Segment order, segment groups, the segments each trigger event requires, and the MSH-9.3 event-to-structure mapping are not checked on any version: a v2.5.1 `ADT^A01` with no EVN or PV1, or an ACK with no MSA, raises no issue. Registered as blocking spec-completeness (permanent-limitations register §E; ADR-019).
 - **Component optionality.** The component grammar records it where the spec prints it; nothing enforces it yet. On v2.3 to v2.4, a component whose prose names no table, several tables, or a table whose name does not match is left unchecked (ADR-017).
 - **Component length.** Recorded on every component, never enforced. Conditional components are checked where the prose states a sibling-presence condition; the "as of v2.7" rules are opt-in (`conformanceConditionSeverity`), off by default because the spec's own examples violate them. Conditions on the coding system in use (CWE.7 and kin) and CNE.20's self-contradictory sentence are not modelled.
 - **Cross-segment conditional predicates.** Same-segment refs only at present; see <doc:#Conditional-field-DSL>.

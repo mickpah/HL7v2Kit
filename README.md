@@ -7,7 +7,7 @@ A native Swift package for **parsing, building, and validating** HL7 v2.x health
 ## Why use this
 
 - **Round-trip safe.** Parse a v2 message, modify it, serialise it — the bytes match (including escape sequences and the original character set).
-- **Spec-faithful validation.** Per-version field grammar for v2.3 → v2.8.2, a conditional-field DSL, cross-segment / message-context rules, group-scope cardinality, and component-level checks. Conformance gaps that can't be checked from the wire are documented, not silently skipped.
+- **Spec-faithful validation.** Per-version field grammar for v2.3 → v2.8.2, a conditional-field DSL, cross-segment / message-context rules, group-scope cardinality (AU profile rules), and component-level checks. Message-level structure (segment order and groups per trigger event) is not yet checked; it is registered as a blocking gap. Conformance gaps that can't be checked from the wire are documented, not silently skipped.
 - **Australian-aware.** An `HL7Locale.auLocalisation` profile layers the ADRM-2021 (`HL7au`) narrowings on top of the base spec; AU Z-segments (ZAU, ZPI, …) round-trip without false negatives.
 - **Two APIs, one AST.** String paths (`msg["PID-5.1"]`) for ad-hoc work, typed accessors (`msg.firstSegment(PID.self)?.patientName`) for known segments.
 - **Zero runtime dependencies.** Pure Swift 6 + Foundation, strict concurrency on. Apache 2.0.
@@ -43,7 +43,7 @@ assert(rebuilt == wire)
 
 ## Supported HL7 v2 versions
 
-Full per-version field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` wire is *recognised* but has no grammar table (rare; see [ADR-013](docs/design/ADR-013-v2_8_2-grammar-version.md)). Segment coverage: **every version has zero missing segments** — all 188 segments the six specs define are modelled on every version that defines them (the deferred backlog of [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md) closed 2026-09-16). Every authored schema is verified against its own version's attribute table (depth, presence *and* per-field datatype) by `scripts/audit-schemas.py`.
+Per-version segment and field grammar + validation for **v2.3, v2.3.1, v2.4, v2.5.1, v2.6, and v2.8.2** (the version is read from `MSH-12`; the AST itself is version-agnostic). A bare `2.8` wire is *recognised* but has no grammar table (rare; see [ADR-013](docs/design/ADR-013-v2_8_2-grammar-version.md)). Segment coverage: **every version has zero missing segments** — all 188 segments the six specs define are modelled on every version that defines them (the deferred backlog of [`docs/design/deferred-coverage-backlog.md`](docs/design/deferred-coverage-backlog.md) closed 2026-09-16). Every authored schema is verified against its own version's attribute table (depth, presence *and* per-field datatype) by `scripts/audit-schemas.py`. **Message structures are not yet validated:** segment order, segment groups and the segments each trigger event requires are a registered blocking gap (see [`permanent-limitations-register.md` section E](docs/design/permanent-limitations-register.md) and ADR-019).
 
 ## Typed segments & composites
 
