@@ -188,4 +188,67 @@ struct V271GrammarTests {
         #expect(components.filter { $0.1.optionalityCode == "C" && $0.1.condition == nil
             && $0.1.conformanceCondition == nil }.count == 19)
     }
+
+    // MARK: - P10-4a: segment schemas, chapters 2 to 4A
+
+    private var segments: [String: SegmentGrammar] { SegmentGrammarTable.v2_7_1 }
+
+    /// Field count of each segment first defined in CH02, CH03, CH04 and CH04A, from the
+    /// defining attribute table (re-measured by the P10-4a extraction; ADD is `1-n`, one field).
+    static let chapterFieldCounts: [String: [String: Int]] = [
+        "CH02": ["ADD": 1, "BHS": 14, "BTS": 3, "DSC": 2, "ERR": 12, "FHS": 14, "FTS": 2,
+                 "MSA": 8, "MSH": 25, "NTE": 8, "OVR": 5, "SFT": 6, "UAC": 2],
+        "CH03": ["AL1": 6, "ARV": 6, "DB1": 8, "EVN": 7, "IAM": 30, "IAR": 4, "MRG": 7,
+                 "NK1": 41, "NPU": 2, "PD1": 22, "PDA": 9, "PID": 40, "PV1": 54, "PV2": 50],
+        "CH04": ["BLG": 4, "BPO": 14, "BPX": 21, "BTX": 19, "IPC": 9, "OBR": 54, "ODS": 4,
+                 "ODT": 3, "ORC": 33, "RQ1": 7, "RQD": 10, "TQ1": 14, "TQ2": 10],
+        "CH04A": ["RXA": 28, "RXC": 9, "RXD": 34, "RXE": 45, "RXG": 30, "RXO": 36, "RXR": 6],
+    ]
+
+    @Test("CH02 to CH04A: 47 segments (46 extracted plus ADD), 778 fields")
+    func chapterSegments() throws {
+        let counts = Self.chapterFieldCounts.values.reduce(into: [String: Int]()) { $0.merge($1) { a, _ in a } }
+        #expect(counts.count == 47)
+        #expect(counts.values.reduce(0, +) == 778)
+        for (segment, count) in counts {
+            let grammar = try #require(segments[segment], "\(segment)")
+            #expect(grammar.version == "2.7.1")
+            #expect(grammar.fields.count == count, "\(segment)")
+            #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
+            // Conditions are P10-5a/5b's: nothing is copied from another version here.
+            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+        }
+        // CH02 section 2.14.1 (p. 47): ADD prints SEQ `1-n`.
+        #expect(segments["ADD"]?.field(1)?.variableColumns == true)
+    }
+
+    @Test("Fields read by hand against the v2.7.1 attribute tables")
+    func printedFields() throws {
+        func field(_ segment: String, _ index: Int) throws -> FieldGrammar {
+            try #require(segments[segment]?.field(index), "\(segment)-\(index)")
+        }
+        // CH02 2.14.9 MSH (p. 57): `9  MSG R 00009`, `12  VID R 00012`.
+        #expect(try field("MSH", 9).dataType == "MSG")
+        #expect(try field("MSH", 9).optionality == .required)
+        #expect(try field("MSH", 12).dataType == "VID")
+        // CH03 3.4.2 PID (p. 59): `3  CX R Y 00106`; `35  CWE C 0446 Species Code`.
+        #expect(try field("PID", 3).repeatability == .multiple)
+        #expect(try field("PID", 3).optionality == .required)
+        #expect(try field("PID", 35).name == "Species Code")
+        #expect(try field("PID", 35).optionality == .conditional)
+        // CH03 3.4.3 PV1 (p. 76): `2  CWE R 0004 00132 Patient Class`.
+        #expect(try field("PV1", 2).dataType == "CWE")
+        #expect(try field("PV1", 2).optionality == .required)
+        // CH04 4.5.1 ORC (p. 32): `1  2..2  ID R 0119 00215`; ORC-4 is EI (v2.8.2 prints EIP).
+        #expect(try field("ORC", 1).length == "2..2")
+        #expect(try field("ORC", 1).table == "0119")
+        #expect(try field("ORC", 4).dataType == "EI")
+        // CH04 4.5.3 OBR (p. 54): `4  CWE R 9999 00238 Universal Service Identifier`.
+        #expect(try field("OBR", 4).dataType == "CWE")
+        #expect(try field("OBR", 4).optionality == .required)
+        // CH04A 4A.4.7 RXA (p. 88): `5  CWE R 0292 00347`; `11  LA2 B` (W from v2.8).
+        #expect(try field("RXA", 5).optionality == .required)
+        #expect(try field("RXA", 11).dataType == "LA2")
+        #expect(try field("RXA", 11).optionality == .backwardCompat)
+    }
 }

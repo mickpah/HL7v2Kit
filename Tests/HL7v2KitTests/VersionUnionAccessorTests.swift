@@ -157,7 +157,7 @@ struct VersionUnionAccessorTests {
     @Test("A retype note points to an existing accessor of that type before viewed(as:)")
     func retypeNotePrefersAccessor() throws {
         let species = try doc("PID", "speciesCode")
-        #expect(species.contains("v2.6 prints `CWE`: use `taxonomicClassificationCode`."))
+        #expect(species.contains("v2.6, v2.7.1 print `CWE`: use `taxonomicClassificationCode`."))
         #expect(!species.contains("viewed(as: CWE.self)"))
     }
 
@@ -174,7 +174,7 @@ struct VersionUnionAccessorTests {
     func renameWording() throws {
         let db1 = try String(contentsOf: Self.generated.appendingPathComponent("DB1.swift"), encoding: .utf8)
         #expect(!db1.contains("public var disabilityIndicator"))
-        #expect(try doc("DB1", "disabledIndicator").contains("v2.4, v2.6, v2.8.2 print this element as `Disability Indicator`."))
+        #expect(try doc("DB1", "disabledIndicator").contains("v2.4, v2.6, v2.7.1, v2.8.2 print this element as `Disability Indicator`."))
         let producersID = try doc("OBX", "producersID")
         #expect(producersID.contains("Same element as `producersReference`, renamed in v2.6; typed as v2.6 prints it."))
         #expect(producersID.contains("v2.3, v2.3.1, v2.4 print this element as `Producer's ID` (`CE`): use `producersReference`."))

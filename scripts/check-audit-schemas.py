@@ -294,6 +294,8 @@ def check_unreadable_is_reported():
     blank = audit.defining_rows([("EVN", [{"index": 2, "optionality": "R", "len": ""}])])
     assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.8.2") == ({""}, None), \
         "v2.8.2 prints LEN and C.LEN only if applicable (2.5.3.2)"
+    assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.7.1") == ({""}, None), \
+        "v2.7.1 prints LEN and C.LEN only if applicable (2.5.3.2, CH02 p. 8; scan A19)"
     assert audit.read_slot(blank, {}, "EVN", 2, "M25", "v2.6")[1] == "blank cell"
     assert audit.unreadable_whitelisted("M19", "v2.6", "SCD", 37, "blank cell")
     assert not audit.unreadable_whitelisted("M19", "v2.6", "SCD", 38, "blank cell")
@@ -422,9 +424,7 @@ def _script(name):
 # mode skips it silently. A staged rollout names here the maps it has not wired yet, each with
 # the task that wires it; an entry that is no longer missing fails too, so the list empties
 # as the rollout lands and never goes stale.
-VERSION_MAPS_PENDING = {
-    "audit-schemas.py CHAPTER_GLOBS": {"2.7.1"},       # P10-4a (segment chapters)
-}
+VERSION_MAPS_PENDING = {}   # P10-4a wired the last one (CHAPTER_GLOBS; see CHAPTER_GLOBS_STAGED)
 
 
 def _modelled_versions():
@@ -469,10 +469,16 @@ def check_version_maps_agree():
                     assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
 
 
-def pending_versions_released(version_source):
-    """Pending map entries whose version Version.swift already declares as a case."""
+def pending_versions_released(version_source, pending=None):
+    """Pending map entries whose version Version.swift already declares as a case. The staged
+    chapter globs (audit CHAPTER_GLOBS_STAGED, P10-4a) count as pending CHAPTER_GLOBS."""
+    if pending is None:
+        pending = dict(VERSION_MAPS_PENDING)
+        staged = {v.lstrip("v") for v in audit.CHAPTER_GLOBS_STAGED}
+        if staged:
+            pending["audit-schemas.py CHAPTER_GLOBS (staged)"] = staged
     declared = set(re.findall(r"\bcase\s+v(\d+(?:_\d+)*)\b", version_source))
-    return sorted((name, v) for name, versions in VERSION_MAPS_PENDING.items()
+    return sorted((name, v) for name, versions in pending.items()
                   for v in versions if v.replace(".", "_") in declared)
 
 
@@ -480,9 +486,15 @@ def check_pending_maps_empty_once_released():
     # P10-1 fix round 1: VERSION_MAPS_PENDING is a staging list only. Once Version.swift
     # declares the case (P10-6), every map must name the version, as DEFERRED_VERSIONS is
     # asserted empty.
-    assert pending_versions_released("    case v2_6   = \"2.6\"\n    case v2_7_1 = \"2.7.1\"\n"), \
+    sample = {"audit-schemas.py CHAPTER_GLOBS": {"2.7.1"}}
+    assert pending_versions_released("    case v2_6   = \"2.6\"\n    case v2_7_1 = \"2.7.1\"\n", sample), \
         "a declared v2_7_1 case with v2.7.1 still pending must be caught"
-    assert not pending_versions_released("    case v2_6   = \"2.6\"\n"), "an undeclared version may stay pending"
+    assert not pending_versions_released("    case v2_6   = \"2.6\"\n", sample), "an undeclared version may stay pending"
+    # P10-4a: a staged (partial) chapter glob is pending too, so it cannot outlive P10-6.
+    if audit.CHAPTER_GLOBS_STAGED:
+        assert pending_versions_released("    case v2_7_1 = \"2.7.1\"\n"), "a staged glob must be caught"
+    assert set(audit.CHAPTER_GLOBS_STAGED) <= set(audit.CHAPTER_GLOBS)
+    assert all(len(why.strip()) >= 20 for why in audit.CHAPTER_GLOBS_STAGED.values())
     source = open(os.path.join(os.path.dirname(HERE), "Sources/HL7v2Kit/Version.swift")).read()
     stale = pending_versions_released(source)
     assert not stale, f"Version.swift declares these versions but their maps are still pending: {stale}"

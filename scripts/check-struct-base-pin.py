@@ -78,7 +78,7 @@ def make_scratch_schemas(scratch):
     schemas = os.path.join(scratch, "schemas")
     shutil.copytree(os.path.join(REPO, "Resources", "schemas"), schemas)
     fake = os.path.join(schemas, "v2.7.1")
-    os.makedirs(fake)
+    os.makedirs(fake, exist_ok=True)   # P10-4a: the real v2.7.1 schemas exist from CH02 to CH04A
     with open(os.path.join(schemas, "v2.8.2", "PRT.json"), encoding="utf-8") as f:
         prt = json.load(f)
     prt["version"] = "2.7.1"

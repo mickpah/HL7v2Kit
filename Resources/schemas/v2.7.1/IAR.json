@@ -1,0 +1,11 @@
+{
+  "segmentID": "IAR",
+  "version": "2.7.1",
+  "description": "Allergy Reaction",
+  "fields": [
+    { "index": 1, "swiftName": "allergyReactionCode", "name": "Allergy Reaction Code", "dataType": "CWE", "optionality": "R", "repeatability": "1" },
+    { "index": 2, "swiftName": "allergySeverityCode", "name": "Allergy Severity Code", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0128"] },
+    { "index": 3, "swiftName": "sensitivityToCausativeAgentCode", "name": "Sensitivity to Causative Agent Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0436"] },
+    { "index": 4, "swiftName": "management", "name": "Management", "dataType": "ST", "length": "250=", "optionality": "O", "repeatability": "1" }
+  ]
+}

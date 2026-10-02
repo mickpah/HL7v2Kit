@@ -324,6 +324,14 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
     let itemStart = columns.first { $0.key == "ITEM" }?.start ?? nameStart
     let contStart = runs(in: line).map(\.start).filter { $0 >= itemStart - 2 }.min() ?? nameStart
     let cont = elementName(from: line, nameStart: min(nameStart, contStart))
+    // P10-4a: a body-prose line after the table is one run that starts left of the ITEM#
+    // column and runs on into the name column; only its tail lies in the name column, and
+    // that tail was glued onto the last row's name (v2.7.1 CH04 BPX-21 "BP Dispensing
+    // Individual mercially prepared blood product that is ...", p. 127; the same bleed hit last
+    // rows on every version, among them v2.8.2 RQ1-7 and OBX-25). A wrapped name lies
+    // wholly at or after the ITEM# column, and a wrapped cell to its left (a TBL# or DT
+    // fragment) ends before it.
+    if runs(in: line).contains(where: { $0.start < itemStart - 2 && $0.end > itemStart }) { return }
     if isNameContinuation(cont, currentName: rows[rows.count-1].name) {
         rows[rows.count-1].name += (rows[rows.count-1].name.isEmpty ? "" : " ") + cont
     }
@@ -456,7 +464,24 @@ func selfCheckRepeatability() -> Never {
         let got = [r.len, r.clen, r.dt, r.opt, r.rp]
         if got != want { failed += 1; print("FAIL row \(line.debugDescription): got \(got), want \(want)") }
     }
-    let total = cases.count + optCases.count + rowCases.count
+    // P10-4a: a wrapped element name continues the last row; a body-prose line that runs from
+    // the left margin into the name column does not (v2.7.1 CH04 BPX-21, p. 127).
+    let contHeader = "SEQ     LEN     C.LEN   DT      OPT    RP/#     TBL#     ITEM#   ELEMENT NAME"
+    let contRow = "21                      XCN     O                         01734   BP Dispensing Individual"
+    let contCases: [(String, String)] = [
+        ("                                                                 and Location", "BP Dispensing Individual and Location"),
+        ("          blood product is defined as any type of blood component or commercially prepared blood product that is",
+         "BP Dispensing Individual"),
+    ]
+    for (line, want) in contCases {
+        guard let cols = detectHeader(contHeader), let r = parseRow(contRow, columns: cols) else {
+            failed += 1; print("FAIL cont: row not parsed"); continue
+        }
+        var rows = [r]
+        appendContinuation(line, to: &rows, columns: cols)
+        if rows[0].name != want { failed += 1; print("FAIL cont \(line.prefix(30).debugDescription): got \(rows[0].name)") }
+    }
+    let total = cases.count + optCases.count + rowCases.count + contCases.count
     print("\(total - failed) passed, \(failed) failed")
     exit(failed == 0 ? 0 : 1)
 }

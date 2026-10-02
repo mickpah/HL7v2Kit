@@ -385,6 +385,13 @@ UNREADABLE_WHITELIST = {
                                    "for Sequence Condition Code, a range with no maximum (section "
                                    "2.5.5 prints min..max); schema keeps '2..' verbatim, and how it "
                                    "validates is P6-6's to decide",
+    ("M25", "v2.7.1", "TQ2", 6, 6, "malformed print"): "v2.7.1 CH04 section 4.5.5 TQ2 attribute table (p. 80) prints "
+                                   "LEN '2..' for Sequence Condition Code, a range with no maximum, "
+                                   "as v2.8.2 does; schema keeps '2..' verbatim",
+    ("M25", "v2.7.1", "RXG", 13, 13, "malformed print"): "v2.7.1 CH04A section 4A.4.6 RXG attribute table (p. 78) prints "
+                                   "LEN '(1..250)' in parentheses for the CWE RXG-13, a shape section "
+                                   "2.5.5 does not define; schema keeps the range '1..250' that the "
+                                   "v2.8.2 table prints for the same element",
 }
 UNREADABLE_WHITELIST = {k: (v % BLANK_OPT if "%s" in v else v) for k, v in UNREADABLE_WHITELIST.items()}
 
@@ -446,6 +453,20 @@ CHAPTER_GLOBS = {
     "v2.5.1": ["HL7_v251_PDF/V251_CH*.pdf"],
     "v2.6":   ["HL7_v26_PDF/V26_CH*.pdf"],
     "v2.8.2": ["HL7_V2.8.2_PDF/PDF/V282_CH*.pdf"],
+    # P10-4a: v2.7.1 is staged (CHAPTER_GLOBS_STAGED). Only the chapters whose segments are
+    # authored are swept, so the presence check holds them in full and stays silent on the
+    # chapters still to come.
+    "v2.7.1": ["HL7_V271_PDF/PDF/V271_CH02*.pdf", "HL7_V271_PDF/PDF/V271_CH03*.pdf",
+               "HL7_V271_PDF/PDF/V271_CH04*.pdf"],
+}
+
+# P10-4a: a version whose CHAPTER_GLOBS entry covers only some chapters while its segment
+# schemas are authored in stages, with the task that widens it. Not a deferral (that needs an
+# owner decision, see DEFERRED_VERSIONS): every swept chapter gets the full presence check.
+# check-audit-schemas.py fails once Version.swift declares a staged version, so the entry
+# cannot outlive the rollout.
+CHAPTER_GLOBS_STAGED = {
+    "v2.7.1": "P10-4b (CH05 to CH09) and P10-4c (CH10 to CH17) widen the glob to V271_CH*.pdf",
 }
 
 # M6-O6 code-table registry. The per-version table JSON lives beside the schemas; the
@@ -830,11 +851,12 @@ AUDIT_TOKENS = {"M19": ("optionality", OPTIONALITY_TOKEN), "M22": ("repeatabilit
 
 
 def blank_length_is_print(version, row):
-    """M25. True where a blank LEN cell in a parsed row is itself the print. v2.8.2: LEN and
-    C.LEN are printed only "if applicable" (sections 2.5.3.2 and 2.5.3.3), and a field without
-    them takes its data type's (2.5.5.4); composite types carry none. Every version: a withdrawn
-    field (OPT W, v2.6 section 2.5.3.4) prints no length and no data type."""
-    return version == "v2.8.2" or (row.get("optionality") or "").strip() == "W"
+    """M25. True where a blank LEN cell in a parsed row is itself the print. v2.7.1 and v2.8.2:
+    LEN and C.LEN are printed only "If applicable" (sections 2.5.3.2 and 2.5.3.3; v2.7.1 CH02
+    p. 8), and a field without them takes its data type's (2.5.5.4); composite types carry
+    none. Every version: a withdrawn field (OPT W, v2.6 section 2.5.3.4) prints no length and
+    no data type."""
+    return version in ("v2.7.1", "v2.8.2") or (row.get("optionality") or "").strip() == "W"
 
 
 def read_slot(defining, union, seg, index, audit, version):
