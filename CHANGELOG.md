@@ -125,6 +125,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now says the field repeats. Codegen fails on an `…All` name that collides with another
   accessor. The v3.13.0 segment-struct surface is checked by `SegmentReleasedSurfaceTests`.
   Additive.
+- **V282-C10: version-union typed accessors.** Generated segment structs keep their
+  v2.5.1 base (or the earliest defining version) and add what the other supported
+  versions define (530 accessors):
+  - fields past the base maximum and positions a later version prints under another
+    element name, each with its later name and type (245; for example PID-40,
+    ORC-32..34, OBR-51..54, OBX-26..30, and `OBX.interpretationCodes: CWE?` for v2.8.2
+    OBX-8);
+  - `<name>As<T>` where a version prints a scalar or raw field as a composite (187; for
+    example `CON.languageTranslatedToAsCWE`);
+  - `<name>All` wherever any supported version repeats the field (98 more, 634 in all:
+    16 base fields that repeat only in another version, 49 later element names, 33
+    `As<T>` views; for example `MRG.priorAlternateVisitIdAll`).
+
+  DocC names the versions each accessor applies to and says that on another version's
+  message it returns whatever the position holds. Composite-to-composite retypes (CE to
+  CWE) carry a DocC note pointing at `viewed(as:)`. A rename and a redefinition are
+  treated alike: OBX-20..22, reserved in v2.5.1, keep their reserved accessors, and the
+  elements v2.6 defines there (Observation Site, Observation Instance Identifier, Mood
+  Code) get their own. The v3-C5 fallback pass is
+  folded into the union pass. No existing accessor changes name or type. Additive.
 
 ### Added — P5-5: field-local component grammar for pre-v2.5 `CM` fields
 

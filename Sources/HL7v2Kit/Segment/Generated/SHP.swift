@@ -3,6 +3,10 @@
 // Regenerate via scripts/regenerate-typed-segments.sh
 
 /// Shipment segment (HL7 v2.8.2).
+///
+/// Defined in HL7 v2.8.2.
+/// Accessors read by field position, so one whose DocC names fewer versions returns
+/// whatever that position holds on another version's wire.
 public struct SHP: TypedSegment {
     public static let segmentID = "SHP"
     public let fields: [Field]

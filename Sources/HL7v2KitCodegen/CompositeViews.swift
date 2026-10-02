@@ -218,10 +218,3 @@ func emitCompositeViews(specFile: URL, outputRoot: URL, dataTypesByVersion: [Str
         print("emitted \(outFile.path)")
     }
 }
-
-/// Numeric HL7 version order: "2.3" < "2.3.1" < "2.4" < "2.10".
-func versionLess(_ a: String, _ b: String) -> Bool {
-    let x = a.split(separator: ".").map { Int($0) ?? 0 }
-    let y = b.split(separator: ".").map { Int($0) ?? 0 }
-    return x.lexicographicallyPrecedes(y)
-}

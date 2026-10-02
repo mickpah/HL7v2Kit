@@ -58,16 +58,17 @@ func fieldRepeats(_ field: FieldSchema) -> Bool {
 
 /// Emit the accessors for one field.
 /// - name: accessor name; defaults to the schema `swiftName`.
-/// - notes: extra DocC sentences (P9-5 version notes).
-/// - single: emit the singular accessor (and its deprecated aliases).
-/// - all: emit `<name>All`; defaults to "the field repeats".
+/// - notes: extra DocC sentences (P9-5 version notes) for both the singular and the `…All` accessor.
+/// - single: emit the singular accessor.
+/// - all: emit `<name>All`; defaults to "the field repeats" in this schema.
 /// - plural: emit the Track B `1-n` column accessor.
+/// - aliases: emit the P6-9 deprecated aliases (released names only, so base schemas only).
 func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = nil,
                    notes: [String] = [], single: Bool = true, all: Bool? = nil,
-                   plural: Bool = true) -> String {
+                   plural: Bool = true, aliases: Bool = true) -> String {
     let accessorName = name ?? field.swiftName
     let shape = accessorShape(field.dataType, index: field.index)
-    let repeats = fieldRepeats(field)
+    let repeats = all ?? fieldRepeats(field)
     var summary = "\(segmentID)-\(field.index): \(field.name). HL7 data type `\(field.dataType)`.\(shape.docTail)"
     if repeats {
         summary += " Repeating field: this accessor reads the first repetition; `\(accessorName)All` returns every repetition."
@@ -78,9 +79,9 @@ func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = ni
             "    public var \(escapedIdentifier(accessorName)): \(shape.type) {",
             "        \(shape.body)",
             "    }",
-        ].joined(separator: "\n") + deprecatedAliases(for: field, segmentID: segmentID, returnType: shape.type))
+        ].joined(separator: "\n") + (aliases ? deprecatedAliases(for: field, segmentID: segmentID, returnType: shape.type) : ""))
     }
-    if all ?? repeats {
+    if repeats {
         var allDoc = [
             "\(segmentID)-\(field.index): every repetition of \(field.name), in wire order. Passes",
             "``TypedSegment/repetitions(_:)`` through unchanged, so the count matches the wire and",
@@ -92,7 +93,7 @@ func swiftAccessor(for field: FieldSchema, segmentID: String, name: String? = ni
             allDoc.append("An element is `nil` when that repetition is not a single scalar (more than one")
             allDoc.append("component or subcomponent), as for the singular accessor.")
         }
-        blocks.append((allDoc + (single ? [] : notes)).map { "    /// \($0)" }.joined(separator: "\n") + "\n" + [
+        blocks.append((allDoc + notes).map { "    /// \($0)" }.joined(separator: "\n") + "\n" + [
             "    public var \(escapedIdentifier(accessorName + "All")): \(shape.allType) {",
             "        \(shape.allBody)",
             "    }",

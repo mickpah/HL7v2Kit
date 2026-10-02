@@ -1,5 +1,5 @@
 // RepeatingFieldAccessorTests.swift
-// P9-4 (V251-C11): every repeating field (`*` or a bound) has a `…All`
+// P9-4 (V251-C11), P9-5: every field that repeats (`*` or a bound) in any supported version has a `…All`
 // accessor that returns every repetition in wire order, agreeing with `~n`
 // path access and with `TypedSegment.repetitions(_:)`.
 
@@ -93,49 +93,81 @@ struct RepeatingFieldAccessorTests {
         .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
 
     private struct Schema: Decodable {
-        struct Field: Decodable { let index: Int; let swiftName: String; let repeatability: String }
+        struct Field: Decodable { let index: Int; let swiftName: String; let dataType: String; let repeatability: String }
         let segmentID: String
+        let version: String
         let fields: [Field]
     }
 
-    /// The schema each struct is generated from: canonical v2.5.1, else the earliest definer.
-    private static func emittingSchemas() throws -> [Schema] {
+    private static func versionKey(_ v: String) -> [Int] { v.split(separator: ".").map { Int($0) ?? 0 } }
+
+    /// Every version's schema per segment, ascending; the struct's base is canonical v2.5.1,
+    /// else the earliest definer (P9-5).
+    private static func schemasBySegment() throws -> [String: [Schema]] {
         let fm = FileManager.default
         let schemasRoot = root.appendingPathComponent("Resources/schemas")
-        var order = try fm.contentsOfDirectory(atPath: schemasRoot.path).filter { $0.hasPrefix("v") }.sorted()
-        order.removeAll { $0 == "v2.5.1" }
-        order.insert("v2.5.1", at: 0)
-        var byID: [String: Schema] = [:]
-        for dir in order {
+        var out: [String: [Schema]] = [:]
+        for dir in try fm.contentsOfDirectory(atPath: schemasRoot.path).filter({ $0.hasPrefix("v") }) {
             let url = schemasRoot.appendingPathComponent(dir)
-            for file in try fm.contentsOfDirectory(atPath: url.path).sorted() where file.hasSuffix(".json") {
+            for file in try fm.contentsOfDirectory(atPath: url.path) where file.hasSuffix(".json") {
                 let schema = try JSONDecoder().decode(Schema.self, from: Data(contentsOf: url.appendingPathComponent(file)))
-                if byID[schema.segmentID] == nil { byID[schema.segmentID] = schema }
+                out[schema.segmentID, default: []].append(schema)
             }
         }
-        return byID.values.sorted { $0.segmentID < $1.segmentID }
+        return out.mapValues { $0.sorted { versionKey($0.version).lexicographicallyPrecedes(versionKey($1.version)) } }
     }
 
-    @Test("Exactly the repeating fields of each generating schema have an All accessor, and its singular DocC says so")
+    /// The `…All` names the union surface owes a segment, `<name>As<T>All` aside: a base
+    /// field that repeats in any version that prints it (an earlier version under any name,
+    /// a later one under the base name), and a later element name that repeats in any
+    /// version that prints it.
+    private static func expectedAll(_ schemas: [Schema]) -> Set<String> {
+        let base = schemas.first { $0.version == "2.5.1" } ?? schemas[0]
+        let baseKey = versionKey(base.version)
+        var expected: Set<String> = []
+        for schema in schemas {
+            let earlier = versionKey(schema.version).lexicographicallyPrecedes(baseKey)
+            for field in schema.fields where !field.dataType.isEmpty && field.repeatability != "1" {
+                let baseField = base.fields.first { $0.index == field.index }
+                if earlier, let baseField {
+                    expected.insert(baseField.swiftName + "All")
+                } else {
+                    expected.insert(field.swiftName + "All")
+                }
+            }
+        }
+        return expected
+    }
+
+    @Test("Every field that repeats in any version has an All accessor, and its singular DocC says so")
     func coverage() throws {
         let generated = Self.root.appendingPathComponent("Sources/HL7v2Kit/Segment/Generated")
         var total = 0
-        for schema in try Self.emittingSchemas() {
-            let text = try String(contentsOf: generated.appendingPathComponent("\(schema.segmentID).swift"), encoding: .utf8)
-            let declared = Set(text.components(separatedBy: "\n")
+        var asTotal = 0
+        for (segmentID, schemas) in try Self.schemasBySegment().sorted(by: { $0.key < $1.key }) {
+            let text = try String(contentsOf: generated.appendingPathComponent("\(segmentID).swift"), encoding: .utf8)
+            let vars = Set(text.components(separatedBy: "\n")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { $0.hasPrefix("public var ") }
-                .compactMap { $0.dropFirst("public var ".count).split(separator: ":").first.map(String.init) }
-                .filter { $0.hasSuffix("All") })
-            let expected = Set(schema.fields.filter { $0.repeatability != "1" }.map { $0.swiftName + "All" })
-            #expect(declared == expected, "\(schema.segmentID): All accessors \(declared.sorted()) != \(expected.sorted())")
-            for field in schema.fields where field.repeatability != "1" {
-                #expect(text.contains("\(schema.segmentID)-\(field.index): every repetition of"),
-                        "\(schema.segmentID)-\(field.index): no All DocC")
+                .compactMap { $0.dropFirst("public var ".count).split(separator: ":").first.map(String.init) })
+            let declared = vars.filter { $0.hasSuffix("All") }
+            let asAll = declared.filter { $0.range(of: "As[A-Z]{2,3}All$", options: .regularExpression) != nil }
+            let expected = Self.expectedAll(schemas)
+            #expect(declared.subtracting(asAll) == expected,
+                    "\(segmentID): All accessors \(declared.subtracting(asAll).sorted()) != \(expected.sorted())")
+            for name in asAll {
+                #expect(vars.contains(String(name.dropLast(3))), "\(segmentID): \(name) without its singular")
+            }
+            for name in expected {
+                let single = String(name.dropLast(3))
+                #expect(text.contains("Repeating field: this accessor reads the first repetition; `\(name)` returns every repetition."),
+                        "\(segmentID).\(single): singular DocC does not name \(name)")
             }
             total += expected.count
+            asTotal += asAll.count
         }
-        #expect(total == 536)
+        #expect(total == 601)
+        #expect(asTotal == 33)
         let pid = try String(contentsOf: generated.appendingPathComponent("PID.swift"), encoding: .utf8)
         #expect(pid.contains("Repeating field: this accessor reads the first repetition; `patientIdentifierListAll` returns every repetition."))
     }
