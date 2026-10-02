@@ -245,6 +245,20 @@ struct MessageStructureValidationTests {
         #expect(try structureIssues(Self.wire("ACK", ["MSA|AA|MSG00001"])).isEmpty)
     }
 
+    @Test("ADT^A01^ACK: ACK^* accepts only message code ACK, so the mismatch alone")
+    func ackStructureUnderADT() throws {
+        let issues = try structureIssues(Self.wire("ADT^A01^ACK", [Self.evn, Self.pid, Self.pv1]), severity: .warning)
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: "ACK", trigger: "ADT^A01")])
+        #expect(issues.first?.severity == .warning)
+    }
+
+    @Test("A valid ADT^A02^ADT_A02 gets the not-modelled info issue only, never a mismatch")
+    func a02UnderA02() throws {
+        let issues = try structureIssues(Self.wire("ADT^A02^ADT_A02", [Self.evn, Self.pid, Self.pv1]), severity: .warning)
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A02")])
+        #expect(issues.first?.severity == .info)
+    }
+
     // MARK: - Version rule
 
     @Test("A recognised version with no structure data (v2.4) is an info issue")

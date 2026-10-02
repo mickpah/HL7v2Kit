@@ -9,6 +9,10 @@ import Foundation
 ///   switch with `@unknown default`.
 public enum BuilderError: Error, Equatable, Sendable {
     case missingMSH
+    /// ``MessageBuilder/acknowledgment(to:code:messageControlID:dateTime:)``
+    /// was given a message with no MSH segment or an empty MSH-10, which
+    /// MSA-2 must echo (v2.5.1 CH02 §2.9.2.2).
+    case acknowledgedMessageControlIDMissing
 }
 
 /// Builds an HL7 v2 `Message` segment-by-segment.

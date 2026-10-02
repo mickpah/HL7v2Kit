@@ -72,6 +72,18 @@ struct SignatureCompatibilityTests {
         #expect(notModelled("SIU_S12") == .messageStructureNotModelled(structure: "SIU_S12"))
     }
 
+    @Test("P8-7 acknowledgment builder: static method, Table 0008 codes and the additive BuilderError case")
+    func acknowledgment() throws {
+        let make: (Message, AcknowledgmentCode, String, String) throws -> Message =
+            MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)
+        #expect(AcknowledgmentCode.allCases.map(\.rawValue) == ["AA", "AE", "AR", "CA", "CE", "CR"])
+        let error: BuilderError = .acknowledgedMessageControlIDMissing
+        let original = try Parser().parse("MSH|^~\\&|A|B|C|D|20240101120000||ADT^A01^ADT_A01|M1|P|2.5.1")
+        #expect(try make(original, .applicationAccept, "X1", "20240101120001")["MSA-2"] == "M1")
+        let headerless = Message(version: .v2_5_1, encodingCharacters: .default, segments: [])
+        #expect(throws: error) { try make(headerless, .applicationAccept, "X1", "20240101120001") }
+    }
+
     @Test("P6-4 repetition-bound severity is a mutable IssueSeverity? property defaulting to .warning")
     func repetitionBoundSeverity() {
         let severity: WritableKeyPath<ValidationOptions, IssueSeverity?> = \.repetitionBoundSeverity

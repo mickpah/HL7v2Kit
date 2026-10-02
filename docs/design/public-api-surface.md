@@ -11,7 +11,9 @@
 > (15 codegen'd segments at compile time → 109 today, all additive).
 > P8-3 (ADR-019, unreleased) adds three hand-written public types, `MessageStructure`,
 > `StructureElement` and `MessageStructureTable` (see "Message structures" below), taking
-> that count 75 → 78.
+> that count 75 → 78. P8-7 (ADR-019 decision 9, unreleased) adds `AcknowledgmentCode`
+> (78 → 79), the static method `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)`
+> and the case `BuilderError.acknowledgedMessageControlIDMissing` (see "Acknowledgment builder").
 > Read this file with those deltas in mind; a fresh inventory belongs to the v2.0 gate if one runs.
 
 **Compiled:** 2026-07-09 (v0.18 cycle, ROADMAP M3 API stabilisation).
@@ -38,10 +40,13 @@ Every component that any supported version defines has a named accessor (hand-wr
 ### Message structures (P8-3, ADR-019; unreleased)
 `MessageStructure` (struct: `id`, `version`, `triggers`, `citation`, `elements`, `init(id:version:triggers:citation:elements:)`, `accepts(messageCode:triggerEvent:)`), `StructureElement` (indirect enum: `segment(_:min:max:)`, `group(_:min:max:elements:)`, `min`, `max`; **open**: ADR-019 adds a `choice` case before the first version that prints `< X | Y >`, so its DocC carries the `@unknown default` note), `MessageStructureTable` (enum namespace: `structure(_:version:)`, `structures(messageCode:triggerEvent:version:)`, both resolving `Version.grammarVersion`). Generated into `Structures/Generated/` from `Resources/structures/`; pinned in `SignatureCompatibilityTests`. The Validator does not read it yet (P8-5).
 
+### Acknowledgment builder (P8-7, ADR-019 decision 9; unreleased)
+`AcknowledgmentCode` (enum, HL7 Table 0008: `applicationAccept` `AA`, `applicationError` `AE`, `applicationReject` `AR`, `commitAccept` `CA`, `commitError` `CE`, `commitReject` `CR`; **open**), `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)` (static, `throws -> Message`) and `BuilderError.acknowledgedMessageControlIDMissing`. Builds the general ACK; no protocol logic.
+
 ### Transport
 `MLLP` (enum namespace), `MLLPUnframer`.
 
-### Enums (17; `StructureElement` added by P8-3) — evolution classification per ADR-014
+### Enums (18; `StructureElement` added by P8-3, `AcknowledgmentCode` by P8-7) — evolution classification per ADR-014
 
 | Enum | Cases | Class | Note added |
 |------|-------|-------|-----------|
@@ -50,7 +55,7 @@ Every component that any supported version defines has a named accessor (hand-wr
 | `IssueCode` | 25 | **Open** | yes (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`; 25 after P8-5 `.messageStructureSegmentMissing(structure:segmentID:group:)`, `.messageStructureSegmentUnexpected(structure:segmentID:)`, `.messageStructureMismatch(declared:trigger:)` and `.messageStructureNotModelled(structure:)`) |
 | `ParseError` | 8 | **Open** | yes |
 | `PathError` | 3 | **Open** | yes |
-| `BuilderError` | 3 | **Open** | yes |
+| `BuilderError` | 2 (`missingMSH`; `acknowledgedMessageControlIDMissing` added by P8-7; the v1.0 compile's 3 lost two never-thrown cases in R10) | **Open** | yes |
 | `FieldOptionality` | 6 (R/O/C/X/B/W) | **Stable** — HL7's complete optionality-code set | — |
 | `FieldRepeatability` | 2 (single, multiple) | **Stable** | — |
 | `IssueSeverity` | 3 (info, warning, error) | **Stable** | — |
@@ -60,9 +65,10 @@ Every component that any supported version defines has a named accessor (hand-wr
 | `RequiredComponentSet.Semantics` | (and/or family) | **Stable** | — |
 | `Segment` | typed / unknown sum-type | **Stable** (shape closed; the *set of typed segments* grows additively via new struct members, not new `Segment` cases) | — |
 | `StructureElement` | 2 (segment, group) | **Open** (P8-3; a `choice` case is planned, ADR-019) | yes |
+| `AcknowledgmentCode` | 6 (AA, AE, AR, CA, CE, CR) | **Open** (P8-7; HL7 owns Table 0008, the same six codes on every supported version today) | yes |
 | `MLLP` / `SegmentGrammarTable` / `MessageStructureTable` | namespace enums (no cases) | n/a | — |
 
-The 7 **open** enums (6 at the v1.0 compile, plus `StructureElement`) each carry a DocC `- Note:` telling consumers to switch with `@unknown default` (added in this cycle). The **stable** enums are closed by their domain; the additive-only 1.x rule still applies if a domain ever surprises us, but no growth is anticipated.
+The 8 **open** enums (6 at the v1.0 compile, plus `StructureElement` and `AcknowledgmentCode`) each carry a DocC `- Note:` telling consumers to switch with `@unknown default` (added in this cycle). The **stable** enums are closed by their domain; the additive-only 1.x rule still applies if a domain ever surprises us, but no growth is anticipated.
 
 ## Conformances (part of the frozen contract)
 
