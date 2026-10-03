@@ -26,6 +26,11 @@ docs/DocC/build/
 # or any public tree. See NEXT_STEPS.md "Parallel-track / project-owner decisions".
 docs/standards/
 
+# HL7 v2.xml schema bundles — author-local reference material for the message-
+# structure group names (P8b, G13). Licensed HL7 content: never committed. No
+# trailing slash, so a symlink at this path is ignored as well as a directory.
+docs/XML-schemas
+
 # No PDF belongs in this repository. The spec PDFs are licensed content and the
 # only PDFs we handle; this is a belt-and-braces rule so a copy dropped outside
 # docs/standards/ still cannot be committed. No PDF has ever been tracked.

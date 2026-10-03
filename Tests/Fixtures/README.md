@@ -26,6 +26,12 @@ See `docs/design/HL7v2Kit-Spec.md` §10 for the anonymisation policy.
 3. Add a corresponding test in `Tests/HL7v2KitTests/` (directory-scanning
    suites pick up round-trip/fuzz coverage automatically; purpose-specific
    assertions need their own test).
+4. A valid-corpus fixture (any name not starting `malformed_`) must conform
+   to its declared message structure wherever that structure is modelled:
+   `FixtureStructureConformanceTests` checks every one with the ADR-019
+   structure check at `.error`. A fixture whose purpose is a structural
+   defect goes in that test's `deliberatelyNonConformant` list with its
+   reason, and its row below says it is structurally non-conformant by design.
 
 ## Line endings
 
@@ -51,15 +57,15 @@ but transparently fake). No real-world data sources.
 
 | File | Category | Purpose | Anonymisation log |
 |---|---|---|---|
-| `adt_a01_minimal.hl7` | ADT^A01 (admit) | MSH + PID + PV1 — smallest valid admit message | N/A — synthetic from scratch |
-| `adt_a01_with_nk1.hl7` | ADT^A01 (admit) | MSH + PID + NK1 + PV1 — admit with next-of-kin contact | N/A — synthetic from scratch |
+| `adt_a01_minimal.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 — smallest valid admit message (EVN added 2026-10-03, P8b-5) | N/A — synthetic from scratch |
+| `adt_a01_with_nk1.hl7` | ADT^A01 (admit) | MSH + EVN + PID + NK1 + PV1 — admit with next-of-kin contact (EVN added 2026-10-03, P8b-5) | N/A — synthetic from scratch |
 | `orm_o01_lab_order.hl7` | ORM^O01 (order) | MSH + PID + ORC + OBR — lab order for glucose | N/A — synthetic from scratch |
 | `oru_r01_chemistry.hl7` | ORU^R01 (result) | MSH + PID + OBR + 3 × OBX — chemistry panel results | N/A — synthetic from scratch |
 | `oru_r01_with_z_segment.hl7` | ORU^R01 + Z-segments | MSH + PID + ZAU + OBR + OBX + ZPI — AU-style Z-segment overlay | N/A — synthetic; Z-segments are facility-specific dummy data |
-| `edge_empty_fields.hl7` | Edge case | Empty fields + `\F\` `\S\` `\T\` escape sequences in NTE-3 | N/A — synthetic |
+| `edge_empty_fields.hl7` | Edge case | Empty fields + `\F\` `\S\` `\T\` escape sequences in a free-text narrative (OBX-5, FT; moved from a top-level NTE-3 that ADT_A01 does not define, and EVN added, 2026-10-03, P8b-5) | N/A — synthetic |
 | `malformed_missing_msh.hl7` | Malformed | Starts with PID instead of MSH — parser must throw `.missingMSH` | N/A — synthetic |
 | `malformed_invalid_encoding_chars.hl7` | Malformed | MSH-2 = `^^^^` (encoding chars not distinct) — parser must throw `.invalidMSH` | N/A — synthetic |
-| `adt_a01_with_allergies.hl7` | ADT^A01 (admit) | MSH + PID + PV1 + 2 × AL1 — admit with drug allergies | N/A — synthetic from scratch |
+| `adt_a01_with_allergies.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 + 2 × AL1 — admit with drug allergies (EVN added 2026-10-03, P8b-5) | N/A — synthetic from scratch |
 | `adt_a01_with_insurance.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 + IN1 — admit with insurance details | N/A — synthetic from scratch |
 | `adt_a01_emergency.hl7` | ADT^A01 (admit) | MSH + EVN + PID + PV1 — emergency-class admission | N/A — synthetic from scratch |
 | `adt_a04_register_clinic.hl7` | ADT^A04 (register) | MSH + EVN + PID + PV1 — outpatient clinic registration | N/A — synthetic from scratch |
@@ -87,17 +93,17 @@ but transparently fake). No real-world data sources.
 | `adt_a01_with_zau_zin.hl7` | ADT^A01 + Z-segments | ZAU (Medicare) + ZIN (insurance) interleaved before PV1 | N/A — synthetic; Z-segments are AU facility-specific dummy |
 | `orm_o01_z_billing.hl7` | ORM^O01 + Z-segment | ZBL (MBS bulk-bill) appended after OBR | N/A — synthetic; ZBL is dummy |
 | `oru_r01_z_lab_overlay.hl7` | ORU^R01 + Z-segments | ZLB (NATA accreditation) before OBR + ZRE (reflex) after OBX | N/A — synthetic; Z-segments dummy |
-| `msh_with_z_only.hl7` | MSH + Z-segment | Heartbeat-style: MSH + ZTX only (no PID) | N/A — synthetic from scratch |
+| `msh_with_z_only.hl7` | MSH + Z-segment | Heartbeat-style: MSH + ZTX only (no PID). Structurally non-conformant by design (ADR-019): it declares ADT^A01^ADT_A01 but carries none of EVN, PID and PV1, because the point is a message with nothing but MSH and one Z-segment; listed in `FixtureStructureConformanceTests.deliberatelyNonConformant` (2026-10-03, P8b-5) | N/A — synthetic from scratch |
 | `malformed_msh_too_short.hl7` | Malformed | MSH segment truncated to `MSH\|^~` — parser must throw `.invalidMSH("too short")` | N/A — synthetic |
 | `malformed_msh_no_field_sep_after_enc.hl7` | Malformed | Char after MSH-2 encoding chars isn't `\|` — `.invalidMSH("MSH-2 not followed by field separator")` | N/A — synthetic |
 | `malformed_unsupported_charset.hl7` | Malformed | MSH-18 = `GB18030` (unsupported) — `.unsupportedCharacterEncoding` | N/A — synthetic |
 | `malformed_empty.hl7` | Malformed | Zero-byte file — `.emptyInput` | N/A — synthetic |
-| `edge_unicode_diacritics.hl7` | Edge | UTF-8 names with diacritics (García, José, Søren, Müller) | N/A — synthetic |
-| `edge_repeating_pid3_identifiers.hl7` | Edge | PID-3 with 3 repetitions (MR + MC + NH) via `~` | N/A — synthetic |
-| `edge_long_address.hl7` | Edge | Very long PID-11 address components | N/A — synthetic |
-| `edge_escape_sequences_in_name.hl7` | Edge | `\F\`, `\H\`, `\N\`, `\X0D\` escape sequences in PID-5 and NTE | N/A — synthetic |
+| `edge_unicode_diacritics.hl7` | Edge | UTF-8 names with diacritics (García, José, Søren, Müller); EVN added 2026-10-03 (P8b-5) | N/A — synthetic |
+| `edge_repeating_pid3_identifiers.hl7` | Edge | PID-3 with 3 repetitions (MR + MC + NH) via `~`; EVN added 2026-10-03 (P8b-5) | N/A — synthetic |
+| `edge_long_address.hl7` | Edge | Very long PID-11 address components; EVN added 2026-10-03 (P8b-5) | N/A — synthetic |
+| `edge_escape_sequences_in_name.hl7` | Edge | `\F\`, `\H\`, `\N\`, `\X0D\` escape sequences in PID-5 and a free-text narrative (OBX-5, FT; moved from a top-level NTE that ADT_A01 does not define, and EVN added, 2026-10-03, P8b-5) | N/A — synthetic |
 | `edge_many_nte.hl7` | Edge | ORU with 4 trailing NTE segments after OBX | N/A — synthetic |
-| `edge_minimal_pid_phone_only.hl7` | Edge | Sparsely populated PID — name + phone only | N/A — synthetic |
+| `edge_minimal_pid_phone_only.hl7` | Edge | Sparsely populated PID — name + phone only; EVN and a minimal PV1 (PV1-2 `O`) added 2026-10-03 (P8b-5) so the message carries ADT_A01's required segments | N/A — synthetic |
 | `edge_obx_repeating_values.hl7` | Edge | OBX-5 + OBX-8 with `~` repetitions (3-sample BP series) | N/A — synthetic |
 | `adt_a01_v23.hl7` | Multi-version (v2.3) | v2.3 ADT^A01 admit — exercises the v2.3 grammar table (MSH cap at 15) | N/A — synthetic from scratch (v0.3-Z2) |
 | `orm_o01_v231.hl7` | Multi-version (v2.3.1) | v2.3.1 ORM^O01 order — exercises the v2.3.1 grammar table (PID cap at 30, ORC cap at 17) | N/A — synthetic from scratch (v0.3-Z2) |
@@ -125,6 +131,7 @@ Not messages: no fixture harness reads them, and they hold no patient data. `Seg
 
 ## Corrections log
 
+- **2026-10-03 — nine v2.5.1 ADT fixtures made structurally valid against ADT_A01; one marked non-conformant by design** (P8b-5, G14). The message-structure check (ADR-019) at `.error` found 15 findings on 10 fixtures. Nine lacked EVN (`adt_a01_minimal`, `adt_a01_with_allergies`, `adt_a01_with_nk1`, `edge_empty_fields`, `edge_escape_sequences_in_name`, `edge_long_address`, `edge_minimal_pid_phone_only`, `edge_repeating_pid3_identifiers`, `edge_unicode_diacritics`): each gains `EVN||<MSH-7>` after MSH (EVN-1 is B in v2.5.1, so it is left empty; EVN-2 repeats the synthetic MSH-7 timestamp). `edge_empty_fields` and `edge_escape_sequences_in_name` carried a top-level NTE that ADT_A01 does not define: the narrative, escape sequences unchanged, moves to an `OBX|1|FT|SYN-NOTE^Narrative note^L||...||||||F` in ADT_A01's OBX position. `edge_minimal_pid_phone_only` lacked PV1 and gains a minimal one (PV1-1 `1`, PV1-2 `O`). `msh_with_z_only` keeps its MSH + ZTX shape and is listed in `FixtureStructureConformanceTests.deliberatelyNonConformant`. All content remains synthetic; the PHI scan passes. The default validation digest is unchanged; with the structure check on, only the 12 corrected findings disappear.
 - **2026-09-21 — `MSH-9` completed in 48 v2.5.1 fixtures (49 MSH segments, batches included)** (M14). v2.5 onward prints all three `MSG` components as required; the fixtures carried `ADT^A01`-style values with no message structure, and the two ACK fixtures a bare `ACK`. Structures taken from v2.5.1 Table 0354 (`ADT_A01` for A01 / A04 / A08, `ORM_O01`, `ORU_R01`, `ACK^A01^ACK`). The v2.3, v2.3.1 and v2.4 fixtures are unchanged: those versions print no component optionality. Synthetic data; no PHI implications.
 - **2026-09-20 — ordering provider moved from OBR-17 to OBR-16 in 13 synthetic fixtures** (`oru_r01_*`, `edge_many_nte`, `edge_obx_repeating_values`). Each carried a provider value such as `DR12121212^Foster^Taylor` (an XCN) in OBR-17, Order Callback Phone Number (XTN), with OBR-16 empty: an off-by-one from when the fixtures were written. The component-level code-table check (M10-C) exposed it, because XTN.2 and XTN.3 are coded. Synthetic data; no PHI implications.
 - **2026-09-20 — `oru_r01_v24.hl7` MSH-18 changed from `UNICODE UTF-8` to `ASCII`** (A5): base v2.4 Table 0211 does not print the UTF-8 value.

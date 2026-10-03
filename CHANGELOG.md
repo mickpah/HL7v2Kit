@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P8b-5: synthetic fixtures conform to their message structures
+
+- Nine v2.5.1 ADT fixtures were not valid against ADT_A01 (v2.5.1 Chapter 3, section 3.3.1),
+  which the message-structure check (ADR-019) reported at `.error` as 12 of 15 corpus findings.
+  All nine gain an `EVN` after MSH (EVN-1, B in v2.5.1, left empty; EVN-2 repeats MSH-7);
+  `edge_empty_fields` and `edge_escape_sequences_in_name` move their top-level NTE narrative,
+  escape sequences unchanged, into an `OBX` (FT), which ADT_A01 defines; and
+  `edge_minimal_pid_phone_only` gains a minimal PV1. `msh_with_z_only` (MSH plus one
+  Z-segment) is structurally non-conformant by design and is marked as such. Every fixture
+  stays synthetic and the PHI scan passes. The default validation digest is byte-identical;
+  with the structure check on, only the 12 corrected findings disappear.
+- New always-on `FixtureStructureConformanceTests`: every parseable valid-corpus fixture is
+  validated with `messageStructureSeverity = .error` and must raise no structure finding
+  (`messageStructureNotModelled` aside), except the fixtures listed in its
+  `deliberatelyNonConformant` set, which must still raise one. The env-gated
+  `StructureMatcherCorpusTests` stays as the measurement tool for the spec examples.
+- `.gitignore` gains `docs/XML-schemas` (no trailing slash, so a worktree symlink is ignored
+  too): the HL7 v2.xml bundles are licensed content and are never committed.
+
 ### Changed — P10-8: the recipient-rule citation names the message's own version
 
 - `extraComponentsInPrimitiveField` and `extraComponentsInCompositeField` messages cited
