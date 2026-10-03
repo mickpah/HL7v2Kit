@@ -1283,7 +1283,7 @@ ITM|approvingRegulatoryAgencyAll|[XON]|16
 ITM|latexIndicator|CNE?|17
 ITM|rulingAct|CWE?|18
 ITM|rulingActAll|[CWE]|18
-ITM|itemNaturalAccountCode|CWE?|19
+ITM|itemNaturalAccountCode|String?|19
 ITM|approvedToBuyQuantity|String?|20
 ITM|approvedToBuyPrice|Field?|21
 ITM|taxableItemIndicator|CNE?|22
@@ -1295,6 +1295,7 @@ ITM|procedureCode|CNE?|27
 ITM|procedureCodeModifier|CNE?|28
 ITM|procedureCodeModifierAll|[CNE]|28
 ITM|specialHandlingCode|CWE?|29
+ITM|itemNaturalAccountCodeAsCWE|CWE?|19
 ITM|hazardousIndicator|CNE?|30
 ITM|sterileIndicator|CNE?|31
 ITM|materialDataSafetySheetNumber|EI?|32

@@ -2123,4 +2123,20 @@ struct TypedSegmentTests {
         #expect(add.addendumContinuationPointers.map { $0.stringValue } == ["part one", "part two"])
         #expect(add.addendumContinuationPointer == "part one")
     }
+
+    @Test("v2.6 ITM has its 29 printed fields; ITM-19 is IS on v2.6 and CWE from v2.7.1")
+    func v26ItemFields() throws {
+        // v2.6 CH17 section 17.4.2 ITM attribute table (pp. 9 to 10): 29 rows, `19  30  IS  O
+        // 0320  00282  Item Natural Account Code`, `29  705  CWE  O  0376  01370`.
+        let grammar = try #require(SegmentGrammarTable.v2_6["ITM"])
+        #expect(grammar.fields.map(\.index) == Array(1...29))
+        #expect(grammar.field(19)?.dataType == "IS")
+        #expect(grammar.field(19)?.table == "0320")
+        #expect(grammar.field(29)?.name == "Special Handling Code")
+        let wire = "MSH|^~\\&|A|B|C|D|20240101||MFN^M16|1|P|2.6\rITM|1||||||||||||||||||ACC-9\r"
+        let (message, itm) = try hydratedMessage(ITM.self, from: wire)
+        #expect(itm.itemNaturalAccountCode == "ACC-9")
+        #expect(itm.itemNaturalAccountCode == message["ITM-19"])
+        #expect(itm.itemNaturalAccountCodeAsCWE?.field.stringValue == "ACC-9")
+    }
 }

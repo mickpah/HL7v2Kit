@@ -47,61 +47,51 @@ public struct ITM: TypedSegment {
     }
 
     /// ITM-7: Manufacturer Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-7 holds on the wire.
     public var manufacturerIdentifier: EI? {
         field(7).map(EI.init(field:))
     }
 
     /// ITM-8: Manufacturer Name. HL7 data type `ST`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-8 holds on the wire.
     public var manufacturerName: String? {
         field(8)?.stringValue
     }
 
     /// ITM-9: Manufacturer Catalog Number. HL7 data type `ST`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-9 holds on the wire.
     public var manufacturerCatalogNumber: String? {
         field(9)?.stringValue
     }
 
     /// ITM-10: Manufacturer Labeler Identification Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-10 holds on the wire.
     public var manufacturerLabelerIdentificationCode: CWE? {
         field(10).map(CWE.init(field:))
     }
 
     /// ITM-11: Patient Chargeable Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-11 holds on the wire.
     public var patientChargeableIndicator: CNE? {
         field(11).map(CNE.init(field:))
     }
 
     /// ITM-12: Transaction Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-12 holds on the wire.
     public var transactionCode: CWE? {
         field(12).map(CWE.init(field:))
     }
 
     /// ITM-13: Transaction amount - unit. HL7 data type `CP`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-13 holds on the wire.
     public var transactionAmountUnit: Field? {
         field(13)
     }
 
     /// ITM-14: Stocked Item Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-14 holds on the wire.
     public var stockedItemIndicator: CNE? {
         field(14).map(CNE.init(field:))
     }
 
     /// ITM-15: Supply Risk Codes. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-15 holds on the wire.
     public var supplyRiskCodes: CWE? {
         field(15).map(CWE.init(field:))
     }
 
     /// ITM-16: Approving Regulatory Agency. HL7 data type `XON`. Returns the typed ``XON`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `approvingRegulatoryAgencyAll` returns every repetition.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-16 holds on the wire.
     public var approvingRegulatoryAgency: XON? {
         field(16).map(XON.init(field:))
     }
@@ -111,19 +101,16 @@ public struct ITM: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-16 holds on the wire.
     public var approvingRegulatoryAgencyAll: [XON] {
         repetitions(16).map(XON.init(field:))
     }
 
     /// ITM-17: Latex Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-17 holds on the wire.
     public var latexIndicator: CNE? {
         field(17).map(CNE.init(field:))
     }
 
     /// ITM-18: Ruling Act. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `rulingActAll` returns every repetition.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-18 holds on the wire.
     public var rulingAct: CWE? {
         field(18).map(CWE.init(field:))
     }
@@ -133,67 +120,57 @@ public struct ITM: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-18 holds on the wire.
     public var rulingActAll: [CWE] {
         repetitions(18).map(CWE.init(field:))
     }
 
-    /// ITM-19: Item Natural Account Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-19 holds on the wire.
-    public var itemNaturalAccountCode: CWE? {
-        field(19).map(CWE.init(field:))
+    /// ITM-19: Item Natural Account Code. HL7 data type `IS`.
+    /// v2.7.1, v2.8.2 print `CWE`: use `itemNaturalAccountCodeAsCWE`.
+    public var itemNaturalAccountCode: String? {
+        field(19)?.stringValue
     }
 
     /// ITM-20: Approved To Buy Quantity. HL7 data type `NM`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-20 holds on the wire.
     public var approvedToBuyQuantity: String? {
         field(20)?.stringValue
     }
 
     /// ITM-21: Approved To Buy Price. HL7 data type `MO`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-21 holds on the wire.
     public var approvedToBuyPrice: Field? {
         field(21)
     }
 
     /// ITM-22: Taxable Item Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-22 holds on the wire.
     public var taxableItemIndicator: CNE? {
         field(22).map(CNE.init(field:))
     }
 
     /// ITM-23: Freight Charge Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-23 holds on the wire.
     public var freightChargeIndicator: CNE? {
         field(23).map(CNE.init(field:))
     }
 
     /// ITM-24: Item Set Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-24 holds on the wire.
     public var itemSetIndicator: CNE? {
         field(24).map(CNE.init(field:))
     }
 
     /// ITM-25: Item Set Identifier. HL7 data type `EI`. Returns the typed ``EI`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-25 holds on the wire.
     public var itemSetIdentifier: EI? {
         field(25).map(EI.init(field:))
     }
 
     /// ITM-26: Track Department Usage Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-26 holds on the wire.
     public var trackDepartmentUsageIndicator: CNE? {
         field(26).map(CNE.init(field:))
     }
 
     /// ITM-27: Procedure Code. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-27 holds on the wire.
     public var procedureCode: CNE? {
         field(27).map(CNE.init(field:))
     }
 
     /// ITM-28: Procedure Code Modifier. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `procedureCodeModifierAll` returns every repetition.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-28 holds on the wire.
     public var procedureCodeModifier: CNE? {
         field(28).map(CNE.init(field:))
     }
@@ -203,15 +180,19 @@ public struct ITM: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-28 holds on the wire.
     public var procedureCodeModifierAll: [CNE] {
         repetitions(28).map(CNE.init(field:))
     }
 
     /// ITM-29: Special Handling Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
-    /// Defined in v2.7.1, v2.8.2. On a message of another version this returns whatever ITM-29 holds on the wire.
     public var specialHandlingCode: CWE? {
         field(29).map(CWE.init(field:))
+    }
+
+    /// ITM-19: Item Natural Account Code. HL7 data type `CWE`. Returns the typed ``CWE`` view; use `.field` for raw access.
+    /// ITM-19 viewed as the `CWE` that v2.7.1, v2.8.2 print (v2.6 prints `IS`). On a message of another version this views whatever ITM-19 holds on the wire.
+    public var itemNaturalAccountCodeAsCWE: CWE? {
+        field(19).map(CWE.init(field:))
     }
 
     /// ITM-30: Hazardous Indicator. HL7 data type `CNE`. Returns the typed ``CNE`` view; use `.field` for raw access.

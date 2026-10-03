@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P10-4d: v2.6 ITM fields 7 to 29
+
+- The v2.6 ITM schema stopped at ITM-6: the segment-table extractor ended the table at a
+  page-foot footnote (fixed in P10-4c). ITM-7 to ITM-29 are added from the v2.6 CH17
+  section 17.4.2 attribute table (pp. 9 to 10), so v2.6 validates them.
+- Added `ITM.itemNaturalAccountCodeAsCWE`: v2.6 prints ITM-19 IS, so the unreleased
+  `itemNaturalAccountCode` is now `String?` and the v2.7.1 / v2.8.2 CWE reading has its
+  own accessor. The released v3.13.0 surface is unchanged.
+
 ### Fixed — P10-4d: v2.8.2 withdrawn fields carry the printed data type
 
 - 30 v2.8.2 withdrawn (W) fields carried a data type the v2.8.2 attribute tables leave blank
