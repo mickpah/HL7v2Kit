@@ -856,7 +856,18 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   template and example master file query. The QBP^Q31/RSP^K31 pair (CH04 4.13.20, CH04A) is
   normative and stays. On a full read, an exclusion or erratum that matches nothing fails.
 - **Errata.** `errata` entries read a print typo as the intended text, each naming the
-  printed and intended text and where (`caption`, `group-mark`, `table-0354`).
+  printed and intended text and where (`caption`, `group-mark`, `table-0354`). 87 group-mark
+  entries (v2.5.1 14, v2.6 22, v2.7.1 41, v2.8.2 10): misspelt names (`OMSERVATION`,
+  `QUERY_RESPNSE`, `TIIMING`, `PAYER_MF_WENTRY`, `RESOURCE` for `RESOURCES`) and names printed
+  with a space or a slash (`PATIENT VISIT`, `SUBJECT_PERSON/ANIMAL_IDENTIFICATION`), each read
+  as the name the version's HL7 v2.xml bundle gives that group. A group mark the reader cannot
+  read is now an error, never dropped (it had been silently ignored, so such a group took a
+  bundle name instead of its printed one).
+- **Reader.** A footnote digit on its own line is furniture; one at the left margin opens the
+  page-foot footnotes, furniture up to the footer. A row with an empty description and text in
+  a later column (Chapter with a footnote number; v2.4's Group Control) is a row. A mark whose
+  `begin` or `end` wraps onto the next line is one mark; `End` reads as `end`. A non-notation
+  row at depth 0 ends the table.
 - **Shared triggers and Table 0354.** A trigger printed under several structures is a
   `shared-trigger` report row, declared by a cited `sharedTriggers` entry or not; the codegen
   is unchanged. Table 0354 is reconciled per version: a printed structure ID the table lacks

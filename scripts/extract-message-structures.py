@@ -85,7 +85,7 @@ TITLE_EVENTS = re.compile(r"\(\s*events?\s+([A-Z0-9]{3}(?:\s*(?:,|and|&|-|to)\s*
 FOOTNOTE = re.compile(r"^\s*\d{1,2}\s*$")      # a footnote digit on a line of its own (P8b-2a review)
 HEADING = re.compile(r"^(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+(\S.*\S)\s*$")   # 3.3.1, 4A.3.20, 2.B.7.5
 PAGE = re.compile(r"\bPage\s+(\d+[A-Z]?-\d+|\d+)\b")   # v2.7.1 and v2.8.2 number pages per chapter
-GROUP_MARK = re.compile(r"^---\s*([A-Z][A-Z0-9_]*)\s+(begin|end)\b")
+GROUP_MARK = re.compile(r"^---\s*([A-Z][A-Z0-9_]*)\s+((?i:begin|end))\b")   # "--- VISIT End" (v2.5.1 CSU_C09)
 TOKEN = re.compile(r"\s+|[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.|…|.")
 TRIGGER = re.compile(r"^[A-Z][A-Z0-9]{2}\^([A-Z0-9]{3}|\*)$")
 
@@ -175,11 +175,12 @@ def split_row(line, desc_col):
             if best is None or abs(m.end() - desc_col) < abs(best.end() - desc_col):
                 best = m
     if best is None:
-        # A row with no description whose right-hand text is only the Chapter column (or a
-        # footnote number beside it) is still a row, not prose (P8b-2a review: OUL_R23, OUL_R24).
-        tail = re.match(r"^(.*?\S)\s{4,}(\d{1,2}(?:\s+\d{1,2})?)$", s)
-        if tail and len(tail.group(1)) < desc_col:
-            return (tail.group(1).strip(), "")
+        # A row with an empty description whose other text sits in a later column (the Chapter
+        # column with a footnote number, OUL_R23 and OUL_R24; v2.4's Group Control column,
+        # RSP_K21) is still a row, not prose.
+        for m in re.finditer(r" {2,}", s):
+            if indent < m.start() < desc_col and m.end() > desc_col + 8:
+                return (s[:m.start()].strip(), "")
         return None
     return (s[:best.start()].strip(), s[best.end():].strip())
 
@@ -307,14 +308,19 @@ _NOTATION = re.compile(r"^(?:[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.
 def syntax_rows(lines, caption):
     """The syntax rows of caption's table, in order. Records page-break repeats of the caption
     and the page of the last row on the caption. A repeated Segments/Description row (v2.7.1,
-    v2.8.2) resets the columns; a footnote digit on a line of its own is furniture."""
+    v2.8.2) resets the columns; a footnote digit on a line of its own is furniture, and one at
+    the left margin opens the page-foot footnotes, read as furniture up to the page footer."""
     pages = page_labels(lines)
-    rows, depth = [], 0
+    rows, depth, foot = [], 0, False
     code_col, desc_col = caption.code_col, caption.desc_col
     caption.end_page = caption.page
     for i in range(caption.line + 1, len(lines)):
         line = lines[i].replace("\f", "")
-        if FURN.search(line) or not line.strip() or FOOTNOTE.match(line):
+        if FURN.search(line):
+            foot = False
+            continue
+        if foot or not line.strip() or FOOTNOTE.match(line):
+            foot = foot or bool(re.match(r"^\d{1,2}\s*$", line))
             continue
         m = match_caption(line, caption.era)
         if m:
@@ -340,9 +346,12 @@ def syntax_rows(lines, caption):
             raise UnknownNotation(f"line {i + 1}: prose inside an open group: {line.strip()[:60]!r}")
         left, desc = cells
         if not left:
+            # "--- NAME" with "begin" or "end" wrapped onto the description's next line.
+            if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(r"(?i)(begin|end)\b", desc):
+                rows[-1].desc += " " + desc
             continue
-        if depth == 0 and not desc and rows and not _NOTATION.match(left):
-            break                       # prose after the table, short enough to sit left of the column
+        if depth == 0 and rows and not _NOTATION.match(left):
+            break       # prose or another table's header after the table (v2.5.1 RSP_K23's QPD field table)
         depth += sum(left.count(c) for c in "[{<") - sum(left.count(c) for c in "]}>")
         rows.append(Row(left, desc, i, pages[i]))
         caption.end_page = pages[i]
@@ -376,11 +385,17 @@ def parse(rows, marks=None, used=None):
                 stack[-1]["children"].append({"kind": "seg", "id": tok})
             else:
                 raise UnknownNotation(f"not notation: {row.left!r}")
-        mark = GROUP_MARK.match(row.desc)
-        name = mark and marks.get(mark.group(1), mark.group(1))
-        if mark and name != mark.group(1) and used is not None:
-            used.add(mark.group(1))
-        if mark and mark.group(2) == "begin":
+        desc = row.desc
+        for printed, intended in marks.items():
+            if re.match(r"^---\s*" + re.escape(printed) + r"\s+(begin|end)\b", desc):
+                desc = desc.replace(printed, intended, 1)
+                if used is not None:
+                    used.add(printed)
+        mark = GROUP_MARK.match(desc)
+        name = mark and mark.group(1)
+        if not mark and re.match(r"^---\s*\S", desc):
+            raise UnknownNotation(f"group mark not read: {desc[:50]!r}")
+        if mark and mark.group(2).lower() == "begin":
             if not opened:
                 raise UnknownNotation(f"--- {name} begin on a row that opens no group")
             opened[0]["name"] = name
@@ -672,6 +687,11 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                     continue
                 cap.structure = hits[0]
             prints.setdefault(cap.structure, []).append((cap, rows, error))
+    for e in errata:     # a group-mark erratum is used when any print of its structure carries the mark
+        if e["where"] == "group-mark" and any(
+                re.match(r"^---\s*" + re.escape(e["printed"]) + r"\s+(?i:begin|end)\b", row.desc)
+                for _, rows, _ in prints.get(e["structure"], []) for row in rows or []):
+            used_errata.add(id(e))
     folds = {f["structure"]: f for f in overrides["triggerFolds"] if f["version"] == ver}
     marks = {}
     for e in errata:

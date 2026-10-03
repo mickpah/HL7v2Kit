@@ -734,6 +734,32 @@ def check_caption_errata():
         raise AssertionError(f"errata entry {broken} must be rejected")
 
 
+def check_reader_layouts():
+    # Page-foot footnotes (a left-margin digit, then text, up to the footer) are furniture
+    # (v2.5.1 DFT_P03); a wrapped "--- NAME" / "begin" mark is one mark (SQM_S25); "End" is
+    # "end" (CSU_C09); a v2.4 Group Control column entry leaves the row a row (RSP_K21); a
+    # non-notation row at depth 0 ends the table (RSP_K23's QPD field table follows it).
+    first = _page(1, _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("[{", "--- G begin"), ("PID", "Patient")])
+                  + ["1", "     If included here, the data is global to the message, and this note runs on."],
+                  heading="9.1.1           XYZ - synthetic (Event X01)")
+    second = _page(2, _table("XYZ^X01^XYZ_X01", [("}]", "--- G End"), ("{", "--- RESPONSE"), ("", "begin"),
+                                                 ("PV1", "Visit")])
+                   + ["    [                                                         Query Result",
+                      "      [PV2]                     Visit 2",
+                      "    ]                                                         End Query",
+                      "    }                         --- RESPONSE end",
+                      "    Field      Field Name       Key/       Sort    LEN"])
+    structures, report, _ = _run("2.5.1", [("syn", first + second)])
+    s = structures.get("XYZ_X01")
+    assert s, report
+    assert [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "G", "RESPONSE"], s["elements"]
+    assert [e.get("segment") or e["group"] for e in s["elements"][2]["elements"]] == ["PV1", "PV2"], s["elements"]
+    # A group mark whose name holds a space is never silently dropped: unreadable without an erratum.
+    s, report = _structure([("MSH", "Header"), ("[", "--- PATIENT VISIT begin"), ("PV1", "Visit"),
+                            ("]", "--- PATIENT VISIT end")])
+    assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_skipped_with_report_line,
@@ -745,7 +771,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_two_part_caption_through_0354, check_section_title_caption, check_primary_print_and_duplicates,
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
-          check_caption_errata]
+          check_caption_errata, check_reader_layouts]
 
 
 def main():
