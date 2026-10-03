@@ -317,6 +317,16 @@ func appendContinuation(_ raw: String, to rows: inout [FieldRow], columns: [Colu
             rows[rows.count-1].tbl = rows[rows.count-1].tbl.trimmingCharacters(in: .whitespaces) + "/" + r.text
         }
     }
+    // P10-4d: a data type cell too narrow for its word wraps its last letters onto the next
+    // line, under the DT column (v2.5.1 CH08 sections 8.5.2 and 8.5.3, pp. 14 and 15: MFE-4
+    // and MFA-5 print "Varie" over "s"; CH07 OBX-5 "varie" over "s" the same way). A
+    // lower-case fragment of one or two letters there completes the cell.
+    if let last = rows[rows.count-1].dt.last, last.isLetter {
+        for r in runs(in: preName) where columnKey(forStart: r.start, columns: columns) == "DT"
+            && (1...2).contains(r.text.count) && r.text.allSatisfy({ $0.isLowercase }) {
+            rows[rows.count-1].dt += r.text
+        }
+    }
     // A wrapped name starts where the row's own name started, not where the header centred
     // "ELEMENT NAME" (v2.3.1 RXE-21: header at column 93, names at 77 — the continuation
     // "Dispensing Instructions" was read as "tructions"). The row's name start is the first
@@ -489,6 +499,18 @@ func selfCheckRepeatability() -> Never {
         appendContinuation(line, to: &rows, columns: cols)
         if rows[0].name != want { failed += 1; print("FAIL cont \(line.prefix(30).debugDescription): got \(rows[0].name)") }
     }
+    // P10-4d: a wrapped DT cell is completed by its lower-case tail (v2.5.1 CH08 MFE-4).
+    let dtHeader = "   SEQ        LEN      DT      OPT       RP/#      TBL#       ITEM#     ELEMENT NAME"
+    let dtRow = "     4         200    Varie      R        Y        9999       00667     Primary Key Value - MFE"
+    let dtCases: [(String, String)] = [("                        s", "Varies"), ("", "Varie")]
+    for (line, want) in dtCases {
+        guard let cols = detectHeader(dtHeader), let r = parseRow(dtRow, columns: cols) else {
+            failed += 1; print("FAIL dt: row not parsed"); continue
+        }
+        var rows = [r]
+        appendContinuation(line, to: &rows, columns: cols)
+        if rows[0].dt != want { failed += 1; print("FAIL dt \(line.debugDescription): got \(rows[0].dt)") }
+    }
     // P10-4c: a page-foot footnote inside a table is not a row (v2.7.1 CH17 ITM, p. 10); the
     // next SEQ, or a backward SEQ with a data type or item number, still is.
     let noteHeader = "SEQ       LEN     C.LEN       DT       OPT       RP/#       TBL#        ITEM#     ELEMENT NAME"
@@ -505,7 +527,7 @@ func selfCheckRepeatability() -> Never {
             failed += 1; print("FAIL note \(line.prefix(30).debugDescription): want footnote \(want)")
         }
     }
-    let total = cases.count + optCases.count + rowCases.count + contCases.count + noteCases.count
+    let total = cases.count + optCases.count + rowCases.count + contCases.count + noteCases.count + dtCases.count
     print("\(total - failed) passed, \(failed) failed")
     exit(failed == 0 ? 0 : 1)
 }
