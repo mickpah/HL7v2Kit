@@ -543,7 +543,7 @@ def check_datatype_existence():
     assert found("v2.7.1", "CE"), "a withdrawn stub on an optional field is a finding"
     assert not found("v2.7.1", "CE", "W") and not found("v2.8.2", "TQ", "B"), "a stub on W or B is accepted"
     assert not found("v2.3", "CM") and found("v2.5.1", "CM"), "CM is field-local only before v2.5"
-    assert not found("v2.4", "NA"), "the cited v2.4 NA exemption"
+    assert not found("v2.4", "NA"), "v2.4 NA (CH07 sec 7.14.1.1) has its component file"
     assert all(len(why) >= 40 for why in audit.DATATYPE_EXISTENCE_EXEMPT.values())
 
 

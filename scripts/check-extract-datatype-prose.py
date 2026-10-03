@@ -166,9 +166,19 @@ def check_judge():
     assert tables == ["0001"] and reasons == [], (tables, reasons)
 
 
+def check_parse_array_line():
+    # P10-4d: v2.4 CH07 sec 7.14.1.1 prints NA as "<value1> ^ <value2> ^ <value3> ^ <value4> ^ ...".
+    got = dtp.parse_array_line("<value1> ^ <value2> ^ <value3> ^ <value4> ^ ...")
+    assert got == [("Value1", ""), ("Value2", ""), ("Value3", ""), ("Value4", "")], got
+    # a fixed list (no closing ellipsis) and typed pieces are not array lines
+    assert dtp.parse_array_line("<a> ^ <b>") is None
+    assert dtp.parse_array_line("<ID (ST)> ^ <check digit (ST)> ^ ...") is None
+    assert "NA" in dtp.ARRAY_SOURCES["2.4"]
+
+
 CHECKS = [check_body_heading_wins_over_contents_entry, check_parse_components_line,
           check_reconcile_warns_and_keeps_subsections, check_promote_misprinted_ampersands,
-          check_judge]
+          check_judge, check_parse_array_line]
 
 
 def main():

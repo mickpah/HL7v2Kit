@@ -135,6 +135,46 @@ def reconcile(code, comps, printed):
     return out
 
 
+ARRAY_SOURCES = {   # version -> {datatype: (pdf, section)} of an array type CH2 defers to CH7
+    "2.4": {"NA": ("HL7_v24_PDF/CH07.PDF", "7.14.1.1")},
+}
+
+
+def parse_array_line(text):
+    """[(name, "")] from an array type's printed line, "<value1> ^ <value2> ^ ... ^ ...": the
+    named pieces before the ellipsis, which closes the line (the array is open-ended). The
+    line prints no datatype code, so each entry's datatype is ""."""
+    pieces = [p.strip() for p in " ".join((text or "").split()).split("^")]
+    names = []
+    for p in pieces:
+        if p == "...":
+            break
+        m = re.fullmatch(r"<\s*([A-Za-z][A-Za-z0-9 ]*?)\s*>", p)
+        if not m:
+            return None
+        names.append(m.group(1))
+    if len(names) < 2 or len(names) == len(pieces):
+        return None                                   # not an array line
+    return [(n[:1].upper() + n[1:], "") for n in names]
+
+
+def extract_array(version, code):
+    """P10-4d. An array datatype CH2 defers to CH7 (v2.4 sec 2.9.27 NA: "Refer to Chapter 7,
+    Section 7.14.1.1"). The CH7 section prints only the array line under its heading."""
+    pdf, section = ARRAY_SOURCES[version][code]
+    lines = pdf_text(pdf)
+    heads = [i for i, l in enumerate(lines) if re.match(rf"^\s*{re.escape(section)}\s+{code}\b", l)]
+    if not heads:
+        return []
+    for line in lines[heads[-1] + 1:heads[-1] + 8]:
+        if line.strip().startswith("Definition:"):
+            break
+        printed = parse_array_line(line) if line.strip() else None
+        if printed:
+            return [{"index": i, "name": n, "dataType": d, "text": ""} for i, (n, d) in enumerate(printed, 1)]
+    return []
+
+
 def extract_tq(version):
     """TQ's components. CH2 defers to CH4 (v2.3 / v2.3.1 sec 4.4, v2.4 sec 4.3), which numbers
     them exactly as CH2 numbers any other composite ("4.4.1 Quantity component (CQ)"). The
@@ -272,6 +312,8 @@ def extract(version):
             source = "prose-line"
         if code == "TQ" and version in TQ_SOURCES:
             comps, source = extract_tq(version), "prose"
+        if code in ARRAY_SOURCES.get(version, {}):
+            comps, source = extract_array(version, code), "prose-line"
         # A trailing subsection with no datatype code is a note, not a component ("Usage
         # notes:", "References for internationalization", "Type-subtype combinations").
         while source == "prose" and comps and not comps[-1]["dataType"]:

@@ -137,12 +137,19 @@ struct DataTypeGrammarTests {
         #expect(try tableIssues("1^Q1H^^^^^^^X", "2.3").isEmpty)
     }
 
-    @Test("P5: MA and NA print no fixed component list before v2.5, so they have no grammar")
-    func arraysHaveNoFixedList() {
+    @Test("P5: MA and NA print no fixed component list before v2.5, so they have no grammar, except v2.4 NA")
+    func arraysHaveNoFixedList() throws {
         for version in [Version.v2_3, .v2_3_1, .v2_4] {
             #expect(DataTypeGrammarTable.grammar("MA", version: version) == nil, "\(version)")
+        }
+        for version in [Version.v2_3, .v2_3_1] {
             #expect(DataTypeGrammarTable.grammar("NA", version: version) == nil, "\(version)")
         }
+        // P10-4d: v2.4 types SAC-11 and SAC-14 NA; CH02 sec 2.9.27 defers to CH07 sec 7.14.1.1,
+        // which prints "<value1> ^ <value2> ^ <value3> ^ <value4> ^ ..." with no datatype codes.
+        let na = try #require(DataTypeGrammarTable.grammar("NA", version: .v2_4))
+        #expect(na.components.map(\.name) == ["Value1", "Value2", "Value3", "Value4"])
+        #expect(na.components.allSatisfy { $0.dataType.isEmpty })
         #expect(DataTypeGrammarTable.grammar("NA", version: .v2_5_1) != nil, "v2.5.1 prints a component table")
     }
 

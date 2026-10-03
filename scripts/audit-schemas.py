@@ -152,11 +152,7 @@ FIELD_LOCAL_TYPES = {
     "v2.4": {"CM"} | CM_REFINEMENTS,
 }
 # (version, dataType) -> why a type with no component table is accepted. Each is an intake row.
-DATATYPE_EXISTENCE_EXEMPT = {
-    ("v2.4", "NA"): "v2.4 CH02 section 2.9.27 prints NA - numeric array and refers to CH07 "
-                    "section 7.14.1.1; Resources/datatypes/v2.4 has no NA file (intake). NA is "
-                    "open-ended and never width-checked (register section C)",
-}
+DATATYPE_EXISTENCE_EXEMPT = {}   # P10-4d: v2.4 NA now has its component file
 # P10-4c rule for withdrawn fields: a W field's dataType is the DT cell its defining attribute
 # table prints. v2.7.1 CH02 section 2.8.4 (p. 24): a deprecated field "will be marked as
 # withdrawn and all explanatory narrative will be removed", and "To refer to the detail of a

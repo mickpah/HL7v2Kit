@@ -24,6 +24,7 @@ extension DataTypeGrammarTable {
         "HD": v2_4_HD,
         "JCC": v2_4_JCC,
         "MO": v2_4_MO,
+        "NA": v2_4_NA,
         "PL": v2_4_PL,
         "PN": v2_4_PN,
         "PPN": v2_4_PPN,
@@ -352,6 +353,18 @@ extension DataTypeGrammarTable {
         components: [
             ComponentGrammar(index: 1, name: "Quantity", dataType: "NM", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
             ComponentGrammar(index: 2, name: "Denomination", dataType: "ID", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+        ]
+    )
+
+    private static let v2_4_NA: DataTypeGrammar = DataTypeGrammar(
+        dataType: "NA",
+        version: "2.4",
+        name: "numeric array",
+        components: [
+            ComponentGrammar(index: 1, name: "Value1", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 2, name: "Value2", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 3, name: "Value3", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
+            ComponentGrammar(index: 4, name: "Value4", dataType: "", optionalityCode: "", tables: [], length: nil, condition: nil, conformanceCondition: nil),
         ]
     )
 
