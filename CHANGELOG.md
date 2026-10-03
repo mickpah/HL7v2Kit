@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8b-3b: CH02B guard, triggerFolds stale guard, ACK on v2.3 and v2.3.1, v2.7.1 ORU_R01
+
+- A Conformance-chapter (CH02B, sections 2.B.x) print is never a structure's primary print; a
+  structure printed only there is an error (exclude it, ruling G7). The v2.7.1 and v2.8.2 CH02B
+  section 2.B.8 `ADT^A01^ADT_A01` profile examples are printed in the caret form, which those
+  versions' caption reader does not take, so they are not read and need no exclusion (an
+  exclusion would be stale); the guard covers them should the reader widen.
+- A `triggerFolds` entry that matches no caption is an error on a full read, and one whose
+  primary matches no normative print is an error there too.
+- v2.3 and v2.3.1: cited `triggerFolds` entries fold every ACK caption into structure `ACK`
+  (`ACK^*`) through CH02 section 2.13.1, which prints the general acknowledgment under the code
+  alone; Table 0354 has no ACK row. ACK now parses on both (76 and 71 captions).
+- v2.7.1 `ORU_R01`: a cited group-mark erratum reads the printed `SPECIMEN OBSERVATION` marks
+  as `SPECIMEN_OBSERVATION` (the v2.8.2 print's and bundle's name); the structure parses. The
+  v2.7.1 bundle names that group `PATIENT_OBSERVATION` and is reported as `bundle-differs`.
+- Two new extractor self-checks (39 in all). No structure JSON added; the pilots reproduce.
+
+### Changed — P8b-3a: the structure extractor reads every version
+
+- `scripts/extract-message-structures.py` reads all seven versions' caption forms (v2.3 code
+  alone with the event in the section title; v2.3.1 `CODE^EVT` through Table 0354; v2.4 to v2.6
+  `CODE^EVT^STRUCT`; v2.7.1 and v2.8.2 `CODE^EVT^STRUCT: title`), event ranges, page-break
+  repeats, and footnote furniture inside syntax tables.
+- Primary-print rule: the defining caption's print is primary; other prints of the structure
+  are compared (`duplicate-differs`). 107 cited exclusions (ruling G7: profile examples, query
+  grammars, Z-events); 93 cited errata (group-mark typos, Table 0354 rows, one caption);
+  `sharedTriggers` declared for v2.3.1 `ORM^O01`, `ORR^O02` and v2.8.2 `ORL^O22/O34/O36/O40`;
+  `triggerFolds` for ACK on v2.4 to v2.8.2. Stale exclusions and errata are errors.
+- `--report` writes per-version rows (parsed, skipped by reason, duplicates, Table 0354
+  reconciliation both ways, shared triggers, bundle-differs). No structure JSON added.
+
 ### Added — P8b-2b: v2.xml bundle reader and group-name resolution
 
 - `scripts/read-v2xml-bundles.py` (imported by the structure extractor) reads the HL7 v2.xml

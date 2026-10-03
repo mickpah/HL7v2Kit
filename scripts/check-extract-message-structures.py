@@ -770,6 +770,43 @@ def check_borrowed_table_errata():
     assert structures["XYZ_X07"]["triggers"] == ["XYZ^X07"], (structures, report)
 
 
+def check_conformance_print_never_primary():
+    # P8b-3b: a CH02B (2.B.x) message-profile print is never primary, even when it carries the
+    # defining caption and comes first; with only CH02B prints the structure is an error.
+    profile = _page(1, _table("ADT^A01^ADT_A01", [("MSH", "Header"), ("PV1", "Visit")]), heading="2.B.8 Static definition")
+    normative = _page(2, _table("ADT^A01^ADT_A01", [("MSH", "Header"), ("PID", "Patient")]), heading="3.3.1 ADT")
+    structures, report, _ = _run("2.5.1", [("V271_CH02B_Conformance.pdf", profile), ("CH03", normative)])
+    assert [e["segment"] for e in structures["ADT_A01"]["elements"]] == ["MSH", "PID"], structures
+    assert structures["ADT_A01"]["citation"].startswith("HL7 v2.5.1 Chapter 3, section 3.3.1"), structures
+    structures, report, _ = _run("2.5.1", [("V271_CH02B_Conformance.pdf", profile)])
+    assert "ADT_A01" not in structures and ("ADT_A01", "error",
+                                            "only Conformance-chapter (CH02B) prints: exclude them (ruling G7)") in report, report
+
+
+def check_general_ack_fold_code_alone():
+    # v2.3.1 (and v2.3): CH02 prints the general acknowledgment under the code ACK alone and
+    # Table 0354 has no ACK row; a triggerFolds entry onto ACK^* reads it and every ACK^<event>
+    # caption as structure ACK. A fold that matches no caption is stale on a full read.
+    fold = {**EMPTY, "triggerFolds": [{"version": v, "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",
+                                       "citation": "x"} for v in ("2.3", "2.3.1")]}
+    general = _page(1, ["    ACK                       General Acknowledgement               Chapter"]
+                    + _table("ACK", [("MSH", "Header"), ("MSA", "Ack"), ("[ ERR ]", "Error")])[1:],
+                    heading="2.13.1 ACK - general acknowledgment")
+    other = _page(2, ["    ACK^X02                   General Acknowledgment                Chapter"]
+                  + _table("ACK^X02", [("MSH", "Header"), ("MSA", "Ack")])[1:], heading="9.1.2 XYZ (Event X02)")
+    for version in ("2.3.1", "2.3"):
+        structures, report, count = _run(version, [("CH02", general), ("CH09", other)], fold, tables=TABLE[:2], full=True)
+        s = structures["ACK"]
+        assert s["triggers"] == ["ACK^*"] and [e["segment"] for e in s["elements"]] == ["MSH", "MSA", "ERR"], (version, s)
+        assert s["citation"].startswith(f"HL7 v{version} Chapter 2, section 2.13.1"), s["citation"]
+        assert not [r for r in report if r[1] in ("needs-event", "needs-structure-id", "error")], (version, report)
+    _, report, _ = _run("2.3.1", [("CH09", _page(1, ["x"]))], fold, tables=TABLE[:2], full=True)
+    assert ("ACK", "error", "triggerFolds entry matches no caption") in report, report
+    # Without the fold the code-alone caption is not read on v2.3.1 (no event, no 0354 row).
+    _, report, count = _run("2.3.1", [("CH02", general)], tables=TABLE[:2])
+    assert count == 0, report
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_skipped_with_report_line,
@@ -782,7 +819,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
           check_caption_errata, check_reader_layouts,
-          check_borrowed_table_errata]
+          check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone]
 
 
 def main():

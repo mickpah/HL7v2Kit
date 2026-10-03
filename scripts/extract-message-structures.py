@@ -134,7 +134,8 @@ class Caption:
     @property
     def printed(self):
         """The caption as printed (the structure ID only when the print carries one)."""
-        return f"{self.code}^{self.event}" + (f"^{self.structure}" if self.id_source == "printed" else "")
+        head = f"{self.code}^{self.event}" if self.event else self.code     # v2.3's code-alone caption
+        return head + (f"^{self.structure}" if self.id_source == "printed" else "")
 
 
 @dataclass
@@ -246,7 +247,7 @@ def match_caption(line, era):
     return None
 
 
-def captions(lines, era="caret", source=""):
+def captions(lines, era="caret", source="", bare=frozenset()):
     """Every caption occurrence, with its section, chapter and page. A caption repeated after a
     page break inside its own table is still listed here; syntax_rows records it as a repeat.
     Eras (ADR-019 caption-form table): caret (v2.4 to v2.6, CODE^EVT^STRUCT with the title on
@@ -254,7 +255,9 @@ def captions(lines, era="caret", source=""):
     "CODE^EVT^STRUCT: title" then a Segments/Description column row); section-title (v2.3, the
     code alone, the event in the section title). A caption needs no Status or Chapter header:
     v2.4 prints 34 three-part captions without one, every one a CH04/CH05 query or response
-    grammar example or a Z-event, each excluded by a cited exclusions entry (ruling G7)."""
+    grammar example or a Z-event, each excluded by a cited exclusions entry (ruling G7). bare:
+    message codes whose code-alone caption (v2.3's form) is also read in the other eras, with no
+    event: the codes a triggerFolds entry folds into one structure (v2.3.1 CH02's general ACK)."""
     if era not in ("caret", "table-0354", "caret-colon", "section-title"):
         raise ValueError(f"unknown caption era {era!r}")
     pages = page_labels(lines)
@@ -273,6 +276,9 @@ def captions(lines, era="caret", source=""):
                 section_title = _title(section_title + " " + nxt)
             continue
         m = match_caption(line, era)
+        if not m and era != "section-title" and bare:
+            b = CODE_ONLY.match(line.translate(_DASHES))
+            m = b and b.group(2) in bare and (len(b.group(1)), b.group(2), "", "", b.start(4), b.group(4))
         if not m:
             continue
         indent, code, event, structure, desc_col, rest = m
@@ -293,7 +299,8 @@ def captions(lines, era="caret", source=""):
                 if not nxt[0] and nxt[1]:
                     title = (title + " " + re.split(r"\s{2,}", nxt[1])[0]).strip()
                 break
-        events = title_events(section_title) if era == "section-title" else expand_events(event) or []
+        events = (title_events(section_title) if era == "section-title" else
+                  expand_events(event) or [] if event else [])
         if era == "section-title":
             event = ",".join(events)
         found.append(Caption(code, event, structure, title, i, section.split(".")[0], section,
@@ -626,10 +633,20 @@ def _primary(sid, entries, fold):
     """The primary print (ADR-019 addendum, P8b-3a): exclusions are already gone; a triggerFolds
     entry names it; else the first print in reading order whose caption is the defining trigger
     (CODE_EVT equals the structure ID: the chapter that defines the message, not one that only
-    reuses it); else the first print in reading order."""
+    reuses it); else the first print in reading order. A Conformance-chapter (CH02B) print is a
+    message-profile example and is never primary (P8b-3b). None when no print qualifies: a fold
+    whose primary matches no print (stale), or only CH02B prints (exclude them, ruling G7)."""
     if fold:
-        return next((k for k, e in enumerate(entries) if fold["primary"] in (e[0].printed, f"{e[0].code}^{e[0].event}")), 0)
-    return next((k for k, e in enumerate(entries) if any(f"{e[0].code}_{v}" == sid for v in e[0].events)), 0)
+        return next((k for k, e in enumerate(entries) if not _profile(e[0])
+                     and fold["primary"] in (e[0].printed, f"{e[0].code}^{e[0].event}")), None)
+    normative = [k for k, e in enumerate(entries) if not _profile(e[0])]
+    return next((k for k in normative if any(f"{entries[k][0].code}_{v}" == sid for v in entries[k][0].events)),
+                normative[0] if normative else None)
+
+
+def _profile(cap):
+    """Whether a caption sits in the Conformance chapter (CH02B, sections 2.B.x)."""
+    return cap.section.startswith("2.B.") or "CH02B" in os.path.basename(cap.source).upper()
 
 
 def extract_version(version, texts, overrides, only=None, bundles=None, tables=None, full=False):
@@ -649,10 +666,15 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     excluded = {x["section"]: x for x in overrides["exclusions"] if x["version"] == ver}
     used_exclusions = set()
     caption_errata = {e["printed"]: e for e in errata if e["where"] == "caption"}
+    folds = {f["structure"]: f for f in overrides["triggerFolds"] if f["version"] == ver}
+    # A fold onto CODE^* whose structure ID is the code itself (ACK): every caption of that code
+    # is the one structure, so it needs no event and no Table 0354 row (v2.3 and v2.3.1 print no
+    # ACK row; their general acknowledgment caption prints the code alone).
+    general = {sid for sid, f in folds.items() if f["trigger"] == f"{sid}^*"}
     prints, count, report = {}, 0, []
     for source, lines in texts:
         consumed = set()
-        for cap in captions(lines, era, source):
+        for cap in captions(lines, era, source, bare=general):
             if cap.line in consumed:
                 continue
             count += 1
@@ -671,7 +693,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 used_exclusions.add(cap.section)
                 report.append((cap.structure or f"{cap.code}^{cap.event}", "excluded", where))
                 continue
-            if not cap.events:
+            if cap.code in general and not cap.structure:
+                cap.structure = cap.code
+            if not cap.events and cap.code not in general:
                 report.append((f"{cap.code}^{cap.event or '?'}", "needs-event",
                                f"{cap.source} line {cap.line + 1}: section {cap.section} {cap.section_title[:60]!r} "
                                "names no event"))
@@ -692,7 +716,6 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 re.match(r"^---\s*" + re.escape(e["printed"]) + r"\s+(?i:begin|end)\b", row.desc)
                 for _, rows, _ in prints.get(e["structure"], []) for row in rows or []):
             used_errata.add(id(e))
-    folds = {f["structure"]: f for f in overrides["triggerFolds"] if f["version"] == ver}
     marks = {}
     for e in errata:
         if e["where"] == "group-mark":
@@ -712,6 +735,12 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         entries = prints[sid]
         fold = folds.get(sid)
         k = _primary(sid, entries, fold)
+        if k is None and fold and not full:     # a partial read may lack the fold's primary print
+            k = next((j for j, e in enumerate(entries) if not _profile(e[0])), None)
+        if k is None:
+            report.append((sid, "error", f"triggerFolds primary {fold['primary']!r} matches no normative print" if fold
+                           else "only Conformance-chapter (CH02B) prints: exclude them (ruling G7)"))
+            continue
         entries = [entries[k]] + entries[:k] + entries[k + 1:]
         cap, rows, error = entries[0]
         try:
@@ -777,6 +806,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                    for x in sorted(set(excluded) - used_exclusions)]
         report += [(e["structure"], "error", f"errata entry ({e['where']}) {e['printed']!r} matches nothing")
                    for e in errata if id(e) not in used_errata]
+        report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
     return structures, report, count
 
 

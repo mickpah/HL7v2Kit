@@ -66,6 +66,8 @@
       "citation": "HL7 v2.7.1 Chapter 3, section 3.3.60 ADT/ACK - Update Adverse Reaction Information (Event A60), p 51: the group mark prints 'ADVERSE REACTION GROUP', which no group name can hold; read as ADVERSE_REACTION_GROUP, the name HL7-xml v2.7.1/ADT_A60.xsd gives the group." },
     { "version": "2.7.1", "where": "group-mark", "structure": "ORL_O34", "printed": "SPECIMEN OBSERVATION", "intended": "SPECIMEN_OBSERVATION",
       "citation": "HL7 v2.7.1 Chapter 4, section 4.4.9 ORL - Laboratory order response message to a multiple order related to, p 17: the group mark prints 'SPECIMEN OBSERVATION', which no group name can hold; read as SPECIMEN_OBSERVATION, the name HL7-xml v2.7.1/ORL_O34.xsd gives the group." },
+    { "version": "2.7.1", "where": "group-mark", "structure": "ORU_R01", "printed": "SPECIMEN OBSERVATION", "intended": "SPECIMEN_OBSERVATION",
+      "citation": "HL7 v2.7.1 Chapter 7, section 7.2.1 ORU - Unsolicited Observation Message (Event R01), p 13: begin and end marks print 'SPECIMEN OBSERVATION' around [{ OBX [{PRT}] }] under SPECIMEN, which no group name can hold; read as SPECIMEN_OBSERVATION, the name the v2.8.2 print (section 7.3.1) and HL7-xml v2.8.2/ORU_R01.xsd give the group (HL7-xml v2.7.1/ORU_R01.xsd reuses ORU_R01.PATIENT_OBSERVATION for it)." },
     { "version": "2.7.1", "where": "group-mark", "structure": "ORL_O36", "printed": "SPECIMEN OBSERVATION", "intended": "SPECIMEN_OBSERVATION",
       "citation": "HL7 v2.7.1 Chapter 4, section 4.4.11 ORL - Laboratory order response message to a single container of a, pp 20 to 21: the group mark prints 'SPECIMEN OBSERVATION', which no group name can hold; read as SPECIMEN_OBSERVATION, the name HL7-xml v2.7.1/ORL_O36.xsd gives the group." },
     { "version": "2.7.1", "where": "group-mark", "structure": "OML_O39", "printed": "SPECIMEN OBSERVATION", "intended": "SPECIMEN_OBSERVATION",
@@ -424,6 +426,10 @@
       "citation": "HL7 v2.8.2 prints ORL^O40 under 2 structures: ORL^O40^ORL_O40 (section 4.4.13.1, p 30); ORL^O40^ORL_O44 (section 4.4.13.2, p 31). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." }
   ],
   "triggerFolds": [
+    { "version": "2.3", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",
+      "citation": "HL7 v2.3 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-68: the general acknowledgment (MSH MSA [ERR]) is printed under the code ACK alone for every trigger; v2.3 prints no Table 0354 and v2.3.1's has no ACK row, so the ACK captions the other chapters print (events from their section titles) are this one structure, as v2.4 to v2.8.2 fold ACK^varies^ACK."},
+    { "version": "2.3.1", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",
+      "citation": "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78: the general acknowledgment (MSH MSA [ERR]) is printed under the code ACK alone for every trigger; Table 0354 has no ACK row, so the ACK^<event> captions the other chapters print are this one structure, as v2.4 to v2.8.2 fold ACK^varies^ACK."},
     { "version": "2.4", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK^varies^ACK",
       "citation": "HL7 v2.4 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-97: ACK^varies^ACK is the general acknowledgment for every trigger (MSH-9.3 is always ACK), so the ACK^<event>^ACK captions the other chapters print are this one structure." },
     { "version": "2.5.1", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK^varies^ACK",
