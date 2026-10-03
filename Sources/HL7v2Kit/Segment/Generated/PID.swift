@@ -23,7 +23,7 @@ public struct PID: TypedSegment {
     }
 
     /// PID-2: Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-2 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-2 holds on the wire.
     public var patientID: CX? {
         field(2).map(CX.init(field:))
     }
@@ -45,9 +45,8 @@ public struct PID: TypedSegment {
     }
 
     /// PID-4: Alternate Patient ID (deprecated). HL7 data type `CX`. Returns the typed ``CX`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `alternatePatientIDAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-4 holds on the wire.
-    /// v2.6, v2.8.2 print this element as `Alternate Patient ID - PID`.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-4 holds on the wire.
+    /// v2.6 prints this element as `Alternate Patient ID - PID`.
     public var alternatePatientID: CX? {
         field(4).map(CX.init(field:))
     }
@@ -57,9 +56,8 @@ public struct PID: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-4 holds on the wire.
-    /// v2.6, v2.8.2 print this element as `Alternate Patient ID - PID`.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-4 holds on the wire.
+    /// v2.6 prints this element as `Alternate Patient ID - PID`.
     public var alternatePatientIDAll: [CX] {
         repetitions(4).map(CX.init(field:))
     }
@@ -107,8 +105,7 @@ public struct PID: TypedSegment {
     }
 
     /// PID-9: Patient Alias (deprecated). HL7 data type `XPN`. Returns the typed ``XPN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientAliasAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-9 holds on the wire.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-9 holds on the wire.
     public var patientAlias: XPN? {
         field(9).map(XPN.init(field:))
     }
@@ -118,8 +115,7 @@ public struct PID: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-9 holds on the wire.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-9 holds on the wire.
     public var patientAliasAll: [XPN] {
         repetitions(9).map(XPN.init(field:))
     }
@@ -159,7 +155,7 @@ public struct PID: TypedSegment {
     }
 
     /// PID-12: County Code (deprecated). HL7 data type `IS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-12 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-12 holds on the wire.
     public var countyCode: String? {
         field(12)?.stringValue
     }
@@ -218,13 +214,13 @@ public struct PID: TypedSegment {
     }
 
     /// PID-19: SSN Number - Patient (deprecated). HL7 data type `ST`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-19 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-19 holds on the wire.
     public var ssnNumberPatient: String? {
         field(19)?.stringValue
     }
 
     /// PID-20: Driver's License Number - Patient (deprecated). HL7 data type `DLN`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-20 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-20 holds on the wire.
     public var driversLicenseNumberPatient: Field? {
         field(20)
     }
@@ -303,8 +299,8 @@ public struct PID: TypedSegment {
     }
 
     /// PID-28: Nationality (deprecated). HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PID-28 holds on the wire.
-    /// v2.6, v2.8.2 print `CWE`: use `viewed(as: CWE.self)`.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PID-28 holds on the wire.
+    /// v2.6 prints `CWE`: use `viewed(as: CWE.self)`.
     public var nationality: CE? {
         field(28).map(CE.init(field:))
     }

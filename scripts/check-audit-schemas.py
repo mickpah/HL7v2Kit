@@ -555,7 +555,9 @@ def check_withdrawn_datatype_rule():
     assert not rule("v2.7.1", "UB1", {"index": 1, "dataType": "SI", "optionality": "W"}), "printed SI"
     assert rule("v2.7.1", "UB1", {"index": 1, "dataType": "", "optionality": "W"}), "a printed type dropped"
     assert not rule("v2.7.1", "PID", {"index": 3, "dataType": "CX", "optionality": "R"}), "not withdrawn"
-    assert not rule("v2.8.2", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "v2.8.2 not yet held"
+    assert rule("v2.8.2", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "v2.8.2 held since P10-4d"
+    assert not rule("v2.8.2", "UB1", {"index": 1, "dataType": "SI", "optionality": "W"}), "v2.8.2 printed SI"
+    assert not rule("v2.6", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "a version not held"
     assert all(len(why) >= 40 for cites in audit.WITHDRAWN_TYPED_AS_PRINTED.values() for why in cites.values())
 
 

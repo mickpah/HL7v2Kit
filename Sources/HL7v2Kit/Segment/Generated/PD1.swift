@@ -55,8 +55,7 @@ public struct PD1: TypedSegment {
     }
 
     /// PD1-4: Patient Primary Care Provider Name & ID No.. HL7 data type `XCN`. Returns the typed ``XCN`` view; use `.field` for raw access. Repeating field: this accessor reads the first repetition; `patientPrimaryCareProviderNameAndIDNoAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PD1-4 holds on the wire.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PD1-4 holds on the wire.
     public var patientPrimaryCareProviderNameAndIDNo: XCN? {
         field(4).map(XCN.init(field:))
     }
@@ -66,8 +65,7 @@ public struct PD1: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever PD1-4 holds on the wire.
-    /// Repeats in v2.3, v2.3.1, v2.4, v2.5.1, v2.6 only.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever PD1-4 holds on the wire.
     public var patientPrimaryCareProviderNameAndIDNoAll: [XCN] {
         repetitions(4).map(XCN.init(field:))
     }

@@ -40,13 +40,13 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-5: Priority (deprecated). HL7 data type `ID`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-5 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-5 holds on the wire.
     public var priority: String? {
         field(5)?.stringValue
     }
 
     /// OBR-6: Requested Date/Time (deprecated). HL7 data type `TS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-6 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-6 holds on the wire.
     public var requestedDateTime: String? {
         field(6)?.stringValue
     }
@@ -120,13 +120,13 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-14: Specimen Received Date/Time. HL7 data type `TS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-14 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-14 holds on the wire.
     public var specimenReceivedDateTime: String? {
         field(14)?.stringValue
     }
 
     /// OBR-15: Specimen Source (deprecated). HL7 data type `SPS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-15 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-15 holds on the wire.
     public var specimenSource: Field? {
         field(15)
     }
@@ -211,7 +211,7 @@ public struct OBR: TypedSegment {
     }
 
     /// OBR-27: Quantity/Timing (deprecated). HL7 data type `TQ`. Repeating field: this accessor reads the first repetition; `quantityTimingAll` returns every repetition.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-27 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-27 holds on the wire.
     public var quantityTiming: Field? {
         field(27)
     }
@@ -221,7 +221,7 @@ public struct OBR: TypedSegment {
     /// the validator: empty when the field is absent; one entry when it is present but empty;
     /// `A~~B` gives three entries, the middle one empty; an HL7 null (`""`) gives one entry
     /// holding the literal `""`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6, v2.8.2. On a message of another version this returns whatever OBR-27 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever OBR-27 holds on the wire.
     public var quantityTimingAll: [Field] {
         repetitions(27)
     }

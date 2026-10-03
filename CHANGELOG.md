@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P10-4d: v2.8.2 withdrawn fields carry the printed data type
+
+- 30 v2.8.2 withdrawn (W) fields carried a data type the v2.8.2 attribute tables leave blank
+  (AL1-6, DG1-2/4/7 to 14, ERR-1, EVN-1, MSA-3/5/6, OBR-5/6/14/15/27, ORC-7, PD1-4,
+  PID-2/4/9/12/19/20/28). They are now untyped, as printed; only UB1-1 keeps a type (SI,
+  CH06 section 6.5.10, p. 124). A populated one raises only the withdrawn-field warning;
+  on the v2.8.2 spec examples 64 type-keyed issues on PID-2, PID-4 and MSA-5 no longer fire.
+  `audit-schemas.py` now holds v2.8.2 to the rule as well as v2.7.1.
+
 ### Fixed — P10-1 fix round: shipped v2.8.2 and v2.6 table data
 
 - v2.8.2 Tables 0359 (Diagnosis Priority) and 0418 (Procedure Priority) stored the printed

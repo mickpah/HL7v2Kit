@@ -153,17 +153,20 @@ FIELD_LOCAL_TYPES = {
 }
 # (version, dataType) -> why a type with no component table is accepted. Each is an intake row.
 DATATYPE_EXISTENCE_EXEMPT = {}   # P10-4d: v2.4 NA now has its component file
-# P10-4c rule for withdrawn fields: a W field's dataType is the DT cell its defining attribute
-# table prints. v2.7.1 CH02 section 2.8.4 (p. 24): a deprecated field "will be marked as
-# withdrawn and all explanatory narrative will be removed", and "To refer to the detail of a
-# withdrawn message constituent, the reader will need to review the appropriate earlier
-# version of the standard". The tables print the DT cell of a W field blank, so no type is
-# carried from an earlier version. Versions listed here are held to the rule; the value maps
-# each W field whose table does print a type to its citation. v2.8.2 is not yet listed: 30 of
-# its W fields carry a type its print leaves blank (intake; register section C).
+# P10-4c rule for withdrawn fields: a W field carries exactly the data type its attribute table
+# prints, and nothing is carried from an earlier version. Chapter 2 section 2.8.4 (v2.7.1 p. 24,
+# v2.8.2 p. 26) is cited only for the fact that a withdrawn field stays listed in its segment
+# with its narrative removed: a deprecated field "will be marked as withdrawn and all explanatory
+# narrative will be removed". The tables print the DT cell of almost every W field blank.
+# Versions listed here are held to the rule; the value maps each W field whose table does print
+# a type to its citation. P10-4d added v2.8.2.
 WITHDRAWN_TYPED_AS_PRINTED = {
     "v2.7.1": {
         ("UB1", 1): "v2.7.1 CH06 section 6.5.10 UB1 attribute table (p. 130) prints `1  SI  W  "
+                    "00530  Set ID - UB1`",
+    },
+    "v2.8.2": {
+        ("UB1", 1): "v2.8.2 CH06 section 6.5.10 UB1 attribute table (p. 124) prints `1  SI  W  "
                     "00530  Set ID - UB1`",
     },
 }
