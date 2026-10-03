@@ -179,7 +179,19 @@
     { "version": "2.7.1", "where": "group-mark", "structure": "OML_O35", "printed": "TIIMING", "intended": "TIMING",
       "citation": "HL7 v2.7.1 Chapter 4, section 4.4.10 OML - Laboratory order for multiple orders related to a single container of, p 19: the '--- TIIMING begin' mark misprints the group the table opens or closes as TIMING; read as TIMING, the name HL7-xml v2.7.1/OML_O35.xsd gives the group." },
     { "version": "2.8.2", "where": "group-mark", "structure": "MFN_M18", "printed": "PAYER_MF_WENTRY", "intended": "PAYER_MF_ENTRY",
-      "citation": "HL7 v2.8.2 Chapter 8, section 8.8.8 MFN/MFK - Master File Notification - Test/Observation (Payer), p 23: the '--- PAYER_MF_WENTRY end' mark misprints the group the table opens or closes as PAYER_MF_ENTRY; read as PAYER_MF_ENTRY, the name HL7-xml v2.8.2/MFN_M18.xsd gives the group." }
+      "citation": "HL7 v2.8.2 Chapter 8, section 8.8.8 MFN/MFK - Master File Notification - Test/Observation (Payer), p 23: the '--- PAYER_MF_WENTRY end' mark misprints the group the table opens or closes as PAYER_MF_ENTRY; read as PAYER_MF_ENTRY, the name HL7-xml v2.8.2/MFN_M18.xsd gives the group." },
+    { "version": "2.3.1", "where": "table-0354", "structure": "ORM_O01", "printed": "ORM__O01", "intended": "ORM_O01",
+      "citation": "HL7 v2.3.1 Chapter 2, section 2.24.1.9 Message type (MSH-9), Table 0354 - Message structure, pp 2-104 to 2-105 (repeated in Appendix A): the row prints ORM__O01 with a doubled underscore for the O01 structure the Chapter 4 caption ORM^O01^ORM_O01 names." },
+    { "version": "2.3.1", "where": "table-0354", "structure": "RAS_O02", "printed": "O022", "intended": "O02",
+      "citation": "HL7 v2.3.1 Chapter 2, section 2.24.1.9 Message type (MSH-9), Table 0354 - Message structure, pp 2-104 to 2-105 (repeated in Appendix A): the RAS_O02 row prints the event as O022; the structure ID and the Chapter 4 RAS^O02 caption name event O02." },
+    { "version": "2.3.1", "where": "table-0354", "structure": "ROR_ROR", "printed": "RROR_ROR", "intended": "ROR_ROR",
+      "citation": "HL7 v2.3.1 Chapter 2, section 2.24.1.9 Message type (MSH-9), Table 0354 - Message structure, pp 2-104 to 2-105 (repeated in Appendix A): the row prints RROR_ROR for the ROR (pharmacy query response) structure; the event it lists is ROR." },
+    { "version": "2.3.1", "where": "table-0354", "structure": "SIU_S12", "printed": "SIIU_S12", "intended": "SIU_S12",
+      "citation": "HL7 v2.3.1 Chapter 2, section 2.24.1.9 Message type (MSH-9), Table 0354 - Message structure, pp 2-104 to 2-105 (repeated in Appendix A): the row prints SIIU_S12 for the SIU structure of the Chapter 10 SIU^S12 to S24 captions." },
+    { "version": "2.5.1", "where": "table-0354", "structure": "BRP_O30", "printed": "BRP_030", "intended": "BRP_O30",
+      "citation": "HL7 v2.5.1 Table 0354 - Message structure (Chapter 2, p 2-102) as extracted to Resources/tables/v2.5.1/0354.json reads BRP_030 (digit zero); the Chapter 4 caption BRP^O30^BRP_O30 and the event O30 name BRP_O30 (pre-flight row B9)." },
+    { "version": "2.3.1", "where": "caption", "structure": "ROR_ROR", "printed": "R0R^R0R", "intended": "ROR^ROR",
+      "citation": "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response, p 4-102: the caption and the section title print R0R (digit zero) for the ROR pharmacy/treatment order response that Table 0354 lists as ROR_ROR (event ROR)." }
   ],
   "exclusions": [
     { "version": "2.4", "section": "4.6.2",
@@ -397,7 +409,20 @@
     { "version": "2.8.2", "section": "8.4.3",
       "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7." }
   ],
-  "sharedTriggers": [],
+  "sharedTriggers": [
+    { "version": "2.3.1", "trigger": "ORM^O01", "structures": ["OMD_O01", "OMN_O01", "OMS_O01", "ORM_O01", "RDO_O01"],
+      "citation": "HL7 v2.3.1 prints ORM^O01 under 5 structures: ORM^O01^ORM_O01 (section 4.2.1, p 4-3); ORM^O01^OMD_O01 (section 4.6, p 4-46); ORM^O01^OMS_O01 (section 4.7, p 4-53); ORM^O01^OMN_O01 (section 4.7, p 4-53); ORM^O01^RDO_O01 (section 4.8.1, p 4-58). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.3.1", "trigger": "ORR^O02", "structures": ["ORD_O02", "ORN_O02", "ORR_O02", "ORS_O02", "RRO_O02"],
+      "citation": "HL7 v2.3.1 prints ORR^O02 under 5 structures: ORR^O02^ORR_O02 (section 4.2.2, p 4-4); ORR^O02^ORD_O02 (section 4.6, p 4-47); ORR^O02^ORS_O02 (section 4.7, p 4-53); ORR^O02^ORN_O02 (section 4.7, p 4-54); ORR^O02^RRO_O02 (section 4.8.1, p 4-59). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.8.2", "trigger": "ORL^O22", "structures": ["ORL_O22", "ORL_O41"],
+      "citation": "HL7 v2.8.2 prints ORL^O22 under 2 structures: ORL^O22^ORL_O22 (section 4.4.7.1, p 15); ORL^O22^ORL_O41 (section 4.4.7.2, p 16). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.8.2", "trigger": "ORL^O34", "structures": ["ORL_O34", "ORL_O42"],
+      "citation": "HL7 v2.8.2 prints ORL^O34 under 2 structures: ORL^O34^ORL_O34 (section 4.4.9.1, p 20); ORL^O34^ORL_O42 (section 4.4.9.2, p 21). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.8.2", "trigger": "ORL^O36", "structures": ["ORL_O36", "ORL_O43"],
+      "citation": "HL7 v2.8.2 prints ORL^O36 under 2 structures: ORL^O36^ORL_O36 (section 4.4.11.1, p 25); ORL^O36^ORL_O43 (section 4.4.11.2, p 26). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.8.2", "trigger": "ORL^O40", "structures": ["ORL_O40", "ORL_O44"],
+      "citation": "HL7 v2.8.2 prints ORL^O40 under 2 structures: ORL^O40^ORL_O40 (section 4.4.13.1, p 30); ORL^O40^ORL_O44 (section 4.4.13.2, p 31). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." }
+  ],
   "triggerFolds": [
     { "version": "2.5.1", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK^varies^ACK",
       "citation": "HL7 v2.5.1 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-61: ACK^varies^ACK is the general acknowledgment for every trigger (MSH-9.3 is always ACK), so the ACK^<event>^ACK captions the other chapters print are this one structure" }

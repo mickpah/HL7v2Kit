@@ -867,8 +867,13 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   page-foot footnotes, furniture up to the footer. A row with an empty description and text in
   a later column (Chapter with a footnote number; v2.4's Group Control) is a row. A mark whose
   `begin` or `end` wraps onto the next line is one mark; `End` reads as `end`. A non-notation
-  row at depth 0 ends the table.
+  row at depth 0 ends the table. Six more errata: Table 0354 rows misprinted in v2.3.1 (`ORM__O01`,
+  `RAS_O02` event `O022`, `RROR_ROR`, `SIIU_S12`) and v2.5.1 (`BRP_030`), and the v2.3.1
+  caption `R0R^R0R` (section 4.8.17) read as `ROR^ROR`.
 - **Shared triggers and Table 0354.** A trigger printed under several structures is a
   `shared-trigger` report row, declared by a cited `sharedTriggers` entry or not; the codegen
-  is unchanged. Table 0354 is reconciled per version: a printed structure ID the table lacks
+  is unchanged. Declared: v2.3.1 `ORM^O01` (five structures) and `ORR^O02` (five); v2.8.2
+  `ORL^O22`, `ORL^O34`, `ORL^O36`, `ORL^O40` (two each). Undeclared, for P8b-3b: the range
+  captions `MFN^M01-M06^MFN_M01` (v2.4) and `MFR^M01-M17^MFR_M01` (v2.5.1, v2.6), which put
+  M02 to M07 under the generic structure as well as their own. Table 0354 is reconciled per version: a printed structure ID the table lacks
   (`0354-missing-row`) and a row no normative print carries (`0354-missing-caption`).

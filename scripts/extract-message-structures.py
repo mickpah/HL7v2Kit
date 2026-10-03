@@ -746,8 +746,6 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
         triggers = [fold["trigger"]] if fold else triggers
-        for trig in triggers:
-            owner.setdefault(trig, []).append(sid)
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid) + name_citation(log)})
         for entry in log:
@@ -763,6 +761,11 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         if (ver, sid) in bundles.defects:
             report.append((sid, "bundle-differs", f"HL7-xml v{ver}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
+    for sid in sorted(prints):     # every printed structure, parsed or not, claims its triggers
+        fold = folds.get(sid)
+        for trig in [fold["trigger"]] if fold else dict.fromkeys(
+                f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events):
+            owner.setdefault(trig, []).append(sid)
     report += shared_triggers(ver, owner, overrides, full)
     report += reconcile_0354(ver, table_ver, table, prints)
     for g in overrides["groupNames"]:
