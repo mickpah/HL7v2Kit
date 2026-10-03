@@ -14,9 +14,12 @@ The print is the only source of structure (ADR-019). One rule reads a table: a r
 only when its left column, measured from the caption line's column positions, is non-empty;
 everything else (wrapped titles, wrapped descriptions, page furniture, the caption repeated
 after a page break) is description and ignored. Nesting comes from bracket balance, never from
-indentation. Group names come from "--- NAME begin" (nameSource printed) or from a cited
-groupNames entry in Resources/structures/overrides.json (nameSource override); an unnamed group
-with neither fails the structure. Choice notation (< X | Y >) is not modelled yet (P8b-6): a
+indentation. Group names come from "--- NAME begin" (nameSource printed); an unnamed group takes
+its HL7 v2.xml bundle name (scripts/read-v2xml-bundles.py: nameSource v2xml, or v2xml-v2.4 for
+v2.3 and v2.3.1), else a cited groupNames entry in Resources/structures/overrides.json (nameSource
+override), else <FIRSTSEG>_GROUP (nameSource synthesised, a no-bundle-name report row). Each
+non-printed name is cited in the structure citation. The bundle's element tree is compared with
+the print, report only (bundle-differs rows); the print stays normative. Choice notation (< X | Y >) is not modelled yet (P8b-6): a
 structure that prints one is reported and skipped. Only the v2.4 to v2.6 caption form is read
 here; ERAS_PENDING names the eras P8b-3 wires.
 """
@@ -47,6 +50,9 @@ def _script(name):
 _examples = _script("extract-example-messages.py")
 CHAPTERS = _examples.CHAPTERS          # single source of the chapter globs (pre-flight A17)
 FURN = _examples.FURN                  # page furniture, incl. the v2.7.1 second footer (B3)
+_v2xml = _script("read-v2xml-bundles.py")   # P8b-2b: HL7 v2.xml bundle names (ADR-019 decision 3)
+Bundles, read_bundle, NAME_SOURCES = _v2xml.Bundles, _v2xml.read_bundle, _v2xml.NAME_SOURCES
+BUNDLES, BUNDLES_DERIVED = _v2xml.BUNDLES, _v2xml.BUNDLES_DERIVED
 
 # (chapter glob, caption form) per version, for the version-map agreement self-check
 # (check-audit-schemas.py). Only the "caret" form is read in P8b-2a.
@@ -80,8 +86,8 @@ class ChoiceNotation(UnknownNotation):
     """< X | Y > choice notation, not modelled until P8b-6."""
 
 
-class UnnamedGroup(Exception):
-    """A group the print leaves unnamed and overrides.json does not name."""
+class NameSourceError(Exception):
+    """A group nameSource outside NAME_SOURCES, or a non-printed name the citation does not cite."""
 
 
 class OverridesError(Exception):
@@ -289,9 +295,13 @@ def _element(node):
             **bounds, "elements": [_element(c) for c in node["children"]]}
 
 
-def name_groups(elements, version, structure, overrides, used=None, path=()):
-    """Resolve every unnamed group through overrides groupNames (nameSource override), or
-    raise UnnamedGroup naming the structure and the group's path."""
+def name_groups(elements, version, structure, overrides, used=None, path=(), bundles=None, log=None, taken=None):
+    """Name every unnamed group, top down (a child's parent path uses its parent's resolved
+    name): the HL7 v2.xml bundle, else an overrides groupNames entry, else <FIRSTSEG>_GROUP.
+    log receives one entry per resolved name: {path, name, source, cite, miss, shadowed}."""
+    bundles = bundles if bundles is not None else Bundles()
+    if taken is None:
+        taken = {g["group"] for _, g in _v2xml.groups(elements) if g["group"]}
     for index, element in enumerate(elements):
         if "group" not in element:
             continue
@@ -299,15 +309,47 @@ def name_groups(elements, version, structure, overrides, used=None, path=()):
             where = list(path) + [index]
             hit = [g for g in overrides["groupNames"]
                    if g["version"] == version and g["structure"] == structure and g["path"] == where]
-            if not hit:
-                first = element["elements"][0].get("segment") or "a group"
-                raise UnnamedGroup(f"{structure} (v{version}): unnamed group at path {where} (first member "
-                                   f"{first}); name it in Resources/structures/overrides.json groupNames")
-            element["group"], element["nameSource"] = hit[0]["name"], "override"
-            if used is not None:
+            name, source, cite = _v2xml.resolve(bundles, version, structure, path, element["elements"])
+            entry = {"path": where, "miss": name is None, "shadowed": bool(name and hit)}
+            if name is None and hit:
+                name, source, cite = hit[0]["name"], "override", f"overrides.json: {hit[0]['citation']}"
+            elif name is None:
+                base = f"{_v2xml.signature(element['elements'])[0]}_GROUP"
+                name = next(n for n in [base] + [f"{base}{k}" for k in range(2, 100)] if n not in taken)
+                source, cite = "synthesised", f"synthesised: {cite}"
+            if hit and used is not None:
                 used.add((version, structure, tuple(where)))
-        name_groups(element["elements"], version, structure, overrides, used, tuple(path) + (element["group"],))
+            taken.add(name)
+            element["group"], element["nameSource"] = name, source
+            if log is not None:
+                log.append({**entry, "name": name, "source": source, "cite": cite})
+        name_groups(element["elements"], version, structure, overrides, used, tuple(path) + (element["group"],),
+                    bundles, log, taken)
     return elements
+
+
+def name_citation(log):
+    """The sentence that cites every non-printed group name, in document order."""
+    if not log:
+        return ""
+    return " Unprinted group names (ADR-019 decision 3): " + _join([f"{e['name']} ({e['cite']})" for e in log]) + "."
+
+
+def validate_names(structure):
+    """Every group's nameSource is one of NAME_SOURCES, and every non-printed name is cited
+    (the rule StructureCodegen enforces)."""
+    for _, group in _v2xml.groups(structure["elements"]):
+        source = group.get("nameSource")
+        if source not in NAME_SOURCES:
+            raise NameSourceError(f"group {group['group']}: nameSource {source!r} is not one of {NAME_SOURCES}")
+        if (source == "v2xml-v2.4") != (source.startswith("v2xml") and structure["version"] in ("2.3", "2.3.1")):
+            raise NameSourceError(f"group {group['group']}: nameSource {source} on v{structure['version']}; "
+                                  "v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
+        if source != "printed":
+            need = _v2xml.required_citation(group["group"], source, structure["version"])
+            if need not in structure["citation"]:
+                raise NameSourceError(f"group {group['group']} ({source}): the citation lacks {need!r}")
+    return structure
 
 
 def _join(items):
@@ -380,10 +422,12 @@ def load_overrides(path=OVERRIDES):
         return validate_overrides(json.load(f))
 
 
-def extract_version(version, texts, overrides, only=None):
+def extract_version(version, texts, overrides, only=None, bundles=None):
     """Read every caption of one version. texts: [(source, lines)]. Returns (structures by ID,
-    report rows, caption count). A report row is (structure, status, reason)."""
+    report rows, caption count). A report row is (structure, status, reason). bundles: the HL7
+    v2.xml bundles (Bundles; default none, so every unprinted name is an override or synthesised)."""
     ver = version.lstrip("v")
+    bundles = bundles if bundles is not None else Bundles()
     prints, count, early = {}, 0, []
     excluded ={x["section"] for x in overrides["exclusions"] if x["version"] == ver}
     for source, lines in texts:
@@ -416,12 +460,10 @@ def extract_version(version, texts, overrides, only=None):
                 raise UnknownNotation(f"trigger event {cap.event!r} is not CODE^EVT")
             if not (cap.page and cap.end_page and cap.section):
                 raise UnknownNotation("no page footer or section heading found for the caption")
-            elements = name_groups(parse(rows), ver, sid, overrides, used)
+            log = []
+            elements = name_groups(parse(rows), ver, sid, overrides, used, bundles=bundles, log=log)
         except ChoiceNotation as exc:
             report.append((sid, "skipped", f"choice: {exc}"))
-            continue
-        except UnnamedGroup as exc:
-            report.append((sid, "skipped", f"unnamed-group: {exc}"))
             continue
         except UnknownNotation as exc:
             report.append((sid, "skipped", f"unreadable: {cap.source} line {cap.line + 1}: {exc}"))
@@ -435,8 +477,8 @@ def extract_version(version, texts, overrides, only=None):
                 triggers.append(trig)
             if c is not cap:
                 try:
-                    same = e is None and name_groups(parse(r), ver, sid, overrides) == elements
-                except (UnknownNotation, UnnamedGroup):
+                    same = e is None and name_groups(parse(r), ver, sid, overrides, bundles=bundles) == elements
+                except UnknownNotation:
                     same = False
                 if not same:
                     report.append((sid, "note", f"{trig} print ({c.source} line {c.line + 1}) differs from {cap.code}^{cap.event}"))
@@ -445,8 +487,20 @@ def extract_version(version, texts, overrides, only=None):
             if trig in owner:
                 report.append((sid, "note", f"trigger {trig} also claimed by {owner[trig]}"))
             owner.setdefault(trig, sid)
-        structures[sid] = {"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
-                           "citation": citation(ver, cap, others, overrides, sid)}
+        structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
+                                          "citation": citation(ver, cap, others, overrides, sid) + name_citation(log)})
+        for entry in log:
+            where = f"[{', '.join(str(p) for p in entry['path'])}]"
+            if entry["source"] == "synthesised":
+                report.append((sid, "no-bundle-name", f"{entry['name']} at {where}: {entry['cite']}"))
+            else:
+                report.append((sid, "name", f"{entry['source']} {entry['name']} at {where}: {entry['cite']}"))
+            if entry["shadowed"]:
+                report.append((sid, "error", f"groupNames entry at path {where} shadows the bundle name {entry['name']}"))
+        tree = bundles.tree(ver, sid) if bundles.available(ver) else None
+        report += [(sid, "bundle-differs", d) for d in (_v2xml.differences(elements, tree) if tree else [])]
+        if (ver, sid) in bundles.defects:
+            report.append((sid, "bundle-differs", f"HL7-xml v{ver}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
     for g in overrides["groupNames"]:
         key = (g["version"], g["structure"], tuple(g["path"]))
@@ -457,12 +511,20 @@ def extract_version(version, texts, overrides, only=None):
 
 def summary(version, structures, report, count):
     skipped = [r for r in report if r[1] == "skipped"]
-    reasons = {k: sum(1 for r in skipped if r[2].startswith(k)) for k in ("choice", "unnamed-group", "unreadable")}
+    reasons = {k: sum(1 for r in skipped if r[2].startswith(k)) for k in ("choice", "unreadable")}
     distinct = len({r[0] for r in report if r[1] in ("parsed", "skipped")})
     excluded = sum(1 for r in report if r[1] == "excluded")
     return (f"v{version.lstrip('v')}: {count} captions ({excluded} excluded), {distinct} structures, {len(structures)} parsed, "
-            f"{len(skipped)} skipped (choice {reasons['choice']}, unnamed-group {reasons['unnamed-group']}, "
-            f"unreadable {reasons['unreadable']})")
+            f"{len(skipped)} skipped (choice {reasons['choice']}, unreadable {reasons['unreadable']})")
+
+
+def name_summary(version, report):
+    """One line: unprinted names by source and the bundle-differs rows (P8b-2b)."""
+    names = [r[2].split(" ")[0] for r in report if r[1] == "name"]
+    misses = sum(1 for r in report if r[1] == "no-bundle-name")
+    differs = sum(1 for r in report if r[1] == "bundle-differs")
+    return (f"v{version.lstrip('v')} names: {names.count('v2xml')} v2xml, {names.count('v2xml-v2.4')} v2xml-v2.4, "
+            f"{misses} synthesised, {names.count('override')} override; {differs} bundle-differs")
 
 
 def pdf_texts(version):
@@ -485,6 +547,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     versions = [f"v{v.lstrip('v')}" for v in (args.version or [v for v in ERAS if v not in ERAS_PENDING])]
     overrides = load_overrides()
+    bundles = Bundles.from_disk()
     failed, tsv = False, []
     for version in versions:
         if version not in ERAS:
@@ -492,6 +555,11 @@ def main(argv=None):
         if version in ERAS_PENDING:
             print(f"{version}: not read yet ({ERAS_PENDING[version]})")
             failed |= bool(args.check or args.write)
+            continue
+        source = BUNDLES_DERIVED.get(version, version)
+        if not bundles.available(source[1:]):
+            print(f"{version}: no HL7 v2.xml bundle at docs/XML-schemas/{BUNDLES[source]} (group names need it)")
+            failed = True
             continue
         texts = pdf_texts(version)
         if not texts:
@@ -501,8 +569,9 @@ def main(argv=None):
         target = os.path.join(STRUCTURES, version)
         only = (set(args.only.split(",")) if args.only else None if not (args.check or args.write) else
                 {f[:-5] for f in os.listdir(target) if f.endswith(".json")} if os.path.isdir(target) else set())
-        structures, report, count = extract_version(version, texts, overrides, only)
+        structures, report, count = extract_version(version, texts, overrides, only, bundles)
         print(summary(version, structures, report, count))
+        print(name_summary(version, report))
         tsv += [(version[1:],) + r for r in report]
         for sid, status, reason in report:
             if status == "error":

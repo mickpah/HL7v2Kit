@@ -50,7 +50,9 @@ struct MessageStructureDataTests {
             return nil
         }
         #expect(Set(object.keys) == Self.groupKeys, "\(path): keys \(object.keys.sorted())")
-        #expect(["printed", "override"].contains(object["nameSource"] as? String ?? ""), "\(path): nameSource")
+        // ADR-019 decision 3 as amended by P8b-2b: the five accepted name sources.
+        #expect(["printed", "override", "v2xml", "v2xml-v2.4", "synthesised"].contains(object["nameSource"] as? String ?? ""),
+                "\(path): nameSource")
         #expect(name.range(of: "^[A-Z][A-Z0-9_]*$", options: .regularExpression) != nil, "\(path): group \(name)")
         #expect(!children.isEmpty, "\(path): empty group")
         let elements = children.enumerated().compactMap { element($1, at: "\(path)/\(name)[\($0)]") }

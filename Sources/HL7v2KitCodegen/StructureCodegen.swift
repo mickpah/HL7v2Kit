@@ -28,7 +28,7 @@ func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: St
 struct StructureElementSchema: Decodable {
     let segment: String?
     let group: String?
-    /// `printed` or `override`; required on a group (ADR-019 data model).
+    /// One of `structureNameSources`; required on a group (ADR-019 data model).
     let nameSource: String?
     let min: Int
     let max: Int?
@@ -83,8 +83,28 @@ private func matches(_ value: String, _ pattern: String) -> Bool {
     value.range(of: pattern, options: .regularExpression) != nil
 }
 
-/// Reject any element the runtime model cannot represent faithfully.
-func validateStructureElement(_ element: StructureElementSchema) throws {
+/// Accepted group `nameSource` values (ADR-019 decision 3, P8b-2b): printed by the chapter, an
+/// `overrides.json` entry, the version's HL7 v2.xml bundle, the v2.4 bundle for v2.3 and v2.3.1,
+/// or synthesised as `<FIRSTSEG>_GROUP`.
+let structureNameSources = ["printed", "override", "v2xml", "v2xml-v2.4", "synthesised"]
+
+/// The text a structure citation must contain to cite a group named from a non-printed source
+/// (the extractor's `required_citation` is the same rule); nil for `printed`.
+func requiredNameCitation(name: String, source: String, version: String) -> String? {
+    let marker: String
+    switch source {
+    case "override": marker = "overrides.json"
+    case "v2xml": marker = "HL7-xml v\(version)/"
+    case "v2xml-v2.4": marker = "HL7-xml v2.4/"
+    case "synthesised": marker = "synthesised"
+    default: return nil
+    }
+    return "\(name) (\(marker)"
+}
+
+/// Reject any element the runtime model cannot represent faithfully. `version` and `citation`
+/// are the file's: every non-printed group name must be cited.
+func validateStructureElement(_ element: StructureElementSchema, version: String, citation: String) throws {
     let isSegment = element.segment != nil
     let isGroup = element.group != nil
     guard isSegment != isGroup else {
@@ -97,13 +117,21 @@ func validateStructureElement(_ element: StructureElementSchema) throws {
         guard matches(name, "^[A-Z][A-Z0-9_]*$") else {
             throw StructureSchemaError(description: "bad group name \"\(name)\"")
         }
-        guard let source = element.nameSource, ["printed", "override"].contains(source) else {
-            throw StructureSchemaError(description: "group \(name) needs nameSource \"printed\" or \"override\"")
+        guard let source = element.nameSource, structureNameSources.contains(source) else {
+            throw StructureSchemaError(description: "group \(name) needs nameSource one of \(structureNameSources)")
+        }
+        // v2.3 and v2.3.1 have no bundle: their names come through v2.4, and only theirs do.
+        guard (source == "v2xml-v2.4") == (source.hasPrefix("v2xml") && ["2.3", "2.3.1"].contains(version)) else {
+            throw StructureSchemaError(description: "group \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
+        }
+        if let needed = requiredNameCitation(name: name, source: source, version: version),
+           !citation.contains(needed) {
+            throw StructureSchemaError(description: "group \(name) (nameSource \(source)) is not cited: the citation lacks \"\(needed)\"")
         }
         guard let children = element.elements, !children.isEmpty else {
             throw StructureSchemaError(description: "group \(name) has no elements")
         }
-        for child in children { try validateStructureElement(child) }
+        for child in children { try validateStructureElement(child, version: version, citation: citation) }
     } else if let id = element.segment {
         guard matches(id, "^[A-Z][A-Z0-9]{2}$") else {
             throw StructureSchemaError(description: "bad segment ID \"\(id)\"")
@@ -130,7 +158,7 @@ func validateStructure(_ s: MessageStructureSchema, file: URL, version: String) 
     guard s.elements.first?.segment == "MSH" else {
         throw StructureSchemaError(description: "a structure must start with MSH")
     }
-    for element in s.elements { try validateStructureElement(element) }
+    for element in s.elements { try validateStructureElement(element, version: s.version, citation: s.citation) }
 }
 
 func renderStructureElement(_ element: StructureElementSchema, indent: String) -> String {

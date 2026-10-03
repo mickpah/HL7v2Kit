@@ -797,3 +797,32 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
 - **Print disagreements reported, not modelled.** v2.5.1 CH05 prints the ACK for Q16, Q17,
   J01, J02 and Q03 with `[ ERR ]`, where CH02 section 2.14.1 prints `[{ ERR }]`; the ACK
   structure follows CH02 and the extractor lists the others as report notes.
+
+## Amendment 2026-10-03 — HL7 v2.xml bundle names (P8b-2b)
+
+- **Decision 3 is now implemented through the bundles.** `scripts/read-v2xml-bundles.py` reads
+  the owner's HL7 v2.xml schema bundles (`docs/XML-schemas`, gitignored; v2.4, v2.5.1, v2.6,
+  v2.7.1, v2.8.2), and an unnamed printed group takes the name of the bundle group with the
+  same parent path, first segment and member segment set (every segment at any depth), never
+  a position. `nameSource` now takes five values: `printed`, `override`, `v2xml`, `v2xml-v2.4`
+  and `synthesised`; this supersedes the data-model bullet above that routes bundle names
+  through `override`. Override entries remain only for names no bundle gives, and an override
+  that a bundle name shadows is an error.
+- **Citations.** Each non-printed name is cited inside the structure `citation`, in document
+  order: `NAME (HL7-xml v<ver>/<STRUCT>.xsd, <STRUCT>.<GROUP>.CONTENT)`, `NAME (HL7-xml
+  v2.4/..., derived for v<ver> <STRUCT>[, which differs from <V24STRUCT> only by trigger])`,
+  `NAME (overrides.json: <citation>)` or `NAME (synthesised: <why>)`. `StructureCodegen` and
+  the extractor reject a non-printed name whose `NAME (<source marker>` text is absent.
+- **Derivation for v2.3 and v2.3.1 (ruling D2).** No bundle exists. In the v2.4 bundle's file
+  of the same structure ID, the group with the same first segment and member set (the parent
+  path breaks a tie); where v2.4 has no file of that ID, every v2.4 file of the same message
+  code (OMD_O01 against OMD_O03), citing both IDs. A miss synthesises `<FIRSTSEG>_GROUP`
+  (numbered 2, 3, ... on a clash within the structure) and is a `no-bundle-name` report row.
+  `v2xml-v2.4` is accepted only on v2.3 and v2.3.1, and `v2xml` never on them.
+- **Bundles are names-only (ruling D3).** The extractor compares each parsed structure's tree
+  with the same-version bundle and writes `bundle-differs` report rows (member lists, bounds,
+  unreadable schemas such as v2.5.1 `ORL_O34.xsd`, which nests `SPECIMEN` inside itself); the
+  print stays normative and nothing but names is taken from a bundle. No bundle text is
+  committed: the self-check uses synthetic schemas in the bundle's style (ruling D4).
+- **Pilot.** The five v2.5.1 ORU_R01 names are now `v2xml`, cited to `HL7-xml
+  v2.5.1/ORU_R01.xsd`; the structure data is unchanged.

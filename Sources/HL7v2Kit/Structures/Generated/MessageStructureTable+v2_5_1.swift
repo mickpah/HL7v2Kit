@@ -65,7 +65,7 @@ extension MessageStructureTable {
         id: "ORU_R01",
         version: "2.5.1",
         triggers: ["ORU^R01"],
-        citation: "HL7 v2.5.1 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 7-13 to 7-14. The print names PATIENT_RESULT and PATIENT only; VISIT, ORDER_OBSERVATION, TIMING_QTY, OBSERVATION and SPECIMEN are the HL7 v2.5.1 XML-encoding names of the unnamed groups (ADR-019 decision 3), the names HL7 v2.6 Chapter 7, section 7.3.1 prints for the same groups. {[NTE]} and {[CTI]} are read as [{ }].",
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 7-13 to 7-14. The print names PATIENT_RESULT and PATIENT only. {[NTE]} and {[CTI]} are read as [{ }]. Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT), TIMING_QTY (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.TIMING_QTY.CONTENT), OBSERVATION (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT) and SPECIMEN (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.SPECIMEN.CONTENT).",
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),

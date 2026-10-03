@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-2b: v2.xml bundle reader and group-name resolution
+
+- `scripts/read-v2xml-bundles.py` (imported by the structure extractor) reads the HL7 v2.xml
+  schema bundles under the gitignored `docs/XML-schemas` (v2.4, v2.5.1, v2.6, v2.7.1, v2.8.2):
+  per `<STRUCTURE>.xsd`, the sequence and choice content, element refs with
+  minOccurs/maxOccurs, and the `STRUCT.GROUP.CONTENT` group names. No bundle file or text is
+  committed (ruling D4).
+- An unnamed printed group takes the bundle group with the same parent path, first segment and
+  member segment set, never a position (`nameSource: v2xml`). v2.3 and v2.3.1 have no bundle:
+  their names are derived through the v2.4 bundle on first segment and member set within the
+  same structure ID, or across the v2.4 structures of the same message code where the ID
+  differs only by trigger, citing both IDs (`v2xml-v2.4`, ruling D2). Otherwise an
+  `overrides.json` entry (`override`), else `<FIRSTSEG>_GROUP` numbered on a clash
+  (`synthesised`), each a `no-bundle-name` report row. An override that a bundle name shadows is
+  an error.
+- Every non-printed name is cited in the structure citation (`NAME (HL7-xml v2.5.1/ORU_R01.xsd,
+  ORU_R01.VISIT.CONTENT)`); the extractor and `StructureCodegen` accept the five `nameSource`
+  values and reject a non-printed name the citation does not cite, `v2xml-v2.4` outside v2.3 and
+  v2.3.1, and `v2xml` on them (`scripts/check-structure-codegen.sh`, six new cases).
+- Report-only cross-check (ruling D3): `bundle-differs` rows where the bundle's member lists or
+  bounds disagree with the print, and for an unreadable bundle schema (v2.5.1 `ORL_O34.xsd`
+  nests `SPECIMEN` inside itself). Per-version name line: v2.4 162 v2xml, 6 synthesised, 14
+  bundle-differs; v2.5.1 8 v2xml, 3 bundle-differs; v2.6 7 v2xml, 6 bundle-differs.
+- `scripts/check-audit-schemas.py`: the bundle map joins the version-map agreement check, with
+  the explicit derived-through-v2.4 exception for 2.3 and 2.3.1.
+
+### Changed — P8b-2b: the ORU_R01 pilot names come from the v2.5.1 bundle
+
+- The five `overrides.json` groupNames for v2.5.1 ORU_R01 are gone; VISIT, ORDER_OBSERVATION,
+  TIMING_QTY, OBSERVATION and SPECIMEN are `nameSource: v2xml`, cited to
+  `HL7-xml v2.5.1/ORU_R01.xsd`. Only `nameSource` and the citation text changed; the structure
+  data and the generated table (citation only) are otherwise identical. Without a bundle the
+  extractor no longer skips a structure with an unnamed group: it synthesises the name and
+  reports the miss.
+
 ### Added — P8b-2a: message-structure extractor core; overrides.json; the pilot golden
 
 - `scripts/extract-message-structures.py` reads the abstract message syntax tables printed

@@ -103,6 +103,21 @@ def first_group(elements):
         if "group" in e: return e
         g = first_group(e.get("elements", []))
         if g: return g
+def oru(source, fragment, version="2.5.1"):
+    # ORU_R01 with PATIENT_RESULT renamed from the given source and cited by the fragment; on
+    # another version the bundle names become v2.4-derived ones.
+    d = load("v2.5.1/ORU_R01.json"); d["version"] = version
+    if version != "2.5.1":
+        d["citation"] = d["citation"].replace("HL7-xml v2.5.1/", "HL7-xml v2.4/")
+        def derive(es):
+            for e in es:
+                if e.get("nameSource") == "v2xml": e["nameSource"] = "v2xml-v2.4"
+                derive(e.get("elements", []))
+        derive(d["elements"])
+        os.makedirs(os.path.join(S, "v" + version), exist_ok=True)
+    first_group(d["elements"])["nameSource"] = source
+    d["citation"] += " " + fragment
+    save("v%s/ORU_R01.json" % version, d)
 '
 
 reject "unknown key in a structure file" 'unknown key(s) ["comment"]' "$PRE
@@ -119,6 +134,28 @@ d = load('v2.5.1/ORU_R01.json'); first_group(d['elements'])['nameSource'] = 'gue
 
 reject "group without nameSource" 'needs nameSource' "$PRE
 d = load('v2.5.1/ORU_R01.json'); del first_group(d['elements'])['nameSource']; save('v2.5.1/ORU_R01.json', d)"
+
+# P8b-2b: the five nameSource values; every non-printed name is cited in the structure citation.
+accept "nameSource v2xml cited by bundle file and element" "$PRE
+oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).')"
+
+accept "nameSource v2xml-v2.4 on v2.3, cited through the v2.4 bundle" "$PRE
+oru('v2xml-v2.4', 'PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.3 ORU_R01).', '2.3')"
+
+accept "nameSource synthesised, cited as synthesised" "$PRE
+oru('synthesised', 'PATIENT_RESULT (synthesised: no HL7-xml group matches).')"
+
+accept "nameSource override, cited to overrides.json" "$PRE
+oru('override', 'PATIENT_RESULT (overrides.json: a cited name).')"
+
+reject "a non-printed name the citation does not cite" 'is not cited' "$PRE
+d = load('v2.5.1/ORU_R01.json'); d['citation'] = d['citation'].split(' Unprinted group names')[0]; save('v2.5.1/ORU_R01.json', d)"
+
+reject "nameSource v2xml on v2.3 (no bundle)" 'for v2.3 and v2.3.1 only' "$PRE
+oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.3/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).', '2.3')"
+
+reject "nameSource v2xml-v2.4 outside v2.3 and v2.3.1" 'for v2.3 and v2.3.1 only' "$PRE
+oru('v2xml-v2.4', 'PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).')"
 
 reject "max below min" 'bad occurrence bounds' "$PRE
 d = load('v2.5.1/ACK.json'); d['elements'][0]['min'] = 2; save('v2.5.1/ACK.json', d)"

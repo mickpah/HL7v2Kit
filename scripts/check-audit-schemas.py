@@ -470,6 +470,15 @@ def check_version_maps_agree():
             for path in (source if isinstance(source, list) else [source]):
                 if key.lstrip("v") == "2.7.1":
                     assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
+    # P8b-2b (pre-flight B2): the HL7 v2.xml bundle map names every modelled version once,
+    # with the explicit derived-through-v2.4 exception for 2.3 and 2.3.1 (no bundle exists).
+    bundled = {k[1:] for k in structures.BUNDLES}
+    derived = {k[1:]: v[1:] for k, v in structures.BUNDLES_DERIVED.items()}
+    assert derived == {"2.3": "2.4", "2.3.1": "2.4"}, f"bundle derivation {derived}"
+    assert not bundled & set(derived), f"bundled and derived: {sorted(bundled & set(derived))}"
+    assert bundled | set(derived) == modelled, \
+        f"bundle map: missing {sorted(modelled - bundled - set(derived))}, unmodelled {sorted((bundled | set(derived)) - modelled)}"
+    assert all(structures.BUNDLES[k] == f"HL7-xml {k}" for k in structures.BUNDLES), structures.BUNDLES
     # P8b-1: the message-structure completeness data names every modelled version, and only
     # those (the codegen enforces the same against the schema directories).
     with open(os.path.join(os.path.dirname(HERE), "Resources", "structures", "completeness.json")) as f:
