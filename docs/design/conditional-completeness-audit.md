@@ -316,6 +316,79 @@ Candidates: every C field in the segments v2.4 ORM^O01, ORU^R01 and REF^I12 carr
 
 Counts: (a) 1, (b) 31, (c) 8, (n) 12; 52 in all. HL7au:00060.4 is SHIPPED with this scope (owner rulings G6 and G9): OBX-2 is the one field enforced by route C, and the other 51 carry no derivable prohibition.
 
+## v2.7.1 (P10-5a, 2026-10-03): orders, results, pharmacy and specimen
+
+**Scope:** every field the v2.7.1 attribute tables print `C` in CH04, CH04A, CH07 and CH13, plus OM7 and PRC (CH08): 85 positions. Each was read against its own v2.7.1 field definition (v2.7.1 Final Standard, July 2012; section and page below). v2.7.1 is not dispatched until P10-6, so these rules change no validation output yet. The other v2.7.1 bare positions (92) are P10-5b's; `BareConditionalGuardTests.v271BareC` pins both sets.
+
+**Rule:** a stored rule equals v2.8.2's or v2.6's only where the v2.7.1 sentence is that version's sentence. The definition texts were compared word by word with v2.8.2's: 52 of the 85 are identical, and in the other 33 the difference is editorial (an inline code table, a component list, "in Chapter 2C") except for the rows marked below. No position carries `conditionIsPredicate`: ADR-021 marks a field only after the route C classification, which is a v2.4 ADRM matter, and no other version marks one.
+
+**Shipped (57 of the 85, plus four non-C rows):**
+
+| Position(s) | Rule | v2.7.1 text | Same as |
+|---|---|---|---|
+| BPX-5, BPX-6 | each `populated` with the other; prohibited (warning) when `BPX-8 populated` | CH04 §4.14.2.5-6 (p. 128): "This field is required for blood components and is not applicable for commercial product messages." | v2.8.2 |
+| BPX-8, BPX-9, BPX-10 | required with one another; prohibited (warning) when `BPX-5 populated OR BPX-6 populated` | CH04 §4.14.2.8-10 (pp. 129-130): "This field is required for commercial blood products and is not applicable for blood component messages." | v2.8.2 |
+| BTX-2, BTX-3, BTX-5, BTX-6, BTX-7 | as BPX | CH04 §4.14.3.2-3, 5-7 (pp. 136-138): the same two sentences | v2.8.2 |
+| BTX-4 | `BTX-2 populated OR BTX-3 populated` (partial) | CH04 §4.14.3.4 (p. 137): "required for blood components and certain commercial products (such as solvent detergent plasma)" | v2.8.2 |
+| OBR-2, OBR-3 | `OBR-3 empty AND ORC-2 empty AND ORC-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC absent AND messageCode in (ORU, ORF)` (OBR-3 mirrors) | CH04 §4.5.3.2 (pp. 55-56): "If the placer order number is not present in the ORC, it must be present in the associated OBR and vice versa ... When results are transmitted in an ORU message, an ORC is not required, and the identifying placer order number must be present in the OBR segments"; §4.5.3.3 (p. 56) the same of the filler number | **v2.6** (differs from v2.8.2) |
+| ORC-2, ORC-3 | `ORC-3 empty AND OBR-2 empty AND OBR-3 empty AND messageCode not in (OUL, OPU, OPL) OR ORC-3 empty AND OBR absent AND messageCode not in (OUL, OPU, OPL)` (ORC-3 mirrors) | CH04 §4.5.1.2 (pp. 34-35), §4.5.1.3 (p. 35): as OBR-2/3 | **v2.6** (differs from v2.8.2) |
+| OBR-7, OBR-25 | `messageCode in (ORU, OUL, OPU)` | CH04 §4.5.3.7 (p. 57): "When the OBR is transmitted as part of a report message, the field must be filled in"; §4.5.3.25 (p. 63): "required whenever the OBR is contained in a report message"; CH07 §7.2.3 (p. 14): QRY/ORF "withdrawn as of v2.7" | v2.8.2 (differs from v2.6, which lists ORF) |
+| OBR-22 | `OBR-25 populated` | CH04 §4.5.3.22 (p. 62): "This conditional field is required whenever the OBR-25 is valued." | v2.8.2 |
+| ORC-26 | `ORC-20 in (3, 4)` (partial) | CH04 §4.5.1.26 (p. 49): "required if the value of ORC-20 ... indicates that the notice was not signed" | v2.8.2 |
+| RQ1-2 to RQ1-5 | either pair | CH04 §4.11.2.2-5 (p. 113): "either RQ1-2-manufacturer ID and RQ1-3-manufacturer's catalog or RQ1-4-vendor ID and RQ1-5-vendor catalog must be valued" | v2.8.2 |
+| RQD-2 to RQD-4 | at least one of three | CH04 §4.11.1.2-4 (pp. 109-110): "at least one of the three fields ... must be valued" | v2.8.2 |
+| TQ1-12 | `nextSegmentID(TQ2) = TQ1` | CH04 §4.5.4.12 (p. 79): "If the TQ1 segment is repeated in the message, this field must be populated" | v2.8.2 |
+| TQ2-3, TQ2-4, TQ2-5 | at least one of three | CH04 §4.5.5.3-5 (p. 81): "At least one of TQ2-3, TQ2-4, TQ2-5 must contain a value." | v2.8.2 |
+| TQ2-6, TQ2-10 | either | CH04 §4.5.5.6 (p. 82), §4.5.5.10 (p. 83): "Either this field or TQ2-10 [TQ2-6] must be present." | v2.8.2 |
+| TQ2-7 | prohibited (warning) when `TQ2-2 != C` | CH04 §4.5.5.7 (p. 82): "Should not be populated when TQ2-2 ... is not equal to a 'C'" | v2.8.2 |
+| RXO-1, RXO-2, RXO-4 | `RXO-6 empty OR noRepeat(RXO-6.1) empty` | CH04A §4A.4.1.1 (p. 27): "mandatory unless the prescription/treatment is transmitted as free text using RXO-6; then RXO-1, RXO-2, and RXO-4 may be blank and the first subcomponent of RXO-6 must be blank" | v2.8.2 |
+| CSR-9, CSR-10 | `triggerEvent = C01` | CH07 §7.7.1.9-10 (p. 97): "This field is required for the patient registration trigger event (C01)." | v2.8.2 |
+| CSR-14, CSR-15, CSR-16 | `triggerEvent = C04` | CH07 §7.7.1.14-16 (pp. 98-99): "required for the off-study trigger event (C04)" | v2.8.2 |
+| CTI-2 | `CTI-3 populated` | CH07 §7.7.4.3 (p. 101): "CTI-2 Study Phase Identifier must be valued if CTI-3 Study Scheduled Time Point is valued." | v2.8.2 |
+| OBX-2 | `OBX-11 != X`; additional prohibition `OBX-11 = O` (error, null permitted) | CH07 §7.3.2.2 (p. 46): "This field is required if OBX- 11-Observ result status is not valued with an 'X'"; §7.3.2.11 (p. 53): "with OBX-11 valued with O, and OBX-2 and OBX-5 valued with null" | v2.8.2 (citation re-pointed to v2.7.1) |
+| OBX-5 | `OBX-11 = O`; additional prohibition `OBX-11 = O` (error, null permitted) | CH07 §7.3.2.11 (p. 53), as OBX-2; §7.3.2.5 (p. 49): "It is not a required field because some systems will report only the Interpretation Codes (OBX-8)" | v2.8.2 |
+| PAC-2 | `SHP-8 > 1` | CH07 §7.17.3.2 (p. 156): "If SHP-8 Number of Packages in Shipment is greater then 1, then Package ID must be valued." | v2.8.2 |
+| PRT-5, PRT-8, PRT-9, PRT-10 | each required when the other three are empty | CH07 §7.3.4.5 (p. 71) and §7.3.4.8-10: "At least one of the Participation Person, Participation Organization, Participation Location, or Participation Device fields must be valued." | **own**: v2.8.2 adds "(and/or Participation Device Type)" and a PRT-22 leg; v2.7.1 PRT has 15 fields |
+| PRT-6, PRT-7 | prohibited when `PRT-5 empty` | CH07 §7.3.4.6-7 (p. 72): "This field may only be valued if PRT-5 Participation Person is valued." | v2.8.2 |
+| PRT-14 | `PRT-4 = POMD` (partial) | CH07 §7.3.4.14 (p. 74): "The address must be present if the Participation is Performing Organization Medical Director." | v2.8.2 |
+| SPM-13 | prohibited (warning) when `SPM-11 empty OR noRepeat(SPM-11) = G` | CH07 §7.3.3.13 (p. 64): "This field would only be valued if the specimen role attribute has the value 'G'." | v2.8.2 |
+| EQU-3 | `messageCode = ESU` | CH13 §13.4.1.3 (p. 20): "The Equipment State is required in the ESU message and is optional otherwise." | **own**: v2.6 and v2.8.2 print the same sentence but leave EQU-3 bare (see below) |
+| OM7-16, OM7-18 | `OM7-15 populated` / `OM7-17 populated` | CH08 §8.8.14.16 and .18 (p. 47): "If Consent Interval [Waiting Period] Quantity is specified, then Consent Interval [Waiting Period] Unit is required." | v2.8.2 |
+| PRC-5 | `PRC-13 = X` (partial) | CH08 §8.10.3.5 (p. 82): "If CDM price will always be overridden when charges are posted, then this field is optional. Otherwise, price would be a required field." | v2.8.2 |
+| ORC-25 (O) | prohibited when `ORC-5 empty` | CH04 §4.5.1.25 (p. 48): "This field may only be populated if the ORC-5-Order Status field is valued." | v2.8.2 |
+| OBX-12 (O) | prohibited when `OBX-7 empty` | CH07 §7.3.2.12 (p. 53): "This field can be valued only if OBX-7-reference range is populated." | v2.8.2 |
+| RXR-6 (O) | prohibited when `RXR-2 empty` | CH04A §4A.4.2.6 (p. 46): "This field may only be populated if RXR-2 Administration Site is populated." No Table 0163 sentence, so no v2.6 additional prohibition. | v2.8.2 |
+| CSR-8 (printed R) | `C`, `triggerEvent = C01` | see "Table versus definition" | v2.8.2 (P4-30) |
+
+The `messageCode not in (OUL, OPU, OPL)` gates are kept as v2.6 and v2.8.2 have them (P10 ruling C5; register §D, "base-spec new-order / Send Number"). The ORC-absent leg keeps `ORF` as v2.6 and v2.8.2 do; ORF is withdrawn in v2.7.1, so the entry can never match a conformant v2.7.1 message.
+
+**Left bare (28):** each stays bare for the reason recorded for the same position on v2.8.2, re-read in the v2.7.1 text.
+
+| Position(s) | Reason | v2.7.1 text |
+|---|---|---|
+| OBR-48 | not wire-decidable (duplicate detection needs patient history) | CH04 §4.5.3.48 (p. 72): "why the procedure found in OBR-44 ... is a duplicate of one ordered/charged previously for the same patient" |
+| RXA-7, RXD-5, RXE-11 | not wire-decidable (whether a code implies units is terminology, register §C) | CH04A §4A.4.7.7 (p. 90): "required if the administered amount code does not imply units"; §4A.4.5.5 (p. 68), §4A.4.4.11 (p. 53): "required if the units are not implied by the actual dispense code" |
+| RXA-12, RXE-22, RXO-17, RXG-14 | not wire-decidable (continuous administration is clinical data) | CH04A §4A.4.7.12 (p. 92), §4A.4.4.22 (p. 57), §4A.4.1.17 (p. 34): "required when ... administered continuously at a prescribed rate"; §4A.4.6.14 (p. 81): "Required when relevant (e.g., certain IVs)" |
+| RXD-8, RXE-16, RXE-17 | not wire-decidable (outpatient dispensing) | CH04A §4A.4.5.8 (p. 68), §4A.4.4.16-17 (pp. 56-57): "required when a prescription is dispensed to an outpatient" |
+| RXE-15 | the text names no message set the model can test | CH04A §4A.4.4.15 (p. 56): "a required field in RXE when used in pharmacy/treatment messages, but it is not required when used in product experience messages"; "pharmacy/treatment messages" is not a list of message codes, and RXE is carried outside Chapter 4A |
+| RXE-10, RXE-18, RXE-19 | text gives no predicate | CH04A §4A.4.4.10 (p. 53), .18, .19 (p. 57): plain definitions ("This field contains the amount to be dispensed ...") |
+| RXO-5 | not wire-decidable (whether a code specifies the form) | CH04A §4A.4.1.5 (p. 29): "Required when both RXO-1 ... and RXO-10 ... do not specify the drug/treatment form" |
+| RXO-15 | site policy | CH04A §4A.4.1.15 (p. 33): "Use if required by the pharmacy or treatment application or site on orders" |
+| RXO-31, OBX-22 | text gives no presence predicate | CH04A §4A.4.1.31 (p. 38), CH07 §7.3.2.22 (p. 56): "may only be used with new trigger events and new messages from v2.6 onward. When this field is not valued ... the value is assumed to be 'EVN'" |
+| OBX-4 | text gives no predicate | CH07 §7.3.2.4 (p. 47): "used to distinguish between multiple OBX segments with the same observation ID organized under one OBR" |
+| CSP-4 | text gives no predicate | CH07 §7.7.2.4 (p. 100): "the disposition of the patient's data for this phase interval" |
+| PRT-1 | not wire-decidable (knowledge of an identifier) | CH07 §7.3.4.1 (p. 70): "The identifier is required when known" |
+| SAC-3, SAC-4 | not wire-decidable (primary or aliquot sample) | CH13 §13.4.3.3-4 (p. 24): "For primary samples this field is empty; for aliquot samples this field should contain the identifier of primary container" |
+| SID-1 to SID-4 | not wire-decidable (depends on the manufacturer) | CH13 §13.4.11 (p. 48): "depending on the manufacturer all or some fields are required (this is the reason the optionality is 'C' (conditional))" |
+
+No v2.7.1 sentence in scope needs a model extension, so no register §D row is added.
+
+**Table versus definition (P4-30, owner ruling G8):** CSR-8 is printed `R` (CH07 attribute table, p. 93) and its definition reads "This field is required for the patient registration trigger event (C01)" (§7.7.1.8, p. 96), the same sentence as v2.8.2; modelled `C`, `triggerEvent = C01`, with an `optionalityCitation`, as on the other versions. RXA-4 is printed `R` and its definition reads "If null, the date/time of RXA-3-Date/Time Start of Administration is assumed" (CH04A §4A.4.7.4, p. 89), as on v2.8.2; it stays `R` and the HL7 null `""` satisfies it (G8). CTI-2 is printed `C` here and takes `CTI-3 populated`, as above.
+
+**Printed `O`, no presence condition:** ORC-8 and OBR-29 (CH04 §4.5.1.8, p. 37; §4.5.3.29, p. 65). The v2.6 "must be present" sentence is gone; §4.5.1.8 states only an equality: "Where the message has matching ORC/OBR pairs, ORC-8 and OBR-?? Must carry the same value" (the parent order field is OBR-54, named in the same section).
+
+**Found on the other versions (intake, not changed here):** EQU-3 prints "The Equipment State is required in the ESU message and is optional otherwise" on v2.8.2 (CH13 §13.4.1.3) and v2.6 with the same wording, yet both leave it bare under the "lab-automation event" rationale above, which the sentence contradicts; `messageCode = ESU` expresses it. RXE-15's "pharmacy/treatment messages" reading applies to every version and stays bare on all.
+
 ## Outcome
 
 - **18 predicates shipped** (PD1-15 exact, ORC-26 partial; v1.8 added CSR-9/10/14/15/16 + CTI-2; Sprint 0 close-out added STF-1, PRA-1, PRA-12, RQ1-2..5, RQD-2..4) — closing the two v0.15 gaps where a spec predicate existed but was not extracted.

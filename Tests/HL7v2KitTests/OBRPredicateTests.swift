@@ -39,6 +39,7 @@ struct OBRPredicateTests {
         case "2.4": return SegmentGrammarTable.v2_4
         case "2.5.1": return SegmentGrammarTable.v2_5_1
         case "2.6": return SegmentGrammarTable.v2_6
+        case "2.7.1": return SegmentGrammarTable.v2_7_1
         case "2.8.2": return SegmentGrammarTable.v2_8_2
         default: return [:]
         }
@@ -122,7 +123,7 @@ struct OBRPredicateTests {
     }
 
     @Test("X-C05 / X-C06: OBR-7 and OBR-14 metadata carry no specimen atom",
-          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func specimenAtomsGone(version: String) throws {
         let obr = try #require(Self.table(version)["OBR"])
         let obr7 = try #require(obr.field(7)?.condition)
@@ -130,7 +131,7 @@ struct OBRPredicateTests {
         #expect(obr.field(14)?.condition == nil, "v\(version) OBR-14")
         let expected: FieldOptionality = switch version {
         case "2.5.1", "2.6": .backwardCompat
-        case "2.8.2": .withdrawn
+        case "2.7.1", "2.8.2": .withdrawn
         default: .conditional
         }
         #expect(obr.field(14)?.optionality == expected, "v\(version) OBR-14 optionality")

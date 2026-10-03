@@ -215,8 +215,11 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: nothing is copied from another version here.
-            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
+            // segments P10-5b audits carry none yet.
+            if !Self.p105aSegments.contains(segment) {
+                #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            }
         }
         // CH02 section 2.14.1 (p. 47): ADD prints SEQ `1-n`.
         #expect(segments["ADD"]?.field(1)?.variableColumns == true)
@@ -285,8 +288,11 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: nothing is copied from another version here.
-            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
+            // segments P10-5b audits carry none yet.
+            if !Self.p105aSegments.contains(segment) {
+                #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            }
         }
         // CH05 section 5.5.8 (p. 48): RDT prints SEQ `1-n`, `varies`, R, 00703 Column Value.
         #expect(segments["RDT"]?.field(1)?.variableColumns == true)
@@ -377,8 +383,11 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: nothing is copied from another version here.
-            #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
+            // segments P10-5b audits carry none yet.
+            if !Self.p105aSegments.contains(segment) {
+                #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
+            }
         }
     }
 

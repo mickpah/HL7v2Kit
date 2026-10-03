@@ -9,7 +9,7 @@
 
 Fully audited in v0.16 and corrected by the P4 remediation (2026-10-01). See **`docs/design/conditional-completeness-audit.md`** for the per-field rationale, and its **Shipped in P4** table for every position that left this set. The v0.16 statement that none of the set is wire-decidable was wrong: the 2026-09 review (planning/reviews, X-C09) found predicates the DSL already expressed (for example OBR-22 on v2.8.2, PV2-45 on v2.6 and v2.8.2, the TXA, TQ2, SCH, AIx, MFE/MFA, LRL, OM7 and BPX/BTX families), prohibitions that were not modelled, and one shipped prohibition (PRT-7) keyed to the wrong field. P4 shipped those and added three model capabilities: `prohibitedSeverity` (warning-level prohibitions for SHOULD and "not applicable" text), the `noRepeat(...)` atom and the `nextSegmentID(...)` referent (ADR-010 amendment).
 
-**Freeze decision:** position by position, not as a block. A `C` field stays bare only where the audit quotes that version's own text and the text names no wire-decidable trigger, or where the text contradicts itself (PV2-1 on v2.3 and v2.3.1). Guard tests pin the bare set on all six versions: `BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1 and v2.6 (P4-15), `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2 (v0.16). Any new DSL capability reopens the set for re-audit.
+**Freeze decision:** position by position, not as a block. A `C` field stays bare only where the audit quotes that version's own text and the text names no wire-decidable trigger, or where the text contradicts itself (PV2-1 on v2.3 and v2.3.1). Guard tests pin the bare set on all six versions: `BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1 and v2.6 (P4-15), `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2 (v0.16). v2.7.1 (P10) is pinned by `BareConditionalGuardTests.v271BareC`: the CH04, CH04A, CH07, CH13, OM7 and PRC positions are audited (P10-5a, `conditional-completeness-audit.md` "v2.7.1 (P10-5a)"); the rest are P10-5b's. Any new DSL capability reopens the set for re-audit.
 
 ### Addendum to §A — prose-backed `C` over printed `O`, OBR-29/ORC-8 on v2.3 to v2.5.1 (P4-18)
 
@@ -43,6 +43,9 @@ each citing the spec in the schema field's `optionalityCitation` (which `scripts
 reads as the slot's optionality whitelist entry): MFI-6 `messageCode = MFN`, CSR-8
 `triggerEvent = C01` (all six versions), and ROL-4 `STF absent` (v2.6, v2.8.2). RXA-4 stays `R`
 (its "If null" is the HL7 null `""`). Rows and evidence: `conditional-completeness-audit.md`.
+v2.7.1 (P10-5a): CSR-8 prints `R` with the same definition (CH07 §7.7.1.8, p. 96) and is
+modelled `C`, `triggerEvent = C01`, likewise; RXA-4 prints `R` with the same "If null" sentence
+(CH04A §4A.4.7.4, p. 89) and stays `R`. MFI-6 and ROL-4 on v2.7.1 are P10-5b's.
 
 **Known limitation (req #3), blocks spec-completeness:** the v2.6 and v2.8.2 ROL-4 definition
 (CH15 §15.4.7.4) continues: "If this field is populated, then it must be populated with the same
@@ -166,6 +169,8 @@ Remaining gaps: lost coverage from the ORC-delimited group model, until P8's mes
 - **ORC-8 and its OBR-29 mirror** (owner decision G2-6, 2026-09-30; widened to OPL on v2.6 in P4-7 fix round 1, OBR-29 added in fix round 2, same rationale): all legs are gated as above on v2.5.1 and v2.6. The `OBR absent` leg is still checked on ORM and other ORC-first structures.
 
 The equality clause ("if both ORC-2 and OBR-2 are valued then they must be valued the same") is enforced separately by the M8-B1/B2 ORC/OBR pair-equality check, not by these conditions.
+
+**v2.7.1 (P10-5a, 2026-10-03):** v2.7.1 prints the v2.6 sentences, not v2.8.2's: no "either a placer or a filler id with an exception for ... 'Send Number'" (CH04 §4.5.1.2-3, pp. 34-35; §4.5.3.2-3, pp. 55-56). ORC-2/3 and OBR-2/3 therefore carry the v2.6 forms (placer-or-filler, no SN exemption), with the same `messageCode not in (OUL, OPU, OPL)` gates and the same ORC-absent `messageCode in (ORU, ORF)` leg (P10 ruling C5). The gaps listed above apply to v2.7.1 as to v2.6.
 
 ### Addendum to §D — one prohibition per field (P4-1 review finding, not an ADRM point; fixed in P4-21)
 

@@ -15,7 +15,7 @@
     { "index": 10, "swiftName": "specimenCollectionSite", "name": "Specimen Collection Site", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0543"] },
     { "index": 11, "swiftName": "specimenRole", "name": "Specimen Role", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0369"] },
     { "index": 12, "swiftName": "specimenCollectionAmount", "name": "Specimen Collection Amount", "dataType": "CQ", "optionality": "O", "repeatability": "1" },
-    { "index": 13, "swiftName": "groupedSpecimenCount", "name": "Grouped Specimen Count", "dataType": "NM", "length": "6=", "optionality": "C", "repeatability": "1" },
+    { "index": 13, "swiftName": "groupedSpecimenCount", "name": "Grouped Specimen Count", "dataType": "NM", "length": "6=", "optionality": "C", "repeatability": "1", "prohibitedWhen": "SPM-11 empty OR noRepeat(SPM-11) = G", "prohibitedSeverity": "warning" },
     { "index": 14, "swiftName": "specimenDescription", "name": "Specimen Description", "dataType": "ST", "optionality": "O", "repeatability": "*" },
     { "index": 15, "swiftName": "specimenHandlingCode", "name": "Specimen Handling Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0376"] },
     { "index": 16, "swiftName": "specimenRiskCode", "name": "Specimen Risk Code", "dataType": "CWE", "optionality": "O", "repeatability": "*", "tables": ["0489"] },
