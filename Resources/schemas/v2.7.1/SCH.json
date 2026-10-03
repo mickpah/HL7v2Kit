@@ -3,8 +3,8 @@
   "version": "2.7.1",
   "description": "SCH",
   "fields": [
-    { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
-    { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "placerAppointmentId", "name": "Placer Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "SCH-2 empty" },
+    { "index": 2, "swiftName": "fillerAppointmentId", "name": "Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "SCH-1 empty" },
     { "index": 3, "swiftName": "occurrenceNumber", "name": "Occurrence Number", "dataType": "NM", "length": "5=", "optionality": "C", "repeatability": "1" },
     { "index": 4, "swiftName": "placerGroupNumber", "name": "Placer Group Number", "dataType": "EI", "optionality": "O", "repeatability": "1" },
     { "index": 5, "swiftName": "scheduleId", "name": "Schedule ID", "dataType": "CWE", "optionality": "O", "repeatability": "1" },
@@ -29,6 +29,6 @@
     { "index": 24, "swiftName": "parentFillerAppointmentId", "name": "Parent Filler Appointment ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
     { "index": 25, "swiftName": "fillerStatusCode", "name": "Filler Status Code", "dataType": "CWE", "optionality": "O", "repeatability": "1", "tables": ["0278"] },
     { "index": 26, "swiftName": "placerOrderNumber", "name": "Placer Order Number", "dataType": "EI", "optionality": "C", "repeatability": "*" },
-    { "index": 27, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "*" }
+    { "index": 27, "swiftName": "fillerOrderNumber", "name": "Filler Order Number", "dataType": "EI", "optionality": "C", "repeatability": "*", "condition": "SCH-26 populated" }
   ]
 }

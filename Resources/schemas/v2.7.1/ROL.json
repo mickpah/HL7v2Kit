@@ -3,10 +3,10 @@
   "version": "2.7.1",
   "description": "ROL",
   "fields": [
-    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "C", "repeatability": "1" },
+    { "index": 1, "swiftName": "roleInstanceId", "name": "Role Instance ID", "dataType": "EI", "optionality": "C", "repeatability": "1", "condition": "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR, PMU) OR messageCode = RSP AND triggerEvent = K25" },
     { "index": 2, "swiftName": "actionCode", "name": "Action Code", "dataType": "ID", "table": "0287", "length": "2..2", "optionality": "R", "repeatability": "1", "tables": ["0287"] },
     { "index": 3, "swiftName": "roleRol", "name": "Role-ROL", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0443"] },
-    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "R", "repeatability": "*" },
+    { "index": 4, "swiftName": "rolePerson", "name": "Role Person", "dataType": "XCN", "optionality": "C", "repeatability": "*", "condition": "STF absent", "optionalityCitation": "v2.7.1 CH15 section 15.4.7.4 (p. 34): the attribute table (p. 32) prints R, but the definition reads 'If both STF and ROL are present in the same message, populating this field is optional'. Modelled C (P4-30 ruling, applied to v2.7.1 in P10-5b)." },
     { "index": 5, "swiftName": "roleBeginDateTime", "name": "Role Begin Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 6, "swiftName": "roleEndDateTime", "name": "Role End Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 7, "swiftName": "roleDuration", "name": "Role Duration", "dataType": "CWE", "optionality": "O", "repeatability": "1" },

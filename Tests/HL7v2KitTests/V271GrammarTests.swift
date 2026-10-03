@@ -215,9 +215,9 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
-            // segments P10-5b audits carry none yet.
-            if !Self.p105aSegments.contains(segment) {
+            // Conditions are pinned in `p105aConditions` and `p105bConditions`; a segment
+            // neither task audited (no printed C) carries none.
+            if !Self.conditionedSegments.contains(segment) {
                 #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
             }
         }
@@ -288,9 +288,9 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
-            // segments P10-5b audits carry none yet.
-            if !Self.p105aSegments.contains(segment) {
+            // Conditions are pinned in `p105aConditions` and `p105bConditions`; a segment
+            // neither task audited (no printed C) carries none.
+            if !Self.conditionedSegments.contains(segment) {
                 #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
             }
         }
@@ -383,9 +383,9 @@ struct V271GrammarTests {
             #expect(grammar.version == "2.7.1")
             #expect(grammar.fields.count == count, "\(segment)")
             #expect(grammar.fields.map(\.index) == Array(1...count), "\(segment)")
-            // Conditions are P10-5a/5b's: P10-5a's are pinned in `p105aConditions`; the
-            // segments P10-5b audits carry none yet.
-            if !Self.p105aSegments.contains(segment) {
+            // Conditions are pinned in `p105aConditions` and `p105bConditions`; a segment
+            // neither task audited (no printed C) carries none.
+            if !Self.conditionedSegments.contains(segment) {
                 #expect(grammar.fields.allSatisfy { $0.condition == nil && $0.prohibitedWhen == nil }, "\(segment)")
             }
         }
@@ -451,8 +451,10 @@ struct V271GrammarTests {
         #expect(try field("LAN", 1).length == "1..4")
         #expect(try field("LAN", 2).name == "Language Code")
         #expect(try field("LAN", 2).optionality == .required)
-        // CH15 ROL (p. 32): `4  XCN R Y 01198 Role Person` (v2.8.2 prints C).
-        #expect(try field("ROL", 4).optionality == .required)
+        // CH15 ROL (p. 32): `4  XCN R Y 01198 Role Person`, as v2.8.2 prints it; modelled C
+        // from the definition (P4-30, applied in P10-5b; `p105bTableVersusDefinition`).
+        #expect(try field("ROL", 4).dataType == "XCN")
+        #expect(try field("ROL", 4).optionality == .conditional)
         // CH16 RFI (p. 26, header in mixed case): `3  1..1  ID O 0136`, "for suggested values".
         #expect(try field("RFI", 3).length == "1..1")
         #expect(try field("RFI", 3).tableOpen)

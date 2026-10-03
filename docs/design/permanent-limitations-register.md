@@ -9,7 +9,7 @@
 
 Fully audited in v0.16 and corrected by the P4 remediation (2026-10-01). See **`docs/design/conditional-completeness-audit.md`** for the per-field rationale, and its **Shipped in P4** table for every position that left this set. The v0.16 statement that none of the set is wire-decidable was wrong: the 2026-09 review (planning/reviews, X-C09) found predicates the DSL already expressed (for example OBR-22 on v2.8.2, PV2-45 on v2.6 and v2.8.2, the TXA, TQ2, SCH, AIx, MFE/MFA, LRL, OM7 and BPX/BTX families), prohibitions that were not modelled, and one shipped prohibition (PRT-7) keyed to the wrong field. P4 shipped those and added three model capabilities: `prohibitedSeverity` (warning-level prohibitions for SHOULD and "not applicable" text), the `noRepeat(...)` atom and the `nextSegmentID(...)` referent (ADR-010 amendment).
 
-**Freeze decision:** position by position, not as a block. A `C` field stays bare only where the audit quotes that version's own text and the text names no wire-decidable trigger, or where the text contradicts itself (PV2-1 on v2.3 and v2.3.1). Guard tests pin the bare set on all six versions: `BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1 and v2.6 (P4-15), `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2 (v0.16). v2.7.1 (P10) is pinned by `BareConditionalGuardTests.v271BareC`: the CH04, CH04A, CH07, CH13, OM7 and PRC positions are audited (P10-5a, `conditional-completeness-audit.md` "v2.7.1 (P10-5a)"); the rest are P10-5b's. Any new DSL capability reopens the set for re-audit.
+**Freeze decision:** position by position, not as a block. A `C` field stays bare only where the audit quotes that version's own text and the text names no wire-decidable trigger, or where the text contradicts itself (PV2-1 on v2.3 and v2.3.1). Guard tests pin the bare set on all six versions: `BareConditionalGuardTests` for v2.3, v2.3.1, v2.4, v2.5.1 and v2.6 (P4-15), `MultiVersionTests.v282M2PermanentLimitationsGuard` for v2.8.2 (v0.16). v2.7.1 (P10) is pinned by `BareConditionalGuardTests.v271BareC`: the CH04, CH04A, CH07, CH13, OM7 and PRC positions are audited (P10-5a, `conditional-completeness-audit.md` "v2.7.1 (P10-5a)"); every other chapter's positions are audited in "v2.7.1 (P10-5b)", so all 177 v2.7.1 `C` positions are either a cited rule or a cited bare entry. Any new DSL capability reopens the set for re-audit.
 
 ### Addendum to §A — prose-backed `C` over printed `O`, OBR-29/ORC-8 on v2.3 to v2.5.1 (P4-18)
 
@@ -45,7 +45,12 @@ reads as the slot's optionality whitelist entry): MFI-6 `messageCode = MFN`, CSR
 (its "If null" is the HL7 null `""`). Rows and evidence: `conditional-completeness-audit.md`.
 v2.7.1 (P10-5a): CSR-8 prints `R` with the same definition (CH07 §7.7.1.8, p. 96) and is
 modelled `C`, `triggerEvent = C01`, likewise; RXA-4 prints `R` with the same "If null" sentence
-(CH04A §4A.4.7.4, p. 89) and stays `R`. MFI-6 and ROL-4 on v2.7.1 are P10-5b's.
+(CH04A §4A.4.7.4, p. 89) and stays `R`. v2.7.1 (P10-5b): MFI-6 prints `R` (CH08 table, p. 7)
+with the same "Required for MFN-Master File Notification message" (§8.5.1.6, p. 8) and ROL-4
+prints `R` (CH15 table, p. 32) with the same "If both STF and ROL are present in the same
+message, populating this field is optional" (§15.4.7.4, p. 34); both are modelled `C` as on
+v2.6 and v2.8.2. The v2.7.1 ROL-4 definition carries the same "same values as the correlated
+field" sentence, so the limitation below applies to v2.7.1 too.
 
 **Known limitation (req #3), blocks spec-completeness:** the v2.6 and v2.8.2 ROL-4 definition
 (CH15 §15.4.7.4) continues: "If this field is populated, then it must be populated with the same
@@ -209,12 +214,13 @@ A test pins the current behaviour (`LocaleAUProfileTests`, P4-20): an AU v2.4 OR
 
 ### Addendum to §D — field-local composite grammar gaps (P5-5 review finding, not an ADRM point)
 
-Found during the P5-5 review (2026-10-02). Not an ADRM-2021 point; added here per the global-constraints rule that rows go into the existing lettered sections. Both rows block spec-completeness (requirement 3). Neither is enforced today: the validator does not read field-local grammars until P5-6.
+Found during the P5-5 review (2026-10-02). Not an ADRM-2021 point; added here per the global-constraints rule that rows go into the existing lettered sections. Every row blocks spec-completeness (requirement 3). None is enforced today: the validator does not read field-local grammars until P5-6. The TXA-22 row was added by P10-5b (2026-10-03).
 
 | Position | Versions | Spec text | What it needs |
 |---|---|---|---|
 | 15 table mentions in CM field definitions left unbound: IN2-28 (0145, 0146) and IN2-29 (0147, 0193) on v2.3, v2.3.1 and v2.4; v2.3 IN3-11.1 (0149); v2.3 MSH-9 (0076, 0003) | v2.3 (7), v2.3.1 (4), v2.4 (4) | IN2-28 / IN2-29 name two tables in one sentence over two IS components ("Refer to User-defined Table 0145 - Room type and User-defined Table 0146 - Amount type"); v2.3 sec 2.24.1.9 MSH-9 names 0076 and 0003 in one sentence ("first ... table 0076 ...; second is ... table 0003"); v2.3 IN3-11 names 0149 "Day type" where the v2.3 registry prints "Days Type". | Pairing a table with a component by the order of its mention, or by the component's name, is a reading the M13 tests do not license. `python3 scripts/extract-field-components.py <version> --report` lists each mention with its reason; the absent binding is an absent check, never a wrong one. |
 | OM2-6 Reference (normal) range for ordinal and continuous observations | v2.3, v2.3.1 (sec 8.7.4.6), v2.4 (CH08 sec 8.8.4.6) | The structure is printed as a narrative repetition list (`<ref. (normal) range1>^<sex1>^<age range1>^...~`) with a nested `Components: <low value (NM)> & <high value (NM)>`, and no field-level Components line. | A field grammar that can state a repeating tuple with nested subcomponents. `DataTypeGrammarTests.fieldLocalCoverage` pins it as registered (ADR-017, P5 addendum). |
+| TXA-22 Authentication Person, Time Stamp (PPN) | v2.5.1 (CH09 sec 9.6.1.22, p. 31), v2.6 (sec 9.6.1.22, p. 21), v2.7.1 (sec 9.7.3.22, p. 36), v2.8.2 (sec 9.7.3.22, p. 36) | "If either of the Authenticating Person or the Authentication Time Stamp is valued as non-null, then both must be valued as non-null." The Date/Time Action Performed component is the time stamp; "the remaining components" are the person. | A co-presence rule between a component group and one component of the same repetition, on every repetition. The field condition language reads the first repetition's single components, and the PPN grammar is shared by fields that print no such rule. TXA-22's own presence keys on TXA-17 on v2.5.1 and has no trigger on v2.6 to v2.8.2, where it stays bare (conditional-completeness-audit.md). |
 
 ### Addendum to §D — v2.7.1 conditional components left bare (P10-2, not an ADRM point)
 

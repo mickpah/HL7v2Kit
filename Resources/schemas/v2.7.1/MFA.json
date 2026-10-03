@@ -4,7 +4,7 @@
   "description": "MFA",
   "fields": [
     { "index": 1, "swiftName": "recordLevelEventCode", "name": "Record-Level Event Code", "dataType": "ID", "table": "0180", "length": "3..3", "optionality": "R", "repeatability": "1", "tables": ["0180"] },
-    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "length": "20=", "optionality": "C", "repeatability": "1" },
+    { "index": 2, "swiftName": "mfnControlId", "name": "MFN Control ID", "dataType": "ST", "length": "20=", "optionality": "C", "repeatability": "1", "condition": "MFI-6 not in (NE)" },
     { "index": 3, "swiftName": "eventCompletionDateTime", "name": "Event Completion Date/Time", "dataType": "DTM", "optionality": "O", "repeatability": "1" },
     { "index": 4, "swiftName": "mfnRecordLevelErrorReturn", "name": "MFN Record Level Error Return", "dataType": "CWE", "optionality": "R", "repeatability": "1", "tables": ["0181"] },
     { "index": 5, "swiftName": "primaryKeyValueMfa", "name": "Primary Key Value - MFA", "dataType": "Varies", "optionality": "R", "repeatability": "*", "tables": ["9999"] },
