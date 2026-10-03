@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-2a: message-structure extractor core; overrides.json; the pilot golden
+
+- `scripts/extract-message-structures.py` reads the abstract message syntax tables printed
+  under each `CODE^EVENT^STRUCTURE` caption (the v2.4 to v2.6 caption form; the other eras are
+  named in `ERAS_PENDING` for P8b-3) and writes `Resources/structures/v<ver>/*.json` in the
+  pilot's exact layout (ADR-019 Option C step 1). `--check` compares with the committed files,
+  `--write` is idempotent, `--report` writes a per-structure TSV, and every run prints captions
+  found, structures parsed and structures skipped by reason (choice, unnamed group,
+  unreadable). Nesting comes from bracket balance; a structure printing choice notation is
+  reported and skipped until P8b-6. It reproduces the three v2.5.1 pilot files byte for byte
+  (v2.5.1: 401 captions, 2 excluded, 173 structures, 141 parsed, 32 skipped).
+- `Resources/structures/overrides.json`: the five ORU_R01 group names the v2.5.1 print leaves
+  unnamed (VISIT, ORDER_OBSERVATION, TIMING_QTY, OBSERVATION, SPECIMEN), each cited; the
+  pilots' citation notes; the ACK trigger fold (`ACK^*`, CH02 section 2.14.1); and one
+  exclusion (v2.5.1 CH05 section 5.7.3.1, a conformance-statement example that prints
+  ORU^R01, ruling G7).
+- `scripts/check-extract-message-structures.py` (CI, fixture-safety job): golden checks on
+  print excerpts for ACK, ADT_A01 and ORU_R01, plus synthetic cases (nested and
+  optional-repeating groups, `{[X]}`, `[PV2]]`, a page break inside a table, a wrapped
+  caption, nested printed names, an unnamed group, a skipped choice, an excluded section,
+  override validation).
+- The codegen accepts `overrides.json` and a `profiles/` directory under
+  `Resources/structures` (4 new cases in `scripts/check-structure-codegen.sh`, now 22);
+  `check-audit-schemas.py` adds the extractor's version map.
+
+### Fixed — P8b-2a: ORU_R01 pilot citation pages
+
+- The golden found the v2.5.1 ORU_R01 citation gave pp 7-12 to 7-13; the table is printed on
+  pp 7-13 to 7-14 (the section heading is on p 7-12). Corrected to the caption-to-last-row
+  rule the other pilots already follow. Structure data and validation output are unchanged.
+
 ### Changed — P8b-1: generated structure version switch, completeness flag and codegen self-check
 
 - The version-to-table switch for message structures is generated from

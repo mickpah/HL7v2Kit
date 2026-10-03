@@ -11,6 +11,14 @@ import Foundation
 /// (pre-flight B5).
 let structureCompletenessFileName = "completeness.json"
 
+/// The extractor's override file (scripts/extract-message-structures.py,
+/// P8b-2a) under the structures root. The codegen skips it.
+let structureOverridesFileName = "overrides.json"
+
+/// The AU profile structures directory under the structures root (ruling G9).
+/// The codegen skips it.
+let structureProfilesDirectoryName = "profiles"
+
 /// One version's entry: whether every structure the version prints is
 /// modelled, and the citation for that claim.
 struct StructureCompletenessEntry: Decodable {

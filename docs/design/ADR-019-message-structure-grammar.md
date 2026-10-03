@@ -772,3 +772,28 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   scratch copies of `Resources/structures` with one defect each and asserts the failure and
   its message, then checks that an unmodified run reproduces every committed `Generated/`
   directory byte for byte (CI, codegen-drift job).
+
+## Amendment 2026-10-03 — extractor core and overrides.json (P8b-2a)
+
+- **Extractor.** `scripts/extract-message-structures.py` reads the `CODE^EVENT^STRUCTURE`
+  caption form (v2.4 to v2.6; the other eras land in P8b-3) and reproduces the three v2.5.1
+  pilot files byte for byte (golden: `scripts/check-extract-message-structures.py`, CI). A
+  caption must carry a title (a bare `CODE^EVT^STRUCT` is a table cell, as in Table 0119);
+  a group whose only member is another printed group stays two groups; a structure printing
+  choice notation is reported and skipped until the `choice` element exists (P8b-6).
+- **overrides.json now exists** (the addendum above said it did not). It holds `groupNames`
+  (an unnamed group addressed by its named ancestors and zero-based position, with
+  `nameSource: override` and a citation), `citationNotes` (the text after the composed
+  `HL7 v<ver> Chapter <n>, section <s> <title>, p(p) ...` citation), `triggerFolds` (ACK:
+  every `ACK^<event>^ACK` caption is `ACK^*`, CH02 section 2.14.1) and `exclusions`
+  (non-normative prints by section, ruling G7; v2.5.1 CH05 section 5.7.3.1 printed ORU^R01
+  ahead of Chapter 7). `errata` and `sharedTriggers` stay empty until P8b-3. The codegen
+  skips `overrides.json` and a `profiles/` directory (G9) under the structures root.
+- **Pilot citation fix found by the golden.** The ORU_R01 citation gave pp 7-12 to 7-13 (and
+  the extractability note above says p7-12 to 7-13); the print puts the 7.3.1 heading on
+  p 7-12 and the table on pp 7-13 to 7-14. The citation rule is caption page to last-row
+  page, which ACK (p 2-61) and ADT_A01 (pp 3-4 to 3-5) already followed; ORU_R01 now reads
+  pp 7-13 to 7-14. No structure data changed.
+- **Print disagreements reported, not modelled.** v2.5.1 CH05 prints the ACK for Q16, Q17,
+  J01, J02 and Q03 with `[ ERR ]`, where CH02 section 2.14.1 prints `[{ ERR }]`; the ACK
+  structure follows CH02 and the extractor lists the others as report notes.

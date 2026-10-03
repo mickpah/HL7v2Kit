@@ -4,7 +4,8 @@
 # (ADR-019). Each case copies Resources/structures to a scratch directory,
 # applies one defect, runs the real codegen against the copy with every
 # output in scratch, and asserts a failing exit status and the expected
-# stderr text. A final good run must reproduce the committed Generated/
+# stderr text; an accept case applies an allowed change and asserts success
+# (P8b-2a). A final good run must reproduce the committed Generated/
 # directories byte for byte. Nothing is written into the repository (the
 # build products under .build/ aside).
 #
@@ -71,6 +72,27 @@ reject() {
   fi
 }
 
+# accept <label> <python change, run with S set to the copy>: the codegen must succeed.
+accept() {
+  local label="$1" change="$2"
+  local dir="$SCRATCH/case$cases"
+  cases=$((cases + 1))
+  mkdir -p "$dir"
+  cp -R "$RES/structures" "$dir/structures"
+  if ! S="$dir/structures" python3 -c "$change"; then
+    echo "FAIL $label: the change did not apply"
+    failures=$((failures + 1)); return
+  fi
+  run_codegen "$dir/structures" "$dir/out" > "$dir/stdout" 2> "$dir/stderr"
+  local status=$?
+  if [[ $status -ne 0 ]]; then
+    echo "FAIL $label: exit status $status: $(head -c 300 "$dir/stderr")"
+    failures=$((failures + 1))
+  else
+    echo "ok   $label"
+  fi
+}
+
 # Shared Python helpers for the defects.
 PRE='import json, os
 S = os.environ["S"]
@@ -122,7 +144,7 @@ d = load('completeness.json'); d['versions']['2.4']['citation'] = ' '; save('com
 reject "complete version with no structures" 'marked complete but has no structures' "$PRE
 d = load('completeness.json'); d['versions']['2.6']['complete'] = True; save('completeness.json', d)"
 
-reject "missing completeness file" 'completeness.json' "$PRE
+reject "missing completeness file" 'couldn’t be opened because there is no such file' "$PRE
 os.remove(os.path.join(S, 'completeness.json'))"
 
 reject "stray file under Resources/structures (versions.json, B5)" 'unexpected entry' "$PRE
@@ -134,13 +156,30 @@ os.mkdir(os.path.join(S, 'drafts'))"
 reject "structure directory for an unlisted version" 'unlisted versions ["2.9"]' "$PRE
 os.mkdir(os.path.join(S, 'v2.9'))"
 
+# P8b-2a: the extractor's overrides.json and the G9 profiles directory are allowed, and only
+# in that form.
+accept "overrides.json under Resources/structures (P8b-2a)" "$PRE
+save('overrides.json', {'groupNames': []})"
+
+accept "profiles directory under Resources/structures (G9)" "$PRE
+os.makedirs(os.path.join(S, 'profiles', 'au-adrm-2021'))"
+
+reject "overrides.json as a directory" 'unexpected entry' "$PRE
+os.remove(os.path.join(S, 'overrides.json')) if os.path.exists(os.path.join(S, 'overrides.json')) else None
+os.mkdir(os.path.join(S, 'overrides.json'))"
+
+reject "profiles as a file" 'unexpected entry' "$PRE
+save('profiles', {})"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"
 mkdir -p "$good"
 cp -R "$RES/structures" "$good/structures"
-if ! run_codegen "$good/structures" "$good/out" > "$good/stdout" 2> "$good/stderr"; then
-  echo "FAIL good run: exit status $?: $(head -c 300 "$good/stderr")"
+run_codegen "$good/structures" "$good/out" > "$good/stdout" 2> "$good/stderr"
+good_status=$?
+if [[ $good_status -ne 0 ]]; then
+  echo "FAIL good run: exit status $good_status: $(head -c 300 "$good/stderr")"
   failures=$((failures + 1))
 else
   drift=""

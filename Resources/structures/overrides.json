@@ -1,0 +1,29 @@
+{
+  "groupNames": [
+    { "version": "2.5.1", "structure": "ORU_R01", "path": ["PATIENT_RESULT", "PATIENT", 4], "name": "VISIT",
+      "citation": "HL7 v2.5.1 Chapter 7, section 7.3.1, p 7-13 prints this group (PV1, [PV2]) unnamed; VISIT is its HL7 v2.5.1 XML-encoding name and the name HL7 v2.6 Chapter 7, section 7.3.1, p 7-12 prints for the same group (ADR-019 decision 3)" },
+    { "version": "2.5.1", "structure": "ORU_R01", "path": ["PATIENT_RESULT", 1], "name": "ORDER_OBSERVATION",
+      "citation": "HL7 v2.5.1 Chapter 7, section 7.3.1, p 7-13 prints this group ({[ORC], OBR, ...}) unnamed; ORDER_OBSERVATION is its HL7 v2.5.1 XML-encoding name and the name HL7 v2.6 Chapter 7, section 7.3.1, p 7-12 prints for the same group (ADR-019 decision 3)" },
+    { "version": "2.5.1", "structure": "ORU_R01", "path": ["PATIENT_RESULT", "ORDER_OBSERVATION", 3], "name": "TIMING_QTY",
+      "citation": "HL7 v2.5.1 Chapter 7, section 7.3.1, p 7-13 prints this group (TQ1, [{TQ2}]) unnamed; TIMING_QTY is its HL7 v2.5.1 XML-encoding name and the name HL7 v2.6 Chapter 7, section 7.3.1, p 7-12 prints for the same group (ADR-019 decision 3)" },
+    { "version": "2.5.1", "structure": "ORU_R01", "path": ["PATIENT_RESULT", "ORDER_OBSERVATION", 5], "name": "OBSERVATION",
+      "citation": "HL7 v2.5.1 Chapter 7, section 7.3.1, p 7-13 prints this group (OBX, {[NTE]}) unnamed; OBSERVATION is its HL7 v2.5.1 XML-encoding name and the name HL7 v2.6 Chapter 7, section 7.3.1, p 7-12 prints for the same group (ADR-019 decision 3)" },
+    { "version": "2.5.1", "structure": "ORU_R01", "path": ["PATIENT_RESULT", "ORDER_OBSERVATION", 8], "name": "SPECIMEN",
+      "citation": "HL7 v2.5.1 Chapter 7, section 7.3.1, p 7-13 prints this group (SPM, [{OBX}]) unnamed; SPECIMEN is its HL7 v2.5.1 XML-encoding name and the name HL7 v2.6 Chapter 7, section 7.3.1, p 7-12 prints for the same group (ADR-019 decision 3)" }
+  ],
+  "citationNotes": [
+    { "version": "2.5.1", "structure": "ACK", "note": " (ACK^varies^ACK; MSH-9.3 is always ACK)." },
+    { "version": "2.5.1", "structure": "ADT_A01", "note": ". Group names PROCEDURE and INSURANCE are printed." },
+    { "version": "2.5.1", "structure": "ORU_R01", "note": ". The print names PATIENT_RESULT and PATIENT only; VISIT, ORDER_OBSERVATION, TIMING_QTY, OBSERVATION and SPECIMEN are the HL7 v2.5.1 XML-encoding names of the unnamed groups (ADR-019 decision 3), the names HL7 v2.6 Chapter 7, section 7.3.1 prints for the same groups. {[NTE]} and {[CTI]} are read as [{ }]." }
+  ],
+  "errata": [],
+  "exclusions": [
+    { "version": "2.5.1", "section": "5.7.3.1",
+      "citation": "HL7 v2.5.1 Chapter 5, section 5.7.3.1 Example of a publish and subscribe Conformance Statement, pp 5-63 to 5-64: an example conformance statement (QSB^Z83 and its ORU^R01 response), not the normative ORU^R01 definition, which is Chapter 7, section 7.3.1 (ruling G7)" }
+  ],
+  "sharedTriggers": [],
+  "triggerFolds": [
+    { "version": "2.5.1", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK^varies^ACK",
+      "citation": "HL7 v2.5.1 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-61: ACK^varies^ACK is the general acknowledgment for every trigger (MSH-9.3 is always ACK), so the ACK^<event>^ACK captions the other chapters print are this one structure" }
+  ]
+}

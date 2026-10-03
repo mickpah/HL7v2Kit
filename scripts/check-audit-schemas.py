@@ -443,7 +443,9 @@ def check_version_maps_agree():
     assert "2.7.1" in modelled, "Resources/tables/v2.7.1 is the P10-1 deliverable"
     dtx, dtp = _script("extract-datatype-components.py"), _script("extract-datatype-prose.py")
     examples = _script("extract-example-messages.py")
+    structures = _script("extract-message-structures.py")
     maps = {
+        "extract-message-structures.py ERAS": structures.ERAS,
         "audit-schemas.py CHAPTER_GLOBS": audit.CHAPTER_GLOBS,
         "audit-schemas.py TABLE_PDFS": audit.TABLE_PDFS,
         "audit-schemas.py EXAMPLE_SOURCES": audit.EXAMPLE_SOURCES,
@@ -475,6 +477,18 @@ def check_version_maps_agree():
     assert completeness == modelled, \
         f"Resources/structures/completeness.json: missing {sorted(modelled - completeness)}, " \
         f"unmodelled {sorted(completeness - modelled)}"
+    # P8b-2a: the structure extractor names every version in ERAS (above) but reads some caption
+    # eras only from P8b-3 on. Version.swift declares every version, so this cannot ride on
+    # VERSION_MAPS_PENDING; instead a version whose era is not read yet can never be marked
+    # complete, and the structure directories stay within the modelled set.
+    with open(os.path.join(os.path.dirname(HERE), "Resources", "structures", "completeness.json")) as f:
+        flags = json.load(f)["versions"]
+    assert set(structures.ERAS_PENDING) <= set(structures.ERAS)
+    unread_complete = sorted(v for v in structures.ERAS_PENDING if flags[v.lstrip("v")]["complete"])
+    assert not unread_complete, f"marked complete before the extractor reads their captions: {unread_complete}"
+    root = os.path.join(os.path.dirname(HERE), "Resources", "structures")
+    dirs = {e[1:] for e in os.listdir(root) if e.startswith("v") and os.path.isdir(os.path.join(root, e))}
+    assert dirs <= modelled, f"Resources/structures names unmodelled versions {sorted(dirs - modelled)}"
 
 
 def pending_versions_released(version_source, pending=None):

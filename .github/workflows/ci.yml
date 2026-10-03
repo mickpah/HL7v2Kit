@@ -39,6 +39,8 @@ jobs:
         run: python3 scripts/check-extract-example-messages.py
       - name: Datatype prose extractor self-check
         run: python3 scripts/check-extract-datatype-prose.py
+      - name: Message-structure extractor self-check
+        run: python3 scripts/check-extract-message-structures.py
       - name: No emoji or icons in tracked files
         run: |
           python3 scripts/check-no-emoji.py --self-test

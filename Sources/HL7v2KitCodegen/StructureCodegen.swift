@@ -186,8 +186,9 @@ private func structureFailure(_ path: String, _ message: Any) -> ExitCode {
 /// Emit one `MessageStructureTable` extension per `v<version>` directory and
 /// the version switch with the completeness set (P8b-1). The input root is
 /// required: without it the generated tables would go stale unseen. The root
-/// may hold only `completeness.json` and `v<digits and dots>` directories
-/// (hidden entries aside); anything else fails the run (pre-flight B5).
+/// may hold only `completeness.json`, the extractor's `overrides.json`, a
+/// `profiles` directory (G9) and `v<digits and dots>` directories (hidden
+/// entries aside); anything else fails the run (pre-flight B5).
 /// `modelledVersions` is the schema version set, which completeness.json
 /// must list exactly. Everything is rendered before anything is written.
 func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: Set<String>) throws {
@@ -200,9 +201,15 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     for entry in try fm.contentsOfDirectory(at: root, includingPropertiesForKeys: [.isDirectoryKey]) {
         let name = entry.lastPathComponent
         let isDirectory = (try? entry.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
-        if name.hasPrefix(".") || (name == structureCompletenessFileName && !isDirectory) { continue }
+        // The extractor's overrides.json (P8b-2a) and the AU profiles directory (G9) are read
+        // by other tools, not by the codegen.
+        let skipped = name.hasPrefix(".")
+            || (!isDirectory && [structureCompletenessFileName, structureOverridesFileName].contains(name))
+            || (isDirectory && name == structureProfilesDirectoryName)
+        if skipped { continue }
         guard isDirectory, matches(name, "^v[0-9]+(\\.[0-9]+)*$") else {
-            throw structureFailure(entry.path, "unexpected entry; Resources/structures holds only \(structureCompletenessFileName) and v<version> directories")
+            throw structureFailure(entry.path, "unexpected entry; Resources/structures holds only \(structureCompletenessFileName), "
+                                   + "\(structureOverridesFileName), \(structureProfilesDirectoryName)/ and v<version> directories")
         }
         dirs.append(entry)
     }
