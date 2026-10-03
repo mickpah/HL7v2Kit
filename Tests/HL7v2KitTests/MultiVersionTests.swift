@@ -1004,12 +1004,13 @@ struct MultiVersionTests {
             "RXA-7", "RXA-12",
             // v1.3: scheduling family (SCH/RGS/AIS/AIG/AIL/AIP/ARQ) — filler/placer
             // and resource fields conditional on the appointment message intent;
-            // ROL-1 role-instance (SPM-13 carries a prohibition since P4-4). All
-            // fail-safe, grouped in conditional-completeness-audit.md.
+            // (SPM-13 carries a prohibition since P4-4). All fail-safe, grouped in
+            // conditional-completeness-audit.md. ROL-1 left this set in P10-7: CH15
+            // 15.4.7.1 reads "required when used in Patient Care and Personnel
+            // Management messages".
             "SCH-3", "SCH-24", "SCH-26",
             "RGS-2", "ARQ-2", "ARQ-3", "ARQ-24",
             "AIS-2", "AIS-5", "AIG-2", "AIL-2", "AIP-2",
-            "ROL-1",
             // v1.3 (master-files / referral batch): AUT-6 Reimbursement Limit is
             // conditional on the authorization decision context. Its former
             // batch-mates MFE-2 / MFA-2 (MFI-6 response level) and OM7-16 / OM7-18
@@ -1018,8 +1019,10 @@ struct MultiVersionTests {
             // v1.4 (query / lab-automation batch): query-tag/response and specimen-
             // container / equipment fields conditional on the query or lab-automation
             // event context (fail-safe; documented in the register). EQU-3 left this
-            // set in P10-5b: CH13 13.4.1.3 reads "required in the ESU message".
-            "QPD-2", "QAK-1", "RCP-4", "SAC-3", "SAC-4",
+            // set in P10-5b: CH13 13.4.1.3 reads "required in the ESU message". RCP-4
+            // left it in P10-7: CH05 5.5.6.4 reads "only valued when RCP-1 ... contains
+            // the value D" (a prohibition).
+            "QPD-2", "QAK-1", "SAC-3", "SAC-4",
             // v1.4 (master-file locations / patient-care / med-records batch):
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.

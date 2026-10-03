@@ -2941,7 +2941,7 @@ extension SegmentGrammarTable {
             FieldGrammar(index: 1, name: "Query Priority", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0091", length: "1"),
             FieldGrammar(index: 2, name: "Quantity Limited Request", dataType: "CQ", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "10"),
             FieldGrammar(index: 3, name: "Response Modality", dataType: "CNE", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
-            FieldGrammar(index: 4, name: "Execution and Delivery Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "24"),
+            FieldGrammar(index: 4, name: "Execution and Delivery Time", dataType: "DTM", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: "RCP-1 != D", variableColumns: false, table: nil, length: "24", prohibitedSeverity: .warning),
             FieldGrammar(index: 5, name: "Modify Indicator", dataType: "ID", optionality: .optional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0395", length: "1"),
             FieldGrammar(index: 6, name: "Sort-by Field", dataType: "SRT", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "512"),
             FieldGrammar(index: 7, name: "Segment group inclusion", dataType: "ID", optionality: .optional, repeatability: .multiple, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0391", length: "256"),
@@ -3042,7 +3042,7 @@ extension SegmentGrammarTable {
         segmentID: "ROL",
         version: "2.6",
         fields: [
-            FieldGrammar(index: 1, name: "Role Instance ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
+            FieldGrammar(index: 1, name: "Role Instance ID", dataType: "EI", optionality: .conditional, repeatability: .single, condition: "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR, PMU) OR messageCode = RSP AND triggerEvent = K25", prohibitedWhen: nil, variableColumns: false, table: nil, length: "60"),
             FieldGrammar(index: 2, name: "Action Code", dataType: "ID", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: "0287", length: "2"),
             FieldGrammar(index: 3, name: "Role-ROL", dataType: "CWE", optionality: .required, repeatability: .single, condition: nil, prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),
             FieldGrammar(index: 4, name: "Role Person", dataType: "XCN", optionality: .conditional, repeatability: .multiple, condition: "STF absent", prohibitedWhen: nil, variableColumns: false, table: nil, length: "250"),

@@ -232,13 +232,29 @@ extension V271GrammarTests {
         #expect(try Self.grammarField(v282, "PID-35").optionality == .optional)
         #expect(try Self.grammarField(v282, "PID-36").condition == nil)
         #expect(try Self.grammarField(v271, "PID-36").optionality == .conditional)
-        // RCP-4 and ROL-1: the same sentence is bare on v2.6 and v2.8.2 (see the audit).
-        for position in ["RCP-4", "ROL-1"] {
-            for sibling in [v26, v282] {
-                let field = try Self.grammarField(sibling, position)
-                #expect(field.condition == nil && field.prohibitedWhen == nil, "\(position)")
-            }
+        // RCP-4: v2.4 CH05 5.5.5.4 (p. 52), v2.5.1 5.5.6.4 (p. 49), v2.6 5.5.6.4 (p. 41) and
+        // v2.8.2 5.5.6.4 (p. 46) print v2.7.1's sentence, "only valued when RCP-1-Query
+        // priority contains the value D"; P10-7's intake gave them its prohibition. v2.3 and
+        // v2.3.1 define no RCP.
+        let v24 = SegmentGrammarTable.v2_4, v251 = SegmentGrammarTable.v2_5_1
+        for table in [v24, v251, v26, v271, v282] {
+            let rcp4 = try Self.grammarField(table, "RCP-4")
+            #expect(rcp4.prohibitedWhen == "RCP-1 != D" && rcp4.prohibitedSeverity == .warning)
+            #expect(rcp4.condition == nil)
         }
+        // ROL-1: v2.5.1 CH15 15.4.7.1 (p. 27), v2.6 15.4.7.1 (p. 22) and v2.8.2 15.4.7.1
+        // (p. 31) print v2.7.1's "required when used in Patient Care and Personnel Management
+        // messages". v2.8.2 CH12 12.3.6 to 12.3.12 (p. 16) removes PRR, PPV, PTR and PPT "as
+        // of v2.8", so its set drops them. v2.4 CH12 12.4.3.1 (p. 24) names Patient Care
+        // messages only, a different sentence, and stays bare; v2.3 and v2.3.1 print R.
+        let rolCare = "messageCode in (PGL, PPG, PPP, PPR, PPT, PPV, PRR, PTR, PMU) OR messageCode = RSP AND triggerEvent = K25"
+        for table in [v251, v26, v271] {
+            #expect(try Self.grammarField(table, "ROL-1").condition == rolCare)
+        }
+        #expect(try Self.grammarField(v282, "ROL-1").condition
+                == "messageCode in (PGL, PPG, PPP, PPR, PMU) OR messageCode = RSP AND triggerEvent = K25")
+        #expect(try Self.grammarField(v24, "ROL-1").condition == nil)
+        #expect(try Self.grammarField(SegmentGrammarTable.v2_3_1, "ROL-1").optionality == .required)
         // TXA-11 and TXA-22: v2.8.2's "Condition" paragraphs on OBR-35 and OBR-32 are not in
         // the v2.7.1 print (CH09 sections 9.7.3.11 and 9.7.3.22); both stay bare here.
         #expect(try Self.grammarField(v271, "TXA-11").condition == nil)

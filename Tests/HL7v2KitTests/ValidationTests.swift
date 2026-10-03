@@ -405,8 +405,11 @@ struct ValidationTests {
         #expect(firedOld.first?.location.pathDescription == "OBR[1]-29")
         // v2.7.1 and v2.8.2: OBR-29 is a DIFFERENT element (00261), so a
         // differing OBR-29 must NOT fire; the pair reads OBR-54 instead
-        // (v2.7.1 CH04 §4.5.3.29 p65 and §4.5.3.54 p74).
-        for version in ["2.7.1", "2.8.2"] {
+        // (v2.7.1 CH04 §4.5.3.29 p65 and §4.5.3.54 p74). A literal "2.7" or "2.8" header
+        // validates under v2.7.1 or v2.8.2 (ADR-018) and gets the same ORC-8/OBR-54 check:
+        // validate() re-declares the message under its grammar version before the pair
+        // gate runs, and the gate (P10-6) also keys on grammarVersion.
+        for version in ["2.7.1", "2.8.2", "2.7", "2.8"] {
             let obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|\(version)\r"
                 + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
                 + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
