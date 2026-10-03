@@ -94,6 +94,7 @@ extension HL7TableRegistry {
         "0128": t0128_v2_4,
         "0129": t0129_v2_4,
         "0130": t0130_v2_4,
+        "0131": t0131_v2_4,
         "0132": t0132_v2_4,
         "0133": t0133_v2_4,
         "0135": t0135_v2_4,
@@ -2380,6 +2381,16 @@ extension HL7TableRegistry {
             HL7Table.Entry(code: "MO", description: "Mobile Unit"),
             HL7Table.Entry(code: "PH", description: "Phone"),
             HL7Table.Entry(code: "TE", description: "Teaching"),
+        ] as [HL7Table.Entry]
+    )
+
+    static let t0131_v2_4 = HL7Table(
+        number: "0131",
+        name: "Contact role",
+        kind: .userDefined,
+        permitsLocalExtensions: false,
+        entries: [
+
         ] as [HL7Table.Entry]
     )
 

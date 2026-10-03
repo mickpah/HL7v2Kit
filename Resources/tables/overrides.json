@@ -1680,6 +1680,13 @@
     }
   },
   "2.4": {
+    "0131": {
+      "createName": "Contact role",
+      "kind": "User",
+      "citation": "HL7 v2.4 Chapter 3 sec 3.4.5.7 NK1-7 Contact role, User-defined Table 0131 - Contact role (p. 105)",
+      "note": "v2.4 prints this table in the chapter, with the single row 'No suggested values', and omits it from Appendix A, whose data element index binds 0131 to NK1-7 and CTD-1 (CH11 sec 11.6.4.1). Created with no entries, as the v2.3.1 Appendix A prints it.",
+      "addEntries": []
+    },
     "0003": {
       "permitsLocalExtensions": true,
       "citation": "HL7 Table 0003 - Event type; Chapter 2 reserves the Znn trigger events for site definition, so the printed rows are not a closed set"

@@ -60,4 +60,13 @@ struct CodeTableCorrectionTests {
             #expect(t.contains("W4") && !t.contains("W5"), "v\(version)")
         }
     }
+
+    @Test("v2.4 0131 is the chapter's 'No suggested values' table, absent from Appendix A")
+    func v24ContactRole() throws {
+        // v2.4 CH03 section 3.4.5.7 (p. 105) prints User-defined Table 0131 - Contact role with
+        // the single row "No suggested values"; NK1-7 and CTD-1 bind it.
+        let t = try #require(HL7TableRegistry.v2_4["0131"])
+        #expect(t.kind == .userDefined)
+        #expect(t.entries.isEmpty)
+    }
 }

@@ -956,7 +956,9 @@ var notes = extractionNotes
 let overridesPath = (outDir as NSString).deletingLastPathComponent + "/overrides.json"
 let overrides = loadOverrides(overridesPath, version: version)
 for (number, o) in overrides where tables[number] == nil {
-    guard let name = o.createName, let kind = o.kind, !o.addEntries.isEmpty else { continue }
+    // A created table needs printed rows, except a user-defined table the chapter prints with
+    // "No suggested values" (P10-4d: v2.4 CH03 section 3.4.5.7 Table 0131, p. 105).
+    guard let name = o.createName, let kind = o.kind, !o.addEntries.isEmpty || kind == "User" else { continue }
     tables[number] = Table(number: number, name: name, kind: kind)   // rows come from addEntries in render()
     notes.append("\(number): created from overrides.json (printed in a chapter, absent from the appendix)")
 }
