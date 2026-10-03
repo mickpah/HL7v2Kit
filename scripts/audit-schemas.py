@@ -159,8 +159,10 @@ DATATYPE_EXISTENCE_EXEMPT = {}   # P10-4d: v2.4 NA now has its component file
 # with its narrative removed: a deprecated field "will be marked as withdrawn and all explanatory
 # narrative will be removed". The tables print the DT cell of almost every W field blank.
 # Versions listed here are held to the rule; the value maps each W field whose table does print
-# a type to its citation. P10-4d added v2.8.2.
+# a type to its citation. P10-4d added v2.8.2, v2.6 and v2.5.1; v2.3 to v2.4 have no W field.
 WITHDRAWN_TYPED_AS_PRINTED = {
+    "v2.5.1": {},
+    "v2.6": {},
     "v2.7.1": {
         ("UB1", 1): "v2.7.1 CH06 section 6.5.10 UB1 attribute table (p. 130) prints `1  SI  W  "
                     "00530  Set ID - UB1`",
@@ -168,6 +170,15 @@ WITHDRAWN_TYPED_AS_PRINTED = {
     "v2.8.2": {
         ("UB1", 1): "v2.8.2 CH06 section 6.5.10 UB1 attribute table (p. 124) prints `1  SI  W  "
                     "00530  Set ID - UB1`",
+    },
+}
+# Registered exceptions to the rule: a W field that keeps a type its table does not print,
+# because a released accessor is typed from it and ADR-014 forbids retyping it.
+WITHDRAWN_TYPE_EXCEPTIONS = {
+    "v2.5.1": {
+        ("MSA", 5): "v2.5.1 CH02 section 2.15.8 MSA attribute table (p. 73) prints `5  W  00022  "
+                    "Delayed Acknowledgment Type` with the DT cell blank; the schema keeps ID because "
+                    "the released accessor MSA.delayedAcknowledgmentType binds it (ADR-014)",
     },
 }
 
@@ -831,11 +842,14 @@ def datatype_existence_findings(version, f, composites):
 
 def withdrawn_datatype_findings(version, seg, f):
     """P10-4c. On a version held to the withdrawn-field rule (WITHDRAWN_TYPED_AS_PRINTED), a W
-    field carries a dataType only where its attribute table prints one, and then it must."""
+    field carries a dataType only where its attribute table prints one, and then it must. A
+    registered exception (WITHDRAWN_TYPE_EXCEPTIONS) keeps its type and must keep it."""
     rule = WITHDRAWN_TYPED_AS_PRINTED.get(version)
     if rule is None or f.get("optionality") != "W":
         return []
     printed, dt = (seg, f["index"]) in rule, f.get("dataType") or ""
+    if (seg, f["index"]) in WITHDRAWN_TYPE_EXCEPTIONS.get(version, {}):
+        return [] if dt else ["registered withdrawn-type exception lost its dataType"]
     if dt and not printed:
         return [f"withdrawn field carries dataType {dt!r}, which its {version} table does not print"]
     if printed and not dt:

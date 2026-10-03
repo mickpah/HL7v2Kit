@@ -557,7 +557,11 @@ def check_withdrawn_datatype_rule():
     assert not rule("v2.7.1", "PID", {"index": 3, "dataType": "CX", "optionality": "R"}), "not withdrawn"
     assert rule("v2.8.2", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "v2.8.2 held since P10-4d"
     assert not rule("v2.8.2", "UB1", {"index": 1, "dataType": "SI", "optionality": "W"}), "v2.8.2 printed SI"
-    assert not rule("v2.6", "PID", {"index": 2, "dataType": "CX", "optionality": "W"}), "a version not held"
+    assert rule("v2.6", "MSA", {"index": 5, "dataType": "ID", "optionality": "W"}), "v2.6 held since P10-4d"
+    assert not rule("v2.5.1", "MSA", {"index": 5, "dataType": "ID", "optionality": "W"}), "the v2.5.1 MSA-5 exception"
+    assert rule("v2.5.1", "MSA", {"index": 5, "dataType": "", "optionality": "W"}), "an exception keeps its type"
+    assert not rule("v2.4", "MSA", {"index": 5, "dataType": "ID", "optionality": "W"}), "v2.4 prints no W field"
+    assert all(len(why) >= 40 for cites in audit.WITHDRAWN_TYPE_EXCEPTIONS.values() for why in cites.values())
     assert all(len(why) >= 40 for cites in audit.WITHDRAWN_TYPED_AS_PRINTED.values() for why in cites.values())
 
 

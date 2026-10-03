@@ -7,7 +7,7 @@
     { "index": 2, "swiftName": "messageControlID", "name": "Message Control ID", "dataType": "ST", "length": "199", "optionality": "R", "repeatability": "1" },
     { "index": 3, "swiftName": "textMessage", "name": "Text Message", "dataType": "ST", "length": "80", "optionality": "B", "repeatability": "1" },
     { "index": 4, "swiftName": "expectedSequenceNumber", "name": "Expected Sequence Number", "dataType": "NM", "length": "15", "optionality": "O", "repeatability": "1" },
-    { "index": 5, "swiftName": "delayedAcknowledgmentType", "name": "Delayed Acknowledgment Type", "dataType": "ID", "optionality": "W", "repeatability": "1" },
+    { "index": 5, "swiftName": "delayedAcknowledgmentType", "name": "Delayed Acknowledgment Type", "dataType": "", "optionality": "W", "repeatability": "1" },
     { "index": 6, "swiftName": "errorCondition", "name": "Error Condition", "dataType": "CE", "length": "250", "optionality": "B", "repeatability": "1", "tables": ["0357"] },
     { "index": 7, "swiftName": "messageWaitingNumber", "name": "Message Waiting Number", "dataType": "NM", "length": "5", "optionality": "O", "repeatability": "1" },
     { "index": 8, "swiftName": "messageWaitingPriority", "name": "Message Waiting Priority", "dataType": "ID", "length": "1", "table": "0520", "optionality": "O", "repeatability": "1", "tables": ["0520"] }

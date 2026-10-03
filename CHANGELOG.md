@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P10-4d: v2.6 withdrawn fields carry the printed data type; the v2.5.1 MSA-5 exception
+
+- Eleven v2.6 withdrawn (W) fields carried a data type the v2.6 attribute tables leave blank
+  (DG1-2, DG1-4, DG1-7 to DG1-14, MSA-5). They are now untyped, as printed. A populated one
+  raises only the withdrawn-field warning; on the spec examples validated as v2.6, 8
+  `extraComponentsInPrimitiveField` issues on MSA-5 no longer fire. No accessor changes.
+- v2.5.1 MSA-5 keeps its ID type as the one registered exception: the print's DT cell is
+  blank, but the released `MSA.delayedAcknowledgmentType` is typed from it (ADR-014).
+  Every version from v2.5.1 up is now held to the rule by `audit-schemas.py`.
+
 ### Fixed — P10-4d: v2.6 ITM fields 7 to 29
 
 - The v2.6 ITM schema stopped at ITM-6: the segment-table extractor ended the table at a

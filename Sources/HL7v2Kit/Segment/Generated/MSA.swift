@@ -38,7 +38,7 @@ public struct MSA: TypedSegment {
     }
 
     /// MSA-5: Delayed Acknowledgment Type. HL7 data type `ID`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever MSA-5 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever MSA-5 holds on the wire.
     public var delayedAcknowledgmentType: String? {
         field(5)?.stringValue
     }

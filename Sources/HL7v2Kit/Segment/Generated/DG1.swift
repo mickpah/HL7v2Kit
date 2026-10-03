@@ -22,7 +22,7 @@ public struct DG1: TypedSegment {
     }
 
     /// DG1-2: Diagnosis Coding Method. HL7 data type `ID`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-2 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-2 holds on the wire.
     public var diagnosisCodingMethod: String? {
         field(2)?.stringValue
     }
@@ -35,7 +35,7 @@ public struct DG1: TypedSegment {
     }
 
     /// DG1-4: Diagnosis Description. HL7 data type `ST`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-4 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-4 holds on the wire.
     public var diagnosisDescription: String? {
         field(4)?.stringValue
     }
@@ -52,49 +52,49 @@ public struct DG1: TypedSegment {
     }
 
     /// DG1-7: Major Diagnostic Category. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-7 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-7 holds on the wire.
     public var majorDiagnosticCategory: CE? {
         field(7).map(CE.init(field:))
     }
 
     /// DG1-8: Diagnostic Related Group. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-8 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-8 holds on the wire.
     public var diagnosticRelatedGroup: CE? {
         field(8).map(CE.init(field:))
     }
 
     /// DG1-9: DRG Approval Indicator. HL7 data type `ID`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-9 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-9 holds on the wire.
     public var drgApprovalIndicator: String? {
         field(9)?.stringValue
     }
 
     /// DG1-10: DRG Grouper Review Code. HL7 data type `IS`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-10 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-10 holds on the wire.
     public var drgGrouperReviewCode: String? {
         field(10)?.stringValue
     }
 
     /// DG1-11: Outlier Type. HL7 data type `CE`. Returns the typed ``CE`` view; use `.field` for raw access.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-11 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-11 holds on the wire.
     public var outlierType: CE? {
         field(11).map(CE.init(field:))
     }
 
     /// DG1-12: Outlier Days. HL7 data type `NM`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-12 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-12 holds on the wire.
     public var outlierDays: String? {
         field(12)?.stringValue
     }
 
     /// DG1-13: Outlier Cost. HL7 data type `CP`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-13 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-13 holds on the wire.
     public var outlierCost: Field? {
         field(13)
     }
 
     /// DG1-14: Grouper Version And Type. HL7 data type `ST`.
-    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1, v2.6. On a message of another version this returns whatever DG1-14 holds on the wire.
+    /// Defined in v2.3, v2.3.1, v2.4, v2.5.1. On a message of another version this returns whatever DG1-14 holds on the wire.
     public var grouperVersionAndType: String? {
         field(14)?.stringValue
     }
