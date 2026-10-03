@@ -308,6 +308,9 @@ def messages_from_lines(text):
                 out.append(cur); out_swapped.append(cur_swapped); out_bare.append(cur_bare)
         cur, seg, cur_swapped, cur_bare = None, None, False, False
     for raw in text:
+        # P10-7: the v2.7.1 text layer encodes the printed hyphen as U+2010; every other
+        # version's PDFs, and the wire, use U+002D. Only that code point is mapped.
+        raw = raw.replace("‐", "-")
         # P4-29 fix round 1: pdftotext opens each page with a form feed, which FURN treats as
         # furniture -- but four pages (all v2.8.2 CH04) open with a printed segment.
         if raw.startswith("\f") and SEG.match(raw[1:]):
@@ -472,13 +475,16 @@ _RXO_FREE_TEXT_REASON = (
 # invisible is now visible — see the active entries below, which replace the two
 # count-0 regression guards that used to stand in for them.
 _AI_SOURCES = ["v2.3/CH10.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH10.PDF",
-               "v2.5.1/V251_CH10.pdf", "v2.6/V26_CH10_Scheduling.pdf", "v2.8.2/V282_CH10_Scheduling.pdf"]
+               "v2.5.1/V251_CH10.pdf", "v2.6/V26_CH10_Scheduling.pdf", "v2.8.2/V282_CH10_Scheduling.pdf",
+               # P10-7: v2.7.1 prints the same SRM/SRR examples (CH10 10.6.6.6 p69, 10.6.7.6 p74
+               # carry the same start/offset sentence as AIS-4, 10.6.4.4 p58).
+               "v2.7.1/V271_CH10_Scheduling.pdf"]
 _AI_SHIFT_COUNTS = {"v2.3/CH10.pdf": 10, "v2.3.1/Hl7V231.pdf": 10, "v2.4/CH10.PDF": 10,
                     "v2.5.1/V251_CH10.pdf": 9, "v2.6/V26_CH10_Scheduling.pdf": 9,
-                    "v2.8.2/V282_CH10_Scheduling.pdf": 9}
+                    "v2.8.2/V282_CH10_Scheduling.pdf": 9, "v2.7.1/V271_CH10_Scheduling.pdf": 9}
 _AI4_SOURCES = ["v2.3/CH10.pdf", "v2.3.1/Hl7V231.pdf", "v2.4/CH10.PDF"]
 _RXO_CH12_SOURCES = ["v2.4/CH12.PDF", "v2.5.1/V251_CH12.pdf", "v2.6/V26_CH12_PatientCare.pdf",
-                     "v2.8.2/V282_CH12_PatientCare.pdf"]
+                     "v2.8.2/V282_CH12_PatientCare.pdf", "v2.7.1/V271_CH12_PatientCare.pdf"]
 # P4-29: the classes of genuine example defect the segment-ID rule newly exposes (examples
 # printed one segment per line with no "<cr>", which used to be dropped), plus the RXA/RXG
 # dose-series cluster P4-28 deferred. Each was read against the print (the omission is in the
@@ -592,13 +598,17 @@ _P4_29_ENTRIES = [
           "v2.6/V26_CH17_MatMngmt.pdf": {0: 1},
           "v2.8.2/V282_CH02_Control.pdf": {8: 2, 9: 2, 10: 2, 12: 2},
           "v2.8.2/V282_CH17_MaterialsMngmt.pdf": {0: 1},
+          # P10-7: v2.7.1 CH08 8.5.2 (p8) MFE-5 and 8.5.3 (p11) MFA-6 print R.
+          "v2.7.1/V271_CH02_Control.pdf": {8: 2, 9: 2, 10: 2, 12: 2},
+          "v2.7.1/V271_CH17_MaterialsMngmt.pdf": {0: 1},
       }.items() for idx, n in by_index.items()],
     *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
        "location_pattern": r"^MFI\[\d+\]-3$", "count": n, "reason": _MFI_SHIFT_REASON}
       for src, n in {"v2.3/CH2.pdf": 6, "v2.3/CH8.pdf": 9, "v2.3.1/Hl7V231.pdf": 6,
                      "v2.4/CH02.PDF": 6, "v2.4/CH08.PDF": 6, "v2.5.1/V251_CH02.pdf": 4,
                      "v2.5.1/V251_CH08.pdf": 6, "v2.6/V26_CH02_Control.pdf": 4,
-                     "v2.8.2/V282_CH02_Control.pdf": 2}.items()],
+                     "v2.8.2/V282_CH02_Control.pdf": 2,
+                     "v2.7.1/V271_CH02_Control.pdf": 2}.items()],
     # Fix round 1 (C-1): MFI-6 is registered on MFN messages only. Its definition reads
     # "Required for MFN-Master File Notification message" (v2.3 CH8, v2.4 CH08, v2.5.1 CH08,
     # v2.8.2 CH08), against an unconditional R in the segment table. P4-30 models MFI-6 as C
@@ -618,6 +628,9 @@ _P4_29_ENTRIES = [
           "v2.6/V26_CH17_MatMngmt.pdf": [0],
           "v2.8.2/V282_CH02_Control.pdf": [8],
           "v2.8.2/V282_CH17_MaterialsMngmt.pdf": [0],
+          # P10-7: v2.7.1 CH08 8.5.1.6 (p8), same "Required for MFN" wording.
+          "v2.7.1/V271_CH02_Control.pdf": [8],
+          "v2.7.1/V271_CH17_MaterialsMngmt.pdf": [0],
       }.items() for idx in indices],
     *[{"source_glob": src, "index": "all", "code": "requiredFieldMissing",
        "location_pattern": r"^DSP\[\d+\]-3$", "count": 29, "reason": _DSP_SHIFT_REASON}
@@ -625,16 +638,20 @@ _P4_29_ENTRIES = [
     *[{"source_glob": src, "index": "all", "code": "*",
        "location_pattern": r"^RDF\[\d+\]-[12]$", "count": n, "reason": _RDF_REASON}
       for src, n in {"v2.4/CH05.PDF": 16, "v2.5.1/V251_CH05.pdf": 16,
-                     "v2.6/V26_CH05_Queries.pdf": 16, "v2.8.2/V282_CH05_Queries.pdf": 12}.items()],
+                     "v2.6/V26_CH05_Queries.pdf": 16, "v2.8.2/V282_CH05_Queries.pdf": 12,
+                     "v2.7.1/V271_CH05_Queries.pdf": 12}.items()],
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
        "location_pattern": r"^PRA\[\d+\]-12$", "count": 1, "reason": _PRA12_REASON}
       for src in ["v2.4/CH15.PDF", "v2.5.1/V251_CH15.pdf", "v2.6/V26_CH15_PersMngmt.pdf",
-                  "v2.8.2/V282_CH15_PersMngmt.pdf"]],
+                  "v2.8.2/V282_CH15_PersMngmt.pdf",
+                  # P10-7: v2.7.1 CH15 15.4.6.12 (p32), the same sentence.
+                  "v2.7.1/V271_CH15_PersMngmt.pdf"]],
     {"source_glob": "v2.8.2/V282_CH09_MedRecords.pdf", "index": "all", "code": "conditionalFieldMissing",
      "location_pattern": r"^TXA\[\d+\]-7$", "count": 1, "reason": _TXA7_REASON},
     *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
        "location_pattern": r"^MSH\[\d+\]-[35]$", "count": 3, "reason": _HD_PAIR_REASON}
-      for src in ["v2.5.1/V251_CH05.pdf", "v2.6/V26_CH05_Queries.pdf", "v2.8.2/V282_CH05_Queries.pdf"]],
+      for src in ["v2.5.1/V251_CH05.pdf", "v2.6/V26_CH05_Queries.pdf", "v2.8.2/V282_CH05_Queries.pdf",
+                  "v2.7.1/V271_CH05_Queries.pdf"]],
 ]
 # P4-30: per-source totals over every message ("all"), so later renumbering cannot strand them.
 # v2.3 CH4 16 = 1 (RAS) + 10 (RAS query-response series) + 1 (RGR give series) + 4 (VXU);
@@ -646,7 +663,9 @@ _P4_30_ENTRIES = [
                      "v2.4/CH04.PDF": 1, "v2.4/CH12.PDF": 1,
                      "v2.5.1/V251_CH04.pdf": 1, "v2.5.1/V251_CH12.pdf": 1,
                      "v2.6/V26_CH04_Orders.pdf": 1, "v2.6/V26_CH12_PatientCare.pdf": 1,
-                     "v2.8.2/V282_CH04A_Orders.pdf": 1, "v2.8.2/V282_CH12_PatientCare.pdf": 1}.items()],
+                     "v2.8.2/V282_CH04A_Orders.pdf": 1, "v2.8.2/V282_CH12_PatientCare.pdf": 1,
+                     # P10-7: v2.7.1 CH04A 4A.4.7 attribute table (p88) prints RXA-4 R.
+                     "v2.7.1/V271_CH04A_Orders.pdf": 1, "v2.7.1/V271_CH12_PatientCare.pdf": 1}.items()],
     *[{"source_glob": src, "index": idx, "code": "*",
        "location_pattern": r"^CSR\[\d+\]-[68]$", "count": 2, "reason": _CSR_SHIFT_REASON}
       for src, idx in {"v2.3/CH7.pdf": 11, "v2.3.1/Hl7V231.pdf": 99}.items()],
@@ -673,7 +692,7 @@ _P6_13_ENTRIES = [
     *[{"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0206")',
        "location_pattern": r"^AI[LP]\[\d+\]-2\.1$", "count": n,
        "reason": _AI_SHIFT_REASON}
-      for src, n in zip(_AI_SOURCES, [9, 9, 9, 8, 8, 8])],
+      for src, n in zip(_AI_SOURCES, [9, 9, 9, 8, 8, 8, 8])],
     {"source_glob": "v2.3.1/Hl7V231.pdf", "index": "all", "code": 'valueNotInTable(table: "0124")',
      "location_pattern": r"^OBR\[\d+\]-30\.1$", "count": 1, "reason": _OBR30_V231_SHIFT_REASON},
     *[{"source_glob": src, "index": "all", "code": 'valueNotInTable(table: "0155")',
@@ -707,7 +726,7 @@ _P10_6_DG13_REASON = (
     "v2.7.1 CH06 6.5.2 DG1 attribute table (p31) prints DG1-3 Diagnosis Code - DG1 CWE R. The "
     "CH03 examples print \"DG1|1|19||BIOPSY||00\": DG1-3 empty, the text in the withdrawn DG1-4.")
 _P10_6_ITM_REASON = (
-    "The v2.7.1 CH17 ITM example is shifted: ITM-13 prints \"300-0001\" (U+2010 in the text layer) "
+    "The v2.7.1 CH17 ITM example is shifted: ITM-13 prints \"300-0001\" (U+2010 in the text layer, mapped to \"-\" since P10-7) "
     "in ITM-13.1 and the item name \"FormulaAlim_8oz\" in ITM-13.2 Price Type (Table 0205).")
 _P10_6_ENTRIES = [
     *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
@@ -727,6 +746,158 @@ _P10_6_ENTRIES = [
      "location_pattern": r"^DG1\[\d+\]-3$", "count": 3, "reason": _P10_6_DG13_REASON},
     {"source_glob": "v2.7.1/V271_CH17_MaterialsMngmt.pdf", "index": "all", "code": 'valueNotInTable(table: "0205")',
      "location_pattern": r"^ITM\[\d+\]-13\.2$", "count": 1, "reason": _P10_6_ITM_REASON},
+]
+# P10-7: the v2.7.1 sweep. Every non-elided error line on an example printed in a v2.7.1
+# chapter, and on any example declaring MSH-12 "2.7" (substituted by v2.7.1, G11), is claimed
+# here or by a per-source row added to an earlier block. Examples whose MSH-12 is elided or
+# misplaced validate under the v2.5.1 fallback (the P4-22 rule); their lines are claimed too,
+# cited against the v2.7.1 print that carries them. Every line is the example's own defect
+# except _P10_7_GOL19_REASON (a fallback-grammar effect). Per-source totals ("all") unless an
+# index is needed to keep a v2.8.2 or same-source line of another class out.
+_P10_7_MSG_REASON = (
+    "v2.7.1 CH02A 2.A.44 (p56) prints MSG.1 Message Code, MSG.2 Trigger Event and MSG.3 Message "
+    "Structure R. The examples print MSH-9 as \"ACK\" or \"MCF\" alone, or as \"RQI^I01\" / "
+    "\"ADT^A04\" / \"PGL^PC4\" without the structure.")
+_P10_7_MSH_HEADER_REASON = (
+    "v2.7.1 CH02 2.14.9 MSH attribute table (p57) prints MSH-7, MSH-9, MSH-10, MSH-11 and MSH-12 "
+    "R (MSH-11.1 Table 0103: D, P, T). The examples leave MSH-7 empty (\"MSH|^~\\&|RAD||CIS||||"
+    "RSP^K61^RSP_K61|5555|P|2.7|\"), end the header at MSH-9 (\"...|200702171830||ADT^A04\"), or "
+    "print one field too many before the message type (\"MSH|^~\\&||||||||ADT^A28^ADT_A05|1|P|2.7\", "
+    "\"MSH|^~\\&|PS^LAB||CPR|COMWEST||||ORU^R01^ORU_R01|4409|P|2.7|\"), so MSH-9 reads blank, the "
+    "control ID lands in MSH-11 and \"P\" in MSH-12 (validated under the v2.5.1 fallback).")
+_P10_7_SCH_REASON = (
+    "v2.7.1 CH10 10.6.2 SCH attribute table (p38) prints SCH-6 Event Reason and SCH-20 Entered By "
+    "Person R. The SRM/SRR examples print the reason \"047^Referral\" in SCH-7 and the entered-by "
+    "person \"087^By^Entered\" in SCH-16, four fields early, leaving SCH-6 and SCH-20 blank.")
+_P10_7_DG16_REASON = (
+    "v2.7.1 CH06 6.5.2 DG1 attribute table (p31) prints DG1-6 Diagnosis Type R. The CH10 SRM "
+    "example prints \"DG1|001|I9|833.00|Closed dislocation wrist|200706190700|||\", DG1-6 empty.")
+_P10_7_CODE_REASON = (
+    "The example prints a code the bound v2.7.1 table does not hold: \"EUI-64\" for EUI64 and "
+    "\"PUMPCO\" (a manufacturer) in Table 0301 (CH02C p91); \"MFAA\" in MFI-6, Table 0179 (NE, "
+    "ER, AL, SU; CH02C p51); \"MP\" in MFE-1, Table 0180 (MAD, MDL, MUP, MDC, MAC; CH02C p51); "
+    "\"PDF\" in TXA-3, Table 0191 (CH02C p54); \"Y\" in RXO-9, Table 0161 (N, G, T; CH04A 4A.4.1.9 "
+    "p30).")
+_P10_7_SHIFT_REASON = (
+    "The example prints a value one field or component off, so a coded slot holds text: NK1-6 "
+    "\"EM^EMPLOYER\" (the contact role, NK1-6 Business Phone omitted, Table 0201); NK1-31 \"2222 "
+    "Farm Rd ^Suite A^Ypsilanti\" (the address, one field early, Tables 0201/0202); PV2-34 "
+    "\"200301101400\" (a date in Military Partnership Code, Table 0136); PID-5 \"EVERYWOMAN^Fluffy"
+    "^^^^^^D\" (the name type in XPN.8, Table 0465); TXA \"example.doc|LA|UC|AV\" (one field "
+    "early: \"UC\" in TXA-17 Table 0271, \"AV\" in TXA-18 Table 0272).")
+_P10_7_SPACE_REASON = (
+    "The print carries a space inside the coded value (present in the PDF text layer): AFF-3 "
+    "\"...^USA^M |\" (XAD.7 \"M \", Table 0190) and PRC-5 \"100.00^UP |\" (Price Type \"UP \", "
+    "Table 0205).")
+_P10_7_OBR25_REASON = (
+    "v2.7.1 CH04 4.5.3.25 (p63): OBR-25 \"is required whenever the OBR is contained in a report "
+    "message\". The CH07 device ORU^R01 examples leave it empty.")
+_P10_7_PID_REASON = (
+    "v2.7.1 CH03 3.4.2 PID attribute table (p59) prints PID-3 and PID-5 R. The examples omit the "
+    "name (\"PID|||1234567^^^^MRN|\"), print it one field late (\"PID|1|E2|MR2^^^ABCHMO|||"
+    "EVERYWOMAN^EVI\") or early (\"PID||0123456-1||EVERYMAN^ADAM^A\", so PID-4.3 \"A\" fails Table "
+    "0061), or leave PID-3 empty (\"PID|||||Nuclear&Ned\").")
+_P10_7_REQUIRED_REASON = (
+    "A field the v2.7.1 attribute table prints R is not printed: OBX-11 (CH07 7.4.2, p46), EQP-5 "
+    "(CH13 13.4.8, p49), GOL-4 (CH12 12.4.1, p25), PRB-4 (CH12 12.4.2, p29), RXA-3 (CH04A 4A.4.7, "
+    "p88; the CH12 example prints the date in RXA-2).")
+_P10_7_CSR_REASON = (
+    "v2.7.1 CH07 7.7.1.9 and 7.7.1.10 (p97): CSR-9 and CSR-10 are \"required for the patient "
+    "registration trigger event (C01)\". The CRM^C01 example leaves both empty.")
+_P10_7_GOL19_REASON = (
+    "Fallback-grammar effect: the CH12 PGL example ends its header at MSH-9, so it validates under "
+    "v2.5.1, where GOL-19 is TS and its second component is Degree of Precision (Table 0529). The "
+    "example prints \"P^Patient^...\" (a coded value) in GOL-19; v2.7.1 prints GOL-19 as DTM (CH12 "
+    "p25), which has no Table 0529 component.")
+_P10_7_ORC_OBR_REASON = (
+    "v2.7.1 CH04 (p90) prints the second child ORC as \"89-522^EKG\" and its OBR as \"89-552^EKG\"; "
+    "the prose names the children 89-551 and 89-552. ORC-3 and OBR-3 are the same element (00217).")
+
+
+def _p10_7(chapter):
+    return "v2.7.1/V271_" + chapter + ".pdf"
+
+
+_P10_7_ENTRIES = [
+    *[{"source_glob": _p10_7(ch), "index": "all", "code": "requiredComponentMissing",
+       "location_pattern": r"^MSH\[\d+\]-9\.[23]$", "count": n, "reason": _P10_7_MSG_REASON}
+      for ch, n in {"CH02_Control": 4, "CH03_PatientAdmin": 3, "CH05_Queries": 1,
+                    "CH10_Scheduling": 10, "CH11_PatientReferral": 16, "CH12_PatientCare": 3,
+                    "CH17_MaterialsMngmt": 4}.items()],
+    *[{"source_glob": _p10_7(ch), "index": "all", "code": "*",
+       "location_pattern": r"^MSH\[\d+\]-(7|9|10|11|11\.1|12)$", "count": n,
+       "reason": _P10_7_MSH_HEADER_REASON}
+      for ch, n in {"CH02_Control": 9, "CH03_PatientAdmin": 6, "CH12_PatientCare": 12}.items()],
+    # Indexed: CH04A and CH05 also print headers elided with "...", whose lines stay ELIDED.
+    *[{"source_glob": _p10_7(ch), "index": idx, "code": "*",
+       "location_pattern": r"^MSH\[\d+\]-(7|9|10|11|11\.1|12)$", "count": n,
+       "reason": _P10_7_MSH_HEADER_REASON}
+      for ch, by_index in {"CH05_Queries": {17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 3, 23: 4}}.items()
+      for idx, n in by_index.items()],
+    # The header itself is elided from MSH-11 (CH04A #12) and MSH-10 (CH05 #11) onward.
+    *[{"source_glob": _p10_7(ch), "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": pat, "count": 1, "reason": _P10_7_MSH_HEADER_REASON}
+      for ch, idx, pat in [("CH04A_Orders", 12, r"^MSH\[\d+\]-10$"),
+                           ("CH05_Queries", 11, r"^MSH\[\d+\]-7$")]],
+    {"source_glob": "v2.8.2/V282_CH05_Queries.pdf", "index": 19, "code": "requiredFieldMissing",
+     "location_pattern": r"^MSH\[\d+\]-7$", "count": 1, "reason": _P10_7_MSH_HEADER_REASON},
+    {"source_glob": _p10_7("CH10_Scheduling"), "index": "all", "code": "requiredFieldMissing",
+     "location_pattern": r"^SCH\[\d+\]-(6|20)$", "count": 6, "reason": _P10_7_SCH_REASON},
+    {"source_glob": _p10_7("CH10_Scheduling"), "index": "all", "code": "requiredFieldMissing",
+     "location_pattern": r"^DG1\[\d+\]-6$", "count": 1, "reason": _P10_7_DG16_REASON},
+    *[{"source_glob": src, "index": idx, "code": "*", "location_pattern": pat, "count": n,
+       "reason": _P10_7_CODE_REASON}
+      for src, idx, pat, n in [
+          (_p10_7("CH07_Observations"), "all", r"^(MSH\[\d+\]-3\.3|OBR\[\d+\]-[23]\.4|OBX\[\d+\]-18\.4)$", 15),
+          (_p10_7("CH02_Control"), "all", r"^MFI\[\d+\]-6$", 1),
+          ("v2.8.2/V282_CH02_Control.pdf", 12, r"^MFI\[\d+\]-6$", 1),
+          (_p10_7("CH08_MasterFiles"), "all", r"^MFE\[\d+\]-1$", 1),
+          (_p10_7("CH09_MedRecords"), "all", r"^TXA\[\d+\]-3$", 1),
+          (_p10_7("CH04A_Orders"), "all", r"^RXO\[\d+\]-9$", 2),
+      ]],
+    *[{"source_glob": _p10_7(ch), "index": "all", "code": "*", "location_pattern": pat,
+       "count": n, "reason": _P10_7_SHIFT_REASON}
+      for ch, pat, n in [("CH03_PatientAdmin", r"^(NK1\[\d+\]-(6|31)\.[23]|PV2\[\d+\]-34|PID\[\d+\]-5\.8)$", 7),
+                         ("CH09_MedRecords", r"^TXA\[\d+\]-1[78]$", 2)]],
+    *[{"source_glob": _p10_7(ch), "index": "all", "code": "*", "location_pattern": pat,
+       "count": n, "reason": _P10_7_SPACE_REASON}
+      for ch, pat, n in [("CH08_MasterFiles", r"^(AFF\[\d+\]-3\.7|PRC\[\d+\]-5\.2)$", 2),
+                         ("CH15_PersMngmt", r"^AFF\[\d+\]-3\.7$", 1)]],
+    {"source_glob": _p10_7("CH13_ClinicalLabAuto"), "index": "all",
+     "code": 'valueNotInTable(table: "0136")', "location_pattern": r"^TCC\[\d+\]-9\.1$",
+     "count": 1, "reason": _TCC9_REASON},
+    {"source_glob": _p10_7("CH09_MedRecords"), "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^TXA\[\d+\]-7$", "count": 1, "reason": _TXA7_REASON},
+    # Indexed where the same source also prints elided copies (ELIDED lines are never claimed).
+    *[{"source_glob": _p10_7("CH07_Observations"), "index": idx, "code": "conditionalFieldMissing",
+       "location_pattern": r"^OBR\[\d+\]-25$", "count": n, "reason": _P10_7_OBR25_REASON}
+      for idx, n in {7: 1, 8: 5}.items()],
+    *[{"source_glob": _p10_7(ch), "index": idx, "code": "*",
+       "location_pattern": r"^PID\[\d+\]-([35]|4\.3)$", "count": n, "reason": _P10_7_PID_REASON}
+      for ch, idx, n in [("CH02_Control", "all", 3), ("CH03_PatientAdmin", "all", 3),
+                         ("CH05_Queries", 17, 1), ("CH05_Queries", 44, 1),
+                         ("CH12_PatientCare", "all", 9)]],
+    *[{"source_glob": _p10_7(ch), "index": idx, "code": "requiredFieldMissing",
+       "location_pattern": pat, "count": n, "reason": _P10_7_REQUIRED_REASON}
+      for ch, idx, pat, n in [("CH03_PatientAdmin", "all", r"^OBX\[\d+\]-11$", 2),
+                           ("CH05_Queries", 17, r"^OBX\[\d+\]-11$", 1),
+                           ("CH09_MedRecords", 0, r"^OBX\[[23]\]-11$", 2),
+                           ("CH12_PatientCare", "all", r"^(OBX\[\d+\]-11|GOL\[\d+\]-4|PRB\[\d+\]-4|RXA\[\d+\]-3)$", 8),
+                           ("CH13_ClinicalLabAuto", "all", r"^EQP\[\d+\]-5$", 1)]],
+    {"source_glob": _p10_7("CH07_Observations"), "index": "all", "code": "conditionalFieldMissing",
+     "location_pattern": r"^CSR\[\d+\]-(9|10)$", "count": 2, "reason": _P10_7_CSR_REASON},
+    {"source_glob": _p10_7("CH12_PatientCare"), "index": "all", "code": 'valueNotInTable(table: "0529")',
+     "location_pattern": r"^GOL\[\d+\]-19\.2$", "count": 1, "reason": _P10_7_GOL19_REASON},
+    {"source_glob": _p10_7("CH04_Orders"), "index": "all", "code": 'pairedFieldMismatch(item: "00217")',
+     "location_pattern": r"^OBR\[\d+\]-3$", "count": 1, "reason": _P10_7_ORC_OBR_REASON},
+    # The v2.8.2 CH02 STF examples that declare "2.7" now validate under v2.7.1: the same CX.5,
+    # XTN.3 and XAD.7 omissions P10-6 registered on the v2.7.1 copies.
+    *[{"source_glob": "v2.8.2/V282_CH02_Control.pdf", "index": idx, "code": "*",
+       "location_pattern": pat, "count": n, "reason": reason}
+      for idx in (0, 1)
+      for pat, n, reason in [(r"^STF\[\d+\]-2\.5$", 1, _P10_6_CX5_REASON),
+                             (r"^STF\[\d+\]-10\.3$", 2, _P10_6_XTN3_REASON),
+                             (r"^STF\[\d+\]-11\.7$", 2, _P10_6_XAD7_REASON)]],
 ]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
@@ -770,11 +941,13 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": idx, "code": "conditionalFieldMissing",
        "location_pattern": r"^RXO\[\d+\]-[124]$", "count": 3, "reason": _RXO_FREE_TEXT_REASON}
       for src, idx in {"v2.4/CH04.PDF": 23, "v2.5.1/V251_CH04.pdf": 26,
-                        "v2.6/V26_CH04_Orders.pdf": 25, "v2.8.2/V282_CH04A_Orders.pdf": 4}.items()],
+                        "v2.6/V26_CH04_Orders.pdf": 25, "v2.8.2/V282_CH04A_Orders.pdf": 4,
+                        "v2.7.1/V271_CH04A_Orders.pdf": 4}.items()],
     *_P4_29_ENTRIES,
     *_P4_30_ENTRIES,
     *_P6_13_ENTRIES,
     *_P10_6_ENTRIES,
+    *_P10_7_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact

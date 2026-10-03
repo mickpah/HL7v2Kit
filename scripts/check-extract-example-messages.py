@@ -356,6 +356,15 @@ def check_second_footer_line_is_furniture():
     assert not extract.FURN.search("Version 2.7.1 was published in July 2012. It adds")
 
 
+def check_text_layer_hyphen_is_ascii():
+    # P10-7: the v2.7.1 text layer encodes the printed hyphen as U+2010 (465 times in 116
+    # examples, e.g. CH03 "EVN|A08|200701310815‐0800"); the same glyph is U+002D in every
+    # other version's PDFs and on the wire. Left alone it turned every time-zone offset into an
+    # invalid DTM. Other punctuation (en dash, curly quotes) is not touched.
+    got = _segments([_MSH, "EVN|A08|200701310815‐0800", "PID|1||555‐2010|“X” – Y"])
+    assert got == [[_MSH, "EVN|A08|200701310815-0800", "PID|1||555-2010|“X” – Y"]], got
+
+
 def check_known_spec_example_errors_cite():
     # P4-22 Part 3 / fix round 1 item 5: every registered exception is keyed by (source
     # glob, index, code, location pattern) with an exact expected count, and cites the spec
@@ -483,6 +492,7 @@ CHECKS = [check_literal_cr_splits_mid_line, check_elision_field_drops_rest_of_se
           check_segment_id_line_starts_a_segment_without_cr,
           check_outdented_line_is_prose_not_continuation,
           check_segment_first_on_a_page_is_kept, check_second_footer_line_is_furniture,
+          check_text_layer_hyphen_is_ascii,
           check_wrapped_line_led_by_a_non_segment_word_is_not_split,
           check_standalone_comment_line_closes_the_open_segment,
           check_elision_only_line_does_not_glue_its_neighbours,
