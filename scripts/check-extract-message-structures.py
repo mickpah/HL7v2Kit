@@ -194,7 +194,7 @@ def _table(caption, rows, col=30):
 
 def _structure(rows, sid="XYZ_X01", overrides=EMPTY):
     text = _page(1, _table(f"XYZ^X01^{sid}", rows), heading="9.1.1           XYZ - synthetic (Event X01)")
-    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], overrides)
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], overrides, tables=[])
     return structures.get(sid), report
 
 
@@ -529,9 +529,209 @@ def check_bundle_maps():
 
 def check_eras_cover_chapters():
     assert set(ext.ERAS) == set(ext.CHAPTERS), sorted(set(ext.ERAS) ^ set(ext.CHAPTERS))
-    assert set(ext.ERAS_PENDING) < set(ext.ERAS)
+    assert not ext.ERAS_PENDING, ext.ERAS_PENDING      # P8b-3a: every era is read
     assert all(ext.ERAS[v] == (ext.CHAPTERS[v], "caret") for v in ("v2.4", "v2.5.1", "v2.6"))
-    assert not set(ext.ERAS_PENDING) & {"v2.4", "v2.5.1", "v2.6"}
+    assert {v: e for v, (_, e) in ext.ERAS.items() if e != "caret"} == {
+        "v2.3": "section-title", "v2.3.1": "table-0354", "v2.7.1": "caret-colon", "v2.8.2": "caret-colon"}
+
+
+def _run(version, texts, overrides=EMPTY, tables=(), full=False):
+    return ext.extract_version(version, texts, overrides, tables=list(tables), full=full)
+
+
+def check_caret_colon_caption():
+    # v2.7.1 / v2.8.2: the caption on its own line, a Segments/Description row that repeats after
+    # the page break at other columns, and chapter-local page numbers.
+    text = ["\fChapter 9: Synthetic", "9.1.1 XYZ - synthetic (Event X01)",
+            "                         XYZ^X01^XYZ_X01: Synthetic Message",
+            "   Segments                    Description                 Status   Chapter",
+            "   MSH                         Message Header                         2",
+            "   [{                          --- G begin",
+            "      PID                      Patient                                3",
+            "Page 1                                     Health Level Seven, Version 2.8.2",
+            "\fChapter 9: Synthetic",
+            "     Segments                      Description               Status   Chapter",
+            "        [PD1]                      Demographics                         3",
+            "     }]                            --- G end",
+            "     EVN                           Event                                3",
+            "This message is followed by prose that sits left of the column.",
+            "Page 2                                     Health Level Seven, Version 2.8.2"]
+    structures, report, count = _run("2.8.2", [("syn", text)])
+    s = structures["XYZ_X01"]
+    assert count == 1, count
+    assert [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "G", "EVN"], s["elements"]
+    assert s["citation"] == "HL7 v2.8.2 Chapter 9, section 9.1.1 XYZ - synthetic (Event X01), pp 1 to 2.", s["citation"]
+
+
+def check_event_ranges():
+    assert ext.expand_events("C01-C08") == [f"C0{n}" for n in range(1, 9)]
+    assert ext.expand_events("PCG,PCH,PCJ") == ["PCG", "PCH", "PCJ"]
+    assert ext.expand_events("PCB-PCD") == ["PCB", "PCC", "PCD"]
+    assert len(ext.expand_events("S12-S24,S26,S27")) == 15
+    assert ext.expand_events("A01-B02") is None and ext.expand_events("varies") == ["varies"]
+    text = _page(1, _table("CRM^C01-C08^CRM_C01", [("MSH", "Header"), ("PID", "Patient")]),
+                 heading="9.1.1           CRM - synthetic (Events C01-C08)")
+    structures, _, _ = _run("2.5.1", [("syn", text)])
+    assert structures["CRM_C01"]["triggers"] == [f"CRM^C0{n}" for n in range(1, 9)], structures["CRM_C01"]["triggers"]
+
+
+TABLE = [("XYZ_X01", ["X01", "X02"], "X01, X02"), ("XYZ_X03", ["X03", "X04"], "X03, X04"), ("ACK", None, "Varies")]
+
+
+def check_two_part_caption_through_0354():
+    # v2.3.1 (and v2.4's two-part captions): CODE^EVT, the structure ID from Table 0354.
+    rows = [("MSH", "Header"), ("PID", "Patient")]
+    for version in ("2.3.1", "2.4"):
+        text = _page(1, ["    XYZ^X02                   Synthetic Message                     Chapter"]
+                     + _table("XYZ^X02", rows)[1:]
+                     + ["    XYZ^X02|1|example message, not a caption", ""]
+                     + ["    ACK^X02                   General Acknowledgment                Chapter"]
+                     + _table("ACK^X02", [("MSH", "Header"), ("MSA", "Ack")])[1:]
+                     + ["    XYZ^X09                   Synthetic Message                     Chapter"]
+                     + _table("XYZ^X09", rows)[1:], heading="9.1.2           XYZ - synthetic (Event X02)")
+        structures, report, count = _run(version, [("syn", text)], tables=TABLE)
+        assert count == 3, (version, count)
+        assert structures["XYZ_X01"]["triggers"] == ["XYZ^X02"], structures
+        assert structures["ACK"]["triggers"] == ["ACK^X02"], structures
+        [miss] = [r for r in report if r[1] == "needs-structure-id"]
+        assert miss[0] == "XYZ^X09" and "has no row for it" in miss[2], miss
+
+
+def check_section_title_caption():
+    # v2.3: the message code alone; the events from the section title, wrapped over two lines.
+    text = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
+                 + _table("XYZ", [("MSH", "Header"), ("PID", "Patient")])[1:], heading="9.2.1 XYZ - synthetic (events X03,")
+    text.insert(2, "X04)")
+    other = _page(2, ["    XYZ                       Synthetic Message                     Chapter"]
+                  + _table("XYZ", [("MSH", "Header")])[1:], heading="9.3 XYZ TRIGGER EVENTS")
+    structures, report, _ = _run("2.3", [("syn", text + other)], tables=TABLE)
+    assert structures["XYZ_X03"]["triggers"] == ["XYZ^X03", "XYZ^X04"], structures
+    [miss] = [r for r in report if r[1] == "needs-event"]
+    assert miss[0] == "XYZ^?" and "9.3" in miss[2], miss
+
+
+def check_primary_print_and_duplicates():
+    # A chapter that only reuses ADT_A01 (ADT^A04 here) prints it first and differently; the
+    # defining caption ADT^A01^ADT_A01 is the primary, the other print a duplicate-differs row.
+    reuse = _page(1, _table("ADT^A04^ADT_A01", [("MSH", "Header"), ("[ERR]", "Error")]), heading="5.1.1 Reuse")
+    define = _page(2, _table("ADT^A01^ADT_A01", [("MSH", "Header"), ("[{ERR}]", "Error")]), heading="3.3.1 Define")
+    same = _page(3, _table("ADT^A08^ADT_A01", [("MSH", "Header"), ("[{ERR}]", "Error")]), heading="3.3.8 Same")
+    structures, report, _ = _run("2.5.1", [("CH05", reuse), ("CH03", define), ("CH03b", same)])
+    s = structures["ADT_A01"]
+    assert s["elements"][1] == {"segment": "ERR", "min": 0, "max": None}, s["elements"]
+    assert s["triggers"] == ["ADT^A01", "ADT^A04", "ADT^A08"], s["triggers"]
+    assert s["citation"].startswith("HL7 v2.5.1 Chapter 3, section 3.3.1 Define"), s["citation"]
+    differs = [r for r in report if r[1] == "duplicate-differs"]
+    assert len(differs) == 1 and differs[0][2].startswith("ADT^A04^ADT_A01 (section 5.1.1) prints 'MSH [ERR]'"), differs
+
+
+def check_excluded_print_never_primary():
+    # The excluded print is first and carries the defining caption: it is never the primary and
+    # never a duplicate-differs row. A stale exclusion is an error on a full read.
+    example = _page(1, _table("ORU^R01^ORU_R01", [("MSH", "Header"), ("OBR", "Request")]), heading="5.7.3.1 Example")
+    normative = _page(2, _table("ORU^R01^ORU_R01", [("MSH", "Header"), ("PID", "Patient")]), heading="7.3.1 ORU")
+    rule = {**EMPTY, "exclusions": [{"version": "2.5.1", "section": "5.7.3.1", "citation": "x"},
+                                    {"version": "2.5.1", "section": "5.9.9", "citation": "x"}]}
+    structures, report, _ = _run("2.5.1", [("CH05", example), ("CH07", normative)], rule, full=True)
+    assert [e["segment"] for e in structures["ORU_R01"]["elements"]] == ["MSH", "PID"]
+    assert not [r for r in report if r[1] == "duplicate-differs"], report
+    assert ("5.9.9", "error", "exclusions entry for section 5.9.9 matches no caption") in report, report
+    # v2.4 prints grammar examples with a title but no Status/Chapter header: still a caption.
+    caps = ext.captions(_page(1, ["    QBP^Z73^QBP_Z73             QBP Message", "    MSH            Header"]))
+    assert [c.structure for c in caps] == ["QBP_Z73"], caps
+
+
+def check_footnotes_inside_table():
+    # A footnote digit on a line of its own, and a row with no description whose right column
+    # holds the chapter and a footnote number, are not prose (P8b-2a review: DFT_P03, OUL_R23).
+    rows = [("MSH", "Header"), ("[{", "--- G begin"), ("PID", "Patient")]
+    text = _page(1, _table("XYZ^X01^XYZ_X01", rows) + ["                  1",
+                 "        [{ OBX }]                                                            7  2",
+                 "    }]                        --- G end"], heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", text)])
+    g = structures["XYZ_X01"]["elements"][1]
+    assert [e["segment"] for e in g["elements"]] == ["PID", "OBX"], (g, report)
+
+
+def check_group_mark_errata():
+    rows = [("MSH", "Header"), ("{", "--- OBSERVATION begin"), ("OBX", "Obs"), ("}", "--- OMSERVATION end")]
+    s, report = _structure(rows)
+    assert s is None and "OMSERVATION end closes no group" in [r for r in report if r[1] == "skipped"][0][2], report
+    fix = {**EMPTY, "errata": [{"version": "2.5.1", "where": "group-mark", "structure": "XYZ_X01",
+                                "printed": "OMSERVATION", "intended": "OBSERVATION", "citation": "x"},
+                               {"version": "2.5.1", "where": "group-mark", "structure": "XYZ_X01",
+                                "printed": "NOWHERE", "intended": "SOMEWHERE", "citation": "x"}]}
+    ext.validate_overrides(fix)
+    text = _page(1, _table("XYZ^X01^XYZ_X01", rows), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    assert structures["XYZ_X01"]["elements"][1]["group"] == "OBSERVATION", structures
+    errors = [r[2] for r in report if r[1] == "error"]
+    assert errors == ["errata entry (group-mark) 'NOWHERE' matches nothing"], errors
+
+
+def check_bracket_split_and_group_of_a_group():
+    # "[" and "{" on two lines open one optional repeating group; an unnamed bracket whose only
+    # member is a printed group is that group, optional (P8b-2a review minors).
+    s, _ = _structure([("MSH", "Header"), ("[", ""), ("{", "--- G begin"), ("PID", "Patient"), ("[PD1]", "Demo"),
+                       ("}", "--- G end"), ("]", "")])
+    g = s["elements"][1]
+    assert (g["group"], g["min"], g["max"], len(g["elements"])) == ("G", 0, None, 2), g
+    s, _ = _structure([("MSH", "Header"), ("[", ""), ("{", "--- OUTER begin"), ("[", "--- INNER begin"),
+                       ("PID", "Patient"), ("[PD1]", "Demo"), ("]", "--- INNER end"), ("}", "--- OUTER end"), ("]", "")])
+    outer = s["elements"][1]
+    assert (outer["group"], outer["min"], outer["max"]) == ("OUTER", 0, None), outer
+    assert [(e["group"], e["min"], e["max"]) for e in outer["elements"]] == [("INNER", 0, 1)], outer
+
+
+def check_shared_triggers():
+    one = _page(1, _table("ORM^O01^ORM_O01", [("MSH", "Header"), ("ORC", "Order")]), heading="4.1.1 ORM")
+    two = _page(2, _table("ORM^O01^OMD_O01", [("MSH", "Header"), ("ODS", "Diet")]), heading="4.2.1 OMD")
+    structures, report, _ = _run("2.3.1", [("syn", one + two)])
+    assert ("ORM^O01", "shared-trigger", "OMD_O01, ORM_O01 (undeclared)") in report, report
+    declared = {**EMPTY, "sharedTriggers": [
+        {"version": "2.3.1", "trigger": "ORM^O01", "structures": ["ORM_O01", "OMD_O01"], "citation": "x"},
+        {"version": "2.3.1", "trigger": "ORR^O02", "structures": ["ORR_O02", "ORD_O02"], "citation": "x"}]}
+    _, report, _ = _run("2.3.1", [("syn", one + two)], declared, full=True)
+    assert ("ORM^O01", "shared-trigger", "OMD_O01, ORM_O01 (declared)") in report, report
+    assert ("ORR^O02", "error", "sharedTriggers entry no longer occurs") in report, report
+    for bad in ({"version": "2.3.1", "trigger": "ORM^O01", "structures": ["ORM_O01"], "citation": "x"},):
+        try:
+            ext.validate_overrides({**EMPTY, "sharedTriggers": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError("a sharedTriggers entry with one structure must be rejected")
+
+
+def check_0354_reconciliation():
+    text = _page(1, _table("XYZ^X01^XYZ_X01", [("MSH", "Header")]) + _table("XYZ^X05^XYZ_X05", [("MSH", "Header")]),
+                 heading="9.1.1           XYZ - synthetic (Event X01)")
+    table = TABLE + [("XYZ_X09", [], "Deprecated and removed as of V2.7")]
+    _, report, _ = _run("2.5.1", [("syn", text)], tables=table)
+    rows = sorted((r[0], r[1]) for r in report if r[1].startswith("0354"))
+    assert rows == [("ACK", "0354-missing-caption"), ("XYZ_X03", "0354-missing-caption"), ("XYZ_X05", "0354-missing-row"),
+                    ("XYZ_X09", "0354-missing-caption")], rows
+    assert [r for r in report if r[0] == "XYZ_X09"][0][2].endswith("(deprecated)"), report
+    # A misprinted Table 0354 row is read through a cited table-0354 erratum.
+    fix = {**EMPTY, "errata": [{"version": "2.5.1", "where": "table-0354", "structure": "XYZ_X05",
+                                "printed": "XYZ__X05", "intended": "XYZ_X05", "citation": "x"}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], fix, tables=TABLE + [("XYZ__X05", ["X05"], "X05")], full=True)
+    assert not [r for r in report if r[0] == "XYZ_X05" and r[1].startswith("0354")], report
+    assert not [r for r in report if r[1] == "error"], report
+
+
+def check_caption_errata():
+    text = _page(1, ["    R0R^R0R                   Pharmacy Response                     Chapter"]
+                 + _table("R0R^R0R", [("MSH", "Header")])[1:], heading="4.9.9 ROR - synthetic (Event ROR)")
+    fix = {**EMPTY, "errata": [{"version": "2.3.1", "where": "caption", "structure": "ROR_ROR",
+                                "printed": "R0R^R0R", "intended": "ROR^ROR", "citation": "x"}]}
+    structures, report, _ = _run("2.3.1", [("syn", text)], fix, tables=[("ROR_ROR", ["ROR"], "ROR")], full=True)
+    assert structures["ROR_ROR"]["triggers"] == ["ROR^ROR"], (structures, report)
+    for broken in ({**fix["errata"][0], "where": "anywhere"}, {**fix["errata"][0], "intended": "R0R^R0R"}):
+        try:
+            ext.validate_overrides({**EMPTY, "errata": [broken]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"errata entry {broken} must be rejected")
 
 
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
@@ -541,7 +741,11 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_bundle_reader_tree, check_bundle_names_group_by_path_and_members,
           check_bundle_mismatch_not_resolved_by_position, check_derivation_through_v24, check_synthesised_fallback,
           check_bundle_differs_report_only, check_override_shadowed_by_bundle, check_name_source_validation,
-          check_bundle_maps]
+          check_bundle_maps, check_caret_colon_caption, check_event_ranges,
+          check_two_part_caption_through_0354, check_section_title_caption, check_primary_print_and_duplicates,
+          check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
+          check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
+          check_caption_errata]
 
 
 def main():

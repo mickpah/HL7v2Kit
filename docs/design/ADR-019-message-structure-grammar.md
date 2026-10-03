@@ -116,7 +116,7 @@ another segment first or places OBR before ORC.
   and header and **repeats the caption line**, which the extractor must de-duplicate. The
   Status column is empty on every row. `ACK^A01^ACK` follows immediately as a separate
   caption.
-- **v2.5.1 CH07 ORU_R01** (§7.3.1, p7-12 to 7-13): extractable, with four traps. (a) The
+- **v2.5.1 CH07 ORU_R01** (§7.3.1, pp 7-13 to 7-14): extractable, with four traps. (a) The
   caption title wraps ("Unsolicited Observation" / "Message") onto a line whose left column
   is empty. (b) Descriptions wrap onto continuation lines with an empty left column
   ("Parties", "Info", "Sequence"). (c) One continuation line ("Specimen", for
@@ -826,3 +826,38 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   committed: the self-check uses synthetic schemas in the bundle's style (ruling D4).
 - **Pilot.** The five v2.5.1 ORU_R01 names are now `v2xml`, cited to `HL7-xml
   v2.5.1/ORU_R01.xsd`; the structure data is unchanged.
+
+## Amendment 2026-10-04 — every caption form, primary print, exclusions, errata (P8b-3a)
+
+- **Caption forms.** The extractor reads every version (`ERAS_PENDING` is empty).
+  `caret` (v2.4 to v2.6): `CODE^EVT^STRUCT title`, and `CODE^EVT  title` with the structure
+  ID from that version's Table 0354. `table-0354` (v2.3.1): the same two forms. `caret-colon`
+  (v2.7.1, v2.8.2): `CODE^EVT^STRUCT: title` on its own line; the columns come from the
+  `Segments  Description` row, which resets them wherever it repeats after a page break;
+  pages are numbered per chapter (`Page 4`) and cited as printed. `section-title` (v2.3): the
+  message code alone; the events come from the section title `(event A01)`, read across a
+  wrapped title. v2.3 prints no Table 0354; its IDs resolve through v2.3.1's (cited). An
+  event list or range (`C01-C08`, `PCG,PCH,PCJ`, `S12-S24,S26,S27`) expands to its events. A
+  caption needs no Status or Chapter header: v2.4 prints 34 three-part captions without one
+  (36 counting the two-part forms), every one a Chapter 4 or 5 query or response grammar
+  example or a Z-event, and each is excluded by a cited `exclusions` entry. A caption whose
+  structure ID Table 0354 cannot resolve (no row, or several) is reported
+  (`needs-structure-id`), never guessed; a v2.3 caption under a title naming no event is
+  reported (`needs-event`).
+- **Primary print.** Exclusions apply first. A `triggerFolds` entry names the primary; else
+  the primary is the first print in reading order whose caption is the defining trigger
+  (CODE_EVT equals the structure ID: the chapter that defines the message, not one that
+  only reuses it); else the first print in reading order. Reading order is chapter order
+  (v2.3's `CH1` to `CH12` sort numerically). Every other print that differs is a report row
+  (`duplicate-differs`, or `duplicate-unreadable`); the structure follows the primary.
+- **Exclusions (ruling G7).** 107 cited entries across v2.4 to v2.8.2: the Chapter 2B
+  message-profile example, the Chapter 4 Z-event query (QBP^Z73, RTB^Z74), the Chapter 5
+  query grammar, query profile and conformance-statement examples, and the Chapter 8 MFN_Znn
+  template and example master file query. The QBP^Q31/RSP^K31 pair (CH04 4.13.20, CH04A) is
+  normative and stays. On a full read, an exclusion or erratum that matches nothing fails.
+- **Errata.** `errata` entries read a print typo as the intended text, each naming the
+  printed and intended text and where (`caption`, `group-mark`, `table-0354`).
+- **Shared triggers and Table 0354.** A trigger printed under several structures is a
+  `shared-trigger` report row, declared by a cited `sharedTriggers` entry or not; the codegen
+  is unchanged. Table 0354 is reconciled per version: a printed structure ID the table lacks
+  (`0354-missing-row`) and a row no normative print carries (`0354-missing-caption`).
