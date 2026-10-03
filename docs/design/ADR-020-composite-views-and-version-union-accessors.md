@@ -195,6 +195,13 @@ of the schemas with a synthetic earlier version defining PRT under a different n
 and shows PRT stays on v2.8.2 with every released declaration intact, while an unpinned
 segment still takes its earliest definer.
 
+**Outcome (P10, checked in P10-8).** With v2.7.1 added, no generated struct takes v2.7.1 as
+its base: the `// Source schema:` headers name v2.5.1 for 150 structs, v2.6 for 24 and v2.8.2
+for 14, and `Resources/struct-bases.json` still holds 38 pins. v2.7.1 contributes through the
+union surface only. The one accessor change in P10 is unreleased: `ITM.itemNaturalAccountCode`
+follows its v2.6 base (ITM-19 printed IS) as `String?`, and the CWE reading of v2.7.1 and
+v2.8.2 has the companion `ITM.itemNaturalAccountCodeAsCWE` (P10-4d).
+
 ## References
 
 - `planning/reviews/v2.5.1-review.md` V251-C11 / V251-A11.

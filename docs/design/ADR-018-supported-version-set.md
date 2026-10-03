@@ -1,12 +1,12 @@
 # ADR-018 — The supported HL7 v2.x version set
 
-**Status:** Accepted 2026-09-30 (owner) — Option A.
+**Status:** Accepted 2026-09-30 (owner) — Option A. Amended 2026-10-03 (P10-6): 2.7.1 modelled, 2.7 substituted by v2.7.1 (owner decision G11); see the amendments and the current version table at the end. Lines that describe 2.7 or 2.7.1 as absent, scheduled or excluded are kept as the original record and marked superseded.
 
 **Context:** Requirement 1 (`the working notes`) asks for the full HL7 v2.x spec, but the package models six releases and never said which it leaves out. The 2026-09-30 review sprints found three consequences:
 
 - X-C02 / V282-C03: `Version.v2_8` (`"2.8"`) is a public case with no grammar. `Validator.grammarTable(for:)` returns `[:]`, so a `2.8` message passes default validation with nothing checked and nothing said; under `.strict`, every segment, MSH included, is rejected as a Z-segment.
-- V282-C09: v2.8.2 Table 0104 lists `2.7`, `2.7.1` and `2.8.1`; none is a `Version` case, and the Parser silently falls back to v2.5.1 for them. The same silent fallback hits a VID-form MSH-12 (`2.4^AUS&Australia&ISO3166_1`), because the Parser reads MSH-12 as a scalar and a composite yields nil.
-- X-C01 / X-C03: v2.7.1 spec text is on disk but has no version, schemas or tables; v2.1, v2.2, v2.5, v2.7, v2.8.1 and v2.9 are absent with no recorded decision.
+- V282-C09: v2.8.2 Table 0104 lists `2.7`, `2.7.1` and `2.8.1`; none is a `Version` case, and the Parser silently falls back to v2.5.1 for them. The same silent fallback hits a VID-form MSH-12 (`2.4^AUS&Australia&ISO3166_1`), because the Parser reads MSH-12 as a scalar and a composite yields nil. *(Superseded for 2.7 and 2.7.1 by the P10-6 amendments: both are `Version` cases.)*
+- X-C01 / X-C03: v2.7.1 spec text is on disk but has no version, schemas or tables; v2.1, v2.2, v2.5, v2.7, v2.8.1 and v2.9 are absent with no recorded decision. *(Superseded by the P10-6 amendments: v2.7.1 is modelled and 2.7 is substituted.)*
 
 `Version` and `IssueCode` are open enums (ADR-014): adding a case is additive. Spec text on disk (`docs/standards/`): 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1 (zipped), 2.8.2. ADR-015 is the extraction pipeline any new version goes through.
 
@@ -20,8 +20,8 @@ A version is **modelled** when it has a `Version` case, a segment grammar (`Reso
 
 - Modelled: 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.8.2.
 - Substituted: 2.8 validated against v2.8.2, with an info issue `IssueCode.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)` at MSH-12 on every report.
-- Scheduled: 2.7.1 as plan P10 (ADR-015 extraction pipeline); Task P3-6 scopes P10, and 2.7.1 is modelled once P10 lands.
-- Excluded, each with a permanent-limitations-register row: 2.1, 2.2, 2.5, 2.7, 2.8.1, 2.9.
+- Scheduled: 2.7.1 as plan P10 (ADR-015 extraction pipeline); Task P3-6 scopes P10, and 2.7.1 is modelled once P10 lands. *(Superseded: P10 landed; 2.7.1 is modelled, P10-6 amendment.)*
+- Excluded, each with a permanent-limitations-register row: 2.1, 2.2, 2.5, 2.7, 2.8.1, 2.9. *(Superseded for 2.7, which is substituted by v2.7.1, P10-6 amendment.)*
 - Pro: `2.8` gets real checking, and the nearest published grammar is the best available evidence. The substitution is announced, so no report claims more than was done. `.v2_8` keeps its source-compatible public case.
 - Con: the v2.8 text is not on disk, so the v2.8 to v2.8.2 differences are unverified. A v2.8 message may draw a finding that only v2.8.2 requires. The info issue states this.
 
@@ -39,9 +39,11 @@ A version is **modelled** when it has a `Version` case, a segment grammar (`Reso
 
 ## Decision
 
-**Option A.** The Validator validates a `.v2_8` message against the v2.8.2 grammar, code tables and datatype grammar, and reports `versionGrammarSubstituted` (info) at MSH-12. The public registries (`HL7TableRegistry.table(_:version:)`, `DataTypeGrammarTable.grammar(_:version:)`) stay version-literal: `.v2_8` owns no tables. `Version.grammarVersion` is the single mapping. A non-Z segment with no entry in the applied grammar is reported as `segmentNotInVersionGrammar` (warning), never as a Z-segment. MSH-12 is read as a VID: the version is VID.1. An MSH-12 version ID with no `Version` case falls back to v2.5.1 and is reported as `versionNotRecognised(wireValue:)` (warning) naming the grammar used; `ParserOptions.strict` keeps throwing `ParseError.unsupportedVersion(found:)`. v2.7.1 is scheduled as plan P10; `2.7` is not mapped to it, because `Version` has no `.v2_7` case and adding one without its text would repeat an unverified substitution. The excluded versions are recorded in `permanent-limitations-register.md` section F.
+**Option A.** The Validator validates a `.v2_8` message against the v2.8.2 grammar, code tables and datatype grammar, and reports `versionGrammarSubstituted` (info) at MSH-12. The public registries (`HL7TableRegistry.table(_:version:)`, `DataTypeGrammarTable.grammar(_:version:)`) stay version-literal: `.v2_8` owns no tables. `Version.grammarVersion` is the single mapping. A non-Z segment with no entry in the applied grammar is reported as `segmentNotInVersionGrammar` (warning), never as a Z-segment. MSH-12 is read as a VID: the version is VID.1. An MSH-12 version ID with no `Version` case falls back to v2.5.1 and is reported as `versionNotRecognised(wireValue:)` (warning) naming the grammar used; `ParserOptions.strict` keeps throwing `ParseError.unsupportedVersion(found:)`. v2.7.1 is scheduled as plan P10; `2.7` is not mapped to it, because `Version` has no `.v2_7` case and adding one without its text would repeat an unverified substitution. *(Superseded by the P10-6 amendments: v2.7.1 is modelled, and the owner chose in G11 to substitute `2.7` by v2.7.1 as `2.8` is by v2.8.2.)* The excluded versions are recorded in `permanent-limitations-register.md` section F.
 
 ### Version table
+
+*(The original table, as accepted. The `2.7.1` row and the `2.7` entry in the excluded row are superseded; the current table follows the amendments.)*
 
 | MSH-12 (VID.1) | Status | Grammar applied | Issue raised |
 |---|---|---|---|
@@ -71,6 +73,17 @@ Plan P10 lands v2.7.1 through the ADR-015 pipeline, so the version table's `2.7.
 ## Amendment (P10-6, 2026-10-03): 2.7 substituted by v2.7.1 (owner decision G11)
 
 `2.7` moves from Excluded to Substituted, exactly as `2.8` under Option A: `Version.v2_7` (`"2.7"`, additive) has `grammarVersion` v2.7.1, the Validator applies the v2.7.1 grammar, code tables and datatype grammar, and reports `versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)` (info) at MSH-12. The public registries stay version-literal: `.v2_7` owns no tables or grammar of its own. The section F register row for 2.7 is rewritten. The v2.7 to v2.7.1 differences are unverified, as for 2.8 to v2.8.2.
+
+### Current version table (after the P10-6 amendments; checked in P10-8)
+
+| MSH-12 (VID.1) | Status | Grammar applied | Issue raised |
+|---|---|---|---|
+| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Modelled | Its own | none |
+| 2.7 | Substituted | v2.7.1 | `versionGrammarSubstituted` (info) |
+| 2.8 | Substituted | v2.8.2 | `versionGrammarSubstituted` (info) |
+| 2.1, 2.2, 2.5, 2.8.1, 2.9, any other | Excluded | v2.5.1 fallback | `versionNotRecognised` (warning) |
+
+The rows for a populated MSH-12 with no version and for an empty MSH-12 are unchanged. `Version` has nine cases (seven modelled, two substituted); `VersionHandlingTests.versionMatrix` pins the `2.7.1` and `2.7` rows.
 
 ## Open question recorded for the owner
 

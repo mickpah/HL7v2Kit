@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P10-8: the recipient-rule citation names the message's own version
+
+- `extraComponentsInPrimitiveField` and `extraComponentsInCompositeField` messages cited
+  "v2.5.1 and v2.8.2 section 2.6.2 a" whatever version validated the message. They now cite
+  the grammar version's own section for the rule "ignore segments, fields, components,
+  subcomponents, and extra repetitions of a field that are present but were not expected":
+  v2.3 and v2.3.1 section 2.10 and v2.4 section 2.11 (receiving rule a), v2.5.1, v2.6, v2.7.1
+  and v2.8.2 section 2.6.2 a (a `2.7` message cites v2.7.1). Only the message text changes:
+  codes, severities and locations are unchanged.
+
+### Documentation — P10-8: v2.7.1 close-out
+
+- `docs/design/v2_7_1-spec-audit.md`: what was extracted, the counts, every ruling and the
+  shipped-data defects fixed along the way. ADR-018: the original lines describing 2.7 and
+  2.7.1 as absent or scheduled are marked superseded, and a current version table follows the
+  amendments. ADR-020: outcome note (no struct base moved). Limitations register sections A,
+  C and E name v2.7.1. Conditional-completeness audit: the v2.7.1 totals are broken down and
+  two stale intake headings reworded. `FieldLengthRule` cites the v2.7.1 truncation marks
+  (CH02 2.5.5.2 p. 11, 2.5.5.3 p. 12). The open-ended NA array (v2.4 and v2.7.1) is pinned by
+  a test.
+
+### Changed — P10-7: RCP-4 and ROL-1 rules on the versions that print v2.7.1's text
+
+- RCP-4 is prohibited (warning) when RCP-1 is not `D` on v2.4, v2.5.1, v2.6 and v2.8.2, as on
+  v2.7.1: each prints "This field is only valued when RCP-1-Query priority contains the value
+  D (Deferred)" (CH05; v2.3 and v2.3.1 define no RCP). Default output gains four warnings on
+  the spec examples: the v2.4 and v2.5.1 CH03 QBP^Q23/Q24 examples print "RCP||I|SEC|0614",
+  one field to the right.
+- ROL-1 is required in the Patient Care and Personnel Management messages on v2.5.1, v2.6 and
+  v2.8.2, as on v2.7.1 (CH15 15.4.7.1); v2.8.2 leaves out PRR, PPV, PTR and PPT, removed as of
+  v2.8. v2.4 prints a different sentence and stays bare; v2.3 and v2.3.1 print ROL-1 `R`. No
+  spec example changes.
+
+### Added — P10-7: v2.7.1 spec examples in the harness
+
+- The 222 v2.7.1 example messages run through the validator; every error line on a v2.7.1
+  example, and on every example declaring MSH-12 `2.7`, is claimed by a registry entry cited
+  to the v2.7.1 print (244 entries, 0 mismatched). Each is an example defect or the declared
+  substitution; none is a misfire.
+- The ORC-8 / OBR-54 pair check is pinned end to end for a literal MSH-12 `2.7` and `2.8`.
+
+### Fixed — P10-7: the v2.7.1 text layer's printed hyphen
+
+- The v2.7.1 PDFs encode a printed hyphen as U+2010, so extracted example values such as
+  time-zone offsets carried a non-ASCII character and raised 94 false format warnings.
+  `extract-example-messages.py` maps U+2010 to "-", with a self-check. Extraction only; the
+  shipped resources are unchanged.
+
 ### Changed — P10-6: MSH-12 `2.7` validated against v2.7.1 (owner decision G11)
 
 - `Version.v2_7` (`"2.7"`), additive. A message whose MSH-12 declares `2.7` no longer
@@ -15,9 +63,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with one `versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)` info issue at
   MSH-12, exactly as `2.8` is validated against v2.8.2 (ADR-018 amendment). The registries
   stay version-literal: `.v2_7` owns no tables or grammar.
-- The ORC/OBR paired-field version sets are keyed on `grammarVersion`, so a `2.8` or `2.7`
-  message gets the ORC-8 / OBR-54 parent-order check of its grammar version (the DocC
-  already said a `2.8` message did; the check read the declared version).
+- The ORC/OBR paired-field version sets are read through `grammarVersion`. This is a tidy-up
+  with no change in output: `validate(_:)` already re-declares the message under its grammar
+  version before any version-keyed check, so a `2.8` message already got the ORC-8 / OBR-54
+  parent-order check of v2.8.2, and a `2.7` message gets v2.7.1's. (Corrected in P10-8: this
+  entry first said the check had read the declared version and that `2.8` output changed;
+  P10-7 found otherwise and pins the behaviour end to end.)
 
 ### Added — P10-6: `Version.v2_7_1`, HL7 v2.7.1 validated against its own grammar
 
@@ -38,6 +89,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `versionNotRecognised`, and `ParserOptions.strict` no longer throws `unsupportedVersion`
   for it. It is validated against the v2.7.1 grammar. None of the spec example messages
   declares `2.7.1`, so the validation digest is unchanged.
+
+### Changed — P10-5b intake: EQU-3 required in the ESU message on v2.4 to v2.8.2
+
+- CH13 13.4.1.3 prints "The Equipment State is required in the ESU message and is optional
+  otherwise" on v2.4, v2.5.1, v2.6 and v2.8.2 as on v2.7.1; all four now carry
+  `messageCode = ESU` (v2.3 and v2.3.1 define no EQU). Every printed ESU example values
+  EQU-3, so no spec example output changes.
+
+### Added — P10-5a, P10-5b: v2.7.1 conditional fields
+
+- Every one of the 177 fields v2.7.1 prints `C` was read against its own v2.7.1 definition:
+  112 carry a rule (107 a `condition`, 5 a prohibition only) and 65 stay bare, each with its
+  quote and reason in `docs/design/conditional-completeness-audit.md`. CSR-8, MFI-6 and
+  ROL-4 are printed `R` and modelled `C` with an optionality citation (P4-30).
+- Readings that differ from v2.8.2, each from the v2.7.1 text: ORC-2/3 and OBR-2/3 take the
+  v2.6 forms (no Send Number exception); PRT-5/8/9/10 have no PRT-22 leg; PID-35 and PID-36
+  take v2.6's "Conditionality Rule" sentences; RCP-4, ROL-1 and EQU-3 get rules v2.6 and
+  v2.8.2 then left bare (applied there in later intakes). The `messageCode not in (OUL ...)`
+  ORC/OBR gates are kept (register section D).
+- No output changed at the time: v2.7.1 was not dispatched until P10-6.
+
+### Fixed — P10-4d: v2.4 NA datatype
+
+- v2.4 types SAC-11 and SAC-14 NA but shipped no NA grammar. CH02 2.9.27 defers to CH07
+  7.14.1.1, which prints "<value1> ^ <value2> ^ <value3> ^ <value4> ^ ...";
+  `Resources/datatypes/v2.4/NA.json` holds the four printed values, untyped as printed. NA is
+  an open-ended array on every version (the print ends in an ellipsis), so the four entries
+  are not a maximum and NA is never width-checked. No output changes.
+
+### Fixed — P10-4d: v2.4 table 0131
+
+- v2.4 binds User-defined Table 0131 (Contact Role) on NK1-7 and CTD-1, and CH03 3.4.5.7
+  prints it with the single row "No suggested values", but Appendix A omits it. It is now
+  created, empty and user-defined (v2.4: 409 tables). No output changes.
+
+### Fixed — P10-4d: v2.5.1 MFA-5, MFE-4 and OBX-5 "Varies"
+
+- The segment-table extractor read a data-type cell that wraps its last letters onto the
+  next line as "Varie" (v2.5.1 CH08 8.5.2 and 8.5.3) and "varie" (OBX-5). It now completes the
+  cell from the wrapped fragment. The schemas already recorded `Varies`, so only the
+  extractor and a now-unneeded audit whitelist entry change.
 
 ### Fixed — P10-4d: v2.6 withdrawn fields carry the printed data type; the v2.5.1 MSA-5 exception
 
@@ -67,6 +159,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   on the v2.8.2 spec examples 64 type-keyed issues on PID-2, PID-4 and MSA-5 no longer fire.
   `audit-schemas.py` now holds v2.8.2 to the rule as well as v2.7.1.
 
+### Added — P10-4a to P10-4c: v2.7.1 segment schemas
+
+- `Resources/schemas/v2.7.1`: 170 segments and 2,519 fields from Chapters 2 to 17, each
+  segment from its defining attribute table, cross-checked by an independent parse and read
+  on the page wherever it differs from v2.8.2. v2.7.1 adds IAR, PAC, PRT and SHP to v2.6's
+  set and lacks QRD, QRF, URD and URS; it lacks ten v2.8.2 segments and has none v2.8.2
+  lacks.
+- Withdrawn (`W`) fields carry exactly the data type their attribute table prints: of
+  v2.7.1's 77, only UB1-1 is typed (SI). Blank OPT cells (87 fields) and table openness
+  (14 fields) are cited from the v2.7.1 print.
+- Extractor fixes, each with a self-check, that also apply to every version: prose bleeding
+  into the last row's element name, and a page-foot footnote inside a table read as a row
+  (it gave v2.7.1 ITM a phantom field and had cut the v2.6 ITM table short).
+- `audit-schemas.py` checks that every field's data type exists on its version. Generated
+  DocC version lists name v2.7.1; no accessor is added, removed or retyped.
+
+### Added — P10-2: v2.7.1 datatype component grammar
+
+- `Resources/datatypes/v2.7.1`: 72 composites, 469 components, 151 bound to a table, 72
+  printed `C` (23 conditions and 30 conformance conditions re-cited to the identical v2.7.1
+  sentences; 19 bare, registered in section D). Against v2.8.2: LA1 and LA2 added, OG
+  absent, PRL.2 ST, XON.4 and XON.5 printed `O`.
+- The datatype and example extractors treat v2.7.1's second page-footer line as furniture,
+  which had truncated 14 composite tables.
+
 ### Fixed — P10-1 fix round: shipped v2.8.2 and v2.6 table data
 
 - v2.8.2 Tables 0359 (Diagnosis Priority) and 0418 (Procedure Priority) stored the printed
@@ -86,6 +203,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   They are now pattern rows matching exactly the codes they name, on every version that prints
   them.
 - See Migration.md for the visible `HL7TableRegistry` changes; validation output is unchanged.
+
+### Added — P10-1: v2.7.1 code tables
+
+- `Resources/tables/v2.7.1`: 535 tables (174 HL7, 361 user-defined), 5,155 entries and four
+  pattern rows (0141, 0203), 144 tables with no values; Appendix A is the source, plus
+  Chapter 2C's 0916. 54 tables carry a cited override: the Appendix A versus Chapter 2C
+  cross-check (13 code-set and 13 kind differences), the readings every version carries,
+  and the openness of ellipsis and no-value tables; 0070 and 0048 are recorded as absent.
+  Readings of 0492, 0125 and 0104 were settled in the review round.
+- `extract-code-tables.swift` reads Appendix A's Unicode ellipsis row (U+2026) as the bare
+  "..." row, which removed 141 bogus entries, with a self-check; the six existing versions
+  re-extract unchanged. Self-check guards: every per-version source map names every modelled
+  version, and a bare U+2026 code is flagged.
 
 ### Changed — P10-3: a released struct's union base never changes (ADR-020 amendment)
 
