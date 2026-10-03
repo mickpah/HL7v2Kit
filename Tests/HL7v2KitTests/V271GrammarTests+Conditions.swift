@@ -118,8 +118,11 @@ extension V271GrammarTests {
         // No PRT-22 leg (CH07 section 7.3.4.5, p. 71).
         #expect(try Self.grammarField(v282, "PRT-5").condition?.contains("PRT-22") == true)
         #expect(v271["PRT"]?.fields.count == 15)
-        // EQU-3 is bare on v2.8.2 although the sentence is the same (see the audit).
-        #expect(try Self.grammarField(v282, "EQU-3").condition == nil)
+        // EQU-3: v2.4, v2.5.1, v2.6 and v2.8.2 print the same CH13 13.4.1.3 sentence, so
+        // P10-5b's intake gave them v2.7.1's rule (v2.3 and v2.3.1 have no EQU).
+        for table in [SegmentGrammarTable.v2_4, SegmentGrammarTable.v2_5_1, SegmentGrammarTable.v2_6, v282] {
+            #expect(try Self.grammarField(table, "EQU-3").condition == "messageCode = ESU")
+        }
         // OBR-7 and OBR-25: the v2.6 report set lists ORF; v2.7.1 withdraws it.
         #expect(try Self.grammarField(SegmentGrammarTable.v2_6, "OBR-7").condition == "messageCode in (ORU, ORF, OUL, OPU)")
         #expect(try Self.grammarField(v271, "OBR-7").condition == "messageCode in (ORU, OUL, OPU)")

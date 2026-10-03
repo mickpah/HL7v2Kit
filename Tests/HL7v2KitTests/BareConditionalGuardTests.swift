@@ -54,7 +54,7 @@ struct BareConditionalGuardTests {
     func v24BareC() {
         let expected: Set<String> = [
             "AIG-2", "AIL-2", "AIP-2", "AIS-2", "AIS-5",
-            "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CSP-4", "EQU-3",
+            "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CSP-4",
             "OBR-14", "OBR-22", "OBX-4", "PTH-6", "QAK-1", "QPD-2", "RCP-4", "RGS-2", "ROL-1",
             "RXA-7", "RXA-11", "RXA-12", "RXD-5", "RXD-8", "RXD-13",
             "RXE-8", "RXE-10", "RXE-11", "RXE-13", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
@@ -69,7 +69,7 @@ struct BareConditionalGuardTests {
     func v251BareC() {
         let expected: Set<String> = [
             "AIG-2", "AIL-2", "AIP-2", "AIS-2", "AIS-5",
-            "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CER-12", "CSP-4", "EQU-3", "IAM-7",
+            "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CER-12", "CSP-4", "IAM-7",
             "OBR-22", "OBR-48", "OBX-4", "PTH-6", "QAK-1", "QPD-2", "RCP-4", "RGS-2", "ROL-1",
             "RXA-7", "RXA-11", "RXA-12", "RXD-5", "RXD-8", "RXD-13",
             "RXE-10", "RXE-11", "RXE-13", "RXE-15", "RXE-16", "RXE-17", "RXE-18", "RXE-19", "RXE-22",
@@ -86,7 +86,7 @@ struct BareConditionalGuardTests {
         let expected: Set<String> = [
             "ADJ-7", "AIG-2", "AIL-2", "AIP-2", "AIS-2", "AIS-5",
             "ARQ-2", "ARQ-3", "ARQ-24", "AUT-6", "CER-12", "CSP-4", "DG1-22",
-            "DMI-2", "DMI-3", "DMI-4", "DMI-5", "EQU-3", "GOL-22", "IAM-7", "IVC-23",
+            "DMI-2", "DMI-3", "DMI-4", "DMI-5", "GOL-22", "IAM-7", "IVC-23",
             "OBR-22", "OBR-48", "OBX-4", "OBX-22", "PRB-28",
             "PSL-10", "PSL-12", "PSL-13", "PSL-14", "PSL-15", "PSL-16", "PTH-6", "PTH-7",
             "QAK-1", "QPD-2", "RCP-4", "REL-1", "RGS-2", "ROL-1",

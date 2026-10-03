@@ -1014,8 +1014,9 @@ struct MultiVersionTests {
             "AUT-6",
             // v1.4 (query / lab-automation batch): query-tag/response and specimen-
             // container / equipment fields conditional on the query or lab-automation
-            // event context (fail-safe; documented in the register).
-            "QPD-2", "QAK-1", "RCP-4", "EQU-3", "SAC-3", "SAC-4",
+            // event context (fail-safe; documented in the register). EQU-3 left this
+            // set in P10-5b: CH13 13.4.1.3 reads "required in the ESU message".
+            "QPD-2", "QAK-1", "RCP-4", "SAC-3", "SAC-4",
             // v1.4 (master-file locations / patient-care / med-records batch):
             // location-relationship, pricing, goal/problem/pathway and transcription-
             // document fields conditional on the master-file / care / document event.
