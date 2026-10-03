@@ -19,7 +19,8 @@ enum PrintedLength: Equatable, Sendable {
     case range(min: Int, max: Int?)
     /// `x,y,z`: the allowed lengths (v2.8.2 §2.5.5.0).
     case list([Int])
-    /// `n=` (never truncated) or `n#` (truncation pattern applies), v2.8.2 §2.5.5.3.
+    /// `n=` (never truncated) or `n#` (truncation pattern applies), v2.8.2 §2.5.5.3;
+    /// v2.7.1 prints the same marks (CH02 §2.5.5.2 p. 11, §2.5.5.3 p. 12).
     case conformance(Int, truncatable: Bool)
 
     /// Reads a stored cell, or nil when it is in none of the printed shapes. Bounds

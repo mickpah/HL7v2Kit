@@ -105,6 +105,13 @@ struct CompositeExtraContentTests {
     func openArraysAreSilent() throws {
         #expect(try extras(obx("NA", "125^34^-22^-234^569^442^-212^6"), at: "OBX", 5).isEmpty)
         #expect(try extras(obx("MA", "0^0^0^0^0^0^0^0~1^1^1^1^1^1^1^1"), at: "OBX", 5).isEmpty)
+        // P10-8: v2.4 (CH07 7.14.1.1 prose line) and v2.7.1 (2.A.45) print four NA values
+        // and an ellipsis; the stored four entries are not a maximum on either.
+        for version in ["2.4", "2.7.1"] {
+            let wire = obx("NA", "125^34^-22^-234^569^442^-212^6")
+                .replacingOccurrences(of: "|P|2.5.1\r", with: "|P|\(version)\r")
+            #expect(try extras(wire, at: "OBX", 5).isEmpty, "v\(version)")
+        }
     }
 
     @Test("A v2.3 CM field (PV1-37) is bounded by the two components its field definition prints (P5-6)")

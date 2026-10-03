@@ -163,7 +163,9 @@ extension Validator {
     /// Composite datatypes that are open-ended arrays. NA: every version's table
     /// lists four values and then an ellipsis, and "A field of this type may contain a
     /// one-dimensional array (vector or row) of numbers", example
-    /// "125^34^-22^-234^569^442^-212^6" (v2.5.1, v2.6 and v2.8.2 2.A.45). MA: the v2.5.1
+    /// "125^34^-22^-234^569^442^-212^6" (v2.5.1, v2.6, v2.7.1 and v2.8.2 2.A.45); v2.4
+    /// prints no table but the line "<value1> ^ <value2> ^ <value3> ^ <value4> ^ ..." (CH07
+    /// 7.14.1.1). The stored NA grammars hold the four printed values, not a maximum. MA: the v2.5.1
     /// table (2.A.40) lists six rows ending "Sample N From Channel N" with no ellipsis,
     /// but its prose has "channels within a sample are separated by component
     /// delimiters", and the v2.6 and v2.8.2 tables (2.A.40) end in an ellipsis.
@@ -205,6 +207,19 @@ extension Validator {
     /// populated component past its datatype's table, and once per composite component
     /// with a populated subcomponent past its own datatype's table, located at that
     /// component.
+    /// Where `version` (a grammar version) prints the recipient rule "ignore segments,
+    /// fields, components, subcomponents, and extra repetitions of a field that are present
+    /// but were not expected": rule a of the receiving rules in v2.3 section 2.10 (p. 2-58),
+    /// v2.3.1 section 2.10 (p. 2-69) and v2.4 section 2.11 (p. 2-87), and rule a of section
+    /// 2.6.2 from v2.5.1 on (v2.5.1 p. 2-17, v2.6 p. 16, v2.7.1 p. 18, v2.8.2 p. 20).
+    static func recipientRuleCitation(_ version: Version) -> String {
+        switch version {
+        case .v2_3, .v2_3_1: return "v\(version.rawValue) section 2.10, receiving rule a"
+        case .v2_4:          return "v2.4 section 2.11, receiving rule a"
+        default:             return "v\(version.rawValue) section 2.6.2 a"
+        }
+    }
+
     func checkExtraPrimitiveComponents(
         _ grammar: FieldGrammar,
         field: Field,
@@ -228,7 +243,7 @@ extension Validator {
                     severity: severity,
                     code: .extraComponentsInPrimitiveField,
                     location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), a primitive data type, but carries \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a separator inside a value is escaped as \\S\\ or \\T\\"
+                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), a primitive data type, but carries \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a separator inside a value is escaped as \\S\\ or \\T\\"
                 ))
             }
             return
@@ -251,7 +266,7 @@ extension Validator {
                     severity: severity,
                     code: .extraComponentsInCompositeField,
                     location: location,
-                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
+                    message: "Field \(location.pathDescription) ('\(grammar.name)') repetition \(offset + 1) is \(dataType), \(printedBy) \(composite.components.count) components, but carries \(beyond.map { "component \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores components it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a later version or a local extension may add components at the end of a data type (section 2.8.1, section 2.11.5)"
                 ))
             }
             for entry in composite.components where repetition.components.count >= entry.index {
@@ -266,7 +281,7 @@ extension Validator {
                         severity: severity,
                         code: .extraComponentsInCompositeField,
                         location: at,
-                        message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) is \(entry.dataType), which the v\(grammarVersion.rawValue) component table defines with \(nested.components.count) components, but carries \(over.map { "subcomponent \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores subcomponents it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a subcomponent separator inside a value is escaped as \\T\\"
+                        message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) is \(entry.dataType), which the v\(grammarVersion.rawValue) component table defines with \(nested.components.count) components, but carries \(over.map { "subcomponent \($0.index) \"\($0.value)\"" }.joined(separator: ", ")); a recipient ignores subcomponents it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a subcomponent separator inside a value is escaped as \\T\\"
                     ))
                     continue
                 }
@@ -288,7 +303,7 @@ extension Validator {
                     severity: severity,
                     code: .extraComponentsInPrimitiveField,
                     location: at,
-                    message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) is \(entry.dataType), a primitive data type, but carries subcomponent \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (v2.5.1 and v2.8.2 section 2.6.2 a), and a subcomponent separator inside a value is escaped as \\T\\"
+                    message: "Component \(at.pathDescription) ('\(entry.name)') repetition \(offset + 1) is \(entry.dataType), a primitive data type, but carries subcomponent \(quoted(extras)) \(shape); a recipient ignores parts it does not expect (\(Self.recipientRuleCitation(grammarVersion))), and a subcomponent separator inside a value is escaped as \\T\\"
                 ))
             }
         }

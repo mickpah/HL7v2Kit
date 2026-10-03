@@ -186,4 +186,29 @@ struct PrimitiveComponentTests {
         #expect(found.map(\.code) == [.extraComponentsInPrimitiveField])
         #expect(found.first?.severity == .warning)
     }
+
+    // P10-8: the recipient rule "ignore ... components, subcomponents ... that are present
+    // but were not expected" is rule a of v2.3 and v2.3.1 section 2.10, v2.4 section 2.11,
+    // and v2.5.1 to v2.8.2 section 2.6.2; the message cites the section of the version whose
+    // grammar validated the message, and no other version.
+    @Test("The extra-component message cites the recipient rule of the message's own version",
+          arguments: [
+            ("2.3", "v2.3 section 2.10, receiving rule a"),
+            ("2.3.1", "v2.3.1 section 2.10, receiving rule a"),
+            ("2.4", "v2.4 section 2.11, receiving rule a"),
+            ("2.5.1", "v2.5.1 section 2.6.2 a"),
+            ("2.6", "v2.6 section 2.6.2 a"),
+            ("2.7.1", "v2.7.1 section 2.6.2 a"),
+            ("2.7", "v2.7.1 section 2.6.2 a"),
+            ("2.8.2", "v2.8.2 section 2.6.2 a"),
+          ])
+    func recipientRuleCitedPerVersion(declared: String, citation: String) throws {
+        let wire = pv1("").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|\(declared)\r")
+            .replacingOccurrences(of: "PV1|1|I|", with: "PV1|1^X|I|")
+        let found = try issues(wire, at: "PV1", 1).filter { $0.code == .extraComponentsInPrimitiveField }
+        #expect(found.count == 1)
+        let message = try #require(found.first?.message)
+        #expect(message.contains("(\(citation))"))
+        #expect(message.components(separatedBy: "section").count == 2)
+    }
 }
