@@ -16,7 +16,7 @@ private struct AnyKey: CodingKey {
 }
 
 /// Throws when `decoder`'s object holds a key outside `allowed`.
-private func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: String) throws {
+func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: String) throws {
     let keys = Set(try decoder.container(keyedBy: AnyKey.self).allKeys.map(\.stringValue))
     let unknown = keys.subtracting(allowed).sorted()
     guard unknown.isEmpty else {
@@ -177,19 +177,38 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
     """
 }
 
-/// Emit one `MessageStructureTable` extension per `v<version>` directory.
-/// The input root is required: without it the generated tables would go
-/// stale unseen.
-func emitStructureTables(from root: URL, to outputRoot: URL) throws {
+/// Fail the run with `message` on stderr.
+private func structureFailure(_ path: String, _ message: Any) -> ExitCode {
+    FileHandle.standardError.write(Data("HL7v2KitCodegen: \(path): \(message)\n".utf8))
+    return .failure
+}
+
+/// Emit one `MessageStructureTable` extension per `v<version>` directory and
+/// the version switch with the completeness set (P8b-1). The input root is
+/// required: without it the generated tables would go stale unseen. The root
+/// may hold only `completeness.json` and `v<digits and dots>` directories
+/// (hidden entries aside); anything else fails the run (pre-flight B5).
+/// `modelledVersions` is the schema version set, which completeness.json
+/// must list exactly. Everything is rendered before anything is written.
+func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: Set<String>) throws {
     let fm = FileManager.default
     guard fm.fileExists(atPath: root.path) else {
         FileHandle.standardError.write(Data("HL7v2KitCodegen: \(root.path) is missing; it is required (ADR-019 message structures)\n".utf8))
         throw ExitCode.failure
     }
-    let dirs = try fm.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)
-        .filter { $0.lastPathComponent.hasPrefix("v") }
-        .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    var dirs: [URL] = []
+    for entry in try fm.contentsOfDirectory(at: root, includingPropertiesForKeys: [.isDirectoryKey]) {
+        let name = entry.lastPathComponent
+        let isDirectory = (try? entry.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+        if name.hasPrefix(".") || (name == structureCompletenessFileName && !isDirectory) { continue }
+        guard isDirectory, matches(name, "^v[0-9]+(\\.[0-9]+)*$") else {
+            throw structureFailure(entry.path, "unexpected entry; Resources/structures holds only \(structureCompletenessFileName) and v<version> directories")
+        }
+        dirs.append(entry)
+    }
+    dirs.sort { $0.lastPathComponent < $1.lastPathComponent }
     var rendered: [(file: URL, source: String)] = []
+    var structureCounts: [String: Int] = [:]
     for dirURL in dirs {
         let version = String(dirURL.lastPathComponent.dropFirst())
         var structures: [MessageStructureSchema] = []
@@ -211,6 +230,17 @@ func emitStructureTables(from root: URL, to outputRoot: URL) throws {
         rendered.append((outFile, renderStructureTable(versionSwiftName: swiftName, sourceDir: dirURL.lastPathComponent,
                                                        structures: structures)))
         print("rendered \(swiftName) (\(structures.count) structure(s))")
+        structureCounts[version] = structures.count
     }
+    let completenessURL = root.appendingPathComponent(structureCompletenessFileName)
+    let completeness: StructureCompleteness
+    do {
+        completeness = try JSONDecoder().decode(StructureCompleteness.self, from: Data(contentsOf: completenessURL))
+        try validateCompleteness(completeness, modelledVersions: modelledVersions, structureCounts: structureCounts)
+    } catch {
+        throw structureFailure(completenessURL.path, error)
+    }
+    rendered.append((outputRoot.appendingPathComponent("MessageStructureTable+Versions.swift"),
+                     renderStructureVersions(completeness, structureCounts: structureCounts)))
     try writeGeneratedDirectory(rendered, into: outputRoot)
 }

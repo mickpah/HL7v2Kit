@@ -24,14 +24,16 @@ extension Validator {
     /// loaded structure prints, or one printed under two (B6, ambiguous), is
     /// not modelled. An MSH-9.3 whose structure does not print MSH-9.1^9.2 is
     /// reported as a mismatch alone, with no body match. An MSH-9.3 ID that is
-    /// not loaded is not modelled: no version is complete yet, and rule 1
-    /// raises the mismatch for an unknown ID only on a complete version.
+    /// not loaded is a mismatch on a complete version (rule 1, completeness
+    /// read through the grammar version) and not modelled on an incomplete
+    /// one; no version is complete yet.
     /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
     ///
-    /// `structures` replaces the version's loaded table; tests pass a
-    /// synthetic one.
+    /// `structures` replaces the version's loaded table and `complete` the
+    /// generated completeness set; tests pass synthetic ones.
     func resolveStructure(_ message: Message, severity: IssueSeverity,
-                          structures: [String: MessageStructure]? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
+                          structures: [String: MessageStructure]? = nil,
+                          complete: Set<Version>? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
         let code = message.messageCode ?? ""
         let event = message.triggerEvent ?? ""
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
@@ -69,7 +71,19 @@ extension Validator {
             // upper-cased is named as such; IDs still match exactly.
             let near = String(declared.drop(while: \.isWhitespace).reversed()
                 .drop(while: \.isWhitespace).reversed()).uppercased()
-            if near != declared, table[near] != nil {
+            let isNear = near != declared && table[near] != nil
+            // Rule 1, complete version: every structure the version prints
+            // is loaded, so an unknown ID is a mismatch, not a gap.
+            if MessageStructureTable.isComplete(message.version, completeVersions: complete ?? MessageStructureTable.completeVersions) {
+                let hint = isNear ? "; it differs from \(near) only by case or whitespace, and structure IDs are matched exactly" : ""
+                return (nil, [ValidationIssue(
+                    severity: severity,
+                    code: .messageStructureMismatch(declared: declared, trigger: trigger),
+                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3),
+                    message: "MSH-9.3 \(declared) is not an abstract message structure of \(ver), whose structures are all modelled\(hint); segment order and groups were not checked (ADR-019 lookup rule 1)."
+                )])
+            }
+            if isNear {
                 return (nil, [notModelled(declared, message: message,
                     reason: "MSH-9.3 \"\(declared)\" differs from the modelled structure ID \(near) only by case or whitespace; structure IDs are matched exactly")])
             }

@@ -885,7 +885,11 @@ struct Codegen {
         // ADR-019: message structures (positional arguments 11 and 12). Required, like the composites.
         let structuresRoot = URL(fileURLWithPath: args.count > 11 ? args[11] : "\(cwd)/Resources/structures")
         let structuresOutputRoot = URL(fileURLWithPath: args.count > 12 ? args[12] : "\(cwd)/Sources/HL7v2Kit/Structures/Generated")
-        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot)
+        // P8b-1: the modelled versions are the schema version directories.
+        let modelledVersions = Set(versionDirs.map {
+            $0.lastPathComponent.replacingOccurrences(of: "v", with: "", options: [.anchored])
+        })
+        try emitStructureTables(from: structuresRoot, to: structuresOutputRoot, modelledVersions: modelledVersions)
 
         print("HL7v2KitCodegen: \(emitted) segment(s) emitted under \(outputRoot.path)")
     }

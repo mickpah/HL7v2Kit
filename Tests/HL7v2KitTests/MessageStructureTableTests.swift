@@ -125,4 +125,27 @@ struct MessageStructureTableTests {
                 == MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A01", version: version.grammarVersion))
         }
     }
+
+    // P8b-1: the version switch and the completeness set are generated from
+    // Resources/structures/completeness.json.
+    @Test("No version is complete yet, substituted versions included", arguments: Version.allCases)
+    func noVersionComplete(version: Version) {
+        #expect(!MessageStructureTable.isComplete(version))
+        #expect(MessageStructureTable.completeVersions.isEmpty)
+    }
+
+    @Test("The generated switch: the three pilot structures on v2.5.1 and none on any other version",
+          arguments: Version.allCases)
+    func generatedSwitch(version: Version) {
+        let ids = MessageStructureTable.structures(for: version).keys.sorted()
+        #expect(ids == (version == .v2_5_1 ? ["ACK", "ADT_A01", "ORU_R01"] : []))
+        #expect(MessageStructureTable.structures(for: version) == MessageStructureTable.structures(for: version.grammarVersion))
+    }
+
+    @Test("Completeness is looked up through the grammar version (pre-flight C3)")
+    func completenessThroughGrammarVersion() {
+        #expect(MessageStructureTable.isComplete(.v2_8, completeVersions: [.v2_8_2]))
+        #expect(MessageStructureTable.isComplete(.v2_7, completeVersions: [.v2_7_1]))
+        #expect(!MessageStructureTable.isComplete(.v2_8, completeVersions: [.v2_7_1]))
+    }
 }

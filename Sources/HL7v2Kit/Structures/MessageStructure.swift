@@ -143,12 +143,17 @@ public enum MessageStructureTable {
             .sorted { $0.id < $1.id }
     }
 
-    /// Every modelled structure of exactly `version`, keyed by ID (no
-    /// grammar-version substitution).
+    /// Every modelled structure of `version`'s grammar version, keyed by ID.
+    /// The switch is generated from Resources/structures/completeness.json
+    /// (`MessageStructureTable+Versions.swift`).
     static func structures(for version: Version) -> [String: MessageStructure] {
-        switch version {
-        case .v2_5_1: return v2_5_1
-        default:      return [:]
-        }
+        generatedStructures(for: version)
+    }
+
+    /// Whether every structure `version`'s grammar version prints is modelled
+    /// (ADR-019 lookup rule 1). `completeVersions` replaces the generated set;
+    /// tests pass a synthetic one.
+    static func isComplete(_ version: Version, completeVersions: Set<Version> = MessageStructureTable.completeVersions) -> Bool {
+        completeVersions.contains(version.grammarVersion)
     }
 }

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8b-1: generated structure version switch, completeness flag and codegen self-check
+
+- The version-to-table switch for message structures is generated from
+  `Resources/structures/completeness.json` into
+  `Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+Versions.swift`, together with
+  the set of complete versions (ADR-019). All seven grammar versions are listed and none is
+  complete; `2.7` and `2.8` read the v2.7.1 and v2.8.2 entries through `grammarVersion`.
+- Lookup rule 1's complete-version branch is implemented: once a version is complete, an
+  MSH-9.3 naming no structure of that version is a `messageStructureMismatch` rather than
+  `messageStructureNotModelled`. No version is complete, so output is unchanged; the
+  validation digest is byte-identical with the structure check off and at `.warning`.
+- `scripts/check-structure-codegen.sh` (CI, codegen-drift job) proves the codegen rejects
+  bad structure and completeness input (17 cases) and that a clean run reproduces the
+  committed generated files; `check-audit-schemas.py` asserts the completeness file names
+  every modelled version.
+- A valid-corpus fixture that fails to parse now fails `FixtureStructureConformanceTests`
+  instead of being skipped. Public API unchanged.
+
 ### Fixed — P8b-5: synthetic fixtures conform to their message structures
 
 - Nine v2.5.1 ADT fixtures were not valid against ADT_A01 (v2.5.1 Chapter 3, section 3.3.1),

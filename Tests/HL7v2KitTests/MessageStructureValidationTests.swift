@@ -239,6 +239,52 @@ struct MessageStructureValidationTests {
         #expect(named.issues.isEmpty)
     }
 
+    // P8b-1: lookup rule 1's complete-version branch, proven on a synthetic
+    // complete version (no version is complete yet).
+    @Test("Rule 1: an MSH-9.3 naming no loaded structure is a mismatch on a complete version, info otherwise")
+    func unknownIDOnCompleteVersion() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]
+        let message = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z99", [Self.pid]))
+        let complete = Validator().resolveStructure(message, severity: .error, structures: table, complete: [.v2_5_1])
+        #expect(complete.structure == nil)
+        #expect(complete.issues.map(\.code) == [.messageStructureMismatch(declared: "ZZZ_Z99", trigger: "ZZZ^Z01")])
+        #expect(complete.issues.first?.severity == .error)
+
+        let incomplete = Validator().resolveStructure(message, severity: .error, structures: table, complete: [])
+        #expect(incomplete.issues.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ_Z99")])
+        #expect(incomplete.issues.first?.severity == .info)
+
+        let otherComplete = Validator().resolveStructure(message, severity: .error, structures: table, complete: [.v2_6])
+        #expect(otherComplete.issues.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ_Z99")])
+    }
+
+    @Test("Rule 1 on a complete version: an ID differing only by case is a mismatch, naming the modelled ID")
+    func nearMissOnCompleteVersion() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]
+        let message = try Parser().parse(Self.wire("ZZZ^Z01^zzz_z01", [Self.pid]))
+        let resolved = Validator().resolveStructure(message, severity: .warning, structures: table, complete: [.v2_5_1])
+        #expect(resolved.issues.map(\.code) == [.messageStructureMismatch(declared: "zzz_z01", trigger: "ZZZ^Z01")])
+        #expect(resolved.issues.first?.severity == .warning)
+        #expect(resolved.issues.first?.message.contains("ZZZ_Z01") == true, "\(resolved.issues.map(\.message))")
+    }
+
+    @Test("A 2.8 message on a complete v2.8.2 uses rule 1 (pre-flight C3)")
+    func substitutedVersionUsesRuleOne() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]
+        let message = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z99", version: "2.8", [Self.pid]))
+        #expect(message.version.grammarVersion == .v2_8_2)
+        let resolved = Validator().resolveStructure(message, severity: .error, structures: table, complete: [.v2_8_2])
+        #expect(resolved.issues.map(\.code) == [.messageStructureMismatch(declared: "ZZZ_Z99", trigger: "ZZZ^Z01")])
+        let known = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", version: "2.8", [Self.pid]))
+        #expect(Validator().resolveStructure(known, severity: .error, structures: table, complete: [.v2_8_2]).structure?.id == "ZZZ_Z01")
+    }
+
+    @Test("Default: no version is complete, so an unknown MSH-9.3 on v2.5.1 stays info")
+    func defaultCompletenessUnchanged() throws {
+        let issues = try structureIssues(Self.wire("ADT^A01^ADT_Z99", [Self.evn, Self.pid, Self.pv1]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_Z99")])
+    }
+
     @Test("ADT^A02^ADT_A01 contradicts v2.5.1 (ADT_A01 is printed for A01, A04, A08, A13 only)")
     func a02UnderA01() throws {
         let issues = try structureIssues(Self.wire("ADT^A02^ADT_A01", [Self.evn, Self.pid, Self.pv1]))

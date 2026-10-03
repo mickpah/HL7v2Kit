@@ -63,6 +63,8 @@ jobs:
           fi
       - name: Pinned struct bases self-check
         run: python3 scripts/check-struct-base-pin.py
+      - name: Message-structure codegen self-check
+        run: bash scripts/check-structure-codegen.sh
       - name: Code-table extractor self-check
         run: |
           xcrun swiftc -O scripts/extract-code-tables.swift -o "$RUNNER_TEMP/tablesbin"

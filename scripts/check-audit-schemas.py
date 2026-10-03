@@ -7,6 +7,7 @@ Each check is a plain function of asserts. The script exits 1 when any check fai
 can run it in the fixture-safety job (Python is on the runner; nothing else is needed).
 """
 import importlib.util
+import json
 import os
 import re
 import sys
@@ -467,6 +468,13 @@ def check_version_maps_agree():
             for path in (source if isinstance(source, list) else [source]):
                 if key.lstrip("v") == "2.7.1":
                     assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
+    # P8b-1: the message-structure completeness data names every modelled version, and only
+    # those (the codegen enforces the same against the schema directories).
+    with open(os.path.join(os.path.dirname(HERE), "Resources", "structures", "completeness.json")) as f:
+        completeness = set(json.load(f)["versions"])
+    assert completeness == modelled, \
+        f"Resources/structures/completeness.json: missing {sorted(modelled - completeness)}, " \
+        f"unmodelled {sorted(completeness - modelled)}"
 
 
 def pending_versions_released(version_source, pending=None):

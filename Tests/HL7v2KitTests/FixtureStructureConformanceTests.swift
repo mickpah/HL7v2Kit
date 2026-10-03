@@ -33,7 +33,7 @@ struct FixtureStructureConformanceTests {
         }
     }
 
-    @Test("Every parseable valid-corpus fixture conforms to its message structure, except the marked ones")
+    @Test("Every valid-corpus fixture parses and conforms to its message structure, except the marked ones")
     func corpusConforms() throws {
         var options = ValidationOptions.default
         options.messageStructureSeverity = .error
@@ -41,7 +41,14 @@ struct FixtureStructureConformanceTests {
         var checked = 0
         for url in try FixtureCorpus.validFixtureURLs() {
             let name = url.lastPathComponent
-            guard let message = try? Parser().parse(Data(contentsOf: url)) else { continue }
+            // The valid corpus must parse: a parse failure is a failure, never a skip.
+            let message: Message
+            do {
+                message = try Parser().parse(Data(contentsOf: url))
+            } catch {
+                Issue.record("\(name) is in the valid corpus but does not parse: \(error)")
+                continue
+            }
             checked += 1
             let findings = Self.structureFindings(validator.validate(message))
             if let reason = Self.deliberatelyNonConformant[name] {

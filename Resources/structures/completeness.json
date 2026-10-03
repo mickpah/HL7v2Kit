@@ -1,0 +1,11 @@
+{
+  "versions": {
+    "2.3": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-15)" },
+    "2.3.1": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-14)" },
+    "2.4": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-13)" },
+    "2.5.1": { "complete": false, "citation": "P8 pilot: ACK, ADT_A01, ORU_R01 only (ADR-019 addendum 2026-10-02); 169 structure IDs measured (rollout step 4)" },
+    "2.6": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-10)" },
+    "2.7.1": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-16)" },
+    "2.8.2": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-11)" }
+  }
+}

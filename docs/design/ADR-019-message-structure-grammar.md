@@ -744,3 +744,31 @@ To show that the check changes no default output, extract the spec examples with
 
 Register §E stays blocking, with this modelled set stated. Next: the per-version rollout,
 scoped as its own plan by P8-9 with an owner gate, starting with the extractor (step 2).
+
+## Amendment 2026-10-03 — generated version switch and completeness (P8b-1)
+
+- **Completeness data.** `Resources/structures/completeness.json` lists every modelled grammar
+  version (the seven schema version directories, never the `2.7` and `2.8` substitutions) with
+  `complete` and a one-line `citation`. All seven are `complete: false`. The name does not start
+  with `v`, so it cannot be read as a version directory; the structures root may hold only that
+  file and `v<version>` directories, and anything else fails the codegen.
+- **Generated switch.** `StructureCodegen` renders
+  `Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+Versions.swift`: the switch from
+  `Version` to its per-version table (one explicit case per listed version, an empty table
+  where nothing is modelled; `v2_7` and `v2_8` resolve through `grammarVersion` before the
+  switch, so no table is duplicated) and `completeVersions`. The hand-written switch is gone.
+  The codegen rejects a completeness file whose keys differ from the schema version set, an
+  unknown key, an empty or multi-line citation, and a version marked complete with no
+  structures; `scripts/check-audit-schemas.py` asserts the same key set alongside the other
+  per-version maps.
+- **Lookup rule 1, complete branch.** `MessageStructureTable.isComplete(_:)` (internal) reads
+  `completeVersions` through `grammarVersion`. On a complete version an MSH-9.3 that names no
+  loaded structure raises `messageStructureMismatch` at the configured severity, with no body
+  match (an ID differing from a loaded one only by case or whitespace is named in the
+  message); on an incomplete version it stays `messageStructureNotModelled` (info). No version
+  is complete, so output is unchanged; tests prove the branch on a synthetic complete version,
+  including a `2.8` message on a complete v2.8.2.
+- **Rejection self-check.** `scripts/check-structure-codegen.sh` runs the real codegen on
+  scratch copies of `Resources/structures` with one defect each and asserts the failure and
+  its message, then checks that an unmodified run reproduces every committed `Generated/`
+  directory byte for byte (CI, codegen-drift job).

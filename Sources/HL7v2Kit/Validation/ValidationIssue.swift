@@ -251,9 +251,11 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// introduced in P8-5.
     case messageStructureSegmentUnexpected(structure: String, segmentID: String)
     /// MSH-9.3 names a structure whose caption lines do not print
-    /// MSH-9.1^9.2 (`trigger`, as `CODE^EVENT`). The mismatch is reported
-    /// alone: the body is not matched against either structure. Located at
-    /// MSH-9.3. ADR-019; additive case introduced in P8-5.
+    /// MSH-9.1^9.2 (`trigger`, as `CODE^EVENT`), or, on a version whose
+    /// structures are all modelled, names no structure of that version
+    /// (ADR-019 lookup rule 1). The mismatch is reported alone: the body is
+    /// not matched against any structure. Located at MSH-9.3. ADR-019;
+    /// additive case introduced in P8-5.
     case messageStructureMismatch(declared: String, trigger: String)
     /// No abstract message syntax was applied to this message, so segment
     /// order and groups were not checked: the structure (`structure`, the
