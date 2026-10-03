@@ -61,7 +61,7 @@ struct ComponentCodeTableTests {
     func perVersionGrammar() throws {
         // Table 0203 Identifier type is never a closed set: user-defined until v2.5 (CX.5 is IS in
         // v2.3 and v2.3.1), and an HL7 table cited "for suggested values" from v2.4 on (P2-7).
-        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"] {
+        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"] {
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^ZZZZ")).isEmpty, "v\(version)")
         }
         // XPN.7 Name type code is ID / 0200 on every version, v2.3 included (prose-derived grammar).
@@ -100,7 +100,7 @@ struct ComponentCodeTableTests {
 
     @Test("Table 0301 prints L,M,N in one row: they are three codes, and each is valid in HD.3")
     func localUniversalIDTypes() throws {
-        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0301", version: version))
             #expect(t.contains("L") && t.contains("M") && t.contains("N"), "0301 on \(version)")
             #expect(!t.contains("L,M,N"))
@@ -175,12 +175,12 @@ struct ComponentCodeTableTests {
 
     @Test("Table 0203 NNxxx is a pattern: NN plus an ISO 3166 alpha-3 country code")
     func nationalPersonIdentifierPattern() throws {
-        for version in ["2.5.1", "2.6", "2.8.2"] {
+        for version in ["2.5.1", "2.6", "2.7.1", "2.8.2"] {
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAUS")).isEmpty, "v\(version) NNAUS")
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNCAN")).isEmpty, "v\(version) NNCAN")
             #expect(try tableIssues(wire(version: version, pid3: "123^^^AUTH^NNAU1")).isEmpty, "v\(version): 0203 is open (P2-7)")
         }
-        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0203", version: version))
             #expect(t.patterns.map(\.code) == ["NNxxx"], "\(version)")
             #expect(t.contains("NNAUS"), "\(version)")

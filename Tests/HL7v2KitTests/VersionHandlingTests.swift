@@ -196,7 +196,7 @@ struct VersionHandlingTests {
     }
 
     @Test("An MSH-12 version HL7v2Kit does not model yields one warning naming the fallback",
-          arguments: ["2.1", "2.2", "2.5", "2.7", "2.7.1", "2.8.1", "2.9"])
+          arguments: ["2.1", "2.2", "2.5", "2.7", "2.8.1", "2.9"])
     func unrecognisedVersionWarns(_ wireVersion: String) throws {
         let message = try Parser().parse(adt(version: wireVersion))
         #expect(message.version == .v2_5_1)
@@ -224,7 +224,7 @@ struct VersionHandlingTests {
 
     @Test("With a version override the warning names the grammar actually applied")
     func overrideNamedInWarning() throws {
-        let message = try Parser(options: ParserOptions(versionOverride: .v2_6)).parse(adt(version: "2.7.1"))
+        let message = try Parser(options: ParserOptions(versionOverride: .v2_6)).parse(adt(version: "2.8.1"))
         let hit = try #require(Validator().validate(message).issues.first(where: Self.isVersionNotRecognised))
         #expect(hit.message.contains("v2.6"))
     }
@@ -342,8 +342,9 @@ struct VersionHandlingTests {
         VersionRow(wire: "2.8", resolved: .v2_8, outcome: .substituted),
         VersionRow(wire: "2.8^AUS", resolved: .v2_8, outcome: .substituted),
         VersionRow(wire: "2.8.2", resolved: .v2_8_2, outcome: .quiet),
-        VersionRow(wire: "2.7.1", resolved: .v2_5_1, outcome: .unresolved("2.7.1")),
-        VersionRow(wire: "2.7.1^AUS", resolved: .v2_5_1, outcome: .unresolved("2.7.1")),
+        VersionRow(wire: "2.7.1", resolved: .v2_7_1, outcome: .quiet),
+        VersionRow(wire: "2.7.1^AUS", resolved: .v2_7_1, outcome: .quiet),
+        VersionRow(wire: "2.7", resolved: .v2_5_1, outcome: .unresolved("2.7")),
         VersionRow(wire: "2.5", resolved: .v2_5_1, outcome: .unresolved("2.5")),
         VersionRow(wire: "2.2", resolved: .v2_5_1, outcome: .unresolved("2.2")),
         VersionRow(wire: "2.4\\S\\x", resolved: .v2_5_1, outcome: .unresolved("2.4^x")),

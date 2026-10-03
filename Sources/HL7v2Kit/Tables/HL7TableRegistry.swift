@@ -35,6 +35,7 @@ public enum HL7TableRegistry {
         case .v2_4:   return v2_4
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
+        case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
         case .v2_8:   return [:]
         }

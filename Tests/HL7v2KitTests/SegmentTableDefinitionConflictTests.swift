@@ -22,12 +22,13 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let allVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+private let allVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
 private let grammarTables: [String: [String: SegmentGrammar]] = [
     "2.3": SegmentGrammarTable.v2_3, "2.3.1": SegmentGrammarTable.v2_3_1,
     "2.4": SegmentGrammarTable.v2_4, "2.5.1": SegmentGrammarTable.v2_5_1,
-    "2.6": SegmentGrammarTable.v2_6, "2.8.2": SegmentGrammarTable.v2_8_2,
+    "2.6": SegmentGrammarTable.v2_6, "2.7.1": SegmentGrammarTable.v2_7_1,
+    "2.8.2": SegmentGrammarTable.v2_8_2,
 ]
 
 @Suite("Segment table R against a restricting field definition (P4-30)")
@@ -115,7 +116,7 @@ struct SegmentTableDefinitionConflictTests {
         return TestWires.wire(type, version, "EVN|\(event)|200601010800", "STF|S1|S1^^^HOSP", rolNoPerson)
     }
 
-    @Test("ROL-4 is optional beside STF and required without it", arguments: ["2.6", "2.8.2"])
+    @Test("ROL-4 is optional beside STF and required without it", arguments: ["2.6", "2.7.1", "2.8.2"])
     func rol4ConditionalOnSTF(version: String) throws {
         let withStaff = staffWire(version)
         #expect(try issues(withStaff, "ROL", 4).isEmpty, "v\(version)")

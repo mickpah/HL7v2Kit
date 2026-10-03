@@ -20,7 +20,7 @@ import Foundation
 @Suite("Base OBX-11 = O dynamic-specification null rule (P4-26)")
 struct OBX11DynamicSpecificationNullTests {
 
-    static let printingVersions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+    static let printingVersions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
     private static func wire(_ version: String, obx: String) -> String {
         TestWires.msh("ORU^R01", version)

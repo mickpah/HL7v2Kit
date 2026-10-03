@@ -9,6 +9,15 @@ import HL7v2Kit
 @Suite("Public initialiser signatures (ADR-014)")
 struct SignatureCompatibilityTests {
 
+    @Test("P10-6 Version.v2_7_1 is additive: wire value 2.7.1, its own grammar version")
+    func version271Case() {
+        let version: Version = .v2_7_1
+        #expect(version.rawValue == "2.7.1")
+        #expect(Version(wireValue: "2.7.1") == .v2_7_1)
+        #expect(version.grammarVersion == .v2_7_1)
+        #expect(Version.allCases.contains(.v2_7_1))
+    }
+
     @Test("ValidationOptions.init keeps its six-parameter signature")
     func validationOptionsInit() {
         let make: (ZSegmentPolicy, Bool, Bool, Bool, Bool, Bool) -> ValidationOptions =

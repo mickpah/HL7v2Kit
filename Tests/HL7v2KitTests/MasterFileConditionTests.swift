@@ -6,7 +6,7 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let masterFileVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+private let masterFileVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
 @Suite("Master-file conditions (P4)")
 struct MasterFileConditionTests {
@@ -41,7 +41,7 @@ struct MasterFileConditionTests {
         #expect(try missing(parent, "LRL", 5).isEmpty, "v\(version)")
     }
 
-    @Test("OM7-16 / OM7-18 units are required with their quantities", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    @Test("OM7-16 / OM7-18 units are required with their quantities", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func om7Units(version: String) throws {
         func om7(_ fields: [Int: String]) -> String {
             TestWires.wire("MFN^M08", version, "MFI|OMA^Numerical^HL70175||UPD|||NE",

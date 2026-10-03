@@ -64,6 +64,10 @@ Every row that raises `versionNotRecognised` throws `ParseError.unsupportedVersi
 - Three additive `IssueCode` cases (ADR-014 minor).
 - Re-opening an excluded version needs its spec text under `docs/standards/`, an amendment to this ADR, and an ADR-015 cycle. A new `Version` case is additive.
 
+## Amendment (P10-6, 2026-10-03): 2.7.1 modelled
+
+Plan P10 lands v2.7.1 through the ADR-015 pipeline, so the version table's `2.7.1` row now reads: Modelled, its own grammar (`Version.v2_7_1`), no issue raised. v2.7.1 sits with v2.8.2 on every era rule (`Version+Eras.swift`, `Validator.primitiveTypes`), each verified against the v2.7.1 print. The section F register row for 2.7.1 is removed.
+
 ## Open question recorded for the owner
 
 `2.8.1` is one point release from v2.8.2 and is excluded under Option A, so it falls back to v2.5.1 while `2.8` is substituted by v2.8.2. The asymmetry exists because `.v2_8` is an existing public case and `.v2_8_1` is not. Substituting `2.8.1` as well needs a new `Version` case; if the owner wants it, amend this ADR and extend `grammarVersion`.

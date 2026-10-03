@@ -31,7 +31,7 @@ struct ConditionalProhibitionTests {
         #expect(advisory.prohibitedSeverity == .warning)
     }
 
-    @Test("RXR-6 may only be populated if RXR-2 is populated (error)", arguments: ["2.5.1", "2.6", "2.8.2"])
+    @Test("RXR-6 may only be populated if RXR-2 is populated (error)", arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func rxr6(version: String) throws {
         let noSite = TestWires.wire("RDE^O11^RDE_O11", version,
             TestWires.segment("RXR", [1: "IV^Intravenous^HL70162", 6: "L^Left^HL70495"]))
@@ -45,7 +45,7 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(sited, "RXR", 6).isEmpty, "v\(version)")
     }
 
-    @Test("TQ2-7 should not be populated when TQ2-2 is not C (warning)", arguments: ["2.5.1", "2.6", "2.8.2"])
+    @Test("TQ2-7 should not be populated when TQ2-2 is not C (warning)", arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func tq27(version: String) throws {
         let sequential = TestWires.wire("OMG^O19^OMG_O19", version,
             TestWires.segment("TQ2", [1: "1", 2: "S", 3: "PL1^SYS", 6: "SS", 7: "*"]))
@@ -63,7 +63,7 @@ struct ConditionalProhibitionTests {
     }
 
     @Test("STF-1 / PRA-1 should not be used outside MFN; PRA-12 not on MFN (warnings)",
-          arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func personnelKeys(version: String) throws {
         let pra = TestWires.segment("PRA", [1: "PG1", 12: "1"])
         let adt = TestWires.wire("ADT^A01^ADT_A01", version, "STF|ID1", pra)
@@ -78,7 +78,7 @@ struct ConditionalProhibitionTests {
 
     // MARK: - v2.6 family (V26-C08, V26-C09)
 
-    @Test("ORC-25 may only be populated if ORC-5 is valued", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    @Test("ORC-25 may only be populated if ORC-5 is valued", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func orc25(version: String) throws {
         let noStatus = TestWires.wire("OMG^O19^OMG_O19", version,
             TestWires.segment("ORC", [1: "NW", 2: "PL1", 25: "HOLD^On hold"]))
@@ -88,7 +88,7 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(withStatus, "ORC", 25).isEmpty, "v\(version)")
     }
 
-    @Test("OBX-12 can be valued only if OBX-7 is populated", arguments: ["2.5.1", "2.6", "2.8.2"])
+    @Test("OBX-12 can be valued only if OBX-7 is populated", arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func obx12(version: String) throws {
         func obx(_ range: String) -> String {
             TestWires.wire("ORU^R01^ORU_R01", version,
@@ -110,7 +110,7 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(wire, "OBX", 12).isEmpty)
     }
 
-    @Test("SPM-13 would only be valued if a SPM-11 role is G (warning)", arguments: ["2.5.1", "2.6", "2.8.2"])
+    @Test("SPM-13 would only be valued if a SPM-11 role is G (warning)", arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func spm13(version: String) throws {
         func spm(_ role: String) -> String {
             TestWires.wire("OML^O33^OML_O33", version,
@@ -129,7 +129,7 @@ struct ConditionalProhibitionTests {
         #expect(try prohibited(noRole, "SPM", 13).map(\.severity) == [.warning], "v\(version) empty SPM-11")
     }
 
-    @Test("PYE-3..6 are not permitted outside their payee types", arguments: ["2.6", "2.8.2"])
+    @Test("PYE-3..6 are not permitted outside their payee types", arguments: ["2.6", "2.7.1", "2.8.2"])
     func pyeNotPermitted(version: String) throws {
         func pye(_ payeeType: String) -> String {
             TestWires.wire("EHC^E01^EHC_E01", version,

@@ -39,7 +39,8 @@ struct OptionalityPerVersionTests {
     @Test("No field name is cut at its left edge: 110 pharmacy names shipped that way before M20")
     func noTruncatedNames() {
         for (version, table) in [("2.3", SegmentGrammarTable.v2_3), ("2.3.1", SegmentGrammarTable.v2_3_1), ("2.4", SegmentGrammarTable.v2_4),
-                                 ("2.5.1", SegmentGrammarTable.v2_5_1), ("2.6", SegmentGrammarTable.v2_6), ("2.8.2", SegmentGrammarTable.v2_8_2)] {
+                                 ("2.5.1", SegmentGrammarTable.v2_5_1), ("2.6", SegmentGrammarTable.v2_6),
+                                 ("2.7.1", SegmentGrammarTable.v2_7_1), ("2.8.2", SegmentGrammarTable.v2_8_2)] {
             for grammar in table.values {
                 for field in grammar.fields {
                     #expect(field.name.first?.isUppercase == true || field.name.first?.isNumber == true,

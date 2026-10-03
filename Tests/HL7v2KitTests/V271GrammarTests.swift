@@ -1,7 +1,7 @@
 // V271GrammarTests.swift
 // HL7 v2.7.1 through the ADR-015 pipeline (plan P10). Each pin is a value printed by the
-// v2.7.1 Final Standard (July 2012); the citation sits beside it. `Version.v2_7_1` does not
-// exist until P10-6, so these tests read the generated registry directly.
+// v2.7.1 Final Standard (July 2012); the citation sits beside it. From P10-6 the tables are
+// read through `Version.v2_7_1`'s dispatch, so every pin also proves the dispatch.
 
 import Testing
 @testable import HL7v2Kit
@@ -9,7 +9,7 @@ import Testing
 @Suite("v2.7.1 grammar (P10)")
 struct V271GrammarTests {
 
-    private var tables: [String: HL7Table] { HL7TableRegistry.v2_7_1 }
+    private var tables: [String: HL7Table] { HL7TableRegistry.tables(for: .v2_7_1) }
 
     private func table(_ number: String) throws -> HL7Table {
         try #require(tables[number], "Table \(number)")
@@ -102,7 +102,7 @@ struct V271GrammarTests {
 
     // MARK: - P10-2: datatype component grammar
 
-    private var grammars: [String: DataTypeGrammar] { DataTypeGrammarTable.v2_7_1 }
+    private var grammars: [String: DataTypeGrammar] { DataTypeGrammarTable.grammars(for: .v2_7_1) }
 
     @Test("v2.7.1 component tables: 72 composites, 469 components, 72 printed C")
     func dataTypeInventory() throws {
@@ -191,7 +191,7 @@ struct V271GrammarTests {
 
     // MARK: - P10-4a: segment schemas, chapters 2 to 4A
 
-    private var segments: [String: SegmentGrammar] { SegmentGrammarTable.v2_7_1 }
+    private var segments: [String: SegmentGrammar] { Validator.grammarTable(for: .v2_7_1) }
 
     /// Field count of each segment first defined in CH02, CH03, CH04 and CH04A, from the
     /// defining attribute table (re-measured by the P10-4a extraction; ADD is `1-n`, one field).

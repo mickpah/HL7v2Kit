@@ -22,6 +22,8 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     case v2_4   = "2.4"
     case v2_5_1 = "2.5.1"
     case v2_6   = "2.6"
+    /// HL7 v2.7.1, modelled from its own text (plan P10, ADR-018).
+    case v2_7_1 = "2.7.1"
     case v2_8_2 = "2.8.2"
     case v2_8   = "2.8"
 

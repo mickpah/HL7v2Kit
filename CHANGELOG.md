@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P10-6: `Version.v2_7_1`, HL7 v2.7.1 validated against its own grammar
+
+- `Version.v2_7_1` (`"2.7.1"`), additive on the open enum (ADR-014). Every per-version
+  dispatch reaches the v2.7.1 resources: `HL7TableRegistry.tables(for:)`,
+  `DataTypeGrammarTable.grammars(for:)` and `fieldGrammars(for:)` (empty: v2.7.1 prints a
+  component table for every composite), and the Validator's segment grammar table.
+- v2.7.1 sits with v2.8.2 on every era rule, each verified against the v2.7.1 print: LEN is
+  a normative length beside C.LEN (CH02 2.5.3.2, 2.5.3.3, 2.5.5.0, 2.5.5.3); no 65536 or
+  99999 length symbols (CH02 2.5.5); SI bounded to 0 to 9999 (CH02A 2.A.69); SNM a primitive
+  and TS withdrawn (CH02A 2.A.71, 2.A.78).
+- The ORC-8 / OBR-54 parent-order pair applies on v2.7.1 (CH04 4.5.3.54; 4.5.1.8 prints
+  "OBR-??", resolved by 4.5.3.54).
+
+### Changed — P10-6: default output for messages that declare 2.7.1
+
+- A message whose MSH-12 declares `2.7.1` no longer falls back to v2.5.1 with
+  `versionNotRecognised`, and `ParserOptions.strict` no longer throws `unsupportedVersion`
+  for it. It is validated against the v2.7.1 grammar. None of the spec example messages
+  declares `2.7.1`, so the validation digest is unchanged.
+
 ### Fixed — P10-4d: v2.6 withdrawn fields carry the printed data type; the v2.5.1 MSA-5 exception
 
 - Eleven v2.6 withdrawn (W) fields carried a data type the v2.6 attribute tables leave blank

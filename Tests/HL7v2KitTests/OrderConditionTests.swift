@@ -6,8 +6,8 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let orderVersions = ["2.5.1", "2.6", "2.8.2"]
-private let pharmacyVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+private let orderVersions = ["2.5.1", "2.6", "2.7.1", "2.8.2"]
+private let pharmacyVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
 @Suite("Order conditions (P4)")
 struct OrderConditionTests {
@@ -183,21 +183,17 @@ struct OrderConditionTests {
     // & timing family", for the quoted citations.
 
     private func expectBareC(_ seg: String, _ idx: Int, versions: [String]) {
-        let tables: [String: [String: SegmentGrammar]] = [
-            "2.3": SegmentGrammarTable.v2_3, "2.3.1": SegmentGrammarTable.v2_3_1,
-            "2.4": SegmentGrammarTable.v2_4, "2.5.1": SegmentGrammarTable.v2_5_1,
-            "2.6": SegmentGrammarTable.v2_6, "2.8.2": SegmentGrammarTable.v2_8_2,
-        ]
         for version in versions {
-            #expect(tables[version]?[seg]?.field(idx)?.optionality == .conditional, "\(seg)-\(idx) v\(version)")
-            #expect(tables[version]?[seg]?.field(idx)?.condition == nil, "\(seg)-\(idx) v\(version)")
+            let table = Version(rawValue: version).map { Validator.grammarTable(for: $0) }
+            #expect(table?[seg]?.field(idx)?.optionality == .conditional, "\(seg)-\(idx) v\(version)")
+            #expect(table?[seg]?.field(idx)?.condition == nil, "\(seg)-\(idx) v\(version)")
         }
     }
 
     // RXO-1/2/4 are `R` on v2.3 (no rule to ship there); `C` from
     // v2.3.1 with the same "mandatory unless free text" sentence
     // through v2.8.2.
-    private static let rxo124Versions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+    private static let rxo124Versions = ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
     private func rxo(_ version: String, _ rxo6: String?) -> String {
         var fields: [Int: String] = [:]

@@ -402,6 +402,7 @@ public struct Validator: Sendable {
         case .v2_4:   return SegmentGrammarTable.v2_4
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
         case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
+        case .v2_7_1: return SegmentGrammarTable.v2_7_1   // plan P10 (ADR-018)
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
         case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
         }
@@ -1092,6 +1093,12 @@ public struct Validator: Sendable {
     ///   ORC-8 and OBR-54 Must carry the same value" (§4.5.1.8);
     ///   "neither one is the same as OBR-29". A `.v2_8` message is
     ///   validated as v2.8.2 (ADR-018), so it gets the ORC-8/OBR-54 leg.
+    ///   v2.7.1 already repurposes OBR-29 (CH04 §4.5.3.29 p65, Parent
+    ///   Result Observation Identifier) and §4.5.3.54 p74 prints "ORC-8
+    ///   and OBR-54 must carry the same value"; its §4.5.1.8 p37 prints
+    ///   "ORC-8 and OBR-?? Must carry the same value", a text defect
+    ///   resolved by §4.5.3.54 and by the "ORC-8/OBR-54 – parent order"
+    ///   line both sections print.
     /// - ORC-7/OBR-27 (TQ) is deliberately ABSENT: the v2.4 prose says
     ///   the pair "should be valued exactly the same" — advisory, not
     ///   normative — and both fields are withdrawn (`W`) from v2.7.
@@ -1104,7 +1111,7 @@ public struct Validator: Sendable {
         OrcObrPair(orcField: 8, obrField: 29, name: "Parent", item: "00222",
                    versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6]),
         OrcObrPair(orcField: 8, obrField: 54, name: "Parent Order", item: "00222",
-                   versions: [.v2_8_2]),
+                   versions: [.v2_7_1, .v2_8_2]),
     ]
 
     /// M8-B1/B2: within each ORC/OBR group, a paired field populated on

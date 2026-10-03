@@ -43,7 +43,7 @@ struct DataTypeGrammarTests {
 
     @Test("Every bound component table resolves in the registry, bar the 9999 sentinel")
     func tablesResolve() {
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             for grammar in DataTypeGrammarTable.grammars(for: version).values {
                 for component in grammar.components {
                     for number in component.tables where number != "9999" {

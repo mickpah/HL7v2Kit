@@ -6,7 +6,7 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let schedulingVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+private let schedulingVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
 /// Field indexes per appointment-information segment.
 struct ResourceSlots: Sendable, CustomStringConvertible {
@@ -42,7 +42,7 @@ struct SchedulingConditionTests {
 
     // MARK: - SCH / ARQ identifiers (V251-C03)
 
-    @Test("SCH-1 / SCH-2: the placer or the filler appointment ID", arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+    @Test("SCH-1 / SCH-2: the placer or the filler appointment ID", arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func schAppointmentIDs(version: String) throws {
         let neither = TestWires.wire("SIU^S12", version, TestWires.segment("SCH", [5: "SCHED1"]))
         #expect(try missing(neither, "SCH", 1).count == 1, "v\(version)")
@@ -53,7 +53,7 @@ struct SchedulingConditionTests {
     }
 
     @Test("SCH-27 / ARQ-25: the filler order number when the placer order number is present",
-          arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func fillerOrderNumbers(version: String) throws {
         let sch = TestWires.wire("SIU^S12", version, TestWires.segment("SCH", [1: "PL1", 26: "PON1"]))
         #expect(try missing(sch, "SCH", 27).count == 1, "v\(version)")
@@ -195,7 +195,7 @@ struct SchedulingConditionTests {
     // conditionally required if a specific location is not identified in AIL-3"
     // (AIP-4 reads the same against AIP-3). Earlier versions print them R.
     @Test("Location / personnel type when no specific resource is identified",
-          arguments: ["AIL", "AIP"], ["2.5.1", "2.6", "2.8.2"])
+          arguments: ["AIL", "AIP"], ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func resourceType(id: String, version: String) throws {
         func wire(_ resource: String) -> String {
             TestWires.wire("SRM^S01", version, TestWires.segment("SCH", [1: "PL1", 2: "FL1"]),

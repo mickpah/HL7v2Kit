@@ -7,7 +7,7 @@ import Testing
 import Foundation
 @testable import HL7v2Kit
 
-private let allSixVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+private let allSixVersions = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
 @Suite("Expressible conditions (P4)")
 struct ExpressibleConditionTests {
@@ -39,7 +39,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(silent, "ORC", 26).isEmpty, "v\(version)")
     }
 
-    @Test("PV2-45 is required when PV2-50 is valued", arguments: ["2.6", "2.8.2"])
+    @Test("PV2-45 is required when PV2-50 is valued", arguments: ["2.6", "2.7.1", "2.8.2"])
     func pv245(version: String) throws {
         let fires = TestWires.wire("ADT^A01^ADT_A01", version, TestWires.segment("PV2", [50: "20260101"]))
         #expect(try missing(fires, "PV2", 45).count == 1, "v\(version)")
@@ -145,7 +145,7 @@ struct ExpressibleConditionTests {
     }
 
     @Test("OUL R22: an ORC after its OBR is not read as an ORC with no OBR",
-          arguments: ["2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func oulR22TrailingORC(version: String) throws {
         let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
                                   obr([2: "PON1", 3: "FON1"]), "ORC|SC")
@@ -154,7 +154,7 @@ struct ExpressibleConditionTests {
 
     /// OPL^O37 ORDER_PRIOR prints `{ OBR [ORC] ... }` (v2.6 and v2.8.2 CH04):
     /// the prior-result ORC follows the OBR that carries the numbers.
-    @Test("OPL O37: a prior-result ORC after its OBR stays silent", arguments: ["2.6", "2.8.2"])
+    @Test("OPL O37: a prior-result ORC after its OBR stays silent", arguments: ["2.6", "2.7.1", "2.8.2"])
     func oplPriorResultORC(version: String) throws {
         // Two prior results: the first is a CH child whose parent is in
         // OBR-29 (ORC-8 empty, per the XOR); the second OBR would pair
@@ -171,7 +171,7 @@ struct ExpressibleConditionTests {
     /// only in its ORC. The ORC-delimited group would pair order 1's ORC
     /// with order 2's OBR, and order 2's OBR with order 1's ORC.
     @Test("OUL R22 with two orders does not cross-resolve peers",
-          arguments: ["2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func oulR22TwoOrders(version: String) throws {
         let wire = TestWires.wire("OUL^R22^OUL_R22", version, "SPM|1",
                                   obr([2: "PON1", 3: "FON1", 29: "PAR1&PL"]), "ORC|CH",
@@ -205,7 +205,7 @@ struct ExpressibleConditionTests {
 
     // MARK: - PV2 trigger events (V231-C11, V251-C03)
 
-    @Test("PV2-1 is required for cancel pending transfer (A26)", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    @Test("PV2-1 is required for cancel pending transfer (A26)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func pv21(version: String) throws {
         let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
         #expect(try missing(TestWires.wire("ADT^A26^ADT_A21", version, pv2), "PV2", 1).count == 1, "v\(version)")
@@ -216,7 +216,7 @@ struct ExpressibleConditionTests {
         #expect(try missing(TestWires.wire("ADT^A27^ADT_A21", version, pv2), "PV2", 1).isEmpty, "v\(version) A27")
     }
 
-    @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.8.2"])
+    @Test("PV2-47 is required for A21 (patient goes on LOA)", arguments: ["2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func pv247(version: String) throws {
         let pv2 = TestWires.segment("PV2", [3: "RSN^Reason"])
         #expect(try missing(TestWires.wire("ADT^A21^ADT_A21", version, pv2), "PV2", 47).count == 1, "v\(version)")

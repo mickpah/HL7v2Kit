@@ -142,7 +142,7 @@ struct CodeTableValidationTests {
         // v2.5.1 sec 7.x: "The data type of the WAV category result segment can be NA (Numeric
         // Array) or MA (Multiplexed Array)"; "for the CHN category, OBX-2 should be valued to CD".
         // Table 0125 omitted all three until v2.8.2 printed them.
-        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"] {
+        for version in ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"] {
             for type in ["NA", "MA", "CD"] {
                 let wire = "MSH|^~\\&|LAB|FAC|HIS|FAC|||ORU^R01^ORU_R01|MSG1|P|\(version)\r"
                     + "PID|1||123^^^AUTH^MR||DOE^JOHN\rOBR|1|||93000^EKG^C4\r"

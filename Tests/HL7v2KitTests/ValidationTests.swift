@@ -393,7 +393,7 @@ struct ValidationTests {
         #expect(!report.isValid)
     }
 
-    @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.8.2")
+    @Test("Parent pair — ORC-8/OBR-29 through v2.6; ORC-8/OBR-54 on v2.7.1 and v2.8.2")
     func orcObrParentPairMovesAcrossVersions() throws {
         // v2.5.1: parent lives at OBR-29 (both sides EIP).
         let v251 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||ORM^O01^ORM_O01|MSG1|P|2.5.1\r"
@@ -403,21 +403,24 @@ struct ValidationTests {
         #expect(firedOld.count == 1, "got \(firedOld.map(\.message))")
         #expect(firedOld.first?.code == .pairedFieldMismatch(item: "00222"))
         #expect(firedOld.first?.location.pathDescription == "OBR[1]-29")
-        // v2.8.2: OBR-29 is a DIFFERENT element (00261) — a differing
-        // OBR-29 must NOT fire; the pair reads OBR-54 instead.
-        let v282Obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
-            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
-            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
-        #expect(try pairMismatches(v282Obr29).isEmpty,
-                "OBR-29 is not the v2.8.2 parent peer")
-        // v2.8.2 with a mismatching OBR-54 fires.
-        let obr54Tail = String(repeating: "|", count: 50)
-        let v282Obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|2.8.2\r"
-            + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
-            + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
-        let fired282 = try pairMismatches(v282Obr54)
-        #expect(fired282.count == 1, "got \(fired282.map(\.message))")
-        #expect(fired282.first?.location.pathDescription == "OBR[1]-54")
+        // v2.7.1 and v2.8.2: OBR-29 is a DIFFERENT element (00261), so a
+        // differing OBR-29 must NOT fire; the pair reads OBR-54 instead
+        // (v2.7.1 CH04 §4.5.3.29 p65 and §4.5.3.54 p74).
+        for version in ["2.7.1", "2.8.2"] {
+            let obr29 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|\(version)\r"
+                + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+                + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L|||||||||||||||||||||||||PARENT-B&HOSP^FILP&LAB\r"
+            #expect(try pairMismatches(obr29).isEmpty,
+                    "OBR-29 is not the v\(version) parent peer")
+            // A mismatching OBR-54 fires.
+            let obr54Tail = String(repeating: "|", count: 50)
+            let obr54 = "MSH|^~\\&|HIS|FAC|LAB|FAC|||OML^O21^OML_O21|MSG1|P|\(version)\r"
+                + "ORC|CH|PL-1^HOSP|FIL-1^LAB|||||PARENT-A&HOSP^FILP&LAB\r"
+                + "OBR|1|PL-1^HOSP|FIL-1^LAB|GLU^Glucose^L\(obr54Tail)PARENT-B&HOSP^FILP&LAB\r"
+            let fired = try pairMismatches(obr54)
+            #expect(fired.count == 1, "v\(version): got \(fired.map(\.message))")
+            #expect(fired.first?.location.pathDescription == "OBR[1]-54")
+        }
     }
 
     // MARK: - 1-n variable columns (Track B)

@@ -59,7 +59,7 @@ struct HL7TableRegistryTests {
 
     @Test("0074 and 0155 are closed HL7 tables on every grammar version")
     func closedTablesEverywhere() throws {
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             for number in ["0074", "0155"] {
                 let t = try #require(HL7TableRegistry.table(number, version: version), "\(version) \(number)")
                 #expect(t.isClosed, "\(version) \(number)")
@@ -69,10 +69,12 @@ struct HL7TableRegistryTests {
 
     @Test("Tables the spec opens to local codes are HL7-owned but never closed")
     func openHL7Tables() throws {
-        for number in ["0003", "0076", "0396", "0399", "0104"] {
-            let t = try #require(HL7TableRegistry.table(number, version: .v2_5_1), "\(number)")
-            #expect(t.kind == .hl7, "\(number)")
-            #expect(!t.isClosed, "\(number)")
+        for version in [Version.v2_5_1, .v2_7_1] {
+            for number in ["0003", "0076", "0396", "0399", "0104"] {
+                let t = try #require(HL7TableRegistry.table(number, version: version), "\(version) \(number)")
+                #expect(t.kind == .hl7, "\(version) \(number)")
+                #expect(!t.isClosed, "\(version) \(number)")
+            }
         }
     }
 
@@ -120,7 +122,7 @@ struct HL7TableRegistryTests {
 
     @Test("Rows that denote an absent field, and prose bled into the Value column, are not codes")
     func absenceAndBleedRows() throws {
-        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let mode = try #require(HL7TableRegistry.table("0207", version: version))
             #expect(mode.codes.allSatisfy { $0.lowercased() != "not present" }, "0207 on \(version)")
             // v2.3 has no T; its Appendix A misprints a / r / i, corrected to Chapter 2's A / R / I.
@@ -163,7 +165,7 @@ struct HL7TableRegistryTests {
 
     @Test("Table 0354 is never closed: every version's chapters use structures it does not print")
     func messageStructureTableIsOpen() throws {
-        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0354", version: version), "\(version)")
             #expect(t.contains("ADT_A01"))
             #expect(!t.isClosed, "0354 on \(version): v2.5.1 CH15 defines RSP_K25, which Appendix A omits")
@@ -183,7 +185,7 @@ struct HL7TableRegistryTests {
 
     @Test("A row the appendix drops is restored from the defining chapter: v2.5.1 0210 OR")
     func restoredRow() throws {
-        for version in [Version.v2_4, .v2_5_1, .v2_6, .v2_8_2] {
+        for version in [Version.v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
             let t = try #require(HL7TableRegistry.table("0210", version: version))
             #expect(Set(t.codes) == ["AND", "OR"], "0210 on \(version)")
         }

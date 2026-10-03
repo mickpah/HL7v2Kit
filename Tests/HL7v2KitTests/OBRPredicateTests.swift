@@ -73,7 +73,7 @@ struct OBRPredicateTests {
     }
 
     @Test("X-C05: OBR-15 on a new order does not require OBR-7 or OBR-14",
-          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func specimenSourceAloneRequiresNothing(version: String) throws {
         let wire = Self.placerOrderNamingSpecimenSource(version)
         let message = try Parser().parse(wire)
@@ -86,7 +86,7 @@ struct OBRPredicateTests {
     /// v2.5.1 §7.4.3: SPM may describe a "virtual" specimen, so SPM on an
     /// order is not "a sample has been sent along" either.
     @Test("X-C05: SPM on a new order does not require OBR-7",
-          arguments: ["2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
     func spmOnOrderDoesNotRequireObservationDateTime(version: String) throws {
         let wire = Self.wire([
             Self.msh("OML^O21^OML_O21", version), Self.pid,

@@ -44,6 +44,16 @@ struct FieldTableOpennessTests {
         // v2.6 / v2.8.2 CH16 PSL-21: "Refer to User-defined Table 0532 ... for suggested values."
         Marked(version: "2.6", segment: "PSL", index: 21, table: "0532"),
         Marked(version: "2.8.2", segment: "PSL", index: 21, table: "0532"),
+        // v2.7.1 prints the same sentences: CH06 sec 6.5.2.24 p36 (DG1-24), CH16 RFI-3,
+        // IVC-13, PSG-4, PSL-47 ("Refer to HL7 Table 0136 ... for suggested values"),
+        // CH04A RXD-11 p70 (Table 0167), CH16 PSL-21 p49 (User-defined Table 0532).
+        Marked(version: "2.7.1", segment: "DG1", index: 24, table: "0136"),
+        Marked(version: "2.7.1", segment: "RFI", index: 3, table: "0136"),
+        Marked(version: "2.7.1", segment: "IVC", index: 13, table: "0136"),
+        Marked(version: "2.7.1", segment: "PSG", index: 4, table: "0136"),
+        Marked(version: "2.7.1", segment: "PSL", index: 47, table: "0136"),
+        Marked(version: "2.7.1", segment: "RXD", index: 11, table: "0167"),
+        Marked(version: "2.7.1", segment: "PSL", index: 21, table: "0532"),
     ]
 
     /// A minimal message carrying `value` at `segment-index`.
@@ -60,6 +70,7 @@ struct FieldTableOpennessTests {
         case .v2_4: SegmentGrammarTable.v2_4
         case .v2_5_1: SegmentGrammarTable.v2_5_1
         case .v2_6: SegmentGrammarTable.v2_6
+        case .v2_7_1: SegmentGrammarTable.v2_7_1
         case .v2_8_2, .v2_8: SegmentGrammarTable.v2_8_2
         }
     }

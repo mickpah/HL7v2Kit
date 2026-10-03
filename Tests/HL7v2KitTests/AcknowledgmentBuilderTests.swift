@@ -9,7 +9,7 @@ import Foundation
 @Suite("Acknowledgment builder")
 struct AcknowledgmentBuilderTests {
 
-    static let supported = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"]
+    static let supported = ["2.3", "2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"]
 
     static func original(version: String = "2.5.1", msh9: String = "ADT^A01^ADT_A01",
                          controlID: String = "MSG00001", msh18: String? = nil,
@@ -120,7 +120,7 @@ struct AcknowledgmentBuilderTests {
     }
 
     @Test("An empty original MSH-9.2 gives ACK^^ACK: a required-MSG.2 error where the version prints it, as on the original",
-          arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.8.2"])
+          arguments: ["2.3.1", "2.4", "2.5.1", "2.6", "2.7.1", "2.8.2"])
     func emptyEvent(version: String) throws {
         let original = try Parser().parse(Self.original(version: version, msh9: "ADT"))
         let ack = try Self.ack(Self.original(version: version, msh9: "ADT"))
@@ -134,7 +134,7 @@ struct AcknowledgmentBuilderTests {
         }
         let ackIssues = atMSG2(Validator().validate(reparsed))
         let originalIssues = atMSG2(Validator().validate(original))
-        if ["2.5.1", "2.6", "2.8.2"].contains(version) {
+        if ["2.5.1", "2.6", "2.7.1", "2.8.2"].contains(version) {
             #expect(ackIssues.count == 1 && ackIssues.allSatisfy { $0.severity == .error },
                     "\(version): \(ackIssues.map(\.message))")
             #expect(originalIssues.count == 1, "\(version): the original fails MSG.2 the same way")

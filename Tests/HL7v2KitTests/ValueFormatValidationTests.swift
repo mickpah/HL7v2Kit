@@ -83,7 +83,7 @@ struct ValueFormatValidationTests {
     // 0 and 9999"); v2.3 to v2.4 print only "a non-negative integer".
     @Test("SI range 0 to 9999 applies where the SI section prints it")
     func sequenceIDRange() {
-        for version in [Version.v2_5_1, .v2_6, .v2_8_2, .v2_8] {
+        for version in [Version.v2_5_1, .v2_6, .v2_7_1, .v2_8_2, .v2_8] {
             #expect(PrimitiveFormat.isValid("10000", dataType: "SI", version: version) == false)
             #expect(PrimitiveFormat.isValid("09999", dataType: "SI", version: version) == true)
         }

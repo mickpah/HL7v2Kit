@@ -21,7 +21,7 @@ struct CodeTableOpennessTests {
     }
 
     @Test("Table 0355 is open where the chapter says it 'can be locally extended with other HL7 data types'",
-          arguments: [("2.4", Version.v2_4), ("2.5.1", .v2_5_1), ("2.6", .v2_6), ("2.8.2", .v2_8_2)])
+          arguments: [("2.4", Version.v2_4), ("2.5.1", .v2_5_1), ("2.6", .v2_6), ("2.7.1", .v2_7_1), ("2.8.2", .v2_8_2)])
     func table0355Open(wireVersion: String, version: Version) throws {
         #expect(try issues(mfn(mfe5: "ST", version: wireVersion), table: "0355").isEmpty)
         let t = try #require(HL7TableRegistry.table("0355", version: version))
@@ -55,13 +55,15 @@ struct CodeTableOpennessTests {
                 + "MFE|MAD|CTL1||1234^Glucose^L|CWE\r"
                 + "OM1|1|1234^Glucose^L\r"
                 + "OM4|1" + String(repeating: "|", count: 15) + "Z\r"),
-        // v2.8.2 CH02A sec 2.A.87.18 XAD.18: "Refer to User-defined Table 0617 - Address Usage".
-        Change(table: "0617", versions: [.v2_8_2], becomesUser: true,
+        // v2.8.2 CH02A sec 2.A.87.18 XAD.18: "Refer to User-defined Table 0617 - Address Usage";
+        // v2.7.1 CH02A sec 2.A.86.18 (p92) prints the same sentence.
+        Change(table: "0617", versions: [.v2_7_1, .v2_8_2], becomesUser: true,
                wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.8.2\r"
                 + "PID|1||123^^^AUTH^MR||DOE^JOHN||||||1 MAIN ST" + String(repeating: "^", count: 17) + "Z\r"),
         // P2-14: NTE-2, the table's only governing field on every version, reads "This table
-        // may be extended locally during implementation" unchanged from v2.3 to v2.8.2.
-        Change(table: "0105", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2], becomesUser: false,
+        // may be extended locally during implementation" unchanged from v2.3 to v2.8.2
+        // (v2.7.1 CH02 sec 2.14.10.2 p65).
+        Change(table: "0105", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2], becomesUser: false,
                wire: "MSH|^~\\&|HIS|FAC|HOSPITAL|FAC|||ADT^A01^ADT_A01|MSG00001|P|2.4\r"
                 + "PID|1||123^^^AUTH^MR||DOE^JOHN\r"
                 + "NTE|1|Z\r"),
@@ -76,9 +78,9 @@ struct CodeTableOpennessTests {
                 + "QRD|20260101000000|R|I|Q001|||10|DOE^JOHN|Z\r"),
         // P2-14: MFI-1, the table's only governing field on every version, reads "This table may
         // be extended by local agreement during implementation to cover site-specific master
-        // files (z-master files)" unchanged from v2.3 to v2.8.2. MFI-1 is CE (see the 0048 note
-        // above for why the check never fires either way).
-        Change(table: "0175", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_8_2], becomesUser: false,
+        // files (z-master files)" unchanged from v2.3 to v2.8.2 (v2.7.1 CH08 sec 8.5.1.1 p7).
+        // MFI-1 is CE (see the 0048 note above for why the check never fires either way).
+        Change(table: "0175", versions: [.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2], becomesUser: false,
                wire: "MSH|^~\\&|HIS|FAC|LAB|FAC|||MFN^M01|MSG00001|P|2.4\r"
                 + "MFI|ZZZ^Bogus^HL70175||UPD|||NE\r"),
         // P2-14: OM4-7 and SAC-27, the only two fields citing the table on v2.4 (SPM does not
@@ -116,8 +118,8 @@ struct CodeTableOpennessTests {
         #expect(try #require(HL7TableRegistry.table("0136", version: .v2_4)).isClosed)
     }
 
-    @Test("Table 0371 stays closed on v2.5.1, v2.6 and v2.8.2: SPM-6 cites it only 'for valid values' while OM4-7/SAC-27 say it may be extended",
-          arguments: [("2.5.1", Version.v2_5_1), ("2.6", .v2_6), ("2.8.2", .v2_8_2)])
+    @Test("Table 0371 stays closed on v2.5.1, v2.6, v2.7.1 and v2.8.2: SPM-6 cites it only 'for valid values' while OM4-7/SAC-27 say it may be extended",
+          arguments: [("2.5.1", Version.v2_5_1), ("2.6", .v2_6), ("2.7.1", .v2_7_1), ("2.8.2", .v2_8_2)])
     func mixedTable0371StaysClosed(wireVersion: String, version: Version) throws {
         let wire = "MSH|^~\\&|HIS|FAC|LAB|FAC|||MFN^M08^MFN_M08|MSG00001|P|\(wireVersion)\r"
             + "MFI|OMA^Numeric^HL70175||UPD|||NE\r"

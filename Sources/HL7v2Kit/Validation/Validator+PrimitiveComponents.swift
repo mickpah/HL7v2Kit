@@ -23,13 +23,16 @@ extension Validator {
     ///   IS 2.A.36, NM 2.A.47, SI 2.A.69, ST 2.A.74, TM 2.A.75, TX 2.A.78)
     /// - v2.8.2 CH02A (DT 2.A.21, DTM 2.A.22, FT 2.A.31, GTS 2.A.32, ID 2.A.35, IS 2.A.36,
     ///   NM 2.A.47, SI 2.A.70, SNM 2.A.72, ST 2.A.76, TM 2.A.77, TX 2.A.80)
+    /// - v2.7.1 CH02A (DT 2.A.21, DTM 2.A.22, FT 2.A.31, GTS 2.A.32, ID 2.A.35, IS 2.A.36,
+    ///   NM 2.A.47, SI 2.A.69, SNM 2.A.71, ST 2.A.75, TM 2.A.76, TX 2.A.79; TS withdrawn
+    ///   at 2.A.78 p85)
     static func primitiveTypes(_ version: Version) -> Set<String> {
         switch version.grammarVersion {
         case .v2_3, .v2_3_1, .v2_4:
             return ["DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"]
         case .v2_5_1, .v2_6:
             return ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"]
-        case .v2_8_2, .v2_8:
+        case .v2_7_1, .v2_8_2, .v2_8:
             return ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"]
         }
     }

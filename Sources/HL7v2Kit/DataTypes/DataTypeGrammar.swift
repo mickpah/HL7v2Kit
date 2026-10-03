@@ -115,6 +115,7 @@ public enum DataTypeGrammarTable {
         case .v2_4:   return v2_4
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
+        case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
         case .v2_8:   return [:]
         }
@@ -149,6 +150,7 @@ public enum DataTypeGrammarTable {
         case .v2_4:   return v2_4_fields
         case .v2_5_1: return v2_5_1_fields
         case .v2_6:   return v2_6_fields
+        case .v2_7_1: return v2_7_1_fields
         case .v2_8_2: return v2_8_2_fields
         case .v2_8:   return [:]   // no v2.8 text; grammar(segment:field:version:) resolves grammarVersion
         }

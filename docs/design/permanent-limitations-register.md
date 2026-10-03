@@ -272,7 +272,6 @@ A message declaring one of these parses, falls back to the v2.5.1 grammar, and c
 | 2.2 | No v2.2 spec text in `docs/standards/`. | Excluded, as 2.1. |
 | 2.5 | No v2.5 spec text; v2.5.1, which HL7 published as the successor release, is modelled. The fallback applies the v2.5.1 grammar, and the warning says so. | Excluded, as 2.1. |
 | 2.7 | Listed in v2.8.2 Table 0104; no v2.7 text on disk. Not mapped to v2.7.1: no `.v2_7` case exists, and adding one without its text would be an unverified substitution. | Excluded, as 2.1. |
-| 2.7.1 | Text on disk (zipped) but not yet extracted. | **Scheduled** as plan P10 (ADR-015 extraction pipeline); P3-6 scopes it. Remove this row when P10 lands. |
 | 2.8.1 | Listed in v2.8.2 Table 0104; no v2.8.1 text on disk. See ADR-018 "Open question" on substituting v2.8.2. | Excluded, as 2.1. |
 | 2.9 | Published after v2.8.2; no text on disk. | Excluded, as 2.1. |
 
