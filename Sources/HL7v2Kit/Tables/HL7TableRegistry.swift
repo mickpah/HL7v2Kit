@@ -8,9 +8,10 @@
 /// Per-version lookup of HL7 code tables. M6-O6.
 public enum HL7TableRegistry {
     /// The table `number` (e.g. `"0074"`) as printed by `version`, or
-    /// `nil` when that version does not define it. `.v2_8` owns no tables;
-    /// the ``Validator`` checks a `2.8` message against the v2.8.2 tables
-    /// via ``Version/grammarVersion`` (ADR-018).
+    /// `nil` when that version does not define it. `.v2_8` and `.v2_7` own no
+    /// tables; the ``Validator`` checks a `2.8` message against the v2.8.2
+    /// tables and a `2.7` message against the v2.7.1 tables via
+    /// ``Version/grammarVersion`` (ADR-018).
     public static func table(_ number: String, version: Version) -> HL7Table? {
         tables(for: version)[number]
     }
@@ -37,7 +38,7 @@ public enum HL7TableRegistry {
         case .v2_6:   return v2_6
         case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
-        case .v2_8:   return [:]
+        case .v2_7, .v2_8: return [:]
         }
     }
 }

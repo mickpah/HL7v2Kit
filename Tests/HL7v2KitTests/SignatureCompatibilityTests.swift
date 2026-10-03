@@ -18,6 +18,15 @@ struct SignatureCompatibilityTests {
         #expect(Version.allCases.contains(.v2_7_1))
     }
 
+    @Test("P10-6 Version.v2_7 is additive: wire value 2.7, validated as v2.7.1 (G11)")
+    func version27Case() {
+        let version: Version = .v2_7
+        #expect(version.rawValue == "2.7")
+        #expect(Version(wireValue: "2.7") == .v2_7)
+        #expect(version.grammarVersion == .v2_7_1)
+        #expect(Version.allCases.contains(.v2_7))
+    }
+
     @Test("ValidationOptions.init keeps its six-parameter signature")
     func validationOptionsInit() {
         let make: (ZSegmentPolicy, Bool, Bool, Bool, Bool, Bool) -> ValidationOptions =

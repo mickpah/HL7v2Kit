@@ -49,12 +49,13 @@ struct VersionHandlingTests {
 
     static let substitution = IssueCode.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)
 
-    @Test("Every version is its own grammar version except 2.8, which is v2.8.2")
+    @Test("Every version is its own grammar version except 2.8 (v2.8.2) and 2.7 (v2.7.1)")
     func grammarVersionMapping() {
-        for version in Version.allCases where version != .v2_8 {
+        for version in Version.allCases where version != .v2_8 && version != .v2_7 {
             #expect(version.grammarVersion == version)
         }
         #expect(Version.v2_8.grammarVersion == .v2_8_2)
+        #expect(Version.v2_7.grammarVersion == .v2_7_1)
     }
 
     @Test("A 2.8 message reports the v2.8.2 substitution once, as info at MSH-12")
@@ -89,6 +90,48 @@ struct VersionHandlingTests {
         let report = Validator(options: .strict).validate(try Parser().parse(adt(version: "2.8")))
         #expect(!report.issues.contains { $0.code == .zSegmentPresent })
         #expect(report.issues.filter { $0.code == Self.substitution }.count == 1)
+    }
+
+    // MARK: - P10-6: 2.7 validated against the v2.7.1 grammar (owner decision G11)
+
+    static let substitution27 = IssueCode.versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)
+
+    @Test("A 2.7 message reports the v2.7.1 substitution once, as info at MSH-12")
+    func substitution27IsAnnounced() throws {
+        let message = try Parser().parse(adt(version: "2.7"))
+        #expect(message.version == .v2_7)
+        let hits = Validator().validate(message).issues.filter { $0.code == Self.substitution27 }
+        #expect(hits.count == 1)
+        let hit = try #require(hits.first)
+        #expect(hit.severity == .info)
+        #expect(hit.location == IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 12))
+        #expect(hit.message.contains("MSH-12 declares 2.7;"))
+        #expect(hit.message.contains("v2.7.1"))
+        #expect(!Validator().validate(message).issues.contains(where: Self.isVersionNotRecognised))
+    }
+
+    @Test("A substituted version draws the same findings as its grammar version, the ORC/OBR pairs included",
+          arguments: [("2.7", "2.7.1"), ("2.8", "2.8.2")])
+    func substitutedSameFindings(declared: String, applied: String) throws {
+        // OBR-24 "XX" is outside closed Table 0074; ORC-8 and OBR-54 differ, a
+        // pairedFieldMismatch on v2.7.1 (CH04 4.5.3.54 p74) and v2.8.2.
+        let orc = "ORC|RE|A|B|||||PARENT-A"
+        let obr = "OBR|1|A|B|C^D||||||||||||||||||||XX" + String(repeating: "|", count: 30) + "PARENT-B"
+        let wireApplied = adt(version: applied, extra: [orc, obr])
+        let wireDeclared = adt(version: declared, extra: [orc, obr])
+        let expected = Validator().validate(try Parser().parse(wireApplied)).issues
+        let actual = Validator().validate(try Parser().parse(wireDeclared)).issues
+            .filter { if case .versionGrammarSubstituted = $0.code { return false } else { return true } }
+        #expect(expected.contains { $0.code == .valueNotInTable(table: "0074") })
+        #expect(expected.contains { $0.code == .pairedFieldMismatch(item: "00222") })
+        #expect(actual == expected)
+    }
+
+    @Test("Under .strict a 2.7 message has no Z-segment issue on MSH, EVN, PID or PV1")
+    func strictNoZSegmentsOn27() throws {
+        let report = Validator(options: .strict).validate(try Parser().parse(adt(version: "2.7")))
+        #expect(!report.issues.contains { $0.code == .zSegmentPresent })
+        #expect(report.issues.filter { $0.code == Self.substitution27 }.count == 1)
     }
 
     // MARK: - P3-4: MSH-12 is a VID; the version is VID.1
@@ -196,7 +239,7 @@ struct VersionHandlingTests {
     }
 
     @Test("An MSH-12 version HL7v2Kit does not model yields one warning naming the fallback",
-          arguments: ["2.1", "2.2", "2.5", "2.7", "2.8.1", "2.9"])
+          arguments: ["2.1", "2.2", "2.5", "2.8.1", "2.9"])
     func unrecognisedVersionWarns(_ wireVersion: String) throws {
         let message = try Parser().parse(adt(version: wireVersion))
         #expect(message.version == .v2_5_1)
@@ -316,7 +359,7 @@ struct VersionHandlingTests {
     enum VersionOutcome: Sendable {
         /// Resolves to a modelled version; no version issue.
         case quiet
-        /// `2.8`: validated as v2.8.2, reported as info.
+        /// `2.8` or `2.7`: validated as v2.8.2 or v2.7.1, reported as info.
         case substituted
         /// No version resolves from VID.1 (payload: VID.1 as rendered):
         /// v2.5.1 fallback with a warning, or a throw under rejectUnknownVersion.
@@ -344,7 +387,8 @@ struct VersionHandlingTests {
         VersionRow(wire: "2.8.2", resolved: .v2_8_2, outcome: .quiet),
         VersionRow(wire: "2.7.1", resolved: .v2_7_1, outcome: .quiet),
         VersionRow(wire: "2.7.1^AUS", resolved: .v2_7_1, outcome: .quiet),
-        VersionRow(wire: "2.7", resolved: .v2_5_1, outcome: .unresolved("2.7")),
+        VersionRow(wire: "2.7", resolved: .v2_7, outcome: .substituted),
+        VersionRow(wire: "2.7^AUS", resolved: .v2_7, outcome: .substituted),
         VersionRow(wire: "2.5", resolved: .v2_5_1, outcome: .unresolved("2.5")),
         VersionRow(wire: "2.2", resolved: .v2_5_1, outcome: .unresolved("2.2")),
         VersionRow(wire: "2.4\\S\\x", resolved: .v2_5_1, outcome: .unresolved("2.4^x")),
@@ -394,8 +438,10 @@ struct VersionHandlingTests {
             #expect(message.version.grammarVersion == row.resolved)
             #expect(versionIssues.isEmpty)
         case .substituted:
-            #expect(message.version.grammarVersion == .v2_8_2)
-            #expect(versionIssues.map(\.code) == [.versionGrammarSubstituted(declared: .v2_8, validatedAs: .v2_8_2)])
+            #expect(message.version == row.resolved)
+            #expect(message.version.grammarVersion != row.resolved)
+            #expect(versionIssues.map(\.code) == [.versionGrammarSubstituted(declared: row.resolved,
+                                                                             validatedAs: row.resolved.grammarVersion)])
             #expect(versionIssues.first?.severity == .info)
         case .unresolved(let vid1):
             #expect(message.version.grammarVersion == .v2_5_1)

@@ -278,8 +278,16 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .info)
     }
 
-    @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.7", "2.9"])
+    @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.8.1", "2.9"])
     func unresolvedVersion(_ version: String) throws {
+        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid]))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
+        #expect(issues.first?.severity == .info)
+    }
+
+    @Test("v2.7.1 has no modelled message structures: 2.7.1 and 2.7 get only the info issue",
+          arguments: ["2.7.1", "2.7"])
+    func v271StructuresNotModelled(_ version: String) throws {
         let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid]))
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
         #expect(issues.first?.severity == .info)

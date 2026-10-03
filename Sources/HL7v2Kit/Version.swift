@@ -24,6 +24,9 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     case v2_6   = "2.6"
     /// HL7 v2.7.1, modelled from its own text (plan P10, ADR-018).
     case v2_7_1 = "2.7.1"
+    /// HL7 v2.7. HL7v2Kit has no v2.7 text and validates a `2.7` message against
+    /// the v2.7.1 grammar (``grammarVersion``; owner decision G11, ADR-018).
+    case v2_7   = "2.7"
     case v2_8_2 = "2.8.2"
     case v2_8   = "2.8"
 
@@ -36,13 +39,15 @@ public enum Version: String, Sendable, CaseIterable, Equatable, Hashable {
     /// The version whose segment grammar, code tables and datatype grammar
     /// the ``Validator`` applies to a message declaring this version.
     ///
-    /// Every case maps to itself except ``v2_8``: HL7v2Kit has no v2.8 text
-    /// and validates a `2.8` message against the v2.8.2 grammar, the nearest
-    /// modelled release, reporting the substitution as
+    /// Every case maps to itself except ``v2_8`` and ``v2_7``: HL7v2Kit has no
+    /// v2.8 or v2.7 text and validates a `2.8` message against the v2.8.2
+    /// grammar and a `2.7` message against the v2.7.1 grammar, the nearest
+    /// modelled release in each case, reporting the substitution as
     /// ``IssueCode/versionGrammarSubstituted(declared:validatedAs:)`` (ADR-018).
     public var grammarVersion: Version {
         switch self {
         case .v2_8: return .v2_8_2
+        case .v2_7: return .v2_7_1
         default:    return self
         }
     }

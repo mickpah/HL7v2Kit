@@ -65,7 +65,7 @@ Every component that any supported version defines has a named accessor (hand-wr
 
 | Enum | Cases | Class | Note added |
 |------|-------|-------|-----------|
-| `Version` | 8 (v2_3 … v2_6, v2_7_1, v2_8_2, v2_8; v2_7_1 unreleased, P10-6) | **Open** | yes — `@unknown default` |
+| `Version` | 9 (v2_3 … v2_6, v2_7_1, v2_7, v2_8_2, v2_8; v2_7_1 and v2_7 unreleased, P10-6) | **Open** | yes — `@unknown default` |
 | `HL7Locale` | 2 (international, auLocalisation) | **Open** | yes |
 | `IssueCode` | 25 | **Open** | yes (count corrected + `.segmentCardinalityAboveMaximum` added, M6-A-3 2026-09-15; the "12" predated the R10 removals; recounted at 18 when P6-6 added `.fieldLengthOutOfRange(length:actual:)`; 20 after P6-13 `.extraComponentsInPrimitiveField` and P6-7 `.valueFormatInvalid(dataType:)`; 21 after P6-15 `.extraComponentsInCompositeField`; 25 after P8-5 `.messageStructureSegmentMissing(structure:segmentID:group:)`, `.messageStructureSegmentUnexpected(structure:segmentID:)`, `.messageStructureMismatch(declared:trigger:)` and `.messageStructureNotModelled(structure:)`) |
 | `ParseError` | 7 (corrected from 8 in P8-8; counted from the source, the same 7 at `v3.13.0`) | **Open** | yes |

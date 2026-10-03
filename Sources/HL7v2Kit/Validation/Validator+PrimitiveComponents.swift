@@ -32,7 +32,7 @@ extension Validator {
             return ["DT", "FT", "ID", "IS", "NM", "SI", "ST", "TM", "TN", "TS", "TX"]
         case .v2_5_1, .v2_6:
             return ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "ST", "TM", "TX"]
-        case .v2_7_1, .v2_8_2, .v2_8:
+        case .v2_7_1, .v2_7, .v2_8_2, .v2_8:
             return ["DT", "DTM", "FT", "GTS", "ID", "IS", "NM", "SI", "SNM", "ST", "TM", "TX"]
         }
     }

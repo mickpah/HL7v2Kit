@@ -146,6 +146,8 @@ struct PrimitiveExtraContentTests {
         #expect(Validator.primitiveComponentLimit("TN", version: .v2_3_1) == 1)
         #expect(Validator.primitiveComponentLimit("SNM", version: .v2_8_2) == 1)
         #expect(Validator.primitiveComponentLimit("SNM", version: .v2_8) == 1)
+        #expect(Validator.primitiveComponentLimit("SNM", version: .v2_7_1) == 1)
+        #expect(Validator.primitiveComponentLimit("SNM", version: .v2_7) == 1)
         #expect(Validator.primitiveComponentLimit("FT", version: .v2_6) == .max)
         #expect(Validator.primitiveComponentLimit("NA", version: .v2_3) == nil)
         #expect(Validator.primitiveComponentLimit("CM", version: .v2_3) == nil)

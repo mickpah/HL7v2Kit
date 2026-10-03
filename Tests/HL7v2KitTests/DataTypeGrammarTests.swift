@@ -213,6 +213,7 @@ struct DataTypeGrammarTests {
                     == DataTypeGrammarTable.grammar(segment: segment, field: field, version: .v2_8_2), "\(key)")
         }
         #expect(DataTypeGrammarTable.grammar(segment: "IN3", field: 20, version: .v2_8) == nil, "v2.8.2 prints tables")
+        #expect(DataTypeGrammarTable.grammar("CX", version: .v2_7) == nil, "the registry stays version-literal: .v2_7 owns no grammar")
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_4).count == 43)
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3_1).count == 41)
         #expect(DataTypeGrammarTable.fieldGrammars(for: .v2_3).count == 46)

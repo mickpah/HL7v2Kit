@@ -68,6 +68,10 @@ Every row that raises `versionNotRecognised` throws `ParseError.unsupportedVersi
 
 Plan P10 lands v2.7.1 through the ADR-015 pipeline, so the version table's `2.7.1` row now reads: Modelled, its own grammar (`Version.v2_7_1`), no issue raised. v2.7.1 sits with v2.8.2 on every era rule (`Version+Eras.swift`, `Validator.primitiveTypes`), each verified against the v2.7.1 print. The section F register row for 2.7.1 is removed.
 
+## Amendment (P10-6, 2026-10-03): 2.7 substituted by v2.7.1 (owner decision G11)
+
+`2.7` moves from Excluded to Substituted, exactly as `2.8` under Option A: `Version.v2_7` (`"2.7"`, additive) has `grammarVersion` v2.7.1, the Validator applies the v2.7.1 grammar, code tables and datatype grammar, and reports `versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)` (info) at MSH-12. The public registries stay version-literal: `.v2_7` owns no tables or grammar of its own. The section F register row for 2.7 is rewritten. The v2.7 to v2.7.1 differences are unverified, as for 2.8 to v2.8.2.
+
 ## Open question recorded for the owner
 
 `2.8.1` is one point release from v2.8.2 and is excluded under Option A, so it falls back to v2.5.1 while `2.8` is substituted by v2.8.2. The asymmetry exists because `.v2_8` is an existing public case and `.v2_8_1` is not. Substituting `2.8.1` as well needs a new `Version` case; if the owner wants it, amend this ADR and extend `grammarVersion`.

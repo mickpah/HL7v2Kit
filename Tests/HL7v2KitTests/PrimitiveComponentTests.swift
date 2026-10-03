@@ -176,9 +176,9 @@ struct PrimitiveComponentTests {
         #expect(found.map(\.code) == [.extraComponentsInPrimitiveField])
     }
 
-    @Test("Under version substitution (MSH-12 2.7, validated as v2.5.1) a later-version CWE value in an IS field warns")
+    @Test("Under version substitution (MSH-12 2.8.1, validated as v2.5.1) a later-version CWE value in an IS field warns")
     func substitutionWarns() throws {
-        let wire = pv1("ABC^Text^HL70069").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|2.7\r")
+        let wire = pv1("ABC^Text^HL70069").replacingOccurrences(of: "|P|2.5.1\r", with: "|P|2.8.1\r")
         let message = try Parser().parse(wire)
         let all = Validator().validate(message).issues
         #expect(all.contains { if case .versionNotRecognised = $0.code { return true } else { return false } })

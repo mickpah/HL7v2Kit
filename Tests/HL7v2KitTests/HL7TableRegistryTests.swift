@@ -22,10 +22,11 @@ struct HL7TableRegistryTests {
         #expect(t.isClosed)
     }
 
-    @Test("Unknown table and .v2_8 resolve to nil: the registry stays version-literal (ADR-018)")
+    @Test("Unknown table, .v2_8 and .v2_7 resolve to nil: the registry stays version-literal (ADR-018)")
     func missingLookups() {
         #expect(HL7TableRegistry.table("9999", version: .v2_5_1) == nil)
         #expect(HL7TableRegistry.table("0074", version: .v2_8) == nil)
+        #expect(HL7TableRegistry.table("0074", version: .v2_7) == nil)
     }
 
     @Test("isClosed is false for user-defined, locally-extensible, or empty tables")

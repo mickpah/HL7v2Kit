@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P10-6: MSH-12 `2.7` validated against v2.7.1 (owner decision G11)
+
+- `Version.v2_7` (`"2.7"`), additive. A message whose MSH-12 declares `2.7` no longer
+  raises `versionNotRecognised` against the v2.5.1 fallback, and `ParserOptions.strict`
+  accepts it: it is validated against the v2.7.1 grammar, code tables and datatype grammar
+  with one `versionGrammarSubstituted(declared: .v2_7, validatedAs: .v2_7_1)` info issue at
+  MSH-12, exactly as `2.8` is validated against v2.8.2 (ADR-018 amendment). The registries
+  stay version-literal: `.v2_7` owns no tables or grammar.
+- The ORC/OBR paired-field version sets are keyed on `grammarVersion`, so a `2.8` or `2.7`
+  message gets the ORC-8 / OBR-54 parent-order check of its grammar version (the DocC
+  already said a `2.8` message did; the check read the declared version).
+
 ### Added — P10-6: `Version.v2_7_1`, HL7 v2.7.1 validated against its own grammar
 
 - `Version.v2_7_1` (`"2.7.1"`), additive on the open enum (ADR-014). Every per-version

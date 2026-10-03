@@ -12,7 +12,7 @@ extension Version {
     var printsMaximumLength: Bool {
         switch self {
         case .v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6: return true
-        case .v2_7_1, .v2_8_2, .v2_8: return false
+        case .v2_7_1, .v2_7, .v2_8_2, .v2_8: return false
         }
     }
 
@@ -25,7 +25,7 @@ extension Version {
     var printsLengthSymbols: Bool {
         switch self {
         case .v2_4, .v2_5_1, .v2_6: return true
-        case .v2_3, .v2_3_1, .v2_7_1, .v2_8_2, .v2_8: return false
+        case .v2_3, .v2_3_1, .v2_7_1, .v2_7, .v2_8_2, .v2_8: return false
         }
     }
 
@@ -41,7 +41,7 @@ extension Version {
     /// by this format check. A component-level SI is not length-checked.
     var boundsSequenceID: Bool {
         switch self {
-        case .v2_5_1, .v2_6, .v2_7_1, .v2_8_2, .v2_8: return true
+        case .v2_5_1, .v2_6, .v2_7_1, .v2_7, .v2_8_2, .v2_8: return true
         case .v2_3, .v2_3_1, .v2_4: return false
         }
     }

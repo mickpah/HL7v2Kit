@@ -57,6 +57,9 @@ struct FieldLengthValidationTests {
         #expect(FieldLengthRule.parse("250#", version: .v2_8_2) == nil)
         #expect(FieldLengthRule.parse("20", version: .v2_8_2) == nil, "a bare v2.7+ integer is not a normative form")
         #expect(FieldLengthRule.parse("1..4", version: .v2_8) == .range(min: 1, max: 4))
+        #expect(FieldLengthRule.parse("1..4", version: .v2_7_1) == .range(min: 1, max: 4))
+        #expect(FieldLengthRule.parse("1..4", version: .v2_7) == .range(min: 1, max: 4))
+        #expect(FieldLengthRule.parse("250#", version: .v2_7_1) == nil)
     }
 
     @Test("FieldLengthRule.admits honours inclusive and open bounds")

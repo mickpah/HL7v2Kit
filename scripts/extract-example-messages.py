@@ -685,6 +685,49 @@ _P6_13_ENTRIES = [
      "code": 'valueNotInTable(table: "0136")',
      "location_pattern": r"^TCC\[\d+\]-9\.1$", "count": 1, "reason": _TCC9_REASON},
 ]
+# P10-6: the v2.7.1 examples first validate against the v2.7.1 grammar (most declare MSH-12
+# "2.7", substituted by v2.7.1 under owner decision G11, ADR-018). Each line below is the
+# example's own defect against a component or field the v2.7.1 print requires; per-source
+# totals over every message ("all"). P10-7 completes the v2.7.1 sweep.
+_P10_6_CX5_REASON = (
+    "v2.7.1 CH02A 2.A.14.5 (p33): \"As of v2.7, CX.5 Identifier Type Code is required.\" The "
+    "examples print CX values without CX.5, e.g. CH03 \"PID|||191919^^^GOOD HEALTH HOSPITAL\" "
+    "and \"MRG|MR2^^^XYZ\".")
+_P10_6_XTN3_REASON = (
+    "v2.7.1 CH02A 2.A.90 (p104) prints XTN.1 Telephone Number W and XTN.3 Telecommunication "
+    "Equipment Type R. The examples print only the withdrawn XTN.1 string, e.g. "
+    "\"(555)555-1002\".")
+_P10_6_ED_REASON = (
+    "v2.7.1 CH02A 2.A.24 (p40) prints ED.2 Type of Data, ED.4 Encoding and ED.5 Data R. The "
+    "CH17 UAC-2 User Authentication Credential examples print a bare token in ED.1.")
+_P10_6_XAD7_REASON = (
+    "v2.7.1 CH02A 2.A.86.7 (p90): \"XAD.7 is required if there are multiple occurrences of XAD "
+    "in a field.\" The STF examples repeat STF-11 Office/Home Address with no XAD.7.")
+_P10_6_DG13_REASON = (
+    "v2.7.1 CH06 6.5.2 DG1 attribute table (p31) prints DG1-3 Diagnosis Code - DG1 CWE R. The "
+    "CH03 examples print \"DG1|1|19||BIOPSY||00\": DG1-3 empty, the text in the withdrawn DG1-4.")
+_P10_6_ITM_REASON = (
+    "The v2.7.1 CH17 ITM example is shifted: ITM-13 prints \"300-0001\" (U+2010 in the text layer) "
+    "in ITM-13.1 and the item name \"FormulaAlim_8oz\" in ITM-13.2 Price Type (Table 0205).")
+_P10_6_ENTRIES = [
+    *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
+       "location_pattern": r"^(PID\[\d+\]-(3|18)|MRG\[\d+\]-[1356]|PV1\[\d+\]-(19|50)|IN1\[\d+\]-3|NK1\[\d+\]-12|GT1\[\d+\]-19|STF\[\d+\]-2|PCE\[\d+\]-2)\.5$",
+       "count": n, "reason": _P10_6_CX5_REASON}
+      for src, n in {"v2.7.1/V271_CH02_Control.pdf": 2, "v2.7.1/V271_CH03_PatientAdmin.pdf": 100, "v2.7.1/V271_CH06_FinancialMngmt.pdf": 6, "v2.7.1/V271_CH08_MasterFiles.pdf": 1, "v2.7.1/V271_CH09_MedRecords.pdf": 2, "v2.7.1/V271_CH10_Scheduling.pdf": 6, "v2.7.1/V271_CH11_PatientReferral.pdf": 28, "v2.7.1/V271_CH15_PersMngmt.pdf": 1, "v2.7.1/V271_CH17_MaterialsMngmt.pdf": 1}.items()],
+    *[{"source_glob": src, "index": "all", "code": "requiredComponentMissing",
+       "location_pattern": r"^(PID\[\d+\]-1[34]|NK1\[\d+\]-[56]|ORC\[\d+\]-(14|23)|PRD\[\d+\]-5|IN1\[\d+\]-7|GT1\[\d+\]-(6|7|18)|SCH\[\d+\]-(13|17|21)|STF\[\d+\]-10|LOC\[\d+\]-6|LDP\[\d+\]-11)\.3$",
+       "count": n, "reason": _P10_6_XTN3_REASON}
+      for src, n in {"v2.7.1/V271_CH02_Control.pdf": 4, "v2.7.1/V271_CH03_PatientAdmin.pdf": 62, "v2.7.1/V271_CH05_Queries.pdf": 24, "v2.7.1/V271_CH06_FinancialMngmt.pdf": 1, "v2.7.1/V271_CH08_MasterFiles.pdf": 2, "v2.7.1/V271_CH10_Scheduling.pdf": 12, "v2.7.1/V271_CH11_PatientReferral.pdf": 38, "v2.7.1/V271_CH15_PersMngmt.pdf": 2}.items()],
+    {"source_glob": "v2.7.1/V271_CH17_MaterialsMngmt.pdf", "index": "all", "code": "requiredComponentMissing",
+     "location_pattern": r"^UAC\[\d+\]-2\.[245]$", "count": 9, "reason": _P10_6_ED_REASON},
+    *[{"source_glob": src, "index": "all", "code": "conditionalComponentMissing",
+       "location_pattern": r"^STF\[\d+\]-11\.7$", "count": n, "reason": _P10_6_XAD7_REASON}
+      for src, n in {"v2.7.1/V271_CH02_Control.pdf": 4, "v2.7.1/V271_CH15_PersMngmt.pdf": 1}.items()],
+    {"source_glob": "v2.7.1/V271_CH03_PatientAdmin.pdf", "index": "all", "code": "requiredFieldMissing",
+     "location_pattern": r"^DG1\[\d+\]-3$", "count": 3, "reason": _P10_6_DG13_REASON},
+    {"source_glob": "v2.7.1/V271_CH17_MaterialsMngmt.pdf", "index": "all", "code": 'valueNotInTable(table: "0205")',
+     "location_pattern": r"^ITM\[\d+\]-13\.2$", "count": 1, "reason": _P10_6_ITM_REASON},
+]
 KNOWN_SPEC_EXAMPLE_ERRORS = [
     *[{"source_glob": src, "index": "all", "code": "conditionalFieldMissing",
        "location_pattern": r"^AI[LP]\[\d+\]-[67]$", "count": 20, "reason": _AI_START_OFFSET_REASON}
@@ -731,6 +774,7 @@ KNOWN_SPEC_EXAMPLE_ERRORS = [
     *_P4_29_ENTRIES,
     *_P4_30_ENTRIES,
     *_P6_13_ENTRIES,
+    *_P10_6_ENTRIES,
 ]
 
 # P4-28: the swapped header itself, per source, counted directly in the PDF text (the exact

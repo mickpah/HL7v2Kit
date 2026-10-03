@@ -70,7 +70,7 @@ struct FieldTableOpennessTests {
         case .v2_4: SegmentGrammarTable.v2_4
         case .v2_5_1: SegmentGrammarTable.v2_5_1
         case .v2_6: SegmentGrammarTable.v2_6
-        case .v2_7_1: SegmentGrammarTable.v2_7_1
+        case .v2_7_1, .v2_7: SegmentGrammarTable.v2_7_1
         case .v2_8_2, .v2_8: SegmentGrammarTable.v2_8_2
         }
     }
@@ -198,7 +198,8 @@ struct FieldTableOpennessTests {
             .appendingPathComponent("Resources/schemas")
         var marked = 0
         for version in Version.allCases {
-            // `.v2_8` is validated against the v2.8.2 grammar and has no schema directory of its own.
+            // `.v2_8` and `.v2_7` are validated against the v2.8.2 and v2.7.1 grammars and have no
+            // schema directory of their own.
             guard version.grammarVersion == version else { continue }
             let dir = root.appendingPathComponent("v\(version.rawValue)")
             let files = try? FileManager.default.contentsOfDirectory(atPath: dir.path)

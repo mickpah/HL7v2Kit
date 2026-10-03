@@ -392,7 +392,7 @@ public struct Validator: Sendable {
     }
 
     /// The segment grammar table for `version` (ADR-018 substitution for
-    /// `v2_8`). Internal, not private, so tests can derive a per-version
+    /// `v2_8` and `v2_7`). Internal, not private, so tests can derive a per-version
     /// table list from `Version.allCases` instead of hand-maintaining one
     /// (P4-15, folded from the P4-25 review).
     static func grammarTable(for version: Version) -> [String: SegmentGrammar] {
@@ -403,6 +403,7 @@ public struct Validator: Sendable {
         case .v2_5_1: return SegmentGrammarTable.v2_5_1
         case .v2_6:   return SegmentGrammarTable.v2_6     // v0.14 (ADR-012)
         case .v2_7_1: return SegmentGrammarTable.v2_7_1   // plan P10 (ADR-018)
+        case .v2_7:   return SegmentGrammarTable.v2_7_1   // ADR-018 substitution (G11)
         case .v2_8_2: return SegmentGrammarTable.v2_8_2   // v0.15 (ADR-013)
         case .v2_8:   return SegmentGrammarTable.v2_8_2   // ADR-018 substitution
         }
@@ -1140,7 +1141,7 @@ public struct Validator: Sendable {
             }) else { continue }
             let obr = message.segments[obrIndex]
             for pair in Self.orcObrEqualityPairs {
-                if let versions = pair.versions, !versions.contains(message.version) { continue }
+                if let versions = pair.versions, !versions.contains(message.version.grammarVersion) { continue }
                 guard let orcValue = flattenedField(segment.field(pair.orcField)),
                       let obrValue = flattenedField(obr.field(pair.obrField)),
                       orcValue != obrValue
