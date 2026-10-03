@@ -727,6 +727,12 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             raise error
         seen = set()
         tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen)
+        # P8b-3b: an empty print, or rows that run on into the next table (a second top-level
+        # MSH, e.g. the acknowledgment printed after it), is a reader gap, never a structure.
+        if not tree:
+            raise UnknownNotation("no syntax rows read under the caption")
+        if sum(1 for e in tree if e.get("segment") == "MSH") > 1:
+            raise UnknownNotation("a second top-level MSH: the rows run on into the next table")
         for printed in seen:
             used_errata.add(id(marks[sid][printed]))
         return name_groups(tree, ver, sid, overrides, names_used, bundles=bundles, log=log)
@@ -890,7 +896,11 @@ def main(argv=None):
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--write", action="store_true")
     ap.add_argument("--report", help="write a TSV report (version, structure, status, reason)")
+    ap.add_argument("--dump", metavar="DIR", help="write every parsed structure to DIR/v<ver>/<ID>.json, for the "
+                    "env-gated lint harness (StructureLintCorpusTests); never under Resources/")
     args = ap.parse_args(argv)
+    if args.dump and os.path.realpath(args.dump).startswith(os.path.realpath(os.path.join(REPO, "Resources"))):
+        ap.error("--dump must not write under Resources/ (no structure JSON is committed this way)")
     versions = [f"v{v.lstrip('v')}" for v in (args.version or [v for v in ERAS if v not in ERAS_PENDING])]
     overrides = load_overrides()
     bundles = Bundles.from_disk()
@@ -923,6 +933,13 @@ def main(argv=None):
             if status == "error":
                 print(f"  {sid}: {reason}")
                 failed = True
+        if args.dump:
+            out = os.path.join(args.dump, version)
+            os.makedirs(out, exist_ok=True)
+            for sid, structure in structures.items():
+                with open(os.path.join(out, f"{sid}.json"), "w", encoding="utf-8") as f:
+                    f.write(render(structure))
+            print(f"  dumped {len(structures)} structure(s) to {out}")
         if not (args.check or args.write):
             continue
         for sid in sorted(only):

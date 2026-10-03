@@ -24,6 +24,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   v2.7.1 bundle names that group `PATIENT_OBSERVATION` and is reported as `bundle-differs`.
 - Two new extractor self-checks (39 in all). No structure JSON added; the pilots reproduce.
 
+### Added — P8b-3b: per-version lint and recogniser run
+
+- `extract-message-structures.py --dump DIR` writes every parsed structure of every version
+  to `DIR/v<ver>/` (refused under `Resources/`), so the lint can run without committing JSON.
+- `StructureLintCorpusTests` (env-gated by `STRUCTURE_LINT_CORPUS`, like the matcher corpus
+  test) decodes each dumped structure, runs the ADR-019 determinism lint, classes each
+  failure's shape, compares the one-pass matcher with the backtracking reference recogniser on
+  the property test's bounded sequences, and records DSC placement; one TSV per version.
+- The property test's sequence generator bounds a derivation at 16 segments or the shortest
+  derivation plus 8, whichever is longer, and stops after 200,000 attempts, so the largest
+  printed structures finish; neither bound binds on the pilots.
+- The extractor reports an empty print, or rows that run on into the next table (a second
+  top-level MSH), as unreadable instead of a parsed structure (17 such structures across
+  v2.4 to v2.8.2; self-check 40).
+
 ### Changed — P8b-3a: the structure extractor reads every version
 
 - `scripts/extract-message-structures.py` reads all seven versions' caption forms (v2.3 code

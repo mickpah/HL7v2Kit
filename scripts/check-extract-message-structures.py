@@ -807,6 +807,17 @@ def check_general_ack_fold_code_alone():
     assert count == 0, report
 
 
+def check_empty_or_run_on_print_unreadable():
+    # P8b-3b: a caption with no syntax rows, or rows that run on into the next table (a second
+    # MSH at top level), is skipped as unreadable, never a parsed structure.
+    s, report = _structure([("MSH", "Header"), ("PID", "Patient"), ("MSH", "Header"), ("MSA", "Ack")])
+    assert s is None and "second top-level MSH" in [r for r in report if r[1] == "skipped"][0][2], report
+    text = _page(1, _table("XYZ^X01^XYZ_X01", []) + ["", "Prose that follows the caption."],
+                 heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, tables=[])
+    assert "XYZ_X01" not in structures and [r for r in report if r[1] == "skipped"], report
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_skipped_with_report_line,
@@ -819,7 +830,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
           check_caption_errata, check_reader_layouts,
-          check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone]
+          check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
+          check_empty_or_run_on_print_unreadable]
 
 
 def main():

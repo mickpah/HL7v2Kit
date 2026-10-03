@@ -98,6 +98,17 @@ struct StructureMatcherPropertyTests {
         return [deleted, inserted, duplicated, swapped]
     }
 
+    /// The length of the shortest derivation: every required element once.
+    private static func shortest(_ elements: [StructureElement]) -> Int {
+        elements.reduce(0) { total, element in
+            guard element.min > 0 else { return total }
+            switch element {
+            case .segment: return total + 1
+            case .group(_, _, _, let children): return total + shortest(children)
+            }
+        }
+    }
+
     /// Every MSH + w over `letters` with |w| <= `length`.
     private static func exhaustive(_ letters: [String], upTo length: Int) -> [[String]] {
         var layer: [[String]] = [["MSH"]]
@@ -116,9 +127,15 @@ struct StructureMatcherPropertyTests {
         }
         var rng = Seeded(state: 2_5_1)
         var result: [[String]] = []
-        while result.count < 6000 {
+        // At most 16 segments, or the shortest derivation plus 8 when that is longer (a large
+        // structure in the P8b-3b corpus run); a bounded number of attempts, so a structure
+        // whose derivations are rarely short still ends. Neither bound binds on the pilots.
+        let limit = Swift.max(16, shortest(elements) + 8)
+        var attempts = 0
+        while result.count < 6000, attempts < 200_000 {
+            attempts += 1
             let valid = derive(elements, &rng)
-            guard valid.count <= 16 else { continue }
+            guard valid.count <= limit else { continue }
             result.append(valid)
             result += mutations(valid, letters, &rng)
         }
