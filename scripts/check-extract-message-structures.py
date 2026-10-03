@@ -760,6 +760,16 @@ def check_reader_layouts():
     assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
 
 
+def check_borrowed_table_errata():
+    # v2.3 resolves through v2.3.1's Table 0354, so that table's own errata apply to it.
+    text = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
+                 + _table("XYZ", [("MSH", "Header")])[1:], heading="9.2.1 XYZ - synthetic (event X07)")
+    fix = {**EMPTY, "errata": [{"version": "2.3.1", "where": "table-0354", "structure": "XYZ_X07",
+                                "printed": "XYZ__X07", "intended": "XYZ_X07", "citation": "x"}]}
+    structures, report, _ = _run("2.3", [("syn", text)], fix, tables=[("XYZ__X07", ["X07"], "X07")])
+    assert structures["XYZ_X07"]["triggers"] == ["XYZ^X07"], (structures, report)
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_skipped_with_report_line,
@@ -771,7 +781,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_two_part_caption_through_0354, check_section_title_caption, check_primary_print_and_duplicates,
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
-          check_caption_errata, check_reader_layouts]
+          check_caption_errata, check_reader_layouts,
+          check_borrowed_table_errata]
 
 
 def main():

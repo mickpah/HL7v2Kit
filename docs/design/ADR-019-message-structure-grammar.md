@@ -869,7 +869,11 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   `begin` or `end` wraps onto the next line is one mark; `End` reads as `end`. A non-notation
   row at depth 0 ends the table. Six more errata: Table 0354 rows misprinted in v2.3.1 (`ORM__O01`,
   `RAS_O02` event `O022`, `RROR_ROR`, `SIIU_S12`) and v2.5.1 (`BRP_030`), and the v2.3.1
-  caption `R0R^R0R` (section 4.8.17) read as `ROR^ROR`.
+  caption `R0R^R0R` (section 4.8.17) read as `ROR^ROR`. v2.3 borrows v2.3.1's table with its errata.
+- **ACK.** `triggerFolds` now folds ACK for v2.4 (section 2.14.1), v2.6, v2.7.1 and v2.8.2
+  (section 2.13.1) as for v2.5.1; without it `ACK^varies^ACK` is not a trigger. v2.3 and v2.3.1
+  print `ACK^<event>` with no ID and their Table 0354 has no ACK row, so ACK stays
+  `needs-structure-id` there until P8b-14 and P8b-15 decide.
 - **Shared triggers and Table 0354.** A trigger printed under several structures is a
   `shared-trigger` report row, declared by a cited `sharedTriggers` entry or not; the codegen
   is unchanged. Declared: v2.3.1 `ORM^O01` (five structures) and `ORR^O02` (five); v2.8.2

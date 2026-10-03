@@ -628,7 +628,7 @@ def _primary(sid, entries, fold):
     (CODE_EVT equals the structure ID: the chapter that defines the message, not one that only
     reuses it); else the first print in reading order."""
     if fold:
-        return next((k for k, e in enumerate(entries) if f"{e[0].code}^{e[0].event}" == fold["primary"]), 0)
+        return next((k for k, e in enumerate(entries) if fold["primary"] in (e[0].printed, f"{e[0].code}^{e[0].event}")), 0)
     return next((k for k, e in enumerate(entries) if any(f"{e[0].code}_{v}" == sid for v in e[0].events)), 0)
 
 
@@ -643,9 +643,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     bundles = bundles if bundles is not None else Bundles()
     errata = [e for e in overrides["errata"] if e["version"] == ver]
     used_errata = set()
-    table = apply_table_errata(tables if tables is not None else load_0354(TABLE_0354.get(ver, ver)),
-                               errata, used_errata)
-    table_ver = TABLE_0354.get(ver, ver)
+    table_ver = TABLE_0354.get(ver, ver)     # the table's own errata apply where it is borrowed (v2.3)
+    table = apply_table_errata(tables if tables is not None else load_0354(table_ver),
+                               [e for e in overrides["errata"] if e["version"] == table_ver], used_errata)
     excluded = {x["section"]: x for x in overrides["exclusions"] if x["version"] == ver}
     used_exclusions = set()
     caption_errata = {e["printed"]: e for e in errata if e["where"] == "caption"}
