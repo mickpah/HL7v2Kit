@@ -1,0 +1,46 @@
+{
+  "structure": "RDS_O01",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (O01/O02), pp 4-77 to 4-78. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RDS_O13.xsd, RDS_O13.ENCODING.CONTENT, derived for v2.3.1 RDS_O01, which differs from RDS_O13 only by trigger; HL7-xml 2.3.1/RDS_O01.xsd names it ENCODING (RDS_O01.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)) and OBSERVATION (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["RDS^O01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL_SUPPLEMENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "NTE", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "RXC", "min": 1, "max": null },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]},
+      { "group": "ENCODING", "nameSource": "v2xml-v2.4", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "segment": "RXD", "min": 1, "max": 1 },
+      { "segment": "RXR", "min": 1, "max": null },
+      { "segment": "RXC", "min": 0, "max": null },
+      { "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "OBX", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

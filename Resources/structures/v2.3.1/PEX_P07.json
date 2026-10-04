@@ -1,0 +1,54 @@
+{
+  "structure": "PEX_P07",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 7, section 7.10.1 PEX - product experience message (events P07, P08), p 7-84. Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.VISIT.CONTENT, generator HL7-Database), EXPERIENCE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.EXPERIENCE.CONTENT, generator HL7-Database), PEX_OBSERVATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_OBSERVATION.CONTENT, generator HL7-Database), PEX_CAUSE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_CAUSE.CONTENT, generator HL7-Database), RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ORDER.CONTENT, generator HL7-Database), RX_ADMINISTRATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ADMINISTRATION.CONTENT, generator HL7-Database), ASSOCIATED_PERSON (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_PERSON.CONTENT, generator HL7-Database), ASSOCIATED_RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ORDER.CONTENT, generator HL7-Database), ASSOCIATED_RX_ADMIN (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ADMIN.CONTENT, generator HL7-Database) and STUDY (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.STUDY.CONTENT, generator HL7-Database).",
+  "triggers": ["PEX^P07", "PEX^P08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "EXPERIENCE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PES", "min": 1, "max": 1 },
+      { "group": "PEX_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "PEO", "min": 1, "max": 1 },
+        { "group": "PEX_CAUSE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "PCR", "min": 1, "max": 1 },
+          { "group": "RX_ORDER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "RXE", "min": 1, "max": 1 },
+            { "segment": "RXR", "min": 0, "max": null }
+          ]},
+          { "group": "RX_ADMINISTRATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "RXA", "min": 1, "max": 1 },
+            { "segment": "RXR", "min": 0, "max": 1 }
+          ]},
+          { "segment": "PRB", "min": 0, "max": null },
+          { "segment": "OBX", "min": 0, "max": null },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "group": "ASSOCIATED_PERSON", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "NK1", "min": 1, "max": 1 },
+            { "group": "ASSOCIATED_RX_ORDER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+              { "segment": "RXE", "min": 1, "max": 1 },
+              { "segment": "RXR", "min": 0, "max": null }
+            ]},
+            { "group": "ASSOCIATED_RX_ADMIN", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+              { "segment": "RXA", "min": 1, "max": 1 },
+              { "segment": "RXR", "min": 0, "max": 1 }
+            ]},
+            { "segment": "PRB", "min": 0, "max": null },
+            { "segment": "OBX", "min": 0, "max": null }
+          ]},
+          { "group": "STUDY", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "CSR", "min": 1, "max": 1 },
+            { "segment": "CSP", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

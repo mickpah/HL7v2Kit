@@ -1,0 +1,18 @@
+{
+  "structure": "ADT_A38",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.38 ADT/ACK - cancel pre-admit (event A38), pp 3-24 to 3-25.",
+  "triggers": ["ADT^A38"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 }
+  ]
+}

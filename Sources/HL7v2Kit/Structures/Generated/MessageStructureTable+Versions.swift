@@ -17,7 +17,7 @@ extension MessageStructureTable {
     static func generatedStructures(for version: Version) -> [String: MessageStructure] {
         switch version.grammarVersion {
         case .v2_3:   return [:]
-        case .v2_3_1: return [:]
+        case .v2_3_1: return v2_3_1
         case .v2_4:   return v2_4
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6

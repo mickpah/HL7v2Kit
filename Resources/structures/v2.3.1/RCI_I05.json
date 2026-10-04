@@ -1,0 +1,29 @@
+{
+  "structure": "RCI_I05",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 11, section 11.2.5 RQC/RCI - request for patient clinical information (event I05), p 11-10. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), OBSERVATION (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and RESULTS (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.RESULTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["RCI^I05"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "RESULTS", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

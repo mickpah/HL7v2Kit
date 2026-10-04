@@ -1,0 +1,11 @@
+{
+  "structure": "MFD_MFA",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 8, section 8.3.2 MFD/ACK - master files delayed application acknowledgment, p 8-4.",
+  "triggers": ["MFD^MFA"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "segment": "MFA", "min": 0, "max": null }
+  ]
+}

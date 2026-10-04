@@ -1,0 +1,33 @@
+{
+  "structure": "ADT_A01",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.1 ADT/ACK - admit/visit notification (event A01), p 3-2; the same structure is printed for ADT^A04 (3.2.4), ADT^A05 (3.2.5), ADT^A08 (3.2.8), ADT^A13 (3.2.13), ADT^A14 (3.2.14), ADT^A28 (3.2.28) and ADT^A31 (3.2.31). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["ADT^A01", "ADT^A04", "ADT^A05", "ADT^A08", "ADT^A13", "ADT^A14", "ADT^A28", "ADT^A31"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "GT1", "min": 0, "max": null },
+    { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": null }
+    ]},
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "UB1", "min": 0, "max": 1 },
+    { "segment": "UB2", "min": 0, "max": 1 }
+  ]
+}

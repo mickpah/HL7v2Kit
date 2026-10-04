@@ -1,0 +1,18 @@
+{
+  "structure": "MFN_M06",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-67. Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_CLIN_STUDY.CONTENT, derived for v2.3.1 MFN_M06) and MF_PHASE_SCHED_DETAIL (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_PHASE_SCHED_DETAIL.CONTENT, derived for v2.3.1 MFN_M06).",
+  "triggers": ["MFN^M06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_CLIN_STUDY", "nameSource": "v2xml-v2.4", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "CM0", "min": 1, "max": 1 },
+      { "group": "MF_PHASE_SCHED_DETAIL", "nameSource": "v2xml-v2.4", "min": 0, "max": null, "elements": [
+        { "segment": "CM1", "min": 1, "max": 1 },
+        { "segment": "CM2", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "structure": "DOC_T12",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19. Unprinted group names (ADR-019 decision 3): RESULT (HL7-xml 2.3.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["DOC^T12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "group": "RESULT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "EVN", "min": 0, "max": 1 },
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "TXA", "min": 1, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

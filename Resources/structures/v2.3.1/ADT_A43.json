@@ -1,0 +1,15 @@
+{
+  "structure": "ADT_A43",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.43 ADT/ACK - move patient information - patient identifier list (event A43), p 3-28; the same structure is printed for ADT^A44 (3.2.44). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A43.xsd, ADT_A43.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "triggers": ["ADT^A43", "ADT^A44"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "MRG", "min": 1, "max": 1 }
+    ]}
+  ]
+}

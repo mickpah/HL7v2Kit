@@ -536,9 +536,9 @@ struct MessageStructureValidationTests {
 
     // MARK: - Version rule
 
-    @Test("A recognised version with no structure data (v2.3.1) is an info issue")
+    @Test("A recognised version with no structure data (v2.3) is an info issue")
     func notModelledVersion() throws {
-        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.3.1", [Self.evn, Self.pid, Self.pv1]))
+        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.3", [Self.evn, Self.pid, Self.pv1]))
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
         #expect(issues.first?.severity == .info)
     }

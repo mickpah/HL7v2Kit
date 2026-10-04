@@ -1,0 +1,15 @@
+{
+  "structure": "TBR_R08",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 2, section 2.20.2 TBR - tabular data response (event R08), p 2-86.",
+  "triggers": ["TBR^R08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 1, "max": 1 },
+    { "segment": "RDF", "min": 1, "max": 1 },
+    { "segment": "RDT", "min": 1, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

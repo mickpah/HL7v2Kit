@@ -1,0 +1,16 @@
+{
+  "structure": "RPR_I03",
+  "version": "2.3.1",
+  "citation": "HL7 v2.3.1 Chapter 11, section 11.2.3 RQI/RPR - request/receipt of patient selection list (event I03), p 11-9. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RPR_I03.xsd, RPR_I03.PROVIDER.CONTENT, derived for v2.3.1 RPR_I03).",
+  "triggers": ["RPR^I03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml-v2.4", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}
