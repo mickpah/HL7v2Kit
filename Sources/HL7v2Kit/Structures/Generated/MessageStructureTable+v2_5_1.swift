@@ -155,7 +155,6 @@ extension MessageStructureTable {
         "RRE_O12": v2_5_1_RRE_O12,
         "RRG_O16": v2_5_1_RRG_O16,
         "RRI_I12": v2_5_1_RRI_I12,
-        "RSP_K21": v2_5_1_RSP_K21,
         "RSP_K23": v2_5_1_RSP_K23,
         "RSP_K25": v2_5_1_RSP_K25,
         "RSP_K31": v2_5_1_RSP_K31,
@@ -4702,29 +4701,6 @@ extension MessageStructureTable {
                 .segment("PV2", min: 0, max: 1),
             ]),
             .segment("NTE", min: 0, max: nil),
-        ]
-    )
-
-    private static let v2_5_1_RSP_K21: MessageStructure = MessageStructure(
-        id: "RSP_K21",
-        version: "2.5.1",
-        triggers: ["RSP^K21", "RSP^K22"],
-        citation: "HL7 v2.5.1 Chapter 3, section 3.3.56 Get Person Demographics (QBP) and Response (RSP) (Events Q21 and K21), p 3-59; the same structure is printed for RSP^K22 (3.3.57).",
-        requiresExactMatch: false,
-        elements: [
-            .segment("MSH", min: 1, max: 1),
-            .segment("SFT", min: 0, max: nil),
-            .segment("MSA", min: 1, max: 1),
-            .segment("ERR", min: 0, max: 1),
-            .segment("QAK", min: 1, max: 1),
-            .segment("QPD", min: 1, max: 1),
-            .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
-                .segment("PID", min: 1, max: 1),
-                .segment("PD1", min: 0, max: 1),
-                .segment("NK1", min: 0, max: nil),
-                .segment("QRI", min: 1, max: 1),
-            ]),
-            .segment("DSC", min: 0, max: 1),
         ]
     )
 

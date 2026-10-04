@@ -266,6 +266,18 @@ struct MessageStructureValidationTests {
         #expect(named.issues.isEmpty)
     }
 
+    // P8b-9: CH03 prints RSP_K21 twice with different syntax (3.3.56 for K21, 3.3.57 for
+    // K22), and its own K22 example carries three responses; RSP_K21 is registered as not
+    // modelled rather than matched against the K21 print.
+    @Test("RSP^K22^RSP_K21 with three responses (the CH03 example's shape) is info only, never a finding")
+    func rspK22UnderK21() throws {
+        let body = ["MSA|AA|8699", "QAK|7|OK|Q22^Find Candidates^HL7nnn", "QPD|Q22^Find Candidates^HL7nnn|7",
+                    Self.pid, "QRI|95", Self.pid, "QRI|90", Self.pid, "QRI|85"]
+        let issues = try structureIssues(Self.wire("RSP^K22^RSP_K21", body))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "RSP_K21")])
+        #expect(issues.first?.message.contains("3.3.57") == true)
+    }
+
     @Test("A registered not-modelled structure is info on a complete version, a mismatch only for a trigger it does not print")
     func registeredGapOnCompleteVersion() throws {
         let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]

@@ -266,6 +266,8 @@
       "citation": "HL7 v2.5.1 Chapter 5, section 5.9.2.1.1 Associated dispense information Conformance Statement, p 5-79: a query grammar, query profile or conformance statement example (QBP^Z87^QBP_Q11 RSP^Z88^RSP_Z88) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
     { "version": "2.5.1", "section": "5.9.2.4",
       "citation": "HL7 v2.5.1 Chapter 5, section 5.9.2.4 Lab results history Conformance Statement, p 5-84: a query grammar, query profile or conformance statement example (QBP^Z89^QBP_Q11 RSP^Z90^RSP_Z90) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
+    { "version": "2.5.1", "section": "5.9.1.1",
+      "citation": "HL7 v2.5.1 Chapter 5, section 5.9.1.1 Proposed dispense history example and Conformance Statement, p 5-66 (under 5.9 QUERY/RESPONSE MESSAGE EXAMPLES): restates 'the structure of the Pharmacy Dispense Information (RDR) message, an original-mode query that was defined in Chapter 4' (RDR^RDR), with TIMING groups and [SFT] the Chapter 4 definition (4.13.17) does not print; an example, not a normative structure definition; excluded under ruling G7." },
     { "version": "2.5.1", "section": "5.9.3.1.1",
       "citation": "HL7 v2.5.1 Chapter 5, section 5.9.3.1.1 MPI Conformance Statement, p 5-89: a query grammar, query profile or conformance statement example (QBP^Z91^QBP_Q13 RTB^Z92^RTB_K13) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
     { "version": "2.5.1", "section": "5.9.3.2.1",
