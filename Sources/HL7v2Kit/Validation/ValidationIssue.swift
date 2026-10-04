@@ -263,10 +263,11 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// MSH-9.3 ID outside the modelled structures included, until the
     /// version is complete), a `CODE^EVENT` with no MSH-9.3 is printed under
     /// two modelled structures (ambiguous), the
-    /// version is not resolved from MSH-12, the message is a fragment
+    /// version is not resolved from MSH-12, or the message is a fragment
     /// (MSH-14 populated, a trailing DSC with DSC-1 populated, or a trailing
-    /// DSC the structure does not define), or the structure fails the
-    /// determinism lint; an empty MSH-9 gives an empty `structure`. Always
+    /// DSC the structure does not define); an empty MSH-9 gives an empty
+    /// `structure`. A structure that fails the determinism lint is matched
+    /// exactly and no longer raises this issue (P8b-12). Always
     /// `.info`; emitted only
     /// when ``ValidationOptions/messageStructureSeverity`` is set. Located at
     /// MSH-9. ADR-019; additive case introduced in P8-5.

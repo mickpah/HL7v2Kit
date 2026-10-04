@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — P8b-12: exact matching for structures that fail the determinism lint
+
+- With `ValidationOptions.messageStructureSeverity` set, a structure that fails the ADR-019
+  determinism lint is now matched exactly instead of raising `messageStructureNotModelled`
+  (owner decision G15). It reports at most one finding, at the furthest segment any parse
+  reached (`messageStructureSegmentUnexpected` there, or `messageStructureSegmentMissing` at
+  the end of the message naming the first segment of the shortest completion), and no group
+  spans. No committed structure fails the lint today, so output is unchanged (validation
+  digest byte-identical with the option off and at `.warning`).
+- The codegen lints every structure it emits and renders an internal `requiresExactMatch`
+  flag into the generated table; the Validator no longer lints a message. A test re-lints
+  every generated structure against the flag, and `scripts/check-structure-codegen.sh` gains
+  eight flag cases. No public API change.
+- Internal `ExactStructureMatcher`: memoised matching over (element path, position) on an
+  automaton compiled from the structure; memory bounded by the structure's state count,
+  time linear in the message length. Proved against the reference recogniser on every
+  synthetic shape (exhaustive) and, env-gated, on the 44 real structures the P8b-3b run
+  found the one-pass matcher wrong on (0 disagreements over 132,000 sequences).
+- ADR-019 amendment (ceiling 1 replaced), register section E, Validation.md and the
+  `messageStructureNotModelled` DocC updated.
+
 ### Added — P8b-6: the choice element in the structure model, matcher and lint
 
 - `StructureElement.choice(_:min:max:alternatives:)`: the print's `< A | B >` (from v2.4),

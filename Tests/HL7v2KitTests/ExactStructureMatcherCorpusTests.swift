@@ -53,7 +53,7 @@ struct ExactStructureMatcherCorpusTests {
         let env = ProcessInfo.processInfo.environment
         let root = URL(fileURLWithPath: try #require(env["STRUCTURE_LINT_CORPUS"]))
         let bound = env["EXACT_CORPUS_BOUND"].flatMap(Int.init) ?? 500
-        var checked = 0, onePassWrong = 0, acceptedCount = 0
+        var checked = 0, onePassWrong = 0, acceptedCount = 0, maxStates = 0
         for (version, id) in Self.disagreeing {
             let url = root.appendingPathComponent("v\(version)/\(id).json")
             let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
@@ -64,6 +64,7 @@ struct ExactStructureMatcherCorpusTests {
             let sequences = Self.sequences(elements, bound: bound)
             #expect(sequences.count == bound, "\(version) \(id): \(sequences.count) sequences")
             let exact = ExactStructureMatcher(structure: structure)
+            maxStates = max(maxStates, exact.stateCount)
             let onePass = StructureMatcher(structure: structure)
             var wrong: [String] = []
             for sequence in sequences {
@@ -75,7 +76,7 @@ struct ExactStructureMatcherCorpusTests {
             checked += sequences.count
             #expect(wrong.isEmpty, "\(version) \(id): \(wrong.prefix(2))")
         }
-        print("exact-corpus: \(Self.disagreeing.count) structures, \(checked) sequences, bound \(bound), \(acceptedCount) accepted, one-pass wrong on \(onePassWrong)")
+        print("exact-corpus: \(Self.disagreeing.count) structures, \(checked) sequences, bound \(bound), \(acceptedCount) accepted, one-pass wrong on \(onePassWrong), at most \(maxStates) automaton states")
         #expect(onePassWrong > 0)
     }
 }

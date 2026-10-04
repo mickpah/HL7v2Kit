@@ -104,23 +104,26 @@ extension Validator {
         return (structure, [])
     }
 
-    /// Match the message body against `structure`: fragments and structures
-    /// that fail the determinism lint are reported as not modelled; otherwise
-    /// every finding is located on a real segment of the message.
+    /// Match the message body against `structure`: fragments are reported as
+    /// not modelled; otherwise every finding is located on a real segment of
+    /// the message. A structure that fails the determinism lint (its
+    /// `requiresExactMatch` flag, set at codegen time) is matched by
+    /// `ExactStructureMatcher`: at most one finding and no group spans
+    /// (ADR-019 ceiling 1, P8b-12); every other structure by the one-pass
+    /// `StructureMatcher`. No message is linted here.
     func matchStructure(_ structure: MessageStructure, message: Message, severity: IssueSeverity) -> [ValidationIssue] {
         let ids = message.segments.map(\.segmentID)
         if let why = fragmentReason(message, structure: structure) {
             return [notModelled(structure.id, message: message, reason: "the message is a fragment (\(why))")]
-        }
-        guard StructureMatcher.lint(structure.elements).isDeterministic else {
-            return [notModelled(structure.id, message: message, reason: "\(structure.id) fails the determinism lint")]
         }
 
         // Segments the version grammar lacks already raise
         // segmentNotInVersionGrammar; Z and ADD are skipped by the matcher.
         let grammar = Self.grammarTable(for: message.version)
         let outside = Set(ids.filter { grammar[$0] == nil })
-        let match = StructureMatcher(structure: structure).match(ids, transparent: outside)
+        let match = structure.requiresExactMatch
+            ? ExactStructureMatcher(structure: structure).match(ids, transparent: outside)
+            : StructureMatcher(structure: structure).match(ids, transparent: outside)
         guard !match.findings.isEmpty, !ids.isEmpty else { return [] }
 
         var seen: [String: Int] = [:]

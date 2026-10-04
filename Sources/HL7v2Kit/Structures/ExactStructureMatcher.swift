@@ -41,7 +41,7 @@
 ///
 /// No group spans: an exact match can be ambiguous (several parses accept
 /// the same sequence with different group boundaries), so `spans` is always
-/// empty (ADR-019 ceiling 3 amendment). Predicates derived from spans skip
+/// empty (ADR-019 ceiling 1, P8b-12 amendment). Predicates derived from spans skip
 /// structures matched this way.
 struct ExactStructureMatcher: Sendable {
     let structure: MessageStructure

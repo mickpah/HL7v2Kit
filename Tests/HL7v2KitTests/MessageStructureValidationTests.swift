@@ -400,19 +400,40 @@ struct MessageStructureValidationTests {
 
     // MARK: - Lint
 
-    @Test("A structure that fails the determinism lint is reported as not modelled, never matched")
-    func lintFailureNotMatched() throws {
-        let elements: [StructureElement] = [
-            .segment("MSH", min: 1, max: 1),
-            .group("G", min: 1, max: nil, elements: [
-                .segment("NTE", min: 1, max: 1),
-                .group("Q", min: 0, max: nil, elements: [.segment("NTE", min: 1, max: 1), .segment("OBX", min: 1, max: 1)]),
-            ]),
-        ]
-        #expect(!StructureMatcher.lint(elements).isDeterministic)
-        let structure = MessageStructure(id: "ZZZ_Z01", version: "2.5.1", triggers: ["ZZZ^Z01"], citation: "synthetic", elements: elements)
-        let message = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", ["NTE|1", "NTE|2", "OBX|1", "NTE|3", "NTE|4", "OBX|2"]))
-        let issues = Validator().matchStructure(structure, message: message, severity: .error)
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ_Z01")])
+    /// `MSH {G: NTE [{Q: NTE OBX}]}`: fails the lint (Q's NTE against G's re-entry).
+    private static let lintFailing: [StructureElement] = [
+        .segment("MSH", min: 1, max: 1),
+        .group("G", min: 1, max: nil, elements: [
+            .segment("NTE", min: 1, max: 1),
+            .group("Q", min: 0, max: nil, elements: [.segment("NTE", min: 1, max: 1), .segment("OBX", min: 1, max: 1)]),
+        ]),
+    ]
+
+    @Test("A structure that fails the determinism lint is matched exactly, not reported as not modelled (P8b-12)")
+    func lintFailureMatchedExactly() throws {
+        #expect(!StructureMatcher.lint(Self.lintFailing).isDeterministic)
+        let structure = MessageStructure(id: "ZZZ_Z01", version: "2.5.1", triggers: ["ZZZ^Z01"], citation: "synthetic", elements: Self.lintFailing)
+        #expect(structure.requiresExactMatch)
+        let good = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", ["NTE|1", "NTE|2", "OBX|1", "NTE|3", "NTE|4", "OBX|2"]))
+        #expect(Validator().matchStructure(structure, message: good, severity: .error).isEmpty)
+        let bad = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", ["NTE|1", "OBX|1"]))
+        let issues = Validator().matchStructure(structure, message: bad, severity: .error)
+        #expect(issues.map(\.code) == [.messageStructureSegmentUnexpected(structure: "ZZZ_Z01", segmentID: "OBX")])
+        #expect(issues.first?.location == IssueLocation(segmentID: "OBX", segmentIndex: 1))
+        let empty = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", []))
+        #expect(Validator().matchStructure(structure, message: empty, severity: .error).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ZZZ_Z01", segmentID: "NTE", group: "G")])
+    }
+
+    @Test("The Validator selects the matcher by the structure's flag and never lints a message")
+    func selectionByFlag() throws {
+        // The same lint-failing structure with the flag forced off goes through the one-pass
+        // matcher, which rejects the valid message: the flag, not a per-message lint, decides.
+        let forced = MessageStructure(id: "ZZZ_Z01", version: "2.5.1", triggers: ["ZZZ^Z01"], citation: "synthetic",
+                                      requiresExactMatch: false, elements: Self.lintFailing)
+        let good = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", ["NTE|1", "NTE|2", "OBX|1", "NTE|3", "NTE|4", "OBX|2"]))
+        let issues = Validator().matchStructure(forced, message: good, severity: .error)
+        #expect(!issues.isEmpty)
+        #expect(!issues.contains { if case .messageStructureNotModelled = $0.code { return true } else { return false } })
     }
 }

@@ -393,7 +393,8 @@ holds).
 
 **Known ceiling**, recorded in the register:
 
-1. Ambiguous structures (lint failures) are not matched.
+1. Ambiguous structures (lint failures) are not matched. *Replaced by the P8b-12 amendment:
+   they are matched exactly, with at most one finding and no group spans.*
 2. After the first divergence, recovery can report a second issue for one real defect (an
    out-of-order PID reports "PID missing" and "PID unexpected"). The first issue is always
    accurate.
@@ -727,7 +728,8 @@ Where the pilot differs from the text above (P8 final review):
   MSH-9.1^9.2 only; until v2.3 structures load, every v2.3 message is not modelled, and the
   rule cannot be exercised.
 - **The determinism lint also runs at validation time,** on every message that reaches the
-  matcher, uncached (`Validator+MessageStructure.swift`). The rollout caches it.
+  matcher, uncached (`Validator+MessageStructure.swift`). The rollout caches it. *Superseded by
+  P8b-12: the codegen runs the lint and the Validator reads the generated flag.*
 
 Tests, measured at P8-8 with `swift test --filter` per suite: `MessageStructureDataTests` 1,
 `MessageStructureTableTests` 8, `StructureLintTests` 13, `StructureMatcherTests` 26,
@@ -949,3 +951,51 @@ promised before the first version that prints one.
   v2.8.2 (summary only): 167 parsed (162 at P8b-3b); CCI_I22, CCM_I21, CCR_I16, CCU_I20 and
   CQU_I19 parse with named choices (RESOURCE_OBJECT, CLINICAL_HISTORY_OBJECT, the ROLE_*_OBJECT
   choices), match the bundle's choice groups and pass the lint.
+
+## Amendment 2026-10-04 — exact matching for lint-failing structures (P8b-12, G15)
+
+Owner decision G15 (gate G1, option a): a structure that fails the determinism lint is
+modelled exactly rather than registered as not modelled. The P8b-3b corpus run found 115
+lint-failing structures across the seven versions, 44 of them where the one-pass matcher
+accepts or rejects the wrong messages. Known ceiling 1 is replaced.
+
+- **Selection at codegen time.** `HL7v2KitCodegen` runs the lint over each structure it emits
+  and renders `requiresExactMatch` (internal on `MessageStructure`) into the generated table.
+  The codegen target does not depend on the library, so it carries a port of the lint's
+  verdict (`StructureDeterminism.swift`); `StructureExactMatchFlagTests` re-lints every
+  generated structure with the library and requires the flag to equal the result, and
+  `scripts/check-structure-codegen.sh` checks the flag on eight synthetic shapes (five
+  lint-failing, three passing including both exempt forms). The Validator no longer lints a
+  message; `messageStructureNotModelled` is no longer raised for a lint failure.
+- **Algorithm** (`ExactStructureMatcher`, internal). The structure is compiled once into a
+  nondeterministic automaton whose states are the points between elements of the tree
+  (finite repetitions expanded, unbounded ones looped, choices forked over their
+  alternatives); matching advances the set of live states one segment at a time. This is
+  memoised backtracking over (element path, position) evaluated forward: each (state,
+  position) pair is visited at most once. Z-segments, ADD and the caller's `transparent` IDs
+  are skipped as the one-pass matcher skips them.
+- **Bounds.** The memo held at any moment is one set of at most S states, S a function of the
+  structure alone; time is O(n x (S + E)) for n segments and E transitions. S grows with each
+  element's expanded size, multiplicatively for large finite maxima nested inside one
+  another; HL7 maxima are 1 or unbounded, so S is a few times the element count (the largest
+  of the 44, v2.8.2 OML_O35, compiles to 1,564 states). A 2,000-segment
+  message matches in under 0.1 s in a debug build.
+- **Findings.** Accepted: none. Rejected: exactly one, at the furthest position any parse
+  reached: `messageStructureSegmentUnexpected` for the segment there that no live parse can
+  take, or, when the message ends with no parse complete, `messageStructureSegmentMissing` at
+  the end naming the first segment of the shortest completion (ties by structure order) and
+  its innermost enclosing group or named choice. `.exceededMaximum` is not distinguished, and
+  there is no recovery after the first divergence.
+- **New known cost (ceiling 1 as amended).** No group spans are reported for an exact-matched
+  structure: an accepted sequence can have several parses with different group boundaries.
+  Span-derived group predicates (P8b-17) skip these structures and keep the back-walk
+  heuristics on them.
+- **Proof.** The reference recogniser of the property test is the oracle: every synthetic
+  shape exhaustively (every MSH + w up to length 12 over two letters, 9 over three, 8 over
+  four), the pilots, and, env-gated (`ExactStructureMatcherCorpusTests`, extractor `--dump`
+  input, never committed), the 44 structures, 500 generated sequences each by default (3,000
+  each measured once: 132,000 sequences, 0 disagreements; the one-pass matcher was wrong on
+  17,779 of them). The env-gated corpus lint test records and asserts exact-matcher
+  agreement on every structure it reads, so P8b-7's full run covers it.
+- **Committed data unchanged.** The three v2.5.1 pilots pass the lint (flag false); regenerated
+  output differs only by the flag line, and the validation digest is byte-identical.
