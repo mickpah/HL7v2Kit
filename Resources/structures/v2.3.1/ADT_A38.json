@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A38",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.38 ADT/ACK - cancel pre-admit (event A38), pp 3-24 to 3-25.",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.38 ADT/ACK - cancel pre-admit (event A38), pp 3-24 to 3-25. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
   "triggers": ["ADT^A38"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

@@ -14,8 +14,8 @@ Resolution of an unnamed printed group (never by position):
       enclosing groups), the same first segment and the same member segment set (every segment
       the group holds, at any depth). nameSource v2xml.
   v2.3.1 (P8b-14 owner ruling, 2026-10-04): its own bundle first, as above (nameSource v2xml; the
-      citation names the file's generator, since that bundle mixes two); the bundle's CHOICE and
-      ENCODING are refused there (never taken without a cited override), and any miss falls
+      citation names the file's generator, since that bundle mixes two); the bundle's CHOICE is
+      refused there (never taken without a cited override), and any miss falls
       through to the v2.4 derivation below.
   v2.3 (no bundle) and v2.3.1's misses (ruling D2), through the v2.4 bundle: in <STRUCT>.xsd, the group
       with the same first segment and member set (the parent path breaks a tie); where v2.4 has
@@ -40,9 +40,10 @@ BUNDLES = {"v2.3.1": "HL7-xml 2.3.1", "v2.4": "HL7-xml v2.4", "v2.5.1": "HL7-xml
 # group its own bundle does not name (P8b-14 ruling: v2.3.1 bundle first, then D2, then synthesised).
 BUNDLES_DERIVED = {"v2.3": "v2.4", "v2.3.1": "v2.4"}
 # Bundle names never taken without a cited override (P8b-14 ruling): in the v2.3.1 bundle, CHOICE
-# is the generator's name for an unnamed choice and ENCODING was flagged as a possible encoder
-# artefact, so neither is read as a printed group's name; the derivation or an override names it.
-REFUSED = {"2.3.1": ("CHOICE", "ENCODING")}
+# is the generator's name for an unnamed choice, so it is not read as a printed group's name; the
+# derivation or an override names that group. ENCODING, first refused with it, is a genuine group
+# name there (RXE {RXR} [{RXC}], as in every later bundle): refusal withdrawn in fix round 1.
+REFUSED = {"2.3.1": ("CHOICE",)}
 # The generators a bundle file can come from: the v2.3.1 bundle mixes the HL7-Database generator
 # of the other five bundles with an encoder generator (namespace urn:com.sun:encoder-hl7-1.0), so
 # a v2.3.1 citation names the generator of the file it reads.

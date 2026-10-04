@@ -1,7 +1,7 @@
 {
   "structure": "BAR_P01",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 6, section 6.3.1 BAR/ACK - add patient account (event P01), p 6-2; the same structure is printed for BAR^P05 (6.3.5). Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "citation": "HL7 v2.3.1 Chapter 6, section 6.3.1 BAR/ACK - add patient account (event P01), p 6-2; the same structure is printed for BAR^P05 (6.3.5). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["BAR^P01", "BAR^P05"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

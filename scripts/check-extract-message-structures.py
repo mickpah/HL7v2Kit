@@ -684,8 +684,9 @@ def check_v231_bundle_encoder_style():
 def check_v231_names_bundle_then_v24_then_synthesised():
     # P8b-14 ruling: a v2.3.1 group takes its own bundle's name (v2xml, the citation naming the file
     # and its generator), else the D2 derivation through v2.4 (v2xml-v2.4), else <SEG>_GROUP. The
-    # v2.3.1 bundle's CHOICE and ENCODING are refused without a cited override: the derivation (or
-    # an override) names that group, and the report says why the bundle name was not taken.
+    # v2.3.1 bundle's CHOICE is refused without a cited override: the derivation (or an override)
+    # names that group, and the citation says why. ENCODING is a genuine group name there (RXE
+    # {RXR} [{RXC}], as in every later bundle) and is taken (fix round 1: refusal withdrawn).
     rows = ["MSH", "[", "PV1", "[PV2]", "]", "[", "{", "IN1", "[IN2]", "}", "]", "[", "RXE", "{RXR}", "]",
             "[", "NK1", "AL1", "]"]
     own = _xsd_encoder("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.VISIT 0 1, XYZ_X01.ENCODING 0 1, XYZ_X01.CHOICE 0 1;"
@@ -695,14 +696,25 @@ def check_v231_names_bundle_then_v24_then_synthesised():
     b = ext.Bundles({"2.3.1": {"XYZ_X01.xsd": own}, "2.4": {"XYZ_X01.xsd": v24}})
     elements, log = _named(rows, "2.3.1", "XYZ_X01", b)
     assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml"), ("IN1_GROUP", "synthesised"),
-                                                      ("RXE_GROUP", "synthesised"), ("NK1_GROUP", "synthesised")], log
+                                                      ("ENCODING", "v2xml"), ("NK1_GROUP", "synthesised")], log
     assert log[0]["cite"] == ("HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.VISIT.CONTENT, generator "
                               "urn:com.sun:encoder-hl7-1.0"), log[0]
-    assert "refused" in log[2]["cite"] and "ENCODING" in log[2]["cite"], log[2]
+    assert log[2]["cite"] == ("HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.ENCODING.CONTENT, generator "
+                              "urn:com.sun:encoder-hl7-1.0"), log[2]
     assert "refused" in log[3]["cite"] and "CHOICE" in log[3]["cite"], log[3]
-    # The v2.4 bundle names the insurance and encoding groups (same first segment and member set).
-    v24 = _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.INSURANCE 0 unbounded, XYZ_X01.ENCODING 0 1;"
-                          "XYZ_X01.INSURANCE: IN1 1 1, IN2 0 1; XYZ_X01.ENCODING: RXE 1 1, RXR 1 unbounded")
+    assert ext._v2xml.REFUSED == {"2.3.1": ("CHOICE",)}, ext._v2xml.REFUSED
+    # The v2.4 bundle names the insurance group and the refused CHOICE group (same first segment
+    # and member set); the derived citation records the refusal.
+    v24 = _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.INSURANCE 0 unbounded, XYZ_X01.NOK_ALLERGY 0 1;"
+                          "XYZ_X01.INSURANCE: IN1 1 1, IN2 0 1; XYZ_X01.NOK_ALLERGY: NK1 1 1, AL1 1 1")
+    b = ext.Bundles({"2.3.1": {"XYZ_X01.xsd": own}, "2.4": {"XYZ_X01.xsd": v24}})
+    _, log = _named(rows, "2.3.1", "XYZ_X01", b)
+    assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml"), ("INSURANCE", "v2xml-v2.4"),
+                                                      ("ENCODING", "v2xml"), ("NOK_ALLERGY", "v2xml-v2.4")], log
+    assert log[3]["cite"].endswith("; HL7-xml 2.3.1/XYZ_X01.xsd names it CHOICE (XYZ_X01.CHOICE.CONTENT), a name "
+                                   "refused without a cited override (P8b-14 ruling)"), log[3]
+    # A cited override names a refused group no bundle names otherwise.
+    v24 = _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.VISIT 0 1; XYZ_X01.VISIT: PV1 1 1, PV2 0 1")
     b = ext.Bundles({"2.3.1": {"XYZ_X01.xsd": own}, "2.4": {"XYZ_X01.xsd": v24}})
     named = copy.deepcopy(EMPTY)
     named["groupNames"].append({"version": "2.3.1", "structure": "XYZ_X01", "path": [4], "name": "NOK_ALLERGY",
@@ -710,12 +722,8 @@ def check_v231_names_bundle_then_v24_then_synthesised():
     log = []
     ext.name_groups(ext.parse([ext.Row(left, "", i, "") for i, left in enumerate(rows)]), "2.3.1", "XYZ_X01", named,
                     bundles=b, log=log)
-    assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml"), ("INSURANCE", "v2xml-v2.4"),
-                                                      ("ENCODING", "v2xml-v2.4"), ("NOK_ALLERGY", "override")], log
-    assert log[2]["cite"].startswith("HL7-xml v2.4/XYZ_X01.xsd, XYZ_X01.ENCODING.CONTENT, derived for v2.3.1"), log[2]
-    assert log[2]["cite"].endswith("; HL7-xml 2.3.1/XYZ_X01.xsd names it ENCODING (XYZ_X01.ENCODING.CONTENT), a name "
-                                   "refused without a cited override (P8b-14 ruling)"), log[2]
-    # Another version's bundle never refuses those names (v2.4 to v2.8.2 name ENCODING groups).
+    assert (log[3]["name"], log[3]["source"]) == ("NOK_ALLERGY", "override"), log
+    # Another version's bundle never refuses a name (v2.4 to v2.8.2 name ENCODING groups).
     other = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.ENCODING 0 1;"
                                                           "XYZ_X01.ENCODING: RXE 1 1, RXR 1 unbounded")})
     _, log = _named(["MSH", "[", "RXE", "{RXR}", "]"], "2.5.1", "XYZ_X01", other)
@@ -841,6 +849,53 @@ def check_caption_erratum_occurrence():
     assert any(r[1] == "error" and "matches nothing" in r[2] for r in report), report
 
 
+def check_table_0354_provenance():
+    # P8b-14 fix round 1: on v2.3.1 (the table-0354 caption era) every structure whose ID was read
+    # from Table 0354 says so in its citation, naming any erratum (printed and corrected row) and
+    # any declaration that resolved it; a caption printing its ID adds nothing; the caret era
+    # (v2.4's two-part captions) is unchanged.
+    rows = [("MSH", "Header"), ("PID", "Patient")]
+    text = _page(1, ["    XYZ^X02                   Synthetic Message                     Chapter"]
+                 + _table("XYZ^X02", rows)[1:] + [""]
+                 + _table("ABC^X05^ABC_X05", rows), heading="9.1.2           XYZ - synthetic (Event X02)")
+    table = [("XYZ__X01", ["X01", "X09"], "X01, X09"), ("ABC_X05", ["X05"], "X05")]
+    fix = {**EMPTY, "errata": [
+        {"version": "2.3.1", "where": "table-0354", "structure": "XYZ_X01", "printed": "XYZ__X01",
+         "intended": "XYZ_X01", "citation": "x"},
+        {"version": "2.3.1", "where": "table-0354", "structure": "XYZ_X01", "printed": "X09", "intended": "X02",
+         "citation": "x"}]}
+    structures, report, _ = _run("2.3.1", [("syn", text)], fix, tables=table, full=True)
+    cite = structures["XYZ_X01"]["citation"]
+    assert " Structure ID from Table 0354 v2.3.1" in cite, cite
+    assert "XYZ__X01 read as XYZ_X01" in cite and "event X09 read as X02" in cite, cite
+    assert "Structure ID from Table 0354" not in structures["ABC_X05"]["citation"], structures["ABC_X05"]["citation"]
+    assert not [r for r in report if r[1] == "error"], report
+    structures, _, _ = _run("2.4", [("syn", text)], fix | {"errata": [{**e, "version": "2.4"} for e in fix["errata"]]},
+                            tables=table)
+    assert "Structure ID from Table 0354" not in structures["XYZ_X01"]["citation"], structures["XYZ_X01"]["citation"]
+    # A declared shared trigger names the rows that list it.
+    two = [("XYZ_X01", ["X01", "X28"], "X01, X28"), ("XYZ_X28", ["X28"], "X28")]
+    text = _page(1, ["    XYZ^X28                   Synthetic Message                     Chapter"] + _table("XYZ^X28", rows)[1:],
+                 heading="9.1.1           XYZ - synthetic (Event X28)")
+    shared = {**EMPTY, "sharedTriggers": [{"version": "2.3.1", "trigger": "XYZ^X28",
+                                           "structures": ["XYZ_X01", "XYZ_X28"], "citation": "x"}]}
+    structures, _, _ = _run("2.3.1", [("syn", text)], shared, tables=two)
+    assert "declared shared" in structures["XYZ_X28"]["citation"], structures["XYZ_X28"]["citation"]
+
+
+def check_table_0354_event_erratum_union():
+    # P8b-14 fix round 1 (v2.3.1 PPG_PCG lists 'PCC, PCH, PCJ'; every later table lists 'PCC, PCG,
+    # PCH, PCJ'): an event erratum whose intended text is a list keeps the printed event and adds
+    # the others, so the row still maps PCC to the structure.
+    table = [("PPG_PCG", ["PCC", "PCH", "PCJ"], "PCC, PCH, PCJ")]
+    e = {"version": "2.3.1", "where": "table-0354", "structure": "PPG_PCG", "printed": "PCC",
+         "intended": "PCC, PCG", "citation": "x"}
+    ext.validate_overrides({**EMPTY, "errata": [e]})
+    used = set()
+    assert ext.apply_table_errata(table, [e], used) == [("PPG_PCG", ["PCC", "PCG", "PCH", "PCJ"], "PCC, PCH, PCJ")]
+    assert id(e) in used
+
+
 def check_caption_structure_declared():
     # P8b-14 (v2.3.1 MFK^M01-M06 and MFK^M04: Table 0354's one MFK row, MFK_M01, omits M02 and M04):
     # a cited captionStructures entry names the Table 0354 row a caption's print belongs to when no
@@ -861,6 +916,12 @@ def check_caption_structure_declared():
     assert s["triggers"] == ["XYZ^X01", "XYZ^X02", "XYZ^X03", "XYZ^X05"], s["triggers"]
     assert "the one XYZ row of Table 0354 omits X02." in s["citation"], s["citation"]
     assert not [r for r in report if r[1] in ("error", "needs-structure-id")], report
+    # The named row must be of the caption's message code (a print is never filed under another
+    # message's structure ID).
+    other = table + [("ABC_X01", ["X02"], "X02")]
+    _, report, _ = _run("2.3.1", [("syn", text)], {**EMPTY, "captionStructures": [{**entry, "structure": "ABC_X01"}]},
+                        tables=other, full=True)
+    assert any(r[1] == "error" and "another message code" in r[2] for r in report), report
     for bad, why in (({**entry, "structure": "XYZ_X09"}, "not a Table 0354 row"), ({**entry, "section": "9.1.8"}, "stale")):
         _, report, _ = _run("2.3.1", [("syn", text)], {**EMPTY, "captionStructures": [bad]}, tables=table, full=True)
         assert any(r[1] == "error" and "captionStructures" in r[2] for r in report), (why, report)
@@ -1609,7 +1670,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_bundle_name_no_group_can_hold, check_v231_bundle_encoder_style,
           check_v231_names_bundle_then_v24_then_synthesised, check_two_structure_match_needs_declaration,
           check_unresolved_caption_declared, check_space_before_caret_caption, check_v231_name_source_validation,
-          check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger]
+          check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
+          check_table_0354_provenance, check_table_0354_event_erratum_union]
 
 
 def main():

@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A09",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.9 ADT/ACK - patient departing - tracking (event A09), p 3-8; the same structure is printed for ADT^A10 (3.2.10), ADT^A11 (3.2.11) and ADT^A15 (3.2.15).",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.9 ADT/ACK - patient departing - tracking (event A09), p 3-8; the same structure is printed for ADT^A10 (3.2.10), ADT^A11 (3.2.11) and ADT^A15 (3.2.15). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
   "triggers": ["ADT^A09", "ADT^A10", "ADT^A11", "ADT^A15"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

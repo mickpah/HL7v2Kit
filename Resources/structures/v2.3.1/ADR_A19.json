@@ -1,7 +1,7 @@
 {
   "structure": "ADR_A19",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), pp 3-14 to 3-15. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), pp 3-14 to 3-15. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103), its row read through cited overrides.json errata (ARD_A19 read as ADR_A19). Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["ADR^A19"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

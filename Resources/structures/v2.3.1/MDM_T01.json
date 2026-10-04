@@ -1,7 +1,7 @@
 {
   "structure": "MDM_T01",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 9, section 9.4.1 MDM/ACK - original document notification (event T01), p 9-4; the same structure is printed for MDM^T03 (9.4.3), MDM^T05 (9.4.5), MDM^T07 (9.4.7), MDM^T09 (9.4.9) and MDM^T11 (9.4.11).",
+  "citation": "HL7 v2.3.1 Chapter 9, section 9.4.1 MDM/ACK - original document notification (event T01), p 9-4; the same structure is printed for MDM^T03 (9.4.3), MDM^T05 (9.4.5), MDM^T07 (9.4.7), MDM^T09 (9.4.9) and MDM^T11 (9.4.11). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
   "triggers": ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

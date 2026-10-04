@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A30",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.30 ADT/ACK - merge person information (event A30), p 3-21; the same structure is printed for ADT^A34 (3.2.34), ADT^A35 (3.2.35), ADT^A36 (3.2.36), ADT^A46 (3.2.46), ADT^A47 (3.2.47), ADT^A48 (3.2.48) and ADT^A49 (3.2.49).",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.30 ADT/ACK - merge person information (event A30), p 3-21; the same structure is printed for ADT^A34 (3.2.34), ADT^A35 (3.2.35), ADT^A36 (3.2.36), ADT^A46 (3.2.46), ADT^A47 (3.2.47), ADT^A48 (3.2.48) and ADT^A49 (3.2.49). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103), its row read through cited overrides.json errata (event 136 read as A36).",
   "triggers": ["ADT^A30", "ADT^A34", "ADT^A35", "ADT^A36", "ADT^A46", "ADT^A47", "ADT^A48", "ADT^A49"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

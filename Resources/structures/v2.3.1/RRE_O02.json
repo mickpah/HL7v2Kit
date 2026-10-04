@@ -1,7 +1,7 @@
 {
   "structure": "RRE_O02",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), p 4-70. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml v2.4/RRE_O12.xsd, RRE_O12.ENCODING.CONTENT, derived for v2.3.1 RRE_O02, which differs from RRE_O12 only by trigger; HL7-xml 2.3.1/RRE_O02.xsd names it ENCODING (RRE_O02.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)).",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), p 4-70. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105), its row read through cited overrides.json errata (RRE_O01 read as RRE_O02 and event O01 read as O02). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["RRE^O02"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -15,7 +15,7 @@
       ]},
       { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
         { "segment": "ORC", "min": 1, "max": 1 },
-        { "group": "ENCODING", "nameSource": "v2xml-v2.4", "min": 0, "max": 1, "elements": [
+        { "group": "ENCODING", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
           { "segment": "RXE", "min": 1, "max": 1 },
           { "segment": "RXR", "min": 1, "max": null },
           { "segment": "RXC", "min": 0, "max": null }

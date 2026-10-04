@@ -1,7 +1,7 @@
 {
   "structure": "RGV_O01",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ENCODING.CONTENT, derived for v2.3.1 RGV_O01, which differs from RGV_O15 only by trigger; HL7-xml 2.3.1/RGV_O01.xsd names it ENCODING (RGV_O01.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)), GIVE (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GIVE (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["RGV^O01"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
@@ -28,7 +28,7 @@
           ]}
         ]}
       ]},
-      { "group": "ENCODING", "nameSource": "v2xml-v2.4", "min": 0, "max": 1, "elements": [
+      { "group": "ENCODING", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
         { "segment": "RXE", "min": 1, "max": 1 },
         { "segment": "RXR", "min": 1, "max": null },
         { "segment": "RXC", "min": 0, "max": null }

@@ -122,7 +122,7 @@ extension MessageStructureTable {
         id: "ADR_A19",
         version: "2.3.1",
         triggers: ["ADR^A19"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), pp 3-14 to 3-15. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), pp 3-14 to 3-15. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103), its row read through cited overrides.json errata (ARD_A19 read as ADR_A19). Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADR_A19.xsd, ADR_A19.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -165,7 +165,7 @@ extension MessageStructureTable {
         id: "ADT_A01",
         version: "2.3.1",
         triggers: ["ADT^A01", "ADT^A04", "ADT^A05", "ADT^A08", "ADT^A13", "ADT^A14", "ADT^A28", "ADT^A31"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.1 ADT/ACK - admit/visit notification (event A01), p 3-2; the same structure is printed for ADT^A04 (3.2.4), ADT^A05 (3.2.5), ADT^A08 (3.2.8), ADT^A13 (3.2.13), ADT^A14 (3.2.14), ADT^A28 (3.2.28) and ADT^A31 (3.2.31). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.1 ADT/ACK - admit/visit notification (event A01), p 3-2; the same structure is printed for ADT^A04 (3.2.4), ADT^A05 (3.2.5), ADT^A08 (3.2.8), ADT^A13 (3.2.13), ADT^A14 (3.2.14), ADT^A28 (3.2.28) and ADT^A31 (3.2.31). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103); declared shared triggers: ADT^A28 (listed under ADT_A01, ADT_A28) and ADT^A31 (listed under ADT_A01, ADT_A28). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -200,7 +200,7 @@ extension MessageStructureTable {
         id: "ADT_A02",
         version: "2.3.1",
         triggers: ["ADT^A02", "ADT^A21", "ADT^A22", "ADT^A23", "ADT^A25", "ADT^A26", "ADT^A27", "ADT^A29", "ADT^A32", "ADT^A33"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.2 ADT/ACK - transfer a patient (event A02), p 3-3; the same structure is printed for ADT^A21 (3.2.21), ADT^A22 (3.2.22), ADT^A23 (3.2.23), ADT^A25 (3.2.25), ADT^A26 (3.2.26), ADT^A27 (3.2.27), ADT^A29 (3.2.29), ADT^A32 (3.2.32) and ADT^A33 (3.2.33).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.2 ADT/ACK - transfer a patient (event A02), p 3-3; the same structure is printed for ADT^A21 (3.2.21), ADT^A22 (3.2.22), ADT^A23 (3.2.23), ADT^A25 (3.2.25), ADT^A26 (3.2.26), ADT^A27 (3.2.27), ADT^A29 (3.2.29), ADT^A32 (3.2.32) and ADT^A33 (3.2.33). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -218,7 +218,7 @@ extension MessageStructureTable {
         id: "ADT_A03",
         version: "2.3.1",
         triggers: ["ADT^A03"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.3 ADT/ACK - discharge/end visit (event A03), p 3-4. Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A03.xsd, ADT_A03.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.3 ADT/ACK - discharge/end visit (event A03), p 3-4. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A03.xsd, ADT_A03.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -242,7 +242,7 @@ extension MessageStructureTable {
         id: "ADT_A06",
         version: "2.3.1",
         triggers: ["ADT^A06", "ADT^A07"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.6 ADT/ACK - change an outpatient to an inpatient (event A06), p 3-6; the same structure is printed for ADT^A07 (3.2.7). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A06.xsd, ADT_A06.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADT_A06.xsd, ADT_A06.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.6 ADT/ACK - change an outpatient to an inpatient (event A06), p 3-6; the same structure is printed for ADT^A07 (3.2.7). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A06.xsd, ADT_A06.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/ADT_A06.xsd, ADT_A06.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -278,7 +278,7 @@ extension MessageStructureTable {
         id: "ADT_A09",
         version: "2.3.1",
         triggers: ["ADT^A09", "ADT^A10", "ADT^A11", "ADT^A15"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.9 ADT/ACK - patient departing - tracking (event A09), p 3-8; the same structure is printed for ADT^A10 (3.2.10), ADT^A11 (3.2.11) and ADT^A15 (3.2.15).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.9 ADT/ACK - patient departing - tracking (event A09), p 3-8; the same structure is printed for ADT^A10 (3.2.10), ADT^A11 (3.2.11) and ADT^A15 (3.2.15). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -297,7 +297,7 @@ extension MessageStructureTable {
         id: "ADT_A12",
         version: "2.3.1",
         triggers: ["ADT^A12"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.12 ADT/ACK - cancel transfer (event A12), p 3-10.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.12 ADT/ACK - cancel transfer (event A12), p 3-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -316,7 +316,7 @@ extension MessageStructureTable {
         id: "ADT_A16",
         version: "2.3.1",
         triggers: ["ADT^A16"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.16 ADT/ACK - pending discharge (event A16), p 3-13.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.16 ADT/ACK - pending discharge (event A16), p 3-13. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -336,7 +336,7 @@ extension MessageStructureTable {
         id: "ADT_A17",
         version: "2.3.1",
         triggers: ["ADT^A17"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.17 ADT/ACK - swap patients (event A17), p 3-13.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.17 ADT/ACK - swap patients (event A17), p 3-13. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -360,7 +360,7 @@ extension MessageStructureTable {
         id: "ADT_A18",
         version: "2.3.1",
         triggers: ["ADT^A18"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.18 ADT/ACK - merge patient information (event A18), p 3-14.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.18 ADT/ACK - merge patient information (event A18), p 3-14. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -376,7 +376,7 @@ extension MessageStructureTable {
         id: "ADT_A20",
         version: "2.3.1",
         triggers: ["ADT^A20"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.20 ADT/ACK - bed status update (event A20), p 3-16.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.20 ADT/ACK - bed status update (event A20), p 3-16. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -389,7 +389,7 @@ extension MessageStructureTable {
         id: "ADT_A24",
         version: "2.3.1",
         triggers: ["ADT^A24"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.24 ADT/ACK - link patient information (event A24), p 3-17.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.24 ADT/ACK - link patient information (event A24), p 3-17. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -409,7 +409,7 @@ extension MessageStructureTable {
         id: "ADT_A28",
         version: "2.3.1",
         triggers: ["ADT^A28", "ADT^A31"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.28 ADT/ACK - add person information (event A28), p 3-20; the same structure is printed for ADT^A31 (3.2.31). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.28 ADT/ACK - add person information (event A28), p 3-20; the same structure is printed for ADT^A31 (3.2.31). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103); declared shared triggers: ADT^A28 (listed under ADT_A01, ADT_A28) and ADT^A31 (listed under ADT_A01, ADT_A28). Unprinted group names (ADR-019 decision 3): PROCEDURE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger) and INSURANCE (HL7-xml 2.3.1/ADT_A01.xsd, ADT_A01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ADT_A28, which differs from ADT_A01 only by trigger).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -444,7 +444,7 @@ extension MessageStructureTable {
         id: "ADT_A30",
         version: "2.3.1",
         triggers: ["ADT^A30", "ADT^A34", "ADT^A35", "ADT^A36", "ADT^A46", "ADT^A47", "ADT^A48", "ADT^A49"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.30 ADT/ACK - merge person information (event A30), p 3-21; the same structure is printed for ADT^A34 (3.2.34), ADT^A35 (3.2.35), ADT^A36 (3.2.36), ADT^A46 (3.2.46), ADT^A47 (3.2.47), ADT^A48 (3.2.48) and ADT^A49 (3.2.49).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.30 ADT/ACK - merge person information (event A30), p 3-21; the same structure is printed for ADT^A34 (3.2.34), ADT^A35 (3.2.35), ADT^A36 (3.2.36), ADT^A46 (3.2.46), ADT^A47 (3.2.47), ADT^A48 (3.2.48) and ADT^A49 (3.2.49). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103), its row read through cited overrides.json errata (event 136 read as A36).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -459,7 +459,7 @@ extension MessageStructureTable {
         id: "ADT_A37",
         version: "2.3.1",
         triggers: ["ADT^A37"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.37 ADT/ACK - unlink patient information (event A37), p 3-24.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.37 ADT/ACK - unlink patient information (event A37), p 3-24. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -479,7 +479,7 @@ extension MessageStructureTable {
         id: "ADT_A38",
         version: "2.3.1",
         triggers: ["ADT^A38"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.38 ADT/ACK - cancel pre-admit (event A38), pp 3-24 to 3-25.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.38 ADT/ACK - cancel pre-admit (event A38), pp 3-24 to 3-25. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -499,7 +499,7 @@ extension MessageStructureTable {
         id: "ADT_A39",
         version: "2.3.1",
         triggers: ["ADT^A39", "ADT^A40", "ADT^A41", "ADT^A42"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.39 ADT/ACK - merge person - patient ID (event A39), p 3-25; the same structure is printed for ADT^A40 (3.2.40), ADT^A41 (3.2.41) and ADT^A42 (3.2.42). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A39.xsd, ADT_A39.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.39 ADT/ACK - merge person - patient ID (event A39), p 3-25; the same structure is printed for ADT^A40 (3.2.40), ADT^A41 (3.2.41) and ADT^A42 (3.2.42). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A39.xsd, ADT_A39.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -517,7 +517,7 @@ extension MessageStructureTable {
         id: "ADT_A43",
         version: "2.3.1",
         triggers: ["ADT^A43", "ADT^A44"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.43 ADT/ACK - move patient information - patient identifier list (event A43), p 3-28; the same structure is printed for ADT^A44 (3.2.44). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A43.xsd, ADT_A43.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.43 ADT/ACK - move patient information - patient identifier list (event A43), p 3-28; the same structure is printed for ADT^A44 (3.2.44). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/ADT_A43.xsd, ADT_A43.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -534,7 +534,7 @@ extension MessageStructureTable {
         id: "ADT_A45",
         version: "2.3.1",
         triggers: ["ADT^A45"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.45 ADT/ACK - move visit information - visit number (event A45), p 3-30. Unprinted group names (ADR-019 decision 3): MERGE_INFO (HL7-xml 2.3.1/ADT_A45.xsd, ADT_A45.MERGE_INFO.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.45 ADT/ACK - move visit information - visit number (event A45), p 3-30. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): MERGE_INFO (HL7-xml 2.3.1/ADT_A45.xsd, ADT_A45.MERGE_INFO.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -552,7 +552,7 @@ extension MessageStructureTable {
         id: "ADT_A50",
         version: "2.3.1",
         triggers: ["ADT^A50", "ADT^A51"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.50 ADT/ACK - change visit number (event A50), p 3-34; the same structure is printed for ADT^A51 (3.2.51).",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.50 ADT/ACK - change visit number (event A50), p 3-34; the same structure is printed for ADT^A51 (3.2.51). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -568,7 +568,7 @@ extension MessageStructureTable {
         id: "BAR_P01",
         version: "2.3.1",
         triggers: ["BAR^P01", "BAR^P05"],
-        citation: "HL7 v2.3.1 Chapter 6, section 6.3.1 BAR/ACK - add patient account (event P01), p 6-2; the same structure is printed for BAR^P05 (6.3.5). Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 6, section 6.3.1 BAR/ACK - add patient account (event P01), p 6-2; the same structure is printed for BAR^P05 (6.3.5). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PROCEDURE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/BAR_P01.xsd, BAR_P01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -605,7 +605,7 @@ extension MessageStructureTable {
         id: "BAR_P02",
         version: "2.3.1",
         triggers: ["BAR^P02"],
-        citation: "HL7 v2.3.1 Chapter 6, section 6.3.2 BAR/ACK - purge patient accounts (event P02), p 6-3. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/BAR_P02.xsd, BAR_P02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 6, section 6.3.2 BAR/ACK - purge patient accounts (event P02), p 6-3. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/BAR_P02.xsd, BAR_P02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -623,7 +623,7 @@ extension MessageStructureTable {
         id: "BAR_P06",
         version: "2.3.1",
         triggers: ["BAR^P06"],
-        citation: "HL7 v2.3.1 Chapter 6, section 6.3.6 BAR/ACK - end account (event P06), pp 6-4 to 6-5. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/BAR_P06.xsd, BAR_P06.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 6, section 6.3.6 BAR/ACK - end account (event P06), pp 6-4 to 6-5. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/BAR_P06.xsd, BAR_P06.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -639,7 +639,7 @@ extension MessageStructureTable {
         id: "CRM_C01",
         version: "2.3.1",
         triggers: ["CRM^C01", "CRM^C02", "CRM^C03", "CRM^C04", "CRM^C05", "CRM^C06", "CRM^C07", "CRM^C08"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.6.1 CRM - clinical study registration message (events C01-C08), p 7-71. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/CRM_C01.xsd, CRM_C01.PATIENT.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.6.1 CRM - clinical study registration message (events C01-C08), p 7-71. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/CRM_C01.xsd, CRM_C01.PATIENT.CONTENT, generator HL7-Database).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -656,7 +656,7 @@ extension MessageStructureTable {
         id: "CSU_C09",
         version: "2.3.1",
         triggers: ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.6.2 CSU - unsolicited study data message (events C09-C12), p 7-71. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.PATIENT.CONTENT, generator HL7-Database), VISIT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.VISIT.CONTENT, generator HL7-Database), STUDY_PHASE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHASE.CONTENT, generator HL7-Database), STUDY_SCHEDULE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_SCHEDULE.CONTENT, generator HL7-Database), STUDY_OBSERVATION (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION.CONTENT, generator HL7-Database), STUDY_PHARM (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHARM.CONTENT, generator HL7-Database) and RX_ADMIN (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.RX_ADMIN.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.6.2 CSU - unsolicited study data message (events C09-C12), p 7-71. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.PATIENT.CONTENT, generator HL7-Database), VISIT (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.VISIT.CONTENT, generator HL7-Database), STUDY_PHASE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHASE.CONTENT, generator HL7-Database), STUDY_SCHEDULE (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_SCHEDULE.CONTENT, generator HL7-Database), STUDY_OBSERVATION (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION.CONTENT, generator HL7-Database), STUDY_PHARM (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.STUDY_PHARM.CONTENT, generator HL7-Database) and RX_ADMIN (HL7-xml 2.3.1/CSU_C09.xsd, CSU_C09.RX_ADMIN.CONTENT, generator HL7-Database).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -695,7 +695,7 @@ extension MessageStructureTable {
         id: "DFT_P03",
         version: "2.3.1",
         triggers: ["DFT^P03"],
-        citation: "HL7 v2.3.1 Chapter 6, section 6.3.3 DFT/ACK - post detail financial transactions (event P03), p 6-3. Unprinted group names (ADR-019 decision 3): FINANCIAL (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.FINANCIAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), FINANCIAL_PROCEDURE (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.FINANCIAL_PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 6, section 6.3.3 DFT/ACK - post detail financial transactions (event P03), p 6-3. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): FINANCIAL (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.FINANCIAL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), FINANCIAL_PROCEDURE (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.FINANCIAL_PROCEDURE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/DFT_P03.xsd, DFT_P03.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -729,7 +729,7 @@ extension MessageStructureTable {
         id: "DOC_T12",
         version: "2.3.1",
         triggers: ["DOC^T12"],
-        citation: "HL7 v2.3.1 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19. Unprinted group names (ADR-019 decision 3): RESULT (HL7-xml 2.3.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103). Unprinted group names (ADR-019 decision 3): RESULT (HL7-xml 2.3.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -752,7 +752,7 @@ extension MessageStructureTable {
         id: "DSR_Q01",
         version: "2.3.1",
         triggers: ["DSR^Q01"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.17.1 QRY/DSR - original mode display query - immediate response (event Q01), p 2-84.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.17.1 QRY/DSR - original mode display query - immediate response (event Q01), p 2-84. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -770,7 +770,7 @@ extension MessageStructureTable {
         id: "DSR_Q03",
         version: "2.3.1",
         triggers: ["DSR^Q03"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.18.2 DSR/ACK - deferred response to a query (event Q03), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.18.2 DSR/ACK - deferred response to a query (event Q03), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -788,7 +788,7 @@ extension MessageStructureTable {
         id: "EDR_R07",
         version: "2.3.1",
         triggers: ["EDR^R07"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.20.1 EDR - enhanced display response (event R07), p 2-86.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.20.1 EDR - enhanced display response (event R07), p 2-86. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -804,7 +804,7 @@ extension MessageStructureTable {
         id: "EQQ_Q04",
         version: "2.3.1",
         triggers: ["EQQ^Q04"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.19.1 EQQ - embedded query language query (event Q04), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.19.1 EQQ - embedded query language query (event Q04), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -817,7 +817,7 @@ extension MessageStructureTable {
         id: "MDM_T01",
         version: "2.3.1",
         triggers: ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
-        citation: "HL7 v2.3.1 Chapter 9, section 9.4.1 MDM/ACK - original document notification (event T01), p 9-4; the same structure is printed for MDM^T03 (9.4.3), MDM^T05 (9.4.5), MDM^T07 (9.4.7), MDM^T09 (9.4.9) and MDM^T11 (9.4.11).",
+        citation: "HL7 v2.3.1 Chapter 9, section 9.4.1 MDM/ACK - original document notification (event T01), p 9-4; the same structure is printed for MDM^T03 (9.4.3), MDM^T05 (9.4.5), MDM^T07 (9.4.7), MDM^T09 (9.4.9) and MDM^T11 (9.4.11). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -832,7 +832,7 @@ extension MessageStructureTable {
         id: "MDM_T02",
         version: "2.3.1",
         triggers: ["MDM^T02", "MDM^T04", "MDM^T06", "MDM^T08", "MDM^T10"],
-        citation: "HL7 v2.3.1 Chapter 9, section 9.4.2 MDM/ACK - original document notification and content (event T02), p 9-5; the same structure is printed for MDM^T04 (9.4.4), MDM^T06 (9.4.6), MDM^T08 (9.4.8) and MDM^T10 (9.4.10).",
+        citation: "HL7 v2.3.1 Chapter 9, section 9.4.2 MDM/ACK - original document notification and content (event T02), p 9-5; the same structure is printed for MDM^T04 (9.4.4), MDM^T06 (9.4.6), MDM^T08 (9.4.8) and MDM^T10 (9.4.10). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -848,7 +848,7 @@ extension MessageStructureTable {
         id: "MFD_MFA",
         version: "2.3.1",
         triggers: ["MFD^MFA"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.3.2 MFD/ACK - master files delayed application acknowledgment, p 8-4.",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.3.2 MFD/ACK - master files delayed application acknowledgment, p 8-4. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104), its row read through cited overrides.json errata (MFD_P09 read as MFD_MFA and event P09 read as MFA).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -861,7 +861,7 @@ extension MessageStructureTable {
         id: "MFK_M01",
         version: "2.3.1",
         triggers: ["MFK^M01", "MFK^M02", "MFK^M03", "MFK^M04", "MFK^M05", "MFK^M06", "MFK^M07", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Triggers Table 0354 v2.3.1 maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.3.1 MFN/MFK - master files notification, p 8-3; the same structure is printed for MFK^M07 (8.10.1). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the general acknowledgment MFK^M01-M06 (Chapter 8 section 8.3.1, p 8-3) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the staff/practitioner acknowledgment MFK^M01-M06 (Chapter 8 section 8.6.1, p 8-11) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). HL7 v2.3.1 Table 0354 (Chapter 2, section 2.24.1.9, p 2-104) has one MFK row, MFK_M01 (M01, M03, M05 to M11), which omits M02 and M04, both MFN/MFK events in Table 0003 (p 2-100), and MFK is the master files application acknowledgment of Table 0076 (p 2-96); the charge description acknowledgment MFK^M04 (Chapter 8 section 8.9.1, p 8-60) is therefore read as MFK_M01 (overrides.json captionStructures, P8b-14). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104); the row named for MFK^M01-M06 and MFK^M04 by overrides.json captionStructures. Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M08, MFK^M09, MFK^M10 and MFK^M11.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -876,7 +876,7 @@ extension MessageStructureTable {
         id: "MFN_M05",
         version: "2.3.1",
         triggers: ["MFN^M05"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.8.1 Patient location master file message (MFN/MFK), p 8-48. Unprinted group names (ADR-019 decision 3): MF_LOCATION (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOCATION.CONTENT, derived for v2.3.1 MFN_M05) and MF_LOC_DEPT (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOC_DEPT.CONTENT, derived for v2.3.1 MFN_M05).",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.8.1 Patient location master file message (MFN/MFK), p 8-48. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): MF_LOCATION (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOCATION.CONTENT, derived for v2.3.1 MFN_M05) and MF_LOC_DEPT (HL7-xml v2.4/MFN_M05.xsd, MFN_M05.MF_LOC_DEPT.CONTENT, derived for v2.3.1 MFN_M05).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -899,7 +899,7 @@ extension MessageStructureTable {
         id: "MFN_M06",
         version: "2.3.1",
         triggers: ["MFN^M06"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-67. Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_CLIN_STUDY.CONTENT, derived for v2.3.1 MFN_M06) and MF_PHASE_SCHED_DETAIL (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_PHASE_SCHED_DETAIL.CONTENT, derived for v2.3.1 MFN_M06).",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-67. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_CLIN_STUDY.CONTENT, derived for v2.3.1 MFN_M06) and MF_PHASE_SCHED_DETAIL (HL7-xml v2.4/MFN_M06.xsd, MFN_M06.MF_PHASE_SCHED_DETAIL.CONTENT, derived for v2.3.1 MFN_M06).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -919,7 +919,7 @@ extension MessageStructureTable {
         id: "MFN_M07",
         version: "2.3.1",
         triggers: ["MFN^M07"],
-        citation: "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), pp 8-67 to 8-68. Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY_SCHED (HL7-xml v2.4/MFN_M07.xsd, MFN_M07.MF_CLIN_STUDY_SCHED.CONTENT, derived for v2.3.1 MFN_M07).",
+        citation: "HL7 v2.3.1 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), pp 8-67 to 8-68. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): MF_CLIN_STUDY_SCHED (HL7-xml v2.4/MFN_M07.xsd, MFN_M07.MF_CLIN_STUDY_SCHED.CONTENT, derived for v2.3.1 MFN_M07).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1091,7 +1091,7 @@ extension MessageStructureTable {
         id: "ORF_R02",
         version: "2.3.1",
         triggers: ["ORF^R04", "ORF^R02"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.2.2 QRY/ORF - query for results of observation (events R02, R04), p 7-16. Triggers Table 0354 v2.3.1 maps to ORF_R02 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORF^R02. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger), PATIENT (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger), ORDER (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger) and OBSERVATION (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger).",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.2.2 QRY/ORF - query for results of observation (events R02, R04), p 7-16. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104) maps to ORF_R02 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORF^R02. Unprinted group names (ADR-019 decision 3): QUERY_RESPONSE (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.QUERY_RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger), PATIENT (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger), ORDER (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger) and OBSERVATION (HL7-xml 2.3.1/ORF_R04.xsd, ORF_R04.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, for v2.3.1 ORF_R02, which differs from ORF_R04 only by trigger).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1175,7 +1175,7 @@ extension MessageStructureTable {
         id: "ORU_R01",
         version: "2.3.1",
         triggers: ["ORU^R01"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-15. Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), VISIT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.2.1 ORU/ACK - unsolicited transmission of an observation message (event R01), p 7-15. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), VISIT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1209,7 +1209,7 @@ extension MessageStructureTable {
         id: "OSQ_Q06",
         version: "2.3.1",
         triggers: ["OSQ^Q06"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5.",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (Q06), p 4-5. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1223,7 +1223,7 @@ extension MessageStructureTable {
         id: "PEX_P07",
         version: "2.3.1",
         triggers: ["PEX^P07", "PEX^P08"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.10.1 PEX - product experience message (events P07, P08), p 7-84. Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.VISIT.CONTENT, generator HL7-Database), EXPERIENCE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.EXPERIENCE.CONTENT, generator HL7-Database), PEX_OBSERVATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_OBSERVATION.CONTENT, generator HL7-Database), PEX_CAUSE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_CAUSE.CONTENT, generator HL7-Database), RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ORDER.CONTENT, generator HL7-Database), RX_ADMINISTRATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ADMINISTRATION.CONTENT, generator HL7-Database), ASSOCIATED_PERSON (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_PERSON.CONTENT, generator HL7-Database), ASSOCIATED_RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ORDER.CONTENT, generator HL7-Database), ASSOCIATED_RX_ADMIN (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ADMIN.CONTENT, generator HL7-Database) and STUDY (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.STUDY.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.10.1 PEX - product experience message (events P07, P08), p 7-84. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104). Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.VISIT.CONTENT, generator HL7-Database), EXPERIENCE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.EXPERIENCE.CONTENT, generator HL7-Database), PEX_OBSERVATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_OBSERVATION.CONTENT, generator HL7-Database), PEX_CAUSE (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.PEX_CAUSE.CONTENT, generator HL7-Database), RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ORDER.CONTENT, generator HL7-Database), RX_ADMINISTRATION (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.RX_ADMINISTRATION.CONTENT, generator HL7-Database), ASSOCIATED_PERSON (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_PERSON.CONTENT, generator HL7-Database), ASSOCIATED_RX_ORDER (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ORDER.CONTENT, generator HL7-Database), ASSOCIATED_RX_ADMIN (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.ASSOCIATED_RX_ADMIN.CONTENT, generator HL7-Database) and STUDY (HL7-xml 2.3.1/PEX_P07.xsd, PEX_P07.STUDY.CONTENT, generator HL7-Database).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1279,7 +1279,7 @@ extension MessageStructureTable {
         id: "PIN_I07",
         version: "2.3.1",
         triggers: ["PIN^I07"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.7 PIN/ACK - unsolicited insurance information (event I07), p 11-11. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.7 PIN/ACK - unsolicited insurance information (event I07), p 11-11. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104), its row read through cited overrides.json errata (PIN_107 read as PIN_I07). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/PIN_I07.xsd, PIN_I07.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1305,7 +1305,7 @@ extension MessageStructureTable {
         id: "QCK_Q02",
         version: "2.3.1",
         triggers: ["QCK^Q02"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.18.1 QRY/QCK - deferred query (event Q02), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.18.1 QRY/QCK - deferred query (event Q02), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-104).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1319,7 +1319,7 @@ extension MessageStructureTable {
         id: "QRY_A19",
         version: "2.3.1",
         triggers: ["QRY^A19"],
-        citation: "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), p 3-14.",
+        citation: "HL7 v2.3.1 Chapter 3, section 3.2.19 QRY/ADR - patient query (event A19), p 3-14. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1332,7 +1332,7 @@ extension MessageStructureTable {
         id: "QRY_PC4",
         version: "2.3.1",
         triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
-        citation: "HL7 v2.3.1 Chapter 12, section 12.2.5 QRY - patient care problem query (event PC4), p 12-10; the same structure is printed for QRY^PC9 (12.2.7), QRY^PCE (12.2.9) and QRY^PCK (12.2.11).",
+        citation: "HL7 v2.3.1 Chapter 12, section 12.2.5 QRY - patient care problem query (event PC4), p 12-10; the same structure is printed for QRY^PC9 (12.2.7), QRY^PCE (12.2.9) and QRY^PCK (12.2.11). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1345,7 +1345,7 @@ extension MessageStructureTable {
         id: "QRY_Q01",
         version: "2.3.1",
         triggers: ["QRY^Q01"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.17.1 QRY/DSR - original mode display query - immediate response (event Q01), p 2-84.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.17.1 QRY/DSR - original mode display query - immediate response (event Q01), p 2-84. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1359,7 +1359,7 @@ extension MessageStructureTable {
         id: "QRY_Q02",
         version: "2.3.1",
         triggers: ["QRY^Q02"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.18.1 QRY/QCK - deferred query (event Q02), p 2-84.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.18.1 QRY/QCK - deferred query (event Q02), p 2-84. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1373,7 +1373,7 @@ extension MessageStructureTable {
         id: "QRY_R02",
         version: "2.3.1",
         triggers: ["QRY^R02", "QRY^R04"],
-        citation: "HL7 v2.3.1 Chapter 7, section 7.2.2 QRY/ORF - query for results of observation (events R02, R04), p 7-16. Triggers Table 0354 v2.3.1 maps to QRY_R02 that no caption prints, accepted with the printed ones (P8b-11 ruling): QRY^R04.",
+        citation: "HL7 v2.3.1 Chapter 7, section 7.2.2 QRY/ORF - query for results of observation (events R02, R04), p 7-16. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Triggers Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105) maps to QRY_R02 that no caption prints, accepted with the printed ones (P8b-11 ruling): QRY^R04.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1386,7 +1386,7 @@ extension MessageStructureTable {
         id: "QRY_T12",
         version: "2.3.1",
         triggers: ["QRY^T12"],
-        citation: "HL7 v2.3.1 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19.",
+        citation: "HL7 v2.3.1 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1399,7 +1399,7 @@ extension MessageStructureTable {
         id: "RAR_RAR",
         version: "2.3.1",
         triggers: ["RAR^RAR"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.18 RAR - pharmacy/treatment administration information (RAR), p 4-102. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml v2.4/RAR_RAR.xsd, RAR_RAR.ENCODING.CONTENT, derived for v2.3.1 RAR_RAR; HL7-xml 2.3.1/RAR_RAR.xsd names it ENCODING (RAR_RAR.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.18 RAR - pharmacy/treatment administration information (RAR), p 4-102. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1431,7 +1431,7 @@ extension MessageStructureTable {
         id: "RAS_O01",
         version: "2.3.1",
         triggers: ["RAS^O01"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.13 RAS/RRA - pharmacy/treatment administration message (O01/O02), pp 4-88 to 4-89. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RAS_O17.xsd, RAS_O17.ENCODING.CONTENT, derived for v2.3.1 RAS_O01, which differs from RAS_O17 only by trigger; HL7-xml 2.3.1/RAS_O01.xsd names it ENCODING (RAS_O01.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)) and OBSERVATION (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.13 RAS/RRA - pharmacy/treatment administration message (O01/O02), pp 4-88 to 4-89. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1479,7 +1479,7 @@ extension MessageStructureTable {
         id: "RCI_I05",
         version: "2.3.1",
         triggers: ["RCI^I05"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.5 RQC/RCI - request for patient clinical information (event I05), p 11-10. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), OBSERVATION (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and RESULTS (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.RESULTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.5 RQC/RCI - request for patient clinical information (event I05), p 11-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), OBSERVATION (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and RESULTS (HL7-xml 2.3.1/RCI_I05.xsd, RCI_I05.RESULTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1510,7 +1510,7 @@ extension MessageStructureTable {
         id: "RCL_I06",
         version: "2.3.1",
         triggers: ["RCL^I06"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.6 RQC/RCL - request/receipt of clinical data listing (event I06), pp 11-10 to 11-11. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RCL_I06.xsd, RCL_I06.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.6 RQC/RCL - request/receipt of clinical data listing (event I06), pp 11-10 to 11-11. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RCL_I06.xsd, RCL_I06.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1535,7 +1535,7 @@ extension MessageStructureTable {
         id: "RDE_O01",
         version: "2.3.1",
         triggers: ["RDE^O01"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), pp 4-69 to 4-70. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), pp 4-69 to 4-70. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENT (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RDE_O01.xsd, RDE_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1628,7 +1628,7 @@ extension MessageStructureTable {
         id: "RDR_RDR",
         version: "2.3.1",
         triggers: ["RDR^RDR"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.19 RDR - pharmacy/treatment dispense information (RDR), pp 4-102 to 4-103. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT, derived for v2.3.1 RDR_RDR; HL7-xml 2.3.1/RDR_RDR.xsd names it ENCODING (RDR_RDR.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)) and DISPENSE (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.19 RDR - pharmacy/treatment dispense information (RDR), pp 4-102 to 4-103. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and DISPENSE (HL7-xml 2.3.1/RDR_RDR.xsd, RDR_RDR.DISPENSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1663,7 +1663,7 @@ extension MessageStructureTable {
         id: "RDS_O01",
         version: "2.3.1",
         triggers: ["RDS^O01"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (O01/O02), pp 4-77 to 4-78. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RDS_O13.xsd, RDS_O13.ENCODING.CONTENT, derived for v2.3.1 RDS_O01, which differs from RDS_O13 only by trigger; HL7-xml 2.3.1/RDS_O01.xsd names it ENCODING (RDS_O01.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)) and OBSERVATION (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (O01/O02), pp 4-77 to 4-78. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENT (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.COMPONENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RDS_O01.xsd, RDS_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1711,7 +1711,7 @@ extension MessageStructureTable {
         id: "REF_I12",
         version: "2.3.1",
         triggers: ["REF^I12", "REF^I13", "REF^I14", "REF^I15"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-14. Unprinted group names (ADR-019 decision 3): AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROVIDER.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT, generator HL7-Database), RESULTS_NOTES (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.RESULTS_NOTES.CONTENT, generator HL7-Database), PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database) and PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-14. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROVIDER.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION_CONTACT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.OBSERVATION.CONTENT, generator HL7-Database), RESULTS_NOTES (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.RESULTS_NOTES.CONTENT, generator HL7-Database), PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database) and PATIENT_VISIT (HL7-xml 2.3.1/REF_I12.xsd, REF_I12.PATIENT_VISIT.CONTENT, generator HL7-Database).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1767,7 +1767,7 @@ extension MessageStructureTable {
         id: "RER_RER",
         version: "2.3.1",
         triggers: ["RER^RER"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.20 RER - pharmacy/treatment encoded order information (RER), p 4-103. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.20 RER - pharmacy/treatment encoded order information (RER), p 4-103. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1795,7 +1795,7 @@ extension MessageStructureTable {
         id: "RGR_RGR",
         version: "2.3.1",
         triggers: ["RGR^RGR"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.21 RGR - pharmacy/treatment dose information (RGR), p 4-103. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml v2.4/RGR_RGR.xsd, RGR_RGR.ENCODING.CONTENT, derived for v2.3.1 RGR_RGR; HL7-xml 2.3.1/RGR_RGR.xsd names it ENCODING (RGR_RGR.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.21 RGR - pharmacy/treatment dose information (RGR), p 4-103. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml 2.3.1/RGR_RGR.xsd, RGR_RGR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1828,7 +1828,7 @@ extension MessageStructureTable {
         id: "RGV_O01",
         version: "2.3.1",
         triggers: ["RGV^O01"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ENCODING.CONTENT, derived for v2.3.1 RGV_O01, which differs from RGV_O15 only by trigger; HL7-xml 2.3.1/RGV_O01.xsd names it ENCODING (RGV_O01.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)), GIVE (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT_VISIT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER_DETAIL_SUPPLEMENT (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ORDER_DETAIL_SUPPLEMENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), COMPONENTS (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.COMPONENTS.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ENCODING (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GIVE (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/RGV_O01.xsd, RGV_O01.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1877,7 +1877,7 @@ extension MessageStructureTable {
         id: "ROR_ROR",
         version: "2.3.1",
         triggers: ["ROR^ROR"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response R0R), p 4-102. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response R0R), p 4-102. Structure ID from Table 0354 v2.3.1, its row read through cited overrides.json errata (RROR_ROR read as ROR_ROR). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1905,7 +1905,7 @@ extension MessageStructureTable {
         id: "RPA_I08",
         version: "2.3.1",
         triggers: ["RPA^I08", "RPA^I09", "RPA^I10", "RPA^I11"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.3.1 RQA/RPA - request patient authorization message, pp 11-12 to 11-13. Unprinted group names (ADR-019 decision 3): AUTHORIZATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.PROVIDER.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.OBSERVATION.CONTENT, generator HL7-Database), RESULTS (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.RESULTS.CONTENT, generator HL7-Database) and VISIT (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.VISIT.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.3.1 RQA/RPA - request patient authorization message, pp 11-12 to 11-13. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105), its row read through cited overrides.json errata (event 1II read as I11). Unprinted group names (ADR-019 decision 3): AUTHORIZATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.PROVIDER.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.OBSERVATION.CONTENT, generator HL7-Database), RESULTS (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.RESULTS.CONTENT, generator HL7-Database) and VISIT (HL7-xml 2.3.1/RPA_I08.xsd, RPA_I08.VISIT.CONTENT, generator HL7-Database).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1958,7 +1958,7 @@ extension MessageStructureTable {
         id: "RPI_I01",
         version: "2.3.1",
         triggers: ["RPI^I01", "RPI^I04"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.1 RQI/RPI - request for insurance information (event I01), pp 11-7 to 11-8; the same structure is printed for RPI^I04 (11.2.4). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.1 RQI/RPI - request for insurance information (event I01), pp 11-7 to 11-8; the same structure is printed for RPI^I04 (11.2.4). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105), its row read through cited overrides.json errata (RPI_I0I read as RPI_I01). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/RPI_I01.xsd, RPI_I01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -1985,7 +1985,7 @@ extension MessageStructureTable {
         id: "RPL_I02",
         version: "2.3.1",
         triggers: ["RPL^I02"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.2 RQI/RPL - request/receipt of patient selection display list (event I02), p 11-8. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RPL_I02.xsd, RPL_I02.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.2 RQI/RPL - request/receipt of patient selection display list (event I02), p 11-8. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RPL_I02.xsd, RPL_I02.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2004,7 +2004,7 @@ extension MessageStructureTable {
         id: "RPR_I03",
         version: "2.3.1",
         triggers: ["RPR^I03"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.3 RQI/RPR - request/receipt of patient selection list (event I03), p 11-9. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RPR_I03.xsd, RPR_I03.PROVIDER.CONTENT, derived for v2.3.1 RPR_I03).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.3 RQI/RPR - request/receipt of patient selection list (event I03), p 11-9. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml v2.4/RPR_I03.xsd, RPR_I03.PROVIDER.CONTENT, derived for v2.3.1 RPR_I03).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2022,7 +2022,7 @@ extension MessageStructureTable {
         id: "RQA_I08",
         version: "2.3.1",
         triggers: ["RQA^I08", "RQA^I09", "RQA^I10", "RQA^I11"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.3.1 RQA/RPA - request patient authorization message, pp 11-11 to 11-12. Unprinted group names (ADR-019 decision 3): AUTHORIZATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.PROVIDER.CONTENT, generator HL7-Database), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.GUARANTOR_INSURANCE.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.OBSERVATION.CONTENT, generator HL7-Database), RESULTS (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.RESULTS.CONTENT, generator HL7-Database) and VISIT (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.VISIT.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.3.1 RQA/RPA - request patient authorization message, pp 11-11 to 11-12. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): AUTHORIZATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), PROVIDER (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.PROVIDER.CONTENT, generator HL7-Database), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.GUARANTOR_INSURANCE.CONTENT, generator HL7-Database), INSURANCE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.INSURANCE.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.AUTHORIZATION.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.OBSERVATION.CONTENT, generator HL7-Database), RESULTS (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.RESULTS.CONTENT, generator HL7-Database) and VISIT (HL7-xml 2.3.1/RQA_I08.xsd, RQA_I08.VISIT.CONTENT, generator HL7-Database).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2076,7 +2076,7 @@ extension MessageStructureTable {
         id: "RQC_I05",
         version: "2.3.1",
         triggers: ["RQC^I05"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.5 RQC/RCI - request for patient clinical information (event I05), pp 11-9 to 11-10. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.5 RQC/RCI - request for patient clinical information (event I05), pp 11-9 to 11-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQC_I05.xsd, RQC_I05.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2097,7 +2097,7 @@ extension MessageStructureTable {
         id: "RQC_I06",
         version: "2.3.1",
         triggers: ["RQC^I06"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.6 RQC/RCL - request/receipt of clinical data listing (event I06), p 11-10. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQC_I06.xsd, RQC_I06.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.6 RQC/RCL - request/receipt of clinical data listing (event I06), p 11-10. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQC_I06.xsd, RQC_I06.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2118,7 +2118,7 @@ extension MessageStructureTable {
         id: "RQI_I01",
         version: "2.3.1",
         triggers: ["RQI^I01", "RQI^I02", "RQI^I03"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.1 RQI/RPI - request for insurance information (event I01), p 11-7; the same structure is printed for RQI^I02 (11.2.2) and RQI^I03 (11.2.3). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.1 RQI/RPI - request for insurance information (event I01), p 11-7; the same structure is printed for RQI^I02 (11.2.2) and RQI^I03 (11.2.3). Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105), its row read through cited overrides.json errata (RQI_I0I read as RQI_I01). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2144,7 +2144,7 @@ extension MessageStructureTable {
         id: "RQP_I04",
         version: "2.3.1",
         triggers: ["RQP^I04"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.2.4 RQP/RPI - request for patient demographic data (event I04), p 11-9. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQP_I04.xsd, RQP_I04.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.2.4 RQP/RPI - request for patient demographic data (event I04), p 11-9. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQP_I04.xsd, RQP_I04.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2163,7 +2163,7 @@ extension MessageStructureTable {
         id: "RQQ_Q09",
         version: "2.3.1",
         triggers: ["RQQ^Q09"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.19.4 RQQ - event replay query (event Q09), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.19.4 RQQ - event replay query (event Q09), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2176,7 +2176,7 @@ extension MessageStructureTable {
         id: "RRA_O02",
         version: "2.3.1",
         triggers: ["RRA^O02"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.13 RAS/RRA - pharmacy/treatment administration message (O01/O02), p 4-89. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ADMINISTRATION (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.ADMINISTRATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.13 RAS/RRA - pharmacy/treatment administration message (O01/O02), p 4-89. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ADMINISTRATION (HL7-xml 2.3.1/RRA_O02.xsd, RRA_O02.ADMINISTRATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2203,7 +2203,7 @@ extension MessageStructureTable {
         id: "RRD_O02",
         version: "2.3.1",
         triggers: ["RRD^O02"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (O01/O02), p 4-78. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and DISPENSE (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.DISPENSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.9 RDS/RRD - pharmacy/treatment dispense message (O01/O02), p 4-78. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and DISPENSE (HL7-xml 2.3.1/RRD_O02.xsd, RRD_O02.DISPENSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2231,7 +2231,7 @@ extension MessageStructureTable {
         id: "RRE_O02",
         version: "2.3.1",
         triggers: ["RRE^O02"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), p 4-70. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml v2.4/RRE_O12.xsd, RRE_O12.ENCODING.CONTENT, derived for v2.3.1 RRE_O02, which differs from RRE_O12 only by trigger; HL7-xml 2.3.1/RRE_O02.xsd names it ENCODING (RRE_O02.ENCODING.CONTENT), a name refused without a cited override (P8b-14 ruling)).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.6 RDE/RRE - pharmacy/treatment encoded order message (O01/O02), p 4-70. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105), its row read through cited overrides.json errata (RRE_O01 read as RRE_O02 and event O01 read as O02). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ENCODING (HL7-xml 2.3.1/RRE_O02.xsd, RRE_O02.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2259,7 +2259,7 @@ extension MessageStructureTable {
         id: "RRG_O02",
         version: "2.3.1",
         triggers: ["RRG^O02"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and GIVE (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.8.11 RGV/RRG - pharmacy/treatment give message (O01/O02), p 4-83. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.RESPONSE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and GIVE (HL7-xml 2.3.1/RRG_O02.xsd, RRG_O02.GIVE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2287,7 +2287,7 @@ extension MessageStructureTable {
         id: "RRI_I12",
         version: "2.3.1",
         triggers: ["RRI^I12", "RRI^I13", "RRI^I14", "RRI^I15"],
-        citation: "HL7 v2.3.1 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-15. Unprinted group names (ADR-019 decision 3): AUTHORIZATION_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), PROVIDER_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PROVIDER_CONTACT.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.OBSERVATION.CONTENT, generator HL7-Database), RESULTS_NOTES (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.RESULTS_NOTES.CONTENT, generator HL7-Database) and PATIENT_VISIT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PATIENT_VISIT.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 11, section 11.4.1 REF/RRI - patient referral message, p 11-15. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): AUTHORIZATION_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), PROVIDER_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PROVIDER_CONTACT.CONTENT, generator HL7-Database), PROCEDURE (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PROCEDURE.CONTENT, generator HL7-Database), AUTHORIZATION_CONTACT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.AUTHORIZATION_CONTACT.CONTENT, generator HL7-Database), OBSERVATION (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.OBSERVATION.CONTENT, generator HL7-Database), RESULTS_NOTES (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.RESULTS_NOTES.CONTENT, generator HL7-Database) and PATIENT_VISIT (HL7-xml 2.3.1/RRI_I12.xsd, RRI_I12.PATIENT_VISIT.CONTENT, generator HL7-Database).",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2363,7 +2363,7 @@ extension MessageStructureTable {
         id: "SIU_S12",
         version: "2.3.1",
         triggers: ["SIU^S12", "SIU^S13", "SIU^S14", "SIU^S15", "SIU^S16", "SIU^S17", "SIU^S18", "SIU^S19", "SIU^S20", "SIU^S21", "SIU^S22", "SIU^S23", "SIU^S24", "SIU^S26"],
-        citation: "HL7 v2.3.1 Chapter 10, section 10.3 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-16. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 10, section 10.3 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-16. Structure ID from Table 0354 v2.3.1, its row read through cited overrides.json errata (SIIU_S12 read as SIU_S12). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2403,7 +2403,7 @@ extension MessageStructureTable {
         id: "SPQ_Q08",
         version: "2.3.1",
         triggers: ["SPQ^Q08"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.19.3 SPQ - stored procedure request (event Q08), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.19.3 SPQ - stored procedure request (event Q08), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2417,7 +2417,7 @@ extension MessageStructureTable {
         id: "SQM_S25",
         version: "2.3.1",
         triggers: ["SQM^S25"],
-        citation: "HL7 v2.3.1 Chapter 10, section 10.4.3 SQM/SQR - schedule query message and response (event S25), p 10-21. Unprinted group names (ADR-019 decision 3): REQUEST (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT, generator urn:com.sun:encoder-hl7-1.0), RESOURCES (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT, generator urn:com.sun:encoder-hl7-1.0), SERVICE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GENERAL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PERSONNEL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and LOCATION_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 10, section 10.4.3 SQM/SQR - schedule query message and response (event S25), p 10-21. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): REQUEST (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT, generator urn:com.sun:encoder-hl7-1.0), RESOURCES (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT, generator urn:com.sun:encoder-hl7-1.0), SERVICE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GENERAL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PERSONNEL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and LOCATION_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2455,7 +2455,7 @@ extension MessageStructureTable {
         id: "SQR_S25",
         version: "2.3.1",
         triggers: ["SQR^S25"],
-        citation: "HL7 v2.3.1 Chapter 10, section 10.4.3 SQM/SQR - schedule query message and response (event S25), pp 10-21 to 10-22. Unprinted group names (ADR-019 decision 3): SCHEDULE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.SCHEDULE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), RESOURCES (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.RESOURCES.CONTENT, generator urn:com.sun:encoder-hl7-1.0), SERVICE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.SERVICE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GENERAL_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.GENERAL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PERSONNEL_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.PERSONNEL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and LOCATION_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.LOCATION_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 10, section 10.4.3 SQM/SQR - schedule query message and response (event S25), pp 10-21 to 10-22. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): SCHEDULE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.SCHEDULE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), RESOURCES (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.RESOURCES.CONTENT, generator urn:com.sun:encoder-hl7-1.0), SERVICE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.SERVICE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), GENERAL_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.GENERAL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PERSONNEL_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.PERSONNEL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and LOCATION_RESOURCE (HL7-xml 2.3.1/SQR_S25.xsd, SQR_S25.LOCATION_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2499,7 +2499,7 @@ extension MessageStructureTable {
         id: "SRM_S01",
         version: "2.3.1",
         triggers: ["SRM^S01", "SRM^S02", "SRM^S03", "SRM^S04", "SRM^S05", "SRM^S06", "SRM^S07", "SRM^S08", "SRM^S09", "SRM^S10", "SRM^S11"],
-        citation: "HL7 v2.3.1 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-12. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-12. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2543,7 +2543,7 @@ extension MessageStructureTable {
         id: "SRR_S01",
         version: "2.3.1",
         triggers: ["SRR^S01", "SRR^S02", "SRR^S03", "SRR^S04", "SRR^S05", "SRR^S06", "SRR^S07", "SRR^S08", "SRR^S09", "SRR^S10", "SRR^S11"],
-        citation: "HL7 v2.3.1 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-12. Unprinted group names (ADR-019 decision 3): SCHEDULE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.SCHEDULE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
+        citation: "HL7 v2.3.1 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-12. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): SCHEDULE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.SCHEDULE.CONTENT, generator HL7-Database), PATIENT (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.PATIENT.CONTENT, generator HL7-Database), RESOURCES (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.RESOURCES.CONTENT, generator HL7-Database), SERVICE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.SERVICE.CONTENT, generator HL7-Database), GENERAL_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.GENERAL_RESOURCE.CONTENT, generator HL7-Database), LOCATION_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.LOCATION_RESOURCE.CONTENT, generator HL7-Database) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SRR_S01.xsd, SRR_S01.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2585,7 +2585,7 @@ extension MessageStructureTable {
         id: "TBR_R08",
         version: "2.3.1",
         triggers: ["TBR^R08"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.20.2 TBR - tabular data response (event R08), p 2-86.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.20.2 TBR - tabular data response (event R08), p 2-86. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106), its row read through cited overrides.json errata (TBR_R09 read as TBR_R08 and event R09 read as R08).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2602,7 +2602,7 @@ extension MessageStructureTable {
         id: "UDM_Q05",
         version: "2.3.1",
         triggers: ["UDM^Q05"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.14.2 UDM/ACK - unsolicited display update message (event Q05), p 2-80.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.14.2 UDM/ACK - unsolicited display update message (event Q05), p 2-80. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2617,7 +2617,7 @@ extension MessageStructureTable {
         id: "VQQ_Q07",
         version: "2.3.1",
         triggers: ["VQQ^Q07"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.19.2 VQQ - virtual table query (event Q07), p 2-85.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.19.2 VQQ - virtual table query (event Q07), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2631,7 +2631,7 @@ extension MessageStructureTable {
         id: "VXQ_V01",
         version: "2.3.1",
         triggers: ["VXQ^V01"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.12.1 VXQ -query for vaccination record (V01), p 4-108.",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.12.1 VXQ -query for vaccination record (V01), p 4-108. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2644,7 +2644,7 @@ extension MessageStructureTable {
         id: "VXR_V03",
         version: "2.3.1",
         triggers: ["VXR^V03"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.12.3 VXR - vaccination record response (V03), p 4-109. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.12.3 VXR - vaccination record response (V03), p 4-109. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2679,7 +2679,7 @@ extension MessageStructureTable {
         id: "VXU_V04",
         version: "2.3.1",
         triggers: ["VXU^V04"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.12.4 VXU - unsolicited vaccination record update (V04), p 4-109. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.12.4 VXU - unsolicited vaccination record update (V04), p 4-109. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0), INSURANCE (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0), ORDER (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and OBSERVATION (HL7-xml 2.3.1/VXU_V04.xsd, VXU_V04.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2711,7 +2711,7 @@ extension MessageStructureTable {
         id: "VXX_V02",
         version: "2.3.1",
         triggers: ["VXX^V02"],
-        citation: "HL7 v2.3.1 Chapter 4, section 4.12.2 VXX - response to vaccination query returning multiple PID matches (V02), p 4-108. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+        citation: "HL7 v2.3.1 Chapter 4, section 4.12.2 VXX - response to vaccination query returning multiple PID matches (V02), p 4-108. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

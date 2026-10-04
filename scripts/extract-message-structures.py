@@ -710,7 +710,8 @@ def table_citation(ver, sid, triggers, where, withdrawn):
     if not triggers:
         return ""
     loc = where.get(sid)
-    at = f" (Chapter {loc[0]}, section {loc[1]}, p {loc[2]})" if loc else ""
+    # v2.3.1 is one PDF with no chapter in its file name: the chapter is the section's first part.
+    at = f" (Chapter {loc[0] or loc[1].split('.')[0]}, section {loc[1]}, p {loc[2]})" if loc else ""
     text = (f" Triggers Table 0354 v{ver}{at} maps to {sid} that no caption prints, accepted with the printed ones "
             f"(P8b-11 ruling): {_join(triggers)}.")
     for trigger in triggers:
@@ -718,6 +719,30 @@ def table_citation(ver, sid, triggers, where, withdrawn):
             chapter, section = withdrawn[trigger]
             text += f" Chapter {chapter} section {section} marks {trigger} withdrawn."
     return text
+
+
+def table_provenance(ver, table_ver, era, sid, how, errata, where):
+    """The sentence a v2.3.1 structure citation carries when its ID was read from Table 0354
+    (P8b-14 fix round 1): the table's place, any erratum the row was read through (printed and
+    corrected), and any declaration that resolved a caption. Only the table-0354 caption era
+    (v2.3.1) carries it; other eras keep their committed citations."""
+    if era != "table-0354" or not how:
+        return ""
+    printed = next((e["printed"] for e in errata or [] if "_" in e["printed"]), sid)
+    loc = where.get(printed) or where.get(sid)
+    at = f" (Chapter {loc[0] or loc[1].split('.')[0]}, section {loc[1]}, p {loc[2]})" if loc else ""
+    text = f" Structure ID from Table 0354 v{table_ver}{at}"
+    if errata:
+        fixes = [f"{e['printed']} read as {e['intended']}" if "_" in e["printed"]
+                 else f"event {e['printed']} read as {e['intended']}" for e in errata]
+        text += f", its row read through cited overrides.json errata ({_join(fixes)})"
+    shared = sorted({f"{h[2]} (listed under {', '.join(h[1])})" for h in how if h[0] == "shared"})
+    assigned = sorted({h[1] for h in how if h[0] == "assigned"})
+    if shared:
+        text += f"; declared shared triggers: {_join(shared)}"
+    if assigned:
+        text += f"; the row named for {_join(assigned)} by overrides.json captionStructures"
+    return text + "."
 
 
 def name_citation(log):
@@ -877,9 +902,11 @@ def load_0354(version):
              re.findall(r"\b[A-Z0-9]{3,4}\b", e["description"]), e["description"]) for e in entries]
 
 
-def apply_table_errata(table, errata, used):
+def apply_table_errata(table, errata, used, log=None):
     """Table 0354 rows with each cited table-0354 erratum applied (a misprinted row code, or a
-    misprinted event in the row's description)."""
+    misprinted event in the row's description). An event erratum whose intended text is a list
+    ("PCC, PCG") puts those events in the printed one's place, so it can keep the printed event
+    and add one (P8b-14 fix round 1). log, if given, receives {corrected code: [errata]}."""
     out = []
     for code, events, desc in table:
         for e in errata:
@@ -889,8 +916,13 @@ def apply_table_errata(table, errata, used):
                 code = e["intended"]
                 used.add(id(e))
             elif code == e["structure"] and events and e["printed"] in events:
-                events = [e["intended"] if x == e["printed"] else x for x in events]
+                events = list(dict.fromkeys(y for x in events
+                                            for y in (re.split(r",\s*", e["intended"]) if x == e["printed"] else [x])))
                 used.add(id(e))
+            else:
+                continue
+            if log is not None:
+                log.setdefault(code, []).append(e)
         out.append((code, events, desc))
     return out
 
@@ -988,7 +1020,8 @@ def _profile(cap):
     return cap.section.startswith("2.B.") or "CH02B" in os.path.basename(cap.source).upper()
 
 
-TABLE_0354_HEADING = re.compile(r"^\s*HL7 Table 0354\s*[-\u2013]\s*Message [Ss]tructure\s*$")
+# v2.3.1 prints the heading without "HL7" (CH2 2.24.1.9, p 2-103; P8b-14 fix round 1).
+TABLE_0354_HEADING = re.compile(r"^\s*(?:HL7 )?Table 0354\s*[-\u2013]\s*Message [Ss]tructure\s*$")
 
 
 def table_0354_rows(texts, era):
@@ -1052,8 +1085,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     errata = [e for e in overrides["errata"] if e["version"] == ver]
     used_errata = set()
     table_ver = TABLE_0354.get(ver, ver)     # the table's own errata apply where it is borrowed (v2.3)
+    row_errata = {}
     table = apply_table_errata(tables if tables is not None else load_0354(table_ver),
-                               [e for e in overrides["errata"] if e["version"] == table_ver], used_errata)
+                               [e for e in overrides["errata"] if e["version"] == table_ver], used_errata, row_errata)
     excluded = {x["section"]: x for x in overrides["exclusions"] if x["version"] == ver}
     used_exclusions = set()
     caption_errata = {}
@@ -1071,6 +1105,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     assigned = {(u["section"], u["caption"]): u for u in overrides["captionStructures"] if u["version"] == ver}
     rows_of_table = {row for row, _, _ in table}
     used_unresolved, used_assigned, assigned_cites = set(), set(), {}
+    provenance = {}     # structure ID: how its Table 0354 resolutions went (P8b-14 fix round 1)
     prints, count, report = {}, 0, []
     for source, lines in texts:
         consumed = set()
@@ -1112,6 +1147,11 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 declared_id = assigned.get((cap.section, cap.printed)) if len(hits) != 1 else None
                 if len(hits) > 1 and all(shared.get(f"{cap.code}^{v}") == hits for v in cap.events):
                     owners = hits
+                elif declared_id and declared_id["structure"].split("_")[0] != cap.code:
+                    used_assigned.add((cap.section, cap.printed))
+                    report.append((cap.printed, "error", f"captionStructures entry for section {cap.section} names "
+                                   f"{declared_id['structure']}, a row of another message code"))
+                    continue
                 elif declared_id and declared_id["structure"] in rows_of_table:
                     # A cited captionStructures entry: the row the print belongs to (P8b-14).
                     used_assigned.add((cap.section, cap.printed))
@@ -1140,6 +1180,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 else:
                     owners = hits
                 cap.structure = owners[0]
+                how = ("shared", tuple(hits), cap.printed) if len(owners) > 1 else \
+                      ("assigned", cap.printed) if declared_id else ("row",)
+                for sid in owners:
+                    provenance.setdefault(sid, []).append(how)
             for sid in owners:
                 prints.setdefault(sid, []).append((cap, rows, error))
     for e in errata:     # a group-mark erratum is used when any print of its structure carries the mark
@@ -1273,6 +1317,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
                                           + (f" {joined['citation']}" if joined else "")
                                           + "".join(f" {c}" for c in dict.fromkeys(assigned_cites.get(sid, [])))
+                                          + table_provenance(ver, table_ver, era, sid, provenance.get(sid),
+                                                             row_errata.get(sid), where_0354)
                                           + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
                                           + name_citation(log)})
         for entry in log:

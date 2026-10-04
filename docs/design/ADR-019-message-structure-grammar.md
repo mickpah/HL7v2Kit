@@ -1189,10 +1189,14 @@ compiling a structure per message.
   resolves to the one row of its message code that lists all its events. The v2.3.1 table
   misprints ten rows; each is read through a cited `table-0354` erratum checked against Table
   0076 or 0003 and the caption (ARD_A19, PIN_107, RPI_I0I, RQI_I0I, TBR_R09/R09, RRE_O01/O01,
-  MFD_P09/P09, and the events `136`, `1II`, PPG's `PCC`). Three new rules settle the rest, each
+  MFD_P09/P09, and the events `136`, `1II`; PPG_PCG's `PCC` read as `PCC, PCG`, an event erratum
+  whose intended text is a list keeping the printed event and adding one). Each v2.3.1
+  structure whose ID came from the table carries "Structure ID from Table 0354 v2.3.1" in its
+  citation, with the table's page, any erratum (printed and corrected) and any declaration (90
+  of 99; the other nine print their ID). Three new rules settle the rest, each
   cited in `overrides.json`: a caption whose events two rows list (ADT^A28, ADT^A31 under ADT_A01
   and ADT_A28) is resolved only when every event is a declared shared trigger of exactly those
-  structures, and the print is then each structure's; `captionStructures` names the row for a
+  structures, and the print is then each structure's; `captionStructures` names the row (of the caption's own message code) for a
   caption whose message code has one row that omits some of the caption's events (MFK, PPP);
   `unresolvedCaptions` declares a caption no row can name (MFN^M04, MFQ, MFR, the MFN templates),
   which is reported and not modelled. On a version that prints its own Table 0354, any other
@@ -1205,9 +1209,9 @@ compiling a structure per message.
   the bundle mixes the HL7-Database generator with an encoder generator,
   `urn:com.sun:encoder-hl7-1.0`), then through the v2.4 bundle (`v2xml-v2.4`), then synthesised.
   A 2.3.1 file of the same message code is matched as D2 matches v2.4 files. The 2.3.1 bundle's
-  CHOICE and ENCODING are never taken without a cited override; the derivation names those
-  groups and the citation records the refusal. Result: 240 `v2xml`, 13 `v2xml-v2.4`, 0
-  synthesised. The codegen, the test-target decoder and the extractor accept `v2xml` on v2.3.1
+  CHOICE is never taken without a cited override; the derivation names that group and the
+  citation records the refusal (ENCODING, refused at first, is a genuine group name there and
+  is taken since fix round 1). Result: 247 `v2xml`, 6 `v2xml-v2.4`, 0 synthesised. The codegen, the test-target decoder and the extractor accept `v2xml` on v2.3.1
   and still reject it on v2.3. The bundle stays names-only with a report-only content check (D3).
 - **Extractor.** `CODE ^EVT` (one space before the caret, CH08 8.8.1) is a caption; notation in
   the description column inside an open group (CH04 OSR^Q06's `[Order Detail Segment] OBR,

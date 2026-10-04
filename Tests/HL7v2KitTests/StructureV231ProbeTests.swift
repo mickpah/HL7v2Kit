@@ -136,17 +136,21 @@ struct StructureV231ProbeTests {
     }
 
     // Group names: ORU_R01's from the HL7-xml 2.3.1 bundle (an encoder-generated file, cited
-    // with its generator); RAS_O01's ENCODING through the v2.4 bundle, the v2.3.1 bundle's
-    // ENCODING being refused without a cited override (P8b-14 ruling).
-    @Test("v2.3.1 group names: the v2.3.1 bundle first, cited with its generator; ENCODING through v2.4")
+    // with its generator); RAS_O01's ENCODING from the same bundle (fix round 1: the refusal of
+    // ENCODING is withdrawn, CHOICE stays refused); TBR_R08's citation names its Table 0354 erratum.
+    @Test("v2.3.1 group names from the v2.3.1 bundle, cited with its generator; Table 0354 provenance")
     func groupNames() throws {
         let oru = try #require(MessageStructureTable.structure("ORU_R01", version: .v2_3_1))
         #expect(Self.groups(oru.elements) == ["PATIENT_RESULT", "PATIENT", "VISIT", "ORDER_OBSERVATION", "OBSERVATION"])
         #expect(oru.citation.contains("PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0)"))
         let ras = try #require(MessageStructureTable.structure("RAS_O01", version: .v2_3_1))
         #expect(Self.groups(ras.elements).contains("ENCODING"))
-        #expect(ras.citation.contains("ENCODING (HL7-xml v2.4/RAS_O17.xsd"))
-        #expect(ras.citation.contains("refused without a cited override"))
+        #expect(ras.citation.contains("ENCODING (HL7-xml 2.3.1/RAS_O01.xsd, RAS_O01.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0)"))
+        #expect(!ras.citation.contains("refused"))
+        // Table 0354 provenance (fix round 1): the ID through the TBR_R09 erratum, named.
+        let tbr = try #require(MessageStructureTable.structure("TBR_R08", version: .v2_3_1))
+        #expect(tbr.citation.contains("Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106)"))
+        #expect(tbr.citation.contains("TBR_R09 read as TBR_R08"))
     }
 
     @Test("At least twelve probes on v2.3.1 structures beyond the resolution cases")
@@ -181,6 +185,29 @@ struct StructureV231ProbeTests {
         }
         let bare = try structureIssues(trigger, ["EVN|A28", "PID|1", "PV1|1"])
         #expect(bare.count == 1 && bare.first?.message.contains("ambiguous") == true, "\(bare.map(\.message))")
+    }
+
+    // Table 0354 v2.3.1 (p 2-104) lists PPG_PCG as 'PCC, PCH, PCJ'; the cited erratum adds PCG (the
+    // CH12 12.2.4 caption, Table 0003) and keeps PCC, which the row maps there, as every later
+    // table does. PPG_PCG is registered (CH12 '[OBR, etc.'): both triggers are info, never a
+    // mismatch (P8b-14 fix round 1).
+    @Test("PPG^PCC^PPG_PCG and PPG^PCG^PPG_PCG resolve to the registered PPG_PCG without a mismatch",
+          arguments: ["PPG^PCC^PPG_PCG", "PPG^PCG^PPG_PCG"])
+    func goalPathway(_ msh9: String) throws {
+        let issues = try structureIssues(msh9, ["PID|1", "PTH|AD", "GOL|AD"])
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PPG_PCG")], "\(issues.map(\.message))")
+        #expect(issues.first?.severity == .info)
+    }
+
+    // Controller ruling (fix round 1): the two-token Table 0354 errata stand, so a message that
+    // copies a misprinted row literally (TBR_R09, RRE_O01, MFD_P09) is a mismatch on v2.3.1.
+    @Test("Literally printed misprinted Table 0354 IDs are mismatches",
+          arguments: [("TBR^R09^TBR_R09", "TBR_R09", "TBR^R09"), ("RRE^O01^RRE_O01", "RRE_O01", "RRE^O01"),
+                      ("MFD^P09^MFD_P09", "MFD_P09", "MFD^P09")])
+    func misprintedIDs(_ c: (String, String, String)) throws {
+        let issues = try structureIssues(c.0, ["MSA|AA|1"])
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: c.1, trigger: c.2)], "\(issues.map(\.message))")
+        #expect(issues.first?.severity == .error)
     }
 
     // Captions Table 0354 places under no structure (overrides.json unresolvedCaptions):

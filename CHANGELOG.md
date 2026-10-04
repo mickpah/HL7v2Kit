@@ -15,15 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Table 0354 ID `PIN_107`) is now `messageStructureMismatch` on v2.3.1 instead of info.
 - Most v2.3.1 captions print `CODE^EVT` only; the structure ID comes from Table 0354 v2.3.1,
   read through cited errata for its misprinted rows (ARD_A19, PIN_107, RPI_I0I, RQI_I0I,
-  TBR_R09, RRE_O01, MFD_P09 and the events 136, 1II and PPG's PCC). Where the table lists an
+  TBR_R09, RRE_O01, MFD_P09 and the events 136 and 1II; PPG_PCG gains PCG and keeps PCC). Each
+  structure whose ID came from the table says so in its citation, naming any erratum. Where the table lists an
   event under two structures (ADT^A28, ADT^A31) the triggers are declared shared; where its
   one row of a message code omits the caption's events (MFK, PPP) a cited declaration names
   the row; captions it places under no structure (MFN^M04, MFQ, MFR and the master file
   templates) are declared and not modelled. CH08 8.10.1's second clinical-trials print, captioned
   MFN^M06 and MFK^M06, is read as M07 (Table 0003).
-- Group names: 240 from the HL7 v2.xml 2.3.1 bundle (each citation names the file's generator,
-  since the bundle mixes two), 13 through the v2.4 bundle (the 2.3.1 bundle's ENCODING names
-  are not taken without a cited override), none synthesised.
+- Group names: 247 from the HL7 v2.xml 2.3.1 bundle (each citation names the file's generator,
+  since the bundle mixes two), 6 through the v2.4 bundle (the 2.3.1 bundle's CHOICE name is not
+  taken without a cited override), none synthesised.
 - 27 v2.3.1 structures are registered as not modelled, each with its reason (register section
   E): the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06), eight
   CH12 `[OBR, etc.` structures, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows no print
@@ -32,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   notation in the description column inside an open group as a placeholder (OSR^Q06), and on a
   version with its own Table 0354 fails a full read on any caption the table cannot resolve
   unless a cited override settles it. No v2.4, v2.5.1, v2.6, v2.7.1 or v2.8.2 structure changes.
+- The literally printed misprinted Table 0354 IDs (`TBR^R09^TBR_R09`, `RRE^O01^RRE_O01`,
+  `MFD^P09^MFD_P09`, `PIN^I07^PIN_107`) are `messageStructureMismatch` on v2.3.1 (P8b-14 fix
+  round 1, controller ruling); register section E gives the evidence.
 
 ### Fixed — P8b-4a: AU profile structures govern base structure findings; RRI_I12
 

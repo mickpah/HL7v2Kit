@@ -566,8 +566,10 @@ ORM^O01 and ORR^O02, whose captions print their IDs).
 Structure IDs (each a cited `overrides.json` entry, defensible from the v2.3.1 print alone).
 Table 0354 errata, each against Table 0076 or 0003 and the caption: ARD_A19 read ADR_A19 (no
 message type ARD); ADT_A30's event `136` read A36; RPA_I08's `1II` read I11; PIN_107, RPI_I0I
-and RQI_I0I read PIN_I07, RPI_I01 and RQI_I01 (a digit and a letter swapped); PPG_PCG's `PCC`
-read PCG (Table 0003 gives PCC to PPP); TBR_R09/R09 read TBR_R08/R08 (R09 is ERP's); RRE_O01/O01
+and RQI_I0I read PIN_I07, RPI_I01 and RQI_I01 (a digit and a letter swapped); PPG_PCG's `PCC, PCH, PCJ`
+read `PCC, PCG, PCH, PCJ` (PCG added, the event its ID and the CH12 12.2.4 caption name; PCC
+kept, as the v2.4, v2.5.1 and v2.7.1 tables keep it, though Table 0003 gives PCC to PPP;
+fix round 1); TBR_R09/R09 read TBR_R08/R08 (R09 is ERP's); RRE_O01/O01
 read RRE_O02/O02 (Table 0003: "O02 ORR - Order response (also RRE, RRD, RRG, RRA)"); MFD_P09/P09
 read MFD_MFA/MFA (P09 is SUR's; CH08 8.2 names MFA). Caption errata: CH08 8.10.1 prints Case 2,
 the clinical study without phases (Table 0003 M07), under MFN^M06 and MFK^M06 a second time;
@@ -579,16 +581,31 @@ PCD as PPP_PCB (`captionStructures`: the one row of the message code omits M02 a
 With the general print of 8.3.1 primary, MFK_M01 allows `[ERR]`; the other five MFK prints omit
 it and are stricter.
 
-Group names (ADR-019 decision 3; owner ruling 2026-10-04). v2.3.1 prints few group names: 240
-come from the HL7 v2.xml 2.3.1 bundle (`HL7-xml 2.3.1`, a folder name with no "v"), 13 through
-the v2.4 bundle (MFN_M05, MFN_M06, MFN_M07, RPR_I03 and seven ENCODING groups) and none is
-synthesised. The 2.3.1 bundle mixes two generators, the HL7-Database generator of the other
+Misprinted IDs on the wire (controller ruling, P8b-14 fix round 1). The two-token Table 0354
+errata stand, so a v2.3.1 message that copies a misprinted row literally is a mismatch, at the
+configured severity, not a match: `TBR^R09^TBR_R09` (Table 0003, p 2-101, gives R08 to TBR and
+R09 to ERP, whose row ERP_R09 lists R09; CH2 2.20.2, p 2-86, prints TBR^R08),
+`RRE^O01^RRE_O01` (Table 0003, p 2-100, gives O02 to the order responses "also RRE, RRD, RRG,
+RRA"; CH4 4.8.6, p 4-70, prints RRE^O02) and `MFD^P09^MFD_P09` (Table 0003, p 2-100, gives P09
+to SUR; CH8 8.2, p 8-3, names MFA and 8.3.2, p 8-4, prints MFD^MFA); likewise the one-token
+misprints `PIN_107`, `RPI_I0I`, `RQI_I0I` and `ARD_A19`. The v2.4 Table 0354 corrects exactly
+these rows (TBR_R08, RRE_O02, MFD_MFA, PIN_I07, RPI_I01, RQI_I01, ADR_A19). Every v2.3.1
+structure whose ID came from the table carries "Structure ID from Table 0354 v2.3.1" in its
+citation, naming the erratum or declaration involved (90 of 99; ACK and the eight ORM^O01 and
+ORR^O02 structures print their IDs). The other event errata were checked for the same
+replace-instead-of-add shape: `136` and `1II` are not events, RAS_O02's `O022` is not an event,
+and TBR's R09, RRE's O01 and MFD's P09 are events of other messages by Table 0003, so only
+PPG_PCG's needed a union.
+
+Group names (ADR-019 decision 3; owner ruling 2026-10-04). v2.3.1 prints few group names: 247
+come from the HL7 v2.xml 2.3.1 bundle (`HL7-xml 2.3.1`, a folder name with no "v"), 6 through
+the v2.4 bundle (MFN_M05, MFN_M06, MFN_M07 and RPR_I03) and none is synthesised. The 2.3.1 bundle mixes two generators, the HL7-Database generator of the other
 five bundles (33 files) and an encoder generator (namespace `urn:com.sun:encoder-hl7-1.0`, 83
-files); every citation names the generator of the file it reads. The bundle's CHOICE and ENCODING
-names are refused without a cited override: the seven ENCODING groups (RAR_RAR, RAS_O01,
-RDR_RDR, RDS_O01, RGR_RGR, RGV_O01, RRE_O02) take the v2.4 bundle's name, which is also
-ENCODING, and the citation says why; no CHOICE group is named (the structures that would use it
-are registered). Where the 2.3.1 bundle has no file for the structure ID, a file of the same
+files); every citation names the generator of the file it reads. The bundle's CHOICE name is refused
+without a cited override; no CHOICE group is named (the structures that would use it are
+registered). ENCODING was refused too at first; it is a genuine group name in the 2.3.1 bundle
+(RXE {RXR} [{RXC}], as in every later bundle), so since fix round 1 the seven ENCODING groups
+(RAR_RAR, RAS_O01, RDR_RDR, RDS_O01, RGR_RGR, RGV_O01, RRE_O02) are named from it. Where the 2.3.1 bundle has no file for the structure ID, a file of the same
 message code is matched on first segment and member set (ORF_R02 from ORF_R04.xsd, ADT_A28 from
 ADT_A01.xsd). The bundle differs from the print, report only, for ADT_A18 (MRG required in the
 print), ADT_A38 (DRG optional in the print), RDE_O01 and RDS_O01 (the print's `{ [OBX] [{NTE}] }`)

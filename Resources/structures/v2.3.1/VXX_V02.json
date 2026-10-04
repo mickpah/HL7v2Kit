@@ -1,7 +1,7 @@
 {
   "structure": "VXX_V02",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 4, section 4.12.2 VXX - response to vaccination query returning multiple PID matches (V02), p 4-108. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.12.2 VXX - response to vaccination query returning multiple PID matches (V02), p 4-108. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-106). Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["VXX^V02"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

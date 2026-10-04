@@ -1,7 +1,7 @@
 {
   "structure": "DSR_Q03",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 2, section 2.18.2 DSR/ACK - deferred response to a query (event Q03), p 2-85.",
+  "citation": "HL7 v2.3.1 Chapter 2, section 2.18.2 DSR/ACK - deferred response to a query (event Q03), p 2-85. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
   "triggers": ["DSR^Q03"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

@@ -1,7 +1,7 @@
 {
   "structure": "RER_RER",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.20 RER - pharmacy/treatment encoded order information (RER), p 4-103. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
+  "citation": "HL7 v2.3.1 Chapter 4, section 4.8.20 RER - pharmacy/treatment encoded order information (RER), p 4-103. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-105). Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0), PATIENT (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0) and ORDER (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0).",
   "triggers": ["RER^RER"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

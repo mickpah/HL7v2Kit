@@ -160,7 +160,7 @@ misprinted rows, two declared shared triggers (ADT^A28, ADT^A31) and four `capti
 entries (MFK, PPP). 99 are committed under `Resources/structures/v2.3.1/` and v2.3.1 is
 `complete: true`; with the 27 registered in `completeness.json` they account for all 117 Table
 0354 v2.3.1 rows (nine printed IDs, ACK and the shared ORM^O01 and ORR^O02 structures, have no
-row). Group names: 240 from the HL7 v2.xml 2.3.1 bundle, 13 through the v2.4 bundle, none
+row). Group names: 247 from the HL7 v2.xml 2.3.1 bundle, 6 through the v2.4 bundle, none
 synthesised (register §E v2.3.1 addendum).
 
 QRY_Q02 and QCK_Q02 are read on v2.3.1 from the one-space direction captions of CH2 (p 2-84):

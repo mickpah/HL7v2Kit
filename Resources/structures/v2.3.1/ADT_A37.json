@@ -1,7 +1,7 @@
 {
   "structure": "ADT_A37",
   "version": "2.3.1",
-  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.37 ADT/ACK - unlink patient information (event A37), p 3-24.",
+  "citation": "HL7 v2.3.1 Chapter 3, section 3.2.37 ADT/ACK - unlink patient information (event A37), p 3-24. Structure ID from Table 0354 v2.3.1 (Chapter 2, section 2.24.1.9, p 2-103).",
   "triggers": ["ADT^A37"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
