@@ -536,11 +536,17 @@ struct MessageStructureValidationTests {
 
     // MARK: - Version rule
 
-    @Test("A recognised version with no structure data (v2.3) is an info issue")
+    // Every version has structure data since P8b-15; the empty table is the synthetic seam's. On
+    // v2.3 the issue names the trigger, never MSH-9.3 (lookup rule 3).
+    @Test("A recognised version with no structure data is an info issue; on v2.3 it names MSH-9.1^9.2")
     func notModelledVersion() throws {
-        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.3", [Self.evn, Self.pid, Self.pv1]))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
-        #expect(issues.first?.severity == .info)
+        for (version, named) in [("2.5.1", "ADT_A01"), ("2.3", "ADT^A01")] {
+            let message = try Parser().parse(Self.wire("ADT^A01^ADT_A01", version: version, [Self.evn, Self.pid, Self.pv1]))
+            let resolved = Validator().resolveStructure(message, severity: .error, structures: [:], complete: [], gaps: [:])
+            #expect(resolved.structure == nil)
+            #expect(resolved.issues.map(\.code) == [.messageStructureNotModelled(structure: named)], "\(version)")
+            #expect(resolved.issues.first?.severity == .info)
+        }
     }
 
     // ADR-019 lookup rule 1 on v2.3.1 (P8b-14): complete, so an unknown MSH-9.3 ID is a mismatch,

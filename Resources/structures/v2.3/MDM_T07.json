@@ -1,0 +1,13 @@
+{
+  "structure": "MDM_T07",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 9, section 9.4.7 Document edit notification (event T07), p 9-7. Structure ID MDM_T07 synthesised as CODE_EVT from the message code MDM and T07, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events MDM^T07 read from the section title 9.4.7 'Document edit notification (event T07)'.",
+  "triggers": ["MDM^T07"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "TXA", "min": 1, "max": 1 }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "structure": "RQI_I01",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 11, section 11.2.1 RQI/RPI - request for insurance information (event I01), p 11-7. Structure ID RQI_I01 synthesised as CODE_EVT from the message code RQI and I01, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events RQI^I01 read from the section title 11.2.1 'RQI/RPI - request for insurance information (event I01)'. Unprinted group names (ADR-019 decision 3): PROVIDER (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.PROVIDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RQI_I01), GUARANTOR_INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.GUARANTOR_INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RQI_I01) and INSURANCE (HL7-xml 2.3.1/RQI_I01.xsd, RQI_I01.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RQI_I01).",
+  "triggers": ["RQI^I01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "group": "GUARANTOR_INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

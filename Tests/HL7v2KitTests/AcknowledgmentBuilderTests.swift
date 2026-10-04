@@ -91,7 +91,7 @@ struct AcknowledgmentBuilderTests {
         #expect(report.issues.isEmpty, "\(version): \(report.issues.map(\.message))")
     }
 
-    @Test("With the structure check on, v2.3.1, v2.4, v2.5.1, v2.6, v2.7.1 and v2.8.2 are modelled: the others get the info issue alone",
+    @Test("With the structure check on, every supported version is modelled: the ACK draws no structure issue",
           arguments: supported)
     func structureCheckPerVersion(version: String) throws {
         let msh9 = version == "2.3" ? "ADT^A01" : "ADT^A01^ADT_A01"
@@ -99,15 +99,8 @@ struct AcknowledgmentBuilderTests {
         var options = ValidationOptions.default
         options.messageStructureSeverity = .warning
         let report = Validator(options: options).validate(try Parser().parse(Data(ack.serialize())))
-        if version == "2.3.1" || version == "2.4" || version == "2.5.1" || version == "2.6" || version == "2.7.1" || version == "2.8.2" || version == "2.8" {
-            #expect(report.issues.isEmpty, "\(report.issues.map(\.message))")
-        } else {
-            // v2.3 has no MSH-9.3, so the issue names the trigger (P8-5 rule).
-            let named = version == "2.3" ? "ACK^A01" : "ACK"
-            #expect(report.issues.map(\.code) == [.messageStructureNotModelled(structure: named)],
-                    "\(version): \(report.issues.map(\.message))")
-            #expect(report.issues.allSatisfy { $0.severity == .info })
-        }
+        // Every supported version is modelled since P8b-15 (v2.3 resolves ACK^A01 to ACK, lookup rule 3).
+        #expect(report.issues.isEmpty, "\(version): \(report.issues.map(\.message))")
     }
 
     @Test("v2.3 has no MSH-9.3: the ACK carries ACK^<event> only")

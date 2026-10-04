@@ -195,9 +195,11 @@ d = load('completeness.json'); d['versions']['2.4']['since'] = 'x'; save('comple
 reject "empty completeness citation" 'one non-empty line' "$PRE
 d = load('completeness.json'); d['versions']['2.4']['citation'] = ' '; save('completeness.json', d)"
 
-# v2.3 is the last version the rollout fills (P8b-15); that task moves this case to a scratch-only
-# version directory before flipping v2.3 (P8b-16 moved it off v2.7.1).
+# Every version has structures since P8b-15: the case empties v2.3's directory in the scratch copy
+# (P8b-16 moved it off v2.7.1; P8b-15 off a version left empty).
 reject "complete version with no structures" 'marked complete but has no structures' "$PRE
+import glob
+for f in glob.glob(os.path.join(S, 'v2.3', '*.json')): os.remove(f)
 d = load('completeness.json'); d['versions']['2.3']['complete'] = True; save('completeness.json', d)"
 
 reject "missing completeness file" 'couldn’t be opened because there is no such file' "$PRE

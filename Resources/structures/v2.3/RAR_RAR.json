@@ -1,0 +1,30 @@
+{
+  "structure": "RAR_RAR",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.8.18 RAR - pharmacy/treatment administration information (event RAR), p 4-106. Structure ID RAR_RAR synthesised as CODE_EVT from the message code RAR and RAR, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events RAR^RAR read from the section title 4.8.18 'RAR - pharmacy/treatment administration information (event RAR)'. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RAR_RAR), PATIENT (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RAR_RAR), ORDER (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RAR_RAR) and ENCODING (HL7-xml 2.3.1/RAR_RAR.xsd, RAR_RAR.ENCODING.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RAR_RAR).",
+  "triggers": ["RAR^RAR"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "ENCODING", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+          { "segment": "RXE", "min": 1, "max": 1 },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null }
+        ]},
+        { "segment": "RXA", "min": 1, "max": null },
+        { "segment": "RXR", "min": 1, "max": 1 }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

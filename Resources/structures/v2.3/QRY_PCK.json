@@ -1,0 +1,11 @@
+{
+  "structure": "QRY_PCK",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 12, section 12.2.11 QRY - patient pathway (goal-oriented) query (event PCK), p 12-16. Structure ID QRY_PCK synthesised as CODE_EVT from the message code QRY and PCK, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events QRY^PCK read from the section title 12.2.11 'QRY - patient pathway (goal-oriented) query (event PCK)'.",
+  "triggers": ["QRY^PCK"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 }
+  ]
+}

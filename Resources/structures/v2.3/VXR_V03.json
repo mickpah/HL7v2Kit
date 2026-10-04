@@ -1,0 +1,33 @@
+{
+  "structure": "VXR_V03",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.12.3 VXR - vaccination record response (event V03), p 4-114. Structure ID VXR_V03 synthesised as CODE_EVT from the message code VXR and V03, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events VXR^V03 read from the section title 4.12.3 'VXR - vaccination record response (event V03)'. Unprinted group names (ADR-019 decision 3): PATIENT_VISIT (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.PATIENT_VISIT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 VXR_V03), INSURANCE (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.INSURANCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 VXR_V03), ORDER (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 VXR_V03) and OBSERVATION (HL7-xml 2.3.1/VXR_V03.xsd, VXR_V03.OBSERVATION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 VXR_V03).",
+  "triggers": ["VXR^V03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "group": "PATIENT_VISIT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "INSURANCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "IN1", "min": 1, "max": 1 },
+      { "segment": "IN2", "min": 0, "max": 1 },
+      { "segment": "IN3", "min": 0, "max": 1 }
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "segment": "RXA", "min": 1, "max": 1 },
+      { "segment": "RXR", "min": 0, "max": 1 },
+      { "group": "OBSERVATION", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "structure": "SRM_S01",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-13. Structure ID SRM_S01 synthesised as CODE_EVT from the message code SRM and S01, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events SRM^S01, SRM^S02, SRM^S03, SRM^S04, SRM^S05, SRM^S06, SRM^S07, SRM^S08, SRM^S09, SRM^S10 and SRM^S11 from overrides.json eventsFromTitle (section 10.2 'PLACER APPLICATION REQUESTS AND TRIGGER EVENTS' names no event): HL7 v2.3 Chapter 10, section 10.2 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-14: 'The trigger events that use this message definition are listed below', sections 10.2.1 to 10.2.11 (events S01 to S11) (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-93), p 2-93: S01 to S11 SRM/SRR.. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PATIENT.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01), RESOURCES (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.RESOURCES.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01), SERVICE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.SERVICE.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01), GENERAL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.GENERAL_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01), LOCATION_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.LOCATION_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SRM_S01.xsd, SRM_S01.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SRM_S01).",
+  "triggers": ["SRM^S01", "SRM^S02", "SRM^S03", "SRM^S04", "SRM^S05", "SRM^S06", "SRM^S07", "SRM^S08", "SRM^S09", "SRM^S10", "SRM^S11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "ARQ", "min": 1, "max": 1 },
+    { "segment": "APR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "DG1", "min": 0, "max": null }
+    ]},
+    { "group": "RESOURCES", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "RGS", "min": 1, "max": 1 },
+      { "group": "SERVICE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIS", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "GENERAL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIG", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "LOCATION_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIL", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "PERSONNEL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIP", "min": 1, "max": 1 },
+        { "segment": "APR", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

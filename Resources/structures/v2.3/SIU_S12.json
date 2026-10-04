@@ -1,0 +1,37 @@
+{
+  "structure": "SIU_S12",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 10, section 10.3 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-18. Structure ID SIU_S12 synthesised as CODE_EVT from the message code SIU and S12, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events SIU^S12, SIU^S13, SIU^S14, SIU^S15, SIU^S16, SIU^S17, SIU^S18, SIU^S19, SIU^S20, SIU^S21, SIU^S22, SIU^S23, SIU^S24 and SIU^S26 from overrides.json eventsFromTitle (section 10.3 'FILLER APPLICATION MESSAGES AND TRIGGER EVENTS' names no event): HL7 v2.3 Chapter 10, section 10.3 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-18: 'The trigger events that use this message definition are listed below', sections 10.3.1 to 10.3.14 (events S12 to S24 and S26, p 10-21) (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-93), p 2-93: S12 to S24 SIU/ACK and S26.. Unprinted group names (ADR-019 decision 3): PID_GROUP (synthesised: no unique HL7-xml 2.3.1/SIU_S12.xsd group has first segment PID and members {DG1, OBX, PID, PV1, PV2}; no unique HL7-xml v2.4/SIU_S12.xsd group has first segment PID and members {DG1, OBX, PID, PV1, PV2}), RESOURCES (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.RESOURCES.CONTENT, generator HL7-Database, derived for v2.3 SIU_S12), SERVICE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.SERVICE.CONTENT, generator HL7-Database, derived for v2.3 SIU_S12), GENERAL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.GENERAL_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SIU_S12), LOCATION_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.LOCATION_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SIU_S12) and PERSONNEL_RESOURCE (HL7-xml 2.3.1/SIU_S12.xsd, SIU_S12.PERSONNEL_RESOURCE.CONTENT, generator HL7-Database, derived for v2.3 SIU_S12).",
+  "triggers": ["SIU^S12", "SIU^S13", "SIU^S14", "SIU^S15", "SIU^S16", "SIU^S17", "SIU^S18", "SIU^S19", "SIU^S20", "SIU^S21", "SIU^S22", "SIU^S23", "SIU^S24", "SIU^S26"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SCH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PID_GROUP", "nameSource": "synthesised", "min": 0, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PV1", "min": 0, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 },
+      { "segment": "OBX", "min": 0, "max": null },
+      { "segment": "DG1", "min": 0, "max": null }
+    ]},
+    { "group": "RESOURCES", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "RGS", "min": 1, "max": 1 },
+      { "group": "SERVICE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIS", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "GENERAL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIG", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "LOCATION_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIL", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "PERSONNEL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+        { "segment": "AIP", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

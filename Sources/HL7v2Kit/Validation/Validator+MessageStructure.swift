@@ -39,6 +39,10 @@ extension Validator {
     /// Z trigger the version prints under no structure may declare a printed
     /// structure without a mismatch (P8b-10).
     /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
+    /// Rule 3 (P8b-15): v2.3 defines no MSH-9.3 (MSH-9 is CM <message type>
+    /// ^ <trigger event>, v2.3 Chapter 2 section 2.24.1.9) and its structure
+    /// IDs are synthesised, so a v2.3 message resolves from MSH-9.1^9.2 only
+    /// and a populated third component is ignored for resolution.
     ///
     /// `structures` replaces the version's loaded table, `complete` the
     /// generated completeness set and `gaps` the registered not-modelled
@@ -50,7 +54,8 @@ extension Validator {
         let code = message.messageCode ?? ""
         let event = message.triggerEvent ?? ""
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
-        let declared = message.messageStructure ?? ""
+        // Lookup rule 3: no MSH-9.3 on v2.3 (grammar version, so 2.3 read as v2.3 only).
+        let declared = message.version.grammarVersion == .v2_3 ? "" : (message.messageStructure ?? "")
         let name = declared.isEmpty ? trigger : declared
 
         let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }

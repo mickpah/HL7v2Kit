@@ -1,0 +1,26 @@
+{
+  "structure": "RER_RER",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.8.20 RER - pharmacy/treatment encoded order information (event RER), p 4-107. Structure ID RER_RER synthesised as CODE_EVT from the message code RER and RER, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events RER^RER read from the section title 4.8.20 'RER - pharmacy/treatment encoded order information (event RER)'. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RER_RER), PATIENT (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RER_RER) and ORDER (HL7-xml 2.3.1/RER_RER.xsd, RER_RER.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 RER_RER).",
+  "triggers": ["RER^RER"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

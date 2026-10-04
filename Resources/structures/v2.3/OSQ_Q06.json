@@ -1,0 +1,12 @@
+{
+  "structure": "OSQ_Q06",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.2.3 OSQ/OSR- query response for order status (event Q06), p 4-6. Structure ID OSQ_Q06 synthesised as CODE_EVT from the message code OSQ and Q06, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events OSQ^Q06 read from the section title 4.2.3 'OSQ/OSR- query response for order status (event Q06)'.",
+  "triggers": ["OSQ^Q06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

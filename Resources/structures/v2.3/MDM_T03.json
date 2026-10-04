@@ -1,0 +1,13 @@
+{
+  "structure": "MDM_T03",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 9, section 9.4.3 MDM/ACK - document status change notification (event T03), p 9-5. Structure ID MDM_T03 synthesised as CODE_EVT from the message code MDM and T03, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events MDM^T03 read from the section title 9.4.3 'MDM/ACK - document status change notification (event T03)'.",
+  "triggers": ["MDM^T03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "TXA", "min": 1, "max": 1 }
+  ]
+}

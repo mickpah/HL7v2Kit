@@ -1,0 +1,36 @@
+{
+  "structure": "SQM_S25",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 10, section 10.4.3 SQM/SQR - schedule query message and response (event S25), p 10-23. Structure ID SQM_S25 synthesised as CODE_EVT from the message code SQM and S25, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events SQM^S25 read from the section title 10.4.3 'SQM/SQR - schedule query message and response (event S25)'. Unprinted group names (ADR-019 decision 3): REQUEST (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25), RESOURCES (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25), SERVICE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25), GENERAL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25), PERSONNEL_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25) and LOCATION_RESOURCE (HL7-xml 2.3.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 SQM_S25).",
+  "triggers": ["SQM^S25"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "REQUEST", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+      { "segment": "ARQ", "min": 1, "max": 1 },
+      { "segment": "APR", "min": 0, "max": 1 },
+      { "segment": "PID", "min": 0, "max": 1 },
+      { "group": "RESOURCES", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "RGS", "min": 1, "max": 1 },
+        { "group": "SERVICE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "AIS", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "GENERAL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "AIG", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "PERSONNEL_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "AIP", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "LOCATION_RESOURCE", "nameSource": "v2xml-v2.3.1", "min": 0, "max": null, "elements": [
+          { "segment": "AIL", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]}
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

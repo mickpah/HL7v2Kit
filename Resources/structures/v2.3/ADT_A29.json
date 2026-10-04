@@ -1,0 +1,16 @@
+{
+  "structure": "ADT_A29",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 3, section 3.2.29 ADT/ACK - delete person information (event A29), p 3-24. Structure ID ADT_A29 synthesised as CODE_EVT from the message code ADT and A29, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ADT^A29 read from the section title 3.2.29 'ADT/ACK - delete person information (event A29)'.",
+  "triggers": ["ADT^A29"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "PV2", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "OBX", "min": 0, "max": null }
+  ]
+}

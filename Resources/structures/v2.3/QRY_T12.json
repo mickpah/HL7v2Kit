@@ -1,0 +1,11 @@
+{
+  "structure": "QRY_T12",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 9, section 9.7.1 QRY/DOC - document query (event T12), p 9-19. Structure ID QRY_T12 synthesised as CODE_EVT from the message code QRY and T12, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events QRY^T12 read from the section title 9.7.1 'QRY/DOC - document query (event T12)'.",
+  "triggers": ["QRY^T12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 }
+  ]
+}

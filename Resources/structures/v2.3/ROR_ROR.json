@@ -1,0 +1,26 @@
+{
+  "structure": "ROR_ROR",
+  "version": "2.3",
+  "citation": "HL7 v2.3 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response (event R0R), p 4-106. Structure ID ROR_ROR synthesised as CODE_EVT from the message code ROR and ROR, the first event the section title names (v2.3 prints no structure ID and no Table 0354). Events ROR^ROR and ROR^R0R read from the section title 4.8.17 'R0R - pharmacy/treatment order response (event R0R)'. Unprinted group names (ADR-019 decision 3): DEFINITION (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.DEFINITION.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 ROR_ROR), PATIENT (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.PATIENT.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 ROR_ROR) and ORDER (HL7-xml 2.3.1/ROR_ROR.xsd, ROR_ROR.ORDER.CONTENT, generator urn:com.sun:encoder-hl7-1.0, derived for v2.3 ROR_ROR).",
+  "triggers": ["ROR^ROR", "ROR^R0R"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "DEFINITION", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "v2xml-v2.3.1", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml-v2.3.1", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}
