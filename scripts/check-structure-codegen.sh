@@ -220,6 +220,10 @@ def au(change):
 '
 reject "profile key in a version file" 'unknown key(s) ["profile"]' "$PRE
 d = load('v2.4/ORU_R01.json'); d['profile'] = 'au-adrm-2021'; save('v2.4/ORU_R01.json', d)"
+reject "baseVersion key in a version file" 'unknown key(s) ["baseVersion"]' "$PRE
+d = load('v2.4/ORU_R01.json'); d['baseVersion'] = '2.4'; save('v2.4/ORU_R01.json', d)"
+reject "rule key in a version file" 'unknown key(s) ["rule"]' "$PRE
+d = load('v2.4/ORU_R01.json'); d['rule'] = 'HL7au:00060.1'; save('v2.4/ORU_R01.json', d)"
 
 reject "profile structure without a rule" 'needs "profile", "baseVersion" and "rule"' "$PRE$AU
 au(lambda d: d.pop('rule'))"

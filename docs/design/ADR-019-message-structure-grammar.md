@@ -682,7 +682,7 @@ Owner gate G2, answered 2026-09-30 (all recommended defaults).
 | 4 | Unrecognised or empty MSH-12 | Skip, `messageStructureNotModelled` (info); no fallback grammar |
 | 5 | Group spans gating | On for complete versions with a clean match, independent of severity; behind the `isComplete` probe |
 | 6 | ORC-8 OUL misfire | Interim gate `messageCode not in (...)` shipped in P4-7; removed per version by the rollout task that supplies spans |
-| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only |
+| 7 | AU removed segments | Not a finding; 00060.1 covers missing required segments only. Amended 2026-10-04 (P8b-4a): a base structure finding is dropped where the AU profile structure accepts the message at that point |
 | 8 | AU overlay timing | Immediately after the extractor (R1) |
 | 9 | Acknowledgments | Build and validate the general ACK; no protocol logic |
 | 10 | Severity | `messageStructureSeverity = nil` default now; presets `.warning` and `.error` confirmed at close-out |
@@ -1213,3 +1213,32 @@ compiling a structure per message.
   ACK^R01 and ACK^O01 (pp 206, 280) and the Appendix 8 simplified REF structure (p 484, gated on
   the MSH-12 profile). Those that add a required segment are registered (permanent-limitations
   register section E, P8b-4 addendum); 00060.1 is PARTIAL in the conformance register.
+
+## Amendment 2026-10-04 — AU profile structures govern base structure findings (P8b-4a)
+
+- **Decision 7 amended (controller ruling, ledger 2026-10-04; project requirement 4).** Matched
+  only against the base v2.4 structure, ADRM-conformant messages drew base findings under the AU
+  locale: REF^I12 `MSH RF1 PRD PID PD1 PV1` (PD1 is printed on p 324, not in the base) and RRI^I12
+  `MSH MSA` (p 325 makes the RF1, PRD and PID group optional "for backward compatibility"). Where
+  the locale's profile has a structure for the message's trigger, a base structure finding is now
+  dropped when the profile structure accepts the message at that point: no profile finding (of any
+  kind, at either place of a relocated `missing` finding) is located there, and the base reports
+  `unexpected` a segment the profile structure places there, or `missing` a segment the profile
+  structure reports missing nowhere in the message (it makes it optional, or removes it). Every
+  other base finding is kept, including one for a segment neither structure places and one for a
+  segment the profile names but not at that point. Messages whose trigger has no profile
+  structure, and every message under the international locale, are untouched; 00060.1 findings
+  keep their P8b-4 behaviour. The comparison of `missing` findings by segment ID rather than by
+  place errs on keeping a base finding. Implemented in `matchProfileStructure`
+  (`Validator+ProfileStructure.swift`), which now returns the governed base findings with the
+  profile's own.
+- **RRI_I12, the fourth profile structure** (p 325): `MSH MSA [ERR] [ RF1 {PRD} PID ]`; MSA is
+  required (base `[MSA]`), ERR is an ADRM addition, and the group takes the synthesised name
+  RF1_GROUP (the base has no RF1 group).
+- **ORM^O01 order detail narrowed.** The place is a required choice of OBR, RXO, ODS and ODT:
+  p 280 replaces OBR only "for medication and diet orders" (RXO, v2.4 section 4.13; ODS and ODT,
+  section 4.7); RQD and RQ1 are the supply order segments (section 4.10). The glossary entry
+  5.1.2.4 is cited on p 279.
+- Still registered (permanent-limitations register section E, P8b-4 and P8b-4a addenda): Appendix
+  8 (p 484, selected by MSH-12), ORR^O02 (p 280 bracket erratum), the ORU^R01 PV1 prose mandate
+  (pp 17, 205), the narrowed maxima and the order status response OBX (p 281).

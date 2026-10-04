@@ -93,10 +93,12 @@ public struct ValidationOptions: Sendable {
     /// instead of a silent pass. Receivers ignore unexpected segments
     /// (v2.5.1 CH02 2.6.2), so `.warning` suits receiver-side use and
     /// `.error` sender-side use. Under ``HL7Locale/auLocalisation`` a v2.4
-    /// ORU^R01, ORM^O01 or REF^I12 is also matched against the ADRM-2021
-    /// structure, and a segment that structure requires and the message
+    /// ORU^R01, ORM^O01, REF^I12 or RRI^I12 is also matched against the
+    /// ADRM-2021 structure: a segment that structure requires and the message
     /// lacks is reported as `profileConstraintViolation(localeRule:
-    /// "HL7au:00060.1")` at this severity (P8b-4). Not an init parameter. P8-5.
+    /// "HL7au:00060.1")` at this severity (P8b-4), and a base structure
+    /// finding the ADRM structure accepts at that point is dropped (P8b-4a).
+    /// Not an init parameter. P8-5.
     public var messageStructureSeverity: IssueSeverity? = nil
 
     /// The caller asserts that the message comes from a pathology sender.

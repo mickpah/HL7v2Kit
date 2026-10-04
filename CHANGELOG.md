@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — P8b-4a: AU profile structures govern base structure findings; RRI_I12
+
+- Under the AU locale with `messageStructureSeverity` set, a v2.4 message that conforms to the
+  ADRM-2021 print no longer draws base v2.4 structure findings the ADRM structure contradicts:
+  a base finding is dropped where the ADRM structure accepts the message at that point (a segment
+  it places there, such as PD1 in REF^I12, p 324, or ERR in RRI^I12, p 325; a segment it makes
+  optional, such as PRD and PID in RRI^I12). Every other base finding is kept. The international
+  locale and triggers with no ADRM structure are unchanged (ADR-019 decision 7, amended).
+- RRI^I12 is the fourth ADRM structure (p 325, `MSH MSA [ERR] [ RF1 {PRD} PID ]`): a missing MSA
+  is reported as `profileConstraintViolation(localeRule: "HL7au:00060.1")`.
+- The ORM^O01 order detail is narrowed to OBR, RXO, ODS and ODT (p 280: OBR is replaced only for
+  medication and diet orders), so RQD or RQ1 in its place is an HL7au:00060.1 finding; the
+  glossary citation moves to p 279.
+- Register and self-check corrections: the RRI print is quoted with its brackets, "PID optional"
+  on the order status response is no longer listed as a relaxation (base v2.4 OSR_Q06 has it), the
+  conformance register row names the narrowed maxima and the base-finding rule, and
+  `check-structure-codegen.sh` covers `baseVersion` and `rule` in a version file (71 cases).
+
 ### Added — P8b-4: HL7au:00060.1 required segments through the ADRM-2021 structures
 
 - Under the AU locale with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or REF^I12

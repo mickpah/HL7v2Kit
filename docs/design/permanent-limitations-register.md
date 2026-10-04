@@ -558,16 +558,34 @@ blocking spec-completeness of the segment half of 00060.1:
 | Gap | Print | Why it is not enforced |
 |---|---|---|
 | ORU^R01 PV1 when PD1, NK1 and PV2 are all absent | p 17 ("in Australia PV1 has been made mandatory") and p 205 ("The PV1 segment is also mandatory"), against the prints on pp 17 and 205, which place PV1 inside `[ [PD1] [{NK1}] PV1 [PV2] ]` | Print and prose disagree. The print is enforced (PV1 required when the group is present), which every reading agrees on; a PID with no visit group at all draws nothing. A ruling (print or prose) would close it |
-| RRI^I12 | p 325: `MSH MSA [ERR] RF1 {PRD} PID`, MSA unbracketed (base v2.4 `[MSA]`); the prose makes the RF1, PRD and PID group optional "for backward compatibility" | Outside P8b-4's three structures (the brief's scope, from ADR-019's survey of captions naming "Message Structure"). MSA required is unambiguous and could be modelled; the optional RF1/PRD/PID group relaxes the base, which a missing-only overlay cannot express |
+| RRI^I12 | p 325: `MSH MSA [ERR] [ RF1 {PRD} PID ]`, MSA unbracketed (base v2.4 `[MSA]`); the prose says the RF1, PRD and PID group "has been made optional for backward compatibility" | Closed by P8b-4a: `RRI_I12.json` requires MSA, and the base findings its optional group and `[ERR]` accept are dropped (addendum below) |
 | Appendix 8 simplified REF structure | pp 484 to 485 ("Constrained REF_I12 message structure", normative; the OBR group and OBX required) | It applies only to messages declaring the simplified REF profile in MSH-12 (pp 483 to 484); the overlay has no MSH-12-gated structure variant |
-| ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | The bracket erratum leaves PID's optionality undecidable; with the order detail read as the base choice (as for ORM^O01, p 280) nothing else is added over the base |
+| ORR^O02 | pp 280 to 281: `[ [PID ... {ORC OBR} ]`, one `[` unclosed | The bracket erratum leaves PID's optionality undecidable, so no structure is modelled; read as for ORM^O01 (p 280: OBR, or RXO, ODS or ODT for medication and diet orders), the order detail would also exclude the base RQD and RQ1, which is not enforced either |
 | Narrowed maxima | REF^I12 p 324 prints `[IN1]` where the base repeats the insurance group | 00060.1 is about required elements; an ADRM maximum below the base is not enforced (the overlay drops `unexpected` and beyond-maximum findings) |
-| Segments and relaxations the ADRM adds | REF^I12 p 324 (IAM; the pharmacy, problem, goal and pathway groups); the order status response p 281 (OBX; PID optional) | The base v2.4 match reports them (unexpected, or missing) under either locale; the overlay does not suppress base findings |
+| Segments the ADRM adds where it prints no modelled structure | the order status response p 281 (`[{OBX}]` inside the order; base v2.4 OSR_Q06 has no OBX; its PID is optional in the base as well) | The response's caption prints `OSQ^Q06^OSQ_Q06` for an OSR^Q06 message and no profile structure is modelled for it, so the base v2.4 match reports OBX unexpected under either locale. Since P8b-4a the base findings on REF^I12 (IAM; the pharmacy, problem, goal and pathway groups; PD1) and RRI^I12 that the profile structure accepts are dropped |
 
 The other ADRM prints add nothing over the base for a missing segment: ACK^R01 (p 206) and
 ACK^O01 (p 280) print MSH MSA [ERR], the base ACK; OSQ^Q06 (p 281) is the base; the order status
 response (p 281, captioned "OSQ^Q06^OSQ_Q06 Order Status Response", for OSR^Q06) requires, with
 the order detail read as the base choice, nothing the base does not.
+
+### Addendum to §E — AU profile structures govern base structure findings (P8b-4a, 2026-10-04)
+
+A fourth ADRM structure, RRI_I12 (p 325: `MSH MSA [ERR] [ RF1 {PRD} PID ]`), is modelled, so a
+missing MSA is a 00060.1 finding. Where the AU profile has a structure for the message's trigger,
+a base v2.4 structure finding is dropped when the profile structure accepts the message at that
+point: no profile finding is located there, and the base reports `unexpected` a segment the
+profile structure places there, or `missing` a segment the profile structure reports missing
+nowhere (ADR-019 decision 7 as amended). Every other base finding is kept: a segment neither
+structure places, one the profile names but not at that point, and a base finding at a place
+where the profile reports a finding of its own. The ORM^O01 order detail is narrowed to OBR, RXO,
+ODS and ODT (p 280 replaces OBR only "for medication and diet orders"), so an RQD or RQ1 in its
+place is a 00060.1 finding. Still not enforced, as the table above records: Appendix 8, the
+ORR^O02 bracket erratum, the PV1 prose mandate, the narrowed maxima (the base allows the
+repetition and the profile drops beyond-maximum findings) and the order status response.
+Approximation, kept on the side of reporting: a base `missing` finding is compared with the
+profile's by segment ID, not by place, so a segment the profile reports missing elsewhere keeps
+every base `missing` finding for it.
 
 ## F. Excluded HL7 v2.x versions (ADR-018)
 

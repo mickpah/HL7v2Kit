@@ -10,8 +10,9 @@ extension Validator {
         issues += resolution.issues
         guard let structure = resolution.structure else { return }
         let findings = matchStructure(structure, message: message, severity: severity)
-        issues += findings
-        issues += matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
+        let governed = matchProfileStructure(over: structure, baseFindings: findings, message: message, severity: severity)
+        issues += governed.base
+        issues += governed.profile
     }
 
     /// The structure to match, or the one issue saying why none is matched.

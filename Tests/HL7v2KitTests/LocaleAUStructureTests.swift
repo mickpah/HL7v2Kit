@@ -5,7 +5,8 @@
 // one. A segment the ADRM structure requires and the message lacks is reported as
 // profileConstraintViolation(localeRule: "HL7au:00060.1") at the configured severity;
 // a base segment the ADRM removed is not a finding (decision 7); a segment the base
-// match already reports missing is not reported twice. The structures live in
+// match already reports missing is not reported twice. P8b-4a: a base finding is dropped where
+// the ADRM structure accepts the message at that point, and RRI_I12 is added. The structures live in
 // Resources/structures/profiles/au-adrm-2021/ (ruling G9), each cited to the print.
 
 import Foundation
@@ -148,6 +149,24 @@ struct LocaleAUStructureTests {
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
     }
 
+    @Test("AU ORM^O01 with a diet order detail segment (ODS, ODT) draws nothing (p 280: diet orders)",
+          arguments: ["ODS|D", "ODT|1"])
+    func ormDietOrderDetail(_ detail: String) throws {
+        let all = try issues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", detail])
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+    }
+
+    @Test("AU ORM^O01 with RQD or RQ1 in place of OBR: 00060.1 fires (p 280 replaces OBR only for medication and diet orders)",
+          arguments: ["RQD|1", "RQ1|1"])
+    func ormRequisitionDetail(_ detail: String) throws {
+        let all = try issues("ORM^O01^ORM_O01", ["PID|1", "ORC|NW", detail])
+        #expect(base(all).isEmpty, "base v2.4 accepts the requisition detail: \(base(all).map(\.message))")
+        let found = au(all)
+        try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].message.contains("requires OBR "))
+    }
+
     @Test("A compliant AU ORM^O01, with the removed NTE segments, draws no finding")
     func ormCompliant() throws {
         let all = try issues("ORM^O01^ORM_O01", ["NTE|1", "PID|1", "PV1|1", "IN1|1", "ORC|NW", "OBR|1", "NTE|2", "DG1|1", "OBX|1", "BLG|"])
@@ -178,9 +197,79 @@ struct LocaleAUStructureTests {
 
     @Test("A compliant AU REF^I12 draws no 00060.1")
     func refCompliant() throws {
-        let all = try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "OBR|1", "OBX|1", "PV1|1"])
+        let all = try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PD1|", "OBR|1", "OBX|1", "PV1|1"])
         #expect(au(all).isEmpty, "\(au(all).map(\.message))")
         #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+    }
+
+    // MARK: - Base findings the profile structure accepts (P8b-4a)
+
+    @Test("AU REF^I12 with PD1 (p 324 places it after PID): the base PD1 unexpected is dropped under AU only")
+    func refPD1BaseFindingIsGoverned() throws {
+        let body = ["RF1|A", "PRD|RP", "PID|1", "PD1|", "PV1|1"]
+        let all = try issues("REF^I12^REF_I12", body)
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        let intl = base(try issues("REF^I12^REF_I12", body, locale: .international))
+        #expect(intl.map(\.code) == [.messageStructureSegmentUnexpected(structure: "REF_I12", segmentID: "PD1")],
+                "\(intl.map(\.message))")
+    }
+
+    @Test("AU REF^I12 with a segment neither structure places there keeps the base finding")
+    func refBaseFindingNeitherPlacesIsKept() throws {
+        // EVN is in the v2.4 grammar and in neither REF_I12; the profile passes it over
+        // (decision 7) but does not place it, so the base finding stands.
+        let stray = base(try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "EVN|", "PV1|1"]))
+        #expect(stray.map(\.code) == [.messageStructureSegmentUnexpected(structure: "REF_I12", segmentID: "EVN")],
+                "\(stray.map(\.message))")
+        // PD1 after PV1: the profile names PD1 but not there, so the base finding stands.
+        let misplaced = base(try issues("REF^I12^REF_I12", ["RF1|A", "PRD|RP", "PID|1", "PV1|1", "PD1|"]))
+        #expect(misplaced.map(\.code) == [.messageStructureSegmentUnexpected(structure: "REF_I12", segmentID: "PD1")],
+                "\(misplaced.map(\.message))")
+    }
+
+    // MARK: - RRI^I12 (ADRM-2021 section 7.2.2, p 325)
+
+    @Test("AU RRI^I12 MSH MSA (p 325: the RF1, PRD, PID group is optional): the base PRD and PID missing are dropped under AU only")
+    func rriBareBaseFindingsAreGoverned() throws {
+        let all = try issues("RRI^I12^RRI_I12", ["MSA|AA|1"])
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+        // Base v2.4 RRI_I12 fails the determinism lint, so it is matched exactly and reports
+        // its first divergence only (P8b-12).
+        let intl = base(try issues("RRI^I12^RRI_I12", ["MSA|AA|1"], locale: .international))
+        #expect(intl.map(\.code) == [
+            .messageStructureSegmentMissing(structure: "RRI_I12", segmentID: "PRD", group: "PROVIDER_CONTACT"),
+        ], "\(intl.map(\.message))")
+    }
+
+    @Test("AU RRI^I12 with ERR (p 325 prints [ERR]; the base has none): the base ERR unexpected is dropped")
+    func rriERRIsPlaced() throws {
+        let all = try issues("RRI^I12^RRI_I12", ["MSA|AA|1", "ERR|", "RF1|A", "PRD|RP", "PID|1"])
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        #expect(au(all).isEmpty, "\(au(all).map(\.message))")
+    }
+
+    @Test("AU RRI^I12 without MSA: MSA is required (p 325; the base makes it optional), so 00060.1 fires")
+    func rriWithoutMSA() throws {
+        let all = try issues("RRI^I12^RRI_I12", ["RF1|A", "PRD|RP", "PID|1"])
+        #expect(base(all).isEmpty, "\(base(all).map(\.message))")
+        let found = au(all)
+        try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].message.contains("requires MSA "), "\(found[0].message)")
+        #expect(found[0].location.segmentID == "RF1")
+    }
+
+    @Test("AU RRI^I12 with RF1 and no PRD: the profile does not accept the message at PID, so the base finding there stands")
+    func rriGroupMissingPRDIsKept() throws {
+        // The profile places PID but reports PRD missing before it: the base PID unexpected
+        // (the exact matcher's first divergence) is kept, and 00060.1 names PRD.
+        let all = try issues("RRI^I12^RRI_I12", ["MSA|AA|1", "RF1|A", "PID|1"])
+        #expect(base(all).map(\.code) == [.messageStructureSegmentUnexpected(structure: "RRI_I12", segmentID: "PID")],
+                "\(base(all).map(\.message))")
+        let found = au(all)
+        try #require(found.count == 1, "\(found.map(\.message))")
+        #expect(found[0].message.contains("requires PRD in group RF1_GROUP before PID[1]"), "\(found[0].message)")
     }
 
     @Test("REF^I13 shares the base REF_I12 structure but the ADRM prints only I12: no 00060.1")
@@ -191,10 +280,10 @@ struct LocaleAUStructureTests {
 
     // MARK: - Data
 
-    @Test("The ADRM-2021 structures are ORM_O01, ORU_R01 and REF_I12, each tagged with the profile, base version and rule")
+    @Test("The ADRM-2021 structures are ORM_O01, ORU_R01, REF_I12 and RRI_I12, each tagged with the profile, base version and rule")
     func dataTags() throws {
         let table = MessageStructureTable.auADRM2021
-        #expect(Set(table.keys) == ["ORM_O01", "ORU_R01", "REF_I12"])
+        #expect(Set(table.keys) == ["ORM_O01", "ORU_R01", "REF_I12", "RRI_I12"])
         for (id, structure) in table {
             #expect(structure.id == id)
             #expect(structure.profile == "au-adrm-2021", "\(id)")
@@ -211,7 +300,7 @@ struct LocaleAUStructureTests {
         #expect(MessageStructureTable.structure("ORU_R01", version: .v2_4)?.profile == nil)
     }
 
-    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORU_R01", "REF_I12"])
+    @Test("Each profile file decodes to exactly the generated structure", arguments: ["ORM_O01", "ORU_R01", "REF_I12", "RRI_I12"])
     func fileParity(_ id: String) throws {
         var object = try #require(try JSONSerialization.jsonObject(
             with: Data(contentsOf: Self.root.appendingPathComponent("\(id).json"))) as? [String: Any])

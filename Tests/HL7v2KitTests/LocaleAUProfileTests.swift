@@ -2481,5 +2481,9 @@ struct AU00060_1RegisterRowTests {
         #expect(verdict == "PARTIAL")
         #expect(note.contains("P8b-4"))
         #expect(note.contains("RRI^I12"))
+        // P8b-4a: RRI^I12 is enforced, the base findings are governed, the narrowed maxima named.
+        #expect(note.contains("P8b-4a"))
+        #expect(note.contains("a base structure finding is dropped where the ADRM structure accepts"))
+        #expect(note.contains("narrowed maxima"))
     }
 }

@@ -7,13 +7,14 @@ extension MessageStructureTable {
         "ORM_O01": auADRM2021_ORM_O01,
         "ORU_R01": auADRM2021_ORU_R01,
         "REF_I12": auADRM2021_REF_I12,
+        "RRI_I12": auADRM2021_RRI_I12,
     ]
 
     private static let auADRM2021_ORM_O01: MessageStructure = MessageStructure(
         id: "ORM_O01",
         version: "2.4",
         triggers: ["ORM^O01"],
-        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Message Structure, ORM^O01^ORM_O01, pp 279 to 280. Constrains HL7 v2.4 Chapter 4, section 4.4.1, p 4-19: NTE segments are removed (p 280), which is not a finding (ADR-019 decision 7), and each ORDER requires an order detail segment, which the base makes optional. The print gives OBR in that place; p 280: 'for use in pathology ordering OBR has become the default order detail segment. The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (section 5.1.2.4, p 280: 'Order detail segment: One of several segments that can carry order information. Examples are OBR and RXO'), so the place is the base choice of order detail segments (OBR, RQD, RQ1, RXO, ODS or ODT; v2.4 section 4.4.1), required. Print erratum: '[IN3' (p 280) has no closing bracket; read as [IN3], as the base prints it. Unprinted group names (ADR-019 decision 3), the base groups with the same members less NTE: PATIENT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT) and ORDER (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.ORDER.CONTENT).",
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 5.2 ORM - general order message (event O01), Order Message Structure, ORM^O01^ORM_O01, pp 279 to 280. Constrains HL7 v2.4 Chapter 4, section 4.4.1, p 4-19: NTE segments are removed (p 280), which is not a finding (ADR-019 decision 7), and each ORDER requires an order detail segment, which the base makes optional. The print gives OBR in that place; p 280: 'for use in pathology ordering OBR has become the default order detail segment. The same message can be used for medication and diet orders where the OBR is replaced with other order detail segments' (section 5.1.2.4, p 279: 'Order detail segment: One of several segments that can carry order information. Examples are OBR and RXO'), so the place is a required choice of OBR or the base order detail segments for medication and diet orders: RXO (pharmacy/treatment orders, v2.4 section 4.13), ODS or ODT (diet orders, v2.4 section 4.7); v2.4 section 4.4.1 note b lists the base order detail segments as OBR, RQD, RQ1, RXO, ODS and ODT, and RQD and RQ1 are the supply order segments (v2.4 section 4.10), not medication or diet orders, so the print does not let them replace OBR. Print erratum: '[IN3' (p 280) has no closing bracket; read as [IN3], as the base prints it. Unprinted group names (ADR-019 decision 3), the base groups with the same members less NTE: PATIENT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT) and ORDER (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.ORDER.CONTENT).",
         profile: "au-adrm-2021",
         baseVersion: "2.4",
         rule: "HL7au:00060.1",
@@ -39,8 +40,6 @@ extension MessageStructureTable {
                 .segment("ORC", min: 1, max: 1),
                 .choice(nil, min: 1, max: 1, alternatives: [
                     .segment("OBR", min: 1, max: 1),
-                    .segment("RQD", min: 1, max: 1),
-                    .segment("RQ1", min: 1, max: 1),
                     .segment("RXO", min: 1, max: 1),
                     .segment("ODS", min: 1, max: 1),
                     .segment("ODT", min: 1, max: 1),
@@ -158,6 +157,27 @@ extension MessageStructureTable {
                     .segment("ROL", min: 1, max: 1),
                     .segment("VAR", min: 0, max: 1),
                 ]),
+            ]),
+        ]
+    )
+
+    private static let auADRM2021_RRI_I12: MessageStructure = MessageStructure(
+        id: "RRI_I12",
+        version: "2.4",
+        triggers: ["RRI^I12"],
+        citation: "HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.2 Patient Referral Acknowledgement Message structure (RRI_I12), RRI^I12^RRI_I12 Referral response Information message structure, p 325: MSH, MSA, [ERR], [ RF1 {PRD} PID ]; 'On receiving a REF^I12 message a system must produce a RRI^I12 response with the following message structure' and 'RF1, PID, PRD group has been made optional for backward compatibility' (p 325). Constrains HL7 v2.4 Chapter 11, section 11.5.1, p 11-17: MSA is required, optional in the base; ERR, which the base does not have, is matched here only; RF1, PRD and PID are one optional group, where the base requires PRD and PID; base segments the print omits are not findings (ADR-019 decision 7). Unprinted group name (ADR-019 decision 3): RF1_GROUP (synthesised), a group the base RRI_I12 does not have.",
+        profile: "au-adrm-2021",
+        baseVersion: "2.4",
+        rule: "HL7au:00060.1",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .group("RF1_GROUP", min: 0, max: 1, elements: [
+                .segment("RF1", min: 1, max: 1),
+                .segment("PRD", min: 1, max: nil),
+                .segment("PID", min: 1, max: 1),
             ]),
         ]
     )

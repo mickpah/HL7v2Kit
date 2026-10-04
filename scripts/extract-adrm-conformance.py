@@ -175,16 +175,21 @@ SHIPPED = {
 # point names, or only one half of a two-part rule (presence but not
 # code-table membership).
 PARTIAL = {
-    # P8b-4 (ADR-019 decisions 7 and 8): the segment half through the ADRM-2021 structures.
-    'HL7au:00060.1': 'P8b-4: with `messageStructureSeverity` set, a v2.4 ORU^R01, ORM^O01 or '
-                     'REF^I12 is also matched against the ADRM-2021 structure (pp 205, 279, 324; '
-                     '`Resources/structures/profiles/au-adrm-2021/`) and a segment it requires '
-                     'and the message lacks is reported; removed base segments are not findings '
-                     '(decision 7). The field and component half is the Validator core. Not '
-                     'enforced: RRI^I12 (p 325 makes MSA required), the Appendix 8 simplified REF '
-                     'structure (p 484), the ORR^O02 print (pp 280 to 281, unbalanced bracket) and '
-                     'the prose-only PV1 mandate on ORU^R01 (pp 17, 205); permanent-limitations '
-                     'register section E, P8b-4 addendum',
+    # P8b-4 and P8b-4a (ADR-019 decisions 7 and 8): the segment half through the ADRM-2021
+    # structures.
+    'HL7au:00060.1': 'P8b-4, P8b-4a: with `messageStructureSeverity` set, a v2.4 ORU^R01, '
+                     'ORM^O01, REF^I12 or RRI^I12 is also matched against the ADRM-2021 structure '
+                     '(pp 205, 279, 324, 325; `Resources/structures/profiles/au-adrm-2021/`) and a '
+                     'segment it requires and the message lacks is reported (RRI^I12: MSA); '
+                     'removed base segments are not findings (decision 7), and a base structure '
+                     'finding is dropped where the ADRM structure accepts the message at that '
+                     'point (a segment it places there, or one it makes optional), every other '
+                     'base finding kept. The field and component half is the Validator core. Not '
+                     'enforced: the Appendix 8 simplified REF structure (p 484, selected by '
+                     'MSH-12), the ORR^O02 print (pp 280 to 281, unbalanced bracket), the '
+                     'prose-only PV1 mandate on ORU^R01 (pp 17, 205), the narrowed maxima (REF^I12 '
+                     '`[IN1]`, p 324) and the order status response OBX (p 281); '
+                     'permanent-limitations register section E, P8b-4 and P8b-4a addenda',
     'HL7au:000043.1': 'M32: the format\'s OID and "ISO" halves ship caller-asserted on MSH-4 '
                       '(`auNASHTransport`); the "registered organisation name in HI service" half '
                       'needs the HPOS/HI directory and stays out',

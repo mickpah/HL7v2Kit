@@ -1,0 +1,19 @@
+{
+  "structure": "RRI_I12",
+  "version": "2.4",
+  "profile": "au-adrm-2021",
+  "baseVersion": "2.4",
+  "rule": "HL7au:00060.1",
+  "citation": "HL7AUSD-STD-OO-ADRM-2021.1, section 7.2.2 Patient Referral Acknowledgement Message structure (RRI_I12), RRI^I12^RRI_I12 Referral response Information message structure, p 325: MSH, MSA, [ERR], [ RF1 {PRD} PID ]; 'On receiving a REF^I12 message a system must produce a RRI^I12 response with the following message structure' and 'RF1, PID, PRD group has been made optional for backward compatibility' (p 325). Constrains HL7 v2.4 Chapter 11, section 11.5.1, p 11-17: MSA is required, optional in the base; ERR, which the base does not have, is matched here only; RF1, PRD and PID are one optional group, where the base requires PRD and PID; base segments the print omits are not findings (ADR-019 decision 7). Unprinted group name (ADR-019 decision 3): RF1_GROUP (synthesised), a group the base RRI_I12 does not have.",
+  "triggers": ["RRI^I12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "group": "RF1_GROUP", "nameSource": "synthesised", "min": 0, "max": 1, "elements": [
+      { "segment": "RF1", "min": 1, "max": 1 },
+      { "segment": "PRD", "min": 1, "max": null },
+      { "segment": "PID", "min": 1, "max": 1 }
+    ]}
+  ]
+}
