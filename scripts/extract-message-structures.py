@@ -384,7 +384,7 @@ def syntax_rows(lines, caption):
     v2.8.2) resets the columns; a footnote digit on a line of its own is furniture, and one at
     the left margin opens the page-foot footnotes, read as furniture up to the page footer."""
     pages = page_labels(lines)
-    rows, depth, choices, foot, placeholder = [], 0, 0, False, None
+    rows, depth, choices, foot, placeholder, ellipsis = [], 0, 0, False, None, None
     code_col, desc_col = caption.code_col, caption.desc_col
     caption.end_page = caption.page
     skip = 0
@@ -445,6 +445,13 @@ def syntax_rows(lines, caption):
             # of the table first, so its page-break repeats of the caption are consumed.
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()!r} among a choice's alternatives"
             continue
+        if not left and rows and re.fullmatch(r"(?:\.\s*){3}|…", desc.strip()):
+            # An ellipsis alone in the description column between syntax rows stands for segments
+            # the print does not enumerate (v2.4 and v2.5.1 CH05 5.10.4.2 ERP^R09: 'the segments
+            # indicated by the ellipsis (...)' are those of another message; P8b-13): ruling G6,
+            # unreadable once a later syntax row shows the ellipsis is inside the table.
+            ellipsis = ellipsis or f"line {i + 1}: placeholder (G6): an ellipsis row stands for unlisted segments"
+            continue
         if not left:
             # "--- NAME" with "begin" or "end" wrapped onto the description's next line, or with
             # the name's last word wrapped too (v2.7.1 CH07 7.17.1 "--- SUBJECT POPULATION/LOCATION"
@@ -465,6 +472,7 @@ def syntax_rows(lines, caption):
         choices += left.count("<") - left.count(">")
         rows.append(Row(left, desc, i, pages[i]))
         caption.end_page = pages[i]
+        placeholder = placeholder or ellipsis
     if placeholder:
         raise UnknownNotation(placeholder)
     return rows

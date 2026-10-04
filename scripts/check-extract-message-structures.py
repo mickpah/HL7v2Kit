@@ -1226,6 +1226,11 @@ def check_v24_reader_layouts():
                             ("MSH", "Header"), ("MSA", "Ack")])
     assert s, report
     assert [e["segment"] for e in s["elements"]] == ["MSH", "PID"], s["elements"]
+    # An ellipsis alone in the description column between syntax rows (v2.4 and v2.5.1 CH05
+    # ERP^R09) stands for unlisted segments: ruling G6, unreadable.
+    for dots in ("...", ". . ."):
+        s, report = _structure([("MSH", "Header"), ("ERQ", "Query"), ("", dots), ("[ DSC ]", "Continuation")])
+        assert s is None and "placeholder (G6)" in [r for r in report if r[1] == "skipped"][0][2], report
 
 
 def check_syntax_cell_erratum_occurrence():

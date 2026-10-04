@@ -53,7 +53,6 @@ extension MessageStructureTable {
         "EAR_U08": v2_5_1_EAR_U08,
         "EDR_R07": v2_5_1_EDR_R07,
         "EQQ_Q04": v2_5_1_EQQ_Q04,
-        "ERP_R09": v2_5_1_ERP_R09,
         "ESR_U02": v2_5_1_ESR_U02,
         "ESU_U01": v2_5_1_ESU_U01,
         "INR_U06": v2_5_1_INR_U06,
@@ -1461,23 +1460,6 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
             .segment("EQL", min: 1, max: 1),
-            .segment("DSC", min: 0, max: 1),
-        ]
-    )
-
-    private static let v2_5_1_ERP_R09: MessageStructure = MessageStructure(
-        id: "ERP_R09",
-        version: "2.5.1",
-        triggers: ["ERP^R09"],
-        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-120.",
-        requiresExactMatch: false,
-        elements: [
-            .segment("MSH", min: 1, max: 1),
-            .segment("SFT", min: 0, max: nil),
-            .segment("MSA", min: 1, max: 1),
-            .segment("ERR", min: 0, max: 1),
-            .segment("QAK", min: 1, max: 1),
-            .segment("ERQ", min: 1, max: 1),
             .segment("DSC", min: 0, max: 1),
         ]
     )
