@@ -71,10 +71,15 @@ extension Validator {
 
         let table = structures ?? MessageStructureTable.structures(for: message.version.grammarVersion)
         let registered = gaps ?? MessageStructureTable.notModelled(for: message.version.grammarVersion)
-        let byTrigger = table.values
+        // The generated tables are read through a trigger index built once (P8b-18);
+        // synthetic tables from tests are scanned.
+        let indexed = structures == nil && gaps == nil
+            ? MessageStructureTable.owners(messageCode: code, triggerEvent: event, version: message.version) : nil
+        let byTrigger = indexed?.modelled ?? table.values
             .filter { $0.accepts(messageCode: code, triggerEvent: event) }
             .map(\.id).sorted()
-        let gapsByTrigger = registered.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted()
+        let gapsByTrigger = indexed?.registered
+            ?? registered.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted()
         let ver = "v\(message.version.rawValue)"
         // A locally defined trigger (CH02 reserves message types and trigger events
         // beginning with Z for local definition) that the version prints under no

@@ -198,4 +198,24 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.isComplete(.v2_7, completeVersions: [.v2_7_1]))
         #expect(!MessageStructureTable.isComplete(.v2_8, completeVersions: [.v2_7_1]))
     }
+
+    @Test("The trigger index gives the same owners as scanning every structure and registered gap (P8b-18)")
+    func triggerIndexEqualsScan() {
+        for version in Version.allCases {
+            let table = MessageStructureTable.structures(for: version)
+            let gaps = MessageStructureTable.notModelled(for: version)
+            var keys = Set(table.values.flatMap(\.triggers) + gaps.values.flatMap(\.triggers))
+            keys.formUnion(["ADT^A99", "ACK^", "ACK^A01", "ZZZ^Z01", "ORU^"])
+            for key in keys {
+                let parts = key.split(separator: "^", maxSplits: 1, omittingEmptySubsequences: false).map(String.init)
+                let code = parts[0], event = parts.count > 1 ? parts[1] : ""
+                for event in event == "*" ? ["*", "Q99"] : [event] {
+                    let scan = (table.values.filter { $0.accepts(messageCode: code, triggerEvent: event) }.map(\.id).sorted(),
+                                gaps.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted())
+                    let index = MessageStructureTable.owners(messageCode: code, triggerEvent: event, version: version)
+                    #expect(index.modelled == scan.0 && index.registered == scan.1, "\(version) \(code)^\(event)")
+                }
+            }
+        }
+    }
 }

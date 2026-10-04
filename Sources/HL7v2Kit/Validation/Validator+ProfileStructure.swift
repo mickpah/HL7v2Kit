@@ -68,8 +68,28 @@ extension Validator {
         // message index, so the loop ends within the message's length; a dropped
         // `missing` is located at the end, after every segment was consumed, so
         // nothing follows it.
+        // P8b-18: a segment the base structure does not name anywhere is unexpected
+        // wherever a base parse reaches it, and dropped when the profile places it
+        // there, so the loop would pass over every such occurrence one round at a
+        // time. They are passed over together on entry (one pass), which leaves the
+        // result unchanged and keeps the loop for the segments the base does name.
         var skipped: Set<Int> = []
         var findings = baseFindings
+        if base.requiresExactMatch, kept.isEmpty, let first = findings.first,
+           case .messageStructureSegmentUnexpected = first.code {
+            let inBase = base.elements.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
+            let alien = ids.indices.filter { index in
+                guard !inBase.contains(ids[index]), !passedOver.contains(ids[index]),
+                      !StructureMatcher.isTransparent(ids[index]) else { return false }
+                let here = at(index)
+                return placed.contains(here) && !unsettled.contains(here)
+            }
+            if !alien.isEmpty {
+                skipped = Set(alien)
+                findings = matchStructure(base, message: message, severity: severity, skipping: skipped)
+                kept = findings.filter(keeps)
+            }
+        }
         while base.requiresExactMatch, kept.isEmpty, let dropped = findings.first,
               case .messageStructureSegmentUnexpected = dropped.code,
               let index = ids.indices.first(where: { at($0) == dropped.location.pathDescription }),

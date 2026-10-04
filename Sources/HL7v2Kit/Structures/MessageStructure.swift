@@ -233,6 +233,38 @@ public enum MessageStructureTable {
         generatedNotModelled(for: version)
     }
 
+    /// The modelled and the registered structure IDs whose triggers accept
+    /// `messageCode`^`triggerEvent` on `version`'s grammar version, each
+    /// sorted: the same sets as filtering ``structures(for:)`` and
+    /// ``notModelled(for:)`` with `accepts`, read from an index built once
+    /// per grammar version (P8b-18, performance).
+    static func owners(messageCode: String, triggerEvent: String,
+                       version: Version) -> (modelled: [String], registered: [String]) {
+        guard let index = triggerIndex[version.grammarVersion] else { return ([], []) }
+        func look(_ map: [String: [String]]) -> [String] {
+            let exact = map["\(messageCode)^\(triggerEvent)"] ?? []
+            let any = map["\(messageCode)^*"] ?? []
+            return any.isEmpty ? exact : Array(Set(exact + any)).sorted()
+        }
+        return (look(index.modelled), look(index.registered))
+    }
+
+    private static let triggerIndex: [Version: (modelled: [String: [String]], registered: [String: [String]])] = {
+        func build(_ entries: [(id: String, triggers: [String])]) -> [String: [String]] {
+            var map: [String: [String]] = [:]
+            for entry in entries {
+                for trigger in Set(entry.triggers) { map[trigger, default: []].append(entry.id) }
+            }
+            return map.mapValues { $0.sorted() }
+        }
+        var index: [Version: (modelled: [String: [String]], registered: [String: [String]])] = [:]
+        for version in Set(Version.allCases.map(\.grammarVersion)) {
+            index[version] = (build(structures(for: version).values.map { ($0.id, $0.triggers) }),
+                              build(notModelled(for: version).map { ($0.key, $0.value.triggers) }))
+        }
+        return index
+    }()
+
     /// The constrained structures `locale`'s profile prints, keyed by the
     /// base structure ID they constrain (P8b-4): the ADRM-2021 structures for
     /// ``HL7Locale/auLocalisation``, none otherwise. Generated from
