@@ -714,6 +714,40 @@ def check_v282_reader_layouts():
         structures["XYZ_X01"]["citation"]
 
 
+def check_v271_reader_layouts():
+    # P8b-16 (v2.7.1 CH07 7.17.1 OSM^R26^OSM_R26): the header row prints the caption's own
+    # CODE^EVT^STRUCT in place of "Segments", with the title wrapped onto the next line, and repeats
+    # so after the page break; a group mark whose name's last word wraps with "begin" or "end"
+    # ("--- SUBJECT POPULATION/LOCATION" then "IDENTIFICATION begin") is one mark.
+    text = ["\fChapter 9: Synthetic", "9.1.1 XYZ - synthetic (Event X01)",
+            "                         XYZ^X01^XYZ_X01: Synthetic Message",
+            "   XYZ^X01^XYZ_X01             Synthetic Shipment Manifest   Status   Chapter",
+            "                               Message",
+            "   MSH                         Message Header                         2",
+            "   [                           --- WRAPPED NAME",
+            "                               PART begin",
+            "      PID                      Patient                                3",
+            "Page 1                                     Health Level Seven, Version 2.7.1",
+            "\fChapter 9: Synthetic",
+            "     XYZ^X01^XYZ_X01               Synthetic Shipment Manifest  Status   Chapter",
+            "                                   Message",
+            "        [PD1]                      Demographics                         3",
+            "     ]                             --- WRAPPED NAME",
+            "                                   PART end",
+            "Page 2                                     Health Level Seven, Version 2.7.1"]
+    fix = {**EMPTY, "errata": [{"version": "2.7.1", "where": "group-mark", "structure": "XYZ_X01",
+                                "printed": "WRAPPED NAME PART", "intended": "WRAPPED_NAME_PART", "citation": "c"}]}
+    structures, report, _ = _run("2.7.1", [("syn", text)], fix)
+    s = structures.get("XYZ_X01")
+    assert s, report
+    assert [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "WRAPPED_NAME_PART"], s["elements"]
+    assert [e["segment"] for e in s["elements"][1]["elements"]] == ["PID", "PD1"], s["elements"]
+    # The header form is read only when its cell is the caption it follows: another ID is prose.
+    text[3] = text[3].replace("XYZ^X01^XYZ_X01", "XYZ^X02^XYZ_X02")
+    structures, report, _ = _run("2.7.1", [("syn", text)], fix)
+    assert "XYZ_X01" not in structures, structures.get("XYZ_X01")
+
+
 def check_event_ranges():
     assert ext.expand_events("C01-C08") == [f"C0{n}" for n in range(1, 9)]
     assert ext.expand_events("PCG,PCH,PCJ") == ["PCG", "PCH", "PCJ"]
@@ -1227,7 +1261,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
           check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
-          check_colon_caption_with_space_ends_table, check_v282_reader_layouts,
+          check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
           check_0354_triggers_merged]
 
 

@@ -85,6 +85,10 @@ TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")(\s{2,})(\S.*)$
 COLON = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r") ?:\s+(\S.*)$")
 # "Descriptions" in v2.8.2 CH04 4.16.6 and 4.16.7 (QBP_O33, RSP_O33; P8b-11).
 COLUMNS = re.compile(r"^(\s*)Segments\s{2,}(Descriptions?)\b")
+# v2.7.1 CH07 7.17.1 prints the caption's own CODE^EVT^STRUCT in place of "Segments" in the header
+# row ("OSM^R26^OSM_R26  Unsolicited Specimen Shipment Manifest  Status  Chapter"; P8b-16): the
+# same column row, recognised only when the cell is the caption it follows.
+COLUMNS_CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}\^\S+)\s{2,}(\S.*?)\s{2,}Status\s+Chap")
 # v2.3: the message code alone, a title and "Chapter"; the event is in the section title.
 CODE_ONLY = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})(\s{3,})(\S.*?)\s{2,}Chapter\s*$")
 TITLE_EVENTS = re.compile(r"\(\s*events?\s+([A-Z0-9]{3}(?:\s*(?:,|and|&|-|to)\s*[A-Z0-9]{3})*)\s*\)", re.I)
@@ -410,6 +414,10 @@ def syntax_rows(lines, caption):
         if cols:
             code_col, desc_col = len(cols.group(1)), cols.start(2)
             continue
+        cols = caption.era == "caret-colon" and COLUMNS_CAPTION.match(line)
+        if cols and cols.group(2) == caption.printed:
+            code_col, desc_col = len(cols.group(1)), cols.start(3)
+            continue
         if heading(line, caption.era, caption.source):
             break
         indent = len(line) - len(line.lstrip())
@@ -432,8 +440,11 @@ def syntax_rows(lines, caption):
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()!r} among a choice's alternatives"
             continue
         if not left:
-            # "--- NAME" with "begin" or "end" wrapped onto the description's next line.
-            if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(r"(?i)(begin|end)\b", desc):
+            # "--- NAME" with "begin" or "end" wrapped onto the description's next line, or with
+            # the name's last word wrapped too (v2.7.1 CH07 7.17.1 "--- SUBJECT POPULATION/LOCATION"
+            # then "IDENTIFICATION begin"; P8b-16).
+            if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(
+                    r"(?:[A-Z][A-Z0-9_/]*\s+)?(?i:begin|end)\b", desc):
                 rows[-1].desc += " " + desc
             elif rows and (MARK_LIKE.match(desc) if depth == 0 else GROUP_MARK.match(desc)):
                 # A group mark with an empty syntax cell: inside a group (v2.5.1 MDM_T02 '---
