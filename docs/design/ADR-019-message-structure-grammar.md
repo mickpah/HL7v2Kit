@@ -1385,17 +1385,23 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   (`GroupSpanIndex`, `ScopeLookup`), for a lookup of peer ID P from an anchor of ID A:
   - *Own level* of a group: its segments and those of the unnamed choices in it, not those of
     nested groups or named choices.
-  - *Pairing boundary*: a group or named choice N whose own level holds P, and some A inside N
-    (at N's own level, or in a nested group whose own level does not hold P) first finds P at
-    N's own level. N pairs its own segments; ORDER_PRIOR `{ ORC OBR ... {OBSERVATION_PRIOR
-    { OBX }} }` is one for ORC, OBR and OBX anchors. A pairing boundary is never transparent.
-  - *Transparency*: a child group or named choice that occurs at most once per occurrence of its
-    parent (maximum 1) and is not a pairing boundary is transparent: its own-level segments count
-    as part of the parent's own level, recursively through transparent children. A bracket that
-    cannot repeat makes segments optional together; it is not a scope. DFT_P03 and DFT_P11
+  - *Transparency* (fix round 3 as ruled): a child group or named choice that occurs at most
+    once per occurrence of its parent (maximum 1) is transparent: its own-level segments count as
+    part of the parent's own level, recursively through transparent children. A bracket that
+    cannot repeat makes segments optional together; it is not a scope, and it is never a pairing
+    boundary. DFT_P03 and DFT_P11
     `COMMON_ORDER { ... [ORDER { OBR [{NTE}] }] [{OBSERVATION { OBX ... }}] }` (v2.5.1 CH06 6.4.3)
     and the v2.8.2 CC* `CLINICAL_*_DETAIL { CLINICAL_*_OBJECT <OBR | ...> [{CLINICAL_*_OBSERVATION
-    { OBX ... }}] }` are the cases that need it.
+    { OBX ... }}] }` need it, and so does the v2.8.2 COMMON_ORDER `{ ORC ... [ORDER_DOCUMENT
+    { OBX ... TXA }] }` of ORU_R01 and OUL_R22 to R24, whose ORC belongs to the whole order (fix
+    round 2 had cut it for OBX anchors, so an order's OBX lost its ORC).
+  - *Pairing boundary*: only a *repeating* nested group or named choice can be one. It is one for
+    a lookup (anchor ID A, peer ID P) when its own level holds P and some A inside it (at its own
+    level, or in a nested group whose own level does not hold P) first finds P at its own level:
+    it claims its own segments. ORDER_PRIOR `{ ORC OBR ... {OBSERVATION_PRIOR { OBX }} }` repeats
+    on every version and is one for ORC, OBR and OBX anchors. A test fails if any printed
+    structure has a non-repeating group that would claim an ORC/OBR pair (none does), because
+    such a group would now leak its ORC or OBR into the enclosing order.
   - *Extended own level*: a group's own level plus the own levels of its transparent
     descendants reached through transparent groups only.
   - The peer is taken from the first of: the extended own level of the anchor's innermost group;
@@ -1412,9 +1418,10 @@ and fixtures, only the quoted condition text where a gate leg was removed.
     anchor in DFT ORDER takes its COMMON_ORDER occurrence (with the sibling OBSERVATION OBX); the
     order's OBR in OML_O21 takes OBSERVATION_REQUEST without ORDER_PRIOR.
   - Each span keeps its structure position; the index reads the definition there.
-  - Through the Validator, a DFT message with an OBX after an OBR has no spans: every
-    COMMON_ORDER element is optional, so the OBX may also open a new COMMON_ORDER and the
-    accepting parses disagree; the ORC walk is used there.
+  - Through the Validator, a DFT message whose COMMON_ORDER carries an ORC and an OBR (or an OBX
+    after the OBR) gets no spans: every COMMON_ORDER element is optional, so the OBR (or OBX) may
+    also open a new COMMON_ORDER and the accepting parses disagree. The ORC walk is used there,
+    and DFT transparency is exercised only on the one-pass parse in the tests.
 - **When spans are used.** The version is complete, the structure resolves (lookup rules 1 to
   4), the message is not a fragment, the base match has no finding, and the match does not
   withhold its spans (below). "No finding" is the base match before any profile structure

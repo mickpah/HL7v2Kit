@@ -24,18 +24,19 @@ enum GroupScoping: Sendable {
 /// - **Own level.** A group's own level is its segments and those of the
 ///   unnamed choices in it (an unnamed choice opens no span), not those of
 ///   nested groups or named choices.
-/// - **Pairing boundary.** A group or named choice N is a pairing boundary for
-///   the lookup when N's own level holds `peer` and some `anchor` segment inside
-///   N (at N's own level, or in a nested group whose own level does not hold
-///   `peer`) first finds `peer` at N's own level. N then pairs its own segments,
-///   as ORDER_PRIOR { [ORC] OBR ... {OBSERVATION_PRIOR { OBX }} } does for ORC,
-///   OBR and OBX anchors. A pairing boundary is never transparent.
 /// - **Transparency.** A child group or named choice that occurs at most once
-///   per occurrence of its parent (maximum 1) and is not a pairing boundary is
-///   transparent: its own-level segments count as part of the parent's own
-///   level, recursively (a transparent child's transparent children too). A
-///   bracket that cannot repeat makes segments optional together; it is not a
-///   scope of its own.
+///   per occurrence of its parent (maximum 1) is transparent: its own-level
+///   segments count as part of the parent's own level, recursively (a
+///   transparent child's transparent children too). A bracket that cannot
+///   repeat makes segments optional together; it is not a scope of its own, and
+///   it is never a pairing boundary (fix round 3: the v2.8.2 COMMON_ORDER
+///   { ORC ... [ORDER_DOCUMENT { OBX ... TXA }] } belongs to its order).
+/// - **Pairing boundary.** A *repeating* group or named choice N (maximum not
+///   1) is a pairing boundary for the lookup when it claims its own segments:
+///   N's own level holds `peer` and some `anchor` segment inside N (at N's own
+///   level, or in a nested group whose own level does not hold `peer`) first
+///   finds `peer` at N's own level. ORDER_PRIOR { [ORC] OBR ...
+///   {OBSERVATION_PRIOR { OBX }} } is one for ORC, OBR and OBX anchors.
 /// - **Extended own level** of a group: its own level plus that of every
 ///   transparent descendant reached through transparent groups only.
 ///
@@ -169,8 +170,15 @@ struct ScopeLookup {
         }
     }
 
-    /// Whether the group or named choice `group` is a pairing boundary.
+    /// Whether the group or named choice `group` is a pairing boundary: it
+    /// repeats and claims its own segments.
     func pairing(_ group: StructureElement) -> Bool {
+        group.max != 1 && claims(group)
+    }
+
+    /// Whether `group`'s own level holds the peer and an anchor inside it first
+    /// finds the peer there, whatever its cardinality.
+    func claims(_ group: StructureElement) -> Bool {
         guard Self.ownLevel(group.children).contains(peer) else { return false }
         func unclaimed(_ children: [StructureElement]) -> Bool {
             children.contains { child in
@@ -184,9 +192,10 @@ struct ScopeLookup {
         return unclaimed(group.children)
     }
 
-    /// Whether the group or named choice `group` is transparent.
+    /// Whether the group or named choice `group` is transparent: it occurs at
+    /// most once per occurrence of its parent.
     func transparent(_ group: StructureElement) -> Bool {
-        group.max == 1 && !pairing(group)
+        group.max == 1
     }
 
     /// The segment IDs of the extended own level of a group with `children`.

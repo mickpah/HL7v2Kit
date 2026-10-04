@@ -5,6 +5,7 @@
 // per parent occurrence and is not a pairing boundary is transparent; a pairing
 // boundary holds for every anchor it pairs.
 
+import Dispatch
 import Testing
 @testable import HL7v2Kit
 
@@ -115,6 +116,8 @@ struct GroupSpanScopeTests {
         let ids = ["MSH", "EVN", "PID", "ORC", "OBR", "OBX", "ORC", "OBR", "OBX", "FT1"]
         let exact = ExactStructureMatcher(structure: structure).match(ids)
         #expect(exact.findings.isEmpty && exact.spansWithheld, "\(key): the print is ambiguous here")
+        let orderOnly = ExactStructureMatcher(structure: structure).match(["MSH", "EVN", "PID", "ORC", "OBR", "FT1"])
+        #expect(orderOnly.findings.isEmpty && orderOnly.spansWithheld, "\(key): ORC then OBR is ambiguous too")
         let match = StructureMatcher(structure: structure).match(ids)
         #expect(match.findings.isEmpty, "\(key)")
         let index = GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
@@ -139,34 +142,67 @@ struct GroupSpanScopeTests {
         #expect(message.associatedIndex("OBR", fromIndex: obx) == obr, "\(msh9)")
     }
 
-    // MARK: - A pairing boundary is never transparent
+    // MARK: - Only a repeating group can be a pairing boundary
 
-    /// `MSH ORDER{ ORC [DETAIL{OBR}] [ORDER_PRIOR{ORC OBR [OBX]}] [OBX] }`: DETAIL and
-    /// ORDER_PRIOR both occur at most once, but ORDER_PRIOR pairs its own ORC and
-    /// OBR (and its OBX with its OBR), so it is cut for ORC, OBR and OBX anchors.
-    @Test("A non-repeating pairing group stays cut; a non-repeating plain group is transparent")
-    func pairingNeverTransparent() {
-        let elements: [StructureElement] = [
-            .segment("MSH", min: 1, max: 1),
-            .group("ORDER", min: 1, max: 1, elements: [
+    /// `MSH ORDER{ ORC [DETAIL{OBR}] PRIOR*{ORC OBR [OBX]} [OBX] }` against the same
+    /// structure with PRIOR printed as non-repeating. Fix round 3 (the controller's
+    /// ruling, replacing round 2's "a pairing boundary is never transparent"): a
+    /// group that occurs at most once per parent occurrence is transparent and
+    /// never a boundary, so a non-repeating PRIOR's ORC and OBR join ORDER's own
+    /// level; a repeating PRIOR that claims its own ORC/OBR/OBX stays cut. No
+    /// printed structure has a non-repeating group that claims an ORC/OBR pair
+    /// (guarded by `noNonRepeatingPairingGroup`), so the first case is synthetic.
+    @Test("A repeating pairing group is cut; the same group printed non-repeating is transparent")
+    func onlyRepeatingGroupsPair() {
+        func elements(priorMax: Int?) -> [StructureElement] {
+            [.segment("MSH", min: 1, max: 1),
+             .group("ORDER", min: 1, max: 1, elements: [
                 .segment("ORC", min: 1, max: 1),
                 .group("DETAIL", min: 0, max: 1, elements: [.segment("OBR", min: 1, max: 1)]),
-                .group("ORDER_PRIOR", min: 0, max: 1, elements: [
+                .group("PRIOR", min: 0, max: priorMax, elements: [
                     .segment("ORC", min: 1, max: 1), .segment("OBR", min: 1, max: 1), .segment("OBX", min: 0, max: 1)]),
                 .segment("OBX", min: 0, max: 1),
-            ]),
-        ]
+             ])]
+        }
         let ids = ["MSH", "ORC", "OBR", "ORC", "OBR", "OBX", "OBX"]
-        let structure = MessageStructure(id: "T", version: "2.5.1", triggers: [], citation: "test", elements: elements)
-        let match = ExactStructureMatcher(structure: structure).match(ids)
-        #expect(match.findings.isEmpty && !match.spansWithheld)
-        let index = GroupSpanIndex(spans: match.spans, elements: elements, ids: ids)
-        let main = index.context(around: 1, of: "ORC", for: "OBR")
-        #expect(main.contains(2) && !main.contains(4), "\(main)")
-        #expect(index.context(around: 2, of: "OBR", for: "ORC").filter { ids[$0] == "ORC" } == [1])
-        #expect(index.context(around: 6, of: "OBX", for: "OBR").filter { ids[$0] == "OBR" } == [2])
-        #expect(index.context(around: 5, of: "OBX", for: "OBR").filter { ids[$0] == "OBR" } == [4])
-        #expect(index.context(around: 4, of: "OBR", for: "ORC").filter { ids[$0] == "ORC" } == [3])
+        for priorMax in [nil, 1] as [Int?] {
+            let structure = MessageStructure(id: "T", version: "2.5.1", triggers: [], citation: "test",
+                                             elements: elements(priorMax: priorMax))
+            let match = ExactStructureMatcher(structure: structure).match(ids)
+            #expect(match.findings.isEmpty && !match.spansWithheld)
+            let index = GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
+            let obrs = index.context(around: 1, of: "ORC", for: "OBR").filter { ids[$0] == "OBR" }
+            let orderOBX = index.context(around: 6, of: "OBX", for: "OBR").filter { ids[$0] == "OBR" }
+            if priorMax == nil {
+                #expect(obrs == [2], "repeating PRIOR is cut for the order's ORC")
+                #expect(orderOBX == [2], "repeating PRIOR is cut for the order's OBX")
+                #expect(index.context(around: 4, of: "OBR", for: "ORC").filter { ids[$0] == "ORC" } == [3])
+                #expect(index.context(around: 5, of: "OBX", for: "OBR").filter { ids[$0] == "OBR" } == [4])
+            } else {
+                #expect(obrs == [2, 4], "non-repeating PRIOR is transparent: its OBR joins ORDER's level")
+                #expect(orderOBX == [2, 4])
+            }
+        }
+    }
+
+    /// The fix-round-3 principle is safe on the prints only if no structure has
+    /// a non-repeating nested group that claims an ORC/OBR pair (a non-repeating
+    /// prior-result style group): such a group would now leak its ORC or OBR
+    /// into the enclosing order.
+    @Test("No printed structure has a non-repeating group that claims its own ORC/OBR pair")
+    func noNonRepeatingPairingGroup() {
+        var found: [String] = []
+        for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+            for structure in MessageStructureTable.structures(for: version).values {
+                for group in Self.groups(structure.elements) where group.max == 1 {
+                    for (anchor, peer) in [("ORC", "OBR"), ("OBR", "ORC")]
+                    where ScopeLookup(anchor: anchor, peer: peer).claims(group) {
+                        found.append("v\(version.rawValue) \(structure.id) \(group.groupName ?? "?") \(anchor)>\(peer)")
+                    }
+                }
+            }
+        }
+        #expect(found.isEmpty, "\(found)")
     }
 
     // MARK: - Every lookup the predicates make terminates, fast
@@ -197,6 +233,95 @@ struct GroupSpanScopeTests {
             case .choice(.none, _, _, let alternatives): return groups(alternatives)
             default: return [element] + groups(element.children)
             }
+        }
+    }
+
+    /// Runs `work` on another thread and waits at most `seconds`: a lookup that
+    /// does not terminate fails the test (the thread is left behind) instead of
+    /// hanging the run. Returns the elapsed time, or nil on a timeout.
+    static func watchdog(_ seconds: Int, _ work: @escaping @Sendable () -> Void) -> Duration? {
+        let done = DispatchSemaphore(value: 0)
+        let start = ContinuousClock.now
+        DispatchQueue.global().async {
+            work()
+            done.signal()
+        }
+        guard done.wait(timeout: .now() + .seconds(seconds)) == .success else { return nil }
+        return ContinuousClock.now - start
+    }
+
+    /// Every message-level lookup (`context`, `group`, and so `region`) for every
+    /// segment of a conforming message of every structure on every version, with
+    /// the group-dependent pairs.
+    @Test("Message-level lookups terminate, fast, on a conforming message of every structure")
+    func everyMessageLookupTerminates() {
+        final class Count: @unchecked Sendable { var structures = 0; var lookups = 0 }
+        let count = Count()
+        let elapsed = Self.watchdog(120) {
+            for version in [Version.v2_3, .v2_3_1, .v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2] {
+                let pairs = Self.predicatePairs(Validator.grammarTable(for: version))
+                for structure in MessageStructureTable.structures(for: version).values {
+                    let ids = GroupSpanPredicateTests.skeleton(structure.elements)
+                    let match = StructureMatcherCache.shared.matcher(for: structure).match(ids)
+                    guard match.findings.isEmpty, !match.spansWithheld else { continue }
+                    let index = GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
+                    count.structures += 1
+                    for (anchor, id) in ids.enumerated() {
+                        for pair in pairs where pair[0] == id {
+                            _ = index.context(around: anchor, of: id, for: pair[1])
+                            count.lookups += 1
+                        }
+                        for head in ["ORC", "OBR"] {
+                            _ = index.group(around: anchor, holding: head, counting: "OBX")
+                            count.lookups += 1
+                        }
+                    }
+                }
+            }
+        }
+        // The suite runs tests in parallel, so wall-clock time here depends on the
+        // load; the watchdog catches a lookup that does not terminate, and the
+        // long-message test below checks the growth rate.
+        #expect(elapsed != nil, "message-level lookups did not finish within 120 s")
+        #expect(count.structures > 500, "\(count.structures) structures")
+        if let elapsed { print("message-level lookups: \(count.lookups) on \(count.structures) structures in \(elapsed)") }
+    }
+
+    /// A long message through the whole Validator: ORU_R01 and OUL_R22 v2.5.1
+    /// with 300 orders of 10 results each (over 3,600 segments, over 3,000 group
+    /// occurrences), against the same message with 30 orders. Validation is
+    /// linear in the segments, so ten times the orders should cost about ten
+    /// times as much; a lookup quadratic in the group occurrences would make it
+    /// about a hundred. The ratio, not the wall-clock time, is bounded, because
+    /// the suite runs tests in parallel; each run sits under a watchdog.
+    @Test("A long ORU_R01 and OUL_R22 validate in time linear in their length", arguments: ["ORU", "OUL"])
+    func longMessage(_ which: String) throws {
+        func message(orders: Int) throws -> Message {
+            var body: [String] = which == "ORU" ? ["PID|1"] : ["PID|1", "SPM|1"]
+            for order in 1...orders {
+                let pair = which == "ORU"
+                    ? ["ORC|RE|P\(order)|F\(order)", "OBR|\(order)|P\(order)|F\(order)|X"]
+                    : ["OBR|\(order)|P\(order)|F\(order)|X", "ORC|SC|P\(order)|F\(order)"]
+                body += pair + (1...10).map { "OBX|\($0)|ST|C^Code||v" }
+            }
+            let msh9 = which == "ORU" ? "ORU^R01^ORU_R01" : "OUL^R22^OUL_R22"
+            return try GroupSpanScopeTests.message(msh9, "2.5.1", body)
+        }
+        let long = try message(orders: 300), short = try message(orders: 30)
+        #expect(GroupSpanSeamTests.describe(Validator().groupScoping(for: long)) == "spans")
+        final class Box: @unchecked Sendable { var findings: [String] = [] }
+        let box = Box()
+        func timed(_ message: Message) -> Duration? {
+            Self.watchdog(120) { box.findings = GroupSpanPredicateTests.groupFindings(Validator().validate(message).issues) }
+        }
+        let shortTimes = [timed(short), timed(short)].compactMap { $0 }
+        let longTime = timed(long)
+        #expect(longTime != nil && shortTimes.count == 2, "\(which): validation did not finish within 120 s")
+        #expect(box.findings.isEmpty, "\(which): \(box.findings.prefix(3))")
+        if let longTime, let shortTime = shortTimes.min() {
+            let ratio = longTime / shortTime
+            print("long-message \(which): \(long.segments.count) segments in \(longTime), \(short.segments.count) in \(shortTime), ratio \(ratio)")
+            #expect(ratio < 30, "\(which): \(longTime) against \(shortTime)")
         }
     }
 

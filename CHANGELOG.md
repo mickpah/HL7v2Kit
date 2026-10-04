@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   whose structure matches cleanly has its ORC/OBR peers, segment-presence atoms, ORC/OBR pair
   equality and group-scope cardinality rules scoped by the matched group instances, whatever
   `messageStructureSeverity` is. A peer is taken from the segment's own scope: the extended
-  own level of an enclosing group (a non-repeating child group that is not a pairing boundary
-  is transparent), or inside the segment's own group; never from a repeating sibling group
+  own level of an enclosing group (a non-repeating child group is transparent and never a
+  pairing boundary, so the v2.8.2 COMMON_ORDER's ORC serves the whole order; only a repeating
+  nested group that claims its own ORC/OBR, such as ORDER_PRIOR, is cut), or inside the
+  segment's own group; never from a repeating sibling group
   (v2.8.2 CSU_C09: the pharmacy ORC has no OBR) or a nested pairing group (the prior results
   of OML_O21, OML_O33, OML_O35 and OMQ_O42). Otherwise the ORC walk is used as before.
 - The P4-7 and P10-5a `messageCode not in (...)` gates are removed: from ORC-2, ORC-3, ORC-8,
