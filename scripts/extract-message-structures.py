@@ -89,6 +89,9 @@ FOOTNOTE = re.compile(r"^\s*\d{1,2}\s*$")      # a footnote digit on a line of i
 HEADING = re.compile(r"^(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+(\S.*\S)\s*$")   # 3.3.1, 4A.3.20, 2.B.7.5
 PAGE = re.compile(r"\bPage\s+(\d+[A-Z]?-\d+|\d+)\b")   # v2.7.1 and v2.8.2 number pages per chapter
 GROUP_MARK = re.compile(r"^---\s*([A-Z][A-Z0-9_]*)\s+((?i:begin|end))\b")   # "--- VISIT End" (v2.5.1 CSU_C09)
+# A mark as printed, misprints included ("--- INVOICE INFORMATION end", v2.6 EHC_E01): parse reads
+# it through GROUP_MARK after any cited group-mark erratum, and an unreadable one is an error.
+MARK_LIKE = re.compile(r"^---\s*[A-Z][A-Za-z0-9_ /+-]*?\s+(?i:begin|end)\b")
 TOKEN = re.compile(r"\s+|[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.|…|.")
 TRIGGER = re.compile(r"^[A-Z][A-Z0-9]{2}\^([A-Z0-9]{3}|\*)$")
 
@@ -381,7 +384,11 @@ def syntax_rows(lines, caption):
             break
         indent = len(line) - len(line.lstrip())
         if indent < code_col - 3:
-            break
+            if rows or not re.match(r"MSH\b", line.strip()):
+                break
+            # The table's first row (MSH) left of an indented caption (v2.6 ADT^A31^ADT_A05 at
+            # 3.3.31: the caption at column 7, its rows at 3): the rows set the column.
+            code_col = indent
         cells = split_row(line, desc_col)
         if cells is None:
             if depth == 0:
@@ -398,9 +405,11 @@ def syntax_rows(lines, caption):
             # "--- NAME" with "begin" or "end" wrapped onto the description's next line.
             if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(r"(?i)(begin|end)\b", desc):
                 rows[-1].desc += " " + desc
-            elif GROUP_MARK.match(desc) and depth > 0:
-                # A group mark with an empty syntax cell (v2.5.1 MDM_T02 '--- COMMON_ORDER end'
-                # with no '}]'): kept, but parse reads it only through a cited group-close erratum.
+            elif rows and (MARK_LIKE.match(desc) if depth == 0 else GROUP_MARK.match(desc)):
+                # A group mark with an empty syntax cell: inside a group (v2.5.1 MDM_T02 '---
+                # COMMON_ORDER end' with no '}]') parse reads an end only through a cited
+                # group-close erratum; a begin/end pair with no brackets (v2.6 CH16 '---
+                # INVOICE_INFORMATION begin') is a required, non-repeating named group (P8b-10).
                 rows.append(Row("", desc, i, pages[i]))
             continue
         if depth == 0 and rows and not _NOTATION.match(left):
@@ -414,6 +423,30 @@ def syntax_rows(lines, caption):
     return rows
 
 
+def _corrected(desc, marks, used):
+    """A row's description with a cited group-mark erratum applied (printed name to intended)."""
+    for printed, intended in (marks or {}).items():
+        if re.match(r"^---\s*" + re.escape(printed) + r"\s+(?i:begin|end)\b", desc):
+            desc = desc.replace(printed, intended, 1)
+            if used is not None:
+                used.add(printed)
+    return desc
+
+
+def _cell_fixed(row, fixes, used):
+    """A row with a cited syntax-cell erratum applied: printed and intended are the row's cell then
+    its description, spaces collapsed; only the cell may differ."""
+    printed = " ".join(f"{row.left} {row.desc}".split())
+    e = fixes.get(printed)
+    if not e:
+        return row
+    desc = " ".join(row.desc.split())
+    if not e["intended"].endswith(" " + desc if desc else ""):
+        raise UnknownNotation(f"syntax-cell erratum for {printed!r} changes the description")
+    used.add(id(e))
+    return Row(e["intended"][:len(e["intended"]) - len(desc)].strip(), row.desc, row.line, row.page)
+
+
 def parse(rows, marks=None, used=None):
     """Elements from syntax rows, by bracket balance. A group the print leaves unnamed has
     "group": None until name_groups resolves it. A choice (P8b-6) is "<", alternatives split
@@ -425,7 +458,21 @@ def parse(rows, marks=None, used=None):
     stack = [root]
     for row in rows:
         if not row.left:
-            continue    # a mark row with an empty syntax cell no group-close erratum filled
+            # A mark row with an empty syntax cell. "--- NAME begin" ... "--- NAME end" with no
+            # brackets is a required, non-repeating named group (CH02 2.5.2: "A segment group may
+            # be required or optional and might or might not repeat"; v2.6 CH16, P8b-10). An end
+            # that closes no such group is skipped: a group-close erratum fills the cell (MDM_T02).
+            desc = _corrected(row.desc, marks, used)
+            mark = GROUP_MARK.match(desc)
+            if not mark:
+                raise UnknownNotation(f"group mark not read: {desc[:50]!r}")
+            if mark.group(2).lower() == "begin":
+                node = {"kind": "=", "children": [], "name": mark.group(1)}
+                stack[-1]["children"].append(node)
+                stack.append(node)
+            elif stack[-1]["kind"] == "=" and stack[-1]["name"] == mark.group(1):
+                stack.pop()
+            continue
         opened, closed = [], []
         for tok in (t.group(0) for t in TOKEN.finditer(row.left)):
             if tok.isspace():
@@ -457,12 +504,7 @@ def parse(rows, marks=None, used=None):
                 raise UnknownNotation(f"placeholder (G6): {row.left!r}")
             else:
                 raise UnknownNotation(f"not notation: {row.left!r}")
-        desc = row.desc
-        for printed, intended in marks.items():
-            if re.match(r"^---\s*" + re.escape(printed) + r"\s+(begin|end)\b", desc):
-                desc = desc.replace(printed, intended, 1)
-                if used is not None:
-                    used.add(printed)
+        desc = _corrected(row.desc, marks, used)
         mark = GROUP_MARK.match(desc)
         name = mark and mark.group(1)
         if not mark and re.match(r"^---\s*\S", desc):
@@ -494,7 +536,9 @@ def _element(node):
         only = node["children"][0] if len(node["children"]) == 1 else None
         # Two printed names are two groups, nested: never merge them; nor a named group into
         # the choice it holds (the group, not the choice, carries the name).
-        if only is not None and only["kind"] != "seg" and not (names and (only["name"] or only["kind"] == "<")):
+        # A bracketless named group ("=", P8b-10) is required: never merged into the brackets it holds.
+        if (only is not None and only["kind"] != "seg" and node["kind"] != "="
+                and not (names and (only["name"] or only["kind"] == "<"))):
             node = only
             continue
         break
@@ -515,9 +559,15 @@ def _choice(node, kinds, names):
     segment groups) is an unnamed group, named like any unnamed printed group by name_groups."""
     if any(not alt for alt in node["alts"]):
         raise UnknownNotation("an empty alternative in a choice")
+    if len(node["alts"]) < 2 and names:
+        # "< QPD RCP >" named QUERY_INFORMATION (v2.8.2 CH16; v2.6 SDR_S31): CH02 defines a choice
+        # by "|" between alternatives, so with none the print is a required sequence: a NAMED
+        # REQUIRED GROUP (P8b-6 ruling); the bundle's one-alternative-each reading is reported.
+        bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
+        return {"group": names[0], "nameSource": "printed", **bounds,
+                "elements": [_element(c) for c in node["alts"][0]]}
     if len(node["alts"]) < 2:
-        # "< QPD RCP >" (v2.8.2 CH16): CH02 defines a choice by "|" between alternatives, so this
-        # is a sequence; the HL7 v2.xml bundle makes each member an alternative. Not guessed.
+        # Unnamed, the print gives the group no name and the bundle reads a choice. Not guessed.
         raise UnknownNotation(f"a choice with one alternative (no '|') around {len(node['alts'][0])} element(s): "
                               "the print reads as a sequence, HL7 v2.xml as a choice of each member; needs a ruling")
     bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
@@ -640,7 +690,9 @@ _OVERRIDE_KEYS = {
     "exclusions": {"version", "section", "citation"},
     # A print typo read as the intended text: in a caption (CODE^EVT as printed), a group mark
     # ("--- NAME begin/end"), or a Table 0354 row (its code or an event in its description); a
-    # group-close erratum supplies the syntax cell ("}]") a printed "--- NAME end" row leaves empty.
+    # group-close erratum supplies the syntax cell ("}]") a printed "--- NAME end" row leaves empty;
+    # a syntax-cell erratum corrects a printed cell, the row given as cell then description with
+    # runs of spaces collapsed ("{ [ CTD } ] Contact Data"), the description unchanged (P8b-10).
     "errata": {"version", "where", "structure", "printed", "intended", "citation"},
     # A trigger printed under several structures (pre-flight B6); reported, never modelled here.
     "sharedTriggers": {"version", "trigger", "structures", "citation"},
@@ -649,7 +701,7 @@ _OVERRIDE_KEYS = {
     # primary-print amendment). primary and stricter are the captions as printed.
     "primaryPrints": {"version", "structure", "primary", "stricter", "citation"},
 }
-ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close")
+ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
 
 def validate_overrides(data):
@@ -831,6 +883,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     for e in errata:
         if e["where"] == "group-close":
             closes.setdefault(e["structure"], {})[e["printed"]] = e
+    cells = {}
+    for e in errata:
+        if e["where"] == "syntax-cell":
+            cells.setdefault(e["structure"], {})[e["printed"]] = e
     structures, used, owner, bundle_rows = {}, set(), {}, []
 
     def read(sid, rows, error, log=None, names_used=None):
@@ -839,6 +895,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         rows = [Row(closes[sid][r.desc]["intended"], r.desc, r.line, r.page) if not r.left and r.desc in closes.get(sid, {})
                 else r for r in rows]
         used_errata.update(id(closes[sid][r.desc]) for r in rows if r.desc in closes.get(sid, {}))
+        rows = [_cell_fixed(r, cells[sid], used_errata) if r.left and sid in cells else r for r in rows]
         seen = set()
         tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen)
         # P8b-3b: an empty print, or rows that run on into the next table (a second top-level

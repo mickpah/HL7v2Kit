@@ -197,7 +197,23 @@
     { "version": "2.5.1", "where": "table-0354", "structure": "BRP_O30", "printed": "BRP_030", "intended": "BRP_O30",
       "citation": "HL7 v2.5.1 Table 0354 - Message structure (Chapter 2, p 2-102) as extracted to Resources/tables/v2.5.1/0354.json reads BRP_030 (digit zero); the Chapter 4 caption BRP^O30^BRP_O30 and the event O30 name BRP_O30 (pre-flight row B9)." },
     { "version": "2.3.1", "where": "caption", "structure": "ROR_ROR", "printed": "R0R^R0R", "intended": "ROR^ROR",
-      "citation": "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response, p 4-102: the caption and the section title print R0R (digit zero) for the ROR pharmacy/treatment order response that Table 0354 lists as ROR_ROR (event ROR)." }
+      "citation": "HL7 v2.3.1 Chapter 4, section 4.8.17 R0R - pharmacy/treatment order response, p 4-102: the caption and the section title print R0R (digit zero) for the ROR pharmacy/treatment order response that Table 0354 lists as ROR_ROR (event ROR)." },
+    { "version": "2.6", "where": "group-mark", "structure": "EHC_E01", "printed": "INVOICE INFORMATION", "intended": "INVOICE_INFORMATION",
+      "citation": "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, pp 4 to 5 (EHC^E01^EHC_E01): the group opens '--- INVOICE_INFORMATION begin' and its end mark prints 'INVOICE INFORMATION', which no group name can hold; read as INVOICE_INFORMATION, the begin mark's name and the name HL7-xml v2.6/EHC_E01.xsd gives the group." },
+    { "version": "2.6", "where": "group-mark", "structure": "ADT_A05", "printed": "Procedure", "intended": "PROCEDURE",
+      "citation": "HL7 v2.6 Chapter 3, section 3.3.31 ADT/ACK - Update Person Information (Event A31), p 3-31 (ADT^A31^ADT_A05): the group opens '--- Procedure begin' and closes '--- PROCEDURE end'; read as PROCEDURE, the end mark's name and the name the 3.3.5 print and HL7-xml v2.6/ADT_A05.xsd give the group." },
+    { "version": "2.6", "where": "group-mark", "structure": "RQI_I01", "printed": "GUARANTOR+INSURANCE", "intended": "GUARANTOR_INSURANCE",
+      "citation": "HL7 v2.6 Chapter 11, section 11.3.3 RQI/RPR - Request/Receipt of Patient Selection List (Event I03), pp 11-9 to 11-10 (RQI^I03^RQI_I01): the group opens '--- GUARANTOR+INSURANCE begin' and closes '--- GUARANTOR_INSURANCE end'; read as GUARANTOR_INSURANCE, the end mark's name and the name HL7-xml v2.6/RQI_I01.xsd gives the group." },
+    { "version": "2.6", "where": "group-mark", "structure": "SDR_S31", "printed": "ANTI-MICROBIAL DEVICE DATA", "intended": "ANTIMICROBIAL_DEVICE_DATA",
+      "citation": "HL7 v2.6 Chapter 17, section 17.5.4 SDR/ACK - Request Anti-Microbial Device Data (Event S31), p 17-27: the group mark prints 'ANTI-MICROBIAL DEVICE DATA', which no group name can hold; read as ANTIMICROBIAL_DEVICE_DATA, the name HL7-xml v2.6/SDR_S31.xsd gives the group." },
+    { "version": "2.6", "where": "group-mark", "structure": "SDR_S32", "printed": "ANTI-MICROBIAL DEVICE CYCLE DATA", "intended": "ANTIMICROBIAL_DEVICE_CYCLE_DATA",
+      "citation": "HL7 v2.6 Chapter 17, section 17.5.5 SMD/ACK - Request Anti-Microbial Device Cycle Data (Event S32), p 17-27: the group mark prints 'ANTI-MICROBIAL DEVICE CYCLE DATA', which no group name can hold; read as ANTIMICROBIAL_DEVICE_CYCLE_DATA, the name HL7-xml v2.6/SDR_S32.xsd gives the group." },
+    { "version": "2.6", "where": "group-close", "structure": "MDM_T02", "printed": "--- COMMON_ORDER end", "intended": "}]",
+      "citation": "HL7 v2.6 Chapter 9, section 9.5.2 MDM/ACK - Original Document Notification and Content (Event T02), pp 9-5 to 9-6: the group opens '[{ --- COMMON_ORDER begin' and its '--- COMMON_ORDER end' row prints no closing bracket; read as '}]', the close of the '[{' the begin mark opens (the TXA that follows is top-level, as in MDM_T01, section 9.5.1, and the v2.5.1 print)." },
+    { "version": "2.6", "where": "syntax-cell", "structure": "BRP_O30", "printed": "] --- RESPONSE end", "intended": "] ] --- RESPONSE end",
+      "citation": "HL7 v2.6 Chapter 4, section 4.20.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 4-165 to 4-166: '[ --- RESPONSE begin' then '[ --- PATIENT begin' open two groups and the print closes one ('] --- RESPONSE end'), leaving no '--- PATIENT end'; read as '] ]', closing PATIENT and RESPONSE, as the v2.5.1 print of the same section and HL7-xml v2.6/BRP_O30.xsd nest them." },
+    { "version": "2.6", "where": "syntax-cell", "structure": "EHC_E12", "printed": "{ [ CTD } ] Contact Data", "intended": "[ { CTD } ] Contact Data",
+      "citation": "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 12 (EHC^E12^EHC_E12): the CTD row prints '{ [ CTD } ]', brackets that cross; read as '[ { CTD } ]' (optional, repeating), as the v2.7.1 print of EHC^E12 and HL7-xml v2.6/EHC_E12.xsd read it." }
   ],
   "exclusions": [
     { "version": "2.4", "section": "4.6.2",
@@ -415,13 +431,27 @@
     { "version": "2.8.2", "section": "5.9.7.2",
       "citation": "HL7 v2.8.2 Chapter 5, section 5.9.7.2 MPI Query Profile - Non query by example version, p 100: a query grammar, query profile or conformance statement example (RTB^Z76^RTB_K13) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
     { "version": "2.8.2", "section": "8.4.3",
-      "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7." }
+      "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7." },
+    { "version": "2.6", "section": "5.9.1.1",
+      "citation": "HL7 v2.6 Chapter 5, section 5.9.1.1 Proposed dispense history example and Query Profile, p 57 (under 5.9 QUERY/RESPONSE MESSAGE EXAMPLES): restates 'the structure of the Pharmacy Dispense Information (RDR) message, an original-mode query that was defined in Chapter 4' (RDR^RDR), with TIMING groups and [SFT] the Chapter 4 definition (4.13.17) does not print; an example, not a normative structure definition; excluded under ruling G7." }
   ],
   "primaryPrints": [
     { "version": "2.5.1", "structure": "RSP_K21", "primary": "RSP^K22^RSP_K21", "stricter": "RSP^K21^RSP_K21",
       "citation": "Two normative prints of RSP_K21 disagree: section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21) a repeating QUERY_RESPONSE with QRI optional, which accepts every message the 3.3.56 print accepts; the looser 3.3.57 print is primary (P8b-9 ruling; register section E)." },
     { "version": "2.5.1", "structure": "RDE_O11", "primary": "RDE^O25^RDE_O11", "stricter": "RDE^O11^RDE_O11",
-      "citation": "Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." }
+      "citation": "Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." },
+    { "version": "2.6", "structure": "ACK", "primary": "ACK^S12-S24, S26^ACK", "stricter": "ACK^varies^ACK",
+      "citation": "Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]), which accepts every message the 2.13.1 print accepts (and every ACK the other chapters print: CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with ERR non-repeating); the looser 10.4 print is primary (P8b-9 ruling; register section E)." },
+    { "version": "2.6", "structure": "ADT_A30", "primary": "ADT^A34^ADT_A30", "stricter": "ADT^A30^ADT_A30",
+      "citation": "Two normative prints of ADT_A30 disagree: Chapter 3 section 3.3.30 (ADT^A30^ADT_A30, p 3-30) prints no ARV, sections 3.3.34 (ADT^A34^ADT_A30, p 3-33), 3.3.36 (A36, p 3-34), 3.3.46 (A46, pp 3-41 to 3-42) and 3.3.47 (A47, p 3-42) print [{ARV}] after PD1, which accepts every message the 3.3.30 print accepts; the looser 3.3.34 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A30.xsd has the ARV." },
+    { "version": "2.6", "structure": "ADT_A43", "primary": "ADT^A44^ADT_A43", "stricter": "ADT^A43^ADT_A43",
+      "citation": "Two normative prints of ADT_A43 disagree: Chapter 3 section 3.3.43 (ADT^A43^ADT_A43, p 3-39) prints PATIENT as PID [PD1] MRG, section 3.3.44 (ADT^A44^ADT_A43, p 3-40) prints [{ARV}] after PD1, which accepts every message the 3.3.43 print accepts; the looser 3.3.44 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/ADT_A43.xsd has the ARV." },
+    { "version": "2.6", "structure": "MFK_M01", "primary": "MFK^M13^MFK_M01", "stricter": "MFK^M01^MFK_M01",
+      "citation": "Two normative prints of MFK_M01 disagree: Chapter 8 section 8.4.1 (MFK^M01^MFK_M01, p 8-5) prints no UAC (as does 8.8.2 MFK^M03), fourteen others print [UAC] after SFT (8.4.2 MFK^M13, p 8-6; 8.7.1 M02; 8.8.3 to 8.8.7 M08 to M12; 8.9.1 M05; 8.10.1 M04; 8.11.1 M06 and M07; 8.12.1 M15; 8.12.2 M16; 8.13.1 M17), which accepts every message the 8.4.1 print accepts; the looser 8.4.2 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/MFK_M01.xsd has the UAC." },
+    { "version": "2.6", "structure": "QRY_PC4", "primary": "QRY^PC9^QRY_PC4", "stricter": "QRY^PC4^QRY_PC4",
+      "citation": "Two normative prints of QRY_PC4 disagree: Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH, which accepts every message the 12.2.5 print accepts; the looser 12.2.7 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC." },
+    { "version": "2.6", "structure": "RDE_O11", "primary": "RDE^O25^RDE_O11", "stricter": "RDE^O11^RDE_O11",
+      "citation": "Two normative prints of RDE_O11 disagree: Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." }
   ],
   "sharedTriggers": [
     { "version": "2.3.1", "trigger": "ORM^O01", "structures": ["OMD_O01", "OMN_O01", "OMS_O01", "ORM_O01", "RDO_O01"],
@@ -443,7 +473,15 @@
     { "version": "2.5.1", "trigger": "MFR^M06", "structures": ["MFR_M01", "MFR_M06"],
       "citation": "HL7 v2.5.1 prints MFR^M06 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M06^MFR_M06 (section 8.11.1, pp 8-84 to 8-85). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
     { "version": "2.5.1", "trigger": "MFR^M07", "structures": ["MFR_M01", "MFR_M07"],
-      "citation": "HL7 v2.5.1 prints MFR^M07 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-85). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." }
+      "citation": "HL7 v2.5.1 prints MFR^M07 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-85). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.6", "trigger": "MFR^M04", "structures": ["MFR_M01", "MFR_M04"],
+      "citation": "HL7 v2.6 prints MFR^M04 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8, the master files query response for every event M01 to M17); MFR^M04^MFR_M04 (section 8.10.1, pp 8-64 to 8-65). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.6", "trigger": "MFR^M05", "structures": ["MFR_M01", "MFR_M05"],
+      "citation": "HL7 v2.6 prints MFR^M05 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M05^MFR_M05 (section 8.9.1, p 8-52). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.6", "trigger": "MFR^M06", "structures": ["MFR_M01", "MFR_M06"],
+      "citation": "HL7 v2.6 prints MFR^M06 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M06^MFR_M06 (section 8.11.1, p 8-72). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.6", "trigger": "MFR^M07", "structures": ["MFR_M01", "MFR_M07"],
+      "citation": "HL7 v2.6 prints MFR^M07 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-73). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." }
   ],
   "triggerFolds": [
     { "version": "2.3", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",

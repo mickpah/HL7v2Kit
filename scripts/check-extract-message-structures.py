@@ -387,10 +387,12 @@ def check_choice_of_segment_groups():
     rol = alts[2]["elements"][1]
     assert (rol["min"], rol["max"]) == (0, None) and rol["elements"] == [_seg("ROL"), _seg("NTE", 0, None)], rol
     assert "OBR_GROUP (synthesised" in s["citation"], s["citation"]
-    # "< QPD RCP >" with no "|" (v2.8.2 CH16) is not read as a choice of one: a ruling is needed.
+    # "< QPD RCP >" with no "|" (v2.8.2 CH16) is not a choice of one: under the P8b-6 ruling it
+    # is a named required group (check_no_bar_choice_is_named_required_group).
     s, report = _structure([("MSH", "Header"), ("<", "--- QUERY_INFORMATION begin"), ("QPD", "Query"),
                             ("RCP", "Control"), (">", "--- QUERY_INFORMATION end")])
-    assert s is None and "a choice with one alternative (no '|')" in [r for r in report if r[1] == "skipped"][0][2], report
+    g = s["elements"][1]
+    assert (g["group"], g["min"], g["max"]) == ("QUERY_INFORMATION", 1, 1) and "alternatives" not in g, g
 
 
 def check_choice_malformed():
@@ -1012,6 +1014,81 @@ def check_primary_print_override():
                                                          "matches no print"], report
 
 
+def check_bracketless_named_group():
+    # P8b-10 (v2.6 CH16 EHC_E01): "--- NAME begin" ... "--- NAME end" on rows with an empty syntax
+    # cell is a required, non-repeating named group (CH02 2.5.2), not merged into the brackets it
+    # holds; a misprinted end mark is read only through a cited group-mark erratum.
+    rows = [("MSH", "Header"), ("", "--- INFO begin"), ("IVC", "Invoice"), ("[ { CTD } ]", "Contact"),
+            ("", "--- INFO end"), ("[ NTE ]", "Note")]
+    s, report = _structure(rows)
+    els = s["elements"]
+    assert [(e.get("segment") or e.get("group"), e["min"], e["max"]) for e in els] == \
+        [("MSH", 1, 1), ("INFO", 1, 1), ("NTE", 0, 1)], els
+    assert els[1]["nameSource"] == "printed" and [e["segment"] for e in els[1]["elements"]] == ["IVC", "CTD"], els
+    only = [("MSH", "Header"), ("", "--- INFO begin"), ("[ {", "--- INNER begin"), ("CTD", "Contact"),
+            ("} ]", "--- INNER end"), ("", "--- INFO end")]
+    s, _ = _structure(only)
+    assert (s["elements"][1]["group"], s["elements"][1]["min"]) == ("INFO", 1), s["elements"]
+    assert s["elements"][1]["elements"][0]["group"] == "INNER", s["elements"]
+    bad = [("MSH", "Header"), ("", "--- INFO begin"), ("IVC", "Invoice"), ("", "--- INFO X end")]
+    s, report = _structure(bad)
+    assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
+    fix = {**EMPTY, "errata": [{"version": "2.5.1", "where": "group-mark", "structure": "XYZ_X01",
+                                "printed": "INFO X", "intended": "INFO", "citation": "x"}]}
+    s, _ = _structure(bad, overrides=fix)
+    assert s["elements"][1]["group"] == "INFO", s
+
+
+def check_no_bar_choice_is_named_required_group():
+    # P8b-6 ruling, applied in P8b-10: "< SDD [{SCD}] >" with a name and no "|" is a NAMED REQUIRED
+    # GROUP (min 1, max 1); unnamed, it stays unreadable (no name and no choice to read).
+    rows = [("MSH", "Header"), ("<", "--- DEVICE begin"), ("SDD", "Device"), ("[{SCD}]", "Cycle"),
+            (">", "--- DEVICE end")]
+    s, _ = _structure(rows)
+    g = s["elements"][1]
+    assert (g["group"], g["nameSource"], g["min"], g["max"]) == ("DEVICE", "printed", 1, 1), g
+    assert "alternatives" not in g and [e["segment"] for e in g["elements"]] == ["SDD", "SCD"], g
+    s, report = _structure([("MSH", "Header"), ("<", ""), ("SDD", "Device"), (">", "")])
+    assert s is None and "needs a ruling" in [r for r in report if r[1] == "skipped"][0][2], report
+
+
+def check_syntax_cell_erratum():
+    # P8b-10 (v2.6 EHC_E12 '{ [ CTD } ]', BRP_O30 '] --- RESPONSE end' closing one of two open
+    # groups): a cited syntax-cell erratum corrects the cell; the description may not change, and a
+    # stale entry is an error.
+    rows = [("MSH", "Header"), ("{ [ CTD } ]", "Contact Data"), ("IVC", "Invoice")]
+    s, report = _structure(rows)
+    assert s is None and "unbalanced" in [r for r in report if r[1] == "skipped"][0][2], report
+    fix = {**EMPTY, "errata": [{"version": "2.5.1", "where": "syntax-cell", "structure": "XYZ_X01",
+                                "printed": "{ [ CTD } ] Contact Data", "intended": "[ { CTD } ] Contact Data",
+                                "citation": "x"},
+                               {"version": "2.5.1", "where": "syntax-cell", "structure": "XYZ_X01",
+                                "printed": "] Gone", "intended": "] ] Gone", "citation": "x"}]}
+    ext.validate_overrides(fix)
+    text = _page(1, _table("XYZ^X01^XYZ_X01", rows), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    ctd = structures["XYZ_X01"]["elements"][1]
+    assert (ctd["segment"], ctd["min"], ctd["max"]) == ("CTD", 0, None), ctd
+    assert [r[2] for r in report if r[1] == "error"] == ["errata entry (syntax-cell) '] Gone' matches nothing"], report
+    renamed = {**EMPTY, "errata": [{**fix["errata"][0], "intended": "[ { CTD } ] Contact"}]}
+    s, report = _structure(rows, overrides=renamed)
+    assert s is None and "changes the description" in [r for r in report if r[1] == "skipped"][0][2], report
+
+
+def check_first_row_left_of_caption():
+    # P8b-10 (v2.6 ADT^A31^ADT_A05 at 3.3.31): the caption at column 7, its rows from column 3; the
+    # MSH row sets the column. Any other row that far left still ends the table.
+    lines = ["\fChapter 9: Synthetic", "9.1.1           XYZ - synthetic (Event X01)",
+             "          XYZ^X01^XYZ_X01             Synthetic Message        Status    Chapter",
+             "   MSH                                Header", "   PID                                Patient",
+             "Page 9-1            Health Level Seven, Version 2.5.1 (c) 2007. All rights reserved."]
+    structures, report, _ = _run("2.5.1", [("syn", lines)])
+    assert [e["segment"] for e in structures["XYZ_X01"]["elements"]] == ["MSH", "PID"], report
+    lines[3] = "   PID                                Patient"
+    structures, report, _ = _run("2.5.1", [("syn", lines)])
+    assert "XYZ_X01" not in structures, structures
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_inline,
@@ -1028,7 +1105,9 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_errata, check_reader_layouts,
           check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
-          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override]
+          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
+          check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
+          check_first_row_left_of_caption]
 
 
 def main():
