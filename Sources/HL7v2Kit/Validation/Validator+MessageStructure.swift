@@ -54,9 +54,8 @@ extension Validator {
         let code = message.messageCode ?? ""
         let event = message.triggerEvent ?? ""
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
-        // Lookup rule 3: no MSH-9.3 on v2.3 (grammar version, so 2.3 read as v2.3 only).
-        let declared = message.version.grammarVersion == .v2_3 ? "" : (message.messageStructure ?? "")
-        let name = declared.isEmpty ? trigger : declared
+        let printedID = message.messageStructure ?? ""
+        let name = printedID.isEmpty ? trigger : printedID
 
         let msh12 = message.segments.first.flatMap { $0.segmentID == "MSH" ? $0.field(12) : nil }
         let reading = Version.reading(msh12: msh12, subcomponentSeparator: message.encodingCharacters.subcomponentSeparator)
@@ -66,6 +65,9 @@ extension Validator {
                 : "MSH-12 does not resolve to v\(message.version.rawValue), the version validated"
             return (nil, [notModelled(name, message: message, reason: why)])
         }
+        // Lookup rule 3: v2.3 defines no MSH-9.3, so once MSH-12 reads as v2.3 a third component
+        // is ignored and the message resolves from MSH-9.1^9.2 only.
+        let declared = wire.grammarVersion == .v2_3 ? "" : printedID
 
         let table = structures ?? MessageStructureTable.structures(for: message.version.grammarVersion)
         let registered = gaps ?? MessageStructureTable.notModelled(for: message.version.grammarVersion)
