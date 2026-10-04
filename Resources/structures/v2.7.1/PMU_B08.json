@@ -1,0 +1,15 @@
+{
+  "structure": "PMU_B08",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 15, section 15.3.9 PMU/ACK - Revoke Certificate/Permission (Event B08), p 9.",
+  "triggers": ["PMU^B08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "STF", "min": 1, "max": 1 },
+    { "segment": "PRA", "min": 0, "max": 1 },
+    { "segment": "CER", "min": 0, "max": null }
+  ]
+}

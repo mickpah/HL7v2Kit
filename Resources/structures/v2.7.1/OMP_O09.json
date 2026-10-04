@@ -1,0 +1,54 @@
+{
+  "structure": "OMP_O09",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 4A, section 4A.3.3 OMP - Pharmacy/Treatment Order Message (Event O09), pp 3 to 5.",
+  "triggers": ["OMP^O09"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "ADDITIONAL_DEMOGRAPHICS", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PD1", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "group": "INSURANCE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "segment": "RXO", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "RXR", "min": 1, "max": null },
+      { "group": "COMPONENT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "RXC", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "segment": "FT1", "min": 0, "max": null },
+      { "segment": "BLG", "min": 0, "max": 1 }
+    ]}
+  ]
+}

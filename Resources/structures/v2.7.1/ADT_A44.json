@@ -1,0 +1,18 @@
+{
+  "structure": "ADT_A44",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 3, section 3.3.44 ADT/ACK - Move Account Information - Patient Account Number (Event A44), pp 36 to 37; the same structure is printed for ADT^A47 (3.3.47).",
+  "triggers": ["ADT^A44", "ADT^A47"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "ARV", "min": 0, "max": null },
+      { "segment": "MRG", "min": 1, "max": 1 }
+    ]}
+  ]
+}

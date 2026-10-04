@@ -1,0 +1,46 @@
+{
+  "structure": "RRI_I12",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 21 to 23.",
+  "triggers": ["RRI^I12", "RRI^I13", "RRI^I14", "RRI^I15"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 0, "max": 1 },
+    { "segment": "RF1", "min": 0, "max": 1 },
+    { "group": "AUTHORIZATION_CONTACT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "AUT", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": 1 }
+    ]},
+    { "group": "PROVIDER_CONTACT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "ACC", "min": 0, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "group": "AUTHORIZATION_CONTACT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "AUT", "min": 1, "max": 1 },
+        { "segment": "CTD", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "RESULTS_NOTES", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]},
+    { "group": "PATIENT_VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "structure": "EHC_E24",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 16, section 16.3.14 EHC^E24 - Authorization Response (event E24), p 25.",
+  "triggers": ["EHC^E24"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "group": "AUTHORIZATION_RESPONSE_INFO", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "IVC", "min": 1, "max": 1 },
+      { "group": "PSL_ITEM_INFO", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PSL", "min": 1, "max": 1 },
+        { "segment": "AUT", "min": 0, "max": 1 },
+        { "group": "PAYER_ADJUSTMENT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "ADJ", "min": 1, "max": 1 }
+        ]}
+      ]}
+    ]}
+  ]
+}

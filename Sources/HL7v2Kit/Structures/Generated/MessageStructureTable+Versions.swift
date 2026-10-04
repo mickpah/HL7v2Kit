@@ -9,7 +9,7 @@ extension MessageStructureTable {
     //   2.4 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-13)
     //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
     //   2.6 (complete): P8b-10: 188 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
-    //   2.7.1 (incomplete): P8b-16: v2.7.1 structures extracted from the v2.7.1 chapter prints (ACK and RQC_I05 from their looser prints, overrides.json primaryPrints), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.7.1 does not define), RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.7.1 not-modelled table)
+    //   2.7.1 (incomplete): P8b-16: v2.7.1 structures extracted from the v2.7.1 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does not define, RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.7.1 not-modelled table)
     //   2.8.2 (complete): P8b-11: 185 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.8.2 row modelled or registered; the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.8.2 does not define), QBP_Q13 and RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.8.2 not-modelled table)
 
     /// Every modelled structure of `version`'s grammar version, keyed by
@@ -21,7 +21,7 @@ extension MessageStructureTable {
         case .v2_4:   return [:]
         case .v2_5_1: return v2_5_1
         case .v2_6:   return v2_6
-        case .v2_7_1: return [:]
+        case .v2_7_1: return v2_7_1
         case .v2_8_2: return v2_8_2
         // Only a grammar version missing from completeness.json reaches
         // here, and the codegen rejects that: not modelled.
@@ -310,6 +310,9 @@ extension MessageStructureTable {
                 "QRY_A19": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_A19 (events: A19), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
+                "QRY_PC4": NotModelledStructure(
+                    triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
+                    reason: "CH12 sections 12.3.5, 12.3.7, 12.3.9 and 12.3.11 (pp 15 to 22) prints QRD and [QRF], the original-mode query segments that v2.7.1 withdrew (CH04A, p 105: 'retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7'; CH02, p 35) and no v2.7.1 chapter defines (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar (register section E, v2.7.1 not-modelled table)"),
                 "QRY_Q01": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
@@ -328,6 +331,12 @@ extension MessageStructureTable {
                 "RAR_RAR": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RAR_RAR (events: RAR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
+                "RCI_I05": NotModelledStructure(
+                    triggers: ["RCI^I05"],
+                    reason: "CH11 section 11.3.5 (p 14) prints QRD and [QRF], the original-mode query segments that v2.7.1 withdrew (CH04A, p 105: 'retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7'; CH02, p 35) and no v2.7.1 chapter defines (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar (register section E, v2.7.1 not-modelled table)"),
+                "RCL_I06": NotModelledStructure(
+                    triggers: ["RCL^I06"],
+                    reason: "CH11 section 11.3.6 (p 15) prints QRD and [QRF], the original-mode query segments that v2.7.1 withdrew (CH04A, p 105: 'retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7'; CH02, p 35) and no v2.7.1 chapter defines (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar (register section E, v2.7.1 not-modelled table)"),
                 "RDR_RDR": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists RDR_RDR (event RDR); its only v2.7.1 print is the CH05 section 5.9.1.1 (pp 61 to 62) restatement of 'an original-mode query that was defined in Chapter 4', and CH04A 4A.3.17 (p 22) says the pair was 'withdrawn as of v2.7' and prints no syntax (excluded under ruling G7; register section E, v2.7.1 not-modelled table)"),
@@ -340,6 +349,9 @@ extension MessageStructureTable {
                 "ROR_ROR": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.7.1 (CH02C section 2.C.2.175, p 105) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.7.1 chapter prints its syntax (register section E, v2.7.1 not-modelled table)"),
+                "RQC_I05": NotModelledStructure(
+                    triggers: ["RQC^I05", "RQC^I06"],
+                    reason: "CH11 sections 11.3.5 (p 13) and 11.3.6 (pp 14 to 15) prints QRD and [QRF], the original-mode query segments that v2.7.1 withdrew (CH04A, p 105: 'retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7'; CH02, p 35) and no v2.7.1 chapter defines (the v2.7.1 segment schemas hold neither), so the print cannot be checked against the v2.7.1 segment grammar; the two prints also disagree on GT1, [{GT1}] against [GT1] (overrides.json primaryPrints) (register section E, v2.7.1 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 34) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.7.1 not-modelled table)"),

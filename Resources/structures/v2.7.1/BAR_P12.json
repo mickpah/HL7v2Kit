@@ -1,0 +1,21 @@
+{
+  "structure": "BAR_P12",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 6, section 6.4.9 BAR/ACK - Update Diagnosis/Procedure (Event P12), p 14.",
+  "triggers": ["BAR^P12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": 1 },
+    { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "PR1", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": null }
+    ]},
+    { "segment": "OBX", "min": 0, "max": 1 }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "structure": "ADT_A43",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 36; the same structure is printed for ADT^A49 (3.3.49).",
+  "triggers": ["ADT^A43", "ADT^A49"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "MRG", "min": 1, "max": 1 }
+    ]}
+  ]
+}

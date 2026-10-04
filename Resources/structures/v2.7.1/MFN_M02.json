@@ -1,0 +1,23 @@
+{
+  "structure": "MFN_M02",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 8, section 8.7.1 MFN/MFK - Staff/Practitioner Master File Message (Event M02), pp 14 to 15.",
+  "triggers": ["MFN^M02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_STAFF", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "STF", "min": 1, "max": 1 },
+      { "segment": "PRA", "min": 0, "max": null },
+      { "segment": "ORG", "min": 0, "max": null },
+      { "segment": "AFF", "min": 0, "max": null },
+      { "segment": "LAN", "min": 0, "max": null },
+      { "segment": "EDU", "min": 0, "max": null },
+      { "segment": "CER", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]}
+  ]
+}

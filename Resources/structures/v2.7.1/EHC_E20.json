@@ -1,0 +1,37 @@
+{
+  "structure": "EHC_E20",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 16, section 16.3.10 EHC^E20 - Submit Authorization Request (event E20), pp 20 to 21.",
+  "triggers": ["EHC^E20"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "group": "AUTHORIZATION_REQUEST", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "IVC", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 1, "max": null },
+      { "segment": "LOC", "min": 0, "max": null },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "group": "PAT_INFO", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "ACC", "min": 0, "max": null },
+        { "group": "INSURANCE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "IN1", "min": 1, "max": 1 },
+          { "segment": "IN2", "min": 0, "max": 1 }
+        ]},
+        { "group": "DIAGNOSIS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "DG1", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "segment": "OBX", "min": 0, "max": null }
+      ]},
+      { "group": "PSL_ITEM_INFO", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PSL", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "ADJ", "min": 0, "max": null },
+        { "segment": "LOC", "min": 0, "max": null },
+        { "segment": "ROL", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

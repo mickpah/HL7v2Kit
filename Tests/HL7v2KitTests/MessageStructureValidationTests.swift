@@ -550,12 +550,19 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .info)
     }
 
-    @Test("v2.7.1 has no modelled message structures: 2.7.1 and 2.7 get only the info issue",
+    // P8b-16: the v2.7.1 structures are loaded (2.7 reads through them, ADR-018); until v2.7.1
+    // is marked complete an unknown MSH-9.3 stays an info issue.
+    @Test("v2.7.1 structures are matched on 2.7.1 and 2.7 wire messages; an unknown ID is info while incomplete",
           arguments: ["2.7.1", "2.7"])
-    func v271StructuresNotModelled(_ version: String) throws {
-        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid]))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
-        #expect(issues.first?.severity == .info)
+    func v271StructuresMatched(_ version: String) throws {
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+        if !MessageStructureTable.isComplete(.v2_7_1) {
+            let issues = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: version, [Self.evn, Self.pid, Self.pv1]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A04")])
+            #expect(issues.first?.severity == .info)
+        }
     }
 
     @Test("An empty MSH-12 is not matched, only the info issue")

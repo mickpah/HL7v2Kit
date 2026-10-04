@@ -1,0 +1,16 @@
+{
+  "structure": "MFN_M15",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 8, section 8.12.1 MFN/MFK - Inventory Item Master File Message (Event M15), pp 93 to 94.",
+  "triggers": ["MFN^M15"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_INV_ITEM", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "IIM", "min": 1, "max": 1 }
+    ]}
+  ]
+}

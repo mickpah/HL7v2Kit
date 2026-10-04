@@ -1,0 +1,20 @@
+{
+  "structure": "MFN_M11",
+  "version": "2.7.1",
+  "citation": "HL7 v2.7.1 Chapter 8, section 8.8.6 MFN/MFK - Master File Notification - Test/Calculated Observations (Event M11), p 19.",
+  "triggers": ["MFN^M11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_TEST_CALCULATED", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "group": "MF_TEST_CALC_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "OM6", "min": 1, "max": 1 },
+        { "segment": "OM2", "min": 1, "max": 1 }
+      ]}
+    ]}
+  ]
+}
