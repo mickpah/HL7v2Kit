@@ -9,15 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — P8b-9: HL7 v2.5.1 message structures complete
 
-- With `messageStructureSeverity` set, every v2.5.1 message structure is now checked: 171
+- With `messageStructureSeverity` set, every v2.5.1 message structure is now checked: 172
   structures extracted from the chapter prints (21 matched exactly), and v2.5.1 is marked
   complete. An MSH-9.3 that names no v2.5.1 structure (`ADT^A04^ADT_A04`) is now
   `messageStructureMismatch` on v2.5.1 instead of info.
-- 32 v2.5.1 structures are registered as not modelled, each with its reason (register section
+- 31 v2.5.1 structures are registered as not modelled, each with its reason (register section
   E): eight CH12 structures whose order detail is the unenumerated `< OBR | etc. >`, eight
-  query and master-file templates, SUR_P09 (a non-segment `ED` row), RSP_K21 (its K21 and K22
-  prints disagree) and 14 Table 0354 rows with no printed syntax. A message naming one draws
+  query and master-file templates, SUR_P09 (a non-segment `ED` row) and 14 Table 0354 rows with
+  no printed syntax. A message naming one draws
   `messageStructureNotModelled` (info) with the reason, never a mismatch.
+- A structure ID printed twice with different syntax takes the looser print, cited to both
+  (`primaryPrints` override): RSP_K21 from its K22 print (repeating QUERY_RESPONSE, QRI optional)
+  and RDE_O11 from its O25 print (OBX optional in OBSERVATION); the stricter prints are not
+  checked (register section E).
 - A trigger printed under two structures (v2.5.1 MFR^M04 to M07) is reported as ambiguous when
   MSH-9.3 is empty; the codegen accepts such a trigger only when it is declared.
 - The structure extractor reads wrapped captions, comma-and-space event lists and indented

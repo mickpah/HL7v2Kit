@@ -155,6 +155,7 @@ extension MessageStructureTable {
         "RRE_O12": v2_5_1_RRE_O12,
         "RRG_O16": v2_5_1_RRG_O16,
         "RRI_I12": v2_5_1_RRI_I12,
+        "RSP_K21": v2_5_1_RSP_K21,
         "RSP_K23": v2_5_1_RSP_K23,
         "RSP_K25": v2_5_1_RSP_K25,
         "RSP_K31": v2_5_1_RSP_K31,
@@ -3851,8 +3852,8 @@ extension MessageStructureTable {
     private static let v2_5_1_RDE_O11: MessageStructure = MessageStructure(
         id: "RDE_O11",
         version: "2.5.1",
-        triggers: ["RDE^O11", "RDE^O25"],
-        citation: "HL7 v2.5.1 Chapter 4, section 4.13.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 4-115 to 4-116; the same structure is printed for RDE^O25 (4.13.13).",
+        triggers: ["RDE^O25", "RDE^O11"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-127 to 4-129; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E).",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -3884,7 +3885,7 @@ extension MessageStructureTable {
                     .segment("RXO", min: 1, max: 1),
                     .segment("NTE", min: 0, max: nil),
                     .segment("RXR", min: 1, max: nil),
-                    .group("COMPONENT", min: 0, max: nil, elements: [
+                    .group("COMPONENTS", min: 0, max: nil, elements: [
                         .segment("RXC", min: 1, max: 1),
                         .segment("NTE", min: 0, max: nil),
                     ]),
@@ -3898,7 +3899,7 @@ extension MessageStructureTable {
                 .segment("RXR", min: 1, max: nil),
                 .segment("RXC", min: 0, max: nil),
                 .group("OBSERVATION", min: 0, max: nil, elements: [
-                    .segment("OBX", min: 1, max: 1),
+                    .segment("OBX", min: 0, max: 1),
                     .segment("NTE", min: 0, max: nil),
                 ]),
                 .segment("FT1", min: 0, max: nil),
@@ -4701,6 +4702,29 @@ extension MessageStructureTable {
                 .segment("PV2", min: 0, max: 1),
             ]),
             .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RSP_K21: MessageStructure = MessageStructure(
+        id: "RSP_K21",
+        version: "2.5.1",
+        triggers: ["RSP^K22", "RSP^K21"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.57 Find Candidates (QBP) and Response (RSP) (Events Q22 and K22), p 3-61; the same structure is printed for RSP^K21 (3.3.56). Two normative prints of RSP_K21 disagree: section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21) a repeating QUERY_RESPONSE with QRI optional, which accepts every message the 3.3.56 print accepts; the looser 3.3.57 print is primary (P8b-9 ruling; register section E).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .group("QUERY_RESPONSE", min: 0, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NK1", min: 0, max: nil),
+                .segment("QRI", min: 0, max: 1),
+            ]),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

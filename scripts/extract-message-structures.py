@@ -644,6 +644,10 @@ _OVERRIDE_KEYS = {
     "errata": {"version", "where", "structure", "printed", "intended", "citation"},
     # A trigger printed under several structures (pre-flight B6); reported, never modelled here.
     "sharedTriggers": {"version", "trigger", "structures", "citation"},
+    # Two normative prints of one structure ID that disagree: the LOOSER print (the one that
+    # accepts every message the other accepts) is primary, cited to both (P8b-9 ruling; ADR-019
+    # primary-print amendment). primary and stricter are the captions as printed.
+    "primaryPrints": {"version", "structure", "primary", "stricter", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close")
 
@@ -847,10 +851,19 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             used_errata.add(id(marks[sid][printed]))
         return name_groups(tree, ver, sid, overrides, names_used, bundles=bundles, log=log)
 
+    primaries = {e["structure"]: e for e in overrides["primaryPrints"] if e["version"] == ver}
     for sid in sorted(prints):
         entries = prints[sid]
         fold = folds.get(sid)
         k = _primary(sid, entries, fold)
+        chosen = primaries.get(sid)
+        if chosen:
+            # The cited looser print overrides the primary-print rule; both prints must exist.
+            k = next((j for j, e in enumerate(entries) if e[0].printed == chosen["primary"]), None)
+            if k is None or not any(e[0].printed == chosen["stricter"] for e in entries):
+                report.append((sid, "error", f"primaryPrints entry {chosen['primary']!r} / {chosen['stricter']!r} "
+                                             "matches no print"))
+                continue
         if k is None and fold and not full:     # a partial read may lack the fold's primary print
             k = next((j for j, e in enumerate(entries) if not _profile(e[0])), None)
         if k is None:
@@ -889,7 +902,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                f"{compact(elements)[:160]!r}"))
         triggers = [fold["trigger"]] if fold else triggers
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
-                                          "citation": citation(ver, cap, others, overrides, sid) + name_citation(log)})
+                                          "citation": citation(ver, cap, others, overrides, sid)
+                                          + (f" {primaries[sid]['citation']}" if sid in primaries else "")
+                                          + name_citation(log)})
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
             if entry["source"] == "synthesised":
@@ -920,6 +935,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report += [(e["structure"], "error", f"errata entry ({e['where']}) {e['printed']!r} matches nothing")
                    for e in errata if id(e) not in used_errata]
         report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
+        report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
     return structures, report, count
 
 

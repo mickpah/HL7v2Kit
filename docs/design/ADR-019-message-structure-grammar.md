@@ -1071,11 +1071,18 @@ compiling a structure per message.
   5.10.3), never a caption. A new `group-close` erratum supplies the syntax cell a printed
   `--- NAME end` row leaves empty (v2.5.1 MDM_T02's missing `}]`, certain from the `[{` its
   begin mark opens). No structure already read in any version changed.
-- **v2.5.1 complete.** 171 structures modelled, 21 of them exact-matched (lint-failing); 32
+- **v2.5.1 complete.** 172 structures modelled, 21 of them exact-matched (lint-failing); 31
   registered (register section E addendum): eight CH12 G6 placeholders, because CH04 4.2.2.4
   names only examples of order detail segments, so no `expansions` override could be cited;
-  eight query and master-file templates; SUR_P09's `ED` row; RSP_K21, whose K21 and K22
-  prints disagree (the corpus run found the K21 print misfiring on CH03's own K22 example, so
-  it is not matched until a ruling picks per-trigger syntax or the K22 print); and 14 Table
-  0354 rows with no printed syntax. The CH05 5.9.1.1 restatement of the RDR structure is
-  excluded under G7. `ADT^A04^ADT_A04` on v2.5.1 is now a mismatch.
+  eight query and master-file templates; SUR_P09's `ED` row; and 14 Table 0354 rows with no
+  printed syntax. The CH05 5.9.1.1 restatement of the RDR structure is excluded under G7.
+  `ADT^A04^ADT_A04` on v2.5.1 is now a mismatch.
+- **Primary print, amended (P8b-9 ruling).** When two normative prints of one structure ID
+  disagree, the primary is the LOOSER print, the one that accepts every message the other
+  accepts, named by a cited overrides.json `primaryPrints` entry (structure, primary and
+  stricter captions as printed) that also names the stricter print, so the reading-order rule
+  is never bypassed silently; a stale entry is an extractor error. Committing the stricter print
+  would misfire on messages the other print allows (requirement 4); per-trigger structures would
+  be a model extension and are registered as a limitation instead. v2.5.1: RSP_K21 from 3.3.57
+  (K22; the K21 print 3.3.56 misfired on CH03's own K22 example) and RDE_O11 from 4.13.13 (O25,
+  OBX optional in OBSERVATION).

@@ -30,7 +30,7 @@ def _load(name, rel):
 ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
-         "triggerFolds": []}
+         "triggerFolds": [], "primaryPrints": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -989,6 +989,29 @@ def check_group_close_erratum():
     assert errors == ["errata entry (group-close) '--- H end' matches nothing"], errors
 
 
+def check_primary_print_override():
+    # P8b-9 ruling: two normative prints of one structure ID that disagree; a cited
+    # primaryPrints entry makes the looser one primary (cited), and a stale entry is an error.
+    strict = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("QRI", "Q"), ("]", "--- R end")]
+    loose = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", strict), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", loose), heading="9.1.2           XYZ - synthetic (Event X02)"))
+    structures, report, _ = _run("2.5.1", [("syn", text)], full=True)
+    assert structures["XYZ_X01"]["elements"][1]["max"] == 1, structures
+    fix = {**EMPTY, "primaryPrints": [{"version": "2.5.1", "structure": "XYZ_X01", "primary": "XYZ^X02^XYZ_X01",
+                                       "stricter": "XYZ^X01^XYZ_X01", "citation": "Looser print primary (synthetic)."}]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s
+    assert "Looser print primary (synthetic)." in s["citation"] and "9.1.2" in s["citation"], s["citation"]
+    assert any(r[1] == "duplicate-differs" for r in report), report
+    stale = {**EMPTY, "primaryPrints": [{**fix["primaryPrints"][0], "primary": "XYZ^X09^XYZ_X01"}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert [r[2] for r in report if r[1] == "error"] == ["primaryPrints entry 'XYZ^X09^XYZ_X01' / 'XYZ^X01^XYZ_X01' "
+                                                         "matches no print"], report
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_inline,
@@ -1005,7 +1028,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_errata, check_reader_layouts,
           check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
-          check_repeat_indented_past_caption, check_group_close_erratum]
+          check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override]
 
 
 def main():

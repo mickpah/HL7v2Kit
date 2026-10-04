@@ -7,7 +7,7 @@ extension MessageStructureTable {
     //   2.3 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-15)
     //   2.3.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-14)
     //   2.4 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-13)
-    //   2.5.1 (complete): P8b-9: 171 structures extracted from the v2.5.1 chapter prints; RSP_K21 (two disagreeing prints, 3.3.56 and 3.3.57), the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
+    //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
     //   2.6 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-10)
     //   2.7.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-16)
     //   2.8.2 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-11)
@@ -124,9 +124,6 @@ extension MessageStructureTable {
                 "RSP_K11": NotModelledStructure(
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
-                "RSP_K21": NotModelledStructure(
-                    triggers: ["RSP^K21", "RSP^K22"],
-                    reason: "CH03 prints two different syntaxes for RSP_K21: section 3.3.56 (RSP^K21^RSP_K21, p 3-59) one QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21) a repeating QUERY_RESPONSE with QRI optional, followed by the chapter's own K22 example; one grammar per structure ID cannot carry both, and choosing one needs a ruling (register section E, v2.5.1 not-modelled table)"),
                 "RSP_K22": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists RSP_K22 (event K22); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),

@@ -266,16 +266,20 @@ struct MessageStructureValidationTests {
         #expect(named.issues.isEmpty)
     }
 
-    // P8b-9: CH03 prints RSP_K21 twice with different syntax (3.3.56 for K21, 3.3.57 for
-    // K22), and its own K22 example carries three responses; RSP_K21 is registered as not
-    // modelled rather than matched against the K21 print.
-    @Test("RSP^K22^RSP_K21 with three responses (the CH03 example's shape) is info only, never a finding")
+    // P8b-9 ruling: CH03 prints RSP_K21 twice with different syntax (3.3.56 for K21, one
+    // QUERY_RESPONSE with QRI required; 3.3.57 for K22, repeating, QRI optional). The looser
+    // 3.3.57 print is the structure, so the chapter's own K22 example (three responses) and a
+    // compliant K21 response both match cleanly.
+    @Test("RSP_K21 takes its looser print: the CH03 K22 example's shape and a K21 response match cleanly")
     func rspK22UnderK21() throws {
-        let body = ["MSA|AA|8699", "QAK|7|OK|Q22^Find Candidates^HL7nnn", "QPD|Q22^Find Candidates^HL7nnn|7",
-                    Self.pid, "QRI|95", Self.pid, "QRI|90", Self.pid, "QRI|85"]
-        let issues = try structureIssues(Self.wire("RSP^K22^RSP_K21", body))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "RSP_K21")])
-        #expect(issues.first?.message.contains("3.3.57") == true)
+        let head = ["MSA|AA|8699", "QAK|7|OK|Q22^Find Candidates^HL7nnn", "QPD|Q22^Find Candidates^HL7nnn|7"]
+        let k22 = head + [Self.pid, "QRI|95", Self.pid, "QRI|90", Self.pid, "QRI|85"]
+        #expect(try structureIssues(Self.wire("RSP^K22^RSP_K21", k22)).isEmpty)
+        let k21 = ["MSA|AA|8699", "QAK|7|OK|Q21^Get Person Demographics^HL7nnn", "QPD|Q21^Get Person Demographics^HL7nnn|7",
+                   Self.pid, "QRI|100"]
+        #expect(try structureIssues(Self.wire("RSP^K21^RSP_K21", k21)).isEmpty)
+        let structure = try #require(MessageStructureTable.structure("RSP_K21", version: .v2_5_1))
+        #expect(structure.citation.contains("3.3.56") && structure.citation.contains("3.3.57"))
     }
 
     @Test("A registered not-modelled structure is info on a complete version, a mismatch only for a trigger it does not print")

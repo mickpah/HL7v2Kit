@@ -417,6 +417,12 @@
     { "version": "2.8.2", "section": "8.4.3",
       "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7." }
   ],
+  "primaryPrints": [
+    { "version": "2.5.1", "structure": "RSP_K21", "primary": "RSP^K22^RSP_K21", "stricter": "RSP^K21^RSP_K21",
+      "citation": "Two normative prints of RSP_K21 disagree: section 3.3.56 (RSP^K21^RSP_K21, p 3-59) prints one QUERY_RESPONSE with QRI required, section 3.3.57 (RSP^K22^RSP_K21) a repeating QUERY_RESPONSE with QRI optional, which accepts every message the 3.3.56 print accepts; the looser 3.3.57 print is primary (P8b-9 ruling; register section E)." },
+    { "version": "2.5.1", "structure": "RDE_O11", "primary": "RDE^O25^RDE_O11", "stricter": "RDE^O11^RDE_O11",
+      "citation": "Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." }
+  ],
   "sharedTriggers": [
     { "version": "2.3.1", "trigger": "ORM^O01", "structures": ["OMD_O01", "OMN_O01", "OMS_O01", "ORM_O01", "RDO_O01"],
       "citation": "HL7 v2.3.1 prints ORM^O01 under 5 structures: ORM^O01^ORM_O01 (section 4.2.1, p 4-3); ORM^O01^OMD_O01 (section 4.6, p 4-46); ORM^O01^OMS_O01 (section 4.7, p 4-53); ORM^O01^OMN_O01 (section 4.7, p 4-53); ORM^O01^RDO_O01 (section 4.8.1, p 4-58). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },

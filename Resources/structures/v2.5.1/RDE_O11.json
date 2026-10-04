@@ -1,8 +1,8 @@
 {
   "structure": "RDE_O11",
   "version": "2.5.1",
-  "citation": "HL7 v2.5.1 Chapter 4, section 4.13.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 4-115 to 4-116; the same structure is printed for RDE^O25 (4.13.13).",
-  "triggers": ["RDE^O11", "RDE^O25"],
+  "citation": "HL7 v2.5.1 Chapter 4, section 4.13.13 RDE - Pharmacy/Treatment Refill Authorization Request Message (Event O25), pp 4-127 to 4-129; the same structure is printed for RDE^O11 (4.13.5). Two normative prints of RDE_O11 disagree: section 4.13.5 (RDE^O11^RDE_O11, pp 4-115 to 4-116) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E).",
+  "triggers": ["RDE^O25", "RDE^O11"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },
@@ -33,7 +33,7 @@
         { "segment": "RXO", "min": 1, "max": 1 },
         { "segment": "NTE", "min": 0, "max": null },
         { "segment": "RXR", "min": 1, "max": null },
-        { "group": "COMPONENT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "group": "COMPONENTS", "nameSource": "printed", "min": 0, "max": null, "elements": [
           { "segment": "RXC", "min": 1, "max": 1 },
           { "segment": "NTE", "min": 0, "max": null }
         ]}
@@ -47,7 +47,7 @@
       { "segment": "RXR", "min": 1, "max": null },
       { "segment": "RXC", "min": 0, "max": null },
       { "group": "OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
-        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": 1 },
         { "segment": "NTE", "min": 0, "max": null }
       ]},
       { "segment": "FT1", "min": 0, "max": null },
