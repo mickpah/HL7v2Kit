@@ -114,12 +114,17 @@ class Bundles:
         return self._trees[key]
 
 
+def _members(e):
+    """A group's elements, or a printed choice's alternatives (P8b-6)."""
+    return e["elements"] if "elements" in e else e["alternatives"]
+
+
 def leaves(elements):
     for e in elements:
         if "segment" in e:
             yield e["segment"]
         else:
-            yield from leaves(e["elements"])
+            yield from leaves(_members(e))
 
 
 def signature(elements):
@@ -128,11 +133,14 @@ def signature(elements):
 
 
 def groups(elements, path=()):
-    """(parent path, group) for every group, depth first."""
+    """(parent path, group) for every group, depth first. A printed choice is not a group but
+    its alternatives are searched, under its name or CHOICE (the bundle's name for an unnamed one)."""
     for e in elements:
         if "group" in e:
             yield path, e
             yield from groups(e["elements"], path + (e["group"],))
+        elif "alternatives" in e:
+            yield from groups(e["alternatives"], path + (e["choice"] or "CHOICE",))
 
 
 def _cite(version, sid, group):
@@ -184,9 +192,10 @@ def _bounds(e):
 def differences(printed, bundle, where="root"):
     """REPORT-ONLY disagreements between the print and the bundle (ruling D3): the member list
     of each group (labels: segment ID or group name), then the bounds of the members both
-    list in the same order, recursively."""
+    list in the same order, recursively. A printed choice is compared with the bundle group of
+    the same label (its name, or CHOICE when unnamed), which must be an xsd:choice (P8b-6)."""
     def label(e):
-        return e.get("segment") or e["group"]
+        return e.get("segment") or e.get("group") or e.get("choice") or "CHOICE"
     a, b = [label(e) for e in printed], [label(e) for e in bundle]
     out = []
     if a != b:
@@ -196,9 +205,12 @@ def differences(printed, bundle, where="root"):
             p, q = printed[block.a + i], bundle[block.b + i]
             if _bounds(p) != _bounds(q):
                 out.append(f"{label(p)} at {where}: print {_bounds(p)}, bundle {_bounds(q)}")
-            if "group" in p and "group" in q:
-                inner = p["group"] if where == "root" else f"{where}/{p['group']}"
-                out += differences(p["elements"], q["elements"], inner)
+            if "segment" not in p and "group" in q:
+                inner = label(p) if where == "root" else f"{where}/{label(p)}"
+                if ("alternatives" in p) != q["choice"]:
+                    out.append(f"{inner}: print {'choice' if 'alternatives' in p else 'sequence'}, "
+                               f"bundle {'choice' if q['choice'] else 'sequence'}")
+                out += differences(_members(p), q["elements"], inner)
     return out
 
 

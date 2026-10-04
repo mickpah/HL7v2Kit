@@ -922,3 +922,20 @@ promised before the first version that prints one.
   v2.3/v2.3.1 bundle rule, a citation for a non-printed name) and forbidden on an unnamed one;
   at least two alternatives; `elements` is not allowed on a choice nor `alternatives` on a
   group or segment. Rendered as `.choice(nil, ...)` or `.choice("NAME", ...)`.
+- **Extractor.** `scripts/extract-message-structures.py` reads a choice in every printed row
+  layout: inline (`<OBR|RQD|RXO>`, v2.4 CH04), one alternative per row with a trailing `|`
+  (`<OBR|` ... `ODT>`, v2.5.1 CH04), each token on a row of its own (`<`, `OBR`, `|`, `>`, v2.5.1
+  CH12) and named (`<` with `--- NAME begin`, `>` with `--- NAME end`, v2.7.1 and v2.8.2).
+  `[ ]` and `{ }` around a choice are its bounds; a named group whose only member is a choice
+  stays a group. An alternative must be one element (the bundles never nest a sequence in a
+  choice). A choice whose alternatives are a placeholder (`< OBR | etc. >`, v2.5.1 CH12, which
+  the CH12 note expands to "all possible combinations of pharmacy and other order detail
+  segments" through CH04 4.2.2.4; the bundle has `anyHL7Segment`) is skipped as
+  `placeholder (G6)` until a cited G6 expansion exists; `...` and `…` rows are labelled the same
+  way. `ChoiceNotation` is gone. The bundle cross-check compares a printed choice with the
+  bundle group of the same label (its name, or `CHOICE`, the bundle's name for an unnamed one),
+  which must be an `xsd:choice`; a group inside an alternative resolves its name under that
+  path. v2.5.1 after the change: 166 parsed (163 before), 21 skipped, of which 15 are G6
+  placeholders; ORM_O01, ORR_O02 and OSR_Q06 parse with a choice, pass the lint and agree with
+  the reference recogniser on 6,000 sequences each; the seven CH12 patient-care structures
+  (PGL_PC6, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF) are G6 placeholders.

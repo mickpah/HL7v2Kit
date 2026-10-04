@@ -308,12 +308,101 @@ def check_unnamed_group_override_or_synthesised():
     assert s["citation"].endswith("VISIT (overrides.json: a cited name)."), s["citation"]
 
 
-def check_choice_skipped_with_report_line():
-    s, report = _structure([("MSH", "Header"), ("<OBR|", "Order Detail Segment OBR, etc."), ("RQD>", "")])
-    assert s is None
-    [line] = [r for r in report if r[0] == "XYZ_X01"]
-    assert line[1] == "skipped" and line[2].startswith("choice:"), line
-    assert "choice 1" in ext.summary("2.5.1", {}, report, 1), ext.summary("2.5.1", {}, report, 1)
+def _seg(sid, lo=1, hi=1):
+    return {"segment": sid, "min": lo, "max": hi}
+
+
+def _choice(alternatives, name=None, lo=1, hi=1):
+    return {"choice": name, "nameSource": "printed" if name else None, "min": lo, "max": hi,
+            "alternatives": alternatives}
+
+
+def check_choice_inline():
+    # P8b-6 layout 1: the whole choice on one row (v2.4 CH04 ORM_O01 style).
+    s, _ = _structure([("MSH", "Header"), ("ORC", "Order"), ("<OBR|RQD|RXO>", "Order Detail Segment OBR, etc."),
+                       ("[{NTE}]", "Notes")])
+    assert s["elements"][2] == _choice([_seg("OBR"), _seg("RQD"), _seg("RXO")]), s["elements"][2]
+    text = ext.render(s)
+    assert '{ "choice": null, "min": 1, "max": 1, "alternatives": [' in text, text
+    assert '      { "segment": "RQD", "min": 1, "max": 1 },' in text, text
+    assert ext.compact(s["elements"][2:]) == "<OBR | RQD | RXO> [{NTE}]", ext.compact(s["elements"][2:])
+
+
+def check_choice_one_per_row():
+    # Layout 2: one alternative per row, "|" trailing (v2.5.1 CH04 ORM_O01), inside a group,
+    # and an optional choice "[ <A|B> ]" folds its bracket into the choice's bounds.
+    s, _ = _structure([("MSH", "Header"), ("[", "--- ORDER_DETAIL begin"), ("<OBR|", "Order Detail Segment OBR, etc."),
+                       ("RQD|", ""), ("RQ1|", ""), ("RXO|", ""), ("ODS|", ""), ("ODT>", ""), ("[{ NTE }]", "Notes"),
+                       ("]", "--- ORDER_DETAIL end"), ("[", ""), ("<OBX|", "Result"), ("SPM>", "Specimen"), ("]", "")])
+    detail = s["elements"][1]
+    assert (detail["group"], detail["min"]) == ("ORDER_DETAIL", 0), detail
+    assert detail["elements"] == [_choice([_seg(x) for x in ("OBR", "RQD", "RQ1", "RXO", "ODS", "ODT")]),
+                                  _seg("NTE", 0, None)], detail["elements"]
+    assert s["elements"][2] == _choice([_seg("OBX"), _seg("SPM")], lo=0), s["elements"][2]
+
+
+def check_choice_separate_rows_and_placeholder():
+    # Layout 3: "<", each alternative, "|" and ">" on rows of their own (v2.5.1 CH12).
+    s, _ = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
+                       ("{RXO}", "Pharmacy order"), (">", ""), ("[{NTE}]", "Notes")])
+    assert s["elements"][1] == _choice([_seg("OBR"), _seg("RXO", 1, None)]), s["elements"][1]
+    # "etc." in place of the alternatives (CH12's "< OBR | etc. >") is a G6 placeholder: skipped.
+    s, report = _structure([("MSH", "Header"), ("<", ""), ("OBR", "Order Detail Segment"), ("|", ""),
+                            ("", "etc."), (">", "")])
+    assert s is None, s
+    [line] = [r for r in report if r[1] == "skipped"]
+    assert "placeholder (G6): 'etc.' among a choice's alternatives" in line[2], line
+    assert "of which placeholder (G6) 1" in ext.summary("2.5.1", {}, report, 1), ext.summary("2.5.1", {}, report, 1)
+    # "etc." in the description column outside a choice is ordinary description text.
+    s, _ = _structure([("MSH", "Header"), ("OBR", "Order"), ("", "etc."), ("NTE", "Notes")])
+    assert [e["segment"] for e in s["elements"]] == ["MSH", "OBR", "NTE"], s
+
+
+def check_choice_named():
+    # Layout 4 (v2.7.1 on): "--- NAME begin" on the "<" row and "--- NAME end" on the ">" row.
+    rows = [("MSH", "Header"), ("[{", "--- RESOURCE_DETAIL begin"), ("<", "--- RESOURCE_OBJECT begin"),
+            ("AIS|", "Service"), ("AIG|", "General Resource"), ("AIP", "Personnel"), (">", "--- RESOURCE_OBJECT end"),
+            ("[{NTE}]", "Notes"), ("}]", "--- RESOURCE_DETAIL end"), ("[{", "--- G begin"), ("<AIL|", "Location"),
+            ("AIP>", "Personnel"), ("}]", "--- G end")]
+    s, _ = _structure(rows)
+    detail = s["elements"][1]
+    assert detail["elements"][0] == _choice([_seg("AIS"), _seg("AIG"), _seg("AIP")], "RESOURCE_OBJECT"), detail
+    text = ext.render(s)
+    assert '{ "choice": "RESOURCE_OBJECT", "nameSource": "printed", "min": 1, "max": 1, "alternatives": [' in text
+    # A named group whose only member is a choice stays a group: the name is the group's.
+    g = s["elements"][2]
+    assert (g["group"], g["min"], g["max"]) == ("G", 0, None), g
+    assert g["elements"] == [_choice([_seg("AIL"), _seg("AIP")])], g["elements"]
+    assert ext.compact([g]) == "[{G: <AIL | AIP>}]", ext.compact([g])
+
+
+def check_choice_malformed():
+    for rows in (["<OBR RQD|RXO>"], ["<OBR>"], ["OBR|RXO"], ["<|OBR>"], ["<OBR|", "RXO"], ["[<OBR|RXO]>"]):
+        try:
+            ext.parse([ext.Row(left, "", 0, "") for left in rows])
+        except ext.UnknownNotation:
+            continue
+        raise AssertionError(f"{rows!r} must raise UnknownNotation")
+
+
+def check_choice_bundle_cross_check():
+    # The bundle names an unnamed choice CHOICE: a print choice is compared with it, member by
+    # member; a group inside an alternative resolves under the CHOICE path; a choice the
+    # bundle models as a sequence (or the reverse) is a bundle-differs row.
+    rows = [("MSH", "Header"), ("<", ""), ("OBR", "Order"), ("|", ""), ("[", ""), ("RXO", "Pharmacy"),
+            ("RXR", "Route"), ("]", ""), (">", "")]
+    good = _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.CHOICE 1 1;XYZ_X01.CHOICE choice: OBR 1 1, XYZ_X01.PHARM 0 1;"
+                           "XYZ_X01.PHARM: RXO 1 1, RXR 1 1")
+    text = _page(1, _table("XYZ^X01^XYZ_X01", rows), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, bundles=_bundles("2.5.1", {"XYZ_X01": good}))
+    choice = structures["XYZ_X01"]["elements"][1]
+    assert choice["alternatives"][1]["group"] == "PHARM" and choice["alternatives"][1]["nameSource"] == "v2xml", choice
+    assert not [r for r in report if r[1] == "bundle-differs"], report
+    seq = good.replace('<xsd:choice><xsd:element ref="OBR"', '<xsd:sequence><xsd:element ref="OBR"')
+    seq = seq.replace('maxOccurs="1"/></xsd:choice></xsd:complexType><xsd:element name="XYZ_X01.CHOICE"',
+                      'maxOccurs="1"/></xsd:sequence></xsd:complexType><xsd:element name="XYZ_X01.CHOICE"')
+    _, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, bundles=_bundles("2.5.1", {"XYZ_X01": seq}))
+    assert ("XYZ_X01", "bundle-differs", "CHOICE: print choice, bundle sequence") in report, report
 
 
 def check_unknown_notation():
@@ -323,7 +412,6 @@ def check_unknown_notation():
         except ext.UnknownNotation:
             continue
         raise AssertionError(f"{left!r} must raise UnknownNotation")
-    assert issubclass(ext.ChoiceNotation, ext.UnknownNotation)
 
 
 def check_overrides_validation():
@@ -820,7 +908,9 @@ def check_empty_or_run_on_print_unreadable():
 
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
-          check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_skipped_with_report_line,
+          check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_inline,
+          check_choice_one_per_row, check_choice_separate_rows_and_placeholder, check_choice_named,
+          check_choice_malformed, check_choice_bundle_cross_check,
           check_unknown_notation, check_overrides_validation, check_excluded_section, check_eras_cover_chapters,
           check_bundle_reader_tree, check_bundle_names_group_by_path_and_members,
           check_bundle_mismatch_not_resolved_by_position, check_derivation_through_v24, check_synthesised_fallback,

@@ -33,6 +33,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No committed structure uses a choice, so the generated tables and every default output
   are unchanged.
 
+### Changed — P8b-6: the extractor reads choices
+
+- `scripts/extract-message-structures.py` reads `< A | B >` inline, one alternative per row,
+  token per row, and named (`--- NAME begin` on the `<` row, v2.7.1 on); `ChoiceNotation` no
+  longer skips a structure. A choice of placeholder alternatives (`< OBR | etc. >`, v2.5.1
+  CH12) and `...` rows are skipped as `placeholder (G6)`; the summary line counts them and the
+  parsed structures that carry a choice.
+- `scripts/read-v2xml-bundles.py`: a printed choice is compared with the bundle's choice group
+  (`CHOICE` when unnamed); a choice against a sequence is a `bundle-differs` row.
+- Six new extractor self-checks (the four layouts, malformed choices, the bundle cross-check).
+- v2.5.1: 166 structures parse (163 before); ORM_O01, ORR_O02 and OSR_Q06 carry a choice and
+  pass the lint; the three pilots still reproduce byte for byte.
+
 ### Changed — P8b-3b: CH02B guard, triggerFolds stale guard, ACK on v2.3 and v2.3.1, v2.7.1 ORU_R01
 
 - A Conformance-chapter (CH02B, sections 2.B.x) print is never a structure's primary print; a

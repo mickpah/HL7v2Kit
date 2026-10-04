@@ -19,8 +19,10 @@ its HL7 v2.xml bundle name (scripts/read-v2xml-bundles.py: nameSource v2xml, or 
 v2.3 and v2.3.1), else a cited groupNames entry in Resources/structures/overrides.json (nameSource
 override), else <FIRSTSEG>_GROUP (nameSource synthesised, a no-bundle-name report row). Each
 non-printed name is cited in the structure citation. The bundle's element tree is compared with
-the print, report only (bundle-differs rows); the print stays normative. Choice notation (< X | Y >) is not modelled yet (P8b-6): a
-structure that prints one is reported and skipped. Every caption form is read (P8b-3a, see
+the print, report only (bundle-differs rows); the print stays normative. Choice notation
+(< X | Y >, P8b-6) is read in every row layout into a choice element, named when the print
+names it; a choice whose alternatives are a placeholder ("etc.", "...") is skipped under ruling
+G6 (unreadable: placeholder (G6)). Every caption form is read (P8b-3a, see
 captions()); exclusions, errata and shared triggers are cited overrides entries; the report
 adds duplicate-differs, needs-structure-id, needs-event, shared-trigger and the Table 0354
 reconciliation (0354-missing-row, 0354-missing-caption).
@@ -95,8 +97,7 @@ class UnknownNotation(Exception):
     group mark."""
 
 
-class ChoiceNotation(UnknownNotation):
-    """< X | Y > choice notation, not modelled until P8b-6."""
+PLACEHOLDER = re.compile(r"^(?:etc\.?|\.\.\.|…)$")   # "< OBR | etc. >" (v2.5.1 CH12): ruling G6
 
 
 class NameSourceError(Exception):
@@ -318,7 +319,7 @@ def syntax_rows(lines, caption):
     v2.8.2) resets the columns; a footnote digit on a line of its own is furniture, and one at
     the left margin opens the page-foot footnotes, read as furniture up to the page footer."""
     pages = page_labels(lines)
-    rows, depth, foot = [], 0, False
+    rows, depth, choices, foot, placeholder = [], 0, 0, False, None
     code_col, desc_col = caption.code_col, caption.desc_col
     caption.end_page = caption.page
     for i in range(caption.line + 1, len(lines)):
@@ -352,6 +353,12 @@ def syntax_rows(lines, caption):
                 break
             raise UnknownNotation(f"line {i + 1}: prose inside an open group: {line.strip()[:60]!r}")
         left, desc = cells
+        if not left and choices > 0 and PLACEHOLDER.match(desc.strip()):
+            # The alternatives are not enumerated (v2.5.1 CH12 "< OBR | etc. >"; the bundle has
+            # anyHL7Segment): expanded only by a cited G6 entry, never guessed. Read on to the end
+            # of the table first, so its page-break repeats of the caption are consumed.
+            placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()!r} among a choice's alternatives"
+            continue
         if not left:
             # "--- NAME" with "begin" or "end" wrapped onto the description's next line.
             if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(r"(?i)(begin|end)\b", desc):
@@ -360,14 +367,19 @@ def syntax_rows(lines, caption):
         if depth == 0 and rows and not _NOTATION.match(left):
             break       # prose or another table's header after the table (v2.5.1 RSP_K23's QPD field table)
         depth += sum(left.count(c) for c in "[{<") - sum(left.count(c) for c in "]}>")
+        choices += left.count("<") - left.count(">")
         rows.append(Row(left, desc, i, pages[i]))
         caption.end_page = pages[i]
+    if placeholder:
+        raise UnknownNotation(placeholder)
     return rows
 
 
 def parse(rows, marks=None, used=None):
     """Elements from syntax rows, by bracket balance. A group the print leaves unnamed has
-    "group": None until name_groups resolves it. marks maps a misprinted group-mark name to the
+    "group": None until name_groups resolves it. A choice (P8b-6) is "<", alternatives split
+    by "|", then ">", in any row layout (inline, one alternative per row, or each token on its
+    own row); "--- NAME begin" on its "<" row names it (v2.7.1 on). marks maps a misprinted group-mark name to the
     intended one (a cited errata entry); used receives every printed name it corrected."""
     marks = marks or {}
     root = {"kind": "root", "children": [], "name": None}
@@ -386,10 +398,22 @@ def parse(rows, marks=None, used=None):
                 if len(stack) == 1 or stack[-1]["kind"] != {"]": "[", "}": "{"}[tok]:
                     raise UnknownNotation(f"unbalanced {tok!r} in {row.left!r}")
                 closed.append(stack.pop())
-            elif tok in "<|>":
-                raise ChoiceNotation(f"choice notation {tok!r} in {row.left!r}")
+            elif tok == "<":
+                node = {"kind": "<", "children": [], "alts": [], "name": None}
+                stack[-1]["children"].append(node)
+                stack.append(node)
+                opened.append(node)
+            elif tok in "|>":
+                if stack[-1]["kind"] != "<":
+                    raise UnknownNotation(f"{tok!r} outside a choice in {row.left!r}")
+                stack[-1]["alts"].append(stack[-1]["children"])
+                stack[-1]["children"] = []
+                if tok == ">":
+                    closed.append(stack.pop())
             elif re.fullmatch(r"[A-Z][A-Z0-9]{2}", tok):
                 stack[-1]["children"].append({"kind": "seg", "id": tok})
+            elif tok in ("...", "…"):
+                raise UnknownNotation(f"placeholder (G6): {row.left!r}")
             else:
                 raise UnknownNotation(f"not notation: {row.left!r}")
         desc = row.desc
@@ -417,6 +441,8 @@ def parse(rows, marks=None, used=None):
 def _element(node):
     if node["kind"] == "seg":
         return {"segment": node["id"], "min": 1, "max": 1}
+    if node["kind"] == "<":
+        return _choice(node, {"<"}, [node["name"]] if node["name"] else [])
     # Nested brackets around one child are one element: [{X}], {[X]} and [ { A B } ] (ADR-019:
     # min 0 if any [ ], max null if any { }).
     kinds, names = set(), []
@@ -425,11 +451,14 @@ def _element(node):
         if node["name"]:
             names.append(node["name"])
         only = node["children"][0] if len(node["children"]) == 1 else None
-        # Two printed names are two groups, nested: never merge them.
-        if only is not None and only["kind"] != "seg" and not (names and only["name"]):
+        # Two printed names are two groups, nested: never merge them; nor a named group into
+        # the choice it holds (the group, not the choice, carries the name).
+        if only is not None and only["kind"] != "seg" and not (names and (only["name"] or only["kind"] == "<")):
             node = only
             continue
         break
+    if node["kind"] == "<":
+        return _choice(node, kinds, names)
     if not node["children"]:
         raise UnknownNotation("an empty group")
     bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
@@ -437,6 +466,17 @@ def _element(node):
         return {"segment": node["children"][0]["id"], **bounds}
     return {"group": names[0] if names else None, "nameSource": "printed" if names else None,
             **bounds, "elements": [_element(c) for c in node["children"]]}
+
+
+def _choice(node, kinds, names):
+    """A choice element: [ ] around it makes it optional, { } repeating (as for a group)."""
+    if any(len(alt) != 1 for alt in node["alts"]) or len(node["alts"]) < 2:
+        shapes = " | ".join(str(len(alt)) for alt in node["alts"])
+        raise UnknownNotation(f"a choice needs two or more alternatives of one element each (element counts {shapes})")
+    bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
+    name = names[0] if names else None
+    return {"choice": name, "nameSource": "printed" if name else None, **bounds,
+            "alternatives": [_element(alt[0]) for alt in node["alts"]]}
 
 
 def name_groups(elements, version, structure, overrides, used=None, path=(), bundles=None, log=None, taken=None):
@@ -447,6 +487,10 @@ def name_groups(elements, version, structure, overrides, used=None, path=(), bun
     if taken is None:
         taken = {g["group"] for _, g in _v2xml.groups(elements) if g["group"]}
     for index, element in enumerate(elements):
+        if "alternatives" in element:     # a choice: the bundle names it CHOICE when the print does not
+            name_groups(element["alternatives"], version, structure, overrides, used,
+                        tuple(path) + (element["choice"] or "CHOICE",), bundles, log, taken)
+            continue
         if "group" not in element:
             continue
         if element["group"] is None:
@@ -515,6 +559,12 @@ def render_element(element, indent):
     if "segment" in element:
         return (f'{indent}{{ "segment": "{element["segment"]}", "min": {element["min"]}, '
                 f'"max": {json.dumps(element["max"])} }}')
+    if "alternatives" in element:     # P8b-6: {"choice": NAME or null, "nameSource" (named), ...}
+        source = f'"nameSource": "{element["nameSource"]}", ' if element["choice"] else ""
+        head = (f'{indent}{{ "choice": {json.dumps(element["choice"])}, {source}"min": {element["min"]}, '
+                f'"max": {json.dumps(element["max"])}, "alternatives": [')
+        body = ",\n".join(render_element(e, indent + "  ") for e in element["alternatives"])
+        return f"{head}\n{body}\n{indent}]}}"
     head = (f'{indent}{{ "group": "{element["group"]}", "nameSource": "{element["nameSource"]}", '
             f'"min": {element["min"]}, "max": {json.dumps(element["max"])}, "elements": [')
     body = ",\n".join(render_element(e, indent + "  ") for e in element["elements"])
@@ -620,7 +670,10 @@ def compact(elements):
     """A one-line rendering of elements in print notation, for report rows."""
     out = []
     for e in elements:
-        inner = e["segment"] if "segment" in e else f"{e['group']}: " + compact(e["elements"])
+        if "alternatives" in e:
+            inner = (f"{e['choice']}: " if e["choice"] else "") + "<" + " | ".join(compact([a]) for a in e["alternatives"]) + ">"
+        else:
+            inner = e["segment"] if "segment" in e else f"{e['group']}: " + compact(e["elements"])
         if e["max"] is None:
             inner = "{" + inner + "}"
         if e["min"] == 0:
@@ -756,9 +809,6 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 raise UnknownNotation("no page footer or section heading found for the caption")
             log = []
             elements = read(sid, rows, error, log, used)
-        except ChoiceNotation as exc:
-            report.append((sid, "skipped", f"choice: {exc}"))
-            continue
         except UnknownNotation as exc:
             report.append((sid, "skipped", f"unreadable: {cap.source} line {cap.line + 1}: {exc}"))
             continue
@@ -857,15 +907,17 @@ def summary(version, structures, report, count):
     def n(status):
         return sum(1 for r in report if r[1] == status)
     skipped = [r for r in report if r[1] == "skipped"]
-    reasons = {k: sum(1 for r in skipped if r[2].startswith(k)) for k in ("choice", "unreadable")}
+    reasons = {"unreadable": sum(1 for r in skipped if r[2].startswith("unreadable")),
+               "placeholder": sum(1 for r in skipped if "placeholder (G6)" in r[2])}
+    with_choice = sum(1 for s in structures.values() if '"alternatives"' in json.dumps(s))
     distinct = len({r[0] for r in report if r[1] in ("parsed", "skipped")})
     return (f"v{version.lstrip('v')}: {count} captions ({n('excluded')} excluded), {distinct} structures, "
             f"{len(structures)} parsed, {len(skipped) + n('needs-structure-id') + n('needs-event')} skipped "
-            f"(choice {reasons['choice']}, unreadable {reasons['unreadable']}, "
+            f"(unreadable {reasons['unreadable']}, of which placeholder (G6) {reasons['placeholder']}, "
             f"needs-structure-id {n('needs-structure-id')}, needs-event {n('needs-event')}); "
             f"duplicate-differs {n('duplicate-differs')}, duplicate-unreadable {n('duplicate-unreadable')}; "
             f"0354-missing-row {n('0354-missing-row')}, 0354-missing-caption {n('0354-missing-caption')}; "
-            f"shared-trigger {n('shared-trigger')}")
+            f"shared-trigger {n('shared-trigger')}; with a choice {with_choice}")
 
 
 def name_summary(version, report):
