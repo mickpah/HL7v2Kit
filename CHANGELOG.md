@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-10: HL7 v2.6 message structures complete
+
+- With `messageStructureSeverity` set, every v2.6 message structure is now checked: 187
+  structures extracted from the chapter prints (23 matched exactly), and v2.6 is marked
+  complete. An MSH-9.3 that names no v2.6 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.6 instead of info.
+- 23 v2.6 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 `< OBR | etc. >` structures, eight query and master-file templates, SUR_P09,
+  RSP_K21 (its K21 and K22 prints are incomparable) and five Table 0354 rows with no printed
+  syntax.
+- Looser prints committed for ACK (CH10's `[{UAC}]`), ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and
+  RDE_O11; v2.6 MFR^M04 to M07 are declared shared triggers.
+- On a complete version a locally defined message (a Z message type, trigger or structure ID
+  whose trigger the version prints under no structure) is not modelled, never a mismatch.
+- `MFK^M14^MFK_M01` is now read on v2.5.1 and v2.6 (the CH08 8.4.3 exclusion is scoped to the
+  `MFN_Znn` template caption).
+- The structure extractor reads bracketless named groups and no-bar named `< ... >` groups as
+  required groups, supports a cited `syntax-cell` erratum and caption-scoped exclusions, and
+  reads a table whose MSH row sits left of its caption.
+
 ### Added — P8b-9: HL7 v2.5.1 message structures complete
 
 - With `messageStructureSeverity` set, every v2.5.1 message structure is now checked: 172

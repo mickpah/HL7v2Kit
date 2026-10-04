@@ -51,7 +51,8 @@ struct StructureV251ProbeTests {
               compliant: ["PID|1", "ORC|RE", "RXA|0|1", "RXR|1"],
               variant: ["PID|1", "ORC|RE", "RXA|0|1"], finding: "missing RXR"),
         // CH10 10.4: RESOURCES prints SERVICE, GENERAL_RESOURCE, LOCATION_RESOURCE,
-        // PERSONNEL_RESOURCE in that order (the CH10 examples print AIP before AIL).
+        // PERSONNEL_RESOURCE in that order (five CH10 examples print AIP before AIL:
+        // one SIU, four SRM/SRR).
         Probe(structure: "SIU_S12", msh9: "SIU^S13^SIU_S12",
               compliant: ["SCH|1", "TQ1|1", "PID|1", "RGS|1", "AIS|1", "AIL|1", "AIP|1"],
               variant: ["SCH|1", "PID|1", "RGS|1", "AIP|1", "AIL|1"], finding: "unexpected AIL"),

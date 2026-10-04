@@ -1086,3 +1086,17 @@ compiling a structure per message.
   be a model extension and are registered as a limitation instead. v2.5.1: RSP_K21 from 3.3.57
   (K22; the K21 print 3.3.56 misfired on CH03's own K22 example) and RDE_O11 from 4.13.13 (O25,
   OBX optional in OBSERVATION).
+
+## Amendment 2026-10-04 — v2.6 complete (P8b-10)
+
+- **v2.6 complete.** 187 structures modelled (23 exact-matched), 23 registered (register
+  section E v2.6 addendum); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
+  looser prints. Where two prints are incomparable (v2.6 RSP_K21) the structure is registered,
+  not guessed.
+- **Extractor.** A `--- NAME begin` / `--- NAME end` pair on empty syntax cells is a required,
+  non-repeating named group (CH02 2.5.2), and a named `< ... >` with no `|` is a named required
+  group (the P8b-6 ruling); a `syntax-cell` erratum corrects a printed cell; an MSH row left of
+  an indented caption sets the column; an exclusion may name one caption of its section.
+- **Lookup.** On a complete version a locally defined message (a Z message type, trigger or
+  structure ID whose trigger the version prints under no structure; CH02 reserves Z codes for
+  local definition) is not modelled, never a rule 1 mismatch.

@@ -307,6 +307,49 @@ ORF_R04, ORL_O34, OUL_R21, OUL_R24, RCI_I05, REF_I12, RPA_I08, RQA_I08, RRI_I12)
 by the exact matcher: at most one finding per message, at the furthest segment any parse
 reached, and no group spans, so span-derived group predicates (P8b-17) cannot use them.
 
+### Addendum to §E — v2.6 complete (P8b-10, 2026-10-04)
+
+v2.6 is `complete: true` in `Resources/structures/completeness.json`: 187 structures modelled
+(each cited to chapter, section and pages) and 23 registered as not modelled in that file's
+`notModelled`, with the same lookup behaviour as v2.5.1 above.
+
+| Not modelled (v2.6) | Why | Status |
+|---|---|---|
+| PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF (CH12 12.2.1 to 12.2.12) | The order detail is printed `< OBR \| etc. >`; the CH12 12.2 note (p 12-6) reads it as every combination of order detail segments per CH04 4.2.2.4, which names only examples (ruling G6). | **Blocking** for v2.6 unless a ruling fixes the set. |
+| QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11 (CH05 5.4.1 to 5.4.5); MFN_M01, MFR_M01, MFN_M03 (CH08 8.4.1, 8.4.4, 8.8.2) | Templates: a `[...]` or `...` row stands for query-specific or master-file-specific segments (ruling G6). | **Permanent** for the template IDs. |
+| SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`; v2.6 defines no ED segment. | **Blocking**; a print defect. |
+| RSP_K21 (CH03 3.3.56, 3.3.57) | Two normative prints, neither looser: 3.3.56 (RSP^K21) prints one optional QUERY_RESPONSE with `[{ARV}]` and QRI required; 3.3.57 (RSP^K22) a repeating QUERY_RESPONSE with QRI optional and no ARV. The looser-print rule cannot settle it. | **Blocking** (per-trigger structures, or a ruling on the union). |
+| ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax. | **Permanent** for v2.6. |
+
+Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
+committed, cited to both (overrides.json `primaryPrints`).
+
+| Structure (v2.6) | Looser print, committed | Stricter print, not checked | Cost | Status |
+|---|---|---|---|---|
+| ACK | CH10 10.4 (ACK^S12-S24, S26, p 10-17): `[{UAC}]` | CH02 2.13.1 (p 42): `[UAC]` (and every chapter's ACK, all stricter) | An ACK with several UAC segments passes. | **Blocking** (per-trigger structures). |
+| ADT_A30 | CH03 3.3.34 (A34; also A36, A46, A47): `[{ARV}]` after PD1 | CH03 3.3.30 (A30; also A35, A48, A49): no ARV | An A30, A35, A48 or A49 message with ARV passes. | **Blocking** (per-trigger structures). |
+| ADT_A43 | CH03 3.3.44 (A44): `[{ARV}]` in PATIENT | CH03 3.3.43 (A43, p 3-39): no ARV | An A43 message with ARV passes. | **Blocking** (per-trigger structures). |
+| MFK_M01 | CH08 8.4.2 (M13) and 13 other prints: `[UAC]` | CH08 8.4.1 (M01, p 8-5) and 8.8.2 (M03): no UAC | An MFK^M01 or MFK^M03 with UAC passes. | **Blocking** (per-trigger structures). |
+| QRY_PC4 | CH12 12.2.7 (PC9; also PCE, PCK): `[{SFT}] [UAC]` | CH12 12.2.5 (PC4, p 12-12): neither | A PC4 query with SFT or UAC passes. | **Blocking** (per-trigger structures). |
+| RDE_O11 | CH04 4.13.13 (O25): OBX optional in OBSERVATION, group COMPONENTS | CH04 4.13.5 (O11, pp 4-88 to 4-89): OBX required | An RDE^O11 with an OBSERVATION of NTE alone passes. | **Blocking** (per-trigger structures). |
+
+Other print disagreements recorded, not modelled (each duplicate stricter than the committed
+print): ADT^A13 omits the ARV after PD1; RQC^I06 prints `[GT1]`; RRE^O26 drops RXE's NTE. The
+HL7 v2.xml bundles differ from the print for the bracketless named groups of EHC_E01, E02, E04,
+E15, E20, E21, E24, QBP_E03, QBP_E22, RSP_E03, RSP_E22 and the no-bar `< ... >` of SDR_S31 and
+SDR_S32 (the bundle reads a choice of each member; the print a required group, P8b-6 ruling),
+ADT_A60 and DFT_P03/P11 (a VISIT group the print does not have), NMR_N01 (nested groups), ACK
+and RDE_O11 (the bundle follows the stricter prints); the print is normative (ruling D3). The
+CH05 5.9.1.1 RDR restatement and the CH08 8.4.3 MFN_Znn template are excluded (G7; the 8.4.3
+acknowledgment MFK^M14^MFK_M01 is read, on v2.5.1 too). A locally defined message (a Z message
+type, trigger or structure whose trigger the version prints under no structure) is not modelled
+rather than a mismatch on a complete version.
+
+Known cost of exact matching: 23 v2.6 structures fail the determinism lint (ADT_A60, BAR_P01,
+BAR_P05, CSU_C09, DFT_P03, DFT_P11, EHC_E15, NMR_N01, OMD_O03, OMG_O19, OML_O21, OML_O33,
+OML_O35, OPL_O37, ORD_O04, ORF_R04, OUL_R21, OUL_R24, RCI_I05, REF_I12, RPA_I08, RQA_I08,
+RRI_I12) and are matched by the exact matcher, with at most one finding and no group spans.
+
 ## F. Excluded HL7 v2.x versions (ADR-018)
 
 A message declaring one of these parses, falls back to the v2.5.1 grammar, and carries
