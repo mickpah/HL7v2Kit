@@ -223,7 +223,11 @@
     { "version": "2.8.2", "where": "group-mark", "structure": "SDR_S32", "printed": "ANTI-MICROBIAL_DEVICE_CYCLE_DATA", "intended": "ANTIMICROBIAL_DEVICE_CYCLE_DATA",
       "citation": "HL7 v2.8.2 Chapter 17, section 17.5.5 SMD/ACK - Request Anti-Microbial Device Cycle Data (Event S32), p 38, and 17.6.5 (SCN^S37, p 41): the group mark prints 'ANTI-MICROBIAL_DEVICE_CYCLE_DATA' (as does HL7-xml v2.8.2/SDR_S32.xsd), which no group name can hold (a hyphen); read as ANTIMICROBIAL_DEVICE_CYCLE_DATA, the name the v2.6 print is read as (HL7-xml v2.6/SDR_S32.xsd)." },
     { "version": "2.8.2", "where": "syntax-cell", "structure": "RDE_O11", "printed": "}]", "intended": "} }]",
-      "citation": "HL7 v2.8.2 Chapter 4A, section 4A.3.13 RDE - Pharmacy/Treatment Refill Authorization Request Message, p 22 (RDE^O25^RDE_O11): inside '[{' RXV ... the row '{ --- TIMING_ENCODED begin' is never closed; the next row '}]' closes the RXV group, leaving the TIMING_ENCODED group open; read as '} }]', closing both, as the 4A.3.1 RDE^O11 print closes them ('} --- TIMING_ENCODED end', '}] --- PHARMACY_TREATMENT_INFUSION_ORDER end', p 7)." }
+      "citation": "HL7 v2.8.2 Chapter 4A, section 4A.3.13 RDE - Pharmacy/Treatment Refill Authorization Request Message, p 22 (RDE^O25^RDE_O11): inside '[{' RXV ... the row '{ --- TIMING_ENCODED begin' is never closed; the next row '}]' closes the RXV group, leaving the TIMING_ENCODED group open; read as '} }]', closing both, as the 4A.3.1 RDE^O11 print closes them ('} --- TIMING_ENCODED end', '}] --- PHARMACY_TREATMENT_INFUSION_ORDER end', p 7)." },
+    { "version": "2.5.1", "where": "table-0354", "structure": "OMN_O07", "printed": "007", "intended": "O07",
+      "citation": "HL7 v2.5.1 Chapter 2, section 2.17.3, Table 0354, p 2-103: the OMN_O07 row prints its event as '007' (zero for the letter O); read as O07, the event the row's own ID and the CH04 4.10.3 caption OMN^O07^OMN_O07 name." },
+    { "version": "2.5.1", "where": "table-0354", "structure": "ORL_O22", "printed": "022", "intended": "O22",
+      "citation": "HL7 v2.5.1 Chapter 2, section 2.17.3, Table 0354, p 2-103: the ORL_O22 row prints its event as '022' (zero for the letter O); read as O22, the event the row's own ID and the CH04 4.4.7 caption ORL^O22^ORL_O22 name." }
   ],
   "exclusions": [
     { "version": "2.4", "section": "4.6.2",
@@ -495,7 +499,15 @@
     { "version": "2.6", "trigger": "MFR^M06", "structures": ["MFR_M01", "MFR_M06"],
       "citation": "HL7 v2.6 prints MFR^M06 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M06^MFR_M06 (section 8.11.1, p 8-72). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
     { "version": "2.6", "trigger": "MFR^M07", "structures": ["MFR_M01", "MFR_M07"],
-      "citation": "HL7 v2.6 prints MFR^M07 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-73). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." }
+      "citation": "HL7 v2.6 prints MFR^M07 under 2 structures: MFR^M01-M17^MFR_M01 (section 8.4.4, pp 8-7 to 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-73). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.5.1", "trigger": "ADT^A12", "structures": ["ADT_A09", "ADT_A12"],
+      "citation": "HL7 v2.5.1 maps ADT^A12 to two structures: Table 0354 (Chapter 2, section 2.17.3, p 2-101) lists A12 under ADT_A09, and Chapter 3 section 3.3.12 (p 3-19) prints ADT^A12^ADT_A12. A structure accepts the triggers Table 0354 maps to it (P8b-11 ruling), so without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.5.1", "trigger": "RPI^I04", "structures": ["RPI_I01", "RPI_I04"],
+      "citation": "HL7 v2.5.1 maps RPI^I04 to two structures: Table 0354 (Chapter 2, section 2.17.3, p 2-104) lists I01 and I04 under RPI_I01, and Chapter 11 section 11.3.4 (p 11-12) prints RPI^I04^RPI_I04. A structure accepts the triggers Table 0354 maps to it (P8b-11 ruling), so without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.6", "trigger": "RPI^I04", "structures": ["RPI_I01", "RPI_I04"],
+      "citation": "HL7 v2.6 maps RPI^I04 to two structures: Table 0354 (Chapter 2, section 2.16.3, p 87) lists I01 and I04 under RPI_I01 and I04 under RPI_I04, and Chapter 11 section 11.3.4 (pp 11-10 to 11-11) prints RPI^I04^RPI_I04. A structure accepts the triggers Table 0354 maps to it (P8b-11 ruling), so without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.8.2", "trigger": "RPI^I04", "structures": ["RPI_I01", "RPI_I04"],
+      "citation": "HL7 v2.8.2 maps RPI^I04 to two structures: Table 0354 (Chapter 2C, section 2.C.2.279, p 153) lists I01 and I04 under RPI_I01 and I04 under RPI_I04, and Chapter 11 section 11.3.4 (p 12) prints RPI^I04^RPI_I04. A structure accepts the triggers Table 0354 maps to it (P8b-11 ruling), so without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." }
   ],
   "triggerFolds": [
     { "version": "2.3", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",

@@ -742,7 +742,8 @@ def check_two_part_caption_through_0354():
                      + _table("XYZ^X09", rows)[1:], heading="9.1.2           XYZ - synthetic (Event X02)")
         structures, report, count = _run(version, [("syn", text)], tables=TABLE)
         assert count == 3, (version, count)
-        assert structures["XYZ_X01"]["triggers"] == ["XYZ^X02"], structures
+        # X01 is added from the Table 0354 row (P8b-11 fix-round ruling).
+        assert structures["XYZ_X01"]["triggers"] == ["XYZ^X02", "XYZ^X01"], structures
         assert structures["ACK"]["triggers"] == ["ACK^X02"], structures
         [miss] = [r for r in report if r[1] == "needs-structure-id"]
         assert miss[0] == "XYZ^X09" and "has no row for it" in miss[2], miss
@@ -867,6 +868,23 @@ def check_0354_reconciliation():
                                 "printed": "XYZ__X05", "intended": "XYZ_X05", "citation": "x"}]}
     _, report, _ = _run("2.5.1", [("syn", text)], fix, tables=TABLE + [("XYZ__X05", ["X05"], "X05")], full=True)
     assert not [r for r in report if r[0] == "XYZ_X05" and r[1].startswith("0354")], report
+    assert not [r for r in report if r[1] == "error"], report
+
+
+def check_0354_triggers_merged():
+    # P8b-11 fix-round ruling: a structure accepts every trigger Table 0354 of its version maps to
+    # it, as well as the triggers its captions print; the added triggers are cited to Table 0354
+    # and, where a section heading marks the event withdrawn, to that section. A "Varies" row adds
+    # nothing; a borrowed table (v2.3 reads v2.3.1's) adds nothing.
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", [("MSH", "Header"), ("PID", "Patient")]),
+                  heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, ["9.1.2           XYZ/ACK - synthetic [WITHDRAWN] (Event X02)"]))
+    table = [("XYZ_X01", ["X01", "X02"], "X01, X02"), ("ACK", None, "Varies")]
+    structures, report, _ = _run("2.5.1", [("syn", text)], tables=table, full=True)
+    s = structures["XYZ_X01"]
+    assert s["triggers"] == ["XYZ^X01", "XYZ^X02"], s["triggers"]
+    assert "Table 0354 v2.5.1" in s["citation"] and "XYZ^X02" in s["citation"], s["citation"]
+    assert "9.1.2" in s["citation"] and "withdrawn" in s["citation"], s["citation"]
     assert not [r for r in report if r[1] == "error"], report
 
 
@@ -1209,7 +1227,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
           check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
-          check_colon_caption_with_space_ends_table, check_v282_reader_layouts]
+          check_colon_caption_with_space_ends_table, check_v282_reader_layouts,
+          check_0354_triggers_merged]
 
 
 def main():

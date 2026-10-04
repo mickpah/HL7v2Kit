@@ -1124,3 +1124,8 @@ compiling a structure per message.
 - **Query-profile triggers.** A query profile in a normative chapter that declares
   `Query Trigger (= MSH-9): CODE^EVT^ID` for a structure printed with "events vary" adds that
   trigger to the structure (v2.8.2 CH04A: QBP^Q31^QBP_Q11, registered).
+- **Table 0354 triggers (P8b-11 fix round).** A structure accepts every trigger Table 0354 of
+  its own version maps to it, as well as the triggers its captions print; the extractor merges
+  them, cites the table row (and any section heading that marks the event withdrawn), and a
+  trigger the table and a caption give to two structures is a declared shared trigger. A
+  borrowed table (v2.3 reads v2.3.1's) adds none.

@@ -272,6 +272,22 @@ struct MessageStructureValidationTests {
         #expect(orl.isEmpty, "\(orl.map(\.message))")
     }
 
+    // P8b-11 fix-round ruling: a structure accepts every trigger Table 0354 of its version
+    // maps to it. v2.8.2 Table 0354 maps M01 to M11 to MFK_M01; CH08 8.8.2 marks M03
+    // withdrawn, the table still maps it, and no caption prints MFK^M03. The
+    // spec's own CH08 and CH02 examples send MFK^M03^MFK_M01: matched, with or without MSH-9.3.
+    @Test("v2.8.2 MFK^M03^MFK_M01 (a Table 0354 trigger no caption prints) is matched, not a mismatch")
+    func tableTriggerAccepted() throws {
+        let body = ["MSA|AA|1", "MFI|OMA", "MFA|MUP"]
+        #expect(try structureIssues(Self.wire("MFK^M03^MFK_M01", version: "2.8.2", body)).isEmpty)
+        #expect(try structureIssues(Self.wire("MFK^M03", version: "2.8.2", body)).isEmpty)
+        let noMFI = try structureIssues(Self.wire("MFK^M03^MFK_M01", version: "2.8.2", ["MSA|AA|1", "MFA|MUP"]))
+        #expect(noMFI.map(\.code) == [.messageStructureSegmentMissing(structure: "MFK_M01", segmentID: "MFI", group: nil)],
+                "\(noMFI.map(\.message))")
+        let structure = try #require(MessageStructureTable.structure("MFK_M01", version: .v2_8_2))
+        #expect(structure.triggers.contains("MFK^M03") && structure.citation.contains("Table 0354"))
+    }
+
     // v2.8.2 CH04 prints ORL^O22 under ORL_O22 (4.4.7.1, patient required) and ORL_O41
     // (4.4.7.2, patient optional), a declared shared trigger: without MSH-9.3 the trigger is
     // ambiguous (not modelled, naming both); with it, the named structure is matched.

@@ -373,7 +373,7 @@ v2.8.2 grammar (ADR-018) and is checked the same way.
 | QBP_Q13 | CH05 5.4.2 refers to 5.3.1.2 for its structure, a query profile example (excluded, G7); no normative print. | **Permanent** for v2.8.2. |
 | RDR_RDR | The only print is the CH05 5.9.1.1 restatement of a Chapter 4 query that v2.8.2 Chapter 4A no longer prints (excluded, G7). | **Permanent** for v2.8.2. |
 | UDM_Q05 (CH05 5.10.1.2) | Retained for backward compatibility; prints URD and `[URS]`, which v2.8.2 does not define (Appendix A lists both as deprecated), so it cannot be checked against the v2.8.2 grammar. | **Permanent** for v2.8.2. |
-| 47 Table 0354 rows marked Deprecated (CH02C 2.C.2.279, pp 149 to 153): ADR_A19, ADT_A18, ADT_A30, DOC_T12, MFN_M01, MFN_M03, MFQ_M01, MFR_M01, MFR_M04, MFR_M05, MFR_M06, MFR_M07, NMQ_N01, NMR_N01, ORF_R04, ORM_O01, ORR_O02, ORU_W01, OSQ_Q06, OSR_Q06, OUL_R21, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QCK_Q02, QRF_W02, QRY_A19, QRY_PC4, QRY_Q01, QRY_Q02, QRY_R02, QRY_T12, RAR_RAR, RCI_I05, RCL_I06, RER_RER, RGR_RGR, ROR_ROR, RQC_I05, RSP_Q11, SQM_S25, SQR_S25, SUR_P09, VXQ_V01, VXR_V03, VXX_V02 | Table 0354 marks each Deprecated (five "Deprecated and removed as of V2.7") and no v2.8.2 chapter prints its syntax. | **Permanent** for v2.8.2 (by design). |
+| 47 Table 0354 rows marked Deprecated (CH02C 2.C.2.279, pp 149 to 153): ADR_A19, ADT_A18, ADT_A30, DOC_T12, MFN_M01, MFN_M03, MFQ_M01, MFR_M01, MFR_M04, MFR_M05, MFR_M06, MFR_M07, NMQ_N01, NMR_N01, ORF_R04, ORM_O01, ORR_O02, ORU_W01, OSQ_Q06, OSR_Q06, OUL_R21, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QCK_Q02, QRF_W02, QRY_A19, QRY_PC4, QRY_Q01, QRY_Q02, QRY_R02, QRY_T12, RAR_RAR, RCI_I05, RCL_I06, RER_RER, RGR_RGR, ROR_ROR, RQC_I05, RSP_Q11, SQM_S25, SQR_S25, SUR_P09, VXQ_V01, VXR_V03, VXX_V02 | The Comment column of the printed table marks each Deprecated (five "Deprecated and removed as of V2.7") and no v2.8.2 chapter prints its syntax. | **Permanent** for v2.8.2 (by design). |
 
 Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
 committed, cited to both (overrides.json `primaryPrints`).
@@ -396,6 +396,19 @@ bundle adds DG1), ADT_A60, DFT_P03 and DFT_P11 (a VISIT group the print does not
 (a PATIENT_INFORMATION group), and OPU_R25, ORG_O20, OUL_R22, R23 and R24 (a PRT the bundle
 lacks); the print is normative (ruling D3). The SDR_S31 and SDR_S32 group names print with a
 hyphen (`ANTI-MICROBIAL_...`) and are read as ANTIMICROBIAL_..., as on v2.6.
+
+A structure accepts every trigger Table 0354 of its version maps to it, as well as the triggers
+its captions print (P8b-11 fix-round ruling; cited in the structure's citation, with any section
+that marks the event withdrawn): v2.8.2 MFK_M01 gains MFK^M01 and MFK^M03 (CH08 8.4.1 and 8.8.2
+mark them withdrawn; the table still maps them), ADT_A39 gains ADT^A39, and RPI_I01
+gains RPI^I04 on v2.5.1, v2.6 and v2.8.2; v2.5.1 ADT_A09 gains ADT^A12. Where the table maps a
+trigger to a structure while a caption prints it under another (RPI^I04 on all three versions,
+ADT^A12 on v2.5.1) the trigger is a declared shared trigger: ambiguous without MSH-9.3. The
+v2.5.1 table prints OMN_O07's and ORL_O22's events as '007' and '022' (cited table-0354 errata).
+The v2.8.2 table lists ORL_O41 to ORL_O44, QBP_O33, QBP_O34, RSP_O33 and RSP_O34 against an event
+equal to their own suffix (O41, O33, ...), which Table 0003 gives to other messages; the ruling
+adds ORL^O41 to ORL^O44, QBP^O33, QBP^O34, RSP^O33 and RSP^O34 as accepted triggers (a
+relaxation, never a false finding).
 
 Known cost of exact matching: 32 v2.8.2 structures fail the determinism lint (ADT_A60, BAR_P01, BAR_P05, CSU_C09, DEL_O46, DEO_O45, DER_O44, DFT_P03, DFT_P11, DPR_O48, DRC_O47, DRG_O43, EHC_E15, OMD_O03, OMG_O19, OML_O21, OML_O33, OML_O35, OMQ_O42, OPL_O37, OPU_R25, ORD_O04, ORG_O20, OSM_R26, OUL_R22, OUL_R23, OUL_R24, REF_I12, RPA_I08, RQA_I08, RRI_I12
 and RSP_O34) and are matched by the exact matcher, with at most one finding and no group spans.

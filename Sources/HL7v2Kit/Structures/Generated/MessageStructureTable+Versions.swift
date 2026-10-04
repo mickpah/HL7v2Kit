@@ -207,67 +207,67 @@ extension MessageStructureTable {
             return [
                 "ADR_A19": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADR_A19 (events: none listed) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADR_A19 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ADT_A18": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADT_A18 (events: none listed) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADT_A18 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ADT_A30": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADT_A30 (events: none listed) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 149) lists ADT_A30 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "DOC_T12": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 150) lists DOC_T12 (events: none listed) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 150) lists DOC_T12 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFN_M01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 150) lists MFN_M01 (events: none listed) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 150) lists MFN_M01 (events: none listed), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFN_M03": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFN_M03 (events: M03) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFN_M03 (events: M03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFQ_M01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFQ_M01 (events: M01, M02, M03, M04, M05, M06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFQ_M01 (events: M01, M02, M03, M04, M05, M06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M01 (events: M01, M02, M03) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M01 (events: M01, M02, M03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M04": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M04 (events: M04) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M04 (events: M04), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M05": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M05 (events: M05) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M05 (events: M05), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M06": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M06 (events: M06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M06 (events: M06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "MFR_M07": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M07 (events: M07) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists MFR_M07 (events: M07), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "NMQ_N01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMQ_N01 (events: N01) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMQ_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "NMR_N01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMR_N01 (events: N01) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists NMR_N01 (events: N01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORF_R04": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists ORF_R04 (events: R04) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 151) lists ORF_R04 (events: R04), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORM_O01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORM_O01 (events: O01) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORM_O01 (events: O01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORR_O02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORR_O02 (events: O02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists ORR_O02 (events: O02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ORU_W01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ORU_W01 (events: W01) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ORU_W01 (events: W01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OSQ_Q06": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSQ_Q06 (events: Q06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSQ_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OSR_Q06": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSR_Q06 (events: Q06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OSR_Q06 (events: Q06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "OUL_R21": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OUL_R21 (events: R21) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists OUL_R21 (events: R21), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PGL_PC6": NotModelledStructure(
                     triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
                     reason: "CH12 section 12.3.1 (pp 7 to 9) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.8.2 not-modelled table)"),
@@ -282,16 +282,16 @@ extension MessageStructureTable {
                     reason: "CH12 section 12.3.2 (pp 9 to 11) prints the order detail as '< OBR | Hxx etc. >', which the CH12 12.3 note (p 7) reads as 'all possible combinations of pharmacy and other order detail segments' per CH04 4.2.2.4 (p 5), and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "PPT_PCL": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPT_PCL (events: PCL) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPT_PCL (events: PCL), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PPV_PCA": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPV_PCA (events: PCA) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PPV_PCA (events: PCA), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PRR_PC5": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PRR_PC5 (events: PC5) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PRR_PC5 (events: PC5), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "PTR_PCF": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PTR_PCF (events: PCF) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PTR_PCF (events: PCF), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
                     triggers: ["QBP^Q11", "QBP^Q31"],
                     reason: "CH05 section 5.4.1 (pp 34 to 35), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 24, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
@@ -303,82 +303,82 @@ extension MessageStructureTable {
                     reason: "CH05 section 5.4.3 (pp 36 to 37) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "QCK_Q02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QCK_Q02 (events: Q02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QCK_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRF_W02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists QRF_W02 (events: W02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists QRF_W02 (events: W02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_A19": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_A19 (events: A19) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_A19 (events: A19), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_PC4": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_PC4 (events: PC4, PC9, PCE, PCK) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_PC4 (events: PC4, PC9, PCE, PCK), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_Q01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q01 (events: Q01, Q26, Q27, Q28, Q29, Q30), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_Q02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q02 (events: Q02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_Q02 (events: Q02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_R02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_R02 (events: R02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_R02 (events: R02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QRY_T12": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_T12 (events: T12) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists QRY_T12 (events: T12), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QVR_Q17": NotModelledStructure(
                     triggers: ["QVR^Q17"],
                     reason: "CH05 section 5.4.5 (pp 38 to 39) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "RAR_RAR": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RAR_RAR (events: RAR) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RAR_RAR (events: RAR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RCI_I05": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCI_I05 (events: I05) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCI_I05 (events: I05), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RCL_I06": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCL_I06 (events: I06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists RCL_I06 (events: I06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RDR_RDR": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279) lists RDR_RDR (event RDR); its only v2.8.2 print is the CH05 section 5.9.1.1 (pp 59 to 60) restatement of 'an original-mode query that was defined in Chapter 4', which v2.8.2 Chapter 4A no longer prints (excluded under ruling G7; register section E, v2.8.2 not-modelled table)"),
                 "RER_RER": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RER_RER (events: RER) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RER_RER (events: RER), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RGR_RGR": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RGR_RGR (events: RGR) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RGR_RGR (events: RGR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "ROR_ROR": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ROR_ROR (events: ROR) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists ROR_ROR (events: ROR), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RQC_I05": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RQC_I05 (events: I05, I06) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RQC_I05 (events: I05, I06), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "RSP_K11": NotModelledStructure(
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 35) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RSP_Q11 (events: Q11) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists RSP_Q11 (events: Q11), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SQM_S25": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQM_S25 (events: S25) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQM_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SQR_S25": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQR_S25 (events: S25) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SQR_S25 (events: S25), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SUR_P09 (events: P09) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists SUR_P09 (events: P09), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "UDM_Q05": NotModelledStructure(
                     triggers: ["UDM^Q05"],
                     reason: "CH05 section 5.10.1.2 (pp 102 to 103), under 5.10 'retained for backward compatibility', prints URD and [URS]; v2.8.2 defines neither segment (Appendix A lists URD and URS as 'deprecated', with no definition), so the print cannot be checked against the v2.8.2 segment grammar (register section E, v2.8.2 not-modelled table)"),
                 "VXQ_V01": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXQ_V01 (events: V01) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXQ_V01 (events: V01), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "VXR_V03": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXR_V03 (events: V03) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXR_V03 (events: V03), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "VXX_V02": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXX_V02 (events: V02) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
+                    reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 153) lists VXX_V02 (events: V02), and the printed table's Comment column marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
             ]
         default: return [:]
         }

@@ -1,8 +1,8 @@
 {
   "structure": "ORL_O43",
   "version": "2.8.2",
-  "citation": "HL7 v2.8.2 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 26 to 27.",
-  "triggers": ["ORL^O36"],
+  "citation": "HL7 v2.8.2 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 26 to 27. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 151) maps to ORL_O43 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORL^O43.",
+  "triggers": ["ORL^O36", "ORL^O43"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "MSA", "min": 1, "max": 1 },

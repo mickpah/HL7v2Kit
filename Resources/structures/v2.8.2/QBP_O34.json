@@ -1,8 +1,8 @@
 {
   "structure": "QBP_O34",
   "version": "2.8.2",
-  "citation": "HL7 v2.8.2 Chapter 4, section 4.16.8 QBP - Get Donor Record (Event Q34), p 158.",
-  "triggers": ["QBP^Q34"],
+  "citation": "HL7 v2.8.2 Chapter 4, section 4.16.8 QBP - Get Donor Record (Event Q34), p 158. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 152) maps to QBP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): QBP^O34.",
+  "triggers": ["QBP^Q34", "QBP^O34"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },
     { "segment": "SFT", "min": 0, "max": null },

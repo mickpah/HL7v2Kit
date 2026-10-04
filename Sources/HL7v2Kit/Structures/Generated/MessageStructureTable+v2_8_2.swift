@@ -642,8 +642,8 @@ extension MessageStructureTable {
     private static let v2_8_2_ADT_A39: MessageStructure = MessageStructure(
         id: "ADT_A39",
         version: "2.8.2",
-        triggers: ["ADT^A40", "ADT^A41", "ADT^A42"],
-        citation: "HL7 v2.8.2 Chapter 3, section 3.2.40 ADT/ACK - Merge Patient - Patient Identifier List (Event A40), pp 34 to 35; the same structure is printed for ADT^A41 (3.2.41) and ADT^A42 (3.2.42).",
+        triggers: ["ADT^A40", "ADT^A41", "ADT^A42", "ADT^A39"],
+        citation: "HL7 v2.8.2 Chapter 3, section 3.2.40 ADT/ACK - Merge Patient - Patient Identifier List (Event A40), pp 34 to 35; the same structure is printed for ADT^A41 (3.2.41) and ADT^A42 (3.2.42). Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 149) maps to ADT_A39 that no caption prints, accepted with the printed ones (P8b-11 ruling): ADT^A39.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -2947,8 +2947,8 @@ extension MessageStructureTable {
     private static let v2_8_2_MFK_M01: MessageStructure = MessageStructure(
         id: "MFK_M01",
         version: "2.8.2",
-        triggers: ["MFK^M13", "MFK^M14", "MFK^M02", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11", "MFK^M12", "MFK^M18", "MFK^M05", "MFK^M04", "MFK^M06", "MFK^M07", "MFK^M15", "MFK^M16", "MFK^M17"],
-        citation: "HL7 v2.8.2 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 6; the same structure is printed for MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M18 (8.8.8), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1).",
+        triggers: ["MFK^M13", "MFK^M14", "MFK^M02", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11", "MFK^M12", "MFK^M18", "MFK^M05", "MFK^M04", "MFK^M06", "MFK^M07", "MFK^M15", "MFK^M16", "MFK^M17", "MFK^M01", "MFK^M03"],
+        citation: "HL7 v2.8.2 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 6; the same structure is printed for MFK^M14 (8.4.3), MFK^M02 (8.7.1), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M18 (8.8.8), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1), MFK^M15 (8.12.1), MFK^M16 (8.12.2) and MFK^M17 (8.13.1). Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 150) maps to MFK_M01 that no caption prints, accepted with the printed ones (P8b-11 ruling): MFK^M01 and MFK^M03. Chapter 8 section 8.4.1 marks MFK^M01 withdrawn. Chapter 8 section 8.8.2 marks MFK^M03 withdrawn.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4790,8 +4790,8 @@ extension MessageStructureTable {
     private static let v2_8_2_ORL_O41: MessageStructure = MessageStructure(
         id: "ORL_O41",
         version: "2.8.2",
-        triggers: ["ORL^O22"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.4.7.2 Patient Segments Optional, pp 16 to 17.",
+        triggers: ["ORL^O22", "ORL^O41"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.4.7.2 Patient Segments Optional, pp 16 to 17. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 151) maps to ORL_O41 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORL^O41.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4828,8 +4828,8 @@ extension MessageStructureTable {
     private static let v2_8_2_ORL_O42: MessageStructure = MessageStructure(
         id: "ORL_O42",
         version: "2.8.2",
-        triggers: ["ORL^O34"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.4.9.2 Patient Segments Optional, pp 21 to 22.",
+        triggers: ["ORL^O34", "ORL^O42"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.4.9.2 Patient Segments Optional, pp 21 to 22. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 151) maps to ORL_O42 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORL^O42.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4870,8 +4870,8 @@ extension MessageStructureTable {
     private static let v2_8_2_ORL_O43: MessageStructure = MessageStructure(
         id: "ORL_O43",
         version: "2.8.2",
-        triggers: ["ORL^O36"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 26 to 27.",
+        triggers: ["ORL^O36", "ORL^O43"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.4.11.2 Patient Segments Optional, pp 26 to 27. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 151) maps to ORL_O43 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORL^O43.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4915,8 +4915,8 @@ extension MessageStructureTable {
     private static let v2_8_2_ORL_O44: MessageStructure = MessageStructure(
         id: "ORL_O44",
         version: "2.8.2",
-        triggers: ["ORL^O40"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.4.13.2 Patient Segments Optional, pp 31 to 32.",
+        triggers: ["ORL^O40", "ORL^O44"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.4.13.2 Patient Segments Optional, pp 31 to 32. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 152) maps to ORL_O44 that no caption prints, accepted with the printed ones (P8b-11 ruling): ORL^O44.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5706,8 +5706,8 @@ extension MessageStructureTable {
     private static let v2_8_2_QBP_O33: MessageStructure = MessageStructure(
         id: "QBP_O33",
         version: "2.8.2",
-        triggers: ["QBP^Q33"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.16.6 QBP - Get Donor Record Candidates (Event Q33), p 157.",
+        triggers: ["QBP^Q33", "QBP^O33"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.16.6 QBP - Get Donor Record Candidates (Event Q33), p 157. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 152) maps to QBP_O33 that no caption prints, accepted with the printed ones (P8b-11 ruling): QBP^O33.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -5721,8 +5721,8 @@ extension MessageStructureTable {
     private static let v2_8_2_QBP_O34: MessageStructure = MessageStructure(
         id: "QBP_O34",
         version: "2.8.2",
-        triggers: ["QBP^Q34"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.16.8 QBP - Get Donor Record (Event Q34), p 158.",
+        triggers: ["QBP^Q34", "QBP^O34"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.16.8 QBP - Get Donor Record (Event Q34), p 158. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 152) maps to QBP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): QBP^O34.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6208,8 +6208,8 @@ extension MessageStructureTable {
     private static let v2_8_2_RPI_I01: MessageStructure = MessageStructure(
         id: "RPI_I01",
         version: "2.8.2",
-        triggers: ["RPI^I01"],
-        citation: "HL7 v2.8.2 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), pp 9 to 10.",
+        triggers: ["RPI^I01", "RPI^I04"],
+        citation: "HL7 v2.8.2 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), pp 9 to 10. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 153) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6862,8 +6862,8 @@ extension MessageStructureTable {
     private static let v2_8_2_RSP_O33: MessageStructure = MessageStructure(
         id: "RSP_O33",
         version: "2.8.2",
-        triggers: ["RSP^K33"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.16.7 RSP - Get Donor Record Candidates Response (K33), pp 157 to 158.",
+        triggers: ["RSP^K33", "RSP^O33"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.16.7 RSP - Get Donor Record Candidates Response (K33), pp 157 to 158. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 153) maps to RSP_O33 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O33.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -6883,8 +6883,8 @@ extension MessageStructureTable {
     private static let v2_8_2_RSP_O34: MessageStructure = MessageStructure(
         id: "RSP_O34",
         version: "2.8.2",
-        triggers: ["RSP^K34"],
-        citation: "HL7 v2.8.2 Chapter 4, section 4.16.9 RSP - Get Donor Record Response (K34), pp 158 to 159.",
+        triggers: ["RSP^K34", "RSP^O34"],
+        citation: "HL7 v2.8.2 Chapter 4, section 4.16.9 RSP - Get Donor Record Response (K34), pp 158 to 159. Triggers Table 0354 v2.8.2 (Chapter 2C, section 2.C.2.279, p 153) maps to RSP_O34 that no caption prints, accepted with the printed ones (P8b-11 ruling): RSP^O34.",
         requiresExactMatch: true,
         elements: [
             .segment("MSH", min: 1, max: 1),

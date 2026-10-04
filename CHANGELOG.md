@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ACK takes its looser print (CH10's `[{UAC}]`); ORL^O22, O34, O36 and O40 are declared
   shared triggers (each printed for a patient-required and a patient-optional structure);
   QBP^Q31, which the CH04A query profile declares, is a registered QBP_Q11 trigger.
+- A structure now accepts every trigger Table 0354 of its version maps to it, as well as the
+  triggers its captions print: v2.8.2 `MFK^M03^MFK_M01` (M03 withdrawn in CH08 8.8.2, still
+  mapped by the table) is matched instead of a mismatch. RPI^I04 (v2.5.1, v2.6, v2.8.2) and
+  ADT^A12 (v2.5.1) become declared shared triggers, ambiguous without MSH-9.3.
 - v2.6 RSP_K21 is now modelled as the union of its two incomparable prints (a new cited
   `unionPrints` override: aligned by name, the lesser minimum and greater maximum, an element
   in one print only optional).

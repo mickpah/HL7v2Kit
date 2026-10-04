@@ -421,8 +421,8 @@ extension MessageStructureTable {
     private static let v2_5_1_ADT_A09: MessageStructure = MessageStructure(
         id: "ADT_A09",
         version: "2.5.1",
-        triggers: ["ADT^A09", "ADT^A10", "ADT^A11"],
-        citation: "HL7 v2.5.1 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 3-16 to 3-17; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11).",
+        triggers: ["ADT^A09", "ADT^A10", "ADT^A11", "ADT^A12"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 3-16 to 3-17; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11). Triggers Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-101) maps to ADT_A09 that no caption prints, accepted with the printed ones (P8b-11 ruling): ADT^A12.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -4287,8 +4287,8 @@ extension MessageStructureTable {
     private static let v2_5_1_RPI_I01: MessageStructure = MessageStructure(
         id: "RPI_I01",
         version: "2.5.1",
-        triggers: ["RPI^I01"],
-        citation: "HL7 v2.5.1 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-9.",
+        triggers: ["RPI^I01", "RPI^I04"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-9. Triggers Table 0354 v2.5.1 (Chapter 2, section 2.17.3, p 2-104) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),

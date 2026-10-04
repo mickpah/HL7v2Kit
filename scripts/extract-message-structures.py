@@ -103,7 +103,9 @@ def heading(line, era, source=""):
         return h and (h.group(1), h.group(2))
     h = INDENTED_HEADING.match(line)
     chapter = re.search(r"_CH(\d+[A-Z]?)_", os.path.basename(source))
-    if not h or not chapter or h.group(2).split(".")[0] != chapter.group(1).lstrip("0"):
+    parts = h.group(2).split(".") if h else []
+    # CH02C numbers its sections 2.C.x: the chapter is the first part, or the first two joined.
+    if not h or not chapter or chapter.group(1).lstrip("0") not in (parts[0], "".join(parts[:2])):
         return None
     return h.group(2), h.group(3)
 PAGE = re.compile(r"\bPage\s+(\d+[A-Z]?-\d+|\d+)\b")   # v2.7.1 and v2.8.2 number pages per chapter
@@ -643,6 +645,22 @@ def name_groups(elements, version, structure, overrides, used=None, path=(), bun
     return elements
 
 
+def table_citation(ver, sid, triggers, where, withdrawn):
+    """The sentence citing the triggers Table 0354 adds to a structure (P8b-11 fix round), and any
+    section that marks one of their events withdrawn."""
+    if not triggers:
+        return ""
+    loc = where.get(sid)
+    at = f" (Chapter {loc[0]}, section {loc[1]}, p {loc[2]})" if loc else ""
+    text = (f" Triggers Table 0354 v{ver}{at} maps to {sid} that no caption prints, accepted with the printed ones "
+            f"(P8b-11 ruling): {_join(triggers)}.")
+    for trigger in triggers:
+        if trigger in withdrawn:
+            chapter, section = withdrawn[trigger]
+            text += f" Chapter {chapter} section {section} marks {trigger} withdrawn."
+    return text
+
+
 def name_citation(log):
     """The sentence that cites every non-printed group name, in document order."""
     if not log:
@@ -891,6 +909,58 @@ def _profile(cap):
     return cap.section.startswith("2.B.") or "CH02B" in os.path.basename(cap.source).upper()
 
 
+TABLE_0354_HEADING = re.compile(r"^\s*HL7 Table 0354\s*[-\u2013]\s*Message [Ss]tructure\s*$")
+
+
+def table_0354_rows(texts, era):
+    """Where the version prints Table 0354: {structure ID: (chapter, section, page)} for each
+    row, read from the chapter text after the table's heading. {} when the texts carry no
+    table (a synthetic or partial read, or a version that borrows another's table)."""
+    for source, lines in texts:
+        start = next((i for i, l in enumerate(lines) if TABLE_0354_HEADING.match(l.replace("\f", ""))), None)
+        if start is None:
+            continue
+        pages = page_labels(lines)
+        # The table's own heading ("2.C.2.279 0354 - Message Structure", v2.8.2 CH02C), else the
+        # section the table sits in.
+        own = next((m.group(1) for m in (re.match(r"^\s*(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+0354\b", lines[j])
+                                         for j in range(start, max(start - 15, -1), -1)) if m), None)
+        section = own or next((h[0] for h in (heading(lines[j].replace("\f", ""), era, source)
+                                              for j in range(start, -1, -1) if not re.search(r"\.{5,}", lines[j])) if h), "")
+        chapter = re.search(r"CH(\d+[A-Z]?)", os.path.basename(source).upper())
+        rows = {}
+        for i in range(start, len(lines)):
+            m = re.match(r"^\s*([A-Z][A-Z0-9]{2}(?:_[A-Z0-9]{3})?)\s", lines[i])
+            if m and m.group(1) not in rows:
+                rows[m.group(1)] = (chapter.group(1).lstrip("0") if chapter else "", section, pages[i])
+        return rows
+    return {}
+
+
+def withdrawn_events(texts, era):
+    """{CODE^EVT: (chapter, section)} for every section heading that marks its message withdrawn,
+    keyed by the message codes the title opens with ("8.8.2 MFN/MFK - Master File Notification -
+    Test/Observation [WITHDRAWN] (Event M03)", v2.8.2 CH08, the title wrapping onto the next
+    line)."""
+    out = {}
+    for source, lines in texts:
+        for i, raw in enumerate(lines):
+            h = heading(raw.replace("\f", ""), era, source)
+            if not h or re.search(r"\.{5,}", raw):
+                continue
+            title = h[1]
+            nxt = lines[i + 1].strip() if i + 1 < len(lines) else ""
+            if "(" not in title and nxt.startswith("[") and "(" in nxt:
+                title += " " + nxt
+            if "withdrawn" not in title.lower():
+                continue
+            codes = re.match(r"^([A-Z][A-Z0-9]{2}(?:\s*/\s*[A-Z][A-Z0-9]{2})*)\s*[-\u2013]", title)
+            for code in re.findall(r"[A-Z][A-Z0-9]{2}", codes.group(1)) if codes else []:
+                for event in title_events(title):
+                    out.setdefault(f"{code}^{event}", (h[0].split(".")[0], h[0]))
+    return out
+
+
 def extract_version(version, texts, overrides, only=None, bundles=None, tables=None, full=False):
     """Read every caption of one version. texts: [(source, lines)] in reading order. Returns
     (structures by ID, report rows, caption count). A report row is (structure, status, reason).
@@ -972,6 +1042,23 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         if e["where"] == "syntax-cell":
             cells.setdefault(e["structure"], {})[e["printed"]] = e
     structures, used, owner, bundle_rows = {}, set(), {}, []
+    # P8b-11 fix-round ruling: a structure accepts every trigger Table 0354 of its own version maps
+    # to it, as well as the triggers its captions print (a borrowed table, v2.3's, adds none).
+    rows_0354 = {code: events for code, events, _ in table if events} if table_ver == ver else {}
+    where_0354 = table_0354_rows(texts, era) if rows_0354 else {}
+    withdrawn = withdrawn_events(texts, era) if rows_0354 else {}
+    added = {}
+    for sid, entries in prints.items():
+        if sid in folds or sid not in rows_0354:
+            continue
+        printed = {v for c, _, _ in entries for v in c.events}
+        codes = sorted({c.code for c, _, _ in entries})
+        missing = [v for v in rows_0354[sid] if v not in printed]
+        if missing and len(codes) != 1:
+            report.append((sid, "0354-trigger-ambiguous", f"Table 0354 v{ver} maps {', '.join(missing)} to {sid}, "
+                                                          f"printed under several message codes ({', '.join(codes)})"))
+        elif missing:
+            added[sid] = [f"{codes[0]}^{v}" for v in missing]
 
     def read(sid, rows, error, log=None, names_used=None):
         if error:
@@ -1062,11 +1149,12 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 report.append((sid, "duplicate-differs", f"{c.printed} (section {c.section}) prints "
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
-        triggers = [fold["trigger"]] if fold else triggers
+        triggers = [fold["trigger"]] if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
                                           + (f" {joined['citation']}" if joined else "")
+                                          + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
                                           + name_citation(log)})
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
@@ -1084,7 +1172,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     for sid in sorted(prints):     # every printed structure, parsed or not, claims its triggers
         fold = folds.get(sid)
         for trig in [fold["trigger"]] if fold else dict.fromkeys(
-                f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events):
+                [f"{c.code}^{v}" for c, _, _ in prints[sid] for v in c.events] + added.get(sid, [])):
             owner.setdefault(trig, []).append(sid)
     report += shared_triggers(ver, owner, overrides, full)
     report += reconcile_0354(ver, table_ver, table, prints)

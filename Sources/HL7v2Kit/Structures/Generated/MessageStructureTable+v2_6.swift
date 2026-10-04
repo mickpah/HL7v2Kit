@@ -5006,8 +5006,8 @@ extension MessageStructureTable {
     private static let v2_6_RPI_I01: MessageStructure = MessageStructure(
         id: "RPI_I01",
         version: "2.6",
-        triggers: ["RPI^I01"],
-        citation: "HL7 v2.6 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-8.",
+        triggers: ["RPI^I01", "RPI^I04"],
+        citation: "HL7 v2.6 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-8. Triggers Table 0354 v2.6 (Chapter 2, section 2.16.3, p 87) maps to RPI_I01 that no caption prints, accepted with the printed ones (P8b-11 ruling): RPI^I04.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
