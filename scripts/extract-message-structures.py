@@ -79,14 +79,33 @@ CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r"
 # CODE^EVT with a title two or more spaces away (v2.3.1; v2.4's two-part captions): the structure
 # ID comes from Table 0354. A line holding "|" or "<cr>" is an example message, never a caption.
 TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")(\s{2,})(\S.*)$")
-# v2.7.1 and v2.8.2: "CODE^EVT^STRUCT: title" on its own line, then a "Segments Description" row.
-COLON = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r"):\s+(\S.*)$")
-COLUMNS = re.compile(r"^(\s*)Segments\s{2,}(Description)\b")
+# v2.7.1 and v2.8.2: "CODE^EVT^STRUCT: title" on its own line, then a "Segments Description" row;
+# v2.8.2 CH07 prints "ACK^R01^ACK : title" with a space before the colon (P8b-11: read as a caption,
+# so the ORU_R01 and ORU_R30 rows end there instead of running on into the acknowledgment).
+COLON = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r") ?:\s+(\S.*)$")
+# "Descriptions" in v2.8.2 CH04 4.16.6 and 4.16.7 (QBP_O33, RSP_O33; P8b-11).
+COLUMNS = re.compile(r"^(\s*)Segments\s{2,}(Descriptions?)\b")
 # v2.3: the message code alone, a title and "Chapter"; the event is in the section title.
 CODE_ONLY = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})(\s{3,})(\S.*?)\s{2,}Chapter\s*$")
 TITLE_EVENTS = re.compile(r"\(\s*events?\s+([A-Z0-9]{3}(?:\s*(?:,|and|&|-|to)\s*[A-Z0-9]{3})*)\s*\)", re.I)
 FOOTNOTE = re.compile(r"^\s*\d{1,2}\s*$")      # a footnote digit on a line of its own (P8b-2a review)
 HEADING = re.compile(r"^(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+(\S.*\S)\s*$")   # 3.3.1, 4A.3.20, 2.B.7.5
+# v2.7.1 and v2.8.2 indent many section headings (v2.8.2 CH04A 4A.3.13, CH08, CH16 16.3.9; P8b-11).
+# Indented by up to 20 columns (CH16 16.3.7 at 17); the title starts with a capital, and the number
+# must open with the chapter of the file it is read from, so a numbered prose line is not a heading.
+INDENTED_HEADING = re.compile(r"^(\s{1,20})(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+([A-Z].*\S)\s*$")
+
+
+def heading(line, era, source=""):
+    """The section heading match for a line, in era's layout: (number, title) or None."""
+    h = HEADING.match(line)
+    if h or era != "caret-colon":
+        return h and (h.group(1), h.group(2))
+    h = INDENTED_HEADING.match(line)
+    chapter = re.search(r"_CH(\d+[A-Z]?)_", os.path.basename(source))
+    if not h or not chapter or h.group(2).split(".")[0] != chapter.group(1).lstrip("0"):
+        return None
+    return h.group(2), h.group(3)
 PAGE = re.compile(r"\bPage\s+(\d+[A-Z]?-\d+|\d+)\b")   # v2.7.1 and v2.8.2 number pages per chapter
 GROUP_MARK = re.compile(r"^---\s*([A-Z][A-Z0-9_]*)\s+((?i:begin|end))\b")   # "--- VISIT End" (v2.5.1 CSU_C09)
 # A mark as printed, misprints included ("--- INVOICE INFORMATION end", v2.6 EHC_E01): parse reads
@@ -298,9 +317,9 @@ def captions(lines, era="caret", source="", bare=frozenset()):
         line = raw.replace("\f", "")
         if FURN.search(line):
             continue
-        h = HEADING.match(line)
+        h = heading(line, era, source)
         if h and not re.search(r"\.{5,}", line):
-            section, section_title = h.group(1), _title(h.group(2))
+            section, section_title = h[0], _title(h[1])
             # A title that wraps inside its parentheses ("(events" / "PC1, PC2)") continues
             # on the next non-blank line.
             nxt = next((x.replace("\f", "") for x in lines[i + 1:i + 4] if x.strip() and not FURN.search(x)), "")
@@ -342,6 +361,9 @@ def captions(lines, era="caret", source="", bare=frozenset()):
 
 
 _NOTATION = re.compile(r"^(?:[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.|…)")
+# A segment ID then a word in prose; a depth-0 line after the table that starts with a segment ID but
+# goes on in prose ("QPD Input Parameter Specification", v2.8.2 CH04A RSP_K31) ends the table (P8b-11).
+_PROSE = re.compile(r"^[A-Z][A-Z0-9]{2}\s+[A-Z]?[a-z]+\b")
 
 
 def syntax_rows(lines, caption):
@@ -354,7 +376,13 @@ def syntax_rows(lines, caption):
     code_col, desc_col = caption.code_col, caption.desc_col
     caption.end_page = caption.page
     skip = 0
-    for i in range(caption.line + 1, len(lines)):
+    start = caption.line + 1
+    if caption.era == "caret-colon":
+        # A title wrapped onto a line of its own before the Segments row (v2.8.2 CH04 4.4.11.1
+        # ORL^O36^ORL_O36 "(Patient Required)"; P8b-11): the rows start after that row.
+        start = next((j for j in range(start, min(start + 4, len(lines)))
+                      if COLUMNS.match(lines[j].replace("\f", ""))), start)
+    for i in range(start, len(lines)):
         line = lines[i].replace("\f", "")
         if skip:
             skip -= 1
@@ -380,7 +408,7 @@ def syntax_rows(lines, caption):
         if cols:
             code_col, desc_col = len(cols.group(1)), cols.start(2)
             continue
-        if HEADING.match(line):
+        if heading(line, caption.era, caption.source):
             break
         indent = len(line) - len(line.lstrip())
         if indent < code_col - 3:
@@ -412,7 +440,7 @@ def syntax_rows(lines, caption):
                 # INVOICE_INFORMATION begin') is a required, non-repeating named group (P8b-10).
                 rows.append(Row("", desc, i, pages[i]))
             continue
-        if depth == 0 and rows and not _NOTATION.match(left):
+        if depth == 0 and rows and (not _NOTATION.match(left) or _PROSE.match(left)):
             break       # prose or another table's header after the table (v2.5.1 RSP_K23's QPD field table)
         depth += sum(left.count(c) for c in "[{<") - sum(left.count(c) for c in "]}>")
         choices += left.count("<") - left.count(">")

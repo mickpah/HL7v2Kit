@@ -670,6 +670,50 @@ def check_caret_colon_caption():
     assert s["citation"] == "HL7 v2.8.2 Chapter 9, section 9.1.1 XYZ - synthetic (Event X01), pp 1 to 2.", s["citation"]
 
 
+def check_colon_caption_with_space_ends_table():
+    # P8b-11 (v2.8.2 CH07 ORU_R01 and ORU_R30): the acknowledgment after the table is captioned
+    # "ACK^R01^ACK : title" (a space before the colon); it is a caption, so it ends the table
+    # instead of the rows running on into a second MSH.
+    text = ["\fChapter 9: Synthetic", "9.1.1 XYZ - synthetic (Event X01)",
+            "                         XYZ^X01^XYZ_X01: Synthetic Message",
+            "   Segments                    Description                 Status   Chapter",
+            "   MSH                         Message Header                         2",
+            "   PID                         Patient                                3",
+            "                        ACK^X01^ACK : Synthetic Message",
+            "   Segments                    Description                 Status   Chapter",
+            "   MSH                         Message Header                         2",
+            "   MSA                         Acknowledgment                         2",
+            "Page 1                                     Health Level Seven, Version 2.8.2"]
+    structures, report, count = _run("2.8.2", [("syn", text)])
+    assert count == 2, (count, report)
+    assert [e["segment"] for e in structures["XYZ_X01"]["elements"]] == ["MSH", "PID"], report
+    assert [e["segment"] for e in structures["ACK"]["elements"]] == ["MSH", "MSA"], report
+
+
+def check_v282_reader_layouts():
+    # P8b-11 (v2.8.2): a caption title wrapped onto the line before the Segments row (CH04 4.4.11.1
+    # ORL^O36^ORL_O36 "(Patient Required)"); a "Segments Descriptions" header (CH04 4.16.6
+    # QBP^Q33^QBP_O33); a depth-0 line after the table that starts with a segment ID but is prose
+    # ("QPD Input Parameter Specification", CH04A RSP^K31^RSP_K31) ends the table.
+    text = ["\fChapter 9: Synthetic", "9.1.1 XYZ - synthetic (Event X01)",
+            " XYZ^X01^XYZ_X01: Synthetic Message - Multiple Order Per Container of Specimen",
+            "                                        (Patient Required)",
+            "   Segments                    Descriptions                Status   Chapter",
+            "   MSH                         Message Header                         2",
+            "   PID                         Patient                                3",
+            "    QPD Input Parameter Specification",
+            "Page 1                                     Health Level Seven, Version 2.8.2"]
+    structures, report, _ = _run("2.8.2", [("syn", text)])
+    assert [e["segment"] for e in structures["XYZ_X01"]["elements"]] == ["MSH", "PID"], report
+    # An indented section heading (v2.8.2 CH04A 4A.3.13, CH16 16.3.9, CH08) is a heading: the
+    # caption cites it, not the last flush-left heading.
+    # The number must open with the file's chapter (CH09 here), so numbered prose is no heading.
+    text[2:2] = ["    9.1.2        XYZ - indented heading (Event X01)", "      2.5   Prose that is numbered"]
+    structures, report, _ = _run("2.8.2", [("v2.8.2/V282_CH09_Synthetic.pdf", text)])
+    assert "section 9.1.2 XYZ - indented heading (Event X01)" in structures["XYZ_X01"]["citation"], \
+        structures["XYZ_X01"]["citation"]
+
+
 def check_event_ranges():
     assert ext.expand_events("C01-C08") == [f"C0{n}" for n in range(1, 9)]
     assert ext.expand_events("PCG,PCH,PCJ") == ["PCG", "PCH", "PCJ"]
@@ -1164,7 +1208,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints]
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
+          check_colon_caption_with_space_ends_table, check_v282_reader_layouts]
 
 
 def main():

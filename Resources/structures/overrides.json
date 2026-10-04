@@ -213,7 +213,17 @@
     { "version": "2.6", "where": "syntax-cell", "structure": "BRP_O30", "printed": "] --- RESPONSE end", "intended": "] ] --- RESPONSE end",
       "citation": "HL7 v2.6 Chapter 4, section 4.20.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 4-165 to 4-166: '[ --- RESPONSE begin' then '[ --- PATIENT begin' open two groups and the print closes one ('] --- RESPONSE end'), leaving no '--- PATIENT end'; read as '] ]', closing PATIENT and RESPONSE, as the v2.5.1 print of the same section and HL7-xml v2.6/BRP_O30.xsd nest them." },
     { "version": "2.6", "where": "syntax-cell", "structure": "EHC_E12", "printed": "{ [ CTD } ] Contact Data", "intended": "[ { CTD } ] Contact Data",
-      "citation": "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 12 (EHC^E12^EHC_E12): the CTD row prints '{ [ CTD } ]', brackets that cross; read as '[ { CTD } ]' (optional, repeating), as the v2.7.1 print of EHC^E12 and HL7-xml v2.6/EHC_E12.xsd read it." }
+      "citation": "HL7 v2.6 Chapter 16, section 16.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 12 (EHC^E12^EHC_E12): the CTD row prints '{ [ CTD } ]', brackets that cross; read as '[ { CTD } ]' (optional, repeating), as the v2.7.1 print of EHC^E12 and HL7-xml v2.6/EHC_E12.xsd read it." },
+    { "version": "2.8.2", "where": "group-mark", "structure": "ADT_A05", "printed": "Procedure", "intended": "PROCEDURE",
+      "citation": "HL7 v2.8.2 Chapter 3, section 3.2.31 ADT/ACK - Update Person Information (Event A31), pp 30 to 31 (ADT^A31^ADT_A05): the group mark prints '--- Procedure begin' and '--- PROCEDURE end'; read as PROCEDURE, as every other print of ADT_A05 and HL7-xml v2.8.2/ADT_A05.xsd name the group." },
+    { "version": "2.8.2", "where": "group-mark", "structure": "RQI_I01", "printed": "GUARANTOR+INSURANCE", "intended": "GUARANTOR_INSURANCE",
+      "citation": "HL7 v2.8.2 Chapter 11, section 11.3.3 RQI/RPR - Request/Receipt of Patient Selection List (Event I03), p 11 (RQI^I03^RQI_I01): the group mark prints '--- GUARANTOR+INSURANCE begin' and '--- GUARANTOR_INSURANCE end'; read as GUARANTOR_INSURANCE, as the other RQI_I01 prints and HL7-xml v2.8.2/RQI_I01.xsd name the group." },
+    { "version": "2.8.2", "where": "group-mark", "structure": "SDR_S31", "printed": "ANTI-MICROBIAL_DEVICE_DATA", "intended": "ANTIMICROBIAL_DEVICE_DATA",
+      "citation": "HL7 v2.8.2 Chapter 17, section 17.5.4 SDR/ACK - Request Anti-Microbial Device Data (Event S31), p 37, and 17.6.4 (SDN^S36, p 41): the group mark prints 'ANTI-MICROBIAL_DEVICE_DATA' (as does HL7-xml v2.8.2/SDR_S31.xsd), which no group name can hold (a hyphen); read as ANTIMICROBIAL_DEVICE_DATA, the name the v2.6 print is read as (HL7-xml v2.6/SDR_S31.xsd)." },
+    { "version": "2.8.2", "where": "group-mark", "structure": "SDR_S32", "printed": "ANTI-MICROBIAL_DEVICE_CYCLE_DATA", "intended": "ANTIMICROBIAL_DEVICE_CYCLE_DATA",
+      "citation": "HL7 v2.8.2 Chapter 17, section 17.5.5 SMD/ACK - Request Anti-Microbial Device Cycle Data (Event S32), p 38, and 17.6.5 (SCN^S37, p 41): the group mark prints 'ANTI-MICROBIAL_DEVICE_CYCLE_DATA' (as does HL7-xml v2.8.2/SDR_S32.xsd), which no group name can hold (a hyphen); read as ANTIMICROBIAL_DEVICE_CYCLE_DATA, the name the v2.6 print is read as (HL7-xml v2.6/SDR_S32.xsd)." },
+    { "version": "2.8.2", "where": "syntax-cell", "structure": "RDE_O11", "printed": "}]", "intended": "} }]",
+      "citation": "HL7 v2.8.2 Chapter 4A, section 4A.3.13 RDE - Pharmacy/Treatment Refill Authorization Request Message, p 22 (RDE^O25^RDE_O11): inside '[{' RXV ... the row '{ --- TIMING_ENCODED begin' is never closed; the next row '}]' closes the RXV group, leaving the TIMING_ENCODED group open; read as '} }]', closing both, as the 4A.3.1 RDE^O11 print closes them ('} --- TIMING_ENCODED end', '}] --- PHARMACY_TREATMENT_INFUSION_ORDER end', p 7)." }
   ],
   "exclusions": [
     { "version": "2.4", "section": "4.6.2",
@@ -430,10 +440,12 @@
       "citation": "HL7 v2.8.2 Chapter 5, section 5.9.7.1 MPI Query Profile using QBE variant, p 97: a query grammar, query profile or conformance statement example (RTB^Z78^RTB_K13) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
     { "version": "2.8.2", "section": "5.9.7.2",
       "citation": "HL7 v2.8.2 Chapter 5, section 5.9.7.2 MPI Query Profile - Non query by example version, p 100: a query grammar, query profile or conformance statement example (RTB^Z76^RTB_K13) on site-defined Z events, not a normative structure definition; excluded under ruling G7." },
-    { "version": "2.8.2", "section": "8.4.3",
-      "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7." },
+    { "version": "2.8.2", "section": "8.4.3", "caption": "MFN^M14^MFN_Znn",
+      "citation": "HL7 v2.8.2 Chapter 8, section 8.4.3 MFN/MFK - Master File Notification - Site Defined (Event M14), p 7: the site-defined Znn master file template (MFN^M14^MFN_Znn), not a normative structure definition; excluded under ruling G7. The section's acknowledgment MFK^M14^MFK_M01 is a normative print and stays read (P8b-10 caption scope, applied in P8b-11)." },
     { "version": "2.6", "section": "5.9.1.1",
-      "citation": "HL7 v2.6 Chapter 5, section 5.9.1.1 Proposed dispense history example and Query Profile, p 57 (under 5.9 QUERY/RESPONSE MESSAGE EXAMPLES): restates 'the structure of the Pharmacy Dispense Information (RDR) message, an original-mode query that was defined in Chapter 4' (RDR^RDR), with TIMING groups and [SFT] the Chapter 4 definition (4.13.17) does not print; an example, not a normative structure definition; excluded under ruling G7." }
+      "citation": "HL7 v2.6 Chapter 5, section 5.9.1.1 Proposed dispense history example and Query Profile, p 57 (under 5.9 QUERY/RESPONSE MESSAGE EXAMPLES): restates 'the structure of the Pharmacy Dispense Information (RDR) message, an original-mode query that was defined in Chapter 4' (RDR^RDR), with TIMING groups and [SFT] the Chapter 4 definition (4.13.17) does not print; an example, not a normative structure definition; excluded under ruling G7." },
+    { "version": "2.8.2", "section": "5.9.1.1",
+      "citation": "HL7 v2.8.2 Chapter 5, section 5.9.1.1 Proposed dispense history example and Query Profile, pp 59 to 60 (under 5.9 QUERY/RESPONSE MESSAGE EXAMPLES): restates 'the structure of the Pharmacy Dispense Information (RDR) message, an original-mode query that was defined in Chapter 4' (RDR^RDR^RDR_RDR) as an example; v2.8.2 Chapter 4A prints no RDR, so it is not a normative structure definition; excluded under ruling G7 as on v2.5.1 and v2.6." }
   ],
   "primaryPrints": [
     { "version": "2.5.1", "structure": "RSP_K21", "primary": "RSP^K22^RSP_K21", "stricter": "RSP^K21^RSP_K21",
@@ -451,7 +463,9 @@
     { "version": "2.6", "structure": "QRY_PC4", "primary": "QRY^PC9^QRY_PC4", "stricter": "QRY^PC4^QRY_PC4",
       "citation": "Two normative prints of QRY_PC4 disagree: Chapter 12 section 12.2.5 (QRY^PC4^QRY_PC4, p 12-12) prints MSH QRD [QRF], sections 12.2.7 (QRY^PC9^QRY_PC4, p 12-14), 12.2.9 (PCE, p 12-15) and 12.2.11 (PCK, p 12-17) print [{SFT}] [UAC] after MSH, which accepts every message the 12.2.5 print accepts; the looser 12.2.7 print is primary (P8b-9 ruling; register section E). HL7-xml v2.6/QRY_PC4.xsd has SFT and UAC." },
     { "version": "2.6", "structure": "RDE_O11", "primary": "RDE^O25^RDE_O11", "stricter": "RDE^O11^RDE_O11",
-      "citation": "Two normative prints of RDE_O11 disagree: Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." }
+      "citation": "Two normative prints of RDE_O11 disagree: Chapter 4 section 4.13.5 (RDE^O11^RDE_O11, pp 4-88 to 4-89) prints OBX required in OBSERVATION, section 4.13.13 (RDE^O25^RDE_O11, pp 4-97 to 4-98) prints it optional ([OBX]) and names the RXC group COMPONENTS, which accepts every message the 4.13.5 print accepts; the looser 4.13.13 print is primary (P8b-9 ruling; register section E)." },
+    { "version": "2.8.2", "structure": "ACK", "primary": "ACK^S12-S24,S26,S27^ACK", "stricter": "ACK^varies^ACK",
+      "citation": "Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 47) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24,S26,S27^ACK, p 20) prints [{UAC}], which accepts every message the 2.13.1 print accepts (and every CH05 5.4.4 to 5.4.7 ACK print, which also prints [ERR] where 2.13.1 prints [{ERR}]); the looser 10.4 print is primary (P8b-9 ruling; register section E)." }
   ],
   "sharedTriggers": [
     { "version": "2.3.1", "trigger": "ORM^O01", "structures": ["OMD_O01", "OMN_O01", "OMS_O01", "ORM_O01", "RDO_O01"],
