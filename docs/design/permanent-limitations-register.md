@@ -544,7 +544,7 @@ is `{[OBX] [{NTE}]}`).
 
 ### Addendum to §E — v2.3.1 complete (P8b-14, 2026-10-04)
 
-v2.3.1 is `complete: true` in `Resources/structures/completeness.json`: 99 structures modelled
+v2.3.1 is `complete: true` in `Resources/structures/completeness.json`: 99 structures modelled (100 since P8b-15 fix round 2, which folds MCF, CH02 2.13.2 pp 2-78 to 2-79, onto `MCF^*`: the print gives its syntax under the code alone, so it is modelled, not registered)
 (each cited to chapter, section and pages of the one v2.3.1 PDF) and 27 registered as not
 modelled in that file's `notModelled`; every Table 0354 v2.3.1 row (Chapter 2, section
 2.24.1.9, pp 2-103 to 2-106; 117 rows) is one or the other. Most v2.3.1 captions print
@@ -560,10 +560,10 @@ ORM^O01 and ORR^O02, whose captions print their IDs).
 | MFN_M03 (CH08 8.7.2, p 8-20) | `??? [other segments(s)]` after OM1; the section then gives the groups that replace it per file in prose, each keyed by the second component of MSH-9 (M08 to M11), and for M03 the row stands for any of them. Corrected in P8b-15 fix round 1: the earlier reason said the print does not fix the combination; it does, per event, in fragments the extractor does not read. | **Blocking** (reading prose-printed fragments and cross-references). |
 | SUR_P09 (CH07 7.10.2, p 7-85) | A row `ED Encapsulated Data`: v2.3.1 defines no ED segment. | **Permanent** for v2.3.1. |
 | MFN_M01, MFN_M02, NUL, ORM_Q06, ORR_Q06, RAS_O02, SRM_T12, SRR_T12 | Table 0354 rows no caption prints (searched in every caption form): MFN_M01's only print is the 8.3.1 template captioned MFN^M01-M06, MFN_M02's the 8.6.1 staff print captioned MFN^M01-M06 (neither caption's six events is one row's); NUL names no message. | **Permanent** for v2.3.1. |
-| MFN_M08 to MFN_M11, ORU_W01 | Table 0354 rows no caption prints: M08 to M11 are printed only as prose fragments keyed by MSH-9 event under MFN^M03 (8.7.2, p 8-20); ORU_W01 is prose in CH07 7.19.1 (p 7-117) with ORU^W01 examples. A reader for prose-printed fragments and cross-references would close them (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
+| MFN_M08 to MFN_M11 | Table 0354 rows no caption prints: M08 to M11 are printed only as prose fragments keyed by MSH-9 event under MFN^M03 (8.7.2, p 8-20). A reader for prose-printed fragments would close them (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
+| ORU_W01 | Table 0354 (p 2-104) gives W01 a structure ID of its own, ORU_W01; CH07 7.19.1 (p 7-117) says only that W01 "identifies ORU messages used to transmit waveform data" (its 7.20 examples carry ORU^W01), and no chapter prints ORU_W01's syntax. Reading W01 as ORU_R01 would contradict the table, so the print gives neither a syntax nor a reference that names a printed structure (class corrected in P8b-15 fix round 2: fix round 1 had moved it to Blocking, but there is no fragment to read). | **Permanent** for v2.3.1. |
 | Captions with no structure ID: MFN^M01-M06 (8.3.1, p 8-3; 8.6.1, p 8-11), MFQ^M01-M06 (8.3.3, p 8-4), MFN^M04 (8.9.1, p 8-60) | Table 0354 lists no row for their events (no MFQ or MFN_M04 row) and no row lists all six of a range; declared in `overrides.json` `unresolvedCaptions` and reported info on the wire. MFN^M01-M06 at 8.3.1 is also a `[Z..]` template. | **Permanent** for v2.3.1. |
-| MFR^M01-M06 (8.3.3, p 8-4) | Table 0354 lists no MFR row; declared in `unresolvedCaptions`, info on the wire. The 8.3.3 print has a `[Z..]` row, but the master file sections give its segments per file in prose (8.6.1 p 8-11, 8.7.2 p 8-20, 8.8.1 p 8-49, 8.9.1 p 8-60, 8.10.1 p 8-68: 'When the ... segments are used in the MFR message, the part ... is replaced by'); only M01's cannot be enumerated (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
-| MCF (CH02 2.13.2, pp 2-78 to 2-79) | The delayed acknowledgment, kept for v2.1 compatibility, is printed twice under the code alone (MSH, MSA, [ERR]); Table 0354 has no MCF row and Table 0003 no event for it, so no structure ID names it; an MCF message is info. | **Permanent** for v2.3.1. |
+| MFR^M01-M06 (8.3.3, p 8-4) | Table 0354 lists no MFR row; declared in `unresolvedCaptions`, info on the wire. The 8.3.3 print has a `[Z..]` row, but the master file sections give its segments per file in prose (8.6.1 pp 8-11 to 8-12, 8.7.2 p 8-20, 8.8.1 p 8-49, 8.9.1 p 8-60, 8.10.1 p 8-68: 'When the ... segments are used in the MFR message, the part ... is replaced by'); only M01's cannot be enumerated (status corrected from Permanent in P8b-15 fix round 1). | **Blocking** (reading prose-printed fragments and cross-references). |
 
 Structure IDs (each a cited `overrides.json` entry, defensible from the v2.3.1 print alone).
 Table 0354 errata, each against Table 0076 or 0003 and the caption: ARD_A19 read ADR_A19 (no
@@ -633,9 +633,9 @@ print AIP before AIL).
 ### Addendum to §E — v2.3 complete (P8b-15, 2026-10-04)
 
 v2.3 is `complete: true` in `Resources/structures/completeness.json`, the last version: 147
-structures modelled (each cited to chapter, section and pages of the CH1 to CH12 PDFs) and 24
-registered as not modelled in that file's `notModelled` (16 unreadable prints and, since fix
-round 1, 8 triggers defined only in prose or Table 0003). v2.3 prints the message code alone over
+structures modelled (each cited to chapter, section and pages of the CH1 to CH12 PDFs) and 20
+registered as not modelled in that file's `notModelled` (16 unreadable prints and 4 triggers the
+print defines only in Table 0003 or prose with no unambiguous printed structure; fix rounds 1 and 2). v2.3 prints the message code alone over
 each table, the events in the section title, no structure ID and no Table 0354, and its MSH-9 has
 no third component. Lookup rule 3: a v2.3 message resolves from MSH-9.1^9.2 only; a populated
 MSH-9.3 is ignored, so rule 1's mismatch for an unknown ID never applies on v2.3. Structure IDs
@@ -651,7 +651,7 @@ caption folds onto ACK).
 | ERP (CH02 2.20.3, p 2-77), MFN_M01 (CH08 8.3.1, p 8-4) | Ellipsis rows after ERQ, the remainder of the record-oriented message the query names; `[Z..]` for the segments of a master file not otherwise specified (ruling G6). | **Permanent** for v2.3. |
 | MFR_M01 (CH08 8.3.3, p 8-5; events M01 to M11), MFN_M03 (8.7.2, p 8-21; events M03, M08 to M11) | MFR prints `[Z..]`, but the master file sections give its segments per file in prose ('the part ... {MFE [Z..]} is replaced by'): 8.6.1 (p 8-12) for M02, 8.7.2 (p 8-21, 'replacing the [Z...] section') for M03 and M08 to M11, 8.8.1 (p 8-50) for M05, 8.9.1 (p 8-63) for M04, 8.10.1 (pp 8-71 to 8-72) for M06 and M07; only M01's `[Z..]` cannot be enumerated. MFN prints `[other segments(s)]`, whose groups the section gives per MSH-9 event M08 to M11 in prose. Neither is modelled because the extractor does not read prose-printed replacement fragments (corrected in P8b-15 fix round 1: the first reason said the segments cannot be enumerated). | **Blocking** (reading prose-printed fragments and cross-references). MFR^M01 to M11 and MFN^M03, M08 to M11 are info. |
 | SUR_P09 (CH07 7.10.2, p 7-80) | A row `ED Encapsulated Data`: v2.3 defines no ED segment. | **Permanent** for v2.3. |
-| Prose-only triggers (P8b-15 fix round 1): QRY_P04 (QRY^P04; CH06 6.3.4, p 6-4, 'the QRY/DSP transaction, as defined in Chapter 2'), ORU_W01 (ORU^W01; CH07 7.19.1, p 7-113, with ORU^W01 examples in 7.20), QRF_W02 (QRF^W02; 7.19.2, p 7-113; QRF is in no Table 0076 row), QRY_R03 and DSR_R03 (R03; Table 0003 only, p 2-93), QRY_R05 and DSR_R05 (R05; CH07 7.2.2.1, p 7-15), UDM_R06 (R06; 7.2.2.1, p 7-15) | Each event is defined in prose or Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-93), by reference to another message, and no v2.3 chapter prints a syntax table for it. Registered in `completeness.json` `notModelled` under a synthesised CODE_EVT ID with the trigger and this reason, as v2.3.1 registers ORU_W01, so the info names why. The extractor reads structures from syntax tables only. | **Blocking** (reading prose-printed fragments and cross-references). |
+| Triggers the print defines only in Table 0003 or prose with no unambiguous printed structure (fix round 2 classes): QRF_W02 (QRF^W02; CH07 7.19.2, p 7-113: 'The W02 trigger event identifies QRF messages which are a response to a QRY message'; no chapter prints a QRF message and Table 0076 lists none), QRY_R03 and DSR_R03 (R03; Table 0003 only, p 2-93, 'QRY/DSR Display-oriented results, query/unsol. update'; no section defines R03, and the one message carrying it is a CH07 7.4.5.3 example sent as ORU^R03), DSR_R05 (R05; CH07 7.2.2.1, p 7-15, 'Event R05 is used for queries for display results'; Chapter 2 prints DSR twice, 2.17.1 with MSA required and 2.18.2 with MSA optional, and the print does not say which mode) | Registered in `completeness.json` `notModelled` under a synthesised CODE_EVT ID with the trigger and a reason quoting the print, so the info names why. | **Permanent** for v2.3. |
 
 Events. 201 captions take their events from the section title (`(event A01)`, `(events C01-C08)`,
 first event for the ID). 39 captions whose title names none, or names them as `O01/O02`, take them
@@ -697,9 +697,9 @@ which print DRG twice; CSU_C09; ORF_R02 and ORU_R01, the pre-v2.5 OBSERVATION gr
 REF_I12, RPA_I08, RQA_I08, RRI_I12) and are matched by the exact matcher, with at most one finding
 and no group spans. RQA_I08 is modelled as printed, `[ [{GT1}] {IN1 [IN2] [IN3]} ]` (11.3.1,
 p 11-12): an insurance group follows GT1 within one optional group, where RPA, REF and RRI print
-`[{GT1}] [{IN1 ...}]`; the print is followed, not the siblings. Triggers the print covers only in
-prose or Table 0003 (QRY^P04, ORU^W01, QRF^W02, QRY and DSR R03 and R05, UDM^R06) name no syntax
-table; they are registered with their reason (table above) and are info. Corpus run (P8b-15): no misfire; 11 spec-example messages draw findings that are
+`[{GT1}] [{IN1 ...}]`; the print is followed, not the siblings. Triggers the print defines only in
+prose or Table 0003 are classed by what the print gives (P8b-15 fix round 2): ORU^W01 (7.19.1, "ORU
+messages"; v2.3 prints one ORU definition, 7.2.1), QRY^P04 (CH06 6.3.4, "the QRY/DSP transaction, as defined in Chapter 2"), QRY^R05 and UDM^R06 (CH07 7.2.2.1; both Chapter 2 QRY prints are MSH QRD [QRF] [DSC], and Chapter 2 prints one UDM) name a printed structure without ambiguity and are added to it through `overrides.json` `referencedTriggers`; QRF^W02, QRY^R03, DSR^R03 and DSR^R05 do not and are registered (table above) as info. Corpus run (P8b-15): no misfire; 11 spec-example messages draw findings that are
 example defects (five CH10 10.6 examples print AIP before AIL; three CH03 3.4.2 ADT examples order
 OBX against the print; CH04 4.14.5 sends ACK with QAK; two CH06 6.5 BAR^P05 examples omit EVN).
 

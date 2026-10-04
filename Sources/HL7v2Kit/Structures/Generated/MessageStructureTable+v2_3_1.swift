@@ -36,6 +36,7 @@ extension MessageStructureTable {
         "DSR_Q03": v2_3_1_DSR_Q03,
         "EDR_R07": v2_3_1_EDR_R07,
         "EQQ_Q04": v2_3_1_EQQ_Q04,
+        "MCF": v2_3_1_MCF,
         "MDM_T01": v2_3_1_MDM_T01,
         "MDM_T02": v2_3_1_MDM_T02,
         "MFD_MFA": v2_3_1_MFD_MFA,
@@ -109,7 +110,7 @@ extension MessageStructureTable {
         id: "ACK",
         version: "2.3.1",
         triggers: ["ACK^*"],
-        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78.",
+        citation: "HL7 v2.3.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 2-78. Structure ID ACK is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no ACK row.",
         requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
@@ -810,6 +811,19 @@ extension MessageStructureTable {
             .segment("MSH", min: 1, max: 1),
             .segment("EQL", min: 1, max: 1),
             .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_3_1_MCF: MessageStructure = MessageStructure(
+        id: "MCF",
+        version: "2.3.1",
+        triggers: ["MCF^*"],
+        citation: "HL7 v2.3.1 Chapter 2, section 2.13.2 MCF - delayed acknowledgment, p 2-78. Structure ID MCF is the message code alone (overrides.json triggerFolds): the caption prints the code alone and Table 0354 has no MCF row.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
         ]
     )
 

@@ -90,6 +90,22 @@ struct StructureV23ProbeTests {
         #expect(bad.allSatisfy { "\($0.code)".contains(p.structure) }, "\(p.msh9): \(bad.map(\.message))")
     }
 
+    // Fix round 2: prose that names a printed structure without ambiguity adds the trigger to it
+    // (overrides.json referencedTriggers): CH07 7.19.1 W01 "ORU messages" (ORU_R01), CH06 6.3.4
+    // and CH07 7.2.2.1 the Chapter 2 QRY (P04, R05; both QRY prints are MSH QRD [QRF] [DSC]),
+    // CH07 7.2.2.1 R06 "the unsolicited message" (UDM_Q05).
+    @Test("Cross-referenced v2.3 triggers are matched against the structure the prose names",
+          arguments: [Probe(msh9: "ORU^W01", structure: "ORU_R01", compliant: ["PID|1", "OBR|1", "OBX|1|CD"],
+                            variant: ["PID|1", "OBX|1|CD"], finding: "unexpected OBX"),
+                      Probe(msh9: "QRY^P04", structure: "QRY_Q01", compliant: ["QRD|1"], variant: ["QRF|1"], finding: "missing QRD"),
+                      Probe(msh9: "QRY^R05", structure: "QRY_Q01", compliant: ["QRD|1", "QRF|1"], variant: ["QRF|1"], finding: "missing QRD"),
+                      Probe(msh9: "UDM^R06", structure: "UDM_Q05", compliant: ["URD|1", "DSP|1"], variant: ["URD|1"], finding: "missing DSP")])
+    func referenced(_ p: Probe) throws {
+        try probe(p)
+        let s = try #require(MessageStructureTable.structure(p.structure, version: .v2_3))
+        #expect(s.citation.contains("added by overrides.json referencedTriggers"))
+    }
+
     @Test("At least twelve probes on v2.3 structures")
     func coverage() {
         #expect(Self.probes.count >= 12)
@@ -163,10 +179,10 @@ struct StructureV23ProbeTests {
     }
 
     // A trigger the v2.3 print covers resolves to its own print; one it does not cover gets
-    // information, never an error. Table 0003 (CH02 p 2-91) lists P04 (QRY/DSP) and CH06 6.3.4
-    // (p 6-3) refers it to "the QRY/DSP transaction, as defined in Chapter 2" in prose, but no
-    // syntax table is printed for P04; A99 is in no table; ZZZ^Z01 is locally defined.
-    @Test("A trigger the v2.3 print does not cover is info, not an error", arguments: ["QRY^P04", "ADT^A99", "ZZZ^Z01"])
+    // information, never an error. A99 is in no table; ZZZ^Z01 is locally defined; QRF^W02 (CH07
+    // 7.19.2, p 7-113) names a QRF message no chapter prints. (QRY^P04, once here, is matched
+    // against the Chapter 2 QRY since fix round 2: CH06 6.3.4 names it.)
+    @Test("A trigger the v2.3 print does not cover is info, not an error", arguments: ["QRF^W02", "ADT^A99", "ZZZ^Z01"])
     func uncoveredTrigger(_ msh9: String) throws {
         let issues = try structureIssues(msh9, ["PID|1"])
         #expect(issues.count == 1 && issues.first?.severity == .info, "\(msh9): \(issues.map(\.message))")
@@ -178,7 +194,8 @@ struct StructureV23ProbeTests {
     @Test("v2.3 complete: registered triggers are info with their reason; a declared ID changes nothing",
           arguments: [("ORM^O01", "Order Detail Segment"), ("PPR^PC2", "OBR, etc"), ("SUR^P09", "ED"),
                       ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
-                      ("ORU^W01", "in prose"), ("QRY^P04", "in prose"), ("DSR^R05", "Event R05"), ("UDM^R06", "event R06")])
+                      ("QRF^W02", "no message type QRF"), ("QRY^R03", "ORU^R03"), ("DSR^R03", "MSA optional"),
+                      ("DSR^R05", "the reference is ambiguous")])
     func registered(_ c: (String, String)) throws {
         #expect(MessageStructureTable.isComplete(.v2_3))
         for msh9 in [c.0, c.0 + (c.0.contains("^") ? "^ZZZ_Z99" : "^^ZZZ_Z99")] {

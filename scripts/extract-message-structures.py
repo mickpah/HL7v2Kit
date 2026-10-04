@@ -793,6 +793,10 @@ def synthesised_provenance(era, sid, entries, fold):
     or the code alone for a triggerFolds entry onto CODE^*), and each print's events come from its
     section title or, where the title names none, a cited overrides.json eventsFromTitle entry.
     entries: (caption, rows, error), the primary print first. Other eras: empty."""
+    if era == "table-0354" and fold and fold["trigger"] == f"{sid}^*":
+        # v2.3.1: the general acknowledgment and MCF print no ID and have no Table 0354 row (fix round 2).
+        return (f" Structure ID {sid} is the message code alone (overrides.json triggerFolds): the caption prints "
+                f"the code alone and Table 0354 has no {sid} row.")
     if era != "section-title":
         return ""
     why = "(v2.3 prints no structure ID and no Table 0354)"
@@ -927,6 +931,10 @@ _OVERRIDE_KEYS = {
     # the print gives them (section text, Table 0003). Keyed by section and caption (the code as
     # printed); an optional "occurrence" (1-based) narrows it to the n-th such caption of the section.
     "eventsFromTitle": {"version", "section", "caption", "events", "citation"},
+    # Triggers the print defines only in prose that names an already printed structure for them
+    # without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages"; P8b-15 fix round 2):
+    # added to that structure's triggers, cited. An entry naming no read structure fails a full read.
+    "referencedTriggers": {"version", "structure", "triggers", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -949,6 +957,10 @@ def validate_overrides(data):
                                               and isinstance(entry["occurrence"], int) and entry["occurrence"] >= 1):
                 raise OverridesError(f"{kind} entry for {entry.get('structure', entry.get('caption'))}: 'occurrence' is "
                                      "a positive integer on a syntax-cell or caption erratum or an eventsFromTitle entry only")
+            if kind == "referencedTriggers" and not (isinstance(entry.get("triggers"), list) and entry["triggers"]
+                                                     and all(isinstance(t, str) and TRIGGER.match(t) for t in entry["triggers"])):
+                raise OverridesError(f"referencedTriggers entry for {entry.get('structure')}: triggers must be a "
+                                     "non-empty list of CODE^EVT")
             if kind == "eventsFromTitle" and not (isinstance(entry.get("events"), list) and entry["events"] and all(
                     isinstance(v, str) and re.fullmatch(r"[A-Z0-9]{3}", v) for v in entry["events"])):
                 raise OverridesError(f"eventsFromTitle entry for {entry.get('caption')} in section "
@@ -1414,6 +1426,9 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                f"{compact(theirs)[:160]!r}; primary {cap.printed} (section {cap.section}) prints "
                                f"{compact(elements)[:160]!r}"))
         triggers = [fold["trigger"]] if fold else triggers + [t for t in added.get(sid, []) if t not in triggers]
+        referenced = [t for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] == sid
+                      for t in e["triggers"] if t not in triggers]
+        triggers += referenced
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
@@ -1423,6 +1438,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                                              row_errata.get(sid), where_0354)
                                           + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
                                           + synthesised_provenance(era, sid, entries, fold)
+                                          + "".join(f" Triggers {_join(e['triggers'])} added by overrides.json referencedTriggers "
+                                                    f"(the print names this structure for them in prose): {e['citation'].rstrip('.')}."
+                                                    for e in overrides.get("referencedTriggers", [])
+                                                    if e["version"] == ver and e["structure"] == sid)
                                           + name_citation(log)})
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
@@ -1460,6 +1479,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                    for key in sorted(set(unresolved) - used_unresolved)]
         report += [(key[1], "error", f"captionStructures entry for section {key[0]} matches no unresolved caption")
                    for key in sorted(set(assigned) - used_assigned)]
+        report += [(e["structure"], "error", "referencedTriggers entry names no structure read from the print")
+                   for e in overrides.get("referencedTriggers", []) if e["version"] == ver and e["structure"] not in structures]
         report += [(e["caption"], "error", f"eventsFromTitle entry for section {e['section']}"
                                            + (f" (occurrence {e['occurrence']})" if "occurrence" in e else "")
                                            + " matches no caption whose section title names no event")

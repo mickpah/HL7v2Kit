@@ -47,14 +47,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cited `overrides.json` `eventsFromTitle` entry (section text or Table 0003).
 - Group names, which v2.3 never prints: 235 derived through the HL7 v2.xml 2.3.1 bundle (new
   `nameSource` `v2xml-v2.3.1`), 7 through the v2.4 bundle, 3 synthesised.
-- 24 v2.3 structures are registered as not modelled, each with its reason (register section E):
+- 20 v2.3 structures are registered as not modelled, each with its reason (register section E):
   the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06; the four
   specialised ORM and ORR prints of CH04 share the trigger and cannot be told apart from
   MSH-9.1^9.2), eight CH12 `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows,
-  SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 8 triggers v2.3 defines only in prose or Table 0003
-  (QRY^P04, ORU^W01, QRF^W02, QRY^R03, DSR^R03, QRY^R05, DSR^R05, UDM^R06), whose info now
-  gives the reason. The v2.3.1 MFN_M03 reason, and the status of v2.3.1's MFN_M03, MFN_M08 to
-  M11, ORU_W01 and MFR rows, are corrected the same way (blocking, not permanent).
+  SUR_P09's ED row, MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated), and 4 triggers v2.3 defines only in Table 0003 or prose
+  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), whose info now gives
+  the reason. the four prose cross-references to printed structures added to them through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1) are matched. The v2.3.1 MFN_M03 reason, and the status of v2.3.1's
+  MFN_M03, MFN_M08 to M11 and MFR rows, are corrected the same way (blocking, not permanent).
+- v2.3.1 MCF (CH02 2.13.2) is now modelled through a `triggerFolds` entry onto `MCF^*`, as on v2.3:
+  v2.3.1 has 100 structures.
 - Errata, each cited to the v2.3 print: CH04 4.8.17's `R0R` read as `ROR` (Table 0076), the
   printed event R0R kept; crossed brackets in ADT^A07 (`[{ROL]}`), ADT^A31 (`{[ROL}]`) and CSU
   (`{[ ... }]`), whose two nested readings mean the same; CH02 2.11.1's WRQ/WRP notation example

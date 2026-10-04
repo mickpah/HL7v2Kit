@@ -1,7 +1,7 @@
 {
   "structure": "MFK_M07",
   "version": "2.3",
-  "citation": "HL7 v2.3 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-71. Structure ID MFK_M07 synthesised as CODE_EVT from the message code MFK and M07, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events MFK^M07 from overrides.json eventsFromTitle (section 8.10.1 'Clinical trials master file message (MFN/MFK)' names no event): HL7 v2.3 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-71, the acknowledgment under Case 2 (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-93), p 2-92: 'M07 MFN/MFK - Clinical study without phases but with schedules master file'..",
+  "citation": "HL7 v2.3 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-71. Structure ID MFK_M07 synthesised as CODE_EVT from the message code MFK and M07, the first event overrides.json eventsFromTitle gives it (v2.3 prints no structure ID and no Table 0354). Events MFK^M07 from overrides.json eventsFromTitle (section 8.10.1 'Clinical trials master file message (MFN/MFK)' names no event): HL7 v2.3 Chapter 8, section 8.10.1 Clinical trials master file message (MFN/MFK), p 8-71, the acknowledgment under Case 2 (v2.3 prints the message code alone and no structure ID; the section title names no event); Table 0003 (Chapter 2, section 2.24.1.9, pp 2-90 to 2-94), p 2-92: 'M07 MFN/MFK - Clinical study without phases but with schedules master file'..",
   "triggers": ["MFK^M07"],
   "elements": [
     { "segment": "MSH", "min": 1, "max": 1 },

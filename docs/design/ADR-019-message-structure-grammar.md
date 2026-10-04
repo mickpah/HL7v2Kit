@@ -1184,7 +1184,7 @@ compiling a structure per message.
 
 ## Amendment 2026-10-04 — v2.3.1 complete (P8b-14)
 
-- **v2.3.1 complete.** 99 structures modelled (10 exact-matched), 27 registered (register
+- **v2.3.1 complete.** 99 structures modelled (100 since P8b-15 fix round 2 folded MCF) (10 exact-matched), 27 registered (register
   section E v2.3.1 addendum: the general order's `Order Detail Segment` placeholder in ORM_O01,
   ORR_O02 and OSR_Q06, the CH12 placeholders, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows
   no print carries); every Table 0354 v2.3.1 row is one or the other.
@@ -1229,12 +1229,15 @@ compiling a structure per message.
 ## Amendment 2026-10-04 — v2.3 complete; lookup rule 3 (P8b-15)
 
 - **v2.3 complete, and with it every supported version.** 147 structures modelled (10
-  exact-matched) and 24 registered (register section E v2.3 addendum): 16 unreadable prints (the
+  exact-matched) and 20 registered (register section E v2.3 addendum): 16 unreadable prints (the
   general order's `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12
   `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows, SUR_P09's ED row, and
-  MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated)), and, since fix round 1, 8 triggers defined only in prose or Table 0003 (QRY^P04,
-  ORU^W01, QRF^W02, QRY and DSR R03 and R05, UDM^R06), registered under synthesised IDs with
-  their reason.
+  MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated)), and 4 triggers defined only in Table 0003 or prose
+  with no unambiguous printed structure (QRF^W02, QRY^R03, DSR^R03, DSR^R05), registered under
+  synthesised IDs with their reason. Fix round 2 adds the override kind `referencedTriggers`
+  (a trigger whose prose names an already printed structure without ambiguity is added to that
+  structure's triggers, cited): the four prose cross-references to printed structures added to them through overrides.json `referencedTriggers` (ORU^W01 to ORU_R01, CH07 7.19.1; QRY^P04 and QRY^R05 to QRY_Q01, CH06 6.3.4 and CH07 7.2.2.1; UDM^R06 to UDM_Q05, 7.2.2.1). v2.3.1 MCF is folded onto `MCF^*` (v2.3.1: 100
+  structures).
 - **Lookup rule 3 implemented** (pilot addendum: "not implemented"; carry-in P8-6(b)). v2.3 MSH-9
   is CM <message type>^<trigger event> (CH2 2.24.1.9) with no third component. Once MSH-12 reads
   as v2.3 (after the version rule, so a message whose MSH-12 does not resolve still names its

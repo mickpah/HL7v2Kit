@@ -153,6 +153,15 @@ struct StructureV231ProbeTests {
         #expect(tbr.citation.contains("TBR_R09 read as TBR_R08"))
     }
 
+    // Fix round 2: CH02 2.13.2 (pp 2-78 to 2-79) prints MCF twice under the code alone (MSH MSA
+    // [ERR]); folded onto MCF^* (no Table 0354 row, no event), with or without MSH-9.3 MCF.
+    @Test("MCF on v2.3.1 is matched against its CH02 print", arguments: ["MCF", "MCF^^MCF"])
+    func delayedAcknowledgment(_ msh9: String) throws {
+        #expect(try structureIssues(msh9, ["MSA|AA|1", "ERR|1"]).isEmpty, "\(msh9)")
+        let bad = try structureIssues(msh9, ["ERR|1"])
+        #expect(bad.map { Self.describe($0.code) } == ["missing MSA"], "\(msh9): \(bad.map(\.message))")
+    }
+
     @Test("At least twelve probes on v2.3.1 structures beyond the resolution cases")
     func coverage() {
         #expect(Self.probes.count >= 12)

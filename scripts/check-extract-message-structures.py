@@ -31,7 +31,7 @@ ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
-         "captionStructures": [], "eventsFromTitle": []}
+         "captionStructures": [], "eventsFromTitle": [], "referencedTriggers": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1435,6 +1435,35 @@ def check_single_space_cell_and_shifted_page():
     assert s is None and any("prose inside an open group" in r[2] for r in report), report
 
 
+def check_referenced_triggers():
+    # P8b-15 fix round 2: a trigger the print defines only in prose that names an already printed
+    # structure without ambiguity (v2.3 CH07 7.19.1: W01 "identifies ORU messages") is added to that
+    # structure's triggers by a cited referencedTriggers entry, which the citation records; an entry
+    # naming no read structure fails a full read; malformed entries are rejected.
+    text = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
+                 + _table("XYZ", [("MSH", "Header"), ("PID", "Patient")])[1:], heading="9.2.1 XYZ - synthetic (event X01)")
+    entries = {**EMPTY, "referencedTriggers": [
+        {"version": "2.3", "structure": "XYZ_X01", "triggers": ["XYZ^X09"], "citation": "9.4 says X09 uses the XYZ message"}]}
+    ext.validate_overrides(entries)
+    structures, report, _ = _run("2.3", [("syn", text)], entries, full=True)
+    s = structures["XYZ_X01"]
+    assert s["triggers"] == ["XYZ^X01", "XYZ^X09"], s
+    assert ("Triggers XYZ^X09 added by overrides.json referencedTriggers (the print names this structure for "
+            "them in prose): 9.4 says X09 uses the XYZ message.") in s["citation"], s["citation"]
+    assert not [r for r in report if r[1] == "error"], report
+    stale = {**EMPTY, "referencedTriggers": [
+        {"version": "2.3", "structure": "XYZ_X07", "triggers": ["XYZ^X09"], "citation": "x"}]}
+    _, report, _ = _run("2.3", [("syn", text)], stale, full=True)
+    assert ("XYZ_X07", "error", "referencedTriggers entry names no structure read from the print") in report, report
+    for bad in ({"version": "2.3", "structure": "XYZ_X01", "triggers": [], "citation": "x"},
+                {"version": "2.3", "structure": "XYZ_X01", "triggers": ["XYZ-X09"], "citation": "x"}):
+        try:
+            ext.validate_overrides({**EMPTY, "referencedTriggers": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"{bad} must be rejected")
+
+
 def check_v23_names_through_v231_then_v24():
     # Controller carry-in (P8b-15): v2.3 group names are derived through the v2.3.1 bundle first
     # (nameSource v2xml-v2.3.1, cited "HL7-xml 2.3.1/" with the file's generator), then the v2.4
@@ -1838,7 +1867,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
           check_table_0354_provenance, check_table_0354_event_erratum_union, check_v23_events_from_title,
           check_v23_caption_forms, check_closing_bracket_in_description_column, check_v23_names_through_v231_then_v24,
-          check_single_space_cell_and_shifted_page]
+          check_single_space_cell_and_shifted_page, check_referenced_triggers]
 
 
 def main():
