@@ -293,8 +293,8 @@ extension MessageStructureTable {
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279, p 152) lists PTR_PCF (events: PCF) and marks it Deprecated; no v2.8.2 chapter prints its syntax (register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q11": NotModelledStructure(
-                    triggers: ["QBP^Q11"],
-                    reason: "CH05 section 5.4.1 (pp 34 to 35) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
+                    triggers: ["QBP^Q11", "QBP^Q31"],
+                    reason: "CH05 section 5.4.1 (pp 34 to 35), the structure for any query trigger a query profile assigns (CH04A 4A.3.20, p 24, declares 'Query Trigger (= MSH-9): QBP^Q31^QBP_Q11'), prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.8.2 not-modelled table)"),
                 "QBP_Q13": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.8.2 (CH02C section 2.C.2.279) lists QBP_Q13 (event Q13); CH05 section 5.4.2 (p 36) says its structure 'can be found in 5.3.1.2', which prints a query profile example (excluded under ruling G7), so no normative syntax exists (register section E, v2.8.2 not-modelled table)"),
