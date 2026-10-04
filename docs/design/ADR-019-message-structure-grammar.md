@@ -1047,3 +1047,35 @@ compiling a structure per message.
   of `scripts/check-structure-codegen.sh`. A missing or empty version directory fails; each
   structure must reach a minimum sequence count (the full enumeration for an alphabet of at
   most four IDs, else 1,000); each row records the default guards' verdict.
+
+## Amendment 2026-10-04 — v2.5.1 complete (P8b-9)
+
+- **Registered not-modelled structures.** A completeness entry may carry `notModelled`: each
+  a structure ID the version prints (or its Table 0354 lists) that cannot be modelled, the
+  triggers its captions print, and a one-line reason pointing at register section E. The
+  codegen validates them (ID and trigger form, a one-line reason, listed once, never a loaded
+  structure) and renders `MessageStructureTable.notModelled(for:)` (internal). Lookup: an
+  MSH-9.3 naming a registered structure is `messageStructureNotModelled` with its reason on
+  any version, complete or not, unless its captions print other triggers only, which is the
+  rule 1 mismatch; with MSH-9.3 empty, a registered structure's triggers count towards
+  ambiguity (rule 2), and a trigger only it prints is not modelled with its reason. Rule 1's
+  complete branch therefore never calls a printed but unmodellable structure a mismatch.
+- **Shared triggers.** The codegen accepts a trigger under two structures of one version,
+  loaded or registered, only when overrides.json `sharedTriggers` declares it with those
+  structures; the Validator reports such a trigger with no MSH-9.3 as ambiguous (rule 2). v2.5.1
+  declares MFR^M04 to M07 (the MFR_M01 template and the specific MFR_M04 to M07).
+- **Extractor.** A caret caption whose event list or structure ID wraps onto the next line is
+  read (v2.5.1 SIU_S12, PPG_PCG), as is an event list with a comma and a space; a page-break
+  repeat indented three or more columns past its caption keeps the caption's row column
+  (ADT^A31^ADT_A05); a two-part "caption" whose title is itself CODE^EVT is a grid row (CH05
+  5.10.3), never a caption. A new `group-close` erratum supplies the syntax cell a printed
+  `--- NAME end` row leaves empty (v2.5.1 MDM_T02's missing `}]`, certain from the `[{` its
+  begin mark opens). No structure already read in any version changed.
+- **v2.5.1 complete.** 171 structures modelled, 21 of them exact-matched (lint-failing); 32
+  registered (register section E addendum): eight CH12 G6 placeholders, because CH04 4.2.2.4
+  names only examples of order detail segments, so no `expansions` override could be cited;
+  eight query and master-file templates; SUR_P09's `ED` row; RSP_K21, whose K21 and K22
+  prints disagree (the corpus run found the K21 print misfiring on CH03's own K22 example, so
+  it is not matched until a ruling picks per-trigger syntax or the K22 print); and 14 Table
+  0354 rows with no printed syntax. The CH05 5.9.1.1 restatement of the RDR structure is
+  excluded under G7. `ADT^A04^ADT_A04` on v2.5.1 is now a mismatch.

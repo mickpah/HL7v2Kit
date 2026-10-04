@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-9: HL7 v2.5.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.5.1 message structure is now checked: 171
+  structures extracted from the chapter prints (21 matched exactly), and v2.5.1 is marked
+  complete. An MSH-9.3 that names no v2.5.1 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.5.1 instead of info.
+- 32 v2.5.1 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 structures whose order detail is the unenumerated `< OBR | etc. >`, eight
+  query and master-file templates, SUR_P09 (a non-segment `ED` row), RSP_K21 (its K21 and K22
+  prints disagree) and 14 Table 0354 rows with no printed syntax. A message naming one draws
+  `messageStructureNotModelled` (info) with the reason, never a mismatch.
+- A trigger printed under two structures (v2.5.1 MFR^M04 to M07) is reported as ambiguous when
+  MSH-9.3 is empty; the codegen accepts such a trigger only when it is declared.
+- The structure extractor reads wrapped captions, comma-and-space event lists and indented
+  page-break repeats, never reads a query/response grid row as a caption, and supports a
+  cited `group-close` erratum (v2.5.1 MDM_T02).
+
 ### Added — P8b-7: guards over every committed structure; compiled-matcher cache
 
 - A default-on test checks every committed structure of every version: the generated
