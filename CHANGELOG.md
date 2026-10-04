@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default output changes on purpose (ADR-019 decision 5): on every complete version a message
   whose structure matches cleanly has its ORC/OBR peers, segment-presence atoms, ORC/OBR pair
   equality and group-scope cardinality rules scoped by the matched group instances, whatever
-  `messageStructureSeverity` is. A peer is taken from the segment's own group occurrence,
-  never from a nested group that pairs its own ORC and OBR (the prior results of OML_O21,
-  OML_O33 and OML_O35). Otherwise the ORC walk is used as before.
+  `messageStructureSeverity` is. A peer is taken from the segment's own scope: the extended
+  own level of an enclosing group (a non-repeating child group that is not a pairing boundary
+  is transparent), or inside the segment's own group; never from a repeating sibling group
+  (v2.8.2 CSU_C09: the pharmacy ORC has no OBR) or a nested pairing group (the prior results
+  of OML_O21, OML_O33, OML_O35 and OMQ_O42). Otherwise the ORC walk is used as before.
 - The P4-7 and P10-5a `messageCode not in (...)` gates are removed: from ORC-2, ORC-3, ORC-8,
   OBR-2, OBR-3 and OBR-29 on v2.5.1 and v2.6, and from ORC-2, ORC-3, OBR-2 and OBR-3 on v2.7.1
   and v2.8.2 (the only fields gated there): OUL^R21 to R24, OPU^R25 and

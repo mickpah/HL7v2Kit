@@ -83,7 +83,7 @@ struct GroupSpanNestedTests {
     static func obrGroup(_ wire: String, around anchor: Int) throws -> [Int] {
         let message = try Parser().parse(wire)
         let spans = try #require(Validator().groupSpans(for: message))
-        return spans.context(around: anchor, of: message.segments[anchor].segmentID, for: "OBR")
+        return try #require(spans.group(around: anchor, holding: "OBR", counting: "OBX"))
     }
 
     @Test("Each OBX is scoped to its own OBR: the order's OBR group holds no prior-result segment", arguments: cases)

@@ -163,9 +163,9 @@ public struct Message: Sendable, Equatable, Hashable {
     /// `fromIndex`, per ADR-008's ORC/OBR group semantics.
     ///
     /// With group spans (P8b-17, ADR-019) the group is the anchor's own
-    /// group occurrence (`GroupSpanIndex.context(around:of:for:)`): the
-    /// first enclosing instance whose definition pairs `id`, without the
-    /// nested groups that pair their own segments. Otherwise it is
+    /// scope (`GroupSpanIndex.context(around:of:for:)`): the extended own
+    /// level of an enclosing group, or inside the anchor's own group, never
+    /// a repeating sibling group or a nested pairing group. Otherwise it is
     /// delimited by ORC segments: the group head is the
     /// most recent ORC at or before `fromIndex`; the group ends at the
     /// next ORC (or the end of the segment list). The first segment of

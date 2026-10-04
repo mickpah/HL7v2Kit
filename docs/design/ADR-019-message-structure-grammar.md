@@ -545,8 +545,9 @@ The group-span index **coexists with and supersedes** the walk, per message:
    - `associatedSegment(_:fromIndex:)` / `segmentExists(_:inGroupOf:)`: from the innermost
      group instance containing the anchor segment, walk outward to the first enclosing
      group whose definition contains the peer segment ID at any depth; search that
-     instance's span. At top level, the whole message. (Corrected in P8b-17 fix round 1:
-     nested groups that pair their own segments are excluded; see that amendment.)
+     instance's span. At top level, the whole message. (Corrected in P8b-17 fix rounds 1
+     and 2: the peer comes from the anchor's own scope, with non-repeating child groups
+     transparent and nested pairing groups cut; see that amendment.)
    - `resolveGroup(scope:)`: `.orcObxGroup` and `.obrObxGroup` resolve to the innermost
      group instance containing the anchor whose definition contains ORC (or OBR
      respectively); `.messageWide` is unchanged.
@@ -1372,24 +1373,48 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   the position atom), `resolveGroup(scope:)` and `checkOrcObrPairEquality` ask it first.
   `.orcObxGroup` and `.obrObxGroup` use the peer rule below with ORC and OBR. No public API
   changes.
-- **The peer rule: the anchor's own group occurrence (fix round 1).** The rule first shipped
+- **The peer rule: the anchor's own scope (fix rounds 1 and 2).** The rule first shipped
   ("the innermost instance whose definition contains the peer at any depth; search its span")
   misfired on conformant messages: OML_O21, OML_O33 and OML_O35 nest PRIOR_RESULT
   `{ ORDER_PRIOR { [ORC] OBR ... } }` inside the order's OBSERVATION_REQUEST (v2.5.1 CH04 4.4.6,
-  4.4.8, 4.4.10), so the order's OBR found OBSERVATION_REQUEST and took the prior result's ORC,
-  and an OBX's OBR group took in the prior-result segments. The rule now: a *boundary* is a
-  group instance whose own level (its segments and those of unnamed choices in it, not those of
-  nested groups) holds the anchor's segment ID; it pairs its own segments. Walk outward from the
-  innermost instance containing the anchor; stop at the first level whose definition holds the
-  peer outside every nested boundary group other than the one the anchor is in (the top level
-  always stops). The peer, or the `.orcObxGroup` / `.obrObxGroup` group, is taken from that
-  level's instance (the whole message at the top) minus every nested boundary instance that does
-  not contain the anchor; a level that defines the peer but holds none answers "absent". So a
-  peer comes from the anchor's own occurrence, or from a non-pairing group nested in it (the
-  COMMON_ORDER `{ ORC ... }` that v2.8.2 nests in ORDER `{ OBR ... }`), never from another
-  occurrence or a nested pairing group, in every direction (OBR to ORC, ORC to OBR, OBX to OBR,
-  pair equality). `GroupSpanIndex.context(around:of:for:)`; each span keeps its structure
-  position and the index reads the definition there.
+  4.4.8, 4.4.10), so the order's OBR took the prior result's ORC. Fix round 1 cut out nested
+  groups whose own level held the anchor's ID, but still let the walk climb into a repeating
+  sibling group (v2.8.2 CSU_C09, CH07 pp 103 to 104: the pharmacy ORC in STUDY_PHARM
+  `{ [COMMON_ORDER { ORC }] ... }` took the OBR of a STUDY_OBSERVATION, a false
+  `pairedFieldMismatch`), and did not cut ORDER_PRIOR for an OBX anchor. The rule as implemented
+  (`GroupSpanIndex`, `ScopeLookup`), for a lookup of peer ID P from an anchor of ID A:
+  - *Own level* of a group: its segments and those of the unnamed choices in it, not those of
+    nested groups or named choices.
+  - *Pairing boundary*: a group or named choice N whose own level holds P, and some A inside N
+    (at N's own level, or in a nested group whose own level does not hold P) first finds P at
+    N's own level. N pairs its own segments; ORDER_PRIOR `{ ORC OBR ... {OBSERVATION_PRIOR
+    { OBX }} }` is one for ORC, OBR and OBX anchors. A pairing boundary is never transparent.
+  - *Transparency*: a child group or named choice that occurs at most once per occurrence of its
+    parent (maximum 1) and is not a pairing boundary is transparent: its own-level segments count
+    as part of the parent's own level, recursively through transparent children. A bracket that
+    cannot repeat makes segments optional together; it is not a scope. DFT_P03 and DFT_P11
+    `COMMON_ORDER { ... [ORDER { OBR [{NTE}] }] [{OBSERVATION { OBX ... }}] }` (v2.5.1 CH06 6.4.3)
+    and the v2.8.2 CC* `CLINICAL_*_DETAIL { CLINICAL_*_OBJECT <OBR | ...> [{CLINICAL_*_OBSERVATION
+    { OBX ... }}] }` are the cases that need it.
+  - *Extended own level*: a group's own level plus the own levels of its transparent
+    descendants reached through transparent groups only.
+  - The peer is taken from the first of: the extended own level of the anchor's innermost group;
+    anywhere inside that group except nested pairing boundaries; the extended own level of each
+    enclosing group outward to the message. The first whose definition holds P decides; if its
+    occurrence has none, the peer is absent. A peer is therefore never taken from a repeating
+    sibling group or from a nested pairing boundary. Used for every cross-segment lookup
+    (`associatedSegment`, `segmentExists`, the field refs and position atom) and the ORC/OBR pair
+    check.
+  - `.orcObxGroup` / `.obrObxGroup` (head ORC / OBR, counting the rule's segment, OBX): the
+    groups around the anchor that are transparent for (counted, head) are dissolved into their
+    parent; the first group from there outward whose extended own level holds the head is the
+    group, taken as its occurrence without nested pairing boundaries for (counted, head). An OBR
+    anchor in DFT ORDER takes its COMMON_ORDER occurrence (with the sibling OBSERVATION OBX); the
+    order's OBR in OML_O21 takes OBSERVATION_REQUEST without ORDER_PRIOR.
+  - Each span keeps its structure position; the index reads the definition there.
+  - Through the Validator, a DFT message with an OBX after an OBR has no spans: every
+    COMMON_ORDER element is optional, so the OBX may also open a new COMMON_ORDER and the
+    accepting parses disagree; the ORC walk is used there.
 - **When spans are used.** The version is complete, the structure resolves (lookup rules 1 to
   4), the message is not a fragment, the base match has no finding, and the match does not
   withhold its spans (below). "No finding" is the base match before any profile structure

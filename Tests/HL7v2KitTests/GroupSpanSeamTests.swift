@@ -42,11 +42,12 @@ struct GroupSpanSeamTests {
         let ids = try Parser().parse(wire).segments.map(\.segmentID)
         let match = ExactStructureMatcher(structure: structure).match(ids)
         #expect(match.findings.isEmpty && !match.spansWithheld && !match.spans.isEmpty, "\(key)")
-        // Every ORC's peer OBR is in the ORC's own innermost group with an OBR.
+        // Every ORC's scope holds exactly one OBR, its own order's, which the
+        // skeleton places next to it (before it in the OBR-first groups).
         let index = GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
         for orc in ids.indices where ids[orc] == "ORC" {
-            let context = index.context(around: orc, of: "ORC", for: "OBR")
-            #expect(context.count < ids.count && context.contains { ids[$0] == "OBR" }, "\(key) ORC at \(orc): \(context)")
+            let peers = index.context(around: orc, of: "ORC", for: "OBR").filter { ids[$0] == "OBR" }
+            #expect(peers.count == 1 && abs(peers[0] - orc) == 1, "\(key) ORC at \(orc): \(peers)")
         }
         #expect(try Self.scoping(wire) == "spans", "\(key)")
     }
