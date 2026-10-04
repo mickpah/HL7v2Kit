@@ -6,7 +6,8 @@
 // STRUCTURE_LINT_CORPUS/v<ver>/<ID>.json and writes lint-<ver>.tsv into the
 // directory STRUCTURE_LINT_OUT (default: the corpus directory), one row per
 // structure: version, structure, lint result, shape class, recogniser
-// agreement, DSC placement. Skipped unless STRUCTURE_LINT_CORPUS is set.
+// agreement, DSC placement, exact-matcher agreement (P8b-12). Skipped
+// unless STRUCTURE_LINT_CORPUS is set.
 
 import Foundation
 import Testing
@@ -99,13 +100,20 @@ struct StructureLintCorpusTests {
             let shapes = lint.isDeterministic ? "-" : Array(Set(lint.conflicts.map { Self.shape(elements, $0) })).sorted()
                 .joined(separator: "; ")
             let sequences = StructureMatcherPropertyTests.sequences(elements)
-            let matcher = StructureMatcher(structure: MessageStructure(id: id, version: version, triggers: [],
-                                                                       citation: "corpus", elements: elements))
-            let disagree = sequences.filter {
-                matcher.match($0).findings.isEmpty != StructureMatcherPropertyTests.referenceAccepts(elements, $0)
-            }.count
+            let structure = MessageStructure(id: id, version: version, triggers: [], citation: "corpus", elements: elements)
+            let matcher = StructureMatcher(structure: structure)
+            let exact = ExactStructureMatcher(structure: structure)
+            var disagree = 0, exactDisagree = 0
+            for sequence in sequences {
+                let accepted = StructureMatcherPropertyTests.referenceAccepts(elements, sequence)
+                if matcher.match(sequence).findings.isEmpty != accepted { disagree += 1 }
+                if exact.match(sequence).findings.isEmpty != accepted { exactDisagree += 1 }
+            }
+            // P8b-12: the exact matcher (the Validator's choice when the lint fails) must never disagree.
+            #expect(exactDisagree == 0, "\(version) \(id): exact matcher disagrees on \(exactDisagree)")
+            #expect(structure.requiresExactMatch == !lint.isDeterministic)
             rows.append([version, id, result, shapes, "\(sequences.count) checked, \(disagree) disagree",
-                         Self.dsc(elements)].joined(separator: "\t"))
+                         Self.dsc(elements), "exact: \(exactDisagree) disagree"].joined(separator: "\t"))
             print("lint-progress \(version) \(id) \(rows.count)/\(files.count)")
         }
         let out = URL(fileURLWithPath: env["STRUCTURE_LINT_OUT"] ?? root.path).appendingPathComponent("lint-\(version).tsv")

@@ -63,7 +63,7 @@ struct StructureMatcherPropertyTests {
         }
     }
 
-    private static func alphabet(_ elements: [StructureElement]) -> [String] {
+    static func alphabet(_ elements: [StructureElement]) -> [String] {
         var ids: Set<String> = []
         func walk(_ element: StructureElement) {
             switch element {
@@ -76,7 +76,7 @@ struct StructureMatcherPropertyTests {
         return ids.sorted()
     }
 
-    private static func derive(_ elements: [StructureElement], _ rng: inout Seeded) -> [String] {
+    static func derive(_ elements: [StructureElement], _ rng: inout Seeded) -> [String] {
         elements.flatMap { element -> [String] in
             // An optional element is present one time in four, so derivations
             // of the larger structures stay short.
@@ -95,7 +95,7 @@ struct StructureMatcherPropertyTests {
         }
     }
 
-    private static func mutations(_ ids: [String], _ letters: [String], _ rng: inout Seeded) -> [[String]] {
+    static func mutations(_ ids: [String], _ letters: [String], _ rng: inout Seeded) -> [[String]] {
         guard ids.count > 1 else { return [] }
         let at = Int.random(in: 1..<ids.count, using: &rng)
         var deleted = ids; deleted.remove(at: at)
@@ -118,7 +118,7 @@ struct StructureMatcherPropertyTests {
     }
 
     /// Every MSH + w over `letters` with |w| <= `length`.
-    private static func exhaustive(_ letters: [String], upTo length: Int) -> [[String]] {
+    static func exhaustive(_ letters: [String], upTo length: Int) -> [[String]] {
         var layer: [[String]] = [["MSH"]]
         var all = layer
         for _ in 0..<length {
