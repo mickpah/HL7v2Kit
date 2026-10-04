@@ -67,6 +67,15 @@ struct StructureMatch: Sendable, Equatable {
 /// divergence a second finding can describe the same defect (an out-of-order
 /// segment is reported missing, then unexpected); the first is always
 /// accurate. No backtracking.
+///
+/// A choice occurrence takes the one alternative whose FIRST set holds the
+/// current segment and matches it as a one-element sequence. A named choice
+/// opens a `GroupSpan` per occurrence, as a group does, and its name is the
+/// `group` of a `.missing` finding for the choice itself; an unnamed choice
+/// opens no span and adds nothing to the path. A required choice with no
+/// alternative present is reported `.missing` with its first alternative's
+/// head segment; a second alternative where the choice's maximum is reached
+/// is a stray like any other (`.exceededMaximum`).
 struct StructureMatcher: Sendable {
     let structure: MessageStructure
 
@@ -155,6 +164,25 @@ struct StructureMatcher: Sendable {
                         state.spans.removeLast()
                     } else {
                         state.spans[span].end = state.lastConsumed
+                    }
+                case .choice(let name, _, _, let alternatives):
+                    // The lint guarantees the alternatives' FIRST sets are
+                    // disjoint, so at most one can begin with `id`.
+                    guard let alternative = alternatives.first(where: { $0.firstSet.contains(id) }) else { break }
+                    // Another alternative's segment is left to this level, where
+                    // it re-enters the choice or is a stray past its maximum.
+                    let inner = later.union(own)
+                    if let name {
+                        let span = state.spans.count
+                        state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent))
+                        matchSequence([alternative], path: path + [name], parent: span, follow: inner, &state)
+                        if state.cursor == before {
+                            state.spans.removeLast()
+                        } else {
+                            state.spans[span].end = state.lastConsumed
+                        }
+                    } else {
+                        matchSequence([alternative], path: path, parent: parent, follow: inner, &state)
                     }
                 }
                 if state.cursor == before { break }

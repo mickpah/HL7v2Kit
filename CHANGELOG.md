@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-6: the choice element in the structure model, matcher and lint
+
+- `StructureElement.choice(_:min:max:alternatives:)`: the print's `< A | B >` (from v2.4),
+  named from v2.7.1 on, unnamed (`nil`) before. Each occurrence takes exactly one
+  alternative. A new case of an open enum (ADR-014): a `switch` outside the package needs
+  `@unknown default`.
+- `StructureElement.children` (a group's elements, a choice's alternatives, none for a
+  segment) and `StructureElement.segmentIDs` (every segment ID at any depth): a walker that
+  recurses through them never skips the segments inside a choice. Pinned in
+  `SignatureCompatibilityTests`.
+- Model: FIRST of a choice is the union of its alternatives' FIRST sets; a choice is
+  nullable when its minimum is 0 or any alternative is nullable; its head segment is the
+  first alternative's.
+- Matcher: a choice occurrence takes the alternative whose FIRST set holds the current
+  segment. A named choice opens a group span per occurrence; an unnamed one opens none. A
+  required choice with no alternative present is missing its first alternative's head; a
+  second alternative past the choice's maximum exceeds it.
+- Lint: two alternatives whose FIRST sets overlap are a conflict, and so is a nullable
+  alternative (the one-pass matcher does not decide how an empty occurrence was taken);
+  otherwise a choice is checked against its FOLLOW like any element, and each alternative
+  against the choice's follow set and, when the choice repeats, its re-entry.
+- Codegen: the JSON keys `choice` (a name, or `null`), `nameSource` (named choices only),
+  `min`, `max` and `alternatives` (at least two); 14 new self-check cases.
+- No committed structure uses a choice, so the generated tables and every default output
+  are unchanged.
+
 ### Changed — P8b-3b: CH02B guard, triggerFolds stale guard, ACK on v2.3 and v2.3.1, v2.7.1 ORU_R01
 
 - A Conformance-chapter (CH02B, sections 2.B.x) print is never a structure's primary print; a

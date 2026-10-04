@@ -1,6 +1,6 @@
 // StructureLintCorpusTests.swift
 // P8b-3b measurement for the G1 decision: run every structure the extractor
-// parses (`extract-message-structures.py --dump DIR`, choice-free until
+// parses (`extract-message-structures.py --dump DIR`, choices included from
 // P8b-6) through the ADR-019 determinism lint and the reference-recogniser
 // property comparison, without committing any structure JSON. Reads
 // STRUCTURE_LINT_CORPUS/v<ver>/<ID>.json and writes lint-<ver>.tsv into the
@@ -24,6 +24,9 @@ struct StructureLintCorpusTests {
             let min = item["min"] as? Int ?? 1
             let max = item["max"] as? Int
             if let id = item["segment"] as? String { return .segment(id, min: min, max: max) }
+            if item.keys.contains("choice"), let alternatives = item["alternatives"] {
+                return .choice(item["choice"] as? String, min: min, max: max, alternatives: try elements(alternatives))
+            }
             guard let name = item["group"] as? String, let children = item["elements"] else {
                 throw DecodeError.shape("neither segment nor group: \(item)")
             }
@@ -31,12 +34,7 @@ struct StructureLintCorpusTests {
         }
     }
 
-    private static func name(_ element: StructureElement) -> String {
-        switch element {
-        case .segment(let id, _, _): return id
-        case .group(let group, _, _, _): return group
-        }
-    }
+    private static func name(_ element: StructureElement) -> String { element.label }
 
     /// Where an overlap's FOLLOW comes from: a later sibling group or segment
     /// (up to the next non-nullable one), or the enclosing level (the element
@@ -45,13 +43,13 @@ struct StructureLintCorpusTests {
     static func shape(_ elements: [StructureElement], _ overlap: StructureLint.Overlap) -> String {
         var level = elements
         for group in overlap.path.dropLast() {
-            guard case .group(_, _, _, let children)? = level.first(where: { name($0) == group }) else { return "other: path not found" }
-            level = children
+            guard let parent = level.first(where: { name($0) == group }), !parent.children.isEmpty else { return "other: path not found" }
+            level = parent.children
         }
         let ids = Set(overlap.segmentIDs)
         let label = "\(overlap.path.last ?? "?") vs \(ids.sorted().joined(separator: ","))"
         for (i, element) in level.enumerated() where name(element) == overlap.path.last {
-            let kind = element.groupName == nil ? "segment" : "group"
+            let kind = element.children.isEmpty ? "segment" : "group"
             for sibling in level[(i + 1)...] {
                 if !sibling.firstSet.isDisjoint(with: ids) {
                     if case .group(let g, _, _, _) = sibling {
@@ -70,13 +68,11 @@ struct StructureLintCorpusTests {
     /// DSC placement: "none", "last" (the last top-level element), or where it sits.
     static func dsc(_ elements: [StructureElement]) -> String {
         if case .segment("DSC", _, _)? = elements.last { return "last" }
-        if elements.contains(where: { name($0) == "DSC" && $0.groupName == nil }) { return "not-last-top-level" }
+        if elements.contains(where: { name($0) == "DSC" && $0.children.isEmpty }) { return "not-last-top-level" }
         func nested(_ list: [StructureElement]) -> Bool {
             list.contains { element in
-                if case .group(_, _, _, let children) = element {
-                    return children.contains { name($0) == "DSC" && $0.groupName == nil } || nested(children)
-                }
-                return false
+                let children = element.children
+                return children.contains { name($0) == "DSC" && $0.children.isEmpty } || nested(children)
             }
         }
         return nested(elements) ? "inside-group" : "none"

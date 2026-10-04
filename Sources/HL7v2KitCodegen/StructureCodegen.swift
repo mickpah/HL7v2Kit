@@ -24,18 +24,25 @@ func rejectUnknownKeys(_ decoder: any Decoder, allowed: Set<String>, in what: St
     }
 }
 
-/// One element of a structure file: exactly one of `segment` or `group`.
+/// One element of a structure file: exactly one of `segment`, `group` or `choice`. A choice
+/// (P8b-6) is `{"choice": "<name>" or null, "nameSource" (named only), "min", "max",
+/// "alternatives": [...]}`; the `choice` key is present even when the print gives no name.
 struct StructureElementSchema: Decodable {
     let segment: String?
     let group: String?
-    /// One of `structureNameSources`; required on a group (ADR-019 data model).
+    /// True when the `choice` key is present (its value may be null).
+    let isChoice: Bool
+    /// The printed choice name, or nil for an unnamed choice.
+    let choice: String?
+    /// One of `structureNameSources`; required on a group and a named choice (ADR-019 data model).
     let nameSource: String?
     let min: Int
     let max: Int?
     let elements: [StructureElementSchema]?
+    let alternatives: [StructureElementSchema]?
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case segment, group, nameSource, min, max, elements
+        case segment, group, choice, nameSource, min, max, elements, alternatives
     }
 
     init(from decoder: any Decoder) throws {
@@ -43,12 +50,15 @@ struct StructureElementSchema: Decodable {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         segment = try c.decodeIfPresent(String.self, forKey: .segment)
         group = try c.decodeIfPresent(String.self, forKey: .group)
+        isChoice = c.contains(.choice)
+        choice = try isChoice && !c.decodeNil(forKey: .choice) ? c.decode(String.self, forKey: .choice) : nil
         nameSource = try c.decodeIfPresent(String.self, forKey: .nameSource)
         min = try c.decode(Int.self, forKey: .min)
         // `max` is required: an integer, or null for unbounded.
         guard c.contains(.max) else { throw StructureSchemaError(description: "element: missing key \"max\"") }
         max = try c.decodeNil(forKey: .max) ? nil : c.decode(Int.self, forKey: .max)
         elements = try c.decodeIfPresent([StructureElementSchema].self, forKey: .elements)
+        alternatives = try c.decodeIfPresent([StructureElementSchema].self, forKey: .alternatives)
     }
 }
 
@@ -105,40 +115,56 @@ func requiredNameCitation(name: String, source: String, version: String) -> Stri
 /// Reject any element the runtime model cannot represent faithfully. `version` and `citation`
 /// are the file's: every non-printed group name must be cited.
 func validateStructureElement(_ element: StructureElementSchema, version: String, citation: String) throws {
-    let isSegment = element.segment != nil
-    let isGroup = element.group != nil
-    guard isSegment != isGroup else {
-        throw StructureSchemaError(description: "an element needs exactly one of \"segment\" or \"group\"")
+    let kinds = [element.segment != nil, element.group != nil, element.isChoice].filter { $0 }.count
+    guard kinds == 1 else {
+        throw StructureSchemaError(description: "an element needs exactly one of \"segment\", \"group\" or \"choice\"")
     }
     guard element.min >= 0, element.max.map({ $0 >= Swift.max(1, element.min) }) ?? true else {
         throw StructureSchemaError(description: "bad occurrence bounds min \(element.min) max \(String(describing: element.max))")
     }
     if let name = element.group {
-        guard matches(name, "^[A-Z][A-Z0-9_]*$") else {
-            throw StructureSchemaError(description: "bad group name \"\(name)\"")
-        }
-        guard let source = element.nameSource, structureNameSources.contains(source) else {
-            throw StructureSchemaError(description: "group \(name) needs nameSource one of \(structureNameSources)")
-        }
-        // v2.3 and v2.3.1 have no bundle: their names come through v2.4, and only theirs do.
-        guard (source == "v2xml-v2.4") == (source.hasPrefix("v2xml") && ["2.3", "2.3.1"].contains(version)) else {
-            throw StructureSchemaError(description: "group \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
-        }
-        if let needed = requiredNameCitation(name: name, source: source, version: version),
-           !citation.contains(needed) {
-            throw StructureSchemaError(description: "group \(name) (nameSource \(source)) is not cited: the citation lacks \"\(needed)\"")
-        }
-        guard let children = element.elements, !children.isEmpty else {
-            throw StructureSchemaError(description: "group \(name) has no elements")
+        try validateName(name, kind: "group", source: element.nameSource, version: version, citation: citation)
+        guard let children = element.elements, !children.isEmpty, element.alternatives == nil else {
+            throw StructureSchemaError(description: "group \(name) needs a non-empty \"elements\" and no \"alternatives\"")
         }
         for child in children { try validateStructureElement(child, version: version, citation: citation) }
+    } else if element.isChoice {
+        let what = element.choice.map { "choice \($0)" } ?? "unnamed choice"
+        if let name = element.choice {
+            try validateName(name, kind: "choice", source: element.nameSource, version: version, citation: citation)
+        } else if element.nameSource != nil {
+            throw StructureSchemaError(description: "an unnamed choice cannot have a nameSource")
+        }
+        guard let alternatives = element.alternatives, alternatives.count >= 2, element.elements == nil else {
+            throw StructureSchemaError(description: "\(what) needs at least two \"alternatives\" and no \"elements\"")
+        }
+        for alternative in alternatives { try validateStructureElement(alternative, version: version, citation: citation) }
     } else if let id = element.segment {
         guard matches(id, "^[A-Z][A-Z0-9]{2}$") else {
             throw StructureSchemaError(description: "bad segment ID \"\(id)\"")
         }
-        guard element.elements == nil, element.nameSource == nil else {
-            throw StructureSchemaError(description: "segment \(id) cannot have elements or a nameSource")
+        guard element.elements == nil, element.alternatives == nil, element.nameSource == nil else {
+            throw StructureSchemaError(description: "segment \(id) cannot have elements, alternatives or a nameSource")
         }
+    }
+}
+
+/// The name rules shared by groups and named choices: the pattern, an accepted `nameSource`, the
+/// v2.3/v2.3.1 bundle rule, and a citation for every name the print does not give.
+private func validateName(_ name: String, kind: String, source: String?, version: String, citation: String) throws {
+    guard matches(name, "^[A-Z][A-Z0-9_]*$") else {
+        throw StructureSchemaError(description: "bad \(kind) name \"\(name)\"")
+    }
+    guard let source, structureNameSources.contains(source) else {
+        throw StructureSchemaError(description: "\(kind) \(name) needs nameSource one of \(structureNameSources)")
+    }
+    // v2.3 and v2.3.1 have no bundle: their names come through v2.4, and only theirs do.
+    guard (source == "v2xml-v2.4") == (source.hasPrefix("v2xml") && ["2.3", "2.3.1"].contains(version)) else {
+        throw StructureSchemaError(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
+    }
+    if let needed = requiredNameCitation(name: name, source: source, version: version),
+       !citation.contains(needed) {
+        throw StructureSchemaError(description: "\(kind) \(name) (nameSource \(source)) is not cited: the citation lacks \"\(needed)\"")
     }
 }
 
@@ -165,6 +191,13 @@ func renderStructureElement(_ element: StructureElementSchema, indent: String) -
     let max = element.max.map(String.init) ?? "nil"
     if let id = element.segment {
         return "\(indent).segment(\(escapeStringLiteral(id)), min: \(element.min), max: \(max)),"
+    }
+    if element.isChoice {
+        let name = element.choice.map(escapeStringLiteral) ?? "nil"
+        var lines = ["\(indent).choice(\(name), min: \(element.min), max: \(max), alternatives: ["]
+        lines += (element.alternatives ?? []).map { renderStructureElement($0, indent: indent + "    ") }
+        lines.append("\(indent)]),")
+        return lines.joined(separator: "\n")
     }
     var lines = ["\(indent).group(\(escapeStringLiteral(element.group ?? "")), min: \(element.min), max: \(max), elements: ["]
     lines += (element.elements ?? []).map { renderStructureElement($0, indent: indent + "    ") }

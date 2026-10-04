@@ -252,4 +252,22 @@ struct SignatureCompatibilityTests {
         #expect(byID("ZZZ_Z01", .v2_5_1) == nil)
         #expect(byTrigger("ZZZ", "Z01", .v2_5_1).isEmpty)
     }
+
+    // Deliberate pin of new, unreleased API (P8b-6, ADR-019 amendment): the choice
+    // case of the open StructureElement enum and the tree walker that covers every
+    // case, so a consumer never silently skips the segments inside a choice.
+    @Test("StructureElement.choice, children and segmentIDs keep their signatures")
+    func structureChoiceAndWalker() {
+        let choice: (String?, Int, Int?, [StructureElement]) -> StructureElement =
+            StructureElement.choice(_:min:max:alternatives:)
+        let children: KeyPath<StructureElement, [StructureElement]> = \.children
+        let segmentIDs: KeyPath<StructureElement, Set<String>> = \.segmentIDs
+        let element = choice("RES", 0, nil, [
+            .segment("AIS", min: 1, max: 1),
+            .group("G", min: 1, max: 1, elements: [.segment("AIG", min: 1, max: 1)]),
+        ])
+        #expect(element[keyPath: children].count == 2)
+        #expect(element[keyPath: segmentIDs] == ["AIS", "AIG"])
+        #expect(element.min == 0 && element.max == nil)
+    }
 }

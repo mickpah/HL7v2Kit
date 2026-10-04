@@ -33,6 +33,10 @@ struct StructureMatcherPropertyTests {
                 frontier = Set(frontier.filter { $0 < ids.count && ids[$0] == id }.map { $0 + 1 })
             case .group(_, _, _, let children):
                 frontier = ends(children[...], ids, from: frontier)
+            case .choice(_, _, _, let alternatives):
+                // One occurrence takes exactly one alternative, any of them.
+                let current = frontier
+                frontier = alternatives.reduce(into: Set<Int>()) { $0.formUnion(ends(of: $1, ids, from: current)) }
             }
             count += 1
             if count >= element.min { result.formUnion(frontier) }
@@ -65,6 +69,7 @@ struct StructureMatcherPropertyTests {
             switch element {
             case .segment(let id, _, _): ids.insert(id)
             case .group(_, _, _, let children): children.forEach(walk)
+            case .choice(_, _, _, let alternatives): alternatives.forEach(walk)
             }
         }
         elements.forEach(walk)
@@ -83,6 +88,8 @@ struct StructureMatcherPropertyTests {
                 switch element {
                 case .segment(let id, _, _): return [id]
                 case .group(_, _, _, let children): return derive(children, &rng)
+                case .choice(_, _, _, let alternatives):
+                    return derive([alternatives.randomElement(using: &rng)!], &rng)
                 }
             }
         }
@@ -105,6 +112,7 @@ struct StructureMatcherPropertyTests {
             switch element {
             case .segment: return total + 1
             case .group(_, _, _, let children): return total + shortest(children)
+            case .choice(_, _, _, let alternatives): return total + (alternatives.map { shortest([$0]) }.min() ?? 0)
             }
         }
     }
@@ -181,6 +189,19 @@ struct StructureMatcherPropertyTests {
         let elements = try #require(StructureShapes.all.first { $0.name == name }).elements
         guard StructureMatcher.lint(elements).isDeterministic else { return }
         #expect(Self.disagreements(elements).prefix(3).map { $0.joined(separator: " ") } == [], "\(name)")
+    }
+
+    @Test("Choice shapes: the lint passes exactly on the three expected; their sequences are not vacuous")
+    func choiceShapes() {
+        let passing = StructureShapes.choices.filter { StructureMatcher.lint($0.elements).isDeterministic }.map(\.name)
+        #expect(passing == ["simpleChoice", "repeatingChoice", "namedChoice"])
+        for (name, elements) in StructureShapes.choices where passing.contains(name) {
+            let accepted = Self.sequences(elements).map { Self.referenceAccepts(elements, $0) }
+            #expect(accepted.contains(true) && accepted.contains(false), "\(name)")
+        }
+        #expect(Self.referenceAccepts(StructureShapes.simpleChoice, ["MSH", "B", "C"]))
+        #expect(!Self.referenceAccepts(StructureShapes.simpleChoice, ["MSH", "A", "B", "C"]))
+        #expect(Self.referenceAccepts(StructureShapes.namedChoice, ["MSH", "B", "N", "A", "N", "N", "C"]))
     }
 
     @Test("Ruling 3 shapes agree with the reference whether or not the lint passes")

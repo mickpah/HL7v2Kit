@@ -65,6 +65,13 @@ extension StructureMatcher {
     /// nothing. This holds whether or not E repeats; for a non-repeating E
     /// the only other parse inserts an instance boundary at E. The
     /// reference-recogniser property test is the guard on this rule.
+    ///
+    /// A choice is an element like any other here (its FIRST set is the
+    /// union of its alternatives'); each alternative is linted as the one
+    /// element of a sequence whose follow set is the choice's, with the
+    /// choice's re-entry when it repeats, and the choice rule
+    /// (`choiceConflicts`) adds its own conflicts. An unnamed choice is
+    /// named `<A|B>` in paths.
     /// Z-segments and ADD never appear in a structure, so they are not
     /// checked.
     static func lint(_ elements: [StructureElement]) -> StructureLint {
@@ -96,10 +103,9 @@ extension StructureMatcher {
                 follow.reentries = inherited.reentries
             }
             let first = element.firstSet
-            let name: String
-            switch element {
-            case .segment(let id, _, _): name = id
-            case .group(let group, _, _, _): name = group
+            let name = element.label
+            if case .choice(_, _, _, let alternatives) = element {
+                choiceConflicts(alternatives, path: path + [name], &conflicts)
             }
             if element.isNullable || element.max != 1 {
                 var hard = first.intersection(follow.plain)
@@ -124,19 +130,55 @@ extension StructureMatcher {
                     exempt.append(.init(path: path + [name], segmentIDs: entry.ids.sorted(), exemptVia: entry.group))
                 }
             }
-            if case .group(let group, _, let max, let children) = element {
+            let children = element.children
+            if !children.isEmpty {
+                let max = element.max
                 var childInherited = follow
                 for k in childInherited.reentries.indices {
                     childInherited.reentries[k].prefixNullable = childInherited.reentries[k].prefixNullable && levelNullable
                     childInherited.reentries[k].prefixFirst.formUnion(levelFirst)
                 }
                 if max == nil {
-                    childInherited.reentries.append(Reentry(group: group, first: first))
+                    childInherited.reentries.append(Reentry(group: name, first: first))
                 } else if max != 1 {
                     childInherited.plain.formUnion(first)
                 }
-                lintSequence(children, path: path + [group], inherited: childInherited, &conflicts, &exempt)
+                if case .choice = element {
+                    // Each alternative is the one element of its own sequence:
+                    // what follows it is what follows the choice.
+                    for alternative in children {
+                        lintSequence([alternative], path: path + [name], inherited: childInherited, &conflicts, &exempt)
+                    }
+                } else {
+                    lintSequence(children, path: path + [name], inherited: childInherited, &conflicts, &exempt)
+                }
             }
+        }
+    }
+
+    /// The choice rule (P8b-6): the one-pass matcher picks an alternative by
+    /// the current segment alone, so the alternatives' FIRST sets must be
+    /// pairwise disjoint; and no alternative may be nullable, since an empty
+    /// occurrence could then be taken through it or through the choice's own
+    /// bounds, and the matcher does not decide between them. Overlapping
+    /// segments are reported at the choice; a nullable alternative at the
+    /// alternative, with its FIRST set.
+    private static func choiceConflicts(
+        _ alternatives: [StructureElement],
+        path: [String],
+        _ conflicts: inout [StructureLint.Overlap]
+    ) {
+        var seen: Set<String> = []
+        var shared: Set<String> = []
+        for alternative in alternatives {
+            shared.formUnion(seen.intersection(alternative.firstSet))
+            seen.formUnion(alternative.firstSet)
+        }
+        if !shared.isEmpty {
+            conflicts.append(.init(path: path, segmentIDs: shared.sorted(), exemptVia: nil))
+        }
+        for alternative in alternatives where alternative.isNullable {
+            conflicts.append(.init(path: path + [alternative.label], segmentIDs: alternative.firstSet.sorted(), exemptVia: nil))
         }
     }
 }

@@ -107,6 +107,48 @@ struct StructureLintTests {
         #expect(StructureMatcher.lint(StructureShapes.nullableFollow).conflicts == [overlap(["X"], ["X"])])
     }
 
+    // MARK: - Choices (P8b-6)
+
+    @Test("<A|B> with disjoint alternatives passes")
+    func simpleChoice() {
+        let result = StructureMatcher.lint(StructureShapes.simpleChoice)
+        #expect(result.conflicts.isEmpty)
+        #expect(result.exempt.isEmpty)
+    }
+
+    @Test("[{<A|{B}>}]: B against the choice's own re-entry is exempt, like a group's")
+    func repeatingChoice() {
+        let result = StructureMatcher.lint(StructureShapes.repeatingChoice)
+        #expect(result.conflicts.isEmpty)
+        #expect(result.exempt == [overlap(["<A|B>", "B"], ["B"], via: "<A|B>")])
+    }
+
+    @Test("A named choice of groups: the trailing N meets only the choice's re-entry, which N cannot begin")
+    func namedChoice() {
+        let result = StructureMatcher.lint(StructureShapes.namedChoice)
+        #expect(result.conflicts.isEmpty)
+        #expect(result.exempt.isEmpty)
+    }
+
+    @Test("Two alternatives that can begin with the same segment are a conflict")
+    func overlappingChoice() {
+        let result = StructureMatcher.lint(StructureShapes.overlappingChoice)
+        #expect(result.conflicts == [overlap(["<A|G>"], ["A"])])
+    }
+
+    @Test("A nullable alternative is a conflict: the one-pass matcher cannot attribute an empty occurrence")
+    func optionalAlternatives() {
+        let result = StructureMatcher.lint(StructureShapes.optionalAlternatives)
+        #expect(!result.isDeterministic)
+        #expect(result.conflicts.contains(overlap(["<A|B>", "A"], ["A"])))
+        #expect(result.conflicts.contains(overlap(["<A|B>", "B"], ["B"])))
+    }
+
+    @Test("An optional choice is checked against its FOLLOW like any element")
+    func choiceThenSibling() {
+        #expect(StructureMatcher.lint(StructureShapes.choiceThenSibling).conflicts == [overlap(["<A|B>"], ["A"])])
+    }
+
     @Test("A required group of optional children followed by a required segment passes")
     func nullableGroup() {
         let result = StructureMatcher.lint(StructureShapes.nullableGroup)

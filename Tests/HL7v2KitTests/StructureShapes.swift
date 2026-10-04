@@ -83,11 +83,71 @@ enum StructureShapes {
         seg("C", 1, 1),
     ]
 
+    // MARK: - Choices (P8b-6)
+
+    /// `MSH <A|B> C`: the brief's plain choice.
+    static let simpleChoice: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice(nil, min: 1, max: 1, alternatives: [seg("A", 1, 1), seg("B", 1, 1)]),
+        seg("C", 1, 1),
+    ]
+
+    /// `MSH [{<A|{B}>}] C`: a repeating optional choice whose second
+    /// alternative repeats (its B meets the choice's own re-entry).
+    static let repeatingChoice: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice(nil, min: 0, max: nil, alternatives: [seg("A", 1, 1), seg("B", 1, nil)]),
+        seg("C", 1, 1),
+    ]
+
+    /// `MSH {RES: <GA: A [{N}] | GB: B [{N}]>} C`: a named repeating choice of
+    /// two groups (the v2.7.1-on named form).
+    static let namedChoice: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice("RES", min: 1, max: nil, alternatives: [
+            .group("GA", min: 1, max: 1, elements: [seg("A", 1, 1), seg("N", 0, nil)]),
+            .group("GB", min: 1, max: 1, elements: [seg("B", 1, 1), seg("N", 0, nil)]),
+        ]),
+        seg("C", 1, 1),
+    ]
+
+    /// `MSH <A | G: A B> C`: two alternatives can begin with A.
+    static let overlappingChoice: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice(nil, min: 1, max: 1, alternatives: [
+            seg("A", 1, 1),
+            .group("G", min: 1, max: 1, elements: [seg("A", 1, 1), seg("B", 1, 1)]),
+        ]),
+        seg("C", 1, 1),
+    ]
+
+    /// `MSH {<[A] | [{B}]>} C`: the pre-flight's choice with optional
+    /// alternatives (v2.6 EHC_E01 INVOICE_INFORMATION's form).
+    static let optionalAlternatives: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice(nil, min: 1, max: nil, alternatives: [seg("A", 0, 1), seg("B", 0, nil)]),
+        seg("C", 1, 1),
+    ]
+
+    /// `MSH [<A|B>] {[A]}`: an optional choice followed by A, a plain
+    /// FIRST/FOLLOW conflict on the choice itself.
+    static let choiceThenSibling: [StructureElement] = [
+        seg("MSH", 1, 1),
+        .choice(nil, min: 0, max: 1, alternatives: [seg("A", 1, 1), seg("B", 1, 1)]),
+        seg("A", 0, nil),
+    ]
+
+    static let choices: [(name: String, elements: [StructureElement])] = [
+        ("simpleChoice", simpleChoice), ("repeatingChoice", repeatingChoice),
+        ("namedChoice", namedChoice), ("overlappingChoice", overlappingChoice),
+        ("optionalAlternatives", optionalAlternatives), ("choiceThenSibling", choiceThenSibling),
+    ]
+
     static let all: [(name: String, elements: [StructureElement])] = [
         ("trailingThenSibling", trailingThenSibling), ("preV25", preV25),
         ("allOptionalGroup", allOptionalGroup), ("nullablePrefix", nullablePrefix),
         ("counterExample", counterExample), ("prefixBeginsWithSegment", prefixBeginsWithSegment),
         ("finiteEnclosing", finiteEnclosing), ("nullableFollow", nullableFollow),
         ("nullableGroup", nullableGroup),
-    ]
+    ] + choices
 }

@@ -4,65 +4,109 @@
 // maximum occurrence. Data lives in Resources/structures/ and is emitted
 // into MessageStructureTable by HL7v2KitCodegen; nothing is parsed at runtime.
 
-/// One element of an abstract message syntax: a segment or a segment group.
+/// One element of an abstract message syntax: a segment, a segment group,
+/// or a choice between alternatives.
 ///
 /// `min` is 0 for an optional element (`[ ]`) and 1 otherwise; `max` is `nil`
 /// for a repeating element (`{ }`) and 1 otherwise (v2.5.1 CH02 section 2.5.2).
 /// The print's `{[X]}` reads the same as `[{X}]`: `min` 0, `max` `nil`.
 ///
 /// - Note: This is an **open** enum per the API evolution policy (ADR-014):
-///   a later release adds cases (ADR-019 plans a choice between
-///   alternatives before the first modelled version that prints
-///   `< X | Y >`). Code that walks the tree must handle `@unknown default`
-///   and should not assume it has seen every segment ID the structure
-///   allows.
+///   a later release may add cases, as P8b-6 added ``choice(_:min:max:alternatives:)``.
+///   Code that walks the tree must handle `@unknown default`; ``children``
+///   and ``segmentIDs`` cover every case, so a walker that recurses through
+///   them never skips the segments inside a case it does not know.
 public indirect enum StructureElement: Sendable, Equatable, Hashable {
     /// A segment, by its three-character ID.
     case segment(String, min: Int, max: Int?)
     /// A named segment group and its ordered elements.
     case group(String, min: Int, max: Int?, elements: [StructureElement])
+    /// One of several alternatives, printed `< A | B >`: each occurrence
+    /// takes exactly one alternative (v2.5.1 CH02 section 2.5.2). The name
+    /// is the one the print gives (named choices appear from v2.7.1), or
+    /// nil; `alternatives` holds at least two elements, each with its own
+    /// occurrence bounds.
+    case choice(String?, min: Int, max: Int?, alternatives: [StructureElement])
 
     /// The minimum number of occurrences: 0 for an optional element.
     public var min: Int {
         switch self {
-        case .segment(_, let min, _), .group(_, let min, _, _): return min
+        case .segment(_, let min, _), .group(_, let min, _, _), .choice(_, let min, _, _): return min
         }
     }
 
     /// The maximum number of occurrences; `nil` when unbounded.
     public var max: Int? {
         switch self {
-        case .segment(_, _, let max), .group(_, _, let max, _): return max
+        case .segment(_, _, let max), .group(_, _, let max, _), .choice(_, _, let max, _): return max
         }
     }
 
-    /// The group name, or nil for a segment.
-    var groupName: String? {
-        if case .group(let name, _, _, _) = self { return name }
-        return nil
+    /// The elements directly inside this one: a group's elements in order,
+    /// a choice's alternatives in order, and none for a segment.
+    public var children: [StructureElement] {
+        switch self {
+        case .segment: return []
+        case .group(_, _, _, let elements): return elements
+        case .choice(_, _, _, let alternatives): return alternatives
+        }
     }
 
-    /// The segment IDs that can begin one occurrence of this element.
+    /// Every segment ID this element can contain, at any depth and in any
+    /// alternative.
+    public var segmentIDs: Set<String> {
+        if case .segment(let id, _, _) = self { return [id] }
+        return children.reduce(into: Set<String>()) { $0.formUnion($1.segmentIDs) }
+    }
+
+    /// The group or choice name, or nil for a segment and an unnamed choice.
+    var groupName: String? {
+        switch self {
+        case .segment: return nil
+        case .group(let name, _, _, _): return name
+        case .choice(let name, _, _, _): return name
+        }
+    }
+
+    /// How the lint names this element in a path: the segment ID, the group
+    /// or choice name, or `<A|B>` (the alternatives' labels) for an unnamed choice.
+    var label: String {
+        switch self {
+        case .segment(let id, _, _): return id
+        case .group(let name, _, _, _): return name
+        case .choice(let name, _, _, let alternatives):
+            return name ?? "<" + alternatives.map(\.label).joined(separator: "|") + ">"
+        }
+    }
+
+    /// The segment IDs that can begin one occurrence of this element; for a
+    /// choice, the union over its alternatives.
     var firstSet: Set<String> {
         switch self {
         case .segment(let id, _, _): return [id]
         case .group(_, _, _, let elements): return StructureElement.firstSet(of: elements[...])
+        case .choice(_, _, _, let alternatives):
+            return alternatives.reduce(into: Set<String>()) { $0.formUnion($1.firstSet) }
         }
     }
 
     /// Whether this element can match no segment at all: it is optional, or
-    /// it is a group all of whose elements are nullable.
+    /// it is a group all of whose elements are nullable, or a choice one of
+    /// whose alternatives is nullable.
     var isNullable: Bool {
         switch self {
         case .segment(_, let min, _):
             return min == 0
         case .group(_, let min, _, let elements):
             return min == 0 || elements.allSatisfy(\.isNullable)
+        case .choice(_, let min, _, let alternatives):
+            return min == 0 || alternatives.contains(where: \.isNullable)
         }
     }
 
     /// The segment reported when this element is required and absent: the
-    /// first non-nullable segment it contains, or its first segment.
+    /// first non-nullable segment it contains, or its first segment; for a
+    /// choice, its first alternative's.
     var headSegmentID: String {
         switch self {
         case .segment(let id, _, _):
@@ -70,6 +114,8 @@ public indirect enum StructureElement: Sendable, Equatable, Hashable {
         case .group(_, _, _, let elements):
             let head = elements.first { !$0.isNullable } ?? elements.first
             return head?.headSegmentID ?? ""
+        case .choice(_, _, _, let alternatives):
+            return alternatives.first?.headSegmentID ?? ""
         }
     }
 

@@ -208,6 +208,74 @@ os.mkdir(os.path.join(S, 'overrides.json'))"
 reject "profiles as a file" 'unexpected entry' "$PRE
 save('profiles', {})"
 
+# P8b-6: the choice element. ACK's MSA becomes a choice; an accepted choice must render as one.
+CH='
+def ack_choice(**fields):
+    d = load("v2.5.1/ACK.json")
+    msa = d["elements"][2]
+    c = {"choice": None, "min": 1, "max": 1, "alternatives": [msa, {"segment": "UAC", "min": 1, "max": 1}]}
+    c.update(fields)
+    for k in [k for k, v in fields.items() if v == "DROP"]: del c[k]
+    d["elements"][2] = c
+    save("v2.5.1/ACK.json", d)
+    return d
+'
+
+# accept_rendering <label> <text the generated v2.5.1 table must contain> <change>
+accept_rendering() {
+  local label="$1" expected="$2" change="$3"
+  local dir="$SCRATCH/case$cases"
+  accept "$label" "$change"
+  if [[ -d "$dir/out" ]] && ! grep -qF "$expected" "$dir/out/Structures/Generated/MessageStructureTable+v2_5_1.swift"; then
+    echo "FAIL $label: the generated table lacks $expected"
+    failures=$((failures + 1))
+  fi
+}
+
+accept_rendering "unnamed choice renders as .choice(nil, ...)" '.choice(nil, min: 1, max: 1, alternatives: [' "$PRE$CH
+ack_choice()"
+
+accept_rendering "named choice with a printed name renders its name" '.choice("ACKNOWLEDGMENT", min: 0, max: nil, alternatives: [' "$PRE$CH
+ack_choice(choice='ACKNOWLEDGMENT', nameSource='printed', min=0, max=None)"
+
+accept "an unnamed choice as an alternative of a choice" "$PRE$CH
+d = ack_choice(); c = d['elements'][2]
+c['alternatives'][1] = {'choice': None, 'min': 1, 'max': 1, 'alternatives': [{'segment': 'UAC', 'min': 1, 'max': 1}, {'segment': 'ERR', 'min': 1, 'max': 1}]}
+save('v2.5.1/ACK.json', d)"
+
+reject "choice with one alternative" 'needs at least two "alternatives"' "$PRE$CH
+d = ack_choice(); d['elements'][2]['alternatives'].pop(); save('v2.5.1/ACK.json', d)"
+
+reject "choice with no alternatives" 'needs at least two "alternatives"' "$PRE$CH
+ack_choice(alternatives=[])"
+
+reject "choice with elements in place of alternatives" 'needs at least two "alternatives"' "$PRE$CH
+d = ack_choice(); c = d['elements'][2]; c['elements'] = c.pop('alternatives'); save('v2.5.1/ACK.json', d)"
+
+reject "choice with max 0" 'bad occurrence bounds' "$PRE$CH
+ack_choice(min=0, max=0)"
+
+reject "element that is both a choice and a group" 'exactly one of "segment", "group" or "choice"' "$PRE$CH
+ack_choice(group='X', nameSource='printed')"
+
+reject "unnamed choice with a nameSource" 'unnamed choice cannot have a nameSource' "$PRE$CH
+ack_choice(nameSource='printed')"
+
+reject "named choice without nameSource" 'choice ACKNOWLEDGMENT needs nameSource' "$PRE$CH
+ack_choice(choice='ACKNOWLEDGMENT')"
+
+reject "named choice with a bad name" 'bad choice name' "$PRE$CH
+ack_choice(choice='ack-x', nameSource='printed')"
+
+reject "named choice from a bundle the citation does not cite" 'choice ACKNOWLEDGMENT (nameSource v2xml) is not cited' "$PRE$CH
+ack_choice(choice='ACKNOWLEDGMENT', nameSource='v2xml')"
+
+reject "a bad segment inside an alternative" 'bad segment ID' "$PRE$CH
+d = ack_choice(); d['elements'][2]['alternatives'][1]['segment'] = 'uac'; save('v2.5.1/ACK.json', d)"
+
+reject "segment with alternatives" 'cannot have elements, alternatives or a nameSource' "$PRE
+d = load('v2.5.1/ACK.json'); d['elements'][2]['alternatives'] = []; save('v2.5.1/ACK.json', d)"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

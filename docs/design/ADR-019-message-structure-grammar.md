@@ -881,3 +881,44 @@ scoped as its own plan by P8-9 with an owner gate, starting with the extractor (
   captions `MFN^M01-M06^MFN_M01` (v2.4) and `MFR^M01-M17^MFR_M01` (v2.5.1, v2.6), which put
   M02 to M07 under the generic structure as well as their own. Table 0354 is reconciled per version: a printed structure ID the table lacks
   (`0354-missing-row`) and a row no normative print carries (`0354-missing-caption`).
+
+## Amendment 2026-10-04 — the choice element (P8b-6)
+
+The print uses `< A | B >` from v2.4 on (v2.5.1 CH02 section 2.5.2: "one of the segments or
+groups ... may be present"). The data model gains the element the "Data model" section
+promised before the first version that prints one.
+
+- **Model.** `StructureElement.choice(_ name: String?, min:, max:, alternatives:)`. Each
+  occurrence takes exactly one alternative; each alternative keeps its own bounds. The name
+  is the one the print gives (named choices appear from v2.7.1 on, between `--- NAME begin`
+  and `--- NAME end`) or nil. FIRST of a choice is the union of its alternatives' FIRST
+  sets; a choice is nullable when its minimum is 0 or any alternative is nullable; its head
+  segment (reported when a required choice is absent) is the first alternative's.
+- **Walker.** `children` (a group's elements, a choice's alternatives, none for a segment)
+  and `segmentIDs` (every segment ID at any depth) are public and cover every case, so a
+  consumer that recurses through them, with `@unknown default` in any switch, never skips
+  the segments inside a case it does not know (the pilot final review's carry-in).
+- **Matcher.** A choice occurrence takes the alternative whose FIRST set holds the current
+  segment and matches it as a one-element sequence whose follow set is the choice's own
+  follow plus the choice's FIRST set (another alternative's segment is left to the choice,
+  where it re-enters a repeating choice or is a stray past the maximum). A named choice
+  opens a group span per occurrence and names a `.missing` finding for the choice itself;
+  an unnamed choice opens no span and adds nothing to a path.
+- **Lint.** Two rules on top of the single FIRST/FOLLOW rule, which applies to a choice
+  like any element: (1) the alternatives' FIRST sets must be pairwise disjoint (the matcher
+  picks by the current segment alone); (2) no alternative may be nullable. Rule 2 is
+  conservative: an empty occurrence could be taken through the nullable alternative or the
+  choice's own bounds, and the one-pass matcher does not decide between them. On the
+  synthetic shape `MSH {<[A] | [{B}]>} C` the matcher and the reference recogniser still
+  agree on all 9,841 sequences, so rule 2 may be relaxed later with the property test as the
+  guard; until then such structures (the pre-flight scan predicts eight per version from v2.6)
+  go to the exact matcher (P8b-12, G15). Each alternative is linted as the one element of a
+  sequence that inherits the choice's follow set and, when the choice repeats, its re-entry
+  (so the prefix-condition exemption applies to a repeating choice as to a repeating group).
+  An unnamed choice is named `<A|B>` (its alternatives' labels) in lint paths.
+- **JSON.** `{"choice": "<NAME>" | null, "nameSource": ..., "min": n, "max": n | null,
+  "alternatives": [ ... ]}`. The `choice` key is present even when the print gives no name;
+  `nameSource` is required on a named choice (the group rules apply: accepted values, the
+  v2.3/v2.3.1 bundle rule, a citation for a non-printed name) and forbidden on an unnamed one;
+  at least two alternatives; `elements` is not allowed on a choice nor `alternatives` on a
+  group or segment. Rendered as `.choice(nil, ...)` or `.choice("NAME", ...)`.
