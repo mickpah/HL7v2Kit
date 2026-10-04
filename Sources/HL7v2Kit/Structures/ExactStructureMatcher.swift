@@ -105,7 +105,7 @@ struct ExactAutomaton: Sendable {
     /// For a segment state, the groups enclosing it, outermost first.
     private(set) var ancestry: [[Int]] = []
     /// The groups and named choices, by structure position.
-    private(set) var groupTable: [(name: String, position: [Int], members: Set<String>)] = []
+    private(set) var groupTable: [(name: String, position: [Int])] = []
     private(set) var edges: [[Int]] = []
     private(set) var start = 0
     private(set) var accept = 0
@@ -153,9 +153,9 @@ struct ExactAutomaton: Sendable {
     }
 
     /// The table index of the group or named choice at `position`.
-    private mutating func groupID(_ name: String, _ position: [Int], _ members: Set<String>) -> Int {
+    private mutating func groupID(_ name: String, _ position: [Int]) -> Int {
         if let id = groupTable.firstIndex(where: { $0.position == position }) { return id }
-        groupTable.append((name, position, members))
+        groupTable.append((name, position))
         return groupTable.count - 1
     }
 
@@ -180,7 +180,7 @@ struct ExactAutomaton: Sendable {
             return exit
         case .group(let name, _, _, let children):
             let exit = add(nil, group: nil)
-            let id = groupID(name, position, element.segmentIDs)
+            let id = groupID(name, position)
             let start = entry(id, from: from)
             link(children.indices.reduce(start) {
                 self.element(children[$1], from: $0, group: name, position: position + [$1], ancestry: ancestry + [id])
@@ -190,7 +190,7 @@ struct ExactAutomaton: Sendable {
             let exit = add(nil, group: nil)
             var start = from, inner = ancestry
             if let name {
-                let id = groupID(name, position, element.segmentIDs)
+                let id = groupID(name, position)
                 start = entry(id, from: from)
                 inner.append(id)
             }

@@ -260,7 +260,7 @@ public struct Validator: Sendable {
                     return conditionTriggers(
                         activation,
                         in: seg,
-                        segmentIndex: group.startIndex + offset,
+                        segmentIndex: group.indices[offset],
                         message: message,
                         currentSegmentID: seg.segmentID
                     )
@@ -294,7 +294,7 @@ public struct Validator: Sendable {
                     matches += 1
                     continue
                 }
-                let absoluteIndex = group.startIndex + offset
+                let absoluteIndex = group.indices[offset]
                 if conditionTriggers(
                     rule.predicate,
                     in: seg,
@@ -349,15 +349,20 @@ public struct Validator: Sendable {
         }
     }
 
-    /// Resolved group boundaries for a `GroupScope` anchored at
-    /// `anchorIndex`. `startIndex` and `headIndex` are 0-based indices
-    /// into `message.segments`; `segments` is the group's segments in
-    /// document order (inclusive of the head, exclusive of the next
-    /// group's head).
+    /// Resolved group for a `GroupScope` anchored at `anchorIndex`.
+    /// `indices` are the group's 0-based indices into `message.segments`
+    /// in document order (contiguous under the walk; with spans, the
+    /// anchor's own occurrence without nested pairing groups, P8b-17);
+    /// `headIndex` is the first; `segments` are the segments at `indices`.
     private struct ResolvedGroup {
-        let startIndex: Int
-        let headIndex: Int
+        let indices: [Int]
         let segments: [Segment]
+        var headIndex: Int { indices.first ?? 0 }
+
+        init(indices: [Int], in all: [Segment]) {
+            self.indices = indices
+            self.segments = indices.map { all[$0] }
+        }
     }
 
     private func resolveGroup(
@@ -369,18 +374,14 @@ public struct Validator: Sendable {
         guard anchorIndex >= 0, anchorIndex < segs.count else { return nil }
         switch scope {
         case .messageWide:
-            return ResolvedGroup(startIndex: 0, headIndex: 0, segments: segs)
+            return ResolvedGroup(indices: Array(segs.indices), in: segs)
         case .orcObxGroup:
-            let range = spanRange(message, around: anchorIndex, containing: "ORC")
-                ?? message.orcGroupRange(around: anchorIndex)
-            return ResolvedGroup(
-                startIndex: range.lowerBound,
-                headIndex: range.lowerBound,
-                segments: Array(segs[range])
-            )
+            let indices = spanContext(message, around: anchorIndex, for: "ORC")
+                ?? Array(message.orcGroupRange(around: anchorIndex))
+            return ResolvedGroup(indices: indices, in: segs)
         case .obrObxGroup:
-            if let range = spanRange(message, around: anchorIndex, containing: "OBR") {
-                return ResolvedGroup(startIndex: range.lowerBound, headIndex: range.lowerBound, segments: Array(segs[range]))
+            if let indices = spanContext(message, around: anchorIndex, for: "OBR") {
+                return ResolvedGroup(indices: indices, in: segs)
             }
             var head = anchorIndex
             while head > 0 && segs[head].segmentID != "OBR" {
@@ -394,16 +395,16 @@ public struct Validator: Sendable {
                     && segs[end].segmentID != "ORC" {
                 end += 1
             }
-            return ResolvedGroup(startIndex: head, headIndex: head, segments: Array(segs[head..<end]))
+            return ResolvedGroup(indices: Array(head..<end), in: segs)
         }
     }
 
-    /// With group spans (P8b-17), the innermost group instance around
-    /// `index` whose definition contains `id` (the whole message at the top
-    /// level); nil when the message has no spans.
-    private func spanRange(_ message: Message, around index: Int, containing id: String) -> Range<Int>? {
+    /// With group spans (P8b-17), the anchor's pairing context for `id`
+    /// (`GroupSpanIndex.context(around:of:for:)`); nil when the message has
+    /// no spans.
+    private func spanContext(_ message: Message, around index: Int, for id: String) -> [Int]? {
         guard case .spans(let spans) = message.groupScoping else { return nil }
-        return spans.range(around: index, containing: id)
+        return spans.context(around: index, of: message.segments[index].segmentID, for: id)
     }
 
     /// The segment grammar table for `version` (ADR-018 substitution for

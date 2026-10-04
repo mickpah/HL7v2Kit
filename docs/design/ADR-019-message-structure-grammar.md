@@ -545,7 +545,8 @@ The group-span index **coexists with and supersedes** the walk, per message:
    - `associatedSegment(_:fromIndex:)` / `segmentExists(_:inGroupOf:)`: from the innermost
      group instance containing the anchor segment, walk outward to the first enclosing
      group whose definition contains the peer segment ID at any depth; search that
-     instance's span. At top level, the whole message.
+     instance's span. At top level, the whole message. (Corrected in P8b-17 fix round 1:
+     nested groups that pair their own segments are excluded; see that amendment.)
    - `resolveGroup(scope:)`: `.orcObxGroup` and `.obrObxGroup` resolve to the innermost
      group instance containing the anchor whose definition contains ORC (or OBR
      respectively); `.messageWide` is unchanged.
@@ -1365,10 +1366,27 @@ and fixtures, only the quoted condition text where a gate leg was removed.
   `Validator.validate(_:)` sets on its own copy before any check, whatever
   `messageStructureSeverity` is: `.spans` (a `GroupSpanIndex`), `.walk`, or `.gated`.
   `associatedSegment(_:fromIndex:)` (and so `segmentExists`, every cross-segment field ref and
-  the position atom), `resolveGroup(scope:)` and `checkOrcObrPairEquality` ask it first. The peer
-  rule is the one above: the innermost matched group instance around the anchor whose definition
-  contains the peer's segment ID at any depth, else the whole message. `.orcObxGroup` and
-  `.obrObxGroup` use it with ORC and OBR. No public API changes.
+  the position atom), `resolveGroup(scope:)` and `checkOrcObrPairEquality` ask it first.
+  `.orcObxGroup` and `.obrObxGroup` use the peer rule below with ORC and OBR. No public API
+  changes.
+- **The peer rule: the anchor's own group occurrence (fix round 1).** The rule first shipped
+  ("the innermost instance whose definition contains the peer at any depth; search its span")
+  misfired on conformant messages: OML_O21, OML_O33 and OML_O35 nest PRIOR_RESULT
+  `{ ORDER_PRIOR { [ORC] OBR ... } }` inside the order's OBSERVATION_REQUEST (v2.5.1 CH04 4.4.6,
+  4.4.8, 4.4.10), so the order's OBR found OBSERVATION_REQUEST and took the prior result's ORC,
+  and an OBX's OBR group took in the prior-result segments. The rule now: a *boundary* is a
+  group instance whose own level (its segments and those of unnamed choices in it, not those of
+  nested groups) holds the anchor's segment ID; it pairs its own segments. Walk outward from the
+  innermost instance containing the anchor; stop at the first level whose definition holds the
+  peer outside every nested boundary group other than the one the anchor is in (the top level
+  always stops). The peer, or the `.orcObxGroup` / `.obrObxGroup` group, is taken from that
+  level's instance (the whole message at the top) minus every nested boundary instance that does
+  not contain the anchor; a level that defines the peer but holds none answers "absent". So a
+  peer comes from the anchor's own occurrence, or from a non-pairing group nested in it (the
+  COMMON_ORDER `{ ORC ... }` that v2.8.2 nests in ORDER `{ OBR ... }`), never from another
+  occurrence or a nested pairing group, in every direction (OBR to ORC, ORC to OBR, OBX to OBR,
+  pair equality). `GroupSpanIndex.context(around:of:for:)`; each span keeps its structure
+  position and the index reads the definition there.
 - **When spans are used.** The version is complete, the structure resolves (lookup rules 1 to
   4), the message is not a fragment, the base match has no finding, and the match does not
   withhold its spans (below). "No finding" is the base match before any profile structure

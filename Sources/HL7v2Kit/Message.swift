@@ -162,9 +162,10 @@ public struct Message: Sendable, Equatable, Hashable {
     /// Resolve the segment of `id` "associated" with the segment at
     /// `fromIndex`, per ADR-008's ORC/OBR group semantics.
     ///
-    /// With group spans (P8b-17, ADR-019) the group is the innermost
-    /// matched group instance around `fromIndex` whose definition contains
-    /// `id`, or the whole message at the top level. Otherwise it is
+    /// With group spans (P8b-17, ADR-019) the group is the anchor's own
+    /// group occurrence (`GroupSpanIndex.context(around:of:for:)`): the
+    /// first enclosing instance whose definition pairs `id`, without the
+    /// nested groups that pair their own segments. Otherwise it is
     /// delimited by ORC segments: the group head is the
     /// most recent ORC at or before `fromIndex`; the group ends at the
     /// next ORC (or the end of the segment list). The first segment of
@@ -182,11 +183,11 @@ public struct Message: Sendable, Equatable, Hashable {
     /// The message index of `associatedSegment(_:fromIndex:)`.
     func associatedIndex(_ id: String, fromIndex: Int) -> Int? {
         guard fromIndex >= 0, fromIndex < segments.count else { return nil }
-        let range: Range<Int>
+        let range: [Int]
         if case .spans(let index) = groupScoping {
-            range = index.range(around: fromIndex, containing: id)
+            range = index.context(around: fromIndex, of: segments[fromIndex].segmentID, for: id)
         } else {
-            range = orcGroupRange(around: fromIndex)
+            range = Array(orcGroupRange(around: fromIndex))
         }
         return range.first { $0 != fromIndex && segments[$0].segmentID == id }
     }

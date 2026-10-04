@@ -61,13 +61,14 @@ extension Validator {
               let structure = resolveStructure(message, severity: .info).structure,
               fragmentReason(message, structure: structure) == nil
         else { return nil }
-        return Self.spanIndex(structureMatch(structure, message: message), segmentCount: message.segments.count)
+        return Self.spanIndex(structureMatch(structure, message: message), structure: structure,
+                              ids: message.segments.map(\.segmentID))
     }
 
-    /// The span index of `match`, or nil when it has a finding or withholds
-    /// its spans.
-    static func spanIndex(_ match: StructureMatch, segmentCount: Int) -> GroupSpanIndex? {
+    /// The span index of `match` against `structure`, or nil when it has a
+    /// finding or withholds its spans.
+    static func spanIndex(_ match: StructureMatch, structure: MessageStructure, ids: [String]) -> GroupSpanIndex? {
         guard match.findings.isEmpty, !match.spansWithheld else { return nil }
-        return GroupSpanIndex(spans: match.spans, segmentCount: segmentCount)
+        return GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
     }
 }

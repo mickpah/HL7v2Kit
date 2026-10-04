@@ -50,8 +50,6 @@ struct GroupSpan: Sendable, Equatable, CustomStringConvertible {
     /// not the name, identifies the group: v2.4 REF_I12 prints two sibling
     /// PATIENT_VISIT groups (P8b-17).
     var position: [Int] = []
-    /// Every segment ID the group's definition contains, at any depth.
-    var members: Set<String> = []
 
     var name: String { path.last ?? "" }
     var description: String { "\(path.joined(separator: "/")) \(indices)" }
@@ -114,7 +112,7 @@ struct StructureMatcher: Sendable {
         matchSequence(root, path: [], parent: nil, follow: [], &state)
         return StructureMatch(findings: state.findings, spans: state.spans.map {
             GroupSpan(path: $0.path, indices: $0.start...$0.end, parent: $0.parent,
-                      position: $0.item.position, members: $0.item.element.segmentIDs)
+                      position: $0.item.position)
         })
     }
 

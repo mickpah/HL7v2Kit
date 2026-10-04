@@ -106,7 +106,7 @@ extension ExactAutomaton {
         return spans.indices.map { i in
             let group = groupTable[spans[i].group]
             return GroupSpan(path: paths[i], indices: spans[i].start...spans[i].end, parent: spans[i].parent,
-                             position: group.position, members: group.members)
+                             position: group.position)
         }
     }
 }

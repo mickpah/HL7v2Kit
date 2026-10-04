@@ -12,9 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default output changes on purpose (ADR-019 decision 5): on every complete version a message
   whose structure matches cleanly has its ORC/OBR peers, segment-presence atoms, ORC/OBR pair
   equality and group-scope cardinality rules scoped by the matched group instances, whatever
-  `messageStructureSeverity` is. Otherwise the ORC walk is used as before.
-- The P4-7 and P10-5a `messageCode not in (...)` gates are removed from ORC-2, ORC-3, ORC-8,
-  OBR-2, OBR-3 and OBR-29 on v2.5.1, v2.6, v2.7.1 and v2.8.2: OUL^R21 to R24, OPU^R25 and
+  `messageStructureSeverity` is. A peer is taken from the segment's own group occurrence,
+  never from a nested group that pairs its own ORC and OBR (the prior results of OML_O21,
+  OML_O33 and OML_O35). Otherwise the ORC walk is used as before.
+- The P4-7 and P10-5a `messageCode not in (...)` gates are removed: from ORC-2, ORC-3, ORC-8,
+  OBR-2, OBR-3 and OBR-29 on v2.5.1 and v2.6, and from ORC-2, ORC-3, OBR-2 and OBR-3 on v2.7.1
+  and v2.8.2 (the only fields gated there): OUL^R21 to R24, OPU^R25 and
   OPL^O37 messages are now checked inside their own groups. An OUL, OPU or OPL message with no
   spans (a structure deviation, disagreeing parses) keeps the gate's outcome on those fields
   (register, Addendum to §D).

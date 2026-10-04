@@ -43,16 +43,16 @@ struct GroupSpanSeamTests {
         let match = ExactStructureMatcher(structure: structure).match(ids)
         #expect(match.findings.isEmpty && !match.spansWithheld && !match.spans.isEmpty, "\(key)")
         // Every ORC's peer OBR is in the ORC's own innermost group with an OBR.
-        let index = GroupSpanIndex(spans: match.spans, segmentCount: ids.count)
+        let index = GroupSpanIndex(spans: match.spans, elements: structure.elements, ids: ids)
         for orc in ids.indices where ids[orc] == "ORC" {
-            let range = index.range(around: orc, containing: "OBR")
-            #expect(range != 0..<ids.count && range.contains { ids[$0] == "OBR" }, "\(key) ORC at \(orc): \(range)")
+            let context = index.context(around: orc, of: "ORC", for: "OBR")
+            #expect(context.count < ids.count && context.contains { ids[$0] == "OBR" }, "\(key) ORC at \(orc): \(context)")
         }
         #expect(try Self.scoping(wire) == "spans", "\(key)")
     }
 
     /// OML_O33 prints `SPECIMEN { SPM ... ORDER { ORC ... [OBSERVATION_REQUEST
-    /// { OBR ... }] } }` (v2.5.1 CH04 4.4.10): the order sits inside its
+    /// { OBR ... }] } }` (v2.5.1 CH04 4.4.8): the order sits inside its
     /// specimen, after the SPM.
     @Test("OML_O33 with SPM before ORC: each ORC/OBR pair is scoped to its own specimen's order",
           arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
@@ -103,7 +103,7 @@ struct GroupSpanSeamTests {
         let exact = ExactStructureMatcher(structure: Self.structure(Self.ambiguous))
         let both = exact.match(["MSH", "A", "B"])
         #expect(both.findings.isEmpty && both.spansWithheld && both.spans.isEmpty)
-        #expect(Validator.spanIndex(both, segmentCount: 3) == nil)
+        #expect(Validator.spanIndex(both, structure: Self.structure(Self.ambiguous), ids: ["MSH", "A", "B"]) == nil)
         let one = exact.match(["MSH", "A"])
         #expect(!one.spansWithheld && one.spans.map(\.description) == ["G1 1...1"])
         #expect(exact.match(["MSH", "B"]).spans.map(\.description) == ["G2 1...1"])
@@ -136,12 +136,13 @@ struct GroupSpanSeamTests {
         ]
         let match = StructureMatcher(structure: Self.structure(elements)).match(["MSH", "ORC", "NTE", "OBR"])
         #expect(match.spans.map(\.position) == [[1], [2]])
-        #expect(match.spans.map(\.members) == [["ORC", "NTE"], ["OBR"]])
         // The first G does not define OBR, so the ORC's OBR peer is looked for
-        // at the top level, not in a G that merges both definitions.
-        let index = GroupSpanIndex(spans: match.spans, segmentCount: 4)
-        #expect(index.range(around: 1, containing: "OBR") == 0..<4)
-        #expect(index.range(around: 1, containing: "NTE") == 1..<3)
+        // at the top level; the second G (position [2]) defines no ORC, so the
+        // OBR's ORC peer is too. Either G read by name would answer "absent".
+        let index = GroupSpanIndex(spans: match.spans, elements: elements, ids: ["MSH", "ORC", "NTE", "OBR"])
+        #expect(index.context(around: 1, of: "ORC", for: "OBR") == [0, 1, 2, 3])
+        #expect(index.context(around: 3, of: "OBR", for: "ORC") == [0, 1, 2, 3])
+        #expect(index.context(around: 1, of: "ORC", for: "NTE") == [1, 2])
         let exact = ExactStructureMatcher(structure: Self.structure(elements)).match(["MSH", "ORC", "NTE", "OBR"])
         #expect(exact.spans == match.spans)
     }
