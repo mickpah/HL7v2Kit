@@ -263,7 +263,7 @@ not define is passed over (it already raises `segmentNotInVersionGrammar`).
 | Message structures (segment order, `[ ]` optional and `{ }` repeating segments, segment groups, required segments per trigger event) | v2.3 CH3 §3.2.1 (ADT^A01) and CH2 ACK; v2.3.1 CH2 §2.11-2.11.1; v2.4 CH02 §2.12-2.12.1 and §2.14; v2.5.1 CH02 §2.5.2 and each chapter's message definitions; v2.6 CH02 §2.5.2; v2.7.1 CH02 §2.5.2 and §2.12; v2.8.2 CH02 §2.12 | With `messageStructureSeverity` set, a v2.5.1 `ADT^A01` with no EVN or PV1, an ACK with no MSA, or an ORU^R01 with OBX before OBR is reported (`messageStructureSegmentMissing`, `messageStructureSegmentUnexpected`). Not checked: the 31 v2.5.1 structures registered as not modelled (addendum below) and every version other than v2.5.1 (`messageStructureNotModelled`, info); a structure that fails the determinism lint is matched exactly since P8b-12 (no longer reported as not modelled; none of the three pilot structures fails it), with one known cost: at most one finding, at the furthest segment any parse reached, and no group spans, so span-derived group predicates (P8b-17) skip such structures and keep the back-walk heuristics on them (ADR-019 ceiling 1, P8b-12 amendment); and anything at all with the option off, the default. `SegmentCardinalityRule` still covers only the AU profile's 21 group rules, and group-dependent predicates still use the `orcObxGroup` / `obrObxGroup` / `messageWide` back-walk heuristics on every version: span-derived groups wait for a complete version (ADR-019, R9). | **Blocking; v2.5.1 complete (P8b-9, 2026-10-04):** 172 structures modelled, 31 registered, opt-in; other versions follow the rollout. Design: ADR-019 (accepted 2026-10-02 under gate G2, answered 2026-09-30). Rollout: `planning/remediation/P8b-message-structure-rollout.md` (scoped by P8-9). |
 | Event-to-structure consistency (MSH-9.3 against MSH-9.1/9.2) | Table 0354 and the chapter caption lines (`ADT^A04^ADT_A01`) | With the option set, an MSH-9.3 naming a loaded structure that does not print MSH-9.1^9.2 (`ADT^A02^ADT_A01` on v2.5.1) raises `messageStructureMismatch` alone, with no body match. Since P8b-9 v2.5.1 is complete, so `ADT^A04^ADT_A04` (no such structure; A04 uses ADT_A01) raises `messageStructureMismatch` (ADR-019 lookup rule 1); an MSH-9.3 naming a registered not-modelled structure stays info, with its reason. Not checked: an MSH-9.3 naming a structure that is not loaded on any other (incomplete) version, which stays `messageStructureNotModelled` (info). Table 0354 is deliberately open (it lags the chapters) and is not consulted. | **Blocking; mechanism shipped (P8-6); v2.5.1 complete (P8b-9).** Same design and rollout. |
 | Message fragments (a logical message broken after an arbitrary segment: first fragment ends in DSC, later fragments carry MSH-14) | v2.4 CH02 §2.15.2.2; v2.5.1, v2.6 and v2.7.1 CH02 §2.10.2.2; v2.8.2 CH02 §2.10.2.1; v2.3 and v2.3.1 CH2 §2.15.4, §2.23.2 and the DSC segment §2.24.8 | A fragment is not structure-checked (it raises `messageStructureNotModelled`) and fragments are not reassembled, so the logical message's structure is never validated. A message is a fragment when MSH-14 is populated, when its trailing DSC has DSC-1 populated (whatever the structure defines), or when it ends in a DSC its structure does not define. Known cost: a complete message carrying a continuation pointer (for example an interactive query response installment, DSC-2 = I, v2.5.1 CH05 §5.6.3.1) is not structure-checked either; DSC-2 is not consulted. | **Blocking.** Reassembly is out of scope for the pilot; ADR-019. |
-| Version provenance (a message whose `message.version` differs from the wire reading of MSH-12, for example one parsed with `ParserOptions.versionOverride`) | ADR-018 version resolution; ADR-019 | Not structure-checked; raises `messageStructureNotModelled`. The comparison is between grammar versions, so a `2.8` or `2.7` message (validated as v2.8.2 or v2.7.1) is not excluded by this rule; it is not modelled only because v2.8.2 and v2.7.1 have no structures yet. An empty or unresolved MSH-12 is not structure-checked either. Conservative (no misfire); honouring an explicit override would need version provenance on `Message`. | **Blocking.** ADR-019 known ceiling 7. |
+| Version provenance (a message whose `message.version` differs from the wire reading of MSH-12, for example one parsed with `ParserOptions.versionOverride`) | ADR-018 version resolution; ADR-019 | Not structure-checked; raises `messageStructureNotModelled`. The comparison is between grammar versions, so a `2.8` or `2.7` message (validated as v2.8.2 or v2.7.1) is not excluded by this rule; it is checked against the v2.8.2 or v2.7.1 structures (both complete since P8b-11 and P8b-16). An empty or unresolved MSH-12 is not structure-checked either. Conservative (no misfire); honouring an explicit override would need version provenance on `Message`. | **Blocking.** ADR-019 known ceiling 7. |
 | Acknowledgment construction and the MSH-15/MSH-16 processing rules | v2.4 CH02 §2.3.2, §2.3.3, §2.13, §2.14.1; v2.5.1 CH02 §2.9.2, §2.9.3, §2.14.1 | The MSH-15/MSH-16 acknowledgment protocol (whether, when and with which code to acknowledge; enhanced mode; sequence numbers). | **Decided (ADR-019 decision 9):** general acknowledgment builder shipped (P8-7, `MessageBuilder.acknowledgment(to:code:messageControlID:dateTime:)`: MSA-2 echo, sender/receiver swap, `ACK^<event>^ACK`, MSH-11/12 echoed, a populated MSH-18 echoed as a builder rule beyond the spec's echo list); MSH-15/MSH-16 protocol logic is a non-goal (HL7v2Kit-Spec.md §2). |
 
 ### Addendum to §E — v2.5.1 complete (P8b-9, 2026-10-04)
@@ -412,6 +412,56 @@ relaxation, never a false finding).
 
 Known cost of exact matching: 32 v2.8.2 structures fail the determinism lint (ADT_A60, BAR_P01, BAR_P05, CSU_C09, DEL_O46, DEO_O45, DER_O44, DFT_P03, DFT_P11, DPR_O48, DRC_O47, DRG_O43, EHC_E15, OMD_O03, OMG_O19, OML_O21, OML_O33, OML_O35, OMQ_O42, OPL_O37, OPU_R25, ORD_O04, ORG_O20, OSM_R26, OUL_R22, OUL_R23, OUL_R24, REF_I12, RPA_I08, RQA_I08, RRI_I12
 and RSP_O34) and are matched by the exact matcher, with at most one finding and no group spans.
+
+### Addendum to §E — v2.7.1 complete (P8b-16, 2026-10-04)
+
+v2.7.1 is `complete: true` in `Resources/structures/completeness.json`: 164 structures modelled
+(each cited to chapter, section and pages) and 58 registered as not modelled in that file's
+`notModelled`; every one of the 222 Table 0354 v2.7.1 rows is one or the other. A 2.7 message
+reads through the v2.7.1 grammar (ADR-018) and is checked the same way.
+
+| Not modelled (v2.7.1) | Why | Status |
+|---|---|---|
+| PGL_PC6, PPR_PC1, PPP_PCB, PPG_PCG, PRR_PC5, PPV_PCA, PTR_PCF, PPT_PCL (CH12 12.3.1 to 12.3.12) | The order detail is printed `< OBR \| Hxx etc. >`; the CH12 12.3 note (p 6) reads "OBR etc." as every combination of order detail segments per CH04 4.2.2.4 (p 4), which names only examples (ruling G6). Table 0354 also lists PCC under PPG_PCG, so PPG^PCC is registered with it. | **Blocking** for v2.7.1 unless a ruling fixes the set. |
+| QBP_Q11, RSP_K11, QBP_Q13, QBP_Q15, QVR_Q17 (CH05 5.4.1 to 5.4.5) | Query templates: a `[...]` or `...` row stands for the segments a query profile defines (ruling G6). QBP_Q11 also carries QBP^Q31, which the CH04A 4A.3.20 query profile (p 22) declares. | **Permanent** for the template IDs. |
+| RDR_RDR | The only print is the CH05 5.9.1.1 restatement of a Chapter 4 query (excluded, G7); CH04A 4A.3.17 (p 22) says the pair was "withdrawn as of v2.7" and prints no syntax. | **Permanent** for v2.7.1. |
+| UDM_Q05 (CH05 5.10.1.2) | Retained for backward compatibility; prints URD and `[URS]`, which no v2.7.1 chapter defines, so it cannot be checked against the v2.7.1 grammar. | **Permanent** for v2.7.1. |
+| QRY_PC4 (CH12 12.3.5, 12.3.7, 12.3.9, 12.3.11), RCI_I05, RQC_I05 (CH11 11.3.5), RCL_I06 (CH11 11.3.6) | Each prints QRD and `[QRF]`, the original-mode query segments "retained for backward compatibility only as of v 2.4 and withdrawn as of v2.7" (CH04A, p 105; CH02, p 35), which no v2.7.1 chapter defines; found by the default structure guard (segments outside the version grammar) in the pre-commit corpus run. On v2.6 the four are modelled; on v2.8.2 they are Table 0354 rows marked Deprecated. | **Permanent** for v2.7.1. |
+| 39 Table 0354 rows marked Deprecated (CH02C 2.C.2.175, pp 102 to 106): ADR_A19, ADT_A18, ADT_A30, DOC_T12, MFN_M01, MFN_M03, MFQ_M01, MFR_M01, MFR_M04, MFR_M05, MFR_M06, MFR_M07, NMQ_N01, NMR_N01, ORF_R04, ORM_O01, ORR_O02, ORU_W01, OSQ_Q06, OSR_Q06, OUL_R21, QCK_Q02, QRF_W02, QRY_A19, QRY_Q01, QRY_Q02, QRY_R02, QRY_T12, RAR_RAR, RER_RER, RGR_RGR, ROR_ROR, RSP_Q11, SQM_S25, SQR_S25, SUR_P09, VXQ_V01, VXR_V03, VXX_V02 | The Comment column of the printed table marks each Deprecated (five "Deprecated and removed as of V2.7") and no v2.7.1 chapter prints its syntax. | **Permanent** for v2.7.1 (by design). |
+
+Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
+committed, cited to both (overrides.json `primaryPrints`). No v2.7.1 pair needed a union.
+
+| Structure (v2.7.1) | Looser print, committed | Stricter print, not checked | Cost | Status |
+|---|---|---|---|---|
+| ACK | CH10 10.4 (ACK^S12-S24,S26,S27, p 18): `[{UAC}]` | CH02 2.13.1 (p 46): `[UAC]` (and every chapter's ACK; CH05 5.4.4 to 5.4.7 also print `[ERR]`) | An ACK with several UAC segments passes. | **Blocking** (per-trigger structures). |
+| RQC_I05 (recorded; not modelled, see above) | CH11 11.3.5 (RQC^I05, p 13): `[{GT1}]` | CH11 11.3.6 (RQC^I06, pp 14 to 15): `[GT1]` | None while RQC_I05 is not modelled. | Recorded for a later grammar that defines QRD and QRF. |
+
+Reader fixes (extractor, each with a self-check case): CH07 7.17.1 prints OSM^R26^OSM_R26's own
+`CODE^EVT^STRUCT` in place of "Segments" in its header row, and wraps the last word of a group
+mark onto the line with "begin" or "end" (`--- SUBJECT POPULATION/LOCATION` then
+`IDENTIFICATION begin`). Cited errata: the `RESOURCED_DETAIL end` marks of CCM_I21, CCR_I16,
+CCU_I20, CQU_I19 and CCI_I22; EHC_E01 `INVOICE INFORMATION`; OPL_O37 `Observation/Result_Group`
+(read as OBSERVATION_RESULT); OSM_R26's two subject group marks; SDR_S31 and SDR_S32
+`ANTI-MICROBIAL_...`; ADT_A05 `Procedure` (3.3.31); RQI_I01 `GUARANTOR+INSURANCE` (11.3.3); and
+BRP_O30's unclosed PATIENT group (a syntax-cell erratum, as on v2.6). The 8.4.3 exclusion is
+scoped to the MFN^M14^MFN_Znn caption, so MFK^M14^MFK_M01 is read. Other print disagreements
+recorded, not modelled: RDE_O11's 4A.3.13 (RDE^O25) print names the RXC group COMPONENTS where
+the 4A.3.5 print says COMPONENT (same syntax); CH15 15.3.7 captions QBP^Q25^QBP_Q21 over a
+query parameter table, not a syntax. The HL7 v2.xml bundles differ from the print for the no-bar
+`< ... >` named groups of EHC_E01, E02, E04, E15, E20, E21, E24, QBP_E03, QBP_E22, RSP_E03 and
+RSP_E22 (the CH16 text never says "one of" for them: named required groups, P8b-6 ruling),
+SDR_S31 and SDR_S32 (likewise, under the hyphenated name), ADT_A09 and ADT_A12 (the bundle adds
+DG1), ADT_A60, DFT_P03 and DFT_P11 (a VISIT group the print does not have), OSM_R26 (a
+PATIENT_INFORMATION group), ORU_R01 (the bundle names the SPECIMEN observations
+PATIENT_OBSERVATION) and ACK (UAC); the print is normative (ruling D3). Table 0354 adds ADT^A39
+to ADT_A39, MFK^M01 and MFK^M03 to MFK_M01 (8.4.1 marks M01 withdrawn) and RPI^I04 to RPI_I01;
+RPI^I04 is a declared shared trigger, ambiguous without MSH-9.3, as on v2.5.1, v2.6 and v2.8.2.
+
+Known cost of exact matching: 20 v2.7.1 structures fail the determinism lint (ADT_A60, BAR_P01,
+BAR_P05, CSU_C09, DFT_P03, DFT_P11, EHC_E15, OMD_O03, OMG_O19, OML_O21, OML_O33, OML_O35, OPL_O37,
+ORD_O04, OSM_R26, OUL_R24, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the exact
+matcher, with at most one finding and no group spans.
 
 ## F. Excluded HL7 v2.x versions (ADR-018)
 

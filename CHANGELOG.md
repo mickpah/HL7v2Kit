@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-16: HL7 v2.7.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.7.1 message structure is now checked: 164
+  structures extracted from the chapter prints (20 matched exactly), and v2.7.1 is marked
+  complete; a 2.7 message is checked against them (`Version.v2_7` reads through the v2.7.1
+  grammar). An MSH-9.3 that names no v2.7.1 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.7.1 and 2.7 instead of info.
+- 58 v2.7.1 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 `< OBR | Hxx etc. >` structures, five CH05 query templates, RDR_RDR (no
+  normative print), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and
+  QRF, withdrawn as of v2.7), whose segments v2.7.1 does not define, and the 39 Table 0354 rows
+  marked Deprecated. Every Table 0354 v2.7.1 row is modelled or registered.
+- ACK takes its looser print (CH10's `[{UAC}]`); RPI^I04 is a declared shared trigger (Table
+  0354 maps it to RPI_I01 as well as the printed RPI_I04).
+- The structure extractor reads a header row that repeats the caption in place of "Segments"
+  (v2.7.1 CH07 OSM^R26) and a group mark whose name wraps onto the begin/end line; 13 v2.7.1
+  print errata are cited, and the CH08 8.4.3 exclusion is scoped to its template caption.
+- Tests pin that RPI^I04 (v2.5.1, v2.6, v2.7.1, v2.8.2) and v2.5.1 ADT^A12 are ambiguous
+  without MSH-9.3 and resolve cleanly with it.
+
 ### Added — P8b-11: HL7 v2.8.2 message structures complete
 
 - With `messageStructureSeverity` set, every v2.8.2 message structure is now checked: 185

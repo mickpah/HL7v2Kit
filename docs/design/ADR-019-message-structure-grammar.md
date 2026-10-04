@@ -487,9 +487,10 @@ row:
 
 | MSH-12 (VID.1) | Structures applied | Note |
 |---|---|---|
-| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.8.2 | Its own | |
+| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Its own | 2.7.1 since P8b-16 |
+| 2.7 | v2.7.1 | Covered by the existing `versionGrammarSubstituted` info (P8b-16) |
 | 2.8 | v2.8.2 | Covered by the existing `versionGrammarSubstituted` info |
-| 2.7.1 (until P10), other, unresolved, or empty | None | `messageStructureNotModelled` (info). Not the v2.5.1 fallback grammar that ADR-018 uses for segments: applying v2.5.1 structures would report every later-version segment and group as a deviation (decision 4) |
+| Other, unresolved, or empty | None | `messageStructureNotModelled` (info). Not the v2.5.1 fallback grammar that ADR-018 uses for segments: applying v2.5.1 structures would report every later-version segment and group as a deviation (decision 4) |
 
 The version comes from the wire reading, `Version.reading(msh12:subcomponentSeparator:)`,
 taken at validation time, because `Message` carries no record of where `message.version`
@@ -603,7 +604,7 @@ the wire is a 00060.1 finding, or only a missing required one is, is decision 7.
 6. **v2.3.1** (structure IDs through Table 0354), then **v2.3** (section-title events,
    synthesised IDs).
 7. **v2.7.1**, a seventh version in the rollout, when plan P10 lands (ADR-018 schedule),
-   in the same cycle as its grammar.
+   in the same cycle as its grammar. Done in P8b-16 (amendment below).
 8. **R9 group resolution** switched on per complete version (the section above), then
    **R10 close-out**: owner confirms the preset change; register §E leaves "blocking" only
    when every modelled version is complete.
@@ -1129,3 +1130,18 @@ compiling a structure per message.
   them, cites the table row (and any section heading that marks the event withdrawn), and a
   trigger the table and a caption give to two structures is a declared shared trigger. A
   borrowed table (v2.3 reads v2.3.1's) adds none.
+
+## Amendment 2026-10-04 — v2.7.1 complete (P8b-16)
+
+- **v2.7.1 complete.** 164 structures modelled (20 exact-matched), 58 registered (register
+  section E v2.7.1 addendum: CH12 placeholders, CH05 templates, RDR_RDR, UDM_Q05, the four
+  QRD/QRF structures and the 39 Table 0354 rows marked Deprecated); every Table 0354 v2.7.1 row
+  is one or the other. ACK from its looser print. A 2.7 message is checked against the v2.7.1
+  structures through `Version.grammarVersion` (resolution table above).
+- **Segments the version does not define.** A print whose segments the version's grammar does
+  not define (v2.7.1: URD and URS; QRD and QRF, withdrawn as of v2.7) is registered as not
+  modelled, never committed: the default structure guard rejects it, and the version task runs
+  the corpus test before committing to find such prints.
+- **Extractor.** In the caret-colon era a header row may repeat the caption in place of
+  "Segments" (accepted only when the cell is the caption it follows), and a group mark's last
+  name word may wrap onto the line with "begin" or "end".

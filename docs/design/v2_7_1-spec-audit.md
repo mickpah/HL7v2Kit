@@ -14,6 +14,7 @@
 | Segment schemas | Each segment's defining attribute table, Chapters 2, 3, 4, 4A (P10-4a), 5 to 10 (P10-4b), 11 to 17 (P10-4c); ADD from CH02 p. 47 | 170 segments, 2,519 fields (47 + 70 + 53 segments; 778 + 1,050 + 691 fields) | P10-4a `30283ba`, P10-4b `4c11091`, P10-4c `41d354d`, `dae0c3d` |
 | Conditional rules | Each `C` field's own definition | 177 printed `C`: 112 with a rule (107 conditions, 5 prohibition only: TQ2-7, PRT-6, PRT-7, SPM-13, RCP-4), 65 bare; plus CSR-8, MFI-6 and ROL-4 printed `R` and modelled `C` (180 `C` fields) | P10-5a `b2004b9`, P10-5b `9dcce3f` |
 | Example messages | Every chapter's printed examples | 222 messages; every error line claimed by the spec-example registry (244 entries, 0 mismatched) | P10-7 `a25ee85` |
+| Message structures | Each chapter's abstract message syntax (`CODE^EVT^STRUCT: title` captions), Table 0354 (CH02C 2.C.2.175) | 164 structures (20 exact-matched); 58 registered as not modelled; v2.7.1 complete | P8b-16 `71724ed`, `1647930`, `7cc10f6` |
 
 Optionality across the 2,519 fields: O 1,815, R 305, C 180, B 55, W 77, blank 87. Chapter 2B's unnamed 40-field PID profile table, the CH07 OBX example tables and the second CH04A RXA table are profile or example prints and are not the base grammar; only each segment's first (defining) table is used.
 
@@ -64,6 +65,38 @@ Counts in this document were recomputed from the shipped resources at P10-8. The
 | Code tables | +10, −12 (535 against 537) | −30 (535 against 565) |
 | Datatypes | component tables for all 72 composites | +LA1, LA2; −OG; PRL.2, XON.4, XON.5 differ |
 | Order numbers | same placer-or-filler forms | no Send Number exception |
+
+## Message structures (P8b-16)
+
+The extractor reads 414 v2.7.1 captions: 39 excluded as examples, query profiles or templates
+(ruling G7; the CH08 8.4.3 exclusion is scoped to its MFN^M14^MFN_Znn caption, and the CH05
+5.9.1.1 RDR restatement is excluded as on the other versions), 182 structure IDs, 169 read and
+13 unreadable (G6 placeholders and templates). 164 are committed under
+`Resources/structures/v2.7.1/` and v2.7.1 is `complete: true`; with the 58 registered in
+`completeness.json` they account for all 222 Table 0354 v2.7.1 rows. A 2.7 message is checked
+against them through `Version.grammarVersion`.
+
+Rulings applied (progress ledger): primary print, and the looser print where two normative
+prints disagree (ACK from CH10 10.4; RQC_I05's 11.3.5 recorded); no-bar `< ... >` groups as
+named required groups (eleven CH16 structures and SDR_S31/SDR_S32; the CH16 text never says
+"one of"); Z message types and triggers on a complete version; Table 0354 triggers merged into
+each structure (ADT_A39, MFK_M01, RPI_I01; RPI^I04 a declared shared trigger); the CH04A
+4A.3.20 "Query Trigger (= MSH-9)" line adds QBP^Q31 to the registered QBP_Q11. Two reader fixes
+(a header row repeating the caption, CH07 7.17.1; a group mark whose name wraps) and 13 cited
+print errata (register §E v2.7.1 addendum).
+
+Not modelled, with reasons in `completeness.json`: PGL_PC6, PPR_PC1, PPP_PCB, PPG_PCG, PRR_PC5,
+PPV_PCA, PTR_PCF and PPT_PCL (CH12 `< OBR | Hxx etc. >`, G6); QBP_Q11, RSP_K11, QBP_Q13, QBP_Q15
+and QVR_Q17 (CH05 query templates, G6); RDR_RDR (no normative print); UDM_Q05 (URD and URS) and
+QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does
+not define; and 39 Table 0354 rows marked Deprecated with no printed syntax.
+
+Requirement 4 evidence: with the structure check off the validation digest is byte-identical;
+with it on, 146 example messages change: 68 now match cleanly, 32 stay info with a new reason,
+46 are example defects cited to the print (ACK trailing space, CH13 bare-code MSH-9.3, CH10 AIP
+before AIL, query events Table 0003 does not define, ADT^A44 under ADT_A43, MFK^M13^MFK_M13,
+acknowledgment bodies labelled MFN^M16 and SLR^S28), and none is a misfire. 13 probes in
+`StructureV271ProbeTests` cover structures not probed on any other version.
 
 ## Known limitations (registered, not shipped — req #3 / #4)
 
