@@ -550,19 +550,68 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .info)
     }
 
-    // P8b-16: the v2.7.1 structures are loaded (2.7 reads through them, ADR-018); until v2.7.1
-    // is marked complete an unknown MSH-9.3 stays an info issue.
-    @Test("v2.7.1 structures are matched on 2.7.1 and 2.7 wire messages; an unknown ID is info while incomplete",
-          arguments: ["2.7.1", "2.7"])
-    func v271StructuresMatched(_ version: String) throws {
-        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.evn, Self.pid, Self.pv1])).isEmpty)
-        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: version, [Self.pid, Self.pv1])).map(\.code)
-                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
-        if !MessageStructureTable.isComplete(.v2_7_1) {
-            let issues = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: version, [Self.evn, Self.pid, Self.pv1]))
-            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A04")])
+    // ADR-019 lookup rule 1 on v2.7.1 (P8b-16): complete, so an unknown MSH-9.3 ID is a
+    // mismatch; registered IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's and
+    // RQC_I05's segments that v2.7.1 does not define) are info with their reason; a Z trigger
+    // declaring a printed structure is matched; ADT^A01 and ORU^R01 resolve and match as on
+    // the other complete versions.
+    @Test("v2.7.1 complete (P8b-16): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
+    func v271RuleOne() throws {
+        #expect(MessageStructureTable.isComplete(.v2_7_1))
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.7.1", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(unknown.first?.severity == .error)
+        #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
+        for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
+                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]"),
+                                 ("RQC^I05^RQC_I05", "RQC_I05", "QRD and [QRF]")] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.7.1", ["QPD|1", "RCP|I"]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
             #expect(issues.first?.severity == .info)
+            #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")
         }
+        let zBody = ["MSA|AA|1", "QAK|1|OK", "QPD|Z84", "PID|1"]
+        #expect(try structureIssues(Self.wire("RSP^Z84^RSP_K23", version: "2.7.1", zBody)).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.7.1", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A04", version: "2.7.1", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", version: "2.7.1", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.7.1", [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+    }
+
+    // ADR-018: a 2.7 wire message reads through the v2.7.1 grammar (Version.grammarVersion),
+    // so it is checked against the v2.7.1 structures and v2.7.1's completeness.
+    @Test("A 2.7 wire message is checked against the v2.7.1 structures (grammarVersion)")
+    func v27WireUsesV271() throws {
+        #expect(MessageStructureTable.isComplete(.v2_7))
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.7", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.7", [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.7", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+    }
+
+    // P8b-11 fix round: Table 0354 maps RPI^I04 to RPI_I01 as well as the RPI_I04 that CH11
+    // 11.3.4 prints (v2.5.1, v2.6, v2.7.1, v2.8.2), and the v2.5.1 table maps ADT^A12 to
+    // ADT_A09 as well as the printed ADT_A12: declared shared triggers, so without MSH-9.3 the
+    // trigger is ambiguous (info naming both); with MSH-9.3 the named structure is matched.
+    @Test("RPI^I04 and v2.5.1 ADT^A12 are ambiguous without MSH-9.3 and resolve cleanly with it",
+          arguments: ["2.5.1", "2.6", "2.7.1", "2.8.2"])
+    func table0354SharedTriggers(_ version: String) throws {
+        let rpi = ["MSA|AA|1", "PRD|RP", "PID|1"]
+        let bare = try structureIssues(Self.wire("RPI^I04", version: version, rpi))
+        #expect(bare.map(\.code) == [.messageStructureNotModelled(structure: "RPI^I04")], "\(version)")
+        #expect(bare.first?.severity == .info)
+        #expect(bare.first?.message.contains("RPI_I01 and RPI_I04") == true, "\(version): \(bare.map(\.message))")
+        #expect(try structureIssues(Self.wire("RPI^I04^RPI_I04", version: version, rpi)).isEmpty, "\(version)")
+        guard version == "2.5.1" else { return }
+        let adt = [Self.evn, Self.pid, Self.pv1]
+        let a12 = try structureIssues(Self.wire("ADT^A12", version: version, adt))
+        #expect(a12.map(\.code) == [.messageStructureNotModelled(structure: "ADT^A12")])
+        #expect(a12.first?.message.contains("ADT_A09 and ADT_A12") == true, "\(a12.map(\.message))")
+        #expect(try structureIssues(Self.wire("ADT^A12^ADT_A12", version: version, adt)).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A12^ADT_A09", version: version, adt)).isEmpty)
     }
 
     @Test("An empty MSH-12 is not matched, only the info issue")
