@@ -1,0 +1,13 @@
+{
+  "structure": "MFN_M13",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 6.",
+  "triggers": ["MFN^M13"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "segment": "MFE", "min": 1, "max": null }
+  ]
+}

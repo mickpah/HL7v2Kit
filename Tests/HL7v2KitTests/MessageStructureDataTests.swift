@@ -95,8 +95,9 @@ struct MessageStructureDataTests {
             #expect(!generated.citation.isEmpty)
             seen[version, default: []].insert(id)
         }
+        // A wire version that shares a grammar (2.8 reads as 2.8.2, ADR-018) serves its files.
         for version in Version.allCases {
-            #expect(Set(MessageStructureTable.structures(for: version).keys) == seen[version] ?? [],
+            #expect(Set(MessageStructureTable.structures(for: version).keys) == seen[version.grammarVersion] ?? [],
                     "\(version.rawValue): generated structures without a file")
         }
     }

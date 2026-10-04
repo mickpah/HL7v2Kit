@@ -1,0 +1,59 @@
+{
+  "structure": "OSM_R26",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 7, section 7.18.1 OSM - Unsolicited Specimen Shipment Manifest Message (Event R26), pp 159 to 161. Unprinted group names (ADR-019 decision 3): SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION (HL7-xml v2.8.2/OSM_R26.xsd, OSM_R26.SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION.CONTENT).",
+  "triggers": ["OSM^R26"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "SHIPMENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "SHP", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 1, "max": null },
+      { "group": "SHIPPING_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "group": "PACKAGE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PAC", "min": 1, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null },
+        { "group": "SPECIMEN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "SPM", "min": 1, "max": 1 },
+          { "segment": "PRT", "min": 0, "max": null },
+          { "group": "SPECIMEN_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null }
+          ]},
+          { "group": "CONTAINER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "SAC", "min": 1, "max": 1 },
+            { "group": "CONTAINER_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]}
+          ]},
+          { "group": "SUBJECT_PERSON_OR_ANIMAL_IDENTIFICATION", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+            { "segment": "PID", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "segment": "ARV", "min": 0, "max": null },
+            { "group": "PATIENT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "segment": "NK1", "min": 0, "max": null }
+          ]},
+          { "group": "SUBJECT_POPULATION_OR_LOCATION_IDENTIFICATION", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "PV1", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "group": "PATIENT_VISIT_OBSERVATION", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "OBX", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "segment": "PID", "min": 0, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "segment": "NK1", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

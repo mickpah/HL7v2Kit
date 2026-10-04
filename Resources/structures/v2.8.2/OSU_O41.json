@@ -1,0 +1,20 @@
+{
+  "structure": "OSU_O41",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 4, section 4.4.18 OSU - Order Status Update (Event O41), p 40.",
+  "triggers": ["OSU^O41"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "PID", "min": 0, "max": 1 },
+    { "segment": "ARV", "min": 0, "max": null },
+    { "group": "ORDER_STATUS", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null }
+    ]}
+  ]
+}

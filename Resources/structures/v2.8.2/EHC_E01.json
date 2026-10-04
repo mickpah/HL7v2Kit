@@ -1,0 +1,60 @@
+{
+  "structure": "EHC_E01",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 16, section 16.3.1 EHC^E01 - Submit HealthCare Services Invoice (event E01), pp 5 to 6.",
+  "triggers": ["EHC^E01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "group": "INVOICE_INFORMATION_SUBMIT", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "IVC", "min": 1, "max": 1 },
+      { "segment": "PYE", "min": 0, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null },
+      { "segment": "AUT", "min": 0, "max": 1 },
+      { "segment": "LOC", "min": 0, "max": null },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "ROL", "min": 0, "max": null },
+      { "group": "PRODUCT_SERVICE_SECTION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PSS", "min": 1, "max": 1 },
+        { "group": "PRODUCT_SERVICE_GROUP", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PSG", "min": 1, "max": 1 },
+          { "segment": "LOC", "min": 0, "max": null },
+          { "segment": "PRT", "min": 0, "max": null },
+          { "segment": "ROL", "min": 0, "max": null },
+          { "group": "PATIENT_INFO", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "PID", "min": 1, "max": 1 },
+            { "segment": "PV1", "min": 0, "max": 1 },
+            { "segment": "PV2", "min": 0, "max": 1 },
+            { "segment": "ACC", "min": 0, "max": null },
+            { "group": "INSURANCE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+              { "segment": "IN1", "min": 1, "max": 1 },
+              { "segment": "IN2", "min": 0, "max": 1 }
+            ]},
+            { "group": "DIAGNOSIS", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "DG1", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null }
+            ]},
+            { "segment": "OBX", "min": 0, "max": null }
+          ]},
+          { "group": "PRODUCT_SERVICE_LINE_ITEM", "nameSource": "printed", "min": 1, "max": null, "elements": [
+            { "segment": "PSL", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "ADJ", "min": 0, "max": null },
+            { "segment": "AUT", "min": 0, "max": 1 },
+            { "segment": "LOC", "min": 0, "max": null },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "segment": "ROL", "min": 0, "max": null }
+          ]},
+          { "group": "PROCEDURE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "PR1", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "segment": "ROL", "min": 0, "max": null }
+          ]},
+          { "segment": "IPR", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

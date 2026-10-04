@@ -1,0 +1,55 @@
+{
+  "structure": "CSU_C09",
+  "version": "2.8.2",
+  "citation": "HL7 v2.8.2 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 103 to 104. Unprinted group names (ADR-019 decision 3): STUDY_OBSERVATION_ORDER (HL7-xml v2.8.2/CSU_C09.xsd, CSU_C09.STUDY_OBSERVATION_ORDER.CONTENT).",
+  "triggers": ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "PRT", "min": 0, "max": null },
+      { "segment": "ARV", "min": 0, "max": null },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 },
+        { "segment": "PRT", "min": 0, "max": null }
+      ]},
+      { "segment": "CSR", "min": 1, "max": 1 },
+      { "group": "STUDY_PHASE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "CSP", "min": 0, "max": 1 },
+        { "group": "STUDY_SCHEDULE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "CSS", "min": 0, "max": 1 },
+          { "group": "STUDY_OBSERVATION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+            { "group": "STUDY_OBSERVATION_ORDER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+              { "segment": "ORC", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "segment": "OBR", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null },
+            { "group": "TIMING_QTY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+              { "segment": "TQ1", "min": 1, "max": 1 },
+              { "segment": "TQ2", "min": 0, "max": null }
+            ]},
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "PRT", "min": 0, "max": null }
+          ]},
+          { "group": "STUDY_PHARM", "nameSource": "printed", "min": 1, "max": null, "elements": [
+            { "group": "COMMON_ORDER", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+              { "segment": "ORC", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]},
+            { "group": "RX_ADMIN", "nameSource": "printed", "min": 1, "max": null, "elements": [
+              { "segment": "RXA", "min": 1, "max": 1 },
+              { "segment": "RXR", "min": 1, "max": 1 },
+              { "segment": "PRT", "min": 0, "max": null }
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}
