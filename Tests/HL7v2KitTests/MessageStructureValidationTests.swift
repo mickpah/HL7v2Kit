@@ -229,6 +229,63 @@ struct MessageStructureValidationTests {
                 == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
     }
 
+    // ADR-019 lookup rule 1 on v2.8.2 (P8b-11): complete, so an unknown MSH-9.3 ID is a
+    // mismatch (the CH02 examples' ADT^A04^ADT_A04 is a genuine example defect); registered
+    // IDs (a template, a Table 0354 row marked Deprecated, UDM_Q05's undefined segments) are
+    // info with their reason; a Z trigger declaring a printed structure is matched; ADT^A01
+    // and ORU^R01 resolve and match as on v2.5.1 and v2.6.
+    @Test("v2.8.2 complete (P8b-11): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01 and ORU^R01 unchanged")
+    func v282RuleOne() throws {
+        #expect(MessageStructureTable.isComplete(.v2_8_2))
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.8.2", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(unknown.first?.severity == .error)
+        #expect(unknown.first?.message.contains("whose structures are all modelled") == true, "\(unknown.map(\.message))")
+        for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "marks it Deprecated"),
+                                 ("UDM^Q05^UDM_Q05", "UDM_Q05", "URD and [URS]")] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.8.2", ["QPD|1", "RCP|I"]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.severity == .info)
+            #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")
+        }
+        let zBody = ["MSA|AA|1", "QAK|1|OK", "QPD|Z84", "PID|1"]
+        #expect(try structureIssues(Self.wire("RSP^Z84^RSP_K23", version: "2.8.2", zBody)).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.8.2", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A04", version: "2.8.2", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", version: "2.8.2", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.8.2", [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+    }
+
+    // ADR-018: a 2.8 wire message reads through the v2.8.2 grammar (Version.grammarVersion),
+    // so it is checked against the v2.8.2 structures and v2.8.2's completeness.
+    @Test("A 2.8 wire message is checked against the v2.8.2 structures (grammarVersion)")
+    func v28WireUsesV282() throws {
+        #expect(MessageStructureTable.isComplete(.v2_8))
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.8", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.8", [Self.pid, Self.pv1])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.8", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        let orl = try structureIssues(Self.wire("ORL^O22^ORL_O41", version: "2.8", ["MSA|AA|1", "ORC|OK"]))
+        #expect(orl.isEmpty, "\(orl.map(\.message))")
+    }
+
+    // v2.8.2 CH04 prints ORL^O22 under ORL_O22 (4.4.7.1, patient required) and ORL_O41
+    // (4.4.7.2, patient optional), a declared shared trigger: without MSH-9.3 the trigger is
+    // ambiguous (not modelled, naming both); with it, the named structure is matched.
+    @Test("v2.8.2 ORL^O22 is ambiguous without MSH-9.3 and matched against ORL_O41 or ORL_O22 with it")
+    func orlSharedTriggerV282() throws {
+        let bare = try structureIssues(Self.wire("ORL^O22", version: "2.8.2", ["MSA|AA|1"]))
+        #expect(bare.map(\.code) == [.messageStructureNotModelled(structure: "ORL^O22")])
+        #expect(bare.first?.message.contains("ORL_O22 and ORL_O41") == true, "\(bare.map(\.message))")
+        let noPatient = ["MSA|AA|1", "ORC|OK"]
+        #expect(try structureIssues(Self.wire("ORL^O22^ORL_O41", version: "2.8.2", noPatient)).isEmpty)
+        // ORL_O22 requires PID first in RESPONSE: the same body is a finding there.
+        #expect(try !structureIssues(Self.wire("ORL^O22^ORL_O22", version: "2.8.2", noPatient)).isEmpty)
+    }
+
     // P8b-10 corpus misfires fixed: a locally defined message (a Z trigger, or a Z
     // structure for a trigger the version prints under no structure) is not modelled,
     // never a mismatch; a Z structure for a printed trigger stays a mismatch; the CH08

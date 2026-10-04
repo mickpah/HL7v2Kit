@@ -10,7 +10,7 @@ extension MessageStructureTable {
     //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
     //   2.6 (complete): P8b-10: 188 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
     //   2.7.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-16)
-    //   2.8.2 (incomplete): P8b-11: v2.8.2 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints); the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.8.2 does not define), QBP_Q13 and RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.8.2 not-modelled table)
+    //   2.8.2 (complete): P8b-11: 185 structures extracted from the v2.8.2 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.8.2 row modelled or registered; the 8 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1 and templates QBP_Q11, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS, which v2.8.2 does not define), QBP_Q13 and RDR_RDR (no normative print) and the 47 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.8.2 not-modelled table)
 
     /// Every modelled structure of `version`'s grammar version, keyed by
     /// ID. A version with no structures modelled returns an empty table.
@@ -31,7 +31,7 @@ extension MessageStructureTable {
 
     /// The grammar versions whose every printed structure is modelled
     /// or registered as not modelled.
-    static let completeVersions: Set<Version> = [.v2_5_1, .v2_6]
+    static let completeVersions: Set<Version> = [.v2_5_1, .v2_6, .v2_8_2]
 
     /// The structures `version`'s grammar version prints, or its Table
     /// 0354 lists, that are registered as not modelled (register section
