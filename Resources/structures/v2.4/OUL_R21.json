@@ -1,0 +1,37 @@
+{
+  "structure": "OUL_R21",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 7, section 7.3.2 OUL - unsolicited laboratory observation message (R21), p 7-20. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/OUL_R21.xsd, OUL_R21.PATIENT.CONTENT), VISIT (HL7-xml v2.4/OUL_R21.xsd, OUL_R21.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/OUL_R21.xsd, OUL_R21.ORDER_OBSERVATION.CONTENT), CONTAINER (HL7-xml v2.4/OUL_R21.xsd, OUL_R21.CONTAINER.CONTENT) and OBSERVATION (HL7-xml v2.4/OUL_R21.xsd, OUL_R21.OBSERVATION.CONTENT).",
+  "triggers": ["OUL^R21"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]},
+    { "group": "VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "ORDER_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "group": "CONTAINER", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "SAC", "min": 1, "max": 1 },
+        { "segment": "SID", "min": 0, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": null }
+      ]},
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "OBX", "min": 0, "max": 1 },
+        { "segment": "TCD", "min": 0, "max": 1 },
+        { "segment": "SID", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "segment": "CTI", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

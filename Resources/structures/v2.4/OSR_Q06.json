@@ -1,0 +1,34 @@
+{
+  "structure": "OSR_Q06",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21. Unprinted group names (ADR-019 decision 3): RESPONSE (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named RESPONSE from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.RESPONSE.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).), PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment PID at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named PATIENT from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and ORDER (overrides.json: HL7 v2.4 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-21: the unnamed group with first segment ORC at [RESPONSE] (v2.4 prints no group names); HL7-xml v2.4 has no OSR_Q06.xsd, so named ORDER from HL7-xml v2.5.1/OSR_Q06.xsd, OSR_Q06.ORDER.CONTENT: the same structure ID, parent path and first segment, its member set adding only TQ1 and TQ2, which v2.4 does not define (P8b-13 ruling 1).).",
+  "triggers": ["OSR^Q06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "RESPONSE", "nameSource": "override", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "override", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "override", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "choice": null, "min": 1, "max": 1, "alternatives": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "RQD", "min": 1, "max": 1 },
+          { "segment": "RQ1", "min": 1, "max": 1 },
+          { "segment": "RXO", "min": 1, "max": 1 },
+          { "segment": "ODS", "min": 1, "max": 1 },
+          { "segment": "ODT", "min": 1, "max": 1 }
+        ]},
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

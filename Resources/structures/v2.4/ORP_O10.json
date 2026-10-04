@@ -1,0 +1,28 @@
+{
+  "structure": "ORP_O10",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.13.4 ORP - pharmacy/treatment order acknowledgment (event O10), p 4-80. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/ORP_O10.xsd, ORP_O10.RESPONSE.CONTENT), PATIENT (HL7-xml v2.4/ORP_O10.xsd, ORP_O10.PATIENT.CONTENT), ORDER (HL7-xml v2.4/ORP_O10.xsd, ORP_O10.ORDER.CONTENT) and ORDER_DETAIL (HL7-xml v2.4/ORP_O10.xsd, ORP_O10.ORDER_DETAIL.CONTENT).",
+  "triggers": ["ORP^O10"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "RXO", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

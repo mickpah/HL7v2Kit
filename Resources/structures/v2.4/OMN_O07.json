@@ -1,0 +1,37 @@
+{
+  "structure": "OMN_O07",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.10.3 OMN - non-stock requisition order message (event O07), pp 4-73 to 4-74. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/OMN_O07.xsd, OMN_O07.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/OMN_O07.xsd, OMN_O07.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/OMN_O07.xsd, OMN_O07.INSURANCE.CONTENT), ORDER (HL7-xml v2.4/OMN_O07.xsd, OMN_O07.ORDER.CONTENT) and OBSERVATION (HL7-xml v2.4/OMN_O07.xsd, OMN_O07.OBSERVATION.CONTENT).",
+  "triggers": ["OMN^O07"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "segment": "RQD", "min": 1, "max": 1 },
+      { "segment": "RQ1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "segment": "BLG", "min": 0, "max": 1 }
+    ]}
+  ]
+}

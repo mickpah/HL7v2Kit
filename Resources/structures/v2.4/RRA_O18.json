@@ -1,0 +1,25 @@
+{
+  "structure": "RRA_O18",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.13.12 RRA - pharmacy/treatment administration acknowledgment message, pp 4-85 to 4-86. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/RRA_O18.xsd, RRA_O18.RESPONSE.CONTENT), PATIENT (HL7-xml v2.4/RRA_O18.xsd, RRA_O18.PATIENT.CONTENT), ORDER (HL7-xml v2.4/RRA_O18.xsd, RRA_O18.ORDER.CONTENT) and ADMINISTRATION (HL7-xml v2.4/RRA_O18.xsd, RRA_O18.ADMINISTRATION.CONTENT).",
+  "triggers": ["RRA^O18"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "ADMINISTRATION", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "RXA", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": 1 }
+        ]}
+      ]}
+    ]}
+  ]
+}

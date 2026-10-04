@@ -1,0 +1,49 @@
+{
+  "structure": "ORM_O01",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.4.1 ORM - general order message (event O01), p 4-19. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.INSURANCE.CONTENT), ORDER (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.ORDER.CONTENT), ORDER_DETAIL (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.ORDER_DETAIL.CONTENT) and OBSERVATION (HL7-xml v2.4/ORM_O01.xsd, ORM_O01.OBSERVATION.CONTENT).",
+  "triggers": ["ORM^O01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "choice": null, "min": 1, "max": 1, "alternatives": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "RQD", "min": 1, "max": 1 },
+          { "segment": "RQ1", "min": 1, "max": 1 },
+          { "segment": "RXO", "min": 1, "max": 1 },
+          { "segment": "ODS", "min": 1, "max": 1 },
+          { "segment": "ODT", "min": 1, "max": 1 }
+        ]},
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "CTD", "min": 0, "max": 1 },
+        { "segment": "DG1", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+          { "segment": "OBX", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]},
+      { "segment": "FT1", "min": 0, "max": null },
+      { "segment": "CTI", "min": 0, "max": null },
+      { "segment": "BLG", "min": 0, "max": 1 }
+    ]}
+  ]
+}

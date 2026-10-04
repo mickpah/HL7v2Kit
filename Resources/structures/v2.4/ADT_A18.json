@@ -1,0 +1,14 @@
+{
+  "structure": "ADT_A18",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.18 ADT/ACK - merge patient information (event A18), p 3-25.",
+  "triggers": ["ADT^A18"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "MRG", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 }
+  ]
+}

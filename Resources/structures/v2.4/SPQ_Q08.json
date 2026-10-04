@@ -1,0 +1,12 @@
+{
+  "structure": "SPQ_Q08",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-116.",
+  "triggers": ["SPQ^Q08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SPR", "min": 1, "max": 1 },
+    { "segment": "RDF", "min": 0, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

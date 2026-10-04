@@ -536,11 +536,19 @@ struct MessageStructureValidationTests {
 
     // MARK: - Version rule
 
-    @Test("A recognised version with no structure data (v2.4) is an info issue")
+    @Test("A recognised version with no structure data (v2.3.1) is an info issue")
     func notModelledVersion() throws {
-        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.4", [Self.evn, Self.pid, Self.pv1]))
+        let issues = try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.3.1", [Self.evn, Self.pid, Self.pv1]))
         #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A01")])
         #expect(issues.first?.severity == .info)
+    }
+
+    // P8b-13 (V24-A01): the v2.4 structures are loaded from the CH03 3.3.1 print; PV1 is required.
+    @Test("v2.4 structures are matched: ADT^A01^ADT_A01 without PV1 is a missing segment")
+    func v24StructuresMatched() throws {
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.4", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.4", [Self.evn, Self.pid])).map(\.code)
+                == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "PV1", group: nil)])
     }
 
     @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.8.1", "2.9"])

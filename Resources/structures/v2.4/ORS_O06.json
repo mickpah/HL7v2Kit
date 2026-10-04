@@ -1,0 +1,24 @@
+{
+  "structure": "ORS_O06",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.10.2 ORS - stock requisition order acknowledgment message (event O06), p 4-73. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/ORS_O06.xsd, ORS_O06.RESPONSE.CONTENT), PATIENT (HL7-xml v2.4/ORS_O06.xsd, ORS_O06.PATIENT.CONTENT) and ORDER (HL7-xml v2.4/ORS_O06.xsd, ORS_O06.ORDER.CONTENT).",
+  "triggers": ["ORS^O06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RQD", "min": 1, "max": 1 },
+        { "segment": "RQ1", "min": 0, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "structure": "PMU_B03",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 15, section 15.3.3 PMU/ACK - Delete personnel record (event B03), p 15-5.",
+  "triggers": ["PMU^B03"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "STF", "min": 1, "max": 1 }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "structure": "EAN_U09",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 13, section 13.3.9 EAN/ACK - automated equipment notification (event U09), p 13-21. Unprinted group names (ADR-019 decision 3): NOTIFICATION (HL7-xml v2.4/EAN_U09.xsd, EAN_U09.NOTIFICATION.CONTENT).",
+  "triggers": ["EAN^U09"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "group": "NOTIFICATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "NDS", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": 1 }
+    ]},
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}

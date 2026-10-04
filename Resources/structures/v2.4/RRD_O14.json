@@ -1,0 +1,26 @@
+{
+  "structure": "RRD_O14",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.13.8 RRD - pharmacy/treatment dispense acknowledgement message (event O14), p 4-83. Unprinted group names (ADR-019 decision 3): RESPONSE (HL7-xml v2.4/RRD_O14.xsd, RRD_O14.RESPONSE.CONTENT), PATIENT (HL7-xml v2.4/RRD_O14.xsd, RRD_O14.PATIENT.CONTENT), ORDER (HL7-xml v2.4/RRD_O14.xsd, RRD_O14.ORDER.CONTENT) and DISPENSE (HL7-xml v2.4/RRD_O14.xsd, RRD_O14.DISPENSE.CONTENT).",
+  "triggers": ["RRD^O14"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "DISPENSE", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "RXD", "min": 1, "max": 1 },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "segment": "RXC", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

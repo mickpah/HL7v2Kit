@@ -1,0 +1,15 @@
+{
+  "structure": "MFN_M12",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 8, section 8.8.2 MFN/MFK - service/test/observation master file, p 8-22. Unprinted group names (ADR-019 decision 3): MF_OBS_ATTRIBUTES (HL7-xml v2.4/MFN_M12.xsd, MFN_M12.MF_OBS_ATTRIBUTES.CONTENT).",
+  "triggers": ["MFN^M12"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_OBS_ATTRIBUTES", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "OM1", "min": 1, "max": 1 },
+      { "segment": "OM7", "min": 0, "max": 1 }
+    ]}
+  ]
+}

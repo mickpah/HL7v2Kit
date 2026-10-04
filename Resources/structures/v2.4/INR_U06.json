@@ -1,0 +1,12 @@
+{
+  "structure": "INR_U06",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 13, section 13.3.6 INR/ACK - automated equipment inventory request (event U06), p 13-20.",
+  "triggers": ["INR^U06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "segment": "INV", "min": 1, "max": null },
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}

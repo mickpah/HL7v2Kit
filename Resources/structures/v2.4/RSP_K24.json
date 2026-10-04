@@ -1,0 +1,15 @@
+{
+  "structure": "RSP_K24",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.59 Allocate identifiers (QBP) and response (RSP) (events Q24 and K24), pp 3-57 to 3-58.",
+  "triggers": ["RSP^K24"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 1, "max": 1 },
+    { "segment": "QPD", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 0, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

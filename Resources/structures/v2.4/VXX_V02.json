@@ -1,0 +1,16 @@
+{
+  "structure": "VXX_V02",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132. Unprinted group names (ADR-019 decision 3): PATIENT (overrides.json: HL7 v2.4 Chapter 4, section 4.17.4 VXX - response to vaccination query returning multiple PID matches, p 4-132: the unnamed group with first segment PID at the root (v2.4 prints no group names); HL7-xml v2.4 has no VXX_V02.xsd, so named PATIENT from HL7-xml v2.5.1/VXX_V02.xsd, VXX_V02.PATIENT.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+  "triggers": ["VXX^V02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "override", "min": 1, "max": null, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "NK1", "min": 0, "max": null }
+    ]}
+  ]
+}

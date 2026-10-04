@@ -1,0 +1,36 @@
+{
+  "structure": "SQM_S25",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25. Unprinted group names (ADR-019 decision 3): REQUEST (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment ARQ at the root (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named REQUEST from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.REQUEST.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), RESOURCES (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment RGS at [REQUEST] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named RESOURCES from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.RESOURCES.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), SERVICE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIS at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named SERVICE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.SERVICE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), GENERAL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIG at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named GENERAL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.GENERAL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).), PERSONNEL_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIP at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named PERSONNEL_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.PERSONNEL_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).) and LOCATION_RESOURCE (overrides.json: HL7 v2.4 Chapter 10, section 10.5.3 SQM/SQR - schedule query message and response (event S25), p 10-25: the unnamed group with first segment AIL at [REQUEST, RESOURCES] (v2.4 prints no group names); HL7-xml v2.4 has no SQM_S25.xsd, so named LOCATION_RESOURCE from HL7-xml v2.5.1/SQM_S25.xsd, SQM_S25.LOCATION_RESOURCE.CONTENT: the same structure ID, parent path, first segment and member set (P8b-13 ruling 1).).",
+  "triggers": ["SQM^S25"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "REQUEST", "nameSource": "override", "min": 0, "max": 1, "elements": [
+      { "segment": "ARQ", "min": 1, "max": 1 },
+      { "segment": "APR", "min": 0, "max": 1 },
+      { "segment": "PID", "min": 0, "max": 1 },
+      { "group": "RESOURCES", "nameSource": "override", "min": 1, "max": null, "elements": [
+        { "segment": "RGS", "min": 1, "max": 1 },
+        { "group": "SERVICE", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "AIS", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "GENERAL_RESOURCE", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "AIG", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "PERSONNEL_RESOURCE", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "AIP", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]},
+        { "group": "LOCATION_RESOURCE", "nameSource": "override", "min": 0, "max": null, "elements": [
+          { "segment": "AIL", "min": 1, "max": 1 },
+          { "segment": "APR", "min": 0, "max": 1 }
+        ]}
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

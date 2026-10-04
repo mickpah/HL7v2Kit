@@ -1,0 +1,10 @@
+{
+  "structure": "QCN_J01",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 5, section 5.4.6 QCN/ACK - cancel query/acknowledge message (event J01), p 5-44; the same structure is printed for QSX^J02 (5.4.7).",
+  "triggers": ["QCN^J01", "QSX^J02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "QID", "min": 1, "max": 1 }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "structure": "ADT_A20",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 3, section 3.3.20 ADT/ACK - bed status update (event A20), p 3-27.",
+  "triggers": ["ADT^A20"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "NPU", "min": 1, "max": 1 }
+  ]
+}

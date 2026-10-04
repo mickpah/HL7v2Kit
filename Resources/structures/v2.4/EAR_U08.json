@@ -1,0 +1,16 @@
+{
+  "structure": "EAR_U08",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 13, section 13.3.8 EAR/ACK - automated equipment response (event U08), p 13-21. Unprinted group names (ADR-019 decision 3): COMMAND_RESPONSE (HL7-xml v2.4/EAR_U08.xsd, EAR_U08.COMMAND_RESPONSE.CONTENT).",
+  "triggers": ["EAR^U08"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "group": "COMMAND_RESPONSE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ECD", "min": 1, "max": 1 },
+      { "segment": "SAC", "min": 0, "max": 1 },
+      { "segment": "ECR", "min": 1, "max": 1 }
+    ]},
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}

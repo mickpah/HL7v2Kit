@@ -1,0 +1,15 @@
+{
+  "structure": "MFN_M04",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 8, section 8.10.1 Charge description master file message (MFN/MFK), p 8-72. Unprinted group names (ADR-019 decision 3): MF_CDM (HL7-xml v2.4/MFN_M04.xsd, MFN_M04.MF_CDM.CONTENT).",
+  "triggers": ["MFN^M04"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_CDM", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "CDM", "min": 1, "max": 1 },
+      { "segment": "PRC", "min": 0, "max": null }
+    ]}
+  ]
+}

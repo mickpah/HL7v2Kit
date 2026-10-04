@@ -1,0 +1,73 @@
+{
+  "structure": "OML_O21",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.4.6 OML - laboratory order message (event O21), pp 4-23 to 4-24. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/OML_O21.xsd, OML_O21.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/OML_O21.xsd, OML_O21.PATIENT_VISIT.CONTENT), INSURANCE (HL7-xml v2.4/OML_O21.xsd, OML_O21.INSURANCE.CONTENT), ORDER_GENERAL (HL7-xml v2.4/OML_O21.xsd, OML_O21.ORDER_GENERAL.CONTENT), CONTAINER_1 (HL7-xml v2.4/OML_O21.xsd, OML_O21.CONTAINER_1.CONTENT), ORDER (HL7-xml v2.4/OML_O21.xsd, OML_O21.ORDER.CONTENT), OBSERVATION_REQUEST (HL7-xml v2.4/OML_O21.xsd, OML_O21.OBSERVATION_REQUEST.CONTENT), CONTAINER_2 (HL7-xml v2.4/OML_O21.xsd, OML_O21.CONTAINER_2.CONTENT), OBSERVATION (HL7-xml v2.4/OML_O21.xsd, OML_O21.OBSERVATION.CONTENT), PRIOR_RESULT (HL7-xml v2.4/OML_O21.xsd, OML_O21.PRIOR_RESULT.CONTENT), PATIENT_PRIOR (HL7-xml v2.4/OML_O21.xsd, OML_O21.PATIENT_PRIOR.CONTENT), PATIENT_VISIT_PRIOR (HL7-xml v2.4/OML_O21.xsd, OML_O21.PATIENT_VISIT_PRIOR.CONTENT), ORDER_PRIOR (HL7-xml v2.4/OML_O21.xsd, OML_O21.ORDER_PRIOR.CONTENT) and OBSERVATION_PRIOR (HL7-xml v2.4/OML_O21.xsd, OML_O21.OBSERVATION_PRIOR.CONTENT).",
+  "triggers": ["OML^O21"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]},
+      { "group": "INSURANCE", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]},
+      { "segment": "GT1", "min": 0, "max": 1 },
+      { "segment": "AL1", "min": 0, "max": null }
+    ]},
+    { "group": "ORDER_GENERAL", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "group": "CONTAINER_1", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "SAC", "min": 1, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "OBSERVATION_REQUEST", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "group": "CONTAINER_2", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "SAC", "min": 1, "max": 1 },
+            { "segment": "OBX", "min": 0, "max": null }
+          ]},
+          { "segment": "TCD", "min": 0, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "DG1", "min": 0, "max": null },
+          { "group": "OBSERVATION", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "segment": "OBX", "min": 1, "max": 1 },
+            { "segment": "TCD", "min": 0, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]},
+          { "group": "PRIOR_RESULT", "nameSource": "v2xml", "min": 0, "max": null, "elements": [
+            { "group": "PATIENT_PRIOR", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+              { "segment": "PID", "min": 1, "max": 1 },
+              { "segment": "PD1", "min": 0, "max": 1 }
+            ]},
+            { "group": "PATIENT_VISIT_PRIOR", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+              { "segment": "PV1", "min": 1, "max": 1 },
+              { "segment": "PV2", "min": 0, "max": 1 }
+            ]},
+            { "segment": "AL1", "min": 0, "max": null },
+            { "group": "ORDER_PRIOR", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+              { "segment": "ORC", "min": 0, "max": 1 },
+              { "segment": "OBR", "min": 1, "max": 1 },
+              { "segment": "NTE", "min": 0, "max": null },
+              { "group": "OBSERVATION_PRIOR", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+                { "segment": "OBX", "min": 1, "max": 1 },
+                { "segment": "NTE", "min": 0, "max": null }
+              ]}
+            ]}
+          ]}
+        ]},
+        { "segment": "FT1", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null },
+        { "segment": "BLG", "min": 0, "max": 1 }
+      ]}
+    ]}
+  ]
+}

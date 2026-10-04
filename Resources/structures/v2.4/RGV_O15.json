@@ -1,0 +1,47 @@
+{
+  "structure": "RGV_O15",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 4, section 4.13.9 RGV - pharmacy/treatment give message (event O15), p 4-84. Unprinted group names (ADR-019 decision 3): PATIENT (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.PATIENT.CONTENT), PATIENT_VISIT (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.PATIENT_VISIT.CONTENT), ORDER (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ORDER.CONTENT), ORDER_DETAIL (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ORDER_DETAIL.CONTENT), ORDER_DETAIL_SUPPLEMENT (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ORDER_DETAIL_SUPPLEMENT.CONTENT), COMPONENTS (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.COMPONENTS.CONTENT), ENCODING (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.ENCODING.CONTENT), GIVE (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.GIVE.CONTENT) and OBSERVATION (HL7-xml v2.4/RGV_O15.xsd, RGV_O15.OBSERVATION.CONTENT).",
+  "triggers": ["RGV^O15"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "segment": "AL1", "min": 0, "max": null },
+      { "group": "PATIENT_VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PV1", "min": 1, "max": 1 },
+        { "segment": "PV2", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "group": "ORDER", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "ORDER_DETAIL", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "group": "ORDER_DETAIL_SUPPLEMENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "NTE", "min": 1, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENTS", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+            { "segment": "RXC", "min": 1, "max": null },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]},
+      { "group": "ENCODING", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "RXE", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]},
+      { "group": "GIVE", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "RXG", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "OBX", "min": 0, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

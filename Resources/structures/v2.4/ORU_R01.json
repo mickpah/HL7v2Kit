@@ -1,0 +1,34 @@
+{
+  "structure": "ORU_R01",
+  "version": "2.4",
+  "citation": "HL7 v2.4 Chapter 7, section 7.3.1 ORU - unsolicited observation message (event R01), p 7-19. Unprinted group names (ADR-019 decision 3): PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT), PATIENT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT.CONTENT), VISIT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT) and OBSERVATION (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT).",
+  "triggers": ["ORU^R01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "group": "PATIENT_RESULT", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+      { "group": "PATIENT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "PD1", "min": 0, "max": 1 },
+        { "segment": "NK1", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "group": "VISIT", "nameSource": "v2xml", "min": 0, "max": 1, "elements": [
+          { "segment": "PV1", "min": 1, "max": 1 },
+          { "segment": "PV2", "min": 0, "max": 1 }
+        ]}
+      ]},
+      { "group": "ORDER_OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 0, "max": 1 },
+        { "segment": "OBR", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "CTD", "min": 0, "max": 1 },
+        { "group": "OBSERVATION", "nameSource": "v2xml", "min": 1, "max": null, "elements": [
+          { "segment": "OBX", "min": 0, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null }
+        ]},
+        { "segment": "FT1", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}
