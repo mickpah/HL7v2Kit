@@ -164,6 +164,16 @@ oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.3/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.C
 reject "nameSource v2xml-v2.4 outside v2.3 and v2.3.1" 'for v2.3 and v2.3.1 only' "$PRE
 oru('v2xml-v2.4', 'PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).')"
 
+# P8b-15: v2.3 names derived through the v2.3.1 bundle first, cited by its folder as on disk.
+accept "nameSource v2xml-v2.3.1 on v2.3, cited through the HL7-xml 2.3.1 bundle" "$PRE
+oru('v2xml-v2.3.1', 'PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database, derived for v2.3 ORU_R01).', '2.3')"
+
+reject "nameSource v2xml-v2.3.1 outside v2.3" 'v2xml-v2.3.1 for v2.3 only' "$PRE
+oru('v2xml-v2.3.1', 'PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database).', '2.3.1')"
+
+reject "nameSource v2xml-v2.3.1 cited to a folder that does not exist" 'is not cited' "$PRE
+oru('v2xml-v2.3.1', 'PATIENT_RESULT (HL7-xml v2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, derived for v2.3 ORU_R01).', '2.3')"
+
 reject "max below min" 'bad occurrence bounds' "$PRE
 d = load('v2.5.1/ACK.json'); d['elements'][0]['min'] = 2; save('v2.5.1/ACK.json', d)"
 

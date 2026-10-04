@@ -31,7 +31,7 @@ ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
          "triggerFolds": [], "primaryPrints": [], "unionPrints": [], "unresolvedCaptions": [],
-         "captionStructures": []}
+         "captionStructures": [], "eventsFromTitle": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -530,7 +530,7 @@ def check_bundle_names_group_by_path_and_members():
     assert s["citation"].endswith(" Unprinted group names (ADR-019 decision 3): VISIT "
                                   "(HL7-xml v2.5.1/XYZ_X01.xsd, XYZ_X01.VISIT.CONTENT)."), s["citation"]
     assert ("XYZ_X01", "name", "v2xml VISIT at [1]: HL7-xml v2.5.1/XYZ_X01.xsd, XYZ_X01.VISIT.CONTENT") in report, report
-    assert "1 v2xml, 0 v2xml-v2.4, 0 synthesised, 0 override; 1 bundle-differs" in ext.name_summary("2.5.1", report), \
+    assert "1 v2xml, 0 v2xml-v2.3.1, 0 v2xml-v2.4, 0 synthesised, 0 override; 1 bundle-differs" in ext.name_summary("2.5.1", report), \
         ext.name_summary("2.5.1", report)
     ext.validate_names(s)
 
@@ -581,9 +581,11 @@ def check_derivation_through_v24():
 
 def check_synthesised_fallback():
     rows = ["MSH", "[", "PV1", "[PV2]", "]", "{", "PV1", "DB1", "}"]
-    elements, log = _named(rows, "2.3", "XYZ_X01", _bundles("2.4", {}))
+    # P8b-15: v2.3 derives through the v2.3.1 bundle, then v2.4; the citation names both misses.
+    elements, log = _named(rows, "2.3", "XYZ_X01", ext.Bundles({"2.3.1": {}, "2.4": {}}))
     assert [(e["name"], e["source"]) for e in log] == [("PV1_GROUP", "synthesised"), ("PV1_GROUP2", "synthesised")], log
-    assert log[0]["cite"] == "synthesised: HL7-xml v2.4 has no XYZ_X01.xsd and no XYZ_*.xsd group matches", log[0]
+    assert log[0]["cite"] == ("synthesised: HL7-xml 2.3.1 has no XYZ_X01.xsd and no XYZ_*.xsd group matches; "
+                              "HL7-xml v2.4 has no XYZ_X01.xsd and no XYZ_*.xsd group matches"), log[0]
     assert log[0]["miss"], log[0]
     assert [e.get("group") for e in elements] == [None, "PV1_GROUP", "PV1_GROUP2"], elements
 
@@ -626,7 +628,7 @@ def check_name_source_validation():
         except ext.NameSourceError:
             continue
         raise AssertionError(f"nameSource {source} with citation {citation!r} must be rejected")
-    assert ext.NAME_SOURCES == ("printed", "override", "v2xml", "v2xml-v2.4", "synthesised")
+    assert ext.NAME_SOURCES == ("printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "synthesised")
 
 
 def check_bundle_maps():
@@ -634,7 +636,8 @@ def check_bundle_maps():
     # derivation as its fallback; v2.3 has no bundle.
     assert set(ext.BUNDLES) == {"v2.3.1", "v2.4", "v2.5.1", "v2.6", "v2.7.1", "v2.8.2"}, ext.BUNDLES
     assert ext.BUNDLES["v2.3.1"] == "HL7-xml 2.3.1", ext.BUNDLES
-    assert ext.BUNDLES_DERIVED == {"v2.3": "v2.4", "v2.3.1": "v2.4"}, ext.BUNDLES_DERIVED
+    # P8b-15: v2.3 derives through the v2.3.1 bundle first, then v2.4 (controller carry-in).
+    assert ext.BUNDLES_DERIVED == {"v2.3": ("v2.3.1", "v2.4"), "v2.3.1": ("v2.4",)}, ext.BUNDLES_DERIVED
     assert set(ext.BUNDLES) | set(ext.BUNDLES_DERIVED) == set(ext.ERAS)
 
 
@@ -1303,14 +1306,176 @@ def check_reader_layouts():
     assert s is None and "group mark not read" in [r for r in report if r[1] == "skipped"][0][2], report
 
 
-def check_borrowed_table_errata():
-    # v2.3 resolves through v2.3.1's Table 0354, so that table's own errata apply to it.
+def check_v23_synthesised_ids_no_table():
+    # P8b-15: v2.3 prints no structure ID and no Table 0354, and its MSH-9 has no third component
+    # (lookup rule 3). The ID is synthesised CODE_EVT from the code and the first event of the
+    # section title, flagged in the citation; no table (v2.3.1's or any other) is consulted, so
+    # another version's Table 0354 errata never reach v2.3.
+    assert not hasattr(ext, "TABLE_0354"), "v2.3 must not borrow v2.3.1's Table 0354"
     text = _page(1, ["    XYZ                       Synthetic Message                     Chapter"]
-                 + _table("XYZ", [("MSH", "Header")])[1:], heading="9.2.1 XYZ - synthetic (event X07)")
-    fix = {**EMPTY, "errata": [{"version": "2.3.1", "where": "table-0354", "structure": "XYZ_X07",
-                                "printed": "XYZ__X07", "intended": "XYZ_X07", "citation": "x"}]}
-    structures, report, _ = _run("2.3", [("syn", text)], fix, tables=[("XYZ__X07", ["X07"], "X07")])
-    assert structures["XYZ_X07"]["triggers"] == ["XYZ^X07"], (structures, report)
+                 + _table("XYZ", [("MSH", "Header")])[1:], heading="9.2.1 XYZ - synthetic (events X07, X08)")
+    fix = {**EMPTY, "errata": [{"version": "2.3.1", "where": "table-0354", "structure": "XYZ_X01",
+                                "printed": "XYZ__X07", "intended": "XYZ_X01", "citation": "x"}]}
+    structures, report, _ = _run("2.3", [("syn", text)], fix, tables=[("XYZ__X07", ["X07", "X08"], "X07, X08")])
+    assert list(structures) == ["XYZ_X07"] and structures["XYZ_X07"]["triggers"] == ["XYZ^X07", "XYZ^X08"], structures
+    cite = structures["XYZ_X07"]["citation"]
+    assert ("Structure ID XYZ_X07 synthesised as CODE_EVT from the message code XYZ and X07, the first event "
+            "the section title names (v2.3 prints no structure ID and no Table 0354)") in cite, cite
+    assert "Events XYZ^X07 and XYZ^X08 read from the section title 9.2.1 'XYZ - synthetic (events X07, X08)'" in cite, cite
+    assert "Table 0354" not in cite.replace("no Table 0354", ""), cite
+    assert not [r for r in report if r[1].startswith("0354")], report
+    # A single event: the ID and the trigger are that event's.
+    one = _page(1, ["    ABC                       Synthetic Message                     Chapter"]
+                + _table("ABC", [("MSH", "Header")])[1:], heading="9.2.2 ABC - synthetic (event X09)")
+    structures, _, _ = _run("2.3", [("syn", one)])
+    assert structures["ABC_X09"]["triggers"] == ["ABC^X09"], structures
+
+
+def check_v23_events_from_title():
+    # P8b-15: a code-alone caption whose section title names no event (v2.3 CH04 4.6 "DIET
+    # ORDERS", CH10 10.2) takes its events from a cited overrides.json eventsFromTitle entry,
+    # keyed by section and caption (and the n-th such caption of the section); the citation says
+    # where the print gives them. Without one it stays needs-event. A stale entry fails a full read.
+    body = (["    XYZ                       Synthetic Message                     Chapter"]
+            + _table("XYZ", [("MSH", "Header"), ("PID", "Patient")])[1:] + [""]
+            + ["The second synthetic message replaces the patient with a visit as follows:", ""]
+            + ["    XYZ                       Synthetic Message                     Chapter"]
+            + _table("XYZ", [("MSH", "Header"), ("PV1", "Visit")])[1:])
+    text = _page(1, body, heading="9.3 XYZ TRIGGER EVENTS")
+    _, report, _ = _run("2.3", [("syn", text)])
+    assert [r[0] for r in report if r[1] == "needs-event"] == ["XYZ^?", "XYZ^?"], report
+    entries = {**EMPTY, "eventsFromTitle": [
+        {"version": "2.3", "section": "9.3", "caption": "XYZ", "events": ["X05", "X06"], "citation": "9.3 lists X05, X06"},
+        {"version": "2.3", "section": "9.3", "caption": "XYZ", "occurrence": 2, "events": ["X10"], "citation": "c2"}]}
+    ext.validate_overrides({**EMPTY, **entries})
+    structures, report, _ = _run("2.3", [("syn", text)], entries, full=True)
+    assert structures["XYZ_X05"]["triggers"] == ["XYZ^X05", "XYZ^X06"], structures
+    assert [e["segment"] for e in structures["XYZ_X05"]["elements"]] == ["MSH", "PID"], structures
+    assert [e["segment"] for e in structures["XYZ_X10"]["elements"]] == ["MSH", "PV1"], structures
+    assert ("Events XYZ^X05 and XYZ^X06 from overrides.json eventsFromTitle (section 9.3 'XYZ TRIGGER EVENTS' "
+            "names no event): 9.3 lists X05, X06") in structures["XYZ_X05"]["citation"], structures["XYZ_X05"]["citation"]
+    assert not [r for r in report if r[1] in ("error", "needs-event")], report
+    # Stale: an entry for a caption whose title names its events, or for no caption at all.
+    titled = _page(1, body[:4], heading="9.4.1 XYZ - synthetic (event X01)")
+    stale = {**EMPTY, "eventsFromTitle": [
+        {"version": "2.3", "section": "9.4.1", "caption": "XYZ", "events": ["X02"], "citation": "x"},
+        {"version": "2.3", "section": "9.9", "caption": "XYZ", "events": ["X02"], "citation": "x"}]}
+    structures, report, _ = _run("2.3", [("syn", titled)], stale, full=True)
+    assert structures["XYZ_X01"]["triggers"] == ["XYZ^X01"], structures
+    errors = [r for r in report if r[1] == "error"]
+    assert len(errors) == 2 and all("eventsFromTitle entry" in r[2] for r in errors), errors
+    for bad in ({"version": "2.3", "section": "9.3", "caption": "XYZ", "events": [], "citation": "x"},
+                {"version": "2.3", "section": "9.3", "caption": "XYZ", "events": ["X1"], "citation": "x"},
+                {"version": "2.3", "section": "9.3", "caption": "XYZ", "events": ["X01"], "occurrence": 0, "citation": "x"}):
+        try:
+            ext.validate_overrides({**EMPTY, "eventsFromTitle": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"{bad} must be rejected")
+
+
+def check_v23_caption_forms():
+    # P8b-15 reader fixes, v2.3 only (the section-title era): CH02 2.18.1 prints "QRY (A to B)"
+    # (a direction tag and no caret); CH04 4.8.6 prints "RRE Pharmacy/Treatment Encoded Order
+    # Acknowledgment Message  Chapter" (one space after the code), whose rows split at the MSH
+    # row's description column; CH04 4.8.17 prints "R0R   Pharmacy /Treatment Order Response"
+    # with no Chapter column, read only when the next row is MSH (a segment row inside a table
+    # never is a caption).
+    text = _page(1, ["    QRY (A to B)              Synthetic Query                       Chapter"]
+                 + _table("QRY", [("MSH", "Header"), ("QRD", "Query")])[1:] + [""]
+                 + ["    QCK (B to A)              Synthetic Ack                         Chapter"]
+                 + _table("QCK", [("MSH", "Header"), ("MSA", "Ack")])[1:], heading="2.18.1 QRY/QCK - deferred (event Q02)")
+    structures, report, count = _run("2.3", [("syn", text)])
+    assert count == 2 and set(structures) == {"QRY_Q02", "QCK_Q02"}, (count, structures, report)
+    assert [e["segment"] for e in structures["QCK_Q02"]["elements"]] == ["MSH", "MSA"], structures
+    narrow = _page(2, ["    RRE Synthetic Encoded Order Acknowledgment Message         Chapter",
+                       "    MSH                       Message Header                        2",
+                       "    [ ERR ]                   Error                                 2",
+                       "    [{NTE}]                   Notes                                 2"],
+                   heading="4.8.6 RDE/RRE - synthetic (event X02)")
+    bare = _page(3, ["    R0R                       Synthetic Response",
+                     "    MSH                       Message Header",
+                     "    RXO                       Order",
+                     "    {RXR}                     Route"], heading="4.8.17 R0R - synthetic (event X03)")
+    structures, report, count = _run("2.3", [("syn", narrow + bare)])
+    assert count == 2, (count, report)
+    assert [(e["segment"], e["min"], e["max"]) for e in structures["RRE_X02"]["elements"]] == [
+        ("MSH", 1, 1), ("ERR", 0, 1), ("NTE", 0, None)], structures
+    assert [e["segment"] for e in structures["R0R_X03"]["elements"]] == ["MSH", "RXO", "RXR"], structures
+    # The relaxed forms are the section-title era's only.
+    for era in ("caret", "table-0354"):
+        assert ext.match_caption("    QRY (A to B)              Synthetic Query        Chapter", era) is None, era
+
+
+def check_closing_bracket_in_description_column():
+    # v2.3 CH02 2.14.2 UDM (p 2-69) prints "{   DSP   } Display Data": the closing brace sits one
+    # space before the description, past the column split. It belongs to the syntax cell.
+    s, report = _structure([("MSH", "Header"), ("URD", "Definition"), ("          {   DSP   } Display Data", ""),
+                            ("[ DSC ]", "Continuation")])
+    assert s and [(e["segment"], e["min"], e["max"]) for e in s["elements"]] == [
+        ("MSH", 1, 1), ("URD", 1, 1), ("DSP", 1, None), ("DSC", 0, 1)], (s, report)
+
+
+def check_single_space_cell_and_shifted_page():
+    # v2.3 CH03 3.2.19 ADR (p 3-17) prints "[{ROL}] Role" with one space before the description at
+    # the column, and CH07 7.6.2 CSU (p 7-64) "{RXA Pharmacy Administration": rows, not prose. CH04
+    # 4.8.19 RDR (p 4-106) sets the page after the break further right, so "{[RXC]}" ends at the
+    # description column: a row. A prose line inside an open group stays unreadable.
+    s, report = _structure([("MSH", "Header"), ("[ {PR1", "Procedures"),
+                            ("                      [{ROL}] Role", ""), ("}]", ""), ("[DSC]", "Continuation")])
+    assert s and [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "PR1_GROUP", "DSC"], (s, report)
+    assert [(e["segment"], e["min"], e["max"]) for e in s["elements"][1]["elements"]] == [
+        ("PR1", 1, 1), ("ROL", 0, None)], s
+    s, report = _structure([("MSH", "Header"), ("{", ""), ("  RXE", ""), ("                   {[RXC]}            Component", ""),
+                            ("}", "")])
+    assert s and [(e["segment"], e["min"], e["max"]) for e in s["elements"][1]["elements"]] == [
+        ("RXE", 1, 1), ("RXC", 0, None)], (s, report)
+    s, report = _structure([("MSH", "Header"), ("{", ""), ("PID", "Patient"),
+                            ("The PID segment carries the patient for every group", ""), ("}", "")])
+    assert s is None and any("prose inside an open group" in r[2] for r in report), report
+
+
+def check_v23_names_through_v231_then_v24():
+    # Controller carry-in (P8b-15): v2.3 group names are derived through the v2.3.1 bundle first
+    # (nameSource v2xml-v2.3.1, cited "HL7-xml 2.3.1/" with the file's generator), then the v2.4
+    # bundle (v2xml-v2.4), matching on (structure ID or message code, first segment, member set),
+    # never by position; else synthesised. The v2.3.1 bundle's CHOICE stays refused there too.
+    rows = ["MSH", "[", "PV1", "[PV2]", "]", "[", "{", "IN1", "[IN2]", "}", "]", "[", "NK1", "AL1", "]"]
+    own = _xsd_encoder("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.VISIT 0 1, XYZ_X01.CHOICE 0 1;"
+                                  "XYZ_X01.VISIT: PV1 1 1, PV2 0 1; XYZ_X01.CHOICE: NK1 1 1, AL1 1 1")
+    v24 = _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.INSURANCE 0 unbounded, XYZ_X01.NOK_ALLERGY 0 1;"
+                          "XYZ_X01.INSURANCE: IN1 1 1, IN2 0 1; XYZ_X01.NOK_ALLERGY: NK1 1 1, AL1 1 1")
+    b = ext.Bundles({"2.3.1": {"XYZ_X01.xsd": own}, "2.4": {"XYZ_X01.xsd": v24}})
+    _, log = _named(rows, "2.3", "XYZ_X01", b)
+    assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml-v2.3.1"), ("INSURANCE", "v2xml-v2.4"),
+                                                      ("NOK_ALLERGY", "v2xml-v2.4")], log
+    assert log[0]["cite"] == ("HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.VISIT.CONTENT, generator "
+                              "urn:com.sun:encoder-hl7-1.0, derived for v2.3 XYZ_X01"), log[0]
+    assert log[1]["cite"].startswith("HL7-xml v2.4/XYZ_X01.xsd, XYZ_X01.INSURANCE.CONTENT, derived for v2.3 XYZ_X01"), log[1]
+    assert "CHOICE" in log[2]["cite"] and "refused" in log[2]["cite"], log[2]
+    # A synthesised v2.3 ID (XYZ_X03) matches a v2.3.1 file of the same message code, cited with both IDs.
+    _, log = _named(rows[:5], "2.3", "XYZ_X03", b)
+    assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml-v2.3.1")], log
+    assert log[0]["cite"].endswith("derived for v2.3 XYZ_X03, which differs from XYZ_X01 only by trigger"), log[0]
+    # Neither bundle: synthesised, the citation naming both misses.
+    _, log = _named(["MSH", "[", "OBR", "NTE", "]"], "2.3", "XYZ_X01", b)
+    assert log[0]["source"] == "synthesised" and "HL7-xml 2.3.1" in log[0]["cite"] and "v2.4" in log[0]["cite"], log
+    # v2.3.1 itself still never derives through its own bundle under the derived source.
+    _, log = _named(rows[:5], "2.3.1", "XYZ_X01", b)
+    assert [(e["name"], e["source"]) for e in log] == [("VISIT", "v2xml")], log
+    # nameSource validation: v2xml-v2.3.1 on v2.3 only, cited by the folder as on disk.
+    def names(source, citation, version="2.3"):
+        return {"structure": "XYZ_X01", "version": version, "citation": f"c. Unprinted group names: {citation}.",
+                "elements": [{"group": "G", "nameSource": source, "min": 0, "max": 1, "elements": []}]}
+    ext.validate_names(names("v2xml-v2.3.1", "G (HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.G.CONTENT, derived for v2.3 XYZ_X01)"))
+    for bad in (names("v2xml-v2.3.1", "G (HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.G.CONTENT)", "2.3.1"),
+                names("v2xml-v2.3.1", "G (HL7-xml 2.3.1/XYZ_X01.xsd, XYZ_X01.G.CONTENT)", "2.4"),
+                names("v2xml-v2.3.1", "G (HL7-xml v2.3.1/XYZ_X01.xsd, XYZ_X01.G.CONTENT)")):
+        try:
+            ext.validate_names(bad)
+        except ext.NameSourceError:
+            continue
+        raise AssertionError(f"{bad} must be rejected")
 
 
 def check_conformance_print_never_primary():
@@ -1660,7 +1825,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_excluded_print_never_primary, check_footnotes_inside_table, check_group_mark_errata,
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
           check_caption_errata, check_reader_layouts,
-          check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
+          check_v23_synthesised_ids_no_table, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
@@ -1671,7 +1836,9 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_v231_names_bundle_then_v24_then_synthesised, check_two_structure_match_needs_declaration,
           check_unresolved_caption_declared, check_space_before_caret_caption, check_v231_name_source_validation,
           check_caption_erratum_occurrence, check_caption_structure_declared, check_v231_own_bundle_other_trigger,
-          check_table_0354_provenance, check_table_0354_event_erratum_union]
+          check_table_0354_provenance, check_table_0354_event_erratum_union, check_v23_events_from_title,
+          check_v23_caption_forms, check_closing_bracket_in_description_column, check_v23_names_through_v231_then_v24,
+          check_single_space_cell_and_shifted_page]
 
 
 def main():

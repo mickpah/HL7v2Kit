@@ -471,11 +471,11 @@ def check_version_maps_agree():
                 if key.lstrip("v") == "2.7.1":
                     assert path.startswith("HL7_V271_PDF/PDF/V271_"), f"{name}: v2.7.1 source {path!r}"
     # P8b-2b (pre-flight B2): the HL7 v2.xml bundle map names every modelled version once,
-    # with the explicit derived-through-v2.4 exception for 2.3 (no bundle exists) and 2.3.1
-    # (its own bundle first, v2.4 as the fallback; P8b-14).
+    # with the explicit derived exceptions for 2.3 (no bundle exists: through the 2.3.1 bundle,
+    # then v2.4; P8b-15) and 2.3.1 (its own bundle first, v2.4 as the fallback; P8b-14).
     bundled = {k[1:] for k in structures.BUNDLES}
-    derived = {k[1:]: v[1:] for k, v in structures.BUNDLES_DERIVED.items()}
-    assert derived == {"2.3": "2.4", "2.3.1": "2.4"}, f"bundle derivation {derived}"
+    derived = {k[1:]: tuple(b[1:] for b in v) for k, v in structures.BUNDLES_DERIVED.items()}
+    assert derived == {"2.3": ("2.3.1", "2.4"), "2.3.1": ("2.4",)}, f"bundle derivation {derived}"
     assert bundled & set(derived) == {"2.3.1"}, f"bundled and derived: {sorted(bundled & set(derived))}"
     assert bundled | set(derived) == modelled, \
         f"bundle map: missing {sorted(modelled - bundled - set(derived))}, unmodelled {sorted((bundled | set(derived)) - modelled)}"

@@ -17,10 +17,12 @@ Resolution of an unnamed printed group (never by position):
       citation names the file's generator, since that bundle mixes two); the bundle's CHOICE is
       refused there (never taken without a cited override), and any miss falls
       through to the v2.4 derivation below.
-  v2.3 (no bundle) and v2.3.1's misses (ruling D2), through the v2.4 bundle: in <STRUCT>.xsd, the group
-      with the same first segment and member set (the parent path breaks a tie); where v2.4 has
-      no <STRUCT>.xsd, every v2.4 <CODE>_*.xsd of the same message code (the ID differs only by
-      trigger, OMD_O01 against OMD_O03), cited with both IDs. nameSource v2xml-v2.4.
+  v2.3 (no bundle) and v2.3.1's misses (ruling D2), derived through a later bundle: in <STRUCT>.xsd,
+      the group with the same first segment and member set (the parent path breaks a tie); where
+      that bundle has no <STRUCT>.xsd, every <CODE>_*.xsd of the same message code (the ID differs
+      only by trigger, OMD_O01 against OMD_O03), cited with both IDs. v2.3 derives through the
+      v2.3.1 bundle first (nameSource v2xml-v2.3.1, P8b-15 controller carry-in; its CHOICE refused
+      as for v2.3.1), then the v2.4 bundle; v2.3.1 through the v2.4 bundle (nameSource v2xml-v2.4).
   otherwise: an overrides.json groupNames entry (nameSource override), else <FIRSTSEG>_GROUP,
       numbered 2, 3, ... on a clash within the structure (nameSource synthesised). Every
       synthesised name is a report row (no-bundle-name).
@@ -36,9 +38,11 @@ ROOT = os.path.join(os.path.dirname(HERE), "docs", "XML-schemas")
 # check-audit-schemas.py). The v2.3.1 folder name has no "v" (owner addition, 2026-10-04).
 BUNDLES = {"v2.3.1": "HL7-xml 2.3.1", "v2.4": "HL7-xml v2.4", "v2.5.1": "HL7-xml v2.5.1", "v2.6": "HL7-xml v2.6",
            "v2.7.1": "HL7-xml v2.7.1", "v2.8.2": "HL7-xml v2.8.2"}
-# Names derived through the v2.4 bundle (ruling D2): every v2.3 name (no bundle), and each v2.3.1
-# group its own bundle does not name (P8b-14 ruling: v2.3.1 bundle first, then D2, then synthesised).
-BUNDLES_DERIVED = {"v2.3": "v2.4", "v2.3.1": "v2.4"}
+# Names derived through later bundles (ruling D2), in order: every v2.3 name (no bundle) through
+# the v2.3.1 bundle, then the v2.4 bundle (P8b-15 controller carry-in); each v2.3.1 group its own
+# bundle does not name through the v2.4 bundle (P8b-14 ruling: v2.3.1 bundle first, then D2, then
+# synthesised).
+BUNDLES_DERIVED = {"v2.3": ("v2.3.1", "v2.4"), "v2.3.1": ("v2.4",)}
 # Bundle names never taken without a cited override (P8b-14 ruling): in the v2.3.1 bundle, CHOICE
 # is the generator's name for an unnamed choice, so it is not read as a printed group's name; the
 # derivation or an override names that group. ENCODING, first refused with it, is a genuine group
@@ -48,7 +52,7 @@ REFUSED = {"2.3.1": ("CHOICE",)}
 # of the other five bundles with an encoder generator (namespace urn:com.sun:encoder-hl7-1.0), so
 # a v2.3.1 citation names the generator of the file it reads.
 CITE_GENERATOR = ("2.3.1",)
-NAME_SOURCES = ("printed", "override", "v2xml", "v2xml-v2.4", "synthesised")
+NAME_SOURCES = ("printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "synthesised")
 _SHARED = {"datatypes", "fields", "messages", "segments"}   # not structures
 _XS = "{http://www.w3.org/2001/XMLSchema}"
 
@@ -209,14 +213,17 @@ def resolve(bundles, version, sid, path, elements):
                 return hits[0]["group"], "v2xml", _cite(version, sid, hits[0], bundles)
             else:
                 own_miss = f"no {folder(version)}/{sid}.xsd group {where} has {want}"
-        if f"v{version}" not in BUNDLES_DERIVED:
-            return None, None, own_miss
-    name, source, cite = _derive(bundles, version, sid, path, sig, want)
-    if name is None and own_miss:
-        cite = f"{own_miss}; {cite}"
-    elif own_miss and "refused" in own_miss:     # say why the version's own bundle name was not taken
-        cite = f"{cite}; {own_miss}"
-    return name, source, cite
+    if f"v{version}" not in BUNDLES_DERIVED:
+        return None, None, own_miss or f"no HL7-xml bundle for v{version}"
+    misses = [own_miss] if own_miss else []
+    for base in BUNDLES_DERIVED[f"v{version}"]:
+        name, source, cite = _derive(bundles, version, base[1:], sid, path, sig, want)
+        if name is not None:
+            # say why an earlier bundle's name was not taken
+            refused = [m for m in misses if "refused" in m]
+            return name, source, "; ".join([cite] + refused)
+        misses.append(cite)
+    return None, None, "; ".join(misses)
 
 
 def _by_code(bundles, version, sid, path, sig):
@@ -233,11 +240,12 @@ def _by_code(bundles, version, sid, path, sig):
     return g["group"], f"{_cite(version, s, g, bundles)}, for v{version} {sid}, which differs from {s} only by trigger"
 
 
-def _derive(bundles, version, sid, path, sig, want):
-    """The D2 derivation through the v2.4 bundle (v2.3, and v2.3.1's misses)."""
-    base = BUNDLES_DERIVED.get(f"v{version}", "")[1:]
-    if not base or not bundles.available(base):
-        return None, None, f"no HL7-xml bundle for v{version}"
+def _derive(bundles, version, base, sid, path, sig, want):
+    """The D2 derivation through the base bundle (v2.3 through v2.3.1, then v2.4; v2.3.1's misses
+    through v2.4): nameSource v2xml-v<base>. A name the base bundle's generator gives an unnamed
+    construct (REFUSED) is a miss whose citation says so."""
+    if not bundles.available(base):
+        return None, None, f"no HL7-xml bundle for v{base}"
     own = bundles.tree(base, sid)
     candidates = [sid] if own is not None else \
         [s for s in bundles.structures(base) if s.split("_")[0] == sid.split("_")[0] and s != sid]
@@ -247,14 +255,17 @@ def _derive(bundles, version, sid, path, sig, want):
         hits = [h for h in hits if h[1] == tuple(path)]
     if hits and len({g["group"] for _, _, g in hits}) == 1:
         s, _, g = hits[0]
-        cite = f"{_cite(base, s, g)}, derived for v{version} {sid}"
+        cite = f"{_cite(base, s, g, bundles)}, derived for v{version} {sid}"
         if s != sid:
             cite += f", which differs from {s} only by trigger"
-        return g["group"], "v2xml-v2.4", cite
+        if g["group"] in REFUSED.get(base, ()):
+            return None, None, (f"{cite} names it {g['group']}, a name refused without a cited override "
+                                "(P8b-14 ruling)")
+        return g["group"], f"v2xml-v{base}", cite
     if own is None:
         code = sid.split("_")[0]
-        return None, None, f"HL7-xml v{base} has no {sid}.xsd and no {code}_*.xsd group matches"
-    return None, None, f"no unique HL7-xml v{base}/{sid}.xsd group has {want}"
+        return None, None, f"{folder(base)} has no {sid}.xsd and no {code}_*.xsd group matches"
+    return None, None, f"no unique {folder(base)}/{sid}.xsd group has {want}"
 
 
 def _bounds(e):
@@ -289,6 +300,7 @@ def differences(printed, bundle, where="root"):
 def required_citation(name, source, version):
     """The text a structure citation must contain for a group named from a non-printed source
     (StructureCodegen enforces the same rule)."""
-    marker = {"override": "overrides.json", "v2xml": f"{folder(version)}/", "v2xml-v2.4": "HL7-xml v2.4/",
+    marker = {"override": "overrides.json", "v2xml": f"{folder(version)}/", "v2xml-v2.3.1": "HL7-xml 2.3.1/",
+              "v2xml-v2.4": "HL7-xml v2.4/",
               "synthesised": "synthesised"}[source]
     return f"{name} ({marker}"

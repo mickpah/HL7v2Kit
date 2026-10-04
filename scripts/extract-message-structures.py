@@ -69,9 +69,10 @@ ERAS = {v: (CHAPTERS[v], era) for v, era in {
 }.items()}
 ERAS_PENDING = {}   # P8b-3a wired the last four eras
 
-# Table 0354 that resolves a caption printing no structure ID (CODE^EVT, or v2.3's CODE alone).
-# v2.3 prints no Table 0354; its IDs resolve through v2.3.1's, the nearest later table (cited).
-TABLE_0354 = {"2.3": "2.3.1"}
+# Table 0354 resolves a v2.3.1 caption that prints no structure ID (CODE^EVT). v2.3 prints no Table
+# 0354 and its MSH-9 has no third component (ADR-019 lookup rule 3): its IDs are synthesised CODE_EVT
+# from the caption's code and the first event of its section title, and no table is consulted
+# (P8b-15; v2.3 borrowed v2.3.1's table, and with it that table's errata, until then).
 
 _DASHES = str.maketrans({"‐": "-", "‑": "-", "–": "-"})
 # A01, C01-C08, PCG,PCH,PCJ, S12-S24,S26,S27, varies; "S12-S24, S26" (v2.5.1 CH10's ACK caption)
@@ -98,6 +99,14 @@ COLUMNS = re.compile(r"^(\s*)Segments\s{2,}(Descriptions?)\b")
 COLUMNS_CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}\^\S+)\s{2,}(\S.*?)\s{2,}Status\s+Chap")
 # v2.3: the message code alone, a title and "Chapter"; the event is in the section title.
 CODE_ONLY = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})(\s{3,})(\S.*?)\s{2,}Chapter\s*$")
+# v2.3 (section-title era) also prints, P8b-15: a direction tag after the code, no caret ("QRY (A to
+# B)", CH02 2.18.1 and 2.18.2, p 2-74); and, read only when the next row is the MSH row, a code one
+# space from a long title ("RRE Pharmacy/Treatment Encoded Order Acknowledgment Message  Chapter",
+# CH04 4.8.6, p 4-73; RRA, 4.8.13) or a code with no Chapter column ("R0R  Pharmacy /Treatment Order
+# Response", CH04 4.8.17 to 4.8.21, pp 4-105 to 4-107).
+CODE_ONLY_TAG = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}) \([A-Z] to [A-Z]\)(\s{3,})(\S.*?)\s{2,}Chapter\s*$")
+CODE_LAX = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})(\s+)([A-Za-z][^|]*?)(?:\s{2,}Chapter)?\s*$")
+MSH_ROW = re.compile(r"^(\s*)MSH\s{2,}(?=Message Header\b)", re.I)
 TITLE_EVENTS = re.compile(r"\(\s*events?\s+([A-Z0-9]{3}(?:\s*(?:,|and|&|-|to)\s*[A-Z0-9]{3})*)\s*\)", re.I)
 FOOTNOTE = re.compile(r"^\s*\d{1,2}\s*$")      # a footnote digit on a line of its own (P8b-2a review)
 HEADING = re.compile(r"^(\d+[A-Z]?(?:\.[A-Z])?(?:\.\d+)+)\s+(\S.*\S)\s*$")   # 3.3.1, 4A.3.20, 2.B.7.5
@@ -163,6 +172,7 @@ class Caption:
     era: str = "caret"
     events: list = field(default_factory=list)
     id_source: str = "printed"
+    events_from: str = ""     # v2.3: the overrides.json eventsFromTitle citation that gave the events
 
     @property
     def key(self):
@@ -196,6 +206,9 @@ def page_labels(lines):
     return [labels.get(p, "") for p in phys]
 
 
+_CELL = re.compile(r"[\[\]{}<>| ]*[A-Z][A-Z0-9]{2}[\[\]{}<>| ]*")
+
+
 def split_row(line, desc_col):
     """(left, description) of a table line, or None when text crosses the description column
     (prose, not a table row)."""
@@ -223,8 +236,26 @@ def split_row(line, desc_col):
         for m in re.finditer(r" {2,}", s):
             if indent < m.start() < desc_col and m.end() > desc_col + 8:
                 return (s[:m.start()].strip(), "")
+        # A syntax cell (brackets and one segment ID) one space from its description at the column
+        # (v2.3 CH03 3.2.19 ADR, p 3-17: "[{ROL}] Role"; CH07 7.6.2 CSU, p 7-64: "{RXA Pharmacy
+        # Administration"; P8b-15).
+        for m in re.finditer(r"(?<=\S) (?=[A-Z][a-z])", s):
+            if m.start() > indent and abs(m.end() - desc_col) <= 8 and _CELL.fullmatch(s[:m.start()].strip()):
+                return (s[:m.start()].strip(), s[m.end():].strip())
+        # A page set further right than the caption's (v2.3 CH04 4.8.19 RDR, p 4-106: the rows after
+        # the page break start six columns on, and "{[RXC]}" ends where the description column was):
+        # a row whose cell ends at the description column, its other text past it (P8b-15).
+        for m in re.finditer(r" {2,}", s):
+            if indent < m.start() == desc_col and m.end() > desc_col + 8 and _CELL.fullmatch(s[:m.start()].strip()):
+                return (s[:m.start()].strip(), "")
         return None
-    return (s[:best.start()].strip(), s[best.end():].strip())
+    left, desc = s[:best.start()].strip(), s[best.end():].strip()
+    # A closing bracket printed one space before the description, past the split (v2.3 CH02 2.14.2
+    # UDM, p 2-69: "{   DSP   } Display Data"; P8b-15), belongs to the syntax cell.
+    tail = re.match(r"([\]}>]+) (\S.*)$", desc)
+    if tail and left:
+        return (f"{left} {tail.group(1)}", tail.group(2))
+    return (left, desc)
 
 
 def _title(text):
@@ -277,7 +308,7 @@ def match_caption(line, era):
         m = COLON.match(line)
         return m and (len(m.group(1)), m.group(2), m.group(3), m.group(4), m.start(5), m.group(5))
     if era == "section-title":
-        m = CODE_ONLY.match(line)
+        m = CODE_ONLY.match(line) or CODE_ONLY_TAG.match(line)
         return m and (len(m.group(1)), m.group(2), "", "", m.start(4), m.group(4))
     m = CAPTION.match(line)
     if m:
@@ -302,6 +333,17 @@ def match_wrapped(lines, i, era):
     caption wraps onto line i + 1 (WRAPPED), and the title column stays the first line's."""
     line = lines[i].replace("\f", "")
     m = match_caption(line, era)
+    if era == "section-title":
+        nxt = next((x.replace("\f", "") for x in lines[i + 1:i + 4] if x.strip() and not FURN.search(x)), "")
+        row = MSH_ROW.match(nxt)
+        if m:
+            # The rows' description column is the MSH row's, which v2.3 sets apart from a title that
+            # starts nearer the code (CH04 4.8.9 RRD, p 4-80: the title at column 30, the rows' at 44).
+            return ((m[0], m[1], m[2], m[3], row.end(), m[5]) if row else m), 0
+        lax = CODE_LAX.match(line.translate(_DASHES))
+        row = lax and lax.group(2) != "MSH" and row
+        # The title column is the MSH row's description column (the caption's own may sit one space on).
+        return (row and (len(lax.group(1)), lax.group(2), "", "", row.end(), lax.group(4))) or None, 0
     if m or era not in ("caret", "table-0354") or i + 1 >= len(lines):
         return m, 0
     w = WRAPPED.match(line.translate(_DASHES))
@@ -745,6 +787,34 @@ def table_provenance(ver, table_ver, era, sid, how, errata, where):
     return text + "."
 
 
+def synthesised_provenance(era, sid, entries, fold):
+    """The sentences a v2.3 structure citation carries (P8b-15): v2.3 prints no structure ID and no
+    Table 0354, so the ID is synthesised (CODE_EVT from the primary print's code and first event,
+    or the code alone for a triggerFolds entry onto CODE^*), and each print's events come from its
+    section title or, where the title names none, a cited overrides.json eventsFromTitle entry.
+    entries: (caption, rows, error), the primary print first. Other eras: empty."""
+    if era != "section-title":
+        return ""
+    why = "(v2.3 prints no structure ID and no Table 0354)"
+    if fold:
+        return f" Structure ID {sid} synthesised as the message code alone (overrides.json triggerFolds) {why}."
+    cap = entries[0][0]
+    whence = ("the first event overrides.json eventsFromTitle gives it" if cap.events_from
+              else "the first event the section title names")
+    text = f" Structure ID {sid} synthesised as CODE_EVT from the message code {cap.code} and {cap.events[0]}, {whence} {why}."
+    seen = []
+    for c, _, _ in entries:
+        trigs = _join([f"{c.code}^{v}" for v in c.events])
+        if c.events_from:
+            line = (f"Events {trigs} from overrides.json eventsFromTitle (section {c.section} "
+                    f"'{c.section_title}' names no event): {c.events_from}")
+        else:
+            line = f"Events {trigs} read from the section title {c.section} '{c.section_title}'"
+        if line not in seen:
+            seen.append(line)
+    return text + "".join(f" {line}." for line in seen)
+
+
 def name_citation(log):
     """The sentence that cites every non-printed group name, in document order."""
     if not log:
@@ -759,11 +829,14 @@ def validate_names(structure):
         source = group.get("nameSource")
         if source not in NAME_SOURCES:
             raise NameSourceError(f"group {group['group']}: nameSource {source!r} is not one of {NAME_SOURCES}")
-        # v2xml-v2.4 is for v2.3 and v2.3.1 only; v2.3 has no bundle, so no v2xml (P8b-14: v2.3.1 has one).
+        # v2xml-v2.4 is for v2.3 and v2.3.1 only, v2xml-v2.3.1 for v2.3 only (P8b-15); v2.3 has no
+        # bundle, so no v2xml (P8b-14: v2.3.1 has one).
         if (source == "v2xml-v2.4" and structure["version"] not in ("2.3", "2.3.1")) or \
+                (source == "v2xml-v2.3.1" and structure["version"] != "2.3") or \
                 (source == "v2xml" and structure["version"] == "2.3"):
             raise NameSourceError(f"group {group['group']}: nameSource {source} on v{structure['version']}; "
-                                  "v2xml-v2.4 is for v2.3 and v2.3.1 only, and v2.3 has no v2xml bundle")
+                                  "v2xml-v2.4 is for v2.3 and v2.3.1 only, v2xml-v2.3.1 for v2.3 only, and v2.3 "
+                                  "has no v2xml bundle")
         if source != "printed":
             need = _v2xml.required_citation(group["group"], source, structure["version"])
             if need not in structure["citation"]:
@@ -849,6 +922,11 @@ _OVERRIDE_KEYS = {
     # (P8b-14, v2.3.1: the one MFK row, MFK_M01, omits M02 and M04). The structure must be a row
     # of the version's table; the citation joins the structure's.
     "captionStructures": {"version", "section", "caption", "structure", "citation"},
+    # v2.3 (P8b-15): the events of a code-alone caption whose section title names none, or names
+    # them in a form the title reader does not read ("(event O01/O02)"), with the citation of where
+    # the print gives them (section text, Table 0003). Keyed by section and caption (the code as
+    # printed); an optional "occurrence" (1-based) narrows it to the n-th such caption of the section.
+    "eventsFromTitle": {"version", "section", "caption", "events", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -866,14 +944,19 @@ def validate_overrides(data):
                 raise OverridesError(f"unionPrints entry for {entry.get('structure')} needs two distinct prints")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
-            if "occurrence" in entry and not (kind == "errata" and entry.get("where") in ("syntax-cell", "caption")
+            if "occurrence" in entry and not ((kind == "eventsFromTitle" or (kind == "errata" and entry.get("where") in
+                                                                             ("syntax-cell", "caption")))
                                               and isinstance(entry["occurrence"], int) and entry["occurrence"] >= 1):
-                raise OverridesError(f"{kind} entry for {entry.get('structure')}: 'occurrence' is a positive "
-                                     "integer on a syntax-cell or caption erratum only")
+                raise OverridesError(f"{kind} entry for {entry.get('structure', entry.get('caption'))}: 'occurrence' is "
+                                     "a positive integer on a syntax-cell or caption erratum or an eventsFromTitle entry only")
+            if kind == "eventsFromTitle" and not (isinstance(entry.get("events"), list) and entry["events"] and all(
+                    isinstance(v, str) and re.fullmatch(r"[A-Z0-9]{3}", v) for v in entry["events"])):
+                raise OverridesError(f"eventsFromTitle entry for {entry.get('caption')} in section "
+                                     f"{entry.get('section')}: events must be a non-empty list of three-character events")
             if kind == "captionStructures" and not re.fullmatch(_SID, entry.get("structure", "")):
                 raise OverridesError(f"captionStructures entry for {entry.get('caption')}: bad structure ID "
                                      f"{entry.get('structure')!r}")
-            optional = {"exclusions": {"caption"}, "errata": {"occurrence"}}.get(kind, set())
+            optional = {"exclusions": {"caption"}, "errata": {"occurrence"}, "eventsFromTitle": {"occurrence"}}.get(kind, set())
             if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
@@ -1077,17 +1160,18 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     """Read every caption of one version. texts: [(source, lines)] in reading order. Returns
     (structures by ID, report rows, caption count). A report row is (structure, status, reason).
     bundles: the HL7 v2.xml bundles (default none, so every unprinted name is an override or
-    synthesised). tables: Table 0354 rows (default: the version's, see TABLE_0354). full: the
+    synthesised). tables: Table 0354 rows (default: the version's own; v2.3 reads none). full: the
     texts are the whole print, so an exclusion or erratum that matches nothing is an error."""
     ver = version.lstrip("v")
     era = ERAS[f"v{ver}"][1]
     bundles = bundles if bundles is not None else Bundles()
     errata = [e for e in overrides["errata"] if e["version"] == ver]
     used_errata = set()
-    table_ver = TABLE_0354.get(ver, ver)     # the table's own errata apply where it is borrowed (v2.3)
+    table_ver = ver
     row_errata = {}
-    table = apply_table_errata(tables if tables is not None else load_0354(table_ver),
-                               [e for e in overrides["errata"] if e["version"] == table_ver], used_errata, row_errata)
+    table = [] if era == "section-title" else apply_table_errata(
+        tables if tables is not None else load_0354(table_ver),
+        [e for e in overrides["errata"] if e["version"] == table_ver], used_errata, row_errata)
     excluded = {x["section"]: x for x in overrides["exclusions"] if x["version"] == ver}
     used_exclusions = set()
     caption_errata = {}
@@ -1106,6 +1190,13 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     rows_of_table = {row for row, _, _ in table}
     used_unresolved, used_assigned, assigned_cites = set(), set(), {}
     provenance = {}     # structure ID: how its Table 0354 resolutions went (P8b-14 fix round 1)
+    # v2.3 (P8b-15): events for a code-alone caption whose title names none; an entry with an
+    # occurrence is preferred over one without for the n-th such caption of its section.
+    title_events_for = {}
+    for e in sorted((e for e in overrides.get("eventsFromTitle", []) if e["version"] == ver),
+                    key=lambda e: "occurrence" not in e):
+        title_events_for.setdefault((e["section"], e["caption"]), []).append(e)
+    seen_untitled, used_titles = {}, set()
     prints, count, report = {}, 0, []
     for source, lines in texts:
         consumed = set()
@@ -1134,11 +1225,22 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 continue
             if cap.code in general and not cap.structure:
                 cap.structure = cap.code
+            if era == "section-title" and not cap.events and cap.code not in general:
+                key = (cap.section, cap.code)
+                seen_untitled[key] = seen_untitled.get(key, 0) + 1
+                entry = next((e for e in title_events_for.get(key, [])
+                              if e.get("occurrence") in (None, seen_untitled[key])), None)
+                if entry:
+                    used_titles.add(id(entry))
+                    cap.events, cap.event, cap.events_from = list(entry["events"]), ",".join(entry["events"]), entry["citation"]
             if not cap.events and cap.code not in general:
                 report.append((f"{cap.code}^{cap.event or '?'}", "needs-event",
                                f"{cap.source} line {cap.line + 1}: section {cap.section} {cap.section_title[:60]!r} "
                                "names no event"))
                 continue
+            if era == "section-title" and not cap.structure:
+                # v2.3 prints no structure ID and no Table 0354 (lookup rule 3): CODE_EVT, the first event.
+                cap.structure, cap.id_source = f"{cap.code}_{cap.events[0]}", "synthesised"
             owners = [cap.structure] if cap.structure else []
             if not cap.structure:
                 hits = resolve_structure(table, cap.code, cap.events)
@@ -1320,6 +1422,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                           + table_provenance(ver, table_ver, era, sid, provenance.get(sid),
                                                              row_errata.get(sid), where_0354)
                                           + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
+                                          + synthesised_provenance(era, sid, entries, fold)
                                           + name_citation(log)})
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
@@ -1357,6 +1460,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                    for key in sorted(set(unresolved) - used_unresolved)]
         report += [(key[1], "error", f"captionStructures entry for section {key[0]} matches no unresolved caption")
                    for key in sorted(set(assigned) - used_assigned)]
+        report += [(e["caption"], "error", f"eventsFromTitle entry for section {e['section']}"
+                                           + (f" (occurrence {e['occurrence']})" if "occurrence" in e else "")
+                                           + " matches no caption whose section title names no event")
+                   for entries in title_events_for.values() for e in entries if id(e) not in used_titles]
     return structures, report, count
 
 
@@ -1382,7 +1489,7 @@ def reconcile_0354(ver, table_ver, table, prints):
     """Table 0354 against the captions: a printed structure ID the table lacks
     (0354-missing-row), and a table row no normative print carries (0354-missing-caption)."""
     if not table:
-        return [] if ver != "2.3" else [("", "0354-note", "v2.3 prints no Table 0354; IDs resolve through v2.3.1's")]
+        return []
     if table_ver != ver:
         return []
     codes = {row for row, _, _ in table}
@@ -1419,7 +1526,8 @@ def name_summary(version, report):
     names = [r[2].split(" ")[0] for r in report if r[1] == "name"]
     misses = sum(1 for r in report if r[1] == "no-bundle-name")
     differs = sum(1 for r in report if r[1] == "bundle-differs")
-    return (f"v{version.lstrip('v')} names: {names.count('v2xml')} v2xml, {names.count('v2xml-v2.4')} v2xml-v2.4, "
+    return (f"v{version.lstrip('v')} names: {names.count('v2xml')} v2xml, {names.count('v2xml-v2.3.1')} v2xml-v2.3.1, "
+            f"{names.count('v2xml-v2.4')} v2xml-v2.4, "
             f"{misses} synthesised, {names.count('override')} override; {differs} bundle-differs")
 
 
@@ -1458,8 +1566,9 @@ def main(argv=None):
             print(f"{version}: not read yet ({ERAS_PENDING[version]})")
             failed |= bool(args.check or args.write)
             continue
-        # v2.3.1 needs its own bundle and the v2.4 one (its fallback, P8b-14); v2.3 the v2.4 one.
-        needed = [v for v in (version if version in BUNDLES else None, BUNDLES_DERIVED.get(version)) if v]
+        # v2.3.1 needs its own bundle and the v2.4 one (its fallback, P8b-14); v2.3 the v2.3.1 and
+        # v2.4 ones (P8b-15).
+        needed = ([version] if version in BUNDLES else []) + list(BUNDLES_DERIVED.get(version, ()))
         if any(not bundles.available(v[1:]) for v in needed):
             print(f"{version}: no HL7 v2.xml bundle at docs/XML-schemas/"
                   f"{', '.join(BUNDLES[v] for v in needed if not bundles.available(v[1:]))} (group names need it)")

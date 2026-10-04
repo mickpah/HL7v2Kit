@@ -111,8 +111,9 @@ private func matches(_ value: String, _ pattern: String) -> Bool {
 
 /// Accepted group `nameSource` values (ADR-019 decision 3, P8b-2b): printed by the chapter, an
 /// `overrides.json` entry, the version's HL7 v2.xml bundle (v2.3.1's folder is `HL7-xml 2.3.1`,
-/// P8b-14), the v2.4 bundle for v2.3 and as v2.3.1's fallback, or synthesised as `<FIRSTSEG>_GROUP`.
-let structureNameSources = ["printed", "override", "v2xml", "v2xml-v2.4", "synthesised"]
+/// P8b-14), the v2.3.1 bundle for v2.3 (P8b-15), the v2.4 bundle for v2.3 and as v2.3.1's
+/// fallback, or synthesised as `<FIRSTSEG>_GROUP`.
+let structureNameSources = ["printed", "override", "v2xml", "v2xml-v2.3.1", "v2xml-v2.4", "synthesised"]
 
 /// The text a structure citation must contain to cite a group named from a non-printed source
 /// (the extractor's `required_citation` is the same rule); nil for `printed`.
@@ -121,6 +122,7 @@ func requiredNameCitation(name: String, source: String, version: String) -> Stri
     switch source {
     case "override": marker = "overrides.json"
     case "v2xml": marker = version == "2.3.1" ? "HL7-xml 2.3.1/" : "HL7-xml v\(version)/"   // the folder as on disk
+    case "v2xml-v2.3.1": marker = "HL7-xml 2.3.1/"
     case "v2xml-v2.4": marker = "HL7-xml v2.4/"
     case "synthesised": marker = "synthesised"
     default: return nil
@@ -175,9 +177,10 @@ private func validateName(_ name: String, kind: String, source: String?, version
         throw StructureSchemaError(description: "\(kind) \(name) needs nameSource one of \(structureNameSources)")
     }
     // v2.3 has no bundle and v2.3.1 falls back to v2.4 (P8b-14): only their names come through
-    // v2.4, and v2.3 has no v2xml.
-    guard !(source == "v2xml-v2.4" && !["2.3", "2.3.1"].contains(version)), !(source == "v2xml" && version == "2.3") else {
-        throw StructureSchemaError(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, and v2.3 has no v2xml bundle")
+    // v2.4, only v2.3's through the v2.3.1 bundle (P8b-15), and v2.3 has no v2xml.
+    guard !(source == "v2xml-v2.4" && !["2.3", "2.3.1"].contains(version)), !(source == "v2xml-v2.3.1" && version != "2.3"),
+          !(source == "v2xml" && version == "2.3") else {
+        throw StructureSchemaError(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, v2xml-v2.3.1 for v2.3 only, and v2.3 has no v2xml bundle")
     }
     if let needed = requiredNameCitation(name: name, source: source, version: version),
        !citation.contains(needed) {
