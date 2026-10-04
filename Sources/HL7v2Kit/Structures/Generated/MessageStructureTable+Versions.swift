@@ -6,7 +6,7 @@ extension MessageStructureTable {
     // Completeness per grammar version (ADR-019 lookup rule 1):
     //   2.3 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-15)
     //   2.3.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-14)
-    //   2.4 (incomplete): P8b-13: v2.4 not yet complete (stage A registers the not-modelled structures)
+    //   2.4 (complete): P8b-13: 147 structures extracted from the v2.4 chapter prints (v2.4 prints no group names: 298 named from HL7-xml v2.4, 35 by cited overrides.json groupNames, 1 synthesised), every Table 0354 v2.4 row modelled or registered; the 19 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, MFN_M03 and templates MFN_M01, MFR_M01, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row; DSR_P04 and QRY_P04, printed as 'see Chapter 5' with no syntax) and the 6 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RRA_O02, RRE_O02) are registered as not modelled below (register section E, v2.4 not-modelled table)
     //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
     //   2.6 (complete): P8b-10: 188 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
     //   2.7.1 (complete): P8b-16: 164 structures extracted from the v2.7.1 chapter prints (ACK from its looser print, overrides.json primaryPrints), every Table 0354 v2.7.1 row modelled or registered; the 13 unreadable prints (G6 placeholders PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF and templates QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11), UDM_Q05 (URD and URS) and QRY_PC4, RCI_I05, RCL_I06 and RQC_I05 (QRD and QRF, withdrawn as of v2.7), segments v2.7.1 does not define, RDR_RDR (no normative print) and the 39 Table 0354 rows marked Deprecated with no printed syntax are registered as not modelled below (register section E, v2.7.1 not-modelled table)
@@ -31,7 +31,7 @@ extension MessageStructureTable {
 
     /// The grammar versions whose every printed structure is modelled
     /// or registered as not modelled.
-    static let completeVersions: Set<Version> = [.v2_5_1, .v2_6, .v2_7_1, .v2_8_2]
+    static let completeVersions: Set<Version> = [.v2_4, .v2_5_1, .v2_6, .v2_7_1, .v2_8_2]
 
     /// The structures `version`'s grammar version prints, or its Table
     /// 0354 lists, that are registered as not modelled (register section

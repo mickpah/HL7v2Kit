@@ -543,12 +543,36 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .info)
     }
 
-    // P8b-13 (V24-A01): the v2.4 structures are loaded from the CH03 3.3.1 print; PV1 is required.
-    @Test("v2.4 structures are matched: ADT^A01^ADT_A01 without PV1 is a missing segment")
-    func v24StructuresMatched() throws {
+    // ADR-019 lookup rule 1 on v2.4 (P8b-13): complete, so an unknown MSH-9.3 ID is a mismatch;
+    // registered IDs (a template, a CH12 placeholder, a Table 0354 row with no print, a 'see
+    // Chapter 5' caption) are info with their reason; a Z trigger declaring a printed structure is
+    // matched; ADT^A01 (V24-A01: PV1 required, CH03 3.3.1) and ORU^R01 resolve and match; ORM^O01's
+    // order-detail choice takes any one alternative.
+    @Test("v2.4 complete (P8b-13): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A01, ORU^R01 and ORM^O01 matched")
+    func v24RuleOne() throws {
+        #expect(MessageStructureTable.isComplete(.v2_4))
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.4", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(unknown.first?.severity == .error)
+        for (msh9, id, text) in [("QBP^Q11^QBP_Q11", "QBP_Q11", "query template"),
+                                 ("MFN^M01^MFN_M01", "MFN_M01", "master file template"),
+                                 ("PPR^PC1^PPR_PC1", "PPR_PC1", "OBR, etc."),
+                                 ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
+                                 ("QRY^P04^QRY_P04", "QRY_P04", "see Chapter 5")] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.4", ["QPD|1", "RCP|I"]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")
+        }
+        #expect(try structureIssues(Self.wire("RSP^Z84^RSP_K23", version: "2.4", ["MSA|AA|1", "QAK|1|OK", "QPD|Z84", "PID|1"])).isEmpty)
         #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.4", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A04", version: "2.4", [Self.evn, Self.pid, Self.pv1])).isEmpty)
         #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", version: "2.4", [Self.evn, Self.pid])).map(\.code)
                 == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "PV1", group: nil)])
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", version: "2.4", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
+        for detail in ["OBR|1", "RXO|1", "ODS|1"] {
+            #expect(try structureIssues(Self.wire("ORM^O01^ORM_O01", version: "2.4", [Self.pid, "ORC|NW", detail])).isEmpty, "\(detail)")
+        }
+        #expect(try !structureIssues(Self.wire("ORM^O01^ORM_O01", version: "2.4", [Self.pid, "ORC|NW", "OBR|1", "RXO|1"])).isEmpty)
     }
 
     @Test("An unresolved MSH-12 is not matched, only the info issue", arguments: ["2.8.1", "2.9"])
