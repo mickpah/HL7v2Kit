@@ -6,8 +6,11 @@
 // STRUCTURE_LINT_CORPUS/v<ver>/<ID>.json and writes lint-<ver>.tsv into the
 // directory STRUCTURE_LINT_OUT (default: the corpus directory), one row per
 // structure: version, structure, lint result, shape class, recogniser
-// agreement, DSC placement, exact-matcher agreement (P8b-12). Skipped
-// unless STRUCTURE_LINT_CORPUS is set.
+// agreement, DSC placement, exact-matcher agreement (P8b-12), the default
+// guards' verdict (P8b-7). Skipped
+// unless STRUCTURE_LINT_CORPUS is set. P8b-7: files are read through
+// StructureJSONDecoder (the codegen's acceptance rules); a missing or empty
+// version directory fails; each structure has a minimum sequence count.
 
 import Foundation
 import Testing
@@ -16,25 +19,6 @@ import Testing
 @Suite("Structure lint corpus", .enabled(if: ProcessInfo.processInfo.environment["STRUCTURE_LINT_CORPUS"] != nil,
                                          "Set STRUCTURE_LINT_CORPUS to an extractor --dump directory"))
 struct StructureLintCorpusTests {
-    enum DecodeError: Error { case shape(String) }
-
-    /// The element tree of one extractor JSON file (the shape the codegen reads).
-    static func elements(_ json: Any) throws -> [StructureElement] {
-        guard let list = json as? [[String: Any]] else { throw DecodeError.shape("elements is not a list") }
-        return try list.map { item in
-            let min = item["min"] as? Int ?? 1
-            let max = item["max"] as? Int
-            if let id = item["segment"] as? String { return .segment(id, min: min, max: max) }
-            if item.keys.contains("choice"), let alternatives = item["alternatives"] {
-                return .choice(item["choice"] as? String, min: min, max: max, alternatives: try elements(alternatives))
-            }
-            guard let name = item["group"] as? String, let children = item["elements"] else {
-                throw DecodeError.shape("neither segment nor group: \(item)")
-            }
-            return .group(name, min: min, max: max, elements: try elements(children))
-        }
-    }
-
     private static func name(_ element: StructureElement) -> String { element.label }
 
     /// Where an overlap's FOLLOW comes from: a later sibling group or segment
@@ -86,13 +70,22 @@ struct StructureLintCorpusTests {
         let env = ProcessInfo.processInfo.environment
         let root = URL(fileURLWithPath: try #require(env["STRUCTURE_LINT_CORPUS"]))
         let dir = root.appendingPathComponent("v\(version)")
-        let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
+        // P8b-7: a missing or empty version directory fails; it is not a pass.
+        let files = try FileManager.default.contentsOfDirectory(atPath: dir.path).filter { $0.hasSuffix(".json") }.sorted()
+        try #require(!files.isEmpty, "no structure JSON under \(dir.path)")
         var rows: [String] = []
-        for file in files.filter({ $0.hasSuffix(".json") }).sorted() {
-            let object = try JSONSerialization.jsonObject(with: Data(contentsOf: dir.appendingPathComponent(file)))
-            let json = try #require(object as? [String: Any])
-            let id = try #require(json["structure"] as? String)
-            let elements = try Self.elements(json["elements"] as Any)
+        // P8b-7: the default-on guards (StructureGuardTests) on every dumped
+        // structure, recorded per row and timed, so a version task sees what
+        // the guards will say before it commits, and the guard cost per
+        // structure at full scale.
+        let grammarVersion = try #require(Version(rawValue: version))
+        var guardTime = Duration.zero
+        var guardFailures = 0
+        for file in files {
+            // The codegen's acceptance rules (StructureJSONDecoder, P8b-7).
+            let id = String(file.dropLast(5))
+            let decoded = try StructureJSONDecoder.decode(Data(contentsOf: dir.appendingPathComponent(file)), id: id, version: version)
+            let elements = decoded.elements
             let lint = StructureMatcher.lint(elements)
             let result = lint.isDeterministic ? "pass" : "fail: " + lint.conflicts
                 .map { "\($0.segmentIDs.joined(separator: ",")) at \($0.path.joined(separator: "/"))" }
@@ -100,7 +93,12 @@ struct StructureLintCorpusTests {
             let shapes = lint.isDeterministic ? "-" : Array(Set(lint.conflicts.map { Self.shape(elements, $0) })).sorted()
                 .joined(separator: "; ")
             let sequences = StructureMatcherPropertyTests.sequences(elements)
-            let structure = MessageStructure(id: id, version: version, triggers: [], citation: "corpus", elements: elements)
+            // P8b-7: a minimum per structure: the full enumeration for an
+            // alphabet of at most four IDs, else at least 1,000 sequences.
+            let letters = StructureMatcherPropertyTests.alphabet(elements).filter { $0 != "MSH" }
+            let minimum = letters.count <= 4 ? StructureMatcherPropertyTests.exhaustive(letters, upTo: 8).count : 1_000
+            #expect(sequences.count >= minimum, "\(version) \(id): \(sequences.count) sequences checked, minimum \(minimum)")
+            let structure = decoded
             let matcher = StructureMatcher(structure: structure)
             let exact = ExactStructureMatcher(structure: structure)
             var disagree = 0, exactDisagree = 0
@@ -112,10 +110,17 @@ struct StructureLintCorpusTests {
             // P8b-12: the exact matcher (the Validator's choice when the lint fails) must never disagree.
             #expect(exactDisagree == 0, "\(version) \(id): exact matcher disagrees on \(exactDisagree)")
             #expect(structure.requiresExactMatch == !lint.isDeterministic)
+            var guarded: (problems: [String], sequences: Int) = ([], 0)
+            guardTime += ContinuousClock().measure {
+                guarded = StructureGuardTests.guardStructure(structure, version: grammarVersion, derivations: StructureGuardTests.defaultDerivations)
+            }
+            if !guarded.problems.isEmpty { guardFailures += 1 }
             rows.append([version, id, result, shapes, "\(sequences.count) checked, \(disagree) disagree",
-                         Self.dsc(elements), "exact: \(exactDisagree) disagree"].joined(separator: "\t"))
+                         Self.dsc(elements), "exact: \(exactDisagree) disagree",
+                         guarded.problems.isEmpty ? "guards: ok" : "guards: " + guarded.problems.joined(separator: "; ")].joined(separator: "\t"))
             print("lint-progress \(version) \(id) \(rows.count)/\(files.count)")
         }
+        print("structure-guard-corpus v\(version): \(files.count) structures, \(guardFailures) failing a guard, guards took \(guardTime)")
         let out = URL(fileURLWithPath: env["STRUCTURE_LINT_OUT"] ?? root.path).appendingPathComponent("lint-\(version).tsv")
         try (rows.joined(separator: "\n") + "\n").write(to: out, atomically: true, encoding: .utf8)
     }

@@ -3,8 +3,8 @@
 // which the P8b-3b run found the one-pass matcher wrong (p8b-3b-lint.tsv,
 // "N disagree" with N > 0). Their JSON is not committed: it is read from an
 // extractor dump (`extract-message-structures.py --dump DIR`, never under
-// Resources/) through the corpus test's decoder. On each, the exact matcher
-// must agree with the reference recogniser on every generated sequence:
+// Resources/) through StructureJSONDecoder (the codegen's acceptance
+// rules, P8b-7). On each, the exact matcher must agree with the reference recogniser on every generated sequence:
 // `bound` per structure (default 500: about 12 s in a debug build; 3,000
 // takes about 70 s), seeded derivations of the grammar of at most 120
 // segments with the property test's four single-edit mutations each. The
@@ -56,9 +56,7 @@ struct ExactStructureMatcherCorpusTests {
         var checked = 0, onePassWrong = 0, acceptedCount = 0, maxStates = 0
         for (version, id) in Self.disagreeing {
             let url = root.appendingPathComponent("v\(version)/\(id).json")
-            let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
-            let json = try #require(object as? [String: Any], "\(version) \(id)")
-            let elements = try StructureLintCorpusTests.elements(json["elements"] as Any)
+            let elements = try StructureJSONDecoder.decode(Data(contentsOf: url), id: id, version: version).elements
             let structure = MessageStructure(id: id, version: version, triggers: [], citation: "corpus", elements: elements)
             #expect(structure.requiresExactMatch, "\(version) \(id) passes the lint")
             let sequences = Self.sequences(elements, bound: bound)
