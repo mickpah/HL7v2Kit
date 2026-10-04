@@ -5,8 +5,177 @@
 extension MessageStructureTable {
     static let v2_5_1: [String: MessageStructure] = [
         "ACK": v2_5_1_ACK,
+        "ADR_A19": v2_5_1_ADR_A19,
         "ADT_A01": v2_5_1_ADT_A01,
+        "ADT_A02": v2_5_1_ADT_A02,
+        "ADT_A03": v2_5_1_ADT_A03,
+        "ADT_A05": v2_5_1_ADT_A05,
+        "ADT_A06": v2_5_1_ADT_A06,
+        "ADT_A09": v2_5_1_ADT_A09,
+        "ADT_A12": v2_5_1_ADT_A12,
+        "ADT_A15": v2_5_1_ADT_A15,
+        "ADT_A16": v2_5_1_ADT_A16,
+        "ADT_A17": v2_5_1_ADT_A17,
+        "ADT_A18": v2_5_1_ADT_A18,
+        "ADT_A20": v2_5_1_ADT_A20,
+        "ADT_A21": v2_5_1_ADT_A21,
+        "ADT_A24": v2_5_1_ADT_A24,
+        "ADT_A30": v2_5_1_ADT_A30,
+        "ADT_A37": v2_5_1_ADT_A37,
+        "ADT_A38": v2_5_1_ADT_A38,
+        "ADT_A39": v2_5_1_ADT_A39,
+        "ADT_A43": v2_5_1_ADT_A43,
+        "ADT_A45": v2_5_1_ADT_A45,
+        "ADT_A50": v2_5_1_ADT_A50,
+        "ADT_A52": v2_5_1_ADT_A52,
+        "ADT_A54": v2_5_1_ADT_A54,
+        "ADT_A60": v2_5_1_ADT_A60,
+        "ADT_A61": v2_5_1_ADT_A61,
+        "BAR_P01": v2_5_1_BAR_P01,
+        "BAR_P02": v2_5_1_BAR_P02,
+        "BAR_P05": v2_5_1_BAR_P05,
+        "BAR_P06": v2_5_1_BAR_P06,
+        "BAR_P10": v2_5_1_BAR_P10,
+        "BAR_P12": v2_5_1_BAR_P12,
+        "BPS_O29": v2_5_1_BPS_O29,
+        "BRP_O30": v2_5_1_BRP_O30,
+        "BRT_O32": v2_5_1_BRT_O32,
+        "BTS_O31": v2_5_1_BTS_O31,
+        "CRM_C01": v2_5_1_CRM_C01,
+        "CSU_C09": v2_5_1_CSU_C09,
+        "DFT_P03": v2_5_1_DFT_P03,
+        "DFT_P11": v2_5_1_DFT_P11,
+        "DOC_T12": v2_5_1_DOC_T12,
+        "DSR_Q01": v2_5_1_DSR_Q01,
+        "DSR_Q03": v2_5_1_DSR_Q03,
+        "EAC_U07": v2_5_1_EAC_U07,
+        "EAN_U09": v2_5_1_EAN_U09,
+        "EAR_U08": v2_5_1_EAR_U08,
+        "EDR_R07": v2_5_1_EDR_R07,
+        "EQQ_Q04": v2_5_1_EQQ_Q04,
+        "ERP_R09": v2_5_1_ERP_R09,
+        "ESR_U02": v2_5_1_ESR_U02,
+        "ESU_U01": v2_5_1_ESU_U01,
+        "INR_U06": v2_5_1_INR_U06,
+        "INU_U05": v2_5_1_INU_U05,
+        "LSU_U12": v2_5_1_LSU_U12,
+        "MDM_T01": v2_5_1_MDM_T01,
+        "MDM_T02": v2_5_1_MDM_T02,
+        "MFK_M01": v2_5_1_MFK_M01,
+        "MFN_M02": v2_5_1_MFN_M02,
+        "MFN_M04": v2_5_1_MFN_M04,
+        "MFN_M05": v2_5_1_MFN_M05,
+        "MFN_M06": v2_5_1_MFN_M06,
+        "MFN_M07": v2_5_1_MFN_M07,
+        "MFN_M08": v2_5_1_MFN_M08,
+        "MFN_M09": v2_5_1_MFN_M09,
+        "MFN_M10": v2_5_1_MFN_M10,
+        "MFN_M11": v2_5_1_MFN_M11,
+        "MFN_M12": v2_5_1_MFN_M12,
+        "MFN_M13": v2_5_1_MFN_M13,
+        "MFN_M15": v2_5_1_MFN_M15,
+        "MFQ_M01": v2_5_1_MFQ_M01,
+        "MFR_M04": v2_5_1_MFR_M04,
+        "MFR_M05": v2_5_1_MFR_M05,
+        "MFR_M06": v2_5_1_MFR_M06,
+        "MFR_M07": v2_5_1_MFR_M07,
+        "NMD_N02": v2_5_1_NMD_N02,
+        "NMQ_N01": v2_5_1_NMQ_N01,
+        "NMR_N01": v2_5_1_NMR_N01,
+        "OMB_O27": v2_5_1_OMB_O27,
+        "OMD_O03": v2_5_1_OMD_O03,
+        "OMG_O19": v2_5_1_OMG_O19,
+        "OMI_O23": v2_5_1_OMI_O23,
+        "OML_O21": v2_5_1_OML_O21,
+        "OML_O33": v2_5_1_OML_O33,
+        "OML_O35": v2_5_1_OML_O35,
+        "OMN_O07": v2_5_1_OMN_O07,
+        "OMP_O09": v2_5_1_OMP_O09,
+        "OMS_O05": v2_5_1_OMS_O05,
+        "ORB_O28": v2_5_1_ORB_O28,
+        "ORD_O04": v2_5_1_ORD_O04,
+        "ORF_R04": v2_5_1_ORF_R04,
+        "ORG_O20": v2_5_1_ORG_O20,
+        "ORI_O24": v2_5_1_ORI_O24,
+        "ORL_O22": v2_5_1_ORL_O22,
+        "ORL_O34": v2_5_1_ORL_O34,
+        "ORL_O36": v2_5_1_ORL_O36,
+        "ORM_O01": v2_5_1_ORM_O01,
+        "ORN_O08": v2_5_1_ORN_O08,
+        "ORP_O10": v2_5_1_ORP_O10,
+        "ORR_O02": v2_5_1_ORR_O02,
+        "ORS_O06": v2_5_1_ORS_O06,
         "ORU_R01": v2_5_1_ORU_R01,
+        "ORU_R30": v2_5_1_ORU_R30,
+        "OSQ_Q06": v2_5_1_OSQ_Q06,
+        "OSR_Q06": v2_5_1_OSR_Q06,
+        "OUL_R21": v2_5_1_OUL_R21,
+        "OUL_R22": v2_5_1_OUL_R22,
+        "OUL_R23": v2_5_1_OUL_R23,
+        "OUL_R24": v2_5_1_OUL_R24,
+        "PEX_P07": v2_5_1_PEX_P07,
+        "PMU_B01": v2_5_1_PMU_B01,
+        "PMU_B03": v2_5_1_PMU_B03,
+        "PMU_B04": v2_5_1_PMU_B04,
+        "PMU_B07": v2_5_1_PMU_B07,
+        "PMU_B08": v2_5_1_PMU_B08,
+        "QBP_Q21": v2_5_1_QBP_Q21,
+        "QCN_J01": v2_5_1_QCN_J01,
+        "QRY": v2_5_1_QRY,
+        "QRY_A19": v2_5_1_QRY_A19,
+        "QRY_PC4": v2_5_1_QRY_PC4,
+        "QRY_Q01": v2_5_1_QRY_Q01,
+        "QRY_R02": v2_5_1_QRY_R02,
+        "QSB_Q16": v2_5_1_QSB_Q16,
+        "RAR_RAR": v2_5_1_RAR_RAR,
+        "RAS_O17": v2_5_1_RAS_O17,
+        "RCI_I05": v2_5_1_RCI_I05,
+        "RCL_I06": v2_5_1_RCL_I06,
+        "RDE_O11": v2_5_1_RDE_O11,
+        "RDR_RDR": v2_5_1_RDR_RDR,
+        "RDS_O13": v2_5_1_RDS_O13,
+        "RDY_K15": v2_5_1_RDY_K15,
+        "REF_I12": v2_5_1_REF_I12,
+        "RER_RER": v2_5_1_RER_RER,
+        "RGR_RGR": v2_5_1_RGR_RGR,
+        "RGV_O15": v2_5_1_RGV_O15,
+        "ROR_ROR": v2_5_1_ROR_ROR,
+        "RPA_I08": v2_5_1_RPA_I08,
+        "RPI_I01": v2_5_1_RPI_I01,
+        "RPI_I04": v2_5_1_RPI_I04,
+        "RPL_I02": v2_5_1_RPL_I02,
+        "RPR_I03": v2_5_1_RPR_I03,
+        "RQA_I08": v2_5_1_RQA_I08,
+        "RQC_I05": v2_5_1_RQC_I05,
+        "RQI_I01": v2_5_1_RQI_I01,
+        "RQP_I04": v2_5_1_RQP_I04,
+        "RQQ_Q09": v2_5_1_RQQ_Q09,
+        "RRA_O18": v2_5_1_RRA_O18,
+        "RRD_O14": v2_5_1_RRD_O14,
+        "RRE_O12": v2_5_1_RRE_O12,
+        "RRG_O16": v2_5_1_RRG_O16,
+        "RRI_I12": v2_5_1_RRI_I12,
+        "RSP_K21": v2_5_1_RSP_K21,
+        "RSP_K23": v2_5_1_RSP_K23,
+        "RSP_K25": v2_5_1_RSP_K25,
+        "RSP_K31": v2_5_1_RSP_K31,
+        "RTB_K13": v2_5_1_RTB_K13,
+        "SIU_S12": v2_5_1_SIU_S12,
+        "SPQ_Q08": v2_5_1_SPQ_Q08,
+        "SQM_S25": v2_5_1_SQM_S25,
+        "SQR_S25": v2_5_1_SQR_S25,
+        "SRM_S01": v2_5_1_SRM_S01,
+        "SRR_S01": v2_5_1_SRR_S01,
+        "SSR_U04": v2_5_1_SSR_U04,
+        "SSU_U03": v2_5_1_SSU_U03,
+        "TBR_R08": v2_5_1_TBR_R08,
+        "TCU_U10": v2_5_1_TCU_U10,
+        "UDM_Q05": v2_5_1_UDM_Q05,
+        "VQQ_Q07": v2_5_1_VQQ_Q07,
+        "VXQ_V01": v2_5_1_VXQ_V01,
+        "VXR_V03": v2_5_1_VXR_V03,
+        "VXU_V04": v2_5_1_VXU_V04,
+        "VXX_V02": v2_5_1_VXX_V02,
     ]
 
     private static let v2_5_1_ACK: MessageStructure = MessageStructure(
@@ -20,6 +189,53 @@ extension MessageStructureTable {
             .segment("SFT", min: 0, max: nil),
             .segment("MSA", min: 1, max: 1),
             .segment("ERR", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADR_A19: MessageStructure = MessageStructure(
+        id: "ADR_A19",
+        version: "2.5.1",
+        triggers: ["ADR^A19"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.19 QRY/ADR - Patient Query (Event A19), pp 3-27 to 3-28.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("QUERY_RESPONSE", min: 1, max: nil, elements: [
+                .segment("EVN", min: 0, max: 1),
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("ROL", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+                .segment("ROL", min: 0, max: nil),
+                .segment("DB1", min: 0, max: nil),
+                .segment("OBX", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+                .segment("DRG", min: 0, max: 1),
+                .group("PROCEDURE", min: 0, max: nil, elements: [
+                    .segment("PR1", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("GT1", min: 0, max: nil),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: nil),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("ACC", min: 0, max: 1),
+                .segment("UB1", min: 0, max: 1),
+                .segment("UB2", min: 0, max: 1),
+            ]),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 
@@ -60,6 +276,2849 @@ extension MessageStructureTable {
             .segment("UB1", min: 0, max: 1),
             .segment("UB2", min: 0, max: 1),
             .segment("PDA", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A02: MessageStructure = MessageStructure(
+        id: "ADT_A02",
+        version: "2.5.1",
+        triggers: ["ADT^A02"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.2 ADT/ACK - Transfer a Patient (Event A02), p 3-6.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("PDA", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A03: MessageStructure = MessageStructure(
+        id: "ADT_A03",
+        version: "2.5.1",
+        triggers: ["ADT^A03"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.3 ADT/ACK - Discharge/End Visit (Event A03), pp 3-7 to 3-8.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("NK1", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("OBX", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("PDA", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A05: MessageStructure = MessageStructure(
+        id: "ADT_A05",
+        version: "2.5.1",
+        triggers: ["ADT^A05", "ADT^A14", "ADT^A28", "ADT^A31"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.5 ADT/ACK - Pre-Admit a Patient (Event A05), pp 3-10 to 3-11; the same structure is printed for ADT^A14 (3.3.14), ADT^A28 (3.3.28) and ADT^A31 (3.3.31).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("NK1", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("UB1", min: 0, max: 1),
+            .segment("UB2", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A06: MessageStructure = MessageStructure(
+        id: "ADT_A06",
+        version: "2.5.1",
+        triggers: ["ADT^A06", "ADT^A07"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.6 ADT/ACK - Change an Outpatient to an Inpatient (Event A06), pp 3-11 to 3-12; the same structure is printed for ADT^A07 (3.3.7).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("MRG", min: 0, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("UB1", min: 0, max: 1),
+            .segment("UB2", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A09: MessageStructure = MessageStructure(
+        id: "ADT_A09",
+        version: "2.5.1",
+        triggers: ["ADT^A09", "ADT^A10", "ADT^A11"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.9 ADT/ACK - Patient Departing - Tracking (Event A09), pp 3-16 to 3-17; the same structure is printed for ADT^A10 (3.3.10) and ADT^A11 (3.3.11).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A12: MessageStructure = MessageStructure(
+        id: "ADT_A12",
+        version: "2.5.1",
+        triggers: ["ADT^A12"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.12 ADT/ACK - Cancel Transfer (Event A12), p 3-19.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("DG1", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A15: MessageStructure = MessageStructure(
+        id: "ADT_A15",
+        version: "2.5.1",
+        triggers: ["ADT^A15"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.15 ADT/ACK - Pending Transfer (Event A15), p 3-23.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A16: MessageStructure = MessageStructure(
+        id: "ADT_A16",
+        version: "2.5.1",
+        triggers: ["ADT^A16"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.16 ADT/ACK - Pending Discharge (Event A16), p 3-24.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("NK1", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A17: MessageStructure = MessageStructure(
+        id: "ADT_A17",
+        version: "2.5.1",
+        triggers: ["ADT^A17"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.17 ADT/ACK - Swap Patients (Event A17), p 3-25.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A18: MessageStructure = MessageStructure(
+        id: "ADT_A18",
+        version: "2.5.1",
+        triggers: ["ADT^A18"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.18 ADT/ACK - Merge Patient Information (Event A18), p 3-26.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("MRG", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A20: MessageStructure = MessageStructure(
+        id: "ADT_A20",
+        version: "2.5.1",
+        triggers: ["ADT^A20"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.20 ADT/ACK - Bed Status Update (Event A20), p 3-28.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("NPU", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A21: MessageStructure = MessageStructure(
+        id: "ADT_A21",
+        version: "2.5.1",
+        triggers: ["ADT^A21", "ADT^A22", "ADT^A23", "ADT^A25", "ADT^A26", "ADT^A27", "ADT^A29", "ADT^A32", "ADT^A33"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.21 ADT/ACK - Patient Goes on a Leave of Absence (Event A21), p 3-29; the same structure is printed for ADT^A22 (3.3.22), ADT^A23 (3.3.23), ADT^A25 (3.3.25), ADT^A26 (3.3.26), ADT^A27 (3.3.27), ADT^A29 (3.3.29), ADT^A32 (3.3.32) and ADT^A33 (3.3.33).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A24: MessageStructure = MessageStructure(
+        id: "ADT_A24",
+        version: "2.5.1",
+        triggers: ["ADT^A24"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.24 ADT/ACK - Link Patient Information (Event A24), p 3-31.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A30: MessageStructure = MessageStructure(
+        id: "ADT_A30",
+        version: "2.5.1",
+        triggers: ["ADT^A30", "ADT^A34", "ADT^A35", "ADT^A36", "ADT^A46", "ADT^A47", "ADT^A48", "ADT^A49"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.30 ADT/ACK - Merge Person Information (Event A30), p 3-37; the same structure is printed for ADT^A34 (3.3.34), ADT^A35 (3.3.35), ADT^A36 (3.3.36), ADT^A46 (3.3.46), ADT^A47 (3.3.47), ADT^A48 (3.3.48) and ADT^A49 (3.3.49).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("MRG", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A37: MessageStructure = MessageStructure(
+        id: "ADT_A37",
+        version: "2.5.1",
+        triggers: ["ADT^A37"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.37 ADT/ACK - Unlink Patient Information (Event A37), p 3-42.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A38: MessageStructure = MessageStructure(
+        id: "ADT_A38",
+        version: "2.5.1",
+        triggers: ["ADT^A38"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.38 ADT/ACK - Cancel Pre-Admit (Event A38), pp 3-42 to 3-43.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("DB1", min: 0, max: nil),
+            .segment("OBX", min: 0, max: nil),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A39: MessageStructure = MessageStructure(
+        id: "ADT_A39",
+        version: "2.5.1",
+        triggers: ["ADT^A39", "ADT^A40", "ADT^A41", "ADT^A42"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.39 ADT/ACK - Merge Person - Patient ID (Event A39), p 3-44; the same structure is printed for ADT^A40 (3.3.40), ADT^A41 (3.3.41) and ADT^A42 (3.3.42).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("MRG", min: 1, max: 1),
+                .segment("PV1", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A43: MessageStructure = MessageStructure(
+        id: "ADT_A43",
+        version: "2.5.1",
+        triggers: ["ADT^A43", "ADT^A44"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.43 ADT/ACK - Move Patient Information - Patient Identifier List (Event A43), p 3-48; the same structure is printed for ADT^A44 (3.3.44).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("MRG", min: 1, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A45: MessageStructure = MessageStructure(
+        id: "ADT_A45",
+        version: "2.5.1",
+        triggers: ["ADT^A45"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.45 ADT/ACK - Move Visit Information - Visit Number (Event A45), p 3-50.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .group("MERGE_INFO", min: 1, max: nil, elements: [
+                .segment("MRG", min: 1, max: 1),
+                .segment("PV1", min: 1, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A50: MessageStructure = MessageStructure(
+        id: "ADT_A50",
+        version: "2.5.1",
+        triggers: ["ADT^A50", "ADT^A51"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.50 ADT/ACK - Change Visit Number (Event A50), p 3-54; the same structure is printed for ADT^A51 (3.3.51).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("MRG", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A52: MessageStructure = MessageStructure(
+        id: "ADT_A52",
+        version: "2.5.1",
+        triggers: ["ADT^A52", "ADT^A53", "ADT^A55"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.52 ADT/ACK- Cancel Leave of Absence for a Patient (Event A52), p 3-56; the same structure is printed for ADT^A53 (3.3.53) and ADT^A55 (3.3.55).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A54: MessageStructure = MessageStructure(
+        id: "ADT_A54",
+        version: "2.5.1",
+        triggers: ["ADT^A54"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.54 ADT/ACK - Change Attending Doctor (Event A54), p 3-57.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV1", min: 1, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A60: MessageStructure = MessageStructure(
+        id: "ADT_A60",
+        version: "2.5.1",
+        triggers: ["ADT^A60"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.60 ADT/ACK - Update Adverse Reaction Information (Event A60), p 3-67.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PV1", min: 0, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("IAM", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_ADT_A61: MessageStructure = MessageStructure(
+        id: "ADT_A61",
+        version: "2.5.1",
+        triggers: ["ADT^A61", "ADT^A62"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.61 ADT/ACK - Change Consulting Doctor (Event A61), p 3-68; the same structure is printed for ADT^A62 (3.3.62).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV2", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P01: MessageStructure = MessageStructure(
+        id: "BAR_P01",
+        version: "2.5.1",
+        triggers: ["BAR^P01"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.1 BAR/ACK - Add Patient Account (Event P01), pp 6-3 to 6-4.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .group("VISIT", min: 1, max: nil, elements: [
+                .segment("PV1", min: 0, max: 1),
+                .segment("PV2", min: 0, max: 1),
+                .segment("ROL", min: 0, max: nil),
+                .segment("DB1", min: 0, max: nil),
+                .segment("OBX", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+                .segment("DRG", min: 0, max: 1),
+                .group("PROCEDURE", min: 0, max: nil, elements: [
+                    .segment("PR1", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("GT1", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: nil),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("ACC", min: 0, max: 1),
+                .segment("UB1", min: 0, max: 1),
+                .segment("UB2", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P02: MessageStructure = MessageStructure(
+        id: "BAR_P02",
+        version: "2.5.1",
+        triggers: ["BAR^P02"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.2 BAR/ACK - Purge Patient Accounts (Event P02), p 6-4.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("PV1", min: 0, max: 1),
+                .segment("DB1", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P05: MessageStructure = MessageStructure(
+        id: "BAR_P05",
+        version: "2.5.1",
+        triggers: ["BAR^P05"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.5 BAR/ACK - Update Account (Event P05), pp 6-8 to 6-9.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .group("VISIT", min: 1, max: nil, elements: [
+                .segment("PV1", min: 0, max: 1),
+                .segment("PV2", min: 0, max: 1),
+                .segment("ROL", min: 0, max: nil),
+                .segment("DB1", min: 0, max: nil),
+                .segment("OBX", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+                .segment("DRG", min: 0, max: 1),
+                .group("PROCEDURE", min: 0, max: nil, elements: [
+                    .segment("PR1", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("GT1", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: nil),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .segment("ACC", min: 0, max: 1),
+                .segment("UB1", min: 0, max: 1),
+                .segment("UB2", min: 0, max: 1),
+                .segment("ABS", min: 0, max: 1),
+                .segment("BLC", min: 0, max: nil),
+                .segment("RMI", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P06: MessageStructure = MessageStructure(
+        id: "BAR_P06",
+        version: "2.5.1",
+        triggers: ["BAR^P06"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.6 BAR/ACK - End Account (event P06), pp 6-9 to 6-10.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PV1", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P10: MessageStructure = MessageStructure(
+        id: "BAR_P10",
+        version: "2.5.1",
+        triggers: ["BAR^P10"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.7 BAR/ACK - Transmit Ambulatory Payment Classification (APC) Groups, p 6-10.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("GP1", min: 1, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("GP2", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BAR_P12: MessageStructure = MessageStructure(
+        id: "BAR_P12",
+        version: "2.5.1",
+        triggers: ["BAR^P12"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.9 BAR/ACK - Update Diagnosis/Procedure (Event P12), p 6-14.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BPS_O29: MessageStructure = MessageStructure(
+        id: "BPS_O29",
+        version: "2.5.1",
+        triggers: ["BPS^O29"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.4 BPS - Blood Product Dispense Status Message (Event O29), p 4-209.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("BPO", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PRODUCT", min: 0, max: nil, elements: [
+                    .segment("BPX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BRP_O30: MessageStructure = MessageStructure(
+        id: "BRP_O30",
+        version: "2.5.1",
+        triggers: ["BRP^O30"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.5 BRP - Blood Product Dispense Status Acknowledgment (Event O30), pp 4-209 to 4-210.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("BPO", min: 0, max: 1),
+                        .segment("BPX", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BRT_O32: MessageStructure = MessageStructure(
+        id: "BRT_O32",
+        version: "2.5.1",
+        triggers: ["BRT^O32"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.7 BRT - Blood Product Transfusion/Disposition Acknowledgment (Event O32), pp 4-211 to 4-212.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 0, max: 1),
+                .group("ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("BPO", min: 0, max: 1),
+                    .segment("BTX", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_BTS_O31: MessageStructure = MessageStructure(
+        id: "BTS_O31",
+        version: "2.5.1",
+        triggers: ["BTS^O31"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.6 BTS - Blood Product Transfusion/Disposition Message (Event O31), pp 4-210 to 4-211.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("BPO", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PRODUCT_STATUS", min: 0, max: nil, elements: [
+                    .segment("BTX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_CRM_C01: MessageStructure = MessageStructure(
+        id: "CRM_C01",
+        version: "2.5.1",
+        triggers: ["CRM^C01", "CRM^C02", "CRM^C03", "CRM^C04", "CRM^C05", "CRM^C06", "CRM^C07", "CRM^C08"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.7.1 CRM - Clinical Study Registration Message (Events C01-C08), p 7-83.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PV1", min: 0, max: 1),
+                .segment("CSR", min: 1, max: 1),
+                .segment("CSP", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_CSU_C09: MessageStructure = MessageStructure(
+        id: "CSU_C09",
+        version: "2.5.1",
+        triggers: ["CSU^C09", "CSU^C10", "CSU^C11", "CSU^C12"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.7.2 CSU - Unsolicited Study Data Message (Events C09-C12), pp 7-83 to 7-84.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .segment("CSR", min: 1, max: 1),
+                .group("STUDY_PHASE", min: 1, max: nil, elements: [
+                    .segment("CSP", min: 0, max: 1),
+                    .group("STUDY_SCHEDULE", min: 1, max: nil, elements: [
+                        .segment("CSS", min: 0, max: 1),
+                        .group("STUDY_OBSERVATION", min: 1, max: nil, elements: [
+                            .segment("ORC", min: 0, max: 1),
+                            .segment("OBR", min: 1, max: 1),
+                            .group("TIMING_QTY", min: 0, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                            .segment("OBX", min: 1, max: nil),
+                        ]),
+                        .group("STUDY_PHARM", min: 1, max: nil, elements: [
+                            .segment("ORC", min: 0, max: 1),
+                            .group("RX_ADMIN", min: 1, max: nil, elements: [
+                                .segment("RXA", min: 1, max: 1),
+                                .segment("RXR", min: 1, max: 1),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_DFT_P03: MessageStructure = MessageStructure(
+        id: "DFT_P03",
+        version: "2.5.1",
+        triggers: ["DFT^P03"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.3 DFT/ACK - Post Detail Financial Transactions (Event P03), pp 6-5 to 6-7.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV1", min: 0, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .group("COMMON_ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 0, max: 1),
+                .group("TIMING_QUANTITY", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 0, max: 1, elements: [
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .group("FINANCIAL", min: 1, max: nil, elements: [
+                .segment("FT1", min: 1, max: 1),
+                .segment("NTE", min: 0, max: 1),
+                .group("FINANCIAL_PROCEDURE", min: 0, max: nil, elements: [
+                    .segment("PR1", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .group("FINANCIAL_COMMON_ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 0, max: 1),
+                    .group("FINANCIAL_TIMING_QUANTITY", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("FINANCIAL_ORDER", min: 0, max: 1, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("FINANCIAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_DFT_P11: MessageStructure = MessageStructure(
+        id: "DFT_P11",
+        version: "2.5.1",
+        triggers: ["DFT^P11"],
+        citation: "HL7 v2.5.1 Chapter 6, section 6.4.8 DFT/ACK - Post Detail Financial Transactions - Expanded (Event P11), pp 6-11 to 6-14.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("PV1", min: 0, max: 1),
+            .segment("PV2", min: 0, max: 1),
+            .segment("ROL", min: 0, max: nil),
+            .segment("DB1", min: 0, max: nil),
+            .group("COMMON_ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 0, max: 1),
+                .group("TIMING_QUANTITY", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 0, max: 1, elements: [
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: 1),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: nil),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .group("FINANCIAL", min: 1, max: nil, elements: [
+                .segment("FT1", min: 1, max: 1),
+                .group("FINANCIAL_PROCEDURE", min: 0, max: nil, elements: [
+                    .segment("PR1", min: 1, max: 1),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+                .group("FINANCIAL_COMMON_ORDER", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 0, max: 1),
+                    .group("FINANCIAL_TIMING_QUANTITY", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("FINANCIAL_ORDER", min: 0, max: 1, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("FINANCIAL_OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("DG1", min: 0, max: nil),
+                .segment("DRG", min: 0, max: 1),
+                .segment("GT1", min: 0, max: nil),
+                .group("FINANCIAL_INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: nil),
+                    .segment("ROL", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_DOC_T12: MessageStructure = MessageStructure(
+        id: "DOC_T12",
+        version: "2.5.1",
+        triggers: ["DOC^T12"],
+        citation: "HL7 v2.5.1 Chapter 9, section 9.8.1 QRY/DOC - Document Query (Event T12), p 9-35. Unprinted group names (ADR-019 decision 3): RESULT (HL7-xml v2.5.1/DOC_T12.xsd, DOC_T12.RESULT.CONTENT).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .group("RESULT", min: 1, max: nil, elements: [
+                .segment("EVN", min: 0, max: 1),
+                .segment("PID", min: 1, max: 1),
+                .segment("PV1", min: 1, max: 1),
+                .segment("TXA", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_DSR_Q01: MessageStructure = MessageStructure(
+        id: "DSR_Q01",
+        version: "2.5.1",
+        triggers: ["DSR^Q01"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_DSR_Q03: MessageStructure = MessageStructure(
+        id: "DSR_Q03",
+        version: "2.5.1",
+        triggers: ["DSR^Q03"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.3.2 DSR/ACK - deferred response to a query (event Q03), p 5-116.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 0, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_EAC_U07: MessageStructure = MessageStructure(
+        id: "EAC_U07",
+        version: "2.5.1",
+        triggers: ["EAC^U07"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, pp 13-18 to 13-19.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("COMMAND", min: 1, max: nil, elements: [
+                .segment("ECD", min: 1, max: 1),
+                .segment("TQ1", min: 0, max: 1),
+                .group("SPECIMEN_CONTAINER", min: 0, max: 1, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .segment("SPM", min: 0, max: nil),
+                ]),
+                .segment("CNS", min: 0, max: 1),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_EAN_U09: MessageStructure = MessageStructure(
+        id: "EAN_U09",
+        version: "2.5.1",
+        triggers: ["EAN^U09"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-20.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("NOTIFICATION", min: 1, max: nil, elements: [
+                .segment("NDS", min: 1, max: 1),
+                .segment("NTE", min: 0, max: 1),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_EAR_U08: MessageStructure = MessageStructure(
+        id: "EAR_U08",
+        version: "2.5.1",
+        triggers: ["EAR^U08"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-19.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("COMMAND_RESPONSE", min: 1, max: nil, elements: [
+                .segment("ECD", min: 1, max: 1),
+                .group("SPECIMEN_CONTAINER", min: 0, max: 1, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .segment("SPM", min: 0, max: nil),
+                ]),
+                .segment("ECR", min: 1, max: 1),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_EDR_R07: MessageStructure = MessageStructure(
+        id: "EDR_R07",
+        version: "2.5.1",
+        triggers: ["EDR^R07"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_EQQ_Q04: MessageStructure = MessageStructure(
+        id: "EQQ_Q04",
+        version: "2.5.1",
+        triggers: ["EQQ^Q04"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQL", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ERP_R09: MessageStructure = MessageStructure(
+        id: "ERP_R09",
+        version: "2.5.1",
+        triggers: ["ERP^R09"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), p 5-120.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("ERQ", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ESR_U02: MessageStructure = MessageStructure(
+        id: "ESR_U02",
+        version: "2.5.1",
+        triggers: ["ESR^U02"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-16.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ESU_U01: MessageStructure = MessageStructure(
+        id: "ESU_U01",
+        version: "2.5.1",
+        triggers: ["ESU^U01"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-15.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .segment("ISD", min: 0, max: nil),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_INR_U06: MessageStructure = MessageStructure(
+        id: "INR_U06",
+        version: "2.5.1",
+        triggers: ["INR^U06"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-18.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .segment("INV", min: 1, max: nil),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_INU_U05: MessageStructure = MessageStructure(
+        id: "INU_U05",
+        version: "2.5.1",
+        triggers: ["INU^U05"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-17.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .segment("INV", min: 1, max: nil),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_LSU_U12: MessageStructure = MessageStructure(
+        id: "LSU_U12",
+        version: "2.5.1",
+        triggers: ["LSU^U12", "LSR^U13"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-21; the same structure is printed for LSR^U13 (13.3).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .segment("EQP", min: 1, max: nil),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MDM_T01: MessageStructure = MessageStructure(
+        id: "MDM_T01",
+        version: "2.5.1",
+        triggers: ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
+        citation: "HL7 v2.5.1 Chapter 9, section 9.5.1 MDM/ACK - Original Document Notification (Event T01), pp 9-5 to 9-6; the same structure is printed for MDM^T03 (9.5.3), MDM^T05 (9.5.5), MDM^T07 (9.5.7), MDM^T09 (9.5.9) and MDM^T11 (9.5.11).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .group("COMMON_ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .segment("TXA", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MDM_T02: MessageStructure = MessageStructure(
+        id: "MDM_T02",
+        version: "2.5.1",
+        triggers: ["MDM^T02", "MDM^T04", "MDM^T06", "MDM^T08", "MDM^T10"],
+        citation: "HL7 v2.5.1 Chapter 9, section 9.5.2 MDM/ACK - Original Document Notification and Content (Event T02), pp 9-6 to 9-7; the same structure is printed for MDM^T04 (9.5.4), MDM^T06 (9.5.6), MDM^T08 (9.5.8) and MDM^T10 (9.5.10). Unprinted group names (ADR-019 decision 3): OBSERVATION (HL7-xml v2.5.1/MDM_T02.xsd, MDM_T02.OBSERVATION.CONTENT).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PV1", min: 1, max: 1),
+            .group("COMMON_ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .segment("TXA", min: 1, max: 1),
+            .group("OBSERVATION", min: 1, max: nil, elements: [
+                .segment("OBX", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFK_M01: MessageStructure = MessageStructure(
+        id: "MFK_M01",
+        version: "2.5.1",
+        triggers: ["MFK^M01", "MFK^M13", "MFK^M02", "MFK^M03", "MFK^M08", "MFK^M09", "MFK^M10", "MFK^M11", "MFK^M12", "MFK^M05", "MFK^M04", "MFK^M06", "MFK^M07", "MFK^M15"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.4.1 MFN/MFK - Master File Notification (Event M01), p 8-5; the same structure is printed for MFK^M13 (8.4.2), MFK^M02 (8.7.1), MFK^M03 (8.8.2), MFK^M08 (8.8.3), MFK^M09 (8.8.4), MFK^M10 (8.8.5), MFK^M11 (8.8.6), MFK^M12 (8.8.7), MFK^M05 (8.9.1), MFK^M04 (8.10.1), MFK^M06 (8.11.1), MFK^M07 (8.11.1) and MFK^M15 (8.12.1).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .segment("MFA", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M02: MessageStructure = MessageStructure(
+        id: "MFN_M02",
+        version: "2.5.1",
+        triggers: ["MFN^M02"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.7.1 MFN/MFK - Staff/Practitioner Master File Message (Event M02), pp 8-19 to 8-20.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_STAFF", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("STF", min: 1, max: 1),
+                .segment("PRA", min: 0, max: nil),
+                .segment("ORG", min: 0, max: nil),
+                .segment("AFF", min: 0, max: nil),
+                .segment("LAN", min: 0, max: nil),
+                .segment("EDU", min: 0, max: nil),
+                .segment("CER", min: 0, max: nil),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M04: MessageStructure = MessageStructure(
+        id: "MFN_M04",
+        version: "2.5.1",
+        triggers: ["MFN^M04"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.10.1 MFN/MFK - Charge Description Master File Message (Event M04), pp 8-74 to 8-75.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_CDM", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CDM", min: 1, max: 1),
+                .segment("PRC", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M05: MessageStructure = MessageStructure(
+        id: "MFN_M05",
+        version: "2.5.1",
+        triggers: ["MFN^M05"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.9.1 MFN/MFK - Patient Location Master File Message (event M05), pp 8-59 to 8-60.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_LOCATION", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("LOC", min: 1, max: 1),
+                .segment("LCH", min: 0, max: nil),
+                .segment("LRL", min: 0, max: nil),
+                .group("MF_LOC_DEPT", min: 1, max: nil, elements: [
+                    .segment("LDP", min: 1, max: 1),
+                    .segment("LCH", min: 0, max: nil),
+                    .segment("LCC", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M06: MessageStructure = MessageStructure(
+        id: "MFN_M06",
+        version: "2.5.1",
+        triggers: ["MFN^M06"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), p 8-83.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_CLIN_STUDY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CM0", min: 1, max: 1),
+                .group("MF_PHASE_SCHED_DETAIL", min: 0, max: nil, elements: [
+                    .segment("CM1", min: 1, max: 1),
+                    .segment("CM2", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M07: MessageStructure = MessageStructure(
+        id: "MFN_M07",
+        version: "2.5.1",
+        triggers: ["MFN^M07"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), p 8-84.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_CLIN_STUDY_SCHED", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CM0", min: 1, max: 1),
+                .segment("CM2", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M08: MessageStructure = MessageStructure(
+        id: "MFN_M08",
+        version: "2.5.1",
+        triggers: ["MFN^M08"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.8.3 MFN/MFK - Master File Notification - Test/Observation (Numeric) (Event M08), p 8-23.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_NUMERIC", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .segment("OM2", min: 0, max: 1),
+                .segment("OM3", min: 0, max: 1),
+                .segment("OM4", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M09: MessageStructure = MessageStructure(
+        id: "MFN_M09",
+        version: "2.5.1",
+        triggers: ["MFN^M09"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.8.4 MFN/MFK - Master File Notification - Test/Observation (Categorical), p 8-24.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CATEGORICAL", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CAT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM3", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M10: MessageStructure = MessageStructure(
+        id: "MFN_M10",
+        version: "2.5.1",
+        triggers: ["MFN^M10"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.8.5 MFN/MFK - Master File Notification - Test/Observation Batteries (Event M10), p 8-25.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_BATTERIES", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_BATT_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM5", min: 1, max: 1),
+                    .segment("OM4", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M11: MessageStructure = MessageStructure(
+        id: "MFN_M11",
+        version: "2.5.1",
+        triggers: ["MFN^M11"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.8.6 MFN/MFK - Master File Notification - Test/Calculated Observations (Event M11), p 8-26.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_TEST_CALCULATED", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .group("MF_TEST_CALC_DETAIL", min: 0, max: 1, elements: [
+                    .segment("OM6", min: 1, max: 1),
+                    .segment("OM2", min: 1, max: 1),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M12: MessageStructure = MessageStructure(
+        id: "MFN_M12",
+        version: "2.5.1",
+        triggers: ["MFN^M12"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.8.7 MFN/MFK - Master File Notification - Additional Basic, pp 8-26 to 8-27.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_OBS_ATTRIBUTES", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("OM1", min: 1, max: 1),
+                .segment("OM7", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M13: MessageStructure = MessageStructure(
+        id: "MFN_M13",
+        version: "2.5.1",
+        triggers: ["MFN^M13"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.4.2 MFN/MFK - Master File Notification - General (Event M13), p 8-6.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .segment("MFE", min: 1, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_MFN_M15: MessageStructure = MessageStructure(
+        id: "MFN_M15",
+        version: "2.5.1",
+        triggers: ["MFN^M15"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.12.1 MFN/MFK - Inventory Item Master File Message (Event M15), p 8-91.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_INV_ITEM", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("IIM", min: 1, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_MFQ_M01: MessageStructure = MessageStructure(
+        id: "MFQ_M01",
+        version: "2.5.1",
+        triggers: ["MFQ^M01", "MFQ^M02", "MFQ^M03", "MFQ^M04", "MFQ^M05", "MFQ^M06", "MFQ^M07", "MFQ^M08", "MFQ^M09", "MFQ^M10", "MFQ^M11", "MFQ^M12", "MFQ^M13", "MFQ^M14"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.4.4 MFQ/MFR - Master Files Query (Event M01-M14), p 8-8.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MFR_M04: MessageStructure = MessageStructure(
+        id: "MFR_M04",
+        version: "2.5.1",
+        triggers: ["MFR^M04"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.10.1 MFN/MFK - Charge Description Master File Message (Event M04), p 8-75.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_QUERY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CDM", min: 1, max: 1),
+                .segment("PRC", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MFR_M05: MessageStructure = MessageStructure(
+        id: "MFR_M05",
+        version: "2.5.1",
+        triggers: ["MFR^M05"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.9.1 MFN/MFK - Patient Location Master File Message (event M05), pp 8-60 to 8-61.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_QUERY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("LOC", min: 1, max: 1),
+                .segment("LCH", min: 0, max: nil),
+                .segment("LRL", min: 0, max: nil),
+                .segment("LDP", min: 1, max: nil),
+                .segment("LCH", min: 0, max: nil),
+                .segment("LCC", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MFR_M06: MessageStructure = MessageStructure(
+        id: "MFR_M06",
+        version: "2.5.1",
+        triggers: ["MFR^M06"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), pp 8-84 to 8-85.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_QUERY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CM0", min: 1, max: 1),
+                .segment("CM1", min: 0, max: nil),
+                .segment("CM2", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_MFR_M07: MessageStructure = MessageStructure(
+        id: "MFR_M07",
+        version: "2.5.1",
+        triggers: ["MFR^M07"],
+        citation: "HL7 v2.5.1 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), p 8-85.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 0, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("MFI", min: 1, max: 1),
+            .group("MF_QUERY", min: 1, max: nil, elements: [
+                .segment("MFE", min: 1, max: 1),
+                .segment("CM0", min: 1, max: 1),
+                .segment("CM2", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_NMD_N02: MessageStructure = MessageStructure(
+        id: "NMD_N02",
+        version: "2.5.1",
+        triggers: ["NMD^N02"],
+        citation: "HL7 v2.5.1 Chapter 14, section 14.3.2 NMD - Application Management Data Message (Event N02), pp 14-3 to 14-4.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("CLOCK_AND_STATS_WITH_NOTES", min: 1, max: nil, elements: [
+                .group("CLOCK", min: 0, max: 1, elements: [
+                    .segment("NCK", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("APP_STATS", min: 0, max: 1, elements: [
+                    .segment("NST", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("APP_STATUS", min: 0, max: 1, elements: [
+                    .segment("NSC", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_NMQ_N01: MessageStructure = MessageStructure(
+        id: "NMQ_N01",
+        version: "2.5.1",
+        triggers: ["NMQ^N01"],
+        citation: "HL7 v2.5.1 Chapter 14, section 14.3.1 NMQ - Application Management Query Message (Event N01), p 14-2.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("QRY_WITH_DETAIL", min: 0, max: 1, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+            ]),
+            .group("CLOCK_AND_STATISTICS", min: 1, max: nil, elements: [
+                .segment("NCK", min: 0, max: 1),
+                .segment("NST", min: 0, max: 1),
+                .segment("NSC", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_NMR_N01: MessageStructure = MessageStructure(
+        id: "NMR_N01",
+        version: "2.5.1",
+        triggers: ["NMR^N01"],
+        citation: "HL7 v2.5.1 Chapter 14, section 14.3.1 NMQ - Application Management Query Message (Event N01), pp 14-2 to 14-3. Unprinted group names (ADR-019 decision 3): CLOCK_AND_STATS_WITH_NOTES_ALT (HL7-xml v2.5.1/NMR_N01.xsd, NMR_N01.CLOCK_AND_STATS_WITH_NOTES_ALT.CONTENT).",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QRD", min: 0, max: 1),
+            .group("CLOCK_AND_STATS_WITH_NOTES_ALT", min: 1, max: nil, elements: [
+                .segment("NCK", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NST", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NSC", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMB_O27: MessageStructure = MessageStructure(
+        id: "OMB_O27",
+        version: "2.5.1",
+        triggers: ["OMB^O27"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.2 OMB - Blood Product Order Message (Event O27), pp 4-206 to 4-208.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("BPO", min: 1, max: 1),
+                .segment("SPM", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMD_O03: MessageStructure = MessageStructure(
+        id: "OMD_O03",
+        version: "2.5.1",
+        triggers: ["OMD^O03"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.7.1 OMD - Dietary Order (Event O03), pp 4-95 to 4-96.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER_DIET", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING_DIET", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("DIET", min: 0, max: 1, elements: [
+                    .segment("ODS", min: 1, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .group("ORDER_TRAY", min: 0, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING_TRAY", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("ODT", min: 1, max: nil),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMG_O19: MessageStructure = MessageStructure(
+        id: "OMG_O19",
+        version: "2.5.1",
+        triggers: ["OMG^O19"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.4 OMG - general clinical order message (event O19), pp 4-11 to 4-13.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("CTD", min: 0, max: 1),
+                .segment("DG1", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("SPECIMEN", min: 0, max: nil, elements: [
+                    .segment("SPM", min: 1, max: 1),
+                    .segment("OBX", min: 0, max: nil),
+                    .group("CONTAINER", min: 0, max: nil, elements: [
+                        .segment("SAC", min: 1, max: 1),
+                        .segment("OBX", min: 0, max: nil),
+                    ]),
+                ]),
+                .group("PRIOR_RESULT", min: 0, max: nil, elements: [
+                    .group("PATIENT_PRIOR", min: 0, max: 1, elements: [
+                        .segment("PID", min: 1, max: 1),
+                        .segment("PD1", min: 0, max: 1),
+                    ]),
+                    .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
+                        .segment("PV1", min: 1, max: 1),
+                        .segment("PV2", min: 0, max: 1),
+                    ]),
+                    .segment("AL1", min: 0, max: nil),
+                    .group("ORDER_PRIOR", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 0, max: 1),
+                        .segment("OBR", min: 1, max: 1),
+                        .group("TIMING_PRIOR", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("CTD", min: 0, max: 1),
+                        .group("OBSERVATION_PRIOR", min: 1, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("CTI", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMI_O23: MessageStructure = MessageStructure(
+        id: "OMI_O23",
+        version: "2.5.1",
+        triggers: ["OMI^O23"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.12 OMI - Imaging Order Message (Event O23), pp 4-25 to 4-26.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("CTD", min: 0, max: 1),
+                .segment("DG1", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("IPC", min: 1, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OML_O21: MessageStructure = MessageStructure(
+        id: "OML_O21",
+        version: "2.5.1",
+        triggers: ["OML^O21"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.6 OML - laboratory order message (event O21), pp 4-14 to 4-17.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("TCD", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTD", min: 0, max: 1),
+                    .segment("DG1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("TCD", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("SPECIMEN", min: 0, max: nil, elements: [
+                        .segment("SPM", min: 1, max: 1),
+                        .segment("OBX", min: 0, max: nil),
+                        .group("CONTAINER", min: 0, max: nil, elements: [
+                            .segment("SAC", min: 1, max: 1),
+                            .segment("OBX", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("PRIOR_RESULT", min: 0, max: nil, elements: [
+                        .group("PATIENT_PRIOR", min: 0, max: 1, elements: [
+                            .segment("PID", min: 1, max: 1),
+                            .segment("PD1", min: 0, max: 1),
+                        ]),
+                        .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
+                            .segment("PV1", min: 1, max: 1),
+                            .segment("PV2", min: 0, max: 1),
+                        ]),
+                        .segment("AL1", min: 0, max: nil),
+                        .group("ORDER_PRIOR", min: 1, max: nil, elements: [
+                            .segment("ORC", min: 0, max: 1),
+                            .segment("OBR", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .group("TIMING_PRIOR", min: 0, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                            .group("OBSERVATION_PRIOR", min: 1, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("CTI", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OML_O33: MessageStructure = MessageStructure(
+        id: "OML_O33",
+        version: "2.5.1",
+        triggers: ["OML^O33"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.8 OML - Laboratory order for multiple orders related to a single specimen, pp 4-18 to 4-20.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("SPECIMEN", min: 1, max: nil, elements: [
+                .segment("SPM", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .segment("SAC", min: 0, max: nil),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("TCD", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("DG1", min: 0, max: nil),
+                        .group("OBSERVATION", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("TCD", min: 0, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .group("PRIOR_RESULT", min: 0, max: nil, elements: [
+                            .group("PATIENT_PRIOR", min: 0, max: 1, elements: [
+                                .segment("PID", min: 1, max: 1),
+                                .segment("PD1", min: 0, max: 1),
+                            ]),
+                            .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
+                                .segment("PV1", min: 1, max: 1),
+                                .segment("PV2", min: 0, max: 1),
+                            ]),
+                            .segment("AL1", min: 0, max: nil),
+                            .group("ORDER_PRIOR", min: 1, max: nil, elements: [
+                                .segment("ORC", min: 0, max: 1),
+                                .segment("OBR", min: 1, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                                .group("TIMING_PRIOR", min: 0, max: nil, elements: [
+                                    .segment("TQ1", min: 1, max: 1),
+                                    .segment("TQ2", min: 0, max: nil),
+                                ]),
+                                .group("OBSERVATION_PRIOR", min: 1, max: nil, elements: [
+                                    .segment("OBX", min: 1, max: 1),
+                                    .segment("NTE", min: 0, max: nil),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                    .segment("FT1", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                    .segment("BLG", min: 0, max: 1),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OML_O35: MessageStructure = MessageStructure(
+        id: "OML_O35",
+        version: "2.5.1",
+        triggers: ["OML^O35"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.10 OML - Laboratory order for multiple orders related to a single container of, pp 4-21 to 4-24.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("SPECIMEN", min: 1, max: nil, elements: [
+                .segment("SPM", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .group("SPECIMEN_CONTAINER", min: 1, max: nil, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                            .segment("OBR", min: 1, max: 1),
+                            .segment("TCD", min: 0, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                            .segment("DG1", min: 0, max: nil),
+                            .group("OBSERVATION", min: 0, max: nil, elements: [
+                                .segment("OBX", min: 1, max: 1),
+                                .segment("TCD", min: 0, max: 1),
+                                .segment("NTE", min: 0, max: nil),
+                            ]),
+                            .group("PRIOR_RESULT", min: 0, max: nil, elements: [
+                                .group("PATIENT_PRIOR", min: 0, max: 1, elements: [
+                                    .segment("PID", min: 1, max: 1),
+                                    .segment("PD1", min: 0, max: 1),
+                                ]),
+                                .group("PATIENT_VISIT_PRIOR", min: 0, max: 1, elements: [
+                                    .segment("PV1", min: 1, max: 1),
+                                    .segment("PV2", min: 0, max: 1),
+                                ]),
+                                .segment("AL1", min: 0, max: nil),
+                                .group("ORDER_PRIOR", min: 1, max: nil, elements: [
+                                    .segment("ORC", min: 0, max: 1),
+                                    .segment("OBR", min: 1, max: 1),
+                                    .segment("NTE", min: 0, max: nil),
+                                    .group("TIMING_PRIOR", min: 0, max: nil, elements: [
+                                        .segment("TQ1", min: 1, max: 1),
+                                        .segment("TQ2", min: 0, max: nil),
+                                    ]),
+                                    .group("OBSERVATION_PRIOR", min: 1, max: nil, elements: [
+                                        .segment("OBX", min: 1, max: 1),
+                                        .segment("NTE", min: 0, max: nil),
+                                    ]),
+                                ]),
+                            ]),
+                        ]),
+                        .segment("FT1", min: 0, max: nil),
+                        .segment("CTI", min: 0, max: nil),
+                        .segment("BLG", min: 0, max: 1),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMN_O07: MessageStructure = MessageStructure(
+        id: "OMN_O07",
+        version: "2.5.1",
+        triggers: ["OMN^O07"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.10.3 OMN - non-stock requisition order message (event O07), pp 4-105 to 4-106.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RQD", min: 1, max: 1),
+                .segment("RQ1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMP_O09: MessageStructure = MessageStructure(
+        id: "OMP_O09",
+        version: "2.5.1",
+        triggers: ["OMP^O09"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.3 OMP - Pharmacy/Treatment Order Message (Event O09), pp 4-113 to 4-114.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RXO", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("RXR", min: 1, max: nil),
+                .group("COMPONENT", min: 0, max: nil, elements: [
+                    .segment("RXC", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OMS_O05: MessageStructure = MessageStructure(
+        id: "OMS_O05",
+        version: "2.5.1",
+        triggers: ["OMS^O05"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.10.1 OMS - stock requisition order message (event O05), pp 4-103 to 4-104.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RQD", min: 1, max: 1),
+                .segment("RQ1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORB_O28: MessageStructure = MessageStructure(
+        id: "ORB_O28",
+        version: "2.5.1",
+        triggers: ["ORB^O28"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.20.3 ORB - Blood Product Order Acknowledgment (Event O28), p 4-208.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("BPO", min: 0, max: 1),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORD_O04: MessageStructure = MessageStructure(
+        id: "ORD_O04",
+        version: "2.5.1",
+        triggers: ["ORD^O04"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.7.2 ORD - dietary order acknowledgment (Event O04), pp 4-96 to 4-97.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER_DIET", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING_DIET", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("ODS", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER_TRAY", min: 0, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING_TRAY", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("ODT", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORF_R04: MessageStructure = MessageStructure(
+        id: "ORF_R04",
+        version: "2.5.1",
+        triggers: ["ORF^R04"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.3 QRY/ORF - Query For Results Of Observation (Events R02, R04), pp 7-16 to 7-17.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("QUERY_RESPONSE", min: 1, max: nil, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 0, max: 1),
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("TIMING_QTY", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("CTD", min: 0, max: 1),
+                    .group("OBSERVATION", min: 1, max: nil, elements: [
+                        .segment("OBX", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ORG_O20: MessageStructure = MessageStructure(
+        id: "ORG_O20",
+        version: "2.5.1",
+        triggers: ["ORG^O20"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.5 ORG - general clinical order acknowledgement message (event O20), pp 4-13 to 4-14.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("OBR", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                    .group("SPECIMEN", min: 0, max: nil, elements: [
+                        .segment("SPM", min: 1, max: 1),
+                        .segment("SAC", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORI_O24: MessageStructure = MessageStructure(
+        id: "ORI_O24",
+        version: "2.5.1",
+        triggers: ["ORI^O24"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.13 ORI - Imaging Order Response Message To Any OMI (Event O24), p 4-27.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("IPC", min: 1, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORL_O22: MessageStructure = MessageStructure(
+        id: "ORL_O22",
+        version: "2.5.1",
+        triggers: ["ORL^O22"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-17.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .group("ORDER", min: 0, max: nil, elements: [
+                        .segment("ORC", min: 1, max: 1),
+                        .group("TIMING", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                            .segment("OBR", min: 1, max: 1),
+                            .group("SPECIMEN", min: 0, max: nil, elements: [
+                                .segment("SPM", min: 1, max: 1),
+                                .segment("SAC", min: 0, max: nil),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORL_O34: MessageStructure = MessageStructure(
+        id: "ORL_O34",
+        version: "2.5.1",
+        triggers: ["ORL^O34"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.9 ORL - Laboratory order response message to a multiple order related to, pp 4-20 to 4-21.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .group("SPECIMEN", min: 1, max: nil, elements: [
+                        .segment("SPM", min: 1, max: 1),
+                        .segment("OBX", min: 0, max: nil),
+                        .segment("SAC", min: 0, max: nil),
+                        .group("ORDER", min: 0, max: nil, elements: [
+                            .segment("ORC", min: 1, max: 1),
+                            .group("TIMING", min: 0, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                            .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                                .segment("OBR", min: 1, max: 1),
+                                .group("SPECIMEN", min: 0, max: nil, elements: [
+                                    .segment("SPM", min: 1, max: 1),
+                                    .segment("SAC", min: 0, max: nil),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORL_O36: MessageStructure = MessageStructure(
+        id: "ORL_O36",
+        version: "2.5.1",
+        triggers: ["ORL^O36"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.11 ORL - Laboratory order response message to a single container of a, pp 4-24 to 4-25.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .group("SPECIMEN", min: 1, max: nil, elements: [
+                        .segment("SPM", min: 1, max: 1),
+                        .segment("OBX", min: 0, max: nil),
+                        .group("SPECIMEN_CONTAINER", min: 1, max: nil, elements: [
+                            .segment("SAC", min: 1, max: 1),
+                            .group("ORDER", min: 0, max: nil, elements: [
+                                .segment("ORC", min: 1, max: 1),
+                                .group("TIMING", min: 0, max: nil, elements: [
+                                    .segment("TQ1", min: 1, max: 1),
+                                    .segment("TQ2", min: 0, max: nil),
+                                ]),
+                                .group("OBSERVATION_REQUEST", min: 0, max: 1, elements: [
+                                    .segment("OBR", min: 1, max: 1),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORM_O01: MessageStructure = MessageStructure(
+        id: "ORM_O01",
+        version: "2.5.1",
+        triggers: ["ORM^O01"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.1 ORM - general order message (event O01), pp 4-6 to 4-7.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RQD", min: 1, max: 1),
+                        .segment("RQ1", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTD", min: 0, max: 1),
+                    .segment("DG1", min: 0, max: nil),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("CTI", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORN_O08: MessageStructure = MessageStructure(
+        id: "ORN_O08",
+        version: "2.5.1",
+        triggers: ["ORN^O08"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.10.4 ORN - non-stock requisition order acknowledgment message (event O08), pp 4-106 to 4-107.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RQD", min: 1, max: 1),
+                    .segment("RQ1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORP_O10: MessageStructure = MessageStructure(
+        id: "ORP_O10",
+        version: "2.5.1",
+        triggers: ["ORP^O10"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.4 ORP - Pharmacy/Treatment Order Acknowledgment (Event O10), pp 4-114 to 4-115.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .group("COMPONENT", min: 0, max: nil, elements: [
+                            .segment("RXC", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORR_O02: MessageStructure = MessageStructure(
+        id: "ORR_O02",
+        version: "2.5.1",
+        triggers: ["ORR^O02"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.2 ORR - general order response message response to any ORM (event O02), pp 4-8 to 4-9.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RQD", min: 1, max: 1),
+                        .segment("RQ1", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ORS_O06: MessageStructure = MessageStructure(
+        id: "ORS_O06",
+        version: "2.5.1",
+        triggers: ["ORS^O06"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.10.2 ORS - stock requisition order acknowledgment message (event O06), pp 4-104 to 4-105.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RQD", min: 1, max: 1),
+                    .segment("RQ1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
         ]
     )
 
@@ -105,6 +3164,2142 @@ extension MessageStructureTable {
                 ]),
             ]),
             .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_ORU_R30: MessageStructure = MessageStructure(
+        id: "ORU_R30",
+        version: "2.5.1",
+        triggers: ["ORU^R30", "ORU^R31", "ORU^R32"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.4 ORU - Unsolicited Point-Of-Care Observation Message Without Existing, p 7-18; the same structure is printed for ORU^R31 (7.3.5) and ORU^R32 (7.3.6).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("ORC", min: 1, max: 1),
+            .segment("OBR", min: 1, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("TIMING_QTY", min: 0, max: nil, elements: [
+                .segment("TQ1", min: 1, max: 1),
+                .segment("TQ2", min: 0, max: nil),
+            ]),
+            .group("OBSERVATION", min: 1, max: nil, elements: [
+                .segment("OBX", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_OSQ_Q06: MessageStructure = MessageStructure(
+        id: "OSQ_Q06",
+        version: "2.5.1",
+        triggers: ["OSQ^Q06"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), p 4-9.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_OSR_Q06: MessageStructure = MessageStructure(
+        id: "OSR_Q06",
+        version: "2.5.1",
+        triggers: ["OSR^Q06"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.4.3 OSQ/OSR- query response for order status (event Q06), pp 4-9 to 4-10.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .choice(nil, min: 1, max: 1, alternatives: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("RQD", min: 1, max: 1),
+                        .segment("RQ1", min: 1, max: 1),
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("ODS", min: 1, max: 1),
+                        .segment("ODT", min: 1, max: 1),
+                    ]),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_OUL_R21: MessageStructure = MessageStructure(
+        id: "OUL_R21",
+        version: "2.5.1",
+        triggers: ["OUL^R21"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.2 OUL - Unsolicited Laboratory Observation Message (Event R21), pp 7-15 to 7-16.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: 1),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("ORDER_OBSERVATION", min: 1, max: nil, elements: [
+                .group("CONTAINER", min: 0, max: 1, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .segment("SID", min: 0, max: 1),
+                ]),
+                .segment("ORC", min: 0, max: 1),
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("TIMING_QTY", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("OBSERVATION", min: 1, max: nil, elements: [
+                    .segment("OBX", min: 0, max: 1),
+                    .segment("TCD", min: 0, max: 1),
+                    .segment("SID", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("CTI", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_OUL_R22: MessageStructure = MessageStructure(
+        id: "OUL_R22",
+        version: "2.5.1",
+        triggers: ["OUL^R22"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.7 OUL - Unsolicited Specimen Oriented Observation Message - (Event R22), pp 7-21 to 7-22.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: 1),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("SPECIMEN", min: 1, max: nil, elements: [
+                .segment("SPM", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .group("CONTAINER", min: 0, max: nil, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .segment("INV", min: 0, max: 1),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("OBR", min: 1, max: 1),
+                    .segment("ORC", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("TIMING_QTY", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("RESULT", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("TCD", min: 0, max: 1),
+                        .segment("SID", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .segment("CTI", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_OUL_R23: MessageStructure = MessageStructure(
+        id: "OUL_R23",
+        version: "2.5.1",
+        triggers: ["OUL^R23"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.8 OUL - Unsolicited Specimen Container Oriented Observation Message -, pp 7-23 to 7-24.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: 1),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("SPECIMEN", min: 1, max: nil, elements: [
+                .segment("SPM", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .group("CONTAINER", min: 1, max: nil, elements: [
+                    .segment("SAC", min: 1, max: 1),
+                    .segment("INV", min: 0, max: 1),
+                    .group("ORDER", min: 1, max: nil, elements: [
+                        .segment("OBR", min: 1, max: 1),
+                        .segment("ORC", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_QTY", min: 0, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .group("RESULT", min: 0, max: nil, elements: [
+                            .segment("OBX", min: 1, max: 1),
+                            .segment("TCD", min: 0, max: 1),
+                            .segment("SID", min: 0, max: nil),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                        .segment("CTI", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_OUL_R24: MessageStructure = MessageStructure(
+        id: "OUL_R24",
+        version: "2.5.1",
+        triggers: ["OUL^R24"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.9 OUL - Unsolicited Order Oriented Observation Message - (Event R24), pp 7-25 to 7-26.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: 1),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("ORC", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("TIMING_QTY", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("SPECIMEN", min: 0, max: nil, elements: [
+                    .segment("SPM", min: 1, max: 1),
+                    .segment("OBX", min: 0, max: nil),
+                    .group("CONTAINER", min: 0, max: nil, elements: [
+                        .segment("SAC", min: 1, max: 1),
+                        .segment("INV", min: 0, max: 1),
+                    ]),
+                ]),
+                .group("RESULT", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("TCD", min: 0, max: 1),
+                    .segment("SID", min: 0, max: nil),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("CTI", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_PEX_P07: MessageStructure = MessageStructure(
+        id: "PEX_P07",
+        version: "2.5.1",
+        triggers: ["PEX^P07", "PEX^P08"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.11.1 PEX - Product Experience Message (Events P07, P08), pp 7-98 to 7-100.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .group("EXPERIENCE", min: 1, max: nil, elements: [
+                .segment("PES", min: 1, max: 1),
+                .group("PEX_OBSERVATION", min: 1, max: nil, elements: [
+                    .segment("PEO", min: 1, max: 1),
+                    .group("PEX_CAUSE", min: 1, max: nil, elements: [
+                        .segment("PCR", min: 1, max: 1),
+                        .group("RX_ORDER", min: 0, max: 1, elements: [
+                            .segment("RXE", min: 1, max: 1),
+                            .group("TIMING_QTY", min: 1, max: nil, elements: [
+                                .segment("TQ1", min: 1, max: 1),
+                                .segment("TQ2", min: 0, max: nil),
+                            ]),
+                            .segment("RXR", min: 0, max: nil),
+                        ]),
+                        .group("RX_ADMINISTRATION", min: 0, max: nil, elements: [
+                            .segment("RXA", min: 1, max: 1),
+                            .segment("RXR", min: 0, max: 1),
+                        ]),
+                        .segment("PRB", min: 0, max: nil),
+                        .segment("OBX", min: 0, max: nil),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("ASSOCIATED_PERSON", min: 0, max: 1, elements: [
+                            .segment("NK1", min: 1, max: 1),
+                            .group("ASSOCIATED_RX_ORDER", min: 0, max: 1, elements: [
+                                .segment("RXE", min: 1, max: 1),
+                                .group("NK1_TIMING_QTY", min: 1, max: nil, elements: [
+                                    .segment("TQ1", min: 1, max: 1),
+                                    .segment("TQ2", min: 0, max: nil),
+                                ]),
+                                .segment("RXR", min: 0, max: nil),
+                            ]),
+                            .group("ASSOCIATED_RX_ADMIN", min: 0, max: nil, elements: [
+                                .segment("RXA", min: 1, max: 1),
+                                .segment("RXR", min: 0, max: 1),
+                            ]),
+                            .segment("PRB", min: 0, max: nil),
+                            .segment("OBX", min: 0, max: nil),
+                        ]),
+                        .group("STUDY", min: 0, max: nil, elements: [
+                            .segment("CSR", min: 1, max: 1),
+                            .segment("CSP", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_PMU_B01: MessageStructure = MessageStructure(
+        id: "PMU_B01",
+        version: "2.5.1",
+        triggers: ["PMU^B01", "PMU^B02"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.1 PMU/ACK - Add Personnel Record (Event B01), pp 15-2 to 15-3; the same structure is printed for PMU^B02 (15.3.2).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("STF", min: 1, max: 1),
+            .segment("PRA", min: 0, max: nil),
+            .segment("ORG", min: 0, max: nil),
+            .segment("AFF", min: 0, max: nil),
+            .segment("LAN", min: 0, max: nil),
+            .segment("EDU", min: 0, max: nil),
+            .segment("CER", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_PMU_B03: MessageStructure = MessageStructure(
+        id: "PMU_B03",
+        version: "2.5.1",
+        triggers: ["PMU^B03"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.3 PMU/ACK - Delete Personnel Record (Event B03), p 15-4.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("STF", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_PMU_B04: MessageStructure = MessageStructure(
+        id: "PMU_B04",
+        version: "2.5.1",
+        triggers: ["PMU^B04", "PMU^B05", "PMU^B06"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.4 PMU/ACK - Activate Practicing Person (Event B04), p 15-4; the same structure is printed for PMU^B05 (15.3.5) and PMU^B06 (15.3.6).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("STF", min: 1, max: 1),
+            .segment("PRA", min: 0, max: nil),
+            .segment("ORG", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_PMU_B07: MessageStructure = MessageStructure(
+        id: "PMU_B07",
+        version: "2.5.1",
+        triggers: ["PMU^B07"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.8 PMU/ACK - Grant Certificate/Permission (Event B07), pp 15-7 to 15-8.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("STF", min: 1, max: 1),
+            .segment("PRA", min: 0, max: 1),
+            .group("CERTIFICATE", min: 0, max: nil, elements: [
+                .segment("CER", min: 1, max: 1),
+                .segment("ROL", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_PMU_B08: MessageStructure = MessageStructure(
+        id: "PMU_B08",
+        version: "2.5.1",
+        triggers: ["PMU^B08"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.9 PMU/ACK - Revoke Certificate/Permission (Event B08), p 15-8.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EVN", min: 1, max: 1),
+            .segment("STF", min: 1, max: 1),
+            .segment("PRA", min: 0, max: 1),
+            .segment("CER", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_QBP_Q21: MessageStructure = MessageStructure(
+        id: "QBP_Q21",
+        version: "2.5.1",
+        triggers: ["QBP^Q21", "QBP^Q22", "QBP^Q23", "QBP^Q24", "QBP^Q25"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.56 Get Person Demographics (QBP) and Response (RSP) (Events Q21 and K21), p 3-59; the same structure is printed for QBP^Q22 (3.3.57), QBP^Q23 (3.3.58), QBP^Q24 (3.3.59) and QBP^Q25 (15.3.7).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QPD", min: 1, max: 1),
+            .segment("RCP", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QCN_J01: MessageStructure = MessageStructure(
+        id: "QCN_J01",
+        version: "2.5.1",
+        triggers: ["QCN^J01", "QSX^J02"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.4.6 QCN/ACK - cancel query/acknowledge message (Event J01), pp 5-41 to 5-42; the same structure is printed for QSX^J02 (5.4.7).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QID", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QRY: MessageStructure = MessageStructure(
+        id: "QRY",
+        version: "2.5.1",
+        triggers: ["QRY^T12"],
+        citation: "HL7 v2.5.1 Chapter 9, section 9.8.1 QRY/DOC - Document Query (Event T12), pp 9-34 to 9-35.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QRY_A19: MessageStructure = MessageStructure(
+        id: "QRY_A19",
+        version: "2.5.1",
+        triggers: ["QRY^A19"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.19 QRY/ADR - Patient Query (Event A19), pp 3-26 to 3-27.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QRY_PC4: MessageStructure = MessageStructure(
+        id: "QRY_PC4",
+        version: "2.5.1",
+        triggers: ["QRY^PC4", "QRY^PC9", "QRY^PCE", "QRY^PCK"],
+        citation: "HL7 v2.5.1 Chapter 12, section 12.3.5 QRY - Patient Care Problem Query (Event PC4), p 12-16; the same structure is printed for QRY^PC9 (12.3.7), QRY^PCE (12.3.9) and QRY^PCK (12.3.11).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QRY_Q01: MessageStructure = MessageStructure(
+        id: "QRY_Q01",
+        version: "2.5.1",
+        triggers: ["QRY^Q01", "QRY^Q26", "QRY^Q27", "QRY^Q28", "QRY^Q29", "QRY^Q30"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115; the same structure is printed for QRY^Q26 (4.13.15), QRY^Q27 (4.13.16), QRY^Q28 (4.13.17), QRY^Q29 (4.13.18) and QRY^Q30 (4.13.19).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QRY_R02: MessageStructure = MessageStructure(
+        id: "QRY_R02",
+        version: "2.5.1",
+        triggers: ["QRY^R02"],
+        citation: "HL7 v2.5.1 Chapter 7, section 7.3.3 QRY/ORF - Query For Results Of Observation (Events R02, R04), p 7-16.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 1, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_QSB_Q16: MessageStructure = MessageStructure(
+        id: "QSB_Q16",
+        version: "2.5.1",
+        triggers: ["QSB^Q16"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.4.4 QSB - Create subscription (Event Q16), p 5-40.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QPD", min: 1, max: 1),
+            .segment("RCP", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RAR_RAR: MessageStructure = MessageStructure(
+        id: "RAR_RAR",
+        version: "2.5.1",
+        triggers: ["RAR^RAR"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.16 RAR - Pharmacy/Treatment Administration Information (Event Q27), p 4-131.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .group("DEFINITION", min: 1, max: nil, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ENCODING", min: 0, max: 1, elements: [
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                    .segment("RXA", min: 1, max: nil),
+                    .segment("RXR", min: 1, max: 1),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RAS_O17: MessageStructure = MessageStructure(
+        id: "RAS_O17",
+        version: "2.5.1",
+        triggers: ["RAS^O17"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.11 RAS - Pharmacy/Treatment Administration Message (Event O17), pp 4-125 to 4-126.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .segment("RXO", min: 1, max: 1),
+                    .group("ORDER_DETAIL_SUPPLEMENT", min: 0, max: 1, elements: [
+                        .segment("NTE", min: 1, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .group("COMPONENTS", min: 0, max: nil, elements: [
+                            .segment("RXC", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+                .group("ENCODING", min: 0, max: 1, elements: [
+                    .segment("RXE", min: 1, max: 1),
+                    .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+                .group("ADMINISTRATION", min: 1, max: nil, elements: [
+                    .segment("RXA", min: 1, max: nil),
+                    .segment("RXR", min: 1, max: 1),
+                    .group("OBSERVATION", min: 0, max: nil, elements: [
+                        .segment("OBX", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("CTI", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RCI_I05: MessageStructure = MessageStructure(
+        id: "RCI_I05",
+        version: "2.5.1",
+        triggers: ["RCI^I05"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.5 RQC/RCI - Request For Patient Clinical Information (Event I05), p 11-13.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("OBSERVATION", min: 0, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RCL_I06: MessageStructure = MessageStructure(
+        id: "RCL_I06",
+        version: "2.5.1",
+        triggers: ["RCL^I06"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), p 11-14.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .segment("DSP", min: 0, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RDE_O11: MessageStructure = MessageStructure(
+        id: "RDE_O11",
+        version: "2.5.1",
+        triggers: ["RDE^O11", "RDE^O25"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.5 RDE - Pharmacy/Treatment Encoded Order Message (Event O11), pp 4-115 to 4-116; the same structure is printed for RDE^O25 (4.13.13).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+                .group("INSURANCE", min: 0, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+                .segment("GT1", min: 0, max: 1),
+                .segment("AL1", min: 0, max: nil),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .segment("RXO", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("RXR", min: 1, max: nil),
+                    .group("COMPONENT", min: 0, max: nil, elements: [
+                        .segment("RXC", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+                .segment("RXE", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RXR", min: 1, max: nil),
+                .segment("RXC", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+                .segment("BLG", min: 0, max: 1),
+                .segment("CTI", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RDR_RDR: MessageStructure = MessageStructure(
+        id: "RDR_RDR",
+        version: "2.5.1",
+        triggers: ["RDR^RDR"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.17 RDR - Pharmacy/Treatment Dispense Information (Event Q28), p 4-132.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .group("DEFINITION", min: 1, max: nil, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ENCODING", min: 0, max: 1, elements: [
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                    .group("DISPENSE", min: 1, max: nil, elements: [
+                        .segment("RXD", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RDS_O13: MessageStructure = MessageStructure(
+        id: "RDS_O13",
+        version: "2.5.1",
+        triggers: ["RDS^O13"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.7 RDS - Pharmacy/Treatment Dispense Message (Event O13), pp 4-119 to 4-120.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .segment("RXO", min: 1, max: 1),
+                    .group("ORDER_DETAIL_SUPPLEMENT", min: 0, max: 1, elements: [
+                        .segment("NTE", min: 1, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .group("COMPONENT", min: 0, max: nil, elements: [
+                            .segment("RXC", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+                .group("ENCODING", min: 0, max: 1, elements: [
+                    .segment("RXE", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+                .segment("RXD", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("RXR", min: 1, max: nil),
+                .segment("RXC", min: 0, max: nil),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .segment("FT1", min: 0, max: nil),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RDY_K15: MessageStructure = MessageStructure(
+        id: "RDY_K15",
+        version: "2.5.1",
+        triggers: ["RDY^K15"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.4.3 QBP/RDY - query by parameter/display response (events vary), pp 5-39 to 5-40.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .segment("DSP", min: 0, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_REF_I12: MessageStructure = MessageStructure(
+        id: "REF_I12",
+        version: "2.5.1",
+        triggers: ["REF^I12", "REF^I13", "REF^I14", "REF^I15"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 11-19 to 11-21.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("RF1", min: 0, max: 1),
+            .group("AUTHORIZATION_CONTACT", min: 0, max: 1, elements: [
+                .segment("AUT", min: 1, max: 1),
+                .segment("CTD", min: 0, max: 1),
+            ]),
+            .group("PROVIDER_CONTACT", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: 1),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .group("AUTHORIZATION_CONTACT", min: 0, max: 1, elements: [
+                    .segment("AUT", min: 1, max: 1),
+                    .segment("CTD", min: 0, max: 1),
+                ]),
+            ]),
+            .group("OBSERVATION", min: 0, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS_NOTES", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RER_RER: MessageStructure = MessageStructure(
+        id: "RER_RER",
+        version: "2.5.1",
+        triggers: ["RER^RER"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.18 RER - Pharmacy/Treatment Encoded Order Information (Event Q29), p 4-133.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .group("DEFINITION", min: 1, max: nil, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .segment("RXE", min: 1, max: 1),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RGR_RGR: MessageStructure = MessageStructure(
+        id: "RGR_RGR",
+        version: "2.5.1",
+        triggers: ["RGR^RGR"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.19 RGR - Pharmacy/Treatment Dose Information (Event Q30), p 4-134.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .group("DEFINITION", min: 1, max: nil, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("ENCODING", min: 0, max: 1, elements: [
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                    .segment("RXG", min: 1, max: nil),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RGV_O15: MessageStructure = MessageStructure(
+        id: "RGV_O15",
+        version: "2.5.1",
+        triggers: ["RGV^O15"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.9 RGV - Pharmacy/Treatment Give Message (Event O15), pp 4-122 to 4-123.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .segment("AL1", min: 0, max: nil),
+                .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                    .segment("PV1", min: 1, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                ]),
+            ]),
+            .group("ORDER", min: 1, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                    .segment("RXO", min: 1, max: 1),
+                    .group("ORDER_DETAIL_SUPPLEMENT", min: 0, max: 1, elements: [
+                        .segment("NTE", min: 1, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .group("COMPONENTS", min: 0, max: nil, elements: [
+                            .segment("RXC", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                ]),
+                .group("ENCODING", min: 0, max: 1, elements: [
+                    .segment("RXE", min: 1, max: 1),
+                    .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+                .group("GIVE", min: 1, max: nil, elements: [
+                    .segment("RXG", min: 1, max: 1),
+                    .group("TIMING_GIVE", min: 1, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                    .group("OBSERVATION", min: 1, max: nil, elements: [
+                        .segment("OBX", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_ROR_ROR: MessageStructure = MessageStructure(
+        id: "ROR_ROR",
+        version: "2.5.1",
+        triggers: ["ROR^ROR"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.15 ROR - Pharmacy/Treatment Order Response (Event Q26), p 4-130.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .group("DEFINITION", min: 1, max: nil, elements: [
+                .segment("QRD", min: 1, max: 1),
+                .segment("QRF", min: 0, max: 1),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .segment("RXO", min: 1, max: 1),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RPA_I08: MessageStructure = MessageStructure(
+        id: "RPA_I08",
+        version: "2.5.1",
+        triggers: ["RPA^I08", "RPA^I09", "RPA^I10", "RPA^I11"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 11-17 to 11-18.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("RF1", min: 0, max: 1),
+            .group("AUTHORIZATION", min: 0, max: 1, elements: [
+                .segment("AUT", min: 1, max: 1),
+                .segment("CTD", min: 0, max: 1),
+            ]),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: 1),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("PROCEDURE", min: 1, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .group("AUTHORIZATION", min: 0, max: 1, elements: [
+                    .segment("AUT", min: 1, max: 1),
+                    .segment("CTD", min: 0, max: 1),
+                ]),
+            ]),
+            .group("OBSERVATION", min: 0, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RPI_I01: MessageStructure = MessageStructure(
+        id: "RPI_I01",
+        version: "2.5.1",
+        triggers: ["RPI^I01"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-9.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("GUARANTOR_INSURANCE", min: 0, max: 1, elements: [
+                .segment("GT1", min: 0, max: nil),
+                .group("INSURANCE", min: 1, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RPI_I04: MessageStructure = MessageStructure(
+        id: "RPI_I04",
+        version: "2.5.1",
+        triggers: ["RPI^I04"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), p 11-12.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("GUARANTOR_INSURANCE", min: 0, max: 1, elements: [
+                .segment("GT1", min: 0, max: nil),
+                .group("INSURANCE", min: 1, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RPL_I02: MessageStructure = MessageStructure(
+        id: "RPL_I02",
+        version: "2.5.1",
+        triggers: ["RPL^I02"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.2 RQI/RPL - Request/Receipt of Patient Selection Display List (Event I02), p 11-10.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+            .segment("DSP", min: 0, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RPR_I03: MessageStructure = MessageStructure(
+        id: "RPR_I03",
+        version: "2.5.1",
+        triggers: ["RPR^I03"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.3 RQI/RPR - Request/Receipt of Patient Selection List (Event I03), p 11-11.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RQA_I08: MessageStructure = MessageStructure(
+        id: "RQA_I08",
+        version: "2.5.1",
+        triggers: ["RQA^I08", "RQA^I09", "RQA^I10", "RQA^I11"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.4.1 RQA/RPA - Request Patient Authorization Message (Event I08), pp 11-15 to 11-17.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("RF1", min: 0, max: 1),
+            .group("AUTHORIZATION", min: 0, max: 1, elements: [
+                .segment("AUT", min: 1, max: 1),
+                .segment("CTD", min: 0, max: 1),
+            ]),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("GUARANTOR_INSURANCE", min: 0, max: 1, elements: [
+                .segment("GT1", min: 0, max: nil),
+                .group("INSURANCE", min: 1, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+            ]),
+            .segment("ACC", min: 0, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .group("AUTHORIZATION", min: 0, max: 1, elements: [
+                    .segment("AUT", min: 1, max: 1),
+                    .segment("CTD", min: 0, max: 1),
+                ]),
+            ]),
+            .group("OBSERVATION", min: 0, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .group("VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RQC_I05: MessageStructure = MessageStructure(
+        id: "RQC_I05",
+        version: "2.5.1",
+        triggers: ["RQC^I05", "RQC^I06"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.5 RQC/RCI - Request For Patient Clinical Information (Event I05), pp 11-12 to 11-13; the same structure is printed for RQC^I06 (11.3.6).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RQI_I01: MessageStructure = MessageStructure(
+        id: "RQI_I01",
+        version: "2.5.1",
+        triggers: ["RQI^I01", "RQI^I02", "RQI^I03", "PIN^I07"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-8; the same structure is printed for RQI^I02 (11.3.2), RQI^I03 (11.3.3) and PIN^I07 (11.3.7).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("GUARANTOR_INSURANCE", min: 0, max: 1, elements: [
+                .segment("GT1", min: 0, max: nil),
+                .group("INSURANCE", min: 1, max: nil, elements: [
+                    .segment("IN1", min: 1, max: 1),
+                    .segment("IN2", min: 0, max: 1),
+                    .segment("IN3", min: 0, max: 1),
+                ]),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RQP_I04: MessageStructure = MessageStructure(
+        id: "RQP_I04",
+        version: "2.5.1",
+        triggers: ["RQP^I04"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.3.4 RQP/RPI - request for patient demographic data (Event I04), p 11-11.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .group("PROVIDER", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .segment("GT1", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RQQ_Q09: MessageStructure = MessageStructure(
+        id: "RQQ_Q09",
+        version: "2.5.1",
+        triggers: ["RQQ^Q09"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), pp 5-119 to 5-120.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("ERQ", min: 1, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RRA_O18: MessageStructure = MessageStructure(
+        id: "RRA_O18",
+        version: "2.5.1",
+        triggers: ["RRA^O18"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.12 RRA - Pharmacy/Treatment Administration Acknowledgment Message, pp 4-126 to 4-127.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("ADMINISTRATION", min: 0, max: 1, elements: [
+                        .segment("RXA", min: 1, max: nil),
+                        .segment("RXR", min: 1, max: 1),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RRD_O14: MessageStructure = MessageStructure(
+        id: "RRD_O14",
+        version: "2.5.1",
+        triggers: ["RRD^O14"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.8 RRD - Pharmacy/Treatment Dispense Acknowledgement Message (Event O14), p 4-121.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("DISPENSE", min: 0, max: 1, elements: [
+                        .segment("RXD", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RRE_O12: MessageStructure = MessageStructure(
+        id: "RRE_O12",
+        version: "2.5.1",
+        triggers: ["RRE^O12", "RRE^O26"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.6 RRE - Pharmacy/Treatment Encoded Order Acknowledgment (Event O12), pp 4-117 to 4-118; the same structure is printed for RRE^O26 (4.13.14).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("ENCODING", min: 0, max: 1, elements: [
+                        .segment("RXE", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RRG_O16: MessageStructure = MessageStructure(
+        id: "RRG_O16",
+        version: "2.5.1",
+        triggers: ["RRG^O16"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.10 RRG - Pharmacy/Treatment Give Acknowledgment Message (Event O16), pp 4-123 to 4-124.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("RESPONSE", min: 0, max: 1, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("GIVE", min: 0, max: 1, elements: [
+                        .segment("RXG", min: 1, max: 1),
+                        .group("TIMING_GIVE", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_RRI_I12: MessageStructure = MessageStructure(
+        id: "RRI_I12",
+        version: "2.5.1",
+        triggers: ["RRI^I12", "RRI^I13", "RRI^I14", "RRI^I15"],
+        citation: "HL7 v2.5.1 Chapter 11, section 11.5.1 REF/RRI - Patient Referral Message, pp 11-21 to 11-22.",
+        requiresExactMatch: true,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 0, max: 1),
+            .segment("RF1", min: 0, max: 1),
+            .group("AUTHORIZATION_CONTACT", min: 0, max: 1, elements: [
+                .segment("AUT", min: 1, max: 1),
+                .segment("CTD", min: 0, max: 1),
+            ]),
+            .group("PROVIDER_CONTACT", min: 1, max: nil, elements: [
+                .segment("PRD", min: 1, max: 1),
+                .segment("CTD", min: 0, max: nil),
+            ]),
+            .segment("PID", min: 1, max: 1),
+            .segment("ACC", min: 0, max: 1),
+            .segment("DG1", min: 0, max: nil),
+            .segment("DRG", min: 0, max: nil),
+            .segment("AL1", min: 0, max: nil),
+            .group("PROCEDURE", min: 0, max: nil, elements: [
+                .segment("PR1", min: 1, max: 1),
+                .group("AUTHORIZATION_CONTACT", min: 0, max: 1, elements: [
+                    .segment("AUT", min: 1, max: 1),
+                    .segment("CTD", min: 0, max: 1),
+                ]),
+            ]),
+            .group("OBSERVATION", min: 0, max: nil, elements: [
+                .segment("OBR", min: 1, max: 1),
+                .segment("NTE", min: 0, max: nil),
+                .group("RESULTS_NOTES", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("NTE", min: 0, max: nil),
+        ]
+    )
+
+    private static let v2_5_1_RSP_K21: MessageStructure = MessageStructure(
+        id: "RSP_K21",
+        version: "2.5.1",
+        triggers: ["RSP^K21", "RSP^K22"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.56 Get Person Demographics (QBP) and Response (RSP) (Events Q21 and K21), p 3-59; the same structure is printed for RSP^K22 (3.3.57).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("NK1", min: 0, max: nil),
+                .segment("QRI", min: 1, max: 1),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RSP_K23: MessageStructure = MessageStructure(
+        id: "RSP_K23",
+        version: "2.5.1",
+        triggers: ["RSP^K23", "RSP^K24"],
+        citation: "HL7 v2.5.1 Chapter 3, section 3.3.58 Get Corresponding Identifiers (QBP) and Response (RSP) (Events Q23 and K23), p 3-64; the same structure is printed for RSP^K24 (3.3.59).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .group("QUERY_RESPONSE", min: 0, max: 1, elements: [
+                .segment("PID", min: 1, max: 1),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RSP_K25: MessageStructure = MessageStructure(
+        id: "RSP_K25",
+        version: "2.5.1",
+        triggers: ["RSP^K25"],
+        citation: "HL7 v2.5.1 Chapter 15, section 15.3.7 QBP/RSP - Query Information (Event Q25/K25), p 15-7.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .segment("RCP", min: 1, max: 1),
+            .group("STAFF", min: 1, max: nil, elements: [
+                .segment("STF", min: 1, max: 1),
+                .segment("PRA", min: 0, max: nil),
+                .segment("ORG", min: 0, max: nil),
+                .segment("AFF", min: 0, max: nil),
+                .segment("LAN", min: 0, max: nil),
+                .segment("EDU", min: 0, max: nil),
+                .segment("CER", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RSP_K31: MessageStructure = MessageStructure(
+        id: "RSP_K31",
+        version: "2.5.1",
+        triggers: ["RSP^K31"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.13.20 Pharmacy Query/Response Message Pair, pp 4-135 to 4-137.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .segment("RCP", min: 1, max: 1),
+            .group("RESPONSE", min: 1, max: nil, elements: [
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PD1", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                    .segment("AL1", min: 0, max: nil),
+                    .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                        .segment("PV1", min: 1, max: 1),
+                        .segment("PV2", min: 0, max: 1),
+                    ]),
+                ]),
+                .group("ORDER", min: 1, max: nil, elements: [
+                    .segment("ORC", min: 1, max: 1),
+                    .group("TIMING", min: 0, max: nil, elements: [
+                        .segment("TQ1", min: 1, max: 1),
+                        .segment("TQ2", min: 0, max: nil),
+                    ]),
+                    .group("ORDER_DETAIL", min: 0, max: 1, elements: [
+                        .segment("RXO", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                        .segment("RXR", min: 1, max: nil),
+                        .group("COMPONENTS", min: 0, max: nil, elements: [
+                            .segment("RXC", min: 1, max: 1),
+                            .segment("NTE", min: 0, max: nil),
+                        ]),
+                    ]),
+                    .group("ENCODING", min: 0, max: 1, elements: [
+                        .segment("RXE", min: 1, max: 1),
+                        .group("TIMING_ENCODED", min: 1, max: nil, elements: [
+                            .segment("TQ1", min: 1, max: 1),
+                            .segment("TQ2", min: 0, max: nil),
+                        ]),
+                        .segment("RXR", min: 1, max: nil),
+                        .segment("RXC", min: 0, max: nil),
+                    ]),
+                    .segment("RXD", min: 1, max: 1),
+                    .segment("RXR", min: 1, max: nil),
+                    .segment("RXC", min: 0, max: nil),
+                    .group("OBSERVATION", min: 1, max: nil, elements: [
+                        .segment("OBX", min: 0, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_RTB_K13: MessageStructure = MessageStructure(
+        id: "RTB_K13",
+        version: "2.5.1",
+        triggers: ["RTB^K13"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.4.2 QBP/RTB - query by parameter/tabular response (events vary), p 5-39.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .group("ROW_DEFINITION", min: 0, max: 1, elements: [
+                .segment("RDF", min: 1, max: 1),
+                .segment("RDT", min: 0, max: nil),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_SIU_S12: MessageStructure = MessageStructure(
+        id: "SIU_S12",
+        version: "2.5.1",
+        triggers: ["SIU^S12", "SIU^S13", "SIU^S14", "SIU^S15", "SIU^S16", "SIU^S17", "SIU^S18", "SIU^S19", "SIU^S20", "SIU^S21", "SIU^S22", "SIU^S23", "SIU^S24", "SIU^S26"],
+        citation: "HL7 v2.5.1 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 10-18 to 10-19.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SCH", min: 1, max: 1),
+            .segment("TQ1", min: 0, max: nil),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("PV1", min: 0, max: 1),
+                .segment("PV2", min: 0, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+            ]),
+            .group("RESOURCES", min: 1, max: nil, elements: [
+                .segment("RGS", min: 1, max: 1),
+                .group("SERVICE", min: 0, max: nil, elements: [
+                    .segment("AIS", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("GENERAL_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIG", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("LOCATION_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIL", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("PERSONNEL_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIP", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_SPQ_Q08: MessageStructure = MessageStructure(
+        id: "SPQ_Q08",
+        version: "2.5.1",
+        triggers: ["SPQ^Q08"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.3 SPQ - stored procedure request (event Q08), p 5-120.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("SPR", min: 1, max: 1),
+            .segment("RDF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_SQM_S25: MessageStructure = MessageStructure(
+        id: "SQM_S25",
+        version: "2.5.1",
+        triggers: ["SQM^S25"],
+        citation: "HL7 v2.5.1 Chapter 10, section 10.5.3 SQM/SQR - Schedule Query Message and Response (Event S25), pp 10-24 to 10-25.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("REQUEST", min: 0, max: 1, elements: [
+                .segment("ARQ", min: 1, max: 1),
+                .segment("APR", min: 0, max: 1),
+                .segment("PID", min: 0, max: 1),
+                .group("RESOURCES", min: 1, max: nil, elements: [
+                    .segment("RGS", min: 1, max: 1),
+                    .group("SERVICE", min: 0, max: nil, elements: [
+                        .segment("AIS", min: 1, max: 1),
+                        .segment("APR", min: 0, max: 1),
+                    ]),
+                    .group("GENERAL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIG", min: 1, max: 1),
+                        .segment("APR", min: 0, max: 1),
+                    ]),
+                    .group("PERSONNEL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIP", min: 1, max: 1),
+                        .segment("APR", min: 0, max: 1),
+                    ]),
+                    .group("LOCATION_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIL", min: 1, max: 1),
+                        .segment("APR", min: 0, max: 1),
+                    ]),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_SQR_S25: MessageStructure = MessageStructure(
+        id: "SQR_S25",
+        version: "2.5.1",
+        triggers: ["SQR^S25"],
+        citation: "HL7 v2.5.1 Chapter 10, section 10.5.3 SQM/SQR - Schedule Query Message and Response (Event S25), pp 10-25 to 10-26.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .segment("QAK", min: 1, max: 1),
+            .group("SCHEDULE", min: 0, max: nil, elements: [
+                .segment("SCH", min: 1, max: 1),
+                .segment("TQ1", min: 0, max: nil),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT", min: 0, max: 1, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PV1", min: 0, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .segment("DG1", min: 0, max: 1),
+                ]),
+                .group("RESOURCES", min: 1, max: nil, elements: [
+                    .segment("RGS", min: 1, max: 1),
+                    .group("SERVICE", min: 0, max: nil, elements: [
+                        .segment("AIS", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GENERAL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIG", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PERSONNEL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIP", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("LOCATION_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_SRM_S01: MessageStructure = MessageStructure(
+        id: "SRM_S01",
+        version: "2.5.1",
+        triggers: ["SRM^S01", "SRM^S02", "SRM^S03", "SRM^S04", "SRM^S05", "SRM^S06", "SRM^S07", "SRM^S08", "SRM^S09", "SRM^S10", "SRM^S11"],
+        citation: "HL7 v2.5.1 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 10-13 to 10-14.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("ARQ", min: 1, max: 1),
+            .segment("APR", min: 0, max: 1),
+            .segment("NTE", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PV1", min: 0, max: 1),
+                .segment("PV2", min: 0, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .segment("DG1", min: 0, max: nil),
+            ]),
+            .group("RESOURCES", min: 1, max: nil, elements: [
+                .segment("RGS", min: 1, max: 1),
+                .group("SERVICE", min: 0, max: nil, elements: [
+                    .segment("AIS", min: 1, max: 1),
+                    .segment("APR", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("GENERAL_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIG", min: 1, max: 1),
+                    .segment("APR", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("LOCATION_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIL", min: 1, max: 1),
+                    .segment("APR", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+                .group("PERSONNEL_RESOURCE", min: 0, max: nil, elements: [
+                    .segment("AIP", min: 1, max: 1),
+                    .segment("APR", min: 0, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_SRR_S01: MessageStructure = MessageStructure(
+        id: "SRR_S01",
+        version: "2.5.1",
+        triggers: ["SRR^S01", "SRR^S02", "SRR^S03", "SRR^S04", "SRR^S05", "SRR^S06", "SRR^S07", "SRR^S08", "SRR^S09", "SRR^S10", "SRR^S11"],
+        citation: "HL7 v2.5.1 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, pp 10-14 to 10-15.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: nil),
+            .group("SCHEDULE", min: 0, max: 1, elements: [
+                .segment("SCH", min: 1, max: 1),
+                .segment("TQ1", min: 0, max: nil),
+                .segment("NTE", min: 0, max: nil),
+                .group("PATIENT", min: 0, max: nil, elements: [
+                    .segment("PID", min: 1, max: 1),
+                    .segment("PV1", min: 0, max: 1),
+                    .segment("PV2", min: 0, max: 1),
+                    .segment("DG1", min: 0, max: nil),
+                ]),
+                .group("RESOURCES", min: 1, max: nil, elements: [
+                    .segment("RGS", min: 1, max: 1),
+                    .group("SERVICE", min: 0, max: nil, elements: [
+                        .segment("AIS", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("GENERAL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIG", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("LOCATION_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIL", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                    .group("PERSONNEL_RESOURCE", min: 0, max: nil, elements: [
+                        .segment("AIP", min: 1, max: 1),
+                        .segment("NTE", min: 0, max: nil),
+                    ]),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_SSR_U04: MessageStructure = MessageStructure(
+        id: "SSR_U04",
+        version: "2.5.1",
+        triggers: ["SSR^U04"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-17.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("SPECIMEN_CONTAINER", min: 1, max: nil, elements: [
+                .segment("SAC", min: 1, max: 1),
+                .segment("SPM", min: 0, max: nil),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_SSU_U03: MessageStructure = MessageStructure(
+        id: "SSU_U03",
+        version: "2.5.1",
+        triggers: ["SSU^U03"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-16.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("SPECIMEN_CONTAINER", min: 1, max: nil, elements: [
+                .segment("SAC", min: 1, max: 1),
+                .segment("OBX", min: 0, max: nil),
+                .group("SPECIMEN", min: 0, max: nil, elements: [
+                    .segment("SPM", min: 1, max: 1),
+                    .segment("OBX", min: 0, max: nil),
+                ]),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_TBR_R08: MessageStructure = MessageStructure(
+        id: "TBR_R08",
+        version: "2.5.1",
+        triggers: ["TBR^R08"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.1 EQQ - embedded query language query (event Q04), p 5-119.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("RDF", min: 1, max: 1),
+            .segment("RDT", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_TCU_U10: MessageStructure = MessageStructure(
+        id: "TCU_U10",
+        version: "2.5.1",
+        triggers: ["TCU^U10", "TCR^U11"],
+        citation: "HL7 v2.5.1 Chapter 13, section 13.3 TRIGGER EVENTS AND MESSAGE DEFINITIONS, p 13-20; the same structure is printed for TCR^U11 (13.3).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("EQU", min: 1, max: 1),
+            .group("TEST_CONFIGURATION", min: 1, max: nil, elements: [
+                .segment("SPM", min: 0, max: 1),
+                .segment("TCC", min: 1, max: nil),
+            ]),
+            .segment("ROL", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_UDM_Q05: MessageStructure = MessageStructure(
+        id: "UDM_Q05",
+        version: "2.5.1",
+        triggers: ["UDM^Q05"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.1.2 UDM/ACK - unsolicited display update message (event Q05), p 5-113.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("URD", min: 1, max: 1),
+            .segment("URS", min: 0, max: 1),
+            .segment("DSP", min: 1, max: nil),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_VQQ_Q07: MessageStructure = MessageStructure(
+        id: "VQQ_Q07",
+        version: "2.5.1",
+        triggers: ["VQQ^Q07"],
+        citation: "HL7 v2.5.1 Chapter 5, section 5.10.4.4 VQQ - Virtual Table query (event Q07), p 5-122.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("VTQ", min: 1, max: 1),
+            .segment("RDF", min: 0, max: 1),
+            .segment("DSC", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_VXQ_V01: MessageStructure = MessageStructure(
+        id: "VXQ_V01",
+        version: "2.5.1",
+        triggers: ["VXQ^V01"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.17.3 VXQ - Query For Vaccination Record (Event V01), p 4-200.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+        ]
+    )
+
+    private static let v2_5_1_VXR_V03: MessageStructure = MessageStructure(
+        id: "VXR_V03",
+        version: "2.5.1",
+        triggers: ["VXR^V03"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.17.5 VXR - Vaccination Record Response (Event V03), pp 4-200 to 4-201.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("PATIENT_VISIT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: 1),
+            ]),
+            .group("ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RXA", min: 1, max: 1),
+                .segment("RXR", min: 0, max: 1),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_VXU_V04: MessageStructure = MessageStructure(
+        id: "VXU_V04",
+        version: "2.5.1",
+        triggers: ["VXU^V04"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.17.6 VXU - Unsolicited Vaccination Record Update (Event V04), p 4-202.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("PID", min: 1, max: 1),
+            .segment("PD1", min: 0, max: 1),
+            .segment("NK1", min: 0, max: nil),
+            .group("PATIENT", min: 0, max: 1, elements: [
+                .segment("PV1", min: 1, max: 1),
+                .segment("PV2", min: 0, max: 1),
+            ]),
+            .segment("GT1", min: 0, max: nil),
+            .group("INSURANCE", min: 0, max: nil, elements: [
+                .segment("IN1", min: 1, max: 1),
+                .segment("IN2", min: 0, max: 1),
+                .segment("IN3", min: 0, max: 1),
+            ]),
+            .group("ORDER", min: 0, max: nil, elements: [
+                .segment("ORC", min: 1, max: 1),
+                .group("TIMING", min: 0, max: nil, elements: [
+                    .segment("TQ1", min: 1, max: 1),
+                    .segment("TQ2", min: 0, max: nil),
+                ]),
+                .segment("RXA", min: 1, max: 1),
+                .segment("RXR", min: 0, max: 1),
+                .group("OBSERVATION", min: 0, max: nil, elements: [
+                    .segment("OBX", min: 1, max: 1),
+                    .segment("NTE", min: 0, max: nil),
+                ]),
+            ]),
+        ]
+    )
+
+    private static let v2_5_1_VXX_V02: MessageStructure = MessageStructure(
+        id: "VXX_V02",
+        version: "2.5.1",
+        triggers: ["VXX^V02"],
+        citation: "HL7 v2.5.1 Chapter 4, section 4.17.4 VXX - RESPONSE TO VACCINATION QUERY RETURNING MULTIPLE PID, p 4-200.",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("QRD", min: 1, max: 1),
+            .segment("QRF", min: 0, max: 1),
+            .group("PATIENT", min: 1, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("NK1", min: 0, max: nil),
+            ]),
         ]
     )
 }

@@ -1,0 +1,12 @@
+{
+  "structure": "RQQ_Q09",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 5, section 5.10.4.2 RQQ - event replay query (event Q09), pp 5-119 to 5-120.",
+  "triggers": ["RQQ^Q09"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "ERQ", "min": 1, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

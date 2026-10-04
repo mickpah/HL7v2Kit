@@ -1,0 +1,17 @@
+{
+  "structure": "DSR_Q01",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 5, section 5.10.2.1 QRY/DSR - original mode display query - immediate response (event Q01), p 5-115.",
+  "triggers": ["DSR^Q01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": 1 },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "DSP", "min": 1, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

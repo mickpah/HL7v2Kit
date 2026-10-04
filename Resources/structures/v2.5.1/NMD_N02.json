@@ -1,0 +1,24 @@
+{
+  "structure": "NMD_N02",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 14, section 14.3.2 NMD - Application Management Data Message (Event N02), pp 14-3 to 14-4.",
+  "triggers": ["NMD^N02"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "group": "CLOCK_AND_STATS_WITH_NOTES", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "group": "CLOCK", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "NCK", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "APP_STATS", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "NST", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "APP_STATUS", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "NSC", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]}
+    ]}
+  ]
+}

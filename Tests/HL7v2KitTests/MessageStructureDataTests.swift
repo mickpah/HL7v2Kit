@@ -13,6 +13,7 @@ struct MessageStructureDataTests {
     private static let topKeys: Set<String> = ["structure", "version", "citation", "triggers", "elements"]
     private static let segmentKeys: Set<String> = ["segment", "min", "max"]
     private static let groupKeys: Set<String> = ["group", "nameSource", "min", "max", "elements"]
+    private static let choiceKeys: Set<String> = ["choice", "min", "max", "alternatives"]
 
     private static var root: URL {
         URL(fileURLWithPath: #filePath)
@@ -44,6 +45,14 @@ struct MessageStructureDataTests {
             #expect(Set(object.keys).isSubset(of: Self.segmentKeys), "\(path): keys \(object.keys.sorted())")
             #expect(id.range(of: "^[A-Z][A-Z0-9]{2}$", options: .regularExpression) != nil, "\(path): segment \(id)")
             return .segment(id, min: min ?? 0, max: max)
+        }
+        // P8b-6: a choice, named (with a nameSource) or unnamed (null, no nameSource).
+        if object.keys.contains("choice"), let alternatives = object["alternatives"] as? [[String: Any]] {
+            let name = object["choice"] as? String
+            #expect(Set(object.keys) == Self.choiceKeys.union(name == nil ? [] : ["nameSource"]), "\(path): keys \(object.keys.sorted())")
+            #expect(alternatives.count >= 2, "\(path): alternatives")
+            let options = alternatives.enumerated().compactMap { element($1, at: "\(path)/<\($0)>") }
+            return .choice(name, min: min ?? 0, max: max, alternatives: options)
         }
         guard let name = object["group"] as? String, let children = object["elements"] as? [[String: Any]] else {
             Issue.record("\(path): neither a segment nor a group with elements")

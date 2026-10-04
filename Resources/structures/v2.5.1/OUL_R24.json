@@ -1,0 +1,45 @@
+{
+  "structure": "OUL_R24",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 7, section 7.3.9 OUL - Unsolicited Order Oriented Observation Message - (Event R24), pp 7-25 to 7-26.",
+  "triggers": ["OUL^R24"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": 1 },
+    { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "segment": "PD1", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]},
+    { "group": "VISIT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PV1", "min": 1, "max": 1 },
+      { "segment": "PV2", "min": 0, "max": 1 }
+    ]},
+    { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "ORC", "min": 0, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null },
+      { "group": "TIMING_QTY", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "group": "SPECIMEN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "SPM", "min": 1, "max": 1 },
+        { "segment": "OBX", "min": 0, "max": null },
+        { "group": "CONTAINER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "SAC", "min": 1, "max": 1 },
+          { "segment": "INV", "min": 0, "max": 1 }
+        ]}
+      ]},
+      { "group": "RESULT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "OBX", "min": 1, "max": 1 },
+        { "segment": "TCD", "min": 0, "max": 1 },
+        { "segment": "SID", "min": 0, "max": null },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "segment": "CTI", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

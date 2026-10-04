@@ -1,0 +1,26 @@
+{
+  "structure": "MFR_M05",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 8, section 8.9.1 MFN/MFK - Patient Location Master File Message (event M05), pp 8-60 to 8-61.",
+  "triggers": ["MFR^M05"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_QUERY", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "LOC", "min": 1, "max": 1 },
+      { "segment": "LCH", "min": 0, "max": null },
+      { "segment": "LRL", "min": 0, "max": null },
+      { "segment": "LDP", "min": 1, "max": null },
+      { "segment": "LCH", "min": 0, "max": null },
+      { "segment": "LCC", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

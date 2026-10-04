@@ -176,17 +176,19 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .warning)
     }
 
+    // P8b-9: PGL_PC6 is registered as not modelled (a G6 placeholder, CH12 12.3.1).
     @Test("An unmodelled structure is an info issue, never a silent pass")
     func notModelledStructure() throws {
-        let issues = try structureIssues(Self.wire("SIU^S12^SIU_S12", []))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "SIU_S12")])
+        let issues = try structureIssues(Self.wire("PGL^PC6^PGL_PC6", []))
+        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "PGL_PC6")])
         #expect(issues.first?.severity == .info)
         #expect(issues.first?.location.pathDescription == "MSH[1]-9")
+        #expect(issues.first?.message.contains("4.2.2.4") == true)
     }
 
     @Test("An unmodelled two-component MSH-9 reports the trigger")
     func notModelledTrigger() throws {
-        #expect(try structureIssues(Self.wire("SIU^S12", [])).map(\.code) == [.messageStructureNotModelled(structure: "SIU^S12")])
+        #expect(try structureIssues(Self.wire("PGL^PC6", [])).map(\.code) == [.messageStructureNotModelled(structure: "PGL^PC6")])
     }
 
     // ADR-019 lookup rule 1: an MSH-9.3 ID outside the loaded structures is
@@ -351,11 +353,10 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .warning)
     }
 
-    @Test("A valid ADT^A02^ADT_A02 gets the not-modelled info issue only, never a mismatch")
+    // P8b-9: ADT_A02 is modelled from CH03 3.3.2.
+    @Test("A valid ADT^A02^ADT_A02 gets no structure issue")
     func a02UnderA02() throws {
-        let issues = try structureIssues(Self.wire("ADT^A02^ADT_A02", [Self.evn, Self.pid, Self.pv1]), severity: .warning)
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A02")])
-        #expect(issues.first?.severity == .info)
+        #expect(try structureIssues(Self.wire("ADT^A02^ADT_A02", [Self.evn, Self.pid, Self.pv1]), severity: .warning).isEmpty)
     }
 
     // MARK: - Version rule

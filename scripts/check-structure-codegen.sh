@@ -196,7 +196,7 @@ os.mkdir(os.path.join(S, 'v2.9'))"
 # P8b-2a: the extractor's overrides.json and the G9 profiles directory are allowed, and only
 # in that form.
 accept "overrides.json under Resources/structures (P8b-2a)" "$PRE
-save('overrides.json', {'groupNames': []})"
+save('overrides.json', {'groupNames': [], 'sharedTriggers': load('overrides.json')['sharedTriggers']})"
 
 accept "profiles directory under Resources/structures (G9)" "$PRE
 os.makedirs(os.path.join(S, 'profiles', 'au-adrm-2021'))"
@@ -278,7 +278,8 @@ d = load('v2.5.1/ACK.json'); d['elements'][2]['alternatives'] = []; save('v2.5.1
 
 # P8b-12: the codegen lints each structure and renders requiresExactMatch. ACK's elements are
 # replaced by a synthetic shape (StructureShapes in the test target); the v2.5.1 table must hold
-# exactly <count> "requiresExactMatch: true" lines (the pilots pass the lint, so 0 or 1).
+# exactly <count> more "requiresExactMatch: true" lines than the committed table (ACK passes
+# the lint, so 0 or 1 more; P8b-9 commits lint-failing v2.5.1 structures).
 SH='
 def seg(i, mn, mx): return {"segment": i, "min": mn, "max": mx}
 def grp(n, mn, mx, es): return {"group": n, "nameSource": "printed", "min": mn, "max": mx, "elements": es}
@@ -293,9 +294,11 @@ flagged() {
   local dir="$SCRATCH/case$cases"
   accept "$label" "$change"
   local found
-  found=$(grep -c "requiresExactMatch: true" "$dir/out/Structures/Generated/MessageStructureTable+v2_5_1.swift" 2>/dev/null)
+  local base
+  base=$(grep -c "requiresExactMatch: true" "$REPO_ROOT/Sources/HL7v2Kit/Structures/Generated/MessageStructureTable+v2_5_1.swift")
+  found=$(( $(grep -c "requiresExactMatch: true" "$dir/out/Structures/Generated/MessageStructureTable+v2_5_1.swift" 2>/dev/null) - base ))
   if [[ -d "$dir/out" && "$found" != "$count" ]]; then
-    echo "FAIL $label: $found structure(s) flagged, expected $count"
+    echo "FAIL $label: $found more structure(s) flagged, expected $count"
     failures=$((failures + 1))
   fi
 }

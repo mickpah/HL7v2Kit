@@ -1,0 +1,23 @@
+{
+  "structure": "MFR_M06",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 8, section 8.11.1 MFN/MFK - Clinical Trials Master File Message (Event M06-M07), pp 8-84 to 8-85.",
+  "triggers": ["MFR^M06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "QAK", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "MFI", "min": 1, "max": 1 },
+    { "group": "MF_QUERY", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "MFE", "min": 1, "max": 1 },
+      { "segment": "CM0", "min": 1, "max": 1 },
+      { "segment": "CM1", "min": 0, "max": null },
+      { "segment": "CM2", "min": 0, "max": null }
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

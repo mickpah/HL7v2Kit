@@ -18,12 +18,19 @@ struct StructureLintTests {
         StructureLint.Overlap(path: path, segmentIDs: ids, exemptVia: via)
     }
 
-    @Test("Every modelled structure is deterministic for the greedy matcher")
+    // P8b-9: lint-failing structures are committed from v2.5.1 on, flagged for the
+    // exact matcher (P8b-12); the three pilots still pass the lint.
+    @Test("Every modelled structure passes the lint or is flagged for the exact matcher")
     func modelledStructuresAreDeterministic() {
         for version in Version.allCases {
             for structure in MessageStructureTable.structures(for: version).values {
-                #expect(StructureMatcher.lint(structure.elements).isDeterministic, "\(version.rawValue) \(structure.id)")
+                #expect(StructureMatcher.lint(structure.elements).isDeterministic == !structure.requiresExactMatch,
+                        "\(version.rawValue) \(structure.id)")
             }
+        }
+        for id in ["ACK", "ADT_A01", "ORU_R01"] {
+            let pilot = MessageStructureTable.structures(for: .v2_5_1)[id]
+            #expect(pilot.map { StructureMatcher.lint($0.elements).isDeterministic } == true, "\(id)")
         }
     }
 

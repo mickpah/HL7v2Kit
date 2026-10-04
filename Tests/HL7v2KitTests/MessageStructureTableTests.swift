@@ -87,11 +87,27 @@ struct MessageStructureTableTests {
         #expect(orderChildren[7] == .segment("CTI", min: 0, max: nil))
     }
 
-    @Test("Lookup by trigger line: ADT^A08 resolves to ADT_A01, ACK^A13 to ACK")
+    @Test("Lookup by trigger line: ADT^A08 resolves to ADT_A01, ACK^A13 to ACK, SIU^S26 to SIU_S12")
     func triggerLookup() {
         #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A08", version: .v2_5_1).map(\.id) == ["ADT_A01"])
         #expect(MessageStructureTable.structures(messageCode: "ACK", triggerEvent: "A13", version: .v2_5_1).map(\.id) == ["ACK"])
-        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_5_1).isEmpty)
+        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_5_1).map(\.id) == ["ADT_A02"])
+        #expect(MessageStructureTable.structures(messageCode: "SIU", triggerEvent: "S26", version: .v2_5_1).map(\.id) == ["SIU_S12"])
+        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_6).isEmpty)
+    }
+
+    // P8b-9: spot checks against the v2.5.1 print.
+    @Test("v2.5.1 spot checks: SIU_S12 (CH10 10.4), MDM_T02 (CH09 9.5.2, erratum), ORM_O01's choice (CH04 4.4.1)")
+    func v251SpotChecks() throws {
+        let table = MessageStructureTable.structures(for: .v2_5_1)
+        let siu = try #require(table["SIU_S12"])
+        #expect(names(siu.elements) == ["MSH", "SCH", "TQ1", "NTE", "PATIENT", "RESOURCES"])
+        #expect(siu.triggers.count == 14)
+        let mdm = try #require(table["MDM_T02"])
+        #expect(names(mdm.elements) == ["MSH", "SFT", "EVN", "PID", "PV1", "COMMON_ORDER", "TXA", "OBSERVATION"])
+        let orm = try #require(table["ORM_O01"])
+        #expect("\(orm.elements)".contains("choice("))
+        #expect(table["RSP_K11"] == nil && MessageStructureTable.notModelled(for: .v2_5_1)["RSP_K11"] != nil)
     }
 
     /// overrides.json `sharedTriggers` as "<version> <trigger>" to the declared structure IDs.
@@ -162,11 +178,12 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.completeVersions.isEmpty)
     }
 
-    @Test("The generated switch: the three pilot structures on v2.5.1 and none on any other version",
+    @Test("The generated switch: 172 structures on v2.5.1 (P8b-9) and none on any other version",
           arguments: Version.allCases)
     func generatedSwitch(version: Version) {
         let ids = MessageStructureTable.structures(for: version).keys.sorted()
-        #expect(ids == (version == .v2_5_1 ? ["ACK", "ADT_A01", "ORU_R01"] : []))
+        #expect(ids.count == (version == .v2_5_1 ? 172 : 0))
+        #expect(version != .v2_5_1 || Set(["ACK", "ADT_A01", "ORU_R01"]).isSubset(of: ids))
         #expect(MessageStructureTable.structures(for: version) == MessageStructureTable.structures(for: version.grammarVersion))
     }
 

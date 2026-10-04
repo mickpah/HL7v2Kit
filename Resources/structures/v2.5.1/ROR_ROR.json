@@ -1,0 +1,27 @@
+{
+  "structure": "ROR_ROR",
+  "version": "2.5.1",
+  "citation": "HL7 v2.5.1 Chapter 4, section 4.13.15 ROR - Pharmacy/Treatment Order Response (Event Q26), p 4-130.",
+  "triggers": ["ROR^ROR"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "group": "DEFINITION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "QRD", "min": 1, "max": 1 },
+      { "segment": "QRF", "min": 0, "max": 1 },
+      { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "segment": "RXO", "min": 1, "max": 1 },
+        { "segment": "RXR", "min": 1, "max": null },
+        { "segment": "RXC", "min": 0, "max": null }
+      ]}
+    ]},
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}
