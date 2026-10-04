@@ -151,6 +151,13 @@ oru('override', 'PATIENT_RESULT (overrides.json: a cited name).')"
 reject "a non-printed name the citation does not cite" 'is not cited' "$PRE
 d = load('v2.5.1/ORU_R01.json'); d['citation'] = d['citation'].split(' Unprinted group names')[0]; save('v2.5.1/ORU_R01.json', d)"
 
+# P8b-14: v2.3.1 has its own bundle, cited by its folder as on disk ("HL7-xml 2.3.1", no "v").
+accept "nameSource v2xml on v2.3.1, cited by the HL7-xml 2.3.1 bundle" "$PRE
+oru('v2xml', 'PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database).', '2.3.1')"
+
+reject "nameSource v2xml on v2.3.1 cited to a folder that does not exist" 'is not cited' "$PRE
+oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).', '2.3.1')"
+
 reject "nameSource v2xml on v2.3 (no bundle)" 'for v2.3 and v2.3.1 only' "$PRE
 oru('v2xml', 'PATIENT_RESULT (HL7-xml v2.3/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).', '2.3')"
 

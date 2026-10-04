@@ -135,12 +135,12 @@ enum StructureJSONDecoder {
         guard let source, nameSources.contains(source) else {
             throw Rejected(description: "\(kind) \(name) needs nameSource one of \(nameSources)")
         }
-        guard (source == "v2xml-v2.4") == (source.hasPrefix("v2xml") && ["2.3", "2.3.1"].contains(version)) else {
-            throw Rejected(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
+        guard !(source == "v2xml-v2.4" && !["2.3", "2.3.1"].contains(version)), !(source == "v2xml" && version == "2.3") else {
+            throw Rejected(description: "\(kind) \(name): nameSource \(source) on v\(version); v2xml-v2.4 is for v2.3 and v2.3.1 only, and v2.3 has no v2xml bundle")
         }
         let marker: String? = switch source {
         case "override": "overrides.json"
-        case "v2xml": "HL7-xml v\(version)/"
+        case "v2xml": version == "2.3.1" ? "HL7-xml 2.3.1/" : "HL7-xml v\(version)/"
         case "v2xml-v2.4": "HL7-xml v2.4/"
         case "synthesised": "synthesised"
         default: nil

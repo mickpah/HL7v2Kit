@@ -132,6 +132,9 @@ struct StructureJSONDecoderTests {
         oru = try Self.load("ORU_R01")
         oru["citation"] = (oru["citation"] as? String ?? "").components(separatedBy: unprinted)[0]
         try reject("a non-printed name the citation does not cite", "is not cited", oru, "ORU_R01")
+        // P8b-14: v2.3.1 has its own bundle, cited by its folder as on disk (no "v").
+        try accept("nameSource v2xml on v2.3.1", try Self.oru("v2xml", "PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator HL7-Database).", version: "2.3.1"), "ORU_R01", version: "2.3.1")
+        try reject("nameSource v2xml on v2.3.1 cited to a folder that does not exist", "is not cited", try Self.oru("v2xml", "PATIENT_RESULT (HL7-xml v2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).", version: "2.3.1"), "ORU_R01", version: "2.3.1")
         try reject("nameSource v2xml on v2.3", "for v2.3 and v2.3.1 only", try Self.oru("v2xml", "PATIENT_RESULT (HL7-xml v2.3/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT).", version: "2.3"), "ORU_R01", version: "2.3")
         try reject("nameSource v2xml-v2.4 outside v2.3 and v2.3.1", "for v2.3 and v2.3.1 only", try Self.oru("v2xml-v2.4", "PATIENT_RESULT (HL7-xml v2.4/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT)."), "ORU_R01")
         try reject("max below min", "bad occurrence bounds", Self.element(try Self.load("ACK"), 0) { $0["min"] = 2 }, "ACK")
@@ -171,7 +174,7 @@ struct StructureJSONDecoderTests {
         try reject("segment with alternatives", "cannot have elements, alternatives or a nameSource",
                    Self.element(try Self.load("ACK"), 2) { $0["alternatives"] = [JSON]() }, "ACK")
 
-        #expect(cases.count == 30)
+        #expect(cases.count == 32)
         for c in cases {
             if let expected = c.expected {
                 #expect(c.verdict?.contains(expected) == true, "\(c.label): \(c.verdict ?? "accepted")")

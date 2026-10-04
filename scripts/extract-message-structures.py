@@ -15,8 +15,8 @@ only when its left column, measured from the caption line's column positions, is
 everything else (wrapped titles, wrapped descriptions, page furniture, the caption repeated
 after a page break) is description and ignored. Nesting comes from bracket balance, never from
 indentation. Group names come from "--- NAME begin" (nameSource printed); an unnamed group takes
-its HL7 v2.xml bundle name (scripts/read-v2xml-bundles.py: nameSource v2xml, or v2xml-v2.4 for
-v2.3 and v2.3.1), else a cited groupNames entry in Resources/structures/overrides.json (nameSource
+its HL7 v2.xml bundle name (scripts/read-v2xml-bundles.py: nameSource v2xml; v2.3.1 from its own
+bundle first, then v2xml-v2.4 through the v2.4 bundle, v2.3's only source), else a cited groupNames entry in Resources/structures/overrides.json (nameSource
 override), else <FIRSTSEG>_GROUP (nameSource synthesised, a no-bundle-name report row). Each
 non-printed name is cited in the structure citation. The bundle's element tree is compared with
 the print, report only (bundle-differs rows); the print stays normative. Choice notation
@@ -25,7 +25,10 @@ names it; a choice whose alternatives are a placeholder ("etc.", "...") is skipp
 G6 (unreadable: placeholder (G6)). Every caption form is read (P8b-3a, see
 captions()); exclusions, errata and shared triggers are cited overrides entries; the report
 adds duplicate-differs, needs-structure-id, needs-event, shared-trigger and the Table 0354
-reconciliation (0354-missing-row, 0354-missing-caption).
+reconciliation (0354-missing-row, 0354-missing-caption). On a version that prints its own Table
+0354 (v2.3.1, P8b-14), a caption the table cannot resolve fails a full read unless a cited
+erratum, a declared shared trigger, a captionStructures entry or an unresolvedCaptions entry
+settles it.
 """
 import argparse
 import difflib
@@ -81,7 +84,8 @@ CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r"
 # CH05 5.10.3.1 (v2.3.1, v2.4, v2.5.1, v2.6) puts a direction one space after CODE^EVT, then the
 # title: "QRY^Q02 (A to B)  Query Message", "QCK^Q02 (B to A)  Query General Acknowledgment".
 # The direction is read past, never into the title (P8b-13 fix round 1).
-TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")(?: \([A-Z] to [A-Z]\))?(\s{2,})(\S.*)$")
+# One space before the caret is a typesetting slip read as the caption (v2.3.1 CH08 8.8.1 "MFN ^M05").
+TWO_PART = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}) ?\^(" + _EVT + r")(?: \([A-Z] to [A-Z]\))?(\s{2,})(\S.*)$")
 # v2.7.1 and v2.8.2: "CODE^EVT^STRUCT: title" on its own line, then a "Segments Description" row;
 # v2.8.2 CH07 prints "ACK^R01^ACK : title" with a space before the colon (P8b-11: read as a caption,
 # so the ORU_R01 and ORU_R30 rows end there instead of running on into the acknowledgment).
@@ -448,6 +452,12 @@ def syntax_rows(lines, caption):
             # of the table first, so its page-break repeats of the caption are consumed.
             placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()!r} among a choice's alternatives"
             continue
+        if not left and rows and depth > 0 and (re.match(r"[\[{<]", desc.strip()) or re.search(r"\bOBR,? etc\b", desc)):
+            # Notation printed in the description column inside an open group (v2.3.1 CH04 4.2.3
+            # OSR^Q06, p 4-5: "[Order Detail Segment] OBR, etc." with an empty syntax cell): read as
+            # description it would vanish from the structure; a placeholder, ruling G6 (P8b-14).
+            placeholder = placeholder or f"line {i + 1}: placeholder (G6): {desc.strip()[:60]!r} in the description column"
+            continue
         if not left and rows and re.fullmatch(r"(?:\.\s*){3}|…", desc.strip()):
             # An ellipsis alone in the description column between syntax rows stands for segments
             # the print does not enumerate (v2.4 and v2.5.1 CH05 5.10.4.2 ERP^R09: 'the segments
@@ -724,9 +734,11 @@ def validate_names(structure):
         source = group.get("nameSource")
         if source not in NAME_SOURCES:
             raise NameSourceError(f"group {group['group']}: nameSource {source!r} is not one of {NAME_SOURCES}")
-        if (source == "v2xml-v2.4") != (source.startswith("v2xml") and structure["version"] in ("2.3", "2.3.1")):
+        # v2xml-v2.4 is for v2.3 and v2.3.1 only; v2.3 has no bundle, so no v2xml (P8b-14: v2.3.1 has one).
+        if (source == "v2xml-v2.4" and structure["version"] not in ("2.3", "2.3.1")) or \
+                (source == "v2xml" and structure["version"] == "2.3"):
             raise NameSourceError(f"group {group['group']}: nameSource {source} on v{structure['version']}; "
-                                  "v2xml-v2.4 is for v2.3 and v2.3.1 only, which have no v2xml")
+                                  "v2xml-v2.4 is for v2.3 and v2.3.1 only, and v2.3 has no v2xml bundle")
         if source != "printed":
             need = _v2xml.required_citation(group["group"], source, structure["version"])
             if need not in structure["citation"]:
@@ -803,6 +815,15 @@ _OVERRIDE_KEYS = {
     # (P8b-10 ruling, v2.6 RSP_K21; ADR-019 addendum). prints are the two captions as printed, the
     # first the primary (cited first); prints that do not align leave the structure unmodelled.
     "unionPrints": {"version", "structure", "prints", "citation"},
+    # A caption (as printed, in its section) whose events no Table 0354 row of the version lists,
+    # or that no declared shared trigger resolves: its print names no structure, so it is reported
+    # and not modelled (P8b-14, v2.3.1). Undeclared, such a caption fails a full read on a version
+    # that prints its own Table 0354.
+    "unresolvedCaptions": {"version", "section", "caption", "citation"},
+    # The Table 0354 row a caption's print belongs to when no row lists all the caption's events
+    # (P8b-14, v2.3.1: the one MFK row, MFK_M01, omits M02 and M04). The structure must be a row
+    # of the version's table; the citation joins the structure's.
+    "captionStructures": {"version", "section", "caption", "structure", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -820,10 +841,13 @@ def validate_overrides(data):
                 raise OverridesError(f"unionPrints entry for {entry.get('structure')} needs two distinct prints")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
-            if "occurrence" in entry and not (kind == "errata" and entry.get("where") == "syntax-cell"
+            if "occurrence" in entry and not (kind == "errata" and entry.get("where") in ("syntax-cell", "caption")
                                               and isinstance(entry["occurrence"], int) and entry["occurrence"] >= 1):
                 raise OverridesError(f"{kind} entry for {entry.get('structure')}: 'occurrence' is a positive "
-                                     "integer on a syntax-cell erratum only")
+                                     "integer on a syntax-cell or caption erratum only")
+            if kind == "captionStructures" and not re.fullmatch(_SID, entry.get("structure", "")):
+                raise OverridesError(f"captionStructures entry for {entry.get('caption')}: bad structure ID "
+                                     f"{entry.get('structure')!r}")
             optional = {"exclusions": {"caption"}, "errata": {"occurrence"}}.get(kind, set())
             if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
@@ -1032,12 +1056,21 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                [e for e in overrides["errata"] if e["version"] == table_ver], used_errata)
     excluded = {x["section"]: x for x in overrides["exclusions"] if x["version"] == ver}
     used_exclusions = set()
-    caption_errata = {e["printed"]: e for e in errata if e["where"] == "caption"}
+    caption_errata = {}
+    for e in errata:
+        if e["where"] == "caption":
+            caption_errata.setdefault(e["printed"], []).append(e)
+    seen_captions = {}     # captions printed so far, per CODE^EVT as printed (a caption erratum's occurrence)
     folds = {f["structure"]: f for f in overrides["triggerFolds"] if f["version"] == ver}
     # A fold onto CODE^* whose structure ID is the code itself (ACK): every caption of that code
     # is the one structure, so it needs no event and no Table 0354 row (v2.3 and v2.3.1 print no
     # ACK row; their general acknowledgment caption prints the code alone).
     general = {sid for sid, f in folds.items() if f["trigger"] == f"{sid}^*"}
+    shared = {e["trigger"]: sorted(e["structures"]) for e in overrides["sharedTriggers"] if e["version"] == ver}
+    unresolved = {(u["section"], u["caption"]): u for u in overrides["unresolvedCaptions"] if u["version"] == ver}
+    assigned = {(u["section"], u["caption"]): u for u in overrides["captionStructures"] if u["version"] == ver}
+    rows_of_table = {row for row, _, _ in table}
+    used_unresolved, used_assigned, assigned_cites = set(), set(), {}
     prints, count, report = {}, 0, []
     for source, lines in texts:
         consumed = set()
@@ -1045,7 +1078,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
             if cap.line in consumed:
                 continue
             count += 1
-            fix = caption_errata.get(f"{cap.code}^{cap.event}")
+            printed_as = f"{cap.code}^{cap.event}"
+            seen_captions[printed_as] = seen_captions.get(printed_as, 0) + 1
+            fix = next((e for e in caption_errata.get(printed_as, [])
+                        if e.get("occurrence") in (None, seen_captions[printed_as])), None)
             try:
                 rows, error = syntax_rows(lines, cap), None
             except UnknownNotation as exc:
@@ -1068,17 +1104,44 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                f"{cap.source} line {cap.line + 1}: section {cap.section} {cap.section_title[:60]!r} "
                                "names no event"))
                 continue
+            owners = [cap.structure] if cap.structure else []
             if not cap.structure:
                 hits = resolve_structure(table, cap.code, cap.events)
-                if len(hits) != 1:
+                # P8b-14: every event of a caption two rows list is a declared shared trigger of
+                # exactly those structures: the print is the print of each (v2.3.1 ADT^A28, A31).
+                declared_id = assigned.get((cap.section, cap.printed)) if len(hits) != 1 else None
+                if len(hits) > 1 and all(shared.get(f"{cap.code}^{v}") == hits for v in cap.events):
+                    owners = hits
+                elif declared_id and declared_id["structure"] in rows_of_table:
+                    # A cited captionStructures entry: the row the print belongs to (P8b-14).
+                    used_assigned.add((cap.section, cap.printed))
+                    owners = [declared_id["structure"]]
+                    assigned_cites.setdefault(owners[0], []).append(declared_id["citation"])
+                elif declared_id:
+                    used_assigned.add((cap.section, cap.printed))
+                    report.append((cap.printed, "error", f"captionStructures entry for section {cap.section} names "
+                                   f"{declared_id['structure']}, which is not a Table 0354 v{table_ver} row"))
+                    continue
+                elif len(hits) != 1:
                     why = (f"Table 0354 (v{table_ver}) has no row for it" if not hits else
                            f"Table 0354 (v{table_ver}) maps it to {', '.join(hits)}" if table else
                            "no Table 0354")
-                    report.append((f"{cap.code}^{cap.event}", "needs-structure-id",
-                                   f"{cap.source} line {cap.line + 1} (section {cap.section}): {why}"))
+                    where = f"{cap.source} line {cap.line + 1} (section {cap.section}): {why}"
+                    declared = unresolved.get((cap.section, cap.printed))
+                    if declared:
+                        used_unresolved.add((cap.section, cap.printed))
+                        where += f"; declared, not modelled (overrides.json unresolvedCaptions): {declared['citation']}"
+                    report.append((f"{cap.code}^{cap.event}", "needs-structure-id", where))
+                    # With its own Table 0354, an undeclared caption is a gap to settle (P8b-14).
+                    if full and table and table_ver == ver and not declared:
+                        report.append((f"{cap.code}^{cap.event}", "error", f"needs-structure-id: {where}: cite a "
+                                       "Table 0354 erratum, declare the shared triggers, or declare it in unresolvedCaptions"))
                     continue
-                cap.structure = hits[0]
-            prints.setdefault(cap.structure, []).append((cap, rows, error))
+                else:
+                    owners = hits
+                cap.structure = owners[0]
+            for sid in owners:
+                prints.setdefault(sid, []).append((cap, rows, error))
     for e in errata:     # a group-mark erratum is used when any print of its structure carries the mark
         if e["where"] == "group-mark" and any(
                 re.match(r"^---\s*" + re.escape(e["printed"]) + r"\s+(?i:begin|end)\b", row.desc)
@@ -1209,6 +1272,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
                                           + (f" {joined['citation']}" if joined else "")
+                                          + "".join(f" {c}" for c in dict.fromkeys(assigned_cites.get(sid, [])))
                                           + table_citation(ver, sid, added.get(sid), where_0354, withdrawn)
                                           + name_citation(log)})
         for entry in log:
@@ -1222,7 +1286,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         tree = bundles.tree(ver, sid) if bundles.available(ver) else None
         report += [(sid, "bundle-differs", d) for d in (_v2xml.differences(elements, tree) if tree else [])]
         if (ver, sid) in bundles.defects:
-            report.append((sid, "bundle-differs", f"HL7-xml v{ver}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
+            report.append((sid, "bundle-differs", f"{_v2xml.folder(ver)}/{sid}.xsd is unreadable: {bundles.defects[(ver, sid)]}"))
         report.append((sid, "parsed", f"{len(entries)} caption(s)"))
     for sid in sorted(prints):     # every printed structure, parsed or not, claims its triggers
         fold = folds.get(sid)
@@ -1243,6 +1307,10 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
         report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
         report += [(sid, "error", "unionPrints entry matches no caption") for sid in sorted(unions) if sid not in prints]
+        report += [(key[1], "error", f"unresolvedCaptions entry for section {key[0]} matches no unresolved caption")
+                   for key in sorted(set(unresolved) - used_unresolved)]
+        report += [(key[1], "error", f"captionStructures entry for section {key[0]} matches no unresolved caption")
+                   for key in sorted(set(assigned) - used_assigned)]
     return structures, report, count
 
 
@@ -1344,9 +1412,11 @@ def main(argv=None):
             print(f"{version}: not read yet ({ERAS_PENDING[version]})")
             failed |= bool(args.check or args.write)
             continue
-        source = BUNDLES_DERIVED.get(version, version)
-        if not bundles.available(source[1:]):
-            print(f"{version}: no HL7 v2.xml bundle at docs/XML-schemas/{BUNDLES[source]} (group names need it)")
+        # v2.3.1 needs its own bundle and the v2.4 one (its fallback, P8b-14); v2.3 the v2.4 one.
+        needed = [v for v in (version if version in BUNDLES else None, BUNDLES_DERIVED.get(version)) if v]
+        if any(not bundles.available(v[1:]) for v in needed):
+            print(f"{version}: no HL7 v2.xml bundle at docs/XML-schemas/"
+                  f"{', '.join(BUNDLES[v] for v in needed if not bundles.available(v[1:]))} (group names need it)")
             failed = True
             continue
         texts = pdf_texts(version)
