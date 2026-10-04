@@ -1228,10 +1228,12 @@ compiling a structure per message.
 ## Amendment 2026-10-04 — v2.3 complete; lookup rule 3 (P8b-15)
 
 - **v2.3 complete, and with it every supported version.** 147 structures modelled (10
-  exact-matched) and 16 registered (register section E v2.3 addendum: the general order's
-  `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12 `[OBR, etc.`
-  structures, the master file `[Z..]` and `[other segments(s)]` placeholders in MFN_M01, MFN_M03
-  and MFR_M01, ERP's ellipsis rows, SUR_P09's ED row).
+  exact-matched) and 24 registered (register section E v2.3 addendum): 16 unreadable prints (the
+  general order's `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12
+  `[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows, SUR_P09's ED row, and
+  MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments the master file sections give per file in prose fragments the extractor does not read (a capability gap that blocks spec-completeness; only M01's `[Z..]` cannot be enumerated)), and, since fix round 1, 8 triggers defined only in prose or Table 0003 (QRY^P04,
+  ORU^W01, QRF^W02, QRY and DSR R03 and R05, UDM^R06), registered under synthesised IDs with
+  their reason.
 - **Lookup rule 3 implemented** (pilot addendum: "not implemented"; carry-in P8-6(b)). v2.3 MSH-9
   is CM <message type>^<trigger event> (CH2 2.24.1.9) with no third component. Once MSH-12 reads
   as v2.3 (after the version rule, so a message whose MSH-12 does not resolve still names its

@@ -177,7 +177,8 @@ struct StructureV23ProbeTests {
     // a trigger printed under a registered structure is info with the register reason, never an error.
     @Test("v2.3 complete: registered triggers are info with their reason; a declared ID changes nothing",
           arguments: [("ORM^O01", "Order Detail Segment"), ("PPR^PC2", "OBR, etc"), ("SUR^P09", "ED"),
-                      ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "[Z..]")])
+                      ("ERP", "ellipsis"), ("MFN^M08", "other segments"), ("MFR^M05", "prose-printed replacement fragments"),
+                      ("ORU^W01", "in prose"), ("QRY^P04", "in prose"), ("DSR^R05", "Event R05"), ("UDM^R06", "event R06")])
     func registered(_ c: (String, String)) throws {
         #expect(MessageStructureTable.isComplete(.v2_3))
         for msh9 in [c.0, c.0 + (c.0.contains("^") ? "^ZZZ_Z99" : "^^ZZZ_Z99")] {

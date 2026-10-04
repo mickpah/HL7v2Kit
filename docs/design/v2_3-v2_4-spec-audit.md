@@ -183,13 +183,16 @@ ORF^R04 with MSH-12 read as 2.3.1 (the CH07 examples elide MSH-12), so the probe
 The extractor reads 252 v2.3 captions in the CH1 to CH12 PDFs: 4 excluded (the CH2 2.11.1
 WRQ/WRP notation example), 248 resolved to 163 structure IDs, 147 read and 16 unreadable (the
 general order's `Order Detail Segment` placeholder in ORM_O01, ORR_O02 and OSR_Q06, eight CH12
-`[OBR, etc.` structures, the CH8 `[Z..]` and `[other segments(s)]` placeholders in MFN_M01,
-MFR_M01 and MFN_M03, ERP's ellipsis rows and SUR_P09's ED row). v2.3 prints the code alone, the
+`[OBR, etc.` structures, MFN_M01's `[Z..]`, ERP's ellipsis rows, SUR_P09's ED row, and
+MFR_M01's `[Z..]` and MFN_M03's `[other segments(s)]`, whose segments CH8 gives per file in prose
+fragments the extractor does not read: a capability gap, not a print limitation). v2.3 prints the code alone, the
 events in the section title, no structure ID and no Table 0354: IDs are synthesised `CODE_EVT`
 from the code and the first title event (or the code alone for the ACK, MCF, EDR, TBR and ERP
 folds), 201 captions take their events from the title and 39 from cited `eventsFromTitle`
 entries (section text, Table 0003). 147 are committed under `Resources/structures/v2.3/` and v2.3
-is `complete: true`; the 16 are registered in `completeness.json` (register §E v2.3 addendum).
+is `complete: true`; the 16 are registered in `completeness.json` with 8 triggers v2.3 defines
+only in prose or Table 0003 (QRY^P04, ORU^W01, QRF^W02, QRY and DSR R03 and R05, UDM^R06; fix
+round 1), 24 entries in all (register §E v2.3 addendum).
 Group names: 235 through the HL7 v2.xml 2.3.1 bundle, 7 through the v2.4 bundle, 3 synthesised.
 
 Lookup rule 3 (ADR-019): v2.3 MSH-9 has two components (CM, CH2 2.24.1.9), so once MSH-12 reads
