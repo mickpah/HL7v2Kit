@@ -923,6 +923,72 @@ def check_empty_or_run_on_print_unreadable():
     assert "XYZ_X01" not in structures and [r for r in report if r[1] == "skipped"], report
 
 
+def check_caption_wrapping_its_id():
+    # P8b-9: the event list or structure ID wraps onto the next line, the title staying on the
+    # first (v2.5.1 SIU^S12-S24, / S26^SIU_S12; PPG^PCG,PCH,PCJ^PPG_ / PCG), and the page-break
+    # repeat wraps the same way; a "S12-S24, S26" event list (comma and space) is one caption.
+    body = ["    XYZ^X01-X03,              Synthetic Message        Status    Chapter",
+            "    X05^XYZ_X01",
+            "    MSH                       Header",
+            "    [{                        --- G begin",
+            "        PID                   Patient"]
+    more = ["    XYZ^X01-X03,              Synthetic Message        Status    Chapter",
+            "    X05^XYZ_X01",
+            "    }]                        --- G end",
+            "    ACK^X01-X03, X05^ACK      General Acknowledgment   Status    Chapter",
+            "    MSH                       Header"]
+    text = _page(1, body, heading="9.1.1           XYZ - synthetic (Events X01-X03, X05)") + _page(2, more)
+    caps = ext.captions(text)
+    assert [(c.structure, c.events) for c in caps] == [("XYZ_X01", ["X01", "X02", "X03", "X05"]),
+                                                       ("XYZ_X01", ["X01", "X02", "X03", "X05"]),
+                                                       ("ACK", ["X01", "X02", "X03", "X05"])], caps
+    rows = ext.syntax_rows(text, caps[0])
+    assert [r.left for r in rows] == ["MSH", "[{", "PID", "}]"], [r.left for r in rows]
+    assert caps[0].repeats == [caps[1].line], (caps[0].repeats, caps[1].line)
+    text = _page(1, ["    XYZ^X01^XYZ_              Synthetic Message        Status    Chapter",
+                     "    X01", "    MSH                       Header"])
+    assert [c.structure for c in ext.captions(text)] == ["XYZ_X01"], ext.captions(text)
+
+
+def check_grid_row_not_a_caption():
+    # P8b-9: v2.5.1 CH05 5.10.3 prints a query/response grid ("EQQ^Q04   TBR^R08   Tabular");
+    # a two-part "caption" whose title is itself CODE^EVT is a grid row, never a caption.
+    text = _page(1, ["        XYZ^X01         ABC^X02           Tabular        valid"])
+    assert ext.captions(text) == [], ext.captions(text)
+
+
+def check_repeat_indented_past_caption():
+    # P8b-9: v2.5.1 ADT^A31^ADT_A05 prints its page-break repeat three columns right of the
+    # caption and the rows after it left of both; the rows still belong to the table.
+    text = _page(1, ["     XYZ^X01^XYZ_X01          Synthetic Message        Status    Chapter",
+                     "    MSH                       Header"]) + \
+        _page(2, ["        XYZ^X01^XYZ_X01      Synthetic Message        Status    Chapter",
+                  "    PID                       Patient"])
+    caps = ext.captions(text)
+    rows = ext.syntax_rows(text, caps[0])
+    assert [r.left for r in rows] == ["MSH", "PID"], [r.left for r in rows]
+
+
+def check_group_close_erratum():
+    # P8b-9: v2.5.1 MDM_T02 prints "--- COMMON_ORDER end" with no "}]"; unreadable unless a
+    # cited group-close erratum supplies the cell, and a stale one is an error.
+    rows = [("MSH", "Header"), ("[{", "--- G begin"), ("ORC", "Order"), ("", "--- G end"), ("TXA", "Doc")]
+    s, report = _structure(rows)
+    assert s is None and "never closed" in [r for r in report if r[1] == "skipped"][0][2], report
+    fix = {**EMPTY, "errata": [{"version": "2.5.1", "where": "group-close", "structure": "XYZ_X01",
+                                "printed": "--- G end", "intended": "}]", "citation": "x"},
+                               {"version": "2.5.1", "where": "group-close", "structure": "XYZ_X01",
+                                "printed": "--- H end", "intended": "}]", "citation": "x"}]}
+    ext.validate_overrides(fix)
+    text = _page(1, _table("XYZ^X01^XYZ_X01", rows), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    els = structures["XYZ_X01"]["elements"]
+    assert [(e.get("segment") or e.get("group"), e["min"], e["max"]) for e in els] == \
+        [("MSH", 1, 1), ("G", 0, None), ("TXA", 1, 1)], els
+    errors = [r[2] for r in report if r[1] == "error"]
+    assert errors == ["errata entry (group-close) '--- H end' matches nothing"], errors
+
+
 CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_brace_bracket_normalisation,
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_inline,
@@ -938,7 +1004,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_bracket_split_and_group_of_a_group, check_shared_triggers, check_0354_reconciliation,
           check_caption_errata, check_reader_layouts,
           check_borrowed_table_errata, check_conformance_print_never_primary, check_general_ack_fold_code_alone,
-          check_empty_or_run_on_print_unreadable]
+          check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
+          check_repeat_indented_past_caption, check_group_close_erratum]
 
 
 def main():

@@ -239,6 +239,49 @@ struct MessageStructureValidationTests {
         #expect(named.issues.isEmpty)
     }
 
+    // P8b-9: a declared shared trigger (overrides.json sharedTriggers) whose other
+    // structure is registered as not modelled (v2.5.1 MFR^M04 under MFR_M01 and MFR_M04).
+    @Test("A trigger shared with a registered not-modelled structure is ambiguous without MSH-9.3 (rule 2)")
+    func ambiguousWithRegisteredGap() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]
+        let gaps = ["ZZZ_Z00": NotModelledStructure(triggers: ["ZZZ^Z00", "ZZZ^Z01"], reason: "a template (synthetic)")]
+        let message = try Parser().parse(Self.wire("ZZZ^Z01", [Self.pid]))
+        let resolved = Validator().resolveStructure(message, severity: .error, structures: table, complete: [.v2_5_1], gaps: gaps)
+        #expect(resolved.structure == nil)
+        #expect(resolved.issues.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ^Z01")])
+        #expect(resolved.issues.first?.severity == .info)
+        #expect(resolved.issues.first?.message.contains("ambiguous, printed under ZZZ_Z00 and ZZZ_Z01") == true,
+                "\(resolved.issues.map(\.message))")
+
+        let declared = try Parser().parse(Self.wire("ZZZ^Z01^ZZZ_Z01", [Self.pid]))
+        let named = Validator().resolveStructure(declared, severity: .error, structures: table, complete: [.v2_5_1], gaps: gaps)
+        #expect(named.structure?.id == "ZZZ_Z01")
+        #expect(named.issues.isEmpty)
+    }
+
+    @Test("A registered not-modelled structure is info on a complete version, a mismatch only for a trigger it does not print")
+    func registeredGapOnCompleteVersion() throws {
+        let table = ["ZZZ_Z01": Self.synthetic("ZZZ_Z01")]
+        let gaps = ["ZZZ_Z00": NotModelledStructure(triggers: ["ZZZ^Z00"], reason: "a template (synthetic)"),
+                    "ZZZ_Z09": NotModelledStructure(triggers: [], reason: "Table 0354 only (synthetic)")]
+        func resolve(_ msh9: String) throws -> [ValidationIssue] {
+            let message = try Parser().parse(Self.wire(msh9, [Self.pid]))
+            return Validator().resolveStructure(message, severity: .error, structures: table, complete: [.v2_5_1], gaps: gaps).issues
+        }
+        let byID = try resolve("ZZZ^Z00^ZZZ_Z00")
+        #expect(byID.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ_Z00")])
+        #expect(byID.first?.severity == .info)
+        #expect(byID.first?.message.contains("a template (synthetic)") == true)
+        let byTrigger = try resolve("ZZZ^Z00")
+        #expect(byTrigger.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ^Z00")])
+        #expect(byTrigger.first?.message.contains("under ZZZ_Z00, which is not modelled: a template (synthetic)") == true)
+        let tableOnly = try resolve("ZZZ^Z01^ZZZ_Z09")
+        #expect(tableOnly.map(\.code) == [.messageStructureNotModelled(structure: "ZZZ_Z09")])
+        let wrongEvent = try resolve("ZZZ^Z01^ZZZ_Z00")
+        #expect(wrongEvent.map(\.code) == [.messageStructureMismatch(declared: "ZZZ_Z00", trigger: "ZZZ^Z01")])
+        #expect(wrongEvent.first?.severity == .error)
+    }
+
     // P8b-1: lookup rule 1's complete-version branch, proven on a synthetic
     // complete version (no version is complete yet).
     @Test("Rule 1: an MSH-9.3 naming no loaded structure is a mismatch on a complete version, info otherwise")

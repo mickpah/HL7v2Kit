@@ -190,8 +190,9 @@ public enum MessageStructureTable {
     }
 
     /// The structures whose caption lines include `messageCode^triggerEvent`,
-    /// sorted by ID. More than one entry would be a data defect; a test
-    /// forbids it.
+    /// sorted by ID. More than one entry occurs only where the print shares
+    /// the trigger between structures (a declared shared trigger, ADR-019
+    /// lookup rule 2); a test forbids any other.
     public static func structures(messageCode: String, triggerEvent: String, version: Version) -> [MessageStructure] {
         structures(for: version.grammarVersion).values
             .filter { $0.accepts(messageCode: messageCode, triggerEvent: triggerEvent) }
@@ -210,5 +211,24 @@ public enum MessageStructureTable {
     /// tests pass a synthetic one.
     static func isComplete(_ version: Version, completeVersions: Set<Version> = MessageStructureTable.completeVersions) -> Bool {
         completeVersions.contains(version.grammarVersion)
+    }
+
+    /// The structures `version`'s grammar version prints, or its Table 0354
+    /// lists, that are registered as not modelled, keyed by ID (P8b-9).
+    static func notModelled(for version: Version) -> [String: NotModelledStructure] {
+        generatedNotModelled(for: version)
+    }
+}
+
+/// A structure a version prints (or its Table 0354 lists) that is registered
+/// as not modelled: the triggers its captions print and the reason
+/// (permanent-limitations register section E). A message naming it is
+/// reported as not modelled, never as a mismatch.
+struct NotModelledStructure: Sendable, Equatable {
+    let triggers: [String]
+    let reason: String
+
+    func accepts(messageCode: String, triggerEvent: String) -> Bool {
+        triggers.contains("\(messageCode)^\(triggerEvent)") || triggers.contains("\(messageCode)^*")
     }
 }

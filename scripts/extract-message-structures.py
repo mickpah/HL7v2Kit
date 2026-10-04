@@ -71,7 +71,8 @@ ERAS_PENDING = {}   # P8b-3a wired the last four eras
 TABLE_0354 = {"2.3": "2.3.1"}
 
 _DASHES = str.maketrans({"‐": "-", "‑": "-", "–": "-"})
-_EVT = r"[A-Za-z0-9]+(?:[-,][A-Za-z0-9]+)*"     # A01, C01-C08, PCG,PCH,PCJ, S12-S24,S26,S27, varies
+# A01, C01-C08, PCG,PCH,PCJ, S12-S24,S26,S27, varies; "S12-S24, S26" (v2.5.1 CH10's ACK caption)
+_EVT = r"[A-Za-z0-9]+(?:(?:-|, ?)[A-Za-z0-9]+)*"
 _SID = r"[A-Z][A-Z0-9]{2}(?:_[A-Za-z0-9]{3})?"
 CAPTION = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2})\^(" + _EVT + r")\^(" + _SID + r")"
                      r"\s+(\S.*)$")   # a caption carries a title; a bare CODE^EVT^STRUCT is a table cell
@@ -196,7 +197,7 @@ def expand_events(text):
     fifteen. A range runs over the suffix after the common prefix (digits or one letter). None
     when a range cannot be read."""
     out = []
-    for part in text.split(","):
+    for part in (p.strip() for p in text.split(",")):
         if "-" not in part:
             out.append(part)
             continue
@@ -243,9 +244,36 @@ def match_caption(line, era):
     if m:
         return (len(m.group(1)), m.group(2), m.group(3), m.group(4), m.start(5), m.group(5))
     m = TWO_PART.match(line)
-    if m and "|" not in line and "<cr>" not in line.lower():
+    # A "title" that is itself CODE^EVT is a grid row (v2.5.1 CH05 5.10.3's query/response
+    # pairs, "EQQ^Q04   TBR^R08   Tabular"), not a caption.
+    if m and "|" not in line and "<cr>" not in line.lower() and not re.match(r"[A-Z][A-Z0-9]{2}\^", m.group(5)):
         return (len(m.group(1)), m.group(2), m.group(3), "", m.start(5), m.group(5))
     return None
+
+
+# A caret caption whose event list or structure ID wraps onto the next line, the title staying on
+# the first ("SIU^S12-S24," then "S26^SIU_S12", v2.5.1 CH10 10.4.1; "PPG^PCG,PCH,PCJ^PPG_" then
+# "PCG", v2.5.1 CH12 12.3.4).
+WRAPPED = re.compile(r"^(\s*)([A-Z][A-Z0-9]{2}\^[A-Za-z0-9,\-^_]*[,\-^_])(\s{2,})(\S.*)$")
+WRAP_TAIL = re.compile(r"^(\s*)([A-Za-z0-9,\-^_]+)\s*$")
+
+
+def match_wrapped(lines, i, era):
+    """(match_caption's tuple, extra lines) for the caption at line i: extra is 1 when the
+    caption wraps onto line i + 1 (WRAPPED), and the title column stays the first line's."""
+    line = lines[i].replace("\f", "")
+    m = match_caption(line, era)
+    if m or era not in ("caret", "table-0354") or i + 1 >= len(lines):
+        return m, 0
+    w = WRAPPED.match(line.translate(_DASHES))
+    t = w and WRAP_TAIL.match(lines[i + 1].replace("\f", "").translate(_DASHES))
+    if not t or abs(len(t.group(1)) - len(w.group(1))) > 2:
+        return None, 0
+    head = w.group(1) + w.group(2) + t.group(2)
+    m = match_caption(head + "  " + w.group(4), era)
+    if not m or not m[3]:
+        return None, 0
+    return (m[0], m[1], m[2], m[3], len(w.group(1)) + len(w.group(2)) + len(w.group(3)), m[5]), 1
 
 
 def captions(lines, era="caret", source="", bare=frozenset()):
@@ -276,7 +304,7 @@ def captions(lines, era="caret", source="", bare=frozenset()):
             if section_title.count("(") > section_title.count(")") and nxt.strip().count(")"):
                 section_title = _title(section_title + " " + nxt)
             continue
-        m = match_caption(line, era)
+        m, extra = match_wrapped(lines, i, era)
         if not m and era != "section-title" and bare:
             b = CODE_ONLY.match(line.translate(_DASHES))
             m = b and b.group(2) in bare and (len(b.group(1)), b.group(2), "", "", b.start(4), b.group(4))
@@ -293,7 +321,7 @@ def captions(lines, era="caret", source="", bare=frozenset()):
                     code_col, desc_col = len(cols.group(1)), cols.start(2)
                     break
         else:
-            for j in range(i + 1, min(i + 4, len(lines))):
+            for j in range(i + 1 + extra, min(i + 4 + extra, len(lines))):
                 nxt = split_row(lines[j], desc_col)
                 if nxt is None or FURN.search(lines[j]) or not "".join(nxt):
                     continue
@@ -304,7 +332,7 @@ def captions(lines, era="caret", source="", bare=frozenset()):
                   expand_events(event) or [] if event else [])
         if era == "section-title":
             event = ",".join(events)
-        found.append(Caption(code, event, structure, title, i, section.split(".")[0], section,
+        found.append(Caption(code, event, structure, title, i + extra, section.split(".")[0], section,
                              section_title, pages[i], code_col, desc_col, source, era=era, events=events,
                              id_source="printed" if structure else "0354"))
     return found
@@ -322,21 +350,28 @@ def syntax_rows(lines, caption):
     rows, depth, choices, foot, placeholder = [], 0, 0, False, None
     code_col, desc_col = caption.code_col, caption.desc_col
     caption.end_page = caption.page
+    skip = 0
     for i in range(caption.line + 1, len(lines)):
         line = lines[i].replace("\f", "")
+        if skip:
+            skip -= 1
+            continue
         if FURN.search(line):
             foot = False
             continue
         if foot or not line.strip() or FOOTNOTE.match(line):
             foot = foot or bool(re.match(r"^\d{1,2}\s*$", line))
             continue
-        m = match_caption(line, caption.era)
+        m, skip = match_wrapped(lines, i, caption.era)
         if m:
             if (m[1], m[2] if caption.era != "section-title" else caption.event, m[3]) != caption.key:
                 break
-            caption.repeats.append(i)
+            caption.repeats.append(i + skip)    # the line captions() lists a wrapped caption at
             if caption.era != "caret-colon":
-                code_col, desc_col = m[0], m[4]
+                # A repeat indented three or more columns past the caption keeps the caption's
+                # row column (v2.5.1 ADT^A31^ADT_A05 at 3.3.31: the caption at column 5, its
+                # repeat at 8, the rows after it at 4).
+                code_col, desc_col = caption.code_col if m[0] - caption.code_col > 2 else m[0], m[4]
             continue
         cols = COLUMNS.match(line)
         if cols:
@@ -363,6 +398,10 @@ def syntax_rows(lines, caption):
             # "--- NAME" with "begin" or "end" wrapped onto the description's next line.
             if rows and re.fullmatch(r"---\s*[A-Z][A-Za-z0-9_ /]*", rows[-1].desc) and re.match(r"(?i)(begin|end)\b", desc):
                 rows[-1].desc += " " + desc
+            elif GROUP_MARK.match(desc) and depth > 0:
+                # A group mark with an empty syntax cell (v2.5.1 MDM_T02 '--- COMMON_ORDER end'
+                # with no '}]'): kept, but parse reads it only through a cited group-close erratum.
+                rows.append(Row("", desc, i, pages[i]))
             continue
         if depth == 0 and rows and not _NOTATION.match(left):
             break       # prose or another table's header after the table (v2.5.1 RSP_K23's QPD field table)
@@ -385,6 +424,8 @@ def parse(rows, marks=None, used=None):
     root = {"kind": "root", "children": [], "name": None}
     stack = [root]
     for row in rows:
+        if not row.left:
+            continue    # a mark row with an empty syntax cell no group-close erratum filled
         opened, closed = [], []
         for tok in (t.group(0) for t in TOKEN.finditer(row.left)):
             if tok.isspace():
@@ -598,12 +639,13 @@ _OVERRIDE_KEYS = {
     "triggerFolds": {"version", "structure", "trigger", "primary", "citation"},
     "exclusions": {"version", "section", "citation"},
     # A print typo read as the intended text: in a caption (CODE^EVT as printed), a group mark
-    # ("--- NAME begin/end"), or a Table 0354 row (its code or an event in its description).
+    # ("--- NAME begin/end"), or a Table 0354 row (its code or an event in its description); a
+    # group-close erratum supplies the syntax cell ("}]") a printed "--- NAME end" row leaves empty.
     "errata": {"version", "where", "structure", "printed", "intended", "citation"},
     # A trigger printed under several structures (pre-flight B6); reported, never modelled here.
     "sharedTriggers": {"version", "trigger", "structures", "citation"},
 }
-ERRATA_WHERE = ("caption", "group-mark", "table-0354")
+ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close")
 
 
 def validate_overrides(data):
@@ -781,11 +823,18 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     for e in errata:
         if e["where"] == "group-mark":
             marks.setdefault(e["structure"], {})[e["printed"]] = e
+    closes = {}
+    for e in errata:
+        if e["where"] == "group-close":
+            closes.setdefault(e["structure"], {})[e["printed"]] = e
     structures, used, owner, bundle_rows = {}, set(), {}, []
 
     def read(sid, rows, error, log=None, names_used=None):
         if error:
             raise error
+        rows = [Row(closes[sid][r.desc]["intended"], r.desc, r.line, r.page) if not r.left and r.desc in closes.get(sid, {})
+                else r for r in rows]
+        used_errata.update(id(closes[sid][r.desc]) for r in rows if r.desc in closes.get(sid, {}))
         seen = set()
         tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen)
         # P8b-3b: an empty print, or rows that run on into the next table (a second top-level

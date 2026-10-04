@@ -29,6 +29,112 @@ extension MessageStructureTable {
         }
     }
 
-    /// The grammar versions whose every printed structure is modelled.
+    /// The grammar versions whose every printed structure is modelled
+    /// or registered as not modelled.
     static let completeVersions: Set<Version> = []
+
+    /// The structures `version`'s grammar version prints, or its Table
+    /// 0354 lists, that are registered as not modelled (register section
+    /// E), keyed by ID.
+    static func generatedNotModelled(for version: Version) -> [String: NotModelledStructure] {
+        switch version.grammarVersion {
+        case .v2_5_1:
+            return [
+                "DSR_P04": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists DSR_P04 (event P04); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "MFD_MFA": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists MFD_MFA (event MFA); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "MFN_M01": NotModelledStructure(
+                    triggers: ["MFN^M01"],
+                    reason: "CH08 section 8.4.1 (p 8-5) prints a master file template: '[...]' after MFE stands for 'one or more HL7 and/or Z-segments carrying the data for the entry', defined per master file (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "MFN_M03": NotModelledStructure(
+                    triggers: ["MFN^M03"],
+                    reason: "CH08 section 8.8.2 (p 8-22) prints '... [other segment(s)]' after OM1, standing for the segment groups of MFN^M08 to M12, whose combination the print does not fix (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "MFR_M01": NotModelledStructure(
+                    triggers: ["MFR^M01", "MFR^M02", "MFR^M03", "MFR^M04", "MFR^M05", "MFR^M06", "MFR^M07", "MFR^M08", "MFR^M09", "MFR^M10", "MFR^M11", "MFR^M12", "MFR^M13", "MFR^M14"],
+                    reason: "CH08 section 8.4.4 (p 8-8) prints the master files query response as a template whose '[...]' row stands for the master-file-specific segments of each event M01 to M14 (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "ORU_R31": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists ORU_R31 (event R31); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "ORU_R32": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists ORU_R32 (event R32); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "ORU_W01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists ORU_W01 (event W01); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "PGL_PC6": NotModelledStructure(
+                    triggers: ["PGL^PC6", "PGL^PC7", "PGL^PC8"],
+                    reason: "CH12 section 12.3.1 (p 12-8) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PPG_PCG": NotModelledStructure(
+                    triggers: ["PPG^PCG", "PPG^PCH", "PPG^PCJ"],
+                    reason: "CH12 section 12.3.4 (p 12-14) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PPP_PCB": NotModelledStructure(
+                    triggers: ["PPP^PCB", "PPP^PCC", "PPP^PCD"],
+                    reason: "CH12 section 12.3.3 (p 12-12) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PPR_PC1": NotModelledStructure(
+                    triggers: ["PPR^PC1", "PPR^PC2", "PPR^PC3"],
+                    reason: "CH12 section 12.3.2 (p 12-10) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PPT_PCL": NotModelledStructure(
+                    triggers: ["PPT^PCL"],
+                    reason: "CH12 section 12.3.12 (p 12-23) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PPV_PCA": NotModelledStructure(
+                    triggers: ["PPV^PCA"],
+                    reason: "CH12 section 12.3.8 (p 12-18) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PRR_PC5": NotModelledStructure(
+                    triggers: ["PRR^PC5"],
+                    reason: "CH12 section 12.3.6 (p 12-16) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "PTR_PCF": NotModelledStructure(
+                    triggers: ["PTR^PCF"],
+                    reason: "CH12 section 12.3.10 (p 12-20) prints the order detail as '< OBR | etc. >', which the CH12 12.3 note reads as every combination of pharmacy and other order detail segments per CH04 4.2.2.4, and 4.2.2.4 names only examples (OBR, RXO), so the alternatives cannot be enumerated (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "QBP_Q11": NotModelledStructure(
+                    triggers: ["QBP^Q11", "QBP^Q31"],
+                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "QBP_Q13": NotModelledStructure(
+                    triggers: ["QBP^Q13"],
+                    reason: "CH05 section 5.4.2 (p 5-38) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "QBP_Q15": NotModelledStructure(
+                    triggers: ["QBP^Q15"],
+                    reason: "CH05 section 5.4.3 (p 5-39) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "QCK_Q02": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QCK_Q02 (event Q02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "QRF_W02": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRF_W02 (event W02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "QRY_P04": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_P04 (event P04); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "QRY_Q02": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_Q02 (event Q02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "QRY_T12": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists QRY_T12 (event T12); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "QVR_Q17": NotModelledStructure(
+                    triggers: ["QVR^Q17"],
+                    reason: "CH05 section 5.4.5 (p 5-41) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "RDE_O01": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists RDE_O01 (event O01); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "RRA_O02": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists RRA_O02 (event O02); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "RSP_K11": NotModelledStructure(
+                    triggers: ["RSP^K11"],
+                    reason: "CH05 section 5.4.1 (p 5-37) prints a query template: a '[...]' row stands for the query-specific segments a conformance statement defines, so no fixed syntax exists (ruling G6; register section E, v2.5.1 not-modelled table)"),
+                "RSP_K22": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists RSP_K22 (event K22); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+                "SUR_P09": NotModelledStructure(
+                    triggers: ["SUR^P09"],
+                    reason: "CH07 section 7.11.2 (p 7-101) prints a row 'ED Encapsulated Data' inside FACILITY, and v2.5.1 defines no ED segment (ED is a data type, CH02A), so the row names nothing a message can carry (register section E, v2.5.1 not-modelled table)"),
+                "TBR_R09": NotModelledStructure(
+                    triggers: [],
+                    reason: "Table 0354 v2.5.1 (CH02, p 2-102) lists TBR_R09 (event R09); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"),
+            ]
+        default: return [:]
+        }
+    }
 }

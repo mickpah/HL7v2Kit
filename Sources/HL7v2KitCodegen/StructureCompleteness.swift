@@ -20,18 +20,42 @@ let structureOverridesFileName = "overrides.json"
 let structureProfilesDirectoryName = "profiles"
 
 /// One version's entry: whether every structure the version prints is
-/// modelled, and the citation for that claim.
+/// modelled, the citation for that claim, and the structures registered as
+/// not modelled (P8b-9).
 struct StructureCompletenessEntry: Decodable {
     let complete: Bool
     let citation: String
+    let notModelled: [NotModelledEntry]
 
-    private enum CodingKeys: String, CodingKey, CaseIterable { case complete, citation }
+    private enum CodingKeys: String, CodingKey, CaseIterable { case complete, citation, notModelled }
 
     init(from decoder: any Decoder) throws {
         try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "completeness entry")
         let c = try decoder.container(keyedBy: CodingKeys.self)
         complete = try c.decode(Bool.self, forKey: .complete)
         citation = try c.decode(String.self, forKey: .citation)
+        notModelled = try c.decodeIfPresent([NotModelledEntry].self, forKey: .notModelled) ?? []
+    }
+}
+
+/// A structure the version prints, or its Table 0354 lists, that is not
+/// modelled (an unexpandable placeholder, a non-segment row, no printed
+/// syntax), with the triggers its captions print and the register reason
+/// (P8b-9). A message naming it is reported as not modelled, never as a
+/// mismatch, even on a complete version.
+struct NotModelledEntry: Decodable {
+    let structure: String
+    let triggers: [String]
+    let reason: String
+
+    private enum CodingKeys: String, CodingKey, CaseIterable { case structure, triggers, reason }
+
+    init(from decoder: any Decoder) throws {
+        try rejectUnknownKeys(decoder, allowed: Set(CodingKeys.allCases.map(\.rawValue)), in: "notModelled entry")
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        structure = try c.decode(String.self, forKey: .structure)
+        triggers = try c.decode([String].self, forKey: .triggers)
+        reason = try c.decode(String.self, forKey: .reason)
     }
 }
 
@@ -53,8 +77,10 @@ struct StructureCompleteness: Decodable {
 /// - Every structure directory's version is listed.
 /// - Every citation is one non-empty line.
 /// - A version marked complete has at least one structure.
+/// - A notModelled entry has a structure ID, triggers of the form CODE^EVT,
+///   a one-line reason, is listed once and is not a loaded structure.
 func validateCompleteness(_ data: StructureCompleteness, modelledVersions: Set<String>,
-                          structureCounts: [String: Int]) throws {
+                          structureCounts: [String: Int], structureIDs: [String: Set<String>] = [:]) throws {
     let listed = Set(data.versions.keys)
     let missing = modelledVersions.subtracting(listed).sorted()
     let extra = listed.subtracting(modelledVersions).sorted()
@@ -74,7 +100,62 @@ func validateCompleteness(_ data: StructureCompleteness, modelledVersions: Set<S
         guard !entry.complete || (structureCounts[version] ?? 0) > 0 else {
             throw StructureSchemaError(description: "version \(version) is marked complete but has no structures")
         }
+        var seen: Set<String> = []
+        for gap in entry.notModelled {
+            let label = "version \(version) notModelled \(gap.structure)"
+            guard gap.structure.range(of: "^[A-Z][A-Z0-9]{2}(_[A-Z0-9]{3})?$", options: .regularExpression) != nil else {
+                throw StructureSchemaError(description: "\(label): bad structure ID")
+            }
+            let bad = gap.triggers.filter { $0.range(of: "^[A-Z][A-Z0-9]{2}\\^([A-Z0-9]{3}|\\*)$", options: .regularExpression) == nil }
+            guard bad.isEmpty else {
+                throw StructureSchemaError(description: "\(label): triggers must be CODE^EVT or CODE^*; bad: \(bad)")
+            }
+            guard !gap.reason.trimmingCharacters(in: .whitespaces).isEmpty, !gap.reason.contains(where: \.isNewline) else {
+                throw StructureSchemaError(description: "\(label): the reason must be one non-empty line")
+            }
+            guard seen.insert(gap.structure).inserted else {
+                throw StructureSchemaError(description: "\(label): listed twice")
+            }
+            guard !(structureIDs[version] ?? []).contains(gap.structure) else {
+                throw StructureSchemaError(description: "\(label): it is a loaded structure")
+            }
+        }
     }
+}
+
+/// Every trigger printed under two or more structures of one version (the
+/// loaded ones and the registered notModelled ones) must be declared in
+/// overrides.json `sharedTriggers` for that version, naming at least those
+/// structures (ADR-019 lookup rule 2: without MSH-9.3 such a trigger is
+/// ambiguous, and the Validator says so). `declared` maps version to trigger
+/// to the declared structure IDs.
+func validateSharedTriggers(owners: [String: [String: Set<String>]], declared: [String: [String: Set<String>]]) throws {
+    for (version, byTrigger) in owners.sorted(by: { versionPrecedes($0.key, $1.key) }) {
+        for (trigger, ids) in byTrigger.sorted(by: { $0.key < $1.key }) where ids.count > 1 {
+            guard let names = declared[version]?[trigger], ids.isSubset(of: names) else {
+                throw StructureSchemaError(description: "version \(version): trigger \(trigger) is printed under \(ids.sorted()) "
+                    + "but overrides.json sharedTriggers does not declare it with those structures")
+            }
+        }
+    }
+}
+
+/// The overrides.json `sharedTriggers` entries as version to trigger to
+/// structure IDs; an absent file or key declares none.
+func declaredSharedTriggers(in root: URL) throws -> [String: [String: Set<String>]] {
+    let url = root.appendingPathComponent(structureOverridesFileName)
+    guard FileManager.default.fileExists(atPath: url.path) else { return [:] }
+    let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
+    guard let entries = (object as? [String: Any])?["sharedTriggers"] as? [[String: Any]] else { return [:] }
+    var out: [String: [String: Set<String>]] = [:]
+    for entry in entries {
+        guard let version = entry["version"] as? String, let trigger = entry["trigger"] as? String,
+              let ids = entry["structures"] as? [String] else {
+            throw StructureSchemaError(description: "\(url.path): a sharedTriggers entry needs version, trigger and structures")
+        }
+        out[version, default: [:]][trigger] = Set(ids)
+    }
+    return out
 }
 
 /// Numeric version order: 2.3 < 2.3.1 < 2.4 < ... < 2.8.2.
@@ -96,6 +177,16 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
         let pad = String(repeating: " ", count: width - name.count)
         let table = (structureCounts[version] ?? 0) > 0 ? name : "[:]"
         return "        case .\(name):\(pad) return \(table)"
+    }.joined(separator: "\n")
+    let gapCases = versions.compactMap { version -> String? in
+        guard let gaps = data.versions[version]?.notModelled, !gaps.isEmpty else { return nil }
+        let rows = gaps.sorted { $0.structure < $1.structure }.map { gap -> String in
+            let triggers = gap.triggers.map(escapeStringLiteral).joined(separator: ", ")
+            return "                \(escapeStringLiteral(gap.structure)): NotModelledStructure(\n"
+                + "                    triggers: [\(triggers)],\n"
+                + "                    reason: \(escapeStringLiteral(gap.reason))),"
+        }.joined(separator: "\n")
+        return "        case .\(versionDirName(version)):\n            return [\n\(rows)\n            ]"
     }.joined(separator: "\n")
     let complete = versions.filter { data.versions[$0]?.complete == true }.map { ".\(versionDirName($0))" }
     let citations = versions.map { version -> String in
@@ -123,8 +214,18 @@ func renderStructureVersions(_ data: StructureCompleteness, structureCounts: [St
             }
         }
 
-        /// The grammar versions whose every printed structure is modelled.
+        /// The grammar versions whose every printed structure is modelled
+        /// or registered as not modelled.
         static let completeVersions: Set<Version> = [\(complete.joined(separator: ", "))]
+
+        /// The structures `version`'s grammar version prints, or its Table
+        /// 0354 lists, that are registered as not modelled (register section
+        /// E), keyed by ID.
+        static func generatedNotModelled(for version: Version) -> [String: NotModelledStructure] {
+            switch version.grammarVersion {
+    \(gapCases.isEmpty ? "" : gapCases + "\n")        default: return [:]
+            }
+        }
     }
 
     """

@@ -94,16 +94,43 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_5_1).isEmpty)
     }
 
-    @Test("No trigger line maps to two structures in one version")
-    func triggersAreUnique() {
-        for version in Version.allCases {
-            var owner: [String: String] = [:]
+    /// overrides.json `sharedTriggers` as "<version> <trigger>" to the declared structure IDs.
+    static func declaredSharedTriggers() throws -> [String: Set<String>] {
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appendingPathComponent("Resources/structures/overrides.json")
+        let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+        let entries = object?["sharedTriggers"] as? [[String: Any]] ?? []
+        return Dictionary(uniqueKeysWithValues: entries.map { entry -> (String, Set<String>) in
+            let version = entry["version"] as? String ?? ""
+            let trigger = entry["trigger"] as? String ?? ""
+            return (version + " " + trigger, Set(entry["structures"] as? [String] ?? []))
+        })
+    }
+
+    @Test("No trigger line maps to two structures in one version, loaded or registered, unless declared shared")
+    func triggersAreUnique() throws {
+        let declared = try Self.declaredSharedTriggers()
+        for version in Version.allCases where version == version.grammarVersion {
+            var owners: [String: Set<String>] = [:]
             for structure in MessageStructureTable.structures(for: version).values {
-                for trigger in structure.triggers {
-                    #expect(owner[trigger] == nil, "\(version.rawValue) \(trigger): \(owner[trigger] ?? "") and \(structure.id)")
-                    owner[trigger] = structure.id
-                }
+                for trigger in structure.triggers { owners[trigger, default: []].insert(structure.id) }
             }
+            for (id, gap) in MessageStructureTable.notModelled(for: version) {
+                for trigger in gap.triggers { owners[trigger, default: []].insert(id) }
+            }
+            for (trigger, ids) in owners where ids.count > 1 {
+                let names = declared["\(version.rawValue) \(trigger)"] ?? []
+                #expect(ids.isSubset(of: names), "\(version.rawValue) \(trigger): \(ids.sorted()) not declared shared")
+            }
+        }
+    }
+
+    @Test("A registered not-modelled structure is never a loaded one, and carries a reason", arguments: Version.allCases)
+    func registeredGapsAreNotLoaded(version: Version) {
+        let loaded = MessageStructureTable.structures(for: version)
+        for (id, gap) in MessageStructureTable.notModelled(for: version) {
+            #expect(loaded[id] == nil, "\(version.rawValue) \(id)")
+            #expect(!gap.reason.isEmpty)
         }
     }
 

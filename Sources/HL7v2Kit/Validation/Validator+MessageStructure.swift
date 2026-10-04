@@ -26,14 +26,19 @@ extension Validator {
     /// reported as a mismatch alone, with no body match. An MSH-9.3 ID that is
     /// not loaded is a mismatch on a complete version (rule 1, completeness
     /// read through the grammar version) and not modelled on an incomplete
-    /// one; no version is complete yet.
+    /// one. A structure the version registers as not modelled (an
+    /// unexpandable placeholder, a Table 0354 row with no printed syntax) is
+    /// not modelled on any version, with its register reason, and its
+    /// triggers count towards an ambiguous trigger (P8b-9).
     /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
     ///
-    /// `structures` replaces the version's loaded table and `complete` the
-    /// generated completeness set; tests pass synthetic ones.
+    /// `structures` replaces the version's loaded table, `complete` the
+    /// generated completeness set and `gaps` the registered not-modelled
+    /// structures; tests pass synthetic ones.
     func resolveStructure(_ message: Message, severity: IssueSeverity,
                           structures: [String: MessageStructure]? = nil,
-                          complete: Set<Version>? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
+                          complete: Set<Version>? = nil,
+                          gaps: [String: NotModelledStructure]? = nil) -> (structure: MessageStructure?, issues: [ValidationIssue]) {
         let code = message.messageCode ?? ""
         let event = message.triggerEvent ?? ""
         let trigger = event.isEmpty ? code : "\(code)^\(event)"
@@ -50,21 +55,42 @@ extension Validator {
         }
 
         let table = structures ?? MessageStructureTable.structures(for: message.version.grammarVersion)
+        let registered = gaps ?? MessageStructureTable.notModelled(for: message.version.grammarVersion)
         let byTrigger = table.values
             .filter { $0.accepts(messageCode: code, triggerEvent: event) }
             .map(\.id).sorted()
+        let gapsByTrigger = registered.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted()
         let ver = "v\(message.version.rawValue)"
 
         guard !declared.isEmpty else {
-            if byTrigger.count > 1 {
-                let both = byTrigger.dropLast().joined(separator: ", ") + " and " + byTrigger[byTrigger.count - 1]
+            let owners = (byTrigger + gapsByTrigger).sorted()
+            if owners.count > 1 {
+                let both = owners.dropLast().joined(separator: ", ") + " and " + owners[owners.count - 1]
                 return (nil, [notModelled(trigger, message: message,
                     reason: "the trigger is ambiguous, printed under \(both) in \(ver), and MSH-9.3 does not say which")])
+            }
+            if let gap = gapsByTrigger.first, let entry = registered[gap] {
+                return (nil, [notModelled(trigger, message: message,
+                    reason: "\(ver) prints \(trigger) under \(gap), which is not modelled: \(entry.reason)")])
             }
             guard let only = byTrigger.first, let structure = table[only] else {
                 return (nil, [notModelled(trigger, message: message)])
             }
             return (structure, [])
+        }
+        if table[declared] == nil, let entry = registered[declared] {
+            // Its captions print other triggers: the print gives this event another structure.
+            if !entry.triggers.isEmpty, !entry.accepts(messageCode: code, triggerEvent: event) {
+                return (nil, [ValidationIssue(
+                    severity: severity,
+                    code: .messageStructureMismatch(declared: declared, trigger: trigger),
+                    location: IssueLocation(segmentID: "MSH", segmentIndex: 1, fieldIndex: 9, componentIndex: 3),
+                    message: "MSH-9.3 \(declared) is not printed for \(trigger) in \(ver) (it is printed for "
+                        + "\(entry.triggers.joined(separator: ", ")) and not modelled); segment order and groups were not checked (ADR-019)."
+                )])
+            }
+            return (nil, [notModelled(declared, message: message,
+                reason: "\(declared) is not modelled in \(ver): \(entry.reason)")])
         }
         guard let structure = table[declared] else {
             // An ID that matches a loaded structure once trimmed and

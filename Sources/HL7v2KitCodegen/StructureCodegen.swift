@@ -279,6 +279,8 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
     dirs.sort { $0.lastPathComponent < $1.lastPathComponent }
     var rendered: [(file: URL, source: String)] = []
     var structureCounts: [String: Int] = [:]
+    var structureIDs: [String: Set<String>] = [:]
+    var owners: [String: [String: Set<String>]] = [:]
     for dirURL in dirs {
         let version = String(dirURL.lastPathComponent.dropFirst())
         var structures: [MessageStructureSchema] = []
@@ -301,14 +303,31 @@ func emitStructureTables(from root: URL, to outputRoot: URL, modelledVersions: S
                                                        structures: structures)))
         print("rendered \(swiftName) (\(structures.count) structure(s))")
         structureCounts[version] = structures.count
+        structureIDs[version] = Set(structures.map(\.structure))
+        for s in structures {
+            for trigger in s.triggers { owners[version, default: [:]][trigger, default: []].insert(s.structure) }
+        }
     }
     let completenessURL = root.appendingPathComponent(structureCompletenessFileName)
     let completeness: StructureCompleteness
     do {
         completeness = try JSONDecoder().decode(StructureCompleteness.self, from: Data(contentsOf: completenessURL))
-        try validateCompleteness(completeness, modelledVersions: modelledVersions, structureCounts: structureCounts)
+        try validateCompleteness(completeness, modelledVersions: modelledVersions, structureCounts: structureCounts,
+                                 structureIDs: structureIDs)
     } catch {
         throw structureFailure(completenessURL.path, error)
+    }
+    // ADR-019 lookup rule 2 (P8b-9): a trigger under two structures, loaded or registered as
+    // not modelled, is accepted only as a declared shared trigger.
+    for (version, entry) in completeness.versions {
+        for gap in entry.notModelled {
+            for trigger in gap.triggers { owners[version, default: [:]][trigger, default: []].insert(gap.structure) }
+        }
+    }
+    do {
+        try validateSharedTriggers(owners: owners, declared: try declaredSharedTriggers(in: root))
+    } catch {
+        throw structureFailure(root.appendingPathComponent(structureOverridesFileName).path, error)
     }
     rendered.append((outputRoot.appendingPathComponent("MessageStructureTable+Versions.swift"),
                      renderStructureVersions(completeness, structureCounts: structureCounts)))

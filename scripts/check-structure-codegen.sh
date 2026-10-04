@@ -324,6 +324,52 @@ ack_shape(alt(0, 1, [seg('AAA', 1, 1), seg('BBB', 1, 1)]), seg('AAA', 0, None))"
 flagged "deterministic repeating choice is not flagged" 0 "$PRE$SH
 ack_shape(alt(0, None, [seg('AAA', 1, 1), seg('BBB', 1, None)]), seg('CCC', 1, 1))"
 
+# P8b-9: a trigger under two structures (loaded, or registered as not modelled in
+# completeness.json) must be a declared sharedTriggers entry (ADR-019 lookup rule 2); the
+# notModelled entries are checked.
+SHARED='
+def share(declare):
+    d = load("v2.5.1/ADT_A01.json"); d["structure"] = "ADT_A99"; d["triggers"] = ["ADT^A01"]; save("v2.5.1/ADT_A99.json", d)
+    if declare:
+        o = load("overrides.json")
+        o["sharedTriggers"].append({"version": "2.5.1", "trigger": "ADT^A01", "structures": ["ADT_A01", "ADT_A99"], "citation": "x"})
+        save("overrides.json", o)
+def gap(**fields):
+    c = load("completeness.json")
+    e = {"structure": "ZZZ_Z01", "triggers": ["ZZZ^Z01"], "reason": "synthetic"}
+    e.update(fields)
+    c["versions"]["2.5.1"].setdefault("notModelled", []).append(e)
+    save("completeness.json", c)
+'
+
+reject "a trigger under two loaded structures, undeclared" 'trigger ADT^A01 is printed under ["ADT_A01", "ADT_A99"]' "$PRE$SHARED
+share(False)"
+
+accept "a trigger under two loaded structures, declared in sharedTriggers" "$PRE$SHARED
+share(True)"
+
+reject "a trigger shared with a registered not-modelled structure, undeclared" 'trigger ADT^A08 is printed under' "$PRE$SHARED
+gap(structure='ADT_A98', triggers=['ADT^A08'])"
+
+reject "a notModelled entry that is a loaded structure" 'notModelled ACK: it is a loaded structure' "$PRE$SHARED
+gap(structure='ACK', triggers=[])"
+
+reject "a notModelled entry with a bad trigger" 'triggers must be CODE^EVT' "$PRE$SHARED
+gap(triggers=['ZZZ-Z01'])"
+
+reject "a notModelled entry with an empty reason" 'the reason must be one non-empty line' "$PRE$SHARED
+gap(reason=' ')"
+
+reject "a notModelled entry with an unknown key" 'unknown key(s) ["page"]' "$PRE$SHARED
+gap(page='x')"
+
+accept "a notModelled entry renders in the versions switch" "$PRE$SHARED
+gap()"
+if ! grep -qF '"ZZZ_Z01": NotModelledStructure(' "$SCRATCH/case$((cases - 1))/out/Structures/Generated/MessageStructureTable+Versions.swift"; then
+  echo "FAIL a notModelled entry renders: the generated versions file lacks it"
+  failures=$((failures + 1))
+fi
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

@@ -164,6 +164,10 @@
       "citation": "HL7 v2.6 Chapter 7, section 7.3.3 QRY/ORF - Query for Results of Observation (Events R02, R04), p 7-15: the '--- QUERY_RESPNSE end' mark misprints the group the table opens or closes as QUERY_RESPONSE; read as QUERY_RESPONSE, the name HL7-xml v2.6/ORF_R04.xsd gives the group." },
     { "version": "2.5.1", "where": "group-mark", "structure": "SRR_S01", "printed": "RESOURCE", "intended": "RESOURCES",
       "citation": "HL7 v2.5.1 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-15: the '--- RESOURCE end' mark misprints the group the table opens or closes as RESOURCES; read as RESOURCES, the name HL7-xml v2.5.1/SRR_S01.xsd gives the group." },
+    { "version": "2.5.1", "where": "group-close", "structure": "MDM_T02", "printed": "--- COMMON_ORDER end", "intended": "}]",
+      "citation": "HL7 v2.5.1 Chapter 9, section 9.5.2 MDM/ACK - Original Document Notification and Content (Event T02), pp 9-6 to 9-7: the group opens '[{ --- COMMON_ORDER begin' and its '--- COMMON_ORDER end' row prints no closing bracket; read as '}]', the close of the '[{' the begin mark opens (the TXA that follows is top-level, as in MDM_T01, section 9.5.1)." },
+    { "version": "2.5.1", "where": "group-mark", "structure": "SIU_S12", "printed": "RESOURCE", "intended": "RESOURCES",
+      "citation": "HL7 v2.5.1 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, pp 10-18 to 10-19: the table opens '--- RESOURCES begin' and closes it with '--- RESOURCE end'; the end mark is read as RESOURCES, the name the begin mark prints and HL7-xml v2.5.1/SIU_S12.xsd gives the group." },
     { "version": "2.6", "where": "group-mark", "structure": "SRR_S01", "printed": "RESOURCE", "intended": "RESOURCES",
       "citation": "HL7 v2.6 Chapter 10, section 10.3 PLACER APPLICATION REQUESTS AND TRIGGER EVENTS, p 10-13: the '--- RESOURCE end' mark misprints the group the table opens or closes as RESOURCES; read as RESOURCES, the name HL7-xml v2.6/SRR_S01.xsd gives the group." },
     { "version": "2.7.1", "where": "group-mark", "structure": "SRR_S01", "printed": "RESOURCES", "intended": "RESOURCE",
@@ -423,7 +427,15 @@
     { "version": "2.8.2", "trigger": "ORL^O36", "structures": ["ORL_O36", "ORL_O43"],
       "citation": "HL7 v2.8.2 prints ORL^O36 under 2 structures: ORL^O36^ORL_O36 (section 4.4.11.1, p 25); ORL^O36^ORL_O43 (section 4.4.11.2, p 26). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
     { "version": "2.8.2", "trigger": "ORL^O40", "structures": ["ORL_O40", "ORL_O44"],
-      "citation": "HL7 v2.8.2 prints ORL^O40 under 2 structures: ORL^O40^ORL_O40 (section 4.4.13.1, p 30); ORL^O40^ORL_O44 (section 4.4.13.2, p 31). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." }
+      "citation": "HL7 v2.8.2 prints ORL^O40 under 2 structures: ORL^O40^ORL_O40 (section 4.4.13.1, p 30); ORL^O40^ORL_O44 (section 4.4.13.2, p 31). Reported, not modelled: a receiver needs MSH-9.3 to tell them apart." },
+    { "version": "2.5.1", "trigger": "MFR^M04", "structures": ["MFR_M01", "MFR_M04"],
+      "citation": "HL7 v2.5.1 prints MFR^M04 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8, the master files query response for every event M01 to M14); MFR^M04^MFR_M04 (section 8.10.1, p 8-75). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.5.1", "trigger": "MFR^M05", "structures": ["MFR_M01", "MFR_M05"],
+      "citation": "HL7 v2.5.1 prints MFR^M05 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M05^MFR_M05 (section 8.9.1, pp 8-60 to 8-61). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.5.1", "trigger": "MFR^M06", "structures": ["MFR_M01", "MFR_M06"],
+      "citation": "HL7 v2.5.1 prints MFR^M06 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M06^MFR_M06 (section 8.11.1, pp 8-84 to 8-85). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." },
+    { "version": "2.5.1", "trigger": "MFR^M07", "structures": ["MFR_M01", "MFR_M07"],
+      "citation": "HL7 v2.5.1 prints MFR^M07 under 2 structures: MFR^M01-M14^MFR_M01 (section 8.4.4, p 8-8); MFR^M07^MFR_M07 (section 8.11.1, p 8-85). Without MSH-9.3 the trigger is ambiguous (ADR-019 lookup rule 2)." }
   ],
   "triggerFolds": [
     { "version": "2.3", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK",
