@@ -1093,6 +1093,11 @@ compiling a structure per message.
   section E v2.6 addendum); ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their
   looser prints. Where two prints are incomparable (v2.6 RSP_K21) the structure is registered,
   not guessed.
+- **Union of incomparable prints (P8b-11).** A cited `unionPrints` entry names two
+  incomparable normative prints of one ID; the extractor aligns them by segment or group name
+  and commits the union (per element the lesser min and the greater max; an element in one
+  print only is optional), or reports an error and leaves the ID not modelled when they do not
+  align. v2.6 RSP_K21 is modelled this way (register section E, both relaxations as the cost).
 - **Extractor.** A `--- NAME begin` / `--- NAME end` pair on empty syntax cells is a required,
   non-repeating named group (CH02 2.5.2), and a named `< ... >` with no `|` is a named required
   group (the P8b-6 ruling); a `syntax-cell` erratum corrects a printed cell; an MSH row left of

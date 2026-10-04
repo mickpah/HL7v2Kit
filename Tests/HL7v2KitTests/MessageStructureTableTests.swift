@@ -179,11 +179,11 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.completeVersions == [.v2_5_1, .v2_6])
     }
 
-    @Test("The generated switch: 172 structures on v2.5.1 (P8b-9), 187 on v2.6 (P8b-10), none on any other version",
+    @Test("The generated switch: 172 structures on v2.5.1 (P8b-9), 188 on v2.6 (P8b-10; RSP_K21 P8b-11), none on any other version",
           arguments: Version.allCases)
     func generatedSwitch(version: Version) {
         let ids = MessageStructureTable.structures(for: version).keys.sorted()
-        #expect(ids.count == (version == .v2_5_1 ? 172 : version.grammarVersion == .v2_6 ? 187 : 0))
+        #expect(ids.count == (version == .v2_5_1 ? 172 : version.grammarVersion == .v2_6 ? 188 : 0))
         #expect(![Version.v2_5_1, .v2_6].contains(version.grammarVersion) || Set(["ACK", "ADT_A01", "ORU_R01"]).isSubset(of: ids))
         #expect(MessageStructureTable.structures(for: version) == MessageStructureTable.structures(for: version.grammarVersion))
     }

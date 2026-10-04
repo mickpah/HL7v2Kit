@@ -309,8 +309,8 @@ reached, and no group spans, so span-derived group predicates (P8b-17) cannot us
 
 ### Addendum to §E — v2.6 complete (P8b-10, 2026-10-04)
 
-v2.6 is `complete: true` in `Resources/structures/completeness.json`: 187 structures modelled
-(each cited to chapter, section and pages) and 23 registered as not modelled in that file's
+v2.6 is `complete: true` in `Resources/structures/completeness.json`: 188 structures modelled
+(each cited to chapter, section and pages; RSP_K21 since P8b-11) and 22 registered as not modelled in that file's
 `notModelled`, with the same lookup behaviour as v2.5.1 above.
 
 | Not modelled (v2.6) | Why | Status |
@@ -318,7 +318,6 @@ v2.6 is `complete: true` in `Resources/structures/completeness.json`: 187 struct
 | PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF (CH12 12.2.1 to 12.2.12) | The order detail is printed `< OBR \| etc. >`; the CH12 12.2 note (p 12-6) reads it as every combination of order detail segments per CH04 4.2.2.4, which names only examples (ruling G6). | **Blocking** for v2.6 unless a ruling fixes the set. |
 | QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11 (CH05 5.4.1 to 5.4.5); MFN_M01, MFR_M01, MFN_M03 (CH08 8.4.1, 8.4.4, 8.8.2) | Templates: a `[...]` or `...` row stands for query-specific or master-file-specific segments (ruling G6). | **Permanent** for the template IDs. |
 | SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`; v2.6 defines no ED segment. | **Blocking**; a print defect. |
-| RSP_K21 (CH03 3.3.56, 3.3.57) | Two normative prints, neither looser: 3.3.56 (RSP^K21) prints one optional QUERY_RESPONSE with `[{ARV}]` and QRI required; 3.3.57 (RSP^K22) a repeating QUERY_RESPONSE with QRI optional and no ARV. The looser-print rule cannot settle it. | **Blocking** (per-trigger structures, or a ruling on the union). |
 | ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax normatively (RSP_Q11's only print is the site-specific CH08 8.4.5.1 example `RSP^Znn^RSP_Q11`, excluded under G7). | **Permanent** for v2.6. |
 
 Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
@@ -332,6 +331,16 @@ committed, cited to both (overrides.json `primaryPrints`).
 | MFK_M01 | CH08 8.4.2 (M13) and 13 other prints: `[UAC]` | CH08 8.4.1 (M01, p 8-5) and 8.8.2 (M03): no UAC | An MFK^M01 or MFK^M03 with UAC passes. | **Blocking** (per-trigger structures). |
 | QRY_PC4 | CH12 12.2.7 (PC9; also PCE, PCK): `[{SFT}] [UAC]` | CH12 12.2.5 (PC4, p 12-12): neither | A PC4 query with SFT or UAC passes. | **Blocking** (per-trigger structures). |
 | RDE_O11 | CH04 4.13.13 (O25): OBX optional in OBSERVATION, group COMPONENTS | CH04 4.13.5 (O11, pp 4-88 to 4-89): OBX required | An RDE^O11 with an OBSERVATION of NTE alone passes. | **Blocking** (per-trigger structures). |
+
+Two normative prints of one structure ID that are incomparable (P8b-10 ruling, applied in
+P8b-11): the committed structure is their union, aligned by segment or group name (per element
+the lesser min and the greater max; an element in one print only is optional), computed by the
+extractor from a cited overrides.json `unionPrints` entry; prints that do not align stay not
+modelled.
+
+| Structure (v2.6) | Prints | Union, committed | Cost | Status |
+|---|---|---|---|---|
+| RSP_K21 | CH03 3.3.56 (RSP^K21, pp 3-48 to 3-49): one optional QUERY_RESPONSE with `[{ARV}]`, QRI required; CH03 3.3.57 (RSP^K22, p 3-50): `[{QUERY_RESPONSE}]`, QRI optional, no ARV | `[{QUERY_RESPONSE: PID [PD1] [{ARV}] [{NK1}] [QRI]}]` | Both relaxations: an RSP^K21 with several responses or a response without QRI passes, and an RSP^K22 with ARV passes. | **Blocking** (per-trigger structures). |
 
 Other print disagreements recorded, not modelled (each duplicate stricter than the committed
 print): ADT^A13 omits the ARV after PD1; RQC^I06 prints `[GT1]`; RRE^O26 drops RXE's NTE. The

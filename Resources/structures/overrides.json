@@ -498,5 +498,9 @@
       "citation": "HL7 v2.7.1 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 46: ACK^varies^ACK is the general acknowledgment for every trigger (MSH-9.3 is always ACK), so the ACK^<event>^ACK captions the other chapters print are this one structure." },
     { "version": "2.8.2", "structure": "ACK", "trigger": "ACK^*", "primary": "ACK^varies^ACK",
       "citation": "HL7 v2.8.2 Chapter 2, section 2.13.1 ACK - general acknowledgment, p 47: ACK^varies^ACK is the general acknowledgment for every trigger (MSH-9.3 is always ACK), so the ACK^<event>^ACK captions the other chapters print are this one structure." }
+  ],
+  "unionPrints": [
+    { "version": "2.6", "structure": "RSP_K21", "prints": ["RSP^K21^RSP_K21", "RSP^K22^RSP_K21"],
+      "citation": "Two normative prints of RSP_K21 are incomparable: Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) prints a repeating QUERY_RESPONSE with QRI optional and no ARV; neither accepts every message the other accepts, so the structure is their union aligned by name (QUERY_RESPONSE repeating, ARV optional repeating, QRI optional; P8b-10 ruling; register section E)." }
   ]
 }

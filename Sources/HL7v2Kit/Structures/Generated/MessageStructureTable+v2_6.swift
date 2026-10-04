@@ -170,6 +170,7 @@ extension MessageStructureTable {
         "RRI_I12": v2_6_RRI_I12,
         "RSP_E03": v2_6_RSP_E03,
         "RSP_E22": v2_6_RSP_E22,
+        "RSP_K21": v2_6_RSP_K21,
         "RSP_K23": v2_6_RSP_K23,
         "RSP_K25": v2_6_RSP_K25,
         "RSP_K31": v2_6_RSP_K31,
@@ -5467,6 +5468,31 @@ extension MessageStructureTable {
                     ]),
                 ]),
             ]),
+        ]
+    )
+
+    private static let v2_6_RSP_K21: MessageStructure = MessageStructure(
+        id: "RSP_K21",
+        version: "2.6",
+        triggers: ["RSP^K21", "RSP^K22"],
+        citation: "HL7 v2.6 Chapter 3, section 3.3.56 QBP/RSP - Get Person Demographics (QBP) and Response (RSP), pp 3-48 to 3-49; the same structure is printed for RSP^K22 (3.3.57). Two normative prints of RSP_K21 are incomparable: Chapter 3 section 3.3.56 (RSP^K21^RSP_K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22^RSP_K21, p 3-50) prints a repeating QUERY_RESPONSE with QRI optional and no ARV; neither accepts every message the other accepts, so the structure is their union aligned by name (QUERY_RESPONSE repeating, ARV optional repeating, QRI optional; P8b-10 ruling; register section E).",
+        requiresExactMatch: false,
+        elements: [
+            .segment("MSH", min: 1, max: 1),
+            .segment("SFT", min: 0, max: nil),
+            .segment("UAC", min: 0, max: 1),
+            .segment("MSA", min: 1, max: 1),
+            .segment("ERR", min: 0, max: 1),
+            .segment("QAK", min: 1, max: 1),
+            .segment("QPD", min: 1, max: 1),
+            .group("QUERY_RESPONSE", min: 0, max: nil, elements: [
+                .segment("PID", min: 1, max: 1),
+                .segment("PD1", min: 0, max: 1),
+                .segment("ARV", min: 0, max: nil),
+                .segment("NK1", min: 0, max: nil),
+                .segment("QRI", min: 0, max: 1),
+            ]),
+            .segment("DSC", min: 0, max: 1),
         ]
     )
 

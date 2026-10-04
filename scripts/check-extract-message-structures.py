@@ -30,7 +30,7 @@ def _load(name, rel):
 ext = _load("extract_message_structures", "extract-message-structures.py")
 OVERRIDES = ext.load_overrides()
 EMPTY = {"groupNames": [], "citationNotes": [], "errata": [], "exclusions": [], "sharedTriggers": [],
-         "triggerFolds": [], "primaryPrints": []}
+         "triggerFolds": [], "primaryPrints": [], "unionPrints": []}
 
 # v2.5.1 CH02 section 2.14.1 (p 2-61), CH03 section 3.3.1 (pp 3-4 to 3-5, across a page break
 # with the caption repeated) and CH07 section 7.3.1 (the four traps: wrapped title, wrapped
@@ -1014,6 +1014,45 @@ def check_primary_print_override():
                                                          "matches no print"], report
 
 
+def check_union_prints():
+    # P8b-10 ruling (v2.6 RSP_K21): two incomparable normative prints of one ID; a cited
+    # unionPrints entry aligns them by segment or group name: per element the lesser min and the
+    # greater max; an element in one print only is optional. Prints that do not align are an error
+    # and the structure stays unmodelled; a stale entry is an error.
+    k21 = [("MSH", "Header"), ("[", "--- R begin"), ("PID", "Patient"), ("[{ARV}]", "Access"), ("QRI", "Q"),
+           ("]", "--- R end"), ("[DSC]", "Continuation")]
+    k22 = [("MSH", "Header"), ("[{", "--- R begin"), ("PID", "Patient"), ("[QRI]", "Q"), ("}]", "--- R end"),
+           ("[DSC]", "Continuation")]
+    text = (_page(1, _table("XYZ^X01^XYZ_X01", k21), heading="9.1.1           XYZ - synthetic (Event X01)")
+            + _page(2, _table("XYZ^X02^XYZ_X01", k22), heading="9.1.2           XYZ - synthetic (Event X02)"))
+    fix = {**EMPTY, "unionPrints": [{"version": "2.5.1", "structure": "XYZ_X01",
+                                     "prints": ["XYZ^X01^XYZ_X01", "XYZ^X02^XYZ_X01"],
+                                     "citation": "Union of two incomparable prints (synthetic)."}]}
+    ext.validate_overrides(fix)
+    structures, report, _ = _run("2.5.1", [("syn", text)], fix, full=True)
+    s = structures["XYZ_X01"]
+    assert ext.compact(s["elements"]) == "MSH [{R: PID [{ARV}] [QRI]}] [DSC]", ext.compact(s["elements"])
+    assert s["triggers"] == ["XYZ^X01", "XYZ^X02"] and "Union of two" in s["citation"], s
+    assert not any(r[1] in ("duplicate-differs", "error") for r in report), report
+    assert any(r[1] == "union" for r in report), report
+    # A group in one print where the other prints a segment, or a different order: not aligned.
+    swapped = [("MSH", "Header"), ("[{", "--- R begin"), ("[QRI]", "Q"), ("PID", "Patient"), ("}]", "--- R end")]
+    text2 = (_page(1, _table("XYZ^X01^XYZ_X01", k21), heading="9.1.1           XYZ - synthetic (Event X01)")
+             + _page(2, _table("XYZ^X02^XYZ_X01", swapped), heading="9.1.2           XYZ - synthetic (Event X02)"))
+    structures, report, _ = _run("2.5.1", [("syn", text2)], fix, full=True)
+    assert "XYZ_X01" not in structures, structures
+    assert any(r[1] == "error" and "do not align" in r[2] for r in report), report
+    stale = {**EMPTY, "unionPrints": [{**fix["unionPrints"][0], "prints": ["XYZ^X01^XYZ_X01", "XYZ^X09^XYZ_X01"]}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert any(r[1] == "error" and "unionPrints entry" in r[2] for r in report), report
+    bad = {**EMPTY, "unionPrints": [{**fix["unionPrints"][0], "prints": ["XYZ^X01^XYZ_X01"]}]}
+    try:
+        ext.validate_overrides(bad)
+        raise AssertionError("a unionPrints entry with one print validated")
+    except ext.OverridesError:
+        pass
+
+
 def check_bracketless_named_group():
     # P8b-10 (v2.6 CH16 EHC_E01): "--- NAME begin" ... "--- NAME end" on rows with an empty syntax
     # cell is a required, non-repeating named group (CH02 2.5.2), not merged into the brackets it
@@ -1125,7 +1164,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption, check_caption_scoped_exclusion]
+          check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints]
 
 
 def main():

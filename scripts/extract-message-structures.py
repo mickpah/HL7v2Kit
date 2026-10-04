@@ -702,6 +702,11 @@ _OVERRIDE_KEYS = {
     # accepts every message the other accepts) is primary, cited to both (P8b-9 ruling; ADR-019
     # primary-print amendment). primary and stricter are the captions as printed.
     "primaryPrints": {"version", "structure", "primary", "stricter", "citation"},
+    # Two normative prints of one structure ID that are incomparable (neither accepts every message
+    # the other accepts): the committed structure is their UNION, aligned by segment or group name
+    # (P8b-10 ruling, v2.6 RSP_K21; ADR-019 addendum). prints are the two captions as printed, the
+    # first the primary (cited first); prints that do not align leave the structure unmodelled.
+    "unionPrints": {"version", "structure", "prints", "citation"},
 }
 ERRATA_WHERE = ("caption", "group-mark", "table-0354", "group-close", "syntax-cell")
 
@@ -715,6 +720,8 @@ def validate_overrides(data):
                 raise OverridesError(f"errata entry where {entry.get('where')!r}, expected one of {ERRATA_WHERE}")
             if kind == "errata" and entry.get("printed") == entry.get("intended"):
                 raise OverridesError(f"errata entry for {entry.get('structure')}: printed equals intended")
+            if kind == "unionPrints" and len(set(entry.get("prints", []))) != 2:
+                raise OverridesError(f"unionPrints entry for {entry.get('structure')} needs two distinct prints")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
             if set(entry) != keys and not (kind == "exclusions" and set(entry) == keys | {"caption"}):
@@ -788,6 +795,52 @@ def compact(elements):
             inner = "[" + inner + "]"
         out.append(inner)
     return " ".join(out)
+
+
+def _key(e):
+    return e["segment"] if "segment" in e else ("choice", e["choice"]) if "alternatives" in e else ("group", e["group"])
+
+
+def _segments(e):
+    if "segment" in e:
+        return {e["segment"]}
+    return set().union(*(_segments(x) for x in e.get("elements", e.get("alternatives", []))))
+
+
+def union(a, b, path="top level"):
+    """The union of two prints' elements (unionPrints, P8b-10 ruling): aligned by segment or group
+    name in order, each aligned element takes the lesser min and the greater max; an element in one
+    print only becomes optional. UnknownNotation when the prints do not align: a different order, a
+    repeated name at a level where they differ, a group in one where the other has a segment, or two
+    choices whose alternatives differ."""
+    ka, kb = [_key(e) for e in a], [_key(e) for e in b]
+    if ka != kb and (len(set(ka)) < len(ka) or len(set(kb)) < len(kb)):
+        raise UnknownNotation(f"the prints do not align at {path}: a name repeats at that level")
+    out, only_a, only_b, i, j = [], [], [], 0, 0
+    while i < len(a) or j < len(b):
+        if i < len(a) and j < len(b) and ka[i] == kb[j]:
+            x, y = a[i], b[j]
+            merged = {**x, "min": min(x["min"], y["min"]),
+                      "max": None if None in (x["max"], y["max"]) else max(x["max"], y["max"])}
+            if "elements" in x:
+                merged["elements"] = union(x["elements"], y["elements"], f"group {x['group']}")
+            elif "alternatives" in x and x["alternatives"] != y["alternatives"]:
+                raise UnknownNotation(f"the prints do not align at {path}: choice {x['choice']} differs")
+            out.append(merged)
+            i, j = i + 1, j + 1
+        elif i < len(a) and ka[i] not in kb[j:]:
+            out.append({**a[i], "min": 0})
+            only_a.append(a[i])
+            i += 1
+        elif j < len(b) and kb[j] not in ka[i:]:
+            out.append({**b[j], "min": 0})
+            only_b.append(b[j])
+            j += 1
+        else:
+            raise UnknownNotation(f"the prints do not align at {path}: the order differs")
+    if any(_segments(x) & _segments(y) for x in only_a for y in only_b):
+        raise UnknownNotation(f"the prints do not align at {path}: a group in one where the other prints its segments")
+    return out
 
 
 def _primary(sid, entries, fold):
@@ -912,11 +965,19 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         return name_groups(tree, ver, sid, overrides, names_used, bundles=bundles, log=log)
 
     primaries = {e["structure"]: e for e in overrides["primaryPrints"] if e["version"] == ver}
+    unions = {e["structure"]: e for e in overrides["unionPrints"] if e["version"] == ver}
     for sid in sorted(prints):
         entries = prints[sid]
         fold = folds.get(sid)
         k = _primary(sid, entries, fold)
         chosen = primaries.get(sid)
+        joined = unions.get(sid)
+        if joined:
+            # The cited union of two incomparable prints; the first listed is the primary.
+            k = next((j for j, e in enumerate(entries) if e[0].printed == joined["prints"][0]), None)
+            if k is None or not any(e[0].printed == joined["prints"][1] for e in entries):
+                report.append((sid, "error", f"unionPrints entry {joined['prints']!r} matches no print"))
+                continue
         if chosen:
             # The cited looser print overrides the primary-print rule; both prints must exist.
             k = next((j for j, e in enumerate(entries) if e[0].printed == chosen["primary"]), None)
@@ -942,13 +1003,26 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         except UnknownNotation as exc:
             report.append((sid, "skipped", f"unreadable: {cap.source} line {cap.line + 1}: {exc}"))
             continue
+        partner = None
+        if joined:
+            partner = next(e for e in entries if e[0].printed == joined["prints"][1])
+            try:
+                theirs = read(sid, partner[1], partner[2])
+                before = compact(elements)
+                elements = union(elements, theirs)
+            except UnknownNotation as exc:
+                report.append((sid, "error", f"unionPrints entry {joined['prints']!r}: {exc}; not modelled"))
+                continue
+            report.append((sid, "union", f"{partner[0].printed} (section {partner[0].section}) prints "
+                           f"{compact(theirs)[:160]!r}; {cap.printed} (section {cap.section}) prints "
+                           f"{before[:160]!r}; union {compact(elements)[:160]!r}"))
         others, triggers = [], []
         for c, r, e in entries:
             trigs = [f"{c.code}^{v}" for v in c.events]
             if c is not cap and not fold and not set(trigs) <= set(triggers):
                 others.append(c)
             triggers += [t for t in trigs if t not in triggers]
-            if c is cap:
+            if c is cap or (partner and c is partner[0]):
                 continue
             try:
                 theirs = read(sid, r, e)
@@ -964,6 +1038,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         structures[sid] = validate_names({"structure": sid, "version": ver, "triggers": triggers, "elements": elements,
                                           "citation": citation(ver, cap, others, overrides, sid)
                                           + (f" {primaries[sid]['citation']}" if sid in primaries else "")
+                                          + (f" {joined['citation']}" if joined else "")
                                           + name_citation(log)})
         for entry in log:
             where = f"[{', '.join(str(p) for p in entry['path'])}]"
@@ -996,6 +1071,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                    for e in errata if id(e) not in used_errata]
         report += [(sid, "error", "triggerFolds entry matches no caption") for sid in sorted(folds) if sid not in prints]
         report += [(sid, "error", "primaryPrints entry matches no caption") for sid in sorted(primaries) if sid not in prints]
+        report += [(sid, "error", "unionPrints entry matches no caption") for sid in sorted(unions) if sid not in prints]
     return structures, report, count
 
 

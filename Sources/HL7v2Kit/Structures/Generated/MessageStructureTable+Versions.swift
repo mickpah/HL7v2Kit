@@ -8,7 +8,7 @@ extension MessageStructureTable {
     //   2.3.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-14)
     //   2.4 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-13)
     //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints (RSP_K21 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
-    //   2.6 (complete): P8b-10: 187 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row), RSP_K21 (two normative prints, neither looser) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
+    //   2.6 (complete): P8b-10: 188 structures extracted from the v2.6 chapter prints (ACK, ADT_A30, ADT_A43, MFK_M01, QRY_PC4 and RDE_O11 from their looser prints, overrides.json primaryPrints; RSP_K21 as the union of its two incomparable prints, overrides.json unionPrints, P8b-11); the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 5 Table 0354 rows with no printed syntax (ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11) are registered as not modelled below (register section E, v2.6 not-modelled table)
     //   2.7.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-16)
     //   2.8.2 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-11)
 
@@ -196,9 +196,6 @@ extension MessageStructureTable {
                 "RSP_K11": NotModelledStructure(
                     triggers: ["RSP^K11"],
                     reason: "CH05 section 5.4.1 (p 31) prints a query template: a '[...]' row stands for the query-specific segments a query profile defines, so no fixed syntax exists (ruling G6; register section E, v2.6 not-modelled table)"),
-                "RSP_K21": NotModelledStructure(
-                    triggers: ["RSP^K21", "RSP^K22"],
-                    reason: "Two normative prints disagree and neither accepts every message the other accepts: CH03 section 3.3.56 (RSP^K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22, p 3-50) a repeating QUERY_RESPONSE with QRI optional and no ARV; the looser-print rule (P8b-9) cannot settle it, so no structure is committed (register section E, v2.6 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
                     triggers: [],
                     reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists RSP_Q11 (event Q11); its only v2.6 print is the site-specific example RSP^Znn^RSP_Q11 in CH08 section 8.4.5.1 (p 8-8, a query profile example excluded under ruling G7), so no normative syntax is printed (register section E, v2.6 not-modelled table)"),
