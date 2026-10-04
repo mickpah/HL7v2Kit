@@ -146,3 +146,34 @@ new reason, 48 are example defects cited to the print (ACK_ACK, CH10 AIP before 
 events Table 0003 v2.4 does not define, the CH03 Q24/K24 example against its query profile, a
 TBR^R08 error response without RDF/RDT), and one misfire was fixed (ERP_R09, now registered on
 v2.4 and v2.5.1). 16 probes in `StructureV24ProbeTests`.
+
+## v2.3.1 message structures (P8b-14)
+
+The extractor reads 246 v2.3.1 captions in the one v2.3.1 PDF (none excluded): 113 structure
+IDs, 99 read and 14 unreadable (the general order's `Order Detail Segment` placeholder in
+ORM_O01, ORR_O02 and OSR_Q06, eight CH12 `[OBR, etc.` structures, ERP_R09's ellipsis rows,
+MFN_M03's `???` row and SUR_P09's ED row), and five captions to which Table 0354 v2.3.1 gives no
+structure ID (MFN^M01-M06 twice, MFQ^M01-M06, MFR^M01-M06, MFN^M04; declared in
+`overrides.json` `unresolvedCaptions`). Most captions print `CODE^EVT` only; their IDs come from
+Table 0354 v2.3.1 (CH2 2.24.1.9, pp 2-103 to 2-106), read through ten cited errata for its
+misprinted rows, two declared shared triggers (ADT^A28, ADT^A31) and four `captionStructures`
+entries (MFK, PPP). 99 are committed under `Resources/structures/v2.3.1/` and v2.3.1 is
+`complete: true`; with the 27 registered in `completeness.json` they account for all 117 Table
+0354 v2.3.1 rows (nine printed IDs, ACK and the shared ORM^O01 and ORR^O02 structures, have no
+row). Group names: 240 from the HL7 v2.xml 2.3.1 bundle, 13 through the v2.4 bundle, none
+synthesised (register §E v2.3.1 addendum).
+
+QRY_Q02 and QCK_Q02 are read on v2.3.1 from the one-space direction captions of CH2 (p 2-84):
+"QRY^Q02 (A to B)  Query Message" prints MSH, QRD, [QRF], [DSC] and "QCK^Q02 (B to A)  Query
+General Acknowledgment" prints MSH, MSA, [ERR], [QAK]; both are modelled.
+
+Requirement 4 evidence: with the structure check off the validation digest is byte-identical;
+with it on, 55 messages change: 47 v2.3.1 spec examples now match cleanly, 6 are example defects
+cited to the print (CH04 4.14.5 sends ACK with QAK; five CH10 10.6 examples print AIP before
+AIL), 2 stay info with a new reason (the `orm_o01_v231.hl7` fixture's ORM^O01 is an ambiguous
+shared trigger without MSH-9.3; a CH08 MFN^M05 example is a fragment). No misfire. The P8b-3b
+lint table's 27 pre-v2.5 ORU-shape failures (an OBSERVATION group `{ [OBX] [{NTE}] }`) are lint failures
+counted over all seven versions, not corpus findings; v2.3.1's two, ORU_R01 and ORF_R02, are
+exact-matched (P8b-12) and committed as printed. No v2.3.1 spec example carries ORU^R01 or
+ORF^R04 with MSH-12 read as 2.3.1 (the CH07 examples elide MSH-12), so the probes exercise them:
+14 probes and 9 resolution cases in `StructureV231ProbeTests`.

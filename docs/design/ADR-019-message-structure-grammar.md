@@ -1179,6 +1179,46 @@ compiling a structure per message.
   changes. No other generated structure or report row changes on any version; v2.7.1 and
   v2.8.2 do not print either structure.
 
+## Amendment 2026-10-04 — v2.3.1 complete (P8b-14)
+
+- **v2.3.1 complete.** 99 structures modelled (10 exact-matched), 27 registered (register
+  section E v2.3.1 addendum: the general order's `Order Detail Segment` placeholder in ORM_O01,
+  ORR_O02 and OSR_Q06, the CH12 placeholders, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows
+  no print carries); every Table 0354 v2.3.1 row is one or the other.
+- **Structure IDs through Table 0354 (rollout order item 6 realised).** A `CODE^EVT` caption
+  resolves to the one row of its message code that lists all its events. The v2.3.1 table
+  misprints ten rows; each is read through a cited `table-0354` erratum checked against Table
+  0076 or 0003 and the caption (ARD_A19, PIN_107, RPI_I0I, RQI_I0I, TBR_R09/R09, RRE_O01/O01,
+  MFD_P09/P09, and the events `136`, `1II`, PPG's `PCC`). Three new rules settle the rest, each
+  cited in `overrides.json`: a caption whose events two rows list (ADT^A28, ADT^A31 under ADT_A01
+  and ADT_A28) is resolved only when every event is a declared shared trigger of exactly those
+  structures, and the print is then each structure's; `captionStructures` names the row for a
+  caption whose message code has one row that omits some of the caption's events (MFK, PPP);
+  `unresolvedCaptions` declares a caption no row can name (MFN^M04, MFQ, MFR, the MFN templates),
+  which is reported and not modelled. On a version that prints its own Table 0354, any other
+  unresolved caption fails a full extractor read; v2.3, which reads v2.3.1's table, still only
+  reports them. A caption erratum may now carry an `occurrence` (CH08 8.10.1's Case 2, printed
+  under MFN^M06 and MFK^M06 a second time, is M07 by Table 0003).
+- **Decision 3 for v2.3.1 through its own bundle (owner ruling 2026-10-04, amending D1 and D2
+  for v2.3.1 only).** Group names come from the HL7 v2.xml 2.3.1 bundle first (nameSource
+  `v2xml`, cited by its folder as on disk, `HL7-xml 2.3.1/`, and by the generator of the file:
+  the bundle mixes the HL7-Database generator with an encoder generator,
+  `urn:com.sun:encoder-hl7-1.0`), then through the v2.4 bundle (`v2xml-v2.4`), then synthesised.
+  A 2.3.1 file of the same message code is matched as D2 matches v2.4 files. The 2.3.1 bundle's
+  CHOICE and ENCODING are never taken without a cited override; the derivation names those
+  groups and the citation records the refusal. Result: 240 `v2xml`, 13 `v2xml-v2.4`, 0
+  synthesised. The codegen, the test-target decoder and the extractor accept `v2xml` on v2.3.1
+  and still reject it on v2.3. The bundle stays names-only with a report-only content check (D3).
+- **Extractor.** `CODE ^EVT` (one space before the caret, CH08 8.8.1) is a caption; notation in
+  the description column inside an open group (CH04 OSR^Q06's `[Order Detail Segment] OBR,
+  etc.`) is a G6 placeholder, where it had been read as description and dropped. No v2.4,
+  v2.5.1, v2.6, v2.7.1 or v2.8.2 report row or dumped structure changes; on v2.3 only the
+  Table 0354 errata change IDs (PIN_I07, RPI_I01, RQI_I01, ADT^A36 under ADT_A30) and resolve
+  ADR^A19 and PPG^PCG, both of whose v2.3 prints are unreadable.
+- **Lookup.** v2.3.1 messages carry MSH-9.3 (CM, three components); lookup rule 1's complete
+  branch now applies to v2.3.1: an MSH-9.3 naming no v2.3.1 structure (including the misprinted
+  table ID `PIN_107`) is a mismatch.
+
 ## Amendment 2026-10-04 — HL7au:00060.1 through the ADRM-2021 structures (P8b-4)
 
 - **Path (ruling G9).** The AU structures live in `Resources/structures/profiles/au-adrm-2021/`

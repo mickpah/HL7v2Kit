@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-14: HL7 v2.3.1 message structures complete
+
+- With `messageStructureSeverity` set, every v2.3.1 message structure is now checked: 99
+  structures extracted from the v2.3.1 print (10 matched exactly), and v2.3.1 is marked
+  complete. An MSH-9.3 that names no v2.3.1 structure (`ADT^A04^ADT_A04`, or the misprinted
+  Table 0354 ID `PIN_107`) is now `messageStructureMismatch` on v2.3.1 instead of info.
+- Most v2.3.1 captions print `CODE^EVT` only; the structure ID comes from Table 0354 v2.3.1,
+  read through cited errata for its misprinted rows (ARD_A19, PIN_107, RPI_I0I, RQI_I0I,
+  TBR_R09, RRE_O01, MFD_P09 and the events 136, 1II and PPG's PCC). Where the table lists an
+  event under two structures (ADT^A28, ADT^A31) the triggers are declared shared; where its
+  one row of a message code omits the caption's events (MFK, PPP) a cited declaration names
+  the row; captions it places under no structure (MFN^M04, MFQ, MFR and the master file
+  templates) are declared and not modelled. CH08 8.10.1's second clinical-trials print, captioned
+  MFN^M06 and MFK^M06, is read as M07 (Table 0003).
+- Group names: 240 from the HL7 v2.xml 2.3.1 bundle (each citation names the file's generator,
+  since the bundle mixes two), 13 through the v2.4 bundle (the 2.3.1 bundle's ENCODING names
+  are not taken without a cited override), none synthesised.
+- 27 v2.3.1 structures are registered as not modelled, each with its reason (register section
+  E): the general order's `Order Detail Segment` placeholder (ORM_O01, ORR_O02, OSR_Q06), eight
+  CH12 `[OBR, etc.` structures, ERP_R09, MFN_M03, SUR_P09 and 13 Table 0354 rows no print
+  carries. Every Table 0354 v2.3.1 row is modelled or registered.
+- The structure extractor reads `CODE ^EVT` (one space before the caret, CH08 8.8.1), treats
+  notation in the description column inside an open group as a placeholder (OSR^Q06), and on a
+  version with its own Table 0354 fails a full read on any caption the table cannot resolve
+  unless a cited override settles it. No v2.4, v2.5.1, v2.6, v2.7.1 or v2.8.2 structure changes.
+
 ### Fixed — P8b-4a: AU profile structures govern base structure findings; RRI_I12
 
 - Under the AU locale with `messageStructureSeverity` set, a v2.4 message that conforms to the

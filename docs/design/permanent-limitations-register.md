@@ -543,6 +543,73 @@ OUL_R21, RCI_I05, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the 
 with at most one finding and no group spans (among them ORU_R01, whose v2.4 OBSERVATION group
 is `{[OBX] [{NTE}]}`).
 
+### Addendum to §E — v2.3.1 complete (P8b-14, 2026-10-04)
+
+v2.3.1 is `complete: true` in `Resources/structures/completeness.json`: 99 structures modelled
+(each cited to chapter, section and pages of the one v2.3.1 PDF) and 27 registered as not
+modelled in that file's `notModelled`; every Table 0354 v2.3.1 row (Chapter 2, section
+2.24.1.9, pp 2-103 to 2-106; 117 rows) is one or the other. Most v2.3.1 captions print
+`CODE^EVT` only: the structure ID comes from that table. Nine printed IDs have no row (ACK,
+folded onto `ACK^*` through CH02 2.13.1, and the eight structures of the shared triggers
+ORM^O01 and ORR^O02, whose captions print their IDs).
+
+| Not modelled (v2.3.1) | Why | Status |
+|---|---|---|
+| ORM_O01 (CH04 4.2.1, p 4-3), ORR_O02 (4.2.2, p 4-4), OSR_Q06 (4.2.3, p 4-5) | The order detail is printed `Order Detail Segment OBR, etc.` (OSR^Q06 in the description column). Use note b (p 4-3) reads it as "whichever of these order detail segment(s) is appropriate ..., currently OBR, RQD, RQ1, RXO, ODS, ODT", 4.1.2.4 (p 4-2) names only examples, and 4.7 (p 4-53) has RQD followed by RQ1 replace it: one segment or a combination is not fixed by the print (ruling G6). | **Permanent** for v2.3.1. |
+| PGL_PC6, PPR_PC1, PPP_PCB, PPG_PCG, PRR_PC5, PPV_PCA, PTR_PCF, PPT_PCL (CH12 12.2.1 to 12.2.12) | `[OBR, etc.`; the CH12 note before 12.2.1 (p 12-7) reads it as every combination of order detail segments per CH04 4.1.2.4 (ruling G6). PTR_PCF also prints `{NTE}]` with no opening bracket. | **Permanent** for v2.3.1. |
+| ERP_R09 (CH02 2.20.3, p 2-86), MFN_M03 (CH08 8.7.2, p 8-20) | Ellipsis rows after ERQ; `??? [other segments(s)]` for the M08 to M11 combinations (ruling G6). | **Permanent** for v2.3.1. |
+| SUR_P09 (CH07 7.10.2, p 7-85) | A row `ED Encapsulated Data`: v2.3.1 defines no ED segment. | **Permanent** for v2.3.1. |
+| MFN_M01, MFN_M02, MFN_M08 to MFN_M11, NUL, ORM_Q06, ORR_Q06, ORU_W01, RAS_O02, SRM_T12, SRR_T12 | Table 0354 rows no caption prints (searched in every caption form): MFN_M01's only print is the 8.3.1 template captioned MFN^M01-M06, MFN_M02's the 8.6.1 staff print captioned MFN^M01-M06 (neither caption's six events is one row's); M08 to M11 are printed only as alternatives under MFN^M03; ORU_W01 is prose in CH07 7.19.1 (p 7-117) with ORU^W01 examples; NUL names no message. | **Permanent** for v2.3.1. |
+| Captions with no structure ID: MFN^M01-M06 (8.3.1, p 8-3; 8.6.1, p 8-11), MFQ^M01-M06 and MFR^M01-M06 (8.3.3, p 8-4), MFN^M04 (8.9.1, p 8-60) | Table 0354 lists no row for their events (no MFQ, MFR or MFN_M04 row) and no row lists all six of a range; declared in `overrides.json` `unresolvedCaptions` and reported info on the wire. MFN^M01-M06 and MFR^M01-M06 are also `[Z..]` templates. | **Permanent** for v2.3.1. |
+| MCF (CH02 2.13.2, pp 2-78 to 2-79) | The delayed acknowledgment, kept for v2.1 compatibility, is printed twice under the code alone (MSH, MSA, [ERR]); Table 0354 has no MCF row and Table 0003 no event for it, so no structure ID names it; an MCF message is info. | **Permanent** for v2.3.1. |
+
+Structure IDs (each a cited `overrides.json` entry, defensible from the v2.3.1 print alone).
+Table 0354 errata, each against Table 0076 or 0003 and the caption: ARD_A19 read ADR_A19 (no
+message type ARD); ADT_A30's event `136` read A36; RPA_I08's `1II` read I11; PIN_107, RPI_I0I
+and RQI_I0I read PIN_I07, RPI_I01 and RQI_I01 (a digit and a letter swapped); PPG_PCG's `PCC`
+read PCG (Table 0003 gives PCC to PPP); TBR_R09/R09 read TBR_R08/R08 (R09 is ERP's); RRE_O01/O01
+read RRE_O02/O02 (Table 0003: "O02 ORR - Order response (also RRE, RRD, RRG, RRA)"); MFD_P09/P09
+read MFD_MFA/MFA (P09 is SUR's; CH08 8.2 names MFA). Caption errata: CH08 8.10.1 prints Case 2,
+the clinical study without phases (Table 0003 M07), under MFN^M06 and MFK^M06 a second time;
+read as M07 (a new optional `occurrence` on caption errata), so MFN_M07 is modelled and MFN_M06
+keeps Case 1 alone. Declared readings: ADT^A28 and ADT^A31, which Table 0354 lists under both
+ADT_A01 and ADT_A28, are declared shared triggers and their print (identical to ADT^A01's) is
+each structure's; MFK^M01-M06 (8.3.1, 8.6.1) and MFK^M04 are read as MFK_M01 and PPP^PCB, PCC,
+PCD as PPP_PCB (`captionStructures`: the one row of the message code omits M02 and M04, or PCC).
+With the general print of 8.3.1 primary, MFK_M01 allows `[ERR]`; the other five MFK prints omit
+it and are stricter.
+
+Group names (ADR-019 decision 3; owner ruling 2026-10-04). v2.3.1 prints few group names: 240
+come from the HL7 v2.xml 2.3.1 bundle (`HL7-xml 2.3.1`, a folder name with no "v"), 13 through
+the v2.4 bundle (MFN_M05, MFN_M06, MFN_M07, RPR_I03 and seven ENCODING groups) and none is
+synthesised. The 2.3.1 bundle mixes two generators, the HL7-Database generator of the other
+five bundles (33 files) and an encoder generator (namespace `urn:com.sun:encoder-hl7-1.0`, 83
+files); every citation names the generator of the file it reads. The bundle's CHOICE and ENCODING
+names are refused without a cited override: the seven ENCODING groups (RAR_RAR, RAS_O01,
+RDR_RDR, RDS_O01, RGR_RGR, RGV_O01, RRE_O02) take the v2.4 bundle's name, which is also
+ENCODING, and the citation says why; no CHOICE group is named (the structures that would use it
+are registered). Where the 2.3.1 bundle has no file for the structure ID, a file of the same
+message code is matched on first segment and member set (ORF_R02 from ORF_R04.xsd, ADT_A28 from
+ADT_A01.xsd). The bundle differs from the print, report only, for ADT_A18 (MRG required in the
+print), ADT_A38 (DRG optional in the print), RDE_O01 and RDS_O01 (the print's `{ [OBX] [{NTE}] }`)
+and REF_I12 (the print's two PATIENT_VISIT groups, as on v2.4).
+
+Reader fixes (extractor, each with a self-check case; no v2.4 to v2.8.2 report row or structure
+changes): `CODE ^EVT` with one space before the caret (CH08 8.8.1 `MFN ^M05`, `MFK ^M05`) is a
+caption; notation in the description column inside an open group (`[Order Detail Segment] OBR,
+etc.`, CH04 OSR^Q06) is a G6 placeholder, where it had been dropped and OSR_Q06 written without
+its order detail; on a version that prints its own Table 0354, a caption the table cannot
+resolve fails a full read unless a cited erratum, declared shared triggers, a `captionStructures`
+or an `unresolvedCaptions` entry settles it. The Table 0354 errata also give v2.3 (which reads
+v2.3.1's table) the corrected IDs; v2.3 is not complete and commits nothing.
+
+Known cost of exact matching: 10 v2.3.1 structures fail the determinism lint (CSU_C09, OMD_O01,
+ORD_O02, ORF_R02, ORU_R01, RCI_I05, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the
+exact matcher, with at most one finding and no group spans (among them ORU_R01 and ORF_R02, whose
+OBSERVATION group is the pre-v2.5 `{ [OBX] [{NTE}] }`). Corpus run (P8b-14): no misfire; six v2.3.1 spec examples
+draw findings that are example defects (CH04 4.14.5 sends ACK with QAK; five CH10 10.6 examples
+print AIP before AIL).
+
 ### Addendum to §E — HL7au:00060.1 through the ADRM-2021 structures (P8b-4, 2026-10-04)
 
 Under `.auLocalisation` with `messageStructureSeverity` set, a v2.4 message whose base structure
