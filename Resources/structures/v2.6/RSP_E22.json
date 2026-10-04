@@ -1,0 +1,24 @@
+{
+  "structure": "RSP_E22",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 16, section 16.3.13 RSP^E22 - Authorization Request Status Query Response (event E22), p 20.",
+  "triggers": ["RSP^E22"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "group": "QUERY_ACK", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "QAK", "min": 1, "max": 1 },
+      { "segment": "QPD", "min": 1, "max": 1 },
+      { "group": "AUTHORIZATION_INFO", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "IVC", "min": 1, "max": 1 },
+        { "segment": "PSG", "min": 1, "max": 1 },
+        { "group": "PSL_ITEM_INFO", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PSL", "min": 1, "max": 1 }
+        ]}
+      ]}
+    ]}
+  ]
+}

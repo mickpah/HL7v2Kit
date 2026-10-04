@@ -1,0 +1,27 @@
+{
+  "structure": "RPI_I01",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 11, section 11.3.1 RQI/RPI - Request for Insurance Information (Event I01), p 11-8.",
+  "triggers": ["RPI^I01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "NK1", "min": 0, "max": null },
+    { "group": "GUARANTOR_INSURANCE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "GT1", "min": 0, "max": null },
+      { "group": "INSURANCE", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "IN1", "min": 1, "max": 1 },
+        { "segment": "IN2", "min": 0, "max": 1 },
+        { "segment": "IN3", "min": 0, "max": 1 }
+      ]}
+    ]},
+    { "segment": "NTE", "min": 0, "max": null }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "structure": "ESU_U01",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 13, section 13.3.1 ESU/ACK - Automated Equipment Status Update (Event U01), p 13-14.",
+  "triggers": ["ESU^U01"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EQU", "min": 1, "max": 1 },
+    { "segment": "ISD", "min": 0, "max": null },
+    { "segment": "ROL", "min": 0, "max": 1 }
+  ]
+}

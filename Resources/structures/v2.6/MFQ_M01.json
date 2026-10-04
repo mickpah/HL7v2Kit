@@ -1,0 +1,14 @@
+{
+  "structure": "MFQ_M01",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 8, section 8.4.4 MFQ/MFR - Master Files Query (Event M01-M17), p 8-7.",
+  "triggers": ["MFQ^M01", "MFQ^M02", "MFQ^M03", "MFQ^M04", "MFQ^M05", "MFQ^M06", "MFQ^M07", "MFQ^M08", "MFQ^M09", "MFQ^M10", "MFQ^M11", "MFQ^M12", "MFQ^M13", "MFQ^M14", "MFQ^M15", "MFQ^M16", "MFQ^M17"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

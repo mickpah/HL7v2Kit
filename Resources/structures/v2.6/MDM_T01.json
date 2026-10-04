@@ -1,0 +1,24 @@
+{
+  "structure": "MDM_T01",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 9, section 9.5.1 MDM/ACK - Original Document Notification (Event T01), p 9-5; the same structure is printed for MDM^T03 (9.5.3), MDM^T05 (9.5.5), MDM^T07 (9.5.7), MDM^T09 (9.5.9) and MDM^T11 (9.5.11).",
+  "triggers": ["MDM^T01", "MDM^T03", "MDM^T05", "MDM^T07", "MDM^T09", "MDM^T11"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PV1", "min": 1, "max": 1 },
+    { "group": "COMMON_ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "ORC", "min": 1, "max": 1 },
+      { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "TQ1", "min": 1, "max": 1 },
+        { "segment": "TQ2", "min": 0, "max": null }
+      ]},
+      { "segment": "OBR", "min": 1, "max": 1 },
+      { "segment": "NTE", "min": 0, "max": null }
+    ]},
+    { "segment": "TXA", "min": 1, "max": 1 }
+  ]
+}

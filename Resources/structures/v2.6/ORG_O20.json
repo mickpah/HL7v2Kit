@@ -1,0 +1,37 @@
+{
+  "structure": "ORG_O20",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 4, section 4.4.5 ORG - general clinical order acknowledgement message (event O20), pp 4-11 to 4-12.",
+  "triggers": ["ORG^O20"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "group": "OBSERVATION_GROUP", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "ROL", "min": 0, "max": null }
+        ]},
+        { "segment": "NTE", "min": 0, "max": null },
+        { "segment": "CTI", "min": 0, "max": null },
+        { "group": "SPECIMEN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "SPM", "min": 1, "max": 1 },
+          { "segment": "SAC", "min": 0, "max": null }
+        ]}
+      ]}
+    ]}
+  ]
+}

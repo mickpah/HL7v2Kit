@@ -1,0 +1,36 @@
+{
+  "structure": "ORP_O10",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 4, section 4.13.4 ORP - Pharmacy/Treatment Order Acknowledgment (Event O10), p 4-88.",
+  "triggers": ["ORP^O10"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "group": "PATIENT", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+        { "segment": "PID", "min": 1, "max": 1 },
+        { "segment": "NTE", "min": 0, "max": null }
+      ]},
+      { "group": "ORDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "group": "ORDER_DETAIL", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "RXO", "min": 1, "max": 1 },
+          { "segment": "NTE", "min": 0, "max": null },
+          { "segment": "RXR", "min": 1, "max": null },
+          { "group": "COMPONENT", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "RXC", "min": 1, "max": 1 },
+            { "segment": "NTE", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

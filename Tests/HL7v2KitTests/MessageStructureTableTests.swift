@@ -93,7 +93,8 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.structures(messageCode: "ACK", triggerEvent: "A13", version: .v2_5_1).map(\.id) == ["ACK"])
         #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_5_1).map(\.id) == ["ADT_A02"])
         #expect(MessageStructureTable.structures(messageCode: "SIU", triggerEvent: "S26", version: .v2_5_1).map(\.id) == ["SIU_S12"])
-        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_6).isEmpty)
+        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_6).map(\.id) == ["ADT_A02"])
+        #expect(MessageStructureTable.structures(messageCode: "ADT", triggerEvent: "A02", version: .v2_7_1).isEmpty)
     }
 
     // P8b-9: spot checks against the v2.5.1 print.
@@ -178,12 +179,12 @@ struct MessageStructureTableTests {
         #expect(MessageStructureTable.completeVersions == [.v2_5_1])
     }
 
-    @Test("The generated switch: 172 structures on v2.5.1 (P8b-9) and none on any other version",
+    @Test("The generated switch: 172 structures on v2.5.1 (P8b-9), 187 on v2.6 (P8b-10), none on any other version",
           arguments: Version.allCases)
     func generatedSwitch(version: Version) {
         let ids = MessageStructureTable.structures(for: version).keys.sorted()
-        #expect(ids.count == (version == .v2_5_1 ? 172 : 0))
-        #expect(version != .v2_5_1 || Set(["ACK", "ADT_A01", "ORU_R01"]).isSubset(of: ids))
+        #expect(ids.count == (version == .v2_5_1 ? 172 : version.grammarVersion == .v2_6 ? 187 : 0))
+        #expect(![Version.v2_5_1, .v2_6].contains(version.grammarVersion) || Set(["ACK", "ADT_A01", "ORU_R01"]).isSubset(of: ids))
         #expect(MessageStructureTable.structures(for: version) == MessageStructureTable.structures(for: version.grammarVersion))
     }
 

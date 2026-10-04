@@ -1,0 +1,13 @@
+{
+  "structure": "ACK",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 10, section 10.4 FILLER APPLICATION MESSAGES AND TRIGGER EVENTS, p 10-17. Two normative prints of ACK disagree: Chapter 2 section 2.13.1 (ACK^varies^ACK, p 42) prints UAC optional and non-repeating ([UAC]), Chapter 10 section 10.4 (ACK^S12-S24, S26^ACK, p 10-17) prints it optional and repeating ([{UAC}]), which accepts every message the 2.13.1 print accepts (and every ACK the other chapters print: CH03 3.3.18 without UAC, CH05 5.4.4 to 5.4.7 with ERR non-repeating); the looser 10.4 print is primary (P8b-9 ruling; register section E).",
+  "triggers": ["ACK^*"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null }
+  ]
+}

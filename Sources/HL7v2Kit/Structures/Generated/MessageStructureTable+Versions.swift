@@ -20,7 +20,7 @@ extension MessageStructureTable {
         case .v2_3_1: return [:]
         case .v2_4:   return [:]
         case .v2_5_1: return v2_5_1
-        case .v2_6:   return [:]
+        case .v2_6:   return v2_6
         case .v2_7_1: return [:]
         case .v2_8_2: return [:]
         // Only a grammar version missing from completeness.json reaches

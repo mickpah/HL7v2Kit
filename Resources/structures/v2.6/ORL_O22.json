@@ -1,0 +1,32 @@
+{
+  "structure": "ORL_O22",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 4, section 4.4.7 ORL - general laboratory order response message to any OML (event O22), p 4-14.",
+  "triggers": ["ORL^O22"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "ERR", "min": 0, "max": null },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "group": "RESPONSE", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+      { "segment": "PID", "min": 1, "max": 1 },
+      { "group": "ORDER", "nameSource": "printed", "min": 0, "max": null, "elements": [
+        { "segment": "ORC", "min": 1, "max": 1 },
+        { "group": "TIMING", "nameSource": "printed", "min": 0, "max": null, "elements": [
+          { "segment": "TQ1", "min": 1, "max": 1 },
+          { "segment": "TQ2", "min": 0, "max": null }
+        ]},
+        { "group": "OBSERVATION_REQUEST", "nameSource": "printed", "min": 0, "max": 1, "elements": [
+          { "segment": "OBR", "min": 1, "max": 1 },
+          { "segment": "ROL", "min": 0, "max": null },
+          { "group": "SPECIMEN", "nameSource": "printed", "min": 0, "max": null, "elements": [
+            { "segment": "SPM", "min": 1, "max": 1 },
+            { "segment": "SAC", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+}

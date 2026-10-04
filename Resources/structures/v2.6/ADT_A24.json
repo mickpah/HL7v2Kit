@@ -1,0 +1,20 @@
+{
+  "structure": "ADT_A24",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 3, section 3.3.24 ADT/ACK - Link Patient Information (Event A24), pp 3-25 to 3-26.",
+  "triggers": ["ADT^A24"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "EVN", "min": 1, "max": 1 },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null },
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "PD1", "min": 0, "max": 1 },
+    { "segment": "PV1", "min": 0, "max": 1 },
+    { "segment": "DB1", "min": 0, "max": null }
+  ]
+}

@@ -179,7 +179,7 @@ reject "empty completeness citation" 'one non-empty line' "$PRE
 d = load('completeness.json'); d['versions']['2.4']['citation'] = ' '; save('completeness.json', d)"
 
 reject "complete version with no structures" 'marked complete but has no structures' "$PRE
-d = load('completeness.json'); d['versions']['2.6']['complete'] = True; save('completeness.json', d)"
+d = load('completeness.json'); d['versions']['2.7.1']['complete'] = True; save('completeness.json', d)"
 
 reject "missing completeness file" 'couldn’t be opened because there is no such file' "$PRE
 os.remove(os.path.join(S, 'completeness.json'))"

@@ -1,0 +1,25 @@
+{
+  "structure": "RCL_I06",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 11, section 11.3.6 RQC/RCL - Request/Receipt of Clinical Data Listing (Event I06), pp 11-12 to 11-13.",
+  "triggers": ["RCL^I06"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": 1 },
+    { "segment": "MSA", "min": 1, "max": 1 },
+    { "segment": "QRD", "min": 1, "max": 1 },
+    { "segment": "QRF", "min": 0, "max": 1 },
+    { "group": "PROVIDER", "nameSource": "printed", "min": 1, "max": null, "elements": [
+      { "segment": "PRD", "min": 1, "max": 1 },
+      { "segment": "CTD", "min": 0, "max": null }
+    ]},
+    { "segment": "PID", "min": 1, "max": 1 },
+    { "segment": "DG1", "min": 0, "max": null },
+    { "segment": "DRG", "min": 0, "max": null },
+    { "segment": "AL1", "min": 0, "max": null },
+    { "segment": "NTE", "min": 0, "max": null },
+    { "segment": "DSP", "min": 0, "max": null },
+    { "segment": "DSC", "min": 0, "max": 1 }
+  ]
+}

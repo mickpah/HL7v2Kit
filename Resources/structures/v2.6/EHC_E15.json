@@ -1,0 +1,33 @@
+{
+  "structure": "EHC_E15",
+  "version": "2.6",
+  "citation": "HL7 v2.6 Chapter 16, section 16.3.9 EHC^E15 - Payment/Remittance Advice (event E15), pp 15 to 16.",
+  "triggers": ["EHC^E15"],
+  "elements": [
+    { "segment": "MSH", "min": 1, "max": 1 },
+    { "segment": "SFT", "min": 0, "max": null },
+    { "segment": "UAC", "min": 0, "max": null },
+    { "group": "PAYMENT_REMITTANCE_HEADER_INFO", "nameSource": "printed", "min": 1, "max": 1, "elements": [
+      { "segment": "PMT", "min": 1, "max": 1 },
+      { "segment": "PYE", "min": 1, "max": 1 }
+    ]},
+    { "group": "PAYMENT_REMITTANCE_DETAIL_INFO", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "IPR", "min": 1, "max": 1 },
+      { "segment": "IVC", "min": 1, "max": 1 },
+      { "group": "PRODUCT_SERVICE_SECTION", "nameSource": "printed", "min": 1, "max": null, "elements": [
+        { "segment": "PSS", "min": 1, "max": 1 },
+        { "group": "PRODUCT_SERVICE_GROUP", "nameSource": "printed", "min": 1, "max": null, "elements": [
+          { "segment": "PSG", "min": 1, "max": 1 },
+          { "group": "PSL_ITEM_INFO", "nameSource": "printed", "min": 1, "max": null, "elements": [
+            { "segment": "PSL", "min": 1, "max": 1 },
+            { "segment": "ADJ", "min": 0, "max": null }
+          ]}
+        ]}
+      ]}
+    ]},
+    { "group": "ADJUSTMENT_PAYEE", "nameSource": "printed", "min": 0, "max": null, "elements": [
+      { "segment": "ADJ", "min": 1, "max": 1 },
+      { "segment": "ROL", "min": 0, "max": 1 }
+    ]}
+  ]
+}
