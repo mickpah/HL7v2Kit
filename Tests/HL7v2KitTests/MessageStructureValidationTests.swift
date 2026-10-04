@@ -191,24 +191,29 @@ struct MessageStructureValidationTests {
         #expect(try structureIssues(Self.wire("PGL^PC6", [])).map(\.code) == [.messageStructureNotModelled(structure: "PGL^PC6")])
     }
 
-    // ADR-019 lookup rule 1: an MSH-9.3 ID outside the loaded structures is
-    // not modelled while the version is incomplete (a mismatch only once the
-    // version is complete), even when the trigger resolves elsewhere.
-    @Test("ADT^A04^ADT_A04 on the incomplete v2.5.1 pilot: not modelled, naming the printed ADT_A01, no body match")
+    // ADR-019 lookup rule 1: v2.5.1 is complete (P8b-9), so an MSH-9.3 ID that
+    // is neither loaded nor registered as not modelled is a mismatch, with no
+    // body match; on an incomplete version it stays info (synthetic tests below).
+    @Test("ADT^A04^ADT_A04 on the complete v2.5.1: the mismatch alone, no body match (rule 1)")
     func a04DeclaredWrongly() throws {
         let issues = try structureIssues(Self.wire("ADT^A04^ADT_A04", [Self.pid]))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_A04")])
-        #expect(issues.first?.severity == .info)
-        #expect(issues.first?.message.contains("prints ADT^A04 under ADT_A01") == true)
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(issues.first?.severity == .error)
+        #expect(issues.first?.message.contains("whose structures are all modelled") == true)
+        // Unchanged by the flip: ADT^A01 and ORU^R01 resolve and match as before.
+        #expect(try structureIssues(Self.wire("ADT^A01^ADT_A01", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^A04", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
     }
 
-    @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: still info, named as such, no body match",
+    // P8b-9: v2.5.1 is complete, so the near miss is a mismatch that names the loaded ID.
+    @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: a mismatch on the complete v2.5.1, named as such",
           arguments: ["ADT_A01 ", "adt_a01"])
     func nearMissStructureID(declared: String) throws {
         let issues = try structureIssues(Self.wire("ADT^A01^\(declared)", [Self.pid]))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: declared)])
-        #expect(issues.first?.severity == .info)
-        #expect(issues.first?.message.contains("differs from the modelled structure ID ADT_A01 only by case or whitespace") == true,
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: declared, trigger: "ADT^A01")])
+        #expect(issues.first?.severity == .error)
+        #expect(issues.first?.message.contains("it differs from ADT_A01 only by case or whitespace") == true,
                 "\(issues.map(\.message))")
     }
 
@@ -324,10 +329,10 @@ struct MessageStructureValidationTests {
         #expect(Validator().resolveStructure(known, severity: .error, structures: table, complete: [.v2_8_2]).structure?.id == "ZZZ_Z01")
     }
 
-    @Test("Default: no version is complete, so an unknown MSH-9.3 on v2.5.1 stays info")
+    @Test("Default: v2.5.1 is complete (P8b-9), so an unknown MSH-9.3 on v2.5.1 is a mismatch")
     func defaultCompletenessUnchanged() throws {
         let issues = try structureIssues(Self.wire("ADT^A01^ADT_Z99", [Self.evn, Self.pid, Self.pv1]))
-        #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: "ADT_Z99")])
+        #expect(issues.map(\.code) == [.messageStructureMismatch(declared: "ADT_Z99", trigger: "ADT^A01")])
     }
 
     @Test("ADT^A02^ADT_A01 contradicts v2.5.1 (ADT_A01 is printed for A01, A04, A08, A13 only)")

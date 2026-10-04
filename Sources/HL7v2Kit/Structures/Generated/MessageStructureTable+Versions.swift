@@ -7,7 +7,7 @@ extension MessageStructureTable {
     //   2.3 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-15)
     //   2.3.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-14)
     //   2.4 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-13)
-    //   2.5.1 (incomplete): P8 pilot: ACK, ADT_A01, ORU_R01 only (ADR-019 addendum 2026-10-02); 169 structure IDs measured (rollout step 4)
+    //   2.5.1 (complete): P8b-9: 172 structures extracted from the v2.5.1 chapter prints; the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)
     //   2.6 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-10)
     //   2.7.1 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-16)
     //   2.8.2 (incomplete): No structures modelled yet (ADR-019 rollout order, P8b-11)
@@ -31,7 +31,7 @@ extension MessageStructureTable {
 
     /// The grammar versions whose every printed structure is modelled
     /// or registered as not modelled.
-    static let completeVersions: Set<Version> = []
+    static let completeVersions: Set<Version> = [.v2_5_1]
 
     /// The structures `version`'s grammar version prints, or its Table
     /// 0354 lists, that are registered as not modelled (register section

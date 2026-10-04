@@ -3,7 +3,7 @@
     "2.3": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-15)" },
     "2.3.1": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-14)" },
     "2.4": { "complete": false, "citation": "No structures modelled yet (ADR-019 rollout order, P8b-13)" },
-    "2.5.1": { "complete": false, "citation": "P8 pilot: ACK, ADT_A01, ORU_R01 only (ADR-019 addendum 2026-10-02); 169 structure IDs measured (rollout step 4)",
+    "2.5.1": { "complete": true, "citation": "P8b-9: 172 structures extracted from the v2.5.1 chapter prints; the 17 unreadable prints (G6 placeholders MFN_M01, MFN_M03, MFR_M01, PGL_PC6, PPG_PCG, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF, QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11; SUR_P09's ED row) and the 14 Table 0354 rows with no printed syntax are registered as not modelled below (register section E, v2.5.1 not-modelled table)",
       "notModelled": [
         {"structure": "DSR_P04", "triggers": [], "reason": "Table 0354 v2.5.1 (CH02, p 2-102) lists DSR_P04 (event P04); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"},
         {"structure": "MFD_MFA", "triggers": [], "reason": "Table 0354 v2.5.1 (CH02, p 2-102) lists MFD_MFA (event MFA); no v2.5.1 chapter prints its syntax (register section E, v2.5.1 not-modelled table)"},
