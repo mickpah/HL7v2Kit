@@ -247,6 +247,30 @@ struct MessageStructureValidationTests {
         #expect(try structureIssues(Self.wire("MFK^M14^MFK_M01", version: "2.5.1", ["MSA|AA|1", "MFI|1"])).isEmpty)
     }
 
+    // P8b-10 review: a locally defined (Z) trigger may declare a printed structure (CH02
+    // reserves Z events for local definition; CH05 prints RSP^Z84^RSP_K11 and similar).
+    // A loaded ID: no mismatch, the body is matched. A registered ID: info with its reason.
+    // A non-Z trigger the structure does not print, and a Z structure for a printed trigger,
+    // stay mismatches.
+    @Test("Complete v2.6: a Z trigger declaring a printed structure is matched (loaded) or info (registered)")
+    func localTriggerDeclaringPrintedStructure() throws {
+        let body = ["MSA|AA|1", "QAK|1|OK", "QPD|Z84", "PID|1"]
+        #expect(try structureIssues(Self.wire("RSP^Z84^RSP_K23", version: "2.6", body)).isEmpty)
+        let noMSA = try structureIssues(Self.wire("RSP^Z84^RSP_K23", version: "2.6", Array(body.dropFirst())))
+        #expect(noMSA.map(\.code) == [.messageStructureSegmentMissing(structure: "RSP_K23", segmentID: "MSA", group: nil)],
+                "\(noMSA.map(\.message))")
+        for (msh9, id) in [("QBP^Z73^QBP_Q13", "QBP_Q13"), ("RSP^Z84^RSP_K11", "RSP_K11")] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.6", ["QPD|Z73", "RCP|I"]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.severity == .info)
+            #expect(issues.first?.message.contains("query template") == true, "\(msh9): \(issues.map(\.message))")
+        }
+        let wrong = try structureIssues(Self.wire("ADT^A02^ADT_A01", version: "2.6", [Self.evn, Self.pid, Self.pv1]))
+        #expect(wrong.map(\.code) == [.messageStructureMismatch(declared: "ADT_A01", trigger: "ADT^A02")])
+        let zID = try structureIssues(Self.wire("ADT^A01^ADT_Z99", version: "2.6", [Self.evn, Self.pid, Self.pv1]))
+        #expect(zID.map(\.code) == [.messageStructureMismatch(declared: "ADT_Z99", trigger: "ADT^A01")])
+    }
+
     // P8b-9: v2.5.1 is complete, so the near miss is a mismatch that names the loaded ID.
     @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: a mismatch on the complete v2.5.1, named as such",
           arguments: ["ADT_A01 ", "adt_a01"])

@@ -319,7 +319,7 @@ v2.6 is `complete: true` in `Resources/structures/completeness.json`: 187 struct
 | QBP_Q11, QBP_Q13, QBP_Q15, QVR_Q17, RSP_K11 (CH05 5.4.1 to 5.4.5); MFN_M01, MFR_M01, MFN_M03 (CH08 8.4.1, 8.4.4, 8.8.2) | Templates: a `[...]` or `...` row stands for query-specific or master-file-specific segments (ruling G6). | **Permanent** for the template IDs. |
 | SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`; v2.6 defines no ED segment. | **Blocking**; a print defect. |
 | RSP_K21 (CH03 3.3.56, 3.3.57) | Two normative prints, neither looser: 3.3.56 (RSP^K21) prints one optional QUERY_RESPONSE with `[{ARV}]` and QRI required; 3.3.57 (RSP^K22) a repeating QUERY_RESPONSE with QRI optional and no ARV. The looser-print rule cannot settle it. | **Blocking** (per-trigger structures, or a ruling on the union). |
-| ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax. | **Permanent** for v2.6. |
+| ORU_W01, QCK_Q02, QRF_W02, QRY_Q02, RSP_Q11 | Table 0354 v2.6 (CH02 2.16.3, pp 86 to 87) lists them; no v2.6 chapter prints their syntax normatively (RSP_Q11's only print is the site-specific CH08 8.4.5.1 example `RSP^Znn^RSP_Q11`, excluded under G7). | **Permanent** for v2.6. |
 
 Two normative prints of one structure ID that disagree (P8b-9 ruling): the looser print is
 committed, cited to both (overrides.json `primaryPrints`).
@@ -343,7 +343,7 @@ and RDE_O11 (the bundle follows the stricter prints); the print is normative (ru
 CH05 5.9.1.1 RDR restatement and the CH08 8.4.3 MFN_Znn template are excluded (G7; the 8.4.3
 acknowledgment MFK^M14^MFK_M01 is read, on v2.5.1 too). A locally defined message (a Z message
 type, trigger or structure whose trigger the version prints under no structure) is not modelled
-rather than a mismatch on a complete version.
+rather than a mismatch on a complete version; a Z trigger the version prints under no structure may declare a printed structure: a loaded one is matched against the body, a registered one is info with its reason (P8b-10 review).
 
 Known cost of exact matching: 23 v2.6 structures fail the determinism lint (ADT_A60, BAR_P01,
 BAR_P05, CSU_C09, DFT_P03, DFT_P11, EHC_E15, NMR_N01, OMD_O03, OMG_O19, OML_O21, OML_O33,

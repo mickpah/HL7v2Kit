@@ -254,7 +254,10 @@ public enum IssueCode: Sendable, Equatable, Hashable {
     /// MSH-9.1^9.2 (`trigger`, as `CODE^EVENT`), or, on a version whose
     /// structures are all modelled, names no structure of that version
     /// (ADR-019 lookup rule 1). The mismatch is reported alone: the body is
-    /// not matched against any structure. Located at MSH-9.3. ADR-019;
+    /// not matched against any structure. Located at MSH-9.3. Never raised for
+    /// a locally defined trigger (a Z message type or trigger event the version
+    /// prints under no structure): it may declare any printed structure, which is
+    /// matched, or registered and reported as not modelled (P8b-10). ADR-019;
     /// additive case introduced in P8-5.
     case messageStructureMismatch(declared: String, trigger: String)
     /// No abstract message syntax was applied to this message, so segment

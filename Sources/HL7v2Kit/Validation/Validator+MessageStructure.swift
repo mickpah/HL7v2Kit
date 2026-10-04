@@ -32,7 +32,9 @@ extension Validator {
     /// triggers count towards an ambiguous trigger (P8b-9).
     /// On a complete version a locally defined message (a Z message type,
     /// trigger event or structure ID, whose trigger the version prints under no
-    /// structure) is not modelled rather than a mismatch (P8b-10).
+    /// structure) is not modelled rather than a mismatch, and on any version a
+    /// Z trigger the version prints under no structure may declare a printed
+    /// structure without a mismatch (P8b-10).
     /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
     ///
     /// `structures` replaces the version's loaded table, `complete` the
@@ -64,6 +66,10 @@ extension Validator {
             .map(\.id).sorted()
         let gapsByTrigger = registered.filter { $0.value.accepts(messageCode: code, triggerEvent: event) }.keys.sorted()
         let ver = "v\(message.version.rawValue)"
+        // A locally defined trigger (CH02 reserves message types and trigger events
+        // beginning with Z for local definition) that the version prints under no
+        // structure may declare any printed structure: no mismatch (P8b-10).
+        let localTrigger = (code.hasPrefix("Z") || event.hasPrefix("Z")) && byTrigger.isEmpty && gapsByTrigger.isEmpty
 
         guard !declared.isEmpty else {
             let owners = (byTrigger + gapsByTrigger).sorted()
@@ -83,7 +89,7 @@ extension Validator {
         }
         if table[declared] == nil, let entry = registered[declared] {
             // Its captions print other triggers: the print gives this event another structure.
-            if !entry.triggers.isEmpty, !entry.accepts(messageCode: code, triggerEvent: event) {
+            if !localTrigger, !entry.triggers.isEmpty, !entry.accepts(messageCode: code, triggerEvent: event) {
                 return (nil, [ValidationIssue(
                     severity: severity,
                     code: .messageStructureMismatch(declared: declared, trigger: trigger),
@@ -109,8 +115,7 @@ extension Validator {
                 // and a Z structure ID (CODE_Znn) is site-defined (v2.6 CH08 8.4.3
                 // MFN^M14^MFN_Znn), when the version prints the trigger under no structure.
                 let zStructure = declared.split(separator: "_").dropFirst().first?.hasPrefix("Z") == true
-                if !isNear, code.hasPrefix("Z") || event.hasPrefix("Z") || zStructure,
-                   byTrigger.isEmpty, gapsByTrigger.isEmpty {
+                if !isNear, localTrigger || (zStructure && byTrigger.isEmpty && gapsByTrigger.isEmpty) {
                     return (nil, [notModelled(declared, message: message,
                         reason: "MSH-9 names a locally defined message (Z message type, trigger event or structure); "
                             + "HL7 defines no abstract message syntax for it")])
@@ -133,7 +138,7 @@ extension Validator {
                 + ", but an unmodelled MSH-9.3 is reported as a mismatch only once every \(ver) structure is modelled"
             return (nil, [notModelled(declared, message: message, reason: printed)])
         }
-        guard structure.accepts(messageCode: code, triggerEvent: event) else {
+        guard localTrigger || structure.accepts(messageCode: code, triggerEvent: event) else {
             return (nil, [ValidationIssue(
                 severity: severity,
                 code: .messageStructureMismatch(declared: declared, trigger: trigger),

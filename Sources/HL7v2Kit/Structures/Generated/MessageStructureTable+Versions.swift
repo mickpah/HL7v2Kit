@@ -201,7 +201,7 @@ extension MessageStructureTable {
                     reason: "Two normative prints disagree and neither accepts every message the other accepts: CH03 section 3.3.56 (RSP^K21, pp 3-48 to 3-49) prints one optional QUERY_RESPONSE with [{ARV}] and QRI required, section 3.3.57 (RSP^K22, p 3-50) a repeating QUERY_RESPONSE with QRI optional and no ARV; the looser-print rule (P8b-9) cannot settle it, so no structure is committed (register section E, v2.6 not-modelled table)"),
                 "RSP_Q11": NotModelledStructure(
                     triggers: [],
-                    reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists RSP_Q11 (event Q11); no v2.6 chapter prints its syntax (register section E, v2.6 not-modelled table)"),
+                    reason: "Table 0354 v2.6 (CH02 section 2.16.3, p 87) lists RSP_Q11 (event Q11); its only v2.6 print is the site-specific example RSP^Znn^RSP_Q11 in CH08 section 8.4.5.1 (p 8-8, a query profile example excluded under ruling G7), so no normative syntax is printed (register section E, v2.6 not-modelled table)"),
                 "SUR_P09": NotModelledStructure(
                     triggers: ["SUR^P09"],
                     reason: "CH07 section 7.11.2 (p 7-86) prints a row 'ED Encapsulated Data' inside FACILITY, and v2.6 defines no ED segment (ED is a data type, CH02A), so the row names nothing a message can carry (register section E, v2.6 not-modelled table)"),

@@ -1099,4 +1099,8 @@ compiling a structure per message.
   an indented caption sets the column; an exclusion may name one caption of its section.
 - **Lookup.** On a complete version a locally defined message (a Z message type, trigger or
   structure ID whose trigger the version prints under no structure; CH02 reserves Z codes for
-  local definition) is not modelled, never a rule 1 mismatch.
+  local definition) is not modelled, never a rule 1 mismatch. A Z trigger the version prints
+  under no structure may also declare a printed structure (CH05 prints `RSP^Z84^RSP_K11`): a
+  loaded structure is matched against the body with no mismatch, a registered one is info with
+  its reason; a non-Z trigger the structure does not print (`ADT^A02^ADT_A01`) and a Z
+  structure for a printed trigger (`ADT^A01^ADT_Z99`) stay mismatches.
