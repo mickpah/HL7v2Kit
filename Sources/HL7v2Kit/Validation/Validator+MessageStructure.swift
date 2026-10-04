@@ -121,9 +121,7 @@ extension Validator {
         // segmentNotInVersionGrammar; Z and ADD are skipped by the matcher.
         let grammar = Self.grammarTable(for: message.version)
         let outside = Set(ids.filter { grammar[$0] == nil })
-        let match = structure.requiresExactMatch
-            ? ExactStructureMatcher(structure: structure).match(ids, transparent: outside)
-            : StructureMatcher(structure: structure).match(ids, transparent: outside)
+        let match = StructureMatcherCache.shared.matcher(for: structure).match(ids, transparent: outside)
         guard !match.findings.isEmpty, !ids.isEmpty else { return [] }
 
         var seen: [String: Int] = [:]

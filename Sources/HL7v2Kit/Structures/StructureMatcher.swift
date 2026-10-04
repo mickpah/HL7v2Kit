@@ -78,6 +78,14 @@ struct StructureMatch: Sendable, Equatable {
 /// is a stray like any other (`.exceededMaximum`).
 struct StructureMatcher: Sendable {
     let structure: MessageStructure
+    /// The structure with every FIRST set and suffix FIRST union computed
+    /// once (P8b-7), so matching a message recomputes none of them.
+    private let root: CompiledSequence
+
+    init(structure: MessageStructure) {
+        self.structure = structure
+        self.root = CompiledSequence(structure.elements)
+    }
 
     /// Z-segments and ADD continuations are never matched (ADR-019): they
     /// are skipped without a finding on every version.
@@ -92,7 +100,7 @@ struct StructureMatcher: Sendable {
     func match(_ ids: [String], transparent: Set<String> = []) -> StructureMatch {
         let positions = ids.indices.filter { !Self.isTransparent(ids[$0]) && !transparent.contains(ids[$0]) }
         var state = State(ids: ids, positions: positions)
-        matchSequence(structure.elements, path: [], parent: nil, follow: [], &state)
+        matchSequence(root, path: [], parent: nil, follow: [], &state)
         return StructureMatch(findings: state.findings, spans: state.spans.map {
             GroupSpan(path: $0.path, indices: $0.start...$0.end, parent: $0.parent)
         })
@@ -137,16 +145,17 @@ struct StructureMatcher: Sendable {
     }
 
     private func matchSequence(
-        _ elements: [StructureElement],
+        _ sequence: CompiledSequence,
         path: [String],
         parent: Int?,
         follow: Set<String>,
         _ state: inout State
     ) {
         state.frames.append([])
-        for (i, element) in elements.enumerated() {
-            let own = element.firstSet
-            let later = elements[(i + 1)...].reduce(into: follow) { $0.formUnion($1.firstSet) }
+        for (i, item) in sequence.items.enumerated() {
+            let element = item.element
+            let own = item.first
+            let later = sequence.later[i].union(follow)
             let keep = own.union(later)
             skipStrays(keeping: keep, &state)
             var count = 0
@@ -155,41 +164,41 @@ struct StructureMatcher: Sendable {
                 switch element {
                 case .segment:
                     state.consume()
-                case .group(let name, _, let max, let children):
+                case .group(let name, _, let max, _):
                     let span = state.spans.count
                     state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent))
                     let inner = max == 1 ? later : later.union(own)
-                    matchSequence(children, path: path + [name], parent: span, follow: inner, &state)
+                    matchSequence(item.bodies[0], path: path + [name], parent: span, follow: inner, &state)
                     if state.cursor == before {
                         state.spans.removeLast()
                     } else {
                         state.spans[span].end = state.lastConsumed
                     }
-                case .choice(let name, _, _, let alternatives):
+                case .choice(let name, _, _, _):
                     // The lint guarantees the alternatives' FIRST sets are
                     // disjoint, so at most one can begin with `id`.
-                    guard let alternative = alternatives.first(where: { $0.firstSet.contains(id) }) else { break }
+                    guard let alternative = item.bodies.first(where: { $0.items[0].first.contains(id) }) else { break }
                     // Another alternative's segment is left to this level, where
                     // it re-enters the choice or is a stray past its maximum.
                     let inner = later.union(own)
                     if let name {
                         let span = state.spans.count
                         state.spans.append(OpenSpan(path: path + [name], start: state.index, end: state.index, parent: parent))
-                        matchSequence([alternative], path: path + [name], parent: span, follow: inner, &state)
+                        matchSequence(alternative, path: path + [name], parent: span, follow: inner, &state)
                         if state.cursor == before {
                             state.spans.removeLast()
                         } else {
                             state.spans[span].end = state.lastConsumed
                         }
                     } else {
-                        matchSequence([alternative], path: path, parent: parent, follow: inner, &state)
+                        matchSequence(alternative, path: path, parent: parent, follow: inner, &state)
                     }
                 }
                 if state.cursor == before { break }
                 count += 1
                 skipStrays(keeping: keep, &state)
             }
-            if count < element.min && !element.isNullable {
+            if count < element.min && !item.nullable {
                 state.findings.append(StructureFinding(
                     kind: .missing, segmentID: element.headSegmentID,
                     group: element.groupName ?? path.last, index: state.index
@@ -207,5 +216,44 @@ struct StructureMatcher: Sendable {
             state.findings.append(StructureFinding(kind: state.strayKind(id), segmentID: id, group: nil, index: state.index))
             state.cursor += 1
         }
+    }
+}
+
+/// One element with the sets matching it needs, computed once.
+private struct CompiledElement: Sendable {
+    let element: StructureElement
+    let first: Set<String>
+    let nullable: Bool
+    /// A group's elements as one sequence; a choice's alternatives, each as
+    /// a one-element sequence; none for a segment.
+    let bodies: [CompiledSequence]
+
+    init(_ element: StructureElement) {
+        self.element = element
+        first = element.firstSet
+        nullable = element.isNullable
+        switch element {
+        case .segment: bodies = []
+        case .group(_, _, _, let children): bodies = [CompiledSequence(children)]
+        case .choice(_, _, _, let choices): bodies = choices.map { CompiledSequence([$0]) }
+        }
+    }
+}
+
+/// A sequence of elements; `later[i]` is the union of the FIRST sets of
+/// every element after `items[i]` (the enclosing FOLLOW is added per match).
+private struct CompiledSequence: Sendable {
+    let items: [CompiledElement]
+    let later: [Set<String>]
+
+    init(_ elements: [StructureElement]) {
+        items = elements.map(CompiledElement.init)
+        var suffix: Set<String> = []
+        var later = [Set<String>](repeating: [], count: items.count)
+        for i in items.indices.reversed() {
+            later[i] = suffix
+            suffix.formUnion(items[i].first)
+        }
+        self.later = later
     }
 }
