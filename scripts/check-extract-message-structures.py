@@ -376,8 +376,25 @@ def check_choice_named():
     assert ext.compact([g]) == "[{G: <AIL | AIP>}]", ext.compact([g])
 
 
+def check_choice_of_segment_groups():
+    # CH02 2.12.1: "<OBR [{NTE}] |RQD|RQ1 [{ROL [{NTE}] }] |RXO|ODS|ODT>": an alternative of
+    # several elements is an unnamed group, named like any other (here synthesised, cited).
+    s, report = _structure([("MSH", "Header"), ("<OBR [{NTE}] |", "Detail"), ("RQD|", ""), ("RQ1 [{ROL [{NTE}] }] |", ""),
+                            ("RXO|ODS|ODT>", "")])
+    alts = s["elements"][1]["alternatives"]
+    assert [a.get("segment") or a["group"] for a in alts] == ["OBR_GROUP", "RQD", "RQ1_GROUP", "RXO", "ODS", "ODT"], alts
+    assert alts[0]["elements"] == [_seg("OBR"), _seg("NTE", 0, None)] and alts[0]["nameSource"] == "synthesised", alts[0]
+    rol = alts[2]["elements"][1]
+    assert (rol["min"], rol["max"]) == (0, None) and rol["elements"] == [_seg("ROL"), _seg("NTE", 0, None)], rol
+    assert "OBR_GROUP (synthesised" in s["citation"], s["citation"]
+    # "< QPD RCP >" with no "|" (v2.8.2 CH16) is not read as a choice of one: a ruling is needed.
+    s, report = _structure([("MSH", "Header"), ("<", "--- QUERY_INFORMATION begin"), ("QPD", "Query"),
+                            ("RCP", "Control"), (">", "--- QUERY_INFORMATION end")])
+    assert s is None and "a choice with one alternative (no '|')" in [r for r in report if r[1] == "skipped"][0][2], report
+
+
 def check_choice_malformed():
-    for rows in (["<OBR RQD|RXO>"], ["<OBR>"], ["OBR|RXO"], ["<|OBR>"], ["<OBR|", "RXO"], ["[<OBR|RXO]>"]):
+    for rows in (["<OBR|>"], ["<OBR>"], ["OBR|RXO"], ["<|OBR>"], ["<OBR|", "RXO"], ["[<OBR|RXO]>"]):
         try:
             ext.parse([ext.Row(left, "", 0, "") for left in rows])
         except ext.UnknownNotation:
@@ -910,7 +927,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_two_level_group, check_optional_repeating_group, check_page_break_footer_inside_table,
           check_wrapped_caption, check_unnamed_group_override_or_synthesised, check_choice_inline,
           check_choice_one_per_row, check_choice_separate_rows_and_placeholder, check_choice_named,
-          check_choice_malformed, check_choice_bundle_cross_check,
+          check_choice_of_segment_groups, check_choice_malformed, check_choice_bundle_cross_check,
           check_unknown_notation, check_overrides_validation, check_excluded_section, check_eras_cover_chapters,
           check_bundle_reader_tree, check_bundle_names_group_by_path_and_members,
           check_bundle_mismatch_not_resolved_by_position, check_derivation_through_v24, check_synthesised_fallback,

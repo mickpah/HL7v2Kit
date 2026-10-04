@@ -469,14 +469,22 @@ def _element(node):
 
 
 def _choice(node, kinds, names):
-    """A choice element: [ ] around it makes it optional, { } repeating (as for a group)."""
-    if any(len(alt) != 1 for alt in node["alts"]) or len(node["alts"]) < 2:
-        shapes = " | ".join(str(len(alt)) for alt in node["alts"])
-        raise UnknownNotation(f"a choice needs two or more alternatives of one element each (element counts {shapes})")
+    """A choice element: [ ] around it makes it optional, { } repeating (as for a group). An
+    alternative of several elements (CH02 2.12.1's "<OBR [{NTE}] | RQD | ...>", a choice of
+    segment groups) is an unnamed group, named like any unnamed printed group by name_groups."""
+    if any(not alt for alt in node["alts"]):
+        raise UnknownNotation("an empty alternative in a choice")
+    if len(node["alts"]) < 2:
+        # "< QPD RCP >" (v2.8.2 CH16): CH02 defines a choice by "|" between alternatives, so this
+        # is a sequence; the HL7 v2.xml bundle makes each member an alternative. Not guessed.
+        raise UnknownNotation(f"a choice with one alternative (no '|') around {len(node['alts'][0])} element(s): "
+                              "the print reads as a sequence, HL7 v2.xml as a choice of each member; needs a ruling")
     bounds = {"min": 0 if "[" in kinds else 1, "max": None if "{" in kinds else 1}
     name = names[0] if names else None
-    return {"choice": name, "nameSource": "printed" if name else None, **bounds,
-            "alternatives": [_element(alt[0]) for alt in node["alts"]]}
+    alternatives = [_element(alt[0]) if len(alt) == 1 else
+                    {"group": None, "nameSource": None, "min": 1, "max": 1, "elements": [_element(c) for c in alt]}
+                    for alt in node["alts"]]
+    return {"choice": name, "nameSource": "printed" if name else None, **bounds, "alternatives": alternatives}
 
 
 def name_groups(elements, version, structure, overrides, used=None, path=(), bundles=None, log=None, taken=None):

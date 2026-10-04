@@ -927,8 +927,15 @@ promised before the first version that prints one.
   (`<OBR|` ... `ODT>`, v2.5.1 CH04), each token on a row of its own (`<`, `OBR`, `|`, `>`, v2.5.1
   CH12) and named (`<` with `--- NAME begin`, `>` with `--- NAME end`, v2.7.1 and v2.8.2).
   `[ ]` and `{ }` around a choice are its bounds; a named group whose only member is a choice
-  stays a group. An alternative must be one element (the bundles never nest a sequence in a
-  choice). A choice whose alternatives are a placeholder (`< OBR | etc. >`, v2.5.1 CH12, which
+  stays a group. An alternative of several elements (CH02 2.12.1's own example
+  `<OBR [{NTE}] |RQD|RQ1 [{ROL [{NTE}] }] |RXO|ODS|ODT>`, "a choice of segment groups") is an
+  unnamed group, named like any unnamed printed group (the bundles never nest a sequence in a
+  choice, so in practice synthesised and cited). A `< >` with no `|` (v2.8.2 CH16
+  `< QPD RCP >` named QUERY_INFORMATION, and the EHC invoice groups) is not read: CH02 defines a
+  choice by the `|` between alternatives, so the print reads as a required sequence, while the
+  HL7 v2.xml bundle makes each member an alternative (the pre-flight's "nullable
+  alternatives"). It is skipped as `a choice with one alternative (no '|')` pending a ruling
+  (11 structures on v2.8.2). A choice whose alternatives are a placeholder (`< OBR | etc. >`, v2.5.1 CH12, which
   the CH12 note expands to "all possible combinations of pharmacy and other order detail
   segments" through CH04 4.2.2.4; the bundle has `anyHL7Segment`) is skipped as
   `placeholder (G6)` until a cited G6 expansion exists; `...` and `…` rows are labelled the same
@@ -939,3 +946,6 @@ promised before the first version that prints one.
   placeholders; ORM_O01, ORR_O02 and OSR_Q06 parse with a choice, pass the lint and agree with
   the reference recogniser on 6,000 sequences each; the seven CH12 patient-care structures
   (PGL_PC6, PPP_PCB, PPR_PC1, PPT_PCL, PPV_PCA, PRR_PC5, PTR_PCF) are G6 placeholders.
+  v2.8.2 (summary only): 167 parsed (162 at P8b-3b); CCI_I22, CCM_I21, CCR_I16, CCU_I20 and
+  CQU_I19 parse with named choices (RESOURCE_OBJECT, CLINICAL_HISTORY_OBJECT, the ROLE_*_OBJECT
+  choices), match the bundle's choice groups and pass the lint.

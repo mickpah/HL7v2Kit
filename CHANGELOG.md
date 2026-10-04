@@ -42,9 +42,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   parsed structures that carry a choice.
 - `scripts/read-v2xml-bundles.py`: a printed choice is compared with the bundle's choice group
   (`CHOICE` when unnamed); a choice against a sequence is a `bundle-differs` row.
-- Six new extractor self-checks (the four layouts, malformed choices, the bundle cross-check).
+- An alternative of several elements (CH02's "choice of segment groups") is an unnamed group,
+  named by the usual rule; a `< >` with no `|` (v2.8.2 CH16 `< QPD RCP >`) is skipped pending a
+  ruling: the print reads as a sequence, the HL7 v2.xml bundle as a choice of each member.
+- Seven new extractor self-checks (the four layouts, choices of segment groups, malformed
+  choices, the bundle cross-check).
 - v2.5.1: 166 structures parse (163 before); ORM_O01, ORR_O02 and OSR_Q06 carry a choice and
-  pass the lint; the three pilots still reproduce byte for byte.
+  pass the lint; the three pilots still reproduce byte for byte. v2.8.2: five structures parse
+  with named choices and pass the lint; eleven print a `< >` with no `|`.
 
 ### Changed — P8b-3b: CH02B guard, triggerFolds stale guard, ACK on v2.3 and v2.3.1, v2.7.1 ORU_R01
 
