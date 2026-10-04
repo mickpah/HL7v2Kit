@@ -230,6 +230,23 @@ struct MessageStructureValidationTests {
                 == [.messageStructureSegmentMissing(structure: "ADT_A01", segmentID: "EVN", group: nil)])
     }
 
+    // P8b-10 corpus misfires fixed: a locally defined message (a Z trigger, or a Z
+    // structure for a trigger the version prints under no structure) is not modelled,
+    // never a mismatch; a Z structure for a printed trigger stays a mismatch; the CH08
+    // 8.4.3 acknowledgment MFK^M14^MFK_M01 is read (only the MFN_Znn template is excluded).
+    @Test("Complete v2.6: a locally defined message is info, not a mismatch; MFK^M14^MFK_M01 is modelled")
+    func locallyDefinedOnCompleteVersion() throws {
+        for msh9 in ["QBP^Z73^QBP_Z73", "RTB^Z74^RTB_Z74", "MFN^M14^MFN_Z99"] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.6", ["MFI|1"]))
+            #expect(issues.count == 1 && issues.first?.severity == .info, "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.message.contains("locally defined") == true, "\(msh9): \(issues.map(\.message))")
+        }
+        let printed = try structureIssues(Self.wire("ADT^A01^ADT_Z99", version: "2.6", [Self.evn, Self.pid, Self.pv1]))
+        #expect(printed.map(\.code) == [.messageStructureMismatch(declared: "ADT_Z99", trigger: "ADT^A01")])
+        #expect(try structureIssues(Self.wire("MFK^M14^MFK_M01", version: "2.6", ["MSA|AA|1", "MFI|1"])).isEmpty)
+        #expect(try structureIssues(Self.wire("MFK^M14^MFK_M01", version: "2.5.1", ["MSA|AA|1", "MFI|1"])).isEmpty)
+    }
+
     // P8b-9: v2.5.1 is complete, so the near miss is a mismatch that names the loaded ID.
     @Test("An MSH-9.3 differing from a modelled ID only by case or whitespace: a mismatch on the complete v2.5.1, named as such",
           arguments: ["ADT_A01 ", "adt_a01"])

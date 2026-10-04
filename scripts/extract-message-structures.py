@@ -687,6 +687,8 @@ _OVERRIDE_KEYS = {
     "groupNames": {"version", "structure", "path", "name", "citation"},
     "citationNotes": {"version", "structure", "note"},
     "triggerFolds": {"version", "structure", "trigger", "primary", "citation"},
+    # An optional "caption" (as printed) narrows an exclusion to that one caption of the section,
+    # so a normative print beside a template stays read (P8b-10: CH08 8.4.3 MFK^M14^MFK_M01).
     "exclusions": {"version", "section", "citation"},
     # A print typo read as the intended text: in a caption (CODE^EVT as printed), a group mark
     # ("--- NAME begin/end"), or a Table 0354 row (its code or an event in its description); a
@@ -715,7 +717,7 @@ def validate_overrides(data):
                 raise OverridesError(f"errata entry for {entry.get('structure')}: printed equals intended")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
-            if set(entry) != keys:
+            if set(entry) != keys and not (kind == "exclusions" and set(entry) == keys | {"caption"}):
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
             if not text.strip() or "\n" in text:
@@ -848,7 +850,8 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
                 cap.code, cap.event = fix["intended"].split("^", 1)
                 cap.events = expand_events(cap.event) or []
             where = f"{cap.printed} in section {cap.section}"
-            if cap.section in excluded:     # a non-normative print (ruling G7), cited in overrides
+            scope = excluded.get(cap.section, {}).get("caption")
+            if cap.section in excluded and scope in (None, cap.printed):     # a non-normative print (ruling G7)
                 used_exclusions.add(cap.section)
                 report.append((cap.structure or f"{cap.code}^{cap.event}", "excluded", where))
                 continue

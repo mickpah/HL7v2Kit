@@ -30,6 +30,9 @@ extension Validator {
     /// unexpandable placeholder, a Table 0354 row with no printed syntax) is
     /// not modelled on any version, with its register reason, and its
     /// triggers count towards an ambiguous trigger (P8b-9).
+    /// On a complete version a locally defined message (a Z message type,
+    /// trigger event or structure ID, whose trigger the version prints under no
+    /// structure) is not modelled rather than a mismatch (P8b-10).
     /// Table 0354 is not consulted (it lags the chapters, ADR-019 fact 5).
     ///
     /// `structures` replaces the version's loaded table, `complete` the
@@ -101,6 +104,17 @@ extension Validator {
             // Rule 1, complete version: every structure the version prints
             // is loaded, so an unknown ID is a mismatch, not a gap.
             if MessageStructureTable.isComplete(message.version, completeVersions: complete ?? MessageStructureTable.completeVersions) {
+                // A locally defined message is never a mismatch (P8b-10): CH02 reserves
+                // message types and trigger events beginning with Z for local definition,
+                // and a Z structure ID (CODE_Znn) is site-defined (v2.6 CH08 8.4.3
+                // MFN^M14^MFN_Znn), when the version prints the trigger under no structure.
+                let zStructure = declared.split(separator: "_").dropFirst().first?.hasPrefix("Z") == true
+                if !isNear, code.hasPrefix("Z") || event.hasPrefix("Z") || zStructure,
+                   byTrigger.isEmpty, gapsByTrigger.isEmpty {
+                    return (nil, [notModelled(declared, message: message,
+                        reason: "MSH-9 names a locally defined message (Z message type, trigger event or structure); "
+                            + "HL7 defines no abstract message syntax for it")])
+                }
                 let hint = isNear ? "; it differs from \(near) only by case or whitespace, and structure IDs are matched exactly" : ""
                 return (nil, [ValidationIssue(
                     severity: severity,

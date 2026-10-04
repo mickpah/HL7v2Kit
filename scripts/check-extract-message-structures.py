@@ -1075,6 +1075,24 @@ def check_syntax_cell_erratum():
     assert s is None and "changes the description" in [r for r in report if r[1] == "skipped"][0][2], report
 
 
+def check_caption_scoped_exclusion():
+    # P8b-10 (CH08 8.4.3): an exclusion with "caption" drops only that caption of the section (the
+    # MFN_Znn template); the section's normative acknowledgment stays read; a caption never seen
+    # is a stale entry.
+    body = (_table("XYZ^X99^XYZ_Znn", [("MSH", "Header"), ("PID", "Patient")])
+            + _table("ACK^X99^ACK", [("MSH", "Header"), ("MSA", "Ack")]))
+    text = _page(1, body, heading="9.1.3           XYZ - site defined (Event X99)")
+    rule = {**EMPTY, "exclusions": [{"version": "2.5.1", "section": "9.1.3", "caption": "XYZ^X99^XYZ_Znn",
+                                     "citation": "x"}]}
+    ext.validate_overrides(rule)
+    structures, report, _ = _run("2.5.1", [("syn", text)], rule)
+    assert "ACK" in structures and not any(k.startswith("XYZ") for k in structures), sorted(structures)
+    assert any(r[1] == "excluded" and "XYZ^X99^XYZ_Znn" in r[2] for r in report), report
+    stale = {**EMPTY, "exclusions": [{**rule["exclusions"][0], "caption": "XYZ^X98^XYZ_Znn"}]}
+    _, report, _ = _run("2.5.1", [("syn", text)], stale, full=True)
+    assert any(r[1] == "error" and "9.1.3" in r[0] for r in report), report
+
+
 def check_first_row_left_of_caption():
     # P8b-10 (v2.6 ADT^A31^ADT_A05 at 3.3.31): the caption at column 7, its rows from column 3; the
     # MSH row sets the column. Any other row that far left still ends the table.
@@ -1107,7 +1125,7 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_empty_or_run_on_print_unreadable, check_caption_wrapping_its_id, check_grid_row_not_a_caption,
           check_repeat_indented_past_caption, check_group_close_erratum, check_primary_print_override,
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
-          check_first_row_left_of_caption]
+          check_first_row_left_of_caption, check_caption_scoped_exclusion]
 
 
 def main():
