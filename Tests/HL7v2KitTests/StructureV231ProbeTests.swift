@@ -49,6 +49,54 @@ struct StructureV231ProbeTests {
                    variant: ["MSA|AA|1", "OBR|1"], finding: "unexpected OBR"),
     ]
 
+    // Each compliant body follows the print cited in the structure's JSON
+    // (Resources/structures/v2.3.1/<ID>.json); the variant names what it breaks.
+    static let probes: [Resolution] = [
+        // CH08 8.3.1 (p 8-3, read as MFK_M01 through overrides.json captionStructures): the
+        // general acknowledgment allows ERR; MFI is required.
+        Resolution(msh9: "MFK^M04^MFK_M01", structure: "MFK_M01", compliant: ["MSA|AA|1", "ERR|1", "MFI|1", "MFA|1"],
+                   variant: ["MSA|AA|1", "MFA|1"], finding: "missing MFI"),
+        // CH08 8.10.1 Case 2 (p 8-67, the MFN^M06 caption read as M07, a cited erratum): no CM1.
+        Resolution(msh9: "MFN^M07^MFN_M07", structure: "MFN_M07", compliant: ["MFI|1", "MFE|MAD", "CM0|1", "CM2|1"],
+                   variant: ["MFI|1", "MFE|MAD", "CM0|1", "CM1|1"], finding: "unexpected CM1"),
+        // CH08 8.10.1 Case 1 (p 8-67): CM2 belongs to a phase (CM1).
+        Resolution(msh9: "MFN^M06^MFN_M06", structure: "MFN_M06", compliant: ["MFI|1", "MFE|MAD", "CM0|1", "CM1|1", "CM2|1"],
+                   variant: ["MFI|1", "MFE|MAD", "CM0|1", "CM2|1"], finding: "unexpected CM2"),
+        // CH08 8.8.1 (p 8-47, the "MFN ^M05" caption): each location has a department (LDP).
+        Resolution(msh9: "MFN^M05^MFN_M05", structure: "MFN_M05", compliant: ["MFI|1", "MFE|MAD", "LOC|1", "LDP|1"],
+                   variant: ["MFI|1", "MFE|MAD", "LOC|1"], finding: "missing LDP"),
+        // CH02 2.20.2 (p 2-86; Table 0354 TBR_R09 read as TBR_R08): RDF is required.
+        Resolution(msh9: "TBR^R08^TBR_R08", structure: "TBR_R08", compliant: ["MSA|AA|1", "QAK|1|OK", "RDF|1", "RDT|1"],
+                   variant: ["MSA|AA|1", "QAK|1|OK", "RDT|1"], finding: "missing RDF"),
+        // CH04 4.8.6 (p 4-70; Table 0354 RRE_O01 read as RRE_O02): RXE needs its route.
+        Resolution(msh9: "RRE^O02", structure: "RRE_O02", compliant: ["MSA|AA|1", "PID|1", "ORC|OK", "RXE|1", "RXR|1"],
+                   variant: ["MSA|AA|1", "PID|1", "ORC|OK", "RXE|1"], finding: "missing RXR"),
+        // CH04 4.8.6 (p 4-69): RXE is required in each order.
+        Resolution(msh9: "RDE^O01^RDE_O01", structure: "RDE_O01", compliant: ["PID|1", "ORC|NW", "RXE|1", "RXR|1"],
+                   variant: ["PID|1", "ORC|NW", "RXR|1"], finding: "missing RXE"),
+        // CH04 4.6 (p 4-46): the diet group prints {OBX [{NTE}]}, required.
+        Resolution(msh9: "ORM^O01^OMD_O01", structure: "OMD_O01", compliant: ["ORC|NW", "ODS|1", "OBX|1"],
+                   variant: ["ORC|NW", "ODS|1"], finding: "missing OBX"),
+        // CH11 11.2.7 (p 11-11; Table 0354 PIN_107 read as PIN_I07): PROVIDER is required.
+        Resolution(msh9: "PIN^I07^PIN_I07", structure: "PIN_I07", compliant: ["PRD|1", "PID|1", "IN1|1"],
+                   variant: ["PID|1", "IN1|1"], finding: "missing PRD"),
+        // CH03 3.2.19 (p 3-14; Table 0354 ARD_A19 read as ADR_A19): QRD is required.
+        Resolution(msh9: "ADR^A19^ADR_A19", structure: "ADR_A19", compliant: ["MSA|AA|1", "QRD|1", "PID|1", "PV1|1"],
+                   variant: ["MSA|AA|1", "PID|1", "PV1|1"], finding: "missing QRD"),
+        // CH03 3.2.36 (p 3-24; Table 0354 '136' read as A36): the ADT_A30 merge requires MRG.
+        Resolution(msh9: "ADT^A36", structure: "ADT_A30", compliant: ["EVN|A36", "PID|1", "MRG|1"],
+                   variant: ["EVN|A36", "PID|1"], finding: "missing MRG"),
+        // CH10 10.3 (p 10-16): RESOURCES orders LOCATION_RESOURCE (AIL) before PERSONNEL_RESOURCE (AIP).
+        Resolution(msh9: "SIU^S13^SIU_S12", structure: "SIU_S12", compliant: ["SCH|1", "RGS|1", "AIL|1", "AIP|1"],
+                   variant: ["SCH|1", "RGS|1", "AIP|1", "AIL|1"], finding: "unexpected AIL"),
+        // CH11 11.4.1 (p 11-14): PROVIDER is required before PID (exact-matched).
+        Resolution(msh9: "REF^I12^REF_I12", structure: "REF_I12", compliant: ["PRD|1", "PID|1", "PV1|1", "PV1|2"],
+                   variant: ["PID|1"], finding: "unexpected PID"),
+        // CH04 4.17 VXU: an ORDER needs RXA.
+        Resolution(msh9: "VXU^V04^VXU_V04", structure: "VXU_V04", compliant: ["PID|1", "ORC|RE", "RXA|1"],
+                   variant: ["PID|1", "ORC|RE", "OBX|1"], finding: "missing RXA"),
+    ]
+
     private func structureIssues(_ msh9: String, _ body: [String]) throws -> [ValidationIssue] {
         var options = ValidationOptions.default
         options.messageStructureSeverity = .error
@@ -72,7 +120,7 @@ struct StructureV231ProbeTests {
         }
     }
 
-    @Test("v2.3.1 triggers resolve through Table 0354 and are matched (V231-A03)", arguments: resolutions)
+    @Test("v2.3.1 triggers resolve through Table 0354 and are matched (V231-A03)", arguments: resolutions + probes)
     func resolves(_ r: Resolution) throws {
         #expect(MessageStructureTable.structure(r.structure, version: .v2_3_1) != nil, "\(r.structure) is not modelled")
         let ok = try structureIssues(r.msh9, r.compliant)
@@ -81,6 +129,30 @@ struct StructureV231ProbeTests {
         #expect(bad.contains { Self.describe($0.code) == r.finding && $0.severity == .error },
                 "\(r.msh9): \(bad.map { Self.describe($0.code) })")
         #expect(bad.allSatisfy { "\($0.code)".contains(r.structure) }, "\(r.msh9): \(bad.map(\.message))")
+    }
+
+    private static func groups(_ elements: [StructureElement]) -> [String] {
+        elements.flatMap { $0.children.isEmpty ? [] : [$0.label] + groups($0.children) }
+    }
+
+    // Group names: ORU_R01's from the HL7-xml 2.3.1 bundle (an encoder-generated file, cited
+    // with its generator); RAS_O01's ENCODING through the v2.4 bundle, the v2.3.1 bundle's
+    // ENCODING being refused without a cited override (P8b-14 ruling).
+    @Test("v2.3.1 group names: the v2.3.1 bundle first, cited with its generator; ENCODING through v2.4")
+    func groupNames() throws {
+        let oru = try #require(MessageStructureTable.structure("ORU_R01", version: .v2_3_1))
+        #expect(Self.groups(oru.elements) == ["PATIENT_RESULT", "PATIENT", "VISIT", "ORDER_OBSERVATION", "OBSERVATION"])
+        #expect(oru.citation.contains("PATIENT_RESULT (HL7-xml 2.3.1/ORU_R01.xsd, ORU_R01.PATIENT_RESULT.CONTENT, generator urn:com.sun:encoder-hl7-1.0)"))
+        let ras = try #require(MessageStructureTable.structure("RAS_O01", version: .v2_3_1))
+        #expect(Self.groups(ras.elements).contains("ENCODING"))
+        #expect(ras.citation.contains("ENCODING (HL7-xml v2.4/RAS_O17.xsd"))
+        #expect(ras.citation.contains("refused without a cited override"))
+    }
+
+    @Test("At least twelve probes on v2.3.1 structures beyond the resolution cases")
+    func coverage() {
+        #expect(Self.probes.count >= 12)
+        #expect(Set(Self.probes.map(\.structure)).count == Self.probes.count)
     }
 
     // CH04 4.2.1 (p 4-3) prints the general order's detail as "Order Detail Segment OBR,
