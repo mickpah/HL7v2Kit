@@ -1109,3 +1109,18 @@ compiling a structure per message.
   loaded structure is matched against the body with no mismatch, a registered one is info with
   its reason; a non-Z trigger the structure does not print (`ADT^A02^ADT_A01`) and a Z
   structure for a printed trigger (`ADT^A01^ADT_Z99`) stay mismatches.
+
+## Amendment 2026-10-04 — v2.8.2 complete (P8b-11)
+
+- **v2.8.2 complete.** 185 structures modelled (32 exact-matched), 58 registered (register
+  section E v2.8.2 addendum: CH12 placeholders, CH05 templates, UDM_Q05, QBP_Q13, RDR_RDR and
+  the 47 Table 0354 rows marked Deprecated); every Table 0354 v2.8.2 row is one or the other.
+  ACK from its looser print. A 2.8 message is checked against the v2.8.2 structures through
+  `Version.grammarVersion`.
+- **Extractor.** In the caret-colon era (v2.7.1, v2.8.2) a caption may carry a space before
+  its colon, a title may wrap before the Segments row, the header may read `Descriptions`,
+  and section headings may be indented (accepted only when the number opens with the file's
+  chapter); a depth-0 line that opens with a segment ID and goes on in prose ends a table.
+- **Query-profile triggers.** A query profile in a normative chapter that declares
+  `Query Trigger (= MSH-9): CODE^EVT^ID` for a structure printed with "events vary" adds that
+  trigger to the structure (v2.8.2 CH04A: QBP^Q31^QBP_Q11, registered).

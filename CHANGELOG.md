@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-11: HL7 v2.8.2 message structures complete
+
+- With `messageStructureSeverity` set, every v2.8.2 message structure is now checked: 185
+  structures extracted from the chapter prints (32 matched exactly), and v2.8.2 is marked
+  complete; a 2.8 message is checked against them (`Version.v2_8` reads through the v2.8.2
+  grammar). An MSH-9.3 that names no v2.8.2 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.8.2 and 2.8 instead of info.
+- 58 v2.8.2 structures are registered as not modelled, each with its reason (register section
+  E): four CH12 `< OBR | Hxx etc. >` structures, four CH05 query templates, UDM_Q05 (its URD
+  and URS are not defined in v2.8.2), QBP_Q13 and RDR_RDR (no normative print) and the 47
+  Table 0354 rows marked Deprecated. Every Table 0354 v2.8.2 row is modelled or registered.
+- ACK takes its looser print (CH10's `[{UAC}]`); ORL^O22, O34, O36 and O40 are declared
+  shared triggers (each printed for a patient-required and a patient-optional structure);
+  QBP^Q31, which the CH04A query profile declares, is a registered QBP_Q11 trigger.
+- v2.6 RSP_K21 is now modelled as the union of its two incomparable prints (a new cited
+  `unionPrints` override: aligned by name, the lesser minimum and greater maximum, an element
+  in one print only optional).
+- The structure extractor reads the v2.7.1 and v2.8.2 layouts more fully: a caption with a
+  space before its colon (`ACK^R01^ACK :`, so ORU_R01 and ORU_R30 no longer run on into the
+  acknowledgment), a caption title wrapped before the Segments row, a `Segments Descriptions`
+  header, prose after a table that opens with a segment ID, and indented section headings
+  (captions now cite their own section).
+
 ### Added — P8b-10: HL7 v2.6 message structures complete
 
 - With `messageStructureSeverity` set, every v2.6 message structure is now checked: 187
