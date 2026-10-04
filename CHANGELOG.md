@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-13: HL7 v2.4 message structures complete
+
+- With `messageStructureSeverity` set, every v2.4 message structure is now checked: 146
+  structures extracted from the chapter prints (18 matched exactly), and v2.4 is marked
+  complete. An MSH-9.3 that names no v2.4 structure (`ADT^A04^ADT_A04`) is now
+  `messageStructureMismatch` on v2.4 instead of info; `ADT^A01^ADT_A01` without PV1 is a
+  missing segment.
+- v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35 by cited
+  overrides (the v2.5.1 bundle's names for the seven structures the v2.4 bundle lacks, ORL_O22,
+  RAS_O17, DFT_P03 and RCI_I05, whose bundle group is named `c`), and one is synthesised.
+- 26 v2.4 structures are registered as not modelled, each with its reason (register section
+  E): eight CH12 `[OBR, etc.` structures, five CH05 query templates, three CH08 master file
+  templates, ERP_R09, SUR_P09, QRY_P04 and DSR_P04 ('see Chapter 5') and six Table 0354 rows
+  with no print. Every Table 0354 v2.4 row is modelled or registered.
+- Shared triggers MFN^M02 to M06, RPI^I04 and RSP^K24 are ambiguous without MSH-9.3.
+
+### Fixed — P8b-13: ERP_R09 on v2.5.1
+
+- v2.5.1 ERP_R09 was extracted as `MSH MSA [ERR] QAK ERQ [DSC]`, dropping the ellipsis rows
+  CH05 5.10.4.2 prints for the replayed message's segments, so a compliant event replay response
+  drew false findings. It is now registered as not modelled (info) on v2.4 and v2.5.1.
+- The structure extractor drops footnote marks fused to brackets, reads a bracket-only cell in
+  the description column as syntax, ends a table at a `CODE^EVT` row, treats an ellipsis row as
+  a placeholder, accepts an `occurrence` on a syntax-cell erratum, and requires a cited override
+  for a bundle group name no group name can hold; four v2.4 print errata are cited.
+
 ### Added — P8b-16: HL7 v2.7.1 message structures complete
 
 - With `messageStructureSeverity` set, every v2.7.1 message structure is now checked: 164

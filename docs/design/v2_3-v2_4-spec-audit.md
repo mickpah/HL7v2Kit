@@ -122,3 +122,20 @@ This S2 commit ships the structural-delta findings + the deferred-items framing.
 - **Per-version conditional rules** — see "Known limitations" above.
 - **Per-version composite-component definitions** — see "Known limitations".
 - **Spec table errata** — neither the v2.3 / v2.3.1 / v2.4 nor the v2.5.1 errata sheets are consulted. The audit uses the public Final Standard PDFs (or, for v2.3 / v2.3.1 / v2.4, the inheritance-from-v2.5.1 assumption).
+
+## v2.4 message structures (P8b-13)
+
+The extractor reads 386 v2.4 captions: 36 excluded as examples, query profiles or conformance
+statements (ruling G7), 166 structure IDs, 146 read and 20 unreadable (G6 placeholders and
+templates, ERP_R09's ellipsis rows, SUR_P09's ED row, and the 'see Chapter 5' captions QRY_P04
+and DSR_P04). 146 are committed under `Resources/structures/v2.4/` and v2.4 is
+`complete: true`; with the 26 registered in `completeness.json` they account for all 171 Table
+0354 v2.4 rows. v2.4 prints no group names: 298 are named from the HL7 v2.xml v2.4 bundle, 35
+by cited overrides and 1 is synthesised (register §E v2.4 addendum).
+
+Requirement 4 evidence: with the structure check off the validation digest is byte-identical;
+with it on, 235 messages declaring MSH-12 2.4 change: 111 now match cleanly, 75 stay info with a
+new reason, 48 are example defects cited to the print (ACK_ACK, CH10 AIP before AIL, query
+events Table 0003 v2.4 does not define, the CH03 Q24/K24 example against its query profile, a
+TBR^R08 error response without RDF/RDT), and one misfire was fixed (ERP_R09, now registered on
+v2.4 and v2.5.1). 16 probes in `StructureV24ProbeTests`.

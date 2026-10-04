@@ -270,7 +270,8 @@ not define is passed over (it already raises `segmentNotInVersionGrammar`).
 
 v2.5.1 is `complete: true` in `Resources/structures/completeness.json`: every structure the
 chapters print is either modelled (172, extracted by `scripts/extract-message-structures.py`,
-each cited to chapter, section and pages) or registered here as not modelled (31, listed in
+each cited to chapter, section and pages; 171 since P8b-13 registered ERP_R09, see the v2.4
+addendum) or registered here as not modelled (31, 32 since P8b-13, listed in
 that file's `notModelled` with the triggers its captions print). A registered structure is
 reported as `messageStructureNotModelled` (info) with its reason, never as a mismatch, unless
 MSH-9.3 names it for a trigger its captions do not print; its triggers count towards an
@@ -462,6 +463,66 @@ Known cost of exact matching: 20 v2.7.1 structures fail the determinism lint (AD
 BAR_P05, CSU_C09, DFT_P03, DFT_P11, EHC_E15, OMD_O03, OMG_O19, OML_O21, OML_O33, OML_O35, OPL_O37,
 ORD_O04, OSM_R26, OUL_R24, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the exact
 matcher, with at most one finding and no group spans.
+
+### Addendum to §E — v2.4 complete (P8b-13, 2026-10-04)
+
+v2.4 is `complete: true` in `Resources/structures/completeness.json`: 146 structures modelled
+(each cited to chapter, section and pages) and 26 registered as not modelled in that file's
+`notModelled`; every Table 0354 v2.4 row is one or the other. v2.4 is the first version whose
+print names no group: 298 group names come from the HL7 v2.xml v2.4 bundle, 35 from cited
+`overrides.json` `groupNames` entries and 1 is synthesised (below).
+
+| Not modelled (v2.4) | Why | Status |
+|---|---|---|
+| PGL_PC6, PPR_PC1, PPP_PCB, PPG_PCG, PRR_PC5, PPV_PCA, PTR_PCF, PPT_PCL (CH12 12.3.1 to 12.3.12) | The order detail is printed `[OBR, etc.`; the CH12 note before 12.3.1 reads "OBR etc." as every combination of order detail segments per CH04 4.2.2.4 (p 4-10), which names only examples (OBR, RXO) (ruling G6). | **Permanent** for v2.4. |
+| QBP_Q11, RSP_K11, QBP_Q13, QBP_Q15, QVR_Q17 (CH05 5.4.1 to 5.4.5) | Query templates: a `[...]` row stands for the segments a conformance statement defines (ruling G6). | **Permanent** for v2.4. |
+| MFN_M01 (CH08 8.4.1), MFR_M01 (8.4.3), MFN_M03 (8.8.2) | Master file templates: `[Z..]` after MFE, and MFN_M03's `??? [other segments(s)]` for the M08 to M12 groups (ruling G6). | **Permanent** for v2.4. |
+| ERP_R09 (CH05 5.10.4.2, p 5-116; also v2.5.1 p 5-120) | Ellipsis rows after ERQ stand for "the segments indicated by the ellipsis", the remainder of another message (ruling G6). A corpus misfire in P8b-13: the extractor had dropped the rows and committed `MSH MSA [ERR] QAK ERQ [DSC]` on v2.4 and v2.5.1; an ellipsis row is now a placeholder and ERP_R09 is registered on both versions. | **Permanent** for v2.4 and v2.5.1. |
+| SUR_P09 (CH07 7.11.2) | A row `ED Encapsulated Data`: v2.4 defines no ED segment (ED is a data type). | **Permanent** for v2.4. |
+| QRY_P04, DSR_P04 (CH06 6.4.4, p 6-13) | The captions print no syntax, only "see Chapter 5" (the original-mode display query). | **Permanent** for v2.4. |
+| ORU_W01, QRF_W02, QCK_Q02, QRY_Q02, RRA_O02, RRE_O02 | Table 0354 v2.4 rows (Appendix A; CH02 2.17.3) with no printed syntax. | **Permanent** for v2.4. |
+
+Looser prints. Every duplicate print of a v2.4 structure (ACK, ADT_A09, MFK_M01, RQC_I05) is
+stricter than its primary print, so no `primaryPrints` or `unionPrints` entry was needed. One
+print is looser than its own intent:
+
+| Structure (v2.4) | Committed, as printed | Stricter reading, not checked | Cost | Status |
+|---|---|---|---|---|
+| REF_I12 (CH11 11.5.1, pp 11-16 to 11-17) | The print repeats the optional `[ PV1 [PV2] ]` group twice before the closing `[{NTE}]` | One PATIENT_VISIT group, as RRI_I12 in the same section, HL7-xml v2.4/REF_I12.xsd and the v2.5.1 print give it | A REF with two visit groups passes. | Recorded; the print is normative (ruling D3). |
+
+Group names (ADR-019 decision 3). The v2.4 bundle has no xsd for DOC_T12, OSR_Q06, SQM_S25,
+SQR_S25, VXR_V03, VXU_V04 and VXX_V02: their 25 groups take the v2.5.1 bundle's name for the
+same structure ID, parent path and first segment, with the same member set or a superset adding
+only segments v2.4 does not define (TQ1 and TQ2: VXU_V04 and VXR_V03 ORDER, SQR_S25 SCHEDULE,
+OSR_Q06 RESPONSE and ORDER). ORL_O22's four groups take the v2.4 bundle's names by member set
+(the bundle nests them under a PATIENT group the print does not have); RAS_O17's RXA group is
+ADMINISTRATION (the v2.5.1 bundle) and its OBX group OBSERVATION (both bundles); DFT_P03's FT1
+group is FINANCIAL (the v2.4 bundle's one root FT1 group; the print adds DG1, DRG, GT1 and an
+insurance group per FT1, its footnotes 3 to 5); RCI_I05's group is OBSERVATION and its inner
+group RESULTS, where the v2.4 bundle names the group `c`, which no group name can hold (the
+v2.5.1 and v2.6 bundles say OBSERVATION). One name is synthesised: DFT_P03's per-FT1 insurance
+group, IN1_GROUP, which no bundle names. Each is cited in the structure's citation.
+
+Reader fixes (extractor, each with a self-check case): a footnote mark fused to a bracket
+(`[{1`, `}]3`; CH06 DFT_P03, CH12 PTR_PCF) is dropped; a bracket-only cell drifted into the
+description column (CH11 RQA_I08, REF_I12, RRI_I12) is syntax; a `CODE^EVT` row at depth 0
+(CH05 DSR^Q03 then `ACK^Q03 (A to B)`) ends the table; an ellipsis row inside a table is a G6
+placeholder (ERP_R09). Cited errata (syntax-cell, confirmed by the v2.4 bundle bounds): OMG_O19
+`{[` read `[{` (PRIOR_RESULT), ORD_O04 `]}` read `}]` (ORDER_TRAY), OUL_R21 `[PV2]]` read
+`[PV2]` (VISIT), and OML_O21's fourth bare `]` read `}` (ORDER_GENERAL; a new optional
+`occurrence` key). Shared triggers: MFN^M02 to M06 (the MFN^M01-M06^MFN_M01 template caption),
+RPI^I04 (Table 0354 lists I04 under RPI_I01, a row the CH02 print spells `RPI_I0I`) and RSP^K24
+(Table 0354 lists K24 under RSP_K23); each is ambiguous without MSH-9.3. Two duplicate prints
+stay unreadable and are reported only: ADT^A31^ADT_A05 (3.3.31, `{ ROL }]`) and CH15 15.3.7's
+QBP^Q25^QBP_Q21 caption over a query parameter table. The HL7 v2.xml v2.4 bundle also differs
+from the print for CSU_C09 (CSP bounds), NMR_N01, ORR_O02 (the bundle's ORDER_DETAIL for the
+printed choice) and DFT_P03 (a VISIT group the print does not have); the print is normative.
+
+Known cost of exact matching: 18 v2.4 structures fail the determinism lint (BAR_P01, BAR_P05,
+CSU_C09, DFT_P03, NMR_N01, OMD_O03, OMG_O19, OML_O21, ORD_O04, ORF_R04, ORL_O22, ORU_R01,
+OUL_R21, RCI_I05, REF_I12, RPA_I08, RQA_I08 and RRI_I12) and are matched by the exact matcher,
+with at most one finding and no group spans (among them ORU_R01, whose v2.4 OBSERVATION group
+is `{[OBX] [{NTE}]}`).
 
 ## F. Excluded HL7 v2.x versions (ADR-018)
 

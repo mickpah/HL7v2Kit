@@ -487,7 +487,7 @@ row:
 
 | MSH-12 (VID.1) | Structures applied | Note |
 |---|---|---|
-| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Its own | 2.7.1 since P8b-16 |
+| 2.3, 2.3.1, 2.4, 2.5.1, 2.6, 2.7.1, 2.8.2 | Its own | 2.7.1 since P8b-16; 2.4 complete since P8b-13 |
 | 2.7 | v2.7.1 | Covered by the existing `versionGrammarSubstituted` info (P8b-16) |
 | 2.8 | v2.8.2 | Covered by the existing `versionGrammarSubstituted` info |
 | Other, unresolved, or empty | None | `messageStructureNotModelled` (info). Not the v2.5.1 fallback grammar that ADR-018 uses for segments: applying v2.5.1 structures would report every later-version segment and group as a deviation (decision 4) |
@@ -1145,3 +1145,25 @@ compiling a structure per message.
 - **Extractor.** In the caret-colon era a header row may repeat the caption in place of
   "Segments" (accepted only when the cell is the caption it follows), and a group mark's last
   name word may wrap onto the line with "begin" or "end".
+
+## Amendment 2026-10-04 — v2.4 complete (P8b-13)
+
+- **v2.4 complete.** 146 structures modelled (18 exact-matched), 26 registered (register
+  section E v2.4 addendum: CH12 placeholders, CH05 query templates, CH08 master file
+  templates, ERP_R09, SUR_P09, the 'see Chapter 5' captions QRY_P04 and DSR_P04, and six
+  Table 0354 rows with no print); every Table 0354 v2.4 row is one or the other.
+- **Decision 3 realised for v2.4 through the bundle.** v2.4 prints no group names. Of 334
+  unprinted names, 298 come from the HL7 v2.xml v2.4 bundle (nameSource `v2xml`), 35 from cited
+  `overrides.json` `groupNames` entries (nameSource `override`) and 1 is synthesised. Override
+  rule for a structure the v2.4 bundle lacks (DOC_T12, OSR_Q06, SQM_S25, SQR_S25, VXR_V03,
+  VXU_V04, VXX_V02): the v2.5.1 bundle's name for the same structure ID, parent path and first
+  segment, with the same member set or a superset adding only segments v2.4 does not define
+  (TQ1, TQ2). Where the v2.4 bundle has the structure but nests or flattens the group
+  differently (ORL_O22, RAS_O17, DFT_P03) the override cites the bundle group with the same
+  member set. A bundle name no group name can hold (RCI_I05 `c`) makes the print unreadable
+  unless a cited override names the group.
+- **Extractor.** Footnote marks fused to brackets are dropped; a bracket-only cell in the
+  description column is syntax; a `CODE^EVT` row ends the table; an ellipsis row inside a table
+  is a G6 placeholder (this registered ERP_R09 on v2.5.1 as well, 171 modelled there); a
+  syntax-cell erratum may carry an `occurrence`. Apart from ERP_R09 on v2.5.1, none changes
+  another version's report.
