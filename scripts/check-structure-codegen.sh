@@ -276,6 +276,54 @@ d = ack_choice(); d['elements'][2]['alternatives'][1]['segment'] = 'uac'; save('
 reject "segment with alternatives" 'cannot have elements, alternatives or a nameSource' "$PRE
 d = load('v2.5.1/ACK.json'); d['elements'][2]['alternatives'] = []; save('v2.5.1/ACK.json', d)"
 
+# P8b-12: the codegen lints each structure and renders requiresExactMatch. ACK's elements are
+# replaced by a synthetic shape (StructureShapes in the test target); the v2.5.1 table must hold
+# exactly <count> "requiresExactMatch: true" lines (the pilots pass the lint, so 0 or 1).
+SH='
+def seg(i, mn, mx): return {"segment": i, "min": mn, "max": mx}
+def grp(n, mn, mx, es): return {"group": n, "nameSource": "printed", "min": mn, "max": mx, "elements": es}
+def alt(mn, mx, es): return {"choice": None, "min": mn, "max": mx, "alternatives": es}
+def ack_shape(*es):
+    d = load("v2.5.1/ACK.json"); d["elements"] = [seg("MSH", 1, 1)] + list(es); save("v2.5.1/ACK.json", d)
+'
+
+# flagged <label> <count> <change>
+flagged() {
+  local label="$1" count="$2" change="$3"
+  local dir="$SCRATCH/case$cases"
+  accept "$label" "$change"
+  local found
+  found=$(grep -c "requiresExactMatch: true" "$dir/out/Structures/Generated/MessageStructureTable+v2_5_1.swift" 2>/dev/null)
+  if [[ -d "$dir/out" && "$found" != "$count" ]]; then
+    echo "FAIL $label: $found structure(s) flagged, expected $count"
+    failures=$((failures + 1))
+  fi
+}
+
+flagged "lint-failing pre-v2.5 ORU shape is flagged for exact matching" 1 "$PRE$SH
+ack_shape(seg('OBR', 1, 1), seg('NTE', 0, None), grp('OBSERVATION', 0, None, [seg('OBX', 0, 1), seg('NTE', 0, None)]))"
+
+flagged "lint-failing counter-example {G: X {Q: X Y}} is flagged" 1 "$PRE$SH
+ack_shape(grp('G', 1, None, [seg('XXA', 1, 1), grp('Q', 1, None, [seg('XXA', 1, 1), seg('YYB', 1, 1)])]))"
+
+flagged "exempt shape {G: [X] [{N}]} passes the lint and is not flagged" 0 "$PRE$SH
+ack_shape(grp('G', 1, None, [seg('XXA', 0, 1), seg('NTE', 0, None)]))"
+
+flagged "exempt nullable prefix {G: [A] [X] [{N}]} is not flagged" 0 "$PRE$SH
+ack_shape(grp('G', 1, None, [seg('AAA', 0, 1), seg('XXA', 0, 1), seg('NTE', 0, None)]))"
+
+flagged "choice with optional alternatives is flagged" 1 "$PRE$SH
+ack_shape(alt(1, None, [seg('AAA', 0, 1), seg('BBB', 0, None)]), seg('CCC', 1, 1))"
+
+flagged "choice with overlapping alternatives is flagged" 1 "$PRE$SH
+ack_shape(alt(1, 1, [seg('AAA', 1, 1), grp('G', 1, 1, [seg('AAA', 1, 1), seg('BBB', 1, 1)])]), seg('CCC', 1, 1))"
+
+flagged "optional choice then a sibling of its FIRST set is flagged" 1 "$PRE$SH
+ack_shape(alt(0, 1, [seg('AAA', 1, 1), seg('BBB', 1, 1)]), seg('AAA', 0, None))"
+
+flagged "deterministic repeating choice is not flagged" 0 "$PRE$SH
+ack_shape(alt(0, None, [seg('AAA', 1, 1), seg('BBB', 1, None)]), seg('CCC', 1, 1))"
+
 # The good run: the unmodified copy reproduces every committed Generated/ directory.
 cases=$((cases + 1))
 good="$SCRATCH/good"

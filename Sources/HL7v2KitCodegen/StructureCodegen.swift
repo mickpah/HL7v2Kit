@@ -216,6 +216,8 @@ func renderStructureTable(versionSwiftName: String, sourceDir: String, structure
             "        version: \(escapeStringLiteral(s.version)),",
             "        triggers: [\(triggers)],",
             "        citation: \(escapeStringLiteral(s.citation)),",
+            // P8b-12: the determinism lint, run here so the Validator never lints a message.
+            "        requiresExactMatch: \(!structureIsDeterministic(s.elements)),",
             "        elements: [",
         ]
         lines += s.elements.map { renderStructureElement($0, indent: "            ") }

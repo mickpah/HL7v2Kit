@@ -14,6 +14,7 @@ extension MessageStructureTable {
         version: "2.5.1",
         triggers: ["ACK^*"],
         citation: "HL7 v2.5.1 Chapter 2, section 2.14.1 ACK - general acknowledgment, p 2-61 (ACK^varies^ACK; MSH-9.3 is always ACK).",
+        requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -27,6 +28,7 @@ extension MessageStructureTable {
         version: "2.5.1",
         triggers: ["ADT^A01", "ADT^A04", "ADT^A08", "ADT^A13"],
         citation: "HL7 v2.5.1 Chapter 3, section 3.3.1 ADT/ACK - Admit/Visit Notification (Event A01), pp 3-4 to 3-5; the same structure is printed for ADT^A04 (3.3.4), ADT^A08 (3.3.8) and ADT^A13 (3.3.13). Group names PROCEDURE and INSURANCE are printed.",
+        requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),
@@ -66,6 +68,7 @@ extension MessageStructureTable {
         version: "2.5.1",
         triggers: ["ORU^R01"],
         citation: "HL7 v2.5.1 Chapter 7, section 7.3.1 ORU - Unsolicited Observation Message (Event R01), pp 7-13 to 7-14. The print names PATIENT_RESULT and PATIENT only. {[NTE]} and {[CTI]} are read as [{ }]. Unprinted group names (ADR-019 decision 3): VISIT (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.VISIT.CONTENT), ORDER_OBSERVATION (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.ORDER_OBSERVATION.CONTENT), TIMING_QTY (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.TIMING_QTY.CONTENT), OBSERVATION (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.OBSERVATION.CONTENT) and SPECIMEN (HL7-xml v2.5.1/ORU_R01.xsd, ORU_R01.SPECIMEN.CONTENT).",
+        requiresExactMatch: false,
         elements: [
             .segment("MSH", min: 1, max: 1),
             .segment("SFT", min: 0, max: nil),

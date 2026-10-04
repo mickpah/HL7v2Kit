@@ -150,16 +150,25 @@ public struct MessageStructure: Sendable, Equatable, Hashable {
     public let citation: String
     /// The ordered top-level elements, starting with MSH.
     public let elements: [StructureElement]
+    /// Whether the structure fails the ADR-019 determinism lint, so the
+    /// Validator matches it with `ExactStructureMatcher` instead of the
+    /// one-pass matcher (P8b-12). The codegen lints each structure it emits
+    /// and renders the result; a test re-lints every generated structure.
+    let requiresExactMatch: Bool
 
     // Internal (P8 final review): there is no public matcher, so a structure
     // built outside the package has no use, and the AU overlay will add
     // fields. The generated table and the tests (`@testable`) use it.
-    init(id: String, version: String, triggers: [String], citation: String, elements: [StructureElement]) {
+    // `requiresExactMatch` nil means "lint now" (tests and synthetic
+    // structures); the generated table always passes the codegen's result.
+    init(id: String, version: String, triggers: [String], citation: String,
+         requiresExactMatch: Bool? = nil, elements: [StructureElement]) {
         self.id = id
         self.version = version
         self.triggers = triggers
         self.citation = citation
         self.elements = elements
+        self.requiresExactMatch = requiresExactMatch ?? !StructureMatcher.lint(elements).isDeterministic
     }
 
     /// Whether the chapters print `messageCode^triggerEvent` for this structure.

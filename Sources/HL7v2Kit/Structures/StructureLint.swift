@@ -1,7 +1,8 @@
 // StructureLint.swift
 // ADR-019 "Determinism lint": the precondition for matching a structure
-// greedily. A structure that fails is never matched; the Validator reports
-// it as not modelled.
+// greedily. A structure that fails is matched exactly instead
+// (ExactStructureMatcher, P8b-12); the codegen runs this lint and records
+// the result as MessageStructure.requiresExactMatch.
 
 /// The outcome of the determinism lint over one element tree.
 struct StructureLint: Sendable, Equatable {
