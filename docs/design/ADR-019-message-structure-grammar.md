@@ -999,3 +999,51 @@ accepts or rejects the wrong messages. Known ceiling 1 is replaced.
   agreement on every structure it reads, so P8b-7's full run covers it.
 - **Committed data unchanged.** The three v2.5.1 pilots pass the lint (flag false); regenerated
   output differs only by the flag line, and the validation digest is byte-identical.
+
+## Amendment 2026-10-04 — structure guards and the matcher cache (P8b-7)
+
+The version tasks (P8b-9 onward) commit several hundred structures. These guards are what
+make a bad structure fail the suite rather than ship, and the cache keeps validation from
+compiling a structure per message.
+
+- **Default-on guards** (`StructureGuardTests`, one test case per committed structure of
+  every grammar version, read from the generated tables, never a list). Per structure:
+  1. the generated `requiresExactMatch` equals a fresh library lint (the drift guard for the
+     codegen's lint port; moved here from `StructureExactMatchFlagTests`);
+  2. the matcher the flag selects (one-pass when false, exact when true) agrees with the
+     reference recogniser on a seeded, bounded set: 40 derivations of the grammar (at most 16
+     segments, or the shortest derivation plus 8; the bound grows by 8 after every 100
+     rejected attempts, so the budget is always met), each with four single-edit mutations,
+     200 sequences in all; an alphabet of at most two IDs after MSH is enumerated to length 6
+     instead. Both accepted and rejected sequences must occur (non-vacuity);
+  3. the first element is a required, non-repeating MSH, and every segment ID is in the
+     version's segment grammar (`Validator.grammarTable(for:)`), or is ADD;
+  4. DSC, if present anywhere, is the last top-level element and nowhere else (the fragment
+     rule assumes it).
+  A test builds a structure breaking each guard and requires it to be reported.
+  `STRUCTURE_PROPERTY_FULL` runs the same guards at 2,000 derivations per structure.
+- **Cost.** Debug build, one structure alone: ACK 6 ms, ADT_A01 50 ms, ORU_R01 56 ms. Over
+  the 166 structures the extractor reads from v2.5.1 (env-gated corpus run) the guards took
+  1.9 s in all, 11 ms per structure; about 1,200 structures project to about 13 s of CPU,
+  spread over the parallel test cases. The budget is a sequence count, not a time ceiling,
+  which misfires under the parallel suite's contention.
+- **Matcher cache** (`StructureMatcherCache`, internal). The Validator takes each structure's
+  compiled matcher (the exact matcher's automaton, or the one-pass matcher with every FIRST
+  set, nullability and suffix FIRST union computed at init) from a cache keyed by structure
+  version and ID, built on first use under an `NSLock`; the class is `@unchecked Sendable`
+  because all its mutable state is behind the lock (the deployment targets predate
+  `Synchronization.Mutex` and `OSAllocatedUnfairLock`). Chosen over precomputed statics in
+  the generated table because the Validator also matches structures outside the table
+  (synthetic ones in tests), a process compiles only the structures it validates, and the
+  codegen stays unchanged. A hit requires the cached structure to equal the one asked for,
+  so a different structure under the same key is rebuilt, never served stale; for a
+  generated structure that comparison is cheap (shared array storage). Simultaneous first
+  lookups may each compile; every result is correct. Proof: 1,000 messages validated
+  against one lint-failing structure compile one automaton (a build counter), and every
+  committed structure's cached matcher is the one its flag selects.
+- **Corpus runs.** The env-gated corpus tests read extractor dumps through a decoder with the
+  codegen's acceptance rules and error texts (`StructureJSONDecoder`, test target; the test
+  target cannot import the codegen executable), checked against every structure-file case
+  of `scripts/check-structure-codegen.sh`. A missing or empty version directory fails; each
+  structure must reach a minimum sequence count (the full enumeration for an alphabet of at
+  most four IDs, else 1,000); each row records the default guards' verdict.

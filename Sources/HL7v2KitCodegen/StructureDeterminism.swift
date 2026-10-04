@@ -5,7 +5,7 @@
 // depend on the library (Package.swift), so this is a port of
 // `StructureMatcher.lint` (Sources/HL7v2Kit/Structures/StructureLint.swift)
 // reduced to its verdict. Keep the two in step: the suite's
-// StructureExactMatchFlagTests re-lints every generated structure with the
+// StructureGuardTests (guard 1) re-lints every generated structure with the
 // library and compares, and scripts/check-structure-codegen.sh checks the
 // flag on lint-failing and exempt synthetic shapes.
 

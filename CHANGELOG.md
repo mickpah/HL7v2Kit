@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — P8b-7: guards over every committed structure; compiled-matcher cache
+
+- A default-on test checks every committed structure of every version: the generated
+  exact-match flag equals a fresh lint; the matcher the flag selects agrees with the
+  reference recogniser on 200 seeded derived and mutated sequences, with both accepted and
+  rejected ones; MSH is the first, required element; every segment is in the version's
+  segment grammar or is ADD; DSC, if present, is only the last top-level element.
+  `STRUCTURE_PROPERTY_FULL` runs it at 2,000 derivations per structure. A structure added by
+  a version task that breaks any of these fails the suite.
+- The Validator compiles each structure's matcher once and reuses it for every message
+  (internal `StructureMatcherCache`, keyed by version and structure ID); the one-pass matcher
+  now computes its FIRST sets once per structure instead of while matching. 1,000 messages
+  against one lint-failing structure compile one automaton. No public API change; the
+  validation digest is byte-identical with the option off and at `.warning`.
+- The env-gated corpus tests read extractor dumps with the codegen's acceptance rules (a test
+  feeds them every structure-file case of `scripts/check-structure-codegen.sh`), fail on a
+  missing or empty version directory, require a minimum sequence count per structure, and
+  record the default guards' verdict per structure.
+- ADR-019 amendment (P8b-7).
+
 ### Changed — P8b-12: exact matching for structures that fail the determinism lint
 
 - With `ValidationOptions.messageStructureSeverity` set, a structure that fails the ADR-019
