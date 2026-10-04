@@ -1210,6 +1210,65 @@ def check_syntax_cell_erratum():
     assert s is None and "changes the description" in [r for r in report if r[1] == "skipped"][0][2], report
 
 
+def check_v24_reader_layouts():
+    # P8b-13 (v2.4): a footnote mark fused to a bracket ('[{1', '}]3'; CH06 DFT_P03) is dropped; a
+    # bracket-only cell drifted into the description column (CH11 RQA_I08 ']') is syntax; a
+    # 'CODE^EVT' row at depth 0 (CH05 DSR^Q03 then 'ACK^Q03 (A to B)') ends the table.
+    s, report = _structure([("MSH", "Header"), ("[{1", ""), ("OBR", "Order"), ("[{ NTE }]", "Notes"), ("}]3", ""), ("[{ DG1 }]6", "Diagnosis")])
+    assert s, report
+    assert [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "OBR_GROUP", "DG1"], s["elements"]
+    assert (s["elements"][1]["min"], s["elements"][1]["max"]) == (0, None), s["elements"][1]
+    s, report = _structure([("MSH", "Header"), ("[", ""), ("PV1", "Visit"), ("[PV2]", "Visit 2"), ("", "]"),
+                            ("EVN", "Event")])
+    assert s, report
+    assert [e.get("segment") or e["group"] for e in s["elements"]] == ["MSH", "PV1_GROUP", "EVN"], s["elements"]
+    s, report = _structure([("MSH", "Header"), ("PID", "Patient"), ("ACK^X01 (A to B)", "General Acknowledgment"),
+                            ("MSH", "Header"), ("MSA", "Ack")])
+    assert s, report
+    assert [e["segment"] for e in s["elements"]] == ["MSH", "PID"], s["elements"]
+
+
+def check_syntax_cell_erratum_occurrence():
+    # P8b-13 (v2.4 CH04 OML_O21): the print closes a '{' group with ']', and ']' recurs in the
+    # print; "occurrence" narrows the erratum to the n-th such row. It is valid on syntax-cell
+    # errata only.
+    rows = [("MSH", "Header"), ("[", ""), ("PID", "Patient"), ("[PD1]", "Demographics"), ("]", ""), ("{", ""),
+            ("PV1", "Visit"), ("[PV2]", "Visit 2"), ("]", "")]
+    s, report = _structure(rows)
+    assert s is None and "unbalanced" in [r for r in report if r[1] == "skipped"][0][2], report
+    entry = {"version": "2.5.1", "where": "syntax-cell", "structure": "XYZ_X01", "printed": "]", "intended": "}",
+             "occurrence": 2, "citation": "x"}
+    fix = {**EMPTY, "errata": [entry]}
+    ext.validate_overrides(fix)
+    s, report = _structure(rows, overrides=fix)
+    assert s, report
+    assert [(e["group"], e["min"], e["max"]) for e in s["elements"][1:]] == \
+        [("PID_GROUP", 0, 1), ("PV1_GROUP", 1, None)], s["elements"]
+    for bad in ({**entry, "occurrence": 0}, {**entry, "where": "caption"}):
+        try:
+            ext.validate_overrides({**EMPTY, "errata": [bad]})
+        except ext.OverridesError:
+            continue
+        raise AssertionError(f"accepted {bad}")
+
+
+def check_bundle_name_no_group_can_hold():
+    # P8b-13 (HL7-xml v2.4/RCI_I05.xsd names a group 'c'): a bundle name that is no valid group name
+    # is a bundle defect; without a cited groupNames override the print is unreadable, with one the
+    # override names the group (nameSource override).
+    b = _bundles("2.5.1", {"XYZ_X01": _xsd("XYZ_X01", "XYZ_X01: MSH 1 1, XYZ_X01.c 0 1; XYZ_X01.c: PV1 1 1, PV2 0 1")})
+    text = _page(1, _table("XYZ^X01^XYZ_X01", VISIT_ROWS), heading="9.1.1           XYZ - synthetic (Event X01)")
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], EMPTY, bundles=b)
+    assert "XYZ_X01" not in structures, structures
+    assert any(r[1] == "skipped" and "no group name can hold" in r[2] for r in report), report
+    named = copy.deepcopy(EMPTY)
+    named["groupNames"].append({"version": "2.5.1", "structure": "XYZ_X01", "path": [1], "name": "VISIT", "citation": "x"})
+    structures, report, _ = ext.extract_version("2.5.1", [("syn", text)], named, bundles=b)
+    g = structures["XYZ_X01"]["elements"][1]
+    assert (g["group"], g["nameSource"]) == ("VISIT", "override"), g
+    assert not [r for r in report if r[1] == "error"], report
+
+
 def check_caption_scoped_exclusion():
     # P8b-10 (CH08 8.4.3): an exclusion with "caption" drops only that caption of the section (the
     # MFN_Znn template); the section's normative acknowledgment stays read; a caption never seen
@@ -1262,7 +1321,8 @@ CHECKS = [check_ack_golden, check_adt_a01_golden, check_oru_r01_golden, check_br
           check_bracketless_named_group, check_no_bar_choice_is_named_required_group, check_syntax_cell_erratum,
           check_first_row_left_of_caption, check_caption_scoped_exclusion, check_union_prints,
           check_colon_caption_with_space_ends_table, check_v282_reader_layouts, check_v271_reader_layouts,
-          check_0354_triggers_merged]
+          check_0354_triggers_merged, check_v24_reader_layouts, check_syntax_cell_erratum_occurrence,
+          check_bundle_name_no_group_can_hold]
 
 
 def main():

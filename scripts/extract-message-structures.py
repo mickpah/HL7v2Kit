@@ -197,6 +197,10 @@ def split_row(line, desc_col):
         return ("", "")
     indent = len(s) - len(s.lstrip())
     if indent >= desc_col - 2:
+        # A cell of brackets alone drifted right into the description column (v2.4 CH11 RQA_I08,
+        # REF_I12 and RRI_I12 print a group's closing ']' there; P8b-13) is syntax, not description.
+        if re.fullmatch(r"[\[\]{}]+", s.strip().replace(" ", "")):
+            return (s.strip(), "")
         return ("", s.strip())
     if len(s) <= desc_col:
         return (s.strip(), "")
@@ -366,7 +370,9 @@ def captions(lines, era="caret", source="", bare=frozenset()):
     return found
 
 
-_NOTATION = re.compile(r"^(?:[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_])|\.\.\.|…)")
+# A segment ID followed by a caret is the next message's caption, never notation (v2.4 CH05 5.10.3.2
+# DSR^Q03 then "ACK^Q03 (A to B)" with no page heading between; P8b-13): it ends the table.
+_NOTATION = re.compile(r"^(?:[\[\]{}<>|]|[A-Z][A-Z0-9]{2}(?![A-Za-z0-9_^])|\.\.\.|…)")
 # A segment ID then a word in prose; a depth-0 line after the table that starts with a segment ID but
 # goes on in prose ("QPD Input Parameter Specification", v2.8.2 CH04A RSP_K31) ends the table (P8b-11).
 _PROSE = re.compile(r"^[A-Z][A-Z0-9]{2}\s+[A-Z]?[a-z]+\b")
@@ -474,18 +480,28 @@ def _corrected(desc, marks, used):
     return desc
 
 
-def _cell_fixed(row, fixes, used):
-    """A row with a cited syntax-cell erratum applied: printed and intended are the row's cell then
-    its description, spaces collapsed; only the cell may differ."""
-    printed = " ".join(f"{row.left} {row.desc}".split())
-    e = fixes.get(printed)
-    if not e:
-        return row
-    desc = " ".join(row.desc.split())
-    if not e["intended"].endswith(" " + desc if desc else ""):
-        raise UnknownNotation(f"syntax-cell erratum for {printed!r} changes the description")
-    used.add(id(e))
-    return Row(e["intended"][:len(e["intended"]) - len(desc)].strip(), row.desc, row.line, row.page)
+def _cells_fixed(rows, fixes, used):
+    """Rows with the cited syntax-cell errata applied: printed and intended are the row's cell then
+    its description, spaces collapsed; only the cell may differ. An entry with "occurrence" n
+    corrects only the n-th row of the print that reads so (a bare ']' recurs; v2.4 OML_O21,
+    P8b-13); one without corrects every such row."""
+    seen, out = {}, []
+    for row in rows:
+        if not row.left:
+            out.append(row)
+            continue
+        printed = " ".join(f"{row.left} {row.desc}".split())
+        n = seen[printed] = seen.get(printed, 0) + 1
+        e = next((x for x in fixes.get(printed, []) if x.get("occurrence", n) == n), None)
+        if not e:
+            out.append(row)
+            continue
+        desc = " ".join(row.desc.split())
+        if not e["intended"].endswith(" " + desc if desc else ""):
+            raise UnknownNotation(f"syntax-cell erratum for {printed!r} changes the description")
+        used.add(id(e))
+        out.append(Row(e["intended"][:len(e["intended"]) - len(desc)].strip(), row.desc, row.line, row.page))
+    return out
 
 
 def parse(rows, marks=None, used=None):
@@ -515,7 +531,11 @@ def parse(rows, marks=None, used=None):
                 stack.pop()
             continue
         opened, closed = [], []
-        for tok in (t.group(0) for t in TOKEN.finditer(row.left)):
+        # A footnote reference fused to a bracket ('[{1', '}]3'; v2.4 CH06 DFT_P03, CH12 PTR_PCF;
+        # P8b-13) is not notation: a segment ID starts with a letter, so digits after a bracket are
+        # always the footnote mark.
+        left = re.sub(r"(?<=[\[\]{}<>])\d{1,2}(?=\s|$)", "", row.left)
+        for tok in (t.group(0) for t in TOKEN.finditer(left)):
             if tok.isspace():
                 continue
             if tok in "[{":
@@ -638,6 +658,13 @@ def name_groups(elements, version, structure, overrides, used=None, path=(), bun
             hit = [g for g in overrides["groupNames"]
                    if g["version"] == version and g["structure"] == structure and g["path"] == where]
             name, source, cite = _v2xml.resolve(bundles, version, structure, path, element["elements"])
+            # A bundle name no group name can hold (the v2.4 bundle's RCI_I05 group "c"; P8b-13)
+            # is a bundle defect: only a cited groupNames override names that group.
+            if name is not None and not re.fullmatch(r"[A-Z][A-Z0-9_]*", name):
+                if not hit:
+                    raise UnknownNotation(f"the HL7 v2.xml bundle names the group at {where} {name!r}, which no "
+                                          "group name can hold: a cited groupNames override is needed")
+                name = None
             entry = {"path": where, "miss": name is None, "shadowed": bool(name and hit)}
             if name is None and hit:
                 name, source, cite = hit[0]["name"], "override", f"overrides.json: {hit[0]['citation']}"
@@ -751,7 +778,8 @@ _OVERRIDE_KEYS = {
     # ("--- NAME begin/end"), or a Table 0354 row (its code or an event in its description); a
     # group-close erratum supplies the syntax cell ("}]") a printed "--- NAME end" row leaves empty;
     # a syntax-cell erratum corrects a printed cell, the row given as cell then description with
-    # runs of spaces collapsed ("{ [ CTD } ] Contact Data"), the description unchanged (P8b-10).
+    # runs of spaces collapsed ("{ [ CTD } ] Contact Data"), the description unchanged (P8b-10); an
+    # optional "occurrence" (1-based) narrows it to the n-th row that reads so (P8b-13).
     "errata": {"version", "where", "structure", "printed", "intended", "citation"},
     # A trigger printed under several structures (pre-flight B6); reported, never modelled here.
     "sharedTriggers": {"version", "trigger", "structures", "citation"},
@@ -781,7 +809,12 @@ def validate_overrides(data):
                 raise OverridesError(f"unionPrints entry for {entry.get('structure')} needs two distinct prints")
             if kind == "sharedTriggers" and len(set(entry.get("structures", []))) < 2:
                 raise OverridesError(f"sharedTriggers entry {entry.get('trigger')} names fewer than two structures")
-            if set(entry) != keys and not (kind == "exclusions" and set(entry) == keys | {"caption"}):
+            if "occurrence" in entry and not (kind == "errata" and entry.get("where") == "syntax-cell"
+                                              and isinstance(entry["occurrence"], int) and entry["occurrence"] >= 1):
+                raise OverridesError(f"{kind} entry for {entry.get('structure')}: 'occurrence' is a positive "
+                                     "integer on a syntax-cell erratum only")
+            optional = {"exclusions": {"caption"}, "errata": {"occurrence"}}.get(kind, set())
+            if not keys <= set(entry) <= keys | optional:
                 raise OverridesError(f"{kind} entry keys {sorted(entry)}, expected {sorted(keys)}")
             text = entry.get("citation", entry.get("note", ""))
             if not text.strip() or "\n" in text:
@@ -1051,7 +1084,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
     cells = {}
     for e in errata:
         if e["where"] == "syntax-cell":
-            cells.setdefault(e["structure"], {})[e["printed"]] = e
+            cells.setdefault(e["structure"], {}).setdefault(e["printed"], []).append(e)
     structures, used, owner, bundle_rows = {}, set(), {}, []
     # P8b-11 fix-round ruling: a structure accepts every trigger Table 0354 of its own version maps
     # to it, as well as the triggers its captions print (a borrowed table, v2.3's, adds none).
@@ -1077,7 +1110,7 @@ def extract_version(version, texts, overrides, only=None, bundles=None, tables=N
         rows = [Row(closes[sid][r.desc]["intended"], r.desc, r.line, r.page) if not r.left and r.desc in closes.get(sid, {})
                 else r for r in rows]
         used_errata.update(id(closes[sid][r.desc]) for r in rows if r.desc in closes.get(sid, {}))
-        rows = [_cell_fixed(r, cells[sid], used_errata) if r.left and sid in cells else r for r in rows]
+        rows = _cells_fixed(rows, cells[sid], used_errata) if sid in cells else rows
         seen = set()
         tree = parse(rows, {k: v["intended"] for k, v in marks.get(sid, {}).items()}, seen)
         # P8b-3b: an empty print, or rows that run on into the next table (a second top-level
