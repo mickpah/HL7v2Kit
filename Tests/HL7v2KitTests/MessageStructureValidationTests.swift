@@ -543,6 +543,33 @@ struct MessageStructureValidationTests {
         #expect(issues.first?.severity == .info)
     }
 
+    // ADR-019 lookup rule 1 on v2.3.1 (P8b-14): complete, so an unknown MSH-9.3 ID is a mismatch,
+    // including a structure ID Table 0354 v2.3.1 lists only through a misprint (PIN_107, read as
+    // PIN_I07 through a cited erratum); registered IDs (a CH12 placeholder, a Table 0354 row with
+    // no print, the CH04 order-detail placeholder) are info with their reason; ADT^A04 (Table 0354:
+    // ADT_A01) and ORU^R01 resolve and match; a Z trigger declaring a printed structure is matched.
+    @Test("v2.3.1 complete (P8b-14): an unknown MSH-9.3 is a mismatch, a registered one info, ADT^A04 and ORU^R01 matched")
+    func v231RuleOne() throws {
+        #expect(MessageStructureTable.isComplete(.v2_3_1))
+        let unknown = try structureIssues(Self.wire("ADT^A04^ADT_A04", version: "2.3.1", [Self.evn, Self.pid, Self.pv1]))
+        #expect(unknown.map(\.code) == [.messageStructureMismatch(declared: "ADT_A04", trigger: "ADT^A04")])
+        #expect(unknown.first?.severity == .error)
+        let misprint = try structureIssues(Self.wire("PIN^I07^PIN_107", version: "2.3.1", ["PRD|1", "PID|1", "IN1|1"]))
+        #expect(misprint.map(\.code) == [.messageStructureMismatch(declared: "PIN_107", trigger: "PIN^I07")])
+        #expect(try structureIssues(Self.wire("PIN^I07^PIN_I07", version: "2.3.1", ["PRD|1", "PID|1", "IN1|1"])).isEmpty)
+        for (msh9, id, text) in [("PPR^PC1^PPR_PC1", "PPR_PC1", "OBR, etc."),
+                                 ("ORU^W01^ORU_W01", "ORU_W01", "Table 0354 only"),
+                                 ("ORM^O01^ORM_O01", "ORM_O01", "Order Detail Segment"),
+                                 ("MFN^M02^MFN_M02", "MFN_M02", "MFN^M01-M06")] {
+            let issues = try structureIssues(Self.wire(msh9, version: "2.3.1", ["MFI|1", "PID|1"]))
+            #expect(issues.map(\.code) == [.messageStructureNotModelled(structure: id)], "\(msh9): \(issues.map(\.message))")
+            #expect(issues.first?.message.contains(text) == true, "\(msh9): \(issues.map(\.message))")
+        }
+        #expect(try structureIssues(Self.wire("ADT^A04", version: "2.3.1", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+        #expect(try structureIssues(Self.wire("ORU^R01^ORU_R01", version: "2.3.1", [Self.pid, "OBR|1", "OBX|1"])).isEmpty)
+        #expect(try structureIssues(Self.wire("ADT^Z99^ADT_A01", version: "2.3.1", [Self.evn, Self.pid, Self.pv1])).isEmpty)
+    }
+
     // ADR-019 lookup rule 1 on v2.4 (P8b-13): complete, so an unknown MSH-9.3 ID is a mismatch;
     // registered IDs (a template, a CH12 placeholder, a Table 0354 row with no print, a 'see
     // Chapter 5' caption) are info with their reason; a Z trigger declaring a printed structure is
